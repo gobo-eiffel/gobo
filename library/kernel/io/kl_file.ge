@@ -187,21 +187,17 @@ feature -- Access
 #ifdef SE
 					if file_exists (string_name) then
 						basic_time := last_change_of (string_name)
-						if operating_system.is_windows then
-							Result := epoch_time.elapsed_seconds (basic_time)
-						else
-							old_is_local := basic_time.is_local_time
-							basic_time.set_universal_time
-							y := basic_time.year
-							m := basic_time.month
-							d := basic_time.day
-							h := basic_time.hour
-							mi := basic_time.minute
-							s := basic_time.second
-							Result := epoch_days (y, m, d) * Seconds_in_day + h * Seconds_in_hour + mi * Seconds_in_minute + s
-							if old_is_local then
-								basic_time.set_local_time
-							end
+						old_is_local := basic_time.is_local_time
+						basic_time.set_universal_time
+						y := basic_time.year
+						m := basic_time.month
+						d := basic_time.day
+						h := basic_time.hour
+						mi := basic_time.minute
+						s := basic_time.second
+						Result := epoch_days (y, m, d) * Seconds_in_day + h * Seconds_in_hour + mi * Seconds_in_minute + s
+						if old_is_local then
+							basic_time.set_local_time
 						end
 						if Result < 0 then
 							Result := -1
@@ -675,14 +671,6 @@ feature {NONE} -- Implementation
 		require
 			not_closed: is_open
 		deferred
-		end
-
-	epoch_time: TIME is
-			-- Epoch time (1 Jan 1970 at 00:00:00)
-		local
-			b: BOOLEAN
-		once
-			b := Result.set (1970, 1, 1, 0, 0, 0)
 		end
 
 #endif
