@@ -18,9 +18,6 @@ class KL_STDERR_FILE
 inherit
 
 	KI_TEXT_OUTPUT_STREAM
-		rename
-			is_writable as is_open_write
-		end
 
 	KL_OPERATING_SYSTEM
 		export

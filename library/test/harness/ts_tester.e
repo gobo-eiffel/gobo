@@ -68,7 +68,7 @@ feature -- Execution
 			-- Execute tester.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_writable
+			a_file_open_write: a_file.is_open_write
 		local
 			a_suite: like suite
 			a_summary: TS_SUMMARY

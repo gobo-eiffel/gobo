@@ -28,7 +28,7 @@ feature -- Output
 	put_string (a_string: STRING) is
 			-- Write `a_string' to output stream.
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 			a_string_not_void: a_string /= Void
 		deferred
 		end
@@ -38,7 +38,7 @@ feature -- Output
 			-- of `i' to output stream.
 			-- Regexp: 0|(-?[1-9][0-9]*)
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 		local
 			j, k: INTEGER
 			a_string: STRING
@@ -93,7 +93,7 @@ feature -- Output
 			-- Write "True" to output stream if
 			-- `b' is true, "False" otherwise.
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 		do
 			if b then
 				put_string (True_constant)
@@ -107,7 +107,7 @@ feature -- Basic operations
 	flush is
 			-- Flush buffered data to disk.
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 		deferred
 		end
 

@@ -23,7 +23,7 @@ feature -- Output
 			-- Write `a_string' to output stream
 			-- followed by a line separator.
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 			a_string_not_void: a_string /= Void
 		do
 			put_string (a_string)
@@ -33,7 +33,7 @@ feature -- Output
 	put_new_line is
 			-- Write a line separator to output stream.
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 		do
 			put_string (eol)
 		end

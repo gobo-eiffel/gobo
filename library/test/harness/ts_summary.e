@@ -122,7 +122,7 @@ feature -- Output
 		require
 			a_test_not_void: a_test /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_writable
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("Test Summary for ")
 			a_file.put_string (a_test.name)
@@ -176,7 +176,7 @@ feature -- Output
 		require
 			not_successful: not is_successful
 			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_writable
+			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LIST_CURSOR [TS_RESULT]
 			a_result: TS_RESULT
@@ -197,7 +197,7 @@ feature -- Output
 			-- Print all results to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_writable
+			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LIST_CURSOR [TS_RESULT]
 		do

@@ -18,9 +18,8 @@ inherit
 	KI_CHARACTER_OUTPUT_STREAM
 		rename
 #ifdef SE
-			rename_file as se_rename_file,
+			rename_file as se_rename_file
 #endif
-			is_writable as is_open_write
 		end
 
 feature {NONE} -- Initialization

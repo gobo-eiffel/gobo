@@ -18,13 +18,13 @@ feature -- Output
 	put (v: G) is
 			-- Write `v' to output stream.
 		require
-			is_writable: is_writable
+			is_open_write: is_open_write
 		deferred
 		end
 
 feature -- Status report
 
-	is_writable: BOOLEAN is
+	is_open_write: BOOLEAN is
 			-- Can items be written to output stream?
 		deferred
 		end
