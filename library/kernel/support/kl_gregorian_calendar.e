@@ -140,6 +140,27 @@ feature -- Week day
 --		ensure
 --			definition: Result = (Saturday - Sunday + 1)
 
+	week_day_of_date (y, m, d: INTEGER): INTEGER is
+			-- Day of date (y,m,d) in current week
+		require
+			m_large_enough: m >= January
+			m_small_enough: m <= December
+			d_large_enough: d >= 1
+			d_small_enough: d <= days_in_month (m, y)
+		local
+			dd: INTEGER
+		do
+				-- 1 January 1970 is a Thursday.
+			dd := epoch_days (y, m, d) + 4 -- (Thursday - Sunday = 4)
+			if dd < 0 then
+				Result := Saturday - (-(dd + 1) \\ Days_in_week)
+			else
+				Result := Sunday + dd \\ Days_in_week
+			end
+		ensure
+			valid_day: Result >= Sunday and Result <= Saturday
+		end
+
 	next_day (d: INTEGER): INTEGER is
 			-- Week day after `d'
 		require
