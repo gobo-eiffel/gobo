@@ -63,6 +63,7 @@ feature -- Initialization
 			-- Reset parser before parsing next input.
 		do
 			precursor
+			Eiffel_buffer.set_end_of_file
 			class_keyword_found := False
 			last_classname := Void
 		end

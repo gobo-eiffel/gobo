@@ -84,13 +84,23 @@ feature -- Setting
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			end_of_file := False
+			end_of_file := a_file.end_of_input
 			flush
 			file := a_file
 		ensure
 			count_set: count = 0
 			file_set: file = a_file
 			beginning_of_line: beginning_of_line
+		end
+
+feature -- Status setting
+
+	set_end_of_file is
+			-- Set `end_of_file' to True.
+		do
+			end_of_file := True
+		ensure
+			end_of_file_set: end_of_file
 		end
 
 feature -- Element change

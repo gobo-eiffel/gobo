@@ -80,6 +80,7 @@ feature -- Initialization
 			-- Reset parser before parsing next input.
 		do
 			precursor
+			Eiffel_buffer.set_end_of_file
 			counters.wipe_out
 			last_keywords.wipe_out
 			last_symbols.wipe_out
