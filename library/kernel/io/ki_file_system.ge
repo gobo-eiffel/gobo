@@ -1,0 +1,134 @@
+indexing
+
+	description:
+
+		"Interface for file systems"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+deferred class KI_FILE_SYSTEM
+
+#ifdef SE
+inherit
+
+	ANY
+		rename
+			rename_file as se_rename_file
+		end
+
+#endif
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new file system object.
+		do
+		end
+
+feature -- Status report
+
+	is_file_readable (a_filename: STRING): BOOLEAN is
+			-- Can file named `a_filename' be opened
+			-- in read mode?
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		deferred
+		end
+
+	is_directory_readable (a_dirname: STRING): BOOLEAN is
+			-- Can directory named `a_dirname' be opened
+			-- in read mode?
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_dirname_not_empty: a_dirname.count > 0
+		deferred
+		end
+
+feature -- File operations
+
+	rename_file (old_name, new_name: STRING) is
+			-- Rename file named `old_name' as `new_name'.
+			-- Do nothing if the file could not be renamed
+			-- or if it did not exist. Overwrite file
+			-- `new_name' if it existed.
+		require
+			old_name_not_void: old_name /= Void
+			old_name_not_empty: old_name.count > 0
+			new_name_not_void: new_name /= Void
+			new_name_not_empty: new_name.count > 0
+		deferred
+		end
+
+	delete_file (a_filename: STRING) is
+			-- Delete file named `a_filename'.
+			-- Do nothing if the file could not be
+			-- deleted or if it did not exist.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		deferred
+		end
+
+feature -- Directory operations
+
+	create_directory (a_dirname: STRING) is
+			-- Create a new directory named `a_dirname'.
+			-- Do nothing if the directory could not
+			-- be created, if it already existed or if
+			-- `a_dirname' is a nested directory name
+			-- and the parent directory does not exist.
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_dirname_not_empty: a_dirname.count > 0
+		deferred
+		end
+
+	delete_directory (a_dirname: STRING) is
+			-- Delete directory named `a_dirname'.
+			-- Do nothing if the directory could not
+			-- be deleted, if it did not exist or if
+			-- it is not empty.
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_dirname_not_empty: a_dirname.count > 0
+		deferred
+		end
+
+	parent_directory (a_dirname: STRING): STRING is
+			-- Parent directory of `a_dirname';
+			-- Return Void if directory `a_dirname'
+			-- does not exist or if it is the root
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_dirname_not_empty: a_dirname.count > 0
+		deferred
+		end
+
+feature -- Working directory
+
+	current_working_directory: STRING is
+			-- Name of current working directory;
+			-- Return absolute pathname or an empty
+			-- string if it could not be computed
+		deferred
+		ensure
+			current_working_directory_not_void: Result /= Void
+		end
+
+	set_current_working_directory (a_dirname: STRING) is
+			-- Set current working directory to `a_dirname'.
+			-- Do nothing if the current working directory
+			-- could not be changed or if directory
+			-- `a_dirname' did not exist.
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_dirname_not_empty: a_dirname.count > 0
+		deferred
+		end
+
+end -- class KI_FILE_SYSTEM

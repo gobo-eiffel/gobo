@@ -1,0 +1,45 @@
+indexing
+
+	description:
+
+		"Standard files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_STANDARD_FILES
+
+feature -- Access
+
+	input: KL_STDIN_FILE is
+			-- Standard input file
+		once
+			!! Result.make
+		ensure
+			file_not_void: Result /= Void
+			file_open_read: Result.is_open_read
+		end
+
+	output: KL_STDOUT_FILE is
+			-- Standard output file
+		once
+			!! Result.make
+		ensure
+			file_not_void: Result /= Void
+			file_open_write: Result.is_open_write
+		end
+
+	error: KL_STDERR_FILE is
+			-- Standard error file
+		once
+			!! Result.make
+		ensure
+			file_not_void: Result /= Void
+			file_open_write: Result.is_open_write
+		end
+
+end -- class KL_STANDARD_FILES

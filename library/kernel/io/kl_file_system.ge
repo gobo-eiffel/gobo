@@ -1,0 +1,412 @@
+indexing
+
+	description:
+
+		"File systems"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_FILE_SYSTEM
+
+inherit
+
+	KI_FILE_SYSTEM
+#ifdef VE
+		redefine
+			make
+		end
+#endif
+
+#ifdef SE
+	FILE_TOOLS
+		rename
+			rename_file as se_rename_file
+		export
+			{NONE} all
+		end
+
+#endif
+#ifdef VE
+	FILE_SYSTEM
+		rename
+			make as ve_make,
+			rename_file as ve_rename_file
+		export
+			{NONE} all
+		end
+
+#endif
+creation
+
+	make
+
+#ifdef VE
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new file system object.
+		do
+			ve_make
+		end
+
+#endif
+feature -- Status report
+
+	is_file_readable (a_filename: STRING): BOOLEAN is
+			-- Can file named `a_filename' be opened
+			-- in read mode?
+		local
+			rescued: BOOLEAN
+#ifdef VE
+			a_file: KL_INPUT_FILE
+#endif
+		do
+			if not rescued then
+#ifdef SE
+				Result := is_readable (a_filename)
+#endif
+#ifdef ISE || HACT
+				file_impl.make (a_filename)
+				Result := file_impl.exists and then file_impl.is_readable
+#endif
+#ifdef VE
+				!! a_file.make (a_filename)
+				a_file.open_read
+				if a_file.is_open_read then
+					Result := True
+					a_file.close
+				end
+#endif
+			else
+				Result := False
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	is_directory_readable (a_dirname: STRING): BOOLEAN is
+			-- Can directory named `a_dirname' be opened
+			-- in read mode?
+		local
+			rescued: BOOLEAN
+#ifdef VE
+			a_dir: KL_DIRECTORY
+#endif
+		do
+			if not rescued then
+#ifdef SE
+				basic_directory.connect_to (a_dirname)
+				if basic_directory.is_connected then
+					Result := True
+					basic_directory.disconnect
+				end
+#endif
+#ifdef ISE || HACT
+				directory_impl.make (a_dirname)
+				Result := directory_impl.exists and then directory_impl.is_readable
+#endif
+#ifdef VE
+				!! a_dir.make (a_dirname)
+				a_dir.open_read
+				if a_dir.is_open_read then
+					Result := True
+					a_dir.close
+				end
+#endif
+			else
+				Result := False
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature -- File operations
+
+	rename_file (old_name, new_name: STRING) is
+			-- Rename file named `old_name' as `new_name'.
+			-- Do nothing if the file could not be renamed
+			-- or if it did not exist. Overwrite file
+			-- `new_name' if it existed.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				if file_exists (old_name) then
+					rename_to (old_name, new_name)
+				end
+#endif
+#ifdef ISE || HACT
+				file_impl.make (old_name)
+				if file_impl.exists then
+					file_impl.change_name (new_name)
+				end
+#endif
+#ifdef VE
+				if file_exists (old_name) then
+					if file_exists (new_name) then
+						remove_file (new_name)
+					end
+					ve_rename_file (old_name, new_name)
+				end
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	delete_file (a_filename: STRING) is
+			-- Delete file named `a_filename'.
+			-- Do nothing if the file could not be
+			-- deleted or if it did not exist.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				delete (a_filename)
+#endif
+#ifdef ISE || HACT
+				file_impl.make (a_filename)
+				if file_impl.exists then
+					file_impl.delete
+				end
+#endif
+#ifdef VE
+				remove_file (a_filename)
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature -- Directory operations
+
+	create_directory (a_dirname: STRING) is
+			-- Create a new directory named `a_dirname'.
+			-- Do nothing if the directory could not
+			-- be created, if it already existed or if
+			-- `a_dirname' is a nested directory name
+			-- and the parent directory does not exist.
+		local
+			rescued: BOOLEAN
+#ifdef SE
+			b: BOOLEAN
+#endif
+		do
+			if not rescued then
+#ifdef SE
+				b := basic_directory.create_new_directory (a_dirname)
+#endif
+#ifdef ISE || HACT
+				directory_impl.make (a_dirname)
+				if not directory_impl.exists then
+					directory_impl.create_dir
+				end
+#endif
+#ifdef VE
+				add_cluster (a_dirname, "")
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	delete_directory (a_dirname: STRING) is
+			-- Delete directory named `a_dirname'.
+			-- Do nothing if the directory could not
+			-- be deleted, if it did not exist or if
+			-- it is not empty.
+		local
+			rescued: BOOLEAN
+#ifdef SE
+			b: BOOLEAN
+#endif
+		do
+			if not rescued then
+#ifdef SE
+				b := basic_directory.remove_directory (a_dirname)
+#endif
+#ifdef ISE || HACT
+				directory_impl.make (a_dirname)
+#ifdef ISE
+				if directory_impl.exists and then directory_impl.is_empty then
+#else
+				if directory_impl.exists and then directory_impl.empty then
+#endif
+					directory_impl.delete
+				end
+#endif
+#ifdef VE
+				remove_cluster (a_dirname)
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	parent_directory (a_dirname: STRING): STRING is
+			-- Parent directory of `a_dirname';
+			-- Return Void if directory `a_dirname'
+			-- does not exist or if it is the root
+		local
+			rescued: BOOLEAN
+#ifdef VE
+			a_dir: DIRECTORY
+#else
+			old_dir: STRING
+			full_name: STRING
+#endif
+		do
+			if not rescued then
+#ifdef VE
+				!! a_dir.make (a_dirname)
+				if a_dir.exists then
+					Result := a_dir.parent
+				end
+#else
+				if is_directory_readable (a_dirname) then
+					old_dir := current_working_directory
+					set_current_working_directory (a_dirname)
+					full_name := current_working_directory
+					set_current_working_directory ("..")
+					Result := current_working_directory
+					if Result.is_equal (full_name) then
+						Result := Void
+					end
+					set_current_working_directory (old_dir)
+				end
+#endif
+			else
+				Result := Void
+#ifndef VE
+				if old_dir /= Void then
+					set_current_working_directory (old_dir)
+				end
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature -- Working directory
+
+	current_working_directory: STRING is
+			-- Name of current working directory;
+			-- Return absolute pathname or an empty
+			-- string if it could not be computed
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				basic_directory.connect_to_current_working_directory
+				Result := clone (basic_directory.last_entry)
+				basic_directory.disconnect
+#endif
+#ifdef ISE || HACT
+				Result := execution_environment.current_working_directory
+				if Result = Void then
+					Result := ""
+				end
+#endif
+#ifdef VE
+				Result := current_cluster
+#endif
+			else
+				Result := ""
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	set_current_working_directory (a_dirname: STRING) is
+			-- Set current working directory to `a_dirname'.
+			-- Do nothing if the current working directory
+			-- could not be changed or if directory
+			-- `a_dirname' did not exist.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				basic_directory.change_current_working_directory (a_dirname)
+#endif
+#ifdef ISE || HACT
+				execution_environment.change_working_directory (a_dirname)
+#endif
+#ifdef VE
+				if cluster_exists (a_dirname) then
+					change_cluster (a_dirname)
+				end
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature {NONE} -- Implementation
+
+#ifdef SE
+	basic_directory: BASIC_DIRECTORY
+			-- Implementation
+#endif
+#ifdef ISE || HACT
+	file_impl: PLAIN_TEXT_FILE is
+			-- File implementation
+		once
+			!! Result.make ("dummy")
+		ensure
+			file_impl_not_void: Result /= Void
+		end
+
+	directory_impl: DIRECTORY is
+			-- Directory implementation
+		once
+			!! Result.make ("dummy")
+		ensure
+			directory_impl_not_void: Result /= Void
+		end
+
+	execution_environment: EXECUTION_ENVIRONMENT is
+			-- Execution environment implementation
+		once
+			!! Result
+		ensure
+			execution_environment_not_void: Result /= Void
+		end
+#endif
+
+end -- class KL_FILE_SYSTEM

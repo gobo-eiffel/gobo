@@ -1,0 +1,157 @@
+indexing
+
+	description:
+
+		"Standard error files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_STDERR_FILE
+
+inherit
+
+	KI_CHARACTER_OUTPUT_STREAM
+		rename
+			is_writable as is_open_write
+		undefine
+			put_integer
+#ifdef VE
+		redefine
+			put_boolean
+#endif
+		end
+
+#ifdef ISE || HACT
+	CONSOLE
+		rename
+			make as old_make,
+			put_boolean as old_put_boolean
+		export
+			{NONE} all
+		end
+#endif
+#ifdef SE
+	STD_ERROR
+		rename
+			make as se_make,
+			is_connected as is_open_write,
+			put_boolean as se_put_boolean
+		export
+			{NONE} all
+		end
+#endif
+#ifdef VE
+	FILE
+		rename
+			make as ve_make,
+			put_character as ve_put_character,
+			put_string as ve_put_string,
+			put_boolean as ve_put_boolean
+		export
+			{NONE} all
+		end
+
+	FILE_SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+#endif
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new standard error file.
+		do
+#ifdef ISE || HACT
+			make_open_stderr ("stderr")
+#endif
+#ifdef SE
+			name := "stderr"
+			se_make
+#endif
+#ifdef VE
+			make_open_stderr
+			name := "stderr"
+#endif
+		ensure
+			name_set: name.is_equal ("stderr")
+			is_open_write: is_open_write
+		end
+
+#ifdef SE
+feature -- Access
+
+	name: STRING
+			-- File name
+
+#endif
+#ifdef VE
+feature -- Output
+
+	put_character (c: CHARACTER) is
+			-- Write `c' to standard error file.
+		do
+			if directory_separator = '\' and then c = '%N' then
+					-- Windows.
+				ve_put_character ('%R')
+			end
+			ve_put_character (c)
+		end
+
+	put_string (a_string: STRING) is
+			-- Write `a_string' to standard error file.
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			if directory_separator = '\' then
+					-- Windows.
+				nb := a_string.count
+				from i := 1 until i > nb loop
+					c := a_string.item (i)
+					if c = '%N' then
+						ve_put_character ('%R')
+					end
+					ve_put_character (c)
+					i := i + 1
+				end
+			else
+				ve_put_string (a_string)
+			end
+		end
+
+	put_boolean (b: BOOLEAN) is
+			-- Write "True" to standard output file
+			-- if `b' is true, "False" otherwise.
+		do
+			if b then
+				ve_put_string (True_constant)
+			else
+				ve_put_string (False_constant)
+			end
+		end
+
+	put_new_line is
+			-- Write a new line to standard error file.
+		do
+			put_character ('%N')
+		end
+
+feature -- Basic operations
+
+	flush is
+			-- Flush buffered data to disk.
+		do
+		end
+
+#endif
+end -- class KL_STDERR_FILE

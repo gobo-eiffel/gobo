@@ -1,0 +1,479 @@
+indexing
+
+	description:
+
+		"Input files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_INPUT_FILE
+
+inherit
+
+	KI_INPUT_FILE
+		redefine
+#ifdef ISE
+			read_to_string,
+#endif
+			read_to_buffer
+		end
+
+#ifdef ISE
+	PLAIN_TEXT_FILE
+		rename
+			read_stream as ise_read_stream,
+			make as ise_make,
+			open_read as ise_open_read,
+			read_line as ise_read_line,
+			close as do_close,
+			delete as do_delete
+		export
+			{NONE} all
+		redefine
+			file_readable
+		end
+#endif
+#ifdef HACT
+	PLAIN_TEXT_FILE
+		rename
+			read_stream as hact_read_stream,
+			make as hact_make,
+			open_read as hact_open_read,
+			read_line as hact_read_line,
+			close as do_close,
+			delete as do_delete
+		export
+			{NONE} all
+		redefine
+			file_readable
+		end
+#endif
+#ifdef SE
+	STD_FILE_READ
+		rename
+			make as se_make,
+			is_connected as is_open_read,
+			rename_file as se_rename_file,
+			end_of_input as end_of_file,
+			read_line as se_read_line,
+			disconnect as do_close
+		export
+			{NONE} all
+		redefine
+			last_string
+		end
+
+	FILE_TOOLS
+		rename
+			rename_file as se_rename_file,
+			delete as se_delete,
+			tmp_string as ft_tmp_string
+		export
+			{NONE} all
+		end
+#endif
+#ifdef VE
+	FILE
+		rename
+			make as ve_make,
+			read_stream as ve_read_stream,
+			read_character as ve_read_character,
+			open_read as ve_open_read,
+			read_line as ve_read_line,
+			close as do_close,
+			delete as do_delete
+		export
+			{NONE} all
+		end
+
+	FILE_SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+#endif
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name) is
+			-- Create a new input file named `a_name'.
+		do
+#ifdef ISE || HACT
+			name := a_name
+			mode := Closed_file
+#endif
+#ifdef SE
+			name := a_name
+			se_make
+#endif
+#ifdef VE
+			ve_make (a_name)
+#endif
+		end
+
+#ifdef SE
+feature -- Access
+
+	name: STRING
+			-- File name
+
+	last_string: STRING
+			-- Last string read
+			-- (Note: this query always return the same object.
+			-- Therefore a clone should be used if the result
+			-- is to be kept beyond the next call to this feature.
+			-- However `last_string' is not shared between file objects.)
+
+feature -- Status report
+
+	is_closed: BOOLEAN is
+			-- Is file closed?
+		do
+			Result := not is_open_read
+		end
+
+#endif
+feature -- Input
+
+#ifdef VE
+	read_character is
+			-- Read the next character in input stream.
+			-- Make the result available in `last_character'.
+		do
+			if directory_separator = '\' then
+					-- Windows.
+				read_character_into_buffer
+				if has_buffered_character then
+					has_buffered_character := False
+					if buffered_character = '%R' then
+						read_character_into_buffer
+						if has_buffered_character and then buffered_character = '%N' then
+							last_character := '%N'
+							has_buffered_character := False
+						else
+							last_character := '%R'
+						end
+					else
+						last_character := buffered_character
+					end
+				end
+			else
+				ve_read_character
+			end
+		end
+
+#endif
+	read_string (nb: INTEGER) is
+			-- Read at most `nb' characters from input stream.
+			-- Make the characters that have actually been read
+			-- available in `last_string'.
+#ifdef ISE || HACT
+		do
+			if last_string = Void then
+				!! last_string.make (nb)
+			elseif last_string.capacity < nb then
+				last_string.resize (nb)
+			end
+#endif
+#ifdef ISE
+			ise_read_stream (nb)
+#endif
+#ifdef HACT
+			hact_read_stream (nb)
+#endif
+#ifdef SE
+		local
+			i: INTEGER
+			a_target: STRING
+		do
+			if last_string = Void then
+				!! a_target.make (nb)
+				last_string := a_target
+			else
+				a_target := last_string
+				if a_target.capacity < nb then
+					a_target.resize (nb)
+				end
+				a_target.clear
+			end
+			from i := nb until i < 1 loop
+				read_character
+				if not end_of_file then
+					a_target.append_character (last_character)
+					i := i - 1
+				else
+					i := 0 -- Jump out of the loop.
+				end
+			end
+#endif
+#ifdef VE
+		local
+			old_string: STRING
+			i: INTEGER
+			c: CHARACTER
+			has_carriage: BOOLEAN
+		do
+			if directory_separator = '\' then
+					-- Windows.
+				if last_string = Void then
+					!! last_string.make (0)
+				else
+					last_string.wipe_out
+				end
+				from i := nb until i < 1 loop
+					ve_read_character
+					if not end_of_file then
+						c := last_character
+						inspect c
+						when '%R' then
+							has_carriage := True
+						when '%N' then
+							last_string.append_character ('%N')
+							has_carriage := False
+							i := i - 1
+						else
+							if has_carriage then
+								last_string.append_character ('%R')
+								has_carriage := False
+							end
+							last_string.append_character (c)
+							i := i - 1
+						end
+					else
+						i := 0 -- Jump out of the loop.
+					end
+				end
+			else
+				old_string := last_string
+				ve_read_stream (nb)
+				if last_string = Void then
+					if old_string /= Void then
+						old_string.wipe_out
+						last_string := old_string
+					else
+						!! last_string.make (0)
+					end
+				end
+				EOF := (last_string.count < nb)
+			end
+#endif
+		end
+
+	read_line is
+			-- Read characters from input stream until '%N', '%R%N'
+			-- or end of file is reached. Make the characters that
+			-- have been read available in `last_string' and discard
+			-- the characters '%N' or '%R%N' from the input stream.
+		local
+			done: BOOLEAN
+			a_target: STRING
+			c: CHARACTER
+			has_carriage: BOOLEAN
+		do
+			if last_string = Void then
+#ifdef VE
+				!! last_string.make (0)
+#else
+				!! last_string.make (256)
+#endif
+			else
+#ifdef ISE
+				last_string.clear_all
+#endif
+#ifdef SE
+				last_string.clear
+#endif
+#ifdef HACT
+				last_string.set_count (0)
+#endif
+#ifdef VE
+				last_string.wipe_out
+#endif
+			end
+			a_target := last_string
+			from until done loop
+				read_character
+				if end_of_file then
+					done := True
+				else
+					c := last_character
+					inspect c
+					when '%N' then
+						done := True
+					when '%R' then
+						has_carriage := True
+					else
+						if has_carriage then
+							last_string.append_character ('%R')
+							has_carriage := False
+						end
+						last_string.append_character (c)
+					end
+				end
+			end
+		end
+
+#ifdef ISE
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with
+			-- at most `nb' characters read from input stream.
+			-- Return the number of characters actually read.
+		local
+			str_area: ANY
+		do
+			str_area := a_string.area
+			Result := file_gss (file_pointer, c_rtid ($str_area) + (pos - 1), nb)
+		end
+
+#endif
+
+	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_buffer', starting at position `pos', with
+			-- at most `nb' characters read from input stream.
+			-- Return the number of characters actually read.
+		local
+			char_buffer: KL_CHARACTER_BUFFER
+		do
+			char_buffer ?= a_buffer
+			if char_buffer /= Void then
+				Result := char_buffer.fill_from_stream (Current, pos, nb)
+			else
+				Result := precursor (a_buffer, pos, nb)
+			end
+		end
+
+feature -- Basic operations
+
+	open_read is
+			-- Open current file in read-only mode if
+			-- it can be opened, let it closed otherwise.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef ISE
+				ise_open_read
+#endif
+#ifdef HACT
+				hact_open_read
+#endif
+#ifdef SE
+				connect_to (name)
+#endif
+#ifdef VE
+				ve_open_read
+#endif
+			elseif not is_closed then
+				close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	close is
+			-- Close current file if it is closable,
+			-- let it open otherwise.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				do_close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	rename_file (new_name: STRING) is
+			-- Rename current file as `new_name'.
+			-- Do nothing if the file could not be renamed
+			-- or if it did not exist. Overwrite file
+			-- `new_name' if it existed. If renaming was
+			-- successful, then `name' is set to `new_name'.
+		local
+			rescued: BOOLEAN
+			old_name: STRING
+		do
+			if not rescued then
+				old_name := name
+#ifdef SE
+				if file_exists (name) then
+					rename_to (name, new_name)
+					if file_exists (new_name) then
+						name := new_name
+					end
+				end
+#endif
+#ifdef ISE || HACT || VE
+				if exists then
+					change_name (new_name)
+				end
+#endif
+			else
+				name := old_name
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	delete is
+			-- Delete current file.
+			-- Do nothing if the file could not be
+			-- deleted or if it did not exist.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				se_delete (name)
+#endif
+#ifdef ISE || HACT || VE
+				if exists then
+					do_delete
+				end
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+#ifdef ISE || HACT
+feature {NONE} -- Implementation
+
+	file_readable: BOOLEAN is
+			-- Is there a current item that may be read?
+		do
+			Result := is_open_read
+		end
+
+#ifdef ISE
+	c_rtid (p: POINTER): POINTER is
+			-- Return `p'
+		external
+			"C [macro <eif_macros.h>]"
+		alias
+			"/**/"
+		end
+
+#endif
+#endif
+end -- class KL_INPUT_FILE

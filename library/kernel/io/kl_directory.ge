@@ -1,0 +1,295 @@
+indexing
+
+	description:
+
+		"Filesystem's directories"
+
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_DIRECTORY
+
+inherit
+
+	KI_DIRECTORY
+
+#ifdef ISE || HACT
+	DIRECTORY
+		rename
+			make as ise_make,
+			open_read as ise_open_read,
+			close as do_close,
+			delete as do_delete
+		export
+			{NONE} all
+		end
+#endif
+#ifdef VE
+	DIRECTORY_INPUT_STREAM
+		rename
+			make as ve_make,
+			close as do_close
+		export
+			{NONE} all
+		end
+#endif
+#ifdef SE
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+#endif
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: STRING) is
+			-- Create a new directory object.
+#ifdef ISE || HACT
+		do
+			ise_make (a_name)
+#endif
+#ifdef SE
+		do
+			name := a_name
+#endif
+#ifdef VE
+		local
+			rescued: BOOLEAN
+			a_dir: DIRECTORY
+		do
+			if not rescued then
+				name := a_name
+				!! a_dir.make (a_name)
+				ve_make (a_dir)
+				if not is_closed then
+					do_close
+				end
+			else
+				name := a_name
+				!! directory.make (a_name)
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+#endif
+		end
+
+feature -- Access
+
+#ifdef SE || VE
+	name: STRING
+			-- Directory name
+
+#endif
+	last_entry: STRING is
+			-- Last entry (file or subdirectory name) read
+			-- (Note: this query returns the new object after
+			-- each call to `read_entry'.)
+		do
+#ifdef ISE || HACT
+			Result := lastentry
+#endif
+#ifdef SE
+			Result := clone (basic_directory.last_entry)
+#endif
+#ifdef VE
+			Result := last_string
+#endif
+		end
+
+feature -- Status report
+
+	is_open_read: BOOLEAN is
+			-- Has directory been opened in read mode?
+		do
+#ifdef ISE || HACT || VE
+			Result := not is_closed
+#endif
+#ifdef SE
+			Result := basic_directory.is_connected
+#endif
+		end
+
+#ifdef SE
+	is_closed: BOOLEAN is
+			-- Is directory closed?
+		do
+			Result := not basic_directory.is_connected
+		end
+
+#endif
+	end_of_input: BOOLEAN is
+			-- Have all entries been read?
+		do
+#ifdef ISE || HACT
+			Result := (lastentry = Void)
+#endif
+#ifdef SE
+			Result := basic_directory.end_of_input
+#endif
+#ifdef VE
+			Result := is_exhausted
+#endif
+		end
+
+feature -- Basic operations
+
+	open_read is
+			-- Try to open directory in read mode.  Set `is_open_read'
+			-- to true and is ready to read first entry in directory
+			-- if operation was successful.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				if exists and then is_readable then
+					ise_open_read
+					if directory_pointer = default_pointer then
+						mode := Close_directory
+					else
+						lastentry := Dummy_entry
+					end
+				end
+#endif
+#ifdef SE
+				basic_directory.connect_to (name)
+#endif
+#ifdef VE
+				is_exhausted := False
+				ve_make (directory)
+#endif
+			elseif not is_closed then
+				close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	close is
+			-- Close directory if it is closable,
+			-- let it open otherwise.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				basic_directory.disconnect
+#else
+				do_close
+#ifdef ISE || HACT 
+				lastentry := Void
+#endif
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	create_directory is
+			-- Create current directory on disk.
+			-- Do nothing if the directory could not
+			-- be created, if it already existed or if
+			-- `name' is a nested directory name and
+			-- the parent directory does not exist.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				file_system.create_directory (name)
+#endif
+#ifdef ISE || HACT
+				if not exists then
+					create_dir
+				end
+#endif
+#ifdef VE
+				directory.originate
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	delete is
+			-- Delete current directory.
+			-- Do nothing if the directory could not
+			-- be deleted, if it did not exist or if
+			-- it is not empty.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef SE
+				file_system.delete_directory (name)
+#endif
+#ifdef VE
+				directory.delete
+#endif
+#ifdef ISE || HACT
+#ifdef ISE
+				if exists and then is_empty then
+#else
+				if exists and then empty then
+#endif
+					do_delete
+				end
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature -- Cursor movement
+
+	read_entry is
+			-- Read next entry in directory.
+			-- Make result available in `last_entry'.
+		do
+#ifdef ISE || HACT
+			readentry
+#endif
+#ifdef SE
+			basic_directory.read_entry
+#endif
+#ifdef VE
+			read_line
+#endif
+		end
+
+#ifdef SE || ISE || HACT
+feature {NONE} -- Implementation
+
+#ifdef SE
+	basic_directory: BASIC_DIRECTORY
+			-- Internal data
+#endif
+#ifdef ISE || HACT
+	Dummy_entry: STRING is ""
+			-- Dummy entry name
+#endif
+
+#endif
+end -- class KL_DIRECTORY

@@ -1,0 +1,294 @@
+indexing
+
+	description:
+
+		"Character buffers"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_CHARACTER_BUFFER
+
+inherit
+
+	KI_CHARACTER_BUFFER
+		redefine
+#ifdef ISE
+			append_substring_to_string,
+#endif
+			fill_from_string, fill_from_stream,
+			move_left, move_right
+		end
+
+#ifdef ISE
+	STRING_HANDLER
+#endif
+creation
+
+	make, make_from_string
+
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Create a new character buffer being able
+			-- to contain `n' characters.
+		do
+#ifdef ISE
+			!! area_string.make (n + 1)
+			area_string.set_count (n + 1)
+			area := area_string.area
+#endif
+#ifdef VE
+			!! area.make (n)
+#endif
+#ifdef SE
+			!! area.blank (n)
+#endif
+#ifdef HACT
+			!! area.make (n)
+			area.fill_blank
+#endif
+		end
+
+feature -- Access
+
+	item (i: INTEGER): CHARACTER is
+			-- Item at position `i'
+		do
+			Result := area.item (i)
+		end
+
+	substring (s, e: INTEGER): STRING is
+			-- New string made up of characters held in
+			-- buffer between indexes `s' and `e'
+#ifdef ISE
+		local
+			a: ANY
+			nb: INTEGER
+			p: POINTER
+#endif
+		do
+			if e < s then
+					-- Empty string
+				!! Result.make (0)
+			else
+#ifdef ISE
+				nb := e - s + 1
+				!! Result.make (nb)
+				a := Result.area
+				p := c_rtid ($a)
+				p.memory_copy (c_rtid ($area) + s, nb)
+				Result.set_count (nb)
+#else
+				Result := area.substring (s, e)
+#endif
+			end
+		end
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of characters in buffer
+		do
+#ifdef ISE
+			Result := area_string.count - 1
+#else
+			Result := area.count
+#endif
+		end
+
+feature -- Element change
+
+	put (v: CHARACTER; i: INTEGER) is
+			-- Replace character at position `i' by `v'.
+		do
+			area.put (v, i)
+		end
+
+#ifdef ISE
+	append_substring_to_string (s, e: INTEGER; a_string: STRING) is
+			-- Append string made up of characters held in buffer
+			-- between indexes `s' and `e' to `a_string'.
+		local
+			nb, old_count, new_count: INTEGER
+			a: ANY
+			p: POINTER
+		do
+			if s <= e then
+				nb := e - s + 1
+				old_count := a_string.count
+				new_count := old_count + nb
+				if new_count > a_string.capacity then
+					a_string.resize (new_count + a_string.additional_space)
+				end
+				a := a_string.area
+				p := c_rtid ($a) + old_count
+				p.memory_move (c_rtid ($area) + s, nb)
+				a_string.set_count (new_count)
+			end
+		end
+
+#endif
+	fill_from_string (a_string: STRING; pos: INTEGER) is
+			-- Copy characters of `a_string' to buffer
+			-- starting at position `pos'.
+		local
+			nb: INTEGER
+#ifdef ISE
+			a: ANY
+			p: POINTER
+#else
+			i, j: INTEGER
+#endif
+		do
+			nb := a_string.count
+			if nb > 0 then
+#ifdef ISE
+				a := a_string.area
+				p := c_rtid ($area) + pos
+				p.memory_copy ($a, nb)
+#else
+				j := pos
+				from i := 1 until i > nb loop
+					area.put (a_string.item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+#endif
+			end
+		end
+
+	fill_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER): INTEGER is
+			-- Fill buffer, starting at position `pos', with
+			-- at most `nb' characters read from `a_stream'.
+			-- Return the number of characters actually read.
+		do
+#ifdef ISE
+			Result := a_stream.read_to_string (area_string, pos + 1, nb)
+#else
+			Result := a_stream.read_to_string (area, pos, nb)
+#endif
+		end
+
+	move_left (old_pos, new_pos: INTEGER; nb: INTEGER) is
+			-- Copy `nb' characters from `old_pos' to
+			-- `new_pos' in buffer.
+#ifndef ISE
+		local
+			i, j, nb2: INTEGER
+#endif
+		do
+			if nb > 0 then
+#ifdef ISE
+				(c_rtid ($area) + new_pos).memory_move (c_rtid ($area) + old_pos, nb)
+#else
+				j := new_pos
+				nb2 := old_pos + nb - 1
+				from i := old_pos until i > nb2 loop
+					area.put (area.item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+#endif
+			end
+		end
+
+	move_right (old_pos, new_pos: INTEGER; nb: INTEGER) is
+			-- Copy `nb' characters from `old_pos' to
+			-- `new_pos' in buffer.
+#ifndef ISE
+		local
+			i, j: INTEGER
+#endif
+		do
+			if nb > 0 then
+#ifdef ISE
+				(c_rtid ($area) + new_pos).memory_move (c_rtid ($area) + old_pos, nb)
+#else
+				j := new_pos + nb - 1
+				from i := old_pos + nb - 1 until i < old_pos loop
+					area.put (area.item (i), j)
+					j := j - 1
+					i := i - 1
+				end
+#endif
+			end
+		end
+
+feature -- Resizing
+
+	resize (n: INTEGER) is
+			-- Resize buffer so that it contains `n' characters.
+			-- Do not lose any previously entered characters.
+#ifdef VE
+		do
+			area.resize (n)
+#endif
+#ifdef SE
+		local
+			i: INTEGER
+		do
+			from
+				i := n - count
+			until
+				i = 0
+			loop
+				area.append_character ('#')
+				i := i - 1
+			end
+#endif
+#ifdef ISE
+		do
+			area_string.resize (n + 1)
+			area_string.set_count (n + 1)
+			area := area_string.area
+#endif
+#ifdef HACT
+		local
+			i: INTEGER
+		do
+			from
+				i := n - count
+				area.resize (n)
+			until
+				i = 0
+			loop
+				area.append_character ('#')
+				i := i - 1
+			end
+#endif
+		end
+
+feature {NONE} -- Implementation
+
+#ifdef ISE
+	area: SPECIAL [CHARACTER]
+	area_string: STRING
+#else
+	area: STRING
+#endif
+			-- Implementation
+
+#ifdef ISE
+	c_rtid (p: POINTER): POINTER is
+			-- Return `p'
+		external
+			"C [macro <eif_macros.h>]"
+		alias
+			"/**/"
+		end
+
+#endif
+invariant
+
+	area_not_void: area /= Void
+#ifdef ISE
+	area_string_not_void: area_string /= Void
+	area_definition: area = area_string.area
+#endif
+
+end -- class KL_CHARACTER_BUFFER

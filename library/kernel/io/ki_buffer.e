@@ -1,0 +1,125 @@
+indexing
+
+	description:
+
+		"Interface for buffers"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+deferred class KI_BUFFER [G]
+
+feature -- Access
+
+	item (i: INTEGER): G is
+			-- Item at position `i'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		deferred
+		end
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items in buffer
+		deferred
+		ensure
+			count_positive: Result >= 0
+		end
+
+feature -- Element change
+
+	put (v: G; i: INTEGER) is
+			-- Replace item at position `i' by `v'.
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		deferred
+		ensure
+			inserted: item (i) = v
+		end
+
+	fill_from_stream (a_stream: KI_INPUT_STREAM [G]; pos, nb: INTEGER): INTEGER is
+			-- Fill buffer, starting at position `pos', with
+			-- at most `nb' items read from `a_stream'.
+			-- Return the number of items actually read.
+		require
+			a_stream_not_void: a_stream /= Void
+			a_stream_open_read: a_stream.is_readable
+			not_end_of_input: not a_stream.end_of_input
+			pos_large_enough: pos >= 1
+			nb_large_enough: nb >= 0
+			enough_space: (pos + nb - 1) <= count
+		do
+			Result := a_stream.read_to_buffer (Current, pos, nb)
+		ensure
+			nb_item_read_large_enough: Result >= 0
+			nb_item_read_small_enough: Result <= nb
+			not_end_of_input: not a_stream.end_of_input implies Result = nb
+		end
+
+	move_left (old_pos, new_pos: INTEGER; nb: INTEGER) is
+			-- Copy `nb' items from `old_pos' to
+			-- `new_pos' in buffer.
+		require
+			nb_positive: nb >= 0
+			old_pos_large_enough: old_pos >= 1
+			enough_characters: (old_pos + nb - 1) <= count
+			new_pos_large_enough: new_pos >= 1
+			enough_space: (new_pos + nb - 1) <= count
+			move_left: old_pos > new_pos
+		local
+			i, j, nb2: INTEGER
+		do
+			if nb > 0 then
+				j := new_pos
+				nb2 := old_pos + nb - 1
+				from i := old_pos until i > nb2 loop
+					put (item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+			end
+		end
+
+	move_right (old_pos, new_pos: INTEGER; nb: INTEGER) is
+			-- Copy `nb' items from `old_pos' to
+			-- `new_pos' in buffer.
+		require
+			nb_positive: nb >= 0
+			old_pos_large_enough: old_pos >= 1
+			enough_characters: (old_pos + nb - 1) <= count
+			new_pos_large_enough: new_pos >= 1
+			enough_space: (new_pos + nb - 1) <= count
+			move_right: old_pos < new_pos
+		local
+			i, j: INTEGER
+		do
+			if nb > 0 then
+				j := new_pos + nb - 1
+				from i := old_pos + nb - 1 until i < old_pos loop
+					put (item (i), j)
+					j := j - 1
+					i := i - 1
+				end
+			end
+		end
+
+feature -- Resizing
+
+	resize (n: INTEGER) is
+			-- Resize buffer so that it contains `n' items.
+			-- Do not lose any previously entered items.
+		require
+			n_large_enough: n >= count
+		deferred
+		ensure
+			count_set: count = n
+		end
+
+end -- class KI_BUFFER

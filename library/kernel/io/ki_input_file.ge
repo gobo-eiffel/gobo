@@ -1,0 +1,114 @@
+indexing
+
+	description:
+
+		"Interface for input files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+deferred class KI_INPUT_FILE
+
+inherit
+
+	KI_CHARACTER_INPUT_STREAM
+		rename
+#ifdef SE
+			rename_file as se_rename_file,
+#endif
+			end_of_input as end_of_file,
+			is_readable as is_open_read
+		redefine
+			read_string, read_to_string
+		end
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name) is
+			-- Create a new input file named `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		deferred
+		ensure
+			name_set: name = a_name
+			is_closed: is_closed
+		end
+
+feature -- Status report
+
+	is_closed: BOOLEAN is
+			-- Is file closed?
+		deferred
+		ensure
+			definition: Result = not is_open_read
+		end
+
+feature -- Input
+
+	read_string (nb: INTEGER) is
+			-- Read at most `nb' characters from input stream.
+			-- Make the characters that have actually been read
+			-- available in `last_string'.
+		deferred
+		ensure then
+			last_string_count_large_enough: not end_of_file implies last_string.count = nb
+		end
+
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos', with
+			-- at most `nb' characters read from input stream.
+			-- Return the number of characters actually read.
+		do
+			Result := precursor (a_string, pos, nb)
+		ensure then
+			not_end_of_input: not end_of_file implies Result = nb
+		end
+
+feature -- Basic operations
+
+	open_read is
+			-- Open current file in read-only mode if
+			-- it can be opened, let it closed otherwise.
+		require
+			is_closed: is_closed
+		deferred
+		ensure
+			not_eof: is_open_read implies not end_of_file
+		end
+
+	close is
+			-- Close current file if it is closable,
+			-- let it open otherwise.
+		require
+			is_open: is_open_read
+		deferred
+		end
+
+	rename_file (new_name: STRING) is
+			-- Rename current file as `new_name'.
+			-- Do nothing if the file could not be renamed
+			-- or if it did not exist. Overwrite file
+			-- `new_name' if it existed. If renaming was
+			-- successful, then `name' is set to `new_name'.
+		require
+			is_closed: is_closed
+			new_name_not_void: new_name /= Void
+			new_name_not_empty: new_name.count > 0
+		deferred
+		end
+
+	delete is
+			-- Delete current file.
+			-- Do nothing if the file could not be
+			-- deleted or if it did not exist.
+		require
+			is_closed: is_closed
+		deferred
+		end
+
+end -- class KI_INPUT_FILE
