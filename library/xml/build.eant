@@ -29,8 +29,6 @@
 			Generate Eiffel files from .ge files.
 		</description>
 
-		<geant target="xf_scanner"/>
-		<geant target="xf_parser"/>
 		<geant target="xf_full_scanner"/>
 		<geant target="xf_full_parser"/>
 		<geant target="install_api"/>
@@ -51,22 +49,14 @@
 		</description>
 
 		<geant target="clean"/>
-		<delete file="impl/eiffel/event/xf_scanner.e"/>
-		<delete file="impl/eiffel/event/xf_parser.e"/>
-		<delete file="impl/eiffel/event/xf_tokens.e"/>
+		<delete file="parser/eiffel/xf_full_scanner.e"/>
+		<delete file="parser/eiffel/xf_full_parser.e"/>
+		<delete file="parser/eiffel/xf_parser_tokens.e"/>
 		<delete directory="impl/expat/spec"/>
 	</target>
 
 
 <!-- Implementation -->
-
-	<target name="xf_scanner" dir="impl/eiffel/event">
-		<gelex input="xf_scanner.l"/>
-	</target>
-
-	<target name="xf_parser" dir="impl/eiffel/event">
-		<geyacc input="xf_parser.y" tokens="XF_TOKENS" output="xf_parser.e"/>
-	</target>
 
 	<target name="xf_full_scanner" dir="parser/eiffel">
 		<gelex input="xf_full_scanner.l" output="xf_full_scanner.e"/>
