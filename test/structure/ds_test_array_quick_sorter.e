@@ -21,7 +21,7 @@ feature -- Test
 	test_make is
 			-- Test feature `make'.
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
 		do
 			!! a_comparator.make
@@ -34,7 +34,7 @@ feature -- Test
 	test_sorted is
 			-- Test feature `sorted'.
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 		do
@@ -50,7 +50,7 @@ feature -- Test
 	test_reverse_sorted is
 			-- Test feature `reverse_sorted'.
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 		do
@@ -66,7 +66,7 @@ feature -- Test
 	test_sort is
 			-- Test feature `sort'.
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 			an_array: ARRAY [INTEGER]
@@ -101,7 +101,7 @@ feature -- Test
 	test_reverse_sort is
 			-- Test feature `reverse_sort'.
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 			an_array: ARRAY [INTEGER]
