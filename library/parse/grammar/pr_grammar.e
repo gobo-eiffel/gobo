@@ -306,9 +306,9 @@ feature -- Processing
 			old_tokens := clone (tokens)
 			old_rules := clone (rules)
 			reduce (error_handler)
-			useless_variables := variables.count - old_variables.count
-			useless_tokens := tokens.count - old_tokens.count
-			useless_rules := rules.count - old_rules.count
+			useless_variables := old_variables.count - variables.count
+			useless_tokens := old_tokens.count - tokens.count
+			useless_rules := old_rules.count - rules.count
 			if useless_variables > 0 then
 				a_file.put_string ("Useless nonterminals:%N%N")
 				nb := old_variables.count
