@@ -470,17 +470,16 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		do
 			do_nothing -- `compile_stylesheet' is used instead
 		end
 
-	compile_stylesheet (a_configuration: XM_XSLT_CONFIGURATION; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+	compile_stylesheet (a_configuration: XM_XSLT_CONFIGURATION) is
+			-- Compile `Current' to an excutable instruction.
 		require
 			configuration_not_void: a_configuration /= Void
-			compile_to_eiffel_not_supported: not compile_to_eiffel
 		local
 			an_executable: XM_XSLT_EXECUTABLE
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
@@ -498,16 +497,14 @@ feature -- Element change
 			until
 				any_compile_errors or else a_cursor.after
 			loop
-				a_cursor.item.compile (an_executable, compile_to_eiffel)
-				if not compile_to_eiffel then
-					if a_cursor.item.any_compile_errors then
-						any_compile_errors := True -- this shouldn't happen
-					else
-						an_instruction := a_cursor.item.last_generated_instruction						
-						-- TODO: add location information to the compiled instruction
-					end
+				a_cursor.item.compile (an_executable)
+				if a_cursor.item.any_compile_errors then
+					any_compile_errors := True -- this shouldn't happen
 				else
-					todo ("compile - compile-to-Eiffel not implemented", True)
+					an_instruction := a_cursor.item.last_generated_instruction						
+					if an_instruction /= Void then
+						an_instruction.set_source_location (module_number (a_cursor.item.system_id), a_cursor.item.line_number)
+					end
 				end
 				a_cursor.forth
 			end

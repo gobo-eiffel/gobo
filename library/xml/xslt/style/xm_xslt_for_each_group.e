@@ -19,6 +19,8 @@ inherit
 			make_style_element, validate, may_contain_sequence_constructor
 		end
 
+	XM_XSLT_FOR_EACH_GROUP_CONSTANTS
+
 	XM_XPATH_ROLE
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -66,28 +68,28 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					a_select_attribute.left_adjust
-					a_select_attribute.right_adjust
+					STRING_.left_adjust (a_select_attribute)
+					STRING_.right_adjust (a_select_attribute)
 				elseif STRING_.same_string (an_expanded_name, Group_by_attribute) then
 					a_group_by_attribute := attribute_value_by_index (a_cursor.index)
-					a_group_by_attribute.left_adjust
-					a_group_by_attribute.right_adjust
+					STRING_.left_adjust (a_group_by_attribute)
+					STRING_.right_adjust (a_group_by_attribute)
 				elseif STRING_.same_string (an_expanded_name, Group_adjacent_attribute) then
 					a_group_adjacent_attribute := attribute_value_by_index (a_cursor.index)
-					a_group_adjacent_attribute.left_adjust
-					a_group_adjacent_attribute.right_adjust					
+					STRING_.left_adjust (a_group_adjacent_attribute)
+					STRING_.right_adjust (a_group_adjacent_attribute		)
 				elseif STRING_.same_string (an_expanded_name, Group_starting_with_attribute) then
 					a_group_starting_with_attribute := attribute_value_by_index (a_cursor.index)
-					a_group_starting_with_attribute.left_adjust
-					a_group_starting_with_attribute.right_adjust					
+					STRING_.left_adjust (a_group_starting_with_attribute)
+					STRING_.right_adjust (a_group_starting_with_attribute	)
 				elseif STRING_.same_string (an_expanded_name, Group_ending_with_attribute) then
 					a_group_ending_with_attribute := attribute_value_by_index (a_cursor.index)
-					a_group_ending_with_attribute.left_adjust
-					a_group_ending_with_attribute.right_adjust					
+					STRING_.left_adjust (a_group_ending_with_attribute)
+					STRING_.right_adjust (a_group_ending_with_attribute		)
 				elseif STRING_.same_string (an_expanded_name, Collation_attribute) then
 					a_collation_attribute := attribute_value_by_index (a_cursor.index)
-					a_collation_attribute.left_adjust
-					a_collation_attribute.right_adjust					
+					STRING_.left_adjust (a_collation_attribute)
+					STRING_.right_adjust (a_collation_attribute	)
 				else
 					check_unknown_attribute (a_name_code)
 				end
@@ -153,11 +155,35 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
+		local
+			algorithm: INTEGER
+			key_expression: XM_XPATH_EXPRESSION
+			key_pattern: XM_XSLT_PATTERN
+			is_pattern: BOOLEAN
 		do
-			todo ("compile", False)
+			if group_by /= Void then
+				algorithm := Group_by_algorithm
+				key_expression := group_by
+			elseif group_adjacent /= Void then
+				algorithm := Group_adjacent_algorithm
+				key_expression := group_adjacent
+			elseif group_starting_with /= Void then
+				algorithm := Group_starting_with_algorithm
+				key_pattern := group_starting_with
+				is_pattern := True
+			elseif group_ending_with /= Void then
+				algorithm := Group_ending_with_algorithm
+				key_pattern := group_ending_with
+				is_pattern := True
+			end
+			if is_pattern then
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make_with_pattern (select_expression, key_pattern, algorithm, sort_keys)
+			else
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make (select_expression, key_expression, algorithm, sort_keys, collation_name)
+			end
+			compile_children (an_executable, last_generated_instruction)
 		end
 
 feature {NONE} -- Implementation
@@ -229,5 +255,7 @@ feature {NONE} -- Implementation
 invariant
 
 	instruction: is_instruction = True
+	only_one_algorithm: validated implies group_by /= Void xor group_adjacent /= Void xor group_starting_with /= Void xor group_ending_with /= Void
+	collation_name: collation_name /= Void implies group_by /= Void xor group_adjacent /= Void
 
 end

@@ -62,9 +62,9 @@ feature
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet.make (a_configuration)
 			create a_uri_source.make ("../xpath/data/books.xsl")
-			a_stylesheet.prepare (a_uri_source, False)
+			a_stylesheet.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= void)
+			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= Void)
 			a_document_element ?= a_stylesheet.last_loaded_module.document_element
 			--print (a_document_element.error_value.error_message)
 			assert ("Stylesheet compiled without errors", not a_document_element.is_stylesheet_in_error)

@@ -19,9 +19,16 @@ inherit
 			validate
 		end
 
+	XM_XPATH_ROLE
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature -- Access
+
+	sort_key_definition: XM_XSLT_SORT_KEY_DEFINITION
+			-- Sort key
 
 feature -- Element change
 
@@ -45,28 +52,28 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					a_select_attribute.left_adjust
-					a_select_attribute.right_adjust
+					STRING_.left_adjust (a_select_attribute)
+					STRING_.right_adjust (a_select_attribute)
 				elseif STRING_.same_string (an_expanded_name, Order_attribute) then
 					an_order_attribute := attribute_value_by_index (a_cursor.index)
-					an_order_attribute.left_adjust
-					an_order_attribute.right_adjust
+					STRING_.left_adjust (an_order_attribute)
+					STRING_.right_adjust (an_order_attribute)
 				elseif STRING_.same_string (an_expanded_name, Data_type_attribute) then
 					a_data_type_attribute := attribute_value_by_index (a_cursor.index)
-					a_data_type_attribute.left_adjust
-					a_data_type_attribute.right_adjust					
+					STRING_.left_adjust (a_data_type_attribute)
+					STRING_.right_adjust (a_data_type_attribute	)
 				elseif STRING_.same_string (an_expanded_name, Case_order_attribute) then
 					a_case_order_attribute := attribute_value_by_index (a_cursor.index)
-					a_case_order_attribute.left_adjust
-					a_case_order_attribute.right_adjust					
+					STRING_.left_adjust (a_case_order_attribute)
+					STRING_.right_adjust (a_case_order_attribute	)
 				elseif STRING_.same_string (an_expanded_name, Lang_attribute) then
 					a_lang_attribute := attribute_value_by_index (a_cursor.index)
-					a_lang_attribute.left_adjust
-					a_lang_attribute.right_adjust					
+					STRING_.left_adjust (a_lang_attribute)
+					STRING_.right_adjust (a_lang_attribute	)
 				elseif STRING_.same_string (an_expanded_name, Collation_attribute) then
 					a_collation_attribute := attribute_value_by_index (a_cursor.index)
-					a_collation_attribute.left_adjust
-					a_collation_attribute.right_adjust					
+					STRING_.left_adjust (a_collation_attribute)
+					STRING_.right_adjust (a_collation_attribute	)
 				else
 					check_unknown_attribute (a_name_code)
 				end
@@ -112,11 +119,10 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		do
-			todo ("compile", False)
+			last_generated_instruction := Void
 		end
 
 feature {NONE} -- Implementation
@@ -167,7 +173,6 @@ feature {NONE} -- Implementation
 			end
 			if a_lang_attribute = Void then
 				create {XM_XPATH_STRING_VALUE} language.make ("")
-				todo ("prepare_attributes_2 - lang", True)
 			else
 				generate_attribute_value_template (a_lang_attribute, static_context)
 				language := last_generated_expression
@@ -181,7 +186,11 @@ feature {NONE} -- Implementation
 		end
 
 	validate_2 is
-			-- perform further validation.
+			-- Perform further validation.
+		local
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_role: XM_XPATH_ROLE_LOCATOR
+			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 		do
 			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
@@ -213,7 +222,16 @@ feature {NONE} -- Implementation
 					data_type := data_type.replacement_expression
 				end
 			end
-			todo ("validate_2", True)
+			create a_role.make (Instruction_role, "xsl:sort/select", 1)
+			create a_type_checker
+			create an_atomic_sequence.make_atomic_sequence
+			a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
+			if a_type_checker.is_static_type_check_error	then
+				report_compile_error (a_type_checker.static_type_check_error_message)
+			else
+				select_expression := a_type_checker.checked_expression
+				create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)
+			end
 		end
 
 end

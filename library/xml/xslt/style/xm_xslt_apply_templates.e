@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_ROLE
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -66,12 +68,12 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					a_select_attribute.left_adjust
-					a_select_attribute.right_adjust
+					STRING_.left_adjust (a_select_attribute)
+					STRING_.right_adjust (a_select_attribute)
 				elseif STRING_.same_string (an_expanded_name, Mode_attribute) then
 					a_mode_attribute := attribute_value_by_index (a_cursor.index)
-					a_mode_attribute.left_adjust
-					a_mode_attribute.right_adjust
+					STRING_.left_adjust (a_mode_attribute)
+					STRING_.right_adjust (a_mode_attribute)
 				else
 					check_unknown_attribute (a_name_code)
 				end
@@ -166,11 +168,22 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
+		local
+			a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
+			a_sorted_sequence: XM_XPATH_EXPRESSION
 		do
-			todo ("compile", False)
+			a_sorted_sequence := select_expression
+			a_sort_key_list := sort_keys
+			if a_sort_key_list.count > 0 then
+				use_tail_recursion := False
+				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
+			end
+			create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_instruction.make (a_sorted_sequence,
+																												with_param_instructions (an_executable, False),
+																												with_param_instructions (an_executable, True),
+																												use_current_mode, use_tail_recursion, mode)
 		end
 	
 feature {NONE} -- Implementation

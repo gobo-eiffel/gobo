@@ -109,6 +109,12 @@ feature -- Access
 			nearly_positive_result: Result > -2
 		end
 
+	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
+			-- Namespace context
+		do
+			Result := style_element.namespace_context
+		end
+
 feature -- Status report
 
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is

@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 				parser.set_callbacks (tree_pipe.start)
 				parser.set_dtd_callbacks (tree_pipe.emitter)
 			end				
-			parser.set_string_mode_unicode
+			parser.set_string_mode_ascii
 		end
 
 	parser: XM_EIFFEL_PARSER

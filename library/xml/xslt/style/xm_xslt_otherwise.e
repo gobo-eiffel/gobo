@@ -83,11 +83,12 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		do
-			todo ("compile", False)
+			check
+				compile_should_not_be_called: False
+			end
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

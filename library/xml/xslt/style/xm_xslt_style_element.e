@@ -239,6 +239,94 @@ feature -- Access
 			end		
 		end
 
+	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
+			-- Namespace context
+		do
+			create Result.make (namespace_codes_in_scope, target_name_pool)
+		end
+
+	with_param_instructions (an_executable: XM_XSLT_EXECUTABLE; is_tunnel: BOOLEAN): DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM] is
+			-- List of tunnel or non-tunnel parameters
+		require
+			executable_not_void: an_executable /= Void
+		local
+			a_parameter_count: INTEGER
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_with_param: XM_XSLT_WITH_PARAM
+			a_compiled_with_param: XM_XSLT_COMPILED_WITH_PARAM
+		do
+			from
+				an_iterator := new_axis_iterator (Child_axis)
+				an_iterator.start
+			until
+				an_iterator.after
+			loop
+				a_with_param ?= an_iterator.item
+				if a_with_param /= Void and then a_with_param.is_tunnel_parameter = is_tunnel then
+					a_parameter_count := a_parameter_count + 1
+				end
+				an_iterator.forth
+			end
+			create Result.make (a_parameter_count)
+			from
+				an_iterator := new_axis_iterator (Child_axis)
+				an_iterator.start
+			until
+				an_iterator.after
+			loop
+				a_with_param ?= an_iterator.item
+				if a_with_param /= Void and then a_with_param.is_tunnel_parameter = is_tunnel then
+					a_with_param.compile (an_executable)
+					a_compiled_with_param ?= a_with_param.last_generated_instruction
+					check
+						with_param_instruction: a_compiled_with_param /= Void
+					end
+					Result.put_last (a_compiled_with_param)
+				end
+				an_iterator.forth
+			end
+		ensure
+			result_list_not_void: Result /= Void
+		end
+
+	sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION] is
+			-- List of sort keys
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_sort: XM_XSLT_SORT
+			sort_key_count: INTEGER
+		do
+			from
+				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+			until
+				an_iterator.after
+			loop
+				a_sort ?= an_iterator.item
+				if a_sort /= Void then
+					sort_key_count := sort_key_count + 1
+				end
+				an_iterator.forth
+			end
+			if sort_key_count > 0 then
+				from
+					an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+					create Result.make (sort_key_count)
+				until
+					an_iterator.after
+				loop
+					a_sort ?= an_iterator.item
+					if a_sort /= Void then
+						Result.put_last (a_sort.sort_key_definition)
+					end
+					an_iterator.forth
+				end
+			else
+				create Result.make (0)
+			end
+		ensure
+			sort_key_list_not_void: Result /= Void
+		end
+
 feature -- Status_report
 
 	any_compile_errors: BOOLEAN
@@ -1117,8 +1205,8 @@ feature -- Element change
 		do
 			exclusions := attribute_value_by_expanded_name (an_attribute_name)
 			if exclusions /= Void then
-				exclusions.left_adjust
-				exclusions.right_adjust
+				STRING_.left_adjust (exclusions)
+				STRING_.right_adjust (exclusions)
 				if STRING_.same_string (exclusions, "#all") then
 					todo ("process_excluded_namespaces_attribute - #all", True)
 				else
@@ -1225,16 +1313,13 @@ feature -- Element change
 			children_validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		require
 			no_previous_error: not is_error and then not any_compile_errors
-			compile_to_eiffel_not_supported: not compile_to_eiffel
 			validation_complete: post_validated
 			executable_not_void: an_executable /= Void
 		deferred
-		ensure
-			no_instruction_generated_for_eiffel_code: compile_to_eiffel implies last_generated_instruction = Void
 		end
 
 	compile_children (an_executable: XM_XSLT_EXECUTABLE; an_instruction: XM_XSLT_INSTRUCTION) is
@@ -1279,7 +1364,7 @@ feature -- Element change
 						if validation_error_message /= Void then
 							fallback_processing (an_executable, a_style_element, an_instruction_list)
 						else
-							a_style_element.compile (an_executable, False)
+							a_style_element.compile (an_executable)
 							another_instruction := a_style_element.last_generated_instruction
 							if another_instruction /= Void then
 								another_instruction.set_executable (an_executable)

@@ -88,7 +88,6 @@ feature -- Operation(s)
 				create a_uri.make_resolve (uri, a_string_uri)
 			end
 			uris.put (a_uri)
-			
 				-- Apply current URI.
 			resolve_uri (uri)
 		end

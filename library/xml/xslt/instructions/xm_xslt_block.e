@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Create a general-purpose block.
 		do
 			instruction_type := General_purpose_block
+			create children.make (0)
 		ensure
 			general_purpose_block: instruction_type = General_purpose_block
 		end
@@ -38,6 +39,7 @@ feature {NONE} -- Initialization
 			-- Create an xsl:otherwise block.
 		do
 			instruction_type := Otherwise_block
+			create children.make (0)
 		ensure
 			otherwise_block: instruction_type = Otherwise_block
 		end
@@ -46,6 +48,7 @@ feature {NONE} -- Initialization
 			-- Create an xsl:fallback block.
 		do
 			instruction_type := Fallback_block
+			create children.make (0)
 		ensure
 			fallback_block: instruction_type = Fallback_block
 		end
@@ -54,6 +57,7 @@ feature {NONE} -- Initialization
 			-- Create an xsl:matching_substring block.
 		do
 			instruction_type := Matching_substring_block
+			create children.make (0)
 		ensure
 			matching_substring_block: instruction_type = Matching_substring_block
 		end
@@ -62,6 +66,7 @@ feature {NONE} -- Initialization
 			-- Create an xsl:non_matching_substring block.
 		do
 			instruction_type := Non_matching_substring_block
+			create children.make (0)
 		ensure
 			non_matching_substring_block: instruction_type = Non_matching_substring_block
 		end
@@ -70,6 +75,7 @@ feature {NONE} -- Initialization
 			-- Create an xsl:if block.
 		do
 			instruction_type := If_block
+			create children.make (0)
 		ensure
 			if_block: instruction_type = If_block
 		end
@@ -78,6 +84,7 @@ feature {NONE} -- Initialization
 			-- Create an xsl:when block.
 		do
 			instruction_type := When_block
+			create children.make (0)
 		ensure
 			when_block: instruction_type = When_block
 		end

@@ -48,7 +48,6 @@ feature -- Access
 	target_name_pool: XM_XPATH_NAME_POOL
 			-- This is the name pool used for names that need to be accessible
 			--   at runtime, notably the names used in XPath expressions in the stylesheet.
-			-- A different (local) namepool is used for compile-time-only names in the stylesheet itself.
 
 	last_loaded_module: XM_XPATH_TREE_DOCUMENT
 			-- Last stylesheet module sucessfully loaded
@@ -67,11 +66,10 @@ feature -- Status report
 
 feature -- Compliation
 
-	prepare (a_source: XM_XSLT_URI_SOURCE; compile_to_eiffel: BOOLEAN) is
+	prepare (a_source: XM_XSLT_URI_SOURCE) is
 			-- Prepare a stylesheet from a source document.
 		require
 			source_not_void: a_source /= Void
-			compile_to_eiffel_not_supported_yet: compile_to_eiffel = False
 		local
 			a_name_pool: XM_XPATH_NAME_POOL
 			a_node_factory: XM_XSLT_NODE_FACTORY
@@ -86,7 +84,7 @@ feature -- Compliation
 			if load_stylesheet_module_failed then
 				todo ("prepare - deal with compile errors", True)
 			else
-				create_style_sheet_executable (last_loaded_module, a_node_factory, compile_to_eiffel)
+				create_style_sheet_executable (last_loaded_module, a_node_factory)
 			end
 		end
 
@@ -125,12 +123,11 @@ feature -- Compliation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	create_style_sheet_executable (a_document: XM_XPATH_TREE_DOCUMENT; a_node_factory: XM_XSLT_NODE_FACTORY; compile_to_eiffel: BOOLEAN) is
+	create_style_sheet_executable (a_document: XM_XPATH_TREE_DOCUMENT; a_node_factory: XM_XSLT_NODE_FACTORY) is
 			-- Create an executable stylesheet.
 		require
 			document_not_void: a_document /= Void
 			node_factory_not_void: a_node_factory /= Void
-			compile_to_eiffel_not_supported_yet: compile_to_eiffel = False
 		local
 			a_stylesheet_document: XM_XPATH_TREE_DOCUMENT
 			a_stylesheet: XM_XSLT_STYLESHEET
@@ -153,7 +150,7 @@ feature -- Compliation
 
 				-- Compile the stylesheet, retaining the resulting  executable
 
-				a_stylesheet.compile_stylesheet (configuration, compile_to_eiffel)
+				a_stylesheet.compile_stylesheet (configuration)
 				if a_stylesheet.is_error then
 					todo ("create_style_sheet_executable - compile failed", True)
 				else

@@ -115,20 +115,20 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			Precursor (a_context)
 			arguments.item (2).set_unsorted (False)
 			a_string_value ?= arguments.item (1)
+			an_xslt_context ?= a_context
+			check
+				static_context_is_xslt_context: an_xslt_context /= Void
+			end
 			if a_string_value /= Void then
 
 				-- Common case, key name is supplied as a constant
 
-				an_xslt_context ?= a_context
-				check
-					static_context_is_xslt_context: an_xslt_context /= Void
-				end
 				key_fingerprint := an_xslt_context.fingerprint (a_string_value.string_value, False)
 				if key_fingerprint = -1 then
 					todo ("check_arguments - issue a dynamic error", True)
 				end
 			else
-				todo ("check_arguments - save namespace context", True)
+				namespace_context := an_xslt_context.namespace_context
 			end
 		end
 
@@ -152,6 +152,9 @@ feature {NONE} -- Implementation
 
 	key_fingerprint: INTEGER
 			-- Fingerprint of key-name
+
+	namespace_context: XM_XSLT_NAMESPACE_RESOLVER
+			-- Namespace context
 
 end
 	

@@ -108,7 +108,7 @@ feature -- Element change
 				establish_attribute_names (a_name_pool, a_stylesheet)
 				remove_excluded_namespaces (a_stylesheet)
 				
-				-- Now translate the list of namespace codes to use `target_name_pool'.
+				-- Now translate the list of namespace codes to use `target_name_pool' -- commented out, as the two pools should be the same
 				
 				create a_namespace_code_list.make (namespace_codes.count - excluded_namespace_count)
 				if namespace_codes.count  > 0 then
@@ -122,14 +122,14 @@ feature -- Element change
 					loop
 						a_namespace_code := a_cursor.item
 						if a_namespace_code /= -1 then
-							an_xml_prefix := document.name_pool.prefix_from_namespace_code (a_namespace_code)
-							a_uri := document.name_pool.uri_from_namespace_code (a_namespace_code)
-							if target_name_pool.is_namespace_code_allocated (an_xml_prefix, a_uri) then
-								a_namespace_code := target_name_pool.namespace_code (an_xml_prefix, a_uri)
-							else
-								target_name_pool.allocate_namespace_code (an_xml_prefix, a_uri)
-								a_namespace_code := target_name_pool.last_namespace_code
-							end
+--							an_xml_prefix := document.name_pool.prefix_from_namespace_code (a_namespace_code)
+--							a_uri := document.name_pool.uri_from_namespace_code (a_namespace_code)
+--							if target_name_pool.is_namespace_code_allocated (an_xml_prefix, a_uri) then
+--								a_namespace_code := target_name_pool.namespace_code (an_xml_prefix, a_uri)
+--							else
+--								target_name_pool.allocate_namespace_code (an_xml_prefix, a_uri)
+--								a_namespace_code := target_name_pool.last_namespace_code
+--							end
 							a_namespace_code_list.put_last (a_namespace_code)
 						end
 						a_cursor.forth
@@ -148,8 +148,8 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		local
 			a_fixed_element: XM_XSLT_FIXED_ELEMENT
 			direct_children, attributes: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
@@ -160,8 +160,8 @@ feature -- Element change
 			if is_top_level then
 				last_generated_instruction := Void
 			else
-				translate (result_name_code)
-				create a_fixed_element.make (last_translated_name_code, namespace_codes, Void, Void, validation)
+				--translate (result_name_code)
+				create a_fixed_element.make (result_name_code, namespace_codes, Void, Void, validation)
 				compile_children (an_executable, a_fixed_element) 
 				direct_children := last_generated_instruction_list
 				if attribute_name_codes.count > 0 then
@@ -424,39 +424,40 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				translate (an_alias)
-				a_cursor.replace (last_translated_name_code)
+				--translate (an_alias)
+				--a_cursor.replace (last_translated_name_code)
 				an_expression := attribute_values.item (a_cursor.index)
 				type_check_expression (a_name_pool.display_name_from_name_code (an_alias), an_expression)
 				if an_expression.was_expression_replaced then
-				 attribute_values.replace (an_expression.replacement_expression, a_cursor.index)
+					attribute_values.replace (an_expression.replacement_expression, a_cursor.index)
 				end
 				a_cursor.forth
 			end
 		end
 
-	last_translated_name_code: INTEGER
-			-- Last name-code translated by `translate'
-
-	translate (a_name_code: INTEGER) is
-			-- Translate a namecode in the stylesheet namepool to a namecode in the target namepool.
-		require
-			valid_name_code: document.name_pool.is_valid_name_code (a_name_code)
-		local
-			an_xml_prefix, a_uri, a_local_name: STRING
-		do
-			an_xml_prefix := document.name_pool.prefix_from_name_code (a_name_code)
-			a_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
-			a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
-			if target_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-				last_translated_name_code := target_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
-			else
-				target_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-				last_translated_name_code := target_name_pool.last_name_code
-			end
-		ensure
-			last_translated_name_code_is_valid: target_name_pool.is_valid_name_code (last_translated_name_code)
-		end
+	-- These next two features commented out, as the two pools should be the same
+--	last_translated_name_code: INTEGER
+--			-- Last name-code translated by `translate'
+--
+--	translate (a_name_code: INTEGER) is
+--			-- Translate a namecode in the stylesheet namepool to a namecode in the target namepool.
+--		require
+--			valid_name_code: document.name_pool.is_valid_name_code (a_name_code)
+--		local
+--			an_xml_prefix, a_uri, a_local_name: STRING
+--		do
+--			an_xml_prefix := document.name_pool.prefix_from_name_code (a_name_code)
+--			a_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
+--			a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
+--			if target_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+--				last_translated_name_code := target_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+--			else
+--				target_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+--				last_translated_name_code := target_name_pool.last_name_code
+--			end
+--		ensure
+--			last_translated_name_code_is_valid: target_name_pool.is_valid_name_code (last_translated_name_code)
+--		end
 
 	excluded_namespace_count: INTEGER
 			-- Number of namespaces excluded

@@ -555,6 +555,22 @@ feature -- Status report
 			end
 		end
 
+	is_prefix_declared (a_qname: STRING): BOOLEAN is
+		require
+			valid_qname: a_qname /= Void and then is_qname (a_qname)
+		local
+			a_colon: INTEGER
+			an_xml_prefix: STRING
+		do
+			a_colon  := a_qname.index_of (':', 1)
+			if a_colon > 0 then
+				an_xml_prefix := a_qname.substring (1, a_colon - 1)
+			else
+				an_xml_prefix := ""
+			end
+			Result := is_code_for_prefix_allocated (an_xml_prefix)
+		end
+
 	is_namespace_code_allocated (an_xml_prefix: STRING; a_uri: STRING): BOOLEAN is
 			-- Has a namespace code been allocated for `an_xml_prefix' with `a_uri'?
 		require

@@ -63,8 +63,8 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					a_name_attribute := attribute_value_by_index (a_cursor.index)
-					a_name_attribute.left_adjust
-					a_name_attribute.right_adjust
+					STRING_.left_adjust (a_name_attribute)
+					STRING_.right_adjust (a_name_attribute)
 				else
 					check_unknown_attribute (a_name_code)
 				end
@@ -180,11 +180,16 @@ feature -- Element change
 			post_validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
+		local
+			a_call: XM_XSLT_COMPILED_CALL
+			a_target: XM_XSLT_COMPILED_TEMPLATE
+			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 		do
-			todo ("compile", False)
+			a_target := template.compiled_template
+			create a_call.make (a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)
+			last_generated_instruction := a_call
 		end
 	
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

@@ -23,6 +23,11 @@ creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
+feature -- Access
+
+	condition: XM_XPATH_EXPRESSION
+			-- Test expression
+
 feature -- Status setting
 
 	mark_tail_calls is
@@ -65,8 +70,8 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Test_attribute) then
 					a_test_attribute := attribute_value_by_index (a_cursor.index)
-					a_test_attribute.left_adjust
-					a_test_attribute.right_adjust
+					STRING_.left_adjust (a_test_attribute)
+					STRING_.right_adjust (a_test_attribute)
 				else
 					check_unknown_attribute (a_name_code)
 				end
@@ -74,7 +79,7 @@ feature -- Element change
 			end
 			if a_test_attribute /= Void then
 				generate_expression (a_test_attribute)
-				test_expression := last_generated_expression
+				condition := last_generated_expression
 			else
 				report_absence ("test")
 			end
@@ -90,19 +95,18 @@ feature -- Element change
 			if an_xsl_choose = Void then
 				report_compile_error ("xsl:when must be immediately within xsl:choose")
 			else
-				type_check_expression ("test", test_expression)
-				if test_expression.was_expression_replaced then
-					test_expression := test_expression.replacement_expression
+				type_check_expression ("test", condition)
+				if condition.was_expression_replaced then
+					condition := condition.replacement_expression
 				end				
 			end
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		do
-			todo ("compile", False)
+			last_generated_instruction := Void
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -112,10 +116,5 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 		do
 			Result := common_child_item_type
 		end
-
-feature {NONE} -- Implementation
-
-	test_expression: XM_XPATH_EXPRESSION
-			-- Test expression
 
 end

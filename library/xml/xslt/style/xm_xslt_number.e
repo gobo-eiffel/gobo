@@ -19,6 +19,8 @@ inherit
 			make_style_element, validate, returned_item_type
 		end
 
+	XM_XSLT_NUMBER_ROUTINES
+
 	XM_XPATH_ROLE
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -167,11 +169,18 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		do
-			todo ("compile", False)
+			create {XM_XSLT_COMPILED_NUMBER} last_generated_instruction.make (select_expression,
+																									level, count_pattern,
+																									from_pattern,
+																									value_expression, format,
+																									grouping_size,
+																									grouping_separator,
+																									letter_value, ordinal,
+																									language, formatter,
+																									numberer, has_variables_in_patterns)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -188,7 +197,8 @@ feature {NONE} -- Implementation
 			-- Level-numbering values
 
 	level: INTEGER
-
+			-- Level
+	
 	has_variables_in_patterns: BOOLEAN
 			-- Do any supplied patterns include variable references?
 
@@ -218,6 +228,12 @@ feature {NONE} -- Implementation
 
 	ordinal: XM_XPATH_EXPRESSION
 			-- Ordinal marker
+
+	formatter: XM_XSLT_NUMBER_FORMATTER
+			-- Formatter
+
+	numberer: XM_XSLT_NUMBERER
+			-- Numberer
 
 	prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute: STRING;
 										 a_count_attribute,a_lang_attribute, a_from_attribute: STRING;
@@ -283,9 +299,14 @@ feature {NONE} -- Implementation
 			if a_format_attribute /= Void then
 				generate_attribute_value_template (a_format_attribute, static_context)
 				format := last_generated_expression
-				todo ("prepare_attributes_3 - number formatter", True)
+				a_string_value ?= format
+				if a_string_value /= Void then
+					create formatter.make (a_string_value.string_value)
+				else
+					do_nothing -- We must allocate the formatter at run time
+				end
 			else
-				todo ("prepare_attributes_3 - number formatter", True)
+				create formatter.make ("1") -- default
 			end
 			if a_grouping_size_attribute /= Void and then a_grouping_separator_attribute /= Void then
 
@@ -297,12 +318,21 @@ feature {NONE} -- Implementation
 				grouping_separator :=  last_generated_expression
 			end
 			if a_lang_attribute = Void then
-				todo ("prepare_attributes_3 - numberer", True)
+				numberer := selected_numberer ("en")
 			else
 				generate_attribute_value_template (a_lang_attribute, static_context)
 				language := last_generated_expression
 				a_string_value ?= language
-				todo ("prepare_attributes_3 - numberer", True)
+				if a_string_value /= Void then
+					numberer := selected_numberer (a_string_value.string_value)
+					if numberer = Void then
+						numberer := selected_numberer ("en")
+					end
+				else
+					do_nothing
+					
+					-- we allocate the numberer at run-time
+				end
 			end
 			if a_letter_value_attribute /= Void then
 				generate_attribute_value_template (a_letter_value_attribute, static_context)

@@ -44,12 +44,12 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					a_select_attribute.left_adjust
-					a_select_attribute.right_adjust
+					STRING_.left_adjust (a_select_attribute)
+					STRING_.left_adjust (a_select_attribute)
 				elseif STRING_.same_string (an_expanded_name, Disable_output_escaping_attribute) then
 					a_disable_attribute := attribute_value_by_index (a_cursor.index)
-					a_disable_attribute.left_adjust
-					a_disable_attribute.right_adjust
+					STRING_.left_adjust (a_disable_attribute)
+					STRING_.right_adjust (a_disable_attribute)
 				elseif STRING_.same_string (an_expanded_name, Separator_attribute) then
 					a_separator_attribute := attribute_value_by_index (a_cursor.index)
 				else
@@ -99,8 +99,8 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		local
 			a_value_of: XM_XSLT_COMPILED_VALUE_OF
 		do

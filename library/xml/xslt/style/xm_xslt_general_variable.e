@@ -74,8 +74,8 @@ feature -- Access
 				if a_name = Void then
 					Result := -1 -- We will report the error later
 				else
-					a_name.left_adjust
-					a_name.right_adjust
+					STRING_.left_adjust (a_name)
+					STRING_.right_adjust (a_name)
 					generate_name_code (a_name)
 					cached_variable_fingerprint := last_generated_name_code \\ bits_20
 				end
@@ -147,20 +147,20 @@ feature -- Status setting
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					a_name_attribute := attribute_value_by_index (a_cursor.index)
-					a_name_attribute.left_adjust
-					a_name_attribute.right_adjust
+					STRING_.left_adjust (a_name_attribute)
+					STRING_.right_adjust (a_name_attribute)
 				elseif STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)					
 				elseif STRING_.same_string (an_expanded_name, As_attribute) then
 					an_as_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Required_attribute) and then allows_required then
 					a_required_attribute := attribute_value_by_index (a_cursor.index)
-					a_required_attribute.left_adjust
-					a_required_attribute.right_adjust
+					STRING_.left_adjust (a_required_attribute)
+					STRING_.right_adjust (a_required_attribute)
 				elseif STRING_.same_string (an_expanded_name, Tunnel_attribute) and then allows_tunnel then
 					a_tunnel_attribute := attribute_value_by_index (a_cursor.index)
-					a_tunnel_attribute.left_adjust
-					a_tunnel_attribute.right_adjust
+					STRING_.left_adjust (a_tunnel_attribute)
+					STRING_.right_adjust (a_tunnel_attribute)
 				else
 					check_unknown_attribute (a_name_code)
 				end

@@ -234,7 +234,8 @@ feature -- Valid characters
 					i > s.count
 				loop
 					c := s.item (i)
-					inspect c
+					inspect
+						c
 					when '%/00/'..'%/31/' then
 						-- control characters.
 						Result := True

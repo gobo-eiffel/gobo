@@ -64,8 +64,8 @@ feature -- Access
 			if internal_fingerprint = -1 then
 				a_name := attribute_value_by_name ("", Name_attribute)
 				if a_name /= Void then
-					a_name.left_adjust
-					a_name.right_adjust
+					STRING_.left_adjust (a_name)
+					STRING_.right_adjust (a_name)
 					generate_name_code (a_name)
 					internal_fingerprint := last_generated_name_code \\ bits_20
 				end
@@ -123,16 +123,16 @@ feature -- Element change
 				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					a_name_attribute := attribute_value_by_index (a_cursor.index)
-					a_name_attribute.left_adjust
-					a_name_attribute.right_adjust
+					STRING_.left_adjust (a_name_attribute)
+					STRING_.right_adjust (a_name_attribute)
 				elseif STRING_.same_string (an_expanded_name, Mode_attribute) then
 					a_mode_attribute := attribute_value_by_index (a_cursor.index)
-					a_mode_attribute.left_adjust
-					a_mode_attribute.right_adjust
+					STRING_.left_adjust (a_mode_attribute)
+					STRING_.right_adjust (a_mode_attribute)
 				elseif STRING_.same_string (an_expanded_name, Priority_attribute) then
 					a_priority_attribute := attribute_value_by_index (a_cursor.index)
-					a_priority_attribute.left_adjust
-					a_priority_attribute.right_adjust
+					STRING_.left_adjust (a_priority_attribute)
+					STRING_.right_adjust (a_priority_attribute)
 				elseif STRING_.same_string (an_expanded_name, Match_attribute) then
 					a_match_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, As_attribute) then
@@ -189,9 +189,8 @@ feature -- Element change
 			create compiled_template.make -- so `{XM_XSLT_CALL_TEMPLATE}.compile' can forward-referenece to it
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to an excutable instruction.
 		local
 			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
 			a_rule_manager: XM_XSLT_RULE_MANAGER
