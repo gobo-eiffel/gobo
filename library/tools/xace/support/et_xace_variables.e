@@ -15,6 +15,8 @@ class ET_XACE_VARIABLES
 
 inherit
 
+	ANY -- Export ANY's features
+
 	UT_SHARED_TEMPLATE_EXPANDER
 		export {NONE} all end
 

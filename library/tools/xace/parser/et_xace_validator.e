@@ -15,6 +15,8 @@ class ET_XACE_VALIDATOR
 
 inherit
 
+	ANY -- Export ANY's features
+
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
