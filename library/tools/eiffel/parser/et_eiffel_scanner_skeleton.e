@@ -249,8 +249,10 @@ feature -- AST processing
 			-- if the preparsing phase gave errouneous result).
 		local
 			a_filename: STRING
+			a_time_stamp: INTEGER
 			a_cluster: ET_CLUSTER
 			a_file: KL_TEXT_INPUT_FILE
+			an_overridden_class: ET_CLASS
 		do
 			if a_class = none_class then
 				a_class.set_parsed
@@ -268,11 +270,15 @@ feature -- AST processing
 					if current_class.is_preparsed then
 						a_filename := current_class.filename
 						a_cluster := current_class.cluster
+						an_overridden_class := current_class.overridden_class
+						current_class.reset_all
+						current_class.set_overridden_class (an_overridden_class)
 						a_file := tmp_file
 						a_file.reset (a_filename)
+						a_time_stamp := a_file.time_stamp
 						a_file.open_read
 						if a_file.is_open_read then
-							universe.parse_file (a_file, a_filename, a_cluster)
+							universe.parse_file (a_file, a_filename, a_time_stamp, a_cluster)
 							a_file.close
 						else
 							set_fatal_error (current_class)

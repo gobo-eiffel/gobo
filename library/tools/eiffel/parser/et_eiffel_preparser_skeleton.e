@@ -102,29 +102,39 @@ feature -- Parsing
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
-						if a_class.cluster.is_override then
+						if a_class.is_override then
 								-- Two classes with the same name in two override clusters.
-							a_class.set_parsed
-							a_class.set_syntax_error
+							l_other_class := a_class.cloned_class
+							l_other_class.reset_all
+							l_other_class.set_filename (a_filename)
+							l_other_class.set_cluster (a_cluster)
+							l_other_class.set_overridden_class (a_class.overridden_class)
+							a_class.set_overridden_class (l_other_class)
 							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 						else
 								-- Override.
-							l_other_class := clone (a_class)
+							l_other_class := a_class.cloned_class
+							l_other_class.set_overridden_class (a_class.overridden_class)
 							a_class.reset_all
 							a_class.set_filename (a_filename)
 							a_class.set_cluster (a_cluster)
 							a_class.set_overridden_class (l_other_class)
 						end
-					elseif not a_class.cluster.is_override then
+					elseif not a_class.is_override then
 							-- Two classes with the same name in two non-override clusters.
-						a_class.set_parsed
-						a_class.set_syntax_error
-						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
-					else
-						l_other_class := clone (a_class)
+						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_overridden_class (a_class.overridden_class)
+						a_class.set_overridden_class (l_other_class)
+						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+					else
+						l_other_class := a_class.cloned_class
+						l_other_class.reset_all
+						l_other_class.set_filename (a_filename)
+						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_overridden_class (a_class.overridden_class)
 						a_class.set_overridden_class (l_other_class)
 					end
 				else
@@ -169,29 +179,39 @@ feature -- Parsing
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
-						if a_class.cluster.is_override then
+						if a_class.is_override then
 								-- Two classes with the same name in two override clusters.
-							a_class.set_parsed
-							a_class.set_syntax_error
+							l_other_class := a_class.cloned_class
+							l_other_class.reset_all
+							l_other_class.set_filename (a_filename)
+							l_other_class.set_cluster (a_cluster)
+							l_other_class.set_overridden_class (a_class.overridden_class)
+							a_class.set_overridden_class (l_other_class)
 							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 						else
 								-- Override.
-							l_other_class := clone (a_class)
+							l_other_class := a_class.cloned_class
+							l_other_class.set_overridden_class (a_class.overridden_class)
 							a_class.reset_all
 							a_class.set_filename (a_filename)
 							a_class.set_cluster (a_cluster)
 							a_class.set_overridden_class (l_other_class)
 						end
-					elseif not a_class.cluster.is_override then
+					elseif not a_class.is_override then
 							-- Two classes with the same name in two non-override clusters.
-						a_class.set_parsed
-						a_class.set_syntax_error
-						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
-					else
-						l_other_class := clone (a_class)
+						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
 						l_other_class.set_filename (a_filename)
 						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_overridden_class (a_class.overridden_class)
+						a_class.set_overridden_class (l_other_class)
+						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
+					else
+						l_other_class := a_class.cloned_class
+						l_other_class.reset_all
+						l_other_class.set_filename (a_filename)
+						l_other_class.set_cluster (a_cluster)
+						l_other_class.set_overridden_class (a_class.overridden_class)
 						a_class.set_overridden_class (l_other_class)
 					end
 				else

@@ -182,29 +182,39 @@ feature -- Parsing
 							a_class := universe.eiffel_class (a_classname)
 							if a_class.is_preparsed then
 								if a_cluster.is_override then
-									if a_class.cluster.is_override then
+									if a_class.is_override then
 											-- Two classes with the same name in two override clusters.
-										a_class.set_parsed
-										a_class.set_syntax_error
+										l_other_class := a_class.cloned_class
+										l_other_class.reset_all
+										l_other_class.set_filename (a_filename)
+										l_other_class.set_cluster (a_cluster)
+										l_other_class.set_overridden_class (a_class.overridden_class)
+										a_class.set_overridden_class (l_other_class)
 										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
 									else
 											-- Override.
-										l_other_class := clone (a_class)
+										l_other_class := a_class.cloned_class
+										l_other_class.set_overridden_class (a_class.overridden_class)
 										a_class.reset_all
 										a_class.set_filename (a_filename)
 										a_class.set_cluster (a_cluster)
 										a_class.set_overridden_class (l_other_class)
 									end
-								elseif not a_class.cluster.is_override then
+								elseif not a_class.is_override then
 										-- Two classes with the same name in two non-override clusters.
-									a_class.set_parsed
-									a_class.set_syntax_error
-									error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
-								else
-									l_other_class := clone (a_class)
+									l_other_class := a_class.cloned_class
 									l_other_class.reset_all
 									l_other_class.set_filename (a_filename)
 									l_other_class.set_cluster (a_cluster)
+									l_other_class.set_overridden_class (a_class.overridden_class)
+									a_class.set_overridden_class (l_other_class)
+									error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+								else
+									l_other_class := a_class.cloned_class
+									l_other_class.reset_all
+									l_other_class.set_filename (a_filename)
+									l_other_class.set_cluster (a_cluster)
+									l_other_class.set_overridden_class (a_class.overridden_class)
 									a_class.set_overridden_class (l_other_class)
 								end
 							else
@@ -398,6 +408,7 @@ feature -- Parsing
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
+			a_time_stamp: INTEGER
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
@@ -420,9 +431,10 @@ feature -- Parsing
 							a_filename := file_system.pathname (dir_name, s)
 							a_file := tmp_file
 							a_file.reset (a_filename)
+							a_time_stamp := a_file.time_stamp
 							a_file.open_read
 							if a_file.is_open_read then
-								universe.parse_file (a_file, a_filename, a_cluster)
+								universe.parse_file (a_file, a_filename, a_time_stamp, a_cluster)
 								a_file.close
 							else
 								error_handler.report_gcaab_error (a_cluster, a_filename)

@@ -32,6 +32,16 @@ inherit
 
 feature {NONE} -- Initialization
 
+	make_standard is
+			-- Create a new Lace parser.
+			-- Error messages will be sent to standard files.
+		local
+			a_handler: ET_LACE_ERROR_HANDLER
+		do
+			create a_handler.make_standard
+			make (a_handler)
+		end
+
 	make (an_error_handler: like error_handler) is
 			-- Create a new Lace parser.
 		require

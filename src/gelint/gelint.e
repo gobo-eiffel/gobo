@@ -33,13 +33,9 @@ feature -- Execution
 			a_file: KL_TEXT_INPUT_FILE
 			a_lace_parser: ET_LACE_PARSER
 			a_lace_error_handler: ET_LACE_ERROR_HANDLER
-			a_lace_ast_factory: ET_LACE_AST_FACTORY
 			an_xace_parser: ET_XACE_UNIVERSE_PARSER
 			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			an_xace_ast_factory: ET_XACE_AST_FACTORY
-			an_eiffel_ast_factory: ET_DECORATED_AST_FACTORY
 			an_xace_variables: ET_XACE_VARIABLES
-			a_null_error_handler: ET_NULL_ERROR_HANDLER
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
 			i, nb: INTEGER
@@ -86,23 +82,7 @@ feature -- Execution
 						if gobo_eiffel /= Void then
 							an_xace_variables.define_value ("GOBO_EIFFEL", gobo_eiffel)
 						end
-						if all_breaks then
-							create an_xace_ast_factory.make
-							create an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
-							create an_eiffel_ast_factory.make
-							an_eiffel_ast_factory.set_keep_all_breaks (True)
-							an_xace_parser.set_eiffel_ast_factory (an_eiffel_ast_factory)
-							if no_output then
-								create a_null_error_handler.make_standard
-								an_xace_parser.set_eiffel_error_handler (a_null_error_handler)
-							end
-						else
-							create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
-							if no_output then
-								create a_null_error_handler.make_standard
-								an_xace_parser.set_eiffel_error_handler (a_null_error_handler)
-							end
-						end
+						create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
 						an_xace_parser.parse_file (a_file)
 						a_file.close
 						if not an_xace_error_handler.has_error then
@@ -110,24 +90,7 @@ feature -- Execution
 						end
 					else
 						create a_lace_error_handler.make_standard
-						if all_breaks then
-							create a_lace_ast_factory.make
-							create an_eiffel_ast_factory.make
-							an_eiffel_ast_factory.set_keep_all_breaks (True)
-							a_lace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
-							if no_output then
-								create a_null_error_handler.make_standard
-								a_lace_ast_factory.set_error_handler (a_null_error_handler)
-							end
-							create a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
-						elseif no_output then
-							create a_lace_ast_factory.make
-							create a_null_error_handler.make_standard
-							a_lace_ast_factory.set_error_handler (a_null_error_handler)
-							create a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
-						else
-							create a_lace_parser.make (a_lace_error_handler)
-						end
+						create a_lace_parser.make (a_lace_error_handler)
 						a_lace_parser.parse_file (a_file)
 						a_file.close
 						if not a_lace_parser.syntax_error then
@@ -167,19 +130,28 @@ feature {NONE} -- Processing
 		require
 			a_universe_not_void: a_universe /= Void
 		local
+			an_ast_factory: ET_DECORATED_AST_FACTORY
+			a_null_error_handler: ET_NULL_ERROR_HANDLER
 			a_system: ET_SYSTEM
 		do
+			if all_breaks then
+				create an_ast_factory.make
+				an_ast_factory.set_keep_all_breaks (True)
+				a_universe.set_ast_factory (an_ast_factory)
+			end
+			if no_output then
+				create a_null_error_handler.make_standard
+				a_universe.set_error_handler (a_null_error_handler)
+			end
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
 			if not is_verbose then
 				a_universe.error_handler.set_info_null
-			else
-				a_universe.error_handler.set_compilers
 			end
-			a_universe.set_use_assign_keyword (True)
+			a_universe.set_use_assign_keyword (False)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
-			a_universe.set_use_recast_keyword (True)
+			a_universe.set_use_recast_keyword (False)
 			a_universe.set_use_reference_keyword (True)
 			a_universe.set_use_void_keyword (True)
 			if is_cat then
@@ -192,10 +164,6 @@ feature {NONE} -- Processing
 			if do_compile then
 				create a_system.make (a_universe)
 				a_system.compile
-				debug ("stop")
-					std.error.put_line ("System built")
-					io.read_line
-				end
 			else
 				a_universe.compile (is_flat)
 			end

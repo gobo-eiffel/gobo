@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset_all is
-			-- 	Reset current class.
+			-- Reset current class.
 		do
 			reset_interface_checked
 			reset_implementation_checked
@@ -216,13 +216,16 @@ feature -- Setting
 			leading_break_set: leading_break = a_break
 		end
 
-feature -- Parsing
+feature -- Preparsing
 
 	filename: STRING
 			-- Filename
 
 	cluster: ET_CLUSTER
 			-- Cluster to which current class belongs
+
+	time_stamp: INTEGER
+			-- Time stamp of the file when it was last parsed
 
 	overridden_class: ET_CLASS
 			-- Class that has been overridden by current class
@@ -248,6 +251,14 @@ feature -- Parsing
 			cluster_set: cluster = a_cluster
 		end
 
+	set_time_stamp (a_time_stamp: INTEGER) is
+			-- Set `time_stamp' to `a_time_stamp'.
+		do
+			time_stamp := a_time_stamp
+		ensure
+			time_stamp_set: time_stamp = a_time_stamp
+		end
+
 	set_overridden_class (a_class: like overridden_class) is
 			-- Set `overridden_class' to `a_class'.
 		do
@@ -256,7 +267,7 @@ feature -- Parsing
 			overridden_class_set: overridden_class = a_class
 		end
 
-feature -- Parsing status
+feature -- Preparsing status
 
 	is_preparsed: BOOLEAN is
 			-- Has current class been preparsed (i.e. its filename
@@ -268,6 +279,50 @@ feature -- Parsing status
 			filename_not_void: Result implies filename /= Void
 			cluster_not_void: Result implies cluster /= Void
 		end
+
+	is_override: BOOLEAN is
+			-- Is current class in an override cluster?
+		do
+			if cluster /= Void then
+				Result := cluster.is_override
+			end
+		end
+
+	has_name_clash: BOOLEAN is
+			-- Is there two classes with the same name?
+			-- (Override clusters are taken into account in order to
+			-- determine whether it is a real name clash or not.)
+		local
+			a_class: ET_CLASS
+		do
+			if not is_override then
+				Result := (overridden_class /= Void)
+			else
+				from
+					a_class := overridden_class
+				until
+					a_class = Void
+				loop
+					if a_class.is_override then
+						Result := True
+						a_class := Void -- Jump out of the loop.
+					else
+						a_class := a_class.overridden_class
+					end
+				end
+			end
+		end
+
+	reset_preparsed is
+			-- Set `is_preparsed' to False.
+		do
+			filename := Void
+			cluster := Void
+		ensure
+			not_preparsed: not is_preparsed
+		end
+
+feature -- Parsing status
 
 	is_parsed: BOOLEAN
 			-- Has current class been parsed?
@@ -289,15 +344,6 @@ feature -- Parsing status
 			has_syntax_error := True
 		ensure
 			syntax_error_set: has_syntax_error
-		end
-
-	reset_preparsed is
-			-- Set `is_preparsed' to False.
-		do
-			filename := Void
-			cluster := Void
-		ensure
-			not_preparsed: not is_preparsed
 		end
 
 	reset_parsed is
@@ -328,7 +374,7 @@ feature -- Parsing status
 			not_parsed: not is_parsed
 			no_syntax_error: not has_syntax_error
 		end
-		
+
 feature -- Class header
 
 	is_deferred: BOOLEAN is
@@ -1016,6 +1062,15 @@ feature -- Type context
 		end
 
 feature -- Duplication
+
+	cloned_class: ET_CLASS is
+			-- Clone version of current class
+		do
+			create Result.make_unknown (tokens.unknown_class_name)
+			Result.copy (Current)
+		ensure
+			cloned_class_not_void: Result /= Void
+		end
 
 	copy (other: like Current) is
 			-- Copy `other' to current class.

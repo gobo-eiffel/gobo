@@ -23,9 +23,19 @@ inherit
 creation
 
 	make, make_with_factory, make_with_variables,
-	make_with_variables_and_factory
+	make_with_variables_and_factory, make_standard
 
 feature {NONE} -- Initialization
+
+	make_standard is
+			-- Create a new Xace parser.
+			-- Error messages will be sent to standard files.
+		local
+			a_handler: ET_XACE_DEFAULT_ERROR_HANDLER
+		do
+			create a_handler.make_standard
+			make (a_handler)
+		end
 
 	make (an_error_handler: like error_handler) is
 			-- Create a new Xace parser.

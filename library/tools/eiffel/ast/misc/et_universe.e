@@ -21,9 +21,19 @@ inherit
 
 creation
 
-	make, make_with_factory
+	make, make_standard, make_with_factory
 
 feature {NONE} -- Initialization
+
+	make_standard is
+			-- Create a new class universe.
+			-- Error messages will be sent to standard files.
+		local
+			a_handler: ET_ERROR_HANDLER
+		do
+			create a_handler.make_standard
+			make (Void, a_handler)
+		end
 
 	make (a_clusters: like clusters; an_error_handler: like error_handler) is
 			-- Create a new class universe.
@@ -493,6 +503,26 @@ feature -- Setting
 			clusters_set: clusters = a_clusters
 		end
 
+	set_error_handler (a_handler: like error_handler) is
+			-- Set `error_handler' to `a_handler'.
+		require
+			a_handler_not_void: a_handler /= Void
+		do
+			error_handler := a_handler
+		ensure
+			error_handler_set: error_handler = a_handler
+		end
+
+	set_ast_factory (a_factory: like ast_factory) is
+			-- Set `ast_factory' to `a_factory'.
+		require
+			a_factory_not_void: a_factory /= Void
+		do
+			ast_factory := a_factory
+		ensure
+			ast_factory_set: ast_factory = a_factory
+		end
+
 feature -- Parser status report
 
 	use_assign_keyword: BOOLEAN
@@ -722,16 +752,17 @@ feature -- Parsing
 			end
 		end
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
 			-- Parse all classes in `a_file' within cluster `a_cluster'.
-			-- `a_filename' is the filename of `a_file'.
+			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
+			-- its time stamp just before it was open.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
-			eiffel_parser.parse (a_file, a_filename, a_cluster)
+			eiffel_parser.parse (a_file, a_filename, a_time_stamp, a_cluster)
 		end
 
 feature -- Compilation
@@ -824,12 +855,13 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			preparse_single
-			debug ("ericb")
-				print_time (dt1, "Degree 6")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			compile_degree_5
+			parse_all
+--			preparse_single
+--			debug ("ericb")
+--				print_time (dt1, "Degree 6")
+--				dt1 := l_clock.system_clock.date_time_now
+--			end
+--			compile_degree_5
 			debug ("ericb")
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now

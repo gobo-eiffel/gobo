@@ -21,7 +21,7 @@ inherit
 
 creation
 
-	make, make_with_factory
+	make, make_standard, make_with_factory
 
 feature -- Access
 

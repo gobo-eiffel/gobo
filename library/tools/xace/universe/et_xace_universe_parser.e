@@ -5,7 +5,7 @@ indexing
 		"Xace universe parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ inherit
 creation
 
 	make, make_with_factory, make_with_variables,
-	make_with_variables_and_factory
+	make_with_variables_and_factory, make_standard
 
 feature -- Access
 

@@ -22,7 +22,7 @@ inherit
 creation
 
 	make, make_with_factory, make_with_variables,
-	make_with_variables_and_factory
+	make_with_variables_and_factory, make_standard
 
 feature -- Parsing
 

@@ -34,6 +34,7 @@ inherit
 		export {NONE} all end
 
 	ET_SHARED_FEATURE_NAME_TESTER
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -101,6 +102,9 @@ feature -- Access
 	cluster: ET_CLUSTER
 			-- Cluster containing the class being parsed
 
+	time_stamp: INTEGER
+			-- Time stamp of file being parsed
+
 feature -- Setting
 
 	set_ast_factory (a_factory: like ast_factory) is
@@ -125,8 +129,10 @@ feature -- Setting
 
 feature -- Parsing
 
-	parse (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
-			-- Parse Eiffel file `a_file'.
+	parse (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
+			-- Parse all classes in `a_file' within cluster `a_cluster'.
+			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
+			-- its time stamp just before it was open.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -139,6 +145,7 @@ feature -- Parsing
 				std.error.put_line ("%'")
 			end
 			filename := a_filename
+			time_stamp := a_time_stamp
 			cluster := a_cluster
 			input_buffer := Eiffel_buffer
 			Eiffel_buffer.set_file (a_file)
@@ -936,19 +943,30 @@ feature {NONE} -- AST factory
 			Result := universe.eiffel_class (a_name)
 			if Result.is_parsed and Result.is_preparsed then
 				if cluster.is_override then
-					if Result.cluster.is_override then
+					if Result.is_override then
 							-- Two classes with the same name in two override clusters.
-						set_fatal_error (Result)
+						l_other_class := Result.cloned_class
+						l_other_class.reset_all
+						l_other_class.set_filename (filename)
+						l_other_class.set_cluster (cluster)
+						l_other_class.set_name (a_name)
+						l_other_class.set_parsed
+						l_other_class.set_time_stamp (time_stamp)
+						l_other_class.set_in_system (True)
+						l_other_class.set_overridden_class (Result.overridden_class)
+						Result.set_overridden_class (l_other_class)
 						error_handler.report_vscn0a_error (Result, cluster, filename)
-						Result := Void
+						Result := l_other_class
 					else
 							-- Override.
-						l_other_class := clone (Result)
+						l_other_class := Result.cloned_class
+						l_other_class.set_overridden_class (Result.overridden_class)
 						Result.reset_all
 						Result.set_filename (filename)
 						Result.set_cluster (cluster)
 						Result.set_name (a_name)
 						Result.set_parsed
+						Result.set_time_stamp (time_stamp)
 						Result.set_in_system (True)
 						Result.set_overridden_class (l_other_class)
 						old_class := current_class
@@ -957,24 +975,45 @@ feature {NONE} -- AST factory
 						current_class := old_class
 						features.wipe_out
 					end
-				elseif not Result.cluster.is_override then
+				elseif not Result.is_override then
 						-- Two classes with the same name in two non-override clusters.
-					set_fatal_error (Result)
+					l_other_class := Result.cloned_class
+					l_other_class.reset_all
+					l_other_class.set_filename (filename)
+					l_other_class.set_cluster (cluster)
+					l_other_class.set_name (a_name)					
+					l_other_class.set_parsed
+					l_other_class.set_time_stamp (time_stamp)
+					l_other_class.set_in_system (True)
+					l_other_class.set_overridden_class (Result.overridden_class)
+					Result.set_overridden_class (l_other_class)
 					error_handler.report_vscn0a_error (Result, cluster, filename)
-					Result := Void
+					Result := l_other_class
 				else
-					l_other_class := clone (Result)
+						-- Overridden.
+					l_other_class := Result.cloned_class
+					Result.set_in_system (True)
 					l_other_class.reset_all
 					l_other_class.set_filename (filename)
 					l_other_class.set_cluster (cluster)
 					l_other_class.set_name (a_name)
+					l_other_class.set_parsed
+					l_other_class.set_time_stamp (time_stamp)
+					l_other_class.set_overridden_class (Result.overridden_class)
 					Result.set_overridden_class (l_other_class)
+					Result := l_other_class
+					old_class := current_class
+					current_class := Result
+					error_handler.report_compilation_status (Current, current_class)
+					current_class := old_class
+					features.wipe_out
 				end
 			else
 				Result.set_filename (filename)
 				Result.set_cluster (cluster)
 				Result.set_name (a_name)
 				Result.set_parsed
+				Result.set_time_stamp (time_stamp)
 				Result.set_in_system (True)
 				old_class := current_class
 				current_class := Result
