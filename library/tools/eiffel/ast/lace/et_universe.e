@@ -57,6 +57,8 @@ feature {NONE} -- Initialization
 			set_use_recast_keyword (True)
 			set_use_reference_keyword (True)
 			make_basic_classes
+			create null_processor.make (Current)
+			qualified_signature_resolver := null_processor
 		ensure
 			clusters_set: clusters = a_clusters
 			ast_factory_set: ast_factory = a_factory
@@ -446,7 +448,9 @@ feature -- Compilation
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			nb: INTEGER
+			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
+			activate_processors
 			preparse_single
 --			parse_all
 --debug ("ericb")
@@ -491,10 +495,19 @@ end
 				end
 				a_cursor.forth
 			end
-				-- Check interface.
+				-- Resolve qualified anchored types in signatures.
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.features_flattened then
+					nb := nb + 1
+					a_class.process (qualified_signature_resolver)
+				end
+				a_cursor.forth
+			end
+				-- Check interface.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.qualified_signatures_resolved then
 					a_class.process (interface_checker)
 				end
 				a_cursor.forth
@@ -506,94 +519,9 @@ debug ("ericb")
 	print ("Done.%N")
 	print (features.count)
 	print (" features%N")
-toto
+	create a_signature_viewer.make (Current)
+	a_signature_viewer.execute
 end
-		end
-
-	toto is
-		local
-			a_name: ET_IDENTIFIER
-			a_class: ET_CLASS
-			a_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
-			args: ET_FORMAL_ARGUMENT_LIST
-			i, nb: INTEGER
-			j, nb2: INTEGER
-			a_type: ET_BASE_TYPE
-		do
-			from
-				print ("Type class name: ")
-				io.read_line
-			until
-				io.last_string.is_empty
-			loop
-				create a_name.make (clone (io.last_string))
-				a_class := eiffel_class (a_name)
-				a_type := a_class
-				print ("Type feature name: ")
-				io.read_line
-				if io.last_string.is_equal ("all") then
-					a_features := a_class.features
-					nb := a_features.count
-					from i := 1 until i > nb loop
-						a_feature := a_features.item (i)
-						print (a_feature.name.name)
-						args := a_feature.arguments
-						if args /= Void then
-							print (" (")
-							nb2 := args.count
-							from j := 1 until j > nb2 loop
-								print (args.formal_argument (j).name.name)
-								print (": ")
-								print (args.formal_argument (j).type.base_type (a_type, Current).to_text)
-								if j /= nb2 then
-									print (", ")
-								end
-								j := j + 1
-							end
-							print (")")
-						end
-						if a_feature.type /= Void then
-							print (": ")
-							print (a_feature.type.base_type (a_type, Current).to_text)
-						end
-						print ("%N")
-						i := i + 1
-					end
-				else
-					create a_name.make (clone (io.last_string))
-					a_feature := a_class.named_feature (a_name)
-					if a_feature /= Void then
-						print (a_feature.name.name)
-						args := a_feature.arguments
-						if args /= Void then
-							print (" (")
-							nb2 := args.count
-							from j := 1 until j > nb2 loop
-								print (args.formal_argument (j).name.name)
-								print (": ")
-								print (args.formal_argument (j).type.base_type (a_type, Current).to_text)
-								if j /= nb2 then
-									print (", ")
-								end
-								j := j + 1
-							end
-							print (")")
-						end
-						if a_feature.type /= Void then
-							print (": ")
-							print (a_feature.type.base_type (a_type, Current).to_text)
-						end
-						print ("%N")
-					else
-						print ("Feature `")
-						print (io.last_string)
-						print ("' not found.%N")
-					end
-				end
-				print ("Type class name: ")
-				io.read_line
-			end
 		end
 
 	compile_system is
@@ -603,6 +531,7 @@ end
 			a_class: ET_CLASS
 			nb: INTEGER
 		do
+			activate_processors
 			preparse_single
 			--preparse_shallow
 			parse_system
@@ -635,10 +564,19 @@ end
 				end
 				a_cursor.forth
 			end
-				-- Check interface.
+				-- Resolve qualified anchored types in signatures.
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.features_flattened then
+					nb := nb + 1
+					a_class.process (qualified_signature_resolver)
+				end
+				a_cursor.forth
+			end
+				-- Check interface.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.qualified_signatures_resolved then
 					nb := nb + 1
 					a_class.process (interface_checker)
 				end
@@ -709,12 +647,34 @@ feature -- Processors
 			feature_flattener_not_void: Result /= Void
 		end
 
+	qualified_signature_resolver: ET_AST_PROCESSOR
+			-- Qualified signature resolver
+
 	interface_checker: ET_INTERFACE_CHECKER is
 			-- Interface checker
 		once
 			create Result.make (Current)
 		ensure
 			interface_checker_not_void: Result /= Void
+		end
+
+	null_processor: ET_AST_NULL_PROCESSOR
+			-- Null processor
+
+	activate_processors is
+			-- Activate processors.
+		do
+			create {ET_QUALIFIED_SIGNATURE_RESOLVER} qualified_signature_resolver.make (Current)
+		end
+
+	set_qualified_signature_resolver (a_resolver: like qualified_signature_resolver) is
+			-- Set `qualified_signature_resolver' to `a_resolver'.
+		require
+			a_resolver_not_void: a_resolver /= Void
+		do
+			qualified_signature_resolver := a_resolver
+		ensure
+			qualified_signature_resolver_not_void: qualified_signature_resolver = a_resolver
 		end
 
 feature {NONE} -- Implementation
@@ -744,5 +704,7 @@ invariant
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	any_parents_not_void: any_parents /= Void
+	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void
+	null_processor_not_void: null_processor /= Void
 
 end
