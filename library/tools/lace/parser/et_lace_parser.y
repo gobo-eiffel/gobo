@@ -144,7 +144,7 @@ Subclusters_opt: -- Empty
 		-- { $$ := Void }
 	| L_CLUSTER L_END
 		-- { $$ := Void }
-	| L_CLUSTER Subcluster_list L_END
+	| L_CLUSTER Subcluster_list Cluster_terminator L_END
 		{ $$ := $2 }
 	;
 
