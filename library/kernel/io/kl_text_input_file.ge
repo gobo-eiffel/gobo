@@ -30,24 +30,25 @@ inherit
 
 	KL_INPUT_FILE
 #ifdef ISE || HACT || VE
-#ifdef ISE || HACT
+#ifdef HACT
 		rename
 			index as position
 		undefine
-#ifdef HACT
 			medium_table_type,
-#endif
 			is_plain_text
 #endif
-#ifdef HACT || VE
 		redefine
+#ifdef ISE
+			string_name,
+			last_character,
+			last_string
+#endif
 #ifdef HACT
 			file_ps
 #endif
 #ifdef VE
 			read_character,
 			read_string
-#endif
 #endif
 		end
 #endif
@@ -56,7 +57,7 @@ inherit
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
-			name as old_name,
+			name as string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -85,8 +86,13 @@ inherit
 			{NONE} all
 		undefine
 			file_readable
-#ifdef HACT
 		redefine
+#ifdef ISE
+			string_name,
+			last_character,
+			last_string
+#endif
+#ifdef HACT
 			file_ps
 #endif
 		end
@@ -97,6 +103,18 @@ creation
 	make
 
 feature -- Access
+#ifdef ISE
+
+	last_character: CHARACTER
+			-- Last character read
+
+	last_string: STRING
+			-- Last string read
+			-- (Note: this query always return the same object.
+			-- Therefore a clone should be used if the result
+			-- is to be kept beyond the next call to this feature.
+			-- However `last_string' is not shared between file objects.)
+#endif
 
 	eol: STRING is "%N"
 			-- Line separator
@@ -209,13 +227,10 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef SE
-				last_string.clear
-#endif
 #ifdef HACT
 				last_string.set_count (0)
 #endif
-#ifdef VE
+#ifdef VE || SE
 				last_string.wipe_out
 #endif
 			end
@@ -267,13 +282,10 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef SE
-				last_string.clear
-#endif
 #ifdef HACT
 				last_string.set_count (0)
 #endif
-#ifdef VE
+#ifdef VE || SE
 				last_string.wipe_out
 #endif
 			end
@@ -301,14 +313,16 @@ feature -- Input
 			end_of_file := False
 		end
 
-#ifdef SE || HACT
+#ifdef SE || HACT || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
 	old_open_read is
 			-- Open file in read-only mode.
 		do
-			connect_to (name)
+			if string_name /= Empty_name then
+				connect_to (string_name)
+			end
 		end
 
 #endif
@@ -319,6 +333,30 @@ feature {NONE} -- Implementation
 			"C | <eif_file.h>"
 		alias
 			"file_pt_ps"
+		end
+
+#endif
+#ifdef ISE
+	string_name: STRING
+			-- Name of file (STRING version)
+
+	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		local
+			str_area: ANY
+		do
+			str_area := a_string.area
+			Result := file_gss (file_pointer, c_rtid ($str_area) + (pos - 1), nb)
+		end
+
+	c_rtid (p: POINTER): POINTER is
+			-- Return `p'
+		external
+			"C [macro <eif_macros.h>]"
+		alias
+			"/**/"
 		end
 
 #endif
