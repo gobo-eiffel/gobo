@@ -199,9 +199,4 @@ feature {NONE} -- Unicode implementation
 			Result := an_element.has_attribute (an_attr_name)
 		end
 
---!!	variables : GEANT_VARIABLES is
---!!			-- Project's variables
---!!		do
---!!			Result := project.variables
---!!		end
 end -- class GEANT_TASK

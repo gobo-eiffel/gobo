@@ -182,7 +182,7 @@ feature -- Processing
 					i := i + 1
 				end
 
-					-- Use passed start target if provided and exists
+					-- Use passed start target if provided and exists:
 				if a_start_target_name /= Void and then a_start_target_name.count > 0 then
 					!! ucs.make_from_string (a_start_target_name)
 					if target_with_name (ucs) /= Void then
@@ -240,7 +240,6 @@ feature -- Processing
 			end
 			a_dependent_targets := a_target.dependent_targets
 
-
 				-- Add all dependent targets to `build_targets':
 			from until a_dependent_targets.count = 0 loop
 				build_targets.force (a_dependent_targets.item)
@@ -266,29 +265,29 @@ feature -- Processing
 				-- Execute configured targets:
 			from until build_targets.count = 0 loop
 				a_target := build_targets.item
-				if not executed_targets.has (a_target) then
-						-- Execute topmost target of `build_targets':
-					execute_target (a_target)
-				end
+				execute_target (a_target, false)
 				build_targets.remove
 			end
 		end
 
-	execute_target (a_target: GEANT_TARGET) is
-			-- Execute `a_target';
+	execute_target (a_target: GEANT_TARGET; a_force: BOOLEAN) is
+			-- Execute `a_target' if not executed before;
+			-- Execute anyway if `a_force' is True.
 			-- Add `a_target' to `executed_targets'.
 		require
 			target_not_void: a_target = Void
 		do
-			current_target := a_target
-			print("%N" + a_target.name)
-			if verbose then
-				print(" (stack item nr=" + build_targets.count.out + ")")
+			if a_force or else not executed_targets.has (a_target) then
+				current_target := a_target
+				print("%N" + a_target.name)
+				if verbose then
+					print(" (stack item nr=" + build_targets.count.out + ")")
+				end
+				print(":%N%N")
+				a_target.execute
+				executed_targets.force_last (a_target)
+				current_target := Void
 			end
-			print(":%N%N")
-			a_target.execute
-			executed_targets.force_last (a_target)
-			current_target := Void
 		ensure
 			target_added_toexecuted_targets: executed_targets.has (a_target)
 			current_target_void: current_target = Void

@@ -45,7 +45,7 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := filename /= Void and then filename.count > 0
+			Result := is_filename_executable or is_target_executable
 		ensure then
 			project_or_target: Result implies is_filename_executable or is_target_executable
 		end
@@ -103,34 +103,40 @@ feature -- Execution
 			a_project: GEANT_PROJECT
 			ucs: UC_STRING
 			a_variables: GEANT_VARIABLES
+			a_target: GEANT_TARGET
 		do
---!!			if not is_filename_executable then
---!!				-- call target of current project:
---!!			else
-				-- Create a new project and run it's build process:
-			if reuse_variables then
-				a_variables := project.variables
+			if is_target_executable then
+					-- call target of current project:
+				!! ucs.make_from_string (start_target_name)
+				a_target := project.target_with_name (ucs)
+				project.execute_target (a_target, True)
 			else
-				a_variables := Void
-			end
-			
-			if filename /= Void and then filename.count > 0 then
-				!! ucs.make_from_string (filename)
-				!! a_project.make_with_filename (ucs, a_variables)
-			else
-				!! a_project.make (a_variables)
-			end
-
-				-- Load build configuration:
-			a_project.load (start_target_name)
-
-				-- Start build process:
-			if a_project.targets /= Void then
-				a_project.build
-				if not a_project.build_successful then
-						--!! TODO: Report this to parent project
-					print ("Build FAILED!%N")
-					Exceptions.die (1)
+				check filename_executable: is_filename_executable end
+					-- Create a new project and run it's build process:
+				if reuse_variables then
+					a_variables := project.variables
+				else
+					a_variables := Void
+				end
+				
+				if filename /= Void and then filename.count > 0 then
+					!! ucs.make_from_string (filename)
+					!! a_project.make_with_filename (ucs, a_variables)
+				else
+					!! a_project.make (a_variables)
+				end
+	
+					-- Load build configuration:
+				a_project.load (start_target_name)
+	
+					-- Start build process:
+				if a_project.targets /= Void then
+					a_project.build
+					if not a_project.build_successful then
+							--!! TODO: Report this to parent project
+						print ("Build FAILED!%N")
+						Exceptions.die (1)
+					end
 				end
 			end
 		end
