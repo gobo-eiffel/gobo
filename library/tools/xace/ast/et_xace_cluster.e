@@ -17,7 +17,9 @@ inherit
 	ET_CLUSTER
 		redefine
 			prefixed_name,
-			parent, subclusters
+			parent, subclusters,
+			is_valid_eiffel_filename,
+			is_valid_directory_name
 		end
 
 creation
@@ -207,6 +209,38 @@ feature {NONE} -- Implementation
 			!! Result.make (a_name, Void)
 			Result.set_parent (Current)
 			Result.set_recursive (True)
+		end
+
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+			-- Is `a_filename' an Eiffel filename which has
+			-- not been excluded?
+		local
+			an_exclude: DS_HASH_SET [STRING]
+		do
+			if precursor (a_filename) then
+				if options /= Void and then options.is_exclude_declared then
+					an_exclude := options.exclude
+					Result := not an_exclude.has (a_filename)
+				else
+					Result := True
+				end
+			end
+		end
+
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+			-- Is `a_dirname' a directory name other than "." and
+			-- ".." and which has not been excluded?
+		local
+			an_exclude: DS_HASH_SET [STRING]
+		do
+			if precursor (a_dirname) then
+				if options /= Void and then options.is_exclude_declared then
+					an_exclude := options.exclude
+					Result := not an_exclude.has (a_dirname)
+				else
+					Result := True
+				end
+			end
 		end
 
 feature {NONE} -- Constants

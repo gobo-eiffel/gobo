@@ -160,6 +160,14 @@ feature {NONE} -- Output
 		do
 			print_indentation (indent, a_file)
 			a_file.put_line ("<option>")
+			if an_option.is_abstract_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.abstract then
+					a_file.put_line ("<option name=%"abstract%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"abstract%" value=%"false%"/>")
+				end
+			end
 			if an_option.is_address_expression_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.address_expression then
@@ -300,6 +308,16 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"exception_trace%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_exclude_declared then
+				a_cursor := an_option.exclude.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"exclude%" value=%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
+				end
+			end
 			if an_option.is_finalize_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.finalize then
@@ -349,6 +367,14 @@ feature {NONE} -- Output
 				a_file.put_string ("<option name=%"heap_size%" value=%"")
 				a_file.put_integer (an_option.heap_size)
 				a_file.put_line ("%"/>")
+			end
+			if an_option.is_high_memory_compiler_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.high_memory_compiler then
+					a_file.put_line ("<option name=%"high_memory_compiler%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"high_memory_compiler%" value=%"false%"/>")
+				end
 			end
 			if an_option.is_inlining_declared then
 				a_cursor := an_option.inlining.new_cursor
@@ -470,6 +496,14 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"profile%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"profile%" value=%"false%"/>")
+				end
+			end
+			if an_option.is_recursive_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.recursive then
+					a_file.put_line ("<option name=%"recursive%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"recursive%" value=%"false%"/>")
 				end
 			end
 			if an_option.is_reloads_optimization_declared then
@@ -599,9 +633,6 @@ feature {NONE} -- Output
 			if a_location /= Void then
 				a_file.put_string ("%" location=%"")
 				a_file.put_string (a_location)
-			end
-			if a_cluster.is_abstract then
-				a_file.put_string ("%" abstract=%"true")
 			end
 			if a_cluster.is_relative then
 				a_file.put_string ("%" relative=%"true")

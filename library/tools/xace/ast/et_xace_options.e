@@ -33,6 +33,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_abstract_declared: BOOLEAN is
+			-- Has 'abstract' option been declared?
+		do
+			Result := declared_abstract /= Void and then not declared_abstract.is_undefined
+		ensure
+			definition: Result = (declared_abstract /= Void and then not declared_abstract.is_undefined)
+		end
+
 	is_address_expression_declared: BOOLEAN is
 			-- Has 'address_expression' option been declared?
 		do
@@ -169,6 +177,14 @@ feature -- Status report
 			definition: Result = (declared_exception_trace /= Void and then not declared_exception_trace.is_undefined)
 		end
 
+	is_exclude_declared: BOOLEAN is
+			-- Has 'exclude' option been declared?
+		do
+			Result := declared_exclude /= Void and then not declared_exclude.is_empty
+		ensure
+			definition: Result = (declared_exclude /= Void and then not declared_exclude.is_empty)
+		end
+
 	is_finalize_declared: BOOLEAN is
 			-- Has 'finalize' option been declared?
 		do
@@ -223,6 +239,14 @@ feature -- Status report
 			Result := declared_heap_size >= 0
 		ensure
 			definition: Result = (declared_heap_size >= 0)
+		end
+
+	is_high_memory_compiler_declared: BOOLEAN is
+			-- Has 'high_memory_compiler' option been declared?
+		do
+			Result := declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined
+		ensure
+			definition: Result = (declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined)
 		end
 
 	is_inlining_declared: BOOLEAN is
@@ -361,6 +385,14 @@ feature -- Status report
 			definition: Result = (declared_reloads_optimization /= Void and then not declared_reloads_optimization.is_undefined)
 		end
 
+	is_recursive_declared: BOOLEAN is
+			-- Has 'recursive' option been declared?
+		do
+			Result := declared_recursive /= Void and then not declared_recursive.is_undefined
+		ensure
+			definition: Result = (declared_recursive /= Void and then not declared_recursive.is_undefined)
+		end
+
 	is_shared_library_definition_declared: BOOLEAN is
 			-- Has 'shared_library_definition' option been declared?
 		do
@@ -450,6 +482,16 @@ feature -- Status report
 		end
 
 feature -- Option values
+
+	abstract: BOOLEAN is
+			-- 'abstract' option
+		do
+			if is_abstract_declared then
+				Result := declared_abstract.is_true
+			else
+				Result := default_abstract
+			end
+		end
 
 	address_expression: BOOLEAN is
 			-- 'address_expression' option
@@ -633,6 +675,19 @@ feature -- Option values
 			end
 		end
 
+	exclude: DS_HASH_SET [STRING] is
+			-- 'exclude' option
+		do
+			if is_exclude_declared then
+				Result := declared_exclude
+			else
+				Result := default_exclude
+			end
+		ensure
+			exclude_not_void: Result /= Void
+			no_void_exclude: not Result.has (Void)
+		end
+
 	finalize: BOOLEAN is
 			-- 'finalize' option
 		do
@@ -704,6 +759,16 @@ feature -- Option values
 				Result := declared_heap_size
 			else
 				Result := default_heap_size
+			end
+		end
+
+	high_memory_compiler: BOOLEAN is
+			-- 'high_memory_compiler' option
+		do
+			if is_high_memory_compiler_declared then
+				Result := declared_high_memory_compiler.is_true
+			else
+				Result := default_high_memory_compiler
 			end
 		end
 
@@ -874,6 +939,16 @@ feature -- Option values
 			end
 		end
 
+	recursive: BOOLEAN is
+			-- 'recursive' option
+		do
+			if is_recursive_declared then
+				Result := declared_recursive.is_true
+			else
+				Result := default_recursive
+			end
+		end
+
 	reloads_optimization: BOOLEAN is
 			-- 'reloads_optimization' option
 		do
@@ -999,6 +1074,22 @@ feature -- Option values
 		end
 
 feature -- Status setting
+
+	set_abstract (b: BOOLEAN) is
+			-- Set `abstract' to `b'.
+		do
+			if declared_abstract = Void then
+				!! declared_abstract.make_undefined
+			end
+			if b then
+				declared_abstract.set_true
+			else
+				declared_abstract.set_false
+			end
+		ensure
+			abstract_declared: is_abstract_declared
+			abstract_set: abstract = b
+		end
 
 	set_address_expression (b: BOOLEAN) is
 			-- Set `address_expression' to `b'.
@@ -1255,6 +1346,20 @@ feature -- Status setting
 			exception_trace_set: exception_trace = b
 		end
 
+	set_exclude (a_value: STRING) is
+			-- Set `exclude' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if declared_exclude = Void then
+				!! declared_exclude.make_equal (10)
+			end
+			declared_exclude.force_last (a_value)
+		ensure
+			exclude_declared: is_exclude_declared
+			exclude_set: exclude.has (a_value)
+		end
+
 	set_finalize (b: BOOLEAN) is
 			-- Set `finalize' to `b'.
 		do
@@ -1350,6 +1455,22 @@ feature -- Status setting
 		ensure
 			heap_size_declared: is_heap_size_declared
 			heap_size_set: heap_size = v
+		end
+
+	set_high_memory_compiler (b: BOOLEAN) is
+			-- Set `high_memory_compiler' to `b'.
+		do
+			if declared_high_memory_compiler = Void then
+				!! declared_high_memory_compiler.make_undefined
+			end
+			if b then
+				declared_high_memory_compiler.set_true
+			else
+				declared_high_memory_compiler.set_false
+			end
+		ensure
+			high_memory_compiler_declared: is_high_memory_compiler_declared
+			high_memory_compiler_set: high_memory_compiler = b
 		end
 
 	set_inlining (a_value: STRING) is
@@ -1584,6 +1705,22 @@ feature -- Status setting
 		ensure
 			profile_declared: is_profile_declared
 			profile_set: profile = b
+		end
+
+	set_recursive (b: BOOLEAN) is
+			-- Set `recursive' to `b'.
+		do
+			if declared_recursive = Void then
+				!! declared_recursive.make_undefined
+			end
+			if b then
+				declared_recursive.set_true
+			else
+				declared_recursive.set_false
+			end
+		ensure
+			recursive_declared: is_recursive_declared
+			recursive_set: recursive = b
 		end
 
 	set_reloads_optimization (b: BOOLEAN) is
@@ -1860,6 +1997,9 @@ feature -- Valid values
 
 feature -- Declared values
 
+	declared_abstract: UT_TRISTATE
+			-- Declared value for 'abstract' option
+
 	declared_address_expression: UT_TRISTATE
 			-- Declared value for 'address_expression' option
 
@@ -1911,6 +2051,9 @@ feature -- Declared values
 	declared_exception_trace: UT_TRISTATE
 			-- Declared value for 'exception_trace' option
 
+	declared_exclude: DS_HASH_SET [STRING]
+			-- Declared values for 'exclude' option
+
 	declared_finalize: UT_TRISTATE
 			-- Declared value for 'finalize' option
 
@@ -1931,6 +2074,9 @@ feature -- Declared values
 
 	declared_heap_size: INTEGER
 			-- Declared value for 'heap_size' option
+
+	declared_high_memory_compiler: UT_TRISTATE
+			-- Declared value for 'high_memory_compiler' option
 
 	declared_inlining: DS_HASH_SET [STRING]
 			-- Declared values for 'inlining' option
@@ -1980,6 +2126,9 @@ feature -- Declared values
 	declared_profile: UT_TRISTATE
 			-- Declared value for 'profile' option
 
+	declared_recursive: UT_TRISTATE
+			-- Declared value for 'recursive' option
+
 	declared_reloads_optimization: UT_TRISTATE
 			-- Declared value for 'reloads_optimization' option
 
@@ -2017,6 +2166,9 @@ feature -- Declared values
 			-- Declared value for 'wedit' option
 
 feature -- Default values
+
+	default_abstract: BOOLEAN is False
+			-- Default value for 'abstract' option
 
 	default_address_expression: BOOLEAN is False
 			-- Default value for 'address_expression' option
@@ -2101,6 +2253,15 @@ feature -- Default values
 	default_exception_trace: BOOLEAN is False
 			-- Default value for 'exception_trace' option
 
+	default_exclude: DS_HASH_SET [STRING] is
+			-- Default value for 'exclude' option
+		once
+			!! Result.make_equal (0)
+		ensure
+			default_exclude_not_void: Result /= Void
+			no_void_exclude: not Result.has (Void)
+		end
+
 	default_finalize: BOOLEAN is False
 			-- Default value for 'finalize' option
 
@@ -2126,6 +2287,9 @@ feature -- Default values
 
 	default_heap_size: INTEGER is -1
 			-- Default value for 'heap_size' option
+
+	default_high_memory_compiler: BOOLEAN is False
+			-- Default value for 'high_memory_compiler' option
 
 	default_inlining: DS_HASH_SET [STRING] is
 			-- Default value for 'inlining' option
@@ -2192,6 +2356,9 @@ feature -- Default values
 
 	default_profile: BOOLEAN is False
 			-- Default value for 'profile' option
+
+	default_recursive: BOOLEAN is False
+			-- Default value for 'recursive' option
 
 	default_reloads_optimization: BOOLEAN is False
 			-- Default value for 'reloads_optimization' option

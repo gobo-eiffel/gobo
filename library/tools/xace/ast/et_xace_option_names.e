@@ -14,6 +14,7 @@ class ET_XACE_OPTION_NAMES
 
 feature -- Option names
 
+	abstract_name: STRING is "abstract"
 	address_expression_name: STRING is "address_expression"
 	arguments_name: STRING is "arguments"
 	array_optimization_name: STRING is "array_optimization"
@@ -31,6 +32,7 @@ feature -- Option names
 	document_name: STRING is "document"
 	dynamic_runtime_name: STRING is "dynamic_runtime"
 	exception_trace_name: STRING is "exception_trace"
+	exclude_name: STRING is "exclude"
 	finalize_name: STRING is "finalize"
 	flat_fst_optimization_name: STRING is "flat_fst_optimization"
 	fst_expansion_factor_name: STRING is "fst_expansion_factor"
@@ -38,6 +40,7 @@ feature -- Option names
 	garbage_collector_name: STRING is "garbage_collector"
 	gc_info_name: STRING is "gc_info"
 	heap_size_name: STRING is "heap_size"
+	high_memory_compiler_name: STRING is "high_memory_compiler"
 	inlining_name: STRING is "inlining"
 	inlining_size_name: STRING is "inlining_size"
 	jumps_optimization_name: STRING is "jumps_optimization"
@@ -54,6 +57,7 @@ feature -- Option names
 	portable_code_generation_name: STRING is "portable_code_generation"
 	precompiled_name: STRING is "precompiled"
 	profile_name: STRING is "profile"
+	recursive_name: STRING is "recursive"
 	reloads_optimization_name: STRING is "reloads_optimization"
 	shared_library_definition_name: STRING is "shared_library_definition"
 	split_name: STRING is "split"
@@ -69,6 +73,7 @@ feature -- Option names
 
 feature -- Option codes
 
+	abstract_code: INTEGER is unique
 	address_expression_code: INTEGER is unique
 	arguments_code: INTEGER is unique
 	array_optimization_code: INTEGER is unique
@@ -86,6 +91,7 @@ feature -- Option codes
 	document_code: INTEGER is unique
 	dynamic_runtime_code: INTEGER is unique
 	exception_trace_code: INTEGER is unique
+	exclude_code: INTEGER is unique
 	finalize_code: INTEGER is unique
 	flat_fst_optimization_code: INTEGER is unique
 	fst_expansion_factor_code: INTEGER is unique
@@ -93,6 +99,7 @@ feature -- Option codes
 	garbage_collector_code: INTEGER is unique
 	gc_info_code: INTEGER is unique
 	heap_size_code: INTEGER is unique
+	high_memory_compiler_code: INTEGER is unique
 	inlining_code: INTEGER is unique
 	inlining_size_code: INTEGER is unique
 	jumps_optimization_code: INTEGER is unique
@@ -109,6 +116,7 @@ feature -- Option codes
 	portable_code_generation_code: INTEGER is unique
 	precompiled_code: INTEGER is unique
 	profile_code: INTEGER is unique
+	recursive_code: INTEGER is unique
 	reloads_optimization_code: INTEGER is unique
 	shared_library_definition_code: INTEGER is unique
 	split_code: INTEGER is unique
@@ -125,7 +133,8 @@ feature -- Option codes
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
 		once
-			!! Result.make_equal (52)
+			!! Result.make_equal (56)
+			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
 			Result.put_new (arguments_code, arguments_name)
 			Result.put_new (array_optimization_code, array_optimization_name)
@@ -143,6 +152,7 @@ feature -- Option codes
 			Result.put_new (document_code, document_name)
 			Result.put_new (dynamic_runtime_code, dynamic_runtime_name)
 			Result.put_new (exception_trace_code, exception_trace_name)
+			Result.put_new (exclude_code, exclude_name)
 			Result.put_new (finalize_code, finalize_name)
 			Result.put_new (flat_fst_optimization_code, flat_fst_optimization_name)
 			Result.put_new (fst_expansion_factor_code, fst_expansion_factor_name)
@@ -150,6 +160,7 @@ feature -- Option codes
 			Result.put_new (garbage_collector_code, garbage_collector_name)
 			Result.put_new (gc_info_code, gc_info_name)
 			Result.put_new (heap_size_code, heap_size_name)
+			Result.put_new (high_memory_compiler_code, high_memory_compiler_name)
 			Result.put_new (inlining_code, inlining_name)
 			Result.put_new (inlining_size_code, inlining_size_name)
 			Result.put_new (jumps_optimization_code, jumps_optimization_name)
@@ -166,6 +177,7 @@ feature -- Option codes
 			Result.put_new (portable_code_generation_code, portable_code_generation_name)
 			Result.put_new (precompiled_code, precompiled_name)
 			Result.put_new (profile_code, profile_name)
+			Result.put_new (recursive_code, recursive_name)
 			Result.put_new (reloads_optimization_code, reloads_optimization_name)
 			Result.put_new (shared_library_definition_code, shared_library_definition_name)
 			Result.put_new (split_code, split_name)

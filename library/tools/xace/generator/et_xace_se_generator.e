@@ -232,6 +232,13 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("collect (no)")
 			end
+			if an_option.high_memory_compiler then
+				print_indentation (indent, a_file)
+				a_file.put_line ("high_memory_compiler (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("high_memory_compiler (no)")
+			end
 			if an_option.manifest_string_trace then
 				print_indentation (indent, a_file)
 				a_file.put_line ("manifest_string_trace (yes)")
@@ -367,14 +374,10 @@ feature {NONE} -- Output
 				a_file.put_character ('%"')
 				an_option := a_cluster.options
 				if an_option /= Void then
-					a_file.put_new_line
-					print_indentation (2, a_file)
-					a_file.put_line ("default")
-					print_cluster_options (an_option, 3, a_file)
-					print_indentation (2, a_file)
-					a_file.put_string ("end")
-				else
-					a_file.put_character (';')
+					if print_cluster_options (an_option, 2, True, a_file) then
+						print_indentation (2, a_file)
+						a_file.put_string ("end")
+					end
 				end
 				a_file.put_new_line
 			end
@@ -420,67 +423,91 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER;
+		need_newline: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
 			-- Print cluster options `an_option' to `a_file'.
+			-- `need_newline' indicates whether a new-line is need before the `default' keyword.
+			-- Return True if the keyword 'default' has been printed.
 		require
 			an_option_not_void: an_option /= Void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
+			an_indent: INTEGER
 			an_assertion: DS_HASH_SET [STRING]
 			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
-			an_assertion := an_option.assertion
-			if an_assertion.has (options.all_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (all)")
-			elseif an_assertion.has (options.check_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (check)")
-			elseif an_assertion.has (options.loop_variant_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (loop)")
-			elseif an_assertion.has (options.loop_invariant_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (loop)")
-			elseif an_assertion.has (options.invariant_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (invariant)")
-			elseif an_assertion.has (options.ensure_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (ensure)")
-			elseif an_assertion.has (options.require_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (require)")
-			elseif an_assertion.has (options.none_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertion (no)")
+			if an_option.is_assertion_declared then
+				Result := True
+			elseif an_option.is_debug_option_declared then
+				Result := True
+			elseif an_option.is_debug_tag_declared then
+				Result := True
+			elseif an_option.is_trace_declared then
+				Result := True
 			end
-			if an_option.is_debug_option_declared then
-				if an_option.debug_option then
-					print_indentation (indent, a_file)
-					a_file.put_line ("debug (yes)")
-				else
-					print_indentation (indent, a_file)
-					a_file.put_line ("debug (no)")
+			if Result then
+				if need_newline then
+					a_file.put_new_line
 				end
-			end
-			a_debug_tag_cursor := an_option.debug_tag.new_cursor
-			from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
-				print_indentation (indent, a_file)
-				a_file.put_string ("debug (%"")
-				a_file.put_string (a_debug_tag_cursor.item)
-				a_file.put_line ("%")")
-				a_debug_tag_cursor.forth
-			end
-			if an_option.is_trace_declared then
-				if an_option.trace then
-					print_indentation (indent, a_file)
-					a_file.put_line ("trace (yes)")
-				else
-					print_indentation (indent, a_file)
-					a_file.put_line ("trace (no)")
+				an_indent := indent
+				print_indentation (an_indent, a_file)
+				a_file.put_line ("default")
+				an_indent := an_indent + 1
+				if an_option.is_assertion_declared then
+					an_assertion := an_option.assertion
+					if an_assertion.has (options.all_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (all)")
+					elseif an_assertion.has (options.check_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (check)")
+					elseif an_assertion.has (options.loop_variant_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (loop)")
+					elseif an_assertion.has (options.loop_invariant_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (loop)")
+					elseif an_assertion.has (options.invariant_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (invariant)")
+					elseif an_assertion.has (options.ensure_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (ensure)")
+					elseif an_assertion.has (options.require_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (require)")
+					elseif an_assertion.has (options.none_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (no)")
+					end
+				end
+				if an_option.is_debug_option_declared then
+					if an_option.debug_option then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("debug (yes)")
+					else
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("debug (no)")
+					end
+				end
+				a_debug_tag_cursor := an_option.debug_tag.new_cursor
+				from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
+					print_indentation (an_indent, a_file)
+					a_file.put_string ("debug (%"")
+					a_file.put_string (a_debug_tag_cursor.item)
+					a_file.put_line ("%")")
+					a_debug_tag_cursor.forth
+				end
+				if an_option.is_trace_declared then
+					if an_option.trace then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("trace (yes)")
+					else
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("trace (no)")
+					end
 				end
 			end
 		end
