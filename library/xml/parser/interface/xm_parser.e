@@ -155,14 +155,23 @@ feature -- Access
 			-- Source of the XML document being parsed.
 		deferred
 		ensure
-			source_not_void: source /= Void
+			source_not_void: Result /= Void
 		end
 
 	position: XM_POSITION is
-			-- Current position in the source of the XML document
+			-- Current position in the XML entity being parsed.
 		deferred
 		ensure
 			position_not_void: Result /= Void
+		end
+
+	positions: DS_LIST [XM_POSITION] is
+			-- Current position from the XML entity being parsed, and 
+			-- the position where it was included.
+		deferred
+		ensure
+			positions_not_void: Result /= Void
+			--consistent_with_first: Result.first = position
 		end
 
 feature -- Error reporting

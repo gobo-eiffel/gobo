@@ -88,14 +88,7 @@ feature -- Initialization
 	reset is
 			-- Reset parser before parsing next input.
 		do
-			from
-			until
-				scanners.is_empty
-			loop
-				scanner := scanners.item
-				scanners.remove
-			end
-			scanner.reset
+			make_scanner
 			in_external_dtd := False
 			entities.wipe_out
 			pe_entities.wipe_out
@@ -223,46 +216,50 @@ feature -- Error reporting
 	last_error_description: STRING
 			-- Textual description of last error
 
-feature -- Error diagnostic
+feature -- Error
 
 	line: INTEGER is
 			-- Current line
 		do
-			Result := scanner.line
+			Result := position.row
+		ensure
+			definition: Result = position.row
 		end
 
 	column: INTEGER is
 			-- Current column
 		do
-			Result := scanner.column
+			Result := position.column
+		ensure
+			definition: Result = position.column
 		end
 
 	byte_position: INTEGER is
 			-- Current byte index
 		do
-			Result := scanner.position
+			Result := position.byte_index
+		ensure
+			definition: Result = position.byte_index
 		end
 
 	position: XM_POSITION is
 			-- Current position in the source of the XML document
 		do
-			create {XM_DEFAULT_POSITION} Result.make (scanner.input_name, byte_position, column, line)
+			if is_correct then
+				Result := scanner.error_position
+			else
+				Result := positions.first
+			end
 		end
 
-	filename: STRING is
-			-- Current file
-		obsolete  "Use position.source_name"
+	positions: DS_LIST [XM_POSITION] is
+			-- Current stack of positions, starting with the current entity.
 		do
-			Result := scanner.input_name
-		ensure
-			filename_not_void: Result /= Void
-		end
-
-	source: XM_SOURCE is
-			-- Source of the XML document beeing parsed
-		obsolete "Use position.source_name"
-		do
-			create {XM_FILE_SOURCE} Result.make (scanner.input_name)
+			if is_correct then
+				Result := new_positions
+			else
+				Result := error_positions
+			end
 		end
 
 	error_header: STRING is
@@ -279,12 +276,84 @@ feature -- Error diagnostic
 			error_header_not_void: Result /= Void
 		end
 
+feature {NONE} -- Error
+
+	error_positions: like positions
+			-- Position stack in case of error.
+
+	setup_error_state (an_error: STRING) is
+			-- Set position
+		require
+			an_error_not_void: an_error /= Void
+		do
+				-- Set error info
+			last_error_description := an_error
+			error_positions := new_positions
+			
+				-- Unfold scanner stack
+			scanner.close_input
+			from
+			until
+				scanners.is_empty
+			loop
+				scanners.item.close_input
+				scanners.remove
+			end
+		end
+
+	new_positions: DS_BILINKED_LIST [XM_POSITION] is
+			-- Create stack of positions representing position in current XML 
+			-- entities.
+		local
+			a_scanners: like scanners
+		do
+				-- Copy scanners so that the stack can be traversed
+				-- without unfolding it.
+			create a_scanners.make
+			a_scanners.copy (scanners)
+
+				-- Top is scanner, not in scanners
+			create Result.make
+			Result.force_last (scanner.error_position)
+
+				-- Rest of stack.
+			from
+			until
+				a_scanners.is_empty
+			loop
+				Result.force_last (a_scanners.item.error_position)
+				a_scanners.remove
+			end
+		ensure
+			result_not_void: Result /= Void
+			count: Result.count = scanners.count + 1
+		end
+
+feature -- Obsolete error
+
+	filename: STRING is
+			-- Current file
+		obsolete  "Use position.source_name"
+		do
+			Result := scanner.input_name
+		ensure
+			filename_not_void: Result /= Void
+		end
+
+	source: XM_SOURCE is
+			-- Source of the XML document beeing parsed
+		obsolete "Use position.source_name"
+		do
+			create {XM_FILE_SOURCE} Result.make (position.source_name)
+		end
+		
 feature {NONE} -- Error reporting
 
 	report_error (an_error: STRING) is
 			-- On error.
 		do
-			last_error_description := an_error
+			check in_error: not is_correct end
+			setup_error_state (an_error)
 			on_error (last_error_extended_description)
 		end
 
@@ -293,6 +362,8 @@ feature {NONE} -- Error reporting
 		do
 			report_error (a_message)
 			abort
+		ensure
+			in_error: not is_correct
 		end
 
 feature {XM_PARSER_STOP_ON_ERROR_FILTER}
@@ -301,7 +372,7 @@ feature {XM_PARSER_STOP_ON_ERROR_FILTER}
 			-- Stop the parser, but do not issue an event error because
 			-- the error is issued by a downstream event.
 		do
-			last_error_description := an_error
+			setup_error_state (an_error)
 			abort
 		end
 

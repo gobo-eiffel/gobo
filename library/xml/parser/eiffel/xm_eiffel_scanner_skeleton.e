@@ -168,6 +168,14 @@ feature -- Error reporting
 			last_error := a_message
 		end
 
+	error_position: XM_DEFAULT_POSITION is
+			-- Position.
+		do
+			create Result.make (input_name, position, column, line)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 feature -- Access
 
 	input_name: STRING
