@@ -69,6 +69,7 @@ feature {NONE} -- Initialization
 			-- Create basic classes.
 		local
 			any_parent: ET_PARENT
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			any_class := eiffel_class (tokens.any_class_name)
 			any_class.set_in_system (True)
@@ -78,6 +79,8 @@ feature {NONE} -- Initialization
 			tuple_class.set_in_system (True)
 			bit_class := eiffel_class (tokens.bit_class_name)
 			bit_class.set_in_system (True)
+			string_class := eiffel_class (tokens.string_class_name)
+			array_class := eiffel_class (tokens.array_class_name)
 			boolean_class := eiffel_class (tokens.boolean_class_name)
 			character_class := eiffel_class (tokens.character_class_name)
 			wide_character_class := eiffel_class (tokens.wide_character_class_name)
@@ -90,6 +93,9 @@ feature {NONE} -- Initialization
 			pointer_class := eiffel_class (tokens.pointer_class_name)
 			create unknown_class.make_unknown (tokens.unknown_class_name)
 			create any_type.make (Void, any_class.name, any_class)
+			create a_parameters.make_with_capacity (1)
+			a_parameters.put_first (any_type)
+			create array_any_type.make (Void, array_class.name, a_parameters, array_class)
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
@@ -167,6 +173,12 @@ feature -- Basic classes
 	bit_class: ET_CLASS
 			-- Class BIT
 
+	string_class: ET_CLASS
+			-- Class STRING
+
+	array_class: ET_CLASS
+			-- Class ARRAY
+
 	boolean_class: ET_CLASS
 			-- Class BOOLEAN
 
@@ -205,6 +217,9 @@ feature -- Basic classes
 
 	any_type: ET_CLASS_TYPE
 			-- Class type ANY
+
+	array_any_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "ARRAY [ANY]"
 
 	any_parents: ET_PARENT_LIST
 			-- Default parents
@@ -559,6 +574,14 @@ end
 				end
 				a_cursor.forth
 			end
+				-- Check implementation.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.interface_checked then
+					a_class.process (implementation_checker)
+				end
+				a_cursor.forth
+			end
 debug ("ericb")
 	print ("Flattened ")
 	print (nb)
@@ -626,6 +649,14 @@ end
 				a_class := a_cursor.item
 				if a_class.qualified_signatures_resolved then
 					a_class.process (interface_checker)
+				end
+				a_cursor.forth
+			end
+				-- Check implementation.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.interface_checked then
+					a_class.process (implementation_checker)
 				end
 				a_cursor.forth
 			end
@@ -707,6 +738,14 @@ feature -- Processors
 			interface_checker_not_void: Result /= Void
 		end
 
+	implementation_checker: ET_IMPLEMENTATION_CHECKER is
+			-- Implementation checker
+		once
+			create Result.make (Current)
+		ensure
+			implementation_checker_not_void: Result /= Void
+		end
+
 	null_processor: ET_AST_NULL_PROCESSOR
 			-- Null processor
 
@@ -750,6 +789,8 @@ invariant
 	none_class_not_void: none_class /= Void
 	tuple_class_not_void: tuple_class /= Void
 	bit_class_not_void: bit_class /= Void
+	string_class_not_void: string_class /= Void
+	array_class_not_void: array_class /= Void
 	boolean_class_not_void: boolean_class /= Void
 	character_class_not_void: character_class /= Void
 	wide_character_class_not_void: wide_character_class /= Void
@@ -762,6 +803,7 @@ invariant
 	pointer_class_not_void: pointer_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
+	array_any_type_not_void: array_any_type /= Void
 	any_parents_not_void: any_parents /= Void
 	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void
 	null_processor_not_void: null_processor /= Void
