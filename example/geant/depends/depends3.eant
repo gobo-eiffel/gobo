@@ -1,0 +1,21 @@
+<project name="geant" default="C" >
+
+	<target name="A">
+		<echo message="A"/>
+	</target>
+
+	<target name="B" depend="A">
+		<echo message="B"/>
+	</target>
+
+	<target name="C">
+		<geant target="B"/>
+		<echo message="C"/>
+	</target>
+
+	<target name="D">
+		<geant file="depends3.eant" target="B"/>
+		<echo message="D"/>
+	</target>
+
+</project>
