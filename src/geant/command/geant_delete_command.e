@@ -120,36 +120,55 @@ feature -- Execution
 			if is_directory_executable then
 				a_name := file_system.pathname_from_file_system (directory, unix_file_system)
 				project.trace ("  [delete] " + a_name + "%N")
-				file_system.recursive_delete_directory (a_name)
-				if file_system.directory_exists (a_name) then
-					project.log ("  [delete] error: cannot delete directory '" + a_name + "'%N")
-					exit_code := 1
+				if not project.no_exec then
+					file_system.recursive_delete_directory (a_name)
+					if file_system.directory_exists (a_name) then
+						project.log ("  [delete] error: cannot delete directory '" + a_name + "'%N")
+						exit_code := 1
+					end
 				end
 			elseif is_file_executable then
 				a_name := file_system.pathname_from_file_system (file, unix_file_system)
 				project.trace ("  [delete] " + a_name + "%N")
-				file_system.delete_file (a_name)
-				if file_system.file_exists (a_name) then
-					project.log ("geant error: cannot delete file '" + a_name + "'%N")
-					exit_code := 1
-				end
-			else
-				check is_fileset_executable: is_fileset_executable end
-				from
-					fileset.execute
-					fileset.filenames.start
-				until
-					fileset.filenames.after or else exit_code /= 0
-				loop
-					a_name := file_system.pathname_from_file_system (fileset.filenames.item_for_iteration, unix_file_system)
-					project.trace ("  [delete] " + a_name + "%N")
+				if not project.no_exec then
 					file_system.delete_file (a_name)
 					if file_system.file_exists (a_name) then
 						project.log ("geant error: cannot delete file '" + a_name + "'%N")
 						exit_code := 1
 					end
-
-					fileset.filenames.forth
+				end
+			else
+				check is_fileset_executable: is_fileset_executable end
+				if not fileset.is_executable then
+					project.log ("  [delete] error: fileset definition wrong%N")
+					exit_code := 1
+				end
+				if exit_code = 0 then
+						-- This command always works on one file and not on two files like copy or move.
+						-- Therefore the force flag of `fileset` is set to 'True' so that files are included
+						-- although `fileset.item_filename' and `fileset.item_mapped_filename' are not
+						-- out of date.
+						-- A value of 'False' for `fileset.force' does not make sense here since the delete
+						-- command does not compare files.
+					fileset.set_force (True)
+					fileset.execute
+					from
+						fileset.start
+					until
+						fileset.after or else exit_code /= 0
+					loop
+						a_name := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
+						project.trace ("  [delete] " + a_name + "%N")
+						if not project.no_exec then
+							file_system.delete_file (a_name)
+							if file_system.file_exists (a_name) then
+								project.log ("geant error: cannot delete file '" + a_name + "'%N")
+								exit_code := 1
+							end
+						end
+	
+						fileset.forth
+					end
 				end
 			end
 		end
