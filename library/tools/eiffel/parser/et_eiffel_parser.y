@@ -181,7 +181,7 @@ creation
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
 %type <ET_WRITABLE>            Writable
 
-%expect 31
+%expect 35
 %start Class_declarations
 
 %%
@@ -2271,6 +2271,11 @@ Expression: Call_expression
 		}
 	| Manifest_string
 		{ $$ := $1 }
+	| Once Manifest_string
+		{
+				-- TODO:
+			$$ := $2
+		}
 	| Bit_constant
 		{ $$ := $1 }
 	| Manifest_array
