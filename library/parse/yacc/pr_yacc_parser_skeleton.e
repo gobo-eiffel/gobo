@@ -14,7 +14,7 @@ deferred class PR_YACC_PARSER_SKELETON
 
 inherit
 
-	YY_NEW_PARSER_SKELETON
+	YY_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton
 		redefine
@@ -153,8 +153,7 @@ feature {NONE} -- Factory
 			--   %token <a_type> a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: `a_char' recognized by
-			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 			a_type_not_void: a_type /= Void
 		do
 			Result := new_char_token (a_char)
@@ -195,8 +194,7 @@ feature {NONE} -- Factory
 			--   %left a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: `a_char' recognized by
-			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_left_associative
@@ -233,8 +231,7 @@ feature {NONE} -- Factory
 			--   %right a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: `a_char' recognized by
-			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_right_associative
@@ -271,8 +268,7 @@ feature {NONE} -- Factory
 			--   %nonassoc a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: `a_char' recognized by
-			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_non_associative
@@ -341,8 +337,7 @@ feature {NONE} -- Factory
 			-- `last_grammar'.
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: `a_char' recognized by
-			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		local
 			a_code: INTEGER
 			a_key: STRING
@@ -424,8 +419,7 @@ feature {NONE} -- Factory
 			-- with this string.
 		require
 			a_string_not_void: a_string /= Void
-			-- valid_string: `a_string' recognized by
-			--		\"[^"\n]*\"
+			-- valid_string: (\"[^"\n]*\").recognizes (a_string)
 		local
 			an_id: INTEGER
 		do
@@ -792,8 +786,7 @@ feature {NONE} -- Implementation
 		require
 			a_token_not_void: a_token /= Void
 			a_string_not_void: a_string /= Void
-			-- valid_string: `a_string' recognized by
-			--		\"[^"\n]*\"
+			-- valid_string: (\"[^"\n]*\").recognizes (a_string)
 		do
 			if
 				a_token.literal_string /= Void and then
