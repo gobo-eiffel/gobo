@@ -52,8 +52,9 @@
 		<set name="gepp_dir" value="clock"/>
 		<set name="gepp_file" value="dt_system_clock"/>
 		<geant target="spec_eif"/>
+	</target>
 
-	<target name="spec_eif" depends="spec_hact,spec_ise,spec_se,spec_ve">
+	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/hact/${gepp_file}.e">
 			<define name="HACT"/>
 		</gepp>
@@ -72,19 +73,19 @@
 		<mkdir directory="spec"/>
 	</target>
 
-	<target name="spec_hact" depends="spec">
+	<target name="spec_hact" depend="spec">
 		<mkdir directory="spec/hact"/>
 	</target>
 
-	<target name="spec_ise" depends="spec">
+	<target name="spec_ise" depend="spec">
 		<mkdir directory="spec/ise"/>
 	</target>
 
-	<target name="spec_se" depends="spec">
+	<target name="spec_se" depend="spec">
 		<mkdir directory="spec/se"/>
 	</target>
 
-	<target name="spec_ve" depends="spec">
+	<target name="spec_ve" depend="spec">
 		<mkdir directory="spec/ve"/>
 	</target>
 

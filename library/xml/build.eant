@@ -78,7 +78,7 @@
 		<geant target="spec_eif"/>
 	</target>
 
-	<target name="spec_eif" depends="spec_hact,spec_ise,spec_se,spec_ve">
+	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/hact/${gepp_file}.e">
 			<define name="HACT"/>
 		</gepp>
