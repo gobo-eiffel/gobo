@@ -12,6 +12,7 @@
 		revision:    "$Revision$"
 	</description>
 
+	<cluster name="elks"/>
 	<cluster name="io"/>
 	<cluster name="misc"/>
 	<cluster name="unicode"/>
