@@ -236,7 +236,7 @@ feature -- Valid characters
 					c := s.item (i)
 					inspect
 						c
-					when '%/00/'..'%/31/' then
+					when '%/0/'..'%/31/' then
 						-- control characters.
 						Result := True
 					when ' ', '%/128/'..'%/255/' then
