@@ -38,6 +38,7 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			Arguments.set_program_name ("getest")
+			!! variables.make
 			!! error_handler.make_standard
 			read_command_line
 			a_file := INPUT_STREAM_.make_file_open_read (config_filename)
@@ -50,7 +51,7 @@ feature -- Processing
 					std.output.put_line ("Running Test Cases")
 					std.output.put_new_line
 				end
-				!! config_parser.make (error_handler)
+				!! config_parser.make (variables, error_handler)
 				config_parser.set_compiler_ise (compiler_ise)
 				config_parser.set_compiler_hact (compiler_hact)
 				config_parser.set_compiler_se (compiler_se)
@@ -58,8 +59,8 @@ feature -- Processing
 				config_parser.parse (a_file)
 				INPUT_STREAM_.close (a_file)
 				a_config := config_parser.last_config
-				if compile /= Void then
-					a_config.set_compile (compile)
+				if compile_command /= Void then
+					a_config.set_compile (compile_command)
 				end
 				process (a_config)
 				if error_handler.error_reported then
@@ -70,111 +71,6 @@ feature -- Processing
 				error_handler.report_error (cannot_read)
 				Exceptions.die (1)
 			end
-		end
-
-	read_command_line is
-			-- Read command line arguments.
-		local
-			i, nb: INTEGER
-			arg: STRING
-			a_file: KL_TEXT_INPUT_FILE
-		do
-			nb := Arguments.argument_count
-			from i := 1 until i > nb loop
-				arg := Arguments.argument (i)
-				if arg.is_equal ("--version") or arg.is_equal ("-V") then
-					report_version_number
-				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
-					report_usage_message
-				elseif arg.is_equal ("--se") then
-					if compiler_specified then
-						report_usage_error
-					else
-						compiler_se := True
-					end
-				elseif arg.is_equal ("--ise") then
-					if compiler_specified then
-						report_usage_error
-					else
-						compiler_ise := True
-					end
-				elseif arg.is_equal ("--hact") then
-					if compiler_specified then
-						report_usage_error
-					else
-						compiler_hact := True
-					end
-				elseif arg.is_equal ("--ve") then
-					if compiler_specified then
-						report_usage_error
-					else
-						compiler_ve := True
-					end
-				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--compile=") then
-					if arg.count > 10 then
-						compile := arg.substring (11, arg.count)
-					else
-						compile := ""
-					end
-				elseif arg.is_equal ("-g") then
-					must_generate := True
-				elseif arg.is_equal ("-c") then
-					must_compile := True
-				elseif arg.is_equal ("-e") then
-					must_execute := True
-				elseif i = nb then
-					if config_filename /= Void then
-						report_usage_error
-					else
-						config_filename := arg
-					end
-				else
-					report_usage_error
-				end
-				i := i + 1
-			end
-			if config_filename = Void then
-				if compiler_ise then
-					!! a_file.make (ISE_config_filename)
-					if a_file.exists then
-						config_filename := ISE_config_filename
-					end
-				elseif compiler_hact then
-					!! a_file.make (HACT_config_filename)
-					if a_file.exists then
-						config_filename := HACT_config_filename
-					end
-				elseif compiler_se then
-					!! a_file.make (SE_config_filename)
-					if a_file.exists then
-						config_filename := SE_config_filename
-					end
-				elseif compiler_ve then
-					!! a_file.make (VE_config_filename)
-					if a_file.exists then
-						config_filename := VE_config_filename
-					end
-				end
-			end
-			if config_filename = Void then
-				!! a_file.make (cfg_config_filename)
-				if a_file.exists then
-					config_filename := cfg_config_filename
-				end
-			end
-			if config_filename = Void then
-				config_filename := Execution_environment.variable_value (Getest_config_variable)
-				if config_filename = Void or else config_filename.count = 0 then
-					report_undefined_environment_variable_error (Getest_config_variable)
-				end
-			end
-			if not (must_generate or must_compile or must_execute) then
-				must_generate := True
-				must_compile := True
-				must_execute := True
-			end
-		ensure
-			config_filename_not_void: config_filename /= Void
 		end
 
 	process (a_config: TS_CONFIG) is
@@ -265,9 +161,12 @@ feature -- Access
 	config_filename: STRING
 			-- Configuration filename
 
-	compile: STRING
+	compile_command: STRING
 			-- Compilation command-line given with
 			-- the option --compile=...
+
+	variables: TS_VARIABLES
+			-- Defined variables
 
 	error_handler: TS_ERROR_HANDLER
 			-- Error handler
@@ -297,6 +196,156 @@ feature -- Status report
 			Result := (compiler_ise or compiler_hact or compiler_se or compiler_ve)
 		ensure
 			definition: Result = (compiler_ise or compiler_hact or compiler_se or compiler_ve)
+		end
+
+feature {NONE} -- Command line
+
+	read_command_line is
+			-- Read command line arguments.
+		local
+			i, nb: INTEGER
+			arg: STRING
+			a_file: KL_TEXT_INPUT_FILE
+		do
+			nb := Arguments.argument_count
+			from i := 1 until i > nb loop
+				arg := Arguments.argument (i)
+				if arg.is_equal ("--version") or arg.is_equal ("-V") then
+					report_version_number
+				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
+					report_usage_message
+				elseif arg.is_equal ("--se") then
+					if compiler_specified then
+						report_usage_error
+					else
+						compiler_se := True
+					end
+				elseif arg.is_equal ("--ise") then
+					if compiler_specified then
+						report_usage_error
+					else
+						compiler_ise := True
+					end
+				elseif arg.is_equal ("--hact") then
+					if compiler_specified then
+						report_usage_error
+					else
+						compiler_hact := True
+					end
+				elseif arg.is_equal ("--ve") then
+					if compiler_specified then
+						report_usage_error
+					else
+						compiler_ve := True
+					end
+				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--define=") then
+					if arg.count > 9 then
+						set_defined_variable (arg.substring (10, arg.count))
+					else
+						report_usage_error
+					end
+				elseif arg.is_equal ("-D") then
+					i := i + 1
+					if i <= nb then
+						arg := Arguments.argument (i)
+						set_defined_variable (arg)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--compile=") then
+					if arg.count > 10 then
+						compile_command := arg.substring (11, arg.count)
+					else
+						report_usage_error
+					end
+				elseif arg.is_equal ("-g") then
+					must_generate := True
+				elseif arg.is_equal ("-c") then
+					must_compile := True
+				elseif arg.is_equal ("-e") then
+					must_execute := True
+				elseif i = nb then
+					if config_filename /= Void then
+						report_usage_error
+					else
+						config_filename := arg
+					end
+				else
+					report_usage_error
+				end
+				i := i + 1
+			end
+			if config_filename = Void then
+				if compiler_ise then
+					!! a_file.make (ISE_config_filename)
+					if a_file.exists then
+						config_filename := ISE_config_filename
+					end
+				elseif compiler_hact then
+					!! a_file.make (HACT_config_filename)
+					if a_file.exists then
+						config_filename := HACT_config_filename
+					end
+				elseif compiler_se then
+					!! a_file.make (SE_config_filename)
+					if a_file.exists then
+						config_filename := SE_config_filename
+					end
+				elseif compiler_ve then
+					!! a_file.make (VE_config_filename)
+					if a_file.exists then
+						config_filename := VE_config_filename
+					end
+				end
+			end
+			if config_filename = Void then
+				!! a_file.make (cfg_config_filename)
+				if a_file.exists then
+					config_filename := cfg_config_filename
+				end
+			end
+			if config_filename = Void then
+				config_filename := Execution_environment.variable_value (Getest_config_variable)
+				if config_filename = Void or else config_filename.count = 0 then
+					report_undefined_environment_variable_error (Getest_config_variable)
+				end
+			end
+			if not (must_generate or must_compile or must_execute) then
+				must_generate := True
+				must_compile := True
+				must_execute := True
+			end
+		ensure
+			config_filename_not_void: config_filename /= Void
+		end
+
+	set_defined_variable (arg: STRING) is
+			-- Set variable defined in `arg' with format <name>[=<value>].
+			-- Report usage error if invalid.
+		require
+			arg_not_void: arg /= Void
+		local
+			i: INTEGER
+			a_name, a_value: STRING
+		do
+			i := arg.index_of ('=', 1)
+			if i > 1 then
+				if i < arg.count then
+					a_name := arg.substring (1, i - 1)
+					a_value := arg.substring (i + 1, arg.count)
+					variables.set_value (a_name, a_value)
+				elseif i = arg.count then
+					a_name := arg.substring (1, i - 1)
+					variables.set_value (a_name, "")
+				else
+					report_usage_error
+				end
+			elseif i = 1 then
+				report_usage_error
+			else
+				a_name := arg
+				variables.set_value (a_name, "")
+			end
 		end
 
 feature {NONE} -- Error handling
@@ -350,7 +399,10 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Getest usage message
 		once
-			!! Result.make ("[-ceghV?][--help][--version][--compile=<command>][--se|--ise|--hact|--ve|<filename>]")
+			!! Result.make ("[-ceghV?][--help][--version]%N%
+				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
+				%%T[-C <command>|--compile=<command>]%N%
+				%%T[--se|--ise|--hact|--ve|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -370,5 +422,6 @@ feature {NONE} -- Constants
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	variables_not_void: variables /= Void
 
 end -- class GETEST
