@@ -23,7 +23,9 @@ inherit
 	DS_TOPOLOGICAL_SORTER [G]
 		redefine
 			make, has, index_of,
-			put, force, wipe_out
+			put, force, wipe_out,
+			set_equality_tester,
+			remove
 		end
 
 creation
@@ -64,6 +66,17 @@ feature -- Status report
 			Result := indexes.has (v)
 		end
 
+feature -- Setting
+
+	set_equality_tester (a_tester: like equality_tester) is
+			-- Set `equality_tester' to `a_tester'.
+			-- A void equality tester means that `='
+			-- will be used as comparison criterion.
+		do
+			items.set_equality_tester (a_tester)
+			indexes.set_key_equality_tester (a_tester)
+		end
+
 feature -- Element change
 
 	put (v: G) is
@@ -92,6 +105,26 @@ feature -- Element change
 		end
 
 feature -- Removal
+
+	remove (v: G) is
+			-- Remove `v' to the list of items to be sorted.
+			-- Keep the order relation for the sorting though.
+		local
+			k, j: INTEGER
+			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, G]
+		do
+			precursor (v)
+			k := indexes.item (v)
+			indexes.remove (v)
+			a_cursor := indexes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				j := a_cursor.item
+				if j > k then
+					a_cursor.replace (j - 1)
+				end
+				a_cursor.forth
+			end
+		end
 
 	wipe_out is
 			-- Wipe out items.

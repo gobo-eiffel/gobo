@@ -11,7 +11,7 @@ indexing
 		%of cycles is described in exercise 23 p.271 and p.548."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,14 @@ feature -- Access
 			-- (Note: the items in `cycle' are stored in reverse order
 			-- and the first item is repeated at the end of the list.)
 
+	equality_tester: KL_EQUALITY_TESTER [G] is
+			-- Equality tester to compare items to be sorted;
+			-- A void equality tester means that `=' will be
+			-- used as comparison criterion.
+		do
+			Result := items.equality_tester
+		end
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -85,6 +93,14 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
+	is_empty: BOOLEAN is
+			-- Are there no items yet to be sorted?
+		do
+			Result := (count = 0)
+		ensure
+			definition: Result = (count = 0)
+		end
 
 	has (v: G): BOOLEAN is
 			-- Is `v' included in the list of items to be sorted?
@@ -108,6 +124,29 @@ feature -- Status report
 			definition: Result = (cycle /= Void and then not cycle.is_empty)
 		end
 
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+			-- Can `set_equality_tester' be called with `a_tester'
+			-- as argument in current state of the sorter?
+		do
+			Result := is_empty
+		ensure
+			definition: Result = is_empty
+		end
+
+feature -- Setting
+
+	set_equality_tester (a_tester: like equality_tester) is
+			-- Set `equality_tester' to `a_tester'.
+			-- A void equality tester means that `='
+			-- will be used as comparison criterion.
+		require
+			equality_tester_settable: equality_tester_settable (a_tester)
+		do
+			items.set_equality_tester (a_tester)
+		ensure
+			equality_tester_set: equality_tester = a_tester
+		end
+
 feature -- Element change
 
 	put (v: G) is
@@ -120,6 +159,7 @@ feature -- Element change
 			counts.put_last (0)
 			successors.put_last (Void)
 		ensure
+			one_more: count = old count + 1
 			inserted: has (v)
 			last: index_of (v) = count
 		end
@@ -140,6 +180,7 @@ feature -- Element change
 			end
 			put (v)
 		ensure
+			one_more: count = old count + 1
 			inserted: has (v)
 			last: index_of (v) = count
 		end
@@ -197,6 +238,85 @@ feature -- Element change
 
 feature -- Removal
 
+	remove (v: G) is
+			-- Remove `v' to the list of items to be sorted.
+			-- Keep the order relation for the sorting though.
+		require
+			has: has (v)
+		local
+			k, j: INTEGER
+			s1, s2, s3, s4, old_s: DS_LINKABLE [INTEGER]
+			i, nb: INTEGER
+		do
+			k := index_of (v)
+			old_s := successors.item (k)
+			from
+				s1 := old_s
+			until
+				s1 = Void
+			loop
+				j := s1.item
+				counts.replace (counts.item (j) - 1, j)
+				s1 := s1.right
+			end
+			items.remove (k)
+			counts.remove (k)
+			successors.remove (k)
+			nb := successors.count
+			from i := 1 until i > nb loop
+				from
+					s1 := successors.item (i)
+					s2 := Void
+				until
+					s1 = Void
+				loop
+					if s1.item = k then
+						if s2 = Void then
+							successors.put (s1.right, i)
+						else
+							s2.put_right (s1.right)
+						end
+						from
+							s3 := old_s
+						until
+							s3 = Void
+						loop
+							j := s3.item
+							if j /= k then
+								if j > k then
+									j := j - 1
+								end
+								create s4.make (j)
+								if s2 = Void then
+									s2 := s4
+									successors.put (s2, i)
+									s2.put_right (s1.right)
+								else
+									s4.put_right (s2.right)
+									s2.put_right (s4)
+									s2 := s4
+								end
+								counts.replace (counts.item (j) + 1, j)
+							end
+							s3 := s3.right
+						end
+						s1 := s1.right
+					elseif s1.item > k then
+						s1.put (s1.item - 1)
+						s2 := s1
+						s1 := s1.right
+					else
+						s2 := s1
+						s1 := s1.right
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			one_less: count = old count - 1
+			removed: not has (v)
+		end
+
 	reset is
 			-- Discard result of last sort.
 		do
@@ -224,19 +344,25 @@ feature -- Sort
 
 	sort is
 			-- Sort items held in `items' according to the
-			-- relations which have been recorded since last sort.
+			-- relations which have been recorded.
 		local
 			i, nb: INTEGER
 			front, rear, old_front: INTEGER
 			qlinks: DS_ARRAYED_LIST [INTEGER]
 			succ: DS_LINKABLE [INTEGER]
 			marks: ARRAY [BOOLEAN]
+			a_counts: like counts
+			a_successors: like successors
 		do
 			-- See description of algorithm in "The Art of Computer
 			-- Programming", Vol.1 3rd ed. p.265. The detection of
 			-- cycles is described in exercise 23 p.271 and p.548.
 
 			reset
+				-- Clone `counts' and `successors' because they
+				-- are overwritten during the sort.
+			a_counts := clone (counts)
+			a_successors := clone (successors)
 			nb := items.count
 			create sorted_items.make (nb)
 				-- T4. Scan for zeros.
@@ -245,11 +371,11 @@ feature -- Sort
 				-- predecessors have already been processed. `front'
 				-- and `rear' are the indexes to the front and rear
 				-- of this queue. `qlinks' shares the same memory space
-				-- as `counts' since the corresponding slots in `counts'
+				-- as `a_counts' since the corresponding slots in `a_counts'
 				-- are not used anymore.
-			qlinks := counts
+			qlinks := a_counts
 			from i := 1 until i > nb loop
-				if counts.item (i) = 0 then
+				if a_counts.item (i) = 0 then
 					if front = 0 then
 						front := i
 						rear := i
@@ -262,12 +388,12 @@ feature -- Sort
 			end
 			from until front = 0 loop
 					-- T5. Output front of queue.
-				succ := successors.item (front)
+				succ := a_successors.item (front)
 				from until succ = Void loop
 						-- T6. Erase relation.
 					i := succ.item
-					nb := counts.item (i) - 1
-					counts.replace (nb, i)
+					nb := a_counts.item (i) - 1
+					a_counts.replace (nb, i)
 					if nb = 0 then
 							-- Add to `qlinks'.
 						qlinks.replace (i, rear)
@@ -275,7 +401,7 @@ feature -- Sort
 					end
 					succ := succ.right
 				end
-				successors.replace (Void, front)
+				a_successors.replace (Void, front)
 				sorted_items.put_last (items.item (front))
 				old_front := front
 				front := qlinks.item (old_front)
@@ -295,13 +421,12 @@ feature -- Sort
 				create marks.make (1, nb)
 				from i := 1 until i > nb loop
 					marks.put (True, i)
-					succ := successors.item (i)
+					succ := a_successors.item (i)
 						-- T10.
 					from until succ = Void loop
 						qlinks.replace (i, succ.item)
 						succ := succ.right
 					end
-					successors.replace (Void, i)
 					i := i + 1
 				end
 					-- T11.
@@ -325,14 +450,6 @@ feature -- Sort
 					i := qlinks.item (i)
 				end
 				cycle.put_last (items.item (i))
-					-- Reset `counts' so that its ready for next
-					-- recording of relations. (`successors' has
-					-- already been reset in step T9.)
-				nb := items.count
-				from i := 1 until i > nb loop
-					counts.replace (0, i)
-					i := i + 1
-				end
 			end
 		ensure
 			sorted: is_sorted
