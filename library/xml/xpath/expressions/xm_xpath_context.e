@@ -14,9 +14,9 @@ class XM_XPATH_CONTEXT
 
 inherit
 
-	KL_IMPORTED_STRING_ROUTINES
+	DT_SHARED_SYSTEM_CLOCK
 
-	XM_XPATH_DEBUGGING_ROUTINES -- TODO - remove when all todo routines are removed
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -31,6 +31,13 @@ feature {NONE} -- Initialization
 			positive_reserved_slots_count: a_reserved_slot_count >= 0
 		do
 			reserved_slot_count := a_reserved_slot_count
+			if reserved_slot_count = 0 then
+
+				-- Not XSLT so:
+
+				create internal_date_time.make_from_epoch (0)
+				utc_system_clock.set_date_time_to_now (internal_date_time)
+			end
 			cached_last := -1
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
 			current_iterator.start
@@ -50,6 +57,12 @@ feature -- Access
 
 	reserved_slot_count: INTEGER
 			-- Slots reserved by host language
+
+	current_date_time: DT_DATE_TIME is
+			-- Current date-time
+		do
+			Result := internal_date_time
+		end
 	
 	context_item: XM_XPATH_ITEM is
 			-- The context item (".")
@@ -195,6 +208,9 @@ feature {NONE} -- Implementation
 
 	cached_last: INTEGER
 			-- Used by `last'
+
+	internal_date_time: like current_date_time
+			-- Used by stand-alone XPath only
 
 invariant
 

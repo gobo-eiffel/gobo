@@ -33,8 +33,12 @@ feature -- Creation
 				create {XM_XPATH_CONTAINS} Result.make
 			elseif STRING_.same_string (a_function_name, "count") then
 				create {XM_XPATH_COUNT} Result.make
+			elseif STRING_.same_string (a_function_name, "current-date") then
+				create {XM_XPATH_CURRENT_DATE} Result.make
 			elseif STRING_.same_string (a_function_name, "current-dateTime") then
 				create {XM_XPATH_CURRENT_DATETIME} Result.make
+			elseif STRING_.same_string (a_function_name, "current-time") then
+				create {XM_XPATH_CURRENT_TIME} Result.make
 			elseif STRING_.same_string (a_function_name, "empty") then
 				create {XM_XPATH_EMPTY} Result.make
 			elseif STRING_.same_string (a_function_name, "exists") then

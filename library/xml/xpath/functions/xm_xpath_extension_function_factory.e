@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_USER_FUNCTION_FACTORY
+deferred class XM_XPATH_EXTENSION_FUNCTION_FACTORY
 
 
 feature -- Access

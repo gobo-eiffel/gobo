@@ -17,6 +17,8 @@ inherit
 		XM_XPATH_CONTEXT
 		rename
 			make as xpath_make
+		redefine
+			current_date_time
 		end
 
 creation
@@ -43,6 +45,12 @@ feature -- Access
 
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer
+
+	current_date_time: DT_DATE_TIME is
+			-- Current date-time
+		do
+			Result := transformer.current_date_time
+		end
 
 invariant
 

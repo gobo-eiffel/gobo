@@ -55,6 +55,7 @@
 			<cluster name="values"/>
 			<cluster name="expressions"/>
 			<cluster name="events"/>
+			<cluster name="exslt"/>
 			<cluster name="functions"/>
 			<cluster name="sort"/>
 			<cluster name="stand_alone"/>

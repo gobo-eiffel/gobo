@@ -58,6 +58,7 @@ feature
 			create a_result.make (an_output)
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
+--			print (an_output_string)
 		end
 
 end

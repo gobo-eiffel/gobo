@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath current-dateTime() function"
+		"Objects that implement the XPath current-date() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_CURRENT_DATETIME
+class XM_XPATH_CURRENT_DATE
 
 inherit
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "current-dateTime"
+			name := "current-date"
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
@@ -78,8 +78,6 @@ feature -- Evaluation
 				a_result_string.append_character ('0')
 			end
 			a_result_string.append_string (a_day.out)
-			a_result_string.append_character ('T')
-			a_date_time.append_precise_time_to_string (a_result_string)
 			a_result_string.append_character ('Z')
 			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result_string)
 		end

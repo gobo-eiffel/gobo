@@ -27,6 +27,8 @@ inherit
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
 	XM_XSLT_VALIDATION
+	
+	DT_SHARED_SYSTEM_CLOCK
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
@@ -56,6 +58,7 @@ feature {NONE} -- Initialization
 			recovery_policy := Recover_with_warnings
 			create parser_factory
 			create user_data_table.make_with_equality_testers (10, Void, string_equality_tester)
+			create current_date_time.make_from_epoch (0)
 		ensure
 			configuration_set: configuration = a_configuration
 			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
@@ -68,6 +71,8 @@ feature -- Access
 
 	configuration: XM_XSLT_CONFIGURATION
 			-- User-selectable configuration parameters
+
+	current_date_time: DT_DATE_TIME
 
 	key_manager: XM_XSLT_KEY_MANAGER is
 			-- Key manager
@@ -544,9 +549,7 @@ feature -- Transformation
 			a_parser: XM_PARSER
 			a_document: XM_XPATH_DOCUMENT
 		do
-
-			-- TODO: reset current date-time
-
+			utc_system_clock.set_date_time_to_now (current_date_time)
 			if a_source /= Void then
 
 				-- Hm. This certainly applies to a uri source, but may need

@@ -89,6 +89,8 @@ feature -- Access
 	Gexslt_eiffel_type_uri: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
 			-- Namespace for extension functions, etc. written in Eiffel
 
+	Exslt_date_uri: STRING is "http://exslt.org/dates-and-times"
+			-- EXSLT dates
 
 			-- The following codes are 3-bit values for building a fingerprint
 

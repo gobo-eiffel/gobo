@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			create user_function_factories.make_with_equality_testers (3, Void, string_equality_tester)
+			create extension_function_factories.make_with_equality_testers (3, Void, string_equality_tester)
 		end
 
 feature -- Access
@@ -42,11 +42,11 @@ feature -- Access
 			valid_local_name: a_local_name /= Void and then a_local_name.count > 0
 			nearly_positive_arity: an_arity >= -1
 		local
-			a_user_function_factory: XM_XPATH_USER_FUNCTION_FACTORY
+			an_extension_function_factory: XM_XPATH_EXTENSION_FUNCTION_FACTORY
 		do
-			if is_user_function_factory_registered (a_uri) then
-				a_user_function_factory := user_function_factories.item (a_uri)
-				Result := a_user_function_factory.has (a_local_name, an_arity)
+			if is_extension_function_factory_registered (a_uri) then
+				an_extension_function_factory := extension_function_factories.item (a_uri)
+				Result := an_extension_function_factory.has (a_local_name, an_arity)
 			end
 		end
 
@@ -59,10 +59,10 @@ feature -- Access
 			nearly_positive_arity: an_arity >= -1
 			is_extension_function: is_extension_function (a_uri, a_local_name, an_arity)
 		local
-			a_user_function_factory: XM_XPATH_USER_FUNCTION_FACTORY			
+			an_extension_function_factory: XM_XPATH_EXTENSION_FUNCTION_FACTORY			
 		do
-			a_user_function_factory := user_function_factories.item (a_uri)
-			Result := a_user_function_factory.function (a_local_name, an_arity)
+			an_extension_function_factory := extension_function_factories.item (a_uri)
+			Result := an_extension_function_factory.function (a_local_name, an_arity)
 		ensure
 			extension_function_not_void: Result /= Void
 		end
@@ -72,12 +72,12 @@ feature -- Status report
 	is_system_function_factory_registered: BOOLEAN
 			-- Has an XM_XPATH_SYSTEM_FUNCTION_FACTORY been registered?
 
-	is_user_function_factory_registered (a_uri: STRING): BOOLEAN is
-			-- Is `a_uri' registered against a user function factory?
+	is_extension_function_factory_registered (a_uri: STRING): BOOLEAN is
+			-- Is `a_uri' registered against an extension function factory?
 		require
 			uri_not_reserved: a_uri /= Void and then not is_reserved_namespace (a_uri) and then a_uri.count > 0
 		do
-			Result := user_function_factories.has (a_uri)
+			Result := extension_function_factories.has (a_uri)
 		end
 
 feature -- Status setting
@@ -93,18 +93,18 @@ feature -- Status setting
 			factory_registered: is_system_function_factory_registered and system_function_factory = a_system_function_factory
 		end
 
-	register_user_function_factory (a_user_function_factory: XM_XPATH_USER_FUNCTION_FACTORY; a_uri: STRING) is
-			-- Register a user function factory for `a_uri'.
+	register_extension_function_factory (an_extension_function_factory: XM_XPATH_EXTENSION_FUNCTION_FACTORY; a_uri: STRING) is
+			-- Register an extension function factory for `a_uri'.
 			-- N.B. The same factory may be registered for multiple URIs
 		require
-			factory_not_void: a_user_function_factory /= Void
+			factory_not_void: an_extension_function_factory /= Void
 			uri_not_reserved: a_uri /= Void and then not is_reserved_namespace (a_uri) and then a_uri.count > 0
-			not_already_registered: not  is_user_function_factory_registered(a_uri)
+			not_already_registered: not  is_extension_function_factory_registered(a_uri)
 		do
-			user_function_factories.force (a_user_function_factory, a_uri)
+			extension_function_factories.force (an_extension_function_factory, a_uri)
 		ensure
-			factory_registered: is_user_function_factory_registered (a_uri)
-			correct_factory: user_function_factories.item (a_uri) = a_user_function_factory
+			factory_registered: is_extension_function_factory_registered (a_uri)
+			correct_factory: extension_function_factories.item (a_uri) = an_extension_function_factory
 		end
 	
 feature -- Creation
@@ -123,8 +123,8 @@ feature {NONE} -- Implementation
 	system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
 			-- The registered system function factory
 
-	user_function_factories: DS_HASH_TABLE [XM_XPATH_USER_FUNCTION_FACTORY, STRING]
-			-- registered user function factories
+	extension_function_factories: DS_HASH_TABLE [XM_XPATH_EXTENSION_FUNCTION_FACTORY, STRING]
+			-- registered extension function factories
 	
 invariant
 
