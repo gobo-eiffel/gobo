@@ -82,15 +82,15 @@
 		<geant file="library/build.eant" target="install"/>
 		<geant file="src/build.eant" target="install"/>
 		<geant file="src/gelex/build.eant" target="compile"/>
-		<copy file="src/gelex/gelex${exe}" to_file="bin/gelex${exe}"/>
+		<move file="src/gelex/gelex${exe}" to_file="bin/gelex${exe}"/>
 		<geant file="src/gepp/build.eant" target="compile"/>
-		<copy file="src/gepp/gepp${exe}" to_file="bin/gepp${exe}"/>
+		<move file="src/gepp/gepp${exe}" to_file="bin/gepp${exe}"/>
 		<geant file="src/gexace/build.eant" target="compile"/>
-		<copy file="src/gexace/gexace${exe}" to_file="bin/gexace${exe}"/>
+		<move file="src/gexace/gexace${exe}" to_file="bin/gexace${exe}"/>
 		<geant file="src/geyacc/build.eant" target="compile"/>
-		<copy file="src/geyacc/geyacc${exe}" to_file="bin/geyacc${exe}"/>
+		<move file="src/geyacc/geyacc${exe}" to_file="bin/geyacc${exe}"/>
 		<geant file="src/geant/build.eant" target="compile"/>
-		<copy file="src/geant/geant${exe}" to_file="bin/geant1${exe}"/>
+		<move file="src/geant/geant${exe}" to_file="bin/geant1${exe}"/>
 		<geant file="library/build.eant" target="clobber"/>
 		<geant file="src/build.eant" target="clobber"/>
 	</target>
@@ -103,9 +103,9 @@
 		<geant file="library/build.eant" target="install"/>
 		<geant file="src/build.eant" target="install"/>
 		<geant file="src/getest/build.eant" target="compile"/>
-		<copy file="src/getest/getest${exe}" to_file="bin/getest${exe}"/>
+		<move file="src/getest/getest${exe}" to_file="bin/getest${exe}"/>
 		<geant file="src/gelint/build.eant" target="compile"/>
-		<copy file="src/gelint/gelint${exe}" to_file="bin/gelint${exe}"/>
+		<move file="src/gelint/gelint${exe}" to_file="bin/gelint${exe}"/>
 		<geant target="clean"/>
 	</target>
 
