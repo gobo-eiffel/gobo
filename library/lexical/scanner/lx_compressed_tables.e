@@ -85,6 +85,7 @@ feature -- Conversion
 			yyNull_equiv_class := other.yyNull_equiv_class
 			yyReject_used := other.yyReject_used
 			yyVariable_trail_context := other.yyVariable_trail_context
+			yyNb_rules := other.yyNb_rules
 			yyEnd_of_buffer := other.yyEnd_of_buffer
 		end
 

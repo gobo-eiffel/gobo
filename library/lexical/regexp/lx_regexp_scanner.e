@@ -474,6 +474,9 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
+	yyNb_rules: INTEGER is 28
+			-- Number of rules
+
 	yyEnd_of_buffer: INTEGER is 29
 			-- End of buffer rule code
 

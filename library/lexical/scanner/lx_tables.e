@@ -48,6 +48,9 @@ feature -- Tables
 
 feature -- Constants
 
+	yyNb_rules: INTEGER
+			-- Number of rules
+
 	yyEnd_of_buffer: INTEGER
 			-- End of buffer rule code
 
