@@ -28,10 +28,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler) is
 			-- Create a new 'build' command.
 		do
-			precursor (an_error_handler)
+			precursor (a_variables, an_error_handler)
 			!! generators.make
 		end
 
@@ -40,36 +40,29 @@ feature -- Access
 	generators: DS_LINKED_LIST [ET_XACE_GENERATOR]
 			-- Ace file generators
 
-	variables: ET_XACE_VARIABLES
-			-- Dollar variables defined for current universe
-
-feature -- Setting
-
-	set_variables (a_variables: like variables) is
-			-- Set `variables' to `a_variables'.
-		do
-			variables := a_variables
-		ensure
-			variables_set: variables = a_variables
-		end
-
 feature -- Execution
 
 	execute is
 			-- Execute 'build' command.
 		local
 			a_parser: ET_XACE_SYSTEM_PARSER
+			a_factory: ET_XACE_AST_FACTORY
 			a_system: ET_XACE_UNIVERSE
 			a_file: like INPUT_STREAM_TYPE
 		do
-			!! a_parser.make (error_handler)
+			!! a_factory.make (variables, error_handler)
+			!! a_parser.make_with_factory (a_factory, error_handler)
 			a_file := INPUT_STREAM_.make_file_open_read (system_filename)
 			if INPUT_STREAM_.is_open_read (a_file) then
 				a_parser.parse_file (a_file)
 				INPUT_STREAM_.close (a_file)
 				a_system := a_parser.last_universe
-				if a_system /= Void then
-					a_system.set_variables (variables)
+				if
+					a_system /= Void and then
+					a_system.system_name /= Void and then
+					a_system.root_class_name /= Void and then
+					a_system.creation_procedure_name /= Void
+				then
 					execute_generators (a_system)
 				end
 			else

@@ -15,11 +15,13 @@ deferred class GEXACE_COMMAND
 
 feature {NONE} -- Initialization
 
-	make (an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler) is
 			-- Create a new command.
 		require
+			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
+			variables := a_variables
 			error_handler := an_error_handler
 			system_filename := default_system_filename
 		ensure
@@ -34,6 +36,9 @@ feature -- Access
 
 	default_system_filename: STRING is "system.xace"
 			-- Default name of Xace file
+
+	variables: ET_XACE_VARIABLES
+			-- Dollar variables defined
 
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
@@ -62,6 +67,7 @@ invariant
 
 	system_filename_not_void: system_filename /= Void
 	system_filename_not_empty: system_filename.count > 0
+	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
 
 end -- class GEXACE_COMMAND

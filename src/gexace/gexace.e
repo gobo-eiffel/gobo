@@ -121,8 +121,7 @@ feature {NONE} -- Command-line processing
 		local
 			a_command: GEXACE_BUILD_COMMAND
 		do
-			!! a_command.make (error_handler)
-			a_command.set_variables (variables)
+			!! a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			process_compilers (a_command)
 			process_system_file (a_command)
@@ -133,45 +132,43 @@ feature {NONE} -- Command-line processing
 		local
 			a_command: GEXACE_VALIDATE_COMMAND
 		do
-			!! a_command.make (error_handler)
-			a_command.set_variables (variables)
+			!! a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			process_system_file (a_command)
 		end
 
 	process_compilers (a_command: GEXACE_BUILD_COMMAND) is
 			-- Process compilers to output code for.
-			-- Possible options are: "--ise", "--se", "--ve", "--hact".
-			-- At least one compiler must be given.
+			-- Possible option is: "--ise", "--se", "--ve" or "--hact".
+			-- One and only one compiler must be given.
 			-- A variable with the upper case option name
 			-- will automatically be defined.
 		require
 			a_command_not_void: a_command /= Void
 		local
-			stop: BOOLEAN
 			g: ET_XACE_GENERATOR
 		do
-			from until
-				stop or not has_next_option
-			loop
+			if has_next_option then
 				if match_long_option ("se") then
+					variables.define_value ("GOBO_EIFFEL", "se")
 					!ET_XACE_SE_GENERATOR! g.make (error_handler)
 					a_command.generators.force_last (g)
 					consume_option
 				elseif match_long_option ("ise") then
+					variables.define_value ("GOBO_EIFFEL", "ise")
 					!ET_XACE_ISE_GENERATOR! g.make (error_handler)
 					a_command.generators.force_last (g)
 					consume_option
 				elseif match_long_option ("ve") then
+					variables.define_value ("GOBO_EIFFEL", "ve")
 					!ET_XACE_VE_GENERATOR! g.make (error_handler)
 					a_command.generators.force_last (g)
 					consume_option
 				elseif match_long_option ("hact") then
+					variables.define_value ("GOBO_EIFFEL", "hact")
 					!ET_XACE_HACT_GENERATOR! g.make (error_handler)
 					a_command.generators.force_last (g)
 					consume_option
-				else
-					stop := True
 				end
 			end
 			if a_command.generators.is_empty then
@@ -227,7 +224,7 @@ feature {NONE} -- Usage message
 			!! Result.make ("[variable-definitions] [options] command [xace-file]%N%
 			%%Tvariable-definitions:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 			%%Toptions:  --verbose%N%
-			%%Tcommand:  --build (--se|--ise|--ve|--hact)+%N%
+			%%Tcommand:  --build (--se|--ise|--ve|--hact)%N%
 			%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void
