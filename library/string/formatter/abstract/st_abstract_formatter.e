@@ -33,13 +33,19 @@ feature {NONE} -- Initialization
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: ANY is
-			-- Class used for `conforms_to' checks;
-			-- To be implemented in descendent to appropriate type.
+			-- Type of formatted value.
+			-- To be implemented in descendant to appropriate type.
 			-- Should be initialized.
 		deferred
 		ensure
 			anchor_not_void: Result /= Void
 		end
+		
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' of the type accepted by this formatter?
+		deferred
+		end
+		
 
 feature -- Width and precision
 
