@@ -50,19 +50,20 @@ feature -- Status report
 			a_string_not_void: a_string /= Void
 		local
 			a_unicode: UC_STRING
-			i: INTEGER
+			i, nb: INTEGER
 		do
 			a_unicode ?= a_string
 			if a_unicode /= Void then
 				Result := a_unicode.is_ascii
 			else
 				Result := True
-				from i := a_string.count until i < 1 loop
+				nb := a_string.count
+				from i := 1 until i > nb loop
 					if maximum_ascii_character_code < a_string.item_code (i) then
 						Result := False
-						i := 0 -- Jump out of the loop.
+						i := nb + 1 -- Jump out of the loop.
 					else
-						i := i - 1
+						i := i + 1
 					end
 				end
 			end
