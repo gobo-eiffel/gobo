@@ -147,6 +147,8 @@ feature -- Namespace mode
 			
 		do
 			use_namespaces := False
+		ensure
+			disabled_namespaces: not use_namespaces
 		end
 		
 	use_namespaces: BOOLEAN
