@@ -1,0 +1,17 @@
+<project name="gexace" default="compile">
+
+	<target name="compile" description="compiles GEXACE">
+		<gexace
+			command="build"
+			command_options="se"
+		/>
+	</target>
+
+	<target name="compile-ise" description="compiles GEXACE">
+		<gexace
+			command="build"
+			command_options="ise"
+		/>
+	</target>
+
+</project>
