@@ -25,7 +25,9 @@ creation
 	make_alias,
 	make_all,
 	make_as,
+	make_assign,
 	make_attribute,
+	make_cat,
 	make_check,
 	make_class,
 	make_convert,
@@ -132,6 +134,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_assign is
+			-- Create a new 'assign' keyword.
+		do
+			code := tokens.assign_keyword_code
+			make_token (tokens.assign_keyword_name)
+		ensure
+			is_assign: is_assign
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_attribute is
 			-- Create a new 'attribute' keyword.
 		do
@@ -139,6 +152,17 @@ feature {NONE} -- Initialization
 			make_token (tokens.attribute_keyword_name)
 		ensure
 			is_attribute: is_attribute
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_cat is
+			-- Create a new 'cat' keyword.
+		do
+			code := tokens.cat_keyword_code
+			make_token (tokens.cat_keyword_name)
+		ensure
+			is_cat: is_cat
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -802,10 +826,22 @@ feature -- Status report
 			Result := (code = tokens.as_keyword_code)
 		end
 
+	is_assign: BOOLEAN is
+			-- Is current keyword 'assign'?
+		do
+			Result := (code = tokens.assign_keyword_code)
+		end
+
 	is_attribute: BOOLEAN is
 			-- Is current keyword 'attribute'?
 		do
 			Result := (code = tokens.attribute_keyword_code)
+		end
+
+	is_cat: BOOLEAN is
+			-- Is current keyword 'cat'?
+		do
+			Result := (code = tokens.cat_keyword_code)
 		end
 
 	is_check: BOOLEAN is

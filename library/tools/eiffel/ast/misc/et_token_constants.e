@@ -214,6 +214,14 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	colon_symbol: ET_SYMBOL is
+			-- ':' symbol
+		once
+			create Result.make_colon
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
 	dollar_symbol: ET_SYMBOL is
 			-- '$' symbol
 		once
@@ -352,6 +360,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	assign_keyword: ET_KEYWORD is
+			-- 'assign' keyword
+		once
+			create Result.make_assign
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	attribute_keyword: ET_KEYWORD is
 			-- 'attribute' keyword
 		once
@@ -364,6 +380,14 @@ feature -- Keywords
 			-- 'BIT' keyword
 		once
 			create Result.make (capitalized_bit_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	cat_keyword: ET_KEYWORD is
+			-- 'cat' keyword
+		once
+			create Result.make_cat
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -705,7 +729,9 @@ feature -- Keyword and symbol names
 	all_keyword_name: STRING is "all"
 	and_keyword_name: STRING is "and"
 	as_keyword_name: STRING is "as"
+	assign_keyword_name: STRING is "assign"
 	attribute_keyword_name: STRING is "attribute"
+	cat_keyword_name: STRING is "cat"
 	check_keyword_name: STRING is "check"
 	class_keyword_name: STRING is "class"
 	convert_keyword_name: STRING is "convert"
