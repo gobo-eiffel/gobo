@@ -189,7 +189,9 @@ feature {NONE} -- Implementation
 		do
 			assert_equal ("scheme", a_scheme, uri.scheme)
 			assert_equal ("authority", a_authority, uri.authority)
-			assert_equal ("path", a_path, uri.path)
+			if a_path /= Void then
+				assert_equal ("path", a_path, uri.path)
+			end
 			assert_equal ("query", a_query, uri.query)
 			assert_equal ("fragment", a_fragment, uri.fragment)
 			assert_equal ("reference", a_reference, uri.full_reference)
