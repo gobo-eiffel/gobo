@@ -131,7 +131,7 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
-			dynamic_calls.wipe_out
+			dynamic_qualified_calls.wipe_out
 			dynamic_qualified_agents.wipe_out
 			dynamic_unqualified_agents.wipe_out
 		end
@@ -194,7 +194,7 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 feature {NONE} -- CAT-calls
 
 	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
 			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
 			-- argument of type `an_actual_type' which does not conform to the type of
@@ -280,7 +280,7 @@ feature {NONE} -- Event handling
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
@@ -295,7 +295,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibeh_error
 				else
 					create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_calls.force_last (l_dynamic_call)
+					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_type := a_feature.type
 					if l_type = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -635,7 +635,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_dynamic_agent: ET_DYNAMIC_QUALIFIED_AGENT
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -737,7 +737,7 @@ feature {NONE} -- Event handling
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -752,7 +752,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibew_error
 				else
 					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_calls.force_last (l_dynamic_call)
+					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_type := a_feature.type
 					if l_type = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -773,7 +773,7 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call instruction has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_target: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -786,7 +786,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibez_error
 				else
 					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_calls.force_last (l_dynamic_call)
+					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end

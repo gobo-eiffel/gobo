@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel qualified feature calls at run-time"
+		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_CALL
+class ET_DYNAMIC_QUALIFIED_CALL
 
 inherit
 
@@ -281,7 +281,7 @@ feature -- Element change
 			l_actual: ET_ARGUMENT_OPERAND
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_result_attachment: ET_DYNAMIC_NULL_ATTACHMENT
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST

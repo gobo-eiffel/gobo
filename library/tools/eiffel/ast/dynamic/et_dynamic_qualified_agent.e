@@ -50,7 +50,7 @@ feature -- Access
 	agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			-- Agent dynamic type
 
-	qualified_call: ET_DYNAMIC_CALL
+	qualified_call: ET_DYNAMIC_QUALIFIED_CALL
 			-- Qualified call
 
 	current_feature: ET_DYNAMIC_FEATURE

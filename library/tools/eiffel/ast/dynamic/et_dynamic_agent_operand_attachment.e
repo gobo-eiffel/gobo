@@ -40,14 +40,14 @@ feature {NONE} -- Initialization
 			source_type_set := a_type_set
 			agent_type := an_agent_type
 			tuple_argument := a_tuple
-			tuple_index := an_index
+			item_index := an_index
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
 			source_type_set_set: source_type_set = a_type_set
 			agent_type_set: agent_type = an_agent_type
 			tuple_argument_set: tuple_argument = a_tuple
-			tuple_index_set: tuple_index = an_index
+			item_index_set: item_index = an_index
 			current_feature_set: current_feature = a_current_feature
 			current_type_set: current_type = a_current_type
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	tuple_argument: ET_AST_NODE
 			-- Tuple argument passed to agent's 'call' or 'item' features
 
-	tuple_index: INTEGER
+	item_index: INTEGER
 			-- Index of item in `tuple_argument' that is passed as
 			-- argument of the associated feature
 
@@ -73,13 +73,18 @@ feature -- Access
 	description: STRING is
 			-- Kind of attachment
 		do
-			Result := "agent tuple item #" + tuple_index.out
+			Result := agent_tuple_item_description + item_index.out
 		end
+
+feature {NONE} -- Constants
+
+	agent_tuple_item_description: STRING is "agent_tuple item #"
+			-- Description constants
 
 invariant
 
 	agent_type_not_void: agent_type /= Void
 	tuple_argument_not_void: tuple_argument /= Void
-	tuple_index_nonnegative: tuple_index >= 1
+	item_index_nonnegative: item_index >= 1
 
 end

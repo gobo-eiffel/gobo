@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_MANIFEST_STRING_AREA
+class ET_DYNAMIC_MANIFEST_STRING_AREA_ATTACHMENT
 
 inherit
 

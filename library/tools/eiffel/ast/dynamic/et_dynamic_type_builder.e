@@ -25,8 +25,6 @@ inherit
 	ET_FEATURE_CHECKER
 		rename
 			make as make_feature_checker
-		export
-			{ET_DYNAMIC_CALL, ET_DYNAMIC_TYPE} set_fatal_error
 		redefine
 			has_fatal_error,
 			make_from_checker, set_state,
@@ -98,7 +96,7 @@ feature {NONE} -- Initialization
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
-			create dynamic_calls.make (100000)
+			create dynamic_qualified_calls.make (100000)
 			create dynamic_qualified_agents.make (10000)
 			create dynamic_unqualified_agents.make (10000)
 			create current_index.make (0)
@@ -168,7 +166,7 @@ feature -- Generation
 			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_call: ET_DYNAMIC_CALL
+			l_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 			l_count: INTEGER
 			old_nb: INTEGER
@@ -259,9 +257,9 @@ feature -- Generation
 				end
 				old_nb := nb
 					-- Process dynamic qualified calls.
-				nb := dynamic_calls.count
+				nb := dynamic_qualified_calls.count
 				from i := 1 until i > nb loop
-					l_call := dynamic_calls.item (i)
+					l_call := dynamic_qualified_calls.item (i)
 					l_count := l_call.count
 					l_call.propagate_types (Current)
 					if l_call.count /= l_count then
@@ -283,14 +281,14 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
-			dynamic_calls.wipe_out
+			dynamic_qualified_calls.wipe_out
 			dynamic_qualified_agents.wipe_out
 			dynamic_unqualified_agents.wipe_out
 		end
 
-feature {ET_DYNAMIC_CALL} -- Generation
+feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Propagate `a_type' from target type set `a_call'.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -410,12 +408,12 @@ feature {NONE} -- CAT-calls
 			-- Check CAT-call validity.
 		local
 			i, nb: INTEGER
-			l_call: ET_DYNAMIC_CALL
+			l_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 		do
-			nb := dynamic_calls.count
+			nb := dynamic_qualified_calls.count
 			from i := 1 until i > nb loop
-				l_call := dynamic_calls.item (i)
+				l_call := dynamic_qualified_calls.item (i)
 				check_catcall_call_validity (l_call)
 				i := i + 1
 			end
@@ -427,7 +425,7 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	check_catcall_call_validity (a_call: ET_DYNAMIC_CALL) is
+	check_catcall_call_validity (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Check CAT-call validity of `a_call'.
 		require
 			a_call_not_void: a_call /= Void
@@ -450,7 +448,7 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
 		require
 			a_type_not_void: a_type /= Void
@@ -531,7 +529,7 @@ feature {NONE} -- CAT-calls
 		end
 
 	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
 			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
 			-- argument of type `an_actual_type' which does not conform to the type of
@@ -716,7 +714,7 @@ feature {NONE} -- Event handling
 			-- Report that a convert function call expression has been processed.
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
@@ -731,7 +729,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibdp_error
 				else
 					create l_dynamic_call.make (an_expression, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_calls.force_last (l_dynamic_call)
+					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_type := a_feature.type
 					if l_type = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -1054,7 +1052,7 @@ feature {NONE} -- Event handling
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_dynamic_agent: ET_DYNAMIC_QUALIFIED_AGENT
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
@@ -1154,7 +1152,7 @@ feature {NONE} -- Event handling
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -1169,7 +1167,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibbb_error
 				else
 					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_calls.force_last (l_dynamic_call)
+					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_type := a_feature.type
 					if l_type = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -1189,7 +1187,7 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call instruction has been processed.
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_target: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1202,7 +1200,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibbe_error
 				else
 					create l_dynamic_call.make (a_call, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_calls.force_last (l_dynamic_call)
+					dynamic_qualified_calls.force_last (l_dynamic_call)
 				end
 			end
 		end
@@ -1577,7 +1575,7 @@ feature {NONE} -- Implementation
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
 
-	dynamic_calls: DS_ARRAYED_LIST [ET_DYNAMIC_CALL]
+	dynamic_qualified_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_CALL]
 			-- Dynamic qualified calls within current feature
 
 	dynamic_qualified_agents: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_AGENT]
@@ -1605,8 +1603,8 @@ feature {NONE} -- Implementation
 invariant
 
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
-	dynamic_calls_not_void: dynamic_calls /= Void
-	no_void_dynamic_call: not dynamic_calls.has (Void)
+	dynamic_qualified_calls_not_void: dynamic_qualified_calls /= Void
+	no_void_dynamic_call: not dynamic_qualified_calls.has (Void)
 	dynamic_qualified_agents_not_void: dynamic_qualified_agents /= Void
 	no_void_dynamic_qualified_agent: not dynamic_qualified_agents.has (Void)
 	dynamic_unqualified_agents_not_void: dynamic_unqualified_agents /= Void

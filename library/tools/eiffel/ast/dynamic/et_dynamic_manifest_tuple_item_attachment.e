@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel manifest array item settings at run-time"
+		"Eiffel manifest tuple item settings at run-time"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_MANIFEST_ARRAY_ITEM
+class ET_DYNAMIC_MANIFEST_TUPLE_ITEM_ATTACHMENT
 
 inherit
 
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; an_expression: like expression;
 		a_current_feature: like current_feature; a_current_type: like current_type) is
-			-- Create a new manifest array item setting.
+			-- Create a new manifest tuple item setting.
 		require
 			a_type_set_not_void: a_type_set /= Void
 			an_expression_not_void: an_expression /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	expression: ET_EXPRESSION
-			-- Manifest array item
+			-- Manifest tuple item
 
 	position: ET_POSITION is
 			-- Position of attachment
@@ -56,7 +56,7 @@ feature -- Access
 			Result := expression.position
 		end
 
-	description: STRING is "manifest array item"
+	description: STRING is "manifest tuple item"
 			-- Kind of attachment
 
 invariant

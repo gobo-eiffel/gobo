@@ -87,9 +87,9 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
-feature {ET_DYNAMIC_CALL} -- Generation
+feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Propagate `a_type' from target type set `a_call'.
 		require
 			a_type_not_void: a_type /= Void

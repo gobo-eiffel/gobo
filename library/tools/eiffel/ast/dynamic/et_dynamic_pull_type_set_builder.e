@@ -78,7 +78,7 @@ feature -- Generation
 			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_call: ET_DYNAMIC_CALL
+			l_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 			l_target: ET_DYNAMIC_TYPE_SET
 			l_count: INTEGER
@@ -146,9 +146,9 @@ feature -- Generation
 					end
 					i := i + 1
 				end
-				nb := dynamic_calls.count
+				nb := dynamic_qualified_calls.count
 				from i := 1 until i > nb loop
-					l_call := dynamic_calls.item (i)
+					l_call := dynamic_qualified_calls.item (i)
 					l_count := l_call.count
 					l_call.propagate_types (Current)
 					if l_call.count /= l_count then
@@ -185,14 +185,14 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
-			dynamic_calls.wipe_out
+			dynamic_qualified_calls.wipe_out
 			dynamic_qualified_agents.wipe_out
 			dynamic_unqualified_agents.wipe_out
 		end
 
-feature {ET_DYNAMIC_CALL} -- Generation
+feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Propagate `a_type' from target type set `a_call'.
 		do
 			a_call.propagate_type (a_type, Current)
@@ -358,7 +358,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- CAT-calls
 
-	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
 		local
 			l_seed: INTEGER
@@ -456,7 +456,7 @@ feature {NONE} -- CAT-calls
 
 	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE;
-		an_actual_source: ET_DYNAMIC_ATTACHMENT; a_call: ET_DYNAMIC_CALL) is
+		an_actual_source: ET_DYNAMIC_ATTACHMENT; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
 			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
 			-- argument of type `an_actual_type' (coming from `an_actual_source')
@@ -766,7 +766,7 @@ feature {NONE} -- Event handling
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -820,7 +820,7 @@ feature {NONE} -- Event handling
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_creation: ET_DYNAMIC_CREATION_INSTRUCTION
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
@@ -888,8 +888,8 @@ feature {NONE} -- Event handling
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_item_attachment: ET_DYNAMIC_MANIFEST_ARRAY_ITEM
-			l_area_attachment: ET_DYNAMIC_MANIFEST_ARRAY_AREA
+			l_item_attachment: ET_DYNAMIC_MANIFEST_ARRAY_ITEM_ATTACHMENT
+			l_area_attachment: ET_DYNAMIC_MANIFEST_ARRAY_AREA_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.dynamic_type (a_type, current_type)
@@ -954,7 +954,7 @@ feature {NONE} -- Event handling
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_MANIFEST_TUPLE_ITEM
+			l_attachment: ET_DYNAMIC_MANIFEST_TUPLE_ITEM_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.dynamic_type (a_type, current_type)
@@ -1008,7 +1008,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1070,7 +1070,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1122,7 +1122,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1184,7 +1184,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1235,7 +1235,7 @@ feature {NONE} -- Event handling
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_TYPE
-			l_attachment: ET_DYNAMIC_MANIFEST_STRING_AREA
+			l_attachment: ET_DYNAMIC_MANIFEST_STRING_AREA_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.string_type
@@ -1292,7 +1292,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			j, nb2: INTEGER
-			l_actual_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_actual_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_result_attachment: ET_DYNAMIC_AGENT_RESULT
 			l_routine_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_routine_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -1453,7 +1453,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
@@ -1577,7 +1577,7 @@ feature {NONE} -- Event handling
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
