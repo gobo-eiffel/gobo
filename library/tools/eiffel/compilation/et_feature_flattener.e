@@ -968,6 +968,9 @@ feature {NONE} -- Replication
 			an_inherited_feature: ET_INHERITED_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
 			a_replicated_feature: ET_FEATURE
+			a_selected_feature: ET_ADAPTED_FEATURE
+			an_adapted_feature: ET_ADAPTED_FEATURE
+			a_parent_feature: ET_FEATURE
 			a_name: ET_FEATURE_NAME
 		do
 			a_replicated_features := a_feature.features
@@ -992,6 +995,7 @@ feature {NONE} -- Replication
 							a_redeclared_feature.set_replicated (a_seed)
 						else
 							a_redeclared_feature.set_selected
+							a_selected_feature := a_redeclared_feature
 						end
 					else
 							-- Get the latest version of `a_replicated_feature'
@@ -1006,6 +1010,28 @@ feature {NONE} -- Replication
 							an_inherited_feature.set_replicated (a_seed)
 						else
 							an_inherited_feature.set_selected
+							a_selected_feature := an_inherited_feature
+						end
+					end
+					a_replicated_features.forth
+				end
+				from a_replicated_features.start until a_replicated_features.after loop
+					a_replicated_feature := a_replicated_features.item_for_iteration
+					if not a_replicated_feature.has_selected_feature then
+						an_adapted_feature ?= a_replicated_feature
+						if an_adapted_feature /= Void then
+							from
+								a_parent_feature := an_adapted_feature.parent_feature
+							until
+								a_parent_feature = Void
+							loop
+								if a_parent_feature.precursor_feature.has_seed (a_seed) then
+									a_selected_feature.add_replicated_feature (a_parent_feature)
+								end
+								a_parent_feature := a_parent_feature.merged_feature
+							end
+						else
+							a_selected_feature.add_replicated_feature (a_replicated_feature)
 						end
 					end
 					a_replicated_features.forth
@@ -1485,17 +1511,18 @@ feature {NONE} -- Signature validity
 			an_inherited_flattened_feature: ET_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
 			an_inherited_feature: ET_FEATURE
+			a_replicated_features: DS_LINKED_LIST [ET_FEATURE]
+			a_cursor: DS_LINKED_LIST_CURSOR [ET_FEATURE]
 		do
 			if a_feature.is_redeclared then
 					-- Redeclaration.
 				a_redeclared_feature := a_feature.redeclared_feature
-				a_flattened_feature := a_feature.flattened_feature
 				from
 					an_inherited_feature := a_redeclared_feature.parent_feature
 				until
 					an_inherited_feature = Void
 				loop
-					check_redeclared_signature_validity (a_flattened_feature, an_inherited_feature)
+					check_redeclared_signature_validity (a_feature, an_inherited_feature)
 					an_inherited_feature := an_inherited_feature.merged_feature
 				end
 			elseif a_feature.is_inherited then
@@ -1518,123 +1545,51 @@ feature {NONE} -- Signature validity
 							an_inherited_feature := an_inherited_feature.merged_feature
 						end
 					else
-							-- Redeclaration (merging deferred features into
-							-- an effective one).
+							-- Redeclaration (merging deferred features into an effective one).
 						from
 							an_inherited_feature := a_feature
 						until
 							an_inherited_feature = Void
 						loop
 							if an_inherited_feature.is_deferred then
-								check_merged_signature_validity (a_feature, an_inherited_feature)
+								check_redeclared_signature_validity (a_feature, an_inherited_feature)
 							end
 							an_inherited_feature := an_inherited_feature.merged_feature
 						end
 					end
 				end
 			end
+			if a_feature.is_inherited and then a_feature.is_selected then
+				a_replicated_features := a_feature.replicated_features
+				if a_replicated_features /= Void then
+					a_cursor := a_replicated_features.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						check_selected_signature_validity (a_feature, a_cursor.item)
+						a_cursor.forth
+					end
+				end
+			end
 		end
 
-	check_redeclared_signature_validity (a_feature: ET_FLATTENED_FEATURE; other: ET_FEATURE) is
+	check_redeclared_signature_validity (a_feature, other: ET_FEATURE) is
 			-- Check whether the signature of `a_feature' conforms
 			-- to the signature of `other'. This check has to be done
 			-- when `a_feature' is a redeclaration in `current_class'
-			-- of the inherited feature `other'.
-		require
-			a_feature_not_void: a_feature /= Void
-			other_not_void: other /= Void
-			other_inherited: other.is_inherited
-			other_not_redeclared: not other.is_redeclared
-		local
-			a_type: ET_TYPE
-			other_type: ET_TYPE
-			other_precursor: ET_FLATTENED_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_resolver: ET_AST_PROCESSOR
-			i, nb: INTEGER
-		do
-				-- We don't want the qualified anchored types in signatures to be resolved yet.
-			a_resolver := universe.qualified_signature_resolver
-			universe.set_qualified_signature_resolver (universe.null_processor)
-			a_type := a_feature.type
-			parent_context.set (other.parent.type, current_class)
-			other_precursor := other.precursor_feature
-			other_type := other_precursor.type
-			if a_type = Void then
-				if other_type /= Void then
-					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-				end
-			elseif other_type = Void then
-				set_fatal_error (current_class)
-				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
-				else
-					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-				end
-			end
-			an_arguments := a_feature.arguments
-			other_arguments := other_precursor.arguments
-			if an_arguments = Void or else an_arguments.is_empty then
-				if other_arguments /= Void and then not other_arguments.is_empty then
-					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-				end
-			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
-				set_fatal_error (current_class)
-				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-			else
-				nb := an_arguments.count
-				from i := 1 until i > nb loop
-					a_type := an_arguments.formal_argument (i).type
-					other_type := other_arguments.formal_argument (i).type
-					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-						if
-							a_type.has_qualified_type (current_class, universe) or
-							other_type.has_qualified_type (parent_context, universe)
-						then
-								-- We have to delay until qualified
-								-- anchored types have been resolved.
-							has_qualified_type := True
-						else
-							set_fatal_error (current_class)
-							error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-						end
-					end
-					i := i + 1
-				end
-			end
-			universe.set_qualified_signature_resolver (a_resolver)
-		end
-
-	check_merged_signature_validity (a_feature, other: ET_FEATURE) is
-			-- Check whether the signature of `a_feature' conforms
-			-- to the signature of `other'. This check has to be done
-			-- when the inherited deferred feature `other' is merged
-			-- to the other inherted feature `a_feature'.
+			-- of the inherited feature `other', or when the inherited
+			-- feature `other' is deferred and is merged to the other
+			-- inherted feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_inherited: a_feature.is_inherited
-			a_feature_flattened: not a_feature.is_redeclared
 			other_not_void: other /= Void
 			other_inherited: other.is_inherited
 			other_not_redeclared: not other.is_redeclared
-			other_deferred: other.is_deferred
 		local
 			a_type: ET_TYPE
 			other_type: ET_TYPE
+			other_precursor: ET_FLATTENED_FEATURE
 			a_flattened_feature: ET_FLATTENED_FEATURE
 			an_inherited_feature: ET_INHERITED_FEATURE
-			other_precursor: ET_FLATTENED_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_resolver: ET_AST_PROCESSOR
@@ -1651,13 +1606,21 @@ feature {NONE} -- Signature validity
 			if a_type = Void then
 				if other_type /= Void then
 					set_fatal_error (current_class)
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					if a_feature.is_redeclared then
+						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+					else
+						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+						error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					end
 				end
 			elseif other_type = Void then
 				set_fatal_error (current_class)
-				an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+				if a_feature.is_redeclared then
+					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+				else
+					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+				end
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
 					a_type.has_qualified_type (current_class, universe) or
@@ -1668,8 +1631,12 @@ feature {NONE} -- Signature validity
 					has_qualified_type := True
 				else
 					set_fatal_error (current_class)
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					if a_feature.is_redeclared then
+						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+					else
+						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+						error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					end
 				end
 			end
 			an_arguments := a_flattened_feature.arguments
@@ -1677,13 +1644,16 @@ feature {NONE} -- Signature validity
 			if an_arguments = Void or else an_arguments.is_empty then
 				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					if a_feature.is_redeclared then
+						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+					else
+						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+						error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					end
 				end
 			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
 				set_fatal_error (current_class)
-				an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+				error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
 			else
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
@@ -1699,8 +1669,128 @@ feature {NONE} -- Signature validity
 							has_qualified_type := True
 						else
 							set_fatal_error (current_class)
-							an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-							error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+							if a_feature.is_redeclared then
+								error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+							else
+								an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+								error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+							end
+						end
+					end
+					i := i + 1
+				end
+			end
+			universe.set_qualified_signature_resolver (a_resolver)
+		end
+
+	check_selected_signature_validity (a_feature, other: ET_FEATURE) is
+			-- Check whether the signature of `a_feature' conforms
+			-- to the signature of `other'. This check has to be done
+			-- when `a_feature' is the selected version in `current_class'
+			-- of the inherited replicated feature `other'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_selected: a_feature.is_selected
+			other_not_void: other /= Void
+			other_inherited: other.is_inherited
+			other_not_redeclared: not other.is_redeclared
+		local
+			a_type: ET_TYPE
+			other_type: ET_TYPE
+			other_precursor: ET_FLATTENED_FEATURE
+			a_flattened_feature: ET_FLATTENED_FEATURE
+			an_inherited_feature: ET_INHERITED_FEATURE
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			other_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_resolver: ET_AST_PROCESSOR
+			i, nb: INTEGER
+		do
+				-- We don't want the qualified anchored types in signatures to be resolved yet.
+			a_resolver := universe.qualified_signature_resolver
+			universe.set_qualified_signature_resolver (universe.null_processor)
+			a_flattened_feature := a_feature.flattened_feature
+			a_type := a_flattened_feature.type
+			parent_context.set (other.parent.type, current_class)
+			other_precursor := other.precursor_feature
+			other_type := other_precursor.type
+			if a_type = Void then
+				if other_type /= Void then
+					set_fatal_error (current_class)
+					if a_feature.is_redeclared then
+						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+					else
+						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+						error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+					end
+				end
+			elseif other_type = Void then
+				set_fatal_error (current_class)
+				if a_feature.is_redeclared then
+					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+				else
+					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+					error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+				end
+			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+				if
+					a_type.has_qualified_type (current_class, universe) or
+					other_type.has_qualified_type (parent_context, universe)
+				then
+						-- We have to delay until qualified
+						-- anchored types have been resolved.
+					has_qualified_type := True
+				else
+					set_fatal_error (current_class)
+					if a_feature.is_redeclared then
+						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+					else
+						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+						error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+					end
+				end
+			end
+			an_arguments := a_flattened_feature.arguments
+			other_arguments := other_precursor.arguments
+			if an_arguments = Void or else an_arguments.is_empty then
+				if other_arguments /= Void and then not other_arguments.is_empty then
+					set_fatal_error (current_class)
+					if a_feature.is_redeclared then
+						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+					else
+						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+						error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+					end
+				end
+			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
+				set_fatal_error (current_class)
+				if a_feature.is_redeclared then
+					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+				else
+					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+					error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+				end
+			else
+				nb := an_arguments.count
+				from i := 1 until i > nb loop
+					a_type := an_arguments.formal_argument (i).type
+					other_type := other_arguments.formal_argument (i).type
+					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+						if
+							a_type.has_qualified_type (current_class, universe) or
+							other_type.has_qualified_type (parent_context, universe)
+						then
+								-- We have to delay until qualified
+								-- anchored types have been resolved.
+							has_qualified_type := True
+						else
+							set_fatal_error (current_class)
+							if a_feature.is_redeclared then
+								error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+							else
+								an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+								error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+							end
 						end
 					end
 					i := i + 1

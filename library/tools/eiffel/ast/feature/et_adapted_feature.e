@@ -18,7 +18,7 @@ inherit
 		redefine
 			type, arguments, is_inherited, is_selected,
 			replicated_seeds, seeded_feature,
-			selected_feature
+			selected_feature, replicated_features
 		end
 
 feature -- Status report
@@ -116,6 +116,11 @@ feature -- Access
 	replicated_seeds: ET_FEATURE_IDS
 			-- Seeds involved when current feature has been replicated
 
+	replicated_features: DS_LINKED_LIST [ET_FEATURE]
+			-- Features which had the same seed as current feature
+			-- in their parents but which have been replicated in
+			-- current class
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
@@ -145,6 +150,23 @@ feature -- Status setting
 			is_selected := True
 		ensure
 			is_selected: is_selected
+		end
+
+feature -- Element change
+
+	add_replicated_feature (a_feature: ET_FEATURE) is
+			-- Add `a_feature' to `replicated_features'.
+		require
+			is_inherited: is_inherited
+			is_selected: is_selected
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_not_redeclared: not a_feature.is_redeclared
+		do
+			if replicated_features = Void then
+				create replicated_features.make
+			end
+			replicated_features.force_last (a_feature)
 		end
 
 feature -- Type processing

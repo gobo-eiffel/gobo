@@ -699,6 +699,23 @@ feature -- Replication
 			is_inherited: is_inherited
 		do
 			-- Result := Void
+		ensure
+			-- valid_seeds: Result /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
+		end
+
+	replicated_features: DS_LINKED_LIST [ET_FEATURE] is
+			-- Features which had the same seed as current feature
+			-- in their parents but which have been replicated in
+			-- current class
+		require
+			is_inherited: is_inherited
+			is_selected: is_selected
+		do
+			-- Result := Void
+		ensure
+			no_void_replicated_features: Result /= Void implies not Result.has (Void)
+			-- replicated_features_inherited: Result /= Void implies forall f in Result, f.is_inherited
+			-- replicated_features_not_redeclared: Result /= Void implies forall f in Result, not f.is_redeclared
 		end
 
 invariant
@@ -707,7 +724,5 @@ invariant
 	clients_not_void: clients /= Void
 	first_seed_positive: is_registered implies first_seed > 0
 	implementation_class_not_void: implementation_class /= Void
-	-- replicated_seeds: is_inherited and then replicated_seeds /= Void implies
-	-- 	forall a_seed in replicated_seeds, has_seed (a_seed)
 
 end
