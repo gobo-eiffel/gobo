@@ -12,51 +12,32 @@ indexing
 
 class XM_RESOLVED_FORMATTER
 
+obsolete "Use XM_XMLNS_GENERATOR and XM_NAMESPACE_PRETTY_PRINT_FILTER directly"
+
 inherit
 
 	XM_FORMATTER
 		redefine
-			process_named_element,
-			process_named_attribute,
-			process_root_start_tag
+			process_document
 		end
 		
 creation
 
 	make
 	
-feature {NONE} -- Implementation
+feature -- Tree processor routines
 
-	process_named_element (a_node: XM_ELEMENT) is
-			-- Process named node `a_node'.
+	process_document (a_document: XM_DOCUMENT) is
+			-- Process document using xmlns generator and 
+			-- pretty print with namespaces filters.
+		local
+			pretty_print: XM_NAMESPACE_PRETTY_PRINT_FILTER
+			xmlns_generator: XM_XMLNS_GENERATOR
 		do
-			process_named (a_node)
-		end
-		
-	process_named_attribute (a_node: XM_ATTRIBUTE) is
-			-- Process named node `a_node'.
-		do
-			process_named (a_node)
-		end
-
-	process_named (a_node: XM_NAMED_NODE) is
-			-- Process named node: display resolved namespace
-			-- URI before name.
-		require
-			a_node_not_void: a_node /= Void
-		do
-			if a_node.namespace.uri.count > 0 then
-				append (a_node.namespace.uri)
-				append (Prefix_separator)
-			end
-			append (a_node.name)
+			create pretty_print.make_null
+			pretty_print.set_output_stream (last_output)
+			create xmlns_generator.set_next (pretty_print)
+			a_document.process_to_events (xmlns_generator)
 		end
 
-	process_root_start_tag  (an_element: XM_ELEMENT) is
-			-- Treat start tag as an ordinary tag.
-		do
-			create root_namespace.make (Void, an_element.namespace.uri)
-			process_start_tag (an_element)
-		end
-		
 end
