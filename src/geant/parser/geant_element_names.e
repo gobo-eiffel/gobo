@@ -33,6 +33,7 @@ feature
 	ucs_xace				: UC_STRING is once !!Result.make_from_string("xace") end
 	ucs_gelex				: UC_STRING is once !!Result.make_from_string("gelex") end
 	ucs_geyacc				: UC_STRING is once !!Result.make_from_string("geyacc") end
+	ucs_gepp				: UC_STRING is once !!Result.make_from_string("gepp") end
 	ucs_lcc					: UC_STRING is once !!Result.make_from_string("lcc") end
 	ucs_var					: UC_STRING is once !!Result.make_from_string("var") end
 

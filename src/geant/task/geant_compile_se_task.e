@@ -3,7 +3,7 @@ indexing
   description:
         "compilation task for SmallEiffel"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""

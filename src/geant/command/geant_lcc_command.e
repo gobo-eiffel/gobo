@@ -3,7 +3,7 @@ indexing
   description:
         "lcc C-compiler command"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""

@@ -3,7 +3,7 @@ indexing
   description:
         "var task"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""

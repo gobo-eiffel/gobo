@@ -3,7 +3,7 @@ indexing
   description:
         "global variable"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""

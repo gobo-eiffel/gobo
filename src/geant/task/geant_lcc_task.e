@@ -3,7 +3,7 @@ indexing
   description:
         "lcc C-Compiler task"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""

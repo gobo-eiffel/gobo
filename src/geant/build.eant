@@ -18,7 +18,9 @@
 
 
 	<target name="test" description="tests the tasks">
-		<exec executable="dir" />
+		<gepp inputfile="gepp.in.txt" outputfile="get.out.txt">
+			<define name="VE" />
+		</gepp>
 	</target>
 
 </project>

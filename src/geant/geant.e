@@ -81,6 +81,10 @@ feature
 						elseif task_el.name.is_equal(ucs_geyacc) then
 							!GEANT_GEYACC_TASK!task.load_from_element(task_el)
 
+						-- gepp --
+						elseif task_el.name.is_equal(ucs_gepp) then
+							!GEANT_GEPP_TASK!task.load_from_element(task_el)
+
 						-- DEFAULT --
 						else
 							task := void

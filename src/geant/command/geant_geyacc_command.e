@@ -3,7 +3,7 @@ indexing
   description:
         "geyacc command"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  "Sven Ehrke and others"

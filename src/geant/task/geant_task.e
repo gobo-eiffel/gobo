@@ -3,7 +3,7 @@ indexing
   description:
         "deferred task which supports creation of the object using a XML definition"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""

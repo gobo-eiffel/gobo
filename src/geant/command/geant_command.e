@@ -3,7 +3,7 @@ indexing
   description:
         "the general command class from which all other commands inherit from"
 
-    library:    "bonbon/geant"
+    library:    "gobo/geant"
     author:     "Sven Ehrke"
     id:         "$Id$"
     copyright:  ""
