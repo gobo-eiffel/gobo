@@ -753,50 +753,50 @@ feature -- Test
 			a_expt := "x"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_01", a_expt, a_got)
+			assert_equal ("replaced1_01", a_expt, a_got.out)
 			assert_same ("replaced1_02", a_uc_string, a_got)
 
 			a_text := "--"
 			a_expt := "#-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_11", a_expt, a_got)
+			assert_equal ("replaced1_11", a_expt, a_got.out)
 
 			a_text := "'- -'"
 			a_expt := "'# -'"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_12", a_expt, a_got)
+			assert_equal ("replaced1_12", a_expt, a_got.out)
 
 			a_text := "---"
 			a_expt := "#--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_13", a_expt, a_got)
+			assert_equal ("replaced1_13", a_expt, a_got.out)
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_21", a_expt, a_got) 
+			assert_equal ("replaced1_21", a_expt, a_got.out) 
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_22", a_expt, a_got) 
+			assert_equal ("replaced1_22", a_expt, a_got.out) 
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_23", a_expt, a_got) 
+			assert_equal ("replaced1_23", a_expt, a_got.out) 
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_24", a_expt, a_got) 
+			assert_equal ("replaced1_24", a_expt, a_got.out) 
 
 			s_old := "-"
 			s_new:= "#-"
@@ -805,59 +805,59 @@ feature -- Test
 			a_expt := "foo#-bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_30", a_expt, a_got)
+			assert_equal ("replaced1_30", a_expt, a_got.out)
 
 			a_text := "foobar-"
 			a_expt := "foobar#-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_31", a_expt, a_got)
+			assert_equal ("replaced1_31", a_expt, a_got.out)
 
 			a_text := "foo-bar-"
 			a_expt := "foo#-bar-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_32", a_expt, a_got)
+			assert_equal ("replaced1_32", a_expt, a_got.out)
 
 			a_text := "-foo-bar-"
 			a_expt := "#-foo-bar-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_33", a_expt, a_got)
+			assert_equal ("replaced1_33", a_expt, a_got.out)
 
 			a_text := "--foo---bar--"
 			a_expt := "#--foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_34", a_expt, a_got)
+			assert_equal ("replaced1_34", a_expt, a_got.out)
 
 			s_new := ""
 			a_text := "--foo---bar--"
 			a_expt := "-foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_35", a_expt, a_got)
+			assert_equal ("replaced1_35", a_expt, a_got.out)
 
 			s_new:= "-"
 			a_text := "--foo---bar--"
 			a_expt := "--foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_36", a_expt, a_got)
+			assert_equal ("replaced1_36", a_expt, a_got.out)
 
 			s_new := s_old
 			a_text := "--foo---bar--"
 			a_expt := "--foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_37", a_expt, a_got)
+			assert_equal ("replaced1_37", a_expt, a_got.out)
 
 			s_new := s_old
 			a_text := "--foo---bar--"
 			a_expt := "--foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_38", a_expt, a_got)
+			assert_equal ("replaced1_38", a_expt, a_got.out)
 
 			s_old := "#"
 			s_new := "-"
@@ -872,7 +872,7 @@ feature -- Test
 			a_expt := "totobar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_40", a_expt, a_got)
+			assert_equal ("replaced1_40", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := "toto"
@@ -880,7 +880,7 @@ feature -- Test
 			a_expt := "12totobar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_41", a_expt, a_got)
+			assert_equal ("replaced1_41", a_expt, a_got.out)
 
 			s_old := "bar"
 			s_new := "toto"
@@ -888,7 +888,7 @@ feature -- Test
 			a_expt := "foototo"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_42", a_expt, a_got)
+			assert_equal ("replaced1_42", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := "1"
@@ -896,7 +896,7 @@ feature -- Test
 			a_expt := "1bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_43", a_expt, a_got)
+			assert_equal ("replaced1_43", a_expt, a_got.out)
 
 			s_old := "bar"
 			s_new := "1"
@@ -904,7 +904,7 @@ feature -- Test
 			a_expt := "foo1"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_43", a_expt, a_got)
+			assert_equal ("replaced1_43", a_expt, a_got.out)
 
 			s_old := "bar"
 			s_new := ""
@@ -912,7 +912,7 @@ feature -- Test
 			a_expt := "foo"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_44", a_expt, a_got)
+			assert_equal ("replaced1_44", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := ""
@@ -920,7 +920,7 @@ feature -- Test
 			a_expt := "bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_45", a_expt, a_got)
+			assert_equal ("replaced1_45", a_expt, a_got.out)
 
 			s_old := "foobar"
 			s_new := ""
@@ -928,7 +928,7 @@ feature -- Test
 			a_expt := ""
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_46", a_expt, a_got)
+			assert_equal ("replaced1_46", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := "toto"
@@ -936,7 +936,7 @@ feature -- Test
 			a_expt := "totobarfoobar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_50", a_expt, a_got)
+			assert_equal ("replaced1_50", a_expt, a_got.out)
 		end
 
 	test_replaced_all_substrings1 is
@@ -1132,50 +1132,50 @@ feature -- Test
 			a_expt := "x"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_01", a_expt, a_got)
+			assert_equal ("replaced2_01", a_expt, a_got.out)
 			assert_same ("replaced2_02", a_got, a_uc_string)
 
 			a_text := "--"
 			a_expt := "##"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_11", a_expt, a_got)
+			assert_equal ("replaced2_11", a_expt, a_got.out)
 
 			a_text := "'- -'"
 			a_expt := "'# #'"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_12", a_expt, a_got)
+			assert_equal ("replaced2_12", a_expt, a_got.out)
 
 			a_text := "---"
 			a_expt := "###"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_13", a_expt, a_got)
+			assert_equal ("replaced2_13", a_expt, a_got.out)
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_21", a_expt, a_got) 
+			assert_equal ("replaced2_21", a_expt, a_got.out) 
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_22", a_expt, a_got) 
+			assert_equal ("replaced2_22", a_expt, a_got.out) 
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_23", a_expt, a_got) 
+			assert_equal ("replaced2_23", a_expt, a_got.out) 
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_24", a_expt, a_got) 
+			assert_equal ("replaced2_24", a_expt, a_got.out) 
 
 			s_old := "-"
 			s_new:= "##"
@@ -1184,58 +1184,58 @@ feature -- Test
 			a_expt := "foo##bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_30", a_expt, a_got)
+			assert_equal ("replaced2_30", a_expt, a_got.out)
 
 			a_text := "foobar-"
 			a_expt := "foobar##"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_31", a_expt, a_got)
+			assert_equal ("replaced2_31", a_expt, a_got.out)
 
 			a_text := "foo-bar-"
 			a_expt := "foo##bar##"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_32", a_expt, a_got)
+			assert_equal ("replaced2_32", a_expt, a_got.out)
 
 			a_text := "-foo-bar-"
 			a_expt := "##foo##bar##"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_33", a_expt, a_got)
+			assert_equal ("replaced2_33", a_expt, a_got.out)
 
 			a_text := "--foo---bar--"
 			a_expt := "####foo######bar####"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_34", a_expt, a_got)
+			assert_equal ("replaced2_34", a_expt, a_got.out)
 
 			s_new := ""
 			a_text := "--foo---bar--"
 			a_expt := "foobar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_35", a_expt, a_got)
+			assert_equal ("replaced2_35", a_expt, a_got.out)
 
 			s_new:= "-"
 			a_text := "--foo---bar--"
 			a_expt := "--foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_36", a_expt, a_got)
+			assert_equal ("replaced2_36", a_expt, a_got.out)
 
 			s_new := s_old
 			a_text := "--foo---bar--"
 			a_expt := "--foo---bar--"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_37", a_expt, a_got)
+			assert_equal ("replaced2_37", a_expt, a_got.out)
 
 			s_new := s_old
 			a_text := "--foo---bar--"
 			a_expt := "--foo---bar--"
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_38", a_expt, a_got)
+			assert_equal ("replaced2_38", a_expt, a_got.out)
 
 			s_old := "#"
 			s_new := "-"
@@ -1250,7 +1250,7 @@ feature -- Test
 			a_expt := "12totobar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_41", a_expt, a_got)
+			assert_equal ("replaced2_41", a_expt, a_got.out)
 
 			s_old := "bar"
 			s_new := "toto"
@@ -1258,7 +1258,7 @@ feature -- Test
 			a_expt := "foototo"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_42", a_expt, a_got)
+			assert_equal ("replaced2_42", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := "1"
@@ -1266,7 +1266,7 @@ feature -- Test
 			a_expt := "1bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_43", a_expt, a_got)
+			assert_equal ("replaced2_43", a_expt, a_got.out)
 
 			s_old := "bar"
 			s_new := "1"
@@ -1274,7 +1274,7 @@ feature -- Test
 			a_expt := "foo1"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_43", a_expt, a_got)
+			assert_equal ("replaced2_43", a_expt, a_got.out)
 
 			s_old := "bar"
 			s_new := ""
@@ -1282,7 +1282,7 @@ feature -- Test
 			a_expt := "foo"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_44", a_expt, a_got)
+			assert_equal ("replaced2_44", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := ""
@@ -1290,7 +1290,7 @@ feature -- Test
 			a_expt := "bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_45", a_expt, a_got)
+			assert_equal ("replaced2_45", a_expt, a_got.out)
 
 			s_old := "foobar"
 			s_new := ""
@@ -1298,7 +1298,7 @@ feature -- Test
 			a_expt := ""
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_46", a_expt, a_got)
+			assert_equal ("replaced2_46", a_expt, a_got.out)
 
 			s_old := "foo"
 			s_new := "toto"
@@ -1306,7 +1306,7 @@ feature -- Test
 			a_expt := "totobartotobar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_50", a_expt, a_got)
+			assert_equal ("replaced2_50", a_expt, a_got.out)
 		end
 
 	test_elks_same_string is
