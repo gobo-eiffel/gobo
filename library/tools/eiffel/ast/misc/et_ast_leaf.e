@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST leaf nodes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,18 @@ feature -- Access
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
+		do
+			Result := Current
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := Current
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
 		do
 			Result := Current
 		end

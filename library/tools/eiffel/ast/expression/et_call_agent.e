@@ -95,6 +95,26 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if target /= Void and use_tilde then
+				Result := target.first_leaf
+			else
+				Result := agent_keyword
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if arguments /= Void then
+				Result := arguments.last_leaf
+			else
+				Result := qualified_name.last_leaf
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

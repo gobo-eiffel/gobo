@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_unconstrained
 		redefine
-			constraint, creation_procedures, break, process,
+			constraint, creation_procedures, break, last_leaf, process,
 			constraint_base_type, set_constraint_base_type
 		end
 
@@ -62,6 +62,16 @@ feature -- Access
 			-- is a cycle of the form "A [G -> H, H -> G]" in
 			-- the constraints (i.e. the base type is also considered
 			-- to be "ANY" in that case)
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if creation_procedures /= Void then
+				Result := creation_procedures.last_leaf
+			else
+				Result := constraint.last_leaf
+			end
+		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node

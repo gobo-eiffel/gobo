@@ -105,6 +105,26 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if from_compound /= Void then
+				Result := from_compound.first_leaf
+			elseif invariant_part /= Void then
+				Result := invariant_part.first_leaf
+			elseif variant_part /= Void then
+				Result := variant_part.first_leaf
+			else
+				Result := until_conditional.first_leaf
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := end_keyword
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

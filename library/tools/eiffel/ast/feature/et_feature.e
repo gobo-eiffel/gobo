@@ -188,6 +188,16 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if not is_frozen then
+				Result := name_item.first_leaf
+			else
+				Result := frozen_keyword
+			end
+		end
+
 feature -- Status report
 
 	is_registered: BOOLEAN is

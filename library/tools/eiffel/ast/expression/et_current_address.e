@@ -34,6 +34,12 @@ feature -- Access
 	current_keyword: ET_CURRENT
 			-- 'Current' keyword
 
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := current_keyword
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

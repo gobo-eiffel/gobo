@@ -66,6 +66,28 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if is_parent_prefixed and parent_name /= Void then
+				Result := parent_name.first_leaf
+			else
+				Result := precursor_keyword
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if arguments /= Void then
+				Result := arguments.last_leaf
+			elseif not is_parent_prefixed and parent_name /= Void then
+				Result := parent_name.last_leaf
+			else
+				Result := precursor_keyword
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

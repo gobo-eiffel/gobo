@@ -68,6 +68,24 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := variant_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if expression /= Void then
+				Result := expression.last_leaf
+			elseif tag /= Void then
+				Result := tag.last_leaf
+			else
+				Result := variant_keyword
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

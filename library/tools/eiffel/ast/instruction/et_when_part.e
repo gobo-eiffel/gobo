@@ -60,6 +60,22 @@ feature -- Access
 			Result := choices.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := choices.first_leaf
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if then_compound /= Void then
+				Result := then_compound.last_leaf
+			else
+				Result := choices.last_leaf
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_rename
 		redefine
-			break, process
+			break, last_leaf, process
 		end
 
 creation
@@ -46,6 +46,12 @@ feature -- Access
 
 	comma: ET_SYMBOL
 			-- Comma separator
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := comma
+		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node

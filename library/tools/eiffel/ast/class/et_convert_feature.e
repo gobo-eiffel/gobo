@@ -54,6 +54,12 @@ feature -- Access
 			Result := name.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := name.first_leaf
+		end
+
 	convert_feature: ET_CONVERT_FEATURE is
 			-- Conversion feature in comma-separated list
 		do

@@ -287,6 +287,18 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := like_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := qualified_name.last_leaf
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

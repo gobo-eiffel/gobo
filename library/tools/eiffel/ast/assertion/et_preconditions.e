@@ -53,7 +53,25 @@ feature -- Access
 		do
 			Result := require_keyword.position
 			if Result.is_null and not is_empty then
-				Result := item (1).position
+				Result := first.position
+			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := require_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if not is_empty then
+				Result := last.last_leaf
+			elseif else_keyword /= Void then
+				Result := else_keyword
+			else
+				Result := require_keyword
 			end
 		end
 
@@ -61,7 +79,7 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			if not is_empty then
-				Result := item (count).break
+				Result := last.break
 			elseif else_keyword /= Void then
 				Result := else_keyword.break
 			else

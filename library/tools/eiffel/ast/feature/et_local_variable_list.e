@@ -103,6 +103,22 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := local_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if is_empty then
+				Result := local_keyword
+			else
+				Result := last.last_leaf
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

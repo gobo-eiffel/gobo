@@ -120,6 +120,29 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if type_mark /= Void then
+				Result := type_mark
+			else
+				Result := name.last_leaf
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.last_leaf
+			else
+				Result := name.last_leaf
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		local

@@ -298,6 +298,18 @@ feature -- Access
 			Result := name.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := name
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := name
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

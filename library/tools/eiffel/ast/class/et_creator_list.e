@@ -98,6 +98,22 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if not is_empty then
+				Result := first.first_leaf
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if not is_empty then
+				Result := last.last_leaf
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

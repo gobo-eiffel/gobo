@@ -54,11 +54,27 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := invariant_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if not is_empty then
+				Result := last.last_leaf
+			else
+				Result := invariant_keyword
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			if not is_empty then
-				Result := item (count).break
+				Result := last.break
 			else
 				Result := invariant_keyword.break
 			end

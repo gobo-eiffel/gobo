@@ -50,6 +50,18 @@ feature -- Access
 			Result := agent_actual_argument.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := agent_actual_argument.first_leaf
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := comma
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

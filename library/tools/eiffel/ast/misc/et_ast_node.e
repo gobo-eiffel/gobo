@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST nodes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,16 @@ feature -- Access
 		deferred
 		ensure
 			position_not_void: Result /= Void
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		deferred
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		deferred
 		end
 
 	break: ET_BREAK is

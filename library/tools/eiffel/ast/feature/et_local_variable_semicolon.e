@@ -56,6 +56,18 @@ feature -- Access
 			Result := local_variable.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := local_variable.first_leaf
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := semicolon
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

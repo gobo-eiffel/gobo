@@ -43,9 +43,25 @@ feature -- Access
 			-- current node in source code
 		do
 			if not is_empty then
-				Result := item (1).position
+				Result := first.position
 			else
 				Result := tokens.null_position
+			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if not is_empty then
+				Result := first.first_leaf
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if not is_empty then
+				Result := last.last_leaf
 			end
 		end
 
@@ -53,7 +69,7 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			if not is_empty then
-				Result := item (count).break
+				Result := last.break
 			end
 		end
 

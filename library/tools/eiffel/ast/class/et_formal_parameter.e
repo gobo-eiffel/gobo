@@ -22,7 +22,7 @@ inherit
 		undefine
 			type, actual_parameter
 		redefine
-			process, position
+			process, position, first_leaf
 		end
 
 	HASHABLE
@@ -91,6 +91,16 @@ feature -- Access
 				Result := type_mark.position
 			else
 				Result := name.position
+			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if type_mark /= Void then
+				Result := type_mark
+			else
+				Result := name
 			end
 		end
 

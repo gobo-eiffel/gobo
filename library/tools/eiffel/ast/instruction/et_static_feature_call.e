@@ -20,7 +20,7 @@ inherit
 		undefine
 			process
 		redefine
-			reset, position
+			reset, position, first_leaf
 		end
 
 feature {NONE} -- Initialization
@@ -76,6 +76,12 @@ feature -- Access
 			else
 				Result := static_type.position
 			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := feature_keyword
 		end
 
 feature -- Setting

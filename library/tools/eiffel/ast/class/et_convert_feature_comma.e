@@ -50,6 +50,18 @@ feature -- Access
 			Result := convert_feature.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := convert_feature.first_leaf
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := comma
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

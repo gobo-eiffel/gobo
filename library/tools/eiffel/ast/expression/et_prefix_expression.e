@@ -63,6 +63,12 @@ feature -- Access
 			no_arguments: Result = Void
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := name.first_leaf
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code

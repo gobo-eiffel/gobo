@@ -50,6 +50,18 @@ feature -- Access
 			Result := colon.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := colon
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := type.last_leaf
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

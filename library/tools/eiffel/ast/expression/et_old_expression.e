@@ -59,6 +59,12 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := old_keyword
+		end
+
 feature -- Setting
 
 	set_old_keyword (an_old: like old_keyword) is

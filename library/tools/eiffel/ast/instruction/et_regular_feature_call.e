@@ -22,7 +22,7 @@ inherit
 		undefine
 			process
 		redefine
-			reset, position
+			reset, position, first_leaf
 		end
 
 feature {NONE} -- Initialization
@@ -64,6 +64,16 @@ feature -- Access
 				Result := target.position
 			else
 				Result := qualified_name.position
+			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if target /= Void then
+				Result := target.first_leaf
+			else
+				Result := qualified_name.first_leaf
 			end
 		end
 

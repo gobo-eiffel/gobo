@@ -44,6 +44,12 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := end_keyword
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

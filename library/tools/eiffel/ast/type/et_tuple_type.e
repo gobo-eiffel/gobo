@@ -105,6 +105,22 @@ feature -- Access
 			Result := tuple_keyword.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := tuple_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			if actual_parameters /= Void then
+				Result := actual_parameters.last_leaf
+			else
+				Result := tuple_keyword
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

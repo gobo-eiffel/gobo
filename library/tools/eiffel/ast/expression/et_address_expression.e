@@ -28,6 +28,12 @@ feature -- Access
 			Result := dollar.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := dollar
+		end
+
 feature -- Setting
 
 	set_dollar (a_dollar: like dollar) is

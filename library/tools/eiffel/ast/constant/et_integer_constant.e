@@ -19,7 +19,7 @@ inherit
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
 		redefine
-			position
+			position, first_leaf
 		end
 
 	ET_CONSTANT
@@ -62,6 +62,16 @@ feature -- Access
 		do
 			if sign /= Void then
 				Result := sign.position
+			else
+				Result := Current
+			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if sign /= Void then
+				Result := sign
 			else
 				Result := Current
 			end

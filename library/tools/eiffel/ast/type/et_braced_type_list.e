@@ -55,8 +55,20 @@ feature -- Access
 		do
 			Result := left_brace.position
 			if Result.is_null and not is_empty then
-				Result := item (1).position
+				Result := first.position
 			end
+		end
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := left_brace
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := right_brace
 		end
 
 	break: ET_BREAK is

@@ -68,6 +68,12 @@ feature -- Access
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
 
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := unique_keyword
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

@@ -86,6 +86,29 @@ feature -- Access
 			end
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := creation_keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		local
+			a_clients_clause: ET_CLIENTS
+		do
+			if is_empty then
+				a_clients_clause := clients_clause
+				if a_clients_clause /= Void then
+					Result := a_clients_clause.last_leaf
+				else
+					Result := creation_keyword
+				end
+			else
+				Result := last.last_leaf
+			end
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		local

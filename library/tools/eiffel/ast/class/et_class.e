@@ -26,6 +26,7 @@ inherit
 			class_mark, process,
 			formal_parameters,
 			is_expanded, is_separate,
+			first_leaf, last_leaf,
 			position, break, append_to_string,
 			is_named_type, is_valid_context,
 			debug_output, copy, is_equal
@@ -188,6 +189,24 @@ feature -- Access
 	leading_break: ET_BREAK
 			-- Break that appears at the top of the file, before
 			-- the class declaration
+
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			if first_indexing /= Void then
+				Result := first_indexing.first_leaf
+			elseif class_mark /= Void then
+				Result := class_mark
+			else
+				Result := class_keyword
+			end
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := end_keyword
+		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node

@@ -61,6 +61,12 @@ feature -- Access
 	constant: ET_CONSTANT
 			-- Constant value
 
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := constant.last_leaf
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do

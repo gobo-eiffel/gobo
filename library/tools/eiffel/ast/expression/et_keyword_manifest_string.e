@@ -52,6 +52,18 @@ feature -- Access
 			Result := keyword.position
 		end
 
+	first_leaf: ET_AST_LEAF is
+			-- First leaf node in current node
+		do
+			Result := keyword
+		end
+
+	last_leaf: ET_AST_LEAF is
+			-- Last leaf node in current node
+		do
+			Result := manifest_string
+		end
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
