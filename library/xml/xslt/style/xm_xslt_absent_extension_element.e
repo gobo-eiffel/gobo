@@ -51,7 +51,9 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			todo ("compile", False)
+			if not is_top_level then
+				todo ("compile", False)
+			end
 		end
 
 end

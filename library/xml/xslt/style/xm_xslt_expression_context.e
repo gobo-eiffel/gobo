@@ -31,7 +31,7 @@ inherit
 
 creation
 
-	make
+	make, make_restricted
 
 feature {NONE} -- Initialization
 
@@ -43,9 +43,23 @@ feature {NONE} -- Initialization
 			style_element := a_style_element
 			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
 			create base_uri.make (style_element.base_uri)
-			--			create base_uri.make (style_element.containing_stylesheet.base_uri)
 		ensure
 			style_element_set: style_element = a_style_element
+			not_restricted: not is_restricted
+		end
+
+	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT) is
+			-- Create a restricted context for [xsl:]use-when processing..
+		require
+			style_element_not_void:	a_style_element /= Void
+		do
+			style_element := a_style_element
+			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			create base_uri.make (style_element.base_uri)
+			is_restricted := True
+		ensure
+			style_element_set: style_element = a_style_element
+			restricted: is_restricted
 		end
 
 feature -- Access
@@ -86,9 +100,7 @@ feature -- Access
 	default_function_namespace_uri: STRING is
 			-- Namespace for non-prefixed XPath functions
 		do
-			--if is_restricted then
 			Result := Xpath_standard_functions_uri
-			--			end
 		end
 	
 	default_collation_name: STRING
@@ -112,7 +124,9 @@ feature -- Access
 	is_backwards_compatible_mode: BOOLEAN is
 			-- Is Backwards Compatible Mode used?
 		do
-			Result := style_element.is_backwards_compatible_processing_enabled
+			if not is_restricted then
+				Result := style_element.is_backwards_compatible_processing_enabled
+			end
 		end
 		
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
@@ -165,7 +179,9 @@ feature -- Status report
 	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a variable declared in the static context?
 		do
-			Result := style_element.is_variable_declared (a_fingerprint)
+			if not style_element.is_excluded then
+				Result := style_element.is_variable_declared (a_fingerprint)
+			end
 		end
 	
 	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is

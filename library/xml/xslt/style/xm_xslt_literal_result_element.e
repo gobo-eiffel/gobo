@@ -55,6 +55,7 @@ feature -- Element change
 					if a_uri_code = Xslt_uri_code then
 						a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_name_code)
 						if a_fingerprint = Xslt_use_attribute_sets_type_code then -- deal with this later
+						elseif a_fingerprint = Xslt_use_when_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_extension_element_prefixes_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_exclude_result_prefixes_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_version_type_code then -- already dealt with

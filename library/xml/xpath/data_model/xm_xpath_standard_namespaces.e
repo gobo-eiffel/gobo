@@ -253,8 +253,9 @@ feature -- Access
 	Xslt_extension_element_prefixes_type_code: INTEGER is 691
 	Xslt_type_type_code: INTEGER is 692
 	Xslt_use_attribute_sets_type_code: INTEGER is 693
-	Xslt_validation_type_code: INTEGER is 694
-	Xslt_version_type_code: INTEGER is 695
+	Xslt_use_when_type_code: INTEGER is 694
+	Xslt_validation_type_code: INTEGER is 695
+	Xslt_version_type_code: INTEGER is 696
 
 			-- Codes in XML Schema Instance namespace (`Xml_schema_instance_uri_code' * 128 + 1..n)
 
@@ -463,6 +464,7 @@ feature -- Access
 	Use_attribute: STRING is "use"
 	Use_attribute_sets_attribute: STRING is "use-attribute-sets"
 	Use_character_maps_attribute: STRING is "use-character-maps"
+	Use_when_attribute: STRING is "use-when"
 	Validation_attribute: STRING is "validation"
 	Value_attribute: STRING is "value"
 	Version_attribute: STRING is "version"
@@ -473,6 +475,11 @@ feature -- Access
 	Xslt_expanded_namespace: STRING is
 		once
 			Result := "{" + Xslt_uri + "}"
+		end
+
+	Xslt_use_when_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Use_when_attribute
 		end
 
 	Xslt_extension_element_prefixes_attribute: STRING is

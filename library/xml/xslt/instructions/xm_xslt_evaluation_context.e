@@ -21,7 +21,7 @@ inherit
 
 creation
 
-	make
+	make, make_restricted
 
 feature {NONE} -- Initialization
 
@@ -38,6 +38,21 @@ feature {NONE} -- Initialization
 			cached_last := -1
 		ensure
 			transformer_set: transformer = a_transformer
+			not_restricted: not is_restricted
+		end
+
+	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+			-- Create a restricted context for [xsl:]use-when
+		require
+			static_context_not_void: a_static_context /= Void
+		do
+			is_restricted := True
+			static_context := a_static_context
+			create internal_date_time.make_from_epoch (0)
+			create local_variable_frame.make (0, 0)
+		ensure
+			restricted: is_restricted
+			static_context_set: static_context = a_static_context
 		end
 
 feature -- Access
@@ -45,37 +60,52 @@ feature -- Access
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer
 
+	static_context: XM_XSLT_EXPRESSION_CONTEXT
+			-- Static context
+
 	last_parsed_document: XM_XPATH_DOCUMENT
 			-- Result from last call to `build_document'
 
 	available_functions: XM_XPATH_FUNCTION_LIBRARY is
 			-- Available functions
 		do
-			Result := transformer.executable.function_library
+			if is_restricted then
+				Result := static_context.available_functions
+			else
+				Result := transformer.executable.function_library
+			end
 		end
 
 	available_documents: XM_XPATH_DOCUMENT_POOL is
 			-- Available documents
 		do
-			Result := transformer.document_pool
+			if not is_restricted then
+				Result := transformer.document_pool
+			end
 		end
 
 	current_date_time: DT_DATE_TIME is
 			-- Current date-time
 		do
-			Result := transformer.current_date_time
+			if not is_restricted then
+				Result := transformer.current_date_time
+			else
+				Result := internal_date_time
+			end
 		end
 
 	is_current_item_available: BOOLEAN is
 			-- May `current()' be called without error?
 		do
-			Result := transformer.current_iterator /= Void and then not transformer.current_iterator.off
+			if not is_restricted then
+				Result := transformer.current_iterator /= Void and then not transformer.current_iterator.off
+			end
 		end
 
 	current_stylesheet_item: XM_XPATH_ITEM is
 			-- Item returned by `current()'
 		require
-			current_item_avaiable: is_current_item_available
+			current_item_available: is_current_item_available
 		do
 			Result := transformer.current_item
 		ensure
@@ -133,7 +163,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	transformer_not_void: transformer /= Void
+	transformer_not_void: not is_restricted implies transformer /= Void
+	static_context_void: not is_restricted implies static_context = Void
+	static_context_not_void: is_restricted implies static_context /= Void
 
 end
 	

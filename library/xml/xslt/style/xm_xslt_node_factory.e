@@ -57,16 +57,21 @@ feature -- Creation
 			a_uri_code: INTEGER
 			a_local_name: STRING
 			a_stylesheet: XM_XSLT_STYLESHEET
-			a_data_element: XM_XSLT_DATA_ELEMENT
 			a_style_element: XM_XSLT_STYLE_ELEMENT
+			a_data_element: XM_XSLT_DATA_ELEMENT
 			is_top_level_element: BOOLEAN
 		do
 			a_stylesheet ?= a_parent
 			is_top_level_element := a_stylesheet /= Void
 
 			a_data_element ?= a_parent
+			a_style_element ?= a_parent
 
-			if a_data_element /= Void then
+			if a_data_element /= Void or else (a_style_element /= Void and then a_style_element.is_excluded) then
+
+				-- The test for an excluded element is for [xsl:]use-when processing - by making all the descendants
+				--  data elements, the whole sub-tree is effectively excluded
+
 				create {XM_XSLT_DATA_ELEMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 				if a_parent /= Void then a_parent.add_child (Result) end
 			else
@@ -80,7 +85,11 @@ feature -- Creation
 					a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
 					a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 					if a_uri_code = Xslt_uri_code then
-						create Result.make_in_error_state (a_document, STRING_.appended_string ("Unknown XSLT element: ", a_local_name))
+						create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+						a_style_element.set_validation_error ("Unknown XSLT element", Report_unless_forwards_comptible) -- TODO - only under certain circumstances
+						Result := a_style_element
+						if a_parent /= Void then a_parent.add_child (Result) end
+						a_style_element.process_use_when_attribute (Use_when_attribute)						
 					else
 
 						-- We can't work out the final class of the node until we've examined its attributes
@@ -196,13 +205,15 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_WITH_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			else
 			end
-			
 			if Result /= Void then
 				if a_parent /= Void then a_parent.add_child (Result) end
-				Result.process_extension_element_attribute (Extension_element_prefixes_attribute)
-				Result.process_excluded_namespaces_attribute (Exclude_result_prefixes_attribute)
-				Result.process_version_attribute (Version_attribute, Report_always)
-				Result.process_default_xpath_namespace_attribute (Xpath_default_namespace_attribute)
+				Result.process_use_when_attribute (Use_when_attribute)
+				if not Result.is_excluded then
+					Result.process_extension_element_attribute (Extension_element_prefixes_attribute)
+					Result.process_excluded_namespaces_attribute (Exclude_result_prefixes_attribute)
+					Result.process_version_attribute (Version_attribute, Report_always)
+					Result.process_default_xpath_namespace_attribute (Xpath_default_namespace_attribute)
+				end
 			end
 		end
 
@@ -219,10 +230,13 @@ feature {NONE} -- Implementation
 
 			create {XM_XSLT_LITERAL_RESULT_ELEMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			if a_parent /= Void then a_parent.add_child (Result) end
-			Result.process_extension_element_attribute (Xslt_extension_element_prefixes_attribute)
-			Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
-			Result.process_version_attribute (Xslt_version_attribute, Report_unless_forwards_comptible)
-			Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
+			Result.process_use_when_attribute (Xslt_use_when_attribute)
+			if not Result.is_excluded then
+				Result.process_extension_element_attribute (Xslt_extension_element_prefixes_attribute)
+				Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
+				Result.process_version_attribute (Xslt_version_attribute, Report_unless_forwards_comptible)
+				Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
+			end
 		end
 
 invariant

@@ -26,6 +26,8 @@ inherit
 
 	XM_XSLT_VALIDATION
 
+	XM_XSLT_SHARED_FUNCTION_LIBRARY
+
 	XM_XPATH_STANDARD_NAMESPACES
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -53,6 +55,7 @@ feature {NONE} -- Initialization
 			create module_list.make_default
 			module_list.set_equality_tester (string_equality_tester)
 			default_validation := Validation_strip
+			function_library := shared_function_library
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -184,7 +187,7 @@ feature -- Access
 				Result.is_error or else a_cursor.before
 			loop
 				an_output ?= a_cursor.item
-				if an_output /= Void and then an_output.output_fingerprint = a_fingerprint then
+				if an_output /= Void and then not an_output.is_excluded and then an_output.output_fingerprint = a_fingerprint then
 					found := True
 					an_output.gather_output_properties (Result)
 				end
@@ -550,10 +553,9 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_style_element ?= a_cursor.item
-				if a_style_element /= Void then
+				if a_style_element /= Void and then not a_style_element.is_excluded then
 					a_style_element.fixup_references
 				end
-				
 				a_cursor.forth
 			end
 
@@ -569,10 +571,9 @@ feature -- Element change
 				any_compile_errors or else a_cursor.after
 			loop
 				a_style_element ?= a_cursor.item
-				if a_style_element /= Void then
+				if a_style_element /= Void and then not a_style_element.is_excluded then
 					a_style_element.validate_subtree
 				end
-				
 				a_cursor.forth
 			end
 			post_validated := True
@@ -622,7 +623,7 @@ feature -- Element change
 							-- Only data elements, style elements and white-space text nodes may be present
 						end
 						a_module ?= a_child
-						if a_module /= Void then
+						if a_module /= Void and then not a_module.is_excluded then
 							a_module.create_static_context
 							a_module.process_attributes
 							if a_module.is_import then
@@ -674,7 +675,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_style_element ?= a_cursor.item
-				if a_style_element /= Void then
+				if a_style_element /= Void and then not a_style_element.is_excluded then
 					a_style_element.process_all_attributes
 				end
 				a_cursor.forth
@@ -743,12 +744,14 @@ feature -- Element change
 			until
 				any_compile_errors or else a_cursor.after
 			loop
-				a_cursor.item.compile (last_compiled_executable)
-				a_system_id := a_cursor.item.system_id
-				if not is_module_registered (a_system_id) then register_module (a_system_id) end
-				an_instruction := a_cursor.item.last_generated_instruction						
-				if an_instruction /= Void then
-					an_instruction.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
+				if not a_cursor.item.is_excluded then
+					a_cursor.item.compile (last_compiled_executable)
+					a_system_id := a_cursor.item.system_id
+					if not is_module_registered (a_system_id) then register_module (a_system_id) end
+					an_instruction := a_cursor.item.last_generated_instruction						
+					if an_instruction /= Void then
+						an_instruction.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
+					end
 				end
 				a_cursor.forth
 			end
@@ -790,7 +793,7 @@ feature -- Element change
 					a_cursor.after
 				loop
 					a_character_map ?= a_cursor.item
-					if a_character_map /= Void and then not a_character_map.is_redundant then
+					if a_character_map /= Void and then not a_character_map.is_excluded and then not a_character_map.is_redundant then
 						a_fingerprint := a_character_map.character_map_fingerprint
 						create a_character_code_map.make_with_equality_testers (10, string_equality_tester, Void)
 						a_character_map.assemble (a_character_code_map)
@@ -829,7 +832,7 @@ feature -- Element change
 					a_cursor.after
 				loop
 					a_function ?= a_cursor.item
-					if a_function /= Void then
+					if a_function /= Void and then not a_function.is_excluded then
 						if a_function.is_overriding then
 							overriding_runtime_library.add_function (a_function)
 						else
@@ -921,7 +924,7 @@ feature {NONE} -- Implementation
 				a_cursor.before
 			loop
 				a_template ?= a_cursor.item
-				if a_template /= Void  then
+				if a_template /= Void and then not a_template.is_excluded then
 					index_named_template (a_template)
 				else
 					a_variable_declaration ?= a_cursor.item
@@ -1153,5 +1156,5 @@ invariant
 	decimal_format_manager_not_void: decimal_format_manager /= Void
 	stylesheet_module_map_not_void: stylesheet_module_map /= Void
 	module_list_not_void: module_list /= Void
-	
+	function_library_not_void:  function_library /= Void
 end

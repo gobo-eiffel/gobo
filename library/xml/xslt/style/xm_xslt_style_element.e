@@ -396,6 +396,9 @@ feature {NONE} -- Implementation
 		
 feature -- Status_report
 
+	is_excluded: BOOLEAN
+			-- Is `Current' excluded by "use-when" processing?
+
 	any_compile_errors: BOOLEAN is
 			-- Have any compile errors been reported?
 		do
@@ -657,7 +660,6 @@ feature -- Status setting
 					STRING_.same_string (an_attribute_uri, Xslt_uri) and then
 					not STRING_.same_string (an_element_uri, Xslt_uri) and then
 					(
-					 -- TODO use-when
 					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
 					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
 					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
@@ -670,7 +672,7 @@ feature -- Status setting
 				elseif STRING_.same_string (an_element_uri, Xslt_uri) and then
 					STRING_.same_string (an_attribute_uri, "") and then
 					(
-					 -- TODO use-when
+					 STRING_.same_string (a_local_name, Use_when_attribute) or else
 					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
 					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
 					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
@@ -1108,6 +1110,7 @@ feature -- Element change
 	allocate_slots (an_expression: XM_XPATH_EXPRESSION) is
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 		require
+			not_excluded: not is_excluded
 			expression_not_void: an_expression /= Void
 		local
 			a_procedure: XM_XSLT_PROCEDURE
@@ -1145,6 +1148,7 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		require
+			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			static_context_not_void: static_context /= Void
 		deferred
@@ -1154,9 +1158,10 @@ feature -- Element change
 
 	process_attributes is
 			-- Process the attribute list for the element.
-	require
-		attributes_not_prepared: not attributes_prepared
-		static_context_not_void: static_context /= Void
+		require
+			not_excluded: not is_excluded
+			attributes_not_prepared: not attributes_prepared
+			static_context_not_void: static_context /= Void
 		do
 			prepare_attributes
 			if is_error then
@@ -1171,8 +1176,9 @@ feature -- Element change
 	
 	process_all_attributes is
 			-- Process the attributes of this element and all its children
-	require
-		attributes_not_prepared: not attributes_prepared		
+		require
+			not_excluded: not is_excluded
+			attributes_not_prepared: not attributes_prepared		
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
@@ -1195,9 +1201,57 @@ feature -- Element change
 			attributes_prepared: attributes_prepared
 		end
 
+	process_use_when_attribute (an_attribute_name: STRING) is
+			--	Process the [xsl:]use-when attribute. 
+		require
+			attributes_not_prepared: not attributes_prepared
+			valid_attribute_name: an_attribute_name /= Void
+				and then	is_valid_expanded_name (an_attribute_name)
+				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Use_when_attribute)
+				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+		local
+			a_static_context: XM_XSLT_EXPRESSION_CONTEXT
+			a_use_when_attribute: STRING
+			an_expression: XM_XPATH_EXPRESSION
+			a_dynamic_context: XM_XSLT_EVALUATION_CONTEXT
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			a_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
+			if a_use_when_attribute /= Void then
+				create a_static_context.make_restricted (Current)
+				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token)
+				if expression_factory.is_parse_error then
+					report_compile_error (expression_factory.parsed_error_value.error_message)
+				else
+					an_expression := expression_factory.parsed_expression
+					an_expression.analyze (a_static_context)
+					if an_expression.is_error then
+						report_compile_error (an_expression.error_value.error_message)
+					else
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						end
+						if an_expression.is_error then
+							report_compile_error (an_expression.error_value.error_message)
+						else
+							create a_dynamic_context.make_restricted (a_static_context)
+							a_boolean_value := an_expression.effective_boolean_value (a_dynamic_context)
+							if a_boolean_value.is_error then
+								report_compile_error (a_boolean_value.error_value.error_message)
+							else
+								is_excluded := not a_boolean_value.value
+							end
+						end
+					end
+				end
+			end
+		end
+
 	process_default_xpath_namespace_attribute (an_attribute_name: STRING) is
 			--	Process the [xsl:]default-xpath-namespace attribute. 
 		require
+			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
@@ -1211,6 +1265,7 @@ feature -- Element change
 	process_version_attribute (an_attribute_name: STRING; a_condition: INTEGER) is
 			--	Process the [xsl:]version attribute. 
 		require
+			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			version_attribute_not_processed: not version_attribute_processed
 			validation_reporting: Report_always <= a_condition and then a_condition <= Report_if_instantiated
@@ -1262,6 +1317,7 @@ feature -- Element change
 	process_extension_element_attribute (an_attribute_name: STRING) is
 			--	Process the [xsl:]extension-element-prefixes attribute. 
 		require
+			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
@@ -1302,6 +1358,7 @@ feature -- Element change
 	process_excluded_namespaces_attribute (an_attribute_name: STRING) is
 			--	Process the  [xsl:]exclude-result-prefixes attribute.
 		require
+			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
@@ -1356,6 +1413,7 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		require
+			not_excluded: not is_excluded
 			attributes_prepared: attributes_prepared
 			not_validated: not validated
 		do
@@ -1366,6 +1424,7 @@ feature -- Element change
 			-- Hook to allow additional validation of a parent element
 			--  immediately after its children have been validated.
 		require
+			not_excluded: not is_excluded
 			children_validated: children_validated
 			post_validate_not_run: not post_validated
 		do
@@ -1375,6 +1434,7 @@ feature -- Element change
 	validate_subtree is
 			-- Recursively walk through the stylesheet to validate all nodes.
 		require
+			not_excluded: not is_excluded
 			not_validated: not validated
 		do
 			if validation_error_message /= Void then
@@ -1397,6 +1457,7 @@ feature -- Element change
 	validate_children is
 			-- Validate the children of this node, recursively.
 		require
+			not_excluded: not is_excluded
 			validated: validated
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -1430,6 +1491,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		require
+			not_excluded: not is_excluded
 			not_in_error: not is_error
 			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
@@ -1441,6 +1503,7 @@ feature -- Element change
 			-- Compile the children of `an_instruction' on the stylesheet tree, adding the
 			--  subordinate instructions to the parent instruction on the execution tree.
 		require
+			not_excluded: not is_excluded
 			executable_not_void: an_executable /= Void
 			instruction_not_void: an_instruction /=Void
 		local
@@ -1510,6 +1573,7 @@ feature -- Element change
 	fallback_processing (an_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT; an_instruction_list: DS_LINKED_LIST [XM_XSLT_INSTRUCTION]) is
 			-- Perform fallback processing.
 		require
+			not_excluded: not is_excluded
 			executable_not_void: an_executable /= Void
 			style_element_not_void: a_style_element /= Void and then a_style_element.validation_error_message /= Void
 			intruction_list_not_void: an_instruction_list /= Void
@@ -1553,6 +1617,7 @@ feature -- Element change
 	accumulate_attribute_sets (used_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]) is
 			-- Accumulate attribute sets associated with `Current'
 		require
+			not_excluded: not is_excluded
 			used_attribute_sets_not_void: used_sets /= Void
 		local
 			a_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]

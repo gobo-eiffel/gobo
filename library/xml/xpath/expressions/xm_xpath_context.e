@@ -240,6 +240,7 @@ feature 	-- Element change
 			-- Build a document.
 		require
 			absolute_uri: a_uri_reference /= Void -- and then a_uri_reference.is_absolute
+			not_restricted: not is_restricted
 		deferred
 		ensure
 			error_message: is_build_document_error implies last_build_error /= Void
@@ -252,7 +253,7 @@ feature {NONE} -- Implementation
 			-- Used by `last'
 
 	internal_date_time: like current_date_time
-			-- Used by stand-alone XPath only
+			-- Used by stand-alone XPath and restricted contexts
 
 invariant
 

@@ -150,6 +150,7 @@ feature -- Element change
 			-- Bind variable to it's declaration.
 		require
 			variable_declared: is_variable_declared (a_fingerprint)
+			not_restricted: not is_restricted
 		deferred
 		ensure
 			variable_bound: last_bound_variable /= Void

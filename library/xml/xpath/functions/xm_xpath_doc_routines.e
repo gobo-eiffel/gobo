@@ -41,7 +41,9 @@ feature -- Evaluation
 			else
 				create a_uri.make_resolve (a_base_uri, a_uri_reference)
 				if a_uri.has_fragment then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string ("Argument to fn:doc must not contain a fragment-id", "FODC0005", Dynamic_error) -- is this true?
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string ("Argument to fn:doc must not contain a fragment-id", "FODC0005", Dynamic_error) -- is this true? NO! TODO
+				elseif a_context.is_restricted then
+					last_evaluated_document := Void
 				elseif a_context.available_documents.is_mapped (a_uri.full_reference) then
 					last_evaluated_document := a_context.available_documents.document (a_uri.full_reference)
 				else
