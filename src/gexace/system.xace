@@ -3,7 +3,15 @@
 <system name="gexace">
 	<root class="GEXACE" creation="make"/>
 	<cluster>
-		<option>
+		<option if="DEBUG">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<optimize enable="False"/>
+		</option>
+
+		<option unless="DEBUG">
 			<require enable="False"/>
 			<ensure enable="False"/>
 			<invariant enable="False"/>
