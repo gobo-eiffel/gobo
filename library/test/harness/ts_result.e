@@ -13,10 +13,6 @@ indexing
 
 deferred class TS_RESULT
 
-inherit
-
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 feature -- Access
 
 	test: TS_TEST
@@ -44,11 +40,11 @@ feature -- Status report
 
 feature -- Output
 
-	print_result (a_file: like OUTPUT_STREAM_TYPE) is
+	print_result (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print result to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_writable
 		deferred
 		end
 

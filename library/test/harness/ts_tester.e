@@ -18,7 +18,6 @@ inherit
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_STANDARD_FILES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -31,16 +30,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new tester and execute it.
 		local
-			a_file: like OUTPUT_STREAM_TYPE
+			a_file: KL_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			make_default
 			read_command_line
 			if output_filename /= Void then
-				a_file := OUTPUT_STREAM_.make_file_open_write (output_filename)
-				if OUTPUT_STREAM_.is_open_write (a_file) then
+				!! a_file.make (output_filename)
+				a_file.open_write
+				if a_file.is_open_write then
 					execute (a_file)
-					OUTPUT_STREAM_.close (a_file)
+					a_file.close
 				else
 					!! cannot_write.make (output_filename)
 					error_handler.report_error (cannot_write)
@@ -64,11 +64,11 @@ feature -- Access
 
 feature -- Execution
 
-	execute (a_file: like OUTPUT_STREAM_TYPE) is
+	execute (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Execute tester.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_writable
 		local
 			a_suite: like suite
 			a_summary: TS_SUMMARY

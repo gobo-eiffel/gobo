@@ -13,10 +13,6 @@ indexing
 
 class TS_SUMMARY
 
-inherit
-
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 creation
 
 	make
@@ -121,12 +117,12 @@ feature -- Element change
 
 feature -- Output
 
-	print_summary (a_test: TS_TEST; a_file: like OUTPUT_STREAM_TYPE) is
+	print_summary (a_test: TS_TEST; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print summary for `a_test' to `a_file'.
 		require
 			a_test_not_void: a_test /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_writable
 		do
 			a_file.put_string ("Test Summary for ")
 			a_file.put_string (a_test.name)
@@ -175,12 +171,12 @@ feature -- Output
 			a_file.put_string (")%N")
 		end
 
-	print_errors (a_file: like OUTPUT_STREAM_TYPE) is
+	print_errors (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print failed or aborted results to `a_file'.
 		require
 			not_successful: not is_successful
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_writable
 		local
 			a_cursor: DS_LIST_CURSOR [TS_RESULT]
 			a_result: TS_RESULT
@@ -197,11 +193,11 @@ feature -- Output
 			end
 		end
 
-	print_results (a_file: like OUTPUT_STREAM_TYPE) is
+	print_results (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print all results to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_writable
 		local
 			a_cursor: DS_LIST_CURSOR [TS_RESULT]
 		do
