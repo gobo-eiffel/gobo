@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel dynamic type sets of agent call argument pushing types to supersets"
+		"Eiffel dynamic type sets of agent operands pulling types from subsets (type sets of argument of features 'call' and 'item')"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,11 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_PUSH_AGENT_TYPE_SET
+class ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET
+	ET_DYNAMIC_PULL_TYPE_SET
+		rename
+			make as make_pull_type_set
+		redefine
+			put_type_from_attachment
+		end
 
 creation
 
@@ -45,35 +50,10 @@ feature -- Access
 	agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			-- Type of agent
 
-	static_type: ET_DYNAMIC_TYPE
-			-- Type at compilation time
-
-	first_type: ET_DYNAMIC_TYPE
-			-- First type in current set;
-			-- Void if no type in the set
-
-	other_types: ET_DYNAMIC_TYPE_LIST
-			-- Other types in current set;
-			-- Void if zero or one type in the set
-
-	targets: ET_DYNAMIC_TARGET_LIST is
-			-- Supersets of the current set
-		do
-		ensure then
-			no_target: Result = Void
-		end
-
-	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Sub-sets of current type set
-		do
-		ensure then
-			no_source: Result = Void
-		end
-
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
-			-- Add `a_type' to current set.
+	put_type_from_attachment (a_type: ET_DYNAMIC_TYPE; an_attachment: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
+			-- Add `a_type' coming from `an_attachment' to current type set.
 		local
 			found: BOOLEAN
 			i, nb: INTEGER
@@ -81,6 +61,7 @@ feature -- Element change
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
+			l_attachment: ET_DYNAMIC_AGENT_OPERAND_ATTACHMENT
 		do
 			if a_type.conforms_to_type (static_type, a_system) then
 				if first_type = Void then
@@ -105,31 +86,17 @@ feature -- Element change
 								-- Internal error: missing open operands.
 							l_builder := a_system.dynamic_type_set_builder
 							l_builder.set_fatal_error
-							l_builder.error_handler.report_gibha_error
+							l_builder.error_handler.report_gibgh_error
 						else
 							from i := 1 until i > nb loop
-								l_item_type_sets.item (i).put_target (l_open_operand_type_sets.item (i), a_system)
+								create l_attachment.make (l_item_type_sets.item (i), agent_type, an_attachment.attachment, i, an_attachment.current_feature, an_attachment.current_type)
+								l_open_operand_type_sets.item (i).put_source (l_attachment, a_system)
 								i := i + 1
 							end
 						end
 					end
 				end
 			end
-		end
-
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
-			-- Add `a_target' to current set.
-			-- (Targets are supersets of current set.)
-		do
-			-- No targets.
-		end
-
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
-			-- Add `a_source' to current set.
-			-- (Sources are subsets of current set.)
-		do
-			-- Do nothing: the current kind of type set is not pulling
-			-- types from sources but pushing them to targets.
 		end
 
 invariant

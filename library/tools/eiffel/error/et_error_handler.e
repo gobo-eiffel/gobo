@@ -8987,21 +8987,6 @@ feature -- Internal errors
 
 --Error codes not used:
 
---							error_handler.report_gibhz_error
---							error_handler.report_gibeo_error
---					l_builder.error_handler.report_gibay_error
---							l_builder.error_handler.report_gibgc_error
---							l_builder.error_handler.report_gibgd_error
---						l_builder.error_handler.report_gibge_error
---								l_builder.error_handler.report_gibhr_error
---									l_builder.error_handler.report_gibhs_error
---												l_builder.error_handler.report_gibht_error
---												l_builder.error_handler.report_gibhu_error
---												l_builder.error_handler.report_gibhv_error
---										l_builder.error_handler.report_gibhw_error
---										l_builder.error_handler.report_gibgf_error
---										l_builder.error_handler.report_gibgg_error
---								l_builder.error_handler.report_gibgh_error
 --						l_builder.error_handler.report_gibgi_error
 --					l_builder.error_handler.report_gibgj_error
 --						a_builder.error_handler.report_gibgk_error
@@ -9010,9 +8995,5 @@ feature -- Internal errors
 --							a_builder.error_handler.report_gibgo_error
 --						a_builder.error_handler.report_gibgp_error
 --										a_builder.error_handler.report_gibgq_error
---										a_builder.error_handler.report_gibgr_error
---							a_builder.error_handler.report_gibgs_error
---						a_builder.error_handler.report_gibgt_error
---					a_builder.error_handler.report_gibgu_error
 
 end

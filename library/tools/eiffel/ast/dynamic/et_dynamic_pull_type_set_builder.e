@@ -22,6 +22,7 @@ inherit
 			build_dynamic_type_sets,
 			build_tuple_item,
 			build_tuple_put,
+			build_agent_call,
 			propagate_call_type,
 			check_catcall_target_validity,
 			report_assignment,
@@ -69,6 +70,7 @@ feature -- Generation
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_TYPE
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
@@ -91,7 +93,12 @@ feature -- Generation
 					l_type := l_dynamic_types.item (i)
 					l_tuple_type ?= l_type
 					if l_tuple_type /= Void then
-						propagate_tuple_item_types (l_tuple_type.item_type_sets)
+						propagate_types (l_tuple_type.item_type_sets)
+					else
+						l_agent_type ?= l_type
+						if l_agent_type /= Void then
+							propagate_types (l_agent_type.open_operand_type_sets)
+						end
 					end
 					l_features := l_type.features
 					nb2 := l_features.count
@@ -239,20 +246,35 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			end
 		end
 
+feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
+
+	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE) is
+			-- Build type set of argument type of `a_call_feature' from `an_agent_type'.
+		local
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_agent_type_set: ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET
+		do
+			l_dynamic_type_sets := a_call_feature.dynamic_type_sets
+			if not l_dynamic_type_sets.is_empty then
+				create l_agent_type_set.make (l_dynamic_type_sets.item (1).static_type, an_agent_type)
+				l_dynamic_type_sets.put (l_agent_type_set, 1)
+			end
+		end
+
 feature {NONE} -- Generation
 
-	propagate_tuple_item_types (an_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST) is
-			-- Propagates types of items of Tuple types.
+	propagate_types (a_type_sets: ET_DYNAMIC_TYPE_SET_LIST) is
+			-- Propagates types in `a_type_sets'.
 		require
-			an_item_type_sets_not_void: an_item_type_sets /= Void
+			a_type_sets_not_void: a_type_sets /= Void
 		local
 			i, nb: INTEGER
 			l_type_set: ET_DYNAMIC_TYPE_SET
 			l_count: INTEGER
 		do
-			nb := an_item_type_sets.count
+			nb := a_type_sets.count
 			from i := 1 until i > nb loop
-				l_type_set := an_item_type_sets.item (i)
+				l_type_set := a_type_sets.item (i)
 				l_count := l_type_set.count
 				l_type_set.propagate_types (current_system)
 				if l_type_set.count /= l_count then
@@ -1272,6 +1294,10 @@ feature {NONE} -- Event handling
 			j, nb2: INTEGER
 			l_actual_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 			l_result_attachment: ET_DYNAMIC_AGENT_RESULT
+			l_routine_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_routine_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_manifest_tuple: ET_MANIFEST_TUPLE
+			l_no_manifest_tuple: BOOLEAN
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
@@ -1287,13 +1313,13 @@ feature {NONE} -- Event handling
 				else
 					l_result_type_set := l_agent_type.result_type_set
 					if l_result_type_set /= Void then
-						l_dynamic_type_set := l_dynamic_feature.result_type_set
-						if l_dynamic_type_set = Void then
-								-- Internal error: a FUNCTION should be an agent on a query.
-							set_fatal_error
-							error_handler.report_gibcn_error
-						else
-							if not l_result_type_set.is_expanded then
+						if not l_result_type_set.is_expanded then
+							l_dynamic_type_set := l_dynamic_feature.result_type_set
+							if l_dynamic_type_set = Void then
+									-- Internal error: a FUNCTION should be an agent on a query.
+								set_fatal_error
+								error_handler.report_gibcn_error
+							else
 								create l_result_attachment.make (l_dynamic_type_set, an_expression.name, current_dynamic_feature, current_dynamic_type)
 								l_result_type_set.put_source (l_result_attachment, current_system)
 							end
@@ -1317,46 +1343,101 @@ feature {NONE} -- Event handling
 							set_fatal_error
 							error_handler.report_gibep_error
 						else
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_actual_expression ?= l_actual
-								if l_actual_expression /= Void then
-									l_dynamic_type_set := dynamic_type_set (l_actual_expression)
-									if l_dynamic_type_set = Void then
-											-- Internal error: the dynamic type sets of the actual
-											-- arguments should be known at this stage.
-										set_fatal_error
-										error_handler.report_gibcq_error
-									else
-										l_argument_type_set := l_argument_type_sets.item (i)
-										if not l_argument_type_set.is_expanded then
-											create l_actual_attachment.make (l_dynamic_type_set, l_actual_expression, current_dynamic_feature, current_dynamic_type)
-											l_argument_type_set.put_source (l_actual_attachment, current_system)
-										end
-									end
+							if (l_dynamic_feature.is_builtin_call or l_dynamic_feature.is_builtin_item) and then current_dynamic_type.is_agent_type then
+									-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
+									-- Try to get the open operand type sets directly from the
+									-- argument if it is a manifest tuple.
+								l_routine_type ?= current_dynamic_type
+								if l_routine_type = Void then
+										-- Internal error: it has to be an agent type.
+									set_fatal_error
+									error_handler.report_gibhz_error
 								else
-										-- Open operand.
-									j := j + 1
-									if j > nb2 then
-											-- Internal error: missing open operands.
+									if nb /= 1 then
+											-- Internal error: 'call' or 'item' should have exactly one argument.
 										set_fatal_error
-										error_handler.report_gibch_error
+										error_handler.report_gibeo_error
 									else
-										l_dynamic_type_set := l_open_operand_type_sets.item (j)
-										set_dynamic_type_set (l_dynamic_type_set, l_actual)
-										l_argument_type_set := l_argument_type_sets.item (i)
-										if not l_argument_type_set.is_expanded then
-											create l_actual_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-											l_argument_type_set.put_source (l_actual_attachment, current_system)
+										l_actual := l_actuals.actual_argument (1)
+										l_manifest_tuple ?= l_actual
+										if l_manifest_tuple /= Void then
+											l_routine_open_operand_type_sets := l_routine_type.open_operand_type_sets
+											nb := l_routine_open_operand_type_sets.count
+											if l_manifest_tuple.count < nb then
+													-- Internal error: the actual argument conforms to the
+													-- formal argument of 'call' or 'item', so there cannot
+													-- be less items in the tuple.
+												set_fatal_error
+												error_handler.report_gibay_error
+											else
+												from i := 1 until i > nb loop
+													l_argument_type_set := l_routine_open_operand_type_sets.item (i)
+													if not l_argument_type_set.is_expanded then
+														l_actual_expression := l_manifest_tuple.expression (i)
+														l_dynamic_type_set := dynamic_type_set (l_actual_expression)
+														if l_dynamic_type_set = Void then
+																-- Internal error: the dynamic type sets of the actual
+																-- arguments should be known at this stage.
+															set_fatal_error
+															error_handler.report_gibgc_error
+														else
+															create l_actual_attachment.make (l_dynamic_type_set, l_actual_expression, current_dynamic_feature, current_dynamic_type)
+															l_argument_type_set.put_source (l_actual_attachment, current_system)
+														end
+													end
+													i := i + 1
+												end
+											end
+										else
+											l_no_manifest_tuple := True
 										end
 									end
 								end
-								i := i + 1
+							else
+								l_no_manifest_tuple := True
 							end
-							if j < nb2 then
-									-- Internal error: too many open operands.
-								set_fatal_error
-								error_handler.report_gibbm_error
+							if l_no_manifest_tuple then
+								from i := 1 until i > nb loop
+									l_actual := l_actuals.actual_argument (i)
+									l_actual_expression ?= l_actual
+									if l_actual_expression /= Void then
+										l_argument_type_set := l_argument_type_sets.item (i)
+										if not l_argument_type_set.is_expanded then
+											l_dynamic_type_set := dynamic_type_set (l_actual_expression)
+											if l_dynamic_type_set = Void then
+													-- Internal error: the dynamic type sets of the actual
+													-- arguments should be known at this stage.
+												set_fatal_error
+												error_handler.report_gibcq_error
+											else
+												create l_actual_attachment.make (l_dynamic_type_set, l_actual_expression, current_dynamic_feature, current_dynamic_type)
+												l_argument_type_set.put_source (l_actual_attachment, current_system)
+											end
+										end
+									else
+											-- Open operand.
+										j := j + 1
+										if j > nb2 then
+												-- Internal error: missing open operands.
+											set_fatal_error
+											error_handler.report_gibch_error
+										else
+											l_argument_type_set := l_argument_type_sets.item (i)
+											if not l_argument_type_set.is_expanded then
+												l_dynamic_type_set := l_open_operand_type_sets.item (j)
+												set_dynamic_type_set (l_dynamic_type_set, l_actual)
+												create l_actual_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+												l_argument_type_set.put_source (l_actual_attachment, current_system)
+											end
+										end
+									end
+									i := i + 1
+								end
+								if j < nb2 then
+										-- Internal error: too many open operands.
+									set_fatal_error
+									error_handler.report_gibbm_error
+								end
 							end
 						end
 					end
@@ -1375,6 +1456,9 @@ feature {NONE} -- Event handling
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_query := current_dynamic_type.dynamic_feature (a_feature, current_system)
@@ -1392,18 +1476,80 @@ feature {NONE} -- Event handling
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
 						error_handler.report_gibbp_error
+					elseif l_query.is_builtin_item and then current_dynamic_type.is_agent_type then
+							-- This is something of the form:  'item ([...])'
+							-- Try to get the open operand type sets directly from the
+							-- argument if it is a manifest tuple.
+						l_agent_type ?= current_dynamic_type
+						if l_agent_type = Void then
+								-- Internal error: it has to be an agent type.
+							set_fatal_error
+								error_handler.report_gibgd_error
+						else
+							if nb /= 1 then
+									-- Internal error: 'item' should have exactly one argument.
+								set_fatal_error
+								error_handler.report_gibge_error
+							else
+								l_actual := l_actuals.actual_argument (1)
+								l_manifest_tuple ?= l_actual
+								if l_manifest_tuple /= Void then
+									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+									nb := l_open_operand_type_sets.count
+									if l_manifest_tuple.count < nb then
+											-- Internal error: the actual argument conforms to the
+											-- formal argument of 'item', so there cannot be less
+											-- items in the tuple.
+										set_fatal_error
+										error_handler.report_gibhr_error
+									else
+										from i := 1 until i > nb loop
+											l_argument_type_set := l_open_operand_type_sets.item (i)
+											if not l_argument_type_set.is_expanded then
+												l_actual := l_manifest_tuple.expression (i)
+												l_dynamic_type_set := dynamic_type_set (l_actual)
+												if l_dynamic_type_set = Void then
+														-- Internal error: the dynamic type sets of the actual
+														-- arguments should be known at this stage.
+													set_fatal_error
+													error_handler.report_gibhs_error
+												else
+													create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+													l_argument_type_set.put_source (l_attachment, current_system)
+												end
+											end
+											i := i + 1
+										end
+									end
+								else
+									l_argument_type_set := l_argument_type_sets.item (1)
+									if not l_argument_type_set.is_expanded then
+										l_dynamic_type_set := dynamic_type_set (l_actual)
+										if l_dynamic_type_set = Void then
+												-- Internal error: the dynamic type sets of the actual
+												-- arguments should be known at this stage.
+											set_fatal_error
+												error_handler.report_gibht_error
+										else
+											create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+											l_argument_type_set.put_source (l_attachment, current_system)
+										end
+									end
+								end
+							end
+						end
 					else
 						from i := 1 until i > nb loop
-							l_actual := l_actuals.actual_argument (i)
-							l_dynamic_type_set := dynamic_type_set (l_actual)
-							if l_dynamic_type_set = Void then
-									-- Internal error: the dynamic type sets of the actual
-									-- arguments should be known at this stage.
-								set_fatal_error
-								error_handler.report_gibbo_error
-							else
-								l_argument_type_set := l_argument_type_sets.item (i)
-								if not l_argument_type_set.is_expanded then
+							l_argument_type_set := l_argument_type_sets.item (i)
+							if not l_argument_type_set.is_expanded then
+								l_actual := l_actuals.actual_argument (i)
+								l_dynamic_type_set := dynamic_type_set (l_actual)
+								if l_dynamic_type_set = Void then
+										-- Internal error: the dynamic type sets of the actual
+										-- arguments should be known at this stage.
+									set_fatal_error
+									error_handler.report_gibbo_error
+								else
 									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 									l_argument_type_set.put_source (l_attachment, current_system)
 								end
@@ -1434,6 +1580,9 @@ feature {NONE} -- Event handling
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_procedure := current_dynamic_type.dynamic_feature (a_feature, current_system)
@@ -1451,18 +1600,80 @@ feature {NONE} -- Event handling
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
 						error_handler.report_gibbs_error
+					elseif l_procedure.is_builtin_call and then current_dynamic_type.is_agent_type then
+							-- This is something of the form:  'call ([...])'
+							-- Try to get the open operand type sets directly from the
+							-- argument if it is a manifest tuple.
+						l_agent_type ?= current_dynamic_type
+						if l_agent_type = Void then
+								-- Internal error: it has to be an agent type.
+							set_fatal_error
+							error_handler.report_gibhu_error
+						else
+							if nb /= 1 then
+									-- Internal error: 'call' should have exactly one argument.
+								set_fatal_error
+								error_handler.report_gibhv_error
+							else
+								l_actual := l_actuals.actual_argument (1)
+								l_manifest_tuple ?= l_actual
+								if l_manifest_tuple /= Void then
+									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+									nb := l_open_operand_type_sets.count
+									if l_manifest_tuple.count < nb then
+											-- Internal error: the actual argument conforms to the
+											-- formal argument of 'call', so there cannot be less
+											-- items in the tuple.
+										set_fatal_error
+										error_handler.report_gibhw_error
+									else
+										from i := 1 until i > nb loop
+											l_argument_type_set := l_open_operand_type_sets.item (i)
+											if not l_argument_type_set.is_expanded then
+												l_actual := l_manifest_tuple.expression (i)
+												l_dynamic_type_set := dynamic_type_set (l_actual)
+												if l_dynamic_type_set = Void then
+														-- Internal error: the dynamic type sets of the actual
+														-- arguments should be known at this stage.
+													set_fatal_error
+													error_handler.report_gibgf_error
+												else
+													create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+													l_argument_type_set.put_source (l_attachment, current_system)
+												end
+											end
+											i := i + 1
+										end
+									end
+								else
+									l_argument_type_set := l_argument_type_sets.item (1)
+									if not l_argument_type_set.is_expanded then
+										l_dynamic_type_set := dynamic_type_set (l_actual)
+										if l_dynamic_type_set = Void then
+												-- Internal error: the dynamic type sets of the actual
+												-- arguments should be known at this stage.
+											set_fatal_error
+											error_handler.report_gibgg_error
+										else
+											create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+											l_argument_type_set.put_source (l_attachment, current_system)
+										end
+									end
+								end
+							end
+						end
 					else
 						from i := 1 until i > nb loop
-							l_actual := l_actuals.actual_argument (i)
-							l_dynamic_type_set := dynamic_type_set (l_actual)
-							if l_dynamic_type_set = Void then
-									-- Internal error: the dynamic type sets of the actual
-									-- arguments should be known at this stage.
-								set_fatal_error
-								error_handler.report_gibbr_error
-							else
-								l_argument_type_set := l_argument_type_sets.item (i)
-								if not l_argument_type_set.is_expanded then
+							l_argument_type_set := l_argument_type_sets.item (i)
+							if not l_argument_type_set.is_expanded then
+								l_actual := l_actuals.actual_argument (i)
+								l_dynamic_type_set := dynamic_type_set (l_actual)
+								if l_dynamic_type_set = Void then
+										-- Internal error: the dynamic type sets of the actual
+										-- arguments should be known at this stage.
+									set_fatal_error
+									error_handler.report_gibbr_error
+								else
 									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
 									l_argument_type_set.put_source (l_attachment, current_system)
 								end

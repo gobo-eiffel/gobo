@@ -182,7 +182,7 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 			-- Build type set of argument type of `a_call_feature' from `an_agent_type'.
 		local
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_agent_type_set: ET_DYNAMIC_PUSH_AGENT_TYPE_SET
+			l_agent_type_set: ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET
 		do
 			l_dynamic_type_sets := a_call_feature.dynamic_type_sets
 			if not l_dynamic_type_sets.is_empty then

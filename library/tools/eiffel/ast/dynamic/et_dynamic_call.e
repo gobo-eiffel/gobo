@@ -283,6 +283,9 @@ feature -- Element change
 			i, nb: INTEGER
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 			l_result_attachment: ET_DYNAMIC_NULL_ATTACHMENT
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_system: ET_SYSTEM
 		do
 			l_system := a_builder.current_system
@@ -313,6 +316,65 @@ feature -- Element change
 								-- feature redeclaration.
 							a_builder.set_fatal_error
 							a_builder.error_handler.report_gibbv_error
+						elseif (l_dynamic_feature.is_builtin_call or l_dynamic_feature.is_builtin_item) and then a_type.is_agent_type then
+								-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
+								-- Try to get the open operand type sets directly from the
+								-- argument if it is a manifest tuple.
+							l_agent_type ?= a_type
+							if l_agent_type = Void then
+									-- Internal error: it has to be an agent type.
+								a_builder.set_fatal_error
+								a_builder.error_handler.report_gibgr_error
+							else
+								if nb /= 1 then
+										-- Internal error: 'call' or 'item' should have exactly one argument.
+									a_builder.set_fatal_error
+									a_builder.error_handler.report_gibgs_error
+								else
+									l_actual := l_actuals.actual_argument (1)
+									l_manifest_tuple ?= l_actual
+									if l_manifest_tuple /= Void then
+										l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+										nb := l_open_operand_type_sets.count
+										if l_manifest_tuple.count < nb then
+												-- We don't get enough operands. This will be reported
+												-- by the CAT-call checking.
+											nb := l_manifest_tuple.count
+										end
+										from i := 1 until i > nb loop
+											l_target_argument_type_set := l_open_operand_type_sets.item (i)
+											if not l_target_argument_type_set.is_expanded then
+												l_actual := l_manifest_tuple.expression (i)
+												l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+												if l_source_argument_type_set = Void then
+														-- Internal error: the dynamic type sets of the actual
+														-- arguments should be known at this stage.
+													a_builder.set_fatal_error
+													a_builder.error_handler.report_gibgt_error
+												else
+													create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
+													l_target_argument_type_set.put_source (l_attachment, l_system)
+												end
+											end
+											i := i + 1
+										end
+									else
+										l_target_argument_type_set := l_target_argument_type_sets.item (1)
+										if not l_target_argument_type_set.is_expanded then
+											l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+											if l_source_argument_type_set = Void then
+													-- Internal error: the dynamic type sets of the actual
+													-- arguments should be known at this stage.
+												a_builder.set_fatal_error
+												a_builder.error_handler.report_gibgu_error
+											else
+												create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
+												l_target_argument_type_set.put_source (l_attachment, l_system)
+											end
+										end
+									end
+								end
+							end
 						else
 							from i := 1 until i > nb loop
 								l_target_argument_type_set := l_target_argument_type_sets.item (i)

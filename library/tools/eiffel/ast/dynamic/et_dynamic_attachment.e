@@ -104,7 +104,7 @@ feature -- Element change
 				if l_other_types /= Void then
 					nb2 := l_other_types.count
 					from j := nb2 until j < 1 loop
-						a_target.put_type (l_other_types.item (j), a_system)
+						a_target.put_type_from_attachment (l_other_types.item (j), Current, a_system)
 						i := i + 1
 						if i < nb then
 							j := j - 1
@@ -117,7 +117,7 @@ feature -- Element change
 				if i < nb then
 					l_type := source_type_set.first_type
 					if l_type /= Void then
-						a_target.put_type (l_type, a_system)
+						a_target.put_type_from_attachment (l_type, Current, a_system)
 					end
 				end
 			end
