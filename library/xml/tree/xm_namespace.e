@@ -124,16 +124,6 @@ feature -- Status report
 			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
 		end
 		
-	is_default_namespace: BOOLEAN is
-			-- Is `Current' the default namespace (empty URI).
-		obsolete
-			"use clearer `uri.is_empty', or `not has_prefix' for other view of 'default'"
-		do
-			Result := uri.count = 0
-		ensure
-			definition: Result = (uri.count = 0)
-		end
-
 invariant
 
 	uri_not_void: uri /= Void
