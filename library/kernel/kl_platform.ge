@@ -19,8 +19,14 @@ class KL_PLATFORM
 inherit
 
 	PLATFORM
+#ifdef SE
+		redefine
+			Minimum_character_code,
+			Maximum_character_code
+		end
+#endif
 
-#ifdef ISE || HACT
+#ifdef ISE || HACT || SE
 feature -- Access
 
 	Minimum_character_code: INTEGER is 0
