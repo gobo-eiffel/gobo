@@ -77,7 +77,7 @@ feature -- Element change
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_flattened: a_parent.is_flattened
-			no_flatten_error: not a_parent.flatten_error
+			no_flatten_error: not a_parent.has_flatten_error
 		local
 			a_class: ET_CLASS
 			a_rename_table: like Shared_rename_table
@@ -189,7 +189,7 @@ feature -- Compilation
 		do
 			process_seeded_features
 			from features.start until features.after loop
-				features.item_for_iteration.process_flattened_feature
+				features.item_for_iteration.process_flattened_feature (Current)
 				features.forth
 			end
 			class_features := current_class.features
