@@ -32,7 +32,7 @@ feature -- Tests
 			a_decoder.read_string (1024)
 			assert ("decoded", a_decoder.last_string.count = 273)
 			create an_output_stream.make_empty
-			create an_encoder.make (an_output_stream, False)
+			create an_encoder.make (an_output_stream, False, False)
 			assert ("is_open_write", an_encoder.is_open_write)
 			an_encoder.put_string (a_decoder.last_string)
 			an_encoder.close

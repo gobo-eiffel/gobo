@@ -22,21 +22,30 @@ inherit
 			close, is_closable
 		end
 
+	-- According to RFC 2045, line breaks should be normalized to
+	--  CRLF before encoding, and encoded lines should not be longer
+	--  then 76 characters. It appears that neither of these operations
+	--  is always done in practice, accordingly I have made them
+	--  both BOOLEAN options in the creation procedure.
+	-- Set both options to `True' for 100% conformance to RFC 2045.
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_stream: like base_stream; output_line_breaks: BOOLEAN) is
+	make (a_stream: like base_stream; output_line_breaks, normalize_line_breaks: BOOLEAN) is
 			-- Create a new base64 encoding stream.
 		do
 			make_base (a_stream)
 			is_line_breaking := output_line_breaks
+			is_normalizing := normalize_line_breaks
 			create triplet.make_filled (' ', 3)
 			triplet_count := 0
 		ensure
 			line_breaking: is_line_breaking = output_line_breaks
+			normailizing: is_normalizing = normalize_line_breaks
 			base_stream_set: base_stream = a_stream
 		end
 
@@ -44,6 +53,9 @@ feature -- Status report
 
 	is_line_breaking: BOOLEAN
 			-- Are line breaks to be written out after 76 characters?
+
+	is_normalizing: BOOLEAN
+			-- Are line-breaks normalized to CRLF before encoding?
 
 	is_closable: BOOLEAN is
 			-- Can current output stream be closed?
@@ -56,26 +68,30 @@ feature -- Output
 	put_character (c: CHARACTER) is
 			-- Write `c' to output stream.
 		do
---			if is_pending_line_break then
---				is_pending_line_break := False
---				if c = '%N' then
---					buffer_character ('%N')
---				else
---					buffer_character ('%N')
---					buffer_character (c)
---					if c = '%R' then
---						is_pending_line_break := True
---					end
---				end
---			elseif c = '%N' then
---				buffer_character ('%R')
---				is_pending_line_break := True
---			elseif c = '%R' then
---				buffer_character (c)
---				is_pending_line_break := True
---			else
+			if not is_normalizing then
 				buffer_character (c)
---			end
+			else
+				if is_pending_line_break then
+					is_pending_line_break := False
+					if c = '%N' then
+						buffer_character ('%N')
+					else
+						buffer_character ('%N')
+						buffer_character (c)
+						if c = '%R' then
+							is_pending_line_break := True
+						end
+					end
+				elseif c = '%N' then
+					buffer_character ('%N')
+					buffer_character ('%R')
+				elseif c = '%R' then
+					buffer_character (c)
+					is_pending_line_break := True
+				else
+					buffer_character (c)
+				end
+			end
 		end
 
 	put_string (a_string: STRING) is
