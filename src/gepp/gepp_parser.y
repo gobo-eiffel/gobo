@@ -5,7 +5,7 @@ indexing
 
 		"Parsers for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class GEPP_PARSER
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton
 		redefine
@@ -42,8 +42,8 @@ feature
 %token P_IFDEF P_IFNDEF P_INCLUDE P_DEFINE P_UNDEF
 %token P_DEF_VALUE P_ELSE P_ENDIF P_EOL
 
-%token <STRING>		P_NAME P_STRING
-%type <BOOLEAN>		Condition
+%token <STRING> P_NAME P_STRING
+%type <BOOLEAN> Condition
 
 %left P_OR
 %left P_AND

@@ -5,7 +5,7 @@ indexing
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,13 +35,20 @@ feature {NONE} -- Initialization
 			yyFinal := machine.states.last.id
 			yyFlag := -32768
 			build_yytranslate
-			build_yyr
+			build_yyr1
+			build_yytypes1
+			build_yytypes2
 			build_action_tables
 			array_size := 3000
 			input_filename := Default_input_filename
 		ensure
 			machine_set: machine = a_machine
 		end
+
+feature -- Status report
+
+	old_typing: BOOLEAN
+			-- Does the generated parser use the old typing mechanism?
 
 feature -- Access
 
@@ -63,6 +70,14 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
+	set_old_typing (b: BOOLEAN) is
+			-- Set `old_typing' to `b'.
+		do
+			old_typing := b
+		ensure
+			old_typing_set: old_typing = b
+		end
+
 feature -- Generation
 
 	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -76,11 +91,28 @@ feature -- Generation
 		do
 			print_eiffel_header (a_file)
 			if tokens_needed then
+				a_file.put_new_line
 				print_token_codes (a_file)
 			end
-			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
+			a_file.put_new_line
+			a_file.put_string ("feature {NONE} -- Implementation%N%N")
 			print_build_parser_tables (a_file)
-			a_file.put_string ("%Nfeature {NONE} -- Semantic actions%N%N")
+			a_file.put_new_line
+			if not old_typing then
+				print_create_value_stacks (a_file)
+				a_file.put_new_line
+				print_init_value_stacks (a_file)
+				a_file.put_new_line
+				print_clear_value_stacks (a_file)
+				a_file.put_new_line
+				print_push_last_value (a_file)
+				a_file.put_new_line
+				print_push_error_value (a_file)
+				a_file.put_new_line
+				print_pop_last_value (a_file)
+				a_file.put_new_line
+			end
+			a_file.put_string ("feature {NONE} -- Semantic actions%N%N")
 			if actions_separated then
 				print_separated_actions (a_file)
 			else
@@ -94,8 +126,14 @@ feature -- Generation
 			end
 			a_file.put_string ("%Nfeature {NONE} -- Table templates%N%N")
 			print_eiffel_tables (a_file)
-			print_conversion_routines (a_file)
-			a_file.put_string ("%Nfeature {NONE} -- Constants%N%N")
+			if old_typing then
+				old_print_conversion_routines (a_file)
+				a_file.put_new_line
+			else
+				a_file.put_string ("%Nfeature {NONE} -- Semantic value stacks%N%N")
+				print_stack_declarations (a_file)
+			end
+			a_file.put_string ("feature {NONE} -- Constants%N%N")
 			print_constants (a_file)
 			a_file.put_string ("%Nfeature -- User-defined features%N%N")
 			print_eiffel_code (a_file)
@@ -119,10 +157,9 @@ feature -- Generation
 			a_file.put_string (class_name)
 			a_file.put_string ("%N%Ninherit%N%N%
 				%%TYY_PARSER_TOKENS%N")
+			a_file.put_new_line
 			print_token_codes (a_file)
-			a_file.put_string ("%Nend -- class ")
-			a_file.put_string (class_name)
-			a_file.put_character ('%N')
+			a_file.put_line ("%Nend")
 		end
 
 feature {NONE} -- Generation
@@ -139,9 +176,13 @@ feature {NONE} -- Generation
 			a_literal: STRING
 			i, nb: INTEGER
 		do
+			if not old_typing then
+				print_last_values (a_file)
+			end
+			a_file.put_new_line
 			tokens := machine.grammar.tokens
 			nb := tokens.count
-			a_file.put_string ("%Nfeature -- Access%N%N%
+			a_file.put_string ("feature -- Access%N%N%
 				%%Ttoken_name (a_token: INTEGER): STRING is%N%
 				%%T%T%T-- Name of token `a_token'%N%
 				%%T%Tdo%N%
@@ -189,6 +230,45 @@ feature {NONE} -- Generation
 			end
 		end
 
+	print_last_values (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `last_..._value' declarations to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			nb_types: INTEGER
+			types: DS_HASH_SET [PR_TYPE]
+			a_cursor: DS_HASH_SET_CURSOR [PR_TYPE]
+			tokens: DS_ARRAYED_LIST [PR_TOKEN]
+			a_type: PR_TYPE
+			i, nb: INTEGER
+		do
+			a_file.put_line ("feature -- Last values")
+			a_file.put_new_line
+			nb_types := machine.grammar.types.count
+			create types.make (nb_types)
+			tokens := machine.grammar.tokens
+			nb := tokens.count
+			from i := 1 until i > nb loop
+				a_type := tokens.item (i).type
+				types.put (a_type)
+				if types.count = nb_types then
+						-- All types have already been registered.
+					i := nb + 1 -- Jump out of the loop.
+				end
+				i := i + 1
+			end
+			a_cursor := types.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_type := a_cursor.item
+				a_file.put_string ("%T")
+				a_file.put_string (a_type.last_value_name)
+				a_file.put_string (": ")
+				a_file.put_line (a_type.name)
+				a_cursor.forth
+			end
+		end
+
 	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print user-defined eiffel header to `a_file'.
 		require
@@ -226,18 +306,224 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("%Tyy_build_parser_tables is%N%
-				%%T%T%T-- Build parser tables.%N%T%Tdo%N%
-				%%T%T%Tyytranslate ?= yytranslate_template%N%
-				%%T%T%Tyyr1 ?= yyr1_template%N%
-				%%T%T%Tyyr2 ?= yyr2_template%N%
-				%%T%T%Tyydefact ?= yydefact_template%N%
-				%%T%T%Tyydefgoto ?= yydefgoto_template%N%
-				%%T%T%Tyypact ?= yypact_template%N%
-				%%T%T%Tyypgoto ?= yypgoto_template%N%
-				%%T%T%Tyytable ?= yytable_template%N%
-				%%T%T%Tyycheck ?= yycheck_template%N%
-				%%T%Tend%N")
+			a_file.put_line ("%Tyy_build_parser_tables is")
+			a_file.put_line ("%T%T%T-- Build parser tables.")
+			a_file.put_line ("%T%Tdo")
+			a_file.put_line ("%T%T%Tyytranslate ?= yytranslate_template")
+			a_file.put_line ("%T%T%Tyyr1 ?= yyr1_template")
+			a_file.put_line ("%T%T%Tyytypes1 ?= yytypes1_template")
+			a_file.put_line ("%T%T%Tyytypes2 ?= yytypes2_template")
+			a_file.put_line ("%T%T%Tyydefact ?= yydefact_template")
+			a_file.put_line ("%T%T%Tyydefgoto ?= yydefgoto_template")
+			a_file.put_line ("%T%T%Tyypact ?= yypact_template")
+			a_file.put_line ("%T%T%Tyypgoto ?= yypgoto_template")
+			a_file.put_line ("%T%T%Tyytable ?= yytable_template")
+			a_file.put_line ("%T%T%Tyycheck ?= yycheck_template")
+			a_file.put_line ("%T%Tend")
+		end
+
+	print_create_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for `yy_create_value_stacks' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_line ("%Tyy_create_value_stacks is")
+			a_file.put_line ("%T%T%T-- Create value stacks.")
+			a_file.put_line ("%T%Tdo")
+			a_file.put_line ("%T%Tend")
+		end
+
+	print_init_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for `yy_init_value_stacks' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			types: DS_ARRAYED_LIST [PR_TYPE]
+			a_type: PR_TYPE
+			a_type_id: INTEGER
+			i, nb: INTEGER
+		do
+			a_file.put_line ("%Tyy_init_value_stacks is")
+			a_file.put_line ("%T%T%T-- Initialize value stacks.")
+			a_file.put_line ("%T%Tdo")
+			types := machine.grammar.types
+			nb := types.count
+			from i := 1 until i > nb loop
+				a_type := types.item (i)
+				a_type_id := a_type.id
+				a_file.put_string ("%T%T%Tyyvsp")
+				a_file.put_integer (a_type_id)
+				a_file.put_line (" := -1")
+				i := i + 1
+			end
+			a_file.put_line ("%T%Tend")
+		end
+
+	print_clear_value_stacks (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for `yy_clear_value_stacks' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			types: DS_ARRAYED_LIST [PR_TYPE]
+			a_type: PR_TYPE
+			i, nb: INTEGER
+		do
+			a_file.put_line ("%Tyy_clear_value_stacks is")
+			a_file.put_line ("%T%T%T-- Clear objects in semantic value stacks so that")
+			a_file.put_line ("%T%T%T-- they can be collected by the garbage collector.")
+			a_file.put_line ("%T%Tdo")
+			types := machine.grammar.types
+			nb := types.count
+			from i := 1 until i > nb loop
+				a_type := types.item (i)
+				a_type.print_clear_yyvs (3, a_file)
+				i := i + 1
+			end
+			a_file.put_line ("%T%Tend")
+		end
+
+	print_push_last_value (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for `yy_push_last_value' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			nb_types: INTEGER
+			types: DS_HASH_SET [PR_TYPE]
+			a_cursor: DS_HASH_SET_CURSOR [PR_TYPE]
+			tokens: DS_ARRAYED_LIST [PR_TOKEN]
+			i, nb: INTEGER
+			a_type: PR_TYPE
+		do
+			a_file.put_line ("%Tyy_push_last_value (yychar1: INTEGER) is")
+			a_file.put_line ("%T%T%T-- Push semantic value associated with token `last_token'")
+			a_file.put_line ("%T%T%T-- (with internal id `yychar1') on top of corresponding")
+			a_file.put_line ("%T%T%T-- value stack.")
+			a_file.put_line ("%T%Tdo")
+			nb_types := machine.grammar.types.count
+			create types.make (nb_types)
+			tokens := machine.grammar.tokens
+			nb := tokens.count
+			from i := 1 until i > nb loop
+				a_type := tokens.item (i).type
+				types.put (a_type)
+				if types.count = nb_types then
+						-- All types have already been registered.
+					i := nb + 1 -- Jump out of the loop.
+				end
+				i := i + 1
+			end
+			inspect types.count
+			when 0 then
+				a_file.put_line ("%T%T%Tdebug (%"GEYACC%")")
+				a_file.put_line ("%T%T%T%Tstd.error.put_string (%"Error in parser: not a token type: %")")
+				a_file.put_line ("%T%T%T%Tstd.error.put_integer (yytypes2.item (yychar1))")
+				a_file.put_line ("%T%T%T%Tstd.error.put_new_line")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%T%Tabort")
+				a_file.put_line ("%T%Tend")
+			when 1 then
+				a_type := types.first
+				a_type.print_push_last_value (3, a_file)
+			else
+				a_file.put_line ("%T%T%Tinspect yytypes2.item (yychar1)")
+				a_cursor := types.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_type := a_cursor.item
+					a_file.put_string ("%T%T%Twhen ")
+					a_file.put_integer (a_type.id)
+					a_file.put_line (" then")
+					a_type.print_push_last_value (4, a_file)
+					a_cursor.forth
+				end
+				a_file.put_line ("%T%T%Telse")
+				a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: not a token type: %")")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yytypes2.item (yychar1))")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+				a_file.put_line ("%T%T%T%Tend")
+				a_file.put_line ("%T%T%T%Tabort")
+				a_file.put_line ("%T%T%Tend")
+			end
+			a_file.put_line ("%T%Tend")
+		end
+
+	print_push_error_value (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for `yy_push_error_value' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			tokens: DS_ARRAYED_LIST [PR_TOKEN]
+			a_token: PR_TOKEN
+			a_type: PR_TYPE
+			nb: INTEGER
+		do
+			a_file.put_line ("%Tyy_push_error_value is")
+			a_file.put_line ("%T%T%T-- Push semantic value associated with token 'error'")
+			a_file.put_line ("%T%T%T-- on top of corresponding value stack.")
+			tokens := machine.grammar.tokens
+			nb := tokens.count
+			if nb >= 2 then
+				a_token := tokens.item (2)
+				a_file.put_line ("%T%Tlocal")
+				a_type := a_token.type
+				a_type.print_dollar_dollar_declaration (a_file)
+				a_file.put_new_line
+				a_file.put_line ("%T%Tdo")
+				a_type.print_increment_yyvsp (1, 3, a_file)
+				a_type.print_resize_yyvs (3, a_file)
+				a_type.print_push_yyval (3, a_file)
+				a_file.put_line ("%T%Tend")
+			else
+				a_file.put_line ("%T%Tdo")
+				a_file.put_line ("%T%T%Tdebug (%"GEYACC%")")
+				a_file.put_line ("%T%T%T%Tstd.error.put_line (%"Error in parser: unknown 'error' token.%")")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%T%Tabort")
+				a_file.put_line ("%T%Tend")
+			end
+		end
+
+	print_pop_last_value (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for `yy_pop_last_value' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			types: DS_ARRAYED_LIST [PR_TYPE]
+			a_type: PR_TYPE
+			i, nb: INTEGER
+		do
+			a_file.put_line ("%Tyy_pop_last_value (yystate: INTEGER) is")
+			a_file.put_line ("%T%T%T-- Pop semantic value from stack when in state `yystate'.")
+			a_file.put_line ("%T%Tlocal")
+			a_file.put_line ("%T%T%Tyy_type_id: INTEGER")
+			a_file.put_line ("%T%Tdo")
+			a_file.put_line ("%T%T%Tyy_type_id := yytypes1.item (yystate)")
+			a_file.put_line ("%T%T%Tinspect yy_type_id")
+			types := machine.grammar.types
+			nb := types.count
+			from i := 1 until i > nb loop
+				a_type := types.item (i)
+				a_file.put_string ("%T%T%Twhen ")
+				a_file.put_integer (a_type.id)
+				a_file.put_line (" then")
+				a_type.print_pop_last_value (4, a_file)
+				i := i + 1
+			end
+			a_file.put_line ("%T%T%Telse")
+			a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
+			a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown type id: %")")
+			a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yy_type_id)")
+			a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+			a_file.put_line ("%T%T%T%Tend")
+			a_file.put_line ("%T%T%T%Tabort")
+			a_file.put_line ("%T%T%Tend")
+			a_file.put_line ("%T%Tend")
 		end
 
 	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -250,7 +536,9 @@ feature {NONE} -- Generation
 			a_file.put_character ('%N')
 			print_eiffel_array ("yyr1_template", yyr1, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yyr2_template", yyr2, a_file)
+			print_eiffel_array ("yytypes1_template", yytypes1, a_file)
+			a_file.put_character ('%N')
+			print_eiffel_array ("yytypes2_template", yytypes2, a_file)
 			a_file.put_character ('%N')
 			print_eiffel_array ("yydefact_template", yydefact, a_file)
 			a_file.put_character ('%N')
@@ -349,9 +637,7 @@ feature {NONE} -- Generation
 			types: DS_HASH_SET [PR_TYPE]
 			a_cursor: DS_HASH_SET_CURSOR [PR_TYPE]
 			a_rule: PR_RULE
-			an_action: STRING
 			a_type: PR_TYPE
-			no_type: PR_NO_TYPE
 		do
 			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER) is")
 			a_file.put_line ("%T%T%T-- Execute semantic action.")
@@ -362,16 +648,12 @@ feature {NONE} -- Generation
 			if nb_types > 0 then
 				from i := 1 until i > nb loop
 					a_rule := rules.item (i)
-					an_action := a_rule.action.out
-					if an_action.count > 0 then
-						a_type := a_rule.lhs.type
-						no_type ?= a_type
-						if no_type = Void then
-							types.put (a_type)
-							if types.count = nb_types then
-									-- All types have already been registered.
-								i := nb + 1 -- Jump out of the loop.
-							end
+					a_type := a_rule.lhs.type
+					if not old_typing or not a_type.name.is_equal ("ANY") then
+						types.put (a_type)
+						if types.count = nb_types then
+								-- All types have already been registered.
+							i := nb + 1 -- Jump out of the loop.
 						end
 					end
 					i := i + 1
@@ -390,34 +672,23 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%T%Tinspect yy_act")
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
-				an_action := a_rule.action.out
 				a_file.put_string ("when ")
 				a_file.put_integer (a_rule.id)
 				a_file.put_line (" then")
-				a_file.put_string ("--|#line ")
-				a_file.put_integer (a_rule.line_nb)
-				a_file.put_string (" %"")
-				a_file.put_string (input_filename)
-				a_file.put_line ("%"")
-				a_file.put_line ("debug (%"GEYACC%")")
-				a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
-				a_file.put_string (input_filename)
-				a_file.put_string ("' at line ")
-				a_file.put_integer (a_rule.line_nb)
-				a_file.put_line ("%")")
-				a_file.put_line ("end")
-				a_type := a_rule.lhs.type
-				a_type.print_dollar_dollar_initialization (a_file)
-				a_file.put_new_line
-				a_file.put_string (an_action)
-				a_file.put_new_line
-				a_type.print_dollar_dollar_finalization (a_file)
-				a_file.put_new_line
+				if old_typing then
+					a_rule.old_print_action (input_filename, a_file)
+				else
+					a_rule.print_action (input_filename, a_file)
+				end
 				i := i + 1
 			end
 			a_file.put_line ("%T%T%Telse")
-			a_file.put_line ("%T%T%T%T%T-- Default action.")
-			a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+			a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
+			a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown rule id: %")")
+			a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yy_act)")
+			a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+			a_file.put_line ("%T%T%T%Tend")
+			a_file.put_line ("%T%T%T%Tabort")
 			a_file.put_line ("%T%T%Tend")
 			a_file.put_line ("%T%Tend")
 		end
@@ -434,7 +705,6 @@ feature {NONE} -- Generation
 			inspect_size: INTEGER
 			rules: DS_ARRAYED_LIST [PR_RULE]
 			a_rule: PR_RULE
-			an_action: STRING
 			a_type: PR_TYPE
 		do
 				-- SmallEiffel generates C code which trigger a
@@ -468,8 +738,12 @@ feature {NONE} -- Generation
 					i := i + 1
 				end
 				a_file.put_line ("%T%T%Telse")
-				a_file.put_line ("%T%T%T%T%T-- Default action.")
-				a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+				a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown rule id: %")")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yy_act)")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+				a_file.put_line ("%T%T%T%Tend")
+				a_file.put_line ("%T%T%T%Tabort")
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
 			else
@@ -489,8 +763,12 @@ feature {NONE} -- Generation
 					i := i + 1
 				end
 				a_file.put_new_line
-				a_file.put_line ("%T%T%T%T%T-- Default action.")
-				a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+				a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown rule id: %")")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yy_act)")
+				a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+				a_file.put_line ("%T%T%T%Tend")
+				a_file.put_line ("%T%T%T%Tabort")
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
 				from i := 1 until i > nb2 loop
@@ -522,8 +800,12 @@ feature {NONE} -- Generation
 						j := j + 1
 					end
 					a_file.put_line ("%T%T%Telse")
-					a_file.put_line ("%T%T%T%T%T-- Default action.")
-					a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+					a_file.put_line ("%T%T%T%Tdebug (%"GEYACC%")")
+					a_file.put_line ("%T%T%T%T%Tstd.error.put_string (%"Error in parser: unknown rule id: %")")
+					a_file.put_line ("%T%T%T%T%Tstd.error.put_integer (yy_act)")
+					a_file.put_line ("%T%T%T%T%Tstd.error.put_new_line")
+					a_file.put_line ("%T%T%T%Tend")
+					a_file.put_line ("%T%T%T%Tabort")
 					a_file.put_line ("%T%T%Tend")
 					a_file.put_line ("%T%Tend")
 					i := i + 1
@@ -531,7 +813,6 @@ feature {NONE} -- Generation
 			end
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
-				an_action := a_rule.action.out
 				a_file.put_new_line
 				a_file.put_string ("%Tyy_do_action_")
 				a_file.put_integer (i)
@@ -542,23 +823,17 @@ feature {NONE} -- Generation
 				a_file.put_string (input_filename)
 				a_file.put_line ("%"")
 				a_type := a_rule.lhs.type
-				a_file.put_line ("%T%Tlocal")
-				a_type.print_dollar_dollar_declaration (a_file)
-				a_file.put_new_line
+				if not old_typing or not a_type.name.is_equal ("ANY") then
+					a_file.put_line ("%T%Tlocal")
+					a_type.print_dollar_dollar_declaration (a_file)
+					a_file.put_new_line
+				end
 				a_file.put_line ("%T%Tdo")
-				a_file.put_line ("%T%T%Tdebug (%"GEYACC%")")
-				a_file.put_string ("%T%T%T%Tstd.error.put_line (%"Executing parser user-code from file '")
-				a_file.put_string (input_filename)
-				a_file.put_string ("' at line ")
-				a_file.put_integer (a_rule.line_nb)
-				a_file.put_line ("%")")
-				a_file.put_line ("%T%T%Tend")
-				a_type.print_dollar_dollar_initialization (a_file)
-				a_file.put_new_line
-				a_file.put_string (an_action)
-				a_file.put_new_line
-				a_type.print_dollar_dollar_finalization (a_file)
-				a_file.put_new_line
+				if old_typing then
+					a_rule.old_print_action (input_filename, a_file)
+				else
+					a_rule.print_action (input_filename, a_file)
+				end
 				a_file.put_line ("%T%Tend")
 				i := i + 1
 			end
@@ -773,7 +1048,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_conversion_routines (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_conversion_routines (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for type conversion routines to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -790,11 +1065,31 @@ feature {NONE} -- Generation
 				from i := 1 until i > nb loop
 					a_type := types.item (i)
 					if a_type.is_used then
-						a_type.print_conversion_routine (a_file)
+						a_type.old_print_conversion_routine (a_file)
 						a_file.put_character ('%N')
 					end
 					i := i + 1
 				end
+			end
+		end
+
+	print_stack_declarations (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print declaration of typed value stacks.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			types: DS_ARRAYED_LIST [PR_TYPE]
+			a_type: PR_TYPE
+			i, nb: INTEGER
+		do
+			types := machine.grammar.types
+			nb := types.count
+			from i := 1 until i > nb loop
+				a_type := types.item (i)
+				a_type.print_yyvs_declaration (1, a_file)
+				a_file.put_new_line
+				i := i + 1
 			end
 		end
 
@@ -869,8 +1164,8 @@ feature {NONE} -- Building
 			yytranslate_not_void: yytranslate /= Void
 		end
 
-	build_yyr is
-			-- Build `yyr1' and `yyr2'.
+	build_yyr1 is
+			-- Build `yyr1'.
 		local
 			rules: DS_ARRAYED_LIST [PR_RULE]
 			i, nb: INTEGER
@@ -879,16 +1174,52 @@ feature {NONE} -- Building
 			rules := machine.grammar.rules
 			nb := rules.count
 			create yyr1.make (0, nb)
-			create yyr2.make (0, nb)
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				yyr1.put (a_rule.lhs.id + yyNtbase, i)
-				yyr2.put (a_rule.rhs.count, i)
 				i := i + 1
 			end
 		ensure
 			yyr1_not_void: yyr1 /= Void
-			yyr2_not_void: yyr2 /= Void
+		end
+
+	build_yytypes1 is
+			-- Build `yytypes1'.
+		local
+			states: DS_ARRAYED_LIST [PR_STATE]
+			i, nb: INTEGER
+			a_state: PR_STATE
+		do
+			states := machine.states
+			nb := states.count
+			create yytypes1.make (0, nb - 1)
+			from i := 1 until i > nb loop
+				a_state := states.item (i)
+				yytypes1.put (a_state.accessing_symbol.type.id, a_state.id)
+				i := i + 1
+			end
+		ensure
+			yytypes1_not_void: yytypes1 /= Void
+		end
+
+	build_yytypes2 is
+			-- Build `yytypes2'.
+		local
+			tokens: DS_ARRAYED_LIST [PR_TOKEN]
+			i, nb: INTEGER
+			a_token: PR_TOKEN
+		do
+			tokens := machine.grammar.tokens
+			nb := tokens.count
+			create yytypes2.make (0, nb)
+			yytypes2.put (1, 0)
+			from i := 1 until i > nb loop
+				a_token := tokens.item (i)
+				yytypes2.put (a_token.type.id, i)
+				i := i + 1
+			end
+		ensure
+			yytypes2_not_void: yytypes2 /= Void
 		end
 
 	build_action_tables is

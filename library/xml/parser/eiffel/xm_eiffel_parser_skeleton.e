@@ -25,7 +25,7 @@ inherit
 
 	XM_FORWARD_DTD_CALLBACKS
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			make as make_parser
 		redefine
@@ -510,9 +510,6 @@ feature {NONE} -- Scanner implementation
 	last_token: INTEGER
 			-- Last token read by `read_token'
 
-	last_value: ANY
-			-- Last value read by `read_token'
-
 	read_token is
 			-- Read token from scanner.
 		local
@@ -521,13 +518,13 @@ feature {NONE} -- Scanner implementation
 				-- Read token from scanner.
 			scanner.read_token
 			last_token := scanner.last_token
-			last_value := scanner.last_value
+			last_string_value := scanner.last_value
 			debug ("xml_parser")
 				
 				std.error.put_string (token_name (last_token))
 				std.error.put_string ("/")
-				if last_value /= Void then
-					std.error.put_string (last_value.out)
+				if last_string_value /= Void then
+					std.error.put_string (last_string_value.out)
 					std.error.put_string ("/")
 				end
 				std.error.put_string (scanner.text_count.out)
@@ -542,7 +539,7 @@ feature {NONE} -- Scanner implementation
 			end
 				-- If this is a PE entity reference, temporarily
 				-- switch scanner. Token is left for validation.
-			last_text ?= last_value
+			last_text := last_string_value
 			--check for_all tokens_below: last_value is STRING end
 			
 			if last_token = DOCTYPE_PEREFERENCE then

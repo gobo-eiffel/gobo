@@ -5,7 +5,7 @@ indexing
 
 		"Scanners for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -126,11 +126,11 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	{WS}				-- Separator.
 	\"[^"\n]+\"		{
 						last_token := P_STRING
-						last_value := text_substring (2, text_count - 1)
+						last_string_value := text_substring (2, text_count - 1)
 					}
 	[a-z0-9_.-]+	{
 						last_token := P_NAME
-						last_value := text
+						last_string_value := text
 					}
 	"&&"				last_token := P_AND
 	"||"				last_token := P_OR
@@ -169,9 +169,6 @@ feature -- Access
 
 	line_nb: INTEGER
 			-- Current line number
-
-	last_value: ANY
-			-- Semantic value to be passed to the parser
 
 	include_stack: DS_STACK [YY_BUFFER] is
 			-- Input buffers not completely parsed yet

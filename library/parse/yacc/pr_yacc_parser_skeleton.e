@@ -5,7 +5,7 @@ indexing
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class PR_YACC_PARSER_SKELETON
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton
 		redefine
@@ -137,8 +137,10 @@ feature {NONE} -- Factory
 			else
 				Result := new_token (a_name)
 			end
-			if Result.type /= Unknown_type then
+			if Result.is_declared then
 				report_token_declared_twice_error (a_name)
+			else
+				Result.set_declared
 			end
 			Result.set_type (a_type)
 		ensure
@@ -156,8 +158,10 @@ feature {NONE} -- Factory
 			a_type_not_void: a_type /= Void
 		do
 			Result := new_char_token (a_char)
-			if Result.type /= Unknown_type then
+			if Result.is_declared then
 				report_token_declared_twice_error (a_char)
+			else
+				Result.set_declared
 			end
 			Result.set_type (a_type)
 		ensure
@@ -531,7 +535,7 @@ feature {NONE} -- Factory
 				Result := types.item (upper_name)
 			else
 					-- Types are indexed from 1.
-					-- (0 is reserved for no-type)
+					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make (an_id, a_name)
 				types.force (Result, upper_name)
@@ -556,7 +560,7 @@ feature {NONE} -- Factory
 				Result := types.item (upper_name)
 			else
 					-- Types are indexed from 1.
-					-- (0 is reserved for no-type)
+					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create {PR_BASIC_TYPE} Result.make (an_id, a_name)
 				types.force (Result, upper_name)
@@ -579,7 +583,7 @@ feature {NONE} -- Factory
 		do
 			if generics /= Void then
 					-- Types are indexed from 1.
-					-- (0 is reserved for no-type)
+					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make_generic (an_id, a_name, generics)
 				upper_name := STRING_.to_upper (Result.name)
@@ -611,7 +615,7 @@ feature {NONE} -- Factory
 				Result := types.item (lower_name)
 			else
 					-- Types are indexed from 1.
-					-- (0 is reserved for no-type)
+					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make_anchored (an_id, a_name)
 				types.force (Result, lower_name)
@@ -647,7 +651,10 @@ feature {NONE} -- Implementation
 			-- Initialize input grammar.
 		local
 			a_token: PR_TOKEN
+			a_type: PR_TYPE
 		do
+				-- Make sure ANY is the first type in grammar.
+			a_type := new_type ("ANY")
 				-- Error token. The token id value 256
 				-- is specified by POSIX.
 			a_token := new_token ("error")
@@ -1269,11 +1276,19 @@ feature {NONE} -- Constants
 			no_action_not_void: Result /= Void
 		end
 
-	No_type: PR_NO_TYPE is
+	No_type: PR_TYPE is
 			-- Type used when no type has been specified:
 			--   %token token_name
 		once
-			create Result.make (0, "ANY")
+			Result := new_type ("ANY")
+		ensure
+			no_type_not_void: Result /= Void
+		end
+
+	Unknown_type: PR_TYPE is
+			-- Type used when type is not known
+		once
+			Result := new_type ("ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

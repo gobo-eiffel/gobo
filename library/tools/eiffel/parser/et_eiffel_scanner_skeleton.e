@@ -5,7 +5,7 @@ indexing
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,9 +89,6 @@ feature -- Access
 
 	filename: STRING
 			-- Name of file being parsed
-
-	last_value: ANY
-			-- Semantic value to be passed to the parser
 
 	current_position: ET_POSITION is
 			-- Current position
@@ -341,7 +338,7 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 's', 'S' then
 						last_token := E_AS
-						last_value := ast_factory.new_as_keyword (Current)
+						last_et_keyword_value := ast_factory.new_as_keyword (Current)
 					else
 						-- Do nothing.
 					end
@@ -349,7 +346,7 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 'o', 'O' then
 						last_token := E_DO
-						last_value := ast_factory.new_do_keyword (Current)
+						last_et_keyword_value := ast_factory.new_do_keyword (Current)
 					else
 						-- Do nothing.
 					end
@@ -357,10 +354,10 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 'f', 'F' then
 						last_token := E_IF
-						last_value := ast_factory.new_if_keyword (Current)
+						last_et_keyword_value := ast_factory.new_if_keyword (Current)
 					when 's', 'S' then
 						last_token := E_IS
-						last_value := ast_factory.new_is_keyword (Current)
+						last_et_keyword_value := ast_factory.new_is_keyword (Current)
 					else
 						-- Do nothing.
 					end
@@ -368,7 +365,7 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 'r', 'R' then
 						last_token := E_OR
-						last_value := ast_factory.new_or_keyword (Current)
+						last_et_keyword_operator_value := ast_factory.new_or_keyword (Current)
 					else
 						-- Do nothing.
 					end
@@ -383,7 +380,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 'd', 'D' then
 							last_token := E_AND
-							last_value := ast_factory.new_and_keyword (Current)
+							last_et_keyword_operator_value := ast_factory.new_and_keyword (Current)
 						else
 							-- Do nothing.
 						end
@@ -391,7 +388,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 'l', 'L' then
 							last_token := E_ALL
-							last_value := ast_factory.new_all_keyword (Current)
+							last_et_keyword_value := ast_factory.new_all_keyword (Current)
 						else
 							-- Do nothing.
 						end
@@ -404,7 +401,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 't', 'T' then
 							last_token := E_BITTYPE
-							last_value := ast_factory.new_identifier (Current)
+							last_et_identifier_value := ast_factory.new_identifier (Current)
 						else
 							-- Do nothing.
 						end
@@ -417,7 +414,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 'd', 'D' then
 							last_token := E_END
-							last_value := ast_factory.new_end_keyword (Current)
+							last_et_keyword_value := ast_factory.new_end_keyword (Current)
 						else
 							-- Do nothing.
 						end
@@ -430,7 +427,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 't', 'T' then
 							last_token := E_NOT
-							last_value := ast_factory.new_not_keyword (Current)
+							last_et_keyword_operator_value := ast_factory.new_not_keyword (Current)
 						else
 							-- Do nothing.
 						end
@@ -443,7 +440,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 'd', 'D' then
 							last_token := E_OLD
-							last_value := ast_factory.new_old_keyword (Current)
+							last_et_keyword_value := ast_factory.new_old_keyword (Current)
 						else
 							-- Do nothing.
 						end
@@ -456,7 +453,7 @@ feature {NONE} -- Processing
 						inspect text_item (3)
 						when 'r', 'R' then
 							last_token := E_XOR
-							last_value := ast_factory.new_xor_keyword (Current)
+							last_et_keyword_operator_value := ast_factory.new_xor_keyword (Current)
 						else
 							-- Do nothing.
 						end
@@ -476,7 +473,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'e', 'E' then
 								last_token := E_ELSE
-								last_value := ast_factory.new_else_keyword (Current)
+								last_et_keyword_value := ast_factory.new_else_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -494,7 +491,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'm', 'M' then
 								last_token := E_FROM
-								last_value := ast_factory.new_from_keyword (Current)
+								last_et_keyword_value := ast_factory.new_from_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -512,7 +509,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'e', 'E' then
 								last_token := E_LIKE
-								last_value := ast_factory.new_like_keyword (Current)
+								last_et_keyword_value := ast_factory.new_like_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -525,7 +522,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'p', 'P' then
 								last_token := E_LOOP
-								last_value := ast_factory.new_loop_keyword (Current)
+								last_et_keyword_value := ast_factory.new_loop_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -543,7 +540,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'e', 'E' then
 								last_token := E_ONCE
-								last_value := ast_factory.new_once_keyword (Current)
+								last_et_keyword_value := ast_factory.new_once_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -561,7 +558,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'n', 'N' then
 								last_token := E_THEN
-								last_value := ast_factory.new_then_keyword (Current)
+								last_et_keyword_value := ast_factory.new_then_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -574,7 +571,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'e', 'E' then
 								last_token := E_TRUE
-								last_value := ast_factory.new_true_keyword (Current)
+								last_et_boolean_constant_value := ast_factory.new_true_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -592,7 +589,7 @@ feature {NONE} -- Processing
 							inspect text_item (4)
 							when 'n', 'N' then
 								last_token := E_WHEN
-								last_value := ast_factory.new_when_keyword (Current)
+								last_et_keyword_value := ast_factory.new_when_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -617,7 +614,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 't', 'T' then
 									last_token := E_AGENT
-									last_value := ast_factory.new_agent_keyword (Current)
+									last_et_keyword_value := ast_factory.new_agent_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -635,7 +632,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 's', 'S' then
 									last_token := E_ALIAS
-									last_value := ast_factory.new_alias_keyword (Current)
+									last_et_keyword_value := ast_factory.new_alias_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -658,7 +655,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'k', 'K' then
 									last_token := E_CHECK
-									last_value := ast_factory.new_check_keyword (Current)
+									last_et_keyword_value := ast_factory.new_check_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -676,7 +673,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 's', 'S' then
 									last_token := E_CLASS
-									last_value := ast_factory.new_class_keyword (Current)
+									last_et_keyword_value := ast_factory.new_class_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -699,7 +696,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'g', 'G' then
 									last_token := E_DEBUG
-									last_value := ast_factory.new_debug_keyword (Current)
+									last_et_keyword_value := ast_factory.new_debug_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -722,7 +719,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'e', 'E' then
 									last_token := E_FALSE
-									last_value := ast_factory.new_false_keyword (Current)
+									last_et_boolean_constant_value := ast_factory.new_false_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -745,7 +742,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'x', 'X' then
 									last_token := E_INFIX
-									last_value := ast_factory.new_infix_keyword (Current)
+									last_et_keyword_value := ast_factory.new_infix_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -768,7 +765,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'l', 'L' then
 									last_token := E_LOCAL
-									last_value := ast_factory.new_local_keyword (Current)
+									last_et_keyword_value := ast_factory.new_local_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -791,7 +788,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'y', 'Y' then
 									last_token := E_RETRY
-									last_value := ast_factory.new_retry_keyword (Current)
+									last_et_retry_instruction_value := ast_factory.new_retry_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -814,7 +811,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'p', 'P' then
 									last_token := E_STRIP
-									last_value := ast_factory.new_strip_keyword (Current)
+									last_et_keyword_value := ast_factory.new_strip_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -837,7 +834,7 @@ feature {NONE} -- Processing
 								inspect text_item (5)
 								when 'l', 'L' then
 									last_token := E_UNTIL
-									last_value := ast_factory.new_until_keyword (Current)
+									last_et_keyword_value := ast_factory.new_until_keyword (Current)
 								else
 									-- Do nothing.
 								end
@@ -868,7 +865,7 @@ feature {NONE} -- Processing
 									when 'e', 'E' then
 										if use_create_keyword then
 											last_token := E_CREATE
-											last_value := ast_factory.new_create_keyword (Current)
+											last_et_keyword_value := ast_factory.new_create_keyword (Current)
 										end
 									else
 										-- Do nothing.
@@ -897,7 +894,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'f', 'F' then
 										last_token := E_ELSEIF
-										last_value := ast_factory.new_elseif_keyword (Current)
+										last_et_keyword_value := ast_factory.new_elseif_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -920,7 +917,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'e', 'E' then
 										last_token := E_ENSURE
-										last_value := ast_factory.new_ensure_keyword (Current)
+										last_et_keyword_value := ast_factory.new_ensure_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -943,7 +940,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 't', 'T' then
 										last_token := E_EXPORT
-										last_value := ast_factory.new_export_keyword (Current)
+										last_et_keyword_value := ast_factory.new_export_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -971,7 +968,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'n', 'N' then
 										last_token := E_FROZEN
-										last_value := ast_factory.new_frozen_keyword (Current)
+										last_et_keyword_value := ast_factory.new_frozen_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -999,7 +996,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'x', 'X' then
 										last_token := E_PREFIX
-										last_value := ast_factory.new_prefix_keyword (Current)
+										last_et_keyword_value := ast_factory.new_prefix_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1027,7 +1024,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'e', 'E' then
 										last_token := E_RENAME
-										last_value := ast_factory.new_rename_keyword (Current)
+										last_et_keyword_value := ast_factory.new_rename_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1045,7 +1042,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'e', 'E' then
 										last_token := E_RESCUE
-										last_value := ast_factory.new_rescue_keyword (Current)
+										last_et_keyword_value := ast_factory.new_rescue_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1058,7 +1055,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 't', 'T' then
 										last_token := E_RESULT
-										last_value := ast_factory.new_result_keyword (Current)
+										last_et_result_value := ast_factory.new_result_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1086,7 +1083,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 't', 'T' then
 										last_token := E_SELECT
-										last_value := ast_factory.new_select_keyword (Current)
+										last_et_keyword_value := ast_factory.new_select_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1114,7 +1111,7 @@ feature {NONE} -- Processing
 									inspect text_item (6)
 									when 'e', 'E' then
 										last_token := E_UNIQUE
-										last_value := ast_factory.new_unique_keyword (Current)
+										last_et_keyword_value := ast_factory.new_unique_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1149,7 +1146,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 't', 'T' then
 											last_token := E_CURRENT
-											last_value := ast_factory.new_current_keyword (Current)
+											last_et_current_value := ast_factory.new_current_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1182,7 +1179,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 'e', 'E' then
 											last_token := E_FEATURE
-											last_value := ast_factory.new_feature_keyword (Current)
+											last_et_keyword_value := ast_factory.new_feature_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1215,7 +1212,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 's', 'S' then
 											last_token := E_IMPLIES
-											last_value := ast_factory.new_implies_keyword (Current)
+											last_et_keyword_operator_value := ast_factory.new_implies_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1243,7 +1240,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 't', 'T' then
 											last_token := E_INHERIT
-											last_value := ast_factory.new_inherit_keyword (Current)
+											last_et_keyword_value := ast_factory.new_inherit_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1266,7 +1263,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 't', 'T' then
 											last_token := E_INSPECT
-											last_value := ast_factory.new_inspect_keyword (Current)
+											last_et_keyword_value := ast_factory.new_inspect_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1299,7 +1296,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 'e', 'E' then
 											last_token := E_REQUIRE
-											last_value := ast_factory.new_require_keyword (Current)
+											last_et_keyword_value := ast_factory.new_require_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1332,7 +1329,7 @@ feature {NONE} -- Processing
 										inspect text_item (7)
 										when 't', 'T' then
 											last_token := E_VARIANT
-											last_value := ast_factory.new_variant_keyword (Current)
+											last_et_keyword_value := ast_factory.new_variant_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -1372,7 +1369,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'n', 'N' then
 												last_token := E_CREATION
-												last_value := ast_factory.new_creation_keyword (Current)
+												last_et_keyword_value := ast_factory.new_creation_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1410,7 +1407,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'd', 'D' then
 												last_token := E_DEFERRED
-												last_value := ast_factory.new_deferred_keyword (Current)
+												last_et_keyword_value := ast_factory.new_deferred_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1448,7 +1445,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'd', 'D' then
 												last_token := E_EXPANDED
-												last_value := ast_factory.new_expanded_keyword (Current)
+												last_et_keyword_value := ast_factory.new_expanded_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1476,7 +1473,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'l', 'L' then
 												last_token := E_EXTERNAL
-												last_value := ast_factory.new_external_keyword (Current)
+												last_et_keyword_value := ast_factory.new_external_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1514,7 +1511,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'g', 'G' then
 												last_token := E_INDEXING
-												last_value := ast_factory.new_indexing_keyword (Current)
+												last_et_keyword_value := ast_factory.new_indexing_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1552,7 +1549,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'e', 'E' then
 												last_token := E_OBSOLETE
-												last_value := ast_factory.new_obsolete_keyword (Current)
+												last_et_keyword_value := ast_factory.new_obsolete_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1590,7 +1587,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'e', 'E' then
 												last_token := E_REDEFINE
-												last_value := ast_factory.new_redefine_keyword (Current)
+												last_et_keyword_value := ast_factory.new_redefine_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1628,7 +1625,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'e', 'E' then
 												last_token := E_SEPARATE
-												last_value := ast_factory.new_separate_keyword (Current)
+												last_et_keyword_value := ast_factory.new_separate_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1666,7 +1663,7 @@ feature {NONE} -- Processing
 											inspect text_item (8)
 											when 'e', 'E' then
 												last_token := E_UNDEFINE
-												last_value := ast_factory.new_undefine_keyword (Current)
+												last_et_keyword_value := ast_factory.new_undefine_keyword (Current)
 											else
 												-- Do nothing.
 											end
@@ -1711,7 +1708,7 @@ feature {NONE} -- Processing
 												inspect text_item (9)
 												when 't', 'T' then
 													last_token := E_INVARIANT
-													last_value := ast_factory.new_invariant_keyword (Current)
+													last_et_keyword_value := ast_factory.new_invariant_keyword (Current)
 												else
 													-- Do nothing.
 												end
@@ -1754,7 +1751,7 @@ feature {NONE} -- Processing
 												inspect text_item (9)
 												when 'r', 'R' then
 													last_token := E_PRECURSOR
-													last_value := ast_factory.new_precursor_keyword (Current)
+													last_et_keyword_value := ast_factory.new_precursor_keyword (Current)
 												else
 													-- Do nothing.
 												end
@@ -1798,7 +1795,7 @@ feature {NONE} -- Processing
 												when 'e', 'E' then
 													if use_reference_keyword then
 														last_token := E_REFERENCE
-														last_value := ast_factory.new_reference_keyword (Current)
+														last_et_keyword_value := ast_factory.new_reference_keyword (Current)
 													end
 												else
 													-- Do nothing.
@@ -1831,7 +1828,7 @@ feature {NONE} -- Processing
 				-- Do nothing.
 			end
 			if last_token = E_IDENTIFIER then
-				last_value := ast_factory.new_identifier (Current)
+				last_et_identifier_value := ast_factory.new_identifier (Current)
 			end
 		end
 
@@ -1848,73 +1845,73 @@ feature {NONE} -- Processing
 			inspect c
 			when '-' then
 				last_token := Minus_code
-				last_value := ast_factory.new_minus_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_minus_symbol (Current)
 			when '+' then
 				last_token := Plus_code
-				last_value := ast_factory.new_plus_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_plus_symbol (Current)
 			when '*' then
 				last_token := Star_code
-				last_value := ast_factory.new_times_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_times_symbol (Current)
 			when '/' then
 				last_token := Slash_code
-				last_value := ast_factory.new_divide_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_divide_symbol (Current)
 			when '^' then
 				last_token := Caret_code
-				last_value := ast_factory.new_power_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_power_symbol (Current)
 			when '=' then
 				last_token := Equal_code
-				last_value := ast_factory.new_equal_symbol (Current)
+				last_et_symbol_value := ast_factory.new_equal_symbol (Current)
 			when '>' then
 				last_token := Greater_than_code
-				last_value := ast_factory.new_gt_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_gt_symbol (Current)
 			when '<' then
 				last_token := Less_than_code
-				last_value := ast_factory.new_lt_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_lt_symbol (Current)
 			when '.' then
 				last_token := Dot_code
-				last_value := ast_factory.new_dot_symbol (Current)
+				last_et_symbol_value := ast_factory.new_dot_symbol (Current)
 			when ';' then
 				last_token := Semicolon_code
-				last_value := ast_factory.new_semicolon_symbol (Current)
+				last_et_semicolon_symbol_value := ast_factory.new_semicolon_symbol (Current)
 			when ',' then
 				last_token := Comma_code
-				last_value := ast_factory.new_comma_symbol (Current)
+				last_et_symbol_value := ast_factory.new_comma_symbol (Current)
 			when ':' then
 				last_token := Colon_code
-				last_value := ast_factory.new_colon_symbol (Current)
+				last_et_symbol_value := ast_factory.new_colon_symbol (Current)
 			when '!' then
 				last_token := Exclamation_code
-				last_value := ast_factory.new_bang_symbol (Current)
+				last_et_symbol_value := ast_factory.new_bang_symbol (Current)
 			when '?' then
 				last_token := Question_mark_code
-				last_value := ast_factory.new_question_mark_symbol (Current)
+				last_et_question_mark_symbol_value := ast_factory.new_question_mark_symbol (Current)
 			when '(' then
 				last_token := Left_parenthesis_code
-				last_value := ast_factory.new_left_parenthesis_symbol (Current)
+				last_et_symbol_value := ast_factory.new_left_parenthesis_symbol (Current)
 			when ')' then
 				last_token := Right_parenthesis_code
-				last_value := ast_factory.new_right_parenthesis_symbol (Current)
+				last_et_symbol_value := ast_factory.new_right_parenthesis_symbol (Current)
 			when '{' then
 				last_token := Left_brace_code
-				last_value := ast_factory.new_left_brace_symbol (Current)
+				last_et_symbol_value := ast_factory.new_left_brace_symbol (Current)
 			when '}' then
 				last_token := Right_brace_code
-				last_value := ast_factory.new_right_brace_symbol (Current)
+				last_et_symbol_value := ast_factory.new_right_brace_symbol (Current)
 			when '[' then
 				last_token := Left_bracket_code
-				last_value := ast_factory.new_left_bracket_symbol (Current)
+				last_et_symbol_value := ast_factory.new_left_bracket_symbol (Current)
 			when ']' then
 				last_token := Right_bracket_code
-				last_value := ast_factory.new_right_bracket_symbol (Current)
+				last_et_symbol_value := ast_factory.new_right_bracket_symbol (Current)
 			when '$' then
 				last_token := Dollar_code
-				last_value := ast_factory.new_dollar_symbol (Current)
+				last_et_symbol_value := ast_factory.new_dollar_symbol (Current)
 			when '~' then
 				last_token := Tilde_code
-				last_value := ast_factory.new_tilde_symbol (Current)
+				last_et_symbol_value := ast_factory.new_tilde_symbol (Current)
 			else
 				last_token := E_UNKNOWN
-				last_value := current_position
+				last_et_position_value := current_position
 			end
 		end
 
@@ -1934,61 +1931,61 @@ feature {NONE} -- Processing
 				inspect c2
 				when '/' then
 					last_token := E_DIV
-					last_value := ast_factory.new_div_symbol (Current)
+					last_et_symbol_operator_value := ast_factory.new_div_symbol (Current)
 				when '=' then
 					last_token := E_NE
-					last_value := ast_factory.new_not_equal_symbol (Current)
+					last_et_symbol_value := ast_factory.new_not_equal_symbol (Current)
 				else
 					last_token := E_UNKNOWN
-					last_value := current_position
+					last_et_position_value := current_position
 				end
 			when '\' then
 				check valid_symbol: c2 = '\' end
 				last_token := E_MOD
-				last_value := ast_factory.new_mod_symbol (Current)
+				last_et_symbol_operator_value := ast_factory.new_mod_symbol (Current)
 			when '>' then
 				inspect c2
 				when '=' then
 					last_token := E_GE
-					last_value := ast_factory.new_ge_symbol (Current)
+					last_et_symbol_operator_value := ast_factory.new_ge_symbol (Current)
 				when '>' then
 					last_token := E_RARRAY
-					last_value := ast_factory.new_right_array_symbol (Current)
+					last_et_symbol_value := ast_factory.new_right_array_symbol (Current)
 				else
 					last_token := E_UNKNOWN
-					last_value := current_position
+					last_et_position_value := current_position
 				end
 			when '<' then
 				inspect c2
 				when '=' then
 					last_token := E_LE
-					last_value := ast_factory.new_le_symbol (Current)
+					last_et_symbol_operator_value := ast_factory.new_le_symbol (Current)
 				when '<' then
 					last_token := E_LARRAY
-					last_value := ast_factory.new_left_array_symbol (Current)
+					last_et_symbol_value := ast_factory.new_left_array_symbol (Current)
 				else
 					last_token := E_UNKNOWN
-					last_value := current_position
+					last_et_position_value := current_position
 				end
 			when '-' then
 				check valid_symbol: c2 = '>' end
 				last_token := E_ARROW
-				last_value := ast_factory.new_arrow_symbol (Current)
+				last_et_symbol_value := ast_factory.new_arrow_symbol (Current)
 			when '.' then
 				check valid_symbol: c2 = '.' end
 				last_token := E_DOTDOT
-				last_value := ast_factory.new_dotdot_symbol (Current)
+				last_et_symbol_value := ast_factory.new_dotdot_symbol (Current)
 			when ':' then
 				check valid_symbol: c2 = '=' end
 				last_token := E_ASSIGN
-				last_value := ast_factory.new_assign_symbol (Current)
+				last_et_symbol_value := ast_factory.new_assign_symbol (Current)
 			when '?' then
 				check valid_symbol: c2 = '=' end
 				last_token := E_REVERSE
-				last_value := ast_factory.new_assign_attempt_symbol (Current)
+				last_et_symbol_value := ast_factory.new_assign_attempt_symbol (Current)
 			else
 				last_token := E_UNKNOWN
-				last_value := current_position
+				last_et_position_value := current_position
 			end
 		end
 
@@ -2009,7 +2006,7 @@ feature {NONE} -- Processing
 			last_literal_start := 2
 			last_literal_end := 2
 			last_token := E_CHARACTER
-			last_value := ast_factory.new_c1_character_constant (c, Current)
+			last_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
 		end
 
 	process_c2_character_constant (c: CHARACTER) is
@@ -2187,7 +2184,7 @@ feature {NONE} -- Processing
 			last_literal_start := 3
 			last_literal_end := 3
 			last_token := E_CHARACTER
-			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+			last_et_character_constant_value := ast_factory.new_c2_character_constant (a_value, Current)
 		end
 
 	process_regular_manifest_string (nb: INTEGER) is
@@ -2416,7 +2413,7 @@ feature {NONE} -- Processing
 			end
 			last_literal_start := 2
 			last_literal_end := nb - 1
-			last_value := ast_factory.new_regular_manifest_string (Current)
+			last_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 		end
 
 	process_break is
@@ -2427,46 +2424,46 @@ feature {NONE} -- Processing
 				process_identifier (last_text_count)
 			when freeop_break then
 				last_token := E_FREEOP
-				last_value := ast_factory.new_free_operator (Current)
+				last_et_free_operator_value := ast_factory.new_free_operator (Current)
 			when character_break then
 				last_token := E_CHARACTER
-				last_value := ast_factory.new_c3_character_constant (Current)
+				last_et_character_constant_value := ast_factory.new_c3_character_constant (Current)
 			when integer_break then
 				last_token := E_INTEGER
-				last_value := ast_factory.new_regular_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_regular_integer_constant (Current)
 			when uinteger_break then
 				last_token := E_INTEGER
-				last_value := ast_factory.new_underscored_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			when hinteger_break then
 				last_token := E_INTEGER
-				last_value := ast_factory.new_hexadecimal_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			when real_break then
 				last_token := E_REAL
-				last_value := ast_factory.new_regular_real_constant (Current)
+				last_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			when ureal_break then
 				last_token := E_REAL
-				last_value := ast_factory.new_underscored_real_constant (Current)
+				last_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			when bit_break then
 				last_token := E_BIT
-				last_value := ast_factory.new_bit_constant (Current)
+				last_et_bit_constant_value := ast_factory.new_bit_constant (Current)
 			when string_break then
 				process_regular_manifest_string (last_text_count)
 			when str_freeop_break then
 				last_token := E_STRFREEOP
-				last_value := ast_factory.new_regular_manifest_string (Current)
+				last_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 			when str_special_break then
 				last_token := E_STRING
-				last_value := ast_factory.new_special_manifest_string (Current)
+				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			when str_verbatim_break then
 				last_token := E_STRING
-				last_value := ast_factory.new_verbatim_string (verbatim_marker,
+				last_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker,
 					verbatim_open_white_characters, verbatim_close_white_characters, Current)
 				verbatim_marker := Void
 				verbatim_open_white_characters := Void
 				verbatim_close_white_characters := Void
 			else
 				last_token := E_UNKNOWN
-				last_value := current_position
+				last_et_position_value := current_position
 			end
 		end
 

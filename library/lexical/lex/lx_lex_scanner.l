@@ -6,7 +6,7 @@ indexing
 		"Scanners for lexical analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,10 +16,15 @@ class LX_LEX_SCANNER
 inherit
 
 	LX_LEX_SCANNER_SKELETON
-		
+		redefine
+			last_integer_value
+		end
+
 	LX_LEX_TOKENS
 		export
 			{NONE} all
+		redefine
+			last_integer_value
 		end
 
 creation
@@ -263,10 +268,10 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					last_string := text
 					if character_classes.has (last_string) then
 						last_token := CCL_OP
-						last_value := character_classes.item (last_string)
+						last_lx_symbol_class_value := character_classes.item (last_string)
 					else
 						last_token := Left_bracket_code
-						last_value := last_string
+						last_string_value := last_string
 						less (1)
 						set_start_condition (FIRSTCCL)
 					end
@@ -298,7 +303,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	{NAME}		{
 					last_token := NAME
-					last_value := text
+					last_string_value := text
 				}
 	.			{
 					report_bad_start_condition_error (text)
@@ -310,7 +315,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	[0-9]+		{
 					last_token := NUMBER
 					check is_integer: STRING_.is_integer (text) end
-					last_value := text.to_integer
+					last_integer_value := text.to_integer
 				}
 	","				last_token := Comma_code
 	"}"			{
@@ -405,7 +410,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	"{"				set_start_condition (EIFFEL_BLOCK2)
 	[^{\n].*	{
 					last_token := EIF_CODE
-					last_value := text
+					last_string_value := text
 					set_start_condition (SECT2)
 				}
 }
@@ -425,7 +430,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 						last_token := EIF_CODE
 						last_string := text_substring (1, text_count - 1)
 						line_nb := line_nb + last_string.occurrences ('%N')
-						last_value := last_string
+						last_string_value := last_string
 						set_start_condition (SECT2)
 					else
 						nb_open_brackets := nb_open_brackets - 1
@@ -440,7 +445,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 <SECT3>(.|\n)+	{
 					last_token := EIF_CODE
-					last_value := text
+					last_string_value := text
 				}
 
 <*>.|\n			{
@@ -453,5 +458,10 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 
 %%
+
+feature {NONE} -- Access
+
+	last_integer_value: INTEGER
+			-- Last semantic value of type INTEGER
 
 end

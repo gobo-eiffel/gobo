@@ -68,50 +68,50 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 
 	[iI][nN][tT][eE][gG][eE][rR]	{
 						last_token := T_INTEGER
-						last_value := text
+						last_string_value := text
 					}
 	[bB][oO][oO][lL][eE][aA][nN]	{
 						last_token := T_BOOLEAN
-						last_value := text
+						last_string_value := text
 					}
 	[rR][eE][aA][lL]	{
 						last_token := T_REAL
-						last_value := text
+						last_string_value := text
 					}
 	[dD][oO][uU][bB][lL][eE]	{
 						last_token := T_DOUBLE
-						last_value := text
+						last_string_value := text
 					}
 	[cC][hH][aA][rR][aA][cC][tT][eE][rR]	{
 						last_token := T_CHARACTER
-						last_value := text
+						last_string_value := text
 					}
 	[pP][oO][iI][nN][tT][eE][rR]	{
 						last_token := T_POINTER
-						last_value := text
+						last_string_value := text
 					}
 	[lL][iI][kK][eE]	{
 						last_token := T_LIKE
-						last_value := text
+						last_string_value := text
 					}
 	[a-z][a-z0-9_]*	{
 						last_token := T_IDENTIFIER
-						last_value := text
+						last_string_value := text
 					}
 	[0-9]+			{
 						last_token := T_NUMBER
-						last_value := text.to_integer
-						if last_value.is_equal (0) then
+						last_integer_value := text.to_integer
+						if last_integer_value = 0 then
 							report_null_integer_error
 						end
 					}
 	\'([^'\\\n]|{ESC})\'	{
 						last_token := T_CHAR
-						last_value := text
+						last_string_value := text
 					}
 	\"[^"\n]*\"		{
 						last_token := T_STR
-						last_value := text
+						last_string_value := text
 						if text_count < 4 then
 							report_invalid_string_token_error (text)
 						end
@@ -122,16 +122,16 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	"%prec"				last_token := T_PREC
 	"%error"		{
 						last_token := T_ERROR
-						last_value := line_nb
+						last_integer_value := line_nb
 						set_start_condition (ERROR_SECTION)
 					}
 	":"				{
 						last_token := Colon_code
-						last_value := line_nb
+						last_integer_value := line_nb
 					}
 	"|"				{
 						last_token := Bar_code
-						last_value := line_nb
+						last_integer_value := line_nb
 					}
 	";"					last_token := Semicolon_code
 	"{"{WS}?{NL}	{
@@ -150,7 +150,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 <SECTION3>{
 	(.|\n)+			{
 						last_token := T_USER_CODE
-						last_value := text
+						last_string_value := text
 					}
 }
 
@@ -163,7 +163,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	[0-9]+			{
 						last_token := T_NUMBER
 						last_error := text.to_integer
-						last_value := last_error
+						last_integer_value := last_error
 					}
 	"{"{WS}?{NL}	{
 						line_nb := line_nb + 1
@@ -186,13 +186,13 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 				}
 	"%}"		{
 					last_token := T_EIFFEL
-					last_value := text_substring (1, text_count - 2)
+					last_string_value := text_substring (1, text_count - 2)
 					set_start_condition (INITIAL)
 				}
 	<<EOF>>		{
 					report_missing_characters_error ("%%}")
 					last_token := T_EIFFEL
-					last_value := text_substring (1, text_count)
+					last_string_value := text_substring (1, text_count)
 					set_start_condition (INITIAL)
 				}
 }
@@ -250,7 +250,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	"}"			{
 					if nb_open_brackets = 0 then
 						last_token := T_ACTION
-						last_value := cloned_string (action_buffer)
+						last_string_value := cloned_string (action_buffer)
 						action_buffer.wipe_out
 						set_start_condition (SECTION2)
 					else
@@ -261,7 +261,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	<<EOF>>		{
 					report_missing_characters_error ("}")
 					last_token := T_ACTION
-					last_value := cloned_string (action_buffer)
+					last_string_value := cloned_string (action_buffer)
 					action_buffer.wipe_out
 					set_start_condition (SECTION2)
 				}

@@ -64,6 +64,12 @@ feature -- Access
 	input_filename: STRING
 			-- Input filename
 
+	old_typing: BOOLEAN
+			-- Use old typing mechanism
+
+	new_typing: BOOLEAN
+			-- Use new typing mechanism
+
 feature -- Setting
 
 	set_verbose_filename (a_filename: like verbose_filename) is
@@ -129,6 +135,22 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
+	set_old_typing (b: BOOLEAN) is
+			-- Set `old_typing' to `b'.
+		do
+			old_typing := b
+		ensure
+			old_typing_set: old_typing = b
+		end
+
+	set_new_typing (b: BOOLEAN) is
+			-- Set `new_typing' to `b'.
+		do
+			new_typing := b
+		ensure
+			new_typing_set: new_typing = b
+		end
+
 feature -- Execution
 
 	execute is
@@ -144,6 +166,14 @@ feature -- Execution
 				cmd.append_string ("-v ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
+			end
+				-- Option --old_typing
+			if old_typing then
+				cmd.append_string ("--old_typing ")
+			end
+				-- Option --new_typing
+			if new_typing then
+				cmd.append_string ("--new_typing ")
 			end
 				-- Option -x
 			if separate_actions then

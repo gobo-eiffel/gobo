@@ -5,7 +5,7 @@ indexing
 
 		"Calculator with memory"
 
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class MCALC
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton
 		end
@@ -170,7 +170,7 @@ feature {NONE} -- Scanner
 						pending_character := c
 						has_pending_character := True
 					end
-					last_value := buffer.to_double
+					last_double_value := buffer.to_double
 				when 'a'..'z', 'A'..'Z' then
 						-- Process variables.
 					last_token := VAR
@@ -193,7 +193,7 @@ feature {NONE} -- Scanner
 						pending_character := c
 						has_pending_character := True
 					end
-					last_value := buffer
+					last_string_value := buffer
 				when ':' then
 					std.input.read_character
 					c := std.input.last_character
@@ -225,9 +225,6 @@ feature {NONE} -- Scanner
 
 	last_token: INTEGER
 			-- Last token read
-
-	last_value: ANY
-			-- Semantic value of last token read
 
 feature {NONE} -- Implementation
 

@@ -65,6 +65,9 @@ feature -- Status report
 				not (is_left_associative or is_right_associative)
 		end
 
+	is_declared: BOOLEAN
+			-- Has current token been declared in a %token clause?
+
 	has_precedence: BOOLEAN is
 			-- Has a precedence level been
 			-- assigned to current token?
@@ -147,6 +150,14 @@ feature -- Status setting
 			associativity := Non_assoc
 		ensure
 			is_non_associative: is_non_associative
+		end
+
+	set_declared is
+			-- Make current token declared.
+		do
+			is_declared := True
+		ensure
+			is_declared: is_declared
 		end
 
 feature -- Output

@@ -6,7 +6,7 @@ indexing
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,7 +85,7 @@ creation
 				last_literal_end := 4
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_once_keyword (Current)
+				last_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
 [oO][nN][cC][eE][ \t\r\n]+/\"	{
 				last_token := E_ONCE_STRING
@@ -94,7 +94,7 @@ creation
 				last_text_count := 4
 				last_break_end := text_count
 				last_comment_end := 0
-				last_value := ast_factory.new_once_keyword (Current)
+				last_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
 [oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{
 				last_token := E_ONCE_STRING
@@ -103,7 +103,7 @@ creation
 				last_text_count := 4
 				last_break_end := 0
 				last_comment_end := text_count
-				last_value := ast_factory.new_once_keyword (Current)
+				last_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
 
 
@@ -133,7 +133,7 @@ creation
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_free_operator (Current)
+				last_et_free_operator_value := ast_factory.new_free_operator (Current)
 			}
 [@#|&][^%" \t\r\n]*/[ \t\r\n]	{
 				last_text_count := text_count
@@ -188,7 +188,7 @@ creation
 				last_literal_end := text_count - 2
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_c3_character_constant (Current)
+				last_et_character_constant_value := ast_factory.new_c3_character_constant (Current)
 			}
 \'%\/[0-9]+\/\'/[ \t\r\n]	{
 				last_text_count := text_count
@@ -204,7 +204,7 @@ creation
 					-- of special character specification %/code/.
 				column := column + text_count
 				error_handler.report_SCAS_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
 			}
@@ -213,7 +213,7 @@ creation
 					-- special character specification %/code/.
 				column := column + 3
 				error_handler.report_SCAC_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := column - 3
 				last_token := E_CHARERR
 			}
@@ -221,7 +221,7 @@ creation
 					-- Syntax error: missing character between quotes.
 				column := column + 1
 				error_handler.report_SCQQ_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := column - 1
 				last_token := E_CHARERR
 			}
@@ -230,7 +230,7 @@ creation
 					-- end of character constant.
 				column := column + text_count
 				error_handler.report_SCEQ_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
 			}
@@ -244,7 +244,7 @@ creation
 				last_literal_end := text_count - 1
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_regular_manifest_string (Current)
+				last_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 			}
 \"[@#|&][^%" \t\r\n]*\"/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -286,13 +286,13 @@ creation
 	.		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 }
@@ -304,7 +304,7 @@ creation
 					last_token := E_STRING
 					last_break_end := 0
 					last_comment_end := 0
-					last_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
+					last_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
 						text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2), Current)
 					verbatim_marker := Void
 					verbatim_open_white_characters := Void
@@ -341,13 +341,13 @@ creation
 	[^"\n]* {
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 }
@@ -367,13 +367,13 @@ creation
 	.*		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 }
@@ -385,7 +385,7 @@ creation
 				last_literal_end := text_count - 1
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_special_manifest_string (Current)
+				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			}
 \"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"/([ \t\r\n]|"--")	{
 					-- Manifest string with special characters.
@@ -468,7 +468,7 @@ creation
 				last_literal_end := text_count - 1
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_special_manifest_string (Current)
+				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 				set_start_condition (INITIAL)
 			}
 	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"/([ \t\r\n]|"--")	{
@@ -495,7 +495,7 @@ creation
 				column := yy_column
 				line := yy_line
 				error_handler.report_SSSC_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -506,7 +506,7 @@ creation
 				column := 1
 				line := yy_line
 				error_handler.report_SSNL_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -518,7 +518,7 @@ creation
 				column := yy_column
 				line := yy_line
 				error_handler.report_SSEQ_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -534,13 +534,13 @@ creation
 	.		{
 					-- Should never happen.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- Should never happen.
 				last_token := E_STRERR
-				last_value := current_position
+				last_et_position_value := current_position
 				set_start_condition (INITIAL)
 			}
 }
@@ -566,7 +566,7 @@ creation
 				column := yy_column - 1
 				line := yy_line
 				error_handler.report_SSNP_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -578,7 +578,7 @@ creation
 				column := yy_column
 				line := yy_line
 				error_handler.report_SSNP_error (current_position)
-				last_value := current_position
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -595,7 +595,7 @@ creation
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_bit_constant (Current)
+				last_et_bit_constant_value := ast_factory.new_bit_constant (Current)
 			}
 [0-1]+[bB]/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -615,7 +615,7 @@ creation
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_regular_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_regular_integer_constant (Current)
 			}
 [0-9]+/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -631,7 +631,7 @@ creation
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_underscored_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
 _(_*[0-9_]+_*)+	{
 					-- Syntax error: an underscore may not be
@@ -642,7 +642,7 @@ _(_*[0-9_]+_*)+	{
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_underscored_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
 (_*[0-9]+_*)+	{
 					-- Syntax error: an underscore must be followed
@@ -654,7 +654,7 @@ _(_*[0-9_]+_*)+	{
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_underscored_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
 (_*[0-9]+_*)+/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -670,7 +670,7 @@ _(_*[0-9_]+_*)+	{
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_hexadecimal_integer_constant (Current)
+				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
 0x[0-9a-fA-F]+/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -705,7 +705,7 @@ _(_*[0-9_]+_*)+	{
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_regular_real_constant (Current)
+				last_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			}
 [0-9]{1,3}(_[0-9]{3})+\./([ \t\r\n]|"--")	|
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*/([ \t\r\n]|"--")	|
@@ -728,7 +728,7 @@ _(_*[0-9_]+_*)+	{
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_value := ast_factory.new_underscored_real_constant (Current)
+				last_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			}
 
 
@@ -740,7 +740,7 @@ _(_*[0-9_]+_*)+	{
 				last_text_count := 0
 				last_break_end := text_count
 				last_comment_end := 0
-				last_value := ast_factory.new_break (Current)
+				last_et_break_value := ast_factory.new_break (Current)
 				last_token := E_BREAK
 			}
 
@@ -750,7 +750,7 @@ _(_*[0-9_]+_*)+	{
 				last_text_count := 0
 				last_break_end := 0
 				last_comment_end := text_count
-				last_value := ast_factory.new_comment (Current)
+				last_et_break_value := ast_factory.new_comment (Current)
 				last_token := E_BREAK
 			}
 
@@ -790,7 +790,7 @@ _(_*[0-9_]+_*)+	{
 <<EOF>>			terminate
 .			{
 				last_token := E_UNKNOWN
-				last_value := current_position
+				last_et_position_value := current_position
 			}
 
 --------------------------------------------------------------------------------

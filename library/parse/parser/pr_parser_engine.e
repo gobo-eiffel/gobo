@@ -23,10 +23,6 @@ feature -- Tables
 			-- (i.e. left-hand-side of the rule), indexed by
 			-- rule id
 
-	yyr2: ARRAY [INTEGER]
-			-- Number of symbols in the right-hand-side
-			-- of each rule, indexed by rule id
-
 	yydefact: ARRAY [INTEGER]
 			-- Default rule to reduce in each state,
 			-- when `yytable' doesn't specify something
@@ -67,7 +63,7 @@ feature -- Tables
 	yycheck: ARRAY [INTEGER]
 			-- Array indexed in parallel with `yytable'. It
 			-- indicates, in a roundabout way, the bounds of
-			-- the portion you are tryng to examine. Suppose
+			-- the portion you are triyng to examine. Suppose
 			-- that the portion of `yytable' starts at index
 			-- `p' and the index to be examined within the 
 			-- portion is `i'. Then if `yycheck.item (p+i)/=i',
@@ -75,6 +71,14 @@ feature -- Tables
 			-- allocated, and the default (from `yydefact'
 			-- or `yydefgoto') should be used. Otherwise,
 			-- `yytable.item (p+i)' should be used.
+
+	yytypes1: ARRAY [INTEGER]
+			-- Array indexed by state id containing the type id
+			-- of the accessing symbol associated with this state
+
+	yytypes2: ARRAY [INTEGER]
+			-- Array indexed by internal token id (from 0 to yyNtbase-1)
+			-- containing the type id of the corresponding token
 
 feature -- Constants
 
@@ -105,8 +109,10 @@ invariant
 	yytranslate_upper: yytranslate.upper = yyMax_token
 	yyr1_not_void: yyr1 /= Void
 	yyr1_lower: yyr1.lower = 0
-	yyr2_not_void: yyr2 /= Void
-	yyr2_lower: yyr2.lower = 0
+	yytypes1_not_void: yytypes1 /= Void
+	yytypes1_lower: yytypes1.lower = 0
+	yytypes2_not_void: yytypes2 /= Void
+	yytypes2_lower: yytypes2.lower = 0
 	yydefact_not_void: yydefact /= Void
 	yydefact_lower: yydefact.lower = 0
 	yydefgoto_not_void: yydefgoto /= Void

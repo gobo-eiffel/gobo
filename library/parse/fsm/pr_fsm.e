@@ -895,10 +895,14 @@ feature {NONE} -- Constants
 	Max_nb_states_increment: INTEGER is 100
 			-- Maxium number of states
 
-	No_type: PR_NO_TYPE is
+	No_type: PR_TYPE is
 			-- Type used when no type has been specified
 		once
-			create Result.make (0, "ANY")
+			if grammar.types.is_empty then
+				create Result.make (0, "ANY")
+			else
+				Result := grammar.types.first
+			end
 		ensure
 			no_type_not_void: Result /= Void
 		end

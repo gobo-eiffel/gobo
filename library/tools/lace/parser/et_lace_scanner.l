@@ -6,7 +6,7 @@ indexing
 		"Scanners for Lace parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ creation
 
 [a-zA-Z][a-zA-Z0-9_]*	{
 				last_token := L_IDENTIFIER
-				last_value := new_identifier (text)
+				last_et_identifier_value := new_identifier (text)
 			}
 
 
@@ -78,7 +78,7 @@ creation
 			}
 \"[^%\n"]+\" {
 				last_token := L_STRING
-				last_value := new_identifier (text_substring (2, text_count - 1))
+				last_et_identifier_value := new_identifier (text_substring (2, text_count - 1))
 			}
 \"[^%\n"]*	{
 				if text_count > 1 then
@@ -131,7 +131,7 @@ creation
 				str_ := STRING_.make (eif_buffer.count)
 				str_.append_string (eif_buffer)
 				eif_buffer.wipe_out
-				last_value := new_identifier (str_)
+				last_et_identifier_value := new_identifier (str_)
 			else
 				last_token := L_STRERR
 			end

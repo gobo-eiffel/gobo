@@ -908,9 +908,6 @@ feature -- Parsing
 		local
 			yystacksize: INTEGER
 			yystate: INTEGER
-				-- Current state
-			yylen: INTEGER
-				-- Number of elements in the current rule
 			yyn: INTEGER
 			yychar1: INTEGER
 			index, yyss_top: INTEGER
@@ -934,7 +931,7 @@ feature -- Parsing
 				error_count := 0
 				yy_lookahead_needed := True
 				yyerrstatus := 0
-				yyvsp := -1
+				yy_init_value_stacks
 				yyssp := -1
 				yystacksize := yyss.count
 				yy_parsing_status := yyContinue
@@ -947,10 +944,9 @@ feature -- Parsing
 					yyssp := yyssp + 1
 					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyvs := FIXED_ARRAY_.resize (yyvs, yystacksize)
 						yyss := FIXED_INTEGER_ARRAY_.resize (yyss, yystacksize)
 						debug ("GEYACC")
-							std.error.put_string ("Stack size increased to ")
+							std.error.put_string ("Stack (yyss) size increased to ")
 							std.error.put_integer (yystacksize)
 							std.error.put_character ('%N')
 						end
@@ -1048,8 +1044,7 @@ feature -- Parsing
 								if last_token > yyEof then
 									yy_lookahead_needed := True
 								end
-								yyvsp := yyvsp + 1
-								yyvs.put (last_value, yyvsp)
+								yy_push_last_value (yychar1)
 									-- Count tokens shifted since error;
 									-- after three, turn off error status.
 								if yyerrstatus /= 0 then
@@ -1073,18 +1068,13 @@ feature -- Parsing
 				when yyReduce then
 						-- Do a reduction. `yyn' is the number of a rule
 						-- to reduce with.
-					yylen := yyr2.item (yyn)
 					debug ("GEYACC")
 						std.error.put_string ("Reducing via rule #")
 						std.error.put_integer (yyn)
 						std.error.put_character ('%N')
 					end
 					yy_do_action (yyn)
-					inspect yy_parsing_status
-					when yyContinue then
-						yyssp := yyssp - yylen
-						yyvsp := yyvsp - yylen + 1
-						yyvs.put (yyval, yyvsp)
+					if yy_parsing_status = yyContinue then
 							-- Now "shift" the result of the reduction.
 							-- Determine what state that goes to,
 							-- based on the state we popped back to 
@@ -1102,11 +1092,11 @@ feature -- Parsing
 							yystate := yydefgoto.item (index)
 						end
 						yy_goto := yyNewstate
-					when yyError_raised then
+					elseif yy_parsing_status = yyError_raised then
 							-- Handle error raised explicitly by an action.
 						yy_parsing_status := yyContinue
 						yy_goto := yyErrlab
-					else
+					-- else
 							-- Accepted or aborted.
 					end
 				when yyErrlab then
@@ -1162,8 +1152,7 @@ feature -- Parsing
 							elseif yyn = yyFinal then
 								accept
 							else
-								yyvsp := yyvsp + 1
-								yyvs.put (last_value, yyvsp)
+								yy_push_error_value
 								yystate := yyn
 								yy_goto := yyNewstate
 							end
@@ -1175,7 +1164,7 @@ feature -- Parsing
 					if yyssp = 0 then
 						abort
 					else
-						yyvsp := yyvsp - 1
+						yy_pop_last_value (yystate)
 						yyssp := yyssp - 1
 						yystate := yyss.item (yyssp)
 						yy_goto := yyErrhandle

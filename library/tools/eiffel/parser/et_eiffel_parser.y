@@ -65,7 +65,7 @@ creation
 %token <ET_RETRY_INSTRUCTION> E_RETRY
 %token <ET_SYMBOL_OPERATOR> E_DIV '/' E_GE '>' E_LE '<' E_MOD '^' '*'
 
-%token E_CHARERR E_STRERR E_INTERR
+%token <ET_POSITION> E_CHARERR E_STRERR E_INTERR
 
 %token <ET_KEYWORD> E_OLD
 %token <ET_SYMBOL> '{' '}'

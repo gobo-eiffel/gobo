@@ -5,7 +5,7 @@ indexing
 		"Test config parser skeletons"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class TS_CONFIG_PARSER_SKELETON
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton,
 			parse as yyparse

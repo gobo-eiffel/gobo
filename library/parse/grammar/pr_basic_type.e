@@ -16,16 +16,16 @@ inherit
 
 	PR_TYPE
 		redefine
-			print_conversion_routine
+			old_print_conversion_routine
 		end
 
 creation
 
 	make
 
-feature -- Output
+feature -- Old typing output
 
-	print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print conversion routine ANY->`name' to `a_file'.
 		do
 			a_file.put_string ("%Tyytype")

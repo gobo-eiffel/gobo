@@ -82,7 +82,7 @@
 	</target>
 
 	<target name="gepp_parser">
-		<geyacc input="gepp_parser.y" tokens="GEPP_TOKENS" output="gepp_parser.e"/>
+		<geyacc new_typing="true" input="gepp_parser.y" tokens="GEPP_TOKENS" output="gepp_parser.e"/>
 	</target>
 
 	<target name="init_system">

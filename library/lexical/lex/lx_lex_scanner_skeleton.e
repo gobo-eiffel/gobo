@@ -6,7 +6,7 @@ indexing
 		%analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,9 +22,7 @@ inherit
 		end
 
 	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -115,9 +113,6 @@ feature -- Access
 			filename_not_void: Result /= Void
 		end
 
-	last_value: ANY
-			-- Semantic value to be passed to the parser
-
 feature {NONE} -- Access
 
 	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
@@ -132,6 +127,9 @@ feature {NONE} -- Access
 
 	last_string: STRING
 			-- Last string which has been read
+
+	last_integer_value: INTEGER
+			-- Last semantic value of type INTEGER
 
 feature -- Setting
 
@@ -180,20 +178,20 @@ feature {NONE} -- Implementation
 	process_character (a_code: INTEGER) is
 			-- Check whether `a_code' is a valid code for character
 			-- whose printable representation is held in `text'.
-			-- Set `last_value' accordingly.
+			-- Set `last_integer_value' accordingly.
 		do
 			if a_code < description.characters_count then
-				last_value := a_code
+				last_integer_value := a_code
 			else
 				report_character_out_of_range_error (text)
-				last_value := 0
+				last_integer_value := 0
 			end
 		end
 
 	process_escaped_character is
 			-- Process escaped character whose printable representation
 			-- is held in `text'. Check whether the corresponding 
-			-- character is not out of range. Set `last_value' accordingly.
+			-- character is not out of range. Set `last_integer_value' accordingly.
 		require
 			-- valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 		local

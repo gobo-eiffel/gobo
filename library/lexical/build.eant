@@ -64,7 +64,7 @@
 	</target>
 
 	<target name="lex_parser" dir="lex">
-		<geyacc input="lx_lex_parser.y" tokens="LX_LEX_TOKENS" output="lx_lex_parser.e"/>
+		<geyacc new_typing="true" input="lx_lex_parser.y" tokens="LX_LEX_TOKENS" output="lx_lex_parser.e"/>
 	</target>
 
 	<target name="regexp_scanner" dir="regexp">
@@ -72,7 +72,7 @@
 	</target>
 
 	<target name="regexp_parser" dir="regexp">
-		<geyacc input="lx_regexp_parser.y" tokens="LX_REGEXP_TOKENS" output="lx_regexp_parser.e"/>
+		<geyacc new_typing="true" input="lx_regexp_parser.y" tokens="LX_REGEXP_TOKENS" output="lx_regexp_parser.e"/>
 	</target>
 
 	<target name="wildcard_scanner" dir="regexp">
@@ -80,7 +80,7 @@
 	</target>
 
 	<target name="wildcard_parser" dir="regexp">
-		<geyacc input="lx_wildcard_parser.y" tokens="LX_WILDCARD_TOKENS" output="lx_wildcard_parser.e"/>
+		<geyacc new_typing="true" input="lx_wildcard_parser.y" tokens="LX_WILDCARD_TOKENS" output="lx_wildcard_parser.e"/>
 	</target>
 
 </project>

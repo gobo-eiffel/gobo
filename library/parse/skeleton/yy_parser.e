@@ -5,12 +5,12 @@ indexing
 		"General parsers"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class YY_PARSER [G]
+deferred class YY_PARSER
 
 feature {NONE} -- Initialization
 
@@ -119,11 +119,6 @@ feature {YY_PARSER_ACTION} -- Scanning
 
 	last_token: INTEGER is
 			-- Last token read
-		deferred
-		end
-
-	last_value: G is
-			-- Semantic value of last token read
 		deferred
 		end
 

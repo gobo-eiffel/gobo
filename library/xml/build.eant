@@ -62,7 +62,7 @@
 	</target>
 	
 	<target name="xm_eiffel_parser" dir="parser/eiffel">
-		<geyacc input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
+		<geyacc new_typing="true" input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
 	</target>
 
 	<target name="install_expat">

@@ -61,6 +61,9 @@ feature -- Status report
 	successful: BOOLEAN
 			-- Has no fatal error been detected?
 
+	old_typing: BOOLEAN
+			-- Does the generated parser use the old typing mechanism?
+
 feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
@@ -84,9 +87,6 @@ feature -- Access
 			filename_not_void: Result /= Void
 		end
 
-	last_value: ANY
-			-- Semantic value to be passed to the parser
-
 feature -- Setting
 
 	set_error_handler (handler: like error_handler) is
@@ -97,6 +97,14 @@ feature -- Setting
 			error_handler := handler
 		ensure
 			error_handler_set: error_handler = handler
+		end
+
+	set_old_typing (b: BOOLEAN) is
+			-- Set `old_typing' to `b'.
+		do
+			old_typing := b
+		ensure
+			old_typing_set: old_typing = b
 		end
 
 feature {NONE} -- Implementation
@@ -125,16 +133,21 @@ feature {NONE} -- Implementation
 		do
 			rhs := a_rule.rhs
 			if n <= 0 then
-				report_dangerous_dollar_n_warning (n)
-				a_type := Unknown_type
+				if old_typing then
+					report_dangerous_dollar_n_warning (n)
+				else
+					report_invalid_dollar_n_error (n)
+				end
 			elseif n > max then
 				report_invalid_dollar_n_error (n)
-				a_type := Unknown_type
 			else
 				a_type := rhs.item (n).type
+				if old_typing then
+					a_type.old_append_dollar_n_to_string (n, max, a_rule, action_buffer)
+				else
+					a_type.append_dollar_n_to_string (n, max, a_rule, action_buffer)
+				end
 			end
-			a_type.append_dollar_n_to_string (n, max, action_buffer)
-			a_type.set_used (True)
 		end
 
 	process_dollar_dollar (a_rule: PR_RULE) is
@@ -145,7 +158,11 @@ feature {NONE} -- Implementation
 			a_type: PR_TYPE
 		do
 			a_type := a_rule.lhs.type
-			a_type.append_dollar_dollar_to_string (action_buffer)
+			if old_typing then
+				a_type.old_append_dollar_dollar_to_string (action_buffer)
+			else
+				a_type.append_dollar_dollar_to_string (action_buffer)
+			end
 		end
 
 	cloned_string (a_string: STRING): STRING is
@@ -247,14 +264,6 @@ feature {NONE} -- Constants
 
 	Init_buffer_size: INTEGER is 256
 				-- Initial size for `action_buffer'
-
-	Unknown_type: PR_NO_TYPE is
-			-- Type used when type is not known
-		once
-			create Result.make (0, "ANY")
-		ensure
-			no_type_not_void: Result /= Void
-		end
 
 invariant
 

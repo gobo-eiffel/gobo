@@ -6,7 +6,7 @@ indexing
 		"Parsers for regular expressions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,12 +16,17 @@ class LX_REGEXP_PARSER
 inherit
 
 	LX_LEX_PARSER_SKELETON
+		redefine
+			last_integer_value
+		end
 
 	LX_REGEXP_SCANNER
 		rename
 			make as make_lex_scanner,
 			make_from_description as make_lex_scanner_from_description,
 			reset as reset_lex_scanner
+		redefine
+			last_integer_value
 		end
 
 creation
@@ -267,5 +272,10 @@ String: -- Empty
 	;
 
 %%
+
+feature {NONE} -- Access
+
+	last_integer_value: INTEGER
+			-- Last semantic value of type INTEGER
 
 end

@@ -81,7 +81,7 @@
 	</target>
 
 	<target name="eiffel_parser">
-		<geyacc input="eiffel_parser.y" tokens="EIFFEL_TOKENS" output="eiffel_parser.e"/>
+		<geyacc new_typing="true" input="eiffel_parser.y" tokens="EIFFEL_TOKENS" output="eiffel_parser.e"/>
 	</target>
 
 	<target name="init_system">

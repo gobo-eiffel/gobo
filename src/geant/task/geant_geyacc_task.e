@@ -45,6 +45,14 @@ feature {NONE} -- Initialization
 					command.set_verbose_filename (a_value)
 				end
 			end
+				-- old_typing:
+			if has_attribute (Old_typing_attribute_name) then
+				command.set_old_typing (boolean_value (Old_typing_attribute_name))
+			end
+				-- new_typing:
+			if has_attribute (New_typing_attribute_name) then
+				command.set_new_typing (boolean_value (New_typing_attribute_name))
+			end
 				-- tokens_classname:
 			if has_attribute (Tokens_classname_attribute_name) then
 				a_value := attribute_value (Tokens_classname_attribute_name)
@@ -131,6 +139,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for input_filename
 		once
 			Result := "input"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Old_typing_attribute_name: STRING is
+			-- Name of xml attribute for 'old_typing'
+		once
+			Result := "old_typing"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	New_typing_attribute_name: STRING is
+			-- Name of xml attribute for 'new_typing'
+		once
+			Result := "new_typing"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -66,9 +66,6 @@ feature -- Access
 	filename: STRING
 			-- Name of file being parsed
 
-	last_value: ANY
-			-- Semantic value to be passed to the parser
-
 	eif_buffer: STRING
 			-- Buffer for lexial tokens
 

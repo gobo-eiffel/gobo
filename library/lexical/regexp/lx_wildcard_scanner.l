@@ -6,7 +6,7 @@ indexing
 		"Scanners for wildcards"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,10 +16,15 @@ class LX_WILDCARD_SCANNER
 inherit
 
 	LX_LEX_SCANNER_SKELETON
+		redefine
+			last_integer_value
+		end
 
 	LX_WILDCARD_TOKENS
 		export
 			{NONE} all
+		redefine
+			last_integer_value
 		end
 
 creation
@@ -48,10 +53,10 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					last_string := text
 					if character_classes.has (last_string) then
 						last_token := CCL_OP
-						last_value := character_classes.item (last_string)
+						last_lx_symbol_class_value := character_classes.item (last_string)
 					else
 						last_token := Left_bracket_code
-						last_value := last_string
+						last_string_value := last_string
 						less (1)
 						set_start_condition (FIRSTCCL)
 					end
@@ -138,5 +143,10 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 
 %%
+
+feature {NONE} -- Access
+
+	last_integer_value: INTEGER
+			-- Last semantic value of type INTEGER
 
 end

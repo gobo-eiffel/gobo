@@ -252,6 +252,132 @@ feature -- Output
 			end
 		end
 
+	print_action (input_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print semantic action to `a_file'.
+			-- `input_filename' is the name of the file where
+			-- the action text as been specified.
+		require
+			input_filename_not_void: input_filename /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_type: PR_TYPE
+			i, nb: INTEGER
+			types: DS_HASH_TABLE [INTEGER, PR_TYPE]
+			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, PR_TYPE]
+		do
+			a_file.put_string ("--|#line ")
+			a_file.put_integer (line_nb)
+			a_file.put_string (" %"")
+			a_file.put_string (input_filename)
+			a_file.put_line ("%"")
+			a_file.put_line ("debug (%"GEYACC%")")
+			a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+			a_file.put_string (input_filename)
+			a_file.put_string ("' at line ")
+			a_file.put_integer (line_nb)
+			a_file.put_line ("%")")
+			a_file.put_line ("end")
+			a_type := lhs.type
+			a_file.put_new_line
+			a_file.put_string (action.out)
+			a_file.put_new_line
+			a_file.put_line ("if yy_parsing_status = yyContinue then")
+			a_file.put_string ("%Tyyssp := yyssp - ")
+			nb := rhs.count
+			a_file.put_integer (nb)
+			a_file.put_new_line
+			create types.make_map (nb + 1)
+			types.put_new (1, a_type)
+			from i := 1 until i > nb loop
+				a_type := rhs.item (i).type
+				types.search (a_type)
+				if types.found then
+					types.replace_found_item (types.found_item - 1)
+				else
+					types.put_new (-1, a_type)
+				end
+				i := i + 1
+			end
+			a_cursor := types.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				nb := a_cursor.item
+				if nb /= 0 then
+					a_cursor.key.print_increment_yyvsp (nb, 1, a_file)
+				end
+				a_cursor.forth
+			end
+			a_type := lhs.type
+			if types.item (a_type) > 0 then
+				a_type.print_resize_yyvs (1, a_file)
+			end
+			a_type.print_push_yyval (1, a_file)
+			a_file.put_line ("end")
+		end
+
+	old_print_action (input_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print semantic action to `a_file' using the old typing mechanism.
+			-- `input_filename' is the name of the file where
+			-- the action text as been specified.
+		require
+			input_filename_not_void: input_filename /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_type: PR_TYPE
+			nb: INTEGER
+		do
+			a_file.put_string ("--|#line ")
+			a_file.put_integer (line_nb)
+			a_file.put_string (" %"")
+			a_file.put_string (input_filename)
+			a_file.put_line ("%"")
+			a_file.put_line ("debug (%"GEYACC%")")
+			a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+			a_file.put_string (input_filename)
+			a_file.put_string ("' at line ")
+			a_file.put_integer (line_nb)
+			a_file.put_line ("%")")
+			a_file.put_line ("end")
+			a_file.put_new_line
+			a_type := lhs.type
+			a_type.old_print_dollar_dollar_initialization (a_file)
+			a_file.put_new_line
+			a_file.put_string (action.out)
+			a_file.put_new_line
+			a_type.old_print_dollar_dollar_finalization (a_file)
+			a_file.put_new_line
+			a_file.put_line ("if yy_parsing_status = yyContinue then")
+			nb := rhs.count
+			if nb /= 0 then
+				a_file.put_string ("%Tyyssp := yyssp - ")
+				a_file.put_integer (nb)
+				a_file.put_new_line
+			end
+			nb := nb - 1
+			if nb > 0 then
+				a_file.put_string ("%Tyyvsp := yyvsp - ")
+				a_file.put_integer (nb)
+				a_file.put_new_line
+			elseif nb < 0 then
+				a_file.put_string ("%Tyyvsp := yyvsp + ")
+				check no_overflow: nb = - 1 end
+				a_file.put_integer (-nb)
+				a_file.put_new_line
+				a_file.put_line ("%Tif yyvsp >= yyvsc then")
+				a_file.put_line ("%T%Tyyvsc := yyvsc + yyInitial_stack_size")
+				a_file.put_line ("%T%Tyyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)")
+				a_file.put_line ("%T%Tdebug (%"GEYACC%")")
+				a_file.put_line ("%T%T%Tstd.error.put_string (%"Stack (yyvs) size increased to %")")
+				a_file.put_line ("%T%T%Tstd.error.put_integer (yyvsc)")
+				a_file.put_line ("%T%T%Tstd.error.put_new_line")
+				a_file.put_line ("%T%Tend")
+				a_file.put_line ("%Tend")
+			end
+			a_file.put_line ("%Tyyvs.put (yyval, yyvsp)")
+			a_file.put_line ("end")
+		end
+
 feature {NONE} -- Implementation
 
 	associativity: INTEGER

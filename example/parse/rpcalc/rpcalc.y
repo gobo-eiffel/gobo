@@ -5,7 +5,7 @@ indexing
 
 		"Reverse polish notation calculator"
 
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class RPCALC
 
 inherit
 
-	YY_PARSER_SKELETON [DOUBLE]
+	YY_NEW_PARSER_SKELETON
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -24,7 +24,8 @@ creation
 
 %}
 
-%token NUM
+%token <DOUBLE> NUM
+%type <DOUBLE> exp
 
 %%
 
@@ -120,7 +121,7 @@ feature {NONE} -- Scanner
 					pending_character := c
 					has_pending_character := True
 				end
-				last_value := buffer.to_double
+				last_double_value := buffer.to_double
 			elseif c = '%R' then
 					-- Bug in Visual Eiffel 2.1: when the Enter Key
 					-- is pressed, `read_character' gets '%R' instead
@@ -134,9 +135,6 @@ feature {NONE} -- Scanner
 
 	last_token: INTEGER
 			-- Last token read
-
-	last_value: DOUBLE
-			-- Semantic value of last token read
 
 feature {NONE} -- Implementation
 

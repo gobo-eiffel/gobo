@@ -5,7 +5,7 @@ indexing
 
 		"Scanners for Eiffel parsers"
 
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,7 +103,7 @@ creation
 											last_token := E_CREATE
 										else
 											last_token := E_IDENTIFIER
-											last_value := text
+											last_any_value := text
 										end
 									}
 [cC][rR][eE][aA][tT][iI][oO][nN]		last_token := E_CREATION
@@ -169,7 +169,7 @@ creation
 
 [a-zA-Z][a-zA-Z0-9_]*	{
 				last_token := E_IDENTIFIER
-				last_value := text
+				last_any_value := text
 			}
 
 
@@ -177,7 +177,7 @@ creation
 
 [@#|&][^%" \t\r\n]*	{
 				last_token := E_FREEOP
-				last_value := text
+				last_any_value := text
 			}
 
 		-- Note: Accepts non-printable characters as well,
@@ -186,43 +186,43 @@ creation
 
 ----------/** Eiffel characters **/---------------------------------------------
 
-\'[^%\n']\'			last_token := E_CHARACTER; last_value := text_item (2)
+\'[^%\n']\'			last_token := E_CHARACTER; last_any_value := text_item (2)
 	-- The following line is not correct Eiffel but
 	-- it appears in some Halstenbach Eiffel libraries.
-\'\'\'				last_token := E_CHARACTER; last_value := '%''
-\'%A\'				last_token := E_CHARACTER; last_value := '%A'
-\'%B\'				last_token := E_CHARACTER; last_value := '%B'
-\'%C\'				last_token := E_CHARACTER; last_value := '%C'
-\'%D\'				last_token := E_CHARACTER; last_value := '%D'
-\'%F\'				last_token := E_CHARACTER; last_value := '%F'
-\'%H\'				last_token := E_CHARACTER; last_value := '%H'
-\'%L\'				last_token := E_CHARACTER; last_value := '%L'
-\'%N\'				last_token := E_CHARACTER; last_value := '%N'
-\'%Q\'				last_token := E_CHARACTER; last_value := '%Q'
-\'%R\'				last_token := E_CHARACTER; last_value := '%R'
-\'%S\'				last_token := E_CHARACTER; last_value := '%S'
-\'%T\'				last_token := E_CHARACTER; last_value := '%T'
-\'%U\'				last_token := E_CHARACTER; last_value := '%U'
-\'%V\'				last_token := E_CHARACTER; last_value := '%V'
-\'%%\'				last_token := E_CHARACTER; last_value := '%%'
-\'%\'\'				last_token := E_CHARACTER; last_value := '%''
-\'%\"\'				last_token := E_CHARACTER; last_value := '%"'
-\'%\(\'				last_token := E_CHARACTER; last_value := '%('
-\'%\)\'				last_token := E_CHARACTER; last_value := '%)'
-\'%<\'				last_token := E_CHARACTER; last_value := '%<'
-\'%>\'				last_token := E_CHARACTER; last_value := '%>'
+\'\'\'				last_token := E_CHARACTER; last_any_value := '%''
+\'%A\'				last_token := E_CHARACTER; last_any_value := '%A'
+\'%B\'				last_token := E_CHARACTER; last_any_value := '%B'
+\'%C\'				last_token := E_CHARACTER; last_any_value := '%C'
+\'%D\'				last_token := E_CHARACTER; last_any_value := '%D'
+\'%F\'				last_token := E_CHARACTER; last_any_value := '%F'
+\'%H\'				last_token := E_CHARACTER; last_any_value := '%H'
+\'%L\'				last_token := E_CHARACTER; last_any_value := '%L'
+\'%N\'				last_token := E_CHARACTER; last_any_value := '%N'
+\'%Q\'				last_token := E_CHARACTER; last_any_value := '%Q'
+\'%R\'				last_token := E_CHARACTER; last_any_value := '%R'
+\'%S\'				last_token := E_CHARACTER; last_any_value := '%S'
+\'%T\'				last_token := E_CHARACTER; last_any_value := '%T'
+\'%U\'				last_token := E_CHARACTER; last_any_value := '%U'
+\'%V\'				last_token := E_CHARACTER; last_any_value := '%V'
+\'%%\'				last_token := E_CHARACTER; last_any_value := '%%'
+\'%\'\'				last_token := E_CHARACTER; last_any_value := '%''
+\'%\"\'				last_token := E_CHARACTER; last_any_value := '%"'
+\'%\(\'				last_token := E_CHARACTER; last_any_value := '%('
+\'%\)\'				last_token := E_CHARACTER; last_any_value := '%)'
+\'%<\'				last_token := E_CHARACTER; last_any_value := '%<'
+\'%>\'				last_token := E_CHARACTER; last_any_value := '%>'
 \'%\/[0-9]+\/\'		{
 						code_ := text_substring (4, text_count - 2).to_integer
 						if code_ > Platform.Maximum_character_code then
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
-							last_value := INTEGER_.to_character (code_)
+							last_any_value := INTEGER_.to_character (code_)
 						end
 					}
 	-- The following line is not correct Eiffel but
 	-- it appears in some Visual Eiffel libraries.
-\'%.\'				last_token := E_CHARACTER; last_value := text_item (3)
+\'%.\'				last_token := E_CHARACTER; last_any_value := text_item (3)
 
 \'.{1,2}			|
 \'%\/[0-9]+(\/)?	last_token := E_CHARERR	-- Catch-all rules (no backing up)
@@ -255,11 +255,11 @@ creation
 			else
 				last_token := E_STRING
 			end
-			last_value := text_substring (2, text_count - 1)
+			last_any_value := text_substring (2, text_count - 1)
 		}
 \"[^%\n"]*\" {
 				last_token := E_STRING
-				last_value := text_substring (2, text_count - 1)
+				last_any_value := text_substring (2, text_count - 1)
 			}
 \"[^%\n"]*	{
 				if text_count > 1 then
@@ -311,7 +311,7 @@ creation
 			str_ := STRING_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
-			last_value := str_
+			last_any_value := str_
 			set_start_condition (INITIAL)
 		}
 	-- The following line is not correct Eiffel
@@ -329,14 +329,14 @@ creation
 
 ----------/** Eiffel bits **/---------------------------------------------------
 
-[0-1]+[bB]			last_token := E_BIT; last_value := text
+[0-1]+[bB]			last_token := E_BIT; last_any_value := text
 
 
 ----------/** Eiffel integers **/-----------------------------------------------
 
 [0-9]+				{
 						last_token := E_INTEGER
-						last_value := text.to_integer
+						last_any_value := text.to_integer
 					}
 [0-9]{1,3}(_[0-9]{3})+	{
 						last_token := E_INTEGER
@@ -349,7 +349,7 @@ creation
 							end 
 							i_ := i_ + 1
 						end
-						last_value := eif_buffer.to_integer
+						last_any_value := eif_buffer.to_integer
 						eif_buffer.wipe_out
 					}
 [0-9_]+				last_token := E_INTERR	-- Catch-all rule (no backing up)
@@ -361,7 +361,7 @@ creation
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	{
 						last_token := E_REAL
-						last_value := text.to_double
+						last_any_value := text.to_double
 					}
 [0-9]{1,3}(_[0-9]{3})+\./[^.0-9]	|
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
@@ -376,7 +376,7 @@ creation
 							end
 							i_ := i_ + 1
 						end
-						last_value := eif_buffer.to_double
+						last_any_value := eif_buffer.to_double
 						eif_buffer.wipe_out
 					}
 
@@ -422,9 +422,6 @@ feature -- Initialization
 
 feature -- Access
 
-	last_value: ANY
-			-- Semantic value to be passed to the parser
-
 	eif_buffer: STRING
 			-- Buffer for lexial tokens
 
@@ -453,7 +450,7 @@ feature {NONE} -- Processing
 				Result := op
 			else
 				Result := E_STRING
-				last_value := text_substring (2, text_count - 1)
+				last_any_value := text_substring (2, text_count - 1)
 			end
 		end
 
