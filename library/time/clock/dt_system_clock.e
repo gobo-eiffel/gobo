@@ -4,6 +4,10 @@ indexing
 
 		"Local system clocks (precision to the millisecond)"
 
+	note:
+
+		"With SmartEiffel under Windows the millisecond part may be stuck to zero."
+
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
