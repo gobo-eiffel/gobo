@@ -21,7 +21,7 @@ feature -- Access
 	-- Not sure if these next two features are needed
 
 	item_type: INTEGER is
-			-- Determine the types of nodes to which this test applies
+			-- Type of nodes to which this test applies
 		do
 			Result := Any_node
 		ensure

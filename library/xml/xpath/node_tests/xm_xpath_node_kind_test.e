@@ -25,12 +25,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (node_type: INTEGER) is
+	make (a_node_type: INTEGER) is
 			-- Establish invariant
 		require
-			valid_node_type: is_node_type (node_type)
+			valid_node_type: is_node_type (a_node_type)
 		do
-			kind := node_type
+			kind := a_node_type
 			inspect
 				kind
 			when Document_node then
@@ -47,15 +47,13 @@ feature {NONE} -- Initialization
 				original_text := "processing-instruction()"
 			end
 		ensure
-			kind_set: kind = node_type
+			kind_set: kind = a_node_type
 		end
 
 feature -- Access
 
 	item_type: INTEGER is
-			-- Determine the types of nodes to which this pattern applies;
-			-- Used for optimisation;
-			-- For patterns that match nodes of several types, return Any_node
+			-- Types of node to which this pattern applies
 		do
 			Result := kind
 		end

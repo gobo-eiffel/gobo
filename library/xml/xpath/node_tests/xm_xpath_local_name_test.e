@@ -48,9 +48,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item_type: INTEGER
-			-- Determine the types of nodes to which this pattern applies;
-			-- Used for optimisation;
-			-- For patterns that match nodes of several types, return Any_node
+			-- Type of nodes to which this pattern applies
+
 
 feature -- Status report
 
