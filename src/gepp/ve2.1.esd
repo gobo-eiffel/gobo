@@ -1,4 +1,4 @@
--- system:     "'ge2e' preprocessor"
+-- system:     "'gepp' preprocessor"
 -- compiler:   "Visual Eiffel 2.0"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1997, Eric Bezault"
@@ -7,11 +7,11 @@
 
 system
 
-	ge2e
+	gepp
 
 root
 
-	GE2E
+	GEPP
 
 creation
 
@@ -19,31 +19,38 @@ creation
 		
 cluster
 
-	[ge2e_project "."] end
-	[ge2e "$GOBO\src\ge2e"] end
-	[spec "$GOBO\spec\ve"] end
+	[gepp_project		"."] end
+	[gepp				"$GOBO\src\gepp"] end
 
 		-- Gobo Eiffel Lexical Library
-	[lx_skeleton "$GOBO\library\lexical\skeleton"] end
+	[lx_skeleton		"$GOBO\library\lexical\skeleton"] end
+	[lx_skeleton_spec	"$GOBO\library\lexical\skeleton\spec\ve"] end
 
 		-- Gobo Eiffel Parse Library
-	[pr_skeleton "$GOBO\library\parse\skeleton"] end
+	[pr_skeleton		"$GOBO\library\parse\skeleton"] end
 
 		-- Gobo Eiffel Utility Library
-	[ut_support "$GOBO\library\utility\support"] end
+	[ut_support			"$GOBO\library\utility\support"] end
+
+		-- Gobo Eiffel Kernel Library
+	[kl_kernel			"$GOBO\library\kernel"] end
+	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
 
 		-- Gobo Eiffel Structure Library
-	[ds_container "$GOBO\library\structure\container"] end
-	[ds_cursor "$GOBO\library\structure\cursor"] end
-	[ds_list "$GOBO\library\structure\list"] end
-	[ds_search "$GOBO\library\structure\search"] end
-	[ds_sort "$GOBO\library\structure\sort"] end
-	[ds_support "$GOBO\library\structure\support"] end
-	[ds_table "$GOBO\library\structure\table"] end
-	[ds_stack "$GOBO\library\structure\stack"] end
+	[ds_container		"$GOBO\library\structure\container"] end
+	[ds_cursor			"$GOBO\library\structure\cursor"] end
+	[ds_cursor_spec		"$GOBO\library\structure\cursor\spec\ve"] end
+	[ds_list			"$GOBO\library\structure\list"] end
+	[ds_search			"$GOBO\library\structure\search"] end
+	[ds_search_spec		"$GOBO\library\structure\search\spec\ve"] end
+	[ds_sort			"$GOBO\library\structure\sort"] end
+	[ds_stack			"$GOBO\library\structure\stack"] end
+	[ds_support			"$GOBO\library\structure\support"] end
+	[ds_table			"$GOBO\library\structure\table"] end
+	[ds_table_spec		"$GOBO\library\structure\table\spec\ve"] end
 
-		-- Kernel
-	[Kernel "$VE_LIB\kernel"] end
+		-- Visual Eiffel Kernel
+	[Kernel				"$VE_LIB\kernel"] end
 
 option
 

@@ -1,2 +1,2 @@
 
-ibyacc -oge2e_parser.ge ge2e_parser.y
+ibyacc -ogepp_parser.ge gepp_parser.y

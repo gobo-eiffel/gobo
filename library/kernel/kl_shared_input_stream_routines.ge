@@ -1,0 +1,38 @@
+indexing
+
+	description:
+
+		"Shared routines that ought to be in class INPUT_STREAM"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_SHARED_INPUT_STREAM_ROUTINES
+
+feature -- Access
+
+	input_stream_: KL_INPUT_STREAM_ROUTINES is
+			-- Routines that ought to be in class INPUT_STREAM
+		once
+			!! Result
+		ensure
+			input_stream__not_void: Result /= Void
+		end
+
+feature -- Anchor types
+
+#ifdef ISE || HACT
+	INPUT_STREAM_TYPE: IO_MEDIUM is do end
+#else
+#ifdef SE
+	INPUT_STREAM_TYPE: INPUT_STREAM is do end
+#else
+	INPUT_STREAM_TYPE: FILE is do end
+#endif
+#endif
+			-- Anchor type
+
+end -- class KL_SHARED_INPUT_STREAM_ROUTINES

@@ -1,0 +1,119 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class OUTPUT_STREAM"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_OUTPUT_STREAM_ROUTINES
+
+inherit
+
+	KL_SHARED_OUTPUT_STREAM_ROUTINES
+
+feature -- Initialization
+
+	make_file_open_write (a_filename: STRING): like OUTPUT_STREAM_TYPE is
+			-- Create a new file object with `a_filename' as
+			-- file name and try to open it in write-only mode.
+			-- `is_open_write (Result)' is set to True
+			-- if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			a_file: PLAIN_TEXT_FILE
+#else
+#ifdef SE
+			a_file: STD_FILE_WRITE
+#endif
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!! a_file.make (a_filename)
+				Result := a_file
+				a_file.open_write
+			elseif not a_file.is_closed then
+				a_file.close
+#else
+#ifdef SE
+				!! a_file.make
+				Result := a_file
+				a_file.connect_to (a_filename)
+			elseif a_file.is_connected then
+				a_file.disconnect
+#else
+				!! Result.make (a_filename)
+				Result.open_write
+			elseif not Result.is_closed then
+				Result.close
+#endif
+#endif
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature -- Status report
+
+	is_open_write (a_stream: like OUTPUT_STREAM_TYPE): BOOLEAN is
+			-- Is `a_stream' open in write mode?
+		require
+			a_stream_void: a_stream /= Void
+		do
+#ifdef SE
+			Result := a_stream.is_connected
+#else
+			Result := a_stream.is_open_write
+#endif
+		end
+
+	is_closed (a_stream: like OUTPUT_STREAM_TYPE): BOOLEAN is
+			-- Is `a_stream' closed?
+		require
+			a_stream_void: a_stream /= Void
+		do
+#ifdef SE
+			Result := not a_stream.is_connected
+#else
+			Result := a_stream.is_closed
+#endif
+		end
+
+feature -- Status setting
+
+	close (a_stream: like OUTPUT_STREAM_TYPE) is
+			-- Close `a_stream' if it is closable,
+			-- let it open otherwise.
+		require
+			a_stream_not_void: a_stream /= Void
+			not_closed: not is_closed (a_stream)
+#ifdef SE
+		local
+			a_file: STD_FILE_WRITE
+#endif
+		do
+#ifdef SE
+			a_file ?= a_stream
+			if a_file /= Void then
+				a_file.disconnect
+			end
+#else
+			a_stream.close
+#endif
+		end
+
+end -- class KL_OUTPUT_STREAM_ROUTINES

@@ -121,7 +121,7 @@ feature -- Access
 
 invariant
 
-	lower_a_code_definition: lower_a_code = ('a').code
+	-- lower_a_code_definition: lower_a_code = ('a').code
 	-- Same thing for all other codes.
 	-- (see "note" in indexing clause.)
 

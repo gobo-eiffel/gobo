@@ -1,0 +1,32 @@
+indexing
+
+	description:
+
+		"Exception handling"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_EXCEPTIONS
+
+inherit
+
+#ifndef SE
+	EXCEPTIONS
+#ifdef HACT
+		rename
+			die as obsolete_die,
+			new_die as die
+		end
+#endif
+#else
+	ANY
+		rename
+			die_with_code as die
+		end
+#endif
+
+end -- class KL_EXCEPTIONS

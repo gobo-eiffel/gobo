@@ -21,10 +21,10 @@ cluster
 
 	[gegrep_project		"."] end
 	[gegrep				"$GOBO\example\gegrep"] end
-	[spec				"$GOBO\spec\ve"] end
 
 		-- Gobo Eiffel Lexical Library
 	[lx_automaton		"$GOBO\library\lexical\automaton"] end
+	[lx_automaton_spec	"$GOBO\library\lexical\automaton\spec\ve"] end
 	[lx_lex				"$GOBO\library\lexical\lex"] end
 	[lx_generation		"$GOBO\library\lexical\generation"] end
 	[lx_regexp			"$GOBO\library\lexical\regexp"] end
@@ -40,17 +40,24 @@ cluster
 	[ut_factory			"$GOBO\library\utility\factory"] end
 	[ut_support			"$GOBO\library\utility\support"] end
 
+		-- Gobo Eiffel Kernel Library
+	[kl_kernel			"$GOBO\library\kernel"] end
+	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
+
 		-- Gobo Eiffel Structure Library
 	[ds_container		"$GOBO\library\structure\container"] end
 	[ds_cursor			"$GOBO\library\structure\cursor"] end
+	[ds_cursor_spec		"$GOBO\library\structure\cursor\spec\ve"] end
 	[ds_list			"$GOBO\library\structure\list"] end
 	[ds_search			"$GOBO\library\structure\search"] end
+	[ds_search_spec		"$GOBO\library\structure\search\spec\ve"] end
 	[ds_sort			"$GOBO\library\structure\sort"] end
+	[ds_stack			"$GOBO\library\structure\stack"] end
 	[ds_support			"$GOBO\library\structure\support"] end
 	[ds_table			"$GOBO\library\structure\table"] end
-	[ds_stack			"$GOBO\library\structure\stack"] end
+	[ds_table_spec		"$GOBO\library\structure\table\spec\ve"] end
 
-		-- Kernel
+		-- Visual EIffel Kernel
 	[Kernel				"$VE_LIB\kernel"] end
 
 option

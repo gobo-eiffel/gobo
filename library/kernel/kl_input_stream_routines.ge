@@ -1,0 +1,217 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class INPUT_STREAM"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_INPUT_STREAM_ROUTINES
+
+inherit
+
+	KL_SHARED_INPUT_STREAM_ROUTINES
+
+feature -- Initialization
+
+	make_file_open_read (a_filename: STRING): like INPUT_STREAM_TYPE is
+			-- Create a new file object with `a_filename' as
+			-- file name and try to open it in read-only mode.
+			-- `is_open_read (Result)' is set to True
+			-- if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			a_file: PLAIN_TEXT_FILE
+#else
+#ifdef SE
+			a_file: STD_FILE_READ
+#endif
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!! a_file.make (a_filename)
+				Result := a_file
+				a_file.open_read
+			elseif not a_file.is_closed then
+				a_file.close
+#else
+#ifdef SE
+				!! a_file.make
+				Result := a_file
+				a_file.connect_to (a_filename)
+			elseif a_file.is_connected then
+				a_file.disconnect
+#else
+				!! Result.make (a_filename)
+				Result.open_read
+			elseif not Result.is_closed then
+				Result.close
+#endif
+#endif
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+feature -- Access
+
+	name (a_stream: like INPUT_STREAM_TYPE): STRING is
+			-- Name of `a_stream'
+		require
+			a_stream_void: a_stream /= Void
+		do
+#ifdef SE
+			Result := ""
+#else
+			Result := a_stream.name
+#endif
+		ensure
+			name_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_open_read (a_stream: like INPUT_STREAM_TYPE): BOOLEAN is
+			-- Is `a_stream' open in read mode?
+		require
+			a_stream_void: a_stream /= Void
+		do
+#ifdef SE
+			Result := a_stream.is_connected
+#else
+			Result := a_stream.is_open_read
+#endif
+		end
+
+	is_closed (a_stream: like INPUT_STREAM_TYPE): BOOLEAN is
+			-- Is `a_stream' closed?
+		require
+			a_stream_void: a_stream /= Void
+		do
+#ifdef SE
+			Result := not a_stream.is_connected
+#else
+			Result := a_stream.is_closed
+#endif
+		end
+
+	end_of_input (a_stream: like INPUT_STREAM_TYPE): BOOLEAN is
+			-- Has an EOF been detected?
+		require
+			a_stream_void: a_stream /= Void
+			a_stream_is_open_read: is_open_read (a_stream)
+		do
+#ifdef ISE || HACT
+			Result := not a_stream.readable
+#else
+#ifdef SE
+			Result := a_stream.end_of_input
+#else
+			Result := a_stream.end_of_file
+#endif
+#endif
+		end
+
+feature -- Status setting
+
+	close (a_stream: like INPUT_STREAM_TYPE) is
+			-- Close `a_stream' if it is closable,
+			-- let it open otherwise.
+		require
+			a_stream_not_void: a_stream /= Void
+			not_closed: not is_closed (a_stream)
+#ifdef SE
+		local
+			a_file: STD_FILE_READ
+#endif
+		do
+#ifdef SE
+			a_file ?= a_stream
+			if a_file /= Void then
+				a_file.disconnect
+			end
+#else
+			a_stream.close
+#endif
+		end
+
+feature -- Input operations
+
+	read_stream (a_stream: like INPUT_STREAM_TYPE;
+		a_buffer: STRING; pos, nb_char: INTEGER): INTEGER is
+			-- Fill `a_buffer', starting at position `pos' with
+			-- at most `nb_char' characters read from `a_stream'.
+			-- Return the number of characters actually read.
+		require
+			a_stream_not_void: a_stream /= Void
+			a_stream_open_read: is_open_read (a_stream)
+			a_buffer_not_void: a_buffer /= Void
+			valid_position: a_buffer.valid_index (pos)
+			nb_char_large_enough: nb_char >= 0
+			nb_char_small_enough: nb_char <= a_buffer.count - pos + 1
+		local
+			i, j: INTEGER
+#ifndef SE
+			a_string: STRING
+#endif
+		do
+#ifdef VE
+			a_stream.read_stream (2048)
+			if a_stream.end_of_file then
+				Result := 0
+			else
+				a_string := a_stream.last_string
+				Result := a_string.count
+				j := pos
+				from i := 1 until i > Result loop
+					a_buffer.put (a_string.item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+			end
+#else
+#ifdef SE
+			Result := nb_char
+			j := pos
+			from i := 1 until i > Result loop
+				a_stream.read_character
+				if not a_stream.end_of_input then
+					a_buffer.put (a_stream.last_character, j)
+					j := j + 1
+					i := i + 1
+				else
+					Result := i - 1
+				end
+			end
+#else
+			a_stream.read_stream (nb_char)
+			a_string := a_stream.last_string
+			Result := a_string.count
+			j := pos
+			from i := 1 until i > Result loop
+				a_buffer.put (a_string.item (i), j)
+				j := j + 1
+				i := i + 1
+			end
+#endif
+#endif
+		ensure
+			nb_char_read_large_enough: Result >= 0
+			nb_char_read_small_enough: Result <= nb_char
+		end
+
+end -- class KL_INPUT_STREAM_ROUTINES

@@ -1,5 +1,5 @@
 -- system:     "'ascii2ps' pretty-printer"
--- compiler:   "Halstenbach ISS-BASE 1.5"
+-- compiler:   "Halstenbach ISS-BASE 1.6"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1997, Eric Bezault"
 -- date:       "$Date$"
@@ -21,27 +21,31 @@ default
 
 cluster
 
-	ascii2ps:		"$GOBO\example\ascii2ps";
-	spec:			"$GOBO\spec\hact";
+	ascii2ps:			"$GOBO\example\ascii2ps";
 
 		-- Gobo Eiffel Lexical Library
-	lx_skeleton:	"$GOBO\library\lexical\skeleton";
+	lx_skeleton:		"$GOBO\library\lexical\skeleton";
+	lx_skeleton_spec:	"$GOBO\library\lexical\skeleton\spec\hact";
+
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$GOBO\library\kernel";
+	kl_kernel_spec:		"$GOBO\library\kernel\spec\hact";
 
 		-- ISS-Baselib
-	kernel:			"$ISS_BASE\library\base\kernel";
-	misc:			"$ISS_BASE\library\base\misc";
-	access:			"$ISS_BASE\library\base\structures\access";
-	cursors:		"$ISS_BASE\library\base\structures\cursors";
-	cursor_trees:	"$ISS_BASE\library\base\structures\cursor_tree";
-	dispenser:		"$ISS_BASE\library\base\structures\dispenser";
-	iteration:		"$ISS_BASE\library\base\structures\iteration";
-	list:			"$ISS_BASE\library\base\structures\list";
-	obsolete:		"$ISS_BASE\library\base\structures\obsolete";
-	set:			"$ISS_BASE\library\base\structures\set";
-	sort:			"$ISS_BASE\library\base\structures\sort";
-	storage:		"$ISS_BASE\library\base\structures\storage";
-	table:			"$ISS_BASE\library\base\structures\table";
-	traversing:		"$ISS_BASE\library\base\structures\traversing";
-	tree:			"$ISS_BASE\library\base\structures\tree";
+	kernel:				"$ISS_BASE\library\base\kernel";
+	misc:				"$ISS_BASE\library\base\misc";
+	access:				"$ISS_BASE\library\base\structures\access";
+	cursors:			"$ISS_BASE\library\base\structures\cursors";
+	cursor_trees:		"$ISS_BASE\library\base\structures\cursor_tree";
+	dispenser:			"$ISS_BASE\library\base\structures\dispenser";
+	iteration:			"$ISS_BASE\library\base\structures\iteration";
+	list:				"$ISS_BASE\library\base\structures\list";
+	obsolete:			"$ISS_BASE\library\base\structures\obsolete";
+	set:				"$ISS_BASE\library\base\structures\set";
+	sort:				"$ISS_BASE\library\base\structures\sort";
+	storage:			"$ISS_BASE\library\base\structures\storage";
+	table:				"$ISS_BASE\library\base\structures\table";
+	traversing:			"$ISS_BASE\library\base\structures\traversing";
+	tree:				"$ISS_BASE\library\base\structures\tree";
 
 end

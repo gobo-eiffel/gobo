@@ -1,2 +1,2 @@
 
-gelex ge2e_scanner.l
+gelex gepp_scanner.l

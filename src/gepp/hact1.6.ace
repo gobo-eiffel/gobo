@@ -1,5 +1,5 @@
--- system:     "'ge2e' preprocessor"
--- compiler:   "Halstenbach ISS-BASE 1.5"
+-- system:     "'gepp' preprocessor"
+-- compiler:   "Halstenbach ISS-BASE 1.6"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1997, Eric Bezault"
 -- date:       "$Date$"
@@ -7,11 +7,11 @@
 
 system
 
-	ge2e
+	gepp
 
 root
 
-	GE2E: "execute"
+	GEPP: "execute"
 		
 default
 
@@ -21,43 +21,50 @@ default
 
 cluster
 
-	ge2e:			"$GOBO\src\ge2e";
-	spec:			"$GOBO\spec\hact";
+	gepp:				"$GOBO\src\gepp";
 
 		-- Gobo Eiffel Lexical Library
-	lx_skeleton:	"$GOBO\library\lexical\skeleton";
+	lx_skeleton:		"$GOBO\library\lexical\skeleton";
+	lx_skeleton_spec:	"$GOBO\library\lexical\skeleton\spec\hact";
 
 		-- Gobo Eiffel Parse Library
-	pr_skeleton:	"$GOBO\library\parse\skeleton";
+	pr_skeleton:		"$GOBO\library\parse\skeleton";
 
 		-- Gobo Eiffel Utility Library
-	ut_support:		"$GOBO\library\utility\support";
+	ut_support:			"$GOBO\library\utility\support";
+
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$GOBO\library\kernel";
+	kl_kernel_spec:		"$GOBO\library\kernel\spec\hact";
 
 		-- Gobo Eiffel Structure Library
-	ds_container:   "$GOBO\library\structure\container";
-	ds_cursor:      "$GOBO\library\structure\cursor";
-	ds_list:        "$GOBO\library\structure\list";
-	ds_search:      "$GOBO\library\structure\search";
-	ds_sort:        "$GOBO\library\structure\sort";
-	ds_support:     "$GOBO\library\structure\support";
-	ds_stack:       "$GOBO\library\structure\stack";
-	ds_table:       "$GOBO\library\structure\table";
+	ds_container:		"$GOBO\library\structure\container";
+	ds_cursor:			"$GOBO\library\structure\cursor";
+	ds_cursor_spec:		"$GOBO\library\structure\cursor\spec\hact";
+	ds_list:			"$GOBO\library\structure\list";
+	ds_search:			"$GOBO\library\structure\search";
+	ds_search_spec:		"$GOBO\library\structure\search\spec\hact";
+	ds_sort:			"$GOBO\library\structure\sort";
+	ds_support:			"$GOBO\library\structure\support";
+	ds_stack:			"$GOBO\library\structure\stack";
+	ds_table:			"$GOBO\library\structure\table";
+	ds_table_spec:		"$GOBO\library\structure\table\spec\hact";
 
 		-- ISS-Baselib
-	kernel:			"$ISS_BASE\library\base\kernel";
-	misc:			"$ISS_BASE\library\base\misc";
-	access:			"$ISS_BASE\library\base\structures\access";
-	cursors:		"$ISS_BASE\library\base\structures\cursors";
-	cursor_trees:	"$ISS_BASE\library\base\structures\cursor_tree";
-	dispenser:		"$ISS_BASE\library\base\structures\dispenser";
-	iteration:		"$ISS_BASE\library\base\structures\iteration";
-	list:			"$ISS_BASE\library\base\structures\list";
-	obsolete:		"$ISS_BASE\library\base\structures\obsolete";
-	set:			"$ISS_BASE\library\base\structures\set";
-	sort:			"$ISS_BASE\library\base\structures\sort";
-	storage:		"$ISS_BASE\library\base\structures\storage";
-	table:			"$ISS_BASE\library\base\structures\table";
-	traversing:		"$ISS_BASE\library\base\structures\traversing";
-	tree:			"$ISS_BASE\library\base\structures\tree";
+	kernel:				"$ISS_BASE\library\base\kernel";
+	misc:				"$ISS_BASE\library\base\misc";
+	access:				"$ISS_BASE\library\base\structures\access";
+	cursors:			"$ISS_BASE\library\base\structures\cursors";
+	cursor_trees:		"$ISS_BASE\library\base\structures\cursor_tree";
+	dispenser:			"$ISS_BASE\library\base\structures\dispenser";
+	iteration:			"$ISS_BASE\library\base\structures\iteration";
+	list:				"$ISS_BASE\library\base\structures\list";
+	obsolete:			"$ISS_BASE\library\base\structures\obsolete";
+	set:				"$ISS_BASE\library\base\structures\set";
+	sort:				"$ISS_BASE\library\base\structures\sort";
+	storage:			"$ISS_BASE\library\base\structures\storage";
+	table:				"$ISS_BASE\library\base\structures\table";
+	traversing:			"$ISS_BASE\library\base\structures\traversing";
+	tree:				"$ISS_BASE\library\base\structures\tree";
 
 end
