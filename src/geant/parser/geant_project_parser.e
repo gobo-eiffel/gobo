@@ -5,7 +5,7 @@ indexing
 		"XML project parsers"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2002, Sven Ehrke and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,13 +14,7 @@ class GEANT_PROJECT_PARSER
 
 inherit
 
-	XM_EVENT_PARSER
-		redefine
-			on_start_tag,
-			on_end_tag,
-			on_content
-		end
-
+	ANY
 	KL_SHARED_STANDARD_FILES
 		export
 			{NONE} all
@@ -28,70 +22,92 @@ inherit
 
 creation
 
-	make_from_implementation
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: UC_STRING) is
+			-- Initialize project parser.
+		require
+			a_variables_not_void: a_variables /= Void
+			a_options_not_void: a_options /= Void
+			a_build_filename_not_void: a_build_filename /= Void
+			a_build_filename_not_empty: a_build_filename.count > 0
+		local
+			an_expat_parser_factory: XM_EXPAT_PARSER_FACTORY
+		do
+			variables := a_variables
+			options := a_options
+			build_filename := a_build_filename
+
+			create an_expat_parser_factory
+			if an_expat_parser_factory.is_expat_available then
+				xml_parser := an_expat_parser_factory.new_expat_parser
+			else
+				create {XM_EIFFEL_PARSER} xml_parser.make
+			end
+
+				-- The parser will build a tree.
+			create tree_pipe.make
+			xml_parser.set_callbacks (tree_pipe.start)
+			tree_pipe.tree.enable_position_table (xml_parser)
+
+		end
 
 feature -- Access
 
-	root_element: GEANT_XML_ELEMENT
+	last_project_element: GEANT_PROJECT_ELEMENT
 			-- Root element
 
-feature -- Actions
+	build_filename: UC_STRING
+			-- Name of the file containing the configuration
+			-- information to build a project
 
-	on_start_tag (a_name, ns_prefix: UC_STRING; attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
-			-- Action executed on start tag.
+feature -- Parsing
+
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Parse eant file `a_file'.
 		local
-			an_element: GEANT_XML_ELEMENT
-			current_element: GEANT_XML_ELEMENT
-			attr_list: GEANT_ATTRIBUTE_LIST
+			a_document: XM_DOCUMENT
+			a_root_element: XM_ELEMENT
+			a_position_table: XM_POSITION_TABLE
 		do
-			debug ("trace_xml")
-				std.output.put_string (a_name.out + "%N")
+			last_project_element := Void
+			xml_parser.parse_from_stream (a_file)
+			if xml_parser.is_correct then
+				if not tree_pipe.error.has_error then
+					a_document := tree_pipe.document
+					a_root_element := a_document.root_element
+					a_position_table := tree_pipe.tree.last_position_table
+
+					create last_project_element.make (a_root_element, variables, options, build_filename)
+				else
+					std.error.put_string (tree_pipe.last_error)
+					std.error.flush
+				end
+			else
+				std.error.put_string (xml_parser.last_error_extended_description)
+				std.error.flush
 			end
-
-			!! an_element.make (a_name)
-			!! attr_list.make_from_bilinear (attributes)
-			an_element.add_attributes (attr_list)
-
-			if root_element = Void then
-					-- Create the root element:
-				root_element := an_element
-			end
-
-			if not stack.is_empty then
-					-- Add the new element as a child to the current element:
-				current_element := stack.item
-				current_element.add_child (an_element)
-			end
-				-- Make the new element the current element:
-			stack.force (an_element)
-		end
-
-	on_end_tag (name, ns_prefix: UC_STRING) is
-			-- Action executed on end tag.
-		do
-			debug ("trace_xml")
-				std.output.put_string ("/" + name.out + "%N")
-			end
-			stack.remove
-		end
-
-	on_content (chr_data: UC_STRING) is
-			-- Action executed on content.
-		local
-			an_element: GEANT_XML_ELEMENT
-		do
-			an_element := stack.item
-			an_element.set_content (clone (chr_data))
 		end
 
 feature {NONE} -- Implementation
 
-	stack: DS_ARRAYED_STACK [GEANT_XML_ELEMENT] is
-			-- Stack of elements
-		once
-			!! Result.make (10)
-		ensure
-			stack_not_void: Result /= Void
-		end
+	xml_parser: XM_PARSER
+			-- XML parser
+
+	tree_pipe: XM_TREE_CALLBACKS_PIPE
+			-- Tree generating callbacks
+
+	variables: GEANT_VARIABLES
+			-- Project variables
+
+	options: GEANT_PROJECT_OPTIONS
+			-- Project options
+
+invariant
+
+	build_filename_not_void: build_filename /= Void
+	build_filename_not_empty: build_filename.count > 0
 
 end

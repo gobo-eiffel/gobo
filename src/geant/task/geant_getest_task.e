@@ -27,12 +27,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name, a_value: STRING
-			i, nb: INTEGER
-			define_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			define_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			define_element: GEANT_DEFINE_ELEMENT
 		do
 			!! command.make (a_project)
@@ -48,10 +48,14 @@ feature {NONE} -- Initialization
 				command.set_compile (a_value)
 			end
 				-- define:
-			define_elements := xml_element.children_by_name (Define_element_name)
-			nb := define_elements.count
-			from i := 1 until i > nb loop
-				!! define_element.make (project, define_elements.item (i))
+			define_elements := elements_by_name (Define_element_name)
+			from
+				cs := define_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create define_element.make (project, cs.item)
 				if define_element.is_enabled and then
 					define_element.has_name and then define_element.has_value
 				then
@@ -61,8 +65,10 @@ feature {NONE} -- Initialization
 						command.defines.force (a_value, a_name)
 					end
 				end
-				i := i + 1
+
+				cs.forth
 			end
+
 		end
 
 feature -- Access

@@ -29,14 +29,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name: STRING
 			a_value: STRING
-			parameter_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			parameter_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			parameter_element: GEANT_DEFINE_ELEMENT
-			i, nb: INTEGER
 			a_pair: DS_PAIR [STRING, STRING]
 		do
 			!! command.make (a_project)
@@ -95,20 +95,27 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			parameter_elements := xml_element.children_by_name (Parameter_element_name)
-			nb := parameter_elements.count
-			from i := 1 until i > nb loop
-				!! parameter_element.make (project, parameter_elements.item (i))
+			parameter_elements := elements_by_name (Parameter_element_name)
+			from
+				cs := parameter_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create parameter_element.make (project, cs.item)
 				if parameter_element.is_enabled and then
 					parameter_element.has_name and then parameter_element.has_value
 				then
 					a_name:= parameter_element.name
 					a_value := parameter_element.value
-					!! a_pair.make (a_name, a_value)
+					create a_pair.make (a_name, a_value)
 					command.parameters.force_last (a_pair)
 				end
-				i := i + 1
+
+				cs.forth
 			end
+
+
 		end
 
 feature -- Access

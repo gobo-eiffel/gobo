@@ -71,38 +71,25 @@ feature -- Processing
 			a_variables_not_void: a_variables /= Void
 			a_options_not_void: a_options /= Void
 		local
-			xml_parser: GEANT_PROJECT_PARSER
-			xml_parser_impl: XI_EVENT_PARSER
+			a_file: KL_TEXT_INPUT_FILE
+			a_project_parser: GEANT_PROJECT_PARSER
 	    do
-				-- Create xml parser:
-			if Parser_factory.is_expat_event_available then
-				xml_parser_impl := Parser_factory.new_expat_event_parser_imp
-			elseif Parser_factory.is_eiffel_event_available then
-				xml_parser_impl := Parser_factory.new_eiffel_event_parser_imp
+			create a_file.make (build_filename.out)
+			a_file.open_read
+			if a_file.is_open_read then
+				create a_project_parser.make (a_variables, a_options, build_filename)
+				a_project_parser.parse_file (a_file)
+				a_file.close
+				project_element := a_project_parser.last_project_element
 			else
-				exit_application (1, "geant error: no XML parser available%N")
+				std.error.put_string ("cannot read file '" + build_filename.out + "':")
 			end
-			create xml_parser.make_from_implementation (xml_parser_impl)
-			xml_parser.parse_from_file_name (build_filename)
 
-				-- Setup project's root element:
-			if xml_parser.root_element = Void then
+			if a_project_parser.last_project_element = Void then
 				exit_application (1, "Parsing error in file %"" + build_filename.out + "%"%N")
 			end
 
-			create project_element.make (xml_parser.root_element, a_variables, a_options, build_filename)
-
 	    end
-
-feature {NONE} -- Implementation
-
-	Parser_factory: XM_PARSER_FACTORY is
-			-- Factory to create xml parsers
-		once
-			create Result.make
-		ensure
-			parser_factory_not_void: Result /= Void
-		end
 
 invariant
 

@@ -27,12 +27,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name: STRING
 			a_value: STRING
-			parameter_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			parameter_elements: DS_ARRAYED_LIST [XM_ELEMENT]
 			parameter_element: GEANT_DEFINE_ELEMENT
 			i, nb: INTEGER
 			a_pair: DS_PAIR [STRING, STRING]

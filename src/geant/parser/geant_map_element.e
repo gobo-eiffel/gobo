@@ -25,11 +25,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new fileset element with information held in `a_xml_element'.
 		local
 			a_value: STRING
-			a_xml_subelement: GEANT_XML_ELEMENT
+			a_xml_subelement: XM_ELEMENT
 			a_map_element: GEANT_MAP_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			a_xml_subelement := xml_element.child_by_name (Map_element_name)
+			a_xml_subelement := xml_element.element_by_name (Map_element_name)
 			if a_xml_subelement /= Void then
 				!! a_map_element.make (project, a_xml_subelement)
 				map.set_map (a_map_element.map)

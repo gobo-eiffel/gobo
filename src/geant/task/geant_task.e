@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_command: like command; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_command: like command; a_xml_element: XM_ELEMENT) is
 			-- Create new task with information held in `an_element'.
 		require
 			a_command_not_void: a_command /= Void
@@ -77,9 +77,9 @@ feature -- Execution
 		do
 			a_old_task_cwd := file_system.current_working_directory
 				-- change to task directory if "dir" attribute is provided:
-			if xml_element.has_attribute (Dir_attribute_name) then
+			if xml_element.has_attribute_by_name (Dir_attribute_name) then
 				a_new_task_cwd := project.variables.interpreted_string (
-					xml_element.attribute_value_by_name (Dir_attribute_name).out)
+					xml_element.attribute_by_name (Dir_attribute_name).value.out)
 				project.trace_debug ("changing to directory: '" + a_new_task_cwd + "'%N")
 				file_system.set_current_working_directory (a_new_task_cwd)
 			end

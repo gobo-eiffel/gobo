@@ -27,11 +27,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
-			a_xml_subelement: GEANT_XML_ELEMENT
+			a_xml_subelement: XM_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
 		do
 			!! command.make (a_project)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
+			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)

@@ -30,21 +30,24 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new inherit element with information held in `a_xml_element'.
 		local
-			a_parent_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			a_parent_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			a_parent_element: GEANT_PARENT_ELEMENT
-			i: INTEGER
-			nbi: INTEGER
 		do
 			interpreting_element_make (a_project, a_xml_element)
 			create geant_inherit.make (project)
 
-			a_parent_elements := xml_element.children_by_name (Parent_element_name)
-			nbi := a_parent_elements.count
-			from i := 1 until i > nbi loop
-				create a_parent_element.make (project, a_parent_elements.item (i))
+			a_parent_elements := elements_by_name (Parent_element_name)
+			from
+				cs := a_parent_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_parent_element.make (project, cs.item)
 
 					-- Check that no two projects have the same name and different locations:
 					-- TODO: do not check `is_executable' in elements (like here):
@@ -64,13 +67,12 @@ feature {NONE} -- Initialization
 					exit_application (1, "ERROR in 'parent' clause%N")
 				end
 
-				
-				i := i + 1
+				cs.forth
 			end
 
 		end
 
-	make_old (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new element with information held in `a_xml_element'.
 			-- (Only to suppport old form of inheritance)
 			-- TODO: remove after obsolete period

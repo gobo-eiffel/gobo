@@ -30,7 +30,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_xml_element: like xml_element) is
 			-- Initialize element by setting `xml_element' to 'a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -43,36 +43,37 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	xml_element: GEANT_XML_ELEMENT
+	xml_element: XM_ELEMENT
 			-- XML Element defining current element
 
-	description: STRING is
-			-- Description for current element
+	elements_by_name (a_name: UC_STRING): DS_LINKED_LIST [XM_ELEMENT] is
+			-- Direct children elements with name `a_name'.
 		require
-			has_description: has_description
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
 		local
-			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
+			e: XM_ELEMENT
 		do
-			children := xml_element.children
-			Result := children.item (1).content.out
+			create Result.make
+			from
+				cs := xml_element.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				e ?= cs.item
+				if e /= Void and then equal (e.name, a_name) then
+					Result.force_last (e)
+				end
+				cs.forth
+			end
 		ensure
-			description_not_void: Result /= Void
+			result_not_void: Result /= Void
+			result_not_empty: xml_element.has_element_by_name (a_name) implies Result.count > 0
 		end
 
 feature -- Status report
-
-	has_description: BOOLEAN is
-			-- Does `xml_element' has a subelement named 'description'?
-		local
-			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
-			an_element: GEANT_XML_ELEMENT
-		do
-			children := xml_element.children
-			if children.count > 0 then
-				an_element := children.item (1)
-				Result := an_element.name.is_equal (Description_element_name)
-			end
-		end
 
 	valid_xml_element (an_xml_element: like xml_element): BOOLEAN is
 			-- Is `an_xml_element' a valid xml element?
@@ -123,7 +124,7 @@ feature -- Access/XML attribute values
 			uc_name: UC_STRING
 		do
 			uc_name := new_unicode_string (an_attr_name)
-			Result := xml_element.attribute_value_by_name (uc_name).out
+			Result := xml_element.attribute_by_name (uc_name).value.out
 		end
 
 	boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
@@ -174,8 +175,8 @@ feature -- Access/XML attribute values (unicode)
 			an_attr_name_not_empty: an_attr_name.count > 0
 			a_default_value_not_void: a_default_value /= Void
 		do
-			if xml_element.has_attribute (an_attr_name) then
-				Result := xml_element.attribute_value_by_name (an_attr_name)
+			if xml_element.has_attribute_by_name (an_attr_name) then
+				Result := xml_element.attribute_by_name (an_attr_name).value
 			else
 				Result := a_default_value
 			end
@@ -190,7 +191,7 @@ feature -- Access/XML attribute values (unicode)
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_uc_attribute (an_attr_name)
 		do
-			Result := xml_element.attribute_value_by_name (an_attr_name)
+			Result := xml_element.attribute_by_name (an_attr_name).value
 		ensure
 			value_not_void: Result /= Void
 		end
@@ -202,7 +203,7 @@ feature -- Access/XML attribute values (unicode)
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 		do
-			if xml_element.has_attribute (an_attr_name) then
+			if xml_element.has_attribute_by_name (an_attr_name) then
 				Result := uc_boolean_value (an_attr_name)
 			else
 				Result := a_default_value
@@ -235,7 +236,7 @@ feature -- Access/XML attribute values (unicode)
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 		do
-			Result := xml_element.has_attribute (an_attr_name)
+			Result := xml_element.has_attribute_by_name (an_attr_name)
 		end
 
 feature {NONE} -- Constants

@@ -31,7 +31,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (
-		a_xml_element: GEANT_XML_ELEMENT;
+		a_xml_element: XM_ELEMENT;
 		a_variables: GEANT_VARIABLES;
 		a_options: GEANT_PROJECT_OPTIONS;
 		a_build_filename: UC_STRING
@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 			a_build_filename_not_void: a_build_filename /= Void
 			a_build_filename_not_empty: a_build_filename.count > 0
 		local
-			target_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			target_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			a_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			a_target: GEANT_TARGET
-			i: INTEGER
 			msg: STRING
 		do
 			element_make (a_xml_element)
@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 			project.trace ("Loading Project's configuration from " + a_build_filename.out + "%N")
 
 				-- Determine description if available:
-			if has_description then
-				project.set_description (description)
+			if xml_element.has_element_by_name (Description_element_name) then
+				project.set_description (xml_element.element_by_name (Description_element_name).text.out)
 			end
 
 				-- Handle project name:
@@ -77,13 +77,18 @@ feature {NONE} -- Initialization
 			end
 
 				-- Create GEANT_TARGETs from the GEANT_ELEMENTs:
-			target_elements := xml_element.children_by_name (Target_element_name)
+			target_elements := elements_by_name (Target_element_name)
 			create a_targets.make (target_elements.count)
 
 				-- Find targets of current project:
 			project.trace_debug ("Project '" + project.name + "': loading " + target_elements.count.out + " immediate targets.%N")
-			from i := 1 until i > target_elements.count loop
-				create a_target.make (project, target_elements.item (i))
+			from
+				cs := target_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_target.make (project, cs.item)
 				project.trace_debug ("Project '" + project.name + "': loading target `" + a_target.name + "'%N")
 
 					-- Make sure there is no other target with this name:
@@ -101,7 +106,8 @@ feature {NONE} -- Initialization
 				end
 
 				a_targets.force_last (a_target, a_target.name)
-				i := i + 1
+
+				cs.forth
 			end
 
 			project.set_targets (a_targets)
@@ -117,7 +123,7 @@ feature {NONE} -- Initialization
 		local
 			msg: STRING
 			a_inherit_element: GEANT_INHERIT_ELEMENT
-			a_xml_element: GEANT_XML_ELEMENT
+			a_xml_element: XM_ELEMENT
 		do
 				-- Check that not both, inherit_attribute and inherit_element have been specified:
 				-- TODO: modify after obsolete period
@@ -146,7 +152,7 @@ feature {NONE} -- Initialization
 				-- Handle inherit_element:
 			if has_inherit_element then
 				check no_inherit_attribute: not has_uc_attribute (Inherit_attribute_name) end
-				a_xml_element := xml_element.child_by_name (Inherit_element_name)
+				a_xml_element := xml_element.element_by_name (Inherit_element_name)
 				create a_inherit_element.make (project, a_xml_element)
 				project.set_inherit_clause (a_inherit_element.geant_inherit)
 			end
@@ -157,9 +163,9 @@ feature -- Access
 	has_inherit_element: BOOLEAN is
 			-- Does `xml_element' has a subelement named `Inherit_element_name'
 		local
-			a_xml_element: GEANT_XML_ELEMENT
+			a_xml_element: XM_ELEMENT
 		do
-			a_xml_element := xml_element.child_by_name (Inherit_element_name)
+			a_xml_element := xml_element.element_by_name (Inherit_element_name)
 			Result := a_xml_element /= Void
 		end
 

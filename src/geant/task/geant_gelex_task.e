@@ -29,7 +29,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING

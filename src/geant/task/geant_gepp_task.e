@@ -27,16 +27,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
 			-- Create a new task with information held in `an_xml_element'.
 		local
 			a_value: STRING
 			a_bool: BOOLEAN
-			define_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			define_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			define_element: GEANT_DEFINE_ELEMENT
-			a_xml_subelement: GEANT_XML_ELEMENT
+			a_xml_subelement: XM_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
-			i, nb: INTEGER
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
@@ -56,17 +56,21 @@ feature {NONE} -- Initialization
 				a_bool := uc_boolean_value (Lines_attribute_name)
 				command.set_empty_lines (a_bool)
 			end
-			define_elements := xml_element.children_by_name (Define_element_name)
-			nb := define_elements.count
-			from i := 1 until i > nb loop
-				!! define_element.make (project, define_elements.item (i))
+
+			define_elements := elements_by_name (Define_element_name)
+			from
+				cs := define_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create define_element.make (project, cs.item)
 				if define_element.is_enabled and then define_element.has_name and then
 					define_element.name.count > 0 then
 
 					command.defines.force_last (define_element.name)
 				end
-
-				i := i + 1
+				cs.forth
 			end
 
 			if has_uc_attribute (To_directory_attribute_name) then
@@ -80,7 +84,7 @@ feature {NONE} -- Initialization
 				command.set_force (uc_boolean_value (Force_attribute_name))
 			end
 
-			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
+			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)

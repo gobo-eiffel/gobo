@@ -25,7 +25,7 @@ creation
 
 feature -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new rename clause with information held in `an_xml_element'.
 		local
 			a_value: STRING

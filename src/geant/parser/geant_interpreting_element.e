@@ -32,7 +32,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Initialize element by setting `project' to `a_project'
 			-- and `xml_element' to 'a_xml_element'.
 		require
@@ -72,14 +72,14 @@ feature -- Status report
 
 				-- Look for an 'if' XML attribute
 			if has_uc_attribute (If_attribute_name) then
-				ucs := xml_element.attribute_value_by_name (If_attribute_name)
+				ucs := xml_element.attribute_by_name (If_attribute_name).value
 				if_condition := project.variables.boolean_condition_value (ucs.out)
 				project.trace_debug (" if: '" + ucs.out + "': " + if_condition.out + "%N")
 			end
 
 				-- Look for an 'unless' XML attribute
 			if has_uc_attribute (Unless_attribute_name) then
-				ucs := xml_element.attribute_value_by_name (Unless_attribute_name)
+				ucs := xml_element.attribute_by_name (Unless_attribute_name).value
 				unless_condition := project.variables.boolean_condition_value (ucs.out)
 				project.trace_debug (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
 			end
@@ -107,7 +107,7 @@ feature -- Access/XML attribute values
 			uc_name: UC_STRING
 		do
 			uc_name := new_unicode_string (an_attr_name)
-			Result := xml_element.attribute_value_by_name (uc_name).out
+			Result := xml_element.attribute_by_name (uc_name).value.out
 			Result := project.variables.interpreted_string (Result)
 		end
 
@@ -119,9 +119,9 @@ feature -- Access/XML attribute values (unicode)
 		local
 			s: STRING
 		do
-			if xml_element.has_attribute (an_attr_name) then
+			if xml_element.has_attribute_by_name (an_attr_name) then
 				s := project.variables.interpreted_string (
-					xml_element.attribute_value_by_name (an_attr_name).out)
+					xml_element.attribute_by_name (an_attr_name).value.out)
 				Result := new_unicode_string (s)
 			else
 				Result := a_default_value
@@ -133,7 +133,7 @@ feature -- Access/XML attribute values (unicode)
 		local
 			s: STRING
 		do
-			s := xml_element.attribute_value_by_name (an_attr_name).out
+			s := xml_element.attribute_by_name (an_attr_name).value.out
 			s := project.variables.interpreted_string (s)
 			Result := new_unicode_string (s)
 		end

@@ -30,16 +30,15 @@ creation
 
 feature -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new parent element with information held in `a_xml_element'.
 		require
 			a_project_not_void: a_project /= Void
 			a_xml_element_not_void: a_xml_element /= Void
 		local
-			i: INTEGER
-			nb: INTEGER
 			s: STRING
-			xml_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			xml_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			a_rename_element: GEANT_RENAME_ELEMENT
 			a_redefine_element: GEANT_REDEFINE_ELEMENT
 			a_select_element: GEANT_SELECT_ELEMENT
@@ -64,10 +63,14 @@ feature -- Initialization
 			end
 
 				-- Handle renames:
-			xml_elements := a_xml_element.children_by_name (Rename_element_name)
-			nb := xml_elements.count
-			from i := 1 until i > nb loop
-				create a_rename_element.make (project, xml_elements.item (i))
+			xml_elements := elements_by_name (Rename_element_name)
+			from
+				cs := xml_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_rename_element.make (project, cs.item)
 				s := a_rename_element.rename_clause.original_name
 				if parent.renames.has (s) then
 					msg := clone ("%NLOAD ERROR:%N")
@@ -82,32 +85,43 @@ feature -- Initialization
 					exit_application (1, msg)
 				end
 				parent.renames.force_last (a_rename_element.rename_clause, s)
-				i := i + 1
+
+				cs.forth
 			end
 
 				-- Handle redefines:
-			xml_elements := a_xml_element.children_by_name (Redefine_element_name)
-			nb := xml_elements.count
-			from i := 1 until i > nb loop
-				create a_redefine_element.make (project, xml_elements.item (i))
+			xml_elements := elements_by_name (Redefine_element_name)
+			from
+				cs := xml_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_redefine_element.make (project, cs.item)
 				s := a_redefine_element.redefine_clause.name
 				parent.redefines.force_last (a_redefine_element.redefine_clause, s)
-				i := i + 1
+
+				cs.forth
 			end
 
 				-- Handle selects:
-			xml_elements := a_xml_element.children_by_name (Select_element_name)
-			nb := xml_elements.count
-			from i := 1 until i > nb loop
-				create a_select_element.make (project, xml_elements.item (i))
+			xml_elements := elements_by_name (Select_element_name)
+			from
+				cs := xml_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_select_element.make (project, cs.item)
 				s := a_select_element.select_clause.name
 				parent.selects.force_last (a_select_element.select_clause, s)
-				i := i + 1
+
+				cs.forth
 			end
 
 		end
 
-	make_old (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new parent element with information held in `a_xml_element'.
 			-- (Only to suppport old form of inheritance)
 			-- TODO: remove after obsolete period
