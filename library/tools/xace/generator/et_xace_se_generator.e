@@ -15,6 +15,9 @@ class ET_XACE_SE_GENERATOR
 inherit
 
 	ET_XACE_GENERATOR
+		redefine
+			print_escaped_name
+		end
 
 creation
 
@@ -103,9 +106,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_character ('%"')
-			a_file.put_string (a_system.system_name)
-			a_file.put_character ('%"')
+			print_escaped_name (a_system.system_name, a_file)
 			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_string ("root")
@@ -726,6 +727,20 @@ feature {NONE} -- Output
 				end
 				a_file.put_character ('%"')
 				a_file.put_new_line
+			end
+		end
+
+	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print escaped version of `a_name' to `a_file'.
+		do
+			-- When `a_name' has to be quoted, we quote it.
+			-- Currently we only do that on a '.', but that might not be complete.
+			if a_name.has ('.') then
+				a_file.put_character ('%"')
+				a_file.put_string (a_name)
+				a_file.put_character ('%"')
+			else
+				a_file.put_string (a_name)
 			end
 		end
 
