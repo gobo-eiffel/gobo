@@ -1,74 +1,110 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="prepare">
+<project name="xml" default="help">
 
-	<!--
-	This is the build script for the eXML project.
-	To use it call 'geant' for example.
-	The geant build tool is part of the GOBO project.
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
+		library:     "Gobo Eiffel XML Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
 
-	Currently this build file supports:
-	- generation of scanner and parser of the eiffel native xml parser
-
-	To prepare xml in order to use it invoke the following command:
-
-		geant
-
-	NOTE:
-		This is not necessary if you downloaded the eXML release since
-		this already done.
-
-	To clean up run
-		geant clean
-
-	Sven Ehrke (sven.ehrke@web.de), 16.06.2001
-	-->
-
-	<target name="windows" if="env.windir" >
-		<var name="copy" value="copy" />
-		<var name="del" value="del" />
-		<var name="executable_extension" value=".exe" />
-		<var name="ps" value="\" />
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="unix" unless="env.windir" >
-		<var name="cp" value="cp" />
-		<var name="del" value="rm" />
-		<var name="executable_extension" value="%/32/" />	<!-- space, necessary due to bug in eiffel parser, unicode handling -->
-		<var name="ps" value="/" />
+	<target name="install" dir="${GOBO}/library/xml">
+		<description>
+			Install the Gobo Eiffel XML Library.
+			Generate scanner and parser files.
+			Generate Eiffel files from .ge files.
+		</description>
+
+		<geant target="xf_scanner"/>
+		<geant target="xf_parser"/>
+		<geant target="install_api"/>
+		<geant target="install_general"/>
 	</target>
 
-	<target name="xf_scanner" dir="impl/eiffel/event"
-		description="runs gelex on scanner.l and generates gelexout.txt"
-	>
-		<gelex input_filename="xf_scanner.l" outfile="xf_scanner.e"/>
-
+	<target name="clean" dir="${GOBO}/library/xml">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
 	</target>
 
-	<target name="xf_parser" dir="impl/eiffel/event"
-		description="runs geyacc on xf_parser.y and generates xf_parser.e, xf_tokens.e"
-	>
-		<geyacc
-			eiffel_grammar_filename="xf_parser.y"
-			eiffel_parser_filename="xf_parser.e"
-			eiffel_tokens_classname="xf_tokens"
-		/>
+	<target name="clobber" dir="${GOBO}/library/xml">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="impl/eiffel/event/xf_scanner.e"/>
+		<delete file="impl/eiffel/event/xf_parser.e"/>
+		<delete file="impl/eiffel/event/xf_tokens.e"/>
+		<delete directory="impl/expat/spec/hact"/>
+		<delete directory="impl/expat/spec/ise"/>
+		<delete directory="impl/expat/spec/se"/>
+		<delete directory="impl/expat/spec/ve"/>
 	</target>
 
-	<target name="prepare" depends="xf_scanner,xf_parser"
-		description="generates files necessary to use xml"
-	>
+
+<!-- Implementation -->
+
+	<target name="xf_scanner" dir="impl/eiffel/event">
+		<gelex input="xf_scanner.l"/>
 	</target>
 
-	<target name="clean_eiffel_parser" dir="impl${ps}eiffel${ps}event">
-		<exec executable="${del} xf_scanner.e" />
-		<exec executable="${del} xf_parser.e" />
-		<exec executable="${del} xf_tokens.e" />
+	<target name="xf_parser" dir="impl/eiffel/event">
+		<geyacc input="xf_parser.y" tokens="XF_TOKENS" output="xf_parser.e"/>
 	</target>
 
-	<target name="clean" description="deletes generated files which can be rebuild using the compile target"
-			depends="clean_eiffel_parser"
-	>
+	<target name="install_api">
+		<set name="gepp_dir" value="impl/expat/api"/>
+		<set name="gepp_file" value="xp_api"/>
+		<geant target="spec_eif"/>
+	</target>
+
+	<target name="install_general">
+		<set name="gepp_dir" value="impl/expat/general"/>
+		<set name="gepp_file" value="c_string_helper"/>
+		<geant target="spec_eif"/>
+	</target>
+
+	<target name="spec_eif" depends="spec_hact,spec_ise,spec_se,spec_ve">
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/hact/${gepp_file}.e">
+			<define name="HACT"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/ise/${gepp_file}.e">
+			<define name="ISE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/se/${gepp_file}.e">
+			<define name="SE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/ve/${gepp_file}.e">
+			<define name="VE"/>
+		</gepp>
+	</target>
+
+	<target name="spec_hact">
+		<mkdir directory="impl/expat/spec/hact"/>
+	</target>
+
+	<target name="spec_ise">
+		<mkdir directory="impl/expat/spec/ise"/>
+	</target>
+
+	<target name="spec_se">
+		<mkdir directory="impl/expat/spec/se"/>
+	</target>
+
+	<target name="spec_ve">
+		<mkdir directory="impl/expat/spec/ve"/>
 	</target>
 
 </project>
