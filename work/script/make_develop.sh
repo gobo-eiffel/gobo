@@ -122,3 +122,6 @@ make depend ise.ace hact.ace
 echo ''; echo "#### Generate files in \$GOBO/test/time"
 cd $GOBO/test/time
 make depend ise.ace hact.ace
+echo ''; echo "#### Generate files in \$GOBO/test/precomp"
+cd $GOBO/test/precomp
+make depend ise.ace ise_base.ace hact.ace
