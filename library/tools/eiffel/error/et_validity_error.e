@@ -8085,9 +8085,9 @@ feature {NONE} -- Initialization
 			an_actual_base_class_not_void: an_actual_base_class /= Void
 			a_generic_class_not_void: a_generic_class /= Void
 		do
-			code := vtcg4a_template_code
+			code := vtcg4b_template_code
 			etl_code := vtcg4_etl_code
-			default_template := vtcg4a_default_template
+			default_template := vtcg4b_default_template
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_position
