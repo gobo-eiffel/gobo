@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "concat1"
-			-- Example name
+	program_name: STRING is "concat1"
+			-- Program name
 
-	library: STRING is "test"
+	library_name: STRING is "test"
 			-- Library name of example
 
 feature -- Test

@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "calc"
-			-- Example name
+	program_name: STRING is "calc"
+			-- Program name
 
-	library: STRING is "parse"
+	library_name: STRING is "parse"
 			-- Library name of example
 
 feature -- Test
@@ -29,7 +29,7 @@ feature -- Test
 	test_calc is
 			-- Test 'calc' example.
 		do
-			compile_example
+			compile_program
 		end
 
 end

@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "calculator"
-			-- Example name
+	program_name: STRING is "calculator"
+			-- Program name
 
-	library: STRING is "lexical"
+	library_name: STRING is "lexical"
 			-- Library name of example
 
 feature -- Test
@@ -31,7 +31,7 @@ feature -- Test
 		do
 			if eiffel_compiler.is_hact then
 				if file_system.directory_exists (yacc_cluster) then
-					compile_example
+					compile_program
 				end
 			end
 		end

@@ -26,6 +26,7 @@
 		<cluster name="test"/>
 		<cluster name="common"/>
 	</cluster>
+	<cluster name="test_common" location="${GOBO}/test/common"/>
 	<cluster name="example_test_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

@@ -18,15 +18,15 @@ inherit
 
 feature -- Access
 
-	tool: STRING is "geant"
-			-- Tool name
+	program_name: STRING is "geant"
+			-- Program name
 
 feature -- Test
 
 	test_geant is
 			-- Test 'geant'.
 		do
-			compile_tool
+			compile_program
 		end
 
 end

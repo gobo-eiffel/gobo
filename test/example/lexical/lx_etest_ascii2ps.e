@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "ascii2ps"
-			-- Example name
+	program_name: STRING is "ascii2ps"
+			-- Program name
 
-	library: STRING is "lexical"
+	library_name: STRING is "lexical"
 			-- Library name of example
 
 feature -- Test
@@ -31,9 +31,9 @@ feature -- Test
 		local
 			ascii2ps_exe: STRING
 		do
-			compile_example
+			compile_program
 				-- Run example.
-			ascii2ps_exe := example_exe
+			ascii2ps_exe := program_exe
 			assert_execute (ascii2ps_exe + " " + sample_e_filename + " toto.ps" + output_log)
 			assert_equal ("no_output_log", 0, file_system.file_count (output_log_filename))
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))

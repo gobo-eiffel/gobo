@@ -4,7 +4,7 @@ indexing
 
 		"Test 'gepp'"
 
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,15 +17,15 @@ inherit
 
 feature -- Access
 
-	tool: STRING is "gepp"
-			-- Tool name
+	program_name: STRING is "gepp"
+			-- Program name
 
 feature -- Test
 
 	test_gepp is
 			-- Test 'gepp'.
 		do
-			compile_tool
+			compile_program
 		end
 
 end

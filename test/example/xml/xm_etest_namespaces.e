@@ -16,15 +16,15 @@ inherit
 
 	EXAMPLE_TEST_CASE
 		redefine
-			example_dirname
+			program_dirname
 		end
 
 feature -- Access
 
-	example: STRING is "namespaces"
-			-- Example name
+	program_name: STRING is "namespaces"
+			-- Program name
 
-	library: STRING is "xml"
+	library_name: STRING is "xml"
 			-- Library name of example
 
 feature -- Test
@@ -32,15 +32,15 @@ feature -- Test
 	test_namespaces is
 			-- Test 'tree/namespaces' example.
 		do
-			compile_example
+			compile_program
 		end
 
 feature {NONE} -- Implementation
 
-	example_dirname: STRING is
-			-- Name of example source directory
+	program_dirname: STRING is
+			-- Name of program source directory
 		do
-			Result := file_system.nested_pathname ("${GOBO}", <<"example", library, "tree", example>>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, "tree", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 

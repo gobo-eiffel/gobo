@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "eiffel_parser"
-			-- Example name
+	program_name: STRING is "eiffel_parser"
+			-- Program name
 
-	library: STRING is "parse"
+	library_name: STRING is "parse"
 			-- Library name of example
 
 feature -- Test
@@ -31,9 +31,9 @@ feature -- Test
 		local
 			eiffel_parser_exe: STRING
 		do
-			compile_example
+			compile_program
 				-- Run example.
-			eiffel_parser_exe := example_exe
+			eiffel_parser_exe := program_exe
 			assert_execute (eiffel_parser_exe + " 2 " + sample_e_filename + output_log)
 			assert_equal ("no_output_log", 0, file_system.file_count (output_log_filename))
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))

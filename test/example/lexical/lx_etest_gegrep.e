@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "gegrep"
-			-- Example name
+	program_name: STRING is "gegrep"
+			-- Program name
 
-	library: STRING is "lexical"
+	library_name: STRING is "lexical"
 			-- Library name of example
 
 feature -- Test
@@ -29,7 +29,7 @@ feature -- Test
 	test_gegrep is
 			-- Test 'gegrep' example.
 		do
-			compile_example
+			compile_program
 		end
 
 end

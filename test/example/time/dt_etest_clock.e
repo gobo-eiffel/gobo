@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	example: STRING is "clock"
-			-- Example name
+	program_name: STRING is "clock"
+			-- Program name
 
-	library: STRING is "time"
+	library_name: STRING is "time"
 			-- Library name of example
 
 feature -- Test
@@ -31,9 +31,9 @@ feature -- Test
 		local
 			clock_exe: STRING
 		do
-			compile_example
+			compile_program
 				-- Run example.
-			clock_exe := example_exe
+			clock_exe := program_exe
 			assert_execute (clock_exe + output_log)
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 		end

@@ -4,7 +4,7 @@ indexing
 
 		"Test 'gexace'"
 
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,8 @@ inherit
 
 feature -- Access
 
-	tool: STRING is "gexace"
-			-- Tool name
+	program_name: STRING is "gexace"
+			-- Program name
 
 feature -- Test
 
@@ -29,8 +29,8 @@ feature -- Test
 			xace_filename: STRING
 			ace_filename: STRING
 		do
-			compile_tool
-			gexace_exe := tool_exe
+			compile_program
+			gexace_exe := program_exe
 				-- Test <option name="recursive" value="true"/>
 			xace_filename := file_system.pathname (sample_dirname, "system1.xace")
 			ace_filename := file_system.pathname (sample_dirname, "ise1.ace")
