@@ -49,6 +49,12 @@ feature -- Test
 			assert_namespace ("default hidden",
 				"<doc xmlns='uri1'><a xmlns='uri2'/></doc>",
 				<<"uri1", "uri2">>)
+			assert_namespace ("sibling restore",
+				"<doc xmlns='uri1'><a xmlns='uri2'/><b/></doc>",
+				<<"uri1", "uri2", "uri1">>)
+			assert_namespace ("child inherit",
+				"<doc xmlns='uri1'><child/></doc>",
+				<<"uri1", "uri1">>)
 			assert_namespace ("named",
 				"<doc><n1:a xmlns:n1='uri1'/></doc>",
 				<<"", "uri1">>)
