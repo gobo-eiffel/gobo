@@ -131,6 +131,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			print_indentation (1, a_file)
 			a_file.put_line ("target exe console")
+			print_indentation (1, a_file)
 			a_file.put_line ("run_time_in_dll off")
 			an_option := a_system.options
 			if an_option /= Void then
