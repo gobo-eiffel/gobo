@@ -3,6 +3,7 @@
 	lx_error:			"$GOBO/library/lexical/error";
 	lx_lex:				"$GOBO/library/lexical/lex";
 	lx_generation:		"$GOBO/library/lexical/generation";
+	lx_regexp:			"$GOBO/library/lexical/regexp";
 	lx_scanner:			"$GOBO/library/lexical/scanner";
 	lx_skeleton:		"$GOBO/library/lexical/skeleton";
 	lx_support:			"$GOBO/library/lexical/support";
