@@ -171,6 +171,68 @@
 		</exec>
 	</target>
 
+	<target name="test_fs1">
+		<description>
+			Demonstrate the usage of attributes
+			'filename_directory' and 'mapped_filename_directory
+			Note: task 'outofdate' is used here to use a fileset. Invoke
+			geant with the '-d' option to see the content of the fileset.
+		</description>
+
+		<outofdate variable="ood" dir="${GOBO}/library">
+			<fileset
+				directory="kernel"
+				include="@(**/*.xace)"
+			>
+			</fileset>
+		</outofdate>
+
+		<outofdate variable="ood" dir="${GOBO}/library/kernel">
+			<fileset
+				directory="."
+				include="@(**/*.xace)"
+			>
+			</fileset>
+		</outofdate>
+
+		<outofdate variable="ood" dir="${GOBO}/library/kernel">
+			<fileset
+				directory="."
+				include="@(**/*.xace)"
+				force="true"
+			>
+			</fileset>
+		</outofdate>
+
+		<outofdate variable="ood" dir="${GOBO}/library">
+			<fileset
+				directory="kernel"
+				include="@(**/*.xace)"
+				mapped_filename_directory="D:/some_other_directory"
+			>
+			</fileset>
+		</outofdate>
+
+		<outofdate variable="ood" dir="${GOBO}/test">
+			<fileset
+				directory="${GOBO}/library/kernel"
+				include="@(**/*.xace)"
+				filename_directory="${GOBO}/library/kernel"
+			>
+			</fileset>
+		</outofdate>
+
+		<outofdate variable="ood" dir="${GOBO}/test">
+			<fileset
+				directory="${GOBO}/library/kernel"
+				include="@(**/*.xace)"
+				filename_directory="${GOBO}/library/kernel"
+				mapped_filename_directory="D:/some_other_directory"
+			>
+			</fileset>
+		</outofdate>
+	</target>
+
 	<!-- move -->	
 	<target name="move_file1">
 		<description>
