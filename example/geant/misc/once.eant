@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<project name="geant_once" default="t2">
+	
+	<target name="t1" once="true">
+		<echo message="This is target 't1'"/>
+	</target>
+
+	<target name="t2">
+		<echo message="Trying to call once target 't1' first time"/>
+		<geant target="t1"/>
+
+		<echo message="Trying to call once target 't1' second time"/>
+		<geant target="t1"/> <!-- Note that target 't1' is not called -->
+
+		<echo message="Trying to call once target 't1' third time"/>
+		<geant target="t1"/> <!-- Note that target 't1' is not called -->
+	</target>
+
+</project>
+
