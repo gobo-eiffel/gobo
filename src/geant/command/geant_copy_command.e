@@ -107,7 +107,7 @@ feature -- Execution
 			if is_to_directory_executable then
 				a_to_file := clone (to_directory)
 				a_to_file.append_string ("/")
-				a_to_file.append_string (file) --!! should be basename (file) here !!
+				a_to_file.append_string (file_system.basename (file))
 				log ("  [copy] " + file + " to " + a_to_file + "%N")
 				file_system.copy_file (file, a_to_file)
 			else
