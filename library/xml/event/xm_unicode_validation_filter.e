@@ -118,7 +118,7 @@ feature {NONE} -- String
 			until
 				(i > a.count) or (not Result)
 			loop
-				Result := is_char (a.item (i).code)
+				Result := is_char (a.item_code (i))
 				i := i + 1
 			end
 		ensure
@@ -133,7 +133,7 @@ feature {NONE} -- String
 			i: INTEGER
 		do
 			-- first
-			Result := a.count = 0 or else is_name_first (a.item(1).code)
+			Result := a.count = 0 or else is_name_first (a.item_code (1))
 
 			-- tail
 			from
@@ -141,7 +141,7 @@ feature {NONE} -- String
 			until
 				(i > a.count) or (not Result)
 			loop
-				Result := is_name_char (a.item (i).code)
+				Result := is_name_char (a.item_code (i))
 				i := i + 1
 			end
 		end

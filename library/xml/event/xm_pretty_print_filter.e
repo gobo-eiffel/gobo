@@ -170,7 +170,7 @@ feature {NONE} -- Output
 			until
 				i > cnt
 			loop
-				if s.item (i).code = Quot_char.code then
+				if s.item_code (i) = Quot_char.code then
 					if last_escaped < i - 1 then
 						output_escaped (s.substring (last_escaped + 1, i - 1))
 					end
@@ -207,7 +207,7 @@ feature {NONE} -- Output
 			until
 				i > cnt
 			loop
-				a_char := s.item (i).code
+				a_char := s.item_code (i)
 				if is_escaped (a_char) then
 					if last_escaped < i - 1 then
 						output (s.substring (last_escaped + 1, i - 1))
