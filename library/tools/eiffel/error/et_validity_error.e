@@ -57,6 +57,10 @@ creation
 	make_vdus4a,
 	make_veen2a,
 	make_vgcc6a,
+	make_vgcc6b,
+	make_vgcc6c,
+	make_vgcc6d,
+	make_vgcc6e,
 	make_vgcp1a,
 	make_vgcp2a,
 	make_vgcp2b,
@@ -71,6 +75,10 @@ creation
 	make_vhrc2a,
 	make_vhrc4a,
 	make_vhrc5a,
+	make_vkcn1a,
+	make_vkcn1b,
+	make_vkcn1c,
+	make_vkcn1d,
 	make_vkcn2a,
 	make_vkcn2b,
 	make_vkcn2c,
@@ -118,6 +126,9 @@ creation
 	make_vuex2c,
 	make_vweq0a,
 	make_vweq0b,
+	make_vwst1a,
+	make_vwst1b,
+	make_vwst2a,
 	make_gvagp0a,
 	make_gvhpr4a,
 	make_gvhpr5a,
@@ -1739,6 +1750,183 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = creation procedure name
 		end
 
+	make_vgcc6b (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation expression in `a_class', is not a procedure.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6b_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6b_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the creation call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of creation type
+		end
+
+	make_vgcc6c (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation expression in `a_class' and viewed from on of its
+			-- descendants `a_descendant', is not a procedure.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6c_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6c_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = descendant class name
+			-- dollar7: $7 = feature name of the creation call
+			-- dollar8: $8 = name of corresponding feature in class $8
+			-- dollar9: $9 = base class of creation type
+		end
+
+	make_vgcc6d (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
+			-- a creation expression with creation procedure name `a_name' in `a_class',
+			-- is not exported for creation to `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6d_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6d_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the creation call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of creation type
+		end
+
+	make_vgcc6e (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
+			-- a creation expression with creation procedure name `a_name' in `a_class',
+			-- is not exported for creation to `a_descendant'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6e_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6e_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = descendant class name
+			-- dollar7: $7 = feature name of the creation call
+			-- dollar8: $8 = name of corresponding feature in class $8
+			-- dollar9: $9 = base class of creation type
+		end
+
 	make_vgcp1a (a_class: like current_class; a_creator: ET_CREATOR) is
 			-- Create a new VGCP-1 error: `a_class' is deferred
 			-- but has a Creation clause.
@@ -2294,6 +2482,178 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent base class
 		end
 
+	make_vkcn1a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VKCN-1 error: `a_feature' of class `a_target', appearing
+			-- in the qualified instruction call `a_name' in `a_class', is not
+			-- a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vkcn1a_template_code
+			etl_code := vkcn1_etl_code
+			default_template := vkcn1a_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call
+		end
+
+	make_vkcn1b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VKCN-1 error: `a_feature' of class `a_target', appearing
+			-- in the qualified instruction call `a_name' in `a_class' and viewed from
+			-- one of its descendants `a_descendant', is a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vkcn1b_template_code
+			etl_code := vkcn1_etl_code
+			default_template := vkcn1b_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = descendant class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+		end
+
+	make_vkcn1c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VKCN-1 error: `a_feature' of `a_class', appearing
+			-- in the unqualified instruction call `a_name' in `a_class', is not
+			-- a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vkcn1c_template_code
+			etl_code := vkcn1_etl_code
+			default_template := vkcn1c_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call
+			-- dollar7: $7 = name of corresponding feature in class $5
+		end
+
+	make_vkcn1d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VKCN-1 error: `a_feature' of `a_class', appearing
+			-- in the unqualified instruction call `a_name' in `a_class' and viewed from
+			-- one of its descendants `a_descendant', is not a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vkcn1d_template_code
+			etl_code := vkcn1_etl_code
+			default_template := vkcn1d_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = descendant class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $6
+		end
+
 	make_vkcn2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VKCN-2 error: `a_feature' of class `a_target', appearing
 			-- in the qualified expression call `a_name' in `a_class', is not
@@ -2351,9 +2711,9 @@ feature {NONE} -- Initialization
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
 		do
-			code := vkcn2a_template_code
+			code := vkcn2b_template_code
 			etl_code := vkcn2_etl_code
-			default_template := vkcn2a_default_template
+			default_template := vkcn2b_default_template
 			current_class := a_class
 			position := a_name.position
 			create parameters.make (1, 9)
@@ -2436,9 +2796,9 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		do
-			code := vkcn2a_template_code
+			code := vkcn2d_template_code
 			etl_code := vkcn2_etl_code
-			default_template := vkcn2a_default_template
+			default_template := vkcn2d_default_template
 			current_class := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
@@ -3899,7 +4259,8 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = name of corresponding feature in class $6
 		end
 
-	make_vuar2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER) is
+	make_vuar2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class' does not conform to the corresponding
 			-- formal argument of `a_feature' in class `a_target'.
@@ -3911,13 +4272,17 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
 		do
 			code := vuar2a_template_code
 			etl_code := vuar2_etl_code
 			default_template := vuar2a_default_template
 			current_class := a_class
 			position := a_name.position
-			create parameters.make (1, 9)
+			create parameters.make (1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3927,6 +4292,8 @@ feature {NONE} -- Initialization
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (a_target.name.name, 8)
 			parameters.put (arg.out, 9)
+			parameters.put (an_actual.to_text, 10)
+			parameters.put (a_formal.to_text, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3942,9 +4309,12 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $8
 			-- dollar8: $8 = base class of target of the call
 			-- dollar9: $9 = argument index
+			-- dollar10: $10 = actual type
+			-- dollar11: $11 = formal type
 		end
 
-	make_vuar2b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER) is
+	make_vuar2b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class' and viewed from one of its descendants
 			-- `a_descendant' does not conform to the corresponding formal argument of
@@ -3958,13 +4328,17 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
 		do
 			code := vuar2b_template_code
 			etl_code := vuar2_etl_code
 			default_template := vuar2b_default_template
 			current_class := a_class
 			position := a_name.position
-			create parameters.make (1, 10)
+			create parameters.make (1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -3975,6 +4349,8 @@ feature {NONE} -- Initialization
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 8)
 			parameters.put (arg.out, 10)
+			parameters.put (an_actual.to_text, 11)
+			parameters.put (a_formal.to_text, 12)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3991,9 +4367,12 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = name of corresponding feature in class $8
 			-- dollar9: $9 = base class of target of the call
 			-- dollar10: $10 = argument index
+			-- dollar11: $11 = actual type
+			-- dollar12: $12 = formal type
 		end
 
-	make_vuar2c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER) is
+	make_vuar2c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class' does not conform to the corresponding
 			-- formal argument of `a_feature' in `a_class'.
@@ -4004,13 +4383,17 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
 		do
 			code := vuar2c_template_code
 			etl_code := vuar2_etl_code
 			default_template := vuar2c_default_template
 			current_class := a_class
 			position := a_name.position
-			create parameters.make (1, 8)
+			create parameters.make (1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4019,6 +4402,8 @@ feature {NONE} -- Initialization
 			parameters.put (a_name.name, 6)
 			parameters.put (a_feature.name.name, 7)
 			parameters.put (arg.out, 8)
+			parameters.put (an_actual.to_text, 9)
+			parameters.put (a_formal.to_text, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4033,9 +4418,12 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name of the call
 			-- dollar7: $7 = name of corresponding feature in class $5
 			-- dollar8: $8 = argument index
+			-- dollar9: $9 = actual type
+			-- dollar10: $10 = formal type
 		end
 
-	make_vuar2d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER) is
+	make_vuar2d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class' and viewed from one of its descendants
 			-- `a_descendant' does not conform to the corresponding formal argument of
@@ -4048,13 +4436,17 @@ feature {NONE} -- Initialization
 			a_descendant_not_void: a_descendant /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
 		do
 			code := vuar2d_template_code
 			etl_code := vuar2_etl_code
 			default_template := vuar2d_default_template
 			current_class := a_class
 			position := a_name.position
-			create parameters.make (1, 9)
+			create parameters.make (1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -4064,6 +4456,8 @@ feature {NONE} -- Initialization
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (arg.out, 9)
+			parameters.put (an_actual.to_text, 10)
+			parameters.put (a_formal.to_text, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4079,6 +4473,8 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $6
 			-- dollar9: $9 = argument index
+			-- dollar10: $10 = actual type
+			-- dollar11: $11 = formal type
 		end
 
 	make_vuar4a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
@@ -4362,6 +4758,120 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = equality operator
 		end
 
+	make_vwst1a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
+			-- Create a new VWST-1 error: `a_name', appearing in a strip
+			-- expression in `a_class', is not the final name of a feature
+			-- in `a_class'.
+			--
+			-- ETL2: p.397
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		do
+			code := vwst1a_template_code
+			etl_code := vwst1_etl_code
+			default_template := vwst1a_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = attribute name
+		end
+
+	make_vwst1b (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VWST-1 error: `a_feature', whose name `a_name' appears
+			-- in a strip expression in `a_class', is not the final name of
+			-- an attribute in `a_class'.
+			--
+			-- ETL2: p.397
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vwst1a_template_code
+			etl_code := vwst1_etl_code
+			default_template := vwst1a_default_template
+			current_class := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = attribute name
+			-- dollar7: $7 = name of actual feature
+		end
+
+	make_vwst2a (a_class: like current_class; a_name1, a_name2: ET_FEATURE_NAME) is
+			-- Create a new VWST-2 error: an atttribute name appears twice in
+			-- a strip expression in `a_class'.
+			--
+			-- ETL2: p.397
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name1_not_void: a_name1 /= Void
+			a_name2_not_void: a_name2 /= Void
+		do
+			code := vwst2a_template_code
+			etl_code := vwst2_etl_code
+			default_template := vwst2a_default_template
+			current_class := a_class
+			position := a_name2.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name2.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = attribute name
+		end
+
 	make_gvagp0a (a_class: like current_class; anc1, anc2: ET_BASE_TYPE) is
 			-- Create a new GVAGP error: `anc1' and `anc2' are two ancestors
 			-- of `a_class' with the same base class but different generic
@@ -4617,6 +5127,10 @@ feature {NONE} -- Implementation
 	vdus4a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
 	veen2a_default_template: STRING is "[$1] Class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
 	vgcc6a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is the final name of a once-procedure."
+	vgcc6b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
+	vgcc6c_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: `$8' is not the final name of a procedure in class $9."
+	vgcc6d_default_template: STRING is "[$1] Class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
+	vgcc6e_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: procedure `$8' of class $9 is not exported for creation to class $6."
 	vgcp1a_default_template: STRING is "[$1] Class $5 ($3,$4): deferred class has a creation clause."
 	vgcp2a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
 	vgcp2b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
@@ -4631,6 +5145,10 @@ feature {NONE} -- Implementation
 	vhrc2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears as first element of two Rename_pairs."
 	vhrc4a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
 	vhrc5a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
+	vkcn1a_default_template: STRING is "[$1] Class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
+	vkcn1b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: query `$8' of class $9 appears in a call instruction."
+	vkcn1c_default_template: STRING is "[$1] Class $5 ($3,$4): query `$7' appears in a call instruction."
+	vkcn1d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: query `$8' appears in a call instruction."
 	vkcn2a_default_template: STRING is "[$1] Class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
 	vkcn2b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: procedure `$8' of class $9 appears in a call expression."
 	vkcn2c_default_template: STRING is "[$1] Class $5 ($3,$4): procedure `$7' appears in a call expression."
@@ -4667,10 +5185,10 @@ feature {NONE} -- Implementation
 	vuar1b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
 	vuar1c_default_template: STRING is "[$1] Class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
 	vuar1d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the number of actual arguments is not the same as the number of formal arguments of feature `$8'."
-	vuar2a_default_template: STRING is "[$1] Class $5 ($3,$4): the $9-th actual argument does not conform to the corresponding formal argument of feature `$7' in class $8."
-	vuar2b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the $10-th actual argument does not conform to the corresponding formal argument of feature `$8' in class $9."
-	vuar2c_default_template: STRING is "[$1] Class $5 ($3,$4): the $8-th actual argument does not conform to the corresponding formal argument of feature `$7'."
-	vuar2d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the $9-th actual argument does not conform to the corresponding formal argument of feature `$8'."
+	vuar2a_default_template: STRING is "[$1] Class $5 ($3,$4): the $9-th actual argument (type '$10') does not conform to the corresponding formal argument (type '$11') of feature `$7' in class $8."
+	vuar2b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the $10-th actual argument (type '$11') does not conform to the corresponding formal argument (type '$12') of feature `$8' in class $9."
+	vuar2c_default_template: STRING is "[$1] Class $5 ($3,$4): the $8-th actual argument (type '$9') does not conform to the corresponding formal argument (type '$10') of feature `$7'."
+	vuar2d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the $9-th actual argument (type '$10') does not conform to the corresponding formal argument (type '$11') of feature `$8'."
 	vuar4a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
 	vuex1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in class $7."
@@ -4678,6 +5196,9 @@ feature {NONE} -- Implementation
 	vuex2c_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$8' of class $7 is not exported to class $6."
 	vweq0a_default_template: STRING is "[$1] Class $5 ($3,$4): none of the operands of '$6' conforms to the other."
 	vweq0b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: none of the operands of '$7' conforms to the other."
+	vwst1a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' is not the final name of a feature in class $5."
+	vwst1b_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' is not the final name of an attribute in class $5."
+	vwst2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in strip expression."
 	gvagp0a_default_template: STRING is "[$1] Class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
 	gvhpr4a_default_template: STRING is "[$1] Class $5: cannot inherit from Bit_type '$6'."
 	gvhpr5a_default_template: STRING is "[$1] Class $5: cannot inherit from Tuple_type '$6'."
@@ -4716,6 +5237,7 @@ feature {NONE} -- Implementation
 	vhrc2_etl_code: STRING is "VHRC-2"
 	vhrc4_etl_code: STRING is "VHRC-4"
 	vhrc5_etl_code: STRING is "VHRC-5"
+	vkcn1_etl_code: STRING is "VKCN-1"
 	vkcn2_etl_code: STRING is "VKCN-2"
 	vmfn_etl_code: STRING is "VMFN"
 	vmrc2_etl_code: STRING is "VMRC-2"
@@ -4739,6 +5261,8 @@ feature {NONE} -- Implementation
 	vuex1_etl_code: STRING is "VUEX-1"
 	vuex2_etl_code: STRING is "VUEX-2"
 	vweq_etl_code: STRING is "VWEQ"
+	vwst1_etl_code: STRING is "VWST-1"
+	vwst2_etl_code: STRING is "VWST-2"
 	gvagp_etl_code: STRING is "GVAGP"
 	gvhpr4_etl_code: STRING is "GVHPR-4"
 	gvhpr5_etl_code: STRING is "GVHPR-5"
@@ -4785,6 +5309,10 @@ feature {NONE} -- Implementation
 	vdus4a_template_code: STRING is "vdus4a"
 	veen2a_template_code: STRING is "veen2a"
 	vgcc6a_template_code: STRING is "vgcc6a"
+	vgcc6b_template_code: STRING is "vgcc6b"
+	vgcc6c_template_code: STRING is "vgcc6c"
+	vgcc6d_template_code: STRING is "vgcc6d"
+	vgcc6e_template_code: STRING is "vgcc6e"
 	vgcp1a_template_code: STRING is "vgcp1a"
 	vgcp2a_template_code: STRING is "vgcp2a"
 	vgcp2b_template_code: STRING is "vgcp2b"
@@ -4799,6 +5327,10 @@ feature {NONE} -- Implementation
 	vhrc2a_template_code: STRING is "vhrc2a"
 	vhrc4a_template_code: STRING is "vhrc4a"
 	vhrc5a_template_code: STRING is "vhrc5a"
+	vkcn1a_template_code: STRING is "vkcn1a"
+	vkcn1b_template_code: STRING is "vkcn1b"
+	vkcn1c_template_code: STRING is "vkcn1c"
+	vkcn1d_template_code: STRING is "vkcn1d"
 	vkcn2a_template_code: STRING is "vkcn2a"
 	vkcn2b_template_code: STRING is "vkcn2b"
 	vkcn2c_template_code: STRING is "vkcn2c"
@@ -4846,6 +5378,9 @@ feature {NONE} -- Implementation
 	vuex2c_template_code: STRING is "vuex2c"
 	vweq0a_template_code: STRING is "vweq0a"
 	vweq0b_template_code: STRING is "vweq0b"
+	vwst1a_template_code: STRING is "vwst1a"
+	vwst1b_template_code: STRING is "vwst1b"
+	vwst2a_template_code: STRING is "vwst2a"
 	gvagp0a_template_code: STRING is "gvagp0a"
 	gvhpr4a_template_code: STRING is "gvhpr4a"
 	gvhpr5a_template_code: STRING is "gvhpr5a"

@@ -38,7 +38,17 @@ creation
 	make_giaar,
 	make_giaas,
 	make_giaat,
-	make_giaau
+	make_giaau,
+	make_giaav,
+	make_giaaw,
+	make_giaax,
+	make_giaay,
+	make_giaaz,
+	make_giaba,
+	make_giabb,
+	make_giabc,
+	make_giabd,
+	make_giabe
 
 feature {NONE} -- Initialization
 
@@ -315,6 +325,136 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_giaav is
+			-- Create a new GIAAV error.
+		do
+			code := giaav_template_code
+			etl_code := giaav_etl_code
+			default_template := giaav_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaaw is
+			-- Create a new GIAAW error.
+		do
+			code := giaaw_template_code
+			etl_code := giaaw_etl_code
+			default_template := giaaw_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaax is
+			-- Create a new GIAAX error.
+		do
+			code := giaax_template_code
+			etl_code := giaax_etl_code
+			default_template := giaax_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaay is
+			-- Create a new GIAAY error.
+		do
+			code := giaay_template_code
+			etl_code := giaay_etl_code
+			default_template := giaay_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaaz is
+			-- Create a new GIAAZ error.
+		do
+			code := giaaz_template_code
+			etl_code := giaaz_etl_code
+			default_template := giaaz_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaba is
+			-- Create a new GIABA error.
+		do
+			code := giaba_template_code
+			etl_code := giaba_etl_code
+			default_template := giaba_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giabb is
+			-- Create a new GIABB error.
+		do
+			code := giabb_template_code
+			etl_code := giabb_etl_code
+			default_template := giabb_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giabc is
+			-- Create a new GIABC error.
+		do
+			code := giabc_template_code
+			etl_code := giabc_etl_code
+			default_template := giabc_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giabd is
+			-- Create a new GIABD error.
+		do
+			code := giabd_template_code
+			etl_code := giabd_etl_code
+			default_template := giabd_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giabe is
+			-- Create a new GIABE error.
+		do
+			code := giabe_template_code
+			etl_code := giabe_etl_code
+			default_template := giabe_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -338,6 +478,16 @@ feature {NONE} -- Implementation
 	giaas_default_template: STRING is "[$1] internal error."
 	giaat_default_template: STRING is "[$1] internal error."
 	giaau_default_template: STRING is "[$1] internal error."
+	giaav_default_template: STRING is "[$1] internal error."
+	giaaw_default_template: STRING is "[$1] internal error."
+	giaax_default_template: STRING is "[$1] internal error."
+	giaay_default_template: STRING is "[$1] internal error."
+	giaaz_default_template: STRING is "[$1] internal error."
+	giaba_default_template: STRING is "[$1] internal error."
+	giabb_default_template: STRING is "[$1] internal error."
+	giabc_default_template: STRING is "[$1] internal error."
+	giabd_default_template: STRING is "[$1] internal error."
+	giabe_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -361,6 +511,16 @@ feature {NONE} -- Implementation
 	giaas_etl_code: STRING is "GIAAS"
 	giaat_etl_code: STRING is "GIAAT"
 	giaau_etl_code: STRING is "GIAAU"
+	giaav_etl_code: STRING is "GIAAV"
+	giaaw_etl_code: STRING is "GIAAW"
+	giaax_etl_code: STRING is "GIAAX"
+	giaay_etl_code: STRING is "GIAAY"
+	giaaz_etl_code: STRING is "GIAAZ"
+	giaba_etl_code: STRING is "GIABA"
+	giabb_etl_code: STRING is "GIABB"
+	giabc_etl_code: STRING is "GIABC"
+	giabd_etl_code: STRING is "GIABD"
+	giabe_etl_code: STRING is "GIABE"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -384,6 +544,16 @@ feature {NONE} -- Implementation
 	giaas_template_code: STRING is "giaas"
 	giaat_template_code: STRING is "giaat"
 	giaau_template_code: STRING is "giaau"
+	giaav_template_code: STRING is "giaav"
+	giaaw_template_code: STRING is "giaaw"
+	giaax_template_code: STRING is "giaax"
+	giaay_template_code: STRING is "giaay"
+	giaaz_template_code: STRING is "giaaz"
+	giaba_template_code: STRING is "giaba"
+	giabb_template_code: STRING is "giabb"
+	giabc_template_code: STRING is "giabc"
+	giabd_template_code: STRING is "giabd"
+	giabe_template_code: STRING is "giabe"
 			-- Template error codes
 
 end
