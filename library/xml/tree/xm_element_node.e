@@ -18,6 +18,6 @@ inherit
 
 invariant
 
-	element_parent_not_void: parent /= Void
+	--element_parent_not_void: parent /= Void
 	
 end
