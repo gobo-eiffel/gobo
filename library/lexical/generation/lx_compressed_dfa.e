@@ -96,36 +96,15 @@ feature -- Access
 			-- of the trailing context or further-along scanning of
 			-- the pattern.
 		local
-			i, j: INTEGER
-			yy_rules_upper: INTEGER
+			i, j, k: INTEGER
 			a_state: LX_DFA_STATE
 			a_nfa_state: LX_NFA_STATE
-			variable_rules: DS_BILINKED_LIST [LX_RULE]
-			a_cursor: DS_BILINKED_LIST_CURSOR [LX_RULE]
-			a_rule: LX_RULE
 			a_sorter: DS_BUBBLE_SORTER [LX_RULE]
 			acc_set: DS_ARRAYED_LIST [LX_RULE]
 		do
 			!! Result.make (yy_rules.count)
 			if yyVariable_trail_context then
-				from
-					i := yy_rules.lower
-					yy_rules_upper := yy_rules.upper
-					!! variable_rules.make
-				until
-					i > yy_rules_upper
-				loop
-					if yy_rules.item (i).variable_trail then
-						variable_rules.put_last (yy_rules.item (i))
-					end
-					i := i + 1
-				end
-				from
-					i := count
-				until
-					i < 1 or
-					variable_rules.is_empty
-				loop
+				from i := count until i < 1 loop
 					a_state := item (i)
 					if a_state.is_accepting_head then
 						acc_set := a_state.accepted_head_rules
@@ -133,19 +112,16 @@ feature -- Access
 							a_nfa_state := a_state.item (j)
 							if a_nfa_state.in_trail_context then
 								from
-									a_cursor := variable_rules.new_cursor
-									a_cursor.start
+									k := acc_set.count
 								until
-									a_cursor.after or else
-									acc_set.has (a_cursor.item) and then
-									a_cursor.item.pattern.has (a_nfa_state)
+									k < 1 or else
+									not Result.has (acc_set.item (k)) and then
+									acc_set.item (k).pattern.has (a_nfa_state)
 								loop
-									a_cursor.forth
+									k := k - 1
 								end
-								if not a_cursor.after then
-									a_rule := a_cursor.item
-									variable_rules.remove_at (a_cursor)
-									Result.put_last (a_rule)
+								if k >= 1 then
+									Result.put_last (acc_set.item (k))
 								end
 							end
 							j := j - 1
