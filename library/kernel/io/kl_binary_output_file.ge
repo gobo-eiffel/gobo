@@ -18,10 +18,6 @@ inherit
 	KI_BINARY_OUTPUT_FILE
 
 	KL_SHARED_FILE_SYSTEM
-#ifdef SE
-		rename
-			rename_file as se_rename_file
-#endif
 		export
 			{NONE} all
 		end
@@ -41,7 +37,8 @@ inherit
 			put_string as old_put_string,
 			flush as old_flush,
 			is_open_write as old_is_open_write,
-			is_closed as old_is_closed
+			is_closed as old_is_closed,
+			change_name as old_change_name
 		export
 			{NONE} all
 		end
@@ -50,7 +47,6 @@ inherit
 	TEXT_FILE_WRITE
 		rename
 			make as old_make,
-			rename_file as se_rename_file,
 			is_connected as old_is_open_write,
 			disconnect as old_close,
 			put_new_line as old_put_new_line,
@@ -65,7 +61,6 @@ inherit
 
 	FILE_TOOLS
 		rename
-			rename_file as se_rename_file,
 			delete as old_delete,
 			tmp_string as old_tmp_string
 		export
@@ -211,7 +206,7 @@ feature -- Basic operations
 			end
 		end
 
-	rename_file (new_name: STRING) is
+	change_name (new_name: STRING) is
 			-- Rename current file as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' already existed.

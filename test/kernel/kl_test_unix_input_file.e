@@ -514,8 +514,8 @@ feature -- Test
 			end
 		end
 
-	test_rename_file1 is
-			-- Test feature `rename_file'.
+	test_change_name1 is
+			-- Test feature `change_name'.
 			-- Old file exists and new file does not exist.
 		local
 			a_file: KL_UNIX_INPUT_FILE
@@ -533,7 +533,7 @@ feature -- Test
 				assert ("readable1", file_system.is_file_readable (old_name))
 				assert ("not_readable1", not file_system.is_file_readable (new_name))
 				!! a_file.make (old_name)
-				a_file.rename_file (new_name)
+				a_file.change_name (new_name)
 				assert_same ("renamed", new_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
 				assert ("readable2", file_system.is_file_readable (new_name))
@@ -545,8 +545,8 @@ feature -- Test
 			end
 		end
 
-	test_rename_file2 is
-			-- Test feature `rename_file'.
+	test_change_name2 is
+			-- Test feature `change_name'.
 			-- Old file and new file do not exist.
 		local
 			a_file: KL_UNIX_INPUT_FILE
@@ -557,14 +557,14 @@ feature -- Test
 			assert ("not_readable1", not file_system.is_file_readable (old_name))
 			assert ("not_readable2", not file_system.is_file_readable (new_name))
 			!! a_file.make (old_name)
-			a_file.rename_file (old_name)
+			a_file.change_name (old_name)
 			assert_same ("not_renamed", old_name, a_file.name)
 			assert ("not_readable3", not file_system.is_file_readable (old_name))
 			assert ("not_readable4", not file_system.is_file_readable (new_name))
 		end
 
-	test_rename_file3 is
-			-- Test feature `rename_file'.
+	test_change_name3 is
+			-- Test feature `change_name'.
 			-- Old file does not exist and new file exists.
 		local
 			a_file: KL_UNIX_INPUT_FILE
@@ -582,7 +582,7 @@ feature -- Test
 				assert ("not_readable1", not file_system.is_file_readable (old_name))
 				assert ("readable1", file_system.is_file_readable (new_name))
 				!! a_file.make (old_name)
-				a_file.rename_file (new_name)
+				a_file.change_name (new_name)
 				assert_same ("not_renamed", old_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
 				assert ("readable2", file_system.is_file_readable (new_name))
@@ -594,8 +594,8 @@ feature -- Test
 			end
 		end
 
-	test_rename_file4 is
-			-- Test feature `rename_file'.
+	test_change_name4 is
+			-- Test feature `change_name'.
 			-- Old file and new file exist.
 		local
 			a_file: KL_UNIX_INPUT_FILE
@@ -623,7 +623,7 @@ feature -- Test
 					assert ("readable1", file_system.is_file_readable (old_name))
 					assert ("readable2", file_system.is_file_readable (new_name))
 					!! a_file.make (old_name)
-					a_file.rename_file (new_name)
+					a_file.change_name (new_name)
 					assert_same ("not_renamed", old_name, a_file.name)
 					assert ("readable3", file_system.is_file_readable (old_name))
 					assert ("readable4", file_system.is_file_readable (new_name))

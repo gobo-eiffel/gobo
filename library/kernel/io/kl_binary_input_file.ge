@@ -24,10 +24,6 @@ inherit
 		end
 
 	KL_SHARED_FILE_SYSTEM
-#ifdef SE
-		rename
-			rename_file as se_rename_file
-#endif
 		export
 			{NONE} all
 		end
@@ -45,7 +41,8 @@ inherit
 			delete as old_delete,
 			end_of_file as old_end_of_file,
 			is_open_read as old_is_open_read,
-			is_closed as old_is_closed
+			is_closed as old_is_closed,
+			change_name as old_change_name
 		export
 			{NONE} all
 		redefine
@@ -57,7 +54,6 @@ inherit
 		rename
 			make as old_make,
 			is_connected as old_is_open_read,
-			rename_file as se_rename_file,
 			end_of_input as old_end_of_file,
 			read_line as old_read_line,
 			read_character as old_read_character,
@@ -72,7 +68,6 @@ inherit
 
 	FILE_TOOLS
 		rename
-			rename_file as se_rename_file,
 			delete as old_delete,
 			tmp_string as old_tmp_string
 		export
@@ -387,7 +382,7 @@ feature -- Basic operations
 			end
 		end
 
-	rename_file (new_name: STRING) is
+	change_name (new_name: STRING) is
 			-- Rename current file as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' already existed.
