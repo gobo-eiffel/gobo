@@ -111,21 +111,7 @@ feature -- Files
 						a_file1.read_line
 						a_file2.read_line
 						i := i + 1
-						if not a_file1.last_string.is_equal (a_file2.last_string) then
-							a_message := STRING_.make (50)
-							a_message.append_string (a_tag)
-							a_message.append_string (" (diff between files '")
-							a_message.append_string (a_filename1)
-							a_message.append_string (" ' and '")
-							a_message.append_string (a_filename2)
-							a_message.append_string ("' at line ")
-							INTEGER_FORMATTER_.append_decimal_integer (a_message, i)
-							a_message.append_string (")")
-							a_file1.close
-							a_file2.close
-							Assertions.set_error_message (a_message)
-							Exceptions.raise (Assertion_failure)
-						elseif a_file1.end_of_file then
+						if a_file1.end_of_file then
 							if not a_file2.end_of_file then
 								a_message := STRING_.make (50)
 								a_message.append_string (a_tag)
@@ -146,6 +132,20 @@ feature -- Files
 								done := True
 							end
 						elseif a_file2.end_of_file then
+							a_message := STRING_.make (50)
+							a_message.append_string (a_tag)
+							a_message.append_string (" (diff between files '")
+							a_message.append_string (a_filename1)
+							a_message.append_string (" ' and '")
+							a_message.append_string (a_filename2)
+							a_message.append_string ("' at line ")
+							INTEGER_FORMATTER_.append_decimal_integer (a_message, i)
+							a_message.append_string (")")
+							a_file1.close
+							a_file2.close
+							Assertions.set_error_message (a_message)
+							Exceptions.raise (Assertion_failure)
+						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
 							a_message := STRING_.make (50)
 							a_message.append_string (a_tag)
 							a_message.append_string (" (diff between files '")
