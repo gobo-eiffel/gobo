@@ -1,3 +1,32 @@
+Version 1.4 - 
+
+	* Added command-line option -x to gelex and geyacc
+	  to allow the generation of semantic actions in
+	  separate routines.
+	* Added command-line option -z to gelex to force the
+	  generated code to use an "inspect" instruction to
+	  find out which action to execute. The default is to
+	  use binary-search implemented with "if" instructions.
+	* Fixed bug in output of geyacc verbose mode (option -v).
+	* Added features `Empty_buffer', `append_text_to_string'
+	  and `append_text_substring_to_string' to YY_SCANNER.
+	* Fixed operator precedence bug in "$GOBO\example\parse\
+	  eiffel\eiffel_parser.y".
+	* Added two new types in $GOBO\library\kernel:
+	  STRING_BUFFER and FIXED_ARRAY (array with lower
+	  bound equal to zero). These two types are used
+	  instead of STRING and ARRAY in gelex and geyacc
+	  skeleton classes for optimization purposes.
+	  STRING_BUFFER maps either to SPECIAL [CHARACTER]
+	  or STRING, and FIXED_ARRAY [G] maps either to
+	  SPECIAL [G] or ARRAY [G] depending on the Eiffel
+	  compiler used. Only ISE Eiffel port has been
+	  optimized so far. SmallEiffel port can be optimized
+	  as well using FAST_ARRAY [G] or NATIVE_ARRAY [G].
+	* Resize input buffer if a call to `unread_character'
+	  results in too much text being pushed back (it was
+	  raising an run-time error in previous releases).
+
 Version 1.3 - 15 August 1998
 
 	* Geyacc has been totally rewritten in Eiffel.
