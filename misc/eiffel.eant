@@ -82,12 +82,12 @@
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<move file="EIFGEN/${codedir}/${system}${exe}" to_directory="."/>
 		<available resource="EIFGEN/${codedir}/lib${system}.dll" variable="file_available"/>
-		<move file="EIFGEN/${codedir}/lib${system}.dll" to_directory="." if="${file_available}=true"/>
+		<copy file="EIFGEN/${codedir}/lib${system}.dll" to_directory="." if="${file_available}=true"/>
 		<available resource="EIFGEN/${codedir}/${system}.melted" variable="file_available"/>
-		<move file="EIFGEN/${codedir}/${system}.melted" to_directory="." if="${file_available}=true"/>
-		<move to_directory=".">
+		<copy file="EIFGEN/${codedir}/${system}.melted" to_directory="." if="${file_available}=true"/>
+		<copy to_directory=".">
 			<fileset directory="EIFGEN/${codedir}" include="@(${system}_module_*.dll)"/>
-		</move>
+		</copy>
 	</target>
 
 	<target name="compile_hact" depend="prepare_compile">
