@@ -183,19 +183,19 @@ feature -- Test
 				-- Non-existing file.
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			assert_equal ("count1", -1, a_file.count)
+			assert_integers_equal ("count1", -1, a_file.count)
 				-- Empty file.
 			a_name := Execution_environment.interpreted_string (empty_filename)
 			create a_file.make (a_name)
-			assert_equal ("count2", 0, a_file.count)
+			assert_integers_equal ("count2", 0, a_file.count)
 				-- Non-empty file.
 			a_name := Execution_environment.interpreted_string (hello_filename)
 			create a_file.make (a_name)
-			assert_equal ("count3", 10, a_file.count)
+			assert_integers_equal ("count3", 10, a_file.count)
 				-- Non-empty file with 2 new-lines.
 			a_name := Execution_environment.interpreted_string (gobo_filename)
 			create a_file.make (a_name)
-			assert_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
+			assert_integers_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
 		end
 
 	test_time_stamp is
@@ -209,7 +209,7 @@ feature -- Test
 				-- Non-existing file.
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			assert_equal ("time_stamp1", -1, a_file.time_stamp)
+			assert_integers_equal ("time_stamp1", -1, a_file.time_stamp)
 				-- Existing file.
 			a_name := Execution_environment.interpreted_string (hello_filename)
 			create a_file.make (a_name)
@@ -268,13 +268,13 @@ feature -- Test
 				assert ("not_eof", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'T', a_file.last_character)
+				assert_characters_equal ("read1", 'T', a_file.last_character)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'T', a_file.last_character)
+				assert_characters_equal ("read2", 'T', a_file.last_character)
 				assert ("not_eof4", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", 'h', a_file.last_character)
+				assert_characters_equal ("read3", 'h', a_file.last_character)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
 			else
@@ -295,17 +295,17 @@ feature -- Test
 				assert ("not_eof", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'T', a_file.last_character)
+				assert_characters_equal ("read1", 'T', a_file.last_character)
 				a_file.unread_character ('G')
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'G', a_file.last_character)
+				assert_characters_equal ("read2", 'G', a_file.last_character)
 				assert ("not_eof4", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", 'G', a_file.last_character)
+				assert_characters_equal ("read3", 'G', a_file.last_character)
 				a_file.read_character
 				assert ("not_eof6", not a_file.end_of_file)
-				assert_equal ("read4", 'h', a_file.last_character)
+				assert_characters_equal ("read4", 'h', a_file.last_character)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
 			else
@@ -326,19 +326,19 @@ feature -- Test
 				assert ("not_eof", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'T', a_file.last_character)
+				assert_characters_equal ("read1", 'T', a_file.last_character)
 				a_file.unread_character ('o')
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'o', a_file.last_character)
+				assert_characters_equal ("read2", 'o', a_file.last_character)
 				a_file.unread_character ('b')
 				assert ("not_eof4", not a_file.end_of_file)
-				assert_equal ("read3", 'b', a_file.last_character)
+				assert_characters_equal ("read3", 'b', a_file.last_character)
 				a_file.unread_character ('o')
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read4", 'o', a_file.last_character)
+				assert_characters_equal ("read4", 'o', a_file.last_character)
 				a_file.unread_character ('g')
 				assert ("not_eof6", not a_file.end_of_file)
-				assert_equal ("read5", 'g', a_file.last_character)
+				assert_characters_equal ("read5", 'g', a_file.last_character)
 				a_file.read_string (26)
 				assert ("not_eof7", not a_file.end_of_file)
 				assert_equal ("read6", "gobohis is the first line,", a_file.last_string)
@@ -364,16 +364,16 @@ feature -- Test
 				assert ("eof1", a_file.end_of_file)
 				a_file.unread_character ('G')
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'G', a_file.last_character)
+				assert_characters_equal ("read1", 'G', a_file.last_character)
 				a_file.unread_character ('B')
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'B', a_file.last_character)
+				assert_characters_equal ("read2", 'B', a_file.last_character)
 				a_file.read_character
 				assert ("not_eof4", not a_file.end_of_file)
-				assert_equal ("read3", 'B', a_file.last_character)
+				assert_characters_equal ("read3", 'B', a_file.last_character)
 				a_file.read_character
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read4", 'G', a_file.last_character)
+				assert_characters_equal ("read4", 'G', a_file.last_character)
 				a_file.read_character
 				assert ("eof2", a_file.end_of_file)
 				a_file.close
@@ -535,7 +535,7 @@ feature -- Test
 					assert_equal ("read2", a_file.eol, a_file.last_string)
 					a_file.read_character
 					assert ("not_eof4", not a_file.end_of_file)
-					assert_equal ("read3", 't', a_file.last_character)
+					assert_characters_equal ("read3", 't', a_file.last_character)
 					a_file.read_new_line
 					assert ("not_eof5", not a_file.end_of_file)
 					assert_equal ("not_read1", "", a_file.last_string)
@@ -563,11 +563,11 @@ feature -- Test
 				assert ("not_eof", not a_file.end_of_file)
 				nb := a_file.read_to_string (a_string, 1, 7)
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("nb_char1", 7, nb)
+				assert_integers_equal ("nb_char1", 7, nb)
 				assert_equal ("read1", "This is", a_string)
 				nb := a_file.read_to_string (a_string, 3, 2)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("nb_char2", 2, nb)
+				assert_integers_equal ("nb_char2", 2, nb)
 				assert_equal ("read2", "Th t is", a_string)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
@@ -592,11 +592,11 @@ feature -- Test
 				assert ("not_eof", not a_file.end_of_file)
 				nb := a_file.read_to_buffer (a_buffer, 1, 8)
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("nb_char1", 8, nb)
+				assert_integers_equal ("nb_char1", 8, nb)
 				assert_equal ("read1", "This is ", a_buffer.to_text)
 				nb := a_file.read_to_buffer (a_buffer, 3, 2)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("nb_char2", 2, nb)
+				assert_integers_equal ("nb_char2", 2, nb)
 				assert_equal ("read2", "Thth is ", a_buffer.to_text)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
@@ -653,7 +653,7 @@ feature -- Test
 				assert ("not_eof3", not a_file.end_of_file)
 				last_string := a_file.last_string
 				assert ("not_empty", last_string.count > 0)
-				assert_equal ("all_read", '#', last_string.item (last_string.count))
+				assert_characters_equal ("all_read", '#', last_string.item (last_string.count))
 				a_file.read_string (1000)
 				assert ("eof", a_file.end_of_file)
 				a_file.close

@@ -1746,7 +1746,7 @@ feature -- Pathname handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
 			create a_file_system.make
-			assert_equal ("directory_separator", '\', a_file_system.directory_separator)
+			assert_characters_equal ("directory_separator", '\', a_file_system.directory_separator)
 		end
 
 end

@@ -59,13 +59,13 @@ feature -- Test
 				std.output.flush
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'T', a_file.last_character)
+				assert_characters_equal ("read1", 'T', a_file.last_character)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'T', a_file.last_character)
+				assert_characters_equal ("read2", 'T', a_file.last_character)
 				assert ("not_eof4", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", 'h', a_file.last_character)
+				assert_characters_equal ("read3", 'h', a_file.last_character)
 					-- Read new-line.
 				a_file.read_new_line
 			end
@@ -84,17 +84,17 @@ feature -- Test
 				std.output.flush
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'T', a_file.last_character)
+				assert_characters_equal ("read1", 'T', a_file.last_character)
 				a_file.unread_character ('G')
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'G', a_file.last_character)
+				assert_characters_equal ("read2", 'G', a_file.last_character)
 				assert ("not_eof4", not a_file.end_of_file)
 				a_file.read_character
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", 'G', a_file.last_character)
+				assert_characters_equal ("read3", 'G', a_file.last_character)
 				a_file.read_character
 				assert ("not_eof6", not a_file.end_of_file)
-				assert_equal ("read4", 'h', a_file.last_character)
+				assert_characters_equal ("read4", 'h', a_file.last_character)
 					-- Read new-line.
 				a_file.read_new_line
 			end
@@ -113,19 +113,19 @@ feature -- Test
 				std.output.flush
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read1", 'T', a_file.last_character)
+				assert_characters_equal ("read1", 'T', a_file.last_character)
 				a_file.unread_character ('o')
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", 'o', a_file.last_character)
+				assert_characters_equal ("read2", 'o', a_file.last_character)
 				a_file.unread_character ('b')
 				assert ("not_eof4", not a_file.end_of_file)
-				assert_equal ("read3", 'b', a_file.last_character)
+				assert_characters_equal ("read3", 'b', a_file.last_character)
 				a_file.unread_character ('o')
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read4", 'o', a_file.last_character)
+				assert_characters_equal ("read4", 'o', a_file.last_character)
 				a_file.unread_character ('g')
 				assert ("not_eof6", not a_file.end_of_file)
-				assert_equal ("read5", 'g', a_file.last_character)
+				assert_characters_equal ("read5", 'g', a_file.last_character)
 				a_file.read_line
 				assert ("not_eof7", not a_file.end_of_file)
 				assert_equal ("read6", "gobohis", a_file.last_string)
@@ -214,7 +214,7 @@ feature -- Test
 				std.output.flush
 				a_file.read_character
 				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", 'f', a_file.last_character)
+				assert_characters_equal ("read3", 'f', a_file.last_character)
 				a_file.read_new_line
 				assert ("not_eof6", not a_file.end_of_file)
 				assert_equal ("not_read1", "", a_file.last_string)
@@ -240,11 +240,11 @@ feature -- Test
 				std.output.flush
 				nb := a_file.read_to_string (a_string, 1, 7)
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("nb_char1", 7, nb)
+				assert_integers_equal ("nb_char1", 7, nb)
 				assert_equal ("read1", "This is", a_string)
 				nb := a_file.read_to_string (a_string, 3, 2)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("nb_char2", 2, nb)
+				assert_integers_equal ("nb_char2", 2, nb)
 				assert_equal ("read2", "Th t is", a_string)
 					-- Read new-line.
 				a_file.read_new_line
@@ -267,11 +267,11 @@ feature -- Test
 				std.output.flush
 				nb := a_file.read_to_buffer (a_buffer, 1, 8)
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("nb_char1", 8, nb)
+				assert_integers_equal ("nb_char1", 8, nb)
 				assert_equal ("read1", "This is ", a_buffer.to_text)
 				nb := a_file.read_to_buffer (a_buffer, 3, 2)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("nb_char2", 2, nb)
+				assert_integers_equal ("nb_char2", 2, nb)
 				assert_equal ("read2", "Thth is ", a_buffer.to_text)
 					-- Read new-line.
 				a_file.read_new_line
@@ -291,7 +291,7 @@ feature -- Test
 				std.output.flush
 				a_file.read_character
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("read", '#', a_file.last_character)
+				assert_characters_equal ("read", '#', a_file.last_character)
 					-- Read new-line.
 				a_file.read_new_line
 			end
