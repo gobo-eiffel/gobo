@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 	make (a_configuration: XM_XSLT_CONFIGURATION; a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
 			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER;
-			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; a_mode: XM_XSLT_MODE; strips_whitespace: BOOLEAN;
+			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; strips_whitespace: BOOLEAN;
 			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
 			-- Establish invariant.
 		require
@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			key_manager := a_key_manager
 			decimal_format_manager := a_decimal_format_manager
 			collation_map := a_collation_map
-			stripper_rules := a_mode
 			is_strips_whitespace := strips_whitespace
 			module_list := a_module_list
 			function_library := a_function_library
@@ -48,7 +47,6 @@ feature {NONE} -- Initialization
 			key_manager_set: key_manager = a_key_manager
 			decimal_format_manager_set: decimal_format_manager = a_decimal_format_manager
 			collation_map_set: collation_map = a_collation_map
-			stripper_rules_set: stripper_rules = a_mode
 			strips_whitespace_set: is_strips_whitespace = strips_whitespace
 			module_list_set: module_list = a_module_list
 			function_library_set: function_library = a_function_library
@@ -188,6 +186,14 @@ feature -- Element change
 			static_context_saved: static_context = a_static_context
 		end
 	
+	set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE) is
+			-- Set strip/preserve whitespace rules
+		do
+			stripper_rules := a_stripper_rules_set
+		ensure
+			stripper_rules_set: stripper_rules = a_stripper_rules_set
+		end
+
 feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
 
 		collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]

@@ -86,6 +86,10 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		do
+			debug ("XSLT stripper")
+				std.error.put_string ("Building element " + shared_name_pool.display_name_from_name_code (a_name_code))
+				std.error.put_new_line
+			end
 			if not has_error then
 				pending_element_name_code := a_name_code
 			end
@@ -178,6 +182,11 @@ feature -- Events
 					if is_output_escaping_disabled (properties) then
 						on_error ("Cannot disable output escaping when writing to a tree")
 					else
+						debug ("XSLT stripper")
+							std.error.put_string ("Creating a text node with content: " + a_character_string)
+							std.error.put_string ("###")
+							std.error.put_new_line
+						end
 						create a_text_node.make (tree_document, a_character_string)
 						current_composite_node.add_child (a_text_node)
 					end

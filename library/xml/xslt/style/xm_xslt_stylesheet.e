@@ -739,7 +739,7 @@ feature -- Element change
 		do
 						
 			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager,
-			collation_map, stripper_rules, strips_whitespace, module_list, function_library)
+			collation_map, strips_whitespace, module_list, function_library)
 
 			-- Call compile method for each top-level object in the stylesheet
 
@@ -850,6 +850,9 @@ feature -- Element change
 					a_cursor.forth
 				end
 				last_compiled_executable.set_function_library (function_library)
+				if stripper_rules /= Void then
+					last_compiled_executable.set_stripper_rules (stripper_rules)
+				end
 			end
 		end
 

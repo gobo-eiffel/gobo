@@ -57,18 +57,18 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			if not first_iterator.before and then first_iterator.after then
-				second_iterator.forth; if not second_iterator.after then item := second_iterator.item else item := Void end
+				advance_second_iterator; if not second_iterator.after then item := second_iterator.item else item := Void end
 			elseif not second_iterator.before and then second_iterator.after then
-				first_iterator.forth; if not first_iterator.after then item := first_iterator.item else item := Void end
+				advance_first_iterator; if not first_iterator.after then item := first_iterator.item else item := Void end
 			else
 
 				-- both iterators may point to valid items
 
 				if cached_first_node = Void then
-					first_iterator.forth
+					advance_first_iterator
 					if first_iterator.after then
 						if cached_second_node = Void then
-							second_iterator.forth
+							advance_second_iterator
 							if second_iterator.after then
 								item := Void
 							else
@@ -83,7 +83,7 @@ feature -- Cursor movement
 							second_node := cached_second_node
 							compare_two_nodes
 						else
-							second_iterator.forth
+							advance_second_iterator
 							if second_iterator.after then
 								item := first_node
 							else
@@ -94,7 +94,7 @@ feature -- Cursor movement
 					end
 				else -- first node is cached so second can't be
 					first_node := cached_first_node
-					second_iterator.forth
+					advance_second_iterator
 					if second_iterator.after then
 						item := first_node
 					else
@@ -150,6 +150,26 @@ feature {NONE} -- Implementation
 				item := second_node
 				cached_first_node := Void
 				cached_second_node := Void
+			end
+		end
+
+	advance_first_iterator is
+			-- Advance `first_iterator'.
+		do
+			if first_iterator.before then
+				first_iterator.start
+			else
+				first_iterator.forth
+			end
+		end
+
+	advance_second_iterator is
+			-- Advance `second_iterator'.
+		do
+			if second_iterator.before then
+				second_iterator.start
+			else
+				second_iterator.forth
 			end
 		end
 

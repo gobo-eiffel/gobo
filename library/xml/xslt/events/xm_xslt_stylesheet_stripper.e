@@ -126,6 +126,7 @@ feature {NONE} -- Implementation
 invariant
 
 	specials_not_void: specials /= Void
+	no_stripper_mode: stripper_mode = Void
 
 end
 	

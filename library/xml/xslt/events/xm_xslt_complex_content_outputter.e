@@ -76,6 +76,10 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			debug ("XSLT content output")
+				std.error.put_string ("Starting document.")
+				std.error.put_new_line
+			end
 			is_document_started := True
 			next_receiver.start_document
 			previous_atomic := False
@@ -94,6 +98,10 @@ feature -- Events
 				suppress_attributes := False
 				start_element_properties := properties
 				if pending_start_tag /= -1 then start_content end
+				debug ("XSLT content output")
+					std.error.put_string ("Starting element " + shared_name_pool.display_name_from_name_code (a_name_code))
+					std.error.put_new_line
+				end
 				create pending_attribute_name_codes.make_default
 				create pending_attribute_type_codes.make_default
 				create pending_attribute_values.make_default
@@ -118,7 +126,11 @@ feature -- Events
 				if pending_start_tag = -1 then
 					on_error ("Cannot write a namespace declaration when there is no open start tag")
 				else
-
+					debug ("XSLT content output")
+						std.error.put_string ("Namespace declaration " + shared_name_pool.uri_from_namespace_code (a_namespace_code))
+						std.error.put_new_line
+					end
+					
 					-- Handle declarations whose prefix is duplicated for this element.
 
 					reject_these_duplicates := are_duplicates_rejected (properties)
@@ -185,9 +197,17 @@ feature -- Events
 		do
 			if not suppress_attributes then
 				if pending_start_tag = -1 then
+					debug ("XSLT stripper")
+						std.error.put_string ("Failing attribute is " + shared_name_pool.display_name_from_name_code (a_name_code))
+						std.error.put_new_line
+					end
 					on_error ("Cannot write an attribute when there is no open start tag")
 				else
-
+					debug ("XSLT content output")
+						std.error.put_string ("Notifying attribute " + shared_name_pool.display_name_from_name_code (a_name_code))
+						std.error.put_new_line
+					end
+				
 					-- If this is a duplicate attribute, overwrite the original, unless
 					--  the REJECT_DUPLICATES option is set.
 
@@ -231,7 +251,15 @@ feature -- Events
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 		do
+			debug ("XSLT content output")
+				std.error.put_string ("Starting content")
+				std.error.put_new_line
+			end
 			if pending_start_tag /= -1 then
+				debug ("XSLT content output")
+					std.error.put_string ("Pending start tag is " + shared_name_pool.display_name_from_name_code (pending_start_tag))
+					std.error.put_new_line
+				end
 				check_proposed_prefix (pending_start_tag, 0)
 				properties := start_element_properties
 				if not is_namespace_declared (properties) then
@@ -284,6 +312,10 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		do
+			debug ("XSLT content output")
+				std.error.put_string ("Ending element")
+				std.error.put_new_line
+			end
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.end_element
 			previous_atomic := False
@@ -295,6 +327,10 @@ feature -- Events
 			previous_atomic := False
 			if chars.count > 0 then
 				if pending_start_tag /= -1 then start_content end
+				debug ("XSLT content output")
+					std.error.put_string ("Notifying content " + chars + "###")
+					std.error.put_new_line
+				end
 				next_receiver.notify_characters (chars, properties)
 			end
 		end

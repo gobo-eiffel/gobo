@@ -210,6 +210,10 @@ feature -- Events
 			a_mapped_string: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			debug ("XSLT stripper")
+				std.error.put_string ("Is start tag open? " + is_open_start_tag.out)
+				std.error.put_new_line
+			end
 			if not is_error then
 				if not is_open then
 					open_document
@@ -242,6 +246,10 @@ feature -- Events
 					a_mapped_string := character_map_expander.mapped_string (chars)
 					output_escape (normalized_string (a_mapped_string), False)
 				else
+					debug ("XSLT stripper")
+						std.error.put_string ("Emitting " + normalized_string (chars) + "###")
+						std.error.put_new_line
+					end
 					output_escape (normalized_string (chars), False)					
 				end
 			end

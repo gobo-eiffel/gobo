@@ -34,6 +34,8 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<!-- <option name="debug_tag" value="XSLT content output"/> -->
+	<!-- <option name="debug_tag" value="XSLT stripper"/> -->
 	<!-- <option name="debug_tag" value="XPath Expression Parser"/>  
 	<option name="debug_tag" value="XPath content emitter"/> -->
 
