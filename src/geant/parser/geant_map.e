@@ -57,9 +57,10 @@ feature -- Status report
 				(STRING_.same_string (type, Type_attribute_value_identity) or else
 				STRING_.same_string (type, Type_attribute_value_flat) or else
 				STRING_.same_string (type, Type_attribute_value_merge) or else
+				STRING_.same_string (type, Type_attribute_value_regexp) or else
 				STRING_.same_string (type, Type_attribute_value_glob))
 			if not Result then
-				project.log (<<"  [map] error: value of attribute 'type' incorrect. Valid: {'flat', 'glob', 'identity', 'merge'}">>)
+				project.log (<<"  [map] error: value of attribute 'type' incorrect. Valid: {'flat', 'glob', 'regexp', 'identity', 'merge'}">>)
 			end
 			if Result then
 				if STRING_.same_string (type, Type_attribute_value_identity) then
@@ -99,6 +100,7 @@ feature -- Status report
 				(STRING_.same_string (type, Type_attribute_value_identity) or else
 				STRING_.same_string (type, Type_attribute_value_flat) or else
 				STRING_.same_string (type, Type_attribute_value_merge) or else
+				STRING_.same_string (type, Type_attribute_value_regexp) or else
 				STRING_.same_string (type, Type_attribute_value_glob))
 			good_glob_source: Result implies (STRING_.same_string (type, Type_attribute_value_glob) implies
 				(source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0))
@@ -140,6 +142,7 @@ feature -- Access
 			target_prefix: STRING
 			target_postfix: STRING
 			a_exit_code: INTEGER
+			regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			if map /= Void then
 				if map.is_executable then
@@ -161,6 +164,21 @@ feature -- Access
 				elseif STRING_.same_string (type, Type_attribute_value_merge) then
 						-- handle merge mapping:
 					Result := target_pattern
+				elseif STRING_.same_string (type, Type_attribute_value_regexp) then
+						-- handle regexp mapping:
+					create regexp.make
+					regexp.compile (source_pattern)
+					if regexp.is_compiled then
+						regexp.match (a_map_filename)
+						if regexp.has_matched then
+							Result := regexp.replace_all (target_pattern)
+						else
+							project.trace_debug (<<"  [*map] no match for '", a_map_filename, "%'">>)
+							Result := a_map_filename
+						end
+					else
+						project.log (<<"regexp ", source_pattern," could not be compiled">>)
+					end
 				else
 						-- handle glob mapping:
 					check type_is_glob: STRING_.same_string (type, Type_attribute_value_glob) end
@@ -278,14 +296,13 @@ feature -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
--- TODO: '\1' syntax has to be supported for regexp first.
---	Type_attribute_value_regexp: STRING is
---			-- Value 'regexp' of xml attribute for type
---		once
---			Result := "regexp"
---		ensure
---			attribute_name_not_void: Result /= Void
---			atribute_name_not_empty: Result.count > 0
---		end
+	Type_attribute_value_regexp: STRING is
+			-- Value 'regexp' of xml attribute for type
+		once
+			Result := "regexp"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
 
 end
