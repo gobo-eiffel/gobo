@@ -4,12 +4,11 @@ indexing
 
 		"Dates (Gregorian calendar)"
 
-	library:    "Gobo Eiffel Time Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DT_DATE
 
@@ -626,7 +625,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Month_shift: INTEGER is 32   -- 2^5
-	Year_shift: INTEGER is 512   -- 2^9 (= 16*32)
+	Month_shift: INTEGER is 32
+			-- 2^5
+
+	Year_shift: INTEGER is 512
+			-- 2^9 (= 16*32)
 
 end -- class DT_DATE

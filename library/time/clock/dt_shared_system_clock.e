@@ -4,13 +4,12 @@ indexing
 
 		"Shared system clocks"
 
-	pattern:    "Singleton"
-	library:    "Gobo Eiffel Time Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	pattern: "Singleton"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DT_SHARED_SYSTEM_CLOCK
 

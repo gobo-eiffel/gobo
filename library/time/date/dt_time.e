@@ -4,13 +4,12 @@ indexing
 
 		"Times"
 
-	note:       "Do not take leap seconds into account"
-	library:    "Gobo Eiffel Time Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	note: "Do not take leap seconds into account"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DT_TIME
 
@@ -188,10 +187,10 @@ feature -- Access
 			!! Result.make_precise_canonical (millisecond_count - other.millisecond_count)
 		ensure
 			duration_not_void: Result /= Void
-				-- The following assertion has been commented out
+				-- TODO: The following assertion has been commented out
 				-- because of a bug in SmallEiffel -0.76b1 (implicit
 				-- feature renaming in DT_DATE_TIME).
---			canonical_duration: Result.is_canonical
+			-- canonical_duration: Result.is_canonical
 			definition: (other + Result).is_equal (Current)
 		end
 
@@ -517,10 +516,17 @@ feature {DT_TIME_HANDLER} -- Implementation
 
 feature {NONE} -- Constants
 
-	Day_shift: INTEGER is 86400000  -- 1d = 24*60*60*1000ms
-	Hour_shift: INTEGER is 3600000  -- 1h = 60*60*1000ms
-	Minute_shift: INTEGER is 60000  -- 1m = 60*1000ms
-	Second_shift: INTEGER is 1000   -- 1s = 1000ms
+	Day_shift: INTEGER is 86400000
+			-- 1d = 24*60*60*1000ms
+
+	Hour_shift: INTEGER is 3600000
+			-- 1h = 60*60*1000ms
+
+	Minute_shift: INTEGER is 60000
+			-- 1m = 60*1000ms
+
+	Second_shift: INTEGER is 1000
+			-- 1s = 1000ms
 
 invariant
 

@@ -4,13 +4,12 @@ indexing
 
 		"Time durations"
 
-	note:       "Do not take leap seconds into account"
-	library:    "Gobo Eiffel Time Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	note: "Do not take leap seconds into account"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DT_TIME_DURATION
  
@@ -421,10 +420,10 @@ feature -- Conversion
 			!! Result.make_precise_canonical (millisecond_count)
 		ensure
 			canonical_duration_not_void: Result /= Void
-				-- The following assertion has been commented out
+				-- TODO: The following assertion has been commented out
 				-- because of a bug in SmallEiffel -0.76b1 (implicit
 				-- feature renaming in DT_DATE_TIME).
---			is_canonical: Result.is_canonical
+			-- is_canonical: Result.is_canonical
 			same_duration: Result.is_equal (Current)
 		end
 

@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
 
-<cluster name="time" location="${GOBO}/library/time" abstract="True">
+<cluster name="time" location="${GOBO}/library/time" abstract="true">
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Time Library"
-		library:     "Gobo Eiffel Time Library"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		library: "Gobo Eiffel Time Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<cluster name="clock"/>

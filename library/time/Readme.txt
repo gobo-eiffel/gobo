@@ -19,11 +19,6 @@ clock
     Clocks, system clock, customizable clocks.
 date
     Date, time and duration classes.
-include
-    C header files used to implement clock system calls.
-spec
-    Eiffel compiler dependent classes (filenames suffixed by
-    ".ge" instead of ".e" in other clusters).
 time_zone
     Time zones, date/time conversions. (STILL UNDER DEVELOPMENT.)
 
@@ -32,6 +27,4 @@ is provided in "$GOBO/doc/time". Examples for this library can
 be found in "$GOBO/example/time".
 
 --
-Copyright (c) 2000-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 2000-2001, Eric Bezault and others

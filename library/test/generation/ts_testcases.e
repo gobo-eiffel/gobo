@@ -4,12 +4,11 @@ indexing
 
 		"Test config testcases"
 
-	library:    "Gobo Eiffel Test Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Test Library"
+	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TS_TESTCASES
 
@@ -277,9 +276,9 @@ invariant
 	testcases_not_void: testcases /= Void
 	no_void_class_name: not testcases.has (Void)
 	no_void_testcase: not testcases.has_item (Void)
---	feature_names_not_void: forall item in testcases, item.first /= Void
---	no_void_feature_names: forall item in testcases, not item.has (Void)
---	class_prefix_not_void: forall item in testcases, item.second /= Void
+	-- feature_names_not_void: forall item in testcases, item.first /= Void
+	-- no_void_feature_names: forall item in testcases, not item.has (Void)
+	-- class_prefix_not_void: forall item in testcases, item.second /= Void
 	error_handler_not_void: error_handler /= Void
 
 end -- class TS_TESTCASES
