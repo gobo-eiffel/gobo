@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			first_seed := a_feature.first_seed
 			other_seeds := a_feature.other_seeds
 			frozen_keyword := a_feature.frozen_keyword
+			cat_keyword := a_feature.cat_keyword
 		ensure
 			parent_set: parent = a_parent
 			precursor_feature_set: precursor_feature = a_feature

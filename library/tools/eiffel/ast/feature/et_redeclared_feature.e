@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			first_seed := a_parent_feature.first_seed
 			other_seeds := a_parent_feature.other_seeds
 			frozen_keyword := a_feature.frozen_keyword
+			cat_keyword := a_feature.cat_keyword
 		ensure
 			flattened_feature_set: flattened_feature = a_feature
 			parent_feature_set: parent_feature = a_parent_feature

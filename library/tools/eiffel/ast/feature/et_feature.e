@@ -89,6 +89,9 @@ feature -- Access
 	frozen_keyword: ET_KEYWORD
 			-- 'frozen' keyword
 
+	cat_keyword: ET_KEYWORD
+			-- 'cat' keyword
+
 	feature_clause: ET_FEATURE_CLAUSE
 			-- Feature clause containing current feature
 
@@ -132,6 +135,13 @@ feature -- Status report
 			-- Has feature been declared as frozen?
 		do
 			Result := (frozen_keyword /= Void)
+		end
+
+	is_cat: BOOLEAN is
+			-- Can the arguments of current feature be redefined
+			-- covariantly in descendant classes?
+		do
+			Result := (cat_keyword /= Void)
 		end
 
 	is_deferred: BOOLEAN is
@@ -345,6 +355,14 @@ feature -- Setting
 			frozen_keyword := a_frozen
 		ensure
 			frozen_keyword_set: frozen_keyword = a_frozen
+		end
+
+	set_cat_keyword (a_cat: like cat_keyword) is
+			-- Set `cat_keyword' to `a_cat'.
+		do
+			cat_keyword := a_cat
+		ensure
+			cat_keyword_set: cat_keyword = a_cat
 		end
 
 	set_synonym (a_synonym: like synonym) is

@@ -49,9 +49,9 @@ feature {NONE} -- Initialization
 			clusters := a_clusters
 			create classes.make_map (3000)
 			classes.set_key_equality_tester (class_name_tester)
-			create features.make (100000)
 			error_handler := an_error_handler
 			ast_factory := a_factory
+			set_use_assign_keyword (True)
 			set_use_attribute_keyword (True)
 			set_use_convert_keyword (True)
 			set_use_create_keyword (True)
@@ -102,9 +102,13 @@ feature {NONE} -- Initialization
 			create unknown_class.make_unknown (tokens.unknown_class_name)
 				-- Type "ANY".
 			create any_type.make (Void, any_class.name, any_class)
+				-- Type "NONE".
+			create none_type.make (Void, none_class.name, none_class)
+				-- Type "STRING".
+			create string_type.make (Void, string_class.name, string_class)
 				-- Type "ARRAY [ANY]".
 			create a_parameters.make_with_capacity (1)
-			a_parameters.put_first (any_type)
+			a_parameters.put_first (any_class)
 			create array_any_type.make (Void, array_class.name, a_parameters, array_class)
 				-- Type "ARRAY [NONE]".
 			create a_parameters.make_with_capacity (1)
@@ -134,6 +138,8 @@ feature {NONE} -- Initialization
 			pointer_class_not_void: pointer_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
+			string_type_not_void: string_type /= Void
+			none_type_not_void: none_type /= Void
 			array_any_type_not_void: array_any_type /= Void
 			array_none_type_not_void: array_none_type /= Void
 			any_parents_not_void: any_parents /= Void
@@ -191,64 +197,70 @@ feature -- Access
 feature -- Basic classes
 
 	any_class: ET_CLASS
-			-- Class ANY
+			-- Class "ANY"
 
 	general_class: ET_CLASS
-			-- Class GENERAL
+			-- Class "GENERAL"
 
 	none_class: ET_CLASS
-			-- Class NONE
+			-- Class "NONE"
 
 	tuple_class: ET_CLASS
-			-- Class TUPLE
+			-- Class "TUPLE"
 
 	bit_class: ET_CLASS
-			-- Class BIT
+			-- Class "BIT"
 
 	string_class: ET_CLASS
-			-- Class STRING
+			-- Class "STRING"
 
 	array_class: ET_CLASS
-			-- Class ARRAY
+			-- Class "ARRAY"
 
 	boolean_class: ET_CLASS
-			-- Class BOOLEAN
+			-- Class "BOOLEAN"
 
 	character_class: ET_CLASS
-			-- Class CHARACTER
+			-- Class "CHARACTER"
 
 	wide_character_class: ET_CLASS
-			-- Class WIDE_CHARACTER
+			-- Class "WIDE_CHARACTER"
 
 	integer_class: ET_CLASS
-			-- Class INTEGER
+			-- Class "INTEGER"
 
 	integer_8_class: ET_CLASS
-			-- Class INTEGER_8
+			-- Class "INTEGER_8"
 
 	integer_16_class: ET_CLASS
-			-- Class INTEGER_16
+			-- Class "INTEGER_16"
 
 	integer_64_class: ET_CLASS
-			-- Class INTEGER_64
+			-- Class "INTEGER_64"
 
 	real_class: ET_CLASS
-			-- Class REAL
+			-- Class "REAL"
 
 	double_class: ET_CLASS
-			-- Class DOUBLE
+			-- Class "DOUBLE"
 
 	pointer_class: ET_CLASS
-			-- Class POINTER
+			-- Class "POINTER"
 
 	unknown_class: ET_CLASS
-			-- Class *UNKNOWN*
+			-- Class "*UNKNOWN*"
 			-- This class is equal to no other classes, not even itself;
 			-- it does conform to no type, not even itself, and no type
 			-- conforms to it
 
 	any_type: ET_CLASS_TYPE
-			-- Class type ANY
+			-- Class type "ANY"
+
+	none_type: ET_CLASS_TYPE
+			-- Class type "NONE"
+
+	string_type: ET_CLASS_TYPE
+			-- Class type "STRING"
 
 	array_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ARRAY [ANY]"
@@ -279,14 +291,14 @@ feature -- Features
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			features.force_last (a_feature)
-			a_feature.set_id (features.count)
+			feature_count := feature_count + 1
+			a_feature.set_id (feature_count)
 		ensure
 			registered: a_feature.is_registered
 		end
 
-	features: DS_ARRAYED_LIST [ET_FEATURE]
-			-- Features in universe, indexed by feature IDs
+	feature_count: INTEGER
+			-- Number of features already registered
 
 feature -- Measurement
 
@@ -330,6 +342,10 @@ feature -- Setting
 
 feature -- Parser status report
 
+	use_assign_keyword: BOOLEAN
+			-- Should 'assign' be considered as
+			-- a keyword (otherwise identifier)?
+
 	use_attribute_keyword: BOOLEAN
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
@@ -351,6 +367,14 @@ feature -- Parser status report
 			-- a keyword (otherwise identifier)?
 
 feature -- Parser setting
+
+	set_use_assign_keyword (b: BOOLEAN) is
+			-- Set `use_assign_keyword' to `b'.
+		do
+			use_assign_keyword := b
+		ensure
+			use_assign_keyword_set: use_assign_keyword = b
+		end
 
 	set_use_attribute_keyword (b: BOOLEAN) is
 			-- Set `use_attribute_keyword' to `b'.
@@ -545,50 +569,111 @@ feature -- Compilation
 			end
 		end
 
-	compile_all is
-			-- Compile all classes in the universe.
+	compile_system is
+			-- Compile all classes in the system.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class: ET_CLASS
-			a_feature: ET_FEATURE
-			nb: INTEGER
---			a_signature_viewer: ET_SIGNATURE_VIEWER
 			clock: DT_SHARED_SYSTEM_CLOCK
 			dt1, dt2: DT_DATE_TIME
 			dtd: DT_DATE_TIME_DURATION
+			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
 			activate_processors
---debug ("ericb")
---	print ("start preparsing...%N")
---	io.read_line
---end
-debug ("ericb")
-	create clock
-	dt1 := clock.system_clock.date_time_now
-end
+			debug ("ericb")
+				create clock
+				dt1 := clock.system_clock.date_time_now
+			end
 			preparse_single
-debug ("ericb")
-	dt2 := clock.system_clock.date_time_now
-	dtd := dt2 - dt1
-	dtd.set_canonical (dt1)
-	std.error.put_string ("Degree 6: ")
-	std.error.put_line (dtd.out)
-	io.read_line
-	dt1 := clock.system_clock.date_time_now
-end
---debug ("ericb")
---	print ("end preparsing.%N")
---	io.read_line
---end
---			parse_all
---debug ("ericb")
---	print ("Parsed ")
---	print (parsed_classes_count)
---	print (" classes%N")
---	print (features.count)
---	print (" features%N")
---	io.read_line
---end
+			-- preparse_shallow
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 6: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+			parse_system
+			debug ("ericb")
+				std.error.put_string ("Preparsed ")
+				std.error.put_integer (classes.count)
+				std.error.put_line (" classes")
+				std.error.put_string ("Parsed ")
+				std.error.put_integer (parsed_classes_count)
+				std.error.put_integer (feature_count)
+				std.error.put_line (" features")
+			end
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 5: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+			if cat_enabled then
+				compile_cat_calls
+				debug ("ericb")
+					dt2 := clock.system_clock.date_time_now
+					dtd := dt2 - dt1
+					dtd.set_canonical (dt1)
+					std.error.put_string ("Degree CAT: ")
+					std.error.put_line (dtd.out)
+					io.read_line
+					dt1 := clock.system_clock.date_time_now
+				end
+			end
+			compile_degree_4
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 4: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+			compile_degree_3
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 3: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+			debug ("ericb")
+				create a_signature_viewer.make (Current)
+				a_signature_viewer.execute
+			end
+		end
+
+	compile_all is
+			-- Compile all classes in the universe.
+		local
+			clock: DT_SHARED_SYSTEM_CLOCK
+			dt1, dt2: DT_DATE_TIME
+			dtd: DT_DATE_TIME_DURATION
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+		do
+			activate_processors
+			debug ("ericb")
+				create clock
+				dt1 := clock.system_clock.date_time_now
+			end
+			preparse_single
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 6: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
 			a_cursor := classes.new_cursor
 				-- Parse classes.
 			from a_cursor.start until a_cursor.after loop
@@ -598,23 +683,184 @@ end
 				end
 				a_cursor.forth
 			end
-debug ("ericb")
-	dt2 := clock.system_clock.date_time_now
-	dtd := dt2 - dt1
-	dtd.set_canonical (dt1)
-	std.error.put_string ("Degree 5: ")
-	std.error.put_line (dtd.out)
-	io.read_line
-	dt1 := clock.system_clock.date_time_now
-end
-debug ("ericb")
-	std.error.put_string ("Parsed ")
-	std.error.put_integer (classes.count)
-	std.error.put_string (" classes%N")
-	std.error.put_integer (features.count)
-	std.error.put_string (" features%N")
---	io.read_line
-end
+			debug ("ericb")
+				std.error.put_string ("Parsed ")
+				std.error.put_integer (classes.count)
+				std.error.put_line (" classes")
+				std.error.put_integer (feature_count)
+				std.error.put_line (" features")
+			end
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 5: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+			if cat_enabled then
+				compile_cat_calls
+				debug ("ericb")
+					dt2 := clock.system_clock.date_time_now
+					dtd := dt2 - dt1
+					dtd.set_canonical (dt1)
+					std.error.put_string ("Degree CAT: ")
+					std.error.put_line (dtd.out)
+					io.read_line
+					dt1 := clock.system_clock.date_time_now
+				end
+			end
+			compile_degree_4
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 4: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+			compile_degree_3
+			debug ("ericb")
+				dt2 := clock.system_clock.date_time_now
+				dtd := dt2 - dt1
+				dtd.set_canonical (dt1)
+				std.error.put_string ("Degree 3: ")
+				std.error.put_line (dtd.out)
+				io.read_line
+				dt1 := clock.system_clock.date_time_now
+			end
+		end
+
+	compile_cat_calls is
+			-- Process CAT-calls.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+			old_feature_count: INTEGER
+			nb_cat: INTEGER
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			k, nb3: INTEGER
+			an_ancestors: ET_BASE_TYPE_LIST
+			an_ancestor: ET_CLASS
+			a_features: ET_FEATURE_LIST
+			a_feature: ET_FEATURE
+			a_cat_feature: ET_FEATURE
+			a_seeds: ET_FEATURE_IDS
+		do
+			old_feature_count := feature_count
+				-- Find 'dog' types.
+			a_cursor := classes.new_cursor
+			all_cat_features := True
+			searching_dog_types := True
+			from dog_type_count := 1 until dog_type_count = 0 loop
+				dog_type_count := 0
+				compile_degree_4
+				compile_degree_3
+					-- Rewind processing to just after parsing.
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					a_class.rewind_to_parsing
+					a_cursor.forth
+				end
+				feature_count := old_feature_count
+				debug ("ericb")
+					std.error.put_string ("DOG type count = ")
+					std.error.put_integer (dog_type_count)
+					std.error.put_new_line
+					io.read_line
+				end
+			end
+			all_cat_features := False
+			searching_dog_types := False
+			searching_cat_features := True
+			from cat_feature_count := 1 until cat_feature_count = 0 loop
+				cat_feature_count := 0
+					-- Build ancestors.
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					if a_class.is_parsed then
+						a_class.process (ancestor_builder)
+					end
+					a_cursor.forth
+				end
+					-- Find 'cat' features.
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					if a_class.ancestors_built then
+						a_class.process (feature_flattener)
+					end
+					a_cursor.forth
+				end
+				from nb_cat := 1 until nb_cat = 0 loop
+					nb_cat := 0
+					from a_cursor.start until a_cursor.after loop
+						a_class := a_cursor.item
+						if a_class.ancestors_built then
+							an_ancestors := a_class.ancestors
+							a_features := a_class.features
+							nb := a_features.count
+							nb2 := an_ancestors.count
+							from i := 1 until i > nb loop
+								a_feature := a_features.item (i)
+								if a_feature.is_cat then
+									from j := 1 until j > nb2 loop
+										an_ancestor := an_ancestors.item (j).direct_base_class (Current)
+										a_cat_feature := an_ancestor.seeded_feature (a_feature.first_seed)
+										if a_cat_feature /= Void and then not a_cat_feature.is_cat then
+											a_cat_feature.set_cat_keyword (tokens.cat_keyword)
+											cat_feature_count := cat_feature_count + 1
+											nb_cat := nb_cat + 1
+										end
+										a_seeds := a_feature.other_seeds
+										if a_seeds /= Void then
+											nb3 := a_seeds.count
+											from k := 1 until k > nb3 loop
+												a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (k))
+												if a_cat_feature /= Void and then not a_cat_feature.is_cat then
+													a_cat_feature.set_cat_keyword (tokens.cat_keyword)
+													cat_feature_count := cat_feature_count + 1
+													nb_cat := nb_cat + 1
+												end
+												k := k + 1
+											end
+										end
+										j := j + 1
+									end
+								end
+								i := i + 1
+							end
+						end
+						a_cursor.forth
+					end
+				end
+					-- Rewind processing to just after parsing.
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					a_class.rewind_to_parsing
+					a_cursor.forth
+				end
+				feature_count := old_feature_count
+				debug ("ericb")
+					std.error.put_string ("CAT feature count = ")
+					std.error.put_integer (cat_feature_count)
+					std.error.put_new_line
+					io.read_line
+				end
+			end
+			searching_cat_features := False
+		end
+
+	compile_degree_4 is
+			-- Equivalent of ISE Eiffel's Degree 4.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+			a_feature: ET_FEATURE
+			nb: INTEGER
+		do
 			a_feature := any_class.named_feature (tokens.default_create_feature_name)
 			if a_feature /= Void then
 				set_default_create_seed (a_feature.first_seed)
@@ -622,6 +868,7 @@ end
 -- TODO
 			end
 				-- Build ancestors.
+			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.is_parsed then
@@ -654,126 +901,87 @@ end
 				end
 				a_cursor.forth
 			end
-debug ("ericb")
-	dt2 := clock.system_clock.date_time_now
-	dtd := dt2 - dt1
-	dtd.set_canonical (dt1)
-	std.error.put_string ("Degree 4: ")
-	std.error.put_line (dtd.out)
-	io.read_line
-	dt1 := clock.system_clock.date_time_now
-end
-debug ("ericb")
-	std.error.put_string ("Flattened ")
-	std.error.put_integer (nb)
-	std.error.put_string (" classes%N")
-	std.error.put_integer (features.count)
-	std.error.put_string (" features%N")
---	create a_signature_viewer.make (Current)
---	a_signature_viewer.execute
-end
-				-- Check implementation.
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if a_class.interface_checked then
-					--a_class.process (flat_checker)
-					a_class.process (implementation_checker)
-				end
-				a_cursor.forth
+			debug ("ericb")
+				std.error.put_string ("Flattened ")
+				std.error.put_integer (nb)
+				std.error.put_line (" classes")
+				std.error.put_integer (feature_count)
+				std.error.put_line (" features")
 			end
-debug ("ericb")
-	dt2 := clock.system_clock.date_time_now
-	dtd := dt2 - dt1
-	dtd.set_canonical (dt1)
-	std.error.put_string ("Degree 3: ")
-	std.error.put_line (dtd.out)
-	io.read_line
-end
 		end
 
-	compile_system is
-			-- Compile all classes in the system.
+	compile_degree_3 is
+			-- Equivalent of ISE Eiffel's Degree 3.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
-			a_feature: ET_FEATURE
-			nb: INTEGER
-			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
-			activate_processors
-			preparse_single
-			--preparse_shallow
-			parse_system
-debug ("ericb")
-	print ("Preparsed ")
-	print (classes.count)
-	print (" classes%N")
-	print ("Parsed ")
-	print (parsed_classes_count)
-	print (" classes%N")
-	print (features.count)
-	print (" features%N")
-	io.read_line
-end
-			a_feature := any_class.named_feature (tokens.default_create_feature_name)
-			if a_feature /= Void then
-				set_default_create_seed (a_feature.first_seed)
-			else
-				-- TODO
-			end
-			a_cursor := classes.new_cursor
-				-- Build ancestors.
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if a_class.is_parsed then
-					a_class.process (ancestor_builder)
-				end
-				a_cursor.forth
-			end
-				-- Flatten features.
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if a_class.ancestors_built then
-					nb := nb + 1
-					a_class.process (feature_flattener)
-				end
-				a_cursor.forth
-			end
-				-- Resolve qualified anchored types in signatures.
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if a_class.features_flattened then
-					nb := nb + 1
-					a_class.process (qualified_signature_resolver)
-				end
-				a_cursor.forth
-			end
-				-- Check interface.
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if a_class.qualified_signatures_resolved then
-					a_class.process (interface_checker)
-				end
-				a_cursor.forth
-			end
 				-- Check implementation.
+			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.interface_checked then
 					a_class.process (implementation_checker)
+					-- a_class.process (flat_checker)
 				end
 				a_cursor.forth
 			end
-debug ("ericb")
-	print ("Flattened ")
-	print (nb)
-	print (" classes%N")
-	print ("Done.%N")
-	print (features.count)
-	print (" features%N")
-	create a_signature_viewer.make (Current)
-	a_signature_viewer.execute
-end
+		end
+
+feature -- CAT-calls
+
+	cat_enabled: BOOLEAN
+			-- Is CAT-call processing enabled?
+
+	set_cat_enabled (b: BOOLEAN) is
+			-- Set `cat_enabled' to `b'.
+		do
+			cat_enabled := b
+		ensure
+			cat_enabled_set: cat_enabled = b
+		end
+
+	all_cat_features: BOOLEAN
+			-- Are all features considered as 'cat'?
+
+	anchored_cat_features: BOOLEAN
+			-- Are features with argument types containing anchored types
+			-- considered as 'cat'?
+
+	set_anchored_cat_features (b: BOOLEAN) is
+			-- Set `anchored_cat_features' to `b'.
+		do
+			anchored_cat_features := b
+		ensure
+			anchored_cat_features_set: anchored_cat_features = b
+		end
+
+	searching_cat_features: BOOLEAN
+			-- Are we currently searching for 'cat' features?
+
+	cat_feature_count: INTEGER
+			-- Number of 'cat' features found
+
+	set_cat_feature_count (i: INTEGER) is
+			-- Set `cat_feature_count' to `i'.
+		do
+			cat_feature_count := i
+		ensure
+			cat_feature_count_set: cat_feature_count = i
+		end
+
+	searching_dog_types: BOOLEAN
+			-- Are we currently searching for 'dog' types?
+
+	dog_type_count: INTEGER
+			-- Number of 'dog' types found
+
+	set_dog_type_count (i: INTEGER) is
+			-- Set `dog_type_count' to `i'.
+		do
+			dog_type_count := i
+		ensure
+			dog_type_count_set: dog_type_count = i
 		end
 
 feature -- Processors
@@ -786,6 +994,7 @@ feature -- Processors
 				create Result.make_with_factory (Current, ast_factory, error_handler)
 				internal_eiffel_preparser := Result
 			end
+			Result.set_use_assign_keyword (use_assign_keyword)
 			Result.set_use_attribute_keyword (use_attribute_keyword)
 			Result.set_use_convert_keyword (use_convert_keyword)
 			Result.set_use_create_keyword (use_create_keyword)
@@ -806,6 +1015,7 @@ feature -- Processors
 			Result.set_universe (Current)
 			Result.set_ast_factory (ast_factory)
 			Result.set_error_handler (error_handler)
+			Result.set_use_assign_keyword (use_assign_keyword)
 			Result.set_use_attribute_keyword (use_attribute_keyword)
 			Result.set_use_convert_keyword (use_convert_keyword)
 			Result.set_use_create_keyword (use_create_keyword)
@@ -839,6 +1049,21 @@ feature -- Processors
 	activate_processors is
 			-- Activate processors.
 		do
+			if cat_enabled then
+				all_cat_features := False
+				any_type.set_cat_keyword (Void)
+				none_type.set_cat_keyword (tokens.cat_keyword)
+				string_type.set_cat_keyword (tokens.cat_keyword)
+				array_any_type.set_cat_keyword (tokens.cat_keyword)
+				array_none_type.set_cat_keyword (tokens.cat_keyword)
+			else
+				all_cat_features := True
+				any_type.set_cat_keyword (Void)
+				none_type.set_cat_keyword (Void)
+				string_type.set_cat_keyword (Void)
+				array_any_type.set_cat_keyword (Void)
+				array_none_type.set_cat_keyword (Void)
+			end
 			if ancestor_builder = null_processor then
 				create {ET_ANCESTOR_BUILDER} ancestor_builder.make (Current)
 			end
@@ -884,8 +1109,6 @@ invariant
 
 	classes_not_void: classes /= Void
 	no_void_class: not classes.has_item (Void)
-	features_not_void: features /= Void
-	no_void_feature: not features.has (Void)
 	error_handler_not_void: error_handler /= Void
 	ast_factory_not_void: ast_factory /= Void
 	any_class_not_void: any_class /= Void
@@ -907,6 +1130,8 @@ invariant
 	pointer_class_not_void: pointer_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
+	none_type_not_void: none_type /= Void
+	string_type_not_void: string_type /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_none_type_not_void: array_none_type /= Void
 	any_parents_not_void: any_parents /= Void
