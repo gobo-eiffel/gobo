@@ -67,7 +67,6 @@ feature -- Evaluation
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_zero: XM_XPATH_INTEGER_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)
 			last_evaluated_item := arguments.item (1).last_evaluated_item

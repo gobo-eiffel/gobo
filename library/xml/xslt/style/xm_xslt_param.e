@@ -155,7 +155,6 @@ feature -- Element change
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_supplied_parameter_reference: XM_XSLT_SUPPLIED_PARAMETER_REFERENCE
 			a_param: XM_XSLT_COMPILED_PARAM
-			a_function_param: XM_XSLT_USER_FUNCTION_PARAMETER
 		do
 			last_generated_instruction := Void
 			if is_global_variable and then not is_redundant_variable then

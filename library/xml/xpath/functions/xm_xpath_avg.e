@@ -70,7 +70,6 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
-			finished: BOOLEAN
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE

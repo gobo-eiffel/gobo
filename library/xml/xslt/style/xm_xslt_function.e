@@ -542,7 +542,6 @@ feature {NONE} -- Implementation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_param: XM_XSLT_PARAM
 			a_function_param: XM_XSLT_USER_FUNCTION_PARAMETER
-			a_reference_count: INTEGER
 		do
 			create some_parameters.make_default
 			a_user_function.set_parameter_definitions (some_parameters)

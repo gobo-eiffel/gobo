@@ -61,10 +61,7 @@ feature -- Access
 			-- Resolver for "file:" scheme with default set
 			-- to the current directory
 		local
-			a_uri: UT_URI
-			a_string: STRING
 			a_cwd: KI_PATHNAME
-			a_drive: STRING
 		do
 			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
 			Result := new_file_resolver_with_uri (File_uri.pathname_to_uri (a_cwd))

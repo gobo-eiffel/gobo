@@ -119,7 +119,6 @@ feature -- Pathname
 			not_relative_with_host: a_pathname.is_relative implies a_pathname.hostname = Void
 		local
 			a_path: DS_ARRAYED_LIST [UT_URI_STRING]
-			a_uri_string: UT_URI_STRING
 			i: INTEGER
 		do
 			if a_pathname.is_relative then

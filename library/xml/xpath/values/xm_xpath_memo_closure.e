@@ -57,8 +57,6 @@ feature {NONE} -- Initialization
 	make (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 			-- Do not call directly. Use {XM_XPATH_EXPRESSION_FACTORY}.make_closure.
-		local
-			new_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 		do
 			Precursor (an_expression, a_context)
 			state := Unread_state

@@ -94,7 +94,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			a_value, another_value: XM_XPATH_VALUE
+			a_value: XM_XPATH_VALUE
 		do
 			mark_unreplaced
 			base_expression.analyze (a_context)
@@ -123,8 +123,6 @@ feature -- Optimization
 	
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
-		local
-			a_promotion: XM_XPATH_EXPRESSION
 		do
 			base_expression.promote (an_offer)
 			if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end

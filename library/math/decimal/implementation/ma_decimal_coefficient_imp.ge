@@ -637,7 +637,6 @@ feature -- Basic operations
 		local
 			borrow: INTEGER
 			index, l_count, start: INTEGER
-			to_subtract: INTEGER
 			l_digits: like digits
 		do
 			from

@@ -200,9 +200,6 @@ feature {NONE} -- Implementation
 
 	initialize (a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE) is
 			-- Initial attributes
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_value: XM_XPATH_VALUE
 		do
 			is_static_type_check_error := False
 			required_type := a_required_type
@@ -245,7 +242,6 @@ feature {NONE} -- Implementation
 	handle_xpath_one_compatibility (backwards_compatible: BOOLEAN) is
 			-- Handle the special rules for 1.0 compatibility mode
 		local
-			a_number_function: XM_XPATH_NUMBER
 			an_expression: XM_XPATH_EXPRESSION
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
