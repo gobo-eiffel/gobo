@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	next (c: CHARACTER): CHARACTER is
-			--  Next character
+			-- Next character
 		require
 			c_small_enough: c.code < Platform.Maximum_character_code
 		do
@@ -33,7 +33,7 @@ feature -- Access
 		end
 
 	previous (c: CHARACTER): CHARACTER is
-			--  Previous character
+			-- Previous character
 		require
 			c_small_enough: c.code > Platform.Minimum_character_code
 		do
@@ -44,6 +44,34 @@ feature -- Access
 #endif
 		ensure
 			definition: Result.code = c.code - 1
+		end
+
+	as_lower (c: CHARACTER): CHARACTER is
+			-- Lower-case version of character `c'
+		do
+#ifdef ISE || HACT
+			Result := c.lower
+#endif
+#ifdef SE
+			Result := c.to_lower
+#endif
+#ifdef VE
+			Result :=  c.as_lower
+#endif
+		end
+
+	as_upper (c: CHARACTER): CHARACTER is
+			-- Upper-case version of character `c'
+		do
+#ifdef ISE || HACT
+			Result := c.upper
+#endif
+#ifdef SE
+			Result := c.to_upper
+#endif
+#ifdef VE
+			Result :=  c.as_upper
+#endif
 		end
 
 end
