@@ -86,7 +86,7 @@ and starts the parser, and prints the result:
 </programlisting>
 
 <para>
-The full example is available at <filename>example/xml/event/tagcount</filename>.
+The full example is available at <filename class="directory">example/xml/event/tagcount</filename>.
 </para>
 
 </sect1>
@@ -128,7 +128,7 @@ The parsers have a <emphasis>string mode</emphasis>. Because XML documents can c
 </programlisting>
 
 <para>
-will not work because the call target is of dynamic type <classname>STRING</classname> which does not know about <string>UC_STRING</string>. A library routine, <classname>KL_STRING_ROUTINES</classname>'s <featurename>appended_string</featurename>, that copes with polymorphism is provided to replace the original routine. Other polymorphic routines are treated similarly. The Gobo Unicode facilities are described in more detail elsewhere along with the rationale for this design. <!-- FIXME: reference to Gobo Unicode doc! -->
+will not work because the call target is of dynamic type <classname>STRING</classname> which does not know about <classname>UC_STRING</classname>. A library routine, <classname>KL_STRING_ROUTINES</classname>'s <featurename>appended_string</featurename>, that copes with polymorphism is provided to replace the original routine. Other polymorphic routines are treated similarly. The Gobo Unicode facilities are described in more detail elsewhere along with the rationale for this design. <!-- FIXME: reference to Gobo Unicode doc! -->
 </para>
 
 <para>
