@@ -74,6 +74,8 @@ feature -- Validity checking
 			a_compound_not_void: a_compound /= Void
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
+			implementation_checked: a_class /= a_feature.implementation_class implies
+				a_feature.implementation_feature.implementation_checked
 		local
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
@@ -1057,7 +1059,8 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				check_unqualified_call_validity (a_identifier, Void, Void)
+				actual_context.reset (current_class)
+				check_unqualified_call_validity (a_identifier, Void, actual_context)
 			end
 		end
 
