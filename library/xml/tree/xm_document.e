@@ -18,13 +18,6 @@ inherit
 		redefine
 			root_node
 		end
-
-	XM_LINKED_LIST [XM_NODE]
-		rename
-			make as make_list,
-			is_first as list_is_first,
-			is_last as list_is_last
-		end
 		
 creation
 
@@ -47,7 +40,7 @@ feature {NONE} -- Initialization
 			not_empty: a_name.count > 0
 		do
 			create root_element.make (Current, a_name, a_ns)
-			make_list
+			list_make
 			force_last (root_element)
 		ensure
 			root_element_name_set: root_element.name = a_name
@@ -57,7 +50,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Parent processing
 
-	before_addition (a_node: like last) is
+	before_addition (a_node: XM_NODE) is
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
@@ -72,7 +65,7 @@ feature {NONE} -- Parent processing
 			parent_accepted: a_node /= Void implies a_node.parent = Current
 		end
 		
-	addable_item (a_node: like last): BOOLEAN is
+	addable_item (a_node: XM_NODE): BOOLEAN is
 			-- Is this not of the correct type for addition?
 			-- (document node)
 		local

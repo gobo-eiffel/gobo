@@ -19,13 +19,11 @@ inherit
 			is_equal, copy
 		end
 
-	DS_BILINEAR [XM_NODE]
+	XM_LINKED_LIST [XM_NODE]
 		rename
+			make as list_make,
 			is_first as list_is_first,
 			is_last as list_is_last
-		undefine
-			-- Descendants will bring in the DS_LINKED_LIST versions
-			has, search_forth, search_back, cursor_off, occurrences
 		end
 			
 	KL_IMPORTED_STRING_ROUTINES
@@ -80,7 +78,7 @@ feature -- Access
 			-- List of all direct child elements in current element
 			-- (Create a new list at each call.)
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -105,7 +103,7 @@ feature -- Text
 			-- (Return a new string at each call.)
 		local
 			typer: XM_NODE_TYPER
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 		do
 			create typer
 			a_cursor := new_cursor
@@ -142,7 +140,7 @@ feature -- Processing
 		require
 			a_processor_not_void: a_processor /= Void
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 		do
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -156,7 +154,7 @@ feature -- Processing
 		require
 			processor_not_void: a_processor /= Void
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer

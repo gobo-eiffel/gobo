@@ -17,6 +17,8 @@ inherit
 	XM_COMPOSITE
 		undefine
 			root_node
+		redefine
+			force_last, put_last
 		end
 
 	XM_NAMED_NODE
@@ -29,15 +31,6 @@ inherit
 			copy, is_equal
 		end
 
-	XM_LINKED_LIST [XM_NODE]
-		rename
-			make as make_list,
-			is_first as list_is_first,
-			is_last as list_is_last
-		redefine
-			force_last, put_last
-		end
-				
 creation
 
 	make,
@@ -57,7 +50,7 @@ feature {NONE} -- Initialization
 			parent := a_parent
 			name := a_name
 			namespace := a_ns
-			make_list
+			list_make
 		ensure
 			parent_set: parent = a_parent
 			name_set: name = a_name
@@ -73,7 +66,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			make_list
+			list_make
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
@@ -91,7 +84,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			make_list
+			list_make
 			a_parent.set_root_element (Current)
 		ensure
 			parent_set: parent = a_parent
@@ -138,7 +131,7 @@ feature -- Element change
 		
 feature {NONE} -- Parent processing
 
-	before_addition (a_node: like last) is
+	before_addition (a_node: XM_NODE) is
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
@@ -153,7 +146,7 @@ feature {NONE} -- Parent processing
 			parent_accepted: a_node /= Void implies a_node.parent = Current
 		end
 	
-	addable_item (a_node: like last): BOOLEAN is
+	addable_item (a_node: XM_NODE): BOOLEAN is
 			-- Is this not of the correct type for addition?
 			-- (element node)
 		local
@@ -204,7 +197,7 @@ feature -- Status report
 			a_uri_not_void: a_uri /= Void
 			a_name_not_void: a_name /= Void
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -228,7 +221,7 @@ feature -- Status report
 		require
 			a_name_not_void: a_name /= Void
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -279,7 +272,7 @@ feature -- Access (from XM_COMPOSITE)
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -301,7 +294,7 @@ feature -- Access (from XM_COMPOSITE)
 			-- Has current node at least one direct child
 			-- element with this qualified name ?
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -324,7 +317,7 @@ feature -- Access (from XM_COMPOSITE)
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -347,7 +340,7 @@ feature -- Access (from XM_COMPOSITE)
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -373,7 +366,7 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -401,7 +394,7 @@ feature -- Access
 			a_uri_not_void: a_uri /= Void
 			a_name_not_void: a_name /= Void
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -429,7 +422,7 @@ feature -- Access
 			-- default namespace.
 			-- (Returns a new list object at each call.)
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -451,7 +444,7 @@ feature -- Access
 			-- List of all attributes in current element
 			-- (Create a new list at each call.)
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINEAR_CURSOR [XM_NODE] 
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -516,7 +509,7 @@ feature -- Removal
 			a_name_not_void: a_name /= Void
 			has_attribute: has_attribute_by_name (a_name)
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -540,7 +533,7 @@ feature -- Removal
 			a_name_not_void: a_name /= Void
 			has_attribute: has_attribute_by_qualified_name (a_uri, a_name)
 		local
-			a_cursor: like new_cursor
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
@@ -562,7 +555,7 @@ feature -- Removal
 		local
 			text_node: XM_CHARACTER_DATA
 			joint_text_node: XM_CHARACTER_DATA
-			a_cursor: like new_cursor
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			typer: XM_NODE_TYPER
 		do
 			create typer
