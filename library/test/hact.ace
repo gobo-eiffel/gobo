@@ -1,3 +1,0 @@
-		-- Gobo Eiffel Test Library
-	ts_generation:		"$GOBO/library/test/generation";
-	ts_harness:			"$GOBO/library/test/harness";

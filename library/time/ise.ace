@@ -1,4 +1,0 @@
-		-- Gobo Eiffel Time Library
-	dt_clock:			"$GOBO/library/time/clock";
-	dt_date:			"$GOBO/library/time/date";
-	dt_time_zone:		"$GOBO/library/time/time_zone";
