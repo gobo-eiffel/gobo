@@ -55,6 +55,20 @@ feature -- Access
 	clusters: DS_ARRAYED_LIST [like cluster]
 			-- Clusters
 
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number (recursively) of non-abstract clusters
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				Result := Result + clusters.item (i).count
+				i := i + 1
+			end
+		end
+
 feature {ET_CLUSTER} -- Setting
 
 	set_parent (a_parent: like cluster) is
@@ -80,6 +94,22 @@ feature -- Element change
 		ensure
 			one_more: clusters.count = old clusters.count + 1
 			cluster_added: clusters.last = a_cluster
+		end
+
+	add_implicit_subclusters (a_universe: ET_UNIVERSE) is
+			-- Add (recursively) implicit subclusters when current clusters are recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_all' routines.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).add_implicit_subclusters (a_universe)
+				i := i + 1
+			end
 		end
 
 feature -- Parsing
