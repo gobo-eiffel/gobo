@@ -39,10 +39,12 @@ feature -- Status report
 	is_compilable: BOOLEAN is
 			-- Can system be compiled?
 		do
-			Result := esd_filename /= Void and then esd_filename.count > 0
+			Result := (esd_filename /= Void and then esd_filename.count > 0) or
+				(xace_filename /= Void and then xace_filename.count > 0)
 		ensure
-			esd_filename_not_void: Result implies esd_filename /= Void
-			esd_filename_not_empty: Result implies esd_filename.count > 0
+			esd_or_xace_filename_not_void: Result implies esd_filename /= Void or xace_filename /= Void
+			esd_filename_not_empty: esd_filename /= Void implies esd_filename.count > 0
+			xace_filename_not_empty: xace_filename /= Void implies xace_filename.count > 0
 		end
 
 	is_cleanable: BOOLEAN is
@@ -68,6 +70,9 @@ feature -- Access
 	esd_filename: STRING
 			-- ESD filename
 
+	xace_filename: STRING
+			-- Xace filename
+
 	clean: STRING
 			-- Name of system to be cleaned
 
@@ -92,6 +97,14 @@ feature -- Setting
 			esd_filename := a_filename
 		ensure
 			esd_filename_set: esd_filename = a_filename
+		end
+
+	set_xace_filename (a_filename: like xace_filename) is
+			-- Set `xace_filename' to `a_filename'.
+		do
+			xace_filename := a_filename
+		ensure
+			xace_filename_set: xace_filename = a_filename
 		end
 
 	set_clean (a_clean: like clean) is
@@ -152,7 +165,11 @@ feature -- Execution
 					cmd.append_string (" -no")
 				end
 				cmd.append_string (" -a:")
-				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
+				if esd_filename /= Void then
+					a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
+				else
+					a_filename := file_system.pathname_from_file_system (xace_filename, unix_file_system)
+				end
 				cmd := STRING_.appended_string (cmd, a_filename)
 				project.trace (<<"  [ve] ", cmd>>)
 				if not project.options.no_exec then
@@ -238,6 +255,7 @@ feature -- Execution
 			old_cwd: STRING
 			a_name: STRING
 			a_dir: KL_DIRECTORY
+			i: INTEGER
 		do
 			old_cwd := file_system.cwd
 			if file_system.directory_exists ("eCluster") then
@@ -274,6 +292,21 @@ feature -- Execution
 				end
 				if not project.options.no_exec then
 					file_system.delete_file ("vec.xcp")
+				end
+				from
+					i := 0
+				until
+					not file_system.file_exists ("vec" + i.out + ".xcp")
+				loop
+					if recursive_clean then
+						project.trace (<<"  [ve] [", old_cwd, "] delete vec" + i.out + ".xcp">>)
+					else
+						project.trace (<<"  [ve] delete vec" + i.out + ".xcp">>)
+					end
+					if not project.options.no_exec then
+						file_system.delete_file ("vec" + i.out + ".xcp")
+					end
+					i := i + 1
 				end
 			end
 			if recursive_clean then

@@ -41,6 +41,12 @@ feature {NONE} -- Initialization
 					command.set_esd_filename (a_value)
 				end
 			end
+			if has_attribute (Xace_attribute_name) then
+				a_value := attribute_value_or_default (Xace_attribute_name, "")
+				if a_value.count > 0 then
+					command.set_xace_filename (a_value)
+				end
+			end
 				-- clean:
 			if has_attribute (Clean_attribute_name) then
 				a_value := attribute_value_or_default (Clean_attribute_name, "")
@@ -87,6 +93,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "esd"
 		once
 			Result := "esd"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Xace_attribute_name: STRING is
+			-- Name of xml attribute for "xace"
+		once
+			Result := "xace"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
