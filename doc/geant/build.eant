@@ -47,10 +47,8 @@
 		<geant target="xslt"/>
 
 			<!-- Elements: -->
-<!-- TODO: finish the following:
 		<set name="next_chapter" value="map_element"/>
 		<geant target="xslt"/>
--->
 
 			<!-- Tasks: -->
 		<set name="next_chapter" value="available_task"/>
