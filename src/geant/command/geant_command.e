@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			a_command_not_void: a_command /= Void
 			a_command_not_empty: a_command.count > 0
 		local
-			shell_command: UT_SHELL_COMMAND
+			shell_command: DP_SHELL_COMMAND
 		do
 			!! shell_command.make (a_command)
 			shell_command.execute
