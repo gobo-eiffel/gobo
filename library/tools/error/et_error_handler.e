@@ -2238,23 +2238,23 @@ feature {NONE}
 			end
 		end
 
-	classes_in_system: HASH_TABLE [ANY, STRING] is
+	classes_in_system: DS_HASH_TABLE [ANY, STRING] is
 		local
 			a_file: PLAIN_TEXT_FILE
 		once
 			!! Result.make (6000)
-			!! a_file.make ("system.txt")
-			if a_file.exists then
-				from
-					a_file.open_read
-				until
-					a_file.end_of_file
-				loop
-					a_file.read_line
-					Result.put (Void, clone (a_file.last_string))
-				end
-				a_file.close
-			end
+--			!! a_file.make ("system.txt")
+--			if a_file.exists then
+--				from
+--					a_file.open_read
+--				until
+--					a_file.end_of_file
+--				loop
+--					a_file.read_line
+--					Result.put (Void, clone (a_file.last_string))
+--				end
+--				a_file.close
+--			end
 		end
 
 end -- class ET_ERROR_HANDLER
