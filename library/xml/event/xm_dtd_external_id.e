@@ -12,6 +12,20 @@ indexing
 
 class XM_DTD_EXTERNAL_ID
 
+inherit
+
+	ANY
+		redefine
+			out
+		end
+		
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out
+		end
+		
 creation 
 
 	make
@@ -23,6 +37,26 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- ANY
+
+	out: STRING is
+			-- Print as in input.
+		do
+			if public_id /= Void then
+				Result := clone ("PUBLIC ")
+				Result := STRING_.appended_string (Result, public_id) 
+			end
+			
+			if system_id /= Void then
+				if Result = Void then
+					Result := clone ("SYSTEM")
+				end
+				Result.append_character (' ')
+				Result := STRING_.appended_string (Result, system_id)
+				Result.append_character (' ')
+			end
+		end
+		
 feature -- Access
 
 	base: STRING
