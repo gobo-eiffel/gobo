@@ -20,7 +20,7 @@ inherit
 feature -- Conversion
 
 	to_character (an_int: INTEGER): CHARACTER is
-			-- Character whose ASCII code is `an_int'
+			-- Character whose code is `an_int'
 		require
 			an_int_large_enough: an_int >= Platform.Minimum_character_code
 			an_int_small_enough: an_int <= Platform.Maximum_character_code
@@ -38,9 +38,6 @@ feature -- Conversion
 	to_hexadecimal (an_int: INTEGER; uppercase: BOOLEAN): STRING is
 			-- Hexadecimal representation of `an_int';
 			-- Return a new string at each call.
-			-- Regexp:
-			--    uppercase: 0|[1-9A-F][0-9A-F]*
-			--    not uppercase: 0|[1-9a-f][0-9a-f]*
 		require
 			an_int_positive: an_int >= 0
 		do
@@ -49,15 +46,14 @@ feature -- Conversion
 		ensure
 			hexadecimal_not_void: Result /= Void
 			is_string: Result.same_type ("")
+			-- regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (Result)
+			-- regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
 		end
 
 feature -- Output
 
 	append_hexadecimal_integer (a_string: STRING; an_int: INTEGER; uppercase: BOOLEAN) is
 			-- Append a hexadecimal representation of `an_int' to `a_string'.
-			-- Regexp:
-			--    uppercase: 0|[1-9A-F][0-9A-F]*
-			--    not uppercase: 0|[1-9a-f][0-9a-f]*
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
 			a_string_not_void: a_string /= Void
@@ -131,12 +127,15 @@ feature -- Output
 					end
 				end
 			end
+		ensure
+			-- regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+			-- regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
 feature -- Operation(s)
 
 	power (x, n: INTEGER): INTEGER is
-			-- Integer x to the power of n (x ^ n)
+			-- Integer `x' to the power of `n' (`x' ^ `n')
 		require
 			positive_n: n >= 0
 		do
@@ -160,7 +159,7 @@ feature -- Operation(s)
 		end
 
 	bit_and (m, n: INTEGER): INTEGER is
-			-- Bitwise and between `m' and `n'.
+			-- Bitwise 'and' between `m' and `n'
 		local
 #ifdef VE
 			i,j: BIT 32
@@ -180,7 +179,7 @@ feature -- Operation(s)
 		end
 
 	bit_or (m, n: INTEGER): INTEGER is
-			-- Bitwise or between `m' and `n'.
+			-- Bitwise 'or' between `m' and `n'
 		local
 #ifdef VE
 			i,j: BIT 32
@@ -200,7 +199,8 @@ feature -- Operation(s)
 		end
 
 	bit_shift_left (m, n: INTEGER): INTEGER is
-			-- `m' shifted `n' bits to left.
+			-- `m' shifted `n' bits to left;
+			-- Note: The new bits added on the right are 0.
 		require
 			thirty_two_bit_shift: 0 <= n and n < 32
 		local
@@ -222,17 +222,28 @@ feature -- Operation(s)
 
 
 	bit_shift_right (m, n: INTEGER): INTEGER is
-			-- `m' shifted `n' bits to right.
+			-- `m' shifted `n' bits to right;
+			-- Note: If the first bit is set (i.e. the sign bit), then
+			-- the new bits added on the left are 1; otherwise they are 0.
 		require
 			thirty_two_bit_shift: 0 <= n and n < 32
 		local
 #ifdef VE
-			i: BIT 32
+			b: BIT 32
+			i: INTEGER
 #endif
 		do
 #ifdef VE
-			i.from_integer (m)
-			Result := (i ^ n).to_integer
+			b.from_integer (m)
+			b := b ^ n
+			if m < 0 then
+				i := 32 - n + 1
+				from until i > 32 loop
+					b.put (True, i)
+					i := i + 1
+				end
+			end
+			Result := b.to_integer
 #endif
 #ifdef ISE
 			Result := m.bit_shift_right (n)
