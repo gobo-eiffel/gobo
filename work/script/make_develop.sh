@@ -105,8 +105,8 @@ echo ''; echo "#### Generate files in \$GOBO/example/parse/rpcalc"
 cd $GOBO/example/parse/rpcalc
 make depend ise.ace hact.ace
 make parser
-echo ''; echo "#### Generate files in \$GOBO/example/time/system_clock"
-cd $GOBO/example/time/system_clock
+echo ''; echo "#### Generate files in \$GOBO/example/time/clock"
+cd $GOBO/example/time/clock
 make depend ise.ace hact.ace
 echo ''; echo "#### Generate files in \$GOBO/example/test/concat1"
 cd $GOBO/example/test/concat1
