@@ -6,13 +6,5 @@
 # revision:    "$Revision$"
 
 
-include $(GOBO)/misc/platform.make
-
-all: spec
-
-depend: Makefile.dep
-
-Makefile.dep:
-	$(GOBO)/bin/ge2dep.sh > Makefile.dep
-
-include Makefile.dep
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/ge2e.mk

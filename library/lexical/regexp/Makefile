@@ -6,7 +6,7 @@
 # revision:    "$Revision$"
 
 
-include $(GOBO)/misc/platform.make
+include ${GOBO}/misc/platform.mk
 
 all: parser scanner
 
@@ -14,9 +14,9 @@ parser: lx_regexp_parser.e
 scanner: lx_regexp_scanner.e
 
 lx_regexp_parser.e: lx_regexp_parser.y
-	$(GEYACC) --version
-	$(GEYACC) -t LX_REGEXP_TOKENS -o lx_regexp_parser.e lx_regexp_parser.y
+	${GEYACC} --version
+	${GEYACC} -t LX_REGEXP_TOKENS -o lx_regexp_parser.e lx_regexp_parser.y
 
 lx_regexp_scanner.e: lx_regexp_scanner.l
-	$(GELEX) --version
-	$(GELEX) lx_regexp_scanner.l
+	${GELEX} --version
+	${GELEX} lx_regexp_scanner.l

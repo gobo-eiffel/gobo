@@ -28,9 +28,9 @@ cluster
 
 	calc:			"$GOBO/example/lexical/calculator";
 
-#include "$GOBO/library/lexical/hact-skl.ace"
+#include "${GOBO}/library/lexical/hact-skl.ace"
 
-#include "$GOBO/library/kernel/hact.ace"
+#include "${GOBO}/library/kernel/hact.ace"
 
 		-- ISS-Yacc
 	yacc:			"$ISS_BASE/library/yacc";

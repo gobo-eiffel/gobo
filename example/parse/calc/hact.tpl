@@ -28,9 +28,9 @@ cluster
 
 	calc:				"$GOBO/example/parse/calc";
 
-#include "$GOBO/library/parse/hact-skl.ace"
+#include "${GOBO}/library/parse/hact-skl.ace"
 
-#include "$GOBO/library/kernel/hact.ace"
+#include "${GOBO}/library/kernel/hact.ace"
 
 component
 

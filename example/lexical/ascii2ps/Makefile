@@ -9,13 +9,13 @@
 TARGET=ascii2ps
 ROOT_CLASS=ASCII2PS
 CREATION_ROUTINE=make
-ROOT_DIR=$(GOBO)/example/lexical/ascii2ps
+ROOT_DIR=${GOBO}/example/lexical/ascii2ps
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk
 
 scanner: ascii2ps.e
 
 ascii2ps.e: ascii2ps.l
-	$(GELEX) --version
-	$(GELEX) ascii2ps.l
+	${GELEX} --version
+	${GELEX} ascii2ps.l

@@ -9,7 +9,7 @@
 TARGET=gegrep
 ROOT_CLASS=GEGREP
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/example/lexical/gegrep
+ROOT_DIR=${GOBO}/example/lexical/gegrep
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk

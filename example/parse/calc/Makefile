@@ -9,13 +9,13 @@
 TARGET=calc
 ROOT_CLASS=CALC
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/example/parse/calc
+ROOT_DIR=${GOBO}/example/parse/calc
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk
 
 parser: calc.e
 
 calc.e: calc.y
-	$(GEYACC) --version
-	$(GEYACC) -o calc.e calc.y
+	${GEYACC} --version
+	${GEYACC} -o calc.e calc.y
