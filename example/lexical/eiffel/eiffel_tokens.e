@@ -5,7 +5,7 @@ indexing
 		"Token codes for Eiffel parsers"
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -114,5 +114,6 @@ feature -- Token codes
 	E_FREEOP: INTEGER is 356
 	E_NOT: INTEGER is 357
 	E_OLD: INTEGER is 358
+	E_PRECURSOR: INTEGER is 359
 
 end -- class EIFFEL_TOKENS
