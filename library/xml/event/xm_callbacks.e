@@ -45,6 +45,7 @@ feature -- Meta
 
 	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			name_not_void: a_name /= Void
 			content_not_void: a_content /= Void
@@ -54,6 +55,7 @@ feature -- Meta
 	on_comment (a_content: STRING) is
 			-- Processing a comment.
 			-- Atomic: single comment produces single event
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			a_content_not_void: a_content /= Void
 		deferred
@@ -63,6 +65,7 @@ feature -- Tag
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part)
@@ -71,6 +74,7 @@ feature -- Tag
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of attribute.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part)
@@ -85,6 +89,7 @@ feature -- Tag
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part)
@@ -97,6 +102,7 @@ feature -- Content
 			-- Text content.
 			-- NOT atomic: two on_content events may follow each other
 			-- without a markup event in between.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			not_void: a_content /= Void
 			not_empty: a_content.count >= 0
