@@ -96,9 +96,9 @@ feature -- Status report
 				Result := a_unicode
 			end
 		ensure
-			result_not_void: Result /= Void
-			result_count: Result.count = 1
-			result_code: Result.item_code (1) = a_code
+			string_not_void: Result /= Void
+			count_set: Result.count = 1
+			code_set: Result.item_code (1) = a_code
 		end
 
 feature -- Access

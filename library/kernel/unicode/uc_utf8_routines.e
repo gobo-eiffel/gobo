@@ -123,13 +123,13 @@ feature -- Status report
 		ensure
 			result_start: Result implies is_endian_detection_character_start (a_first, a_second)
 		end
-		
+
 	is_endian_detection_character_start (a_first, a_second: CHARACTER): BOOLEAN is
 			-- Are these characters the start of a UTF-8 encoded Byte Order Marker (BOM)?
 		do
 			Result := a_first = byte_ef and a_second = byte_bb
 		end
-		
+
 feature -- Access
 
 	encoded_first_value (a_byte: CHARACTER): INTEGER is
@@ -492,11 +492,13 @@ feature {NONE} -- Constants
 	byte_255: CHARACTER is '%/255/'
 
 	byte_ef: CHARACTER is '%/239/'
-		-- UTF-8 BOM first: EF
+			-- UTF-8 BOM first: EF
+
 	byte_bb: CHARACTER is '%/187/'
-		-- UTF-8 BOM second: BB
+			-- UTF-8 BOM second: BB
+
 	byte_bf: CHARACTER is '%/191/'
-		-- UTF-8 BOM third: BF
+			-- UTF-8 BOM third: BF
 
 feature {NONE} -- Implementation
 

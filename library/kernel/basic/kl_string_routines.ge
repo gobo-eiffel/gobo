@@ -135,6 +135,7 @@ feature -- Initialization
 
 	make_buffer (n: INTEGER): STRING is
 			-- Create a new string containing `n' characters.
+			-- (Not in ELKS 2001 STRING)
 		require
 			non_negative_n: n >= 0
 		do
@@ -202,8 +203,8 @@ feature -- Status report
 		end
 
 	is_hexadecimal (a_string: STRING): BOOLEAN is
-			-- Is a string made up of digits or
-			-- A-F or a-f?
+			-- Is a string made up of digits or A-F or a-f?
+			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -232,6 +233,7 @@ feature -- Access
 	new_empty_string (a_string: STRING; n: INTEGER): STRING is
 			-- New empty string with same dynamic type as `a_string';
 			-- Try to allocate space for at least `n' characters.
+			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
 			non_negative_n: n >= 0
@@ -292,8 +294,7 @@ feature -- Access
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
 			-- Note: Too time and memory consuming with SE -0.74:
-			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal
-			--	(a_string.substring (start_index + 1, end_index))
+			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal (a_string.substring (start_index + 1, end_index))
 		end
 
 	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER is
@@ -402,6 +403,7 @@ feature -- Access
 	case_insensitive_hash_code (a_string: STRING): INTEGER is
 			-- Hash code value of `a_string' which doesn't
 			-- take case sensitivity into account
+			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -513,6 +515,7 @@ feature -- Comparison
 
 	same_string (a_string, other: STRING): BOOLEAN is
 			-- Do `a_string' and `other' have the same unicode character sequence?
+			-- (Not in ELKS 2001 STRING)
 			-- Note: the difference with `elks_same_string' is that here the
 			-- implementation uses STRING.item_code instead of STRING.item
 			-- and hence characters which have different codes are not
@@ -557,9 +560,30 @@ feature -- Comparison
 			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 
+	same_unicode_string (a_string, other: STRING): BOOLEAN is
+			-- Do `a_string' and `other' have the same unicode character sequence?
+			-- Note: the difference with `elks_same_string' is that here the
+			-- implementation uses STRING.item_code instead of STRING.item
+			-- and hence characters which have different codes are not
+			-- considered equal even if they do not fit into a CHARACTER.
+		obsolete
+			"[020722] Use `same_string' instead."
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		do
+			Result := same_string (a_string, other)
+		ensure
+			definition: Result = (a_string.count = other.count and then
+				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
+				(a_string.count >= 2 implies same_string (a_string.substring (2, a_string.count), other.substring (2, a_string.count))))))
+			elks_same_string: Result implies elks_same_string (a_string, other)
+		end
+
 	same_case_insensitive (s1, s2: STRING): BOOLEAN is
 			-- Are `s1' and `s2' made up of the same
 			-- characters (case insensitive)?
+			-- (Not in ELKS 2001 STRING)
 		require
 			s1_not_void: s1 /= Void
 			s2_not_void: s2 /= Void
@@ -614,6 +638,7 @@ feature -- Comparison
 	three_way_comparison (a_string, other: STRING): INTEGER is
 			-- If `a_string' equal to `other', 0;
 			-- if smaller, -1; if greater, 1
+			-- (ELKS 2001 STRING)
 			-- Note: there is a bug in the specification of the
 			-- contracts of `three_way_comparison' from class
 			-- COMPARABLE. This routine cannot satisfy its
@@ -691,6 +716,7 @@ feature -- Comparison
 	three_way_case_insensitive_comparison (a_string, other: STRING): INTEGER is
 			-- If `a_string' equal to `other', 0; if smaller, -1; if greater, 1
 			-- (case insensitive comparison)
+			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
@@ -1017,14 +1043,13 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := clone (a_string)
-			Result.to_lower
+			Result := a_string.as_lower
 		ensure
 			lower_string_not_void: Result /= Void
 			lower_string_same_type: Result.same_type (a_string)
 			same_count: Result.count = a_string.count
-			-- definition: forall i in 1..a_string.count,
-			--	Result.item (i) = a_string.item (i).to_lower
+			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
+			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_lower)
 		end
 
 	to_upper (a_string: STRING): STRING is
@@ -1035,14 +1060,13 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := clone (a_string)
-			Result.to_upper
+			Result := a_string.as_upper
 		ensure
 			upper_string_not_void: Result /= Void
 			upper_string_same_type: Result.same_type (a_string)
 			same_count: Result.count = a_string.count
-			-- definition: forall i in 1..a_string.count,
-			--	Result.item (i) = a_string.item (i).to_upper
+			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
+			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_upper)
 		end
 
 	as_lower (a_string: STRING): STRING is
@@ -1080,7 +1104,9 @@ feature -- Conversion
 		end
 
 	hexadecimal_to_integer (a_string: STRING): INTEGER is
-			-- Convert  hexadecimal number string to integer.
+			-- Convert hexadecimal number string to integer;
+			-- (Not in ELKS 2001 STRING)
+			-- Note: Do not take overflow into account.
 		require
 			not_void: a_string /= Void
 			hexadecimal: is_hexadecimal (a_string)
@@ -1150,8 +1176,7 @@ feature -- Removal
 				when ' ', '%T', '%R', '%N' then
 					i := i + 1
 				else
-						-- Jump out of the loop.
-					nb := 0
+					nb := 0 -- Jump out of the loop.
 				end
 			end
 			a_string.remove_head (i - 1)
@@ -1180,8 +1205,7 @@ feature -- Removal
 				when ' ', '%T', '%R', '%N' then
 					nb := nb - 1
 				else
-						-- Jump out of the loop.
-					i := nb + 1
+					i := nb + 1 -- Jump out of the loop.
 				end
 			end
 			a_string.keep_head (nb)
@@ -1274,9 +1298,9 @@ feature -- Removal
 			-- Remove all characters in `a_string'.
 			-- Do not discard allocated memory (i.e. do not
 			-- change capacity) when allowed by the underlying
-			-- Eiffel compiler. (Note: currently only ISE and
-			-- SE will not change capacity, whereas 
-			-- VE will reset capacity to zero.)
+			-- Eiffel compiler.
+			-- Note: currently only ISE and SE will not change
+			-- capacity, whereas VE will reset capacity to zero.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -1329,28 +1353,6 @@ feature -- Resizing
 #endif
 		ensure
 			count_set: a_string.count = n
-		end
-
-feature -- Obsolete
-
-	same_unicode_string (a_string, other: STRING): BOOLEAN is
-			-- Do `a_string' and `other' have the same unicode character sequence?
-			-- Note: the difference with `elks_same_string' is that here the
-			-- implementation uses STRING.item_code instead of STRING.item
-			-- and hence characters which have different codes are not
-			-- considered equal even if they do not fit into a CHARACTER.
-		obsolete
-			"[020722] Use `same_string' instead."
-		require
-			a_string_not_void: a_string /= Void
-			other_not_void: other /= Void
-		do
-			Result := same_string (a_string, other)
-		ensure
-			definition: Result = (a_string.count = other.count and then
-				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
-				(a_string.count >= 2 implies same_string (a_string.substring (2, a_string.count), other.substring (2, a_string.count))))))
-			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 
 feature {NONE} -- Implementation

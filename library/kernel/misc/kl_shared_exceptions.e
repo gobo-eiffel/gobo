@@ -28,11 +28,11 @@ feature -- Obsolete
 	exceptions_: KL_EXCEPTIONS is
 			-- Exception handling
 		obsolete
-			"Use `Exceptions' instead."
+			"[040101] Use `Exceptions' instead."
 		once
 			Result := Exceptions
 		ensure
-			exceptions__not_void: Result /= Void
+			exceptions_not_void: Result /= Void
 		end
 
 end

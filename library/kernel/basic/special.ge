@@ -66,8 +66,7 @@ feature {NONE} -- Initialization
 #endif
 		ensure
 			count_set: count = an_array.count
-			-- same_items: forall i in 0.. (count - 1),
-			--	item (i) = an_array.item (an_array.lower + i)
+			-- same_items: forall i in 0.. (count - 1), item (i) = an_array.item (an_array.lower + i)
 		end
 
 #ifdef VE
@@ -143,9 +142,7 @@ feature -- Removal
 		do
 			storage.clear_all
 		ensure
-			-- all_cleared: forall i in 0..(count - 1),
-			--		item (i) = Void or else
-			--		item (i) = item (i).default
+			-- all_cleared: forall i in 0..(count - 1), item (i) = Void or else item (i) = item (i).default
 		end
 
 feature {NONE} -- Implementation

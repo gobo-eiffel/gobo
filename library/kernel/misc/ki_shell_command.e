@@ -67,7 +67,7 @@ feature -- Execution
 			-- termination. Make exit status available in `exit_code',
 			-- `is_user_code' and `is_system_code'.
 			-- (Note that under Windows 95/98 the exit status code
-			-- returned is always 0 when `is_user_code' is true.).
+			-- returned is always 0 when `is_user_code' is true.)
 		deferred
 		end
 

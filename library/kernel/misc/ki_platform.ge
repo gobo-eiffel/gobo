@@ -5,7 +5,7 @@ indexing
 		"Interface for platform-dependent properties"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -164,8 +164,10 @@ feature -- Values
 		ensure
 			meaningful: Result >= Maximum_byte_code
 #ifdef ISE || VE
-				-- Problem with ^ in SE 2.1b1
 			definition: Result = (2 ^ Character_bits) - 1
+#else
+			-- Problem with ^ in SE 2.1b1:
+			-- definition: Result = (2 ^ Character_bits) - 1
 #endif
 		end
 
@@ -176,8 +178,10 @@ feature -- Values
 			meaningful: Result <= 0
 				-- Result = - (2 ^ (Integer_bits - 1)):
 #ifdef ISE || VE 
-				-- Problem with ^ in SE 2.1b1
 			definition: Result = (2 ^ (Integer_bits - 2)) * -2
+#else
+			-- Problem with ^ in SE 2.1b1:
+			-- definition: Result = (2 ^ (Integer_bits - 2)) * -2
 #endif
 		end
 

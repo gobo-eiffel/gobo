@@ -201,9 +201,8 @@ feature -- Access
 			substring_not_void: Result /= Void
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = item (start_index)
-				-- Note: Too time and memory consuming with SE -0.74:
-			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal
-			--	(substring (start_index + 1, end_index))
+			-- Note: Too time and memory consuming with SE -0.74:
+			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal (substring (start_index + 1, end_index))
 		end
 
 	substring_index (other: STRING; start_index: INTEGER): INTEGER is
@@ -416,11 +415,9 @@ feature -- Comparison
 			-- (Extended from ELKS 2001 STRING)
 		deferred
 		ensure then
-				-- Note: Definition not necessarily acceptable in proper descendant classes:
-			-- definition: Result = (same_type (other) and then
-			--	count = other.count and then
-			--	(count > 0 implies (item (1) = other.item (1) and 
-			--	substring (2, count).is_equal (other.substring (2, count)))))
+			-- Note: Definition not necessarily acceptable in proper descendant classes:
+			-- definition: Result = (same_type (other) and then count = other.count and then
+			--   (count > 0 implies (item (1) = other.item (1) and substring (2, count).is_equal (other.substring (2, count)))))
 			definition: same_type ("") implies
 				(Result = (same_type (other) and then count = other.count and then
 				(count > 0 implies (item (1) = other.item (1) and 
@@ -446,17 +443,17 @@ feature -- Comparison
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
-		-- Note: ELKS 2001 specifies `other' of type STRING, but this routine
-		-- is inherited from COMPARABLE with another signature:
+	-- Note: ELKS 2001 specifies `other' of type STRING, but this routine
+	-- is inherited from COMPARABLE with another signature:
 	-- infix "<" (other: STRING): BOOLEAN is
 			-- Is string lexicographically lower than `other'?
 			-- (Extended from ELKS 2001 STRING)
 		deferred
 		ensure then
-				-- Note: Definition not necessarily acceptable in proper descendant classes:
+			-- Note: Definition not necessarily acceptable in proper descendant classes:
 			-- definition: Result = (count = 0 and other.count > 0 or
-			--	count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
-			--	item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
+			--   count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
+			--   item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
 			definition: same_type ("") implies Result = (count = 0 and other.count > 0 or
 				count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
 				item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
@@ -549,8 +546,8 @@ feature -- Element change
 		end
 
 	replace_substring (s: like Current; start_index, end_index: INTEGER) is
-		-- Note: VE 4.1 has 'like Current' in its signature instead
-		-- of STRING as specified in ELKS 2001:
+	-- Note: VE 4.1 has 'like Current' in its signature instead
+	-- of STRING as specified in ELKS 2001:
 	-- replace_substring (s: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `s'.
@@ -678,10 +675,10 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: There is an infinite loop with SE 1.0 because SE
-				-- checks assertions even when execution assertions and `as_lower'
-				-- in descendant classes is implemented by calling `to_lower'
-				-- on a clone of `Current':
+			-- Note: There is an infinite loop with SE 1.0 because SE
+			-- checks assertions even when execution assertions and `as_lower'
+			-- in descendant classes is implemented by calling `to_lower'
+			-- on a clone of `Current':
 			-- length_and_content: is_equal (old as_lower)
 		end
 
@@ -690,10 +687,10 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: There is an infinite loop with SE 1.0 because SE
-				-- checks assertions even when execution assertions and `as_upper'
-				-- in descendant classes is implemented by calling `to_upper'
-				-- on a clone of `Current':
+			-- Note: There is an infinite loop with SE 1.0 because SE
+			-- checks assertions even when execution assertions and `as_upper'
+			-- in descendant classes is implemented by calling `to_upper'
+			-- on a clone of `Current':
 			-- length_and_content: is_equal (old as_upper)
 		end
 

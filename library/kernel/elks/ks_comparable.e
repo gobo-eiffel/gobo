@@ -41,7 +41,7 @@ feature -- Comparison
 		deferred
 		ensure
 			-- Note: Wrong precedence of operators in ELKS 95:
-			--definition: Result = (Current < other) or is_equal (other)
+			-- definition: Result = (Current < other) or is_equal (other)
 			definition: Result = (Current < other or is_equal (other))
 		end
 

@@ -79,8 +79,8 @@ feature -- Setting
 			environment_impl.set_environment_variable (STRING_.as_string (a_variable), STRING_.as_string (a_value))
 #endif
 		ensure
-			-- (This setting may fail on certain platforms, hence the
-			-- following commented postcondition.)
+			-- This setting may fail on certain platforms, hence the
+			-- following commented postcondition:
 			-- variable_set: equal (variable_value (a_variable), STRING_.as_string (a_value))
 		end
 

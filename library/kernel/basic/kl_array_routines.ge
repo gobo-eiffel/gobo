@@ -25,8 +25,7 @@ feature -- Initialization
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = an_array.count
-			-- same_items: forall i in Result.lower .. Result.upper,
-			--	Result.item (i) = an_array.item (i + an_array.lower - min_index)
+			-- same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + an_array.lower - min_index)
 		end
 
 feature -- Status report
@@ -82,8 +81,7 @@ feature -- Access
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = end_pos - start_pos + 1
-			-- same_items: forall i in Result.lower .. Result.upper,
-			--	Result.item (i) = an_array.item (i + start_pos - min_index)
+			-- same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + start_pos - min_index)
 		end
 
 feature -- Element change
@@ -124,8 +122,7 @@ feature -- Element change
 			end
 #endif
 		ensure
-			-- copied: forall i in 0 .. (end_pos - start_pos),
-			--     an_array.item (index_pos + i) = other.item (start_pos + i)
+			-- copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
 feature -- Removal
@@ -139,9 +136,7 @@ feature -- Removal
 		do
 			an_array.clear_all
 		ensure
-			-- all_cleared: forall i in an_array.lower .. an_array.upper,
-			--		an_array.item (i) = Void or else
-			--		an_array.item (i) = an_array.item (i).default
+			-- all_cleared: forall i in an_array.lower .. an_array.upper, an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
 		end
 
 end

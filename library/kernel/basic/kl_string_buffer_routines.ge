@@ -126,8 +126,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	append_substring_to_string (a_buffer: like STRING_BUFFER_TYPE;
-		s, e: INTEGER; a_string: STRING) is
+	append_substring_to_string (a_buffer: like STRING_BUFFER_TYPE; s, e: INTEGER; a_string: STRING) is
 			-- Append string made up of characters held in `a_buffer'
 			-- between indexes `s' and `e' to `a_string'.
 		require
@@ -174,8 +173,7 @@ feature -- Element change
 			charaters_set: equal (substring (a_buffer, pos, a_string.count + pos - 1), a_string)
 		end
 
-	copy_from_stream (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER;
-		a_stream: like INPUT_STREAM_TYPE; nb_char: INTEGER): INTEGER is
+	copy_from_stream (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER; a_stream: like INPUT_STREAM_TYPE; nb_char: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos' with
 			-- at most `nb_char' characters read from `a_stream'.
 			-- Return the number of characters actually read.
