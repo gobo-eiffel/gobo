@@ -59,6 +59,7 @@
 			Install developer package.
 		</description>
 
+		<geant target="clobber"/>
 		<geant target="install"/>
 		<geant target="clean"/>
 	</target>
@@ -68,8 +69,15 @@
 			Install delivery package.
 		</description>
 
+		<geant target="clobber"/>
 		<geant target="install"/>
 		<geant target="clean"/>
+		<delete directory="work"/>
+		<delete directory="doc/structure/visio"/>
+		<delete directory="doc/time/visio"/>
+		<delete>
+			<fileset directory="." include="@(**/.cvsignore)"/>
+		</delete>
 	</target>
 
 	<target name="bootstrap1" depend="init">
