@@ -6,16 +6,20 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class ET_SYNTAX_ERROR
+class ET_SYNTAX_ERROR
 
 inherit
 
 	ET_ERROR
+
+creation
+
+	make
 
 feature {NONE} -- Initialization
 
@@ -26,6 +30,20 @@ feature {NONE} -- Initialization
 		do
 			!! parameters.make (1, 1)
 			parameters.put (a_position.out, 1)
+		end
+
+feature -- Access
+
+	default_template: STRING is
+			-- Default template used to built the error message
+		once
+			Result := "Syntax error.%N$1%N"
+		end
+
+	code: STRING is
+			-- Error code
+		once
+			Result := "SERR"
 		end
 
 invariant
