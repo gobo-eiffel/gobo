@@ -49,6 +49,7 @@ feature -- Initialization
 			-- Reset expression as it was when it was first parsed.
 		do
 			name.reset
+			expression.reset
 		end
 
 feature -- Access
