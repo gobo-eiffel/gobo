@@ -1,0 +1,53 @@
+indexing
+
+	description:
+
+		"Underlying operating systems"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_OPERATING_SYSTEM
+
+feature -- Access
+
+#ifdef WINDOWS
+	is_windows: BOOLEAN is True
+#else
+	is_windows: BOOLEAN is False
+#endif
+			-- Is underlying operating system Windows-like?
+
+#ifdef UNIX
+	is_unix: BOOLEAN is True
+#else
+	is_unix: BOOLEAN is False
+#endif
+			-- Is underlying operating system Unix-like?
+
+#ifdef LINUX
+	is_linux: BOOLEAN is True
+#else
+	is_linux: BOOLEAN is False
+#endif
+			-- Is underlying operating system Linux-like?
+
+#ifdef MACOS
+	is_macos: BOOLEAN is True
+#else
+	is_macos: BOOLEAN is False
+#endif
+			-- Is underlying operating system MacOS-like?
+
+#ifdef VMS
+	is_vms: BOOLEAN is True
+#else
+	is_vms: BOOLEAN is False
+#endif
+			-- Is underlying operating system VMS-like?
+
+end -- class KL_OPERATING_SYSTEM
