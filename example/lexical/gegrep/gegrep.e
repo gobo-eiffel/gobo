@@ -32,6 +32,8 @@ feature -- Execution
 			a_filename: STRING
 			case_insensitive: BOOLEAN
 		do
+			if False then resurrect_code end
+
 			nb := Arguments.argument_count
 			if nb = 0 then
 				std.error.put_string (Usage_message)
@@ -129,5 +131,20 @@ feature -- Access
 
 	regexp: LX_DFA_REGULAR_EXPRESSION
 			-- Regular expression
+
+feature {NONE} -- Implementation
+
+	resurrect_code is
+			-- Make sure that SmallEiffel does not complain about possible
+			-- "calls on a Void target in the living Eiffel code".
+		local
+			et1: DS_EQUALITY_TESTER [LX_NFA_STATE]
+			et2: DS_EQUALITY_TESTER [INTEGER]
+			fb: YY_FILE_BUFFER
+		do
+			!! et1
+			!! et2
+			!! fb.make (std.input)
+		end
 
 end -- class GEGREP
