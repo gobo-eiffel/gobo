@@ -940,7 +940,7 @@ feature {NONE} -- Generation
 			a_state: PR_STATE
 			an_action: PR_ERROR_ACTION
 		do
-				-- SmartEiffel generates C code which trigger a
+				-- SmartEiffel generates C code which triggers a
 				-- stack overflow of the C compiler if there are
 				-- too many branches in an inspect instruction.
 				-- Therefore, split the inspect instruction into
