@@ -62,8 +62,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_linear (other: DS_LINEAR [G]) is
-			-- Create an empty list and allocate
-			-- memory space for at least `n' items.
+			-- Create a new list and fill it with items of `other'.
 			-- Use `=' as comparison criterion.
 		require
 			other_not_void: other /= Void

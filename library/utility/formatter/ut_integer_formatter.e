@@ -22,7 +22,7 @@ feature -- Access
 	decimal_integer_out (an_int: INTEGER): STRING is
 			-- Decimal representation of `an_int';
 			-- Return a new string at each call.
-			-- Regexp: -?(0|[1-9][0-9]*)
+			-- Regexp: 0|(-?[1-9][0-9]*)
 		do
 			Result := STRING_.make (10)
 			append_decimal_integer (Result, an_int)
