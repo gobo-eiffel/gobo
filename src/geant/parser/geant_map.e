@@ -291,7 +291,7 @@ feature -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
---!! '\1' syntax has to be supported for regexp first.
+-- TODO: '\1' syntax has to be supported for regexp first.
 --	Type_attribute_value_regexp: UC_STRING is
 --			-- Value 'regexp' of xml attribute for type
 --		once
