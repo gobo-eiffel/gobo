@@ -6,11 +6,21 @@ Version 1.6 -
 	  in place of identifiers (e.g. LE or DOTDOT) in grammar
 	  rules (suggested by Berend de Boer).
 	* Anchored types are now accepted in %type declarations.
+	* Improved format of tokens in verbose file (suggested
+	  by Roger Browne).
+	* Added ISE's language extensions to the Eiffel parser
+	  example (suggested by Patrick Flaherty).
 
 	gelex:
 
 	* Added redefinable routine `default_action' to YY_SCANNER
 	  when default rule is matched (suggested by David Massart).
+	* Added `pre_action' and `post_action', called when
+	  %option pre-action and %option post-action are specified
+	  (suggested by Alexander Kogtenkov).
+	* Added `pre_eof_action' and `post_eof_action', called when
+	  %option pre-eof-action and %option post-eof-action are
+	  specified.
 
 	Gobo Eiffel Structure Library:
 
