@@ -29,10 +29,10 @@ feature -- Initialization
 			non_negative_n: n >= 0
 #ifdef ISE
 		local
-			a_string: STRING
+			to_special: TO_SPECIAL [CHARACTER]
 		do
-			!! a_string.make (n)
-			Result := a_string.area
+			!! to_special.make_area (n)
+			Result := to_special.area
 #else
 		do
 #ifdef VE
