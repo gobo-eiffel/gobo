@@ -175,6 +175,12 @@
 		<element name="echo">
 			<ref name="dir_if_unless"/>
 			<attribute name="message"/>
+			<optional>
+				<attribute name="to_file"/>
+				<optional>
+					<attribute name="append"/>
+				</optional>
+			</optional>
 		</element>
 	</define>
 	<define name="exec">

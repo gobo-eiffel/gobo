@@ -38,6 +38,32 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
+			<varlistentry>
+				<term>to_file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>if specified this attribute defines the name of the file the message will be written to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>append</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>This attribute applies only if attribute 'to'file' was specified.
+						If set to 'true' 'message' will be appended to the file. Otherwise the file will be overwritten with 'message'
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
 		</variablelist>
 	</section>
 
@@ -49,6 +75,12 @@
   <element name="echo">
     <ref name="dir_if_unless"/>
     <attribute name="message"/>
+    <optional>
+      <attribute name="to_file"/>
+      <optional>
+        <attribute name="append"/>
+      </optional>
+    </optional>
   </element>
 </define>
 ]]>
@@ -60,6 +92,8 @@
 
 		<programlisting><![CDATA[
   <echo message="Hello world!"/>
+  <echo message="Hello world!" to_file="messages.txt"/>
+  <echo message="Hello world again!" to_file="messages.txt" append="true"/>
 ]]>
 		</programlisting>
 	</section>
