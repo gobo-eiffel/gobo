@@ -40,16 +40,19 @@ inherit
 			is_first as list_is_first,
 			is_last as list_is_last
 		redefine
-			equality_tester
+			equality_tester,
+			force_last, put_last
 		end
 				
 creation
 
 	make,
+	make_last,
+	make_root,
 	make_child
 
 feature {NONE} -- Initialization
-
+	
 	make (a_parent: like parent; a_name: like name; a_ns: like namespace) is
 			-- Create a new child element.
 		require
@@ -61,9 +64,43 @@ feature {NONE} -- Initialization
 			namespace := a_ns
 			make_list
 		ensure
+			parent_set: parent = a_parent
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
+		end
+		
+	make_last (a_parent: XM_ELEMENT; a_name: like name; a_ns: like namespace) is
+			-- Create a new child element.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_name_not_void: a_name /= Void
+		do
+			name := a_name
+			namespace := a_ns
+			make_list
+			a_parent.force_last (Current)
+		ensure
 			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			name_set: name = a_name
+			ns_prefix_set: namespace = a_ns
+		end
+		
+	make_root (a_parent: XM_DOCUMENT; a_name: like name; a_ns: like namespace) is
+			-- Create a new child element.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_name_not_void: a_name /= Void
+		do
+			name := a_name
+			namespace := a_ns
+			make_list
+			a_parent.set_root_element (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			name_set: name = a_name
+			ns_prefix_set: namespace = a_ns
 		end
 		
 	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace) is
@@ -81,18 +118,44 @@ feature -- List
 
 	equality_tester: KL_EQUALITY_TESTER [XM_ELEMENT_NODE]
 
+feature -- Element change
+
+	force_last (v: XM_ELEMENT_NODE) is
+			-- `force_last' with parent removal and optimisation for 
+			-- force_last (last).
+		do
+			-- check last_efficient: O(last) < O(Precursor) end
+			if is_empty or else last /= v then
+				Precursor (v)
+			-- else force_last (last) happens to be a no-op.
+			end
+		end
+		
+	put_last (v: XM_ELEMENT_NODE) is
+			-- `put_last' with parent removal and optimisation for 
+			-- put_last (last).
+		do
+			-- check last_efficient: O(last) < O(Precursor) end
+			if is_empty or else last /= v then
+				Precursor (v)
+			-- else force_last (last) happens to be a no-op.
+			end
+		end
+		
 feature {NONE} -- Parent processing
 
 	before_addition (a_node: XM_ELEMENT_NODE) is
 			-- Remove node from original parent if not us.
 		do
-			if a_node /= Void and then a_node.parent /= Current then
+			if a_node /= Void then
 					-- Remove from previous parent.
-				a_node.parent.equality_delete (a_node)
-				a_node.set_parent (Current)
+				if a_node.parent /= Void then
+					a_node.parent.equality_delete (a_node)
+				end
+				a_node.node_set_parent (Current)
 			end
 		ensure then
-			parent_accepted: a_node.parent = Current
+			parent_accepted: a_node /= Void implies a_node.parent = Current
 		end
 		
 feature {XM_NODE} -- Removal
