@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+
+<project name="src" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel tools"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_hact"/>
+		<echo message="   geant compile_se"/>
+		<echo message="   geant compile_ve"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}/src">
+		<description>
+			Install the Gobo Eiffel tools.
+		</description>
+
+		<geant file="geant/build.eant" target="install"/>
+		<geant file="gelex/build.eant" target="install"/>
+		<geant file="gelint/build.eant" target="install"/>
+		<geant file="gepp/build.eant" target="install"/>
+		<geant file="getest/build.eant" target="install"/>
+		<geant file="gexace/build.eant" target="install"/>
+		<geant file="geyacc/build.eant" target="install"/>
+	</target>
+
+	<target name="compile" depend="init" dir="${GOBO}/src">
+		<description>
+			Compile Gobo tools.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant file="geant/build.eant" target="compile"/>
+		<geant file="gelex/build.eant" target="compile"/>
+		<geant file="gelint/build.eant" target="compile"/>
+		<geant file="gepp/build.eant" target="compile"/>
+		<geant file="getest/build.eant" target="compile"/>
+		<geant file="gexace/build.eant" target="compile"/>
+		<geant file="geyacc/build.eant" target="compile"/>
+	</target>
+
+	<target name="compile_ise" depend="init" dir="${GOBO}/src">
+		<description>
+			Compile Gobo tools with ISE Eiffel.
+		</description>
+
+		<geant file="geant/build.eant" target="compile_ise"/>
+		<geant file="gelex/build.eant" target="compile_ise"/>
+		<geant file="gelint/build.eant" target="compile_ise"/>
+		<geant file="gepp/build.eant" target="compile_ise"/>
+		<geant file="getest/build.eant" target="compile_ise"/>
+		<geant file="gexace/build.eant" target="compile_ise"/>
+		<geant file="geyacc/build.eant" target="compile_ise"/>
+	</target>
+
+	<target name="compile_hact" depend="init" dir="${GOBO}/src">
+		<description>
+			Compile Gobo tools with Halstenbach Eiffel.
+		</description>
+
+		<geant file="geant/build.eant" target="compile_hact"/>
+		<geant file="gelex/build.eant" target="compile_hact"/>
+		<geant file="gelint/build.eant" target="compile_hact"/>
+		<geant file="gepp/build.eant" target="compile_hact"/>
+		<geant file="getest/build.eant" target="compile_hact"/>
+		<geant file="gexace/build.eant" target="compile_hact"/>
+		<geant file="geyacc/build.eant" target="compile_hact"/>
+	</target>
+
+	<target name="compile_ve" depend="init" dir="${GOBO}/src">
+		<description>
+			Compile Gobo tools with Visual Eiffel.
+		</description>
+
+		<geant file="geant/build.eant" target="compile_ve"/>
+		<geant file="gelex/build.eant" target="compile_ve"/>
+		<geant file="gelint/build.eant" target="compile_ve"/>
+		<geant file="gepp/build.eant" target="compile_ve"/>
+		<geant file="getest/build.eant" target="compile_ve"/>
+		<geant file="gexace/build.eant" target="compile_ve"/>
+		<geant file="geyacc/build.eant" target="compile_ve"/>
+	</target>
+
+	<target name="compile_se" depend="init" dir="${GOBO}/src">
+		<description>
+			Compile Gobo tools with SmallEiffel.
+		</description>
+
+		<geant file="geant/build.eant" target="compile_se"/>
+		<geant file="gelex/build.eant" target="compile_se"/>
+		<geant file="gelint/build.eant" target="compile_se"/>
+		<geant file="gepp/build.eant" target="compile_se"/>
+		<geant file="getest/build.eant" target="compile_se"/>
+		<geant file="gexace/build.eant" target="compile_se"/>
+		<geant file="geyacc/build.eant" target="compile_se"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}/src">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="geant/build.eant" target="clean"/>
+		<geant file="gelex/build.eant" target="clean"/>
+		<geant file="gelint/build.eant" target="clean"/>
+		<geant file="gepp/build.eant" target="clean"/>
+		<geant file="getest/build.eant" target="clean"/>
+		<geant file="gexace/build.eant" target="clean"/>
+		<geant file="geyacc/build.eant" target="clean"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}/src">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="geant/build.eant" target="clobber"/>
+		<geant file="gelex/build.eant" target="clobber"/>
+		<geant file="gelint/build.eant" target="clobber"/>
+		<geant file="gepp/build.eant" target="clobber"/>
+		<geant file="getest/build.eant" target="clobber"/>
+		<geant file="gexace/build.eant" target="clobber"/>
+		<geant file="geyacc/build.eant" target="clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+</project>

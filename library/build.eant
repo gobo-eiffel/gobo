@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<project name="library" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel libraries"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}/library">
+		<description>
+			Install the Gobo Eiffel libraries.
+		</description>
+
+		<geant file="kernel/build.eant" target="install"/>
+		<geant file="lexical/build.eant" target="install"/>
+		<geant file="other/build.eant" target="install"/>
+		<geant file="parse/build.eant" target="install"/>
+		<geant file="pattern/build.eant" target="install"/>
+		<geant file="structure/build.eant" target="install"/>
+		<geant file="test/build.eant" target="install"/>
+		<geant file="time/build.eant" target="install"/>
+		<geant file="tools/build.eant" target="install"/>
+		<geant file="utility/build.eant" target="install"/>
+		<geant file="xml/build.eant" target="install"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}/library">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="kernel/build.eant" target="clean"/>
+		<geant file="lexical/build.eant" target="clean"/>
+		<geant file="other/build.eant" target="clean"/>
+		<geant file="parse/build.eant" target="clean"/>
+		<geant file="pattern/build.eant" target="clean"/>
+		<geant file="structure/build.eant" target="clean"/>
+		<geant file="test/build.eant" target="clean"/>
+		<geant file="time/build.eant" target="clean"/>
+		<geant file="tools/build.eant" target="clean"/>
+		<geant file="utility/build.eant" target="clean"/>
+		<geant file="xml/build.eant" target="clean"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}/library">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="kernel/build.eant" target="clobber"/>
+		<geant file="lexical/build.eant" target="clobber"/>
+		<geant file="other/build.eant" target="clobber"/>
+		<geant file="parse/build.eant" target="clobber"/>
+		<geant file="pattern/build.eant" target="clobber"/>
+		<geant file="structure/build.eant" target="clobber"/>
+		<geant file="test/build.eant" target="clobber"/>
+		<geant file="time/build.eant" target="clobber"/>
+		<geant file="tools/build.eant" target="clobber"/>
+		<geant file="utility/build.eant" target="clobber"/>
+		<geant file="xml/build.eant" target="clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+</project>

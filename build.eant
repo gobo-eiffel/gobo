@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+<project name="gobo" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant develop"/>
+		<echo message="   geant delivery"/>
+		<echo message="   geant bootstrap1"/>
+		<echo message="   geant bootstrap2"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}">
+		<description>
+			Install the Gobo Eiffel package.
+		</description>
+
+		<geant file="library/build.eant" target="install"/>
+		<geant file="src/build.eant" target="install"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="library/build.eant" target="clean"/>
+		<geant file="src/build.eant" target="clean"/>
+		<delete file="src/geant/geant${exe}"/>
+		<delete file="src/gelex/gelex${exe}"/>
+		<delete file="src/gelint/gelint${exe}"/>
+		<delete file="src/gepp/gepp${exe}"/>
+		<delete file="src/getest/getest${exe}"/>
+		<delete file="src/gexace/gexace${exe}"/>
+		<delete file="src/geyacc/geyacc${exe}"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="library/build.eant" target="clobber"/>
+		<geant file="src/build.eant" target="clobber"/>
+	</target>
+
+	<target name="develop" depend="init" dir="${GOBO}">
+		<description>
+			Install developer package.
+		</description>
+
+		<geant target="install"/>
+		<geant target="clean"/>
+	</target>
+
+	<target name="delivery" depend="init" dir="${GOBO}">
+		<description>
+			Install delivery package.
+		</description>
+
+		<geant target="install"/>
+		<geant target="clean"/>
+	</target>
+
+	<target name="bootstrap1" depend="init" dir="${GOBO}">
+		<description>
+			Bootstrap the Gobo Eiffel package (first pass).
+		</description>
+
+		<geant file="library/build.eant" target="install"/>
+		<geant file="src/build.eant" target="install"/>
+		<geant file="src/gelex/build.eant" target="compile"/>
+		<copy file="src/gelex/gelex${exe}" to_file="bin/gelex${exe}"/>
+		<geant file="src/gepp/build.eant" target="compile"/>
+		<copy file="src/gepp/gepp${exe}" to_file="bin/gepp${exe}"/>
+		<geant file="src/gexace/build.eant" target="compile"/>
+		<copy file="src/gexace/gexace${exe}" to_file="bin/gexace${exe}"/>
+		<geant file="src/geyacc/build.eant" target="compile"/>
+		<copy file="src/geyacc/geyacc${exe}" to_file="bin/geyacc${exe}"/>
+		<geant file="src/geant/build.eant" target="compile"/>
+		<copy file="src/geant/geant${exe}" to_file="bin/geant1${exe}"/>
+		<geant file="library/build.eant" target="clobber"/>
+		<geant file="src/build.eant" target="clobber"/>
+	</target>
+
+	<target name="bootstrap2" depend="init" dir="${GOBO}">
+		<description>
+			Bootstrap the Gobo Eiffel package (second pass).
+		</description>
+
+		<geant file="library/build.eant" target="install"/>
+		<geant file="src/build.eant" target="install"/>
+		<geant file="src/getest/build.eant" target="compile"/>
+		<copy file="src/getest/getest${exe}" to_file="bin/getest${exe}"/>
+		<geant file="src/gelint/build.eant" target="compile"/>
+		<copy file="src/gelint/gelint${exe}" to_file="bin/gelint${exe}"/>
+		<geant target="clean"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<geant target="init_os"/>
+	</target>
+
+	<target name="init_os">
+		<geant target="init_windows"/>
+		<geant target="init_unix"/>
+	</target>
+
+	<target name="init_windows" if="${GOBO_OS}=windows">
+		<set name="exe" value=".exe"/>
+	</target>
+
+	<target name="init_unix" unless="${GOBO_OS}=windows">
+		<set name="exe" value=""/>
+	</target>
+
+</project>
