@@ -25,6 +25,7 @@ inherit
 		rename
 			make as make_scanner_stdin
 		redefine
+			new_file_buffer,
 			reset,
 			fatal_error
 		end
@@ -771,6 +772,15 @@ feature -- Input
 			keep_copy: a_name = filename
 		end
 	
+	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
+			-- New input buffer for `a_file'
+		local
+			a_utf16: XF_UTF16_INPUT_STREAM
+		do
+			!! a_utf16.make_from_stream (a_file)
+			Result := Precursor (a_utf16)
+		end
+		
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
 		do
