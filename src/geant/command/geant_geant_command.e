@@ -113,6 +113,7 @@ feature -- Execution
 				
 				!! ucs.make_from_string (filename)
 				!! a_project.make_with_filename (ucs, a_variables)
+				a_project.set_verbose (project.verbose)
 	
 					-- Load build configuration:
 				a_project.load (start_target_name)
@@ -122,8 +123,7 @@ feature -- Execution
 					a_project.build
 					if not a_project.build_successful then
 							--!! TODO: Report this to parent project
-						print ("BUILD FAILED%N")
-						Exceptions.die (1)
+						exit_application (1, Void)
 					end
 				end
 			else
@@ -134,9 +134,7 @@ feature -- Execution
 				if a_target /= Void then
 					project.build_target (a_target)
 				else
-					print ("geant error: unknown target: " + start_target_name + "%N")
-					print ("BUILD FAILED%N")
-					Exceptions.die (1)
+					exit_application (1, "geant error: unknown target: " + start_target_name + "%N")
 				end
 			end
 		end
