@@ -12,6 +12,23 @@ indexing
 
 class XM_XPATH_CONTEXT
 
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_controller: XM_XSLT_CONTROLLER) is
+			-- Establish invariant.
+		require
+			controller_not_void: a_controller /= Void
+		do
+			controller := a_controller
+			-- TODO more code
+		ensure
+			controller_set: controller = a_controller
+		end
+
 feature -- Evaluation
 
 	evaluate_local_variable (slot_number: INTEGER): XM_XPATH_VALUE is
@@ -21,6 +38,15 @@ feature -- Evaluation
 		do
 			-- TODO
 		end
+
+feature {NONE} -- Implementation
+
+	controller: XM_XSLT_CONTROLLER
+			-- XSLT controller
+
+invariant
+
+	controller_not_void: controller /= Void
 
 end
 

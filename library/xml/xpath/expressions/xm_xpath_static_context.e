@@ -23,6 +23,17 @@ feature -- Access
 		ensure
 			name_pool_not_void: Result /= Void
 		end
-	
+
+	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
+			-- The last variablew bound by `bind_variable'
+
+	bind_variable (fingerprint: INTEGER) is
+			-- Bind variable in this element to the XM_XSLT_XSL_VARIABLE in which it is declared.#
+		deferred
+		ensure
+			variable_bound: last_bound_variable /= Void
+			-- TODO - require that fingerprint is valid, I think
+		end
+
 end
 	

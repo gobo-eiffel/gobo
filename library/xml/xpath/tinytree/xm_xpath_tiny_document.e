@@ -111,6 +111,19 @@ feature -- Access
 			end
 		end		
 
+	
+	select_id (id: STRING): XM_XPATH_ELEMENT is
+			-- Element with ID value of `id'
+		do
+			if id_table = Void then
+				Result := Void
+			elseif id_table.has (id) then
+				Result := id_table.item (id)
+			else
+				Result := Void
+			end
+		end
+
 	hash_code: INTEGER is
 		do
 			Result := document_number \\ 7

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath union patterns"
+		"XSLT union patterns"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

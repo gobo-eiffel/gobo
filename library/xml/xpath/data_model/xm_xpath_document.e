@@ -67,4 +67,11 @@ feature -- Access
 		deferred
 		end
 
+	select_id (id: STRING): XM_XPATH_ELEMENT is
+			-- Element with ID value of `id'
+		require
+			id_not_void: id /= Void
+		deferred
+		end
+
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath pattern that matches a particular node kind"
+		"XSLT patterns that matches a particular node kind"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
