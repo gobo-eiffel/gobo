@@ -1,2 +1,2 @@
 
-geyacc calc.y
+geyacc -o calc.e calc.y

@@ -1,2 +1,2 @@
 
-geyacc -d EIFFEL_TOKENS -o eiffel_parser.e eiffel_parser.y
+geyacc -t EIFFEL_TOKENS -o eiffel_parser.e eiffel_parser.y

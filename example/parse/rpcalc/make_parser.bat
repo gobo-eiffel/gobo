@@ -1,2 +1,2 @@
 
-geyacc rpcalc.y
+geyacc -o rpcalc.e rpcalc.y
