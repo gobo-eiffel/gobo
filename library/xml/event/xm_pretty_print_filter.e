@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -17,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			on_comment,
 			on_processing_instruction,
 			on_start_tag,
 			on_attribute,
@@ -30,6 +30,7 @@ inherit
 	XM_OUTPUT
 	
 creation
+
 	make_null,
 	set_next
 	
@@ -46,7 +47,17 @@ feature -- Meta
 			
 			Precursor (a_name, a_content)
 		end
-				
+	
+	on_comment (a_content: UC_STRING) is
+			-- Print comment.
+		do
+			output_constant (Comment_start)
+			output (a_content)
+			output_constant (Comment_end)
+			
+			Precursor (a_content)
+		end
+	
 feature -- Tag
 
 	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
@@ -109,9 +120,6 @@ feature {NONE} -- Escaped
 			Result := a_char = Lt_char.code 
 					or a_char = Gt_char.code
 					or a_char = Amp_char.code
-					or a_char = 9
-					or a_char = 10
-					or a_char = 13
 		end
 		
 	escaped_char (a_char: INTEGER): STRING is
