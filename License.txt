@@ -1,0 +1,25 @@
+All source code and binary programs included in this package
+(except for geyacc which is distributed under the GPL license)
+are distributed under the following terms and conditions:
+
+	Copyright (c) 1997, Eric Bezault
+
+	Permission is hereby granted, without written agreement and
+	without license or royalty fees, to use, copy, modify, or
+	distribute this source code or binary programs using it or
+	part of it, provided that the above copyright notice and the
+	following disclaimer appear in all copies or substantial
+	portions of this source code. (Binary programs derived from
+	the source code can be distributed without restriction or
+	mention of the origin of the source.) The name of the author
+	may not be used to endorse or promote products derived from
+	this software without specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+	IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+	PURPOSE.
+
+This basically says "do whatever you please with this software
+except removing the copyright notice from the source code".
+In particular, this software may be used in non-free programs.
