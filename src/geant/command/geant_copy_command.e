@@ -103,11 +103,11 @@ feature -- Execution
 			-- Execute command.
 		local
 			a_to_file: STRING
+			a_basename: STRING
 		do
 			if is_to_directory_executable then
-				a_to_file := clone (to_directory)
-				a_to_file.append_string ("/")
-				a_to_file.append_string (file_system.basename (file))
+				a_basename := unix_file_system.basename (file)
+				a_to_file := unix_file_system.pathname (to_directory, a_basename)
 				log ("  [copy] " + file + " to " + a_to_file + "%N")
 				file_system.copy_file (file, a_to_file)
 			else

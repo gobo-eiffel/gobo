@@ -61,7 +61,7 @@ feature -- Execution
 			a_name: STRING
 		do
 			log ("  [mkdir] " + directory + "%N")
-			a_name := file_system.pathname_from (directory, unix_file_system)
+			a_name := file_system.pathname_from_file_system (directory, unix_file_system)
 
 			! KL_DIRECTORY ! a_directory.make (a_name)
 			a_directory.recursive_create_directory
