@@ -1,0 +1,166 @@
+indexing
+
+	description:
+
+		"Sparse sets implemented with single arrays. Ancestor of %
+		%hash sets which should supply its hashing mechanism."
+
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+deferred class DS_ARRAYED_SPARSE_SET [G]
+
+inherit
+
+	DS_SPARSE_SET [G]
+		redefine
+			new_cursor
+		end
+
+	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
+		rename
+			FIXED_ARRAY_TYPE as FIXED_ITEM_ARRAY_TYPE
+		undefine
+			is_equal, copy
+		end
+
+	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+		undefine
+			is_equal, copy
+		end
+
+feature -- Access
+
+	new_cursor: DS_ARRAYED_SPARSE_SET_CURSOR [G] is
+			-- New external cursor for traversal
+		do
+			!! Result.make (Current)
+		end
+
+feature {DS_ARRAYED_SPARSE_SET_CURSOR} -- Implementation
+
+	items_item (i: INTEGER): G is
+			-- Item at position `i' in `items'
+		do
+			Result := items.item (i)
+		end
+
+	clashes_item (i: INTEGER): INTEGER is
+			-- Item at position `i' in `clashes'
+		do
+			Result := clashes.item (i)
+		end
+
+feature {NONE} -- Implementation
+
+	items: like FIXED_ITEM_ARRAY_TYPE
+			-- Storage for items of the set indexed from 0 to `capacity-1'
+
+	make_items (n: INTEGER) is
+			-- Create `items'.
+		do
+			!! FIXED_ITEM_ARRAY_
+			items := FIXED_ITEM_ARRAY_.make (n)
+		end
+
+	items_put (v: G; i: INTEGER) is
+			-- Put `v' at position `i' in `items'.
+		do
+			items.put (v, i)
+		end
+
+	clone_items is
+			-- Clone `items'.
+		do
+			items := clone (items)
+		end
+
+	items_resize (n: INTEGER) is
+			-- Resize `items'.
+		do
+			items := FIXED_ITEM_ARRAY_.resize (items, n)
+		end
+
+	clashes: like FIXED_INTEGER_ARRAY_TYPE
+			-- Indexes in `items' when there is clashes
+			-- in `slots'. Each entry points to the next alternative
+			-- until `No_position' is reached. Also keep track of
+			-- free slot positions with indexes less that or equal
+			-- to `Free_watermark'
+
+	make_clashes (n: INTEGER) is
+			-- Create `clashes'.
+		do
+			clashes := FIXED_INTEGER_ARRAY_.make (n)
+		end
+
+	clashes_put (v: INTEGER; i: INTEGER) is
+			-- Put `v' at position `i' in `clashes'.
+		do
+			clashes.put (v, i)
+		end
+
+	clone_clashes is
+			-- Clone `clashes'.
+		do
+			clashes := clone (clashes)
+		end
+
+	clashes_resize (n: INTEGER) is
+			-- Resize `clashes'.
+		do
+			clashes := FIXED_INTEGER_ARRAY_.resize (clashes, n)
+		end
+
+	slots: like FIXED_INTEGER_ARRAY_TYPE
+			-- Indexes in `items', indexed by hash codes
+			-- from 0 to `modulus' (the entry at index `modulus'
+			-- being reserved for void items)
+
+	make_slots (n: INTEGER) is
+			-- Create `slots'.
+		do
+			slots := FIXED_INTEGER_ARRAY_.make (n)
+		end
+
+	slots_item (i: INTEGER): INTEGER is
+			-- Item at position `i' in `slots'
+		do
+			Result := slots.item (i)
+		end
+
+	slots_put (v: INTEGER; i: INTEGER) is
+			-- Put `v' at position `i' in `slots'.
+		do
+			slots.put (v, i)
+		end
+
+	clone_slots is
+			-- Clone `slots'.
+		do
+			slots := clone (slots)
+		end
+
+	slots_resize (n: INTEGER) is
+			-- Resize `slots'.
+		do
+			slots := FIXED_INTEGER_ARRAY_.resize (slots, n)
+		end
+
+	FIXED_ITEM_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
+			-- Routines that ought to be in FIXED_ARRAY
+
+invariant
+
+	items_not_void: items /= Void
+	items_count: items.count = capacity
+	clashes_not_void: clashes /= Void
+	clashes_count: clashes.count = capacity
+	slots_not_void: slots /= Void
+	slots_count: slots.count = modulus + 1
+
+end -- class DS_ARRAYED_SPARSE_SET
