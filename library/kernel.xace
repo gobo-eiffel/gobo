@@ -79,7 +79,7 @@
 
 	<cluster name="se" if="${GOBO_EIFFEL}=se">
 		<option name="abstract" value="true"/>
-		<cluster name="se" location="${SmartEiffelDirectory}/lib" unless="${SE_0_74}">
+		<cluster name="se" location="${SmartEiffelDirectory}/lib">
 			<option name="abstract" value="true"/>
 			<cluster name="abilities" if="${SE_2_0}"/>
 			<cluster name="base"/>
@@ -118,17 +118,6 @@
 				<cluster name="formatter" if="${SE_2_0}"/>
 			</cluster>
 			<cluster name="unicode" if="${SE_2_0}"/>
-		</cluster>
-		<cluster name="se" location="${SmallEiffelDirectory}/lib" if="${SE_0_74}">
-			<option name="abstract" value="true"/>
-			<cluster name="base"/>
-			<cluster name="io"/>
-			<cluster name="iterator"/>
-			<cluster name="kernel"/>
-			<cluster name="number"/>
-			<cluster name="random"/>
-			<cluster name="sorting"/>
-			<cluster name="time"/>
 		</cluster>
 	</cluster>
 

@@ -157,21 +157,13 @@ feature {NONE} -- Precompilation
 			a_file: KL_TEXT_INPUT_FILE
 			a_dir: KL_DIRECTORY
 			a_dirname, a_filename: STRING
-			define_option: STRING
-			se_0_74: STRING
 		do
-			se_0_74 := Execution_environment.variable_value ("SE_0_74")
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate loadpath file.
-			if se_0_74 /= Void and then se_0_74.count > 0 then
-				define_option := "--define=%"SE_0_74%" "
-			else
-				define_option := ""
-			end
-			assert_execute ("gexace " + define_option + "--library=se " + xace_filename + output_log)
+			assert_execute ("gexace --library=se " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			create a_file.make ("loadpath.se")
 			a_file.open_read

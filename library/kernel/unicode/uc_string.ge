@@ -87,7 +87,7 @@ inherit
 #ifndef ISE
 			make as old_make,
 #endif
-#ifndef (SE && ! SE_0_74)
+#ifndef SE
 			empty as old_empty,
 #endif
 			make_from_string as old_make_from_string,

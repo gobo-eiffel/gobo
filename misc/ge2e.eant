@@ -24,7 +24,6 @@
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/se/${gepp_file}.e" lines="true">
 			<define name="SE"/>
-			<define name="SE_0_74" if="${SE_0_74}"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ve/${gepp_file}.e" lines="true">
 			<define name="VE"/>

@@ -69,9 +69,7 @@ inherit
 #ifdef SE
 	BINARY_FILE_WRITE
 		rename
-#ifndef SE_0_74
 			flush as old_flush,
-#endif
 			make as old_make,
 			is_connected as old_is_open_write,
 			disconnect as old_close
@@ -122,20 +120,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-#ifdef SE_0_74
-	old_flush is
-			-- Forces a write of unwritten character (write my have been 
-			-- delayed, flush writes buffered characters).
-		do
-			basic_io_flush (output_stream)
-		end
-
-	basic_io_flush(stream_pointer: POINTER) is
-		external
-			"SmallEiffel"
-		end
-
-#endif
 #endif
 #ifdef ISE
 	string_name: STRING
