@@ -36,10 +36,11 @@ creation
 %%
 
 \r?\n				output ("%Tnewline%N")
+\r					output ("%Tnewline%N")
 " "					output ("%T( ) show%N")
 "\t"				output ("%Tprinttab%N")
 ""				output ("%Tnewpage%N")
-[^ \t\n\\()]+	{
+[^ \t\n\r\\()]+	{
 					output ("%T(")
 					output (text)
 					output (") printword%N")
@@ -49,6 +50,7 @@ creation
 					output (text_item (1).out)
 					output (") printword%N")
 				}
+
 
 %%
 
