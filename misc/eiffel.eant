@@ -33,10 +33,14 @@
 			Install ${system} directory.
 		</description>
 
-		<gexace command="build" command_options="ise"/>
-		<gexace command="build" command_options="hact"/>
-		<gexace command="build" command_options="se"/>
-		<gexace command="build" command_options="ve"/>
+		<set name="eiffel" value="ise"/>
+		<geant target="xace"/>
+		<set name="eiffel" value="hact"/>
+		<geant target="xace"/>
+		<set name="eiffel" value="se"/>
+		<geant target="xace"/>
+		<set name="eiffel" value="ve"/>
+		<geant target="xace"/>
 		<geant target="other_install"/>
 	</target>
 
@@ -55,7 +59,8 @@
 			Compile '${system}' with ISE Eiffel.
 		</description>
 
-		<gexace command="build" command_options="ise"/>
+		<set name="eiffel" value="ise"/>
+		<geant target="xace"/>
 		<ise ace="ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
 	</target>
 
@@ -64,7 +69,8 @@
 			Compile '${system}' with Halstenbach Eiffel.
 		</description>
 
-		<gexace command="build" command_options="hact"/>
+		<set name="eiffel" value="hact"/>
+		<geant target="xace"/>
 		<hact ace="hact.ace" system="${system}" finalize="true" fish="true"/>
 	</target>
 
@@ -73,7 +79,8 @@
 			Compile '${system}' with Visual Eiffel.
 		</description>
 
-		<gexace command="build" command_options="ve"/>
+		<set name="eiffel" value="ve"/>
+		<geant target="xace"/>
 		<ve esd="ve.esd"/>
 	</target>
 
@@ -82,7 +89,8 @@
 			Compile '${system}' with SmallEiffel.
 		</description>
 
-		<gexace command="build" command_options="se"/>
+		<set name="eiffel" value="se"/>
+		<geant target="xace"/>
 		<se ace="se.ace"/>
 	</target>
 
@@ -101,9 +109,9 @@
 			Compile '${system}' with ISE Eiffel in debug mode.
 		</description>
 
-		<gexace command="build" command_options="ise">
-			<define name="DEBUG" value="true"/>
-		</gexace>
+		<set name="eiffel" value="ise"/>
+		<set name="debug" value="True"/>
+		<geant target="xace"/>
 		<ise ace="ise.ace" system="${system}" finalize="false" finish_freezing="true"/>
 	</target>
 
@@ -112,9 +120,9 @@
 			Compile '${system}' with Halstenbach Eiffel in debug mode.
 		</description>
 
-		<gexace command="build" command_options="hact">
-			<define name="DEBUG" value="true"/>
-		</gexace>
+		<set name="eiffel" value="hact"/>
+		<set name="debug" value="True"/>
+		<geant target="xace"/>
 		<hact ace="hact.ace" system="${system}" finalize="false" fish="true"/>
 	</target>
 
@@ -123,9 +131,9 @@
 			Compile '${system}' with Visual Eiffel in debug mode.
 		</description>
 
-		<gexace command="build" command_options="ve">
-			<define name="DEBUG" value="true"/>
-		</gexace>
+		<set name="eiffel" value="ve"/>
+		<set name="debug" value="True"/>
+		<geant target="xace"/>
 		<ve esd="ve.esd"/>
 	</target>
 
@@ -134,9 +142,9 @@
 			Compile '${system}' with SmallEiffel in debug mode.
 		</description>
 
-		<gexace command="build" command_options="se">
-			<define name="DEBUG" value="true"/>
-		</gexace>
+		<set name="eiffel" value="se"/>
+		<set name="debug" value="True"/>
+		<geant target="xace"/>
 		<se ace="se.ace"/>
 	</target>
 
@@ -170,6 +178,15 @@
 
 
 <!-- Implementation -->
+
+
+	<target name="xace" depend="init" dir="${system_dir}">
+		<!-- To be redefined in descendant if aditional options are necessary -->
+
+		<gexace command="build" command_options="${eiffel}">
+			<define name="DEBUG" value="${debug}" if="${debug}"/>
+		</gexace>
+	</target>
 
 	<target name="other_install" depend="init" dir="${system_dir}">
 		<description>
