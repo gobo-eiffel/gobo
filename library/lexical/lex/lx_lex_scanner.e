@@ -1114,7 +1114,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 458
+--|#line 0
 fatal_error ("scanner jammed")
 end
 end

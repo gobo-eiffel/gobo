@@ -287,7 +287,7 @@ else
 				
 end
 else
---|#line 199
+--|#line 0
 fatal_error ("scanner jammed")
 end
 end
