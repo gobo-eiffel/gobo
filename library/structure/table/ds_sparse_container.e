@@ -208,12 +208,13 @@ feature -- Duplication
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
+					-- Set `internal_cursor' to Void before calling
+					-- `valid_cursor' and `new_cursor' to avoid an
+					-- invariant violation.
+				internal_cursor := Void
 				if old_cursor /= Void and then valid_cursor (old_cursor) then
 					internal_cursor := old_cursor
 				else
-						-- Set `internal_cursor' to Void before calling
-						-- `new_cursor' to avoid an invariant violation.
-					internal_cursor := Void
 					internal_cursor := new_cursor
 				end
 				unset_found_item
