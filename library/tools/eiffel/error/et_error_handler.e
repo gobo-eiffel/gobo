@@ -2523,6 +2523,24 @@ feature -- Validity errors
 			end
 		end
 
+	report_vhpr1b_error (a_class: ET_CLASS; a_none: ET_BASE_TYPE) is
+			-- Report VHPR-1 error: `a_class' is involved
+			-- in the inheritance cycle: it inherits from NONE.
+			--
+			-- ETL2: p.79
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_none_not_void: a_none /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vhpr1_error (a_class) then
+				create an_error.make_vhpr1b (a_class, a_none)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vhpr3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE) is
 			-- Report VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.

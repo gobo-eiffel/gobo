@@ -117,6 +117,7 @@ creation
 	make_vgcp3c,
 	make_vhay0a,
 	make_vhpr1a,
+	make_vhpr1b,
 	make_vhpr3a,
 	make_vhpr3b,
 	make_vhpr3c,
@@ -4475,6 +4476,44 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = cycle
+		end
+
+	make_vhpr1b (a_class: like current_class; a_none: ET_BASE_TYPE) is
+			-- Create a new VHPR-1 error: `a_class' is involved
+			-- in the inheritance cycle: it inherits from NONE.
+			--
+			-- ETL2: p.79
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_none_not_void: a_none /= Void
+		do
+			code := vhpr1b_template_code
+			etl_code := vhpr1_etl_code
+			default_template := vhpr1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_none.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_none.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = class NONE
 		end
 
 	make_vhpr3a (a_class: like current_class; a_type: ET_BIT_FEATURE) is
@@ -9707,6 +9746,7 @@ feature {NONE} -- Implementation
 	vgcp3c_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears twice in creation clause of constraint."
 	vhay0a_default_template: STRING is "[$1] class $5: implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING is "[$1] class $5: inheritance cycle $6."
+	vhpr1b_default_template: STRING is "[$1] class $5 ($3, $4): inheritance cycle when inheriting from $6."
 	vhpr3a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
 	vhpr3b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
 	vhpr3c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
@@ -10025,6 +10065,7 @@ feature {NONE} -- Implementation
 	vgcp3c_template_code: STRING is "vgcp3c"
 	vhay0a_template_code: STRING is "vhay0a"
 	vhpr1a_template_code: STRING is "vhpr1a"
+	vhpr1b_template_code: STRING is "vhpr1b"
 	vhpr3a_template_code: STRING is "vhpr3a"
 	vhpr3b_template_code: STRING is "vhpr3b"
 	vhpr3c_template_code: STRING is "vhpr3c"
