@@ -6,22 +6,30 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	copyright:  "Copyright (c) 2001-2002, Andreas Leitner and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class ET_XACE_GENERATOR
 
+inherit
+
+	KL_SHARED_EXECUTION_ENVIRONMENT
+	KL_SHARED_OPERATING_SYSTEM
+
 feature {NONE} -- Initialization
 
-	make (an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler) is
 			-- Create a new generator.
 		require
+			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
+			variables := a_variables
 			error_handler := an_error_handler
 		ensure
+			variables_set: variables = a_variables
 			error_handler_set: error_handler = an_error_handler
 		end
 
@@ -29,6 +37,9 @@ feature -- Access
 
 	output_filename: STRING
 			-- Output filename
+
+	variables: ET_XACE_VARIABLES
+			-- Defined variables
 
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
@@ -79,8 +90,33 @@ feature {NONE} -- Output
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	is_windows: BOOLEAN is
+			-- Is current generator generating an Ace file
+			-- to be used under Windows?
+		local
+			gobo_os_variable: STRING
+			gobo_os_value: STRING
+			a_value: STRING
+		do
+			gobo_os_variable := "GOBO_OS"
+			gobo_os_value := "windows"
+			if variables.is_defined (gobo_os_variable) then
+				Result := variables.value (gobo_os_variable).is_equal (gobo_os_value)
+			else
+				a_value := Execution_environment.variable_value (gobo_os_variable)
+				if a_value /= Void and then a_value.count > 0 then
+					Result := a_value.is_equal (gobo_os_value)
+				else
+					Result := operating_system.is_windows
+				end
+			end
+		end
+
 invariant
 
+	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
 
 end -- class ET_XACE_GENERATOR
