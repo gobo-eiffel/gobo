@@ -1,0 +1,24 @@
+indexing
+
+	description: "Parser token codes"
+	generator: "geyacc version 1.6"
+
+class TS_CONFIG_TOKENS
+
+feature -- Token codes
+
+	T_CLASS: INTEGER is 258
+	T_CLUSTER: INTEGER is 259
+	T_COMPILE: INTEGER is 260
+	T_DEFAULT: INTEGER is 261
+	T_END: INTEGER is 262
+	T_EXECUTE: INTEGER is 263
+	T_FEATURE: INTEGER is 264
+	T_PREFIX: INTEGER is 265
+	T_TEST: INTEGER is 266
+	T_TESTGEN: INTEGER is 267
+	T_STRERR: INTEGER is 268
+	T_IDENTIFIER: INTEGER is 269
+	T_STRING: INTEGER is 270
+
+end -- class TS_CONFIG_TOKENS

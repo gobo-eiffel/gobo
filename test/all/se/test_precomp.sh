@@ -7,7 +7,7 @@ cp $GOBO/test/precomp/se.sh .
 
 if [ -s tmp11.txt ]; then
 	cat tmp11.txt
-	echo "Test failed"
+	echo "Test FAILED"
 else
-	echo "Test successful"
+	echo "Test SUCCESSFUL"
 fi

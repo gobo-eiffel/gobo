@@ -1,0 +1,18 @@
+test
+
+	xstructure
+
+default
+
+	class ("DS_TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("X")
+	testgen ("TESTGEN")
+	compile ("bash -c %" ( ( echo q | ibcomp -executable -new -ace hact.ace -project xstructure.eif ) ; cd xtime_gen/W_code ; fish ) > tmp_compile.txt 2>&1%"")
+	execute ("bash -c %"cd xstructure_gen/W_code ; ./xstructure%"")
+
+cluster
+
+	time: "$GOBO/test/structure"
+
+end

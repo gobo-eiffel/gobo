@@ -1,0 +1,233 @@
+indexing
+
+	description:
+
+		"Test result summaries"
+
+	library:    "Gobo Eiffel Test Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class TS_SUMMARY
+
+inherit
+
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new result summary.
+		do
+			!! results.make
+		end
+
+feature -- Status report
+
+	is_successful: BOOLEAN is
+			-- Have all tests been successful?
+		do
+			Result := failure_count = 0 and abort_count = 0
+		end
+
+	fail_on_rescue: BOOLEAN
+			-- Should the test application crash when an error occur?
+			-- (By default test case errors are caught by a rescue
+			-- clause and reported to the result summary, but during
+			-- debugging it might be useful to get the full exception
+			-- trace.)
+
+feature -- Measurement
+
+	test_count: INTEGER is
+			-- Number of tests executed
+		do
+			Result := success_count + failure_count + abort_count
+		ensure
+			definition: Result = (success_count + failure_count + abort_count)
+		end
+
+	success_count: INTEGER
+			-- Number of successful tests
+
+	failure_count: INTEGER
+			-- Number of failed tests
+
+	abort_count: INTEGER
+			-- Number of aborted tests
+
+	assertion_count: INTEGER
+			-- Number of assertions executed
+
+feature -- Element change
+
+	put_success (a_test: TS_TEST) is
+			-- Add successful test `a_test'.
+		require
+			a_test_not_void: a_test /= Void
+		local
+			a_result: TS_SUCCESSFUL_RESULT
+		do
+			!! a_result.make (a_test)
+			results.put_last (a_result)
+			success_count := success_count + 1
+		end
+
+	put_failure (a_test: TS_TEST; a_reason: STRING) is
+			-- Add failed test `a_test'.
+		require
+			a_test_not_void: a_test /= Void
+			a_reason_not_void: a_reason /= Void
+		local
+			a_result: TS_FAILED_RESULT
+		do
+			!! a_result.make (a_test, a_reason)
+			results.put_last (a_result)
+			failure_count := failure_count + 1
+		end
+
+	put_abort (a_test: TS_TEST; a_reason: STRING) is
+			-- Add aborted test `a_test'.
+		require
+			a_test_not_void: a_test /= Void
+			a_reason_not_void: a_reason /= Void
+		local
+			a_result: TS_ABORTED_RESULT
+		do
+			!! a_result.make (a_test, a_reason)
+			results.put_last (a_result)
+			abort_count := abort_count + 1
+		end
+
+	start_test (a_test: TS_TEST) is
+			-- Inform Current that a test will be started.
+		do
+			-- empty
+		end
+	
+	end_test (a_test: TS_TEST; asserts: INTEGER) is
+			-- Inform Current that a test was completed with 
+			-- `asserts' assertions run.
+		do
+			assertion_count := assertion_count + asserts
+		end
+
+feature -- Output
+
+	print_summary (a_test: TS_TEST; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print summary for `a_test' to `a_file'.
+		require
+			a_test_not_void: a_test /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		do
+			a_file.put_string ("Test Summary for ")
+			a_file.put_string (a_test.name)
+			if failure_count = 0 and abort_count = 0 then
+				a_file.put_string ("%N%N# PASSED:     ")
+			else
+				a_file.put_string ("%N%N# Passed:     ")
+			end
+			a_file.put_integer (success_count)
+			a_file.put_string (" test")
+			if success_count > 1 then
+				a_file.put_character ('s')
+			end
+			if failure_count > 0 then
+				a_file.put_string ("%N# FAILED:     ")
+			else
+				a_file.put_string ("%N# Failed:     ")
+			end
+			a_file.put_integer (failure_count)
+			a_file.put_string (" test")
+			if failure_count > 1 then
+				a_file.put_character ('s')
+			end
+			if abort_count > 0 then
+				a_file.put_string ("%N# ABORTED:    ")
+			else
+				a_file.put_string ("%N# Aborted:    ")
+			end
+			a_file.put_integer (abort_count)
+			a_file.put_string (" test")
+			if abort_count > 1 then
+				a_file.put_character ('s')
+			end
+			a_file.put_string ("%N# Total:      ")
+			a_file.put_integer (test_count)
+			a_file.put_string (" test")
+			if test_count > 1 then
+				a_file.put_character ('s')
+			end
+			a_file.put_string (" (")
+			a_file.put_integer (assertion_count)
+			a_file.put_string (" assertion")
+			if assertion_count > 1 then
+				a_file.put_character ('s')
+			end
+			a_file.put_string (")%N")
+		end
+
+	print_errors (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print failed or aborted results to `a_file'.
+		require
+			not_successful: not is_successful
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			a_cursor: DS_LIST_CURSOR [TS_RESULT]
+			a_result: TS_RESULT
+		do
+			a_file.put_string ("Test Results:%N")
+			a_cursor := results.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_result := a_cursor.item
+				if not a_result.passed then
+					a_result.print_result (a_file)
+					a_file.put_character ('%N')
+				end
+				a_cursor.forth
+			end
+		end
+
+	print_results (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print all results to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			a_cursor: DS_LIST_CURSOR [TS_RESULT]
+		do
+			if not results.is_empty then
+				a_file.put_string ("Test Results:%N")
+				a_cursor := results.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_cursor.item.print_result (a_file)
+					a_file.put_character ('%N')
+					a_cursor.forth
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	results: DS_LINKED_LIST [TS_RESULT]
+			-- List of results
+
+invariant
+
+	success_count_positive: success_count >= 0
+	failure_count_positive: failure_count >= 0
+	abort_count_positive: abort_count >= 0
+	assertion_count_positive: assertion_count >= 0
+	results_not_void: results /= Void
+	no_void_result: not results.has (Void)
+
+end -- class TS_SUMMARY

@@ -9,8 +9,8 @@ finish_freezing -silent > tmp11.txt 2>&1
 cd msc
 
 if [ -x driver ]; then
-	echo "Test successful"
+	echo "Test SUCCESSFUL"
 else
 	cat tmp11.txt
-	echo "Test failed"
+	echo "Test FAILED"
 fi

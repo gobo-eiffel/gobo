@@ -1,0 +1,17 @@
+test
+
+	xtester
+
+default
+
+	class ("TEST_[A-Z_]*")
+	feature ("test_[a-z_]*")
+	prefix ("X")
+	compile ("compile -boost -no_split -no_gc -no_style_warning -w XTESTER make")
+	execute ("xtester")
+
+cluster
+
+	time: "$GOBO/test/time"
+
+end

@@ -1,0 +1,18 @@
+test
+
+	xtester
+
+default
+
+	class ("TEST_[A-Z_]*")
+	feature ("test_[a-z_]*")
+	prefix ("X")
+	testgen ("TESTGEN")
+	compile ("ise_compile.sh -finalize")
+	execute ("cd EIFGEN\F_code & .\xtester")
+
+cluster
+
+	time: "."
+
+end

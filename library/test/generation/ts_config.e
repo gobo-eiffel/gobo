@@ -1,0 +1,88 @@
+indexing
+
+	description:
+
+		"Test configurations"
+
+	library:    "Gobo Eiffel Test Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class TS_CONFIG
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_root: like root_class; a_testgen: like testgen; a_compile: like compile;
+		an_execute: like execute; a_clusters: like clusters) is
+			-- Create a new configuration.
+		require
+			a_root_not_void: a_root /= Void
+			a_compile_not_void: a_compile /= Void
+			an_execute_not_void: an_execute /= Void
+			a_clusters_not_void: a_clusters /= Void
+			no_void_cluster: not a_clusters.has (Void)
+		do
+			root_class := a_root
+			testgen := a_testgen
+			compile := a_compile
+			execute := an_execute
+			clusters := a_clusters
+		ensure
+			root_class_set: root_class = a_root
+			testgen_set: testgen = a_testgen
+			compile_set: compile = a_compile
+			execute_set: execute = an_execute
+			clusters_set: clusters = a_clusters
+		end
+
+feature -- Access
+
+	root_class: STRING
+			-- Name of test root class
+
+	compile: STRING
+			-- Compilation command-line
+
+	execute: STRING
+			-- Execution command-line
+
+	testgen: STRING
+			-- Directory where test classes will be generated;
+			-- Void means current directory
+
+	clusters: DS_LIST [TS_CLUSTER]
+			-- List of clusters to be searched
+
+feature -- Processing
+
+	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is
+			-- Process current config.
+		require
+			testcases_not_void: testcases /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		local
+			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
+		do
+			a_cursor := clusters.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (testcases, an_error_handler)
+				a_cursor.forth
+			end
+		end
+
+invariant
+
+	root_class_not_void: root_class /= Void
+	compile_not_void: compile /= Void
+	execute_not_void: execute /= Void
+	clusters_not_void: clusters /= Void
+	no_void_cluster: not clusters.has (Void)
+
+end -- class TS_CONFIG

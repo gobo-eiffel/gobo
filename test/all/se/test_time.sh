@@ -12,7 +12,7 @@ for dir in `ls -d $GOBO_UNIX/test/time/test*` ; do
 	mkdir `basename $dir`
 	cd `basename $dir`
 
-	if [ "$1" = "-boost" ]; then
+	if [ "$1" = "-finalize" ]; then
 		cp $dir/se.sh .
 	else
 		sed "s/-boost/-all_check/g" $dir/se.sh > se.sh

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# usage: test_all.sh [--finalize]
+
 echo "Testing precomp..."
 $GOBO/test/all/ve/test_precomp.sh $1
 
@@ -12,41 +14,4 @@ echo "Testing Gobo Eiffel Time Library..."
 $GOBO/test/all/ve/test_time.sh $1
 
 echo ""
-echo "Testing geyacc..."
-$GOBO/test/all/ve/test_geyacc.sh $1
-
-echo ""
-echo "Testing gelex..."
-$GOBO/test/all/ve/test_gelex.sh $1
-
-echo ""
-echo "Testing gepp..."
-$GOBO/test/all/ve/test_gepp.sh $1
-
-echo ""
-echo "Testing example ascii2ps..."
-$GOBO/test/all/ve/test_ascii2ps.sh $1
-
-echo ""
-echo "Testing example gegrep..."
-$GOBO/test/all/ve/test_gegrep.sh $1
-
-echo ""
-echo "Testing example eiffel_scanner..."
-$GOBO/test/all/ve/test_eiffel_scanner.sh $1
-
-echo ""
-echo "Testing example eiffel_parser..."
-$GOBO/test/all/ve/test_eiffel_parser.sh $1
-
-echo ""
-echo "Testing example rpcalc..."
-$GOBO/test/all/ve/test_rpcalc.sh $1
-
-echo ""
-echo "Testing example calc..."
-$GOBO/test/all/ve/test_calc.sh $1
-
-echo ""
-echo "Testing example mcalc..."
-$GOBO/test/all/ve/test_mcalc.sh $1
+$GOBO/test/all/common/test_all.sh $1 ve
