@@ -93,6 +93,9 @@ feature -- Access
 	text_substring (s, e: INTEGER): STRING is
 			-- Substring of last token read
 			-- (Create a new string at each call.)
+			-- (For efficiency reason, this function can bypass the
+			-- call to `text' and create the substring directly from
+			-- the input buffer.)
 		require
 			meaningful_start: 1 <= s
 			meaningful_interval: s <= e + 1
@@ -149,6 +152,35 @@ feature -- Scanning
 		end
 
 feature -- Element change
+
+	append_text_to_string (a_string: STRING) is
+			-- Append `text' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `text' and directly copy the characters from
+			-- the input buffer.)
+		require
+			a_string_not_void: a_string /= Void
+		do
+			a_string.append_string (text)
+		ensure
+			count_set: a_string.count = old (a_string.count) + text_count
+		end
+
+	append_text_substring_to_string (s, e: INTEGER; a_string: STRING) is
+			-- Append `text_substring' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass
+			-- the call to `text_substring' and directly copy
+			-- the characters from the input buffer.)
+		require
+			a_string_not_void: a_string /= Void
+			s_large_enough: 1 <= s
+			valid_interval: s <= e + 1
+			e_small_enough: e <= text_count
+		do
+			a_string.append_string (text_substring (s, e))
+		ensure
+			count_set: a_string.count = old (a_string.count) + (e - s + 1)
+		end
 
 	terminate is
 			-- Terminate scanner and set `last_token'
@@ -242,6 +274,14 @@ feature -- Input
 			!! Result.make (a_string)
 		ensure
 			new_buffer_not_void: Result /= Void
+		end
+
+	Empty_buffer: YY_BUFFER is
+			-- Empty input buffer
+		once
+			!! Result.make ("")
+		ensure
+			empty_buffer_not_void: Result /= Void
 		end
 
 feature -- Output
