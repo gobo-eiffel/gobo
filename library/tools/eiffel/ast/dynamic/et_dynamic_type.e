@@ -196,7 +196,7 @@ feature -- Features
 			else
 				nb := features.count
 				from i := 1 until i > nb loop
-					l_dynamic_feature :=  features.item (i)
+					l_dynamic_feature := features.item (i)
 					if l_dynamic_feature.static_feature = a_feature then
 						Result := l_dynamic_feature
 						i := nb + 1 -- Jump out of the loop.
