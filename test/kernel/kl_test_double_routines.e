@@ -41,6 +41,18 @@ feature -- Test
 			assert_equal ("log (1.0)", 0, r.log (1.0).truncated_to_integer)
 		end
 
+	test_log2 is
+			-- Test feature `log2'.
+		local
+			r: KL_DOUBLE_ROUTINES
+		do
+			create r
+				-- Use values truncated to integer to avoid possible
+				-- precision problems when comparing double values.
+			assert_equal ("log2 (2)", 1, r.log2 (2.0).truncated_to_integer)
+			assert_equal ("log2 (1024)", 10, r.log2 (1024).truncated_to_integer)
+		end
+
 	test_log10 is
 			-- Test feature `log10'.
 		local
