@@ -69,7 +69,7 @@ feature
                                 %other parser backend%N")
   	       Exceptions.die (1)
   	    end
-  	    !! event_parser.make_from_imp (fact.new_expat_event_parser_imp)
+  	    !! event_parser.make_from_implementation (fact.new_expat_event_parser_imp)
 	 
 	 elseif
 	    parser_switch.is_equal ("--eiffel")
@@ -81,7 +81,7 @@ feature
                               %other parser backend%N")
 	       Exceptions.die (1)
 	    end
-	    !! event_parser.make_from_imp (fact.new_eiffel_event_parser_imp)
+	    !! event_parser.make_from_implementation (fact.new_eiffel_event_parser_imp)
 	 else
 	    io.put_string (usage_string);
 	    Exceptions.die (1)

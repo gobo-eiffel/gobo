@@ -11,7 +11,7 @@ inherit
 	 on_comment
       end
 creation
-   make_from_imp
+   make_from_implementation
 feature   
    on_xml_declaration (xml_version, encoding: UC_STRING; standalone: BOOLEAN) is
       do
