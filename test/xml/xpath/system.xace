@@ -20,11 +20,11 @@
     <option name="garbage_collector" value="internal"/>
     <option name="finalize" value="false"/>
     <!-- <option name="debug_tag" value="XPath content emitter"/>  -->
-    <!-- <option name="debug_tag" value="XPath descendants enumeration"/>-->
-    <!--<option name="debug_tag" value="XPath preceding enumeration"/>-->
-    <!-- <option name="debug_tag" value="XPath tiny builder"/>-->
+    <!-- <option name="debug_tag" value="XPath descendants enumeration"/> -->
+    <!-- <option name="debug_tag" value="XPath preceding enumeration"/> -->
+    <!-- <option name="debug_tag" value="XPath tiny builder"/> -->
     <!-- <option name="debug_tag" value="XPath tiny node"/> -->
-    <!-- <option name="debug_tag" value="XPath tiny sibling enumeration"/>-->
+    <!-- <option name="debug_tag" value="XPath tiny sibling enumeration"/> -->
     <!-- <option name="debug_tag" value="XPath tiny document"/> -->
     <!-- <option name="debug_tag" value="XPath abstract node"/> -->
     <!-- <option name="debug_tag" value="XPath name pool"/> -->

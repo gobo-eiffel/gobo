@@ -334,9 +334,9 @@ feature -- Access
 			end
 			if not element_list.has (a_fingerprint) then
 				debug ("XPath tiny document")
-					print ("All_elements: adding new list for fingerprint ")
-					print (a_fingerprint.out)
-					print ("%N")
+					std.error.put_string ("All_elements: adding new list for fingerprint ")
+					std.error.put_string (a_fingerprint.out)
+					std.error.put_new_line
 				end
 				create a_list.make_default
 			else
@@ -574,11 +574,11 @@ feature -- Element change
 			set_next_sibling (-1, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
 			debug ("XPath tiny document")
-				print ("Add_node: Node  ")
-				print (last_node_added.out)
-				print (" of type  ")
-				print (type_name (new_node_type))
-				print ("%N")
+				std.error.put_string ("Add_node: Node  ")
+				std.error.put_string (last_node_added.out)
+				std.error.put_string (" of type  ")
+				std.error.put_string (type_name (new_node_type))
+				std.error.put_new_line
 			end
 		ensure
 			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
@@ -597,11 +597,11 @@ feature -- Element change
 			valid_next_sibling: next >= -1 -- -1 means no next sibling
 		do
 			debug ("XPath tiny document")
-				print ("Set_next_sibling: Node ")
-				print (which_node.out)
-				print (" set to ")
-				print (next.out)
-				print ("%N")
+				std.error.put_string ("Set_next_sibling: Node ")
+				std.error.put_string (which_node.out)
+				std.error.put_string (" set to ")
+				std.error.put_string (next.out)
+				std.error.put_new_line
 			end
 			if which_node > next_sibling_indices.count then next_sibling_indices.resize (1, 2 * next_sibling_indices.count) end
 			next_sibling_indices.put (next, which_node)
@@ -633,6 +633,13 @@ feature -- Element change
 					-- same size as parent
 				end
 			namespace_codes.put_last (ns_code)
+			debug ("XPath tiny document")
+				std.error.put_string ("Namespace added: ")
+				std.error.put_string (name_pool.uri_from_namespace_code (ns_code))
+				std.error.put_string (" for parent:")
+				std.error.put_string (the_parent.out)
+				std.error.put_new_line
+			end			
 		end
 
 	add_attribute (the_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; value: STRING) is
@@ -651,16 +658,16 @@ feature -- Element change
 			attribute_codes.put_last (a_name_code)
 
 			debug ("XPath tiny document")
-				print ("Add_attribute: name code is ")
-				print (a_name_code.out)
-				print (", value is ")
-				print (value.out)
-				print ("%N")
-				print ("Attribute_values count is ")
-				print (attribute_values.count.out)
-				print (", attribute_codes count is ")
-				print (attribute_codes.count.out)
-				print ("%N")
+				std.error.put_string ("Add_attribute: name code is ")
+				std.error.put_string (a_name_code.out)
+				std.error.put_string (", value is ")
+				std.error.put_string (value.out)
+				std.error.put_new_line
+				std.error.put_string ("Attribute_values count is ")
+				std.error.put_string (attribute_values.count.out)
+				std.error.put_string (", attribute_codes count is ")
+				std.error.put_string (attribute_codes.count.out)
+				std.error.put_new_line
 			end
 			
 			if a_type_code = 0 then

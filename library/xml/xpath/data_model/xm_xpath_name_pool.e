@@ -689,7 +689,7 @@ feature -- Element change
 			namespace_code_not_allocated: not is_namespace_code_allocated (xml_prefix, uri)
 		local
 			prefix_code, uri_code: INTEGER -- should be INTEGER_16
-			key: STRING
+			key, key2: STRING
 		do
 			debug ("XPath name pool")
 				std.error.put_string ("allocate_namespace_code: prefix is ")
@@ -714,9 +714,12 @@ feature -- Element change
 			end
 
 			-- Ensure the prefix is in the list of prefixes used with this URI
-			create key.make_from_string (xml_prefix)
-			key.append_character (' ')
-			prefixes_for_uri.item (uri_code + 1).append_string (key)
+
+			key2 := prefixes_for_uri.item (uri_code + 1)
+			key := clone (xml_prefix)
+			key := STRING_.appended_string (key, " ")
+			key := STRING_.appended_string (key, key2)
+			prefixes_for_uri.replace (key, uri_code + 1)
 
 			debug ("XPath name pool")
 				std.error.put_string ("allocate_namespace_code: code for prefix is ")
@@ -814,7 +817,7 @@ feature -- Element change
 		local
 			hash_code, depth, the_prefix_index: INTEGER
 			prefix_code: INTEGER -- should be INTEGER_16
-			key: STRING
+			key, key2: STRING
 			the_name_entry, next, new_entry: XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 		do
@@ -839,9 +842,13 @@ feature -- Element change
 					std.error.put_new_line
 				end
 				allocate_code_for_prefix (xml_prefix)
-				create key.make_from_string (xml_prefix)
-				key.append_character (' ')
-				prefixes_for_uri.item (uri_code + 1).append_string (key)
+
+				key2 := prefixes_for_uri.item (uri_code + 1)
+				key := clone (xml_prefix)
+				key := STRING_.appended_string (key, " ")
+				key := STRING_.appended_string (key, key2)
+				prefixes_for_uri.replace (key, uri_code + 1)
+
 				the_prefix_index := prefix_index (uri_code, xml_prefix)
 					check
 						valid_prefix_index2: the_prefix_index > 0 and the_prefix_index < 255
@@ -987,8 +994,8 @@ feature -- Conversion
 					Result := entry.local_name
 				else
 					Result := prefix_with_index (entry.uri_code, the_prefix_index)
-					Result.append_character (':')
-					Result.append_string (entry.local_name)
+					Result := STRING_.appended_string (Result, ":")
+					Result := STRING_.appended_string (Result, entry.local_name)
 				end
 			end	
 		ensure

@@ -38,19 +38,7 @@ feature -- Access
 			Result := Text_node
 		end
 
-	string_value: STRING is
-			-- String-value
-		do
-			Result := clone (content_property)
-		end
-
-feature {NONE} -- Access
-
-	content_property: STRING
-			-- Content property from the infoset
-
 invariant
 	type: item_type = Text_node
-	content_not_void: content_property /= Void
 	
 end

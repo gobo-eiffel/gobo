@@ -238,7 +238,7 @@ feature -- Tag
 			if a_prefix.count = 0 then
 				element_qname := a_local_part
 			else
-				element_qname := a_prefix
+				element_qname := clone (a_prefix)
 				element_qname.append_character (':')
 				element_qname.append_string (a_local_part)
 			end
@@ -251,7 +251,7 @@ feature -- Tag
 		local
 			name_code, namespace_code: INTEGER
 			the_type_code: INTEGER -- should be INTEGER_16
-			attribute_qname, a_prefix: STRING
+			attribute_qname, a_prefix, namespace_prefix: STRING
 			attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
 			attribute_model: XM_DTD_ATTRIBUTE_CONTENT
 		do
@@ -280,10 +280,15 @@ feature -- Tag
 			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
 				-- Notify a namespace declaration
-				if name_pool.is_namespace_code_allocated (a_prefix, a_namespace) then
-					namespace_code := name_pool.namespace_code (a_prefix, a_namespace)
+				if STRING_.same_string (a_local_part, "xmlns") then
+					namespace_prefix := "" -- default namespace
 				else
-					name_pool.allocate_namespace_code (a_prefix, a_namespace)
+					namespace_prefix := a_local_part
+				end
+				if name_pool.is_namespace_code_allocated (namespace_prefix, a_value) then
+					namespace_code := name_pool.namespace_code (namespace_prefix, a_value)
+				else
+					name_pool.allocate_namespace_code (namespace_prefix, a_value)
 					namespace_code := name_pool.last_namespace_code
 				end
 				receiver.namespace (namespace_code, 0)
@@ -326,8 +331,8 @@ feature -- Tag
 							the_type_code := 0 -- not a valid type code
 						end
 					end
-					receiver.attribute (name_code, the_type_code, a_value, 0)
 				end
+				receiver.attribute (name_code, the_type_code, a_value, 0)
 			end
 		end
 
@@ -378,10 +383,22 @@ feature {NONE} -- Implementation
 			prefix_not_void: ns_prefix /= Void
 			local_part_not_void: a_local_part /= Void
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("Is_namespace_declaration: local name is ")
+				std.error.put_string (a_local_part)
+				std.error.put_string (", prefix is ")
+				std.error.put_string (ns_prefix)
+				std.error.put_new_line
+			end			
 			if ns_prefix.count = 0 and then STRING_.same_string (a_local_part, "xmlns") then
 				Result := True
 			elseif STRING_.same_string (ns_prefix, "xmlns") then
 				Result := True
+			end
+			debug ("XPath content emitter")
+				std.error.put_string ("Is_namespace_declaration: Result is ")
+				std.error.put_string (Result.out)
+				std.error.put_new_line
 			end
 		end
 

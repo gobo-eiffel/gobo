@@ -35,7 +35,20 @@ feature {NONE} -- Initialization
 			document_set: document = doc
 			node_number_set: node_number = a_node_number
 		end
-	
+
+feature -- Access
+
+	string_value: STRING is
+			-- String-value
+		local
+			start, length: INTEGER
+		do
+			start := document.alpha_value (node_number)
+			length := document.beta_value (node_number)
+			Result := document.character_buffer.substring (start, start + length)
+		end
+
+
 feature {XM_XPATH_NODE} -- Access
 
 	is_possible_child: BOOLEAN is

@@ -18,6 +18,8 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 
+	KL_SHARED_STANDARD_FILES
+
 feature -- Initialization
 
 	initialize_type_tables is
