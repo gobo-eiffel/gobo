@@ -8,11 +8,28 @@ can be found in "$GOBO\example\parse".
 
 Clusters:
 
+error
+    Error message classes used throughout this Library and Geyacc.
+fsm
+    Finite State Machine.
+generation
+    Parser table compression algorithm. Generation of Eiffel class
+    texts describing parsers made out of given grammars.
+grammar
+    Grammar description classes.
+parser
+    Parser engine classes.
 skeleton
     Skeleton classes used by Geyacc. Describe abstract parsers.
+support
+    Support classes.
+yacc
+    Parser used by Geyacc to read grammar descriptions from ".y" files.
 
 A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Eric Bezault <ericb@gobo.demon.co.uk>
+Copyright (c) 1998, Eric Bezault
+mailto:ericb@gobo.demon.co.uk
+http://www.gobo.demon.co.uk
