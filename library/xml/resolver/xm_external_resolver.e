@@ -15,7 +15,8 @@ deferred class XM_EXTERNAL_RESOLVER
 feature -- Action(s)
 
 	resolve (a_system: STRING) is
-			-- Resolve a system identifier to an input stream.
+			-- Resolve a system identifier to an input stream
+			-- on behalf of an XML parser.
 		require
 			a_system_not_void: a_system /= Void
 		deferred
@@ -38,9 +39,9 @@ feature -- Action(s)
 		end
 		
 	resolve_finish is
-			-- The client has finished with the last resolved entity.
+			-- The parser has finished with the last resolved entity.
 			-- The previously resolved entity becomes the last resolved one.
-			-- Note: last_stream is not required to be restored accordingly.
+			-- Note: `last_stream' is not required to be restored accordingly.
 		require
 			--balanced: resolve_depth > 0
 		do
