@@ -87,6 +87,29 @@ feature -- Status report
 #endif
 		end
 
+	is_hexadecimal (a_string: STRING): BOOLEAN is
+			-- Is a string made up of digits or 
+			-- A-F or a-f?
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i: INTEGER
+			c: CHARACTER
+		do
+			from
+				i := a_string.count
+				Result := True
+			until
+				not Result or i = 0
+			loop
+				c := a_string.item (i)
+				Result := (c >= '0' and c <= '9')
+					or (c >= 'a' and c <= 'f')
+					or (c >= 'A' and c <= 'F')
+				i := i - 1
+			end
+		end
+		
 feature -- Access
 
 	case_insensitive_hash_code (a_string: STRING): INTEGER is
@@ -198,6 +221,46 @@ feature -- Conversion
 			same_count: Result.count = a_string.count
 --			definition: forall i in 1..a_string.count,
 --				Result.item (i) = a_string.item (i).to_upper
+		end
+
+	hexadecimal_to_integer (a_string: STRING): INTEGER is
+			-- Convert  hexadecimal number string to integer.
+		require
+			not_void: a_string /= Void
+			hexadecimal: is_hexadecimal (a_string)
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > a_string.count
+			loop
+				-- shift previous result
+				Result := Result * 16
+				-- add current digit
+				-- (inspect independent of character set)
+				inspect a_string.item (i)
+				when '0' then -- do_nothing
+				when '1' then Result := Result + 1
+				when '2' then Result := Result + 2
+				when '3' then Result := Result + 3
+				when '4' then Result := Result + 4
+				when '5' then Result := Result + 5
+				when '6' then Result := Result + 6
+				when '7' then Result := Result + 7
+				when '8' then Result := Result + 8
+				when '9' then Result := Result + 9
+				when 'a','A' then Result := Result + 10
+				when 'b','B' then Result := Result + 11
+				when 'c','C' then Result := Result + 12
+				when 'd','D' then Result := Result + 13
+				when 'e','E' then Result := Result + 14
+				when 'f','F' then Result := Result + 15
+				end
+				-- next
+				i := i + 1
+			end
 		end
 
 feature -- Removal
