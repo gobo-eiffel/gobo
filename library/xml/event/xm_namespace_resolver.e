@@ -172,7 +172,7 @@ feature {NONE} -- Attribute events
 							-- xmlns: prefix has implicit namespace
 						next.on_attribute (Xmlns_namespace,
 							attributes_prefix.item,
-							attributes_local_part.item
+							attributes_local_part.item,
 							attributes_value.item)
 					else
 						on_error (Undeclared_namespace_error)
