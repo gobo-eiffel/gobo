@@ -16,7 +16,6 @@ inherit
 
 	GEPP_VERSION
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
@@ -45,7 +44,7 @@ feature -- Processing
 			-- Preprocess `in_filename' and put
 			-- results to `out_filename'.
 		local
-			in_file: like INPUT_STREAM_TYPE
+			in_file: KL_TEXT_INPUT_FILE
 			out_file: KL_TEXT_OUTPUT_FILE
 		do
 			if not out_filename.is_equal ("-") then
@@ -63,10 +62,11 @@ feature -- Processing
 			if in_filename.is_equal ("-") then
 				parser.parse_file (std.input)
 			else
-				in_file := INPUT_STREAM_.make_file_open_read (in_filename)
-				if INPUT_STREAM_.is_open_read (in_file) then
+				!! in_file.make (in_filename)
+				in_file.open_read
+				if in_file.is_open_read then
 					parser.parse_file (in_file)
-					INPUT_STREAM_.close (in_file)
+					in_file.close
 				else
 					report_cannot_read_error (in_filename)
 					Exceptions.die (1)

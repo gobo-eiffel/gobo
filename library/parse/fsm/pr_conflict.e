@@ -13,10 +13,6 @@ indexing
 
 class PR_CONFLICT
 
-inherit
-
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 creation
 
 	make
@@ -60,12 +56,12 @@ feature -- Access
 
 feature -- Output
 
-	print_conflict (a_file: like OUTPUT_STREAM_TYPE) is
+	print_conflict (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of
 			-- current conflict to `a_file.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("Conflict in state ")
 			a_file.put_integer (state.id)

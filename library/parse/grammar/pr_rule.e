@@ -18,11 +18,6 @@ inherit
 
 	COMPARABLE
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-		undefine
-			is_equal
-		end
-
 creation
 
 	make
@@ -210,12 +205,12 @@ feature -- Comparison
 
 feature -- Output
 
-	print_rule (a_file: like OUTPUT_STREAM_TYPE) is
+	print_rule (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of
 			-- current rule to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 		do

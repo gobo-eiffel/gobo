@@ -63,8 +63,8 @@ feature {NONE} -- Initialization
 			no_more_option: BOOLEAN
 			arg: STRING
 			in_filename, out_filename: STRING
-			in_file: like INPUT_STREAM_TYPE
-			out_file: like OUTPUT_STREAM_TYPE
+			in_file: KL_TEXT_INPUT_FILE
+			out_file: KL_TEXT_OUTPUT_FILE
 		do
 			output_file := std.output
 			make_compressed_scanner_skeleton
@@ -128,8 +128,9 @@ feature {NONE} -- Initialization
 			end
 
 			if not out_filename.is_equal ("-") then
-				out_file := OUTPUT_STREAM_.make_file_open_write (out_filename)
-				if OUTPUT_STREAM_.is_open_write (out_file) then
+				!! out_file.make (out_filename)
+				out_file.open_write
+				if out_file.is_open_write then
 					set_output_file (out_file)
 				else
 					std.error.put_string ("ascii2ps: cannot open %'")
@@ -143,11 +144,12 @@ feature {NONE} -- Initialization
 			if in_filename.is_equal ("-") then
 				print_postscript
 			else
-				in_file := INPUT_STREAM_.make_file_open_read (in_filename)
-				if INPUT_STREAM_.is_open_read (in_file) then
+				!! in_file.make (in_filename)
+				in_file.open_read
+				if in_file.is_open_read then
 					set_input_buffer (new_file_buffer (in_file))
 					print_postscript
-					INPUT_STREAM_.close (in_file)
+					in_file.close
 				else
 					std.error.put_string ("ascii2ps: cannot open %'")
 					std.error.put_string (in_filename)
@@ -155,9 +157,9 @@ feature {NONE} -- Initialization
 					Exceptions.die (1)
 				end
 			end
-			if out_file /= Void and then not OUTPUT_STREAM_.is_closed (out_file) then
+			if out_file /= Void and then not out_file.is_closed then
 				output_file := std.output
-				OUTPUT_STREAM_.close (out_file)
+				out_file.close
 			end
 		rescue
 			std.error.put_string ("ascii2ps: internal error%N")
@@ -642,14 +644,14 @@ feature {NONE} -- Implementation
 
 feature -- Output
 
-	output_file: like OUTPUT_STREAM_TYPE
+	output_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
-	set_output_file (a_file: like OUTPUT_STREAM_TYPE) is
+	set_output_file (a_file: like output_file) is
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			output_file := a_file
 		ensure
@@ -670,6 +672,6 @@ invariant
 	tab_length_positive: tab_length > 0
 	filename_not_void: filename /= Void
 	output_not_void: output_file /= Void
-	output_open_write: OUTPUT_STREAM_.is_open_write (output_file)
+	output_open_write: output_file.is_open_write
 
 end -- class ASCII2PS

@@ -26,7 +26,7 @@ creation
 
 feature -- Output
 
-	print_conversion_routine (a_file: like OUTPUT_STREAM_TYPE) is
+	print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print conversion routine ANY->`name' to `a_file'.
 		do
 			a_file.put_string ("%Tyytype")

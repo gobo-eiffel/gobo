@@ -56,7 +56,7 @@ feature -- Generation
 			!! Result.make (Current)
 		end
 
-	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
+	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print a backing-up report to `a_file'.
 		do
 			Precursor (a_file)
@@ -74,7 +74,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
 			a_file.put_string ("%Tyy_build_tables is%N%
@@ -90,7 +90,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Eiffel code for full tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
@@ -102,7 +102,7 @@ feature {NONE} -- Generation
 			print_eiffel_array ("yy_accept_template", yy_accept, a_file)
 		end
 
-	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for constants to `a_file'.
 		do
 			a_file.put_string ("%TyyNull_equiv_class: INTEGER is ")

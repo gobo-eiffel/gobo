@@ -168,7 +168,7 @@ feature -- Element change
 
 feature -- Output
 
-	print_variable (a_grammar: PR_GRAMMAR; a_file: like OUTPUT_STREAM_TYPE) is
+	print_variable (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of current
 			-- variable to `a_file' with rules where it
 			-- appears in `a_grammar'.

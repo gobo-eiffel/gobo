@@ -15,7 +15,6 @@ deferred class ET_CLUSTER
 
 inherit
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -172,7 +171,7 @@ feature -- Parsing
 			-- Parse all classes in cluster.
 		local
 			a_filename: STRING
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
@@ -189,10 +188,11 @@ feature -- Parsing
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
 							a_filename.append_string (s)
-							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-							if INPUT_STREAM_.is_open_read (a_file) then
+							!! a_file.make (a_filename)
+							a_file.open_read
+							if a_file.is_open_read then
 								a_universe.parse_file (a_file, a_filename, Current)
-								INPUT_STREAM_.close (a_file)
+								a_file.close
 							else
 								-- TODO.
 							end

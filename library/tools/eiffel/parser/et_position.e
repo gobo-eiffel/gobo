@@ -20,11 +20,6 @@ inherit
 			out
 		end
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-		undefine
-			out
-		end
-
 	UT_IMPORTED_FORMATTERS
 		undefine
 			out
@@ -75,14 +70,15 @@ feature -- Output
 		require
 			a_string_not_void: a_string /= Void
 		local
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			an_arrow: STRING
 			c: CHARACTER
 			i, nb: INTEGER
 			eol: BOOLEAN
 		do
-			a_file := INPUT_STREAM_.make_file_open_read (filename)
-			if INPUT_STREAM_.is_open_read (a_file) then
+			!! a_file.make (filename)
+			a_file.open_read
+			if a_file.is_open_read then
 				nb := line
 				if nb > 1 then
 					skip_lines (a_file, nb - 2)
@@ -95,7 +91,7 @@ feature -- Output
 					an_arrow := STRING_.make (80)
 					a_file.read_character
 				until
-					INPUT_STREAM_.end_of_input (a_file) or eol
+					a_file.end_of_file or eol
 				loop
 					c := a_file.last_character
 					if c = '%N' then
@@ -123,26 +119,26 @@ feature -- Output
 				a_string.append_character ('%N')
 				append_line_to_string (a_file, a_string)
 				a_string.append_character ('%N')
-				INPUT_STREAM_.close (a_file)
+				a_file.close
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	append_line_to_string (a_file: like INPUT_STREAM_TYPE; a_string: STRING) is
+	append_line_to_string (a_file: KI_CHARACTER_INPUT_STREAM; a_string: STRING) is
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 			a_string_not_void: a_string /= Void
 		local
 			c: CHARACTER
 			eol: BOOLEAN
 		do
-			if not INPUT_STREAM_.end_of_input (a_file) then
+			if not a_file.end_of_input then
 				from
 					a_file.read_character
 				until
-					INPUT_STREAM_.end_of_input (a_file) or eol
+					a_file.end_of_input or eol
 				loop
 					c := a_file.last_character
 					if c = '%N' then
@@ -155,10 +151,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	skip_lines (a_file: like INPUT_STREAM_TYPE; nb: INTEGER) is
+	skip_lines (a_file: KI_CHARACTER_INPUT_STREAM; nb: INTEGER) is
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 			nb_positive: nb >= 0
 		local
 			i: INTEGER
@@ -167,7 +163,7 @@ feature {NONE} -- Implementation
 				from
 					a_file.read_character
 				until
-					INPUT_STREAM_.end_of_input (a_file) or i = nb
+					a_file.end_of_input or i = nb
 				loop
 					if a_file.last_character = '%N' then
 						i := i + 1

@@ -15,7 +15,6 @@ class PR_GRAMMAR
 
 inherit
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
@@ -176,12 +175,12 @@ feature -- Element change
 
 feature -- Output
 
-	print_grammar (a_file: like OUTPUT_STREAM_TYPE) is
+	print_grammar (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of
 			-- current grammar to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 		do
@@ -282,14 +281,14 @@ feature -- Processing
 			end
 		end
 
-	reduce_verbose (error_handler: UT_ERROR_HANDLER; a_file: like OUTPUT_STREAM_TYPE) is
+	reduce_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Remove useless nonterminal symbols and rules.
 			-- Report verbosely results to `error_handler'
 			-- and `a_file'.
 		require
 			error_handler_not_void: error_handler /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			old_variables: like variables
 			old_rules: like rules

@@ -17,7 +17,6 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 feature -- Access
 
@@ -184,35 +183,35 @@ feature -- String handling
 
 feature -- File handling
 
-	put_decimal_integer (a_file: like OUTPUT_STREAM_TYPE; an_int: INTEGER) is
+	put_decimal_integer (a_file: KI_TEXT_OUTPUT_STREAM; an_int: INTEGER) is
 			-- Write decimal representation of `an_int' to `a_file'.
 			-- Regexp: 0|(-?[1-9][0-9]*)
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 		do
 			a_file.put_string (decimal_integer_out (an_int))
 		end
 
-	put_octal_integer (a_file: like OUTPUT_STREAM_TYPE; an_int: INTEGER) is
+	put_octal_integer (a_file: KI_TEXT_OUTPUT_STREAM; an_int: INTEGER) is
 			-- Write octal representation of `an_int' to `a_file'.
 			-- Regexp: 0|[1-7][0-7]*
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 			an_int_positive: an_int >= 0
 		do
 			a_file.put_string (octal_integer_out (an_int))
 		end
 
-	put_hexadecimal_integer (a_file: like OUTPUT_STREAM_TYPE; an_int: INTEGER; uppercase: BOOLEAN) is
+	put_hexadecimal_integer (a_file: KI_TEXT_OUTPUT_STREAM; an_int: INTEGER; uppercase: BOOLEAN) is
 			-- Write hexadecimal representation of `an_int' to `a_file'.
 			-- Regexp:
 			--    uppercase:      0|[1-9A-F][0-9A-F]*
 			--    not uppercase:  0|[1-9a-f][0-9a-f]*
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 			an_int_positive: an_int >= 0
 		do
 			a_file.put_string (hexadecimal_integer_out (an_int, uppercase))

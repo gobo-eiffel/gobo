@@ -16,7 +16,6 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_SHARED_STANDARD_FILES
 
 creation
@@ -29,7 +28,7 @@ feature -- Execution
 			-- Start 'gegrep' execution.
 		local
 			i, nb: INTEGER
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			a_filename: STRING
 			case_insensitive: BOOLEAN
 		do
@@ -63,10 +62,11 @@ feature -- Execution
 						parse_file (std.input, Void)
 					when 1 then
 						a_filename := Arguments.argument (i)
-						a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-						if INPUT_STREAM_.is_open_read (a_file) then
+						!! a_file.make (a_filename)
+						a_file.open_read
+						if a_file.is_open_read then
 							parse_file (a_file, Void)
-							INPUT_STREAM_.close (a_file)
+							a_file.close
 						else
 							std.error.put_string ("gegrep: cannot read %'")
 							std.error.put_string (a_filename)
@@ -76,10 +76,11 @@ feature -- Execution
 					else
 						from until i > nb loop
 							a_filename := Arguments.argument (i)
-							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-							if INPUT_STREAM_.is_open_read (a_file) then
+							!! a_file.make (a_filename)
+							a_file.open_read
+							if a_file.is_open_read then
 								parse_file (a_file, a_filename)
-								INPUT_STREAM_.close (a_file)
+								a_file.close
 							else
 								std.error.put_string ("gegrep: cannot read %'")
 								std.error.put_string (a_filename)
@@ -98,11 +99,11 @@ feature -- Execution
 
 feature -- Parsing
 
-	parse_file (a_file: like INPUT_STREAM_TYPE; a_filename: STRING) is
+	parse_file (a_file: KI_TEXT_INPUT_STREAM; a_filename: STRING) is
 			-- Parse `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 			regexp_not_void: regexp /= Void
 			regexp_compiled: regexp.compiled
 		local
@@ -111,7 +112,7 @@ feature -- Parsing
 			from
 				a_file.read_line
 			until
-				INPUT_STREAM_.end_of_input (a_file)
+				a_file.end_of_input
 			loop
 				a_line := a_file.last_string
 				if regexp.matches (a_line) then

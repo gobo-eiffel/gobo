@@ -15,8 +15,6 @@ deferred class YY_SCANNER
 
 inherit
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_SHARED_STANDARD_FILES
 
 feature {NONE} -- Initialization
@@ -28,12 +26,12 @@ feature {NONE} -- Initialization
 			make_with_file (std.input)
 		end
 
-	make_with_file (a_file: like INPUT_STREAM_TYPE) is
+	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Create a new scanner with
 			-- `a_file' as input file.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			make_with_buffer (new_file_buffer (a_file))
 		end
@@ -312,11 +310,11 @@ feature -- Input
 			flushed: input_buffer.count = 0
 		end
 
-	new_file_buffer (a_file: like INPUT_STREAM_TYPE): YY_FILE_BUFFER is
+	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			!! Result.make (a_file)
 		ensure

@@ -175,11 +175,11 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: like INPUT_STREAM_TYPE) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse scanner description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
@@ -206,7 +206,7 @@ feature -- Processing
 			a_filname_not_void: a_filename /= Void
 			a_filename_not_empty: a_filename.count > 0
 		local
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
@@ -215,8 +215,9 @@ feature -- Processing
 					output (" \%N%T")
 					output (a_filename)
 				end
-				a_file := INPUT_STREAM_.make_file_open_read (Execution_environment.interpreted_string (a_filename))
-				if INPUT_STREAM_.is_open_read (a_file) then
+				!! a_file.make (Execution_environment.interpreted_string (a_filename))
+				a_file.open_read
+				if a_file.is_open_read then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
 				else
@@ -245,7 +246,7 @@ feature -- Error handling
 		do
 			file_buffer ?= input_buffer
 			if file_buffer /= Void then
-				filename := INPUT_STREAM_.name (file_buffer.file)
+				filename := file_buffer.file.name
 			else
 				filename := "string"
 			end

@@ -34,8 +34,6 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 	UT_IMPORTED_FORMATTERS
 
 feature {NONE} -- Initialization
@@ -108,11 +106,11 @@ feature -- Generation
 			scanner_not_void: Result /= Void
 		end
 
-	print_scanner (a_file: like OUTPUT_STREAM_TYPE) is
+	print_scanner (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for corresponding scanner to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			print_eiffel_header (a_file)
 			a_file.put_string ("%Nfeature -- Status report%N%N")
@@ -131,11 +129,11 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
+	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print a backing-up report to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			a_state: LX_DFA_STATE
@@ -164,11 +162,11 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_eiffel_header (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print user-defined eiffel header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 		do
@@ -181,11 +179,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_status_report_routines (a_file: like OUTPUT_STREAM_TYPE) is
+	print_status_report_routines (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for `valid_start_condition' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("%Tvalid_start_condition (sc: INTEGER): BOOLEAN is%N%
 				%%T%T%T-- Is `sc' a valid start condition?%N%
@@ -208,19 +206,19 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%Tend%N")
 		end
 
-	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		deferred
 		end
 
-	print_actions (a_file: like OUTPUT_STREAM_TYPE) is
+	print_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 		do
@@ -250,13 +248,13 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_inspect_actions (a_file: like OUTPUT_STREAM_TYPE) is
+	print_inspect_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for actions to `a_file'.
 			-- The generated code uses an inspect instruction
 			-- to find out which action to execute.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			rule, next_rule: LX_RULE
@@ -312,14 +310,13 @@ feature {NONE} -- Generation
 				%%T%T%Tend%N")
 		end
 
-	print_binary_search_actions
-		(a_file: like OUTPUT_STREAM_TYPE; l, u: INTEGER) is
+	print_binary_search_actions (a_file: KI_TEXT_OUTPUT_STREAM; l, u: INTEGER) is
 			-- Print code for actions indexed from `l' to `u'
 			-- to `a_file'. The generated code uses binary search
 			-- to find out which action to execute.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 			l_large_enough: l >= yy_rules.lower
 			l_small_enough: l <= u
 			u_small_enough: u <= yy_rules.upper
@@ -348,11 +345,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_action_call (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+	print_action_call (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE) is
 			-- Print code for `a_rule's action call to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 			a_rule_not_void: a_rule /= Void
 		do
 			if actions_separated then
@@ -366,11 +363,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_action_routine (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+	print_action_routine (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE) is
 			-- Print code for `a_rule's action routine to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 			a_rule_not_void: a_rule /= Void
 		do
 			a_file.put_string ("%Tyy_execute_action_")
@@ -382,11 +379,11 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%Tend%N")
 		end
 
-	print_action_body (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+	print_action_body (a_file: KI_TEXT_OUTPUT_STREAM; a_rule: LX_RULE) is
 			-- Print code for `a_rule's action body to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 			a_rule_not_void: a_rule /= Void
 		local
 			line_count, column_count, head_count: INTEGER
@@ -473,11 +470,11 @@ feature {NONE} -- Generation
 			a_file.put_character ('%N')
 		end
 
-	print_eof_actions (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eof_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for end-of-file actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			rule: LX_RULE
@@ -561,19 +558,19 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Eiffel code for DFA tables to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		deferred
 		end
 
-	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for constants to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 		do
@@ -601,26 +598,25 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%T%T-- Start condition codes%N")
 		end
 
-	print_eiffel_code (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_code (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print user-defined eiffel code to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			if eiffel_code /= Void then
 				a_file.put_string (eiffel_code)
 			end
 		end
 
-	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER];
-		a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
 			a_table_not_void: a_table /= Void
 			zero_based_table: a_table.lower = 0
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, j, k, nb: INTEGER
 			a_table_upper: INTEGER
@@ -684,14 +680,14 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: like OUTPUT_STREAM_TYPE) is
+	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print the (sorted) list of the line numbers of 
 			-- the rules associated to the NFA states making up
 			-- `a_state' to `a_file'.
 		require
 			a_state_not_void: a_state /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			j, yy_rules_upper: INTEGER
@@ -736,14 +732,14 @@ feature {NONE} -- Generation
 			a_file.put_character ('%N')
 		end
 
-	print_transitions (a_state: LX_DFA_STATE; a_file: like OUTPUT_STREAM_TYPE) is
+	print_transitions (a_state: LX_DFA_STATE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print out- and jam-transitions from `a_state'
 			-- in a human-readable form (i.e. not using
 			-- equivalence classes) to `a_file'.
 		require
 			a_state_not_void: a_state /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, j, nb: INTEGER
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
@@ -825,13 +821,13 @@ feature {NONE} -- Generation
 			a_file.put_string ("]%N")
 		end
 
-	print_readable_character (i: INTEGER; a_file: like OUTPUT_STREAM_TYPE) is
+	print_readable_character (i: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print a human-readable form of the character
 			-- of ASCII code `i' to `a_file'. Print octal value
 			-- if the corresponding character is not printable.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			octal, tmp: STRING
 			j: INTEGER

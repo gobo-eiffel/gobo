@@ -6,16 +6,12 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class YY_BUFFER
-
-inherit
-
-	KL_IMPORTED_STRING_BUFFER_ROUTINES
 
 creation
 
@@ -33,9 +29,8 @@ feature {NONE} -- Initialization
 			nb: INTEGER
 		do
 			nb := str.count + 2
-			buff := STRING_BUFFER_.make (nb)
-			STRING_BUFFER_.copy_from_string (buff, lower, str)
-			nb := nb + (lower - 1)
+			!! buff.make (nb)
+			buff.fill_from_string (str, 1)
 			buff.put (End_of_buffer_character, nb - 1)
 			buff.put (End_of_buffer_character, nb)
 			make_from_buffer (buff)
@@ -52,16 +47,13 @@ feature {NONE} -- Initialization
 		require
 			buff_not_void: buff /= Void
 			valid_buff: buff.count >= 2 and then
-				buff.item (buff.count + (lower - 1) - 1) = '%U' and
-				buff.item (buff.count + (lower - 1)) = '%U'
-		local
-			l: INTEGER
+				buff.item (buff.count - 1) = '%U' and
+				buff.item (buff.count) = '%U'
 		do
-			l := lower
 			capacity := buff.count - 2
-			upper := capacity + (l - 1)
+			count := capacity
 			content := buff
-			index := l
+			index := 1
 			line := 1
 			column := 1
 			position := 1
@@ -75,17 +67,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	content: like STRING_BUFFER_TYPE
+	content: KL_CHARACTER_BUFFER
 			-- Input buffer characters
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in buffer,
 			-- not including EOB characters
-		do
-			Result := upper - lower + 1
-		ensure
-			definition: Result = upper - lower + 1
-		end
 
 	capacity: INTEGER
 			-- Maximum number of characters in buffer,
@@ -102,16 +89,6 @@ feature -- Access
 
 	index: INTEGER
 			-- Current index in `content'
-
-	lower: INTEGER is
-			-- Lower value for `index'
-		once
-			Result := STRING_BUFFER_.lower
-		end
-
-	upper: INTEGER
-			-- Upper value for `index', not
-			-- including room for EOB characters
 
 	beginning_of_line: BOOLEAN
 			-- Is current position at the beginning of a line?
@@ -138,8 +115,8 @@ feature -- Setting
 	set_index (i: INTEGER) is
 			-- Set `index' to `i'.
 		require
-			i_small_enough: i <= upper + 2
-			i_large_enough: i >= lower
+			i_small_enough: i <= count + 2
+			i_large_enough: i >= 1
 		do
 			index := i
 		ensure
@@ -185,17 +162,14 @@ feature -- Element change
 
 	flush is
 			-- Flush buffer.
-		local
-			l: INTEGER
 		do
-			l := lower
 				-- We always need two end-of-file characters.
 				-- The first causes a transition to the end-of-buffer
 				-- state. The second causes a jam in that state.
-			content.put (End_of_buffer_character, l)
-			content.put (End_of_buffer_character, l + 1)
-			upper := l - 1
-			index := l
+			content.put (End_of_buffer_character, 1)
+			content.put (End_of_buffer_character, 2)
+			count := 0
+			index := 1
 			line := 1
 			column := 1
 			position := 1
@@ -222,23 +196,21 @@ feature -- Element change
 			-- and make sure there is still available space at
 			-- the end of buffer.
 		local
-			new_index: INTEGER
 			nb: INTEGER
 		do
-			nb := upper - index + 1
+			nb := count - index + 1
 			if nb >= capacity then
 					-- Buffer is full. Resize it.
 				resize
 			end
-			new_index := lower
-			if index /= new_index then
+			if index /= 1 then
 					-- Move the 2 EOB characters as well.
-				STRING_BUFFER_.move_left (content, index, new_index, nb + 2)
-				index := new_index
-				upper := new_index + nb - 1
+				content.move_left (index, 1, nb + 2)
+				index := 1
+				count := nb
 			end
 		ensure
-			compacted_left: index = lower
+			compacted_left: index = 1
 			not_full: capacity > count
 		end
 
@@ -250,7 +222,7 @@ feature -- Element change
 			new_index: INTEGER
 			nb: INTEGER
 		do
-			nb := upper - index + 1
+			nb := count - index + 1
 			if nb >= capacity then
 					-- Buffer is full. Resize it.
 				resize
@@ -258,13 +230,13 @@ feature -- Element change
 			new_index := index + capacity - count
 			if index /= new_index then
 					-- Move the 2 EOB characters as well.
-				STRING_BUFFER_.move_right (content, index, new_index, nb + 2)
+				content.move_right (index, new_index, nb + 2)
 				index := new_index
-				upper := new_index + nb - 1
+				count := new_index + nb - 1
 			end
 		ensure
 			compacted_right: count = capacity
-			not_full: index > lower
+			not_full: index > 1
 		end
 
 feature {NONE} -- Implementation
@@ -281,7 +253,7 @@ feature {NONE} -- Implementation
 				-- Include room for 2 EOB characters.
 			if capacity + 2 > content.count then
 					-- Set `content.count' to `capacity' + 2.
-				content := STRING_BUFFER_.resize (content, capacity + 2)
+				content.resize (capacity + 2)
 			end
 		ensure
 			resized: capacity > old capacity
@@ -301,9 +273,9 @@ invariant
 	content_count: content.count >= capacity + 2
 	positive_capacity: capacity >= 0
 	valid_count: count >= 0 and count <= capacity
-	end_of_buffer: content.item (upper + 1) = End_of_buffer_character and
-		content.item (upper + 2) = End_of_buffer_character
-	valid_index: index >= lower and index <= upper + 2
+	end_of_buffer: content.item (count + 1) = End_of_buffer_character and
+		content.item (count + 2) = End_of_buffer_character
+	valid_index: index >= 1 and index <= count + 2
 	line_positive: line >= 1
 	column_positive: column >= 1
 	position_positive: position >= 1

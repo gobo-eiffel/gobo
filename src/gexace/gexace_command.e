@@ -13,13 +13,6 @@ indexing
 
 deferred class GEXACE_COMMAND
 
-inherit
-
-	ANY
-
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-		export {NONE} all end
-
 feature -- Access
 
 	xace_filename: STRING

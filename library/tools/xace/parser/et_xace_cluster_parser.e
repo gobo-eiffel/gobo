@@ -26,7 +26,7 @@ creation
 
 feature -- Parsing
 
-	parse_file (a_file: like INPUT_STREAM_TYPE) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse Xace file `a_file'.
 		do
 			last_cluster := Void

@@ -17,7 +17,6 @@ inherit
 
 	PR_PARSER_ENGINE
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
@@ -51,14 +50,14 @@ feature -- Access
 
 feature -- Generation
 
-	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: like OUTPUT_STREAM_TYPE) is
+	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for corresponding parser to `a_file'.
 			-- Print the token codes with the parser class text
 			-- if `tokens_needed' is true, and the semantic actions
 			-- in individual routines if `actions_separated' is true.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			print_eiffel_header (a_file)
 			if tokens_needed then
@@ -81,7 +80,7 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-	print_token_class (class_name, version: STRING; a_file: like OUTPUT_STREAM_TYPE) is
+	print_token_class (class_name, version: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print class text with token code constants to `a_file'.
 			-- `class_name' is the name of the generated class
 			-- and `version' is the verrsion number of geyacc.
@@ -89,7 +88,7 @@ feature -- Generation
 			class_name_not_void: class_name /= Void
 			version_not_void: version /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("indexing%N%N%
 				%%Tdescription: %"Parser token codes%"%N%
@@ -107,11 +106,11 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_token_codes (a_file: like OUTPUT_STREAM_TYPE) is
+	print_token_codes (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print token codes to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			a_token: PR_TOKEN
@@ -169,11 +168,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_eiffel_header (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print user-defined eiffel header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			eiffel_header: DS_ARRAYED_LIST [STRING]
@@ -186,11 +185,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_eiffel_code (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_code (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print user-defined eiffel code to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			eiffel_code: STRING
 		do
@@ -200,11 +199,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_build_parser_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_build_parser_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for `yy_build_parser_tables' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("%Tyy_build_parser_tables is%N%
 				%%T%T%T-- Build parser tables.%N%T%Tdo%N%
@@ -220,11 +219,11 @@ feature {NONE} -- Generation
 				%%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Eiffel code for parser tables to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			print_eiffel_array ("yytranslate_template", yytranslate, a_file)
 			a_file.put_character ('%N')
@@ -245,14 +244,14 @@ feature {NONE} -- Generation
 			print_eiffel_array ("yycheck_template", yycheck, a_file)
 		end
 
-	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
 			a_table_not_void: a_table /= Void
 			zero_based_table: a_table.lower = 0
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, j, k, nb: INTEGER
 			a_table_upper: INTEGER
@@ -316,12 +315,12 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_actions (a_file: like OUTPUT_STREAM_TYPE) is
+	print_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for actions to `a_file'.
 			-- Print all actions in one routine.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			rules: DS_ARRAYED_LIST [PR_RULE]
@@ -391,12 +390,12 @@ feature {NONE} -- Generation
 				%%T%T%Tend%N%T%Tend%N")
 		end
 
-	print_separated_actions (a_file: like OUTPUT_STREAM_TYPE) is
+	print_separated_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for actions to `a_file'.
 			-- Print each action into an individual routine.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			j, k, nb2: INTEGER
@@ -511,11 +510,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_conversion_routines (a_file: like OUTPUT_STREAM_TYPE) is
+	print_conversion_routines (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for type conversion routines to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			types: DS_ARRAYED_LIST [PR_TYPE]
 			a_type: PR_TYPE
@@ -536,11 +535,11 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for constants to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("%TyyFinal: INTEGER is ")
 			a_file.put_integer (yyFinal)

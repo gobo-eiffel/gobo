@@ -16,8 +16,6 @@ inherit
 
 	LX_DESCRIPTION_OVERRIDER
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
@@ -51,17 +49,18 @@ feature -- Processing
 		local
 			parser: LX_LEX_PARSER
 			filename: STRING
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			!! parser.make_from_description (description, error_handler)
 			parser.set_options_overrider (Current)
 			filename := description.input_filename
 			if filename /= Void then
-				a_file := INPUT_STREAM_.make_file_open_read (filename)
-				if INPUT_STREAM_.is_open_read (a_file) then
+				!! a_file.make (filename)
+				a_file.open_read
+				if a_file.is_open_read then
 					parser.parse_file (a_file)
-					INPUT_STREAM_.close (a_file)
+					a_file.close
 				else
 					!! cannot_read.make (filename)
 					error_handler.report_error (cannot_read)
@@ -150,15 +149,16 @@ feature -- Processing
 			dfa_not_void: dfa /= Void
 		local
 			filename: STRING
-			a_file: like OUTPUT_STREAM_TYPE
+			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			filename := description.output_filename
 			if filename /= Void then
-				a_file := OUTPUT_STREAM_.make_file_open_write (filename)
-				if OUTPUT_STREAM_.is_open_write (a_file) then
+				!! a_file.make (filename)
+				a_file.open_write
+				if a_file.is_open_write then
 					dfa.print_scanner (a_file)
-					OUTPUT_STREAM_.close (a_file)
+					a_file.close
 				else
 					!! cannot_write.make (filename)
 					error_handler.report_error (cannot_write)
@@ -175,16 +175,17 @@ feature -- Processing
 			dfa_not_void: dfa /= Void
 		local
 			filename: STRING
-			a_file: like OUTPUT_STREAM_TYPE
+			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			if description.backing_up_report then
 				filename := description.backing_up_filename
 				if filename /= Void then
-					a_file := OUTPUT_STREAM_.make_file_open_write (filename)
-					if OUTPUT_STREAM_.is_open_write (a_file) then
+					!! a_file.make (filename)
+					a_file.open_write
+					if a_file.is_open_write then
 						dfa.print_backing_up_report (a_file)
-						OUTPUT_STREAM_.close (a_file)
+						a_file.close
 					else
 						!! cannot_write.make (filename)
 						error_handler.report_error (cannot_write)

@@ -46,13 +46,14 @@ feature -- Execution
 		local
 			a_parser: ET_XACE_CLUSTER_PARSER
 			a_cluster: ET_XACE_CLUSTER
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 		do
 			!! a_parser.make_with_variables (variables, error_handler)
-			a_file := INPUT_STREAM_.make_file_open_read (xace_filename)
-			if INPUT_STREAM_.is_open_read (a_file) then
+			!! a_file.make (xace_filename)
+			a_file.open_read
+			if a_file.is_open_read then
 				a_parser.parse_file (a_file)
-				INPUT_STREAM_.close (a_file)
+				a_file.close
 				a_cluster := a_parser.last_cluster
 				if a_cluster /= Void then
 					execute_generators (a_cluster)

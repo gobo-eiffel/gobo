@@ -14,10 +14,6 @@ indexing
 
 deferred class PR_SYMBOL
 
-inherit
-
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 feature {NONE} -- Initialization
 
 	make (an_id: INTEGER; a_name: like name; a_type: like type) is
@@ -93,14 +89,14 @@ feature -- Setting
 
 feature -- Output
 
-	print_symbol (a_grammar: PR_GRAMMAR; a_file: like OUTPUT_STREAM_TYPE) is
+	print_symbol (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of current
 			-- symbol to `a_file' with rules where it
 			-- appears in `a_grammar'.
 		require
 			a_grammar_not_void: a_grammar /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		deferred
 		end
 

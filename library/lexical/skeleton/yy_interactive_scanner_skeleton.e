@@ -291,7 +291,7 @@ feature -- Scanning
 							-- states make transitions on EOB to the 
 							-- end-of-buffer state). Contrast this with the
 							-- test in `read_character'.
-						if yy_end <= input_buffer.upper + 1 then
+						if yy_end <= input_buffer.count + 1 then
 								-- This was really a NULL character.
 							yy_end := yy_bp + yy_matched_count
 							yy_current_state := yy_previous_state

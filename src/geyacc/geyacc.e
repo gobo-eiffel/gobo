@@ -21,8 +21,6 @@ inherit
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 creation
 
@@ -35,10 +33,10 @@ feature -- Processing
 		local
 			fsm: PR_FSM
 			parser_generator: PR_PARSER_GENERATOR
-			out_file, token_file: like OUTPUT_STREAM_TYPE
+			out_file, token_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 			tokens_needed: BOOLEAN
-			verbose_file: like OUTPUT_STREAM_TYPE
+			verbose_file: KL_TEXT_OUTPUT_FILE
 		do
 			if False then resurrect_code end
 
@@ -49,14 +47,15 @@ feature -- Processing
 			if grammar /= Void then
 				if verbose_filename /= Void then
 						-- Verbose mode.
-					verbose_file := OUTPUT_STREAM_.make_file_open_write (verbose_filename)
-					if OUTPUT_STREAM_.is_open_write (verbose_file) then
+					!! verbose_file.make (verbose_filename)
+					verbose_file.open_write
+					if verbose_file.is_open_write then
 						grammar.reduce_verbose (error_handler, verbose_file)
 						grammar.set_nullable
 						!! fsm.make (grammar)
 						fsm.resolve_conflicts_verbose (error_handler, verbose_file)
 						fsm.print_machine (verbose_file)
-						OUTPUT_STREAM_.close (verbose_file)
+						verbose_file.close
 					else
 						!! cannot_write.make (verbose_filename)
 						error_handler.report_error (cannot_write)
@@ -71,10 +70,11 @@ feature -- Processing
 				!! parser_generator.make (fsm)
 				if token_classname /= Void then
 						-- Print class text with token code constants.
-					token_file := OUTPUT_STREAM_.make_file_open_write (token_filename)
-					if OUTPUT_STREAM_.is_open_write (token_file) then
+					!! token_file.make (token_filename)
+					token_file.open_write
+					if token_file.is_open_write then
 						parser_generator.print_token_class (token_classname, Version_number, token_file)
-						OUTPUT_STREAM_.close (token_file)
+						token_file.close
 					else
 						!! cannot_write.make (token_filename)
 						error_handler.report_error (cannot_write)
@@ -84,10 +84,11 @@ feature -- Processing
 					tokens_needed := True
 				end
 				if output_filename /= Void then
-					out_file := OUTPUT_STREAM_.make_file_open_write (output_filename)
-					if OUTPUT_STREAM_.is_open_write (out_file) then
+					!! out_file.make (output_filename)
+					out_file.open_write
+					if out_file.is_open_write then
 						parser_generator.print_parser (tokens_needed, actions_separated, out_file)
-						OUTPUT_STREAM_.close (out_file)
+						out_file.close
 					else
 						!! cannot_write.make (output_filename)
 						error_handler.report_error (cannot_write)
@@ -103,15 +104,16 @@ feature -- Processing
 			-- Parse input file.
 		local
 			parser: PR_YACC_PARSER
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			!! parser.make (error_handler)
 			if input_filename /= Void then
-				a_file := INPUT_STREAM_.make_file_open_read (input_filename)
-				if INPUT_STREAM_.is_open_read (a_file) then
+				!! a_file.make (input_filename)
+				a_file.open_read
+				if a_file.is_open_read then
 					parser.parse_file (a_file)
-					INPUT_STREAM_.close (a_file)
+					a_file.close
 				else
 					!! cannot_read.make (input_filename)
 					error_handler.report_error (cannot_read)

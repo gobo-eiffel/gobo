@@ -18,8 +18,6 @@ inherit
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 creation
 
 	make, make_with_variables
@@ -72,11 +70,11 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: like INPUT_STREAM_TYPE) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse Xace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		local
 			a_root_name: UC_STRING
 			a_system: ET_XACE_UNIVERSE
@@ -99,7 +97,7 @@ feature -- Parsing
 							a_cluster := ast_factory.new_cluster (xml_parser.document.root_element)
 						end
 					else
-						error_handler.report_not_xace_file_error (INPUT_STREAM_.name (a_file))
+						error_handler.report_not_xace_file_error (a_file.name)
 					end
 				else
 					error_handler.report_parser_error (xml_parser.last_error_extended_description)

@@ -21,7 +21,6 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 creation
 
@@ -122,18 +121,18 @@ feature {NONE} -- Scanner
 				if has_pending_character then
 					c := pending_character
 					has_pending_character := False
-				elseif not INPUT_STREAM_.end_of_input (std.input) then
+				elseif not std.input.end_of_file then
 					std.input.read_character
 					c := std.input.last_character
 				end
 			until
-				INPUT_STREAM_.end_of_input (std.input) or else
+				std.input.end_of_file or else
 				(c /= ' ' and c /= '%T')
 			loop
 				std.input.read_character
 				c := std.input.last_character
 			end
-			if INPUT_STREAM_.end_of_input (std.input) then
+			if std.input.end_of_file then
 					-- Return end-of-file
 				last_token := 0
 			else
@@ -147,20 +146,20 @@ feature {NONE} -- Scanner
 						std.input.read_character
 						c := std.input.last_character
 					until
-						INPUT_STREAM_.end_of_input (std.input) or else
+						std.input.end_of_file or else
 						(c < '0' or c > '9')
 					loop
 						buffer.append_character (c)
 						std.input.read_character
 						c := std.input.last_character
 					end
-					if not INPUT_STREAM_.end_of_input (std.input) and then c = '.' then
+					if not std.input.end_of_file and then c = '.' then
 						from
 							buffer.append_character ('.')
 							std.input.read_character
 							c := std.input.last_character
 						until
-							INPUT_STREAM_.end_of_input (std.input) or else
+							std.input.end_of_file or else
 							(c < '0' or c > '9')
 						loop
 							buffer.append_character (c)
@@ -168,7 +167,7 @@ feature {NONE} -- Scanner
 							c := std.input.last_character
 						end
 					end
-					if not INPUT_STREAM_.end_of_input (std.input) then
+					if not std.input.end_of_file then
 						pending_character := c
 						has_pending_character := True
 					end
@@ -182,7 +181,7 @@ feature {NONE} -- Scanner
 						std.input.read_character
 						c := std.input.last_character
 					until
-						INPUT_STREAM_.end_of_input (std.input) or else
+						std.input.end_of_file or else
 						not (('a' <= c and c <= 'z') or
 							('A' <= c and c <= 'Z') or
 							('0' <= c and c <= '9'))
@@ -191,7 +190,7 @@ feature {NONE} -- Scanner
 						std.input.read_character
 						c := std.input.last_character
 					end
-					if not INPUT_STREAM_.end_of_input (std.input) then
+					if not std.input.end_of_file then
 						pending_character := c
 						has_pending_character := True
 					end
@@ -199,7 +198,7 @@ feature {NONE} -- Scanner
 				when ':' then
 					std.input.read_character
 					c := std.input.last_character
-					if not INPUT_STREAM_.end_of_input (std.input) then
+					if not std.input.end_of_file then
 						if c = '=' then
 								-- Found ":="
 							last_token := ASSIGN

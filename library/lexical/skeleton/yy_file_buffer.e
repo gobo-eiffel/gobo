@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -22,19 +22,17 @@ inherit
 			fill, wipe_out
 		end
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 creation
 
 	make, make_with_size
 
 feature {NONE} -- Initialization
 
-	make (a_file: like INPUT_STREAM_TYPE) is
+	make (a_file: like file) is
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			make_with_size (a_file, Default_capacity)
 		ensure
@@ -43,18 +41,18 @@ feature {NONE} -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 		
-	make_with_size (a_file: like INPUT_STREAM_TYPE; size: INTEGER) is
+	make_with_size (a_file: like file; size: INTEGER) is
 			-- Create a new buffer of capacity `size' for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 			size_positive: size >= 0
 		do
 			capacity := size
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			content := STRING_BUFFER_.make (size + 2)
+			!! content.make (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
@@ -65,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file: like INPUT_STREAM_TYPE
+	file: KI_CHARACTER_INPUT_STREAM
 			-- Input file
 
 feature -- Status report
@@ -75,11 +73,11 @@ feature -- Status report
 
 feature -- Setting
 
-	set_file (a_file: like INPUT_STREAM_TYPE) is
+	set_file (a_file: like file) is
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			end_of_file := False
 			flush
@@ -114,9 +112,9 @@ feature -- Element change
 					-- Read in more data.
 				if interactive then
 					file.read_character
-					if not INPUT_STREAM_.end_of_input (file) then
-						upper := upper + 1
-						buff.put (file.last_character, upper)
+					if not file.end_of_input then
+						count := count + 1
+						buff.put (file.last_character, count)
 						filled := True
 					else
 						filled := False
@@ -126,19 +124,19 @@ feature -- Element change
 --					if nb > Read_buffer_capacity then
 --						nb := Read_buffer_capacity
 --					end
-					nb2 := STRING_BUFFER_.copy_from_stream (buff, upper + 1, file, nb)
+					nb2 := buff.fill_from_stream (file, count + 1, nb)
 					if nb2 < nb then
-						end_of_file := INPUT_STREAM_.end_of_input (file)
+						end_of_file := file.end_of_input
 					end
 					if nb2 > 0 then
 						filled := True
 					else
 						filled := False
 					end
-					upper := upper + nb2
+					count := count + nb2
 				end
-				buff.put (End_of_buffer_character, upper + 1)
-				buff.put (End_of_buffer_character, upper + 2)
+				buff.put (End_of_buffer_character, count + 1)
+				buff.put (End_of_buffer_character, count + 2)
 			else
 				filled := False
 			end
@@ -163,6 +161,6 @@ feature {NONE} -- Constants
 invariant
 
 	file_not_void: file /= Void
-	file_open_read: not end_of_file implies INPUT_STREAM_.is_open_read (file)
+	file_open_read: not end_of_file implies file.is_open_read
 
 end -- class YY_FILE_BUFFER

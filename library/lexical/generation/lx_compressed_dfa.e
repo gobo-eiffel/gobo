@@ -59,11 +59,11 @@ feature -- Generation
 			!! Result.make (Current)
 		end
 
-	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
+	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print a backing up report to `a_file'.
 		do
 			Precursor (a_file)
-			a_file.put_string ("Compressed tables always back up.%N")
+			a_file.put_line ("Compressed tables always back up.")
 		end
 
 feature -- Access
@@ -123,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Generation
 
-	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_build_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
 			a_file.put_string ("%Tyy_build_tables is%N%
@@ -153,7 +153,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
+	print_eiffel_tables (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Eiffel code for compressed tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
@@ -179,7 +179,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
+	print_constants (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print code for constants to `a_file'.
 		do
 			a_file.put_string ("%TyyJam_base: INTEGER is ")

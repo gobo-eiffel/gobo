@@ -16,7 +16,6 @@ class UT_CHARACTER_FORMATTER
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
 feature -- Access
@@ -101,13 +100,13 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_character (a_file: like OUTPUT_STREAM_TYPE; c: CHARACTER) is
+	put_eiffel_character (a_file: KI_TEXT_OUTPUT_STREAM; c: CHARACTER) is
 			-- Write `c' to `a_file'; if `c' is not printable,
 			-- it is replaced by its escaped character sequence
 			-- as described in ETL, section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 		do
 			inspect c
 			when ' ', '!', '#', '$', '&', '('..'~' then
@@ -137,14 +136,14 @@ feature -- File handling
 			end
 		end
 
-	put_quoted_eiffel_character (a_file: like OUTPUT_STREAM_TYPE; c: CHARACTER) is
+	put_quoted_eiffel_character (a_file: KI_TEXT_OUTPUT_STREAM; c: CHARACTER) is
 			-- Write `c' surrounded by single quotes to `a_string';
 			-- if `c' is not printable, it is replaced by its
 			-- escaped character sequence as described in ETL,
 			-- section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 		do
 			a_file.put_character ('%'')
 			put_quoted_eiffel_character (a_file, c)

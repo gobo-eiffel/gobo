@@ -92,11 +92,11 @@ feature -- Access
 
 feature -- Parsing
 
-	parse (a_file: like INPUT_STREAM_TYPE; a_filename: STRING; a_cluster: ET_CLUSTER) is
+	parse (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
 			-- Parse Eiffel file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do

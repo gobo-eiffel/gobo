@@ -152,7 +152,7 @@ feature -- Status setting
 
 feature -- Output
 
-	print_token (a_grammar: PR_GRAMMAR; a_file: like OUTPUT_STREAM_TYPE) is
+	print_token (a_grammar: PR_GRAMMAR; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of current
 			-- token to `a_file' with rules where it
 			-- appears in `a_grammar'.

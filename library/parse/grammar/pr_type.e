@@ -17,7 +17,6 @@ inherit
 
 	HASHABLE
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
@@ -141,11 +140,11 @@ feature -- Output
 			INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
 		end
 
-	print_conversion_routine (a_file: like OUTPUT_STREAM_TYPE) is
+	print_conversion_routine (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print conversion routine ANY->`name' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("%Tyytype")
 			a_file.put_integer (id)
@@ -190,11 +189,11 @@ feature -- Output
 --				%%T%T%T%"RTID%"%N%T%Tend%N")
 		end
 
-	print_dollar_dollar_declaration (a_file: like OUTPUT_STREAM_TYPE) is
+	print_dollar_dollar_declaration (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print $$ declaration to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("%T%T%Tyyval")
 			a_file.put_integer (id)
@@ -202,19 +201,19 @@ feature -- Output
 			a_file.put_string (name)
 		end
 
-	print_dollar_dollar_initialization (a_file: like OUTPUT_STREAM_TYPE) is
+	print_dollar_dollar_initialization (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print $$ initialization to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 		end
 
-	print_dollar_dollar_finalization (a_file: like OUTPUT_STREAM_TYPE) is
+	print_dollar_dollar_finalization (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print $$ finalization to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("%T%T%Tyyval := yyval")
 			a_file.put_integer (id)

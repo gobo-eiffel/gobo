@@ -16,7 +16,6 @@ class UT_STRING_FORMATTER
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
 feature -- Access
@@ -158,14 +157,14 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_string (a_file: like OUTPUT_STREAM_TYPE; a_string: STRING) is
+	put_eiffel_string (a_file: KI_TEXT_OUTPUT_STREAM; a_string: STRING) is
 			-- Write `a_string' to `a_file', where all
 			-- non-printable characters are replaced by their
 			-- escaped character sequence as described in
 			-- ETL, section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
@@ -204,14 +203,14 @@ feature -- File handling
 			end
 		end
 
-	put_quoted_eiffel_string (a_file: like OUTPUT_STREAM_TYPE; a_string: STRING) is
+	put_quoted_eiffel_string (a_file: KI_TEXT_OUTPUT_STREAM; a_string: STRING) is
 			-- Write `a_string', surrounded by double quotes, to
 			-- `a_file', where all non-printable characters are
 			-- replaced by their escaped character sequence as
 			-- described in ETL, section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 			a_string_not_void: a_string /= Void
 		do
 			a_file.put_character ('%"')
@@ -219,13 +218,13 @@ feature -- File handling
 			a_file.put_character ('%"')
 		end
 
-	put_left_padded_string (a_file: like OUTPUT_STREAM_TYPE; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
+	put_left_padded_string (a_file: KI_TEXT_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
 			-- Write `a_string' to `a_file', padded on the
 			-- left with `c' characters if `a_string' is less
 			-- than `a_length' character long.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_is_open_write: a_file.is_open_write
 			a_string_not_void: a_string /= Void
 			a_length_positive: a_length >= 0
 		local

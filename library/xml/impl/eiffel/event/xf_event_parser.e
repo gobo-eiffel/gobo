@@ -28,28 +28,29 @@ feature {ANY}
 
 	parse_from_file_name (a_file_name: UC_STRING) is
 		local
-			in_file: like INPUT_STREAM_TYPE
+			in_file: KL_TEXT_INPUT_FILE
 		do
-			in_file := INPUT_STREAM_.make_file_open_read (a_file_name.out)
+			!! in_file.make (a_file_name.out)
+			in_file.open_read
 			check
-				is_open_read: INPUT_STREAM_.is_open_read (in_file)
+				is_open_read: in_file.is_open_read
 			end
 			parse_from_stream (in_file)
-			INPUT_STREAM_.close (in_file)
+			in_file.close
 		end
 
-	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 		local
 			a_filename: UC_STRING
 		do
-			!! a_filename.make_from_string (INPUT_STREAM_.name (a_stream))
+			!! a_filename.make_from_string (a_stream.name)
 			!XM_DEFAULT_URI_SOURCE! source.make (a_filename)
 			reset
 			set_input_buffer (new_file_buffer (a_stream))
 			parse
 		end
 
-	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 		local
 			an_input_buffer: YY_BUFFER
 		do
@@ -68,14 +69,14 @@ feature {ANY}
 
 feature {ANY} -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 		do
 			check
 				False   -- Not supported
 			end
 		end
 
-	parse_incremental_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 		do
 			check
 				False   -- Not supported

@@ -22,8 +22,6 @@ inherit
 			is_valid_directory_name
 		end
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 creation
 
 	make
@@ -89,11 +87,11 @@ feature -- Setting
 
 feature -- Output
 
-	print_flat_cluster (a_file: like OUTPUT_STREAM_TYPE) is
+	print_flat_cluster (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print a flattened version of current cluster in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			if not is_abstract then
 				a_file.put_character ('%T')
@@ -107,12 +105,12 @@ feature -- Output
 			end
 		end
 
-	print_flat_name (a_file: like OUTPUT_STREAM_TYPE) is
+	print_flat_name (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print a flattened version of current
 			-- cluster's name in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			if parent /= Void then
 				parent.print_flat_name (a_file)

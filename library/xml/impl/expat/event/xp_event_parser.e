@@ -31,10 +31,6 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
-	KL_IMPORTED_STRING_BUFFER_ROUTINES
-
 	C_STRING_HELPER
 
 feature {NONE} -- Gc
@@ -110,25 +106,26 @@ feature {ANY} -- Parsing
 	parse_from_file_name (a_file_name: UC_STRING) is
 			-- Parse XML Document from file
 		local
-			in_file: like INPUT_STREAM_TYPE
+			in_file: KL_TEXT_INPUT_FILE
 		do
 			!XM_DEFAULT_URI_SOURCE! source.make (a_file_name)
-			in_file := INPUT_STREAM_.make_file_open_read (a_file_name.to_utf8)
+			!! in_file.make (a_file_name.to_utf8)
+			in_file.open_read
 			check
-				file_is_open: INPUT_STREAM_.is_open_read (in_file)
+				file_is_open: in_file.is_open_read
 			end
 			parse_from_stream (in_file)
-			INPUT_STREAM_.close (in_file)
+			in_file.close
 		end
 
-	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 		do
 			create_new_parser
 			parse_incremental_from_stream (a_stream)
 			set_end_of_document
 		end
 
-	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 		do
 			create_new_parser
 			parse_incremental_from_string_buffer (a_buffer)
@@ -143,7 +140,7 @@ feature {ANY} -- Parsing
 
 feature {ANY} -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse partial XML document from GOBO input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call set_end_of_document to get any pending error messages.
@@ -151,14 +148,14 @@ feature {ANY} -- Incremental parsing
 			a_string: STRING
 			nc: INTEGER
 		do
-			from until INPUT_STREAM_.end_of_input (a_stream) loop
+			from until a_stream.end_of_input loop
 				a_string := STRING_.make_buffer (read_block_size)
-				nc := INPUT_STREAM_.read_stream (a_stream, a_string, 1, read_block_size)
+				nc := a_stream.read_stream (a_string, 1, read_block_size)
 				parse_incremental_from_string (a_string)
 			end
 		end
 
-	parse_incremental_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 		do
 			parse_string_buffer_and_set_error (a_buffer, False)
 		end
@@ -190,7 +187,7 @@ feature {NONE} -- Low level parsing
 			set_error_from_parse_result (int_result)
 		end
 
-	parse_string_buffer_and_set_error (data: like STRING_BUFFER_TYPE; is_final: BOOLEAN) is
+	parse_string_buffer_and_set_error (data: KL_CHARACTER_BUFFER; is_final: BOOLEAN) is
 			-- parse `data' (which may be empty).
 			-- set the error flags according to result.
 			-- `is_final' signals end of data input.
@@ -662,7 +659,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			parent_source: XM_SOURCE
 			encoding: POINTER
 			system_id: UC_STRING
-			in_file: like INPUT_STREAM_TYPE
+			in_file: KL_TEXT_INPUT_FILE
 		do
 			parent_item := item
 			encoding := default_pointer
@@ -677,11 +674,12 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					parent_source := source
 					system_id := new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr)
 					!XM_DEFAULT_URI_SOURCE! source.make (system_id)
-					in_file := INPUT_STREAM_.make_file_open_read (system_id.to_utf8)
-					if INPUT_STREAM_.is_open_read (in_file) then
+					!! in_file.make (system_id.to_utf8)
+					in_file.open_read
+					if in_file.is_open_read then
 						parse_incremental_from_stream (in_file)
 						set_end_of_document
-						INPUT_STREAM_.close (in_file)
+						in_file.close
 						Result := True
 					else
 						Result := False

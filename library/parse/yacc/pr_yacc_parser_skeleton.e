@@ -65,11 +65,11 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: like INPUT_STREAM_TYPE) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse grammar description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse

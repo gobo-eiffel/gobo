@@ -13,10 +13,6 @@ indexing
 
 deferred class LX_SCANNER_SKELETON
 
-inherit
-
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 feature {NONE} -- Initialization
 
 	make is
@@ -147,11 +143,11 @@ feature -- Input
 			input_buffer_set: input_buffer = a_buffer
 		end
 
-	new_file_buffer (a_file: like INPUT_STREAM_TYPE): LX_FILE_BUFFER is
+	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): LX_FILE_BUFFER is
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			!! Result.make (a_file)
 		ensure

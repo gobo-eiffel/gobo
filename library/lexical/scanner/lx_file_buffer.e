@@ -22,19 +22,17 @@ inherit
 			refill
 		end
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 creation
 
 	make
 
 feature -- Initialization
 
-	make (a_file: like INPUT_STREAM_TYPE) is
+	make (a_file: like file) is
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			file := a_file
 			refill
@@ -44,7 +42,7 @@ feature -- Initialization
 
 feature -- Access
 
-	file: like INPUT_STREAM_TYPE
+	file: KI_CHARACTER_INPUT_STREAM
 			-- Input file
 
 feature -- Status report
@@ -57,8 +55,9 @@ feature -- Element change
 	refill is
 			-- Refill buffer with characters from `file'.
 		do
-			if not INPUT_STREAM_.end_of_input (file) then
-				content := INPUT_STREAM_.read_string (file, 16384)
+			if not file.end_of_input then
+				file.read_string (16384)
+				content := file.last_string
 			else
 				end_of_file := True
 				content := ""
@@ -69,6 +68,6 @@ feature -- Element change
 invariant
 
 	file_not_void: file /= Void
-	file_open_read: not end_of_file implies INPUT_STREAM_.is_open_read (file)
+	file_open_read: not end_of_file implies file.is_open_read
 
 end -- class LX_FILE_BUFFER

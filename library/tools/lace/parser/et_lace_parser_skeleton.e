@@ -58,11 +58,11 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse (a_file: like INPUT_STREAM_TYPE) is
+	parse (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse Ace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			reset
 			set_input_buffer (new_file_buffer (a_file))
@@ -117,7 +117,7 @@ feature -- Error handling
 		do
 			f_buffer ?= input_buffer
 			if f_buffer /= Void then
-				std.error.put_string (INPUT_STREAM_.name (f_buffer.file))
+				std.error.put_string (f_buffer.file.name)
 				std.error.put_string (", line ")
 			else
 				std.error.put_string ("line ")

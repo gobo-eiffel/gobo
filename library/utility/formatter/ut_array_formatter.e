@@ -13,13 +13,9 @@ indexing
 
 class UT_ARRAY_FORMATTER
 
-inherit
-
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 feature -- File handling
 
-	put_integer_array (a_file: like OUTPUT_STREAM_TYPE;
+	put_integer_array (a_file: KI_TEXT_OUTPUT_STREAM;
 		an_array: ARRAY [INTEGER]; start_pos, end_pos: INTEGER) is
 			-- Write code for `an_array''s items within bounds
 			-- `start_pos' and `end_pos' to `a_file'.
@@ -29,7 +25,7 @@ feature -- File handling
 			end_pos_small_enough: end_pos <= an_array.upper
 			valid_bounds: start_pos <= end_pos + 1
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, an_item: INTEGER
 			nb_line, nb_colon: INTEGER

@@ -108,7 +108,7 @@ feature -- Access
 		do
 			file_buffer ?= input_buffer
 			if file_buffer /= Void then
-				Result := INPUT_STREAM_.name (file_buffer.file)
+				Result := file_buffer.file.name
 			else
 				Result := "string"
 			end

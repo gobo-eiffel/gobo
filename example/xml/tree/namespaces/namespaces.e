@@ -13,8 +13,6 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 	KL_SHARED_EXCEPTIONS
 
 creation
@@ -106,14 +104,17 @@ feature -- Checks we have to do before we can run
 	check_file_readable is
 			-- check if file_name is readable
 		local
-			s: like INPUT_STREAM_TYPE
+			s: KL_TEXT_INPUT_FILE
 		do
-			s := INPUT_STREAM_.make_file_open_read (file_name.to_utf8)
-			if not INPUT_STREAM_.is_open_read (s) then
+			!! s.make (file_name.to_utf8)
+			s.open_read
+			if not s.is_open_read then
 				io.put_string ("Unable to open input file:")
 				io.put_string (file_name.to_utf8)
 				io.put_string ("%N")
 				Exceptions.die (1)
+			else
+				s.close
 			end
 		end
 

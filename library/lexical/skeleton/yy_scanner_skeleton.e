@@ -22,7 +22,6 @@ inherit
 			flush_input_buffer
 		end
 
-	KL_IMPORTED_STRING_BUFFER_ROUTINES
 	KL_IMPORTED_FIXED_ARRAY_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
@@ -79,7 +78,7 @@ feature -- Access
 			-- (Create a new string at each call.)
 		do
 			if yy_start < yy_end then
-				Result := STRING_BUFFER_.substring (yy_content, yy_start, yy_end - 1)
+				Result := yy_content.substring (yy_start, yy_end - 1)
 			else
 				Result := STRING_.make (0)
 			end
@@ -101,8 +100,7 @@ feature -- Access
 			if e < s then
 				Result := STRING_.make (0)
 			else
-				Result := STRING_BUFFER_.substring (yy_content,
-					yy_start + s - 1, yy_start + e - 1)
+				Result := yy_content.substring (yy_start + s - 1, yy_start + e - 1)
 			end
 		end
 
@@ -150,8 +148,7 @@ feature -- Element change
 			-- from the input buffer.)
 		do
 			if yy_start < yy_end then
-				STRING_BUFFER_.append_substring_to_string (yy_content,
-					yy_start, yy_end - 1, a_string)
+				yy_content.append_substring_to_string (yy_start, yy_end - 1, a_string)
 			end
 		end
 
@@ -162,8 +159,7 @@ feature -- Element change
 			-- the characters from the input buffer.)
 		do
 			if s <= e then
-				STRING_BUFFER_.append_substring_to_string (yy_content,
-					yy_start + s - 1, yy_start + e - 1, a_string)
+				yy_content.append_substring_to_string (yy_start + s - 1, yy_start + e - 1, a_string)
 			end
 		end
 
@@ -209,7 +205,7 @@ feature -- Element change
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
 		do
-			if yy_end <= input_buffer.lower then
+			if yy_end <= 1 then
 					-- Need to shift characters up to make room.
 				input_buffer.set_index (yy_end)
 				input_buffer.compact_right
@@ -236,7 +232,7 @@ feature -- Element change
 					-- to return. If this occurs before the EOB characters,
 					-- then it's a valid NULL; if not, then we've hit the
 					-- end of the buffer.
-				if yy_end > input_buffer.upper then
+				if yy_end > input_buffer.count then
 						-- EOB has been reached. Need more input.
 					yy_start := yy_end
 					yy_refill_input_buffer
@@ -357,7 +353,7 @@ feature {NONE} -- Implementation
 			-- Refill `input_buffer'.
 			-- Update `yy_start' and `yy_end'.
 		require
-			end_of_buffer_not_missed: yy_end <= (input_buffer.upper + 2)
+			end_of_buffer_not_missed: yy_end <= (input_buffer.count + 2)
 		local
 			yy_new_start: INTEGER
 		do
@@ -552,7 +548,7 @@ feature {NONE} -- Implementation
 	yy_start_state: INTEGER
 			-- Start state
 
-	yy_content: like STRING_BUFFER_TYPE
+	yy_content: KL_CHARACTER_BUFFER
 			-- Characters in `input_buffer'
 
 	yy_end: INTEGER

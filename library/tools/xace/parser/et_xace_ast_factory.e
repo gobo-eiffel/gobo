@@ -18,7 +18,6 @@ inherit
 	ET_XACE_ELEMENT_NAMES
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -246,7 +245,7 @@ feature -- AST factory
 			an_excluded: DS_LINKED_LIST [STRING]
 			a_cluster: ET_XACE_CLUSTER
 			a_filename: STRING
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			clusters: ET_XACE_CLUSTERS
 		do
 			if an_element.has_attribute_by_name (uc_location) then
@@ -273,10 +272,11 @@ feature -- AST factory
 							a_cursor.forth
 						end
 						a_filename := Execution_environment.interpreted_string (a_pathname)
-						a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-						if INPUT_STREAM_.is_open_read (a_file) then
+						!! a_file.make (a_filename)
+						a_file.open_read
+						if a_file.is_open_read then
 							cluster_parser.parse_file (a_file)
-							INPUT_STREAM_.close (a_file)
+							a_file.close
 							a_cluster := cluster_parser.last_cluster
 							if a_cluster /= Void then
 								!! clusters.make (a_cluster)

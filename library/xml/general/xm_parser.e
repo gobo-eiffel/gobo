@@ -22,10 +22,6 @@ inherit
 
 	XM_ERROR_CODES
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
-	KL_IMPORTED_STRING_BUFFER_ROUTINES
-
 feature {ANY} -- Access
 
 	is_incremental: BOOLEAN is
@@ -66,7 +62,7 @@ feature {ANY} -- Parsing
 			implementation.parse_from_file_name (a_file_name)
 		end
 
-	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse XML Document from GOBO input stream.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -74,7 +70,7 @@ feature {ANY} -- Parsing
 			implementation.parse_from_stream (a_stream)
 		end
 
-	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 			-- Parse XML Document from GOBO string buffer. This is
 			-- faster that parsing from a ordinary STRING on some systems.
 		require
@@ -93,7 +89,7 @@ feature {ANY} -- Parsing
 
 feature {ANY} -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse partial XML document from GOBO input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call set_end_of_document to get any pending error messages.
@@ -104,7 +100,7 @@ feature {ANY} -- Incremental parsing
 			implementation.parse_incremental_from_stream (a_stream)
 		end
 
-	parse_incremental_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 			-- Parse partial XML document from GOBO input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- Parse XML Document from GOBO string buffer. This is

@@ -825,7 +825,7 @@ feature {NONE} -- Initialization
 		local
 			j, n: INTEGER
 			a_filename: STRING
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 		do
 			make
 			n := Arguments.argument_count
@@ -835,12 +835,13 @@ feature {NONE} -- Initialization
 			else
 				from j := 1 until j > n loop
 					a_filename := Arguments.argument (j)
-					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-					if INPUT_STREAM_.is_open_read (a_file) then
+					!! a_file.make (a_filename)
+					a_file.open_read
+					if a_file.is_open_read then
 						reset
 						set_input_buffer (new_file_buffer (a_file))
 						parse
-						INPUT_STREAM_.close (a_file)
+						a_file.close
 					else
 						std.error.put_string ("eiffel_parser: cannot read %'")
 						std.error.put_string (a_filename)
@@ -856,7 +857,7 @@ feature {NONE} -- Initialization
 		local
 			j, n: INTEGER
 			a_filename: STRING
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 		do
 			make
 			if
@@ -869,12 +870,13 @@ feature {NONE} -- Initialization
 				n := Arguments.argument (1).to_integer
 				a_filename := Arguments.argument (2)
 				from j := 1 until j > n loop
-					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-					if INPUT_STREAM_.is_open_read (a_file) then
+					!! a_file.make (a_filename)
+					a_file.open_read
+					if a_file.is_open_read then
 						reset
 						set_input_buffer (new_file_buffer (a_file))
 						parse
-						INPUT_STREAM_.close (a_file)
+						a_file.close
 					else
 						std.error.put_string ("eiffel_parser: cannot read %'")
 						std.error.put_string (a_filename)
@@ -895,7 +897,7 @@ feature -- Error handling
 		do
 			f_buffer ?= input_buffer
 			if f_buffer /= Void then
-				std.error.put_string (INPUT_STREAM_.name (f_buffer.file))
+				std.error.put_string (f_buffer.file.name)
 				std.error.put_string (", line ")
 			else
 				std.error.put_string ("line ")

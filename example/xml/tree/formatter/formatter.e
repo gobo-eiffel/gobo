@@ -11,10 +11,6 @@ class FORMATTER
 
 inherit
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 	KL_SHARED_ARGUMENTS
 
 	KL_SHARED_EXCEPTIONS
@@ -62,7 +58,7 @@ feature {ANY} -- Basic operations
 			tree_parser_not_void: tree_parser /= Void
 		local
 			formatter: XM_FORMATTER
-			os: like OUTPUT_STREAM_TYPE
+			os: KL_TEXT_OUTPUT_FILE
 		do
 			io.put_string ("1) parsing data...%N")
 			tree_parser.parse_from_file_name (in_file_name)
@@ -81,7 +77,8 @@ feature {ANY} -- Basic operations
 					io.put_string (formatter.last_string.to_utf8)
 					io.put_new_line
 				else
-					os := OUTPUT_STREAM_.make_file_open_write (out_file_name.to_utf8)
+					!! os.make (out_file_name.to_utf8)
+					os.open_write
 					os.put_string (formatter.last_string.to_utf8)
 				end
 			end
@@ -151,24 +148,30 @@ feature {ANY} -- Checks we have to do before we can run
 			in_file_name_not_void: in_file_name /= Void
 			out_file_name: not use_std_out implies out_file_name /= Void
 		local
-			i: like INPUT_STREAM_TYPE
-			o: like OUTPUT_STREAM_TYPE
+			i: KL_TEXT_INPUT_FILE
+			o: KL_TEXT_OUTPUT_FILE
 		do
-			i := INPUT_STREAM_.make_file_open_read (in_file_name.to_utf8)
-			if not INPUT_STREAM_.is_open_read (i) then
+			!! i.make (in_file_name.to_utf8)
+			i.open_read
+			if not i.is_open_read then
 				io.put_string ("Unable to open input file:")
 				io.put_string (in_file_name.to_utf8)
 				io.put_string ("%N")
 				Exceptions.die (1)
+			else
+				i.close
 			end
 
 			if not use_std_out then
-				o := OUTPUT_STREAM_.make_file_open_write (out_file_name.to_utf8)
-				if not OUTPUT_STREAM_.is_open_write (o) then
+				!! o.make (out_file_name.to_utf8)
+				o.open_write
+				if not o.is_open_write then
 					io.put_string ("Unable to write to output file:")
 					io.put_string (out_file_name.to_utf8)
 					io.put_string ("%N")
 					Exceptions.die (1)
+				else
+					o.close
 				end
 			end
 		end

@@ -17,8 +17,6 @@ inherit
 
 	HASHABLE
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 creation
 
 	make
@@ -490,12 +488,12 @@ feature -- Sorting
 
 feature -- Output
 
-	print_state (a_file: like OUTPUT_STREAM_TYPE) is
+	print_state (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of
 			-- current state to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			a_state: PR_STATE
@@ -587,12 +585,12 @@ feature -- Output
 			end
 		end
 
-	print_reductions (a_file: like OUTPUT_STREAM_TYPE) is
+	print_reductions (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print textual representation of current
 			-- state's reductions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		local
 			no_default, defaulted: BOOLEAN
 			shift_tokens, tokens: DS_ARRAYED_LIST [PR_TOKEN]

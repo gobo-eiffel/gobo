@@ -40,12 +40,12 @@ feature {NONE} -- Initialization
 			make_scanner_skeleton
 		end
 
-	make_with_file (a_file: like INPUT_STREAM_TYPE; tables: like to_tables) is
+	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM; tables: like to_tables) is
 			-- Create a new scanner with `a_file' as input file.
 			-- Build the scanner with information contained in `tables'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 			tables_not_void: tables /= Void
 		do
 			make_from_tables (tables)

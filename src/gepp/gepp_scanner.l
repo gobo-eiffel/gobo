@@ -210,13 +210,17 @@ feature -- Element change
 			-- True unless an include file was being processed.
 		local
 			old_buffer: YY_FILE_BUFFER
+			a_file: KI_FILE
 		do
 			if not include_stack.is_empty then
 				old_buffer ?= input_buffer
 				set_input_buffer (include_stack.item)
 				include_stack.remove
 				if old_buffer /= Void then
-					INPUT_STREAM_.close (old_buffer.file)
+					a_file ?= old_buffer
+					if a_file /= Void then
+						a_file.close
+					end
 				end
 				set_start_condition (INITIAL)
 			else
