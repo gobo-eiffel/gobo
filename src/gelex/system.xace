@@ -10,26 +10,24 @@
 	</description>
 
 	<root class="GELEX" creation="execute"/>
-	<cluster>
-		<option unless="${DEBUG}">
-			<option name="assertion" value="none"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
-		</option>
-		<option if="${DEBUG}">
-			<option name="assertion" value="all"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="false"/>
-		</option>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
 
-		<cluster name="gelex" location="${GOBO}/src/gelex"/>
+	<cluster name="gelex" location="${GOBO}/src/gelex"/>
 
-		<mount location="${GOBO}/library/lexical/cluster.xace"/>
-		<mount location="${GOBO}/library/parse/cluster.xace"/>
-		<mount location="${GOBO}/library/utility/cluster.xace"/>
-		<mount location="${GOBO}/library/pattern/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel/cluster.xace"/>
-		<mount location="${GOBO}/library/structure/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel.xace"/>
-	</cluster>
+	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
+	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
+	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
+	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
+	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

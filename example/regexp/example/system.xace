@@ -11,22 +11,18 @@
 	</description>
 
 	<root class="RX_EXAMPLE" creation="make"/>
-	<cluster>
-		<option unless="${DEBUG}">
-			<option name="assertion" value="none"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
-		</option>
-		<option if="${DEBUG}">
-			<option name="assertion" value="all"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="false"/>
-		</option>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
 
-		<cluster name="regexp_example" location="${GOBO}/example/regexp/example"/>
-
-		<mount location="${GOBO}/library/kernel.xace"/>
-		<mount location="${GOBO}/library/regexp/cluster.xace"/>
-
-	</cluster>
+	<cluster name="regexp_example" location="${GOBO}/example/regexp/example"/>
+	<mount location="${GOBO}/library/regexp/library.xace" prefix="rx_"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

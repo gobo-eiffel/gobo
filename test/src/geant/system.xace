@@ -10,25 +10,23 @@
 	</description>
 
 	<root class="XGEANT" creation="make"/>
-	<cluster>
-		<option unless="${DEBUG}">
-			<option name="assertion" value="none"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
-		</option>
-		<option if="${DEBUG}">
-			<option name="assertion" value="all"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="false"/>
-		</option>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
 
-		<cluster name="geant_tester" location="${GOBO}/test/src" abstract="true">
-			<cluster name="geant"/>
-			<cluster name="common"/>
-			<cluster name="testgen" location="TESTGEN"/>
-		</cluster>
-		<mount location="${GOBO}/library/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel.xace"/>
-		<mount location="${GOBO}/src/geant/cluster.xace"/>
+	<cluster name="geant_tester" location="${GOBO}/test/src" abstract="true">
+		<cluster name="geant"/>
+		<cluster name="common"/>
+		<cluster name="testgen" location="TESTGEN"/>
 	</cluster>
+	<mount location="${GOBO}/src/geant/library.xace" prefix="geant_"/>
+	<mount location="${GOBO}/library/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

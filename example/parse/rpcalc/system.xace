@@ -10,22 +10,19 @@
 	</description>
 
 	<root class="RPCALC" creation="execute"/>
-	<cluster>
-		<option unless="${DEBUG}">
-			<option name="assertion" value="none"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
-		</option>
-		<option if="${DEBUG}">
-			<option name="assertion" value="all"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="false"/>
-		</option>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
 
-		<cluster name="rpcalc" location="${GOBO}/example/parse/rpcalc"/>
-
-		<mount location="${GOBO}/library/parse/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel.xace"/>
-	</cluster>
+	<cluster name="rpcalc" location="${GOBO}/example/parse/rpcalc"/>
+	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
+	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

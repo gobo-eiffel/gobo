@@ -10,23 +10,20 @@
 	</description>
 
 	<root class="PRINT" creation="make"/>
-	<cluster>
-		<option unless="${DEBUG}">
-			<option name="assertion" value="none"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
-		</option>
-		<option if="${DEBUG}">
-			<option name="assertion" value="all"/>
-			<option name="garbage_collector" value="none"/>
-			<option name="finalize" value="false"/>
-		</option>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
 
-		<cluster name="print" location="${GOBO}/example/xml/event/print"/>
-
-		<mount location="${GOBO}/library/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel.xace" />
-	</cluster>
+	<cluster name="print" location="${GOBO}/example/xml/event/print"/>
+	<mount location="${GOBO}/library/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace" />
 </system>
 
 
