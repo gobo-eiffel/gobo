@@ -1,4 +1,4 @@
-Gobo Eiffel, version 1.0
+Gobo Eiffel, version 1.1
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -24,7 +24,7 @@ This package consists of five Eiffel libraries:
 
 and three utilities:
 
-    . Gobo Eiffel Lex, version 1.0b (gelex)
+    . Gobo Eiffel Lex, version 1.1 (gelex)
     . Gobo Eiffel Yacc, version 1.0a (geyacc)
     . Gobo Eiffel Preprocessor (gepp)
 
@@ -102,4 +102,4 @@ for your specific needs. Thank you in advance.
 Copyright (c) 1997, Eric Bezault
 email: ericb@gobo.demon.co.uk
 http://www.gobo.demon.co.uk
-14 October 1997
+29 October 1997
