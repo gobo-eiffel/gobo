@@ -35,12 +35,16 @@ Version 1.6 -
 	  (suggested by Andreas Leitner).
 	* DS_SEARCHABLE: added features `same_items' and
 	  `same_equality_tester'.
-	* DS_ARRAYED_LIST, DS_ARRAYED_STACK: get rid of garbage
+	* DS_ARRAYED_LIST, DS_ARRAYED_STACK: got rid of garbage
 	  (i.e. old items at indexes count+1..capacity) in
 	  removal features.
+	* DS_TABLE, DS_SPARSE_TABLE, DS_HASH_TABLE: added
+	  fetaure `put_new'.
+	* DS_SPARSE_TABLE, DS_HASH_TABLE: added fetaure
+	  `replace_found_item'.
+	* DS_SPARSE_TABLE, DS_HASH_TABLE: new implementation.
 	* DS_SPARSE_TABLE: added feature `key'; optimization
 	  of feature `force' (avoid unnecessary resizing).
-	* DS_HASH_TABLE: fixed precondition in `hash_code'.
 	* HASH_TABLE: optimization of features `put' and
 	  `force' (avoid unnecessary resizing).
 
@@ -48,6 +52,12 @@ Version 1.6 -
 
 	* Added class KL_DIRECTORY to allow Eiffel compiler
 	  portable directory access.
+
+	Gobo Eiffel Utility Library:
+
+	* Fixed bug in feature `append_decimal_integer' from
+	  class UT_INTEGER_FORMATTER when dealing with negative
+	  values.
 
 Version 1.5 - 2 October 1999
 
