@@ -929,6 +929,7 @@ feature {NONE} -- AST factory
 			cluster_not_void: cluster /= Void
 		local
 			old_class: ET_CLASS
+			l_other_class: ET_CLASS
 		do
 			Result := universe.eiffel_class (a_name)
 			if Result.is_parsed and Result.is_preparsed then
@@ -940,11 +941,14 @@ feature {NONE} -- AST factory
 						Result := Void
 					else
 							-- Override.
+						l_other_class := clone (Result)
+						Result.reset_all
 						Result.set_filename (filename)
 						Result.set_cluster (cluster)
 						Result.set_name (a_name)
 						Result.set_parsed
 						Result.set_in_system (True)
+						Result.set_overridden_class (l_other_class)
 						old_class := current_class
 						current_class := Result
 						error_handler.report_compilation_status (Current, current_class)
@@ -956,6 +960,13 @@ feature {NONE} -- AST factory
 					set_fatal_error (Result)
 					error_handler.report_vscn0a_error (Result, cluster, filename)
 					Result := Void
+				else
+					l_other_class := clone (Result)
+					l_other_class.reset_all
+					l_other_class.set_filename (filename)
+					l_other_class.set_cluster (cluster)
+					l_other_class.set_name (a_name)
+					Result.set_overridden_class (l_other_class)
 				end
 			else
 				Result.set_filename (filename)

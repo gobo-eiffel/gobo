@@ -164,6 +164,7 @@ feature -- Parsing
 			s: STRING
 			a_classname: ET_IDENTIFIER
 			a_class: ET_CLASS
+			l_other_class: ET_CLASS
 			l_subclusters: ET_CLUSTERS
 		do
 			if not a_cluster.is_abstract then
@@ -188,14 +189,23 @@ feature -- Parsing
 										error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
 									else
 											-- Override.
+										l_other_class := clone (a_class)
+										a_class.reset_all
 										a_class.set_filename (a_filename)
 										a_class.set_cluster (a_cluster)
+										a_class.set_overridden_class (l_other_class)
 									end
 								elseif not a_class.cluster.is_override then
 										-- Two classes with the same name in two non-override clusters.
 									a_class.set_parsed
 									a_class.set_syntax_error
 									error_handler.report_vscn0a_error (a_class, a_cluster, a_filename)
+								else
+									l_other_class := clone (a_class)
+									l_other_class.reset_all
+									l_other_class.set_filename (a_filename)
+									l_other_class.set_cluster (a_cluster)
+									a_class.set_overridden_class (l_other_class)
 								end
 							else
 								a_class.set_filename (a_filename)
