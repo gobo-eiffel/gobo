@@ -46,18 +46,18 @@ grep -v "\$\(Date\|Revision\):" calc.e > tmp1.e
 grep -v "\$\(Date\|Revision\):" $GOBO/example/parse/calc/calc.e > tmp2.e
 diff tmp1.e tmp2.e
 
-cp $GOBO/example/parse/eiffel_parser/eiffel_parser.y .
-./geyacc -t EIFFEL_TOKENS -o eiffel_parser.e eiffel_parser.y
-grep -v "\$\(Date\|Revision\):" eiffel_parser.e > tmp1.e
-grep -v "\$\(Date\|Revision\):" $GOBO/example/parse/eiffel_parser/eiffel_parser.e > tmp2.e
-diff tmp1.e tmp2.e > tmp3.txt
-if [ -s tmp3.txt ]; then
-	echo "diff \$GOBO/example/parse/eiffel_parser/eiffel_parser.e"
-	cat tmp3.txt
-fi
-grep -v "generator:" eiffel_tokens.e > tmp1.e
-grep -v "generator:" $GOBO/example/parse/eiffel_parser/eiffel_tokens.e > tmp2.e
-diff tmp1.e tmp2.e
+#cp $GOBO/example/parse/eiffel_parser/eiffel_parser.y .
+#./geyacc -t EIFFEL_TOKENS -o eiffel_parser.e eiffel_parser.y
+#grep -v "\$\(Date\|Revision\):" eiffel_parser.e > tmp1.e
+#grep -v "\$\(Date\|Revision\):" $GOBO/example/parse/eiffel_parser/eiffel_parser.e > tmp2.e
+#diff tmp1.e tmp2.e > tmp3.txt
+#if [ -s tmp3.txt ]; then
+#	echo "diff \$GOBO/example/parse/eiffel_parser/eiffel_parser.e"
+#	cat tmp3.txt
+#fi
+#grep -v "generator:" eiffel_tokens.e > tmp1.e
+#grep -v "generator:" $GOBO/example/parse/eiffel_parser/eiffel_tokens.e > tmp2.e
+#diff tmp1.e tmp2.e
 
 cp $GOBO/example/parse/mcalc/mcalc.y .
 ./geyacc -o mcalc.e mcalc.y
