@@ -62,7 +62,6 @@ feature -- Generation
 		do
 			print_eiffel_header (a_file)
 			if tokens_needed then
-				a_file.put_string ("%Nfeature -- Token codes%N%N")
 				print_token_codes (a_file)
 			end
 			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
@@ -98,7 +97,8 @@ feature -- Generation
 			a_file.put_string (version)
 			a_file.put_string ("%"%N%Nclass ")
 			a_file.put_string (class_name)
-			a_file.put_string ("%N%Nfeature -- Token codes%N%N")
+			a_file.put_string ("%N%Ninherit%N%N%
+				%%TYY_PARSER_TOKENS%N")
 			print_token_codes (a_file)
 			a_file.put_string ("%Nend -- class ")
 			a_file.put_string (class_name)
@@ -116,10 +116,44 @@ feature {NONE} -- Generation
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			a_token: PR_TOKEN
 			a_name: STRING
+			a_literal: STRING
 			i, nb: INTEGER
 		do
 			tokens := machine.grammar.tokens
 			nb := tokens.count
+			a_file.put_string ("%Nfeature -- Access%N%N%
+				%%Ttoken_name (a_token: INTEGER): STRING is%N%
+				%%T%T%T-- Name of token `a_token'%N%
+				%%T%Tdo%N%
+				%%T%T%Tinspect a_token%N%
+				%%T%T%Twhen 0 then%N%
+				%%T%T%T%TResult := %"EOF token%"%N%
+				%%T%T%Twhen -1 then%N%
+				%%T%T%T%TResult := %"Error token%"%N")
+				-- Skip the "error" and "$undefined." tokens.
+			from i := 3 until i > nb loop
+				a_token := tokens.item (i)
+				if a_token.has_identifier then
+					a_name := a_token.name
+					a_file.put_string ("%T%T%Twhen ")
+					a_file.put_string (a_name)
+					a_file.put_string (" then%N%
+						%%T%T%T%TResult := %"")
+					a_file.put_string (a_name)
+					a_literal := a_token.literal_string
+					if a_literal /= Void then
+						a_file.put_string (" (")
+						STRING_FORMATTER_.put_eiffel_string (a_file, a_literal)
+						a_file.put_character (')')
+					end
+					a_file.put_string ("%"%N")
+				end
+				i := i + 1
+			end
+			a_file.put_string ("%T%T%Telse%N%
+				%%T%T%T%TResult := yy_character_token_name (a_token)%N%
+				%%T%T%Tend%N%
+				%%T%Tend%N%Nfeature -- Token codes%N%N")
 				-- Skip the "error" and "$undefined." tokens.
 			from i := 3 until i > nb loop
 				a_token := tokens.item (i)
