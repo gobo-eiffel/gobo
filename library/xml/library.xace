@@ -19,11 +19,11 @@
 		<cluster name="tree"/>
 		<cluster name="formatter"/>
 		<cluster name="resolver">
-		  <option name="abstract" value="true"/>
-		  <cluster name="resolver_interface" location="interface" relative="true"/>
-		  <cluster name="catalog"/>
-		  <cluster name="simple"/>
-		  <cluster name="uri"/>
+			<option name="abstract" value="true"/>
+			<cluster name="resolver_interface" location="interface" relative="true"/>
+			<cluster name="catalog"/>
+			<cluster name="simple"/>
+			<cluster name="uri"/>
 		</cluster>
 		<cluster name="parser">
 			<option name="abstract" value="true"/>
