@@ -179,6 +179,8 @@
 		<geant file="build.eant" target="clean" dir="pattern" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="regexp"/>
 		<geant file="build.eant" target="clean" dir="regexp" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="string"/>
+		<geant file="build.eant" target="clean" dir="string" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="structure"/>
 		<geant file="build.eant" target="clean" dir="structure" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="time"/>
