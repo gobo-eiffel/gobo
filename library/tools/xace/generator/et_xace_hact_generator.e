@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	copyright:  "Copyright (c) 2001-2002, Andreas Leitner and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,6 +16,11 @@ class ET_XACE_HACT_GENERATOR
 inherit
 
 	ET_XACE_GENERATOR
+
+	KL_IMPORTED_ARRAY_ROUTINES
+
+	UT_STRING_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -112,13 +117,13 @@ feature {NONE} -- Output
 				a_file.put_line ("default")
 				a_file.put_new_line
 				print_options (an_option, 1, a_file)
+				a_file.put_new_line
 			end
-			a_file.put_new_line
 			a_file.put_line ("cluster")
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
-				print_clusters (a_clusters, a_file)
+				print_clusters (a_clusters, 1, a_file)
 				a_file.put_new_line
 			end
 			print_component (a_file)
@@ -164,7 +169,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_file.put_line ("cluster")
 			a_file.put_new_line
-			print_cluster (a_cluster, a_file)
+			print_cluster (a_cluster, 1, a_file)
 			a_file.put_new_line
 			print_component (a_file)
 			!! an_external.make
@@ -244,10 +249,11 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
+			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
@@ -257,66 +263,81 @@ feature {NONE} -- Output
 			cluster_list := a_clusters.clusters
 			nb := cluster_list.count
 			from i := 1 until i > nb loop
-				print_cluster (cluster_list.item (i), a_file)
+				print_cluster (cluster_list.item (i), indent, a_file)
 				i := i + 1
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
+			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_pathname: STRING
+			a_pathname, a_name: STRING
 			an_option: ET_XACE_OPTIONS
 			subclusters: ET_XACE_CLUSTERS
 			need_end_keyword: BOOLEAN
 			an_externals: ET_XACE_EXTERNALS
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_EXPORTED_CLASS]
 		do
-			if not a_cluster.is_abstract then
-				print_indentation (1, a_file)
-				a_file.put_string (a_cluster.full_name ('_'))
-				a_file.put_string (": %"")
-				a_pathname := a_cluster.full_pathname
-				a_file.put_string (a_pathname)
-				a_file.put_character ('%"')
+			if not a_cluster.is_fully_abstract then
+				print_indentation (indent, a_file)
+				if a_cluster.is_abstract then
+					a_file.put_string ("abstract ")
+				end
+				a_name := a_cluster.name
+				if is_lace_keyword (a_name) then
+					a_file.put_character ('%"')
+					a_file.put_string (a_cluster.name)
+					a_file.put_character ('%"')
+				else
+					a_file.put_string (a_cluster.name)
+				end
+				a_pathname := a_cluster.pathname
+				if a_pathname /= Void then
+					a_file.put_string (": %"")
+					a_file.put_string (a_pathname)
+					a_file.put_character ('%"')
+				end
 				an_option := a_cluster.options
 				if an_option /= Void then
 					a_file.put_new_line
-					print_indentation (2, a_file)
-					a_file.put_string ("default")
-					a_file.put_new_line
-					print_options (an_option, 3, a_file)
+					print_indentation (indent + 1, a_file)
+					a_file.put_line ("default")
+					print_options (an_option, indent + 2, a_file)
 					need_end_keyword := True
 				end
 				an_externals := a_cluster.externals
 				if an_externals /= Void and then not an_externals.exported_classes.is_empty then
 					a_file.put_new_line
-					print_indentation (2, a_file)
-					a_file.put_string ("visible")
-					a_file.put_new_line
+					print_indentation (indent + 1, a_file)
+					a_file.put_line ("visible")
 					a_cursor := an_externals.exported_classes.new_cursor
 					from a_cursor.start until a_cursor.after loop
-						print_exported_class (a_cursor.item, 3, a_file)
+						print_exported_class (a_cursor.item, indent + 2, a_file)
 						a_cursor.forth
 					end
 					need_end_keyword := True
 				end
+				subclusters := a_cluster.subclusters
+				if subclusters /= Void then
+					a_file.put_new_line
+					print_indentation (indent + 1, a_file)
+					a_file.put_line ("cluster")
+					print_clusters (subclusters, indent + 2, a_file)
+					need_end_keyword := True
+				end
 				if need_end_keyword then
-					print_indentation (2, a_file)
+					print_indentation (indent + 1, a_file)
 					a_file.put_string ("end;")
 					a_file.put_new_line
 				else
 					a_file.put_character (';')
 					a_file.put_new_line
 				end
-			end
-			subclusters := a_cluster.subclusters
-			if subclusters /= Void then
-				print_clusters (subclusters, a_file)
 			end
 		end
 
@@ -373,6 +394,10 @@ feature {NONE} -- Output
 					print_indentation (2, a_file)
 					a_file.put_character ('%"')
 					a_pathname := a_cursor.item
+					if is_windows then
+						a_pathname := replace_all_characters (a_pathname, '{', '(')
+						a_pathname := replace_all_characters (a_pathname, '}', ')')
+					end
 					a_file.put_string (a_pathname)
 					if a_cursor.is_last then
 						a_file.put_string ("%";")
@@ -398,6 +423,7 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
 			may_close_statement: BOOLEAN
 			lib_contains_path,
 			has_dot_lib_extension,
@@ -412,20 +438,25 @@ feature {NONE} -- Output
 				may_close_statement := link_libraries_directories.is_empty
 				a_cursor := link_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
+					a_pathname := a_cursor.item
 					print_indentation (2, a_file)
-					lib_contains_path := a_cursor.item.has ('/') or a_cursor.item.has ('\')
+					lib_contains_path := a_pathname.has ('/') or a_pathname.has ('\')
 					if lib_contains_path then
 						lib_needs_option := False
 					else
-						has_dot_lib_extension := a_cursor.item.count > 4 and then a_cursor.item.substring (a_cursor.item.count - 3, a_cursor.item.count).is_equal (".lib")
+						has_dot_lib_extension := a_pathname.count > 4 and then a_pathname.substring (a_pathname.count - 3, a_pathname.count).is_equal (".lib")
 						lib_needs_option := not has_dot_lib_extension
 					end
 					if lib_needs_option then
 						a_file.put_string ("%"-l")
 					else
 						a_file.put_character ('%"')
+						if is_windows then
+							a_pathname := replace_all_characters (a_pathname, '{', '(')
+							a_pathname := replace_all_characters (a_pathname, '}', ')')
+						end
 					end
-					a_file.put_string (a_cursor.item)
+					a_file.put_string (a_pathname)
 					if a_cursor.is_last and may_close_statement then
 						a_file.put_line ("%";")
 					else
@@ -440,7 +471,12 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
 					a_file.put_string ("%"-L")
-					a_file.put_string (a_cursor.item)
+					a_pathname := a_cursor.item
+					if is_windows then
+						a_pathname := replace_all_characters (a_pathname, '{', '(')
+						a_pathname := replace_all_characters (a_pathname, '}', ')')
+					end
+					a_file.put_string (a_pathname)
 					if a_cursor.is_last then
 						a_file.put_line ("%";")
 					else
@@ -450,6 +486,54 @@ feature {NONE} -- Output
 				end
 				a_file.put_new_line
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	is_lace_keyword (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a LACE keyword?
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+			a_keywords: like lace_keywords
+		do
+			a_keywords := lace_keywords
+			i := a_keywords.lower
+			nb := a_keywords.upper
+			from until i > nb loop
+				if a_keywords.item (i).is_equal (a_name) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	lace_keywords: ARRAY [STRING] is
+			-- LACE keywors
+		once
+			Result := <<
+				"abstract",
+				"assertion",
+				"cluster",
+				"component",
+				"debug",
+				"default",
+				"end",
+				"export",
+				"external",
+				"include_path",
+				"object",
+				"option",
+				"root",
+				"system",
+				"visible"
+			>>
+		ensure
+			lace_keywords_not_void: Result /= Void
+			no_void_keyword: not STRING_ARRAY_.has (Result, Void)
 		end
 
 end -- class ET_XACE_HACT_GENERATOR
