@@ -45,16 +45,18 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			print (a_string);print ("%N")
+			io.put_string(a_string)
+			io.put_new_line
 			from
 				i := 1
 			until
 				i > a_string.count
 			loop
-				print (a_string.item_code (i));print (",")
+				io.put_string (a_string.item_code (i).out)
+				io.put_string (",")
 				i := i+ 1
 			end
-			print ("%N")
+			io.put_new_line
 		end
 
 feature {NONE} -- Implementation
