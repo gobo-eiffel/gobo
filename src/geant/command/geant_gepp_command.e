@@ -58,6 +58,10 @@ feature -- Access
 	output_filename: STRING
 			-- Output filename
 
+	empty_lines: BOOLEAN
+			-- Should empty lines be generated when lines are
+			-- ignored in order to preserve line numbering?
+
 	defines: DS_ARRAYED_LIST [STRING]
 			-- Defined values from the commandline (-D options)
 
@@ -85,6 +89,14 @@ feature -- Setting
 			output_filename_set: output_filename = a_filename
 		end
 
+	set_empty_lines (b: BOOLEAN) is
+			-- Set `empty_lines' to `b'.
+		do
+			empty_lines := b
+		ensure
+			empty_lines_set: empty_lines = b
+		end
+
 feature -- Execution
 
 	execute is
@@ -101,11 +113,13 @@ feature -- Execution
 				cmd.append_string (defines.item (i))
 				i := i + 1
 			end
-
+			if empty_lines then
+				cmd.append_string (" --lines")
+			end
 			cmd.append_string (" ")
-			cmd.append_string (input_filename)
+			cmd.append_string (file_system.pathname_from_file_system (input_filename, unix_file_system))
 			cmd.append_string (" ")
-			cmd.append_string (output_filename)
+			cmd.append_string (file_system.pathname_from_file_system (output_filename, unix_file_system))
 			
 			trace ("  [gepp] " + cmd + "%N")
 			execute_shell (cmd)
