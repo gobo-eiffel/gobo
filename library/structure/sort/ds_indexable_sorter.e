@@ -18,20 +18,20 @@ inherit
 
 feature -- Status report
 
-	sorted (container: DS_INDEXABLE [G]): BOOLEAN is
-			-- Is `container' sorted in increasing order?
+	sorted (a_container: DS_INDEXABLE [G]): BOOLEAN is
+			-- Is `a_container' sorted in increasing order?
 		do
-			Result := container.is_empty or else
-				subsorted (container, 1, container.count)
+			Result := a_container.is_empty or else
+				subsorted (a_container, 1, a_container.count)
 		end
 
-	subsorted (container: DS_INDEXABLE [G]; lower, upper: INTEGER): BOOLEAN is
-			-- Is `container' sorted in increasing order
+	subsorted (a_container: DS_INDEXABLE [G]; lower, upper: INTEGER): BOOLEAN is
+			-- Is `a_container' sorted in increasing order
 			-- within bounds `lower'..`upper'?
 		require
-			container_not_void: container /= Void
-			valid_lower: container.valid_entry (lower)
-			valid_upper: container.valid_entry (upper)
+			a_container_not_void: a_container /= Void
+			valid_lower: a_container.valid_entry (lower)
+			valid_upper: a_container.valid_entry (upper)
 			constraint: lower <= upper
 		local
 			i: INTEGER
@@ -42,32 +42,32 @@ feature -- Status report
 			until
 				not Result or i >= upper
 			loop
-				Result := container.item (i) <= container.item (i + 1)
+				Result := a_container.item (i) <= a_container.item (i + 1)
 				i := i + 1
 			end
 		end	
 			
 feature -- Sort
 
-	sort (container: DS_INDEXABLE [G]) is
-			-- Sort `container' in increasing order?
+	sort (a_container: DS_INDEXABLE [G]) is
+			-- Sort `a_container' in increasing order?
 		do
-			if not container.is_empty then
-				subsort (container, 1, container.count)
+			if not a_container.is_empty then
+				subsort (a_container, 1, a_container.count)
 			end
 		end
 		
-	subsort (container: DS_INDEXABLE [G]; lower, upper: INTEGER) is
-			-- Sort `container' in increasing order
+	subsort (a_container: DS_INDEXABLE [G]; lower, upper: INTEGER) is
+			-- Sort `a_container' in increasing order
 			-- within bounds `lower'..`upper'?
 		require
-			container_not_void: container /= Void
-			valid_lower: container.valid_entry (lower)
-			valid_upper: container.valid_entry (upper)
+			a_container_not_void: a_container /= Void
+			valid_lower: a_container.valid_entry (lower)
+			valid_upper: a_container.valid_entry (upper)
 			constraint: lower <= upper
 		deferred
 		ensure
-			subsorted: subsorted (container, lower, upper)
+			subsorted: subsorted (a_container, lower, upper)
 		end
 
 end -- class DS_INDEXABLE_SORTER
