@@ -11,7 +11,9 @@ Clusters:
 EiffelBase
     Main ISE EiffelBase containers such as LINKED_LIST or HASH_TABLE
     whose features have been implemented by inheriting from the
-    Gobo Eiffel Structure Library classes. 
+    Gobo Eiffel Structure Library classes. A more detailed
+    documentation for this cluster, in HTML format, is provided
+    in "$GOBO/doc/structure/base.html".
 EiffelTime
     Main ISE EiffelTime classes such as DATE or TIME_DURATION
     whose features have been implemented by inheriting from the
