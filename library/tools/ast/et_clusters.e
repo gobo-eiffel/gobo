@@ -13,6 +13,10 @@ indexing
 
 class ET_CLUSTERS
 
+inherit
+
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+
 creation
 
 	make
@@ -64,6 +68,44 @@ feature -- Parsing
 				a_cluster = Void
 			loop
 				a_cluster.parse_all (a_universe)
+				a_cluster := a_cluster.next
+			end
+		end
+
+feature {ET_CLUSTER} -- Setting
+
+	set_parent (a_parent: ET_CLUSTER) is
+			-- Set parent of all clusters to `a_parent'.
+		local
+			a_cluster: ET_CLUSTER
+		do
+			from
+				a_cluster := clusters
+			until
+				a_cluster = Void
+			loop
+				a_cluster.set_parent (a_parent)
+				a_cluster := a_cluster.next
+			end
+		end
+
+feature -- Output
+
+	print_flat_clusters (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print a flattened version of current
+			-- clusters in `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			a_cluster: ET_CLUSTER
+		do
+			from
+				a_cluster := clusters
+			until
+				a_cluster = Void
+			loop
+				a_cluster.print_flat_cluster (a_file)
 				a_cluster := a_cluster.next
 			end
 		end

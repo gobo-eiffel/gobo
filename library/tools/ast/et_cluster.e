@@ -16,6 +16,8 @@ class ET_CLUSTER
 inherit
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
 creation
@@ -28,7 +30,6 @@ feature {NONE} -- Initialization
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
-			a_pathname_not_void: a_pathname /= Void
 		do
 			name := a_name
 			pathname := a_pathname
@@ -37,13 +38,104 @@ feature {NONE} -- Initialization
 			pathname_set: pathname = a_pathname
 		end
 
+feature -- Status report
+
+	is_abstract: BOOLEAN
+			-- Is there no classes in current cluster?
+
 feature -- Access
 
 	name: ET_IDENTIFIER
 			-- Name
 
 	pathname: ET_IDENTIFIER
-			-- Directory pathname
+			-- Directory pathname (may be Void)
+
+	full_name: STRING is
+			-- Full name
+		local
+			parent_name: STRING
+			a_basename: STRING
+		do
+			if parent /= Void then
+				parent_name := parent.full_name
+				a_basename := name.name
+				Result := STRING_.make (parent_name.count + a_basename.count + 1)
+				Result.append_string (parent_name)
+				Result.append_character ('.')
+				Result.append_string (a_basename)
+			else
+				Result := name.name
+			end
+		ensure
+			full_name_not_void: Result /= Void
+		end
+
+	full_pathname: STRING is
+			-- Full directory pathname
+		local
+			parent_pathname: STRING
+			a_basename: STRING
+		do
+			if pathname /= Void then
+				Result := pathname.name
+			elseif parent /= Void then
+				parent_pathname := parent.full_pathname
+				a_basename := name.name
+				Result := STRING_.make (parent_pathname.count + a_basename.count + 1)
+				Result.append_string (parent_pathname)
+				Result.append_character ('/')
+				Result.append_string (a_basename)
+			else
+				Result := name.name
+			end
+		ensure
+			full_pathname_not_void: Result /= Void
+		end
+
+feature -- Nested
+
+	parent: ET_CLUSTER
+			-- Parent cluster
+
+	subclusters: ET_CLUSTERS
+			-- Subclusters
+
+feature -- Status setting
+
+	set_abstract (b: BOOLEAN) is
+			-- Set `is_abstract' to `b'.
+		do
+			is_abstract := b
+		ensure
+			abstract_set: is_abstract = b
+		end
+
+feature -- Setting
+
+	set_subclusters (a_subclusters: like subclusters) is
+			-- Set `subclusters' to `a_subclusters'.
+		do
+			if subclusters /= Void then
+				subclusters.set_parent (Void)
+			end
+			subclusters := a_subclusters
+			if subclusters /= Void then
+				subclusters.set_parent (Current)
+			end
+		ensure
+			subclusters_set: subclusters = a_subclusters
+		end
+
+feature {ET_CLUSTERS} -- Setting
+
+	set_parent (a_parent: like parent) is
+			-- Set `parent' to `a_parent'.
+		do
+			parent := a_parent
+		ensure
+			parent_set: parent = a_parent
+		end
 
 feature -- Parsing
 
@@ -58,7 +150,7 @@ feature -- Parsing
 			dir: KL_DIRECTORY
 			s: STRING
 		do
-			dir_name := Execution_environment.interpreted_string (pathname.name)
+			dir_name := Execution_environment.interpreted_string (full_pathname)
 			!! dir.make (dir_name)
 			dir.open_read
 			if dir.is_open_read then
@@ -82,6 +174,40 @@ feature -- Parsing
 			end
 		end
 
+feature -- Output
+
+	print_flat_cluster (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print a flattened version of current cluster in `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		do
+			if not is_abstract then
+				a_file.put_character ('%T')
+				print_flat_name (a_file)
+				a_file.put_string (": %"")
+				a_file.put_string (full_pathname)
+				a_file.put_string ("%"%N")
+			end
+			if subclusters /= Void then
+				subclusters.print_flat_clusters (a_file)
+			end
+		end
+
+	print_flat_name (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print a flattened version of current
+			-- cluster's name in `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		do
+			if parent /= Void then
+				parent.print_flat_name (a_file)
+				a_file.put_character ('_')
+			end
+			a_file.put_string (name.name)
+		end
+
 feature {ET_CLUSTERS} -- Implementation
 
 	next: ET_CLUSTER
@@ -98,6 +224,5 @@ feature {ET_CLUSTERS} -- Implementation
 invariant
 
 	name_not_void: name /= Void
-	pathname_not_void: pathname /= Void
 
 end -- class ET_CLUSTER
