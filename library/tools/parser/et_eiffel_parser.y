@@ -70,7 +70,7 @@ creation
 %right E_NOT E_OLD
 
 %type <ET_ACTUAL_ARGUMENTS>    Actuals_opt Actual_list
-%type <ET_ACTUAL_GENERIC_TYPES>  Actual_generics_opt Type_list
+%type <ET_ACTUAL_GENERIC_PARAMETERS>  Actual_generics_opt Type_list
 %type <ET_ASSERTION>           Assertion_clause
 %type <ET_ASSERTIONS>          Assertion_list Invariant_opt
 %type <ET_BOOLEAN_CONSTANT>    Boolean_constant
@@ -87,8 +87,8 @@ creation
                                Deferred_function_declaration External_function_declaration
 %type <ET_FEATURE_NAME>        Feature_name Feature_list_item
 %type <ET_FORMAL_ARGUMENTS>    Formal_arguments_opt Formal_argument_list
-%type <ET_FORMAL_GENERIC_TYPE> Formal_generic
-%type <ET_FORMAL_GENERIC_TYPES> Formal_generics_opt Formal_generic_list
+%type <ET_FORMAL_GENERIC_PARAMETER>  Formal_generic
+%type <ET_FORMAL_GENERIC_PARAMETERS> Formal_generics_opt Formal_generic_list
 %type <ET_IDENTIFIER>          Identifier Class_name
 %type <ET_IF_INSTRUCTION>      Conditional If_elseif_list
 %type <ET_INSTRUCTION>         Instruction Creation_instruction Assignment
@@ -810,13 +810,13 @@ Type: Class_type
 		-- TODO
 		{ $$ := $2 }
 	| E_LIKE E_CURRENT
-		{ $$ := new_like_current ($2) }
+		{ $$ := new_like_current ($1) }
 	| E_LIKE Identifier
-		{ $$ := new_like_identifier ($2) }
+		{ $$ := new_like_identifier ($2, $1) }
 	| E_BITTYPE Integer_constant
-		{ $$ := new_bit_type ($2) }
+		{ $$ := new_bit_type ($2, $1.position) }
 	| E_BITTYPE Identifier
-		{ $$ := new_bit_identifier ($2)  }
+		{ $$ := new_bit_identifier ($2, $1.position)  }
 	;
 
 Class_type: Class_name Actual_generics_opt
@@ -904,7 +904,9 @@ Creation_call_opt: -- Empty
 	;
 
 Create_instruction: E_CREATE '{' Type '}' Writable Creation_call_opt
+		{ $$ := new_creation_instruction ($3, $5, $6) }
 	| E_CREATE Writable Creation_call_opt
+		{ $$ := new_creation_instruction (Void, $2, $3) }
 	;
 
 Create_expression: E_CREATE '{' Type '}' Creation_call_opt
