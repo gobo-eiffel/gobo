@@ -292,7 +292,6 @@ feature -- Tag
 			else
 				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
-
 			if is_namespace_declaration (a_prefix, a_local_part) then
 
 				-- Notify a namespace declaration

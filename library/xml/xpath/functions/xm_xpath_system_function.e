@@ -72,6 +72,9 @@ feature -- Element change
 				end
 				create a_root_expression.make
 				arguments.put_last (a_root_expression)
+				minimum_argument_count := minimum_argument_count + 1
+				maximum_argument_count := maximum_argument_count + 1
+				augmented_argument_count := 1
 			end
 		end
 

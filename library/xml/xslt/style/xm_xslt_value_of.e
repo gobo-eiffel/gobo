@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STRING_CONSTRUCTOR
 		redefine
-			validate
+			validate, returned_item_type
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -83,7 +83,19 @@ feature -- Element change
 			-- As well as validation, it can perform first-time initialisation.
 		do
 			Precursor
-			todo ("validate", False)
+			check_within_template
+			if select_expression /= Void and then not select_expression.is_error then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+			end
+			if separator /= Void and then not separator.is_error then
+				type_check_expression ("separator", separator)
+				if separator.was_expression_replaced then
+					separator := separator.replacement_expression
+				end
+			end			
 			validated := True
 		end
 
@@ -93,6 +105,14 @@ feature -- Element change
 		do
 			-- compile_content
 			todo ("compile", False)
+		end
+
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			Result := text_node_kind_test
 		end
 
 feature {NONE} -- Implementation

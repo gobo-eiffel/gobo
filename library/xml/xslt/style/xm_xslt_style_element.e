@@ -16,13 +16,21 @@ inherit
 
 	XM_XPATH_TREE_ELEMENT
 
-	XM_UNICODE_CHARACTERS_1_1
-
 	XM_XSLT_VALIDATION
+
+	XM_XSLT_STRING_ROUTINES
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+
+	XM_XPATH_SHARED_NODE_KIND_TESTS
+
+	XM_XPATH_SHARED_NO_NODE_TEST
+
+	XM_XPATH_SHARED_NODE_KIND_TESTS
+
+	XM_XPATH_TYPE
 
 	XM_XPATH_TOKENS
 
@@ -138,6 +146,30 @@ feature -- Access
 			prinicpal_stylesheet_not_void: Result /= Void
 		end
 
+	owning_procedure: XM_XSLT_PROCEDURE is
+			-- Owning Procedure definition, if this is a local variable
+		local
+			a_node, a_next_node: XM_XPATH_NODE
+			a_stylesheet: XM_XSLT_STYLESHEET
+			a_procedure: XM_XSLT_PROCEDURE
+			found: BOOLEAN
+		do
+			from
+				a_node := Current
+			until
+				found
+			loop
+				a_next_node := a_node.parent
+				a_stylesheet ?= a_next_node
+				if a_stylesheet /= Void then
+					found := True
+					a_procedure ?= a_node
+					Result := a_procedure
+				end
+				a_node := a_next_node
+			end
+		end
+
 	target_name_pool: XM_XPATH_NAME_POOL is
 			-- Name pool to be used at run-time;
 			-- This namepool holds the names used in
@@ -182,6 +214,30 @@ feature -- Access
 			end
 		ensure
 			uri_not_void: Result /= Void
+		end
+
+	last_child_instruction: XM_XSLT_STYLE_ELEMENT is
+			-- Last child instruction of this instruction.
+			-- Returns `Void' if there are no child instructions,
+			--  or if the last child is a text node.
+		local
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		do
+			from
+				a_child_iterator := new_axis_iterator (Child_axis)
+				a_child_iterator.start
+			until
+				a_child_iterator.after
+			loop
+				a_style_element ?= a_child_iterator.item
+				if a_style_element /= Void then
+					Result := a_style_element
+				else
+					Result := Void
+				end
+				a_child_iterator.forth
+			end		
 		end
 
 feature -- Status_report
@@ -275,45 +331,20 @@ feature -- Status_report
 			Result := version < decimal_two
 		end
 
-	check_unknown_attribute (a_name_code: INTEGER) is
-			-- Check whether an unknown attribute is permitted.
+	is_explaining: BOOLEAN is
+			-- Has "gexslt:explain" been coded on this element?
 		local
-			an_attribute_uri, an_element_uri, a_local_name, a_message: STRING
+			an_explain_value: STRING
 		do
-			if not is_forwards_compatible_processing_enabled then
-				an_attribute_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
-				an_element_uri := uri
-				a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
-
-				-- Allow xsl:extension-element-prefixes etc on an extension element.
-
-				if is_instruction and then
-					STRING_.same_string (an_attribute_uri, Xslt_uri) and then
-					not STRING_.same_string (an_element_uri, Xslt_uri) and then
-					(
-					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
-					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Version_attribute)
-					 ) then
-					do_nothing
-
-					-- Allow standard attributes on an XSLT element.
-
-				elseif STRING_.same_string (an_element_uri, Xslt_uri) and then
-					STRING_.same_string (an_attribute_uri, "") and then
-					(
-					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
-					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Version_attribute)
-					 ) then
-					do_nothing
-				elseif STRING_.same_string (an_attribute_uri, "") or else
-					STRING_.same_string (an_attribute_uri, Xslt_uri) then
-					a_message := STRING_.appended_string ("Attribute ", document.name_pool.display_name_from_name_code (a_name_code))
-					a_message := STRING_.appended_string (a_message, " is not allowed on this element")
-					report_compile_error (a_message)
+			an_explain_value := attribute_value_by_expanded_name (Gexslt_explain_attribute)
+			if an_explain_value /= Void and then STRING_.same_string (an_explain_value, "no") then
+				Result := False
+			elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "yes") then
+				Result := True
+			else
+				an_explain_value := containing_stylesheet.attribute_value_by_expanded_name (Gexslt_explain_attribute)
+				if an_explain_value /= Void then 
+					Result := STRING_.same_string (an_explain_value, "all")
 				end
 			end
 		end
@@ -331,15 +362,61 @@ feature -- Status_report
 			-- Does `a_fingerprint' represent an in-scope variable?
 		require
 			positive_fingerprint: a_fingerprint >= 0
-		local
-			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_style_element, a_previous_style_element: XM_XSLT_STYLE_ELEMENT
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
-			finished, finished_inner: BOOLEAN
 		do
 			Result :=  is_local_variable_declared (a_fingerprint)
 				or else is_global_variable_declared (a_fingerprint)
+		end
+
+	is_defined_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' defined as an excluded namespace within `Current'?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			if excluded_namespaces /= Void then
+				from
+					a_cursor := excluded_namespaces.new_cursor
+					a_cursor.start
+				variant
+					excluded_namespaces.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					if a_cursor.item = a_uri_code then
+						Result := True
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
+				end
+			end
+		end
+
+	is_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' defined as an excluded namespace on this or any ancestor element?
+		local
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+		do
+			if a_uri_code = Xslt_uri_code then
+				Result := True
+			else
+				from
+					a_style_element ?= Current
+				until
+					Result or else a_style_element = Void
+				loop
+					if a_style_element.is_defined_excluded_namespace (a_uri_code) then
+						Result := True
+					else
+						a_style_element ?= a_style_element.parent
+					end
+				end
+			end
+		end
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := False
 		end
 
 feature -- Status setting
@@ -389,6 +466,196 @@ feature -- Status setting
 			validation_message_not_void: a_message /= Void
 		do
 			error_listener.warning (a_message)
+		end
+
+	mark_tail_calls is
+			-- Mark tail-recursive calls on templates and functions.
+		do
+			do_nothing
+		end
+
+	check_unknown_attribute (a_name_code: INTEGER) is
+			-- Check whether an unknown attribute is permitted.
+		local
+			an_attribute_uri, an_element_uri, a_local_name, a_message: STRING
+		do
+			if not is_forwards_compatible_processing_enabled then
+				an_attribute_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
+				an_element_uri := uri	
+				a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
+
+				-- Allow xsl:extension-element-prefixes etc on an extension element.
+
+				if is_instruction and then
+					STRING_.same_string (an_attribute_uri, Xslt_uri) and then
+					not STRING_.same_string (an_element_uri, Xslt_uri) and then
+					(
+					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
+					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
+					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
+					 STRING_.same_string (a_local_name, Version_attribute)
+					 ) then
+					do_nothing
+
+					-- Allow standard attributes on an XSLT element.
+
+				elseif STRING_.same_string (an_element_uri, Xslt_uri) and then
+					STRING_.same_string (an_attribute_uri, "") and then
+					(
+					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
+					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
+					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
+					 STRING_.same_string (a_local_name, Version_attribute)
+					 ) then
+					do_nothing
+				elseif STRING_.same_string (an_attribute_uri, "") or else
+					STRING_.same_string (an_attribute_uri, Xslt_uri) then
+					a_message := STRING_.appended_string ("Attribute ", document.name_pool.display_name_from_name_code (a_name_code))
+					a_message := STRING_.appended_string (a_message, " is not allowed on this element")
+					report_compile_error (a_message)
+				end
+			end
+		end
+
+	check_top_level is
+			-- Check `Current' is a top-level element.
+		do
+			if not is_top_level then
+				report_compile_error (STRING_.appended_string (node_name, " must only be used at top level of stylesheet"))
+			end
+		end
+
+	check_empty is
+			-- Check `Current' has no children
+		do
+			if has_child_nodes then
+				report_compile_error (STRING_.appended_string (node_name, " must be empty"))
+			end
+		end
+
+	check_empty_with_attribute (an_attribute_name: STRING) is
+			-- Check `Current' has no children
+		require
+			attribute_namer_not_void: an_attribute_name /= Void
+		local
+			a_message: STRING
+		do
+			if has_child_nodes then
+				a_message := STRING_.appended_string (node_name, " must be empty when the '")
+				a_message := STRING_.appended_string (a_message, an_attribute_name)
+				a_message := STRING_.appended_string (a_message, "' attribute is supplied.")
+				report_compile_error (a_message)
+			end
+		end
+
+	check_not_empty_missing_attribute (an_attribute_name: STRING) is
+			-- Check `Current' has children
+		require
+			attribute_namer_not_void: an_attribute_name /= Void
+		local
+			a_message: STRING
+		do
+			if not has_child_nodes then
+				a_message := STRING_.appended_string (node_name, " must not be empty when the '")
+				a_message := STRING_.appended_string (a_message, an_attribute_name)
+				a_message := STRING_.appended_string (a_message, "' attribute is not supplied.")
+				report_compile_error (a_message)
+			end
+		end
+
+	type_check_expression (a_name: STRING; an_expression: XM_XPATH_EXPRESSION) is
+			-- Type-check and optimize `an expression.'.
+			-- This is called to check each expression while the containing  instruction is being validated.
+			-- It is not just a static type-check, it also adds code
+			--  to perform any necessary run-time type checking and/or conversion
+		require
+			expression_not_in_error: an_expression /= Void and then not an_expression.is_error
+			valid_name: a_name /= Void and then a_name.count > 0
+		do
+			an_expression.analyze (static_context)
+			if is_explaining then
+				std.error.put_string ("Attribute '")
+				std.error.put_string (a_name)
+				std.error.put_string ("' of element '")
+				std.error.put_string (node_name)
+				std.error.put_string ("' at line ")
+				--	std.error.put_string (line_number)
+				std.error.put_string (" %N")
+				if not an_expression.is_error then
+					std.error.put_string ("Static type: ")
+					std.error.put_string (an_expression.item_type.conventional_name)
+					std.error.put_string (an_expression.occurence_indicator)
+					std.error.put_new_line
+					std.error.put_string ("Optimized expression tree:%N")
+					an_expression.display (10, static_context.name_pool)
+				else
+					std.error.put_string ("Expression is in error%N")
+					std.error.put_string (an_expression.error_value.error_message)
+					std.error.put_new_line
+				end
+			end
+			if an_expression.is_error and then an_expression.error_value.type /= Dynamic_error then
+				report_compile_error (an_expression.error_value.error_message)
+			else
+				allocate_slots (an_expression)
+			end
+		end
+
+	type_check_pattern (a_name: STRING; a_pattern: XM_XSLT_PATTERN) is
+			-- Type-check `a_pattern'.
+			-- This is called to check each expression while the containing  instruction is being validated.
+			-- It is not just a static type-check, it also adds code
+			--  to perform any necessary run-time type checking and/or conversion
+		require
+			pattern_not_void: a_pattern /= Void
+			valid_name: a_name /= Void and then a_name.count > 0
+		do
+			a_pattern.type_check (static_context)
+			todo ("type_check_pattern - error reporting", True)
+		end
+
+	check_within_template is
+			-- Check `Current' is within a template.
+		local
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+		do
+			a_style_element ?= parent
+			if a_style_element = Void or else not a_style_element.may_contain_template_body then
+				report_compile_error ("Element must only be used within a template body")
+			end
+		end
+
+	check_only_with_parameter_content is
+			-- Check contents of `Current' is only xsl:with-param elements.
+		local
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_parameter: XM_XSLT_WITH_PARAM
+			a_text_node: XM_XPATH_TEXT
+			finished: BOOLEAN
+		do
+			if has_child_nodes then
+				from
+					a_child_iterator := new_axis_iterator (Child_axis)
+					a_child_iterator.start
+				until
+					finished or else a_child_iterator.after
+				loop
+					a_parameter ?= a_child_iterator.item
+					if a_parameter = Void then
+
+						-- may be a whitespace text node
+
+						a_text_node ?= a_child_iterator.item
+						if a_text_node /= Void and then is_all_whitespace (a_text_node.string_value) then
+							do_nothing
+						else
+							report_compile_error ("xsl:call-template may only have xsl:with-param children")
+							finished := True
+						end
+					end
+					a_child_iterator.forth
+				end
+			end
 		end
 
 feature -- Creation
@@ -616,7 +883,7 @@ feature -- Element change
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 			from
-			a_child_iterator := new_axis_iterator (Child_axis)
+				a_child_iterator := new_axis_iterator (Child_axis)
 				a_child_iterator.start
 			until
 				a_child_iterator.after
@@ -629,10 +896,41 @@ feature -- Element change
 			end				
 		end
 
-	allocate_slots (an_expr: XM_XPATH_EXPRESSION) is
-			-- TODO
+	allocate_slots (an_expression: XM_XPATH_EXPRESSION) is
+			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
+		require
+			expression_not_void: an_expression /= Void
+		local
+			a_procedure: XM_XSLT_PROCEDURE
+			a_template: XM_XSLT_TEMPLATE
+			a_first_slot: INTEGER
 		do
-			todo ("allocate_slots", False)
+			a_procedure := owning_procedure
+			a_template ?= Current
+			
+			-- If `Current' is not part of a procedure, then
+			--  it needs it's own stack frame to contain its variables.
+			-- Also, expressions in the match pattern of an xsl:template
+			--  can be evaluated without a stack fram being created
+
+			if a_procedure = Void or else a_template /= Void then 
+				an_expression.allocate_slots (1)
+				containing_stylesheet.allocate_local_slots (an_expression.last_slot_number)
+			else
+				a_first_slot := a_procedure.number_of_variables + 1
+				an_expression.allocate_slots (a_first_slot)
+				if an_expression.last_slot_number > a_first_slot then
+					containing_stylesheet.allocate_local_slots (an_expression.last_slot_number)
+					a_procedure.set_number_of_variables (an_expression.last_slot_number)
+
+					-- This algorithm is not very efficient because it never reuses
+					--  a slot when a variable goes out of scope. But at least it is safe.
+					-- Note that range variables within XPath expressions need to maintain
+					--  a slot until the instruction they are part of finishes, e.g. in
+					--  xsl:for-each.
+				 
+				end
+			end
 		end
 
 	prepare_attributes is
@@ -997,10 +1295,54 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			Result := principal_stylesheet.is_global_variable_declared (a_fingerprint)
 		end
 
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			Result := any_item
+		ensure
+			returned_item_type_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	Fixed_component, Left_double_curly_brace_component, Right_double_curly_brace_component, Avt_component: INTEGER is unique
 			-- Constants used by `generate_attribute_value_template'
+	
+	common_child_item_type: XM_XPATH_ITEM_TYPE is
+			-- Most general type of item returned by the children of this instruction
+		local
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_node: XM_XPATH_NODE
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+			finished: BOOLEAN
+		do
+			Result := empty_item
+			from
+				a_child_iterator := new_axis_iterator (Child_axis)
+				a_child_iterator.start
+			until
+				finished or else a_child_iterator.after
+			loop
+				a_node := a_child_iterator.item
+				if a_node = Void then
+					finished := True
+				else
+					a_style_element ?= a_node
+					if a_style_element /= Void then
+						Result := common_super_type (Result, a_style_element.returned_item_type)
+					else
+						Result := common_super_type (Result, text_node_kind_test)
+					end
+					if Result = any_item then
+						finished := True
+					else
+						a_child_iterator.forth
+					end
+				end
+			end
+		ensure
+			common_child_item_type_not_void: Result /= Void	
+		end
 
 	append_fixed_component (components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_string_component: STRING) is
 			--	Append `a_string_component' onto `components'.

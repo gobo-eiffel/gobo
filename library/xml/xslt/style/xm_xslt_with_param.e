@@ -39,10 +39,37 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			an_apply_templates: XM_XSLT_APPLY_TEMPLATES
+			-- TODO an_apply_imports: XM_XSLT_APPLY_IMPORTS
+			--a_next_match: XM_XSLT_NEXT_MATCH
+			a_call_template: XM_XSLT_CALL_TEMPLATE
+			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_with_param: XM_XSLT_WITH_PARAM
 		do
-			todo ("validate", False)
+			Precursor
+			an_apply_templates ?= parent
+			if an_apply_templates = Void then
+				a_call_template  ?= parent
+				if a_call_template = Void then
+					report_compile_error (STRING_.appended_string ("xsl:with-param cannot appear as a child of ", parent.node_name))
+				end
+			end
+			
+			-- Check for duplicate parameter names
+			
+			a_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
+			from
+			   a_preceding_iterator.start
+			until
+			   any_compile_errors or else a_preceding_iterator.after
+			loop
+				a_with_param ?= a_preceding_iterator.item
+				if a_with_param /= Void and then a_with_param.variable_fingerprint = variable_fingerprint then
+					report_compile_error ("Duplicate parameter name")
+				end
+			   a_preceding_iterator.forth
+			end
 			validated := True
 		end
 

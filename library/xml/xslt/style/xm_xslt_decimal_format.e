@@ -118,10 +118,9 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
 		do
-			todo ("validate", False)
+			check_top_level
+			check_empty
 			validated := True
 		end
 

@@ -132,36 +132,32 @@ feature -- Optimization
 			end
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Type-check the pattern;
-			-- Default implementation does nothing. This is only needed for patterns that contain
-			-- variable references or function calls.
 		local
 			a_boolean: XM_XPATH_BOOLEAN_VALUE
 			an_integer: XM_XPATH_INTEGER_VALUE
 			a_position_range: XM_XPATH_POSITION_RANGE
 			is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
-			a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			a_filter_expression, an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			a_result_pattern := clone (Current)
 
 			-- Analyze each component of the pattern
 
 			if parent_pattern /= Void then
-				a_result_pattern.set_parent_pattern (parent_pattern.type_check (a_context))
+				parent_pattern.type_check (a_context)
 			elseif ancestor_pattern /= Void then
-				a_result_pattern.set_ancestor_pattern (ancestor_pattern.type_check (a_context))
+				ancestor_pattern.type_check (a_context)
 			end
 
 			if filters /= Void then
 				from
-					a_cursor := a_result_pattern.filters.new_cursor
+					a_cursor := filters.new_cursor
 					a_cursor.start
 				variant
-					a_result_pattern.filters.count + 1 - a_cursor.index
+					filters.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -192,42 +188,41 @@ feature -- Optimization
 
 			-- See if it's an element pattern with a single positional predicate of [1]
 
-			if node_test.node_kind = Element_node and then a_result_pattern.filters.count = 1 then
-				a_filter_expression := a_result_pattern.filters.item (1)
+			if node_test.node_kind = Element_node and then filters.count = 1 then
+				a_filter_expression := filters.item (1)
 				an_integer ?= a_filter_expression
 				a_position_range ?= a_filter_expression
 				if (an_integer /= Void and then an_integer.value.is_equal (one))
 					or else (a_position_range /= Void and then
 								a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
-					a_result_pattern.set_first_element_pattern (True)
-					a_result_pattern.set_special_filter (True)
-					a_result_pattern.set_filters (Void)
+					set_first_element_pattern (True)
+					set_special_filter (True)
+					set_filters (Void)
 				end
 			end
 
 			-- See if it's an element pattern with a single positional predicate
 			-- of [position()=last()]
 
-			if not a_result_pattern.is_first_element_pattern and then node_test.node_kind = Element_node and then a_result_pattern.filters.count = 1 then
-				is_last_expression ?= a_result_pattern.filters.item (1)
+			if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters.count = 1 then
+				is_last_expression ?= filters.item (1)
 				if is_last_expression /= Void and then is_last_expression.condition then
-					a_result_pattern.set_last_element_pattern (True)
-					a_result_pattern.set_special_filter (True)
-					a_result_pattern.set_filters (Void)
+					set_last_element_pattern (True)
+					set_special_filter (True)
+					set_filters (Void)
 				end
 			end
 
-			if a_result_pattern.is_positional then
+			if is_positional then
 				an_expression := make_equivalent_expression
 				an_expression.analyze (a_context)
 				if an_expression.was_expression_replaced then
-					a_result_pattern.set_equivalent_expression (an_expression.replacement_expression)
+					set_equivalent_expression (an_expression.replacement_expression)
 				else
-					a_result_pattern.set_equivalent_expression (an_expression)
+					set_equivalent_expression (an_expression)
 				end
-				a_result_pattern.set_special_filter (True)
+				set_special_filter (True)
 			end
-			Result := a_result_pattern
 		end
 
 feature -- Matching

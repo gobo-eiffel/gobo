@@ -12,6 +12,10 @@ indexing
 
 class XM_XSLT_RULE_MANAGER
 
+inherit
+
+	XM_XPATH_DEBUGGING_ROUTINES
+
 creation
 
 	make
@@ -22,6 +26,14 @@ feature {NONE} -- Initialization
 			-- TODO.
 		do
 			-- TODO
+		end
+
+feature -- Access
+
+	mode (a_mode_name_code: INTEGER): XM_XSLT_MODE is
+			-- Mode corresponding to `a_mode_name_code:'
+		do
+			todo ("mode", False)
 		end
 
 end

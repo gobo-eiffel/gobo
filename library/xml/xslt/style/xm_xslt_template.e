@@ -16,8 +16,10 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate
+			make_style_element, validate, returned_item_type, mark_tail_calls, may_contain_template_body
 		end
+
+	XM_XSLT_PROCEDURE
 
 creation {XM_XSLT_NODE_FACTORY}
 
@@ -73,6 +75,32 @@ feature -- Access
 
 	redundant_named_template: BOOLEAN
 			-- Current is a redundant named template
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
+
+feature -- Status setting
+
+	mark_tail_calls is
+			-- Mark tail-recursive calls on templates and functions.
+		local
+			a_last_instruction: XM_XSLT_STYLE_ELEMENT
+		do
+			if required_type = Void then
+
+				-- Don't attempt tail call optimization if the return type needs checking
+
+				a_last_instruction := last_child_instruction
+				if a_last_instruction /= Void then
+					a_last_instruction.mark_tail_calls
+				end
+			end
+		end
 
 feature -- Element change
 
@@ -154,7 +182,9 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		do
-			todo ("validate", False)
+			check_top_level
+			if match /= Void then type_check_pattern ("match", match) end
+			mark_tail_calls
 			validated := True
 		end
 
@@ -163,6 +193,18 @@ feature -- Element change
 			--  or to Eiffel code.
 		do
 			todo ("compile", False)
+		end
+
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			if required_type = Void then
+				Result := common_child_item_type
+			else
+				Result := required_type.primary_type
+			end
 		end
 
 feature {NONE} -- Implementation

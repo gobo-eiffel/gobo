@@ -79,10 +79,36 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			an_apply_templates: XM_XSLT_APPLY_TEMPLATES
+			a_for_each: XM_XSLT_FOR_EACH
+			a_for_each_group: XM_XSLT_FOR_EACH_GROUP
+			-- TODO a_perform_sort: XM_XSLT_PERFORM_SORT
 		do
-			todo ("validate", False)
+			if select_expression /= Void then
+				if has_child_nodes then
+					report_compile_error ("xsl:sort must be empty when a 'select' attribute is uspplied")
+				else
+					an_apply_templates ?= parent
+					a_for_each ?= parent
+					a_for_each_group ?= parent
+					-- TODO a_perform_sort  ?= parent
+					if an_apply_templates = Void and then
+						a_for_each = Void and then
+						a_for_each_group = Void then
+						report_compile_error ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort")
+					end
+				end
+			else
+				if has_child_nodes then
+					todo ("validate - sequence constructor content", True)
+				else
+					create {XM_XPATH_CONTEXT_ITEM_EXPRESSION} select_expression.make
+				end
+			end
+			if not any_compile_errors then
+				validate_2
+			end
 			validated := True
 		end
 
@@ -120,8 +146,6 @@ feature {NONE} -- Implementation
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
-			else
-				create {XM_XPATH_CONTEXT_ITEM_EXPRESSION} select_expression.make
 			end
 			if an_order_attribute /= Void then
 				generate_attribute_value_template (an_order_attribute, static_context)
@@ -150,7 +174,45 @@ feature {NONE} -- Implementation
 			if a_collation_attribute /= Void then
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
+			else
+				create {XM_XPATH_STRING_VALUE} collation_name.make ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint")
 			end
+		end
+
+	validate_2 is
+			-- perform further validation.
+		do
+			if select_expression /= Void then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+			end
+			if order /= Void then
+				type_check_expression ("order", order)
+				if order.was_expression_replaced then
+					order := order.replacement_expression
+				end
+			end
+			if case_order /= Void then
+				type_check_expression ("case-order", case_order)
+				if case_order.was_expression_replaced then
+					case_order := case_order.replacement_expression
+				end
+			end
+			if language /= Void then
+				type_check_expression ("lang", language)
+				if language.was_expression_replaced then
+					language := language.replacement_expression
+				end
+			end
+			if data_type /= Void then
+				type_check_expression ("data-type", data_type)
+				if data_type.was_expression_replaced then
+					data_type := data_type.replacement_expression
+				end
+			end
+			todo ("validate_2", True)
 		end
 
 end

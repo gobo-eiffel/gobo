@@ -23,6 +23,8 @@ inherit
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
+	XM_XPATH_SHARED_NODE_KIND_TESTS
+
 creation
 
 	make
@@ -64,6 +66,8 @@ feature -- Status report
 				create Result.make_single_string
 			when 2 then
 				create Result.make_atomic_sequence
+			when 3 then
+				create Result.make (document_node_kind_test, Required_cardinality_exactly_one)
 			end
 		end
 

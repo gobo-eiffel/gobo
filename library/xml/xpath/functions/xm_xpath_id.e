@@ -23,6 +23,8 @@ inherit
 
 	XM_XPATH_MAPPING_FUNCTION
 
+	XM_XPATH_SHARED_NODE_KIND_TESTS
+
 creation
 
 	make
@@ -45,7 +47,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
---			Result := any_node_test
+			Result := element_node_kind_test
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -57,7 +59,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			todo ("required_type ", False)
+			create Result.make_string_sequence
 		end
 
 feature -- Optimization

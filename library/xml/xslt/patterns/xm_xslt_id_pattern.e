@@ -54,17 +54,13 @@ feature -- Access
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Type-check the pattern;
-		local
-			an_id_pattern: XM_XSLT_ID_PATTERN
 		do
-			an_id_pattern := clone (Current)
-			an_id_pattern.id_expression.analyze (a_context)
-			if an_id_pattern.id_expression.was_expression_replaced then
-				an_id_pattern.set_expression (an_id_pattern.id_expression.replacement_expression)
+			id_expression.analyze (a_context)
+			if id_expression.was_expression_replaced then
+				id_expression := id_expression.replacement_expression
 			end
-			Result := an_id_pattern
 		end
 
 feature -- Matching
@@ -124,18 +120,6 @@ feature -- Matching
 					end
 				end
 			end
-		end
-
-feature {XM_XSLT_ID_PATTERN} -- Local
-
-	set_expression (an_expr: XM_XPATH_EXPRESSION) is
-			-- Set `id_expression'.
-		require
-			id_expression_not_void: an_expr /= Void
-		do
-			id_expression := an_expr
-		ensure
-			id_expression_set: id_expression = an_expr
 		end
 
 invariant

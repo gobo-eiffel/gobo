@@ -99,16 +99,14 @@ feature -- Optimization
 			pattern_not_void: Result /= Void
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
 		require
 			context_not_void: a_context /= Void
 		do
-			Result := Current
-		ensure
-			pattern_not_void: Result /= Void
+			do_nothing
 		end
 
 feature -- Matching

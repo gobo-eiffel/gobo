@@ -984,10 +984,10 @@ feature -- Element change
 			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 				a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
 				a_uri_code := type_factory.standard_uri_code (a_fingerprint)
-					check
-						prefix_not_allocated: prefix_index (a_uri_code, an_xml_prefix) < 0
-						-- because of pre-conditions (and we have a standard name)
-					end
+				check
+					prefix_not_allocated: prefix_index (a_uri_code, an_xml_prefix) < 0
+					-- because of pre-conditions (and we have a standard name)
+				end
 				allocate_prefix (a_uri_code, an_xml_prefix)
 				a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
 				last_name_code :=  (a_prefix_index * bits_20) + a_fingerprint
@@ -998,13 +998,13 @@ feature -- Element change
 					allocate_code_for_uri (a_uri)
 					a_uri_code := last_uri_code
 				end
-					check
-						valid_uri_code:  is_valid_uri_code (a_uri_code)
-					end
+				check
+					valid_uri_code:  is_valid_uri_code (a_uri_code)
+				end
 				allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 			end
 		ensure
-			name_allocated: is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)			
+			name_allocated: is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)
 		end
 
 	allocate_name_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING) is
@@ -1294,7 +1294,7 @@ feature {NONE} -- Implementation
 			positive_name_code: a_name_code >= 0
 		local
 			a_hash_code, a_depth, a_counter: INTEGER
-			found: BOOLEAN
+			end_of_chain: BOOLEAN
 			an_entry: XM_XPATH_NAME_ENTRY
 		do
 			a_depth := name_code_to_depth (a_name_code)
@@ -1305,10 +1305,10 @@ feature {NONE} -- Implementation
 			variant
 				a_depth - a_counter + 1
 			until
-				a_counter = a_depth or found = True
+				a_counter = a_depth or else end_of_chain
 			loop
 				if an_entry = Void then
-					found := True
+					end_of_chain := True
 				else
 					an_entry := an_entry.next
 				end

@@ -170,7 +170,7 @@ feature -- Access
 			a_namespace_code, a_prefix_code: INTEGER
 		do
 			if cached_namespace_codes_in_scope /= Void then
-				Result := cached_namespace_codes_in_scope
+				do_nothing
 			else
 				create cached_namespace_codes_in_scope.make_from_linear (namespace_code_list)
 				a_parent ?= parent
@@ -218,15 +218,17 @@ feature -- Access
 					if not cached_namespace_codes_in_scope.extendible (1) then
 						cached_namespace_codes_in_scope.resize (cached_namespace_codes_in_scope.count + 1)
 					end
-						check
-							xml_prefix_code_is_one: document.name_pool.code_for_prefix ("xml") = 1
-							-- Architectural definition
-							end
+					check
+						xml_prefix_code_is_one: document.name_pool.code_for_prefix ("xml") = 1
+						-- Architectural definition
+					end
 					cached_namespace_codes_in_scope.put_last (Xml_uri_code + bits_16) -- bits_16 = 1 << 16
 				end
 			end
+			Result := cached_namespace_codes_in_scope
+		ensure
+        result_not_void: Result /= Void
 		end
-								
 
 feature -- Measurement
 

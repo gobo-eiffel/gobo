@@ -456,6 +456,7 @@ feature {NONE} -- Implementation
 			-- Bind names specific to Gobo to their fingerprints.
 		do
 			bind_gexslt_name (Numeric_type_code, "numeric")
+			bind_gexslt_name (Explain_type_code, "explain")
 		end
 	
 	bind_xdt_names is

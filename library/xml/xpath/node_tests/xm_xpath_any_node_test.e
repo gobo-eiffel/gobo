@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-		matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
+	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
 		local
 			a_node: XM_XPATH_NODE

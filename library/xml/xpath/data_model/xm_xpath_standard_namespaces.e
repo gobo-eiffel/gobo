@@ -168,8 +168,8 @@ feature -- Access
 			-- Codes in Gobo XPath/XSLT namespace (`Gexslt_uri_code' * 128 + 1..n)
 
 	Numeric_type_code: INTEGER is 513
-	Object_type_code: INTEGER is 512
-
+	Object_type_code: INTEGER is 514
+	Explain_type_code: INTEGER is 515
 
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 128 + 0..n)
 
@@ -301,7 +301,12 @@ feature -- Access
 		once
 			Result := "{" + Xslt_uri + "}" + Xpath_default_namespace_attribute
 		end
-	
+
+	Gexslt_explain_attribute: STRING is
+		once
+			Result := "{" + Gexslt_eiffel_type_uri + "}explain"
+		end
+
 feature -- Status report
 
 	is_reserved_namespace (a_uri: STRING): BOOLEAN is

@@ -17,13 +17,12 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, returned_item_type, may_contain_template_body
 		end
 
-feature -- Access
+	XM_XPATH_ROLE
 
-	redundant_variable: BOOLEAN
-			-- Current is a redundant variable
+feature -- Access
 
 	as_type: XM_XPATH_SEQUENCE_TYPE
 			-- Type declared by "as" attribute
@@ -84,16 +83,41 @@ feature -- Access
 			variable_fingerprint_nearly_positive: Result > -2	
 		end
 
-feature -- Element change
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
+
+	is_redundant_variable: BOOLEAN
+			-- Is `Current' a redundant variable?
+
+	is_global_variable: BOOLEAN
+			-- Is `Current' a global variable?
+
+feature -- Status setting
 	
 	set_redundant_variable is
 			-- Mark as a redundant variable
 		require
 			attributes_not_prepared: not attributes_prepared
 		do
-			redundant_variable := True
+			is_redundant_variable := True
 		ensure
-			redundant_variable_set:	redundant_variable = True
+			redundant_variable_set:	is_redundant_variable = True
+		end
+
+	set_global_variable is
+			-- Mark as a global variable
+		require
+			not_yet_validated: not validated
+		do
+			is_global_variable := True
+		ensure
+			global_variable_set:	is_global_variable = True
 		end
 
 	prepare_attributes is
@@ -175,11 +199,110 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_stylesheet: XM_XSLT_STYLESHEET
+			a_message: STRING
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_first_node: XM_XPATH_NODE
+			a_parameter: XM_XSLT_PARAM
 		do
-			todo ("validate", False)
-			validated := True
+			a_stylesheet ?= parent
+			is_global := a_stylesheet /= Void
+			if select_expression /= Void and then has_child_nodes then
+				a_message := STRING_.appended_string ("An ", node_name)
+				report_compile_error (STRING_.appended_string (a_message, " element with a select attribute must be empty"))
+			else
+				check_against_required_type
+				if not any_compile_errors then
+					if select_expression = Void and then allows_value then
+						is_text_only := True
+						a_child_iterator := new_axis_iterator (Child_axis)
+						a_child_iterator.start
+						if a_child_iterator.after then
+							if as_type = Void then
+								create {XM_XPATH_STRING_VALUE} select_expression.make ("")
+							else
+								a_parameter ?= Current
+								if a_parameter /= Void then -- xsl:param
+									if not is_required_parameter then
+										if as_type.cardinality_allows_zero then
+											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+										else
+											is_required_parameter := True
+										end
+									end
+								else -- not an xsl:param
+									if as_type.cardinality_allows_zero then
+											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+									else
+										report_compile_error ("Default value () is not valid for the declared type")
+									end
+								end
+							end
+						else -- at least one child node
+							a_first_node := a_child_iterator.item
+							a_child_iterator.forth
+							if a_child_iterator.after then
+								
+								-- There is exactly one child node
+
+								if a_first_node.node_type = Text_node then
+									constant_text := a_first_node.string_value
+								end
+							end
+							
+							-- Determine if the temporary tree can only contain text nodes
+
+							is_text_only := common_child_item_type = text_node_kind_test
+						end
+					end	
+				end
+			end
+			if select_expression /= Void then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+			end
+		end
+
+	check_against_required_type is
+			-- Check the expression conforms to `as_type'.
+		require
+			no_compile_errors: not any_compile_errors
+		local
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+		do
+			if as_type /= Void then
+				create a_role.make (Variable_role, variable_name, 1)
+				if select_expression /= Void then
+					create a_type_checker
+					a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
+					if a_type_checker.is_static_type_check_error	then
+						report_compile_error (a_type_checker.static_type_check_error_message)
+					else
+						select_expression := a_type_checker.checked_expression
+					end
+				else
+
+					-- TODO: check the type of the instruction sequence statically
+
+					todo ("check_against_required_type", True)
+				end
+			end
+		end
+
+
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction;
+			-- This is EMPTY for a variable: we are not
+			--  interested in the type of the variable, but in what the xsl:variable constributes
+			--  to the result of the sequence constructor it is part of.
+		do
+			Result := empty_item
 		end
 
 feature {NONE} -- Implementation
@@ -191,5 +314,14 @@ feature {NONE} -- Implementation
 
 	is_tunnel: BOOLEAN
 			-- Is this a tunnel parameter?
+
+	is_text_only: BOOLEAN
+			-- Is the value of `Current' computed solely from text nodes?
+
+	is_global: BOOLEAN
+			-- Is `Current' a global variable/parameter?
+
+	constant_text: STRING
+			-- Value of `Current' when it has a single text node child
 
 end

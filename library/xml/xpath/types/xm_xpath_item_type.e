@@ -66,7 +66,7 @@ feature -- Conversion
 			-- Where this is a QName, it will use conventional prefixes.
 		deferred
 		ensure
-			result_not_void: Result /= void
+			result_not_void: Result /= Void
 		end
 
 end

@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_VARIABLE_DECLARATION
 
+	XM_XSLT_PROCEDURE
+
 feature -- Access
 
 	required_type: XM_XPATH_SEQUENCE_TYPE is
@@ -30,6 +32,17 @@ feature -- Access
 			required_type_not_void: Result /= Void
 		end
 
+	
+	slot_number: INTEGER is
+			-- Slot number 
+		require
+			non_redundant_global_variable: is_global_variable and then not is_redundant_variable
+		do
+			Result := internal_slot_number
+		ensure
+			strictly_positive_result: Result > 0
+		end
+			
 	references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]
 			-- List of XM_XPATH_VARIABLE_REFERENCE objects that reference `Current'
 										  
@@ -93,10 +106,33 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_procedure: XM_XSLT_PROCEDURE
 		do
-			todo ("validate", False)
+			Precursor
+			if not any_compile_errors then
+				if is_global_variable then
+					if not is_redundant_variable then
+						principal_stylesheet.allocate_slot_number
+						internal_slot_number := principal_stylesheet.number_of_variables
+					end
+				else
+					a_procedure := owning_procedure
+					if a_procedure = Void then
+						report_compile_error ("Local variable must be declared within a template or function")
+					else
+						a_procedure.allocate_slot_number
+						internal_slot_number := a_procedure.number_of_variables
+					end
+				end
+			end
 			validated := True
 		end
+
+feature {NONE} -- Implementation
+
+	internal_slot_number: INTEGER
+			-- Slot number
 
 invariant
 

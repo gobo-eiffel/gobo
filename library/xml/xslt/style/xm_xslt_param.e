@@ -19,6 +19,8 @@ inherit
 			make_style_element, validate, allows_required, allows_value
 		end
 
+	XM_XSLT_STRING_ROUTINES
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -70,10 +72,64 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			is_local: BOOLEAN
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+			a_stylesheet: XM_XSLT_STYLESHEET
+			a_template: XM_XSLT_TEMPLATE
+			a_function: XM_XSLT_FUNCTION
+			a_parameter: XM_XSLT_PARAM
+			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_node: XM_XPATH_NODE
 		do
-			todo ("validate", False)
+			a_stylesheet ?= parent; a_template ?= parent; a_function ?= parent
+			is_local := a_template /= Void or else a_function /= Void
+			is_global_variable := a_stylesheet /= Void
+			if not is_local and then not is_global_variable then
+				report_compile_error ("xsl:param must be immediately within a template, function or stylesheet")
+			else
+				if not is_global_variable then
+					from
+						a_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
+						a_preceding_iterator.start
+					until
+						any_compile_errors or else a_preceding_iterator.after
+					loop
+						a_node := a_preceding_iterator.item
+						a_parameter ?= a_node
+						if a_parameter /= Void then
+							if variable_fingerprint = a_parameter.variable_fingerprint then
+								report_compile_error ("The name of the parameter is not unique")
+							end
+						else
+							a_style_element ?= a_node
+							if a_style_element /= Void then
+								report_compile_error ("xsl:param must be the first element within a template or function")
+							else
+
+								-- must be a text node - allow it only if all white-space
+
+								if not is_all_whitespace (a_node.string_value) then
+									report_compile_error ("xsl:param must not be preceded by text")
+								end
+							end
+						end
+						a_preceding_iterator.forth
+					end
+				end
+				if is_required_parameter then
+					if select_expression /= Void then
+
+						-- NB, we do this test before setting the default select attribute
+
+						report_compile_error ("The select attribute should be omitted when required='yes'")
+					end
+					if has_child_nodes then
+						report_compile_error ("A parameter specifying required='yes' must have empty content")
+					end
+				end
+				if not any_compile_errors then Precursor end
+			end
 			validated := True
 		end
 

@@ -16,12 +16,33 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, returned_item_type, mark_tail_calls, may_contain_template_body
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature -- Status setting
+
+	mark_tail_calls is
+			-- Mark tail-recursive calls on templates and functions.
+		local
+			a_last_instruction: XM_XSLT_STYLE_ELEMENT
+		do
+			a_last_instruction := last_child_instruction
+			if a_last_instruction /= Void then
+				a_last_instruction.mark_tail_calls
+			end
+		end
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
 
 feature -- Element change
 
@@ -62,10 +83,18 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			an_xsl_choose: XM_XSLT_CHOOSE
 		do
-			todo ("validate", False)
+			an_xsl_choose ?= parent
+			if an_xsl_choose = Void then
+				report_compile_error ("xsl:when must be immediately within xsl:choose")
+			else
+				type_check_expression ("test", test_expression)
+				if test_expression.was_expression_replaced then
+					test_expression := test_expression.replacement_expression
+				end				
+			end
 			validated := True
 		end
 
@@ -74,6 +103,14 @@ feature -- Element change
 			--  or to Eiffel code.
 		do
 			todo ("compile", False)
+		end
+
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			Result := common_child_item_type
 		end
 
 feature {NONE} -- Implementation

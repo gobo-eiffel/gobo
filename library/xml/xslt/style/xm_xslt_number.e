@@ -16,8 +16,10 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate
+			make_style_element, validate, returned_item_type
 		end
+
+	XM_XPATH_ROLE
 
 creation {XM_XSLT_NODE_FACTORY}
 
@@ -92,10 +94,76 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_single_node: XM_XPATH_SEQUENCE_TYPE			
 		do
-			todo ("validate", False)
+			check_within_template
+			check_empty
+			if select_expression /= Void then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+				create a_type_checker
+				create a_role.make (Instruction_role, "xsl:number/select", 1)
+				create a_single_node.make_single_node
+				a_type_checker.static_type_check (static_context, select_expression, a_single_node, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					report_compile_error (a_type_checker.static_type_check_error_message)
+				else
+					select_expression := a_type_checker.checked_expression
+				end
+			end
+			if value_expression /= Void then
+				type_check_expression ("value", value_expression)
+				if value_expression.was_expression_replaced then
+					value_expression := value_expression.replacement_expression
+				end
+			end
+			if format /= Void then
+				type_check_expression ("format", format)
+				if format.was_expression_replaced then
+					format := format.replacement_expression
+				end
+			end			
+			if grouping_size /= Void then
+				type_check_expression ("grouping-size", grouping_size)
+				if grouping_size.was_expression_replaced then
+					grouping_size := grouping_size.replacement_expression
+				end
+			end
+			if grouping_separator /= Void then
+				type_check_expression ("grouping-separator", grouping_separator)
+				if grouping_separator.was_expression_replaced then
+					grouping_separator := grouping_separator.replacement_expression
+				end
+			end						
+			if letter_value /= Void then
+				type_check_expression ("letter-value", letter_value)
+				if letter_value.was_expression_replaced then
+					letter_value := letter_value.replacement_expression
+				end
+			end
+			if ordinal /= Void then
+				type_check_expression ("ordinal", ordinal)
+				if ordinal.was_expression_replaced then
+					ordinal := ordinal.replacement_expression
+				end
+			end
+			if language /= Void then
+				type_check_expression ("lang", language)
+				if language.was_expression_replaced then
+					language := language.replacement_expression
+				end
+			end
+			if from_pattern /= Void then
+				type_check_pattern ("from", from_pattern)
+			end
+			if count_pattern /= Void then
+				type_check_pattern ("count", count_pattern)
+			end				
 			validated := True
 		end
 
@@ -104,6 +172,14 @@ feature -- Element change
 			--  or to Eiffel code.
 		do
 			todo ("compile", False)
+		end
+
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			Result := text_node_kind_test
 		end
 
 feature {NONE} -- Implementation

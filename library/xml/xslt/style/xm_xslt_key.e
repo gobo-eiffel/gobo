@@ -19,6 +19,10 @@ inherit
 			validate
 		end
 
+	XM_XPATH_ROLE
+
+	XM_XPATH_CARDINALITY
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -86,8 +90,41 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_role: XM_XPATH_ROLE_LOCATOR
+			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			todo ("validate", False)
+			check_top_level
+			if use /= Void then
+				check_empty_with_attribute ("use")
+			else
+				check_not_empty_missing_attribute ("use")
+			end
+			if not any_compile_errors then
+				create a_type_checker
+				create a_role.make (Instruction_role, "xsl:key/use", 1)
+				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
+				a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					report_compile_error (a_type_checker.static_type_check_error_message)
+				else
+					use := a_type_checker.checked_expression
+				end
+			end
+			if not any_compile_errors and then use /= Void then
+				type_check_expression ("use", use)
+				if use.was_expression_replaced then
+					use := use.replacement_expression
+				end
+			end
+			if not any_compile_errors and then match /= Void then
+				type_check_pattern ("match", match)
+			end
+			
+			-- TODO check that the collation for this key is consistent
+			--  with other key definitions of the same name
+
 			validated := True
 		end
 

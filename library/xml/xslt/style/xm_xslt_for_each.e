@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate
+			make_style_element, validate, returned_item_type, may_contain_template_body
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -32,6 +32,14 @@ feature {NONE} -- Initialization
 		do
 			is_instruction := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+		end
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
 		end
 
 feature -- Element change
@@ -73,10 +81,12 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
 		do
-			todo ("validate", False)
+			check_within_template
+			type_check_expression ("select", select_expression)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+			end				
 			validated := True
 		end
 
@@ -85,6 +95,14 @@ feature -- Element change
 			--  or to Eiffel code.
 		do
 			todo ("compile", False)
+		end
+
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			Result := common_child_item_type
 		end
 
 feature {NONE} -- Implementation

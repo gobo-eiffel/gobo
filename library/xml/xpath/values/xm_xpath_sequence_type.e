@@ -26,9 +26,9 @@ inherit
 
 creation
 
-	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic, make_optional_integer,
+	make, make_any_sequence, make_single_item, make_optional_item, make_single_atomic, make_optional_atomic, make_optional_integer,
 	make_single_string, make_single_integer, make_single_double, make_single_node, make_optional_node, make_node_sequence,
-	make_numeric_sequence, make_atomic_sequence
+	make_numeric_sequence, make_atomic_sequence, make_string_sequence
 
 feature {NONE} -- Initialization
 
@@ -61,6 +61,14 @@ feature {NONE} -- Initialization
 			primary_type := any_item
 			set_cardinality_optional
 		end
+	
+	make_single_atomic is
+			-- Create a sequence that one atomic item
+		do
+			primary_type := type_factory.any_atomic_type
+			set_cardinality_exactly_one
+		end
+
 	
 	make_optional_atomic is
 			-- Create a sequence that allows zero or one atomic items
@@ -129,6 +137,13 @@ feature {NONE} -- Initialization
 			-- Create a sequence that allows zero or more atomicic values
 		do
 			primary_type := type_factory.any_atomic_type
+			set_cardinality_zero_or_more
+		end
+
+	make_string_sequence is
+			-- Create a sequence that allows zero or more atomicic values
+		do
+			primary_type := type_factory.string_type
 			set_cardinality_zero_or_more
 		end
 

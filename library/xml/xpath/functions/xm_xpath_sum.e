@@ -53,8 +53,13 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			-- TODO - a sequence of zero or more items
-			todo ("required-type", False)
+			inspect
+				argument_number
+			when 1 then
+				create Result.make_atomic_sequence
+			when 2 then
+				create Result.make_optional_atomic
+			end
 		end
 
 feature -- Evaluation

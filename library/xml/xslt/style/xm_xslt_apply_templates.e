@@ -16,8 +16,10 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate
+			make_style_element, validate, mark_tail_calls
 		end
+
+	XM_XPATH_ROLE
 
 creation {XM_XSLT_NODE_FACTORY}
 
@@ -33,6 +35,14 @@ feature {NONE} -- Initialization
 			mode_name_code := -1 -- default mode
 			is_instruction := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+		end
+
+feature -- Status setting
+
+	mark_tail_calls is
+			-- Mark tail-recursive calls on templates and functions.
+		do
+			use_tail_recursion := True
 		end
 
 feature -- Element change
@@ -91,10 +101,63 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_sort: XM_XSLT_SORT
+			a_param: XM_XSLT_WITH_PARAM
+			a_text: XM_XPATH_TEXT
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
 		do
-			todo ("validate", False)
+			check_within_template
+
+			-- get the mode object
+
+			if not use_current_mode then
+				mode := principal_stylesheet.rule_manager.mode (mode_name_code)
+			end
+
+			from
+				a_child_iterator := new_axis_iterator (Child_axis)
+				a_child_iterator.start
+			until
+				any_compile_errors or else a_child_iterator.after
+			loop
+				a_sort ?= a_child_iterator.item
+				if a_sort /= Void then
+					do_nothing
+				else
+					a_param ?= a_child_iterator.item
+					if a_param /= Void then
+						do_nothing
+					else
+						a_text ?= a_child_iterator.item
+						if a_text /= Void and then not is_all_whitespace (a_text.string_value) then
+							report_compile_error ("No character data allowed within xsl:apply-templates")
+						elseif a_text = Void then
+							report_compile_error ("Invalid element within xsl:apply-templates")
+						end
+					end
+				end
+				a_child_iterator.forth
+			end
+			if select_expression = Void then
+				create {XM_XPATH_AXIS_EXPRESSION} select_expression.make (Child_axis, Void)
+			end
+			type_check_expression ("select", select_expression)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+			end
+			create a_type_checker
+			create a_role.make (Instruction_role, "xsl:apply-templates/select", 1)
+			create a_node_sequence.make_node_sequence
+			a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
+			if a_type_checker.is_static_type_check_error	then
+				report_compile_error (a_type_checker.static_type_check_error_message)
+			else
+				select_expression := a_type_checker.checked_expression
+			end
 			validated := True
 		end
 
@@ -104,14 +167,20 @@ feature -- Element change
 		do
 			todo ("compile", False)
 		end
-
+	
 feature {NONE} -- Implementation
+
+	mode: XM_XSLT_MODE
+			-- Mode to use
 
 	mode_name_code: INTEGER
 			-- Name code of mode
 
 	use_current_mode: BOOLEAN
 			-- Use current mode
+
+	use_tail_recursion: BOOLEAN
+			-- Use tail recursion
 
 	select_expression: XM_XPATH_EXPRESSION
 			-- Value of 'select' attribute

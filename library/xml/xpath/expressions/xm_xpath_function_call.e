@@ -212,6 +212,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {NONE} -- Implementation
 
+	augmented_argument_count: INTEGER
+			-- Number of secretly added arguments
+
 	check_argument_count (a_minimum_count, a_maximum_count: INTEGER) is
 			-- Check number of arguments
 		require
@@ -227,20 +230,20 @@ feature {NONE} -- Implementation
 				is_type_error := True
 			a_message := STRING_.appended_string ("Function ", name)
 			a_message := STRING_.appended_string (a_message, " must have ")
-			a_message := STRING_.appended_string (a_message, a_minimum_count.out)
-			a_message := STRING_.appended_string (a_message, plural_arguments_text (a_minimum_count))
+			a_message := STRING_.appended_string (a_message, (a_minimum_count - augmented_argument_count).out)
+			a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_minimum_count - augmented_argument_count)))
 			elseif supplied_argument_count < a_minimum_count then
 			is_type_error := True
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at least")
-				a_message := STRING_.appended_string (a_message, a_minimum_count.out)
-				a_message := STRING_.appended_string (a_message, plural_arguments_text (a_minimum_count))
+				a_message := STRING_.appended_string (a_message, (a_minimum_count - augmented_argument_count).out)
+				a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_minimum_count - augmented_argument_count)))
 			elseif a_maximum_count > -1 and supplied_argument_count > a_maximum_count then
 			is_type_error := True
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at most")
-				a_message := STRING_.appended_string (a_message, a_maximum_count.out)
-				a_message := STRING_.appended_string (a_message, plural_arguments_text (a_maximum_count))
+				a_message := STRING_.appended_string (a_message, (a_maximum_count - augmented_argument_count).out)
+				a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_maximum_count - augmented_argument_count)))
 			end
 			if is_type_error then
 				set_last_error_from_string (a_message, 17, Static_error)
@@ -266,5 +269,6 @@ feature {NONE} -- Implementation
 invariant
 
 	arguments: arguments /= Void and then arguments.equality_tester.is_equal (expression_tester)
+	augmented_argument_count: augmented_argument_count = 0 or else augmented_argument_count = 1
 
 end

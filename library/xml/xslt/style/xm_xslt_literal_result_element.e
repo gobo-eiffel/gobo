@@ -16,12 +16,20 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, validate_children
+			validate, validate_children, may_contain_template_body
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
 
 feature -- Element change
 
@@ -72,17 +80,70 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_name_pool: XM_XPATH_NAME_POOL
+			an_element_uri_code, a_namespace_code: INTEGER
+			a_stylesheet: XM_XSLT_STYLESHEET
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			an_xml_prefix, a_uri: STRING
+			a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 		do
-			todo ("validate", False)
+			result_name_code := name_code
+			a_name_pool := document.name_pool
+			an_element_uri_code := a_name_pool.uri_code_from_name_code (result_name_code)
+			if is_top_level then
+				validate_top_level_element (an_element_uri_code)
+			else
+				a_stylesheet := principal_stylesheet
+				
+				-- Build the list of output namespace nodes
+				
+				if should_namespaces_be_omitted (an_element_uri_code, a_name_pool) then
+					create namespace_codes.make (0)
+				else
+					namespace_codes := namespace_codes_in_scope
+					apply_namespace_aliases (an_element_uri_code, a_name_pool, a_stylesheet)
+				end
+				validate_special_attributes
+				establish_attribute_names (a_name_pool, a_stylesheet)
+				remove_excluded_namespaces (a_stylesheet)
+				
+				-- Now translate the list of namespace codes to use `target_name_pool'.
+				
+				create a_namespace_code_list.make (namespace_codes.count - excluded_namespace_count)
+				if namespace_codes.count  > 0 then
+					from
+						a_cursor := namespace_codes.new_cursor
+						a_cursor.start
+					variant
+						namespace_codes.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_namespace_code := a_cursor.item
+						if a_namespace_code /= -1 then
+							an_xml_prefix := document.name_pool.prefix_from_namespace_code (a_namespace_code)
+							a_uri := document.name_pool.uri_from_namespace_code (a_namespace_code)
+							if target_name_pool.is_namespace_code_allocated (an_xml_prefix, a_uri) then
+								a_namespace_code := target_name_pool.namespace_code (an_xml_prefix, a_uri)
+							else
+								target_name_pool.allocate_namespace_code (an_xml_prefix, a_uri)
+								a_namespace_code := target_name_pool.last_namespace_code
+							end
+							a_namespace_code_list.put_last (a_namespace_code)
+						end
+						a_cursor.forth
+					end
+				end
+				namespace_code_list := a_namespace_code_list
+			end
 			validated := True
 		end
 
 		validate_children is
 			-- Validate the children of this node, recursively.
 		do
-			if not top_level then
+			if not is_top_level then
 				Precursor
 			end
 		end
@@ -96,10 +157,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	top_level: BOOLEAN
-			-- Is `Current' a top-level element?
-
-			-- The next three lists constitute a triple:
+	-- The next three lists constitute a triple:
 
 	attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes for non-XSLT attributes
@@ -109,6 +167,14 @@ feature {NONE} -- Implementation
 	
 	attribute_clean_flags: DS_ARRAYED_LIST [BOOLEAN]
 			-- Flags for non-XSLT attributes indicating whether they are clean for XML output
+
+	result_name_code: INTEGER
+			-- Name code for the resulting output (after namespace-aliasing is taken into account)
+
+	namespace_codes: DS_ARRAYED_LIST [INTEGER]
+
+	validation: INTEGER
+			-- Validation level
 
 	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `an_expression' guarenteed free of special characters?
@@ -149,9 +215,245 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	validate_top_level_element (an_element_uri_code: INTEGER) is
+			-- Validate a top-level LRE.
+		require
+			top_level_element: is_top_level
+		do
+
+			-- A top-level element can never be a "real" literal result element,
+			-- but this class gets used for unknown elements found at the top level
+
+			if an_element_uri_code = 0 then
+				report_compile_error ("Top level elements must have a non-null namespace URI")
+			end
+		end
+
+	should_namespaces_be_omitted (an_element_uri_code: INTEGER; a_name_pool: XM_XPATH_NAME_POOL): BOOLEAN is
+			-- Should namespaces be omitted on output?
+		require
+			not_top_level: not is_top_level
+			positive_uri_code: an_element_uri_code >= 0
+			name_pool_not_void: a_name_pool /= Void
+		local
+			a_literal_result_element: XM_XSLT_LITERAL_RESULT_ELEMENT
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+
+			-- If this LRE has a parent that is also an LRE,
+			--  and if this LRE has no namespace declarations
+			--  and if this element name is in the same namespace as its parent,
+			--  and if there are no attributes in a non-null namespace,
+			--  then we don't need to output any namespace declarations to the result.
+
+			a_literal_result_element ?= parent
+			if a_literal_result_element /= Void and then
+				namespace_code_list.count = 0 and then
+				an_element_uri_code = a_name_pool.uri_code_from_name_code (parent.fingerprint) then
+				Result := True
+			end
+
+			if Result then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					if a_name_pool.prefix_from_name_code (a_cursor.item).count > 0 then
+						Result := False
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
+				end
+			end
+		end
+
+	apply_namespace_aliases (an_element_uri_code: INTEGER; a_name_pool: XM_XPATH_NAME_POOL; a_stylesheet: XM_XSLT_STYLESHEET) is
+			-- Apply any aliases required to create the list of output namespaces.
+		require
+			not_top_level: not is_top_level
+			positive_uri_code: an_element_uri_code >= 0
+			name_pool_not_void: a_name_pool /= Void
+			stylesheet_not_void: a_stylesheet /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_source_uri_code, a_namespace_alias_code: INTEGER
+			an_xml_prefix: STRING
+			a_uri_code: INTEGER
+		do
+			if a_stylesheet.has_namespace_aliases then
+				from
+					a_cursor := namespace_codes.new_cursor
+					a_cursor.start
+				variant
+					namespace_codes.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_source_uri_code := uri_code_from_namespace_code (a_cursor.item)
+					a_namespace_alias_code := a_stylesheet.namespace_alias (a_source_uri_code)
+					if a_namespace_alias_code /= -1 and then uri_code_from_namespace_code (a_namespace_alias_code) /= a_source_uri_code then
+						a_cursor.replace (a_namespace_alias_code)
+					end
+					a_cursor.forth
+				end
+				
+				-- Determine if there is an alias for the namespace of the element name.
+				
+				a_namespace_alias_code := a_stylesheet.namespace_alias (an_element_uri_code)
+				if a_namespace_alias_code /= -1 then
+					a_uri_code := uri_code_from_namespace_code (a_namespace_alias_code)
+					an_xml_prefix := a_name_pool.prefix_from_namespace_code (a_namespace_alias_code)
+					if a_uri_code /= an_element_uri_code then
+						if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, local_part) then
+							result_name_code := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), local_part)
+						else
+							a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, local_part)
+							result_name_code := a_name_pool.last_name_code
+						end
+					end
+				end
+			end
+		end
+
+	validate_special_attributes is
+			-- Validate special attributes.
+		local
+			a_use_attribute_sets_attribute, a_type_attribute, a_validation_attribute: STRING
+		do
+			a_use_attribute_sets_attribute := attribute_value (Xslt_use_attribute_sets_type_code)
+			if a_use_attribute_sets_attribute /= Void then
+				todo ("validate_special_attributes", True)
+			end
+			a_type_attribute := attribute_value (Xslt_type_type_code)
+			if a_type_attribute /= Void then
+				report_compile_error ("The xsl:type attribute is available only with a schema-aware XSLT processor")
+			end
+			validation := Validation_strict
+			a_validation_attribute := attribute_value (Xslt_validation_type_code)
+			if a_validation_attribute /= Void then
+				validation := validation_code (a_validation_attribute)
+				if validation /= Validation_strict then
+					report_compile_error ("To perform validation, a schema-aware XSLT processor is needed")
+				end
+			else
+				validation := containing_stylesheet.default_validation
+			end
+		end
+
+	establish_attribute_names (a_name_pool: XM_XPATH_NAME_POOL; a_stylesheet: XM_XSLT_STYLESHEET) is
+			-- Establish the names to be used for all the output attributes.
+			-- Also type-check the AVT expressions
+		require
+			name_pool_not_void: a_name_pool /= Void
+			stylesheet_not_void: a_stylesheet /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			an_alias, a_uri_code, another_uri_code, a_namespace_code: INTEGER
+			an_xml_prefix, a_local_name: STRING
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			from
+				a_cursor := attribute_name_codes.new_cursor
+				a_cursor.start
+			variant
+				attribute_name_codes.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				an_alias := a_cursor.item
+				a_uri_code := a_name_pool.uri_code_from_name_code (an_alias)
+				if a_uri_code /= 0 then -- attribute has a namespace prefix
+					a_namespace_code := a_stylesheet.namespace_alias (a_uri_code)
+					another_uri_code := uri_code_from_namespace_code (a_namespace_code)
+					if a_namespace_code /= -1 and then another_uri_code /= a_uri_code then
+						a_uri_code := another_uri_code
+						an_xml_prefix := a_name_pool.prefix_from_namespace_code (a_namespace_code)
+						a_local_name := a_name_pool.local_name_from_name_code (a_cursor.item)
+						if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name) then
+							an_alias := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_local_name)
+						else
+							a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+							an_alias := a_name_pool.last_name_code
+						end
+					end
+				end
+				translate (an_alias)
+				a_cursor.replace (last_translated_name_code)
+				an_expression := attribute_values.item (a_cursor.index)
+				type_check_expression (a_name_pool.display_name_from_name_code (an_alias), an_expression)
+				if an_expression.was_expression_replaced then
+				 attribute_values.replace (an_expression.replacement_expression, a_cursor.index)
+				end
+				a_cursor.forth
+			end
+		end
+
+	last_translated_name_code: INTEGER
+			-- Last name-code translated by `translate'
+
+	translate (a_name_code: INTEGER) is
+			-- Translate a namecode in the stylesheet namepool to a namecode in the target namepool.
+		require
+			valid_name_code: document.name_pool.is_valid_name_code (a_name_code)
+		local
+			an_xml_prefix, a_uri, a_local_name: STRING
+		do
+			an_xml_prefix := document.name_pool.prefix_from_name_code (a_name_code)
+			a_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
+			a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
+			if target_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+				last_translated_name_code := target_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+			else
+				target_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+				last_translated_name_code := target_name_pool.last_name_code
+			end
+		ensure
+			last_translated_name_code_is_valid: target_name_pool.is_valid_name_code (last_translated_name_code)
+		end
+
+	excluded_namespace_count: INTEGER
+			-- Number of namespaces excluded
+
+	remove_excluded_namespaces (a_stylesheet: XM_XSLT_STYLESHEET) is
+			-- Remove any namespace that is on the exclude-result-prefixes list,
+			--  unless it is the namespace of the element or an attribute.
+		require
+			no_namespaces_excluded_yet: excluded_namespace_count = 0
+			stylesheet_not_void: a_stylesheet /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_uri_code: INTEGER
+		do
+			from
+				a_cursor := namespace_codes.new_cursor
+				a_cursor.start
+			variant
+				namespace_codes.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_uri_code := uri_code_from_namespace_code (a_cursor.item)
+				if is_excluded_namespace (a_uri_code) and then
+					not a_stylesheet.is_alias_result_namespace (a_uri_code) then
+
+					-- Exclude it from the output namespace list.
+
+					namespace_codes.replace (-1, a_cursor.index)
+					excluded_namespace_count := excluded_namespace_count + 1
+				end
+				a_cursor.forth
+			end
+		end
+
 invariant
 
 	attribute_lists_not_void: attributes_prepared implies attribute_name_codes /= Void and attribute_values /= Void and attribute_clean_flags /= Void
 	attribute_lists_consistent_length: attributes_prepared implies attribute_name_codes.count = attribute_values.count and attribute_values.count = attribute_clean_flags.count
+	positive_excluded_namespace_count: excluded_namespace_count >= 0
 
 end

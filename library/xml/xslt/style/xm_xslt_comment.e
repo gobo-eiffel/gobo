@@ -63,7 +63,13 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		do
-			todo ("validate", False)
+			if select_expression /= Void and then not select_expression.is_error then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+			end
+			check_within_template
 			Precursor
 			validated := True
 		end

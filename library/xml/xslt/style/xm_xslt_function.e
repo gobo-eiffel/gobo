@@ -16,11 +16,20 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, may_contain_template_body
 		end
 
 		-- TODO XM_XSLT_FUNCTION_SIGNATURE
 
+	XM_XSLT_PROCEDURE
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
 
 feature -- Element change
 

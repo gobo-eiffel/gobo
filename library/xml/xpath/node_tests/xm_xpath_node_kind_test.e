@@ -36,8 +36,10 @@ feature {NONE} -- Initialization
 				node_kind
 			when Document_node then
 				original_text := "/"
-			when Element_node, Attribute_node then
-				original_text := "*"
+			when Element_node then
+				original_text := "element()"
+			when Attribute_node then
+				original_text := "attribute()"
 			when Comment_node then
 				original_text := "comment()"
 			when Text_node then
@@ -109,7 +111,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		node_kind: INTEGER
+	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
 

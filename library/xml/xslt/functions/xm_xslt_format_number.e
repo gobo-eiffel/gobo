@@ -19,6 +19,8 @@ inherit
 			pre_evaluate, check_arguments, evaluate_as_string, evaluate_item
 		end
 
+	XM_UNICODE_CHARACTERS_1_1
+
 creation
 
 	make
@@ -88,8 +90,42 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
+		local
+			a_string_value: XM_XPATH_STRING_VALUE
+			a_qname: STRING
 		do
-			todo ("check_arguments", False)
+			Precursor (a_context)
+			a_string_value ?= arguments.item (2)
+			if a_string_value /= Void then
+
+				-- picture is known statically - optimize for this common case
+
+				picture := a_string_value.string_value
+			end
+			if arguments.count = 3 then
+				a_string_value ?= arguments.item (3)
+				if a_string_value /= Void then
+
+					-- common case, decimal format name is supplied as a string literal
+					
+					a_qname := a_string_value.string_value
+					if is_qname (a_qname) then
+						todo ("check_arguments", True)
+					else
+						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"), 0, Static_error)
+					end
+				else
+					
+					-- we need to save the namespace context
+
+					todo ("check_arguments", True)
+				end
+			else
+
+				-- two arguments only: it uses the default decimal format
+
+					todo ("check_arguments", True)
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -99,6 +135,11 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			set_cardinality_exactly_one
 		end
+
+feature {NONE} -- Implementation
+
+	picture: STRING
+			-- Picture, when statically known
 
 end
 	

@@ -2,6 +2,10 @@
 
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 
+ xmlns:gexslt="http://www.gobosoft.com/gexslt/eiffel-type"
+
+ gexslt:explain="no"
+
  version="2.0"
 
 >
@@ -12,9 +16,9 @@
 
 
 
-<xsl:key name="authkey" match="ITEM" use="AUTHOR"/>
+<xsl:key name="authkey" match="ITEM" use="AUTHOR" gexslt:explain="no" />
 
-<xsl:key name="codekey" match="CATEGORY" use="@CODE"/>
+<xsl:key name="codekey" match="CATEGORY" use="@CODE" gexslt:explain="no" />
 
 
 

@@ -17,7 +17,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-		make_style_element, validate
+			make_style_element, validate, may_contain_template_body
 		end
 
 feature {NONE} -- Initialization
@@ -31,6 +31,13 @@ feature {NONE} -- Initialization
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 		end
 
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
 
 feature -- Element change
 	
@@ -38,13 +45,35 @@ feature -- Element change
 			-- Check that the stylesheet element is valid
 		local
 			a_message: STRING
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_node: XM_XPATH_NODE
 		do
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.appended_string ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
 				report_compile_error (a_message)
 			else
-				todo ("validate", True)
+				a_child_iterator := new_axis_iterator (Child_axis)
+				a_child_iterator.start
+				if select_expression = Void then
+					if a_child_iterator.after then
+
+						-- No select attribute and no children
+
+						create {XM_XPATH_STRING_VALUE} select_expression.make ("")
+					else
+						a_node := a_child_iterator.item
+						a_child_iterator.forth
+						if a_child_iterator.after then
+
+							-- Exactly one child node - optimize if it is a text node
+
+							if a_node.node_type = Text_node then
+								create {XM_XPATH_STRING_VALUE} select_expression.make (a_node.string_value)
+							end
+						end
+					end
+				end
 			end
 		end	
 

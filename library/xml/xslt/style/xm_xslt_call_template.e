@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, post_validate
+			make_style_element, validate, post_validate, returned_item_type, mark_tail_calls, may_contain_template_body
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -32,6 +32,22 @@ feature {NONE} -- Initialization
 		do
 			is_instruction := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+		end
+
+feature -- Status report
+
+	may_contain_template_body: BOOLEAN is
+			-- Is `Current' allowed to contain a template-body?
+		do
+			Result := True
+		end
+
+feature -- Status setting
+
+	mark_tail_calls is
+			-- Mark tail-recursive calls on templates and functions.
+		do
+			use_tail_recursion := True
 		end
 
 feature -- Element change
@@ -66,11 +82,15 @@ feature -- Element change
 				report_absence ("name")
 			else
 				called_template_name := a_name_attribute
-				generate_name_code (a_name_attribute)
-				if last_generated_name_code = -1 then
-					report_compile_error (STRING_.appended_string (a_name_attribute, " is not a recognised QName"))
+				if is_qname (a_name_attribute) then
+					generate_name_code (a_name_attribute)
+					if last_generated_name_code = -1 then
+						report_compile_error (STRING_.appended_string (a_name_attribute, " is not a recognised QName"))
+					end
+					called_template_fingerprint := last_generated_name_code
+				else
+					report_compile_error (STRING_.appended_string ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute))
 				end
-				called_template_fingerprint := last_generated_name_code
 			end
 			attributes_prepared := True
 		end
@@ -80,7 +100,8 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		do
-			todo ("validate", False)
+			check_within_template
+			check_only_with_parameter_content
 			validated := True
 		end
 
@@ -97,8 +118,26 @@ feature -- Element change
 		do
 			todo ("compile", False)
 		end
+	
+feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
+
+	returned_item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of item returned by this instruction
+		do
+			if template = Void then
+				Result := any_item
+			else
+				Result := template.returned_item_type
+			end
+		end
 
 feature {NONE} -- Implementation
+
+	template: XM_XSLT_TEMPLATE
+			-- Containing template
+
+	use_tail_recursion: BOOLEAN
+			-- Use tail recursion
 
 	called_template_name: STRING
 			-- Name of called template (for diagnostices)

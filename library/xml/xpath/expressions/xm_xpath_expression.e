@@ -103,6 +103,7 @@ feature -- Status report
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		require
+			no_error: not is_error
 			name_pool_not_void: a_pool /= Void
 		deferred
 		end

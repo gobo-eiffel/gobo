@@ -19,6 +19,8 @@ inherit
 			make_style_element, target_name_pool, precedence, process_all_attributes, validate, is_global_variable_declared
 		end
 
+	XM_XSLT_PROCEDURE
+
 	XM_XSLT_STRING_ROUTINES
 
 	XM_XSLT_VALIDATION
@@ -73,6 +75,9 @@ feature -- Access
 	includes_processed: BOOLEAN
 			-- Has import/include processing been performed?
 
+	default_validation: INTEGER
+			-- Default validation
+
 	precedence: INTEGER is
 			-- Import precedence of `Current'
 		do
@@ -83,8 +88,35 @@ feature -- Access
 			end
 		end
 
-	default_validation: INTEGER
-			-- Default validation
+	namespace_alias (a_uri_code: INTEGER): INTEGER is
+			-- Declared namespace alias for a given namespace URI code if there is one.
+			-- If there is more than one, we get the last.
+		local
+			an_index: INTEGER
+		do
+			if not has_namespace_aliases then
+				Result := -1
+			else
+			
+				-- if there are several matches, the last in stylesheet takes priority;
+				-- but the list is in reverse stylesheet order
+				
+				from
+					an_index := 1
+				variant
+					namespace_alias_uri_codes.count + 1 - an_index
+				until
+					an_index > namespace_alias_uri_codes.count
+				loop
+					if a_uri_code = namespace_alias_uri_codes.item (an_index) then
+						Result := namespace_alias_namespace_codes.item (an_index)
+						an_index := namespace_alias_uri_codes.count + 1
+					else
+						an_index := an_index + 1
+					end
+				end
+			end
+		end
 
 feature -- Status report
 
@@ -94,7 +126,48 @@ feature -- Status report
 	indices_built: BOOLEAN
 			-- Have the indices been built?
 
+	has_namespace_aliases: BOOLEAN is
+			-- Have any namespace aliases been declared?
+		do
+			Result := namespace_alias_uri_codes /= Void
+		end
+
+	is_alias_result_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' included in the result-prefix of a namespace-alias?
+		local
+			an_index: INTEGER
+		do
+			if	namespace_alias_namespace_codes /= Void then
+				from
+					an_index := 1
+				variant
+					namespace_alias_namespace_codes.count + 1 - an_index
+				until
+					an_index > namespace_alias_namespace_codes.count
+				loop
+					if a_uri_code = uri_code_from_namespace_code (namespace_alias_namespace_codes.item (an_index)) then
+						Result := True
+						an_index := namespace_alias_namespace_codes.count + 1
+					else
+						an_index := an_index + 1
+					end
+				end
+			end
+		end
+
 feature -- Element change
+
+	allocate_local_slots (a_variable_count: INTEGER) is
+			-- Ensure there is enough space for local variables or parameters in any template.
+		require
+			positive_variable_count: a_variable_count >= 0
+		do
+			if a_variable_count > largest_stack_frame then
+				largest_stack_frame := a_variable_count
+			end
+		ensure
+			no_smaller: largest_stack_frame >= old largest_stack_frame
+		end
 
 	prepare_attributes is
 			-- Set the attribute list for the element.
@@ -302,8 +375,17 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
+		local
+			a_document: XM_XPATH_DOCUMENT
 		do
-			todo ("validate", False)
+			if validation_error_message /= Void then
+				report_compile_error (validation_error_message)
+			else
+				a_document ?= parent
+				if a_document = Void then
+					report_compile_error (STRING_.appended_string (node_name, " must be the outermost element"))
+				end
+			end
 			validated := True
 		end
 
@@ -358,6 +440,9 @@ feature {NONE} -- Implementation
 
 	namespace_alias_namespace_codes: ARRAY [INTEGER]
 			-- Namespace codes for each namespace alias
+
+	largest_stack_frame: INTEGER
+			-- Maximum number of local variables in any template
 
 	build_indices is
 			-- Build indices from selected top-level declarations.
@@ -559,5 +644,6 @@ invariant
 	target_name_pool_not_void: target_name_pool /= Void
 	named_templates_index_not_void: named_templates_index /= Void
 	variables_index_not_void: variables_index /= Void
+	positive_largest_stack_frame: largest_stack_frame >= 0
 
 end
