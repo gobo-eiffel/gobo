@@ -87,6 +87,16 @@ feature -- Access
 			Result := storage.item (position).first
 		end
 
+	key (k: K): K is
+			-- Key associated with `k'
+		require
+			has_k: has (k)
+		do
+			search_position (k)
+			check has_k: valid_cell (storage.item (position)) end
+			Result := storage.item (position).second
+		end
+
 	found_item: G
 			-- Item found by last call to `search'
 --		require
@@ -355,11 +365,23 @@ feature -- Element change
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
 			-- Move cursors `off' when resizing.
+		local
+			current_cell: like dead_cell
 		do
-			if count = capacity then
-				resize (new_capacity (count + 1))
+			unset_found_item
+			search_position (k)
+			current_cell := storage.item (position)
+			if not valid_cell (current_cell) then
+				if count = capacity then
+					resize (new_capacity (count + 1))
+					search_position (k)
+				end
+				!! current_cell.make (v, k)
+				storage.put (current_cell, position)
+				count := count + 1
+			else
+				current_cell.put_first (v)
 			end
-			put (v, k)
 		end
 
 feature -- Removal
@@ -492,6 +514,11 @@ feature {NONE} -- Implementation
 		ensure
 			not_found: not found
 		end
+
+feature {NONE} -- Implementation
+
+	internal_cursor: like new_cursor
+			-- Internal cursor
 
 feature {NONE} -- Cursor movements
 
