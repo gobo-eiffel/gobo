@@ -89,7 +89,7 @@ associated with a given kernel class. They contain a set of
 routines whose first argument is the object that routine should
 be applied to.</p>
 
-<p>There is two typical ways to use the classes described above.
+<p>There are two typical ways to use the classes described above.
 They can be used as <em>mixin</em> classes. This means that a
 given class will inherit from one of these classes to have access
 to its features, as shown below:</p>
@@ -104,10 +104,11 @@ to its features, as shown below:</p>
             {<em>NONE</em>} <em><strong>all</strong></em>
         <em><strong>end</strong></em>
 
-<em><strong>feature</strong></em>
+<em><strong>feature</strong></em> -- Basic operations
 
     <em>do_something</em> <em><strong>is</strong></em>
-            -- ...
+            -- Do something with a character obtained from
+            -- its ASCII code provided as input by the user.
         <em><strong>local</strong></em>
             <em>c</em>: <em>CHARACTER</em>
         <em><strong>do</strong></em>
@@ -116,26 +117,38 @@ to its features, as shown below:</p>
             ...
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>(Note that all features of <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font><font
 color="#008080" size="2" face="Courier New"><em> </em></font>have
 been made secret since this class is inherited for implementation
-only.) The disadvantage of this method is that it rapidly pollute
-the name space in the application classes. As a consequence,
-facility classes are also often used as expanded in local
-entities:</p>
+only.) The disadvantage of this method is that it rapidly pollutes
+the name space in the application classes. A possible way to handle 
+this problem would be to declare facility classes, such as
+<font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, as
+expanded and use them in local variables:  
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
+
+<em><strong>feature</strong></em>
+
+            ...
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
 
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em> <em>FOO</em>
 
-<em><strong>feature</strong></em>
+<em><strong>feature</strong></em> -- Basic operations
 
     <em>do_something</em> <em><strong>is</strong></em>
-            -- ...
+            -- Do something with a character obtained from
+            -- its ASCII code provided as input by the user.
         <em><strong>local</strong></em><em>
-            integer_routines</em>: <em><strong>expanded</strong></em> <em>KL_INTEGER_ROUTINES</em>
+            integer_routines</em>: <em>KL_INTEGER_ROUTINES</em>
             <em>c</em>: <em>CHARACTER</em>
         <em><strong>do</strong></em>
             <em>io</em>.<em>read_integer</em>
@@ -143,7 +156,7 @@ entities:</p>
             ...
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Some Eiffel compilers will even optimized the code above by
@@ -162,17 +175,17 @@ following class will be provided:</p>
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_IMPORTED_INTEGER_ROUTINES</em>
 
-<em><strong>feature</strong></em>
+<em><strong>feature</strong></em> -- Access
 
-    <em>INTEGER_</em> <em><strong>is</strong></em>
+    <em>INTEGER_</em>: <em>KL_INTEGER_ROUTINES <strong>is</strong></em>
             -- Routines that ought to be in class INTEGER
         <em><strong>once</strong></em>
-            !! <em>Result
+            <em><strong>create</strong></em> <em>Result
         </em><em><strong>ensure</strong></em><em>
             integer_routines_not_void</em>:<em> Result </em>/=<em> Void</em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_IMPORTED_INTEGER_ROUTINES</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>and class <font color="#008080"><em><tt>FOO</tt></em></font>
@@ -185,10 +198,11 @@ will become:</p>
 
     <em>KL_IMPORTED_INTEGER_ROUTINES</em>
 
-<em><strong>feature</strong></em>
+<em><strong>feature</strong></em> -- Basic operations
 
     <em>do_something</em> <em><strong>is</strong></em>
-            -- ...
+            -- Do something with a character obtained from
+            -- its ASCII code provided as input by the user.
         <em><strong>local</strong></em><em>
             c</em>: <em>CHARACTER</em>
         <em><strong>do</strong></em>
@@ -197,7 +211,7 @@ will become:</p>
             ...
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>The class name convention <font color="#008080"><em><tt>_IMPORTED_</tt></em></font><em>
@@ -238,7 +252,7 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -248,7 +262,7 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 10 August 1998</font><br>
+            <strong>Last Updated:</strong> 21 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
