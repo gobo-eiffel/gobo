@@ -147,7 +147,7 @@ feature {NONE} -- Constraint validity
 								-- resolving of formal parameters in the constraint.
 							a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
 						else
-							a_constraint := universe.any_type
+							a_constraint := universe.any_class
 						end
 						if not an_actual.conforms_to_type (a_constraint, current_class, current_class, universe) then
 								-- The actual parameter does not conform to the

@@ -223,6 +223,7 @@ feature {NONE} -- Instruction validity
 			an_actual_context: ET_TYPE_CONTEXT
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
+			a_target_type: ET_TYPE
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -231,7 +232,13 @@ feature {NONE} -- Instruction validity
 					-- class of `current_feature' first.
 				expression_checker.check_expression_validity (a_target, universe.any_type, a_class_impl, current_feature, a_class_impl)
 				if not expression_checker.has_fatal_error then
-					create a_context.make (expression_checker.type, expression_checker.context)
+					a_target_type := expression_checker.type
+					if a_target_type = universe.string_type then
+							-- When a manifest string is the target of a call,
+							-- we consider it as non-cat type.
+						a_target_type := universe.string_class
+					end
+					create a_context.make (a_target_type, expression_checker.context)
 					a_class := a_context.base_class (universe)
 					a_class.process (universe.interface_checker)
 					if a_class.has_interface_error then
@@ -259,7 +266,13 @@ feature {NONE} -- Instruction validity
 				if a_feature = Void then
 					expression_checker.check_expression_validity (a_target, universe.any_type, current_class, current_feature, current_class)
 					if not expression_checker.has_fatal_error then
-						create a_context.make (expression_checker.type, expression_checker.context)
+						a_target_type := expression_checker.type
+						if a_target_type = universe.string_type then
+								-- When a manifest string is the target of a call,
+								-- we consider it as non-cat type.
+							a_target_type := universe.string_class
+						end
+						create a_context.make (a_target_type, expression_checker.context)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -342,6 +355,15 @@ feature {NONE} -- Instruction validity
 							error_handler.report_vkcn1a_error (current_class, a_name, a_feature, a_class)
 						else
 							error_handler.report_vkcn1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
+						end
+					elseif a_feature.is_cat then
+						if not a_context.type.is_cat_type (a_context.context, universe) then
+							set_fatal_error
+-- TODO:
+							error_handler.report_error_message ("class " + current_class.name.name + " (" +
+								a_name.position.line.out + "," + a_name.position.column.out +
+								"): cat feature `" + a_name.name + "' applied to target of non-cat type '" +
+								a_context.base_type (universe).to_text + "'")
 						end
 					end
 				end

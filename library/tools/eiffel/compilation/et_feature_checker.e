@@ -170,7 +170,10 @@ feature {NONE} -- Feature validity
 						end
 					end
 				elseif a_constant.is_string_constant then
-					if not a_type.same_named_type (universe.string_class, current_class, current_class, universe) then
+					if
+						not a_type.same_named_type (universe.string_type, current_class, current_class, universe) and
+						not a_type.same_named_type (universe.string_class, current_class, current_class, universe)
+					then
 						set_fatal_error
 						a_class_impl := current_feature.implementation_class
 						if current_class = a_class_impl then

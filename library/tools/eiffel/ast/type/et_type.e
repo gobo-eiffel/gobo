@@ -117,12 +117,47 @@ feature -- Status report
 	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
+			-- (Note that the feature name `is_expanded_type' is
+			-- already the name of a feature in SmartEiffel's GENERAL.)
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
+		end
+
+	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type monomorphic when viewed from
+			-- `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type contain an anchored type
+			-- when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type contain a formal generic parameter
+			-- when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
 		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -519,11 +554,11 @@ feature -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -542,11 +577,11 @@ feature {ET_TYPE} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -564,11 +599,11 @@ feature {ET_TYPE} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -587,11 +622,11 @@ feature {ET_TYPE} -- Conformance
 		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_sgnature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -610,11 +645,11 @@ feature {ET_TYPE} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void

@@ -15,6 +15,9 @@ deferred class ET_LIKE_TYPE
 inherit
 
 	ET_TYPE
+		redefine
+			has_anchored_type
+		end
 
 	HASHABLE
 
@@ -35,6 +38,15 @@ feature -- Access
 			-- Result := Void
 		ensure then
 			no_direct_base_type: Result = Void
+		end
+
+feature -- Status report
+
+	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type contain an anchored type
+			-- when viewed from `a_context' in `a_universe'?
+		do
+			Result := True
 		end
 
 feature {NONE} -- Constants

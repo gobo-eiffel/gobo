@@ -19,6 +19,7 @@ inherit
 			make as make_class_type
 		redefine
 			actual_parameters,
+			unresolved_type,
 			process
 		end
 
@@ -51,6 +52,19 @@ feature -- Access
 
 	actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Actual generic parameters
+
+	unresolved_type: ET_CLASS_TYPE
+			-- Type from which current type is a resolved version
+
+feature -- Setting
+
+	set_unresolved_type (a_type: like unresolved_type) is
+			-- Set `origin_type' to `a_type'.
+		do
+			unresolved_type := a_type
+		ensure
+			unresolved_type_set: unresolved_type = a_type
+		end
 
 feature -- Processing
 

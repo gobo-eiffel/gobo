@@ -18,6 +18,8 @@ inherit
 		redefine
 			named_type,
 			name, is_formal_type,
+			has_anchored_type,
+			has_formal_type,
 			has_qualified_type,
 			same_syntactical_bit_type,
 			same_syntactical_class_type,
@@ -237,8 +239,113 @@ feature -- Status report
 	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
 		do
-			-- Result := False
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.is_type_expanded (a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type monomorphic when viewed from
+			-- `a_context' in `a_universe'?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.is_cat_type (a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type contain an anchored type
+			-- when viewed from `a_context' in `a_universe'?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.has_anchored_type (a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type contain a formal generic parameter
+			-- when viewed from `a_context' in `a_universe'?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := True
+				else
+					Result := an_actual.has_formal_type (a_context.root_context, a_universe)
+				end
+			end
 		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

@@ -358,7 +358,7 @@ feature {NONE} -- Expression validity
 				an_arguments.process (Current)
 			end
 
-			type := universe.none_class
+			type := universe.none_type
 			context := current_class
 		end
 
@@ -404,6 +404,11 @@ feature {NONE} -- Expression validity
 					-- class of `current_feature' first.
 				check_expression_validity (a_target, universe.any_type, a_class_impl, current_feature, a_class_impl)
 				if not has_fatal_error then
+					if type = universe.string_type then
+							-- When a manifest string is the target of a call,
+							-- we consider it as non-cat type.
+						type := universe.string_class
+					end
 					create a_context.make (type, context)
 					a_class := a_context.base_class (universe)
 					a_class.process (universe.interface_checker)
@@ -432,6 +437,11 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					check_expression_validity (a_target, universe.any_type, current_class, current_feature, current_class)
 					if not has_fatal_error then
+						if type = universe.string_type then
+								-- When a manifest string is the target of a call,
+								-- we consider it as non-cat type.
+							type := universe.string_class
+						end
 						create a_context.make (type, context)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
@@ -573,6 +583,16 @@ feature {NONE} -- Expression validity
 						else
 							type := a_type
 							context := a_context
+						end
+						if a_feature.is_cat then
+							if not a_context.type.is_cat_type (a_context.context, universe) then
+								set_fatal_error
+-- TODO:
+								error_handler.report_error_message ("class " + current_class.name.name + " (" +
+									a_name.position.line.out + "," + a_name.position.column.out +
+									"): cat feature `" + a_name.name + "' applied to target of non-cat type '" +
+									a_context.base_type (universe).to_text + "'")
+							end
 						end
 					end
 				end
@@ -1062,29 +1082,32 @@ feature {NONE} -- Expression validity
 				left_context := context
 				check_expression_validity (an_expression.right, universe.any_type, current_class, current_feature, current_class)
 				if not has_fatal_error then
-					right_type := type
-					right_context := context
-					if left_type.conforms_to_type (right_type, right_context, left_context, universe) then
-						-- OK.
-					elseif right_type.conforms_to_type (left_type, left_context, right_context, universe) then
-						-- OK.
-					elseif left_type.same_named_type (universe.none_class, current_class, left_context, universe) then
-						-- OK.
-					elseif right_type.same_named_type (universe.none_class, current_class, right_context, universe) then
-						-- OK.
-					elseif left_type.convertible_to_type (right_type, right_context, left_context, universe) then
-						-- OK.
-					elseif right_type.convertible_to_type (left_type, left_context, right_context, universe) then
-						-- OK.
-					else
-						left_named_type := left_type.named_type (left_context, universe)
-						right_named_type := right_type.named_type (right_context, universe)
-						a_class_impl := current_feature.implementation_class
-						set_fatal_error
-						if a_class_impl = current_class then
-							error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
+					if not universe.cat_enabled then
+							-- This rule is too constraining when checking CAT-calls.
+						right_type := type
+						right_context := context
+						if left_type.conforms_to_type (right_type, right_context, left_context, universe) then
+							-- OK.
+						elseif right_type.conforms_to_type (left_type, left_context, right_context, universe) then
+							-- OK.
+						elseif left_type.same_named_type (universe.none_type, current_class, left_context, universe) then
+							-- OK.
+						elseif right_type.same_named_type (universe.none_type, current_class, right_context, universe) then
+							-- OK.
+						elseif left_type.convertible_to_type (right_type, right_context, left_context, universe) then
+							-- OK.
+						elseif right_type.convertible_to_type (left_type, left_context, right_context, universe) then
+							-- OK.
 						else
-							error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
+							left_named_type := left_type.named_type (left_context, universe)
+							right_named_type := right_type.named_type (right_context, universe)
+							a_class_impl := current_feature.implementation_class
+							set_fatal_error
+							if a_class_impl = current_class then
+								error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
+							else
+								error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
+							end
 						end
 					end
 					if not has_fatal_error then
@@ -1256,8 +1279,26 @@ feature {NONE} -- Expression validity
 			-- Check validity of `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
+		local
+			a_literal: STRING
 		do
-			type := universe.integer_class
+			a_literal := a_constant.literal
+			inspect a_literal.count
+			when 4 then
+					-- 0[xX][a-fA-F0-9]{2}
+				type := universe.integer_8_class
+			when 6 then
+					-- 0[xX][a-fA-F0-9]{4}
+				type := universe.integer_16_class
+			when 10 then
+					-- 0[xX][a-fA-F0-9]{8}
+				type := universe.integer_class
+			when 18 then
+					-- 0[xX][a-fA-F0-9]{16}
+				type := universe.integer_64_class
+			else
+				type := universe.integer_class
+			end
 			context := current_class
 		end
 
@@ -1288,6 +1329,7 @@ feature {NONE} -- Expression validity
 			an_array_type: ET_CLASS_TYPE
 			an_array_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_array_parameter: ET_TYPE
+			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 		do
 			array_class := universe.array_class
 			an_array_type ?= current_target_type.named_type (current_target_context, universe)
@@ -1345,7 +1387,9 @@ feature {NONE} -- Expression validity
 					else
 						create an_actuals.make_with_capacity (1)
 						an_actuals.put_first (a_type)
-						create {ET_GENERIC_CLASS_TYPE} type.make (Void, array_class.name, an_actuals, array_class)
+						create a_generic_class_type.make (Void, array_class.name, an_actuals, array_class)
+						a_generic_class_type.set_cat_keyword (universe.array_any_type.cat_keyword)
+						type := a_generic_class_type
 					end
 					context := current_class
 				end
@@ -1468,9 +1512,21 @@ feature {NONE} -- Expression validity
 			-- Check validity of `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
+		local
+			a_class_type: ET_CLASS_TYPE
+			a_class: ET_CLASS
 		do
 			type := universe.integer_class
 			context := current_class
+			a_class_type ?= current_target_type.named_type (current_target_context, universe)
+			if a_class_type /= Void then
+				a_class := a_class_type.direct_base_class (universe)
+				if a_class = universe.integer_8_class then
+					type := a_class
+				elseif a_class = universe.integer_16_class then
+					type := a_class
+				end
+			end
 		end
 
 	check_regular_manifest_string_validity (a_string: ET_REGULAR_MANIFEST_STRING) is
@@ -1478,7 +1534,7 @@ feature {NONE} -- Expression validity
 		require
 			a_string_not_void: a_string /= Void
 		do
-			type := universe.string_class
+			type := universe.string_type
 			context := current_class
 		end
 
@@ -1530,7 +1586,7 @@ feature {NONE} -- Expression validity
 		require
 			a_string_not_void: a_string /= Void
 		do
-			type := universe.string_class
+			type := universe.string_type
 			context := current_class
 		end
 
@@ -1782,9 +1838,21 @@ feature {NONE} -- Expression validity
 			-- Check validity of `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
+		local
+			a_class_type: ET_CLASS_TYPE
+			a_class: ET_CLASS
 		do
 			type := universe.integer_class
 			context := current_class
+			a_class_type ?= current_target_type.named_type (current_target_context, universe)
+			if a_class_type /= Void then
+				a_class := a_class_type.direct_base_class (universe)
+				if a_class = universe.integer_8_class then
+					type := a_class
+				elseif a_class = universe.integer_16_class then
+					type := a_class
+				end
+			end
 		end
 
 	check_underscored_real_constant_validity (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
@@ -1801,7 +1869,7 @@ feature {NONE} -- Expression validity
 		require
 			a_string_not_void: a_string /= Void
 		do
-			type := universe.string_class
+			type := universe.string_type
 			context := current_class
 		end
 

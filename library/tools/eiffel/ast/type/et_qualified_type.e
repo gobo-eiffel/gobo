@@ -251,6 +251,43 @@ feature -- Status report
 			end
 		end
 
+	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type monomorphic when viewed from
+			-- `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			a_target_type: ET_TYPE
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				-- Result := False
+			else
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						create a_target_context.make (a_target_type, a_context)
+						Result := a_query_type.is_cat_type (a_target_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						-- Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					-- Result := False
+				end
+			end
+		end
+
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type a formal parameter when viewed from
 			-- `a_context', or if it is a qualified type is its

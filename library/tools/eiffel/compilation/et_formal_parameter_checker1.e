@@ -426,7 +426,7 @@ feature {NONE} -- Constraint cycles
 					set_fatal_error
 					error_handler.report_giaah_error
 				else
-					any_type := universe.any_type
+					any_type := universe.any_class
 					a_parameters_count := a_parameters.count
 					a_sorted_formals := direct_formal_parameter_sorter.sorted_items
 					nb := a_sorted_formals.count

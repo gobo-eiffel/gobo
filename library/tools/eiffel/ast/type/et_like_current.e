@@ -140,6 +140,15 @@ feature -- Status report
 			Result := a_context.base_class (a_universe).is_expanded
 		end
 
+	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type monomorphic when viewed from
+			-- `a_context' in `a_universe'?
+		do
+				-- Unless we can declare the base class as frozen,
+				-- 'like Current' is not monomorphic.
+			Result := True
+		end
+
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type a qualified anchored type (other than of
 			-- the form 'like Current.b') when viewed from `a_context',

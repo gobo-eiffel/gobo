@@ -34,6 +34,13 @@ feature -- Status report
 			Result := True
 		end
 
+	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type monomorphic when viewed from
+			-- `a_context' in `a_universe'?
+		do
+			Result := True
+		end
+
 feature -- Access
 
 	bit_keyword: ET_IDENTIFIER
@@ -219,11 +226,11 @@ feature -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		do
 			if other = Current then
 				Result := True
@@ -238,11 +245,11 @@ feature {NONE} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		do
 			if other = Current then
 				Result := True

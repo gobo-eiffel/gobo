@@ -22,6 +22,9 @@ inherit
 			resolved_syntactical_constraint
 		end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 feature -- Access
 
 	type: ET_CONSTRAINT_TYPE is
