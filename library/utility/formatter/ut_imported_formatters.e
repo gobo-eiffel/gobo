@@ -5,8 +5,9 @@ indexing
 		"Formatting routines"
 
 	library:    "Gobo Eiffel Utility Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -30,6 +31,15 @@ feature -- Access
 			!! Result
 		ensure
 			character_formatter_not_void: Result /= Void
+		end
+
+	BOOLEAN_FORMATTER_: UT_BOOLEAN_FORMATTER is
+			-- Formatting routines that ought
+			-- to be in class BOOLEAN
+		once
+			!! Result
+		ensure
+			boolean_formatter_not_void: Result /= Void
 		end
 
 	STRING_FORMATTER_: UT_STRING_FORMATTER is
