@@ -39,6 +39,7 @@ feature -- Execution
 			an_xace_ast_factory: ET_XACE_AST_FACTORY
 			an_eiffel_ast_factory: ET_DECORATED_AST_FACTORY
 			an_xace_variables: ET_XACE_VARIABLES
+			a_null_error_handler: ET_NULL_ERROR_HANDLER
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
 			i, nb: INTEGER
@@ -60,6 +61,8 @@ feature -- Execution
 					is_flat := True
 				elseif equal (arg, "--compile") then
 					do_compile := True
+				elseif equal (arg, "--no_output") then
+					no_output := True
 				elseif i = nb then
 					a_filename := arg
 				else
@@ -89,8 +92,16 @@ feature -- Execution
 							create an_eiffel_ast_factory.make
 							an_eiffel_ast_factory.set_keep_all_breaks (True)
 							an_xace_parser.set_eiffel_ast_factory (an_eiffel_ast_factory)
+							if no_output then
+								create a_null_error_handler.make_standard
+								an_xace_parser.set_eiffel_error_handler (a_null_error_handler)
+							end
 						else
 							create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
+							if no_output then
+								create a_null_error_handler.make_standard
+								an_xace_parser.set_eiffel_error_handler (a_null_error_handler)
+							end
 						end
 						an_xace_parser.parse_file (a_file)
 						a_file.close
@@ -104,6 +115,15 @@ feature -- Execution
 							create an_eiffel_ast_factory.make
 							an_eiffel_ast_factory.set_keep_all_breaks (True)
 							a_lace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
+							if no_output then
+								create a_null_error_handler.make_standard
+								a_lace_ast_factory.set_error_handler (a_null_error_handler)
+							end
+							create a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
+						elseif no_output then
+							create a_lace_ast_factory.make
+							create a_null_error_handler.make_standard
+							a_lace_ast_factory.set_error_handler (a_null_error_handler)
 							create a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
 						else
 							create a_lace_parser.make (a_lace_error_handler)
@@ -137,6 +157,7 @@ feature -- Status report
 	is_forget: BOOLEAN
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
+	no_output: BOOLEAN
 			-- Command-line options
 
 feature {NONE} -- Processing
