@@ -141,8 +141,10 @@ feature -- Execution
 				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
 				cmd.append_string (a_filename)
 				project.trace ("  [ve] " + cmd + "%N")
-				file_system.delete_file ("Result.out")
-				execute_shell (cmd)
+				if not project.no_exec then
+					file_system.delete_file ("Result.out")
+					execute_shell (cmd)
+				end
 			elseif is_tunable then
 				execute_tuner
 			else
@@ -228,7 +230,9 @@ feature -- Execution
 				else
 					project.trace ("  [ve] delete Result.out%N")
 				end
-				file_system.delete_file ("Result.out")
+				if not project.no_exec then
+					file_system.delete_file ("Result.out")
+				end
 			end
 			if file_system.file_exists ("vec.xcp") then
 				if recursive_clean then
@@ -236,7 +240,9 @@ feature -- Execution
 				else
 					project.trace ("  [ve] delete vec.xcp%N")
 				end
-				file_system.delete_file ("vec.xcp")
+				if not project.no_exec then
+					file_system.delete_file ("vec.xcp")
+				end
 			end
 			if recursive_clean then
 				!! a_dir.make (old_cwd)

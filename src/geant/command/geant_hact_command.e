@@ -161,14 +161,16 @@ feature -- Execution
 				cmd := clone ("fish")
 				project.trace ("  [hact] " + cmd + "%N")
 				execute_shell (cmd)
-				if exit_code = 0 then
-					a_filename := system_name + file_system.exe_extension
-					if not file_system.file_exists (a_filename) then
-						exit_code := -1
-					elseif not finalize then
-						a_filename := system_name + ".h2o"
+				if not project.no_exec then
+					if exit_code = 0 then
+						a_filename := system_name + file_system.exe_extension
 						if not file_system.file_exists (a_filename) then
-							exit_code := -2
+							exit_code := -1
+						elseif not finalize then
+							a_filename := system_name + ".h2o"
+							if not file_system.file_exists (a_filename) then
+								exit_code := -2
+							end
 						end
 					end
 				end
@@ -186,12 +188,16 @@ feature -- Execution
 			a_name := clean + "_gen"
 			if file_system.directory_exists (a_name) then
 				project.trace ("  [hact] delete " + a_name + "%N")
-				file_system.recursive_delete_directory (a_name)
+				if not project.no_exec then
+					file_system.recursive_delete_directory (a_name)
+				end
 			end
 			a_name := clean + ".eif"
 			if file_system.file_exists (a_name) then
 				project.trace ("  [hact] delete " + a_name + "%N")
-				file_system.delete_file (a_name)
+				if not project.no_exec then
+					file_system.delete_file (a_name)
+				end
 			end
 		end
 

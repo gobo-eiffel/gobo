@@ -74,7 +74,9 @@ feature -- Execution
 			-- Put variable in project variables pool.
 		do
 			project.trace ("  [setenv] " + name + "=" + value + "%N")
-			Execution_environment.set_variable_value (name, value)
+			if not project.no_exec then
+				Execution_environment.set_variable_value (name, value)
+			end
 			exit_code := 0
 		end
 
