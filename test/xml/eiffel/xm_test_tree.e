@@ -133,6 +133,45 @@ feature
 			assert_ns_element ("uri1", "doc")
 			assert_last
 		end
+	
+	test_build_with_add is
+			-- Build simple tree and use addition routine(s).
+		local
+			a_namespace: XM_NAMESPACE
+			a_doc: XM_DOCUMENT
+			an_element: XM_ELEMENT
+			a_sub: XM_ELEMENT
+		do
+			create a_namespace.make ("", "uri1")
+			create a_doc.make
+			create an_element.make (a_doc, "doc", a_namespace)
+			a_doc.set_root_element (an_element)
+			an_element.add_unqualified_attribute ("attr1", "v1") 
+			an_element.add_attribute ("attr2", a_namespace, "v2")
+			
+			create a_sub.make_last (an_element, "child", a_namespace)
+			an_element.add_unqualified_attribute ("attr3", "v3")
+			
+			create typer
+			node := a_doc
+			
+			assert_document
+			go_down
+			assert_first
+			assert_ns_element ("uri1", "doc")
+			go_down
+			assert_first
+			-- out of order attribute at the start
+			assert_attribute ("attr3", "v3")
+			go_next
+			assert_attribute ("attr1", "v1")
+			go_next
+			assert_ns_attribute ("uri1", "attr2", "v2")
+			go_next
+			assert_ns_element ("uri1", "child")
+			assert_last
+			go_up
+		end
 			
 feature {NONE} -- Walk navigation
 
