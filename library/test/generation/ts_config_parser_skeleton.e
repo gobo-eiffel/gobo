@@ -49,15 +49,15 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse (a_file: like INPUT_STREAM_TYPE) is
+	parse (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse Ace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
+			a_file_open_read: a_file.is_open_read
 		do
 			reset
 			set_input_buffer (new_file_buffer (a_file))
-			filename := INPUT_STREAM_.name (a_file)
+			filename := a_file.name
 			last_config := Void
 			class_regexp := Void
 			feature_regexp := Void
@@ -102,6 +102,13 @@ feature -- Status report
 	compiler_ve: BOOLEAN
 			-- Compiler which will be used to compile the test classes
 
+	fail_on_rescue: BOOLEAN
+			-- Should the test application crash when an error occur?
+			-- (By default test case errors are caught by a rescue
+			-- clause and reported to the result summary, but during
+			-- debugging it might be useful to get the full exception
+			-- trace.)
+
 feature -- Status setting
 
 	set_compiler_ise (b: BOOLEAN) is
@@ -134,6 +141,14 @@ feature -- Status setting
 			compiler_ve := b
 		ensure
 			compiler_ve_set: compiler_ve = b
+		end
+
+	set_fail_on_rescue (b: BOOLEAN) is
+			-- Set `fail_on_rescue' to `b'.
+		do
+			fail_on_rescue := b
+		ensure
+			fail_on_rescue_set: fail_on_rescue = b
 		end
 
 feature -- AST factory
@@ -264,6 +279,9 @@ feature -- Defaults
 		do
 			a_name := STRING_.to_lower (root_class) + file_system.exe_extension
 			Result := file_system.pathname (file_system.relative_current_directory, a_name)
+			if fail_on_rescue then
+				Result.append_string (" -a")
+			end
 			a_cursor := variables.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				Result.append_string (" -D %"")

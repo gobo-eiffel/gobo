@@ -14,7 +14,7 @@ To compile getest:
 
 2. Run getest using:
 
-       getest [-ceghV?][--help][--version]
+       getest [-aceghV?][--help][--version]
             [-D <name>=<value>|--define=<name>=<value>]*
             [-C <command>|--compile=<command>]
             [--se|--ise|--hact|--ve|<filename>]

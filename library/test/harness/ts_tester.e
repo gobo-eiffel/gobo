@@ -66,6 +66,15 @@ feature -- Access
 	output_filename: STRING
 			-- Output filename
 
+feature -- Status report
+
+	fail_on_rescue: BOOLEAN
+			-- Should the test application crash when an error occur?
+			-- (By default test case errors are caught by a rescue
+			-- clause and reported to the result summary, but during
+			-- debugging it might be useful to get the full exception
+			-- trace.)
+
 feature -- Execution
 
 	execute (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -79,6 +88,7 @@ feature -- Execution
 		do
 			a_suite := suite
 			!! a_summary.make
+			a_summary.set_fail_on_rescue (fail_on_rescue)
 			a_suite.execute (a_summary)
 			a_summary.print_summary (a_suite, a_file)
 			if not a_summary.is_successful then
@@ -107,6 +117,8 @@ feature {NONE} -- Command line
 						output_filename := Void
 						report_usage_error
 					end
+				elseif arg.is_equal ("-a") then
+					fail_on_rescue := True
 				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--define=") then
 					if arg.count > 9 then
 						set_defined_variable (arg.substring (10, arg.count))
@@ -171,7 +183,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Tester usage message
 		once
-			!! Result.make ("[-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
+			!! Result.make ("[-a][-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -40,6 +40,16 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
+feature -- Status setting
+
+	set_fail_on_rescue (b: BOOLEAN) is
+			-- Set `fail_on_rescue' to `b'.
+		do
+			fail_on_rescue := b
+		ensure
+			fail_on_rescue_set: fail_on_rescue = b
+		end
+
 feature -- Measurement
 
 	test_count: INTEGER is
