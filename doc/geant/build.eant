@@ -28,114 +28,41 @@
 		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/> -->
 
 			<!-- Concepts: -->
-		<xslt
-			processor="${xslt_processor}"
-			input="overview.xml"
-			output="overview.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
-		/>
+		<set name="previous" value="xslt_task"/>
+		<set name="current" value="overview"/>
 
-		<set name="input" value="overview"/>
-		<set name="next" value="overview"/>
-
-		<set name="next_chapter" value="introduction"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="examples"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="builtin_variables"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="target"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="tasks"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="fileset_element"/>
-		<geant target="xslt"/>
-
-			<!-- Elements: -->
-		<set name="next_chapter" value="map_element"/>
-		<geant target="xslt"/>
-
-			<!-- Tasks: -->
-		<set name="next_chapter" value="available_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="copy_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="delete_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="echo_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="exec_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="exit_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="geant_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="gelex_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="geyacc_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="gepp_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="getest_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="gexace_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="gexmlsplit_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="ise_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="mkdir_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="move_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="outofdate_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="precursor_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="se_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="set_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="setenv_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="unset_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="ve_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="xslt_task"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="introduction"/>
-		<geant target="xslt"/>
-
+		<geant target="xslt_and_shift" arguments="introduction"/>
+		<geant target="xslt_and_shift" arguments="examples"/>
+		<geant target="xslt_and_shift" arguments="builtin_variables"/>
+		<geant target="xslt_and_shift" arguments="target"/>
+		<geant target="xslt_and_shift" arguments="tasks"/>
+		<geant target="xslt_and_shift" arguments="fileset_element"/>
+		<geant target="xslt_and_shift" arguments="map_element"/>
+		<geant target="xslt_and_shift" arguments="available_task"/>
+		<geant target="xslt_and_shift" arguments="copy_task"/>
+		<geant target="xslt_and_shift" arguments="delete_task"/>
+		<geant target="xslt_and_shift" arguments="echo_task"/>
+		<geant target="xslt_and_shift" arguments="exec_task"/>
+		<geant target="xslt_and_shift" arguments="exit_task"/>
+		<geant target="xslt_and_shift" arguments="geant_task"/>
+		<geant target="xslt_and_shift" arguments="gelex_task"/>
+		<geant target="xslt_and_shift" arguments="geyacc_task"/>
+		<geant target="xslt_and_shift" arguments="gepp_task"/>
+		<geant target="xslt_and_shift" arguments="getest_task"/>
+		<geant target="xslt_and_shift" arguments="gexace_task"/>
+		<geant target="xslt_and_shift" arguments="gexmlsplit_task"/>
+		<geant target="xslt_and_shift" arguments="ise_task"/>
+		<geant target="xslt_and_shift" arguments="mkdir_task"/>
+		<geant target="xslt_and_shift" arguments="move_task"/>
+		<geant target="xslt_and_shift" arguments="outofdate_task"/>
+		<geant target="xslt_and_shift" arguments="precursor_task"/>
+		<geant target="xslt_and_shift" arguments="se_task"/>
+		<geant target="xslt_and_shift" arguments="set_task"/>
+		<geant target="xslt_and_shift" arguments="setenv_task"/>
+		<geant target="xslt_and_shift" arguments="unset_task"/>
+		<geant target="xslt_and_shift" arguments="ve_task"/>
+		<geant target="xslt_and_shift" arguments="xslt_task"/>
+		<geant target="xslt_and_shift" arguments="overview"/>
 	</target>
 
 	<target name="clean">
@@ -191,26 +118,32 @@
 
 <!-- Implementation -->
 
-	<target name="xslt">
+	<target name="xslt_and_shift" export="NONE">
 		<description>
-			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+			Call `xslt' and shift variables `previous' and `current' one chapter forward.
 		</description>
+		<argument name="a_next"/>
 
-		<set name="previous" value="${input}"/>
-		<set name="input" value="${next}"/>
-		<set name="next" value="${next_chapter}"/>
+		<geant target="xslt" arguments="${previous},${current},${a_next}"/>
 
-		<xslt
-			processor="${xslt_processor}"
-			input="${input}.xml"
-			output="${input}.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
-		>
-			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
-			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<!-- Shift parameters: -->
+		<set name="previous" value="${current}"/>
+		<set name="current" value="${a_next}"/>
+	</target>
+
+	<target name="xslt" export="NONE">
+		<description>
+			Execute XSL Transformation for argument ${a_file}, ${a_previous} and ${a_next} using processor ${xslt_processor}.
+		</description>
+		<argument name="a_previous"/>
+		<argument name="a_file"/>
+		<argument name="a_next"/>
+
+		<xslt processor="${xslt_processor}" input="${a_file}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
+			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'overview.html'&quot;"/>
 		</xslt>
 	</target>
-
 
 </project>
