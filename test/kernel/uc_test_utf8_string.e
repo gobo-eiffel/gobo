@@ -16,9 +16,6 @@ inherit
 
 	KL_TEST_CASE
 
-	KL_SHARED_EIFFEL_COMPILER
-		export {NONE} all end
-
 feature -- Test
 
 	test_make1 is
