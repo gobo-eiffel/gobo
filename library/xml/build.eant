@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<project name="xml" default="prepare">
+
+	<!--
+	This is the build script for the eXML project.
+	To use it call 'geant' for example.
+	The geant build tool is part of the GOBO project.
+
+	Currently this build file supports:
+	- generation of scanner and parser of the eiffel native xml parser
+
+	To prepare xml in order to use it invoke the following command:
+
+		geant
+
+	NOTE:
+		This is not necessary if you downloaded the eXML release since
+		this already done.
+
+	To clean up run
+		geant clean
+
+	Sven Ehrke (sven.ehrke@web.de), 16.06.2001
+	-->
+
+	<target name="windows" if="env.windir" >
+		<var name="copy" value="copy" />
+		<var name="del" value="del" />
+		<var name="executable_extension" value=".exe" />
+		<var name="ps" value="\" />
+	</target>
+
+	<target name="unix" unless="env.windir" >
+		<var name="cp" value="cp" />
+		<var name="del" value="rm" />
+		<var name="executable_extension" value="%/32/" />	<!-- space, necessary due to bug in eiffel parser, unicode handling -->
+		<var name="ps" value="/" />
+	</target>
+
+	<target name="xf_scanner" dir="impl/eiffel/event"
+		description="runs gelex on scanner.l and generates gelexout.txt"
+	>
+		<gelex input_filename="xf_scanner.l" outfile="xf_scanner.e"/>
+
+	</target>
+
+	<target name="xf_parser" dir="impl/eiffel/event"
+		description="runs geyacc on xf_parser.y and generates xf_parser.e, xf_tokens.e"
+	>
+		<geyacc
+			eiffel_grammar_filename="xf_parser.y"
+			eiffel_parser_filename="xf_parser.e"
+			eiffel_tokens_classname="xf_tokens"
+		/>
+	</target>
+
+	<target name="prepare" depends="xf_scanner,xf_parser"
+		description="generates files necessary to use xml"
+	>
+	</target>
+
+	<target name="clean_eiffel_parser" dir="impl${ps}eiffel${ps}event">
+		<exec executable="${del} xf_scanner.e" />
+		<exec executable="${del} xf_parser.e" />
+		<exec executable="${del} xf_tokens.e" />
+	</target>
+
+	<target name="clean" description="deletes generated files which can be rebuild using the compile target"
+			depends="clean_eiffel_parser"
+	>
+	</target>
+
+</project>
