@@ -157,6 +157,7 @@ goto exit
 	goto bootstrap
 
 :bootstrap
+	set PATH=%BIN_DIR%;%PATH%
 	cd %BIN_DIR%
 	%MV% geant%EXE% geant1%EXE%
 	cd %GOBO%

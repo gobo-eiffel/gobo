@@ -141,6 +141,8 @@ else
 	exit 1
 fi
 
+PATH=$BIN_DIR:$PATH
+export PATH
 cd $BIN_DIR
 $MV geant$EXE geant1$EXE
 cd $GOBO
