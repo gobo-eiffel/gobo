@@ -17,6 +17,9 @@ Version 1.3 - 23 May 1998
 	* The second generic parameter of DS_HASH_TABLE is now
 	  constrained to HASHABLE (HASHABLE was not part of 
 	  SmallEiffel in previous releases).
+	* Cluster `error' has been added to the Gobo Eiffel
+	  Utility Library to support a flexible error
+	  reporting mechanism.
 
 Version 1.2 - 17 December 1997
 
