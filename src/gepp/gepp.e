@@ -4,14 +4,17 @@ indexing
 
 		"C-like preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class GEPP
 
 inherit
+
+	GEPP_VERSION
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
@@ -195,7 +198,7 @@ feature -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make ("1.4")
+			!! a_message.make (Version_number)
 			error_handler.report_message (a_message)
 		end
 

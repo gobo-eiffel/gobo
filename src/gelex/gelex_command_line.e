@@ -4,8 +4,9 @@ indexing
 
 		"Gobo Eiffel Lex command lines"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -13,10 +14,10 @@ class GELEX_COMMAND_LINE
 
 inherit
 
+	GELEX_VERSION
+
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_SHARED_EXCEPTIONS
-
 	KL_SHARED_ARGUMENTS
 
 creation
@@ -237,7 +238,7 @@ feature {NONE} -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make ("1.4")
+			!! a_message.make (Version_number)
 			error_handler.report_message (a_message)
 			Exceptions.die (0)
 		end
