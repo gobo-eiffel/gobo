@@ -25,7 +25,7 @@ spec
     Eiffel compiler dependent classes (filenames suffixed by
     ".ge" instead of ".e" in other clusters).
 time_zone
-    Time zones, date/time conversions. (Under construction.)
+    Time zones, date/time conversions. (STILL UNDER DEVELOPMENT.)
 
 A more detailed documentation for this library, in HTML format,
 is provided in "$GOBO/doc/time". Examples for this library can
