@@ -71,7 +71,7 @@
 		<geant target="xace"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
-		<delete file="$lib{system}.dll"/>
+		<delete file="lib${system}.dll"/>
 		<delete>
 			<fileset directory="." include="@(${system}_module_*.dll)"/>
 		</delete>
