@@ -42,9 +42,7 @@
 				<optional>
 					<attribute name="id"/>
 				</optional>
-				<optional><!-- should section title be optional? -->
-					<ref name="title"/>
-				</optional>
+				<ref name="title"/>
 				<ref name="paras"/>
 				<zeroOrMore>
 					<element name="sect2">
@@ -98,8 +96,17 @@
 				<text/>
 			</element>
 			<ref name="variablelist"/>
+			<ref name="orderedlist"/>
+			<ref name="table"/>
+			<ref name="synopsis"/>
 		</choice>
 	</zeroOrMore>
+</define>
+
+<define name="synopsis">
+	<element name="synopsis">
+		<text/>
+	</element>
 </define>
 
 <define name="variablelist">
@@ -125,9 +132,42 @@
 	</element>
 </define>
 
+<define name="orderedlist">
+	<element name="orderedlist">
+		<oneOrMore>
+			<ref name="listitem"/>
+		</oneOrMore>
+	</element>
+</define>
+
 <define name="listitem">
 	<element name="listitem">
 		<ref name="paras"/>
+	</element>
+</define>
+
+<define name="table">
+	<element name="table">
+		<element name="title"><text/></element>
+		<element name="tgroup">
+			<attribute name="cols"/>
+			<element name="thead">
+				<ref name="tablerow"/>
+			</element>
+			<element name="tbody">
+				<oneOrMore>
+					<ref name="tablerow"/>
+				</oneOrMore>
+			</element>
+		</element>
+	</element>
+</define>
+
+<define name="tablerow">
+	<element name="row">
+		<oneOrMore>
+			<element name="entry"><text/></element>
+		</oneOrMore>
 	</element>
 </define>
 
