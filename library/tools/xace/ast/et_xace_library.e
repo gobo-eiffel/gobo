@@ -21,6 +21,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new Xace library.
 		do
+			library_prefix := empty_prefix
+		ensure
+			no_library_prefix: library_prefix.count = 0
 		end
 
 feature -- Access
@@ -39,6 +42,10 @@ feature -- Access
 
 	externals: ET_XACE_EXTERNALS
 			-- External clause
+
+	library_prefix: STRING
+			-- Prefix to be applied to the names of the
+			-- clusters of the current library when mounted
 
 feature -- Setting
 
@@ -80,6 +87,16 @@ feature -- Setting
 			externals := an_externals
 		ensure
 			externals_set: externals = an_externals
+		end
+
+	set_library_prefix (a_prefix: like library_prefix) is
+			-- Set `library_prefix' to `a_prefix'.
+		require
+			a_prefix_not_void: a_prefix /= Void
+		do
+			library_prefix := a_prefix
+		ensure
+			library_prefix_set: library_prefix = a_prefix
 		end
 
 feature -- Basic operations
@@ -130,5 +147,14 @@ feature -- Basic operations
 				externals := Void
 			end
 		end
+
+feature {NONE} -- Constants
+
+	empty_prefix: STRING is ""
+			-- Empty prefix
+
+invariant
+
+	library_prefix_not_void: library_prefix /= Void
 
 end
