@@ -41,10 +41,12 @@ feature -- Access
 		end
 
 	version: INTEGER
-			-- Version (feature ID of last declaration of current feature)
+			-- Version (feature ID of last declaration
+			-- of current feature)
 
 	seeds: ET_FEATURE_SEEDS
-			-- Seeds (feature IDs of first declarations of current feature)
+			-- Seeds (feature IDs of first declarations
+			-- of current feature)
 
 	implementation_class: ET_CLASS
 			-- Class where implementation of current feature
@@ -52,6 +54,14 @@ feature -- Access
 			-- feature calls and type anchors (that might
 			-- be renamed in descendant classes) when feature
 			-- is inherited as-is.)
+
+	signature: ET_SIGNATURE is
+			-- Signature of current feature
+			-- (Create a new object at each call.)
+		deferred
+		ensure
+			signature_not_void: Result /= Void
+		end
 
 feature -- Status report
 
@@ -80,12 +90,6 @@ feature -- Status report
 			-- Is feature a unique attribute?
 		do
 			Result := False
-		end
-
-	has_seed (a_seed: INTEGER): BOOLEAN is
-			-- Is `a_seed' a seed of current feature?
-		do
-			Result := seeds.has (a_seed)
 		end
 
 feature -- Comparison
@@ -161,34 +165,6 @@ feature -- Status setting
 			is_frozen: is_frozen
 		end
 
-feature -- Element change
-
-	replace_seed (old_seed, new_seed: INTEGER) is
-			-- Replace `old_seed' by `new_seed'.
-		require
-			has_old_seed: has_seed (old_seed)
-			not_has_new_seed: not has_seed (new_seed)
-		do
-			seeds := clone (seeds)
-			seeds.replace (old_seed, new_seed)
-		ensure
-			same_count: seeds.count = old (seeds.count)
-			not_has_old_seed: not has_seed (old_seed)
-			has_new_seed: has_seed (new_seed)
-		end
-
-	remove_seed (a_seed: INTEGER) is
-			-- Remove `a_seed' from `seeds'.
-		require
-			has_seed: has_seed (a_seed)
-		do
-			seeds := clone (seeds)
-			seeds.remove (a_seed)
-		ensure
-			one_less: seeds.count = old (seeds.count) - 1
-			not_has_seed: not has_seed (a_seed)
-		end
-
 feature -- Duplication
 
 	synonym (a_name: like name; an_id: INTEGER): like Current is
@@ -228,6 +204,46 @@ feature -- Conversion
 			name_set: Result.name = a_name
 			version_set: Result.version = an_id
 			id_set: Result.id = an_id
+		end
+
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in current feature.
+		deferred
+		end
+
+feature -- Type processing
+
+	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+			-- Does current feature contain formal generic parameter
+			-- types of index 'i' such that 'actual_parameters.item (i)'
+			-- is not void?
+		require
+			actual_parameters_not_void: actual_parameters /= Void
+		deferred
+		end
+
+	resolve_formal_parameters (actual_parameters: ARRAY [ET_TYPE]) is
+			-- Replace in current feature the formal generic parameter
+			-- types of index 'i' by 'actual_parameters.item (i)'
+			-- when these new parameters are not void.
+		require
+			actual_parameters_not_void: actual_parameters /= Void
+		deferred
+		end
+
+	resolve_identifier_types (a_flattener: ET_FEATURE_FLATTENER) is
+			-- Replace any 'like identifier' types that appear
+			-- in the implementation of current feature by the
+			-- corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types and check
+			-- validity of arguments' name.
+		require
+			a_flattener_not_void: a_flattener /= Void
+			immediate_or_redeclared: implementation_class = a_flattener.current_class
+		deferred
 		end
 
 invariant
