@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			file_set: file = a_file
 			beginning_of_line: beginning_of_line
 		end
-		
+
 	make_with_size (a_file: like file; size: INTEGER) is
 			-- Create a new buffer of capacity `size' for `a_file'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			!! content.make (size + 2)
+			!KL_CHARACTER_BUFFER! content.make (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
@@ -160,7 +160,7 @@ feature -- Element change
 feature {NONE} -- Constants
 
 	Read_buffer_capacity: INTEGER is 8192
-			-- Maximum number of characters to 
+			-- Maximum number of characters to
 			-- be read at a time
 
 invariant

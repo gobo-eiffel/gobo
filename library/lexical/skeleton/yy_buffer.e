@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			nb: INTEGER
 		do
 			nb := str.count + 2
-			!! buff.make (nb)
+			!KL_CHARACTER_BUFFER! buff.make (nb)
 			buff.fill_from_string (str, 1)
 			buff.put (End_of_buffer_character, nb - 1)
 			buff.put (End_of_buffer_character, nb)
@@ -78,7 +78,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	content: KL_CHARACTER_BUFFER
+	content: KI_CHARACTER_BUFFER
 			-- Input buffer characters
 
 	count: INTEGER

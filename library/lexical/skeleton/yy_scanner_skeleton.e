@@ -164,7 +164,7 @@ feature -- Element change
 
 	more is
 			-- Tell scanner to append the next matched token
-			-- to current value of `text' instead of 
+			-- to current value of `text' instead of
 			-- replacing it.
 		do
 			yy_more_flag := True
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 	yy_start_state: INTEGER
 			-- Start state
 
-	yy_content: KL_CHARACTER_BUFFER
+	yy_content: KI_CHARACTER_BUFFER
 			-- Characters in `input_buffer'
 
 	yy_end: INTEGER
