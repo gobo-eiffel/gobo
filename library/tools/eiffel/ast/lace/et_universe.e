@@ -98,6 +98,9 @@ feature -- Status report
 			is_parsed: Result implies eiffel_class (a_name).is_parsed
 		end
 
+	is_preparsed: BOOLEAN
+			-- Has current universe already been preparsed?
+
 feature -- Access
 
 	clusters: ET_CLUSTERS
@@ -446,8 +449,11 @@ feature -- Parsing
 			-- are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
 		do
-			if clusters /= Void then
-				clusters.preparse_shallow (Current)
+			if not is_preparsed then
+				if clusters /= Void then
+					clusters.preparse_shallow (Current)
+				end
+				is_preparsed := True
 			end
 		end
 
@@ -458,8 +464,11 @@ feature -- Parsing
 			-- Each Eiffel file is supposed to contain exactly
 			-- one class.
 		do
-			if clusters /= Void then
-				clusters.preparse_single (Current)
+			if not is_preparsed then
+				if clusters /= Void then
+					clusters.preparse_single (Current)
+				end
+				is_preparsed := True
 			end
 		end
 
@@ -469,8 +478,11 @@ feature -- Parsing
 			-- are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
 		do
-			if clusters /= Void then
-				clusters.preparse_multiple (Current)
+			if not is_preparsed then
+				if clusters /= Void then
+					clusters.preparse_multiple (Current)
+				end
+				is_preparsed := True
 			end
 		end
 
@@ -525,7 +537,7 @@ feature -- Parsing
 					preparse
 				end
 				if not root_class.is_preparsed then
-						-- TODO.
+						-- TODO:
 					print ("Class ")
 					print (root_class.name.name)
 					print (" not found.%N")
