@@ -20,9 +20,7 @@ inherit
 		end
 
 	GEANT_SHARED_PROPERTIES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
@@ -51,7 +49,7 @@ feature -- Initialization
 
 			create parent.make (a_project)
 
-			if has_uc_attribute (Location_attribute_name) then
+			if has_attribute (Location_attribute_name) then
 				a_string := uc_attribute_value (Location_attribute_name)
 				if a_string.count > 0 then
 					create a_project_loader.make (a_string)
@@ -128,7 +126,7 @@ feature -- Initialization
 		require
 			a_project_not_void: a_project /= Void
 			a_xml_element_not_void: a_xml_element /= Void
---			has_inherit_attribute: has_uc_attribute (Inherit_attribute_name)
+--			has_inherit_attribute: has_attribute (Inherit_attribute_name)
 			project_in_old_inherit_form: a_project.old_inherit
 		local
 			a_string: STRING

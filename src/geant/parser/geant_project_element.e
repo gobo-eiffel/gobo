@@ -20,9 +20,7 @@ inherit
 		end
 
 	GEANT_SHARED_PROPERTIES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
@@ -61,7 +59,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Handle project name:
-			if not has_uc_attribute (Name_attribute_name) then
+			if not has_attribute (Name_attribute_name) then
 				msg := clone ("%NLOAD ERROR:%N")
 				msg.append_string ("  Project in file '")
 				msg.append_string (a_build_filename)
@@ -69,11 +67,11 @@ feature {NONE} -- Initialization
 				msg.append_string ("  Please specify a name for this project.")
 				exit_application (1, msg)
 			end
-			project.set_name (uc_attribute_value (Name_attribute_name).out)
+			project.set_name (attribute_value (Name_attribute_name))
 
 				-- Set default target name if present:
-			if has_uc_attribute (Default_attribute_name) then
-				project.set_default_target_name (uc_attribute_value (Default_attribute_name).out)
+			if has_attribute (Default_attribute_name) then
+				project.set_default_target_name (attribute_value (Default_attribute_name))
 			end
 
 				-- Create GEANT_TARGETs from the GEANT_ELEMENTs:
@@ -127,7 +125,7 @@ feature {NONE} -- Initialization
 		do
 				-- Check that not both, inherit_attribute and inherit_element have been specified:
 				-- TODO: modify after obsolete period
-			if has_uc_attribute (Inherit_attribute_name) and has_inherit_element then
+			if has_attribute (Inherit_attribute_name) and has_inherit_element then
 				msg := clone ("%NLOAD ERROR in project '")
 				msg.append_string (project.name)
 				msg.append_string ("':%N")
@@ -137,7 +135,7 @@ feature {NONE} -- Initialization
 
 				-- Handle obsolete inherit_attribute:
 				-- TODO: remove after obsolete period
-			if has_uc_attribute (Inherit_attribute_name) then
+			if has_attribute (Inherit_attribute_name) then
 				msg := clone ("Project '")
 				msg.append_string (project.name)
 				msg.append_string ("': WARNING: Obsolete inheritance format using attribute 'inherit' found.%N  Use new inheritance format with subelement instead.%N")
@@ -151,7 +149,7 @@ feature {NONE} -- Initialization
 
 				-- Handle inherit_element:
 			if has_inherit_element then
-				check no_inherit_attribute: not has_uc_attribute (Inherit_attribute_name) end
+				check no_inherit_attribute: not has_attribute (Inherit_attribute_name) end
 				a_xml_element := xml_element.element_by_name (Inherit_element_name)
 				create a_inherit_element.make (project, a_xml_element)
 				project.set_inherit_clause (a_inherit_element.geant_inherit)
@@ -172,7 +170,7 @@ feature -- Access
 	has_parent: BOOLEAN is
 			-- Does `xml_element' has an attribute named `Inherit_attribute_name'
 		do
-			Result := has_uc_attribute (Inherit_attribute_name)
+			Result := has_attribute (Inherit_attribute_name)
 		end
 
 feature -- Access
