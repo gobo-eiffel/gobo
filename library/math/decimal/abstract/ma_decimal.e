@@ -67,6 +67,10 @@ creation {MA_DECIMAL}
 
 	make_infinity, make_nan, make_snan, make_special
 
+creation {MA_DECIMAL_TEXT_PARSER}
+	
+	make_from_parser
+	
 feature {NONE} -- Initialization
 
 	make (a_precision: INTEGER) is
@@ -172,30 +176,39 @@ feature {NONE} -- Initialization
 		do
 			l_parser := parser
 			l_parser.decimal_parse (value_string)
-			if l_parser.error then
-				if ctx.is_extended then
+			make_from_parser (l_parser, ctx)
+		end
+
+	make_from_parser (a_decimal_parser : MA_DECIMAL_TEXT_PARSER; a_context : MA_DECIMAL_CONTEXT) is
+			-- Make from `a_decimal_parser', relative to `a_context'.
+		require
+			a_parser_not_void: a_decimal_parser /= Void
+			a_context_not_void: a_context /= Void
+		do
+			if a_decimal_parser.error then
+				if a_context.is_extended then
 					make_nan
 				else
 					make_snan
 				end
 			else
-				if l_parser.is_infinity then
+				if a_decimal_parser.is_infinity then
 					make_infinity (parser.sign)
-				elseif l_parser.is_snan then
+				elseif a_decimal_parser.is_snan then
 					make_snan
-				elseif l_parser.is_nan then
+				elseif a_decimal_parser.is_nan then
 					make_nan
 				else
-					if l_parser.sign < 0 then
+					if a_decimal_parser.sign < 0 then
 						set_negative
 					else
 						set_positive
 					end
-					if l_parser.has_exponent then
-						if l_parser.exponent_as_double > Platform.Maximum_integer then
-							exponent := ctx.Maximum_exponent + ctx.digits + l_parser.exponent_count + 2
+					if a_decimal_parser.has_exponent then
+						if a_decimal_parser.exponent_as_double > Platform.Maximum_integer then
+							exponent := a_context.Maximum_exponent + a_context.digits + a_decimal_parser.exponent_count + 2
 						else
-							exponent := l_parser.exponent_as_double.truncated_to_integer
+							exponent := a_decimal_parser.exponent_as_double.truncated_to_integer
 						end
 						if parser.exponent_sign < 0 then
 							exponent := -exponent
@@ -203,16 +216,16 @@ feature {NONE} -- Initialization
 					else
 						exponent := 0
 					end
-					if l_parser.has_point then
-						exponent := exponent - l_parser.fractional_part_count
+					if a_decimal_parser.has_point then
+						exponent := exponent - a_decimal_parser.fractional_part_count
 					end
-					create {MA_DECIMAL_COEFFICIENT_IMP} coefficient.make ((ctx.digits + 1).max (l_parser.coefficient_count))
-					coefficient.set_from_substring (value_string, l_parser.coefficient_begin, l_parser.coefficient_end)
-					clean_up (ctx)
+					create {MA_DECIMAL_COEFFICIENT_IMP} coefficient.make ((a_context.digits + 1).max (a_decimal_parser.coefficient_count))
+					coefficient.set_from_substring (a_decimal_parser.last_parsed, a_decimal_parser.coefficient_begin, a_decimal_parser.coefficient_end)
+					clean_up (a_context)
 				end
 			end
 		end
-
+		
 	make_from_string (value_string: STRING) is
 			-- Make a new decimal from string `value_string' relative to `shared_decimal_context'.
 		require

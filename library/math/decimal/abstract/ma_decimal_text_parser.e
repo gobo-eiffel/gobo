@@ -25,7 +25,11 @@ class MA_DECIMAL_TEXT_PARSER
 inherit
 
 	MA_DECIMAL_PARSER
-
+	MA_SHARED_DECIMAL_CONTEXT
+		export
+			{NONE} all
+		end
+		
 	KL_IMPORTED_CHARACTER_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -83,8 +87,11 @@ feature -- Access
 		end
 
 	decimal_point_index: INTEGER
-			-- Index of decimal point if any
+			-- Index of decimal point if any.
 
+	last_parsed : STRING
+			-- Last parsed string.
+			
 feature -- Status report
 
 	error: BOOLEAN is 
@@ -133,15 +140,10 @@ feature -- Basic operations
 
 	parse (s: STRING) is
 			-- Parse `s'.
-		require else
-			s_not_void: s /= Void
-		local
-			old_allowed: BOOLEAN
 		do
-			old_allowed := is_comma_allowed
-			is_comma_allowed := False
-			create last_decimal.make_from_string (s)
-			is_comma_allowed := old_allowed
+			parse_ctx (s, shared_decimal_context, False)
+		ensure then
+			last_parsed_string_affected: last_parsed = s
 		end
 
 	parse_with_decimal_point_comma (s: STRING) is
@@ -149,19 +151,48 @@ feature -- Basic operations
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
+		do
+			parse_ctx (s, shared_decimal_context, True)
+		ensure
+			no_mode_change: is_comma_allowed = old is_comma_allowed
+			last_parsed_string_affected: last_parsed = s
+			last_decimal_not_void_when_no_error: not error implies last_decimal /= Void
+		end
+
+	parse_ctx (s : STRING; ctx : MA_DECIMAL_CONTEXT; parse_comma_as_decimal_point : BOOLEAN) is
+			-- Parse `s' using `ctx' wrt `parse_comma_as_decimal_point'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
 		local
 			old_allowed : BOOLEAN
 		do
 			old_allowed := is_comma_allowed
-			is_comma_allowed := True
-			create last_decimal.make_from_string (s)
+			is_comma_allowed := parse_comma_as_decimal_point
+			parse_and_create_last_decimal (s, shared_decimal_context)
 			is_comma_allowed := old_allowed
 		ensure
 			no_mode_change: is_comma_allowed = old is_comma_allowed
+			last_parsed_string_affected: last_parsed = s
+			last_decimal_not_void_when_no_error: not error implies last_decimal /= Void
 		end
-
+		
 feature {MA_DECIMAL} -- Basic operations
 
+	parse_and_create_last_decimal (s : STRING; ctx : MA_DECIMAL_CONTEXT) is
+			-- parse `s' and create `last_decimal' using `ctx'.
+		do
+			decimal_parse (s)
+			if not error then
+				create last_decimal.make_from_parser (Current, ctx)
+			else
+				last_decimal := Void
+			end
+		ensure
+			last_parsed_is_s: last_parsed = s
+			last_decimal_created_if_no_error: not error implies last_decimal /= Void
+		end
+		
 	decimal_parse (s: STRING) is
 			-- Effective parse of `s'.
 		require
@@ -225,6 +256,9 @@ feature {MA_DECIMAL} -- Basic operations
 			if decimal_point_is_comma and then not is_comma_allowed then
 				state := State_error
 			end
+			last_parsed := s
+		ensure
+			last_parsed_is_s: last_parsed = s
 		end
 
 	process_start (c: CHARACTER; index: INTEGER; s: STRING) is 
