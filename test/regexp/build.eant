@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
 
-<project name="example" inherit="${GOBO}/misc/eiffel.eant" default="help">
+<project name="example" default="help">
 
 	<description>
 		system: "Regular expression test"
-		copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
+		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
 
 
 <!-- Implementation -->
