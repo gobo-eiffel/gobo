@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<project name="A" default="a">
+
+	<target name="f">
+		<echo message="this is A.f"/>
+	</target>
+
+	<target name="a">
+		<echo message="this is A.a"/>
+		<geant target="f"/>
+	</target>
+
+</project>
