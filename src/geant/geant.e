@@ -235,7 +235,7 @@ feature {NONE} -- Constants
 	Default_build_filename: STRING is
 			-- Default Name of build file
 		once
-			Result := clone ("build.eant")
+			Result := "build.eant"
 		ensure
 			filename_not_void: Result /= Void
 			filename_not_empty: Result.count > 0
