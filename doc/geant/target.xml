@@ -1,0 +1,191 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Target"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2004, Sven Ehrke and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="target">
+	<title>Target</title>
+
+	<sect1 id="target_description">
+		<title>Description</title>
+		<para>
+			A build file's target is comparable to a method of class in an object oriented
+			programming language. Targets can be invoked from the command line or from within
+			the build script itself. If a build script 'build.eant' contains a target 't1' for
+			example you can invoke this target from the commondline like this:
+		</para>
+		<programlisting><![CDATA[
+  geant t1
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="target_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>name</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+					The target's name. The name must be unique within the build file. If the build file
+					inherits from other build file(s) the inheritance rules must be followed as well.
+					The mechanisms to resolve naming conflicts are basically the same as in the Eiffel
+					programming language. Since probably all users of geant are Eiffel developers and thus
+					are familiar with Eiffel's inheritance mechanisms these rules are not documented.
+					Geant will display error messages in case these rules are violated.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>String</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>if</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+					execute target only if the variable used in the attributevalue is defined. If the
+					value is '$some_var' for example and the variable name 'some_var' is defined the target
+					will be executed (but only if evaluation of attribute 'unless' does not prevent this).
+					Note that the variable can also reference an environment variable like '$WINDIR' for example.
+					In addition to simply checking if a variable is defined or not it is also possible if it's
+					value is equal to a certain string. This is done like this: '${some_var}=some_value'. At the
+					moment only equality comparison is supported.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>variable definition or variable-value comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>unless</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+					The description of attribute 'if' is valid for this attribute as well with the difference
+					that the evaluation of the attribute value is negated. Thus this means the target is
+					executed only if the variable referenced in the attributevalue is not defined etc.
+					(but only if evaluation of attribute 'if' does not prevent this)
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>variable definition or variable-value comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>once</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should target be executed only once?
+						If set to 'true' this target will be executed only on it's first invocation.
+						NOTE: Use this attribute instead of the obsolete attribute 'depend'
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>true|false</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>depend</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Obsolete. Use attribute 'once' instead.
+						Comma separated list of names of targets which should be invoked before this target is executed.
+						Execution of targets is done from left to rights. Thus if the value of this attribute is 'a,b,c'
+						The first target 'a', then target 'b' and finally target 'c' are called. Note that these targets
+						are only executed if they have not been executed before.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Comma separated list of target names</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+
+	<sect1 id="target_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="target">
+    <element name="target">
+    <ref name="description"/>
+    <attribute name="name"/>
+    <optional>
+      <attribute name="once"/>
+    </optional>
+    <optional>
+      <attribute name="depend"/>
+    </optional>
+    <ref name="dir_if_unless"/>
+    <ref name="tasks"/>
+    </element>
+  </define>
+
+  <define name="tasks">
+    <zeroOrMore>
+      <choice>
+        <ref name="available"/>
+        <ref name="copy"/>
+        <ref name="echo"/>
+        <ref name="delete"/>
+        <ref name="exec"/>
+        <ref name="exit"/>
+        <ref name="geant"/>
+        <ref name="gelex"/>
+        <ref name="geyacc"/>
+        <ref name="gepp"/>
+        <ref name="getest"/>
+        <ref name="gexace"/>
+        <ref name="gexmlsplit"/>
+        <ref name="hact"/>
+        <ref name="ise"/>
+        <ref name="mkdir"/>
+        <ref name="move"/>
+        <ref name="outofdate"/>
+        <ref name="precursor"/>
+        <ref name="se"/>
+        <ref name="set"/>
+        <ref name="setenv"/>
+        <ref name="unset"/>
+        <ref name="ve"/>
+        <ref name="xslt"/>
+      </choice>
+    </zeroOrMore>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="target_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <target name="t1">
+    <echo message="This is target 't1'"/>
+  </target>
+]]>
+		</programlisting>
+	</sect1>
+</chapter>
