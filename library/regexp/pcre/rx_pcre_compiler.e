@@ -14,6 +14,8 @@ class RX_PCRE_COMPILER
 
 inherit
 
+	ANY
+
 	RX_PCRE_BYTE_CODE_CONSTANTS
 		export {NONE} all end
 
@@ -33,16 +35,22 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_CHARACTER_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
 
 	UT_IMPORTED_FORMATTERS
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 creation
 
@@ -51,7 +59,7 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create new regexp compiler.
+			-- Create a new regexp compiler.
 		do
 			!! byte_code.make (1024)
 			set_character_case_mapping (default_character_case_mapping)
@@ -166,7 +174,7 @@ feature -- Status report
 			-- effect can also be achieved by appropriate constructs in the
 			-- pattern itself (^), which is the only way to do it in Perl.
 
-	is_more_strict: BOOLEAN
+	is_strict: BOOLEAN
 			-- If true, the compiler checks the patterns more strictly, i.e.
 			-- an unknown escaped character is reported as an error. Otherwise
 			-- the character is treated as itself.
@@ -201,7 +209,7 @@ feature -- Status setting
 			set_eol (True)
 			set_anchored (False)
 			set_greedy (True)
-			set_more_strict (False)
+			set_strict (False)
 		ensure
 			caseless_set: is_caseless = False
 			multiline_set: is_multiline = False
@@ -213,7 +221,7 @@ feature -- Status setting
 			eol_set: is_eol = True
 			anchored_set: is_anchored = False
 			greedy_set: is_greedy = True
-			more_strict_set: is_more_strict = False
+			strict_set: is_strict = False
 		end
 
 	set_caseless (b: BOOLEAN) is
@@ -246,14 +254,14 @@ feature -- Status setting
 			greedy_set: is_greedy = b
 		end
 
-	set_more_strict (b: BOOLEAN) is
-			-- Set 'is_more_strict' to 'b'.
+	set_strict (b: BOOLEAN) is
+			-- Set 'is_strict' to 'b'.
 		require
 			not_compiled: not is_compiled
 		do
-			is_more_strict := b
+			is_strict := b
 		ensure
-			more_strict_set: is_more_strict = b
+			strict_set: is_strict = b
 		end
 
 	set_multiline (b: BOOLEAN) is
@@ -584,7 +592,7 @@ feature -- Debugging
 							a_file.put_string ("  ")
 							j := 2
 						end
-						if print_set.has (i) and then i /= 32 then
+						if print_set.has (i) and then i /= Space_code then
 							a_file.put_character (INTEGER_.to_character (i))
 							j := j + 2
 						else
@@ -743,9 +751,8 @@ feature -- Debugging
 							a_file.put_string ("    ")
 							a_file.put_string (op_name (byte_code.opcode_item (i + 1)))
 						else
-							a_file.put_string ("end-of-byte-code")
+							a_file.put_string ("end-of-byte-code ")
 						end
---						a_file.put_character (' ')
 						a_file.put_string (op_name (an_op))
 						i := i + 1
 					when op_exact, op_upto, op_minupto then
@@ -990,7 +997,7 @@ feature {NONE} -- Debug helpers
 
 	map_position (a_position: INTEGER; a_position_map: like new_position_map): INTEGER is
 			-- Position in the byte code of the original PCRE
-			-- package (coded with bytes) corresponding to 
+			-- package (coded with bytes) corresponding to
 			-- `a position' in byte code of the Gobo version
 			-- (coded with int32).
 		require
@@ -1162,6 +1169,9 @@ feature {NONE} -- Status setting
 		end
 
 feature {NONE} -- Access
+
+	code_index: INTEGER
+			-- Position in byte code
 
 	pattern: STRING
 			-- Regular expression pattern being compiled
@@ -1682,7 +1692,7 @@ feature {NONE} -- Compilation
 									when Lower_x_code then
 										is_extended := flag
 									when Upper_x_code then
-										is_more_strict := flag
+										is_strict := flag
 									when Upper_u_code then
 										is_greedy := not flag
 									else
@@ -2825,7 +2835,7 @@ feature {NONE} -- Pattern scanning
 							end
 						end
 					else
-						if is_more_strict then
+						if is_strict then
 							set_error (err_msg_3, 3, pattern_position)
 						end
 						Result := c
@@ -3314,9 +3324,6 @@ feature {NONE} -- Implementation
 				start_bits := Void
 			end
 		end
-
-	code_index: INTEGER
-			-- Position in byte code
 
 feature {NONE} -- Constants
 

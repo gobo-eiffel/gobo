@@ -14,21 +14,23 @@ class RX_PCRE_MATCHER
 
 inherit
 
-	RX_PCRE_BYTE_CODE_CONSTANTS
-		export {NONE} all end
-
-	RX_PCRE_OPTION_ROUTINES
-		export {NONE} all end
-
-	RX_PCRE_SHARED_CHARACTER_SETS
-		export {NONE} all end
-
-	UT_CHARACTER_CODES
-		export {NONE} all end
-
-	KL_SHARED_PLATFORM
+	RX_PCRE_COMPILER
+		rename
+			make as make_compiler,
+			reset as reset_compiler,
+			compile as compile_pattern
+		export
+			{NONE}
+				make_compiler,
+				reset_compiler,
+				compile_pattern
+		end
 
 	KL_IMPORTED_NATIVE_ARRAY_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -36,68 +38,312 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_regexp: RX_PCRE_REGULAR_EXPRESSION) is
+	make is
 			-- On entry ecode points to the first opcode, and `eptr' to the first character
 			-- in the subject string, while `eptr_vector' holds the value of `eptr' at the start of the
 			-- last bracketed group - used for breaking infinite loops matching zero-length
 			-- strings.
-		require
-			a_regexp_not_void: a_regexp /= Void
 		do
-			regexp := a_regexp
-			brastart_vector := NATIVE_INTEGER_ARRAY_.make (8)
+			make_compiler
+			offset_vector := FIXED_INTEGER_ARRAY_.make (64)
+			offset_vector_count := 0
+			brastart_capacity := 8
+			brastart_vector := NATIVE_INTEGER_ARRAY_.make (brastart_capacity)
 			brastart_lower := 0
 			brastart_count := 0
-			brastart_capacity := 8
-			eptr_vector := NATIVE_INTEGER_ARRAY_.make (8)
+			eptr_capacity := 8
+			eptr_vector := NATIVE_INTEGER_ARRAY_.make (eptr_capacity)
 			eptr_lower := 0
 			eptr_upper := -1
-			eptr_capacity := 8
+		end
+
+feature -- Element Change
+
+	reset is
+			-- Reset is needed only if options must be changed.
+			-- For an option change a recompilation is needed.
+		do
+			reset_compiler
+			match_count := 0
+			subject := Void
+			subject_start := 1
+			subject_next_start := subject_start
+			subject_end := 0
 		ensure
-			regexp_set: regexp = a_regexp
+			all_reset: not is_compiled and not has_matched and not is_matcher_active
+		end
+
+feature -- Compiler command
+
+	compile (a_pattern: STRING) is
+			-- There are two different sets of meta-characters: those  that
+			-- are  recognized anywhere in the pattern except within square
+			-- brackets, and those that are recognized in square  brackets.
+			-- Outside square brackets, the meta-characters are as follows:
+			--   \      general escape character with several uses
+			--   ^      assert start of subject (or line, in multiline mode)
+			--   $      assert end of subject (or line, in multiline mode)
+			--   .      match any character except newline (by default)
+			--   [      start character class definition
+			--   |      start of alternative branch
+			--   (      start subpattern
+			--   )      end subpattern
+			--   ?      extends the meaning of (
+			--          also 0 or 1 quantifier
+			--          also quantifier minimizer
+			--   *      0 or more quantifier
+			--   +      1 or more quantifier
+			--   {      start min/max quantifier
+			--
+			-- Part of a pattern that is in square  brackets  is  called  a
+			-- "character  class".  In  a  character  class  the only meta-
+			-- characters are:
+			--   \      general escape character
+			--   ^      negate the class, but only if the first character
+			--   -      indicates character range
+			--   ]      terminates the character class
+		do
+			subject := Void
+			compile_pattern (a_pattern)
+			offset_vector_count := subexpression_count * 2 + 2
+			if offset_vector.count < offset_vector_count then
+				offset_vector := FIXED_INTEGER_ARRAY_.resize (offset_vector, offset_vector_count)
+			end
+		ensure
+			matcher_not_active: not is_matcher_active and not has_matched
+		end
+
+feature -- Public matcher infos
+
+	subject: STRING
+			-- Actual subject to match on
+
+	subject_start: INTEGER
+			-- The starting index of the portion of interest of the subject.
+			-- Anchored expressions only matches at this point even on
+			-- repeated matches
+
+	subject_end: INTEGER
+			-- The ending index of the portion of interest of the subject
+
+	match_count: INTEGER
+			-- Number of matched patterns;
+			-- Result > 1 implies there are matched (sub-) portions
+
+	is_matcher_active: BOOLEAN is
+			-- Matcher active state
+		do
+			Result := subject /= Void
+		end
+
+	has_matched: BOOLEAN is
+			-- Was the last match attempt successful?
+		do
+			Result := match_count > 0
+		ensure
+			definition: Result = (match_count > 0)
 		end
 
 feature -- Matching
 
-	match_start (a_eptr: INTEGER): BOOLEAN is
+	match_it (a_subject: STRING; a_start, a_end: INTEGER) is
+			-- This function applies a compiled regexp to a subject string and picks out
+			-- portions of the string if it matches. Two elements in the 'offset_vector'
+			-- are set for each substring: the offsets to the start and end of the
+			-- substring.
+		require
+			compiled: is_compiled
+			valid_subject: a_subject /= Void
 		local
-			new_count: INTEGER
+			first_char: INTEGER
+			req_char: INTEGER
+			req_char2: INTEGER
+			req_char_ptr: INTEGER
+			p: INTEGER
+			stop: BOOLEAN
 		do
-			subject := regexp.subject
-			byte_code := regexp.byte_code
-			code_position := 0
-			eptr := a_eptr
-			eptr_lower := 0
-			eptr_upper := -1
-			offset_top := 2 -- TODO: + regexp.offset_vector.lower
-			brastart_count := regexp.offset_vector_count
-			new_count := brastart_lower + brastart_count
-			if brastart_capacity < new_count then
-				brastart_vector := NATIVE_INTEGER_ARRAY_.resize (brastart_vector, brastart_capacity, new_count)
-				brastart_capacity := new_count
+			subject := a_subject
+			subject_next_start := a_start
+			subject_end := a_end
+			match_count := 0
+
+			first_matched_index := a_start
+
+			first_char := -1
+			req_char := -1
+			req_char2 := -1
+			req_char_ptr := first_matched_index - 1
+
+				-- Set up the first character to match, if available. The first_char value is
+				-- never set for an anchored regular expression, but the anchoring may be forced
+				-- at run time, so we have to test for anchoring. The first char may be unset for
+				-- an unanchored pattern, of course. If there's no first char and the pattern was
+				-- studied, there may be a bitmap of possible first characters.
+			if not is_anchored then
+				if first_character >= 0 then
+					if is_caseless then
+						first_char := character_case_mapping.to_lower (first_character)
+					else
+						first_char := first_character
+					end
+				end
 			end
-			is_caseless := regexp.is_caseless
-			is_multiline := regexp.is_multiline
-			is_dotall := regexp.is_dotall
-			Result := match_internal (0, True, False) = return_true
+
+				-- For anchored or unanchored matches, there may be a "last known required
+				-- character" set. If the PCRE_CASELESS is set, implying that the match starts
+				-- caselessly, or if there are any changes of this flag within the regex, set up
+				-- both cases of the character. Otherwise set the two values the same, which will
+				-- avoid duplicate testing (which takes significant time). This covers the vast
+				-- majority of cases. It will be suboptimal when the case flag changes in a regex
+				-- and the required character in fact is caseful.
+			if required_character >= 0 then
+				req_char := required_character
+				if is_caseless or else is_ichanged then
+					req_char2 := character_case_mapping.flip_case (req_char)
+				else
+					req_char2 := req_char
+				end
+			end
+
+				-- Loop for handling unanchored repeated matching attempts;
+				-- for anchored regexps the loop runs just once.
+			from until stop loop
+				match_count := 0
+
+				from p := offset_vector_count - 1 until p < 0 loop
+					offset_vector.put (0, p)
+					p := p - 1
+				end
+
+				if first_char >= 0 then
+						-- Advance to a unique first char if possible.
+					if is_caseless then
+						from
+						until
+							first_matched_index > a_end or else
+							character_case_mapping.to_lower (subject.item_code (first_matched_index)) = first_char
+						loop
+							first_matched_index := first_matched_index + 1
+						end
+					else
+						from
+						until
+							first_matched_index > a_end or else
+							subject.item_code (first_matched_index) = first_char
+						loop
+							first_matched_index := first_matched_index + 1
+						end
+					end
+				elseif is_startline then
+						-- Or to just after \n for a multiline match if possible.
+					if first_matched_index > a_start then
+						from
+						until
+							first_matched_index > a_end or else
+							subject.item_code (first_matched_index - 1) = New_line_code
+						loop
+							first_matched_index := first_matched_index + 1
+						end
+					end
+				elseif start_bits /= Void then
+						-- Or to a non-unique first char after study.
+					from
+					until
+						first_matched_index > a_end or else
+						start_bits.has (subject.item_code (first_matched_index))
+					loop
+						first_matched_index := first_matched_index + 1
+					end
+				end
+
+				if req_char >= 0 then
+						-- If req_char is set, we know that that character must appear in the subject
+						-- for the match to succeed. If the first character is set, req_char must be
+						-- later in the subject; otherwise the test starts at the match point. This
+						-- ptimization can save a huge amount of backtracking in patterns with nested
+						-- unlimited repeats that aren't going to match. We don't know what the state of
+						-- case matching may be when this character is hit, so test for it in both its
+						-- cases if necessary. However, the different cased versions will not be set up
+						-- unless PCRE_CASELESS was given or the casing state changes within the regex.
+						-- Writing separate code makes it go faster, as does using an autoincrement and
+						-- backing off on a match.
+					if first_char >= 0 then
+						p := first_matched_index + 1
+					else
+						p := first_matched_index
+					end
+
+						-- We don't need to repeat the search if we haven't yet reached the
+						-- place we found it at last time.
+					if p > req_char_ptr then
+						if req_char = req_char2 then
+								-- Do a single test if no case difference is set up.
+							from
+							until
+								p > a_end or else
+								subject.item_code (p) = req_char
+							loop
+								p := p + 1
+							end
+						else
+								-- Otherwise test for either case.
+							from
+							until
+								p > a_end or else
+								subject.item_code (p) = req_char
+								or else subject.item_code (p) = req_char2
+							loop
+								p := p + 1
+							end
+						end
+
+						if p > a_end then
+								-- If we can't find the required character, break the matching loop.
+							stop := True
+						else
+								-- If we have found the required character, save the point where we
+								-- found it, so that we don't search again next time round the loop if
+								-- the start hasn't passed this character yet.
+							req_char_ptr := p
+						end
+					end
+				end
+
+				if not stop then
+					if match_start (first_matched_index) then
+						offset_vector.put (first_matched_index, 0)
+						offset_vector.put (subject_next_start, 1)
+						match_count := match_count // 2
+						stop := True
+					else
+						match_count := 0
+						stop := is_anchored or else first_matched_index > a_end
+							-- Yes, move at least one step behind the subject:
+						first_matched_index := first_matched_index + 1
+					end
+				end
+			end
+		ensure
+			matcher_active: is_matcher_active
+			holding_ref: subject = a_subject
 		end
 
 feature {NONE} -- Access
 
-	regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Associated regular expression
+	subject_next_start: INTEGER
+			-- Points after the last matched character
 
-	byte_code: RX_BYTE_CODE
-			-- Byte code of regular expression
-
-	code_position: INTEGER
-			-- Position in `byte_code'
-
-	subject: STRING
-			-- Input string
+	first_matched_index: INTEGER
+			-- Points to the first matched character (if any)
 
 	eptr: INTEGER
 			-- Position in `subject'
+
+	offset_vector: like FIXED_INTEGER_ARRAY_TYPE
+			-- FIXED_ARRAY[INTEGER]
+
+	offset_vector_count: INTEGER
+			-- Number of items in `offset_vector'
 
 	offset_top: INTEGER
 
@@ -111,20 +357,61 @@ feature {NONE} -- Access
 	eptr_upper: INTEGER
 	eptr_capacity: INTEGER
 
+feature {NONE} -- Setting
+
+	set_next_start (an_index: INTEGER) is
+			-- Set `subject_next_start' to `an_index'.
+		do
+			subject_next_start := an_index
+		ensure
+			subject_next_start_set: subject_next_start = an_index
+		end
+
+	set_match_count (a_count: INTEGER) is
+			-- Set `match_count' to `a_count'.
+		do
+			match_count := a_count
+		ensure
+			match_count_set: match_count = a_count
+		end
+
 feature {NONE} -- Status report
 
-	is_caseless: BOOLEAN
+	is_matching_caseless: BOOLEAN
 
-	is_multiline: BOOLEAN
+	is_matching_multiline: BOOLEAN
 
-	is_dotall: BOOLEAN
+	is_matching_dotall: BOOLEAN
 
 feature {NONE} -- Matching
 
-	match (a_ecode: INTEGER; a_isgroup, a_condassert: BOOLEAN): INTEGER is
+	match_start (a_eptr: INTEGER): BOOLEAN is
+			-- Start a new matching cycle.
+		local
+			new_count: INTEGER
+		do
+			code_index := 0
+			eptr := a_eptr
+			eptr_lower := 0
+			eptr_upper := -1
+			offset_top := 2
+			brastart_count := offset_vector_count
+			new_count := brastart_lower + brastart_count
+			if brastart_capacity < new_count then
+				brastart_vector := NATIVE_INTEGER_ARRAY_.resize (brastart_vector, brastart_capacity, new_count)
+				brastart_capacity := new_count
+			end
+			is_matching_caseless := is_caseless
+			is_matching_multiline := is_multiline
+			is_matching_dotall := is_dotall
+			Result := match_internal (0, True, False) = return_true
+		end
+
+	match_recursive (a_ecode: INTEGER; a_isgroup, a_condassert: BOOLEAN): INTEGER is
+			-- Recursive call for matching subexpression and the like.
 		local
 			old_eptr: INTEGER
-			old_code_position: INTEGER
+			old_code_index: INTEGER
 			old_caseless: BOOLEAN
 			old_dotall: BOOLEAN
 			old_multiline: BOOLEAN
@@ -132,18 +419,18 @@ feature {NONE} -- Matching
 			old_eptr_upper: INTEGER
 		do
 			old_eptr := eptr
-			old_code_position := code_position
-			old_caseless := is_caseless
-			old_dotall := is_dotall
-			old_multiline := is_multiline
+			old_code_index := code_index
+			old_caseless := is_matching_caseless
+			old_dotall := is_matching_dotall
+			old_multiline := is_matching_multiline
 			old_offset_top := offset_top
 			old_eptr_upper := eptr_upper
 			Result := match_internal (a_ecode, a_isgroup, a_condassert)
 			eptr := old_eptr
-			code_position := old_code_position
-			is_caseless := old_caseless
-			is_dotall := old_dotall
-			is_multiline := old_multiline
+			code_index := old_code_index
+			is_matching_caseless := old_caseless
+			is_matching_dotall := old_dotall
+			is_matching_multiline := old_multiline
 			offset_top := old_offset_top
 			eptr_upper := old_eptr_upper
 		ensure
@@ -151,6 +438,7 @@ feature {NONE} -- Matching
 		end
 
 	match_internal (a_ec: INTEGER; a_isgroup, a_iscondassert: BOOLEAN): INTEGER is
+			-- The real matching work is mainly done in this routine.
 		local
 			op: INTEGER
 			ec: INTEGER
@@ -183,7 +471,7 @@ feature {NONE} -- Matching
 				op := byte_code.opcode_item (ec)
 				if op > op_bra then
 					Result := match_additional_bracket (ec, op - op_bra)
-					ec := code_position
+					ec := code_index
 				else
 						-- Other types of node can be handled by a switch.
 					inspect op
@@ -201,15 +489,15 @@ feature {NONE} -- Matching
 						if byte_code.opcode_item (ec + 2) = op_cref then
 								-- Condition is extraction test.
 							tmp := byte_code.integer_item (ec + 3) * 2
-							if tmp < offset_top and then regexp.offset_vector.item (tmp) > 0 then
-								Result := match (ec + 4, True, False)
+							if tmp < offset_top and then offset_vector.item (tmp) > 0 then
+								Result := match_recursive (ec + 4, True, False)
 							else
-								Result := match (ec + 2 + byte_code.integer_item (ec + 1), True, False)
+								Result := match_recursive (ec + 2 + byte_code.integer_item (ec + 1), True, False)
 							end
 						else
-								-- The condition is an assertion. Call `match' to evaluate it - setting
+								-- The condition is an assertion. Call `match_recursive' to evaluate it - setting
 								-- the final argument True causes it to stop at the end of an assertion.
-							Result := match (ec + 2, True, True)
+							Result := match_recursive (ec + 2, True, True)
 							if Result = return_true then
 								ec := ec + 2 + byte_code.integer_item (ec + 3)
 								from until byte_code.opcode_item (ec) /= op_alt loop
@@ -218,7 +506,7 @@ feature {NONE} -- Matching
 							else
 								ec := ec + byte_code.integer_item (ec + 1)
 							end
-							Result := match (ec + 2, True, False)
+							Result := match_recursive (ec + 2, True, False)
 						end
 					when op_cref then
 							-- Skip over conditional reference data if encountered (should not be).
@@ -226,21 +514,21 @@ feature {NONE} -- Matching
 					when op_end then
 							-- End of the pattern. If PCRE_NOTEMPTY is set, fail if we have matched
 							-- an empty string - recursion will then try other alternatives, if any.
-						if not regexp.is_empty_allowed and then eptr = regexp.start_match then
+						if not is_empty_allowed and then eptr = first_matched_index then
 							Result := return_false
 						else
 								-- Record where we ended.
-							regexp.set_next_start (eptr)
+							set_next_start (eptr)
 								-- And how many extracts were taken.
-							regexp.set_match_count (offset_top)
+							set_match_count (offset_top)
 							Result := return_true
 						end
 					when op_opt then
 							-- Change option settings.
 						opts := byte_code.integer_item (ec + 1)
-						is_caseless := is_option_caseless (opts)
-						is_multiline := is_option_multiline (opts)
-						is_dotall := is_option_dotall (opts)
+						is_matching_caseless := is_option_caseless (opts)
+						is_matching_multiline := is_option_multiline (opts)
+						is_matching_dotall := is_option_dotall (opts)
 						ec := ec + 2
 					when op_assert, op_assertback then
 							-- Assertion brackets. Check the alternative branches in turn - the
@@ -255,7 +543,7 @@ feature {NONE} -- Matching
 						Result := next_matching_alternate (ec)
 						eptr_lower := old_eptr_lower
 						eptr_upper := old_eptr_upper
-						ec := code_position
+						ec := code_index
 						if byte_code.opcode_item (ec) = op_ket then
 							Result := return_false
 						elseif a_iscondassert then
@@ -270,7 +558,7 @@ feature {NONE} -- Matching
 								op := byte_code.opcode_item (ec)
 							end
 							ec := ec + 2
-							offset_top := regexp.match_count
+							offset_top := match_count
 						end
 					when op_assert_not, op_assertback_not then
 							-- Negative assertion: all branches must fail to match.
@@ -279,7 +567,7 @@ feature {NONE} -- Matching
 						elseif a_iscondassert then
 							Result := return_true
 						else
-							ec := code_position + 2
+							ec := code_index + 2
 						end
 					when op_reverse then
 							-- Move the subject pointer back. This occurs only at the start of
@@ -287,7 +575,7 @@ feature {NONE} -- Matching
 							-- move back, this match function fails. When working with UTF-8 we move
 							-- back a number of characters, not bytes.
 						eptr := eptr - byte_code.integer_item (ec + 1)
-						if eptr < regexp.subject_start then
+						if eptr < subject_start then
 							Result := return_false
 						else
 							ec := ec + 2
@@ -318,14 +606,14 @@ feature {NONE} -- Matching
 							j := j + 1
 							i := i + 1
 						end
-						tmp := match (0, True, False)
+						tmp := match_recursive (0, True, False)
 						brastart_lower := old_brastart_lower
 						if tmp = return_true then
 								-- In case the recursion has set more capturing values, save the final
 								-- number, then move along the subject till after the recursive match,
 								-- and advance one byte in the pattern code.
-							offset_top := regexp.match_count
-							eptr := regexp.subject_next_start
+							offset_top := match_count
+							eptr := subject_next_start
 							ec := ec + 1
 						else
 							Result := return_false
@@ -341,7 +629,7 @@ feature {NONE} -- Matching
 						tmpptr := eptr
 							-- Never uses the result.
 						n := next_matching_alternate (ec)
-						ec := code_position
+						ec := code_index
 						op := byte_code.opcode_item (ec)
 							-- If hit the end of the group (which could be repeated), fail.
 						if op /= op_once and then op /= op_alt then
@@ -353,8 +641,8 @@ feature {NONE} -- Matching
 								ec := ec + byte_code.integer_item (ec + 1)
 								op := byte_code.opcode_item (ec)
 							end
-							offset_top := regexp.match_count
-							eptr := regexp.subject_next_start
+							offset_top := match_count
+							eptr := subject_next_start
 								-- For a non-repeating ket, just continue at this level. This also
 								-- happens for a repeating ket if no characters were matched in the group.
 								-- This is the forcible breaking of infinite loops as implemented in Perl
@@ -368,20 +656,20 @@ feature {NONE} -- Matching
 									-- that changed within the bracket before re-running it, so check the next
 									-- opcode.
 								if byte_code.opcode_item (ec + 2) = op_opt then
-									regexp.set_ims_options (byte_code.integer_item (ec + 3))
+									set_ims_options (byte_code.integer_item (ec + 3))
 								end
 								if op = op_ketrmin then
-									Result := match (ec + 2, False, False)
+									Result := match_recursive (ec + 2, False, False)
 									if Result /= return_true then
-										Result := match (tmp, True, False)
+										Result := match_recursive (tmp, True, False)
 									end
 								else
 									check
 										op_ketrmax: op = op_ketrmax
 									end
-									Result := match (tmp, True, False)
+									Result := match_recursive (tmp, True, False)
 									if Result /= return_true then
-										Result := match (ec + 2, False, False)
+										Result := match_recursive (ec + 2, False, False)
 									end
 								end
 							end
@@ -400,7 +688,7 @@ feature {NONE} -- Matching
 							-- repeat limits are compiled as a number of copies, with the optional ones
 							-- preceded by BRAZERO or BRAMINZERO.
 						tmpptr := ec + 1
-						if match (tmpptr, True, False) = return_true then
+						if match_recursive (tmpptr, True, False) = return_true then
 							Result := return_true
 						else
 							from op := op_alt until op /= op_alt loop
@@ -415,7 +703,7 @@ feature {NONE} -- Matching
 							tmpptr := tmpptr + byte_code.integer_item (tmpptr + 1)
 							op := byte_code.opcode_item (tmpptr)
 						end
-						if match (tmpptr + 2, True, False) = return_true then
+						if match_recursive (tmpptr + 2, True, False) = return_true then
 							Result := return_true
 						else
 							ec := ec + 1
@@ -436,8 +724,8 @@ feature {NONE} -- Matching
 							or else op = op_assertback or else op = op_assertback_not
 						then
 								-- For ONCE.
-							regexp.set_next_start (eptr)
-							regexp.set_match_count (offset_top)
+							set_next_start (eptr)
+							set_match_count (offset_top)
 							Result := return_true
 						else
 								-- In all other cases except a conditional group we have to check the
@@ -448,17 +736,17 @@ feature {NONE} -- Matching
 								n := op - op_bra
 								off := n * 2
 								if n > 0 then
-									regexp.offset_vector.put (brastart_vector.item (brastart_lower + off), off)
-									regexp.offset_vector.put (eptr, off + 1)
+									offset_vector.put (brastart_vector.item (brastart_lower + off), off)
+									offset_vector.put (eptr, off + 1)
 									if offset_top <= off then
 										offset_top := off + 2
 									end
 								end
 							end
 								-- Reset the value of the ims flags, in case they got changed during the group.
-							is_caseless := regexp.is_caseless
-							is_multiline := regexp.is_multiline
-							is_dotall := regexp.is_dotall
+							is_matching_caseless := is_caseless
+							is_matching_multiline := is_multiline
+							is_matching_dotall := is_dotall
 							op := byte_code.opcode_item (ec)
 							if op = op_ket or else eptr <= tmpptr then
 									-- For a non-repeating ket, just continue at this level. This also
@@ -471,39 +759,39 @@ feature {NONE} -- Matching
 									-- The repeating kets try the rest of the pattern or restart from the
 									--  preceding bracket, in the appropriate order.
 								if op = op_ketrmin then
-									Result := match (ec + 2, False, False)
+									Result := match_recursive (ec + 2, False, False)
 									if Result /= return_true then
-										Result := match (tmp, True, False)
+										Result := match_recursive (tmp, True, False)
 									end
 								else
 									check
 										op_ketrmax: op = op_ketrmax
 									end
-									Result := match (tmp, True, False)
+									Result := match_recursive (tmp, True, False)
 									if Result /= return_true then
-										Result := match (ec + 2, False, False)
+										Result := match_recursive (ec + 2, False, False)
 									end
 								end
 							end
 						end
 					when op_circ then
 							-- Start of subject unless notbol, or after internal newline if multiline.
-						if not regexp.is_bol and then eptr = regexp.subject_start then
+						if not is_bol and then eptr = subject_start then
 							Result := return_false
-						elseif is_multiline then
-							if eptr > regexp.subject_start and then subject.item_code (eptr - 1) /= New_line_code then
+						elseif is_matching_multiline then
+							if eptr > subject_start and then subject.item_code (eptr - 1) /= New_line_code then
 								Result := return_false
 							else
 								ec := ec + 1
 							end
-						elseif eptr > regexp.subject_start then
+						elseif eptr > subject_start then
 							Result := return_false
 						else
 							ec := ec + 1
 						end
 					when op_sod then
 							-- Start of subject assertion.
-						if eptr > regexp.subject_start then
+						if eptr > subject_start then
 							Result := return_false
 						else
 							ec := ec + 1
@@ -511,37 +799,37 @@ feature {NONE} -- Matching
 					when op_doll then
 							-- Assert before internal newline if multiline, or before a terminating
 							-- newline unless endonly is set, else end of subject unless noteol is set.
-						if is_multiline then
-							if eptr <= regexp.subject_end then
+						if is_matching_multiline then
+							if eptr <= subject_end then
 								if subject.item_code (eptr) /= New_line_code then
 									Result := return_false
 								else
 									ec := ec + 1
 								end
-							elseif regexp.is_eol then
+							elseif is_eol then
 								ec := ec + 1
 							else
 								Result := return_false
 							end
-						elseif not regexp.is_eol then
+						elseif not is_eol then
 							Result := return_false
-						elseif not regexp.is_dollar_endonly then
+						elseif not is_dollar_endonly then
 							if
-								eptr < regexp.subject_end or else
-								(eptr = regexp.subject_end and then subject.item_code (eptr) /= New_line_code)
+								eptr < subject_end or else
+								(eptr = subject_end and then subject.item_code (eptr) /= New_line_code)
 							then
 								Result := return_false
 							else
 								ec := ec + 1
 							end
-						elseif eptr <= regexp.subject_end then
+						elseif eptr <= subject_end then
 							Result := return_false
 						else
 							ec := ec + 1
 						end
 					when op_eod then
 							-- End of subject assertion (\z).
-						if eptr <= regexp.subject_end then
+						if eptr <= subject_end then
 							Result := return_false
 						else
 							ec := ec + 1
@@ -549,8 +837,8 @@ feature {NONE} -- Matching
 					when op_eodn then
 							-- End of subject or ending \n assertion (\Z).
 						if
-							eptr < regexp.subject_end or else
-							(eptr = regexp.subject_end and then subject.item_code (eptr) /= New_line_code)
+							eptr < subject_end or else
+							(eptr = subject_end and then subject.item_code (eptr) /= New_line_code)
 						then
 							Result := return_false
 						else
@@ -559,8 +847,8 @@ feature {NONE} -- Matching
 					when op_not_word_boundary then
 							-- No word boundary assertion.
 						if
-							(eptr > regexp.subject_start and then regexp.word_set.has (subject.item_code (eptr - 1))) /=
-							(eptr <= regexp.subject_end and then regexp.word_set.has (subject.item_code (eptr)))
+							(eptr > subject_start and then word_set.has (subject.item_code (eptr - 1))) /=
+							(eptr <= subject_end and then word_set.has (subject.item_code (eptr)))
 						then
 							Result := return_false
 						else
@@ -569,8 +857,8 @@ feature {NONE} -- Matching
 					when op_word_boundary then
 							-- Word boundary assertions.
 						if
-							(eptr > regexp.subject_start and then regexp.word_set.has (subject.item_code (eptr - 1))) =
-							(eptr <= regexp.subject_end and then regexp.word_set.has (subject.item_code (eptr)))
+							(eptr > subject_start and then word_set.has (subject.item_code (eptr - 1))) =
+							(eptr <= subject_end and then word_set.has (subject.item_code (eptr)))
 						then
 							Result := return_false
 						else
@@ -578,51 +866,51 @@ feature {NONE} -- Matching
 						end
 					when op_any then
 							-- Match a single character type; inline for speed.
-						if not is_dotall and then eptr <= regexp.subject_end and then subject.item_code (eptr) = New_line_code then
+						if not is_matching_dotall and then eptr <= subject_end and then subject.item_code (eptr) = New_line_code then
 							Result := return_false
-						elseif eptr > regexp.subject_end then
+						elseif eptr > subject_end then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_not_digit then
-						if eptr > regexp.subject_end or else digit_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else digit_set.has (subject.item_code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_digit then
-						if eptr > regexp.subject_end or else not digit_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else not digit_set.has (subject.item_code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_not_whitespace then
-						if eptr > regexp.subject_end or else space_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else space_set.has (subject.item_code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_whitespace then
-						if eptr > regexp.subject_end or else not space_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else not space_set.has (subject.item_code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_not_wordchar then
-						if eptr > regexp.subject_end or else regexp.word_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else word_set.has (subject.item_code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_wordchar then
-						if eptr > regexp.subject_end or else not regexp.word_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else not word_set.has (subject.item_code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
@@ -630,21 +918,21 @@ feature {NONE} -- Matching
 						end
 					when op_ref then
 						Result := match_repeated_refs (ec)
-						ec := code_position
+						ec := code_index
 					when op_class then
 						Result := match_repeated_classes (ec)
-						ec := code_position
+						ec := code_index
 					when op_chars then
 							-- Match a run of characters.
 						n := byte_code.integer_item (ec + 1)
 						ec := ec + 2
-						if eptr + n - 1 > regexp.subject_end then
+						if eptr + n - 1 > subject_end then
 							Result := return_false
-						elseif is_caseless then
+						elseif is_matching_caseless then
 							from until n <= 0 loop
 								if
-									regexp.character_case_mapping.to_lower (byte_code.character_item (ec)) /=
-									regexp.character_case_mapping.to_lower (subject.item_code (eptr))
+									character_case_mapping.to_lower (byte_code.character_item (ec)) /=
+									character_case_mapping.to_lower (subject.item_code (eptr))
 								then
 									Result := return_false
 									n := 0
@@ -686,14 +974,14 @@ feature {NONE} -- Matching
 						Result := match_repeated_characters (ec, 0, 1, op = op_minquery)
 					when op_not then
 							-- Match a negated single character.
-						if eptr > regexp.subject_end then
+						if eptr > subject_end then
 							Result := return_false
 						else
 							ec := ec + 1
-							if is_caseless then
+							if is_matching_caseless then
 								if
-									regexp.character_case_mapping.to_lower (byte_code.character_item (ec)) =
-									regexp.character_case_mapping.to_lower (subject.item_code (eptr))
+									character_case_mapping.to_lower (byte_code.character_item (ec)) =
+									character_case_mapping.to_lower (subject.item_code (eptr))
 								then
 									Result := return_false
 								end
@@ -776,14 +1064,14 @@ feature {NONE} -- Matching
 			save_offset3: INTEGER
 		do
 			offset := a_number * 2
-			save_offset1 := regexp.offset_vector.item (offset)
-			save_offset2 := regexp.offset_vector.item (offset + 1)
+			save_offset1 := offset_vector.item (offset)
+			save_offset2 := offset_vector.item (offset + 1)
 			save_offset3 := brastart_vector.item (brastart_lower + offset)
 			brastart_vector.put (eptr, brastart_lower + offset)
 			Result := next_matching_alternate (a_ec)
 			if Result /= return_true then
-				regexp.offset_vector.put (save_offset1, offset)
-				regexp.offset_vector.put (save_offset2, offset+1)
+				offset_vector.put (save_offset1, offset)
+				offset_vector.put (save_offset2, offset+1)
 				brastart_vector.put (save_offset3, brastart_lower + offset)
 				Result := return_false
 			end
@@ -793,16 +1081,16 @@ feature {NONE} -- Matching
 		local
 			op, res: INTEGER
 		do
-			code_position := a_ec
+			code_index := a_ec
 			from op := op_alt until op /= op_alt loop
-				res := match (code_position + 2, True, False)
+				res := match_recursive (code_index + 2, True, False)
 				if res = return_true then
 						-- Break the loop.
 					op := op_end
 					Result := return_true
 				else
-					code_position := code_position + byte_code.integer_item (code_position + 1)
-					op := byte_code.opcode_item (code_position)
+					code_index := code_index + byte_code.integer_item (code_index + 1)
+					op := byte_code.opcode_item (code_index)
 				end
 			end
 		ensure
@@ -817,20 +1105,20 @@ feature {NONE} -- Matching
 		local
 			p, sp, ep: INTEGER
 		do
-			if a_length > regexp.subject_end - a_eptr + 1 then
+			if a_length > subject_end - a_eptr + 1 then
 					-- Always fail if not enough characters left.
 				Result := return_false
 			else
-				p := regexp.offset_vector.item (a_offset)
+				p := offset_vector.item (a_offset)
 				sp := a_eptr
 				ep := p + a_length
 				Result := return_true
 					-- Separate the caselesss case for speed.
-				if is_caseless then
+				if is_matching_caseless then
 					from until p >= ep loop
 						if
-							regexp.character_case_mapping.to_lower (subject.item_code (p)) =
-							regexp.character_case_mapping.to_lower (subject.item_code (sp))
+							character_case_mapping.to_lower (subject.item_code (p)) =
+							character_case_mapping.to_lower (subject.item_code (sp))
 						then
 							p := p + 1
 							sp := sp + 1
@@ -876,10 +1164,10 @@ feature {NONE} -- Matching
 				-- of subject left; this ensures that every attempt at a match fails. We
 				-- can't just fail here, because of the possibility of quantifiers with zero
 				-- minima.
-			if off >= offset_top or else regexp.offset_vector.item (off) <= 0 then
-				length := regexp.subject_end - eptr + 2
+			if off >= offset_top or else offset_vector.item (off) <= 0 then
+				length := subject_end - eptr + 2
 			else
-				length := regexp.offset_vector.item (off + 1) - regexp.offset_vector.item (off)
+				length := offset_vector.item (off + 1) - offset_vector.item (off)
 			end
 				-- Set up for repetition, or handle the non-repeated case.
 			inspect byte_code.opcode_item (ec)
@@ -950,7 +1238,7 @@ feature {NONE} -- Matching
 					if minimize then
 							-- If minimizing, keep trying and advancing the pointer
 						from i := min until Result /= return_none loop
-							if match (ec, False, False) = return_true then
+							if match_recursive (ec, False, False) = return_true then
 								Result := return_true
 							elseif i >= max or else match_ref (eptr, off, length) /= return_true then
 								Result := return_false
@@ -971,7 +1259,7 @@ feature {NONE} -- Matching
 							end
 						end
 						from until eptr < tmpptr loop
-							if match (ec, False, False) = return_true then
+							if match_recursive (ec, False, False) = return_true then
 								Result := return_true
 								eptr := tmpptr - 1
 							else
@@ -984,7 +1272,7 @@ feature {NONE} -- Matching
 					end
 				end
 			end
-			code_position := ec
+			code_index := ec
 		ensure
 			valid_result: Result = return_true or Result = return_false or Result = return_none
 		end
@@ -1049,7 +1337,7 @@ feature {NONE} -- Matching
 			end
 				-- First, ensure the minimum number of matches are present.
 			from i := 1 until i > min loop
-				if eptr > regexp.subject_end then
+				if eptr > subject_end then
 					Result := return_false
 					i := min + 1
 				else
@@ -1070,9 +1358,9 @@ feature {NONE} -- Matching
 						-- If minimizing, keep testing the rest of the expression and advancing
 						-- the pointer while it matches the class.
 					from i := min until Result /= return_none loop
-						if match (ec, False, False) = return_true then
+						if match_recursive (ec, False, False) = return_true then
 							Result := return_true
-						elseif i >= max or else eptr > regexp.subject_end then
+						elseif i >= max or else eptr > subject_end then
 							Result := return_false
 						else
 							c := subject.item_code (eptr)
@@ -1090,7 +1378,7 @@ feature {NONE} -- Matching
 					from
 						i := min
 					until
-						i >= max or else eptr > regexp.subject_end
+						i >= max or else eptr > subject_end
 					loop
 						c := subject.item_code (eptr)
 						if byte_code.character_set_has (a_set, c) then
@@ -1101,7 +1389,7 @@ feature {NONE} -- Matching
 						end
 					end
 					from until eptr < pp loop
-						if match (ec, False, False) = return_true then
+						if match_recursive (ec, False, False) = return_true then
 							Result := return_true
 							pp := eptr -- stop the loop
 						end
@@ -1112,7 +1400,7 @@ feature {NONE} -- Matching
 					end
 				end
 			end
-			code_position := ec
+			code_index := ec
 		ensure
 			valid_result: Result = return_true or Result = return_false or Result = return_none
 		end
@@ -1122,7 +1410,7 @@ feature {NONE} -- Matching
 			i, tmpptr: INTEGER
 			c: INTEGER
 		do
-			if a_min > regexp.subject_end - eptr + 1 then
+			if a_min > subject_end - eptr + 1 then
 				Result := return_false
 			else
 				c := byte_code.character_item (a_ec - 1)
@@ -1133,10 +1421,10 @@ feature {NONE} -- Matching
 					-- the expression and advancing one matching character if failing, up to the
 					-- maximum. Alternatively, if maximizing, find the maximum number of
 					-- characters and work backwards.
-				if is_caseless then
-					c := regexp.character_case_mapping.to_lower (c)
+				if is_matching_caseless then
+					c := character_case_mapping.to_lower (c)
 					from i := 1 until i > a_min loop
-						if c /= regexp.character_case_mapping.to_lower (subject.item_code (eptr)) then
+						if c /= character_case_mapping.to_lower (subject.item_code (eptr)) then
 							Result := return_false
 							i := a_min + 1
 						else
@@ -1147,11 +1435,11 @@ feature {NONE} -- Matching
 					if Result = return_none and then a_min < a_max then
 						if a_minimize then
 							from i := a_min until Result /= return_none loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
-								elseif i >= a_max or else eptr > regexp.subject_end then
+								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
-								elseif c /= regexp.character_case_mapping.to_lower (subject.item_code (eptr)) then
+								elseif c /= character_case_mapping.to_lower (subject.item_code (eptr)) then
 									eptr := eptr + 1
 									Result := return_false
 								else
@@ -1163,8 +1451,8 @@ feature {NONE} -- Matching
 							tmpptr := eptr
 							from i := a_min until i >= a_max loop
 								if
-									eptr > regexp.subject_end or else
-									c /= regexp.character_case_mapping.to_lower (subject.item_code (eptr))
+									eptr > subject_end or else
+									c /= character_case_mapping.to_lower (subject.item_code (eptr))
 								then
 									i := a_max
 								else
@@ -1173,7 +1461,7 @@ feature {NONE} -- Matching
 								end
 							end
 							from until eptr < tmpptr loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
 									tmpptr := eptr -- stop the loop
 								end
@@ -1198,9 +1486,9 @@ feature {NONE} -- Matching
 					if Result = return_none and then a_min < a_max then
 						if a_minimize then
 							from i := a_min until Result /= return_none loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
-								elseif i >= a_max or else eptr > regexp.subject_end then
+								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
 								elseif c /= subject.item_code (eptr) then
 									eptr := eptr + 1
@@ -1213,7 +1501,7 @@ feature {NONE} -- Matching
 						else
 							tmpptr := eptr
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else c /= subject.item_code (eptr) then
+								if eptr > subject_end or else c /= subject.item_code (eptr) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1221,7 +1509,7 @@ feature {NONE} -- Matching
 								end
 							end
 							from until eptr < tmpptr loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
 									tmpptr := eptr -- stop the loop
 								end
@@ -1243,7 +1531,7 @@ feature {NONE} -- Matching
 			i, tmpptr: INTEGER
 			c: INTEGER
 		do
-			if a_min > regexp.subject_end - eptr + 1 then
+			if a_min > subject_end - eptr + 1 then
 				Result := return_false
 			else
 				c := byte_code.character_item (a_ec - 1)
@@ -1254,10 +1542,10 @@ feature {NONE} -- Matching
 					-- the expression and advancing one matching character if failing, up to the
 					-- maximum. Alternatively, if maximizing, find the maximum number of
 					-- characters and work backwards.
-				if is_caseless then
-					c := regexp.character_case_mapping.to_lower (c)
+				if is_matching_caseless then
+					c := character_case_mapping.to_lower (c)
 					from i := 1 until i > a_min loop
-						if c = regexp.character_case_mapping.to_lower (subject.item_code (eptr)) then
+						if c = character_case_mapping.to_lower (subject.item_code (eptr)) then
 							Result := return_false
 							i := a_min + 1
 						else
@@ -1268,11 +1556,11 @@ feature {NONE} -- Matching
 					if Result = return_none and then a_min < a_max then
 						if a_minimize then
 							from i := a_min until Result /= return_none loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
-								elseif i >= a_max or else eptr > regexp.subject_end then
+								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
-								elseif c /= regexp.character_case_mapping.to_lower (subject.item_code (eptr)) then
+								elseif c /= character_case_mapping.to_lower (subject.item_code (eptr)) then
 									eptr := eptr + 1
 									Result := return_false
 								else
@@ -1284,8 +1572,8 @@ feature {NONE} -- Matching
 							tmpptr := eptr
 							from i := a_min until i >= a_max loop
 								if
-									eptr > regexp.subject_end or else
-									c = regexp.character_case_mapping.to_lower (subject.item_code (eptr))
+									eptr > subject_end or else
+									c = character_case_mapping.to_lower (subject.item_code (eptr))
 								then
 									i := a_max
 								else
@@ -1294,7 +1582,7 @@ feature {NONE} -- Matching
 								end
 							end
 							from until eptr < tmpptr loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
 									tmpptr := eptr -- stop the loop
 								end
@@ -1318,9 +1606,9 @@ feature {NONE} -- Matching
 					if Result = return_none and then a_min < a_max then
 						if a_minimize then
 							from i := a_min until Result /= return_none loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
-								elseif i >= a_max or else eptr > regexp.subject_end then
+								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
 								elseif c = subject.item_code (eptr) then
 									eptr := eptr + 1
@@ -1333,7 +1621,7 @@ feature {NONE} -- Matching
 						else
 							tmpptr := eptr;
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else c = subject.item_code (eptr) then
+								if eptr > subject_end or else c = subject.item_code (eptr) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1341,7 +1629,7 @@ feature {NONE} -- Matching
 								end
 							end
 							from until eptr < tmpptr loop
-								if match (a_ec, False, False) = return_true then
+								if match_recursive (a_ec, False, False) = return_true then
 									Result := return_true
 									tmpptr := eptr -- stop the loop
 								end
@@ -1372,13 +1660,13 @@ feature {NONE} -- Matching
 				-- the minimum number of bytes before we start, except when doing '.' in
 				-- UTF8 mode. Leave the test in in all cases; in the special case we have
 				-- to test after each character.
-			if a_min > regexp.subject_end - eptr + 1 then
+			if a_min > subject_end - eptr + 1 then
 				Result := return_false
 			else
 				if a_min > 0 then
 					inspect ctype
 					when op_any then
-						if is_dotall then
+						if is_matching_dotall then
 							eptr := eptr + a_min
 						else
 							from i := 1 until i > a_min loop
@@ -1393,7 +1681,7 @@ feature {NONE} -- Matching
 						end
 					when op_not_digit then
 						from i := 1 until i > a_min loop
-							if eptr > regexp.subject_end or else digit_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else digit_set.has (subject.item_code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1403,7 +1691,7 @@ feature {NONE} -- Matching
 						end
 					when op_digit then
 						from i := 1 until i > a_min loop
-							if eptr > regexp.subject_end or else not digit_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else not digit_set.has (subject.item_code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1413,7 +1701,7 @@ feature {NONE} -- Matching
 						end
 					when op_not_whitespace then
 						from i := 1 until i > a_min loop
-							if eptr > regexp.subject_end or else space_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else space_set.has (subject.item_code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1423,7 +1711,7 @@ feature {NONE} -- Matching
 						end
 					when op_whitespace then
 						from i := 1 until i > a_min loop
-							if eptr > regexp.subject_end or else not space_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else not space_set.has (subject.item_code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1433,7 +1721,7 @@ feature {NONE} -- Matching
 						end
 					when op_not_wordchar then
 						from i := 1 until i > a_min loop
-							if eptr > regexp.subject_end or else regexp.word_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else word_set.has (subject.item_code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1443,7 +1731,7 @@ feature {NONE} -- Matching
 						end
 					when op_wordchar then
 						from i := 1 until i > a_min loop
-							if eptr > regexp.subject_end or else not regexp.word_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else not word_set.has (subject.item_code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1459,16 +1747,16 @@ feature {NONE} -- Matching
 						-- subsequent match.
 					if a_minimize then
 						from i := a_min until Result /= return_none loop
-							if match (a_ec, False, False) = return_true then
+							if match_recursive (a_ec, False, False) = return_true then
 								Result := return_true
-							elseif i >= a_max or else eptr > regexp.subject_end then
+							elseif i >= a_max or else eptr > subject_end then
 								Result := return_false
 							else
 								c := subject.item_code (eptr)
 								eptr := eptr + 1
 								inspect ctype
 								when op_any then
-									if not is_dotall and then c = New_line_code then
+									if not is_matching_dotall and then c = New_line_code then
 										Result := return_false
 									end
 								when op_not_digit then
@@ -1488,11 +1776,11 @@ feature {NONE} -- Matching
 										Result := return_false
 									end
 								when op_not_wordchar then
-									if regexp.word_set.has (subject.item_code (eptr)) then
+									if word_set.has (subject.item_code (eptr)) then
 										Result := return_false
 									end
 								when op_wordchar then
-									if not regexp.word_set.has (subject.item_code (eptr)) then
+									if not word_set.has (subject.item_code (eptr)) then
 										Result := return_false
 									end
 								end
@@ -1505,15 +1793,15 @@ feature {NONE} -- Matching
 						pp := eptr
 						inspect ctype
 						when op_any then
-							if is_dotall then
+							if is_matching_dotall then
 								i := a_max - a_min
-								if i > regexp.subject_end - eptr then
-									i := regexp.subject_end - eptr + 1
+								if i > subject_end - eptr then
+									i := subject_end - eptr + 1
 								end
 								eptr := eptr + i
 							else
 								from i := a_min until i >= a_max loop
-									if eptr > regexp.subject_end or else subject.item_code (eptr) = New_line_code then
+									if eptr > subject_end or else subject.item_code (eptr) = New_line_code then
 										i := a_max
 									else
 										eptr := eptr + 1
@@ -1523,7 +1811,7 @@ feature {NONE} -- Matching
 							end
 						when op_not_digit then
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else digit_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else digit_set.has (subject.item_code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1532,7 +1820,7 @@ feature {NONE} -- Matching
 							end
 						when op_digit then
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else not digit_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else not digit_set.has (subject.item_code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1541,7 +1829,7 @@ feature {NONE} -- Matching
 							end
 						when op_not_whitespace then
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else space_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else space_set.has (subject.item_code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1550,7 +1838,7 @@ feature {NONE} -- Matching
 							end
 						when op_whitespace then
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else not space_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else not space_set.has (subject.item_code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1559,7 +1847,7 @@ feature {NONE} -- Matching
 							end
 						when op_not_wordchar then
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else regexp.word_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else word_set.has (subject.item_code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1568,7 +1856,7 @@ feature {NONE} -- Matching
 							end
 						when op_wordchar then
 							from i := a_min until i >= a_max loop
-								if eptr > regexp.subject_end or else not regexp.word_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else not word_set.has (subject.item_code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1577,7 +1865,7 @@ feature {NONE} -- Matching
 							end
 						end
 						from until eptr < pp loop
-							if match (a_ec, False, False) = return_true then
+							if match_recursive (a_ec, False, False) = return_true then
 								Result := return_true
 								eptr := pp - 1
 							else
@@ -1596,14 +1884,12 @@ feature {NONE} -- Matching
 
 feature {NONE} -- Constants
 
-	infinity: INTEGER is
-			-- Positive infinity
-		once
-			Result := Platform.Maximum_integer
-		end
-
 	return_true: INTEGER is 1
 	return_none: INTEGER is 0
 	return_false: INTEGER is -1
+
+invariant
+
+	is_matcher_active implies is_compiled
 
 end
