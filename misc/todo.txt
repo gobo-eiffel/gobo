@@ -9,7 +9,7 @@ releases.
 8 June 1997
 
 . Review the ID counter in NFA states.
-. Resize input buffer if a call to `unput' results in too much text being
+. Resize input buffer if a call to `unread_character' results in too much text being
   pushed back (it presently raise an run-time error).
 
 14 June 1997
@@ -28,6 +28,3 @@ releases.
 . Look at `fatal_error'. Try to avoid raising an exception.
 . Put precondition to `set_start_condition'.
 
-18 October 1997
-
-. Add a Bug/Deficiency section in Gelex documentation.
