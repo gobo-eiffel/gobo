@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 
-creation
+creation {XM_XPATH_SHARED_NO_NODE_TEST}
 
 	make
 
@@ -25,6 +25,14 @@ feature {NONE} -- Initialization
 	make is
 		do
 			original_text := "empty()"
+		end
+
+feature -- Access
+
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := 0
 		end
 	
 feature -- Status report

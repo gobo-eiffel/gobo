@@ -131,7 +131,7 @@ feature -- Status report
 			-- Diagnostic print of children to `std.error'
 		local
 			a_message: STRING
-			an_expression: XM_XPATH_EXPRESSION
+			an_expression: XM_XSLT_EXPRESSION_INSTRUCTION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
 		do
 			a_message := STRING_.appended_string (instruction_indentation (a_level), instruction_name)

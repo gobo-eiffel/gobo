@@ -15,6 +15,9 @@ class XM_XPATH_COMBINED_NODE_TEST
 inherit
 
 	XM_XPATH_NODE_TEST
+		redefine
+			constraining_node_names, is_at_most_one_name_constraint
+		end
 
 	XM_XPATH_TOKENS
 
@@ -49,8 +52,32 @@ feature {NONE} -- Initialization
 			node_test_two_set: node_test_two = another_node_test
 			operator_set: operator = an_operator
 		end
-	
+
+feature -- Access
+
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := node_test_one.node_kind_mask & node_test_two.node_kind_mask
+		end
+
+	constraining_node_names: DS_SET [INTEGER] is
+			-- Set of fingerprints of node names allowed
+		do
+			if node_test_one.constraining_node_names = Void then
+				Result := node_test_two.constraining_node_names
+			elseif node_test_two.constraining_node_names = Void then
+				Result := node_test_one.constraining_node_names
+			end
+		end
+
 feature -- Status report
+
+	is_at_most_one_name_constraint: BOOLEAN is
+			-- Is there at most one name constraint?
+		do
+			Result := node_test_one.constraining_node_names = Void or else node_test_two.constraining_node_names = Void
+		end
 
 	allows_text_nodes: BOOLEAN is
 			-- Does this node test allow text nodes?

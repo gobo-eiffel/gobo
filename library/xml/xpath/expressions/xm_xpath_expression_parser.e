@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_and_expression%N")
 			end
-			parse_instance_of_expression
+			parse_comparison_expression
 			if not is_parse_error then
 				from
 					an_expression := internal_last_parsed_expression
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
-						parse_instance_of_expression
+						parse_comparison_expression
 						if not is_parse_error then
 							create another_expression.make (an_expression, And_token, internal_last_parsed_expression)
 							an_expression := another_expression
@@ -873,7 +873,7 @@ feature {NONE} -- Implementation
 
 	parse_cast_expression is
 			-- Parse a "cast as" expression;
-			-- CastExpr ::= ComparisonExpr ( "cast" "as" SingleType )?
+			-- CastExpr ::= UnaryExpr ( "cast" "as" SingleType )?
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
@@ -881,22 +881,41 @@ feature {NONE} -- Implementation
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_CAST_EXPRESSION
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			allows_empty: BOOLEAN
+			a_message: STRING
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_cast_expression%N")
 			end			
-			parse_comparison_expression
+			parse_unary_expression
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = Cast_as_token then
 					next_token ("In parse_cast_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
+					elseif tokenizer.last_token /= Name_token then
+						a_message := "expected %"<name>%", found "
+						a_message := STRING_.appended_string (a_message, display_current_token)
+						report_parse_error (a_message, 3)
 					else
-						parse_sequence
+						an_atomic_type := atomic_type_from_qname (tokenizer.last_token_value)
 						if not is_parse_error then
-							create another_expression.make_from_sequence_type (an_expression, internal_last_parsed_sequence)
-							an_expression := another_expression
+							next_token ("In parse_cast_expression: looking for optional '?'")
+							if tokenizer.is_lexical_error then
+								report_parse_error (tokenizer.last_lexical_error, 3)
+							else
+								allows_empty := tokenizer.last_token = Question_mark_token
+								create another_expression.make (an_expression, an_atomic_type, allows_empty)
+								an_expression := another_expression
+								if allows_empty then
+									next_token ("In parse_cast_expression: after parsing.")
+									if tokenizer.is_lexical_error then
+										report_parse_error (tokenizer.last_lexical_error, 3)
+									end
+								end
+							end
 						end
 					end
 				end
@@ -1060,7 +1079,7 @@ feature {NONE} -- Implementation
 
 	parse_multiplicative_expression is
 			-- Parse a MultiplicativeExpr;
-			-- MultiplicativeExpr ::= UnaryExpr ( ("*" | "div" | "idiv" | "mod") UnaryExpr )*
+			-- MultiplicativeExpr ::= UnionExpr ( ("*" | "div" | "idiv" | "mod") UnionExpr )*
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
@@ -1074,7 +1093,7 @@ feature {NONE} -- Implementation
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_multiplicative_expression%N")
 			end
-			parse_unary_expression
+			parse_union_expression
 			if not is_parse_error then
 				from
 					an_expression := internal_last_parsed_expression
@@ -1091,7 +1110,7 @@ feature {NONE} -- Implementation
 						finished := True
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
-						parse_unary_expression
+						parse_union_expression
 						if not is_parse_error then
 							create another_expression.make (an_expression, an_operator, internal_last_parsed_expression)
 							an_expression := another_expression
@@ -1110,7 +1129,7 @@ feature {NONE} -- Implementation
 
 	parse_unary_expression is
 			-- Parse a UnaryExpr;
-			-- UnaryExpr ::= ("-" | "+")* UnionExpr
+			-- UnaryExpr ::= ("-" | "+")* ValueExpr
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
@@ -1154,7 +1173,7 @@ feature {NONE} -- Implementation
 					end
 				end				
 			else
-				parse_union_expression
+				parse_path_expression
 				an_expression := internal_last_parsed_expression
 			end
 			if not is_parse_error then internal_last_parsed_expression := an_expression end
@@ -1204,8 +1223,7 @@ feature {NONE} -- Implementation
 
 	parse_intersect_expression is
 			-- Parse an IntersectExceptExpr;
-			-- IntersectExceptExpr ::= ValueExpr ( ("intersect" | "except") ValueExpr )*
-			-- ValueExpr ::= PathExpr
+			-- IntersectExceptExpr ::= InstanceOfExpr ( ("intersect" | "except") InstanceOfExpr )*
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
@@ -1218,7 +1236,7 @@ feature {NONE} -- Implementation
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_intersect_expression%N")
 			end
-			parse_path_expression
+			parse_instance_of_expression
 			if not is_parse_error then
 				from
 					an_expression := internal_last_parsed_expression
@@ -1230,7 +1248,7 @@ feature {NONE} -- Implementation
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
-						parse_path_expression
+						parse_instance_of_expression
 						if not is_parse_error then
 							create another_expression.make (an_expression, an_operator, internal_last_parsed_expression)
 							an_expression := another_expression
@@ -2337,4 +2355,60 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	atomic_type_from_qname (a_qname: STRING): XM_XPATH_ATOMIC_TYPE is
+			-- Atomic type named by `a_qname'
+		require
+			qname_not_void: a_qname /= Void
+			no_previous_error:  not is_parse_error
+		local
+			a_splitter: ST_SPLITTER
+			qname_parts: DS_LIST [STRING]
+			an_xml_prefix, a_uri, a_local_name, a_message: STRING
+			a_uri_code: INTEGER
+			an_item_type: XM_XPATH_ITEM_TYPE
+		do
+		create a_splitter.make
+				a_splitter.set_separators (":")
+				qname_parts := a_splitter.split (tokenizer.last_token_value)
+				if qname_parts.count > 2 then
+					report_parse_error ("A QName may not contain more then one token", 3)
+				elseif qname_parts.count = 0 then
+					report_parse_error ("Expecting a QName, found ''", 3)
+				elseif qname_parts.count = 1 then
+					a_uri_code := environment.default_element_namespace
+					a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
+					a_local_name := qname_parts.item (1)
+				else
+					if environment.is_prefix_declared (qname_parts.item (1)) then
+						a_uri := environment.uri_for_prefix (qname_parts.item (1))
+						a_local_name := qname_parts.item (2)
+					else
+						a_message := STRING_.concat ("Prefix ", qname_parts.item (1))
+						a_message := STRING_.appended_string (a_message, " is not in scope.")
+						report_parse_error (a_message, 3)
+					end
+				end
+				if not is_parse_error then
+					if STRING_.same_string (a_uri, Xml_schema_uri) or else
+						STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
+						an_item_type := built_in_item_type (a_uri, a_local_name)
+						if an_item_type = Void then
+							report_parse_error (STRING_.concat ("Unknown atomic type ", a_qname), 51)
+						else
+							Result ?= an_item_type
+							if Result = Void then
+								a_message := STRING_.concat ("The type ", a_qname)
+								a_message := STRING_.appended_string (a_message, " is not atomic.")
+								report_parse_error (a_message, 3)
+							end
+						end
+					else
+						a_message := STRING_.concat ("The type ", a_qname)
+						a_message := STRING_.appended_string (a_message, " is not a built-in.")
+						report_parse_error (a_message, 3)
+					end
+				end
+		ensure
+			atomic_type_or_parse_error:  not is_parse_error implies Result /= Void
+		end
 end

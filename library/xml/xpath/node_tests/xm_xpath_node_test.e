@@ -53,6 +53,22 @@ feature -- Access
 			Result := Any_node
 		end
 
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched;
+			-- A bit mask.
+		deferred
+		end
+
+	constraining_node_names: DS_SET [INTEGER] is
+			-- Set of fingerprints of node names allowed
+		require
+			at_most_one_name_constraint: is_at_most_one_name_constraint
+		do
+			-- default is that there are no constraints
+		ensure
+			not_void_if_any_constraints: True
+		end
+
 	primitive_type: INTEGER is
 			-- fingerprint of primitive type corresponding to this item type
 		do
@@ -79,6 +95,12 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	is_at_most_one_name_constraint: BOOLEAN is
+			-- Is there at most one name constraint?
+		do
+			Result := True
+		end
 
 	allows_text_nodes: BOOLEAN is
 			-- Does this node test allow text nodes?

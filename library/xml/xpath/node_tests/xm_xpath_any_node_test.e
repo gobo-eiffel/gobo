@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
-creation
+creation {XM_XPATH_SHARED_ANY_NODE_TEST}
 
 	make
 
@@ -47,6 +47,13 @@ feature -- Access
 			-- Type from which this item type is derived by restriction
 		do
 			Result := any_item
+		end
+
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := 1 |<< Element_node | 1 |<< Attribute_node | 1 |<< Document_node |
+			1 |<< Text_node | 1 |<< Comment_node | 1 |<< Processing_instruction_node | 1 |<< Namespace_node
 		end
 
 feature -- Status report

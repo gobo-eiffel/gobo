@@ -163,7 +163,10 @@ feature -- Access
 		local
 			a_node, a_next_node: XM_XPATH_NODE
 			a_stylesheet: XM_XSLT_STYLESHEET
-			a_procedure: XM_XSLT_PROCEDURE
+			a_template: XM_XSLT_TEMPLATE
+			a_variable: XM_XSLT_GENERAL_VARIABLE
+			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
+			a_function: XM_XSLT_FUNCTION
 			found: BOOLEAN
 		do
 			from
@@ -175,8 +178,23 @@ feature -- Access
 				a_stylesheet ?= a_next_node
 				if a_stylesheet /= Void then
 					found := True
-					a_procedure ?= a_node
-					Result := a_procedure
+					a_template ?= a_node
+					if a_template /= Void then
+						Result := a_template
+					else
+						a_variable ?=	 a_node
+						if a_variable /= Void then
+							Result := a_variable
+						else
+							an_attribute_set ?= a_node
+							if an_attribute_set /= Void then
+								Result := an_attribute_set
+							else
+								a_function ?= a_node
+								Result := a_function -- might be `Void'
+							end
+						end
+					end
 				end
 				a_node := a_next_node
 			end
@@ -1531,7 +1549,7 @@ feature -- Element change
 			a_set_name: STRING
 			a_fingerprint: INTEGER
 			found: BOOLEAN
-			another_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			another_cursor: DS_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
 			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
 		do

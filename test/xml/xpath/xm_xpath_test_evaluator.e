@@ -631,26 +631,26 @@ feature
 			assert ("XP0020", an_evaluator.error_value.type = Type_error and an_evaluator.error_value.code = 20)
 		end
 
---	test_for_error_xp0021 is
---			-- Cast expression cannot be cast to correct type - this is probably a 4 or a 6, but Cast needs fixing anyway.
---		local
---			an_evaluator: XM_XPATH_EVALUATOR
---			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
---		do
---			create an_evaluator.make (18, False)
---			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
---			assert ("Build successfull", not an_evaluator.was_build_error)
---			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:date")
---			evaluated_items := an_evaluator.evaluated_items
---			assert ("Evaluation error", an_evaluator.is_error)
---			print (an_evaluator.error_value.error_message); print ("%N")
---			assert ("XP0021", an_evaluator.error_value.type = Dynamic_error and an_evaluator.error_value.code = 21)
---		end
+	test_for_error_xp0021 is
+			-- Cast expression cannot be cast to correct type - this is probably a 4 or a 6, but Cast needs fixing anyway.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("('fred' eq 'jim') cast as xs:date")
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("XP0021", an_evaluator.error_value.type = Dynamic_error and an_evaluator.error_value.code = 21)
+		end
 
 	test_for_error_xp0051 is
 			-- Named type can't be found in the static context
 		local
-			an_evaluator: XM_XPATH_EVALUATOR			
+			an_evaluator: XM_XPATH_EVALUATOR
+			
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii

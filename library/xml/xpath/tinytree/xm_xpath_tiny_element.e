@@ -89,7 +89,7 @@ feature -- Access
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_node, a_namespace_code: INTEGER
-			an_element: XM_XPATH_ELEMENT
+			an_element: XM_XPATH_TINY_ELEMENT
 		do
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
@@ -132,7 +132,7 @@ feature -- Access
 			-- Output all namespace nodes associated with this element.
 		local
 			a_namespace_node: INTEGER
-			a_parent: XM_XPATH_ELEMENT
+			a_parent: XM_XPATH_TINY_ELEMENT
 		do
 			a_namespace_node := document.beta_value (node_number)
 			if a_namespace_node > 0 then

@@ -27,7 +27,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ITEM_TYPE) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ATOMIC_TYPE) is
 			-- Establish invariant.
 		require
 			sequence_not_void: a_sequence /= Void
@@ -173,7 +173,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	sequence: XM_XPATH_EXPRESSION
 			-- Base expression 
 
-	required_type: XM_XPATH_ITEM_TYPE
+	required_type: XM_XPATH_ATOMIC_TYPE
 			-- Target type 
 
 	compute_cardinality is

@@ -81,7 +81,7 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		local
-			an_instruction: XM_XSLT_INSTRUCTION
+			an_expression_instruction: XM_XSLT_EXPRESSION_INSTRUCTION
 			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
 			an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
@@ -95,15 +95,19 @@ feature -- Optimization
 				until
 					a_cursor.after
 				loop
-					an_expression ?= a_cursor.item
-					if an_expression /= Void then
-						an_expression.simplify
-						if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
-						an_instruction ?= an_expression
-						if an_instruction /= Void then
-							a_cursor.replace (an_instruction)
+					an_expression_instruction ?= a_cursor.item
+					if an_expression_instruction /= Void then
+						an_expression_instruction.simplify
+						if an_expression_instruction.was_expression_replaced then
+							an_expression := an_expression_instruction.replacement_expression
 						else
-							create a_sequence_instruction.make (an_instruction.executable, an_expression, Void)
+							an_expression := an_expression_instruction
+						end
+						an_expression_instruction ?= an_expression
+						if an_expression_instruction /= Void then
+							a_cursor.replace (an_expression_instruction)
+						else
+							create a_sequence_instruction.make (an_expression_instruction.executable, an_expression, Void)
 							a_cursor.replace (a_sequence_instruction)
 						end
 					end
@@ -115,7 +119,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
 		local
-			an_instruction: XM_XSLT_INSTRUCTION
+			an_instruction: XM_XSLT_EXPRESSION_INSTRUCTION
 			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
 			an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]	
@@ -128,11 +132,13 @@ feature -- Optimization
 			until
 				a_cursor.after
 			loop
-				an_expression ?= a_cursor.item
-				if an_expression /= Void then
-					an_expression.analyze (a_context)
-					if an_expression.was_expression_replaced then
-						an_expression := an_expression.replacement_expression
+				an_instruction ?= a_cursor.item
+				if an_instruction /= Void then
+					an_instruction.analyze (a_context)
+					if an_instruction.was_expression_replaced then
+						an_expression := an_instruction.replacement_expression
+					else
+						an_expression := an_instruction
 					end
 					an_instruction ?= an_expression
 					if an_instruction /= Void then

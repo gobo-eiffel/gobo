@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			starting_node_not_void: a_starting_node /= Void
 			node_test_not_void: a_node_test /= Void
 		local
-			a_node: like a_starting_node
+			a_node: XM_XPATH_TREE_NODE
 		do
 			make_enumeration (a_starting_node, a_node_test)
 			root ?= starting_node.document_root
@@ -96,7 +96,7 @@ feature -- Duplication
 
 feature {NONE} -- Implemnentation
 
-	root: like starting_node
+	root: XM_XPATH_TREE_DOCUMENT
 
 	advance_one_step is
 			-- Move to the next candidate node

@@ -40,6 +40,12 @@ feature -- Access
 			create Result.make_from_string ("-0.5")
 		end
 
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := 1 |<< Element_node | 1 |<< Comment_node | 1 |<< Text_node | 1 |<< Processing_instruction_node
+		end
+
 feature -- Status report
 
 	allows_text_nodes: BOOLEAN is

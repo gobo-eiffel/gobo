@@ -53,6 +53,12 @@ feature -- Access
 	uri_code: INTEGER
 			-- The uri code
 
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := 1 |<< node_kind
+		end
+
 feature -- Status report
 
 	allows_text_nodes: BOOLEAN is

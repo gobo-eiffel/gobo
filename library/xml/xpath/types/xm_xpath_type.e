@@ -18,7 +18,13 @@ inherit
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
+	XM_XPATH_SHARED_NO_NODE_TEST
+
+	XM_XPATH_SHARED_ANY_NODE_TEST
+
 	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_XPATH_DEBUGGING_ROUTINES
 
 feature -- Access
 
@@ -37,6 +43,9 @@ feature -- Access
 	Any_node: INTEGER is 0
 
 	Any_item_fingerprint: INTEGER is 88
+
+	Same_item_type, Subsuming_type, Subsumed_type, Overlapping_types, Disjoint_types: INTEGER is unique
+			-- Type realtionships
 
 	common_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common supertype of two given types
@@ -146,28 +155,109 @@ feature -- Status report
 		require
 			super_type_not_void: a_super_type /= Void
 		local
-			a_no_node_test: XM_XPATH_NO_NODE_TEST
+			a_relationship: INTEGER
 		do
 			if a_sub_type /= Void then
-				if a_sub_type.is_same_type (a_super_type) then
-					Result := True
+				a_relationship := type_relationship (a_sub_type, a_super_type)
+				Result := a_relationship = Same_item_type or else a_relationship = Subsumed_type
+			end
+		end
+
+	type_relationship (a_first_type, a_second_type: XM_XPATH_ITEM_TYPE): INTEGER is
+			-- Relation of `a_first_type' to `a_second_type'
+		require
+			types_not_void: a_first_type /= Void and then a_second_type /= Void
+		local
+			an_atomic_type, another_atomic_type, a_third_atomic_type: XM_XPATH_ATOMIC_TYPE
+			a_node_test, another_node_test: XM_XPATH_NODE_TEST
+			an_item_type: XM_XPATH_ITEM_TYPE
+			finished: BOOLEAN
+			a_fingerprint: INTEGER
+		do
+			if a_first_type = any_item then
+				if a_second_type = any_item then
+					Result := Same_item_type
 				else
-					if any_item = a_super_type then
-						Result := True
-					elseif any_item = a_sub_type then
-							Result := False
+					Result := Subsuming_type
+				end
+			elseif a_second_type = any_item then
+				Result := Subsumed_type
+			else
+				an_atomic_type ?= a_first_type
+				if an_atomic_type /= Void then
+					a_node_test ?= a_second_type
+					if a_node_test /= Void then
+						Result := Disjoint_types
 					else
-						a_no_node_test ?= a_sub_type
-						if a_no_node_test /= Void then
-							Result := True
+						another_atomic_type ?= a_second_type
+						a_fingerprint := an_atomic_type.fingerprint
+						if another_atomic_type /= Void and then
+							a_fingerprint = another_atomic_type.fingerprint then
+							Result := Same_item_type
 						else
-							Result := is_sub_type (a_sub_type.super_type, a_super_type)
+							Result := -1
+							from
+								an_item_type := a_second_type
+							until
+								finished
+							loop
+								a_third_atomic_type ?= an_item_type
+								if a_third_atomic_type = Void then
+									finished := True
+								else
+									if a_fingerprint = a_third_atomic_type.fingerprint then
+										Result := Subsuming_type
+										finished := True
+									else
+										an_item_type := an_item_type.super_type
+									end
+								end
+							end
+							if Result = -1 then
+								from
+									finished := False
+									a_fingerprint := another_atomic_type.fingerprint
+									an_item_type := a_first_type
+								until
+									finished
+								loop
+									a_third_atomic_type ?= an_item_type
+									if a_third_atomic_type = Void then
+										Result := Disjoint_types
+										finished := True
+									else
+										if a_fingerprint = a_third_atomic_type.fingerprint then
+											Result := Subsumed_type
+											finished := True
+										else
+											an_item_type := an_item_type.super_type
+										end
+									end
+								end
+							end
 						end
+					end
+				else
+
+					-- `a_first_type' must be a node test
+
+					an_atomic_type ?= a_second_type
+					if an_atomic_type /= Void then
+						Result := Disjoint_types
+					else
+						a_node_test ?= a_first_type
+						another_node_test ?= a_second_type
+						check
+							both_node_tests: a_node_test /= Void and then another_node_test /= Void
+						end
+						Result := node_test_relationship (a_node_test, another_node_test)
 					end
 				end
 			end
+		ensure
+			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
-	
+			
 	is_promotable (a_source_type, a_target_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Can `a_source_type' be numerically promoted to `a_target_type?
 			--  (e.g. xs:integer is promotable to xs:double)
@@ -210,6 +300,100 @@ feature -- Status report
 				end
 				Result := t1 = t2
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	node_test_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER is
+			-- Relation of `a_node_test' to `another_node_test'
+		require
+			tests_not_void: a_node_test /= Void and then another_node_test /= Void
+		local
+			a_mask, another_mask, a_node_kind_relationship, a_node_name_relationship: INTEGER
+			a_set, another_set: DS_SET [INTEGER]
+		do
+			Result := -1
+			if a_node_test = any_node_test then
+				if another_node_test = any_node_test then
+					Result := Same_item_type
+				else
+					Result := Subsuming_type
+				end
+			elseif another_node_test = any_node_test then
+				Result := Subsumed_type
+			elseif a_node_test = empty_item then
+				Result := Disjoint_types
+			elseif another_node_test = empty_item then
+				Result := Disjoint_types
+			else
+
+				-- Firstly, find the relationship between the node kinds allowed.
+
+				a_mask := a_node_test.node_kind_mask; another_mask := another_node_test.node_kind_mask
+				if a_mask & another_mask = 0 then
+					Result := Disjoint_types
+				elseif a_mask = another_mask then
+					a_node_kind_relationship := Same_item_type
+				elseif a_mask & another_mask = a_mask then
+					a_node_kind_relationship := Subsumed_type
+				elseif a_mask & another_mask = another_mask then
+					a_node_kind_relationship := Subsuming_type
+				else
+					a_node_kind_relationship := Overlapping_types
+				end
+
+				-- Next, find the relationship between the node names allowed.
+				-- N.B. Namespace tests and local name tests do not occur
+				--  in sequence types, so we don't need to consider them.
+
+				if a_node_test.is_at_most_one_name_constraint then
+					a_set := a_node_test.constraining_node_names
+				end
+				if another_node_test.is_at_most_one_name_constraint then
+					another_set := another_node_test.constraining_node_names
+				end
+				if a_set = Void then
+					if another_set = Void then
+						a_node_name_relationship := Same_item_type
+					else
+						a_node_name_relationship := Subsuming_type
+					end
+				elseif another_set = Void then
+					a_node_name_relationship := Subsumed_type
+				elseif a_set.is_superset (another_set) then
+					if a_set.is_equal (another_set) then
+						a_node_name_relationship := Same_item_type
+					else
+						a_node_name_relationship := Subsuming_type
+					end
+				elseif another_set.is_superset (a_set) then
+					a_node_name_relationship := Subsumed_type
+				else
+					a_node_name_relationship := Overlapping_types
+				end
+
+				-- TODO - need to test content-type relationship, but only
+				--  for schema-aware processor(?)
+				
+				if a_node_kind_relationship = Same_item_type
+					and then a_node_name_relationship = Same_item_type then
+					Result := Same_item_type
+				elseif
+					(a_node_name_relationship = Same_item_type or else a_node_name_relationship = Subsuming_type)and then
+					(a_node_kind_relationship = Same_item_type or else a_node_kind_relationship = Subsuming_type) then
+					Result := Subsuming_type
+				elseif
+					(a_node_name_relationship = Same_item_type or else a_node_name_relationship = Subsumed_type)and then
+					(a_node_kind_relationship = Same_item_type or else a_node_kind_relationship = Subsumed_type) then
+					Result := Subsumed_type
+				elseif a_node_name_relationship = Disjoint_types or else a_node_kind_relationship = Disjoint_types then
+					Result := Disjoint_types
+				else
+					Result := Overlapping_types
+				end
+			end
+		ensure
+			valid_realtionship: Result >= Same_item_type and then Disjoint_types >= Result
 		end
 
 end

@@ -51,6 +51,12 @@ feature -- Access
 		node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := 1 |<< node_kind
+		end
+
 feature -- Status report
 
 	allows_text_nodes: BOOLEAN is

@@ -599,7 +599,7 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		local
-			a_document: XM_XPATH_DOCUMENT
+			a_document: XM_XPATH_TREE_DOCUMENT
 		do
 			if validation_error_message /= Void then
 				report_compile_error (validation_error_message)

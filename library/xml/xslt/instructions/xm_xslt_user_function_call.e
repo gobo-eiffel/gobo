@@ -143,6 +143,7 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_execution_context: XM_XSLT_EVALUATION_CONTEXT
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			an_execution_context ?= a_context
 			check
@@ -150,8 +151,9 @@ feature -- Evaluation
 				-- as this is an XSLT function
 			end
 			call (an_execution_context)
-			last_evaluated_item ?= last_called_value
-			if last_evaluated_item = Void then
+			an_atomic_value ?= last_called_value
+			last_evaluated_item := an_atomic_value
+			if an_atomic_value = Void then
 				an_iterator := last_called_value.iterator (a_context)
 				an_iterator.start
 				if not an_iterator.after then

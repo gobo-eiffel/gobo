@@ -115,7 +115,7 @@ feature -- Access
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_code: INTEGER
-			an_element: XM_XPATH_ELEMENT
+			an_element: XM_XPATH_TREE_ELEMENT
 		do
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
@@ -160,7 +160,7 @@ feature -- Access
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
-			a_parent: XM_XPATH_ELEMENT
+			a_parent: XM_XPATH_TREE_ELEMENT
          a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			from

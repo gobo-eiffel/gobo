@@ -142,20 +142,17 @@ feature -- Element change
 	fixup_references is
 			-- Fix up references from XPath expressions.
 		local
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_USER_FUNCTION_CALL]
 			a_function_call: XM_XSLT_USER_FUNCTION_CALL
 		do
 			from
-				a_child_iterator := new_axis_iterator (Child_axis)
-				a_child_iterator.start
+				a_cursor := references.new_cursor; a_cursor.start
 			until
-				a_child_iterator.after
+				a_cursor.after
 			loop
-				a_function_call ?= a_child_iterator.item
-				if a_function_call /= Void then
-					a_function_call.set_static_type (result_type)
-				end
-				a_child_iterator.forth
+				a_function_call := a_cursor.item
+				a_function_call.set_static_type (result_type)
+				a_cursor.forth
 			end
 			Precursor
 		end
@@ -395,6 +392,7 @@ feature {NONE} -- Implementation
 			a_starting_instruction: XM_XSLT_INSTRUCTION
 			a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
 			an_expression: XM_XPATH_EXPRESSION
+			an_expression_instruction: XM_XSLT_EXPRESSION_INSTRUCTION
 			a_variable: XM_XSLT_COMPILED_VARIABLE
 			a_sequence: XM_XSLT_SEQUENCE_INSTRUCTION
 			a_let_expression: XM_XPATH_LET_EXPRESSION
@@ -408,9 +406,9 @@ feature {NONE} -- Implementation
 				if a_trace_instruction /= Void then
 					a_starting_instruction := a_trace_instruction.children.item (1)
 				end
-				an_expression ?= a_starting_instruction
-				if an_expression /= Void then
-					Result := an_expression
+				an_expression_instruction ?= a_starting_instruction
+				if an_expression_instruction /= Void then
+					Result := an_expression_instruction
 				else
 					a_variable ?= a_starting_instruction
 					if a_variable /= Void then

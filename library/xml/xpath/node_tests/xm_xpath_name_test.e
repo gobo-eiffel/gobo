@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			fingerprint, node_kind
+			fingerprint, node_kind, constraining_node_names
 		end
 
 creation
@@ -62,6 +62,19 @@ feature -- Access
 
 	node_kind: INTEGER
 			-- Type of nodes matched
+
+	node_kind_mask: INTEGER is
+			-- Mask of types of nodes matched
+		do
+			Result := 1 |<< node_kind
+		end
+
+	constraining_node_names: DS_SET [INTEGER] is
+			-- Set of fingerprints of node names allowed
+		do
+			create {DS_HASH_SET [INTEGER]} Result.make (1)
+			Result.put (fingerprint)
+		end
 
 feature -- Status report
 

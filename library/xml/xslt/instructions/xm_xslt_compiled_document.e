@@ -132,7 +132,8 @@ feature -- Optimization
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
 			an_expression: XM_XPATH_EXPRESSION
-			an_instruction: XM_XSLT_INSTRUCTION
+			an_instruction: XM_XSLT_EXPRESSION_INSTRUCTION
+			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION	
 		do
 			from
 				a_cursor := children.new_cursor
@@ -142,13 +143,17 @@ feature -- Optimization
 			until
 				a_cursor.after
 			loop
-				an_expression ?= a_cursor.item
-				if an_expression = Void then
+				an_instruction ?= a_cursor.item
+				if an_instruction = Void then
 					a_cursor.go_after
 					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", 0, Type_error)
 				else
-					an_expression.promote (an_offer)
-					--if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
+					an_instruction.promote (an_offer)
+					if an_instruction.was_expression_replaced then
+						an_expression := an_instruction.replacement_expression
+					else
+						an_expression := an_instruction
+					end
 					an_instruction ?= an_expression
 					if an_instruction /= Void then
 						a_cursor.replace (an_instruction)
@@ -156,8 +161,8 @@ feature -- Optimization
 						check
 							cant_happen: False
 						end
-						--create a_sequence_instruction.make (an_expression, Void)
-						--a_cursor.replace (a_sequence_instruction)
+						create a_sequence_instruction.make (executable, an_expression, Void)
+						a_cursor.replace (a_sequence_instruction)
 					end
 				end
 				a_cursor.forth

@@ -27,7 +27,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ITEM_TYPE; empty_ok: BOOLEAN) is
+	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ATOMIC_TYPE; empty_ok: BOOLEAN) is
 			-- Establish invariant.
 		do
 			source := a_source
@@ -43,13 +43,15 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_sequence_type (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
-			-- Establish invariant.
+			-- Establish invariant. -- TODO - is this still used?
 		require
 			source_not_void: a_source /= Void
-			valid_target_type: a_target /= Void and then not a_target.cardinality_allows_many and then not is_sub_type (a_target.primary_type, any_node_test)
+			valid_target_type: a_target /= Void and then not a_target.cardinality_allows_many
+				and then not is_sub_type (a_target.primary_type, any_node_test)
+				and then is_sub_type (a_target.primary_type, type_factory.any_atomic_type)
 		do
 			source := a_source
-			target_type := a_target.primary_type
+			target_type ?= a_target.primary_type
 			compute_static_properties
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -106,7 +108,7 @@ feature -- Optimization
 					set_source (source.replacement_expression)
 				end
 				an_atomic_value ?= source
-				if	an_atomic_value /= Void then
+				if	an_atomic_value /= Void and then an_atomic_value.is_convertible (target_type) then
 					set_replacement (an_atomic_value.convert_to_type (target_type))
 				end
 			end
@@ -156,9 +158,11 @@ feature -- Optimization
 					else
 						an_atomic_value ?= an_expression
 						if an_atomic_value /= Void then
-							an_atomic_value.evaluate_item (Void)
-							an_atomic_value ?= an_atomic_value.last_evaluated_item
-							set_replacement (an_atomic_value)
+							evaluate_item (Void)
+							an_atomic_value ?= last_evaluated_item
+							if an_atomic_value /= Void then
+								set_replacement (an_atomic_value)
+							end
 						else
 							set_source (an_expression)
 						end
@@ -187,11 +191,15 @@ feature -- Evaluation
 			else
 				an_atomic_value ?= source.last_evaluated_item
 				if an_atomic_value = Void then
-					last_evaluated_item := Void
+					if allows_empty then
+						last_evaluated_item := Void
+					else
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target typr for cast as does not allow empty sequence", target_type.conventional_name), 6, Type_error)
+					end
 				elseif an_atomic_value.is_convertible (target_type) then
 					last_evaluated_item := an_atomic_value.convert_to_type (target_type)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ", target_type.conventional_name), Dynamic_error, 21)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ", target_type.conventional_name), 21, Dynamic_error)
 				end
 			end
 		end
@@ -225,7 +233,7 @@ feature {NONE} -- Implementation
 	source: XM_XPATH_EXPRESSION
 			-- Castable expression 
 	
-	target_type: XM_XPATH_ITEM_TYPE
+	target_type: XM_XPATH_ATOMIC_TYPE
 			-- Target type 
 
 	allows_empty: BOOLEAN

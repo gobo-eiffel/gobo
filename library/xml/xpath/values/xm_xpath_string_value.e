@@ -149,6 +149,9 @@ feature -- Status report
 				or else a_required_type = type_factory.any_atomic_type
 				or else a_required_type = any_item then
 				Result := True
+			elseif a_required_type = type_factory.date_type then
+				Result := False
+				todo ("is-convertible (xs:date)", True)
 			else
 				Result := False -- TODO Any_uri, qname, dtd type, dates and times
 				todo ("is-convertible", True)
