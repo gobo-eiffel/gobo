@@ -182,7 +182,7 @@ feature -- Replacement
 feature -- Splitting
 
 	split_in (an_array: ARRAY [STRING]) is
-			-- Append to `an_array' the parts of `subject' between `subjet_start'
+			-- Append to `an_array' the parts of `subject' between `subject_start'
 			-- and `subject_end' which do not match the pattern.
 		obsolete
 			"[0207211] Use `append_split_to_array' instead."

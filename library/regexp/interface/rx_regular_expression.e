@@ -188,7 +188,7 @@ feature -- Replacement
 feature -- Splitting
 
 	split: ARRAY [STRING] is
-			-- Parts of `subject' between `subjet_start' and `subject_end'
+			-- Parts of `subject' between `subject_start' and `subject_end'
 			-- which do not match the pattern.
 		require
 			is_matching: is_matching
@@ -201,7 +201,7 @@ feature -- Splitting
 		end
 
 	append_split_to_array (an_array: ARRAY [STRING]) is
-			-- Append to `an_array' the parts of `subject' between `subjet_start'
+			-- Append to `an_array' the parts of `subject' between `subject_start'
 			-- and `subject_end' which do not match the pattern.
 		require
 			is_matching: is_matching
