@@ -15,7 +15,7 @@ error
 formatter
     Formatter classes for IO operations or string handling.
 spec
-    classes adapted from non-portable classes (filenames suffixed by
+    Eiffel compiler dependent classes (filenames suffixed by
     ".ge" instead of ".e" in other clusters).
 support
     Miscellaneous classes.
