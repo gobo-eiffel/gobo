@@ -218,7 +218,7 @@ feature -- Task names
 		end
 
 	Mkdir_task_name: UC_STRING is
-			-- "Mkdir" task name
+			-- "mkdir" task name
 		once
 			!! Result.make_from_string ("mkdir")
 		ensure
@@ -227,9 +227,18 @@ feature -- Task names
 		end
 
 	Delete_task_name: UC_STRING is
-			-- "Mkdir" task name
+			-- "delete" task name
 		once
 			!! Result.make_from_string ("delete")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+	Setenv_task_name: UC_STRING is
+			-- "setenv" task name
+		once
+			!! Result.make_from_string ("setenv")
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: not Result.empty
