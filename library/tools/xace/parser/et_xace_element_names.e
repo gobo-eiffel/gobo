@@ -4,12 +4,12 @@ indexing
 
 		"Xace XML element names"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_ELEMENT_NAMES
 
@@ -245,6 +245,15 @@ feature -- Constants
 		ensure
 			uc_feature_not_void: Result /= Void
 			uc_feature_not_empty: Result.count > 0
+		end
+
+	uc_link_library_dir: UC_STRING is
+			-- "link_library_dir" element name
+		once
+			Result := new_unicode_string ("link_library_dir")
+		ensure
+			uc_link_library_dir_not_void: Result /= Void
+			uc_link_library_dir_not_empty: Result.count > 0
 		end
 
 	uc_link_library: UC_STRING is

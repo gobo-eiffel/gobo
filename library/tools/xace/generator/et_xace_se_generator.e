@@ -4,12 +4,12 @@ indexing
 
 		"Ace file generators for SmallEiffel"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_SE_GENERATOR
 
@@ -131,6 +131,8 @@ feature {NONE} -- Output
 			if an_option /= Void then
 				print_options (an_option, 1, a_file)
 			end
+			print_indentation (1, a_file)
+			a_file.put_string ("debug (no)")
 			a_file.put_new_line
 			a_file.put_string ("cluster")
 			a_file.put_new_line
@@ -153,6 +155,8 @@ feature {NONE} -- Output
 					a_file.put_new_line
 				end
 				print_include_directories (an_external.include_directories, a_file)
+				print_link_libraries_path (an_external.link_libraries_directories, a_file)
+
 				print_link_libraries (an_external.link_libraries, a_file)
 				a_file.put_new_line
 			end
@@ -335,7 +339,8 @@ feature {NONE} -- Output
 		end
 
 	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_directories' to `a_file'.
+			-- Makes sure the C compiler can find the header files.
+			-- You really need SmallEiffel >b19 for this
 		require
 			a_directories_not_void: a_directories /= Void
 			no_void_directory: not a_directories.has (Void)
@@ -347,14 +352,44 @@ feature {NONE} -- Output
 		do
 			if not a_directories.is_empty then
 				print_indentation (1, a_file)
-				a_file.put_string ("external_lib_path:")
+				a_file.put_string ("external_header_path:")
 				a_file.put_new_line
 				print_indentation (2, a_file)
 				a_file.put_character ('%"')
 				a_cursor := a_directories.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_pathname := a_cursor.item
-					a_file.put_string ("-I")
+					a_file.put_string (a_pathname)
+					if not a_cursor.is_last then
+						a_file.put_character (' ')
+					end
+					a_cursor.forth
+				end
+				a_file.put_character ('%"')
+				a_file.put_new_line
+			end
+		end
+
+	print_link_libraries_path (library_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Makes sure any external libraries can be found by the linker.
+		require
+			library_directories_not_void: library_directories /= Void
+			no_void_directory: not library_directories.has (Void)
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
+		do
+			if not library_directories.is_empty then
+				print_indentation (1, a_file)
+				a_file.put_string ("external_lib_path:")
+				a_file.put_new_line
+				print_indentation (2, a_file)
+				a_file.put_character ('%"')
+				a_cursor := library_directories.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_pathname := a_cursor.item
 					a_file.put_string (a_pathname)
 					if not a_cursor.is_last then
 						a_file.put_character (' ')
@@ -419,6 +454,38 @@ feature {NONE} -- Output
 				else
 					error_handler.report_cannot_write_file_error (cecil_filename)
 				end
+			end
+		end
+
+	print_include_directories_as_c_options (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_directories' to `a_file'.
+		require
+			a_directories_not_void: a_directories /= Void
+			no_void_directory: not a_directories.has (Void)
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
+		do
+			if not a_directories.is_empty then
+				print_indentation (1, a_file)
+				a_file.put_string ("c_compiler_options:")
+				a_file.put_new_line
+				print_indentation (2, a_file)
+				a_file.put_character ('%"')
+				a_file.put_string ("-O ")
+				a_cursor := a_directories.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_pathname := a_cursor.item
+					a_file.put_string (a_pathname)
+					if not a_cursor.is_last then
+						a_file.put_character (' ')
+					end
+					a_cursor.forth
+				end
+				a_file.put_character ('%"')
+				a_file.put_new_line
 			end
 		end
 

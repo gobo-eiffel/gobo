@@ -4,12 +4,12 @@ indexing
 
 		"Eiffel class universes"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_UNIVERSE
 
@@ -60,7 +60,7 @@ feature -- Setting
 	set_root_class_name (a_name: like root_class_name) is
 			-- Set `root_class_name' to `a_name'.
 		local
-			an_identifier:  ET_IDENTIFIER
+			an_identifier:	ET_IDENTIFIER
 		do
 			root_class_name := a_name
 			!! an_identifier.make (a_name)

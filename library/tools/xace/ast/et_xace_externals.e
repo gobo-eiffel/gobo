@@ -4,12 +4,12 @@ indexing
 
 		"Xace external clauses"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_EXTERNALS
 
@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			!! exported_classes.make
 			!! include_directories.make
+			!! link_libraries_directories.make
 			!! link_libraries.make
 		end
 
@@ -34,6 +35,7 @@ feature -- Status report
 		do
 			Result := exported_classes.is_empty and
 				include_directories.is_empty and
+				link_libraries_directories.is_empty and
 				link_libraries.is_empty
 		end
 
@@ -79,6 +81,9 @@ feature -- Access
 	include_directories: DS_LINKED_LIST [STRING]
 			-- Include directories
 
+	link_libraries_directories: DS_LINKED_LIST [STRING]
+			-- Directories where link libraries can be found
+
 	link_libraries: DS_LINKED_LIST [STRING]
 			-- Link libraries
 
@@ -100,6 +105,14 @@ feature -- Element change
 			include_directories.force_last (a_directory)
 		end
 
+	put_link_library_directory (a_directory: STRING) is
+			-- Add a link library to current external clause.
+		require
+			a_directory_not_void: a_directory /= Void
+		do
+			link_libraries_directories.force_last (a_directory)
+		end
+
 	put_link_library (a_link_library: STRING) is
 			-- Add a link library to current external clause.
 		require
@@ -115,6 +128,7 @@ feature -- Element change
 		do
 			exported_classes.append_last (other.exported_classes)
 			include_directories.append_last (other.include_directories)
+			link_libraries_directories.append_last (other.link_libraries_directories)
 			link_libraries.append_last (other.link_libraries)
 		end
 
@@ -129,6 +143,7 @@ feature -- Duplication
 			cloned_externals_not_void: Result /= Void
 			same_exported_classes: Result.exported_classes.is_equal (exported_classes)
 			same_include_directories: Result.include_directories.is_equal (include_directories)
+			same_link_libraries_directories: Result.link_libraries_directories.is_equal (link_libraries_directories)
 			same_link_libraries: Result.link_libraries.is_equal (link_libraries)
 		end
 
@@ -138,6 +153,8 @@ invariant
 	no_void_exported_class: not exported_classes.has (Void)
 	include_directories_not_void: include_directories /= Void
 	no_void_include_directory: not include_directories.has (Void)
+	link_libraries_directories_not_void: link_libraries_directories /= Void
+	no_void_link_libraries_directory: not link_libraries_directories.has (Void)
 	link_libraries_not_void: link_libraries /= Void
 	no_void_link_library: not link_libraries.has (Void)
 

@@ -4,12 +4,12 @@ indexing
 
 		"Xace Abstract Syntax Tree factories"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_AST_FACTORY
 
@@ -447,7 +447,17 @@ feature -- AST factory
 			from a_cursor.start until a_cursor.after loop
 				a_child ?= a_cursor.item
 				if a_child /= Void then
-					if a_child.name.is_equal (uc_link_library) then
+					if a_child.name.is_equal (uc_link_library_dir) then
+						if a_child.has_attribute_by_name (uc_location) then
+							if Result = Void then
+								!! Result.make
+							end
+							a_value := a_child.attribute_by_name (uc_location).value
+							if a_value /= Void then
+								Result.put_link_library_directory (a_value.to_utf8)
+							end
+						end
+					elseif a_child.name.is_equal (uc_link_library) then
 						if a_child.has_attribute_by_name (uc_location) then
 							if Result = Void then
 								!! Result.make

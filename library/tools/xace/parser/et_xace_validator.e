@@ -4,12 +4,12 @@ indexing
 
 		"Xace XML validators"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_VALIDATOR
 
@@ -261,6 +261,10 @@ feature {NONE} -- Validation
 				if a_child = Void then
 						-- Not an element. Ignore.
 				elseif a_child.name.is_equal (uc_include_dir) then
+					if not a_child.has_attribute_by_name (uc_location) then
+						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
+					end
+				elseif a_child.name.is_equal (uc_link_library_dir) then
 					if not a_child.has_attribute_by_name (uc_location) then
 						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
 					end
