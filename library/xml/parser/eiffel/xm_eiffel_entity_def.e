@@ -210,7 +210,9 @@ feature -- Scanner: events
 							enc_count := enc_count + 1
 						elseif last_token = XMLDECLARATION_VERSION then
 							vers_count := vers_count + 1
-						elseif last_token = SPACE then
+						elseif last_token = SPACE or last_token = APOS 
+							or last_token = QUOT or last_token = XMLDECLARATION_ENCODING_VALUE
+						then
 							-- Continue.
 						elseif last_token = XMLDECLARATION_END then
 							if enc_count = 1 and vers_count <= 1 then
