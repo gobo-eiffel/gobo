@@ -117,7 +117,7 @@ feature -- Output
 				end
 				a_string.append_character ('%N')
 				a_string.append_string (an_arrow)
-				if an_arrow.item (an_arrow.count) /= '^' then
+				if an_arrow.count = 0 or else an_arrow.item (an_arrow.count) /= '^' then
 					a_string.append_character ('^')
 				end
 				a_string.append_character ('%N')
@@ -138,17 +138,19 @@ feature {NONE} -- Implementation
 			c: CHARACTER
 			eol: BOOLEAN
 		do
-			from
-				a_file.read_character
-			until
-				INPUT_STREAM_.end_of_input (a_file) or eol
-			loop
-				c := a_file.last_character
-				if c = '%N' then
-					eol := True
-				else
-					a_string.append_character (c)
+			if not INPUT_STREAM_.end_of_input (a_file) then
+				from
 					a_file.read_character
+				until
+					INPUT_STREAM_.end_of_input (a_file) or eol
+				loop
+					c := a_file.last_character
+					if c = '%N' then
+						eol := True
+					else
+						a_string.append_character (c)
+						a_file.read_character
+					end
 				end
 			end
 		end
