@@ -31,27 +31,6 @@ inherit
 			{NONE} all
 		end
 
-#ifdef SE
-	FILE_TOOLS
-		rename
-			rename_file as se_rename_file
-		export
-			{NONE} all
-		end
-
-#endif
-#ifdef VE
-	FILE_SYSTEM
-		rename
-			make as ve_make,
-			rename_file as ve_rename_file,
-			copy_file as ve_copy_file,
-			directory_separator as ve_directory_separator
-		export
-			{NONE} all
-		end
-
-#endif
 	KL_SHARED_FILE_SYSTEM
 #ifdef SE
 		rename
@@ -67,15 +46,14 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new file system object.
 		do
-			ve_make
+--			ve_make
 		end
 
 #endif
 feature -- Status report
 
 	is_current_file_system: BOOLEAN is
-			-- Is file system the file system of the 
-			-- underlying platform?
+			-- Is file system the file system of the underlying platform?
 		do
 			Result := same_type (file_system)
 		end
@@ -83,218 +61,61 @@ feature -- Status report
 feature -- File handling
 
 	is_file_readable (a_filename: STRING): BOOLEAN is
-			-- Can file named `a_filename' be opened
-			-- in read mode?
-		local
-			rescued: BOOLEAN
-#ifdef VE
-			a_file: KL_TEXT_INPUT_FILE
-#endif
+			-- Can file named `a_filename' be opened in read mode?
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if a_filename.count > 0 then
-#ifdef SE
-					Result := is_readable (a_filename)
-#endif
-#ifdef ISE || HACT
-					file_impl.make (a_filename)
-					Result := file_impl.exists and then (file_impl.is_readable and file_impl.is_plain)
-#endif
-#ifdef VE
-					!! a_file.make (a_filename)
-					a_file.open_read
-					if a_file.is_open_read then
-						Result := True
-						a_file.close
-					end
-#endif
-				end
-			else
-				Result := False
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			tmp_file.reset (a_filename)
+			Result := tmp_file.is_readable
 		end
 
 	rename_file (old_name, new_name: STRING) is
 			-- Rename file named `old_name' as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' already existed.
-		local
-			rescued: BOOLEAN
+			-- (`old_name' and `new_name' should follow the pathname
+			-- convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if old_name.count > 0 and new_name.count > 0 then
-#ifdef SE
-					if not file_exists (new_name) then
-						rename_to (old_name, new_name)
-					end
-#endif
-#ifdef ISE || HACT
-					file_impl.make (new_name)
-					if not file_impl.exists then
-						file_impl.make (old_name)
-						if file_impl.exists then
-							file_impl.change_name (new_name)
-						end
-					end
-#endif
-#ifdef VE
-					if not file_exists (new_name) then
-						if file_exists (old_name) then
-							ve_rename_file (old_name, new_name)
-						end
-					end
-#endif
-				end
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			tmp_file.reset (old_name)
+			tmp_file.change_name (new_name)
 		end
 
 	copy_file (old_name, new_name: STRING) is
 			-- Copy file named `old_name' to `new_name'.
 			-- Do nothing if the file could not be copied, if it
 			-- did not exist or if `new_name' already existed.
-#ifdef VE
-		local
-			rescued: BOOLEAN
+			-- (`old_name' and `new_name' should follow the pathname
+			-- convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if old_name.count > 0 and new_name.count > 0 then
-					if not file_exists (new_name) then
-						if file_exists (old_name) then
-							ve_copy_file (old_name, new_name)
-						end
-					end
-				end
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
-#else
-		local
-			old_file: KL_BINARY_INPUT_FILE
-			new_file: KL_BINARY_OUTPUT_FILE
-		do
-			if old_name.count > 0 and new_name.count > 0 then
-#ifdef SE
-				if not file_exists (new_name) then
-#endif
-#ifdef ISE || HACT
-				file_impl.make (new_name)
-				if not file_impl.exists then
-#endif
-					!! old_file.make (old_name)
-					old_file.open_read
-					if old_file.is_open_read then
-						!! new_file.make (new_name)
-						new_file.open_write
-						if new_file.is_open_write then
-							from
-								old_file.read_string (512)
-							until
-								old_file.end_of_file
-							loop
-								new_file.put_string (old_file.last_string)
-								old_file.read_string (512)
-							end
-							new_file.put_string (old_file.last_string)
-							new_file.close
-						end
-						old_file.close
-					end
-#ifdef SE || ISE || HACT
-				end
-#endif
-			end
-#endif
+			tmp_file.reset (old_name)
+			tmp_file.copy_file (new_name)
 		end
 
 	delete_file (a_filename: STRING) is
 			-- Delete file named `a_filename'.
 			-- Do nothing if the file could not be
 			-- deleted or if it did not exist.
-		local
-			rescued: BOOLEAN
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if a_filename.count > 0 then
-#ifdef SE
-					delete (a_filename)
-#endif
-#ifdef ISE || HACT
-					file_impl.make (a_filename)
-					if file_impl.exists then
-						file_impl.delete
-					end
-#endif
-#ifdef VE
-					remove_file (a_filename)
-#endif
-				end
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			tmp_file.reset (a_filename)
+			tmp_file.delete
 		end
 
 feature -- Directory handling
 
 	is_directory_readable (a_dirname: STRING): BOOLEAN is
-			-- Can directory named `a_dirname' be opened
-			-- in read mode?
-		local
-			rescued: BOOLEAN
-#ifdef VE
-			a_dir: KL_DIRECTORY
-#endif
+			-- Can directory named `a_dirname' be opened in read mode?
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if a_dirname.count > 0 then
-#ifdef SE
-					basic_directory.connect_to (a_dirname)
-					if basic_directory.is_connected then
-						Result := True
-						basic_directory.disconnect
-					end
-#endif
-#ifdef ISE || HACT
-					directory_impl.make (a_dirname)
-					Result := directory_impl.exists and then directory_impl.is_readable
-#ifdef HACT
-					if Result then
-						Result := not is_file_readable (a_dirname)
-					end
-#endif
-#endif
-#ifdef VE
-					!! a_dir.make (a_dirname)
-					a_dir.open_read
-					if a_dir.is_open_read then
-						Result := True
-						a_dir.close
-					end
-#endif
-				end
-			else
-				Result := False
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			tmp_directory.reset (a_dirname)
+			Result := tmp_directory.is_readable
 		end
 
 	create_directory (a_dirname: STRING) is
@@ -303,71 +124,24 @@ feature -- Directory handling
 			-- be created, if it already existed or if
 			-- `a_dirname' is a nested directory name
 			-- and the parent directory does not exist.
-		local
-			rescued: BOOLEAN
-#ifdef SE
-			b: BOOLEAN
-#endif
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if a_dirname.count > 0 then
-#ifdef SE
-					b := basic_directory.create_new_directory (a_dirname)
-#endif
-#ifdef ISE || HACT
-					directory_impl.make (a_dirname)
-					if not directory_impl.exists then
-						directory_impl.create_dir
-					end
-#endif
-#ifdef VE
-					add_cluster (a_dirname, "")
-#endif
-				end
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			tmp_directory.reset (a_dirname)
+			tmp_directory.create_directory
 		end
 
 	delete_directory (a_dirname: STRING) is
 			-- Delete directory named `a_dirname'.
-			-- Do nothing if the directory could not
-			-- be deleted, if it did not exist or if
-			-- it is not empty.
-		local
-			rescued: BOOLEAN
-#ifdef SE
-			b: BOOLEAN
-#endif
+			-- Do nothing if the directory could not be deleted,
+			-- if it did not exist or if it is not empty.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			if not rescued then
-				if a_dirname.count > 0 then
-#ifdef SE
-					b := basic_directory.remove_directory (a_dirname)
-#endif
-#ifdef ISE || HACT
-					directory_impl.make (a_dirname)
-#ifdef ISE
-					if directory_impl.exists and then directory_impl.is_empty then
-#else
-					if directory_impl.exists and then directory_impl.empty then
-#endif
-						directory_impl.delete
-					end
-#endif
-#ifdef VE
-					remove_cluster (a_dirname)
-#endif
-				end
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			tmp_directory.reset (a_dirname)
+			tmp_directory.delete
 		end
 
 feature -- Working directory
@@ -376,6 +150,7 @@ feature -- Working directory
 			-- Name of current working directory;
 			-- Return absolute pathname with the naming 
 			-- convention of the underlying file system
+			-- (Return a new object at each call.)
 		do
 #ifdef SE
 			basic_directory.connect_to_current_working_directory
@@ -386,15 +161,17 @@ feature -- Working directory
 			Result := execution_environment.current_working_directory
 #endif
 #ifdef VE
-			Result := current_cluster
+			Result := file_system_impl.current_cluster
 #endif
 		end
 
 	cd, set_current_working_directory (a_dirname: STRING) is
 			-- Set current working directory to `a_dirname'.
-			-- Do nothing if the current working directory
-			-- could not be changed or if directory
-			-- `a_dirname' did not exist.
+			-- Do nothing if the current working directory could not
+			-- be changed or if directory `a_dirname' did not exist.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		local
 			rescued: BOOLEAN
 		do
@@ -407,8 +184,8 @@ feature -- Working directory
 					execution_environment.change_working_directory (a_dirname)
 #endif
 #ifdef VE
-					if cluster_exists (a_dirname) then
-						change_cluster (a_dirname)
+					if file_system_impl.cluster_exists (a_dirname) then
+						file_system_impl.change_cluster (a_dirname)
 					end
 #endif
 				end
@@ -420,31 +197,45 @@ feature -- Working directory
 			end
 		end
 
-#ifdef ISE || HACT || SE
 feature {NONE} -- Implementation
+
+	tmp_file: KL_TEXT_INPUT_FILE is
+			-- Temporary file object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+	tmp_directory: KL_DIRECTORY is
+			-- Temporary directory object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			directory_not_void: Result /= Void
+			directory_closed: Result.is_closed
+		end
+
+	dummy_name: STRING is "dummy"
+			-- Dummy name
 
 #ifdef SE
 	basic_directory: BASIC_DIRECTORY
 			-- Implementation
 
 #endif
+#ifdef VE
+	file_system_impl: FILE_SYSTEM is
+			-- Implementation
+		once
+			!! Result.make
+		ensure
+			file_system_impl_not_void: Result /= Void
+		end
+
+#endif
 #ifdef ISE || HACT
-	file_impl: PLAIN_TEXT_FILE is
-			-- File implementation
-		once
-			!! Result.make ("dummy")
-		ensure
-			file_impl_not_void: Result /= Void
-		end
-
-	directory_impl: DIRECTORY is
-			-- Directory implementation
-		once
-			!! Result.make ("dummy")
-		ensure
-			directory_impl_not_void: Result /= Void
-		end
-
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Execution environment implementation
 		once
@@ -453,6 +244,5 @@ feature {NONE} -- Implementation
 			execution_environment_not_void: Result /= Void
 		end
 
-#endif
 #endif
 end -- class KL_FILE_SYSTEM
