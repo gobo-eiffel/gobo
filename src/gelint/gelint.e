@@ -152,6 +152,7 @@ end
 			a_universe_not_void: a_universe /= Void
 		do
 --			a_universe.error_handler.set_compilers
+			a_universe.error_handler.set_ise
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
 			a_universe.set_use_recast_keyword (True)
