@@ -16,7 +16,6 @@ feature -- Token codes
 
 	CHAR: INTEGER is 257
 	NUMBER: INTEGER is 258
-	EOF_OP: INTEGER is 259
-	CCL_OP: INTEGER is 260
+	CCL_OP: INTEGER is 259
 
 end -- class LX_REGEXP_TOKENS
