@@ -82,7 +82,7 @@ feature -- Processing
 				parser_switch := Arguments.argument (1)
 				filename := Arguments.argument (2)
 				if parser_switch.is_equal ("--expat") then
-					if not fact.is_expat_available then
+					if not fact.is_expat_parser_available then
 						error_handler.report_error_message ("expat is not availabe, please choose other parser backend")
 						has_error := True
 					else
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			a_message: STRING
 		once
 			a_message := clone ("(")
-			if fact.is_expat_available then
+			if fact.is_expat_parser_available then
 				a_message.append_string ("--expat|")
 			end
 			a_message.append_string ("--eiffel) <input-file>")
