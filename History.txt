@@ -12,6 +12,9 @@ Version 1.6 -
 	  example (suggested by Patrick Flaherty).
 	* The Eiffel parser example now accepts empty Eiffel
 	  source files (suggested by Alexander Kogtenkov).
+	* Added a few words in the documentation about the Eiffel
+	  debug instructions spread out in the parser skeleton
+	  class (suggested by Francis Drai).
 
 	gelex:
 
@@ -42,7 +45,8 @@ Version 1.6 -
 	  fetaure `put_new'.
 	* DS_SPARSE_TABLE, DS_HASH_TABLE: added fetaure
 	  `replace_found_item'.
-	* DS_SPARSE_TABLE, DS_HASH_TABLE: new implementation.
+	* DS_SPARSE_TABLE, DS_HASH_TABLE: new optimized
+	  implementation (requested by Jacques Bouchard).
 	* DS_SPARSE_TABLE: added feature `key'; optimization
 	  of feature `force' (avoid unnecessary resizing).
 	* HASH_TABLE: optimization of features `put' and
