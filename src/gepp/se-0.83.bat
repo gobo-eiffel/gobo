@@ -1,5 +1,5 @@
 @rem system:     "'gepp' preprocessor"
-@rem compiler:   "SmallEiffel -0.85"
+@rem compiler:   "SmallEiffel -0.84"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1997, Eric Bezault"
 @rem date:       "$Date$"
@@ -36,7 +36,7 @@
 @echo %GOBO%\library\structure\table\spec\se\>>		loadpath.se
 
 @rem	-- SmallEiffel Kernel
-@echo %SmallEiffel%\std_lib\>>						loadpath.se
+@echo %SmallEiffel%\lib_std\>>						loadpath.se
 
 
 compile_to_c -boost -no_split GEPP execute
