@@ -89,7 +89,11 @@ install-ise-precomp-base:
 	-if [ -r EIFGEN/${ISE_PRECOMP_CODEGEN}/${ISE_COMPILER}/driver${EXE} ]; then \
 		${CP} -f EIFGEN/${ISE_PRECOMP_CODEGEN}/${ISE_COMPILER}/driver${EXE} ${BIN_DIR}/driver-base${EXE} ; \
 	else \
-		${CP} -f EIFGEN/${ISE_PRECOMP_CODEGEN}/driver${EXE} ${BIN_DIR}/driver-base${EXE} ; \
+		if [ -r EIFGEN/${ISE_PRECOMP_CODEGEN}/${COMPILER}/driver${EXE} ]; then \
+			${CP} -f EIFGEN/${ISE_PRECOMP_CODEGEN}/${COMPILER}/driver${EXE} ${BIN_DIR}/driver-base${EXE} ; \
+		else \
+			${CP} -f EIFGEN/${ISE_PRECOMP_CODEGEN}/driver${EXE} ${BIN_DIR}/driver-base${EXE} ; \
+		fi \
 	fi
 
 clean-ise-precomp:
