@@ -19,6 +19,9 @@ inherit
 			make
 		end
 
+	GEANT_SHARED_PROPERTIES
+		export {NONE} all end
+
 creation
 
 	make
@@ -59,8 +62,28 @@ feature {NONE} -- Initialization
 			if has_attribute (Force_attribute_name) then
 				fileset.set_force (boolean_value (Force_attribute_name))
 			end
+			if has_attribute (Concat_attribute_name) and then
+				has_attribute (Mapped_filename_directory_attribute_name) then
+				exit_application (1, <<"%NLOAD ERROR in project '", project.name, "%':%N",
+					"  Remove obsolete attribute '", Concat_attribute_name, "' from element 'fileset'">>)
+			end
 			if has_attribute (Concat_attribute_name) then
+				project.trace (<<"Project '", project.name,
+					"': WARNING: Obsolete attribute 'concat' in element 'fileset' found.%N",
+					"Use new attribute '", Mapped_filename_directory_attribute_name, "' instead.">>)
 				fileset.set_concat (boolean_value (Concat_attribute_name))
+			end
+			if has_attribute (Filename_directory_attribute_name) then
+				a_value := attribute_value (Filename_directory_attribute_name)
+				if a_value.count > 0 then
+					fileset.set_filename_directory_name (a_value)
+				end
+			end
+			if has_attribute (Mapped_filename_directory_attribute_name) then
+				a_value := attribute_value (Mapped_filename_directory_attribute_name)
+				if a_value.count > 0 then
+					fileset.set_mapped_filename_directory_name (a_value)
+				end
 			end
 				-- Add 'include' elements to fileset:
 			a_elements := elements_by_name (Include_element_name)
@@ -136,6 +159,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for concat
 		once
 			Result := "concat"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Filename_directory_attribute_name: STRING is
+			-- Name of xml attribute for filename_directory
+		once
+			Result := "filename_directory"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Mapped_filename_directory_attribute_name: STRING is
+			-- Name of xml attribute for mapped_filename_directory
+		once
+			Result := "mapped_filename_directory"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

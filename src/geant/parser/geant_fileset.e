@@ -88,6 +88,36 @@ feature -- Status report
 			map_executable: Result implies (map = Void or else map.is_executable)
 		end
 
+	are_project_variables_up_to_date: BOOLEAN is
+			-- If not `after' is project variable named `filename_variable_name' set to `item_filename' and
+			-- project variable named `mapped_filename_variable_name' set to `item_mapped_filename'?
+			-- And if `after' are project variables named `filename_variable_name' and
+			-- `mapped_filename_variable_name' not existing?
+		do
+			if not after then
+				Result := project.variables.has_variable (filename_variable_name) and then
+					STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename) and then
+					project.variables.has_variable (mapped_filename_variable_name) and then
+					STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename)
+			else
+				Result := not (project.variables.has_variable (filename_variable_name) or
+					project.variables.has_variable (mapped_filename_variable_name))
+			end
+		ensure
+			filename_variable_name_exists: not after implies
+				(Result implies project.variables.has_variable (filename_variable_name))
+			filename_variable_name_set: not after implies (Result implies
+				STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename))
+			mapped_filename_variable_name_exists: not after implies
+				(Result implies project.variables.has_variable (mapped_filename_variable_name))
+			mapped_filename_variable_name_set: not after implies (Result implies
+				STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename))
+			filename_variable_name_not_exists: after implies
+				(Result implies not project.variables.has_variable (filename_variable_name))
+			mapped_filename_variable_name_not_exists: after implies
+				(Result implies not project.variables.has_variable (mapped_filename_variable_name))
+		end
+
 feature -- Access
 
 	directory_name: STRING
@@ -126,6 +156,12 @@ feature -- Access
 
 	concat: BOOLEAN
 			-- Should `directory_name' be prepended to matched filenames?
+
+	filename_directory_name: STRING
+			-- Name of directory prepended to matched filenames
+
+	mapped_filename_directory_name: STRING
+			-- Name of directory prepended to mapped filenames
 
 	filename_variable_name: STRING
 			-- Name of project variable to which `item_filename' is assigned to
@@ -177,37 +213,7 @@ feature -- Access
 			item_mapped_filename_not_void: Result /= Void
 		end
 
-	are_project_variables_up_to_date: BOOLEAN is
-			-- If not `after' is project variable named `filename_variable_name' set to `item_filename' and
-			-- project variable named `mapped_filename_variable_name' set to `item_mapped_filename'?
-			-- And if `after' are project variables named `filename_variable_name' and
-			-- `mapped_filename_variable_name' not existing?
-		do
-			if not after then
-				Result := project.variables.has_variable (filename_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename) and then
-					project.variables.has_variable (mapped_filename_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename)
-			else
-				Result := not (project.variables.has_variable (filename_variable_name) or
-					project.variables.has_variable (mapped_filename_variable_name))
-			end
-		ensure
-			filename_variable_name_exists: not after implies
-				(Result implies project.variables.has_variable (filename_variable_name))
-			filename_variable_name_set: not after implies (Result implies
-				STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename))
-			mapped_filename_variable_name_exists: not after implies
-				(Result implies project.variables.has_variable (mapped_filename_variable_name))
-			mapped_filename_variable_name_set: not after implies (Result implies
-				STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename))
-			filename_variable_name_not_exists: after implies
-				(Result implies not project.variables.has_variable (filename_variable_name))
-			mapped_filename_variable_name_not_exists: after implies
-				(Result implies not project.variables.has_variable (mapped_filename_variable_name))
-		end
-
-feature -- Setting
+feature -- Element change
 
 	set_directory_name (a_directory_name: STRING) is
 			-- Set `directory_name' to `a_directory_name'.
@@ -289,6 +295,26 @@ feature -- Setting
 			concat_set: concat = b
 		end
 
+	set_filename_directory_name (a_filename_directory_name: STRING) is
+			-- Set `filename_directory_name' to `a_filename_directory_name'.
+		require
+			filename_directory_name_not_void: a_filename_directory_name /= Void
+		do
+			filename_directory_name := a_filename_directory_name
+		ensure
+			filename_directory_name_set: filename_directory_name.is_equal (a_filename_directory_name)
+		end
+
+	set_mapped_filename_directory_name (a_mapped_filename_directory_name: STRING) is
+			-- Set `mapped_filename_directory_name' to `a_mapped_filename_directory_name'.
+		require
+			mapped_filename_directory_name_not_void: a_mapped_filename_directory_name /= Void
+		do
+			mapped_filename_directory_name := a_mapped_filename_directory_name
+		ensure
+			mapped_filename_directory_name_set: mapped_filename_directory_name.is_equal (a_mapped_filename_directory_name)
+		end
+
 	set_filename_variable_name (a_filename_variable_name: STRING) is
 			-- Set `filename_variable_name' to `a_filename_variable_name'.
 		require
@@ -310,8 +336,6 @@ feature -- Setting
 		ensure
 			mapped_filename_variable_name_set: mapped_filename_variable_name = a_mapped_filename_variable_name
 		end
-
-feature -- Element change
 
 	add_fileset_entry_if_necessary (a_filename: STRING) is
 			-- Add new GEANT_FILESET_ENTRY created from `a_filename'
@@ -335,10 +359,22 @@ feature -- Element change
 			else
 				an_mapped_filename := an_filename
 			end
+				-- Remove support for `concat' after obsolete period:
+			check not_concat_and_mapped_filename_directory_name:
+				not (concat and mapped_filename_directory_name /= Void)
+			end
 			if concat then
 				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
 			end
-			if force or else map = Void or else is_file_outofdate (an_filename, an_mapped_filename) then
+
+			if filename_directory_name /= Void then
+				an_filename := unix_file_system.pathname (filename_directory_name, an_filename)
+			end
+			if mapped_filename_directory_name /= Void then
+				an_mapped_filename := unix_file_system.pathname (mapped_filename_directory_name,
+					an_mapped_filename)
+			end
+			if force or else is_file_outofdate (an_filename, an_mapped_filename) then
 				create a_entry.make (an_filename, an_mapped_filename)
 				filenames.force_last (a_entry)
 			end
@@ -404,6 +440,12 @@ feature -- Execution
 			project.trace_debug (<<"  [*fileset] directory_name: ", directory_name>>)
 			if include_wc_string /= Void then
 				project.trace_debug (<<"  [*fileset] include_wc_string: ", include_wc_string>>)
+			end
+			if filename_directory_name /= Void then
+				project.trace_debug (<<"  [*fileset] filename_directory: ", filename_directory_name>>)
+			end
+			if mapped_filename_directory_name /= Void then
+				project.trace_debug (<<"  [*fileset] mapped_filename_directory: ", mapped_filename_directory_name>>)
 			end
 			al_directory_name := unix_file_system.canonical_pathname (directory_name)
 				-- Add entries from filesystem scan:
