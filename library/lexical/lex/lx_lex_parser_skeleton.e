@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 			a_text_not_void: a_text /= Void
 		local
 			i, nb: INTEGER
-			action: UT_COMMAND
+			action: DP_COMMAND
 		do
 			action := action_factory.new_action (a_text)
 			nb := pending_rules.count

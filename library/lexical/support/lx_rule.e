@@ -63,7 +63,7 @@ feature -- Access
 	id: INTEGER
 			-- Identification number
 
-	action: UT_COMMAND
+	action: DP_COMMAND
 			-- Associated semantic action
 
 	pattern: LX_NFA

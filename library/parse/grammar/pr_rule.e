@@ -60,7 +60,7 @@ feature -- Access
 	rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			-- Right-hand-side of current rule
 
-	action: UT_COMMAND
+	action: DP_COMMAND
 			-- Associated semantic action
 
 	precedence: INTEGER

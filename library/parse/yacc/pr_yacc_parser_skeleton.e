@@ -622,7 +622,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_action (a_text: STRING): UT_COMMAND is
+	new_action (a_text: STRING): DP_COMMAND is
 			-- Action associated with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			inserted: a_rule.rhs.last = rhs
 		end
 
-	put_action (an_action: UT_COMMAND; a_rule: PR_RULE) is
+	put_action (an_action: DP_COMMAND; a_rule: PR_RULE) is
 			-- Set semantic action of `a_rule' to `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -1225,7 +1225,7 @@ feature {NONE} -- Constants
 	Initial_max_nb_types: INTEGER is 300
 			-- Initial maximum number of types
 
-	No_action: UT_COMMAND is
+	No_action: DP_COMMAND is
 			-- Do nothing semantic action
 		once
 			Result := action_factory.new_action ("")

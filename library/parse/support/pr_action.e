@@ -15,7 +15,7 @@ class PR_ACTION
 
 inherit
 
-	UT_COMMAND
+	DP_COMMAND
 		redefine
 			out
 		end

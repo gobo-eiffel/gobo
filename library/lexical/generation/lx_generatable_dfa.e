@@ -481,10 +481,10 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 			rule: LX_RULE
-			actions: DS_ARRAYED_LIST [DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]]
-			action: UT_COMMAND
+			actions: DS_ARRAYED_LIST [DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]]
+			action: DP_COMMAND
 			j, nb_actions: INTEGER
-			a_pair: DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]
+			a_pair: DS_PAIR [DP_COMMAND, DS_LINKED_LIST [LX_RULE]]
 			rule_list: DS_LINKED_LIST [LX_RULE]
 			rule_cursor: DS_LINKED_LIST_CURSOR [LX_RULE]
 		do
