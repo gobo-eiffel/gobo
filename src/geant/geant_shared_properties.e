@@ -31,13 +31,35 @@ feature -- Access
 			no_void_variable_value: not Result.has_item (Void)
 		end
 
+	has_variable (a_name: STRING): BOOLEAN is
+			-- Is there a variable named `a_name'
+			-- in `Variables'?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+		local
+			value: STRING
+		do
+				-- Search value from the project variables:
+			Variables.search (a_name)
+			Result := Variables.found 
+			if not Result then
+					-- Look if it is an environment variable.
+				if a_name.count > ("env.").count and then a_name.substring(1, 4).is_equal("env.") then
+					value := environment_variable_value (a_name)
+					Result := value.count > 0
+				end
+			end
+		end
+
 	variable_value (a_name: STRING): STRING is
 			-- Value of global variable `a_name';
 			-- `${a_name}' if `a_name' has not been set
 		require
 			a_name_not_void: a_name /= Void
 		do
-				-- Check for environment variables defined names beginning with 'env.'
+				-- Check for environment variables defined names beginning with 'env.':
+				-- TBD: separate routine to get environment variable:
 			if a_name.count > 4 and then a_name.substring(1, 4).is_equal("env.") then
 					-- Cut off the beginning 'env.'.
 					-- The rest of a_name is the environment variable name.
@@ -59,6 +81,23 @@ feature -- Access
 			end
 		ensure
 			variable_value_not_void: Result /= Void 
+		end
+
+	environment_variable_value (a_name: STRING): STRING is
+			-- Value of environment variable `a_name';
+			-- Empty if `a_name' environment variable does not exist
+		require
+			a_name_not_void: a_name /= Void
+			a_name_good_length: a_name.count > ("env.").count
+			a_name_good_value: a_name.substring (1, 4).is_equal ("env.")
+		do
+				-- Cut off the beginning 'env.'.
+				-- The rest of a_name is the environment variable name.
+			Result := a_name.substring (5, a_name.count)
+			Result := Execution_environment.variable_value (Result)
+			if Result = Void then
+				Result := ""
+			end
 		end
 
 	set_variable_value (a_name, a_value : STRING) is

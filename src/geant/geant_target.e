@@ -19,6 +19,8 @@ inherit
 	GEANT_ELEMENT_NAMES
 		export {NONE} all end
 	KL_SHARED_EXCEPTIONS
+	GEANT_SHARED_PROPERTIES
+		export {NONE} all end
 
 creation
 
@@ -85,10 +87,35 @@ feature -- Processing
 			i, nb: INTEGER
 			an_element: GEANT_ELEMENT
 			a_task: GEANT_TASK
+			ucs: UC_STRING
+			if_condition: BOOLEAN
+			unless_condition: BOOLEAN
 		do
+				-- Set default target execution conditions:
+			if_condition := true
+			unless_condition := false
+
+				-- Look for an 'if' XML attribute
+			if target_element.has_attribute (If_attribute_name) then
+				ucs := target_element.attribute_value_by_name (If_attribute_name)
+				if_condition := has_variable (ucs.out)
+				if project.verbose then
+					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
+				end
+			end
+
+				-- Look for an 'unless' XML attribute
+			if target_element.has_attribute (Unless_attribute_name) then
+				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
+				unless_condition := has_variable (ucs.out)
+				if project.verbose then
+					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
+				end
+			end
+
 			children := target_element.children
 			nb := children.count
-			from i := 1 until i > nb loop
+			from i := 1 until i > nb or not if_condition or unless_condition loop
 				an_element := children.item (i)
 					-- Dispatch tasks:
 				if an_element.name.is_equal (Compile_se_task_name) then
@@ -266,6 +293,35 @@ feature {NONE} -- Implementation
 
 	target_element : GEANT_ELEMENT
 		-- Xml element defining this target
+
+feature {NONE} -- Constants
+
+	Depends_attribute_name: UC_STRING is
+			-- "depends" attribute name
+		once
+			!! Result.make_from_string ("depends")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	If_attribute_name: UC_STRING is
+			-- "if" attribute name
+		once
+			!! Result.make_from_string ("if")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	Unless_attribute_name: UC_STRING is
+			-- "unless" attribute name
+		once
+			!! Result.make_from_string ("unless")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
 
 invariant
 	target_element_not_void: element /= Void
