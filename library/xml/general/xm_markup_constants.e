@@ -65,4 +65,7 @@ feature -- Constants
 	Xml_prefix_namespace: STRING is once Result := "http://www.w3.org/XML/1998/namespace" end
 	Xmlns_namespace: STRING is once Result := "http://www.w3.org/2000/xmlns/" end
 
+	Xml_id: STRING is once Result := "id" end
+	Xml_id_with_prefix: STRING is once Result := "xml:id" end
+
 end
