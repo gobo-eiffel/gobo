@@ -65,7 +65,7 @@ feature -- XML asserts
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 
 				-- Constants are in UTF8, so convert if UC_STRING.
-			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
 		end
 
 	assert_output_utf16 (a_name: STRING; in_utf16: STRING; an_out: STRING) is
@@ -80,7 +80,7 @@ feature -- XML asserts
 			debug ("xml_parser") print_parser_error end
 			
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
-			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
 		end
 	
 	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_TEST_STRING_EXTERNAL_RESOLVER) is
@@ -128,7 +128,7 @@ feature -- XML asserts
 			debug ("xml_parser") print_parser_error end
 
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
-			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
 		end
 
 feature {NONE} -- Debug
@@ -147,9 +147,9 @@ feature {NONE} -- Parser
 	parser: XM_PARSER
 			-- XML parser
 
-	output: STRING
-			-- Output
-
+	printer: XM_CANONICAL_PRETTY_PRINT_FILTER
+			-- Pretty print filter
+		
 	error: XM_STOP_ON_ERROR_FILTER
 			-- Error collector
 
@@ -165,26 +165,23 @@ feature {NONE} -- Parser
 			-- Reset parser.
 		local
 			an_attribute: XM_ATTRIBUTE_DEFAULT_FILTER
-			a_printer: XM_CANONICAL_PRETTY_PRINT_FILTER
 		do
-			output := new_unicode_string_empty
-
 			parser := new_parser
 			parser.set_string_mode_mixed
 
 			error := new_stop_on_error
-			a_printer := new_canonical_pretty_print
-			a_printer.set_output_string (output)
+			printer := new_canonical_pretty_print
+			printer.set_output_to_string
 			create an_attribute.make_null
 			parser.set_dtd_callbacks (an_attribute)
 			parser.set_callbacks (callbacks_pipe (<<
 				new_unicode_validation,
 				an_attribute,
 				error,
-				a_printer >>))
+				printer >>))
 		ensure
 			parser_not_void: parser /= Void
-			output_not_void: output /= Void
+			printer_not_void: printer /= Void
 		end
 
 end
