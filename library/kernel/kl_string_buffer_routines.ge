@@ -333,7 +333,7 @@ feature -- Resizing
 		require
 			a_buffer_not_void: a_buffer /= Void
 			n_large_enough: n >= a_buffer.count
-#ifndef VE || TOWER
+#ifndef VE || ISE || TOWER
 		local
 			i: INTEGER
 #endif
