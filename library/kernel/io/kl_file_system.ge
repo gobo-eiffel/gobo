@@ -194,15 +194,18 @@ feature -- File handling
 			-- KI_FILE_SYSTEM.pathname_from_file_system.)
 		local
 			a_file1, a_file2: KL_BINARY_INPUT_FILE
+			a_count1, a_count2: INTEGER
 			done: BOOLEAN
 		do
 			create a_file1.make (a_filename1)
+			a_count1 := a_file1.count
 			a_file1.open_read
 			if a_file1.is_open_read then
 				create a_file2.make (a_filename2)
+				a_count2 := a_file2.count
 				a_file2.open_read
 				if a_file2.is_open_read then
-					if a_file1.count /= a_file2.count then
+					if a_count1 /= a_count2 then
 						Result := False
 					else
 						Result := True
