@@ -58,6 +58,7 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="print"/>
+		<geant file="build.eant" target="${target}" dir="tagcount"/>
 	</target>
 
 </project>
