@@ -30,7 +30,6 @@ feature -- Operation(s)
 	resolve (a_uri: UT_URI) is
 			-- Resolve URI to stream.
 		local
-			p: STRING
 			a_string_stream: KL_STRING_INPUT_STREAM
 		do
 			has_error := False
