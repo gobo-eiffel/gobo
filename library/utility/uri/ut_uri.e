@@ -263,6 +263,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 		local
 			p, q: INTEGER
 			has_host: BOOLEAN
+			a_port: STRING
 		do
 			Result := authority /= Void and then not authority.is_empty
 			if Result then
@@ -273,7 +274,11 @@ feature -- If authority is <userinfo>@<host>:<port>
 					(q - p > 0)
 				Result := has_host
 				if Result and then q /= 0 and then q < authority.count then
+					a_port := authority.substring (q + 1, authority.count)
 					Result := authority.substring (q + 1, authority.count).is_integer
+					if Result then
+						Result := a_port.to_integer <= 65535 and a_port.to_integer >= 0
+					end
 				end
 			end
 		end
@@ -321,7 +326,11 @@ feature -- If authority is <userinfo>@<host>:<port>
 					port := default_port
 				else
 					s := host_port.substring (p + 1, host_port.count)
-					check valid_authority_implies_integer: s.is_integer end
+					check 
+						valid_authority_implies_integer: s.is_integer
+						valid_authority_implies_positive: s.to_integer >= 0
+						valid_authority_implies_maximukm: s.to_integer <= 65535
+					end
 					port := s.to_integer
 				end
 			end
