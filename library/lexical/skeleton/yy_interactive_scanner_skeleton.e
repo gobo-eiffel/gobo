@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 			-- Create a new scanner with
 			-- `a_buffer' as input buffer.
 		do
-			yy_initialize
 			input_buffer := a_buffer
 			input_buffer.set_interactive (True)
+			yy_initialize
 			yy_load_input_buffer
 		end
 
