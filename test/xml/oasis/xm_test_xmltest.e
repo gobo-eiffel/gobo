@@ -47,12 +47,6 @@ feature -- Deviant tests
 				"<doc></doc>")
 		end
 
-	test_deviant_colon_in_name is
-			-- ":" is a valid name (when not using namespace)
-			-- parser bug, should have a flag to deal with that.
-		do
-			--assert_valid ("xmltest, valid, stand alone, 012", xmltest_valid_sa_012)
-		end
 
 	test_deviant_attribute_default_value_order is
 			-- Expansion of default attribute values in different 
@@ -376,6 +370,13 @@ feature -- Test
 			assert_output_utf16 ("xmltest, valid, stand alone, 049", xmltest_valid_sa_049, xmltest_valid_sa_out_049)
 			assert_output_utf16 ("xmltest, valid, stand alone, 050", xmltest_valid_sa_050, xmltest_valid_sa_out_050)
 			assert_output_utf16 ("xmltest, valid, stand alone, 051", xmltest_valid_sa_051, xmltest_valid_sa_out_051)
+		end
+		
+	test_valid_sa_notnamespace is
+			-- ":" is a valid name (when not using namespace)
+			-- This requires calling XM_EIFFEL_PARSER.disable_namespaces.
+		do
+			assert_output ("xmltest, valid, stand alone, 012", xmltest_valid_sa_012, xmltest_valid_sa_out_012)
 		end
 		
 	test_valid_sa is

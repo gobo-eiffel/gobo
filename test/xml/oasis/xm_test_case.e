@@ -151,11 +151,12 @@ feature {NONE} -- Parser
 	error: XM_STOP_ON_ERROR_FILTER
 			-- Error collector
 
-	new_parser: XM_PARSER is
+	new_parser: XM_EIFFEL_PARSER is
 			-- New parser
 			-- (Can be redefined to test another parser.)
 		do
-			create {XM_EIFFEL_PARSER} Result.make
+			create Result.make
+			Result.disable_namespaces
 		end
 
 	reset_parser is
