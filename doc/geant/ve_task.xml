@@ -91,6 +91,20 @@
 				</listitem>
 			</varlistentry>
 		
+			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the compiler process's return code after it's run
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Intgeger (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
+
 		</variablelist>
 	
 		<para>
