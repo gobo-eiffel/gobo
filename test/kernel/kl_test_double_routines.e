@@ -26,8 +26,8 @@ feature -- Test
 			create r
 				-- Use values truncated to integer to avoid possible
 				-- precision problems when comparing double values.
-			assert_integers_equal ("nth_root (1.0, 1.0)", 1, r.nth_root (1.0, 1.0).truncated_to_integer)
-			assert_integers_equal ("nth_root (0.0, 1.0)", 0, r.nth_root (0.0, 1.0).truncated_to_integer)
+			assert_integers_equal ("nth_root1", 1, r.nth_root (1.0, 1.0).truncated_to_integer)
+			assert_integers_equal ("nth_root2", 0, r.nth_root (0.0, 1.0).truncated_to_integer)
 		end
 
 	test_log is
@@ -38,7 +38,7 @@ feature -- Test
 			create r
 				-- Use values truncated to integer to avoid possible
 				-- precision problems when comparing double values.
-			assert_integers_equal ("log (1.0)", 0, r.log (1.0).truncated_to_integer)
+			assert_integers_equal ("log_1", 0, r.log (1.0).truncated_to_integer)
 		end
 
 	test_log2 is
@@ -49,8 +49,8 @@ feature -- Test
 			create r
 				-- Use values truncated to integer to avoid possible
 				-- precision problems when comparing double values.
-			assert_integers_equal ("log2 (2)", 1, r.log2 (2.0).truncated_to_integer)
-			assert_integers_equal ("log2 (1024)", 10, r.log2 (1024).truncated_to_integer)
+			assert_integers_equal ("log2_1", 1, r.log2 (2.0).truncated_to_integer)
+			assert_integers_equal ("log2_2", 10, r.log2 (1024).truncated_to_integer)
 		end
 
 	test_log10 is
@@ -61,8 +61,8 @@ feature -- Test
 			create r
 				-- Use values truncated to integer to avoid possible
 				-- precision problems when comparing double values.
-			assert_integers_equal ("log10 (1.0)", 0, r.log10 (1.0).truncated_to_integer)
-			assert_integers_equal ("log10 (10.0)", 1, r.log10 (10.0).truncated_to_integer)
+			assert_integers_equal ("log10_1", 0, r.log10 (1.0).truncated_to_integer)
+			assert_integers_equal ("log10_2", 1, r.log10 (10.0).truncated_to_integer)
 		end
 
 	test_floor is

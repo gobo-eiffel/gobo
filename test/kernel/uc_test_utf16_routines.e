@@ -23,37 +23,40 @@ feature
 			-- Test feature `valid_utf16' when valid.
 		do
 			assert ("empty", utf16.valid_utf16 (""))
-			assert ("valid big endian", utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/223/c%/0/d"))
-			assert ("valid little endian", utf16.valid_utf16 (Little_endian + "a%/0/b%/217/c%/223/d%/0/"))
+			assert ("valid_big_endian", utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/223/c%/0/d"))
+			assert ("valid_little_endian", utf16.valid_utf16 (Little_endian + "a%/0/b%/217/c%/223/d%/0/"))
 		end
 
 	test_invalid is
 			-- Test feature `valid_utf16' when invalid.
 		do
 			assert ("odd", not utf16.valid_utf16 (Big_endian + "a"))
-			assert ("surrogate high high", not utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/219/c%/0/d"))
-			assert ("surrogate low low", not utf16.valid_utf16 (Big_endian + "%/0/a%/220/b%/223/c%/0/d"))
-			assert ("surrogate low high", not utf16.valid_utf16 (Big_endian + "%/0/a%/222/b%/218/c%/0/d"))
-			assert ("surrogate high alone", not utf16.valid_utf16 (Big_endian + "%/0/a%/217/b%/0/c"))
-			assert ("surrogate low alone", not utf16.valid_utf16 (Big_endian + "%/0/a%/221/b%/0/c"))
-			assert ("surrogate high at end", not utf16.valid_utf16 (Big_endian + "%/0/a%/217/a"))
-			assert ("surrogate low at end", not utf16.valid_utf16 (Big_endian + "%/0/a%/221/a"))
+			assert ("surrogate_high_high", not utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/219/c%/0/d"))
+			assert ("surrogate_low_low", not utf16.valid_utf16 (Big_endian + "%/0/a%/220/b%/223/c%/0/d"))
+			assert ("surrogate_low_high", not utf16.valid_utf16 (Big_endian + "%/0/a%/222/b%/218/c%/0/d"))
+			assert ("surrogate_high_alone", not utf16.valid_utf16 (Big_endian + "%/0/a%/217/b%/0/c"))
+			assert ("surrogate_low_alone", not utf16.valid_utf16 (Big_endian + "%/0/a%/221/b%/0/c"))
+			assert ("surrogate_high_at_end", not utf16.valid_utf16 (Big_endian + "%/0/a%/217/a"))
+			assert ("surrogate_low_at_end", not utf16.valid_utf16 (Big_endian + "%/0/a%/221/a"))
 		end
 
 	test_is_endian_detection_character is
 			-- Test feature `is_endian_detection_character'
 		do
-			assert ("big endian char", utf16.is_endian_detection_character (Big_endian.item_code (1), Big_endian.item_code (2)))
-			assert ("little endian char", utf16.is_endian_detection_character (Little_endian.item_code (1), Little_endian.item_code (2)))
-			assert ("endian not", not utf16.is_endian_detection_character (255, 255))
+			assert ("big_endian_char", utf16.is_endian_detection_character (Big_endian.item_code (1), Big_endian.item_code (2)))
+			assert ("little_endian_char", utf16.is_endian_detection_character (Little_endian.item_code (1), Little_endian.item_code (2)))
+			assert ("endian_not", not utf16.is_endian_detection_character (255, 255))
 		end
 
 	test_surrogate is
 			-- Test feature `surrogate_from_bytes'
 		do
-			assert_integers_equal ("surrogate 0x10000", utf16.surrogate_from_bytes (216, 0, 220, 0), 65536)
-			assert_integers_equal ("surrogate 0x10001", utf16.surrogate_from_bytes (216, 0, 220, 1), 65537)
-			assert_integers_equal ("surrogate 0x10ffff", utf16.surrogate_from_bytes (219, 255, 223, 255), 1114111)
+				-- Surrogate 0x10000.
+			assert_integers_equal ("surrogate_0x10000", utf16.surrogate_from_bytes (216, 0, 220, 0), 65536)
+				-- Surrogate 0x10001.
+			assert_integers_equal ("surrogate_0x10001", utf16.surrogate_from_bytes (216, 0, 220, 1), 65537)
+				-- Surrogate 0x10ffff.
+			assert_integers_equal ("surrogate_0x10ffff", utf16.surrogate_from_bytes (219, 255, 223, 255), 1114111)
 		end
 
 feature {NONE} -- Constants

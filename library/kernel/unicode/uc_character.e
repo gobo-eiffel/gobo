@@ -14,6 +14,11 @@ class UC_CHARACTER
 
 inherit
 
+	ANY -- Needed for SE 2.1.
+		undefine
+			is_equal, out
+		end
+
 	COMPARABLE
 		redefine
 			out

@@ -49,7 +49,7 @@ feature -- Test
 			create a_pathname.make
 			assert ("no_drive", a_pathname.drive = Void)
 			a_pathname.set_drive ("c:")
-			assert_equal ("drive", "c:",  a_pathname.drive)
+			assert_equal ("drive", "c:", a_pathname.drive)
 		end
 
 	test_set_hostname is
@@ -60,7 +60,7 @@ feature -- Test
 			create a_pathname.make
 			assert ("no_hostname", a_pathname.hostname = Void)
 			a_pathname.set_hostname ("gobo")
-			assert_equal ("hostname", "gobo",  a_pathname.hostname)
+			assert_equal ("hostname", "gobo", a_pathname.hostname)
 		end
 
 	test_append_name is
@@ -77,8 +77,8 @@ feature -- Test
 			a_pathname.append_name ("bar")
 				-- "/foo/bar"
 			assert_integers_equal ("count2", 2, a_pathname.count)
-			assert_equal ("foo2", "foo",  a_pathname.item (1))
-			assert_equal ("bar2", "bar",  a_pathname.item (2))
+			assert_equal ("foo2", "foo", a_pathname.item (1))
+			assert_equal ("bar2", "bar", a_pathname.item (2))
 		end
 
 	test_append_names is
@@ -95,9 +95,9 @@ feature -- Test
 			a_pathname.append_names (<<"foo", "bar">>)
 				-- "/gobo/foo/bar"
 			assert_integers_equal ("count2", 3, a_pathname.count)
-			assert_equal ("gobo2", "gobo",  a_pathname.item (1))
-			assert_equal ("foo2", "foo",  a_pathname.item (2))
-			assert_equal ("bar2", "bar",  a_pathname.item (3))
+			assert_equal ("gobo2", "gobo", a_pathname.item (1))
+			assert_equal ("foo2", "foo", a_pathname.item (2))
+			assert_equal ("bar2", "bar", a_pathname.item (3))
 		end
 
 	test_append_current is
@@ -110,7 +110,7 @@ feature -- Test
 			a_pathname.append_name ("foo")
 				-- "/foo"
 			assert_integers_equal ("count1", 1, a_pathname.count)
-			assert_equal ("foo1", "foo",  a_pathname.item (1))
+			assert_equal ("foo1", "foo", a_pathname.item (1))
 			a_pathname.append_current
 				-- "/foo/."
 			assert_integers_equal ("count2", 2, a_pathname.count)
@@ -119,9 +119,9 @@ feature -- Test
 			a_pathname.append_name ("bar")
 				-- "/foo/./bar"
 			assert_integers_equal ("count3", 3, a_pathname.count)
-			assert_equal ("foo3", "foo",  a_pathname.item (1))
+			assert_equal ("foo3", "foo", a_pathname.item (1))
 			assert ("current3", a_pathname.is_current (2))
-			assert_equal ("bar3", "bar",  a_pathname.item (3))
+			assert_equal ("bar3", "bar", a_pathname.item (3))
 			create a_pathname.make
 			assert_integers_equal ("empty2", 0, a_pathname.count)
 			a_pathname.set_relative (True)
@@ -141,18 +141,18 @@ feature -- Test
 			a_pathname.append_name ("foo")
 				-- "/foo"
 			assert_integers_equal ("count1", 1, a_pathname.count)
-			assert_equal ("foo1", "foo",  a_pathname.item (1))
+			assert_equal ("foo1", "foo", a_pathname.item (1))
 			a_pathname.append_parent
 				-- "/foo/.."
 			assert_integers_equal ("count2", 2, a_pathname.count)
-			assert_equal ("foo2", "foo",  a_pathname.item (1))
+			assert_equal ("foo2", "foo", a_pathname.item (1))
 			assert ("parent2", a_pathname.is_parent (2))
 			a_pathname.append_name ("bar")
 				-- "/foo/../bar"
 			assert_integers_equal ("count3", 3, a_pathname.count)
-			assert_equal ("foo3", "foo",  a_pathname.item (1))
+			assert_equal ("foo3", "foo", a_pathname.item (1))
 			assert ("parent3", a_pathname.is_parent (2))
-			assert_equal ("bar3", "bar",  a_pathname.item (3))
+			assert_equal ("bar3", "bar", a_pathname.item (3))
 			create a_pathname.make
 			assert_integers_equal ("empty2", 0, a_pathname.count)
 			a_pathname.set_relative (True)
@@ -172,42 +172,42 @@ feature -- Test
 			a_pathname.append_name ("foo")
 				-- "/foo"
 			assert_integers_equal ("count1", 1, a_pathname.count)
-			assert_equal ("foo1", "foo",  a_pathname.item (1))
+			assert_equal ("foo1", "foo", a_pathname.item (1))
 			a_pathname.append_parent
 				-- "/foo/.."
 			assert_integers_equal ("count2", 2, a_pathname.count)
-			assert_equal ("foo2", "foo",  a_pathname.item (1))
+			assert_equal ("foo2", "foo", a_pathname.item (1))
 			assert ("parent2", a_pathname.is_parent (2))
 			a_pathname.append_name ("bar")
 				-- "/foo/../bar"
 			assert_integers_equal ("count3", 3, a_pathname.count)
-			assert_equal ("foo3", "foo",  a_pathname.item (1))
+			assert_equal ("foo3", "foo", a_pathname.item (1))
 			assert ("parent3", a_pathname.is_parent (2))
-			assert_equal ("bar3", "bar",  a_pathname.item (3))
+			assert_equal ("bar3", "bar", a_pathname.item (3))
 			assert ("not_canonical1", not a_pathname.is_canonical)
 			a_pathname.set_canonical
 				-- "/bar"
 			assert ("canonical1", a_pathname.is_canonical)
 			assert_integers_equal ("count4", 1, a_pathname.count)
-			assert_equal ("bar4", "bar",  a_pathname.item (1))
+			assert_equal ("bar4", "bar", a_pathname.item (1))
 			a_pathname.append_current
 				-- "/bar/."
 			assert_integers_equal ("count5", 2, a_pathname.count)
-			assert_equal ("bar5", "bar",  a_pathname.item (1))
+			assert_equal ("bar5", "bar", a_pathname.item (1))
 			assert ("current5", a_pathname.is_current (2))
 			a_pathname.append_name ("gobo")
 				-- "/bar/./gobo"
 			assert_integers_equal ("count6", 3, a_pathname.count)
-			assert_equal ("bar6", "bar",  a_pathname.item (1))
+			assert_equal ("bar6", "bar", a_pathname.item (1))
 			assert ("current6", a_pathname.is_current (2))
-			assert_equal ("gobo6", "gobo",  a_pathname.item (3))
+			assert_equal ("gobo6", "gobo", a_pathname.item (3))
 			assert ("not_canonical2", not a_pathname.is_canonical)
 			a_pathname.set_canonical
 				-- "/bar/gobo"
 			assert ("canonical2", a_pathname.is_canonical)
 			assert_integers_equal ("count7", 2, a_pathname.count)
-			assert_equal ("bar7", "bar",  a_pathname.item (1))
-			assert_equal ("gobo7", "gobo",  a_pathname.item (2))
+			assert_equal ("bar7", "bar", a_pathname.item (1))
+			assert_equal ("gobo7", "gobo", a_pathname.item (2))
 		end
 
 	test_same_pathname is

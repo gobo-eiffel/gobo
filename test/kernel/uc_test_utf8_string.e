@@ -337,17 +337,17 @@ feature -- Test
 		do
 			create a_string.make_from_string ("bar")
 			create c.make_from_character ('b')
-			assert_uc_characters_equal ("item1", c, a_string.unicode_item (1)) 
+			assert_equal ("item1", c, a_string.unicode_item (1)) 
 			create c.make_from_character ('a')
-			assert_uc_characters_equal ("item2", c, a_string.unicode_item (2)) 
+			assert_equal ("item2", c, a_string.unicode_item (2)) 
 			create c.make_from_character ('r')
-			assert_uc_characters_equal ("item3", c, a_string.unicode_item (3)) 
+			assert_equal ("item3", c, a_string.unicode_item (3)) 
 			a_string.put_code (543, 2)
 			create c.make_from_code (543)
-			assert_uc_characters_equal ("item4", c, a_string.unicode_item (2)) 
+			assert_equal ("item4", c, a_string.unicode_item (2)) 
 			a_string.put_code (134, 2)
 			create c.make_from_code (134)
-			assert_uc_characters_equal ("item5", c, a_string.unicode_item (2)) 
+			assert_equal ("item5", c, a_string.unicode_item (2)) 
 		end
 
 	test_unicode_item2 is
@@ -358,17 +358,17 @@ feature -- Test
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			create c.make_from_character ('b')
-			assert_uc_characters_equal ("item1", c, a_string.unicode_item (1)) 
+			assert_equal ("item1", c, a_string.unicode_item (1)) 
 			create c.make_from_character ('a')
-			assert_uc_characters_equal ("item2", c, a_string.unicode_item (2)) 
+			assert_equal ("item2", c, a_string.unicode_item (2)) 
 			create c.make_from_character ('r')
-			assert_uc_characters_equal ("item3", c, a_string.unicode_item (3)) 
+			assert_equal ("item3", c, a_string.unicode_item (3)) 
 			a_string.put_code (543, 2)
 			create c.make_from_code (543)
-			assert_uc_characters_equal ("item4", c, a_string.unicode_item (2)) 
+			assert_equal ("item4", c, a_string.unicode_item (2)) 
 			a_string.put_code (134, 2)
 			create c.make_from_code (134)
-			assert_uc_characters_equal ("item5", c, a_string.unicode_item (2)) 
+			assert_equal ("item5", c, a_string.unicode_item (2)) 
 		end
 
 	test_item_code1 is
@@ -3962,14 +3962,6 @@ feature {NONE} -- Implementation
 		ensure
 			too_big: Result > Platform.Maximum_character_code
 			different: Result /= too_big_character
-		end
-
-	assert_uc_characters_equal (a_tag: STRING; expected, value: UC_CHARACTER) is
-			-- Assert for UC_CHARACTERS.
-		require
-			a_tag_not_void: a_tag /= Void
-		do
-			assert_integers_equal (a_tag, expected.code, value.code)
 		end
 
 end

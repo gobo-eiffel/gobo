@@ -57,8 +57,8 @@ Version ?
 
 	Gobo Eiffel Kernel Library
 
-	* KL_DOUBLE_ROUTINES.log2: new feature.
-	* KL_INTEGER_ROUTINES.power: new feature.
+	* Added feature `log2' to KL_DOUBLE_ROUTINES.
+	* Added features `power', `div' and `mod' to KL_INTEGER_ROUTINES.
 	* Added bit operation features to KL_INTEGER_ROUTINES.
 
 	Gobo Eiffel Math/Decimal Library
