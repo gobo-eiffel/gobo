@@ -41,7 +41,7 @@ in the file 'build.eant'. In order to know the possible
 command-line arguments provided by a given build file,
 type:
 
-   geant help
+   geant -h
 
 Finally, note that the version of the Gobo package in CVS
 is a development version and not an official release. The
