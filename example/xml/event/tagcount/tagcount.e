@@ -45,14 +45,14 @@ feature -- Processing
 			a_parser: XM_PARSER
 			a_consumer: TAGCOUNT_CALLBACKS
 		do
-			-- Create the parser. 
-			-- It is left in the default state, which means: 
-			-- ascii only, no external entities or DTDs, 
+			-- Create the parser.
+			-- It is left in the default state, which means:
+			-- ascii only, no external entities or DTDs,
 			-- no namespace resolving.
 			create {XM_EIFFEL_PARSER} a_parser.make
 			
-			-- Create the event comsumer that counts start tags. 
-			create {TAGCOUNT_CALLBACKS} a_consumer.make	
+			-- Create the event comsumer that counts start tags.
+			create {TAGCOUNT_CALLBACKS} a_consumer.make
 			a_parser.set_callbacks (a_consumer)
 			
 			-- Parse and display result
