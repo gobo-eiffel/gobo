@@ -57,8 +57,9 @@ S_END_COMMENT "-->"
 S_WORD        [+\-a-zA-Z0-9()_]*
 S_NS_WORD     {S_WORD}:{S_WORD}
 
-%s B_IN_TAG B_IN_CONTENT B_IN_ATTR_TEXT B_IN_PI B_IN_XML_DECL B_IN_XML_DECL_ATTR_TEXT 
+%s B_IN_TAG B_IN_CONTENT B_IN_PI B_IN_XML_DECL
 %s B_IN_PI_AFTER_TARGET B_IN_COMMENT B_IN_COMMENT_AFTER_CONTENT
+%x B_IN_ATTR_TEXT B_IN_XML_DECL_ATTR_TEXT
 
 %%
 
@@ -120,7 +121,9 @@ S_NS_WORD     {S_WORD}:{S_WORD}
 					last_token := T_ATTR_TEXT
 					handle_found_text
 					}
-
+<B_IN_XML_DECL_ATTR_TEXT>.|\n	{
+					last_token := text_item (1).code
+					}
 <B_IN_XML_DECL>{S_EQUAL}	{
 				last_token := T_EQUAL
 				}
@@ -190,6 +193,9 @@ S_NS_WORD     {S_WORD}:{S_WORD}
         handle_found_text
         set_start_condition(B_IN_TAG)
         }
+<B_IN_ATTR_TEXT>.|\n	{
+	last_token := text_item (1).code
+	}
 
 ---
 <B_IN_TAG>{S_WORD} {
