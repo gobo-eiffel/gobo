@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_NULL_DYNAMIC_ATTACHMENT
+class ET_DYNAMIC_NULL_ATTACHMENT
 
 inherit
 

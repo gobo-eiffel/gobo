@@ -161,7 +161,7 @@ feature {NONE} -- Element change
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
-			l_attachment: ET_NULL_DYNAMIC_ATTACHMENT
+			l_attachment: ET_DYNAMIC_NULL_ATTACHMENT
 		do
 			l_seed := static_feature.first_seed
 			l_feature := a_type.base_class.seeded_feature (l_seed)
