@@ -118,7 +118,7 @@ feature -- Resolve format specifiers and return a string
 			Result := do_sprintf (a_format, a_para)
 		end
 
-	to_string (a_format: STRING; a_para: ANY): STRING is
+	format_single (a_format: STRING; a_para: ANY): STRING is
 			-- String with single parameter in `a_format' replaced by
 			-- `a_para'
 		require

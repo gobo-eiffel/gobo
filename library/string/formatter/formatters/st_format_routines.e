@@ -44,4 +44,15 @@ feature -- Access
 			format_not_void: Result /= Void
 		end
 
+	format_single (a_format: STRING; a_para: ANY): STRING is
+			-- String with single parameter in `a_format' replaced by
+			-- `a_para'
+		require
+			parameters_valid: is_correct_format_and_parameters (a_format, <<a_para>>)
+		do
+			Result := formatter.format_single (a_format, a_para)
+		ensure
+			format_not_void: Result /= Void
+		end
+
 end
