@@ -86,7 +86,7 @@ feature -- Access
 		require
 			not_error: not error.has_error
 		do
-			Result := tree.document
+			Result := tree.tiny_document
 		end
 
 	last_error: STRING is

@@ -48,23 +48,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document: XM_XPATH_TREE_DOCUMENT
-			-- Resulting document
-
-	parser: XM_PARSER
-			-- XML parser
+	tree_document: XM_XPATH_TREE_DOCUMENT
+			-- Created ocument
 
 	resolver: XM_URI_EXTERNAL_RESOLVER
 			-- Entity resolver
 	
-feature -- Status report
-
-	has_error: BOOLEAN
-			-- Has an error occurred?
-
-	last_error: STRING
-			-- Error message
-
 feature -- Events
 
 	on_error (a_message: STRING) is
@@ -83,12 +72,13 @@ feature -- Events
 			-- TODO add timing information
 
 			system_id := resolver.uri.full_reference
-			create document.make (name_pool, system_id)
+			create tree_document.make (name_pool, system_id)
+			document := tree_document
 			current_depth := 1
 			next_node_number := 2
-			current_composite_node := document
+			current_composite_node := tree_document
 			if is_line_numbering then
-				document.set_line_numbering
+				tree_document.set_line_numbering
 			end
 		end
 
@@ -96,7 +86,7 @@ feature -- Events
 			-- Notify an unparsed entity URI
 		do
 			if not has_error then
-				-- TODO document.set_unparsed_entity (a_name, a_system_id, a_public_id)
+				-- TODO tree_document.set_unparsed_entity (a_name, a_system_id, a_public_id)
 			end
 		end
 
@@ -153,20 +143,20 @@ feature -- Events
 			a_counter: INTEGER
 		do
 			if not has_error then
-				an_element := node_factory.new_element_node (document, current_composite_node, pending_attributes, pending_namespaces,
+				an_element := node_factory.new_element_node (tree_document, current_composite_node, pending_attributes, pending_namespaces,
 																			pending_element_name_code, next_node_number)
 				if an_element.is_error then
 					has_error := True
 					last_error := an_element.error_value.error_message
 				else
-					document.set_system_id_for_node (next_node_number, resolver.uri.full_reference)
+					tree_document.set_system_id_for_node (next_node_number, resolver.uri.full_reference)
 					if is_line_numbering then
-						document.set_line_number_for_node (next_node_number, parser.position.row)
+						tree_document.set_line_number_for_node (next_node_number, parser.position.row)
 					end
 					next_node_number := next_node_number + 1
 					current_depth := current_depth + 1
-					if current_composite_node = document then
-						document.set_document_element (an_element)
+					if current_composite_node = tree_document then
+						tree_document.set_document_element (an_element)
 					end
 					current_composite_node := an_element
 				end
@@ -191,7 +181,7 @@ feature -- Events
 		do
 			if not has_error then
 				if a_character_string.count > 0 then
-					create a_text_node.make (document, a_character_string)
+					create a_text_node.make (tree_document, a_character_string)
 					current_composite_node.add_child (a_text_node)
 				end
 			end
@@ -213,7 +203,7 @@ feature -- Events
 				else
 					a_name_code := name_pool.name_code ("", "", a_target) 
 				end
-				create a_processing_instruction.make (document, a_name_code, a_data_string)
+				create a_processing_instruction.make (tree_document, a_name_code, a_data_string)
 				current_composite_node.add_child (a_processing_instruction)
 
 				a_processing_instruction.set_location (resolver.uri.full_reference, parser.position.row)
@@ -226,7 +216,7 @@ feature -- Events
 			a_comment: XM_XPATH_TREE_COMMENT
 		do
 			if not has_error then
-				create a_comment.make (document, a_content_string)
+				create a_comment.make (tree_document, a_content_string)
 				current_composite_node.add_child (a_comment)
 			end
 		end

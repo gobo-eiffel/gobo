@@ -83,7 +83,7 @@ feature -- Access
 		require
 			not_error: not tree.has_error
 		do
-			Result := tree.document
+			Result := tree.tree_document
 		end
 
 	last_error: STRING is

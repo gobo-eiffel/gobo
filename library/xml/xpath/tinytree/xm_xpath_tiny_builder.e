@@ -45,22 +45,11 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	document: XM_XPATH_TINY_DOCUMENT
-			-- Resulting document
-
-	parser: XM_PARSER
-			-- XML parser
+	tiny_document: XM_XPATH_TINY_DOCUMENT
+			-- Created document
 
 	resolver: XM_URI_EXTERNAL_RESOLVER
 			-- Entity resolver
-	
-feature -- Status report
-
-	has_error: BOOLEAN
-			-- Has an error occurred?
-
-	last_error: STRING
-			-- Error message
 
 feature -- Events
 
@@ -81,26 +70,27 @@ feature -- Events
 
 			system_id := resolver.uri.full_reference
 			if defaults_overridden then
-				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)
+				create tiny_document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)
 			else
-				create document.make_with_defaults (name_pool, system_id)
+				create tiny_document.make_with_defaults (name_pool, system_id)
 			end
+			document := tiny_document
 			current_depth := 1
 			if is_line_numbering then
-				document.set_line_numbering
+				tiny_document.set_line_numbering
 			end
-			document.add_node (Document_node, current_depth, -1, -1, -1)
+			tiny_document.add_node (Document_node, current_depth, -1, -1, -1)
 			create previously_at_depth.make (1, 100)
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
 			previously_at_depth.put (0, 2) 
-			document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
+			tiny_document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI
 		do
-			-- TODO document.set_unparsed_entity (a_name, a_system_id, a_public_id)
+			-- TODO tiny_document.set_unparsed_entity (a_name, a_system_id, a_public_id)
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -109,11 +99,11 @@ feature -- Events
 			an_owner_node, a_previous_sibling: INTEGER
 			a_new_type_code: like a_type_code
 		do
-			document.add_node (Element_node, current_depth, -1, -1, a_name_code)
-			node_number := document.last_node_added
+			tiny_document.add_node (Element_node, current_depth, -1, -1, a_name_code)
+			node_number := tiny_document.last_node_added
 			if conformance.basic_xslt_processor then
 				a_new_type_code := Untyped_type_code
-				document.set_element_annotation (node_number, a_new_type_code)
+				tiny_document.set_element_annotation (node_number, a_new_type_code)
 			else
 					check
 						Only_basic_xslt_processors_are_supported: False
@@ -126,10 +116,10 @@ feature -- Events
 
 			an_owner_node := previously_at_depth.item (current_depth - 1)
 			if a_previous_sibling > 0 then
-				document.set_next_sibling (node_number, a_previous_sibling)
+				tiny_document.set_next_sibling (node_number, a_previous_sibling)
 			end
 
-			document.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
+			tiny_document.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
 			
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
@@ -138,16 +128,16 @@ feature -- Events
 			end
 			previously_at_depth.put (-1, current_depth) -- no previous sibling
 
-			document.set_system_id_for_node (node_number, resolver.uri.full_reference)
+			tiny_document.set_system_id_for_node (node_number, resolver.uri.full_reference)
 			if is_line_numbering then
-				document.set_line_number_for_node (node_number, parser.position.row)
+				tiny_document.set_line_number_for_node (node_number, parser.position.row)
 			end
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
-				document.add_namespace (node_number + 1, a_namespace_code)			
+				tiny_document.add_namespace (node_number + 1, a_namespace_code)			
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -163,7 +153,7 @@ feature -- Events
 						Only_basic_xslt_processors_are_supported: False
 					end
 			end
-				document.add_attribute (node_number, a_name_code, a_new_type_code, a_value)
+				tiny_document.add_attribute (node_number, a_name_code, a_new_type_code, a_value)
 		end
 
 	start_content is
@@ -184,16 +174,16 @@ feature -- Events
 		local
 			a_buffer_start, a_previous_sibling: INTEGER
 		do
-			a_buffer_start := document.character_buffer_length
-			document.append_characters (a_character_string)
-			document.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
-			node_number := document.last_node_added
+			a_buffer_start := tiny_document.character_buffer_length
+			tiny_document.append_characters (a_character_string)
+			tiny_document.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
+			node_number := tiny_document.last_node_added
 
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				document.set_next_sibling (node_number, a_previous_sibling)
+				tiny_document.set_next_sibling (node_number, a_previous_sibling)
 			end
-			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end
 	
@@ -211,20 +201,20 @@ feature -- Events
 			else
 				a_name_code := name_pool.name_code ("", "", a_target) 
 			end
-			document.store_comment (a_data_string)
-			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, a_data_string.count, a_name_code)
-			node_number := document.last_node_added
+			tiny_document.store_comment (a_data_string)
+			tiny_document.add_node (Processing_instruction_node, current_depth, tiny_document.comment_buffer_length, a_data_string.count, a_name_code)
+			node_number := tiny_document.last_node_added
 
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				document.set_next_sibling (node_number, a_previous_sibling)
+				tiny_document.set_next_sibling (node_number, a_previous_sibling)
 			end
-			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 
-			document.set_system_id_for_node (node_number, resolver.uri.full_reference)
+			tiny_document.set_system_id_for_node (node_number, resolver.uri.full_reference)
 			if is_line_numbering then
-				document.set_line_number_for_node (node_number, parser.position.row)
+				tiny_document.set_line_number_for_node (node_number, parser.position.row)
 			end
 		end
 
@@ -233,15 +223,15 @@ feature -- Events
 		local
 			a_previous_sibling: INTEGER
 		do
-			document.store_comment (a_content_string)
-			document.add_node (Comment_node, current_depth, document.comment_buffer_length, a_content_string.count, -1)
-			node_number := document.last_node_added
+			tiny_document.store_comment (a_content_string)
+			tiny_document.add_node (Comment_node, current_depth, tiny_document.comment_buffer_length, a_content_string.count, -1)
+			node_number := tiny_document.last_node_added
 
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				document.set_next_sibling (node_number, a_previous_sibling)
+				tiny_document.set_next_sibling (node_number, a_previous_sibling)
 			end
-			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end
 

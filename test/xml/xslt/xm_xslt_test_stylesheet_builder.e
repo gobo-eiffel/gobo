@@ -31,6 +31,7 @@ feature
 		local
 			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			a_configuration: XM_XSLT_CONFIGURATION
+			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source: XM_XSLT_URI_SOURCE
 			a_document_element: XM_XSLT_STYLESHEET
 			a_key: XM_XSLT_KEY
@@ -274,6 +275,8 @@ feature
 			assert ("xsl:value-of 11", a_value_of /= Void)			
 			a_literal_result ?= a_literal_result.next_sibling
 			assert ("hr 3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "hr"))
+			a_transformer := a_stylesheet.new_transformer
+			assert ("transformer", a_transformer /= Void)
 		end
 
 end

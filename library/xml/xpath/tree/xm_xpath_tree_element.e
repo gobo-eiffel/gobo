@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			create attribute_collection.make (a_name_pool)
 			create namespace_code_list.make (5)
 			sequence_number_high_word := 50000
+			create {XM_XPATH_TREE_DOCUMENT} document.make (a_name_pool, "") -- dummy document, to preserve invariant
 		end
 
 	make_in_error_state (a_document: XM_XPATH_TREE_DOCUMENT; a_message: STRING) is

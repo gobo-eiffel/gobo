@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
 		do
+			set_string_mode_mixed
 			entity_resolver := an_entity_resolver
 			name_pool := default_pool.default_pool
 		ensure
@@ -44,6 +45,7 @@ feature {NONE} -- Initialization
 		do
 			set_string_mode_mixed
 			entity_resolver := new_file_resolver_current_directory
+			name_pool := default_pool.default_pool
 		end
 
 feature -- Access
@@ -60,13 +62,17 @@ feature -- Access
 	name_pool: XM_XPATH_NAME_POOL
 			-- Name pool
 
-feature -- Status report
-
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?
 
-feature -- Status setting
+	is_strip_all_white_space: BOOLEAN
+			-- Is all white space to be stripped from source documents?
 
+	is_tiny_tree_model: BOOLEAN
+			-- Should the tiny tree model be used for XML source?
+
+feature -- Element change
+	
 	set_line_numbering (on_or_off: BOOLEAN) is
 			-- Turn line numbering `on_or_off'.
 		do
@@ -74,8 +80,6 @@ feature -- Status setting
 		ensure
 			set: is_line_numbering = on_or_off
 		end
-
-feature -- Element change
 
 	set_entity_resolver (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER) is
 			-- Set `entity_resolver'.
@@ -85,6 +89,22 @@ feature -- Element change
 			entity_resolver := an_entity_resolver
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
+		end
+
+	set_strip_all_white_space (strip_all_white_space: BOOLEAN) is
+			-- Set `is_strip_all_white_space'.
+		do
+			is_strip_all_white_space := strip_all_white_space
+		ensure
+			set: is_strip_all_white_space = strip_all_white_space
+		end
+
+	use_tiny_tree_model (true_or_false: BOOLEAN) is
+			-- Switch on/off use of tiny tree model for source XML.
+		do
+			is_tiny_tree_model := true_or_false
+		ensure
+			set: is_tiny_tree_model = true_or_false
 		end
 
 invariant

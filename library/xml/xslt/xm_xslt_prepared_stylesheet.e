@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			configuration_not_void: a_configuration /= Void
 		do
 			configuration := a_configuration
+			create stripper_rules.make
 		ensure
 			configuration_set: configuration = a_configuration
 		end
@@ -55,6 +56,9 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Last error listener used by `prepare'
 
+	stripper_rules: XM_XSLT_MODE
+			-- Strip/preserve space rules
+
 feature -- Status report
 
 	load_stylesheet_module_failed: BOOLEAN
@@ -64,23 +68,21 @@ feature -- Status report
 	load_stylesheet_module_error: STRING
 			-- Error reported by last call to `load_stylesheet_module'
 
-feature -- Compliation
+feature -- Compilation
 
 	prepare (a_source: XM_XSLT_URI_SOURCE) is
 			-- Prepare a stylesheet from a source document.
 		require
 			source_not_void: a_source /= Void
 		local
-			a_name_pool: XM_XPATH_NAME_POOL
 			a_node_factory: XM_XSLT_NODE_FACTORY
 		do
-			create a_name_pool.make
 			error_listener := configuration.error_listener
 			if error_listener = Void then
 				create {XM_XSLT_DEFAULT_ERROR_LISTENER} error_listener.make
 			end
-			create a_node_factory.make (a_name_pool, error_listener, configuration.are_external_functions_allowed)
-			load_stylesheet_module (a_source, configuration, a_name_pool, a_node_factory)
+			create a_node_factory.make (default_pool.default_pool, error_listener, configuration.are_external_functions_allowed)
+			load_stylesheet_module (a_source, configuration, default_pool.default_pool, a_node_factory)
 			if load_stylesheet_module_failed then
 				todo ("prepare - deal with compile errors", True)
 			else
@@ -117,7 +119,7 @@ feature -- Compliation
 				load_stylesheet_module_failed := True
 				load_stylesheet_module_error := a_tree_builder.last_error
 			else
-				last_loaded_module := a_tree_builder.document
+				last_loaded_module := a_tree_builder.tree_document
 			end
 		ensure
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
@@ -154,18 +156,29 @@ feature -- Compliation
 				if a_stylesheet.is_error then
 					todo ("create_style_sheet_executable - compile failed", True)
 				else
-					--executable ?= a_stylesheet.last_generated_instruction
+					executable ?= a_stylesheet.last_compiled_executable
 					check
-					--	instruction_is_executable: executable /= Void
-						-- as {XM_XSLT_STYLESHEET}.compile produces an
-						-- executable if no error.
-						end
+						executable: executable /= Void
+						-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.
+					end
 				end
 			end
 		ensure
 			node_factory_set: node_factory = a_node_factory
 		end
-		
+
+feature -- Creation
+
+	new_transformer: XM_XSLT_TRANSFORMER is
+			-- New transformer for this stylesheet
+		require
+			executable: executable /= Void
+		do
+			create Result.make (configuration, Current)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 invariant
 	
 	configuration_not_void: configuration /= Void

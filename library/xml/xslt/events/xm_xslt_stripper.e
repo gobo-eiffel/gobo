@@ -29,10 +29,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; a_stripper_mode: XM_XSLT_MODE) is
+	make (a_transformer: XM_XSLT_TRANSFORMER; a_stripper_mode: XM_XSLT_MODE; an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
+			receiver_not_void: an_underlying_receiver /= Void
 		do
 			transformer := a_transformer
 			stripper_mode := a_stripper_mode
@@ -46,9 +47,11 @@ feature {NONE} -- Initialization
 				xml_space_code := transformer.name_pool.last_name_code
 			end
 			create element.make_dummy (transformer.name_pool)
+			base_receiver := an_underlying_receiver
 		ensure
 			transformer_set: transformer = a_transformer
 			mode_set: stripper_mode = a_stripper_mode
+			base_receiver_set: base_receiver = an_underlying_receiver
 		end
 
 feature -- Access
@@ -191,7 +194,7 @@ feature -- Duplication
 	another: XM_XSLT_STRIPPER is
 			-- A clean copu of `Current'
 		do
-			create Result.make (transformer, stripper_mode)
+			create Result.make (transformer, stripper_mode, base_receiver)
 			Result.clone_attributes (strip_all, preserve_all)
 		ensure
 			copy_not_void: Result /= Void

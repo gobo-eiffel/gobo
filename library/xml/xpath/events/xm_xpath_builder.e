@@ -22,8 +22,20 @@ feature -- Access
 	system_id: STRING
 			-- SYSTEM ID of the resulting document
 
+	parser: XM_PARSER
+			-- XML parser
+
+	document: XM_XPATH_DOCUMENT
+			-- Resulting document
 
 feature -- Status report
+
+	has_error: BOOLEAN
+			-- Has an error occurred?
+
+	last_error: STRING
+			-- Error message
+
 
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?

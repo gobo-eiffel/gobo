@@ -25,6 +25,8 @@ inherit
 
 	XM_XSLT_VALIDATION
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -46,12 +48,16 @@ feature {NONE} -- Initialization
 			create decimal_format_manager.make
 			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create a_code_point_collator
-			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator)
+			declare_collation (default_collation_name, a_code_point_collator)
 			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
+			create stripper_rules.make
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Access
+
+	default_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			-- Default collation name
 
 	importer: like Current
 			-- The stylesheet that imported or included `Current';
@@ -89,6 +95,9 @@ feature -- Access
 	default_validation: INTEGER
 			-- Default validation
 
+	stripper_rules: XM_XSLT_MODE
+			-- Strip/preserve whitespace rules
+	
 	precedence: INTEGER is
 			-- Import precedence of `Current'
 		do
@@ -201,6 +210,27 @@ feature -- Status report
 		do
 			Result := collation_map.has (a_collator_uri)
 		end
+
+	strips_whitespace: BOOLEAN is
+			-- Does this stysheet do any whitespace stripping?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+		do
+			from
+				a_cursor := top_level_elements.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if a_cursor.item.fingerprint = Xslt_strip_space_type_code then
+					Result := True
+					a_cursor.go_after
+				end
+				a_cursor.forth
+			end
+		end
+
+	last_compiled_executable: XM_XSLT_EXECUTABLE
+			-- Result of successfull call to `compile_stylesheet'
 
 feature -- Element change
 
@@ -481,11 +511,12 @@ feature -- Element change
 		require
 			configuration_not_void: a_configuration /= Void
 		local
-			an_executable: XM_XSLT_EXECUTABLE
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_instruction: XM_XSLT_INSTRUCTION
+			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
+			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 		do
-			create an_executable.make (a_configuration)
+			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace)
 
 			-- Call compile method for each top-level object in the stylesheet
 
@@ -497,7 +528,7 @@ feature -- Element change
 			until
 				any_compile_errors or else a_cursor.after
 			loop
-				a_cursor.item.compile (an_executable)
+				a_cursor.item.compile (last_compiled_executable)
 				if a_cursor.item.any_compile_errors then
 					any_compile_errors := True -- this shouldn't happen
 				else
@@ -508,8 +539,20 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
-				
-			todo ("compile_stylesheet", True)
+			-- TODO: last_compiled_executable.set_slot_space (?, largest_stack_frame)
+
+			create a_compiled_templates_index.make (named_templates_index.count)
+			from
+				another_cursor := named_templates_index.new_cursor; another_cursor.start
+			until
+				another_cursor.after
+			loop
+				a_compiled_templates_index.put (another_cursor.item.compiled_template, another_cursor.key)
+				another_cursor.forth
+			end
+			last_compiled_executable.set_named_template_table (a_compiled_templates_index)
+
+			todo ("compile_stylesheet", True) -- Build character maps index
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
