@@ -88,6 +88,9 @@ feature -- Processing
 			ucs: UC_STRING
 			if_condition: BOOLEAN
 			unless_condition: BOOLEAN
+			a_file_system: KL_FILE_SYSTEM
+			old_cwd: STRING
+			new_cwd: STRING
 		do
 				-- Set default target execution conditions:
 			if_condition := true
@@ -113,56 +116,78 @@ feature -- Processing
 
 			children := target_element.children
 			nb := children.count
-			from i := 1 until i > nb or not if_condition or unless_condition loop
-				an_element := children.item (i)
-					-- Dispatch tasks:
-				if an_element.name.is_equal (Compile_se_task_name) then
-						-- compile_se: SmallEiffel compilation
-					!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Exec_task_name) then
-						-- exec
-					!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Lcc_task_name) then
-						-- lcc
-					!GEANT_LCC_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Var_task_name) then
-						-- var
-					!GEANT_VAR_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Gexace_task_name) then
-						-- gexace
-					!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Gelex_task_name) then
-						-- gelex
-					!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Geyacc_task_name) then
-						-- geyacc
-					!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Gepp_task_name) then
-						-- gepp
-					!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Getest_task_name) then
-						-- getest
-					!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Geant_task_name) then
-						-- geant
-					!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
-				elseif an_element.name.is_equal (Echo_task_name) then
-						-- echo
-					!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
-				else
-						-- Default:
-					a_task := Void
+			if if_condition and not unless_condition then
+					-- change to the specified directory if "dir" attribue is provided:
+				if target_element.has_attribute (Dir_attribute_name) then
+					new_cwd := interpreted_string (target_element.attribute_value_by_name (Dir_attribute_name).out)
+					if project.verbose then
+						print (" changing to directory: '" + new_cwd + "'%N")
+					end
+					!! a_file_system.make
+					old_cwd := a_file_system.current_working_directory
+					a_file_system.set_current_working_directory (new_cwd)
 				end
-					-- Execute task:
-				if a_task = Void then
-					print ("WARNING: unknown task : " + an_element.name.out + "%N")
-				elseif not a_task.is_executable then
-					print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
-				else
-					a_task.execute
+
+
+				from i := 1 until i > nb or not if_condition or unless_condition loop
+					an_element := children.item (i)
+						-- Dispatch tasks:
+					if an_element.name.is_equal (Compile_se_task_name) then
+							-- compile_se: SmallEiffel compilation
+						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Exec_task_name) then
+							-- exec
+						!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Lcc_task_name) then
+							-- lcc
+						!GEANT_LCC_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Var_task_name) then
+							-- var
+						!GEANT_VAR_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Gexace_task_name) then
+							-- gexace
+						!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Gelex_task_name) then
+							-- gelex
+						!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Geyacc_task_name) then
+							-- geyacc
+						!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Gepp_task_name) then
+							-- gepp
+						!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Getest_task_name) then
+							-- getest
+						!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Geant_task_name) then
+							-- geant
+						!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Echo_task_name) then
+							-- echo
+						!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
+					else
+							-- Default:
+						a_task := Void
+					end
+						-- Execute task:
+					if a_task = Void then
+						print ("WARNING: unknown task : " + an_element.name.out + "%N")
+					elseif not a_task.is_executable then
+						print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
+					else
+						a_task.execute
+					end
+					i := i + 1
+				end -- from
+
+				if target_element.has_attribute (Dir_attribute_name) then
+					if project.verbose then
+						print (" changing to directory: '" + old_cwd + "'%N")
+					end
+					a_file_system.set_current_working_directory (old_cwd)
+
 				end
-				i := i + 1
-			end
+			end	-- if
 		end
 
 	dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET] is
@@ -316,6 +341,15 @@ feature {NONE} -- Constants
 			-- "unless" attribute name
 		once
 			!! Result.make_from_string ("unless")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	Dir_attribute_name: UC_STRING is
+			-- "dir" attribute name
+		once
+			!! Result.make_from_string ("dir")
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: not Result.empty

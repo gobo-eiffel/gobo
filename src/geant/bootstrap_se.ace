@@ -193,6 +193,11 @@ cluster
 			assertion (no)
 		option
 	;
+	gobo_kernel_io: "${GOBO}/library/kernel/io"
+		default
+			assertion (no)
+		option
+	;
 	gobo_kernel_spec: "${GOBO}/library/kernel/spec"
 		default
 			assertion (no)

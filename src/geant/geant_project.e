@@ -96,7 +96,7 @@ feature -- Setting
 
 feature -- Processing
 
-	load (a_start_target_name : STRING) is
+	load (a_start_target_name: STRING) is
 			-- Read current project's configuration from `build_filename'
 			-- and convert it into a 'GEANT_DOM'.
 			-- When set use `a_start_target_name' for first target to execute
