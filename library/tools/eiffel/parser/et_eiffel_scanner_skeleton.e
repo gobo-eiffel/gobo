@@ -81,6 +81,7 @@ feature {NONE} -- Initialization
 			filename := a_filename
 			ast_factory := a_factory
 			error_handler := an_error_handler
+			set_use_assign_keyword (True)
 			set_use_attribute_keyword (True)
 			set_use_convert_keyword (True)
 			set_use_create_keyword (True)
@@ -137,6 +138,10 @@ feature -- Setting
 
 feature -- Status report
 
+	use_assign_keyword: BOOLEAN
+			-- Should 'assign' be considered as
+			-- a keyword (otherwise identifier)?
+
 	use_attribute_keyword: BOOLEAN
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
@@ -158,6 +163,14 @@ feature -- Status report
 			-- a keyword (otherwise identifier)?
 
 feature -- Statut setting
+
+	set_use_assign_keyword (b: BOOLEAN) is
+			-- Set `use_assign_keyword' to `b'.
+		do
+			use_assign_keyword := b
+		ensure
+			use_assign_keyword_set: use_assign_keyword = b
+		end
 
 	set_use_attribute_keyword (b: BOOLEAN) is
 			-- Set `use_attribute_keyword' to `b'.
@@ -1004,6 +1017,36 @@ feature {NONE} -- Processing
 				end
 			when 6 then
 				inspect text_item (1)
+				when 'a', 'A' then
+					inspect text_item (2)
+					when 's', 'S' then
+						inspect text_item (3)
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'i', 'I' then
+								inspect text_item (5)
+								when 'g', 'G' then
+									inspect text_item (6)
+									when 'n', 'N' then
+										if use_assign_keyword then
+											last_token := E_ASSIGN
+											last_et_keyword_value := ast_factory.new_assign_keyword (Current)
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
 				when 'c', 'C' then
 					inspect text_item (2)
 					when 'r', 'R' then
@@ -2224,7 +2267,7 @@ feature {NONE} -- Processing
 				last_et_symbol_value := ast_factory.new_dotdot_symbol (Current)
 			when ':' then
 				check valid_symbol: c2 = '=' end
-				last_token := E_ASSIGN
+				last_token := E_ASSIGN_SYMBOL
 				last_et_symbol_value := ast_factory.new_assign_symbol (Current)
 			when '?' then
 				check valid_symbol: c2 = '=' end
