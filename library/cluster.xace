@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<cluster name="gobo">
+	<mount location="${GOBO}/library/kernel/cluster.xace"/>
+	<mount location="${GOBO}/library/lexical/cluster.xace"/>
+	<mount location="${GOBO}/library/parse/cluster.xace"/>
+	<mount location="${GOBO}/library/structure/cluster.xace"/>
+	<mount location="${GOBO}/library/tools/cluster.xace"/>
+	<mount location="${GOBO}/library/utility/cluster.xace"/>
+	<mount location="${GOBO}/library/xml/cluster.xace"/>
+</cluster>
