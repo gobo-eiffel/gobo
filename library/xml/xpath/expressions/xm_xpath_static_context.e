@@ -64,7 +64,7 @@ feature -- Access
 		ensure
 			default_function_namespace_uri_not_void: Result /= Void
 			restricted_means_standard_function_namespace: is_restricted implies
-				String_.same_string (Result, Xpath_standard_functions_uri)
+				STRING_.same_string (Result, Xpath_standard_functions_uri)
 		end
 	
 	default_collation_name: STRING is
@@ -74,7 +74,7 @@ feature -- Access
 			default_collation_name_not_void: Result /= Void
 			known_collation: is_known_collation (Result)
 			restricted_means_unicode_code_point_collation: is_restricted implies
-			String_.same_string (Result, Unicode_codepoint_collation_uri)	
+			STRING_.same_string (Result, Unicode_codepoint_collation_uri)	
 		end
 
 	collator (a_collation_name: STRING): ST_COLLATOR is
