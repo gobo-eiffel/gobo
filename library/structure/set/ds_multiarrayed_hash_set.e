@@ -23,7 +23,9 @@ inherit
 
 creation
 
-	make, make_equal, make_default
+	make, make_equal, make_default,
+	make_with_chunk_size,
+	make_equal_with_chunk_size
 
 feature -- Access
 
@@ -36,7 +38,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	hash_position (v: G): INTEGER is
-			-- Hash position of `v' in `slots'
+			-- Hash position of `v' in `slots';
 			-- Use `v.hash_code' as hashing function.
 		do
 			if v /= Void then
