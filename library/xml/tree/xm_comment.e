@@ -16,34 +16,36 @@ class XM_COMMENT
 inherit
 
 	XM_NODE
-		redefine
-			implementation
-		end
 
 creation
 
-	make_from_implementation
+	make
+
+feature {NONE} -- Initialisation
+
+	make (a_parent: XM_COMPOSITE; a_data: UC_STRING) is
+		require
+			a_data_not_void: a_data /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			data := a_data
+			parent := a_parent
+		end
 
 feature {ANY} -- Access
 
-	data: UC_STRING is
+	data: UC_STRING
 			--Actual character data of this comment.
-		do
-			Result := implementation.data
-		end
 
 feature {ANY} -- Basic routines
 
 	process (x: XM_NODE_PROCESSOR) is
+			-- Visitor process.
 		do
 			x.process_comment (Current)
 		end
 
 feature {ANY} -- Element change
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_COMMENT
 
 invariant
 

@@ -16,32 +16,20 @@ deferred class XM_NAMED_NODE
 inherit
 
 	XM_NODE
-		redefine
-			implementation
-		end
 
 feature {ANY} -- Access
 
-	name: UC_STRING is
+	name: UC_STRING
 			-- Name of this node.
-		do
-			Result := implementation.name
-		ensure
-			result_not_void: Result /= Void
-		end
 
-	ns_prefix: UC_STRING is
+	ns_prefix: UC_STRING
 			-- Namespace prefix used to declare the namespace of the 
 			-- name of this node.
-		do
-			Result := implementation.ns_prefix
-		end
 
-	namespace: UC_STRING is
+	namespace: UC_STRING
 			-- Namespace of the name of this node.
-		do
-			Result := implementation.namespace
-		end
+
+feature {ANY} -- Access
 
 	has_namespace: BOOLEAN is
 			-- Has the name of this node been defined with namespace?
@@ -64,19 +52,19 @@ feature {ANY} -- Element change
 		require
 			n_not_void: n /= Void
 		do
-			implementation.set_name (n)
+			name := n
 		end
 
 	set_namespace (n: UC_STRING) is
 			-- Set `n' to be the namespace of the name of this node.
 		do
-			implementation.set_namespace (n)
+			namespace := n
 		end
 
 	set_prefix (n: UC_STRING) is
 			-- Set `n' to be the prefix for the namespace of the name of this node
 		do
-			implementation.set_prefix (n)
+			ns_prefix := n
 		end
 
 	apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
@@ -98,10 +86,6 @@ feature {ANY} -- Element change
 				end
 			end
 		end
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_NAMED_NODE
 
 invariant
 

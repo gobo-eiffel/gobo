@@ -21,21 +21,47 @@ inherit
 		undefine
 			root_node
 		redefine
-			implementation, remove_namespace_declarations_from_attributes_recursive, resolve_namespaces_start
+			remove_namespace_declarations_from_attributes_recursive, resolve_namespaces_start
 		end
 
 	XM_NAMED_NODE
 		undefine
-			make_from_implementation
+			copy, is_equal
 		redefine
-			implementation, apply_namespace_declarations
+			apply_namespace_declarations
 		end
 
 creation
 
-	make_from_implementation
+	make_root, make_child
 
-feature {NONE} -- Initialisation
+feature {NONE} -- Implementation
+
+	make_root (a_name, a_ns_prefix: UC_STRING) is
+			-- make a new root element based on the information held in a
+			-- XM_START_TAG object. This will fill in the name and the attributes
+		require
+			a_name_not_void: a_name /= Void
+		do
+			make_composite
+			name := a_name
+			ns_prefix := a_ns_prefix
+		ensure
+			name_set: equal (name, a_name)
+		end
+
+	make_child (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: UC_STRING) is
+			-- make a new child element based on the information held in a
+			-- XM_START_TAG object. This will fill in the name and the attributes
+		require
+			a_parent_not_void: a_parent /= Void
+			a_name_not_void: a_name /= Void
+		do
+			make_root (a_name, a_ns_prefix)
+			parent := a_parent
+		ensure
+			name_set: equal (name, a_name)
+		end
 
 	make_default is
 		do
@@ -136,10 +162,29 @@ feature {ANY} -- Element change
 			-- Add `a_attributes' to this element.
 		require
 			a_attributes_not_void: a_attributes /= Void
+		local
+			cs: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
 		do
-			implementation.add_attributes (a_attributes, Current)
+			from
+				cs := a_attributes.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				add_attribute (cs.item.first.first, cs.item.first.second, cs.item.second)
+				cs.forth
+			end
 		end
 
+	add_attribute (a_name, a_prefix, a_value: UC_STRING) is
+			-- Add one attribute to this element.
+		local
+			xml: XM_ATTRIBUTE
+		do
+			!! xml.make (a_name, a_prefix, a_value, Current)
+			force_last (xml)
+		end
+		
 feature {ANY} -- Removal
 
 	remove_attribute_by_name (n: UC_STRING) is
@@ -263,10 +308,6 @@ feature {NONE} -- Implementation
 		end
 
 	namespace_declarations_cache: DS_LINKED_LIST [XM_NAMESPACE]
-
-feature {NONE} -- Implementation
-
-	implementation: XI_ELEMENT
 
 end -- class XM_ELEMENT
 

@@ -16,21 +16,29 @@ class XM_CHARACTER_DATA
 inherit
 
 	XM_NODE
-		redefine
-			implementation
-		end
 
 creation
 
-	make_from_implementation
+	make
+
+feature {NONE} -- Initialisation
+
+	make (a_parent: XM_COMPOSITE; c: UC_STRING) is
+			-- Make a new object from a string.
+		require
+			a_parent_not_void: a_parent /= Void
+			c_not_void: c /= Void
+		do
+			parent := a_parent
+			content := c
+		ensure
+			content_set: equal (content, c)
+		end
 
 feature {ANY} -- Access
 
-	content: UC_STRING is
+	content: UC_STRING
 			-- Actual character data of this node.
-		do
-			Result := implementation.content
-		end
 
 feature {ANY} -- Basic routines
 
@@ -48,12 +56,8 @@ feature {ANY} -- Element change
 		require
 			other /= Void
 		do
-			implementation.append_content (other)
+			content.append_uc_string (other.content)
 		end
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_CHARACTER_DATA
 
 invariant
 

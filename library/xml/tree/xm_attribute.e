@@ -16,24 +16,29 @@ class XM_ATTRIBUTE
 inherit
 
 	XM_NAMED_NODE
-		redefine
-			implementation
-		end
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 
 creation
 
-	make_from_implementation
+	make
+
+feature {NONE} -- Initialisation
+
+	make (a_name, a_prefix, a_value: UC_STRING; a_parent: XM_ELEMENT) is
+		do
+			--make_default
+			name := a_name
+			ns_prefix := a_prefix
+			value := a_value
+			parent := a_parent
+		end
 
 feature {ANY} -- Access
 
-	value: UC_STRING is
+	value: UC_STRING
 			-- The value of this attribute.
-		do
-			Result := implementation.value
-		end
 
 	is_namespace_declaration: BOOLEAN is
 			-- Is this attribute a namespace declaration ?
@@ -76,14 +81,10 @@ feature {ANY} -- Basic routines
 		require
 			a_value_not_void: a_value /= Void
 		do
-			implementation.set_value (a_value)
+			value := a_value
 		ensure
 			value_set: value = a_value
 		end
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_ATTRIBUTE
 
 feature {NONE} -- Constants
 

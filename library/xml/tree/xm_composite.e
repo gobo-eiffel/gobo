@@ -16,45 +16,34 @@ deferred class XM_COMPOSITE
 inherit
 
 	XM_NODE
+		undefine
+			is_equal, copy
 		redefine
-			implementation, root_node, make_from_implementation
+			root_node
 		end
 
-	DS_BILINEAR [XM_NODE]
-		redefine
-			valid_cursor
+	DS_LINKED_LIST [XM_NODE]
+		rename
+			make as make_list
 		end
 
 	UC_UNICODE_FACTORY
-		export {NONE} all end
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
 
 feature {NONE} -- Access
 
-	make_from_implementation (imp: like implementation) is
+	make_composite is
+			-- Initialisation specific to this node.
 		do
 			!! namespaces.make (10)
-			precursor (imp)
+			make_list
 		end
 
 feature {ANY} -- Access
-
-	first: XM_NODE is
-			-- First item in container
-		do
-			Result := implementation.first
-		end
-
-	last: XM_NODE is
-			-- First item in container
-		do
-			Result := implementation.last
-		end
-
-	new_cursor: DS_BILINEAR_CURSOR [XM_NODE] is
-			-- New external cursor for traversal
-		do
-			Result := implementation.new_cursor
-		end
 
 	root_node: XM_COMPOSITE is
 			-- the root node of this node. In most cases this will be of
@@ -125,22 +114,6 @@ feature {ANY} -- Access
 		end
 
 	namespaces: XM_NAMESPACE_TABLE
-
-feature {ANY} -- Status report
-
-	valid_cursor (a_cursor: DS_CURSOR [XM_NODE]): BOOLEAN is
-			-- Is `a_cursor' a valid cursor?
-		do
-			Result := implementation.valid_cursor (a_cursor)
-		end
-
-feature {ANY} -- Messurement
-
-	count: INTEGER is
-			-- Number of items in container
-		do
-			Result := implementation.count
-		end
 
 feature {ANY} -- Basic routines
 
@@ -316,303 +289,6 @@ feature {ANY} -- Element change
 			end
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	put_first, force_first (v: XM_NODE) is
-			-- Add `v' to beginning of list.
-			-- Do not move cursors.
-			-- (Performance: O(1).)
-		do
-			implementation.put_first (v)
-		end
-
-	put_last, force_last (v: XM_NODE) is
-			-- Add `v' to end of list.
-			-- Do not move cursors.
-			-- (Performance: O(1).)
-		do
-			implementation.put_last (v)
-		end
-
-	put_left_cursor, force_left_cursor (v: XM_NODE; a_cursor: like new_cursor) is
-			-- Add `v' to left of `a_cursor' position.
-			-- Do not move cursors.
-			-- (Synonym of `a_cursor.put_left (v)'.)
-			-- (Performance: O(1).)
-		do
-			implementation.put_left_cursor (v, a_cursor)
-		end
-
-	put_right_cursor, force_right_cursor (v: XM_NODE; a_cursor: like new_cursor) is
-			-- Add `v' to right of `a_cursor' position.
-			-- Do not move cursors.
-			-- (Synonym of `a_cursor.put_right (v)'.)
-			-- (Performance: O(1).)
-		do
-			implementation.put_right_cursor (v, a_cursor)
-		end
-
-	extend_first, append_first (other: DS_LINEAR [XM_NODE]) is
-			-- Add items of `other' to beginning of list.
-			-- Keep items of `other' in the same order.
-			-- Do not move cursors.
-			-- (Performance: O(other.count).)
-		do
-			implementation.extend_first (other)
-		end
-
-	extend_last, append_last (other: DS_LINEAR [XM_NODE]) is
-			-- Add items of `other' to end of list.
-			-- Keep items of `other' in the same order.
-			-- Do not move cursors.
-			-- (Performance: O(other.count).)
-		do
-			implementation.extend_last (other)
-		end
-
-	extend_left_cursor, append_left_cursor (other: DS_LINEAR [XM_NODE]; a_cursor: like new_cursor) is
-			-- Add items of `other' to left of `a_cursor' position.
-			-- Keep items of `other' in the same order.
-			-- Do not move cursors.
-			-- (Synonym of `a_cursor.extend_left (other)'.)
-			-- (Performance: O(other.count).)
-		do
-			implementation.extend_left_cursor (other, a_cursor)
-		end
-
-	extend_right_cursor, append_right_cursor (other: DS_LINEAR [XM_NODE]; a_cursor: like new_cursor) is
-			-- Add items of `other' to right of `a_cursor' position.
-			-- Keep items of `other' in the same order.
-			-- Do not move cursors.
-			-- (Synonym of `a_cursor.extend_right (other)'.)
-			-- (Performance: O(other.count).)
-		do
-			implementation.extend_right_cursor (other, a_cursor)
-		end
-
-feature -- Removal
-
-	remove_first is
-			-- Remove item at beginning of list.
-			-- Move any cursors at this position `forth'.
-			-- (Performance: O(1).)
-		do
-			implementation.remove_first
-		end
-
-	remove_last is
-			-- Remove item at end of list.
-			-- Move any cursors at this position `forth'.
-			-- (Performance: O(count).)
-		do
-			implementation.remove_last
-		end
-
-	remove_at_cursor (a_cursor: like new_cursor) is
-			-- Remove item at `a_cursor' position.
-			-- Move any cursors at this position `forth'.
-			-- (Synonym of `a_cursor.remove'.)
-			-- (Performance: O(1).)
-		do
-			implementation.remove_at_cursor (a_cursor)
-		end
-
-	remove_left_cursor (a_cursor: like new_cursor) is
-			-- Remove item to left of `a_cusor' position.
-			-- Move any cursors at this position `forth'.
-			-- (Synonym of `a_cursor.remove_left'.)
-			-- (Performance: O(a_cursor.index).)
-		do
-			implementation.remove_left_cursor (a_cursor)
-		end
-
-	remove_right_cursor (a_cursor: like new_cursor) is
-			-- Remove item to right of `a_cursor' position.
-			-- Move any cursors at this position `forth'.
-			-- (Synonym of `a_cursor.remove_right'.)
-			-- (Performance: O(1).)
-		do
-			implementation.remove_right_cursor (a_cursor)
-		end
-
-	prune_first (n: INTEGER) is
-			-- Remove `n' first items from list.
-			-- Move all cursors `off'.
-			-- (Performance: O(n).)
-		do
-			implementation.prune_first (n)
-		end
-
-	prune_last (n: INTEGER) is
-			-- Remove `n' last items from list.
-			-- Move all cursors `off'.
-			-- (Performance: O(count-n).)
-		do
-			keep_first (count - n)
-		end
-
-	prune_left_cursor (n: INTEGER; a_cursor: like new_cursor) is
-			-- Remove `n' items to left of `a_cursor' position.
-			-- Move all cursors `off'.
-			-- (Synonym of `a_cursor.prune_left (n)'.)
-			-- (Performance: O(2*a_cursor.index-n).)
-		do
-			implementation.prune_left_cursor (n, a_cursor)
-		end
-
-	prune_right_cursor (n: INTEGER; a_cursor: like new_cursor) is
-			-- Remove `n' items to right of `a_cursor' position.
-			-- Move all cursors `off'.
-			-- (Synonym of `a_cursor.prune_right (n)'.)
-			-- (Performance: O(n).)
-		do
-			implementation.prune_right_cursor (n, a_cursor)
-		end
-
-	keep_first (n: INTEGER) is
-			-- Keep `n' first items in list.
-			-- Move all cursors `off'.
-			-- (Performance: O(n).)
-		do
-			implementation.keep_first (n)
-		end
-
-	keep_last (n: INTEGER) is
-			-- Keep `n' last items in list.
-			-- Move all cursors `off'.
-			-- (Performance: O(count-n).)
-		do
-			prune_first (count - n)
-		end
-
-	delete (v: XM_NODE) is
-			-- Remove all occurrences of `v'.
-			-- (Use `equality_tester''s comparison criterion
-			-- if not void, use `=' criterion otherwise.)
-			-- Move all cursors `off'.
-			-- (Performance: O(count).)
-		do
-			implementation.delete (v)
-		end
-
-	wipe_out is
-			-- Remove all items from container.
-		do
-			implementation.wipe_out
-		end
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_COMPOSITE
-
-	internal_cursor: like new_cursor is
-			-- Internal cursor
-		do
-			Result := implementation.internal_cursor
-		end
-
-feature {DS_CURSOR} -- Cursor implementation
-
-	cursor_item (a_cursor: like new_cursor): XM_NODE is
-			-- Item at `a_cursor' position
-		do
-			Result := implementation.cursor_item (a_cursor)
-		end
-
-	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
-			-- Is `a_cursor' at same position as `other'?
-		do
-			Result := implementation.cursor_same_position (a_cursor, other)
-		end
-
-	cursor_go_to (a_cursor, other: like new_cursor) is
-			-- Move `a_cursor' to `other''s position.
-		do
-			implementation.cursor_go_to (a_cursor, other)
-		end
-
-feature {DS_LINEAR_CURSOR} -- Cursor implementation
-
-	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
-			-- Is `a_cursor' on first item?
-		do
-			Result := implementation.cursor_is_first (a_cursor)
-		end
-
-	cursor_after (a_cursor: like new_cursor): BOOLEAN is
-			-- Is there no valid position to right of `a_cursor'?
-		do
-			Result := implementation.cursor_after (a_cursor)
-		end
-
-	cursor_start (a_cursor: like new_cursor) is
-			-- Move `a_cursor' to first position.
-		do
-			implementation.cursor_start (a_cursor)
-		end
-
-	cursor_forth (a_cursor: like new_cursor) is
-			-- Move `a_cursor' to next position.
-		do
-			implementation.cursor_forth (a_cursor)
-		end
-
-	cursor_search_forth (a_cursor: like new_cursor; v: XM_NODE) is
-			-- Move `a_cursor' to first position at or after its current
-			-- position where `cursor_item (a_cursor)' and `v' are equal.
-			-- (Use `equality_tester''s comparison criterion
-			-- if not void, use `=' criterion otherwise.)
-			-- Move `after' if not found.
-		do
-			implementation.cursor_search_forth (a_cursor, v)
-		end
-
-	cursor_go_after (a_cursor: like new_cursor) is
-			-- Move `a_cursor' to `after' position.
-		do
-			implementation.cursor_go_after (a_cursor)
-		end
-
-feature {DS_BILINEAR_CURSOR} -- Cursor implementation
-
-	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
-			-- Is `a_cursor' on last item?
-		do
-			Result := implementation.cursor_is_last (a_cursor)
-		end
-
-	cursor_before (a_cursor: like new_cursor): BOOLEAN is
-			-- Is there no valid position to left of `a_cursor'?
-		do
-			Result := implementation.cursor_before (a_cursor)
-		end
-
-	cursor_finish (a_cursor: like new_cursor) is
-			-- Move `a_cursor' to last position.
-		do
-			implementation.cursor_finish (a_cursor)
-		end
-
-	cursor_back (a_cursor: like new_cursor) is
-			-- Move `a_cursor' to previous position.
-		do
-			implementation.cursor_back (a_cursor)
-		end
-
-	cursor_search_back (a_cursor: like new_cursor; v: XM_NODE) is
-			-- Move `a_cursor' to first position at or before its current
-			-- position where `cursor_item (a_cursor)' and `v' are equal.
-			-- (Use `equality_tester''s comparison criterion
-			-- if not void, use `=' criterion otherwise.)
-			-- Move `before' if not found.
-		do
-			implementation.cursor_search_back (a_cursor, v)
-		end
-
-	cursor_go_before (a_cursor: like new_cursor) is
-			-- Move `a_cursor' to `before' position.
-		do
-			implementation.cursor_go_before (a_cursor)
 		end
 
 invariant
