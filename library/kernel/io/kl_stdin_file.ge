@@ -2,10 +2,12 @@ indexing
 
 	description:
 
-		"Standard input files. The line separtor of the underlying file system %
-		%is automatically converted to %%N when read from the satndard input file. %
-		%However `read_line' and `read_new_line' are able to recognize %
-		%'%%N', '%%R%%N' and '%%R' as line separators."
+		"Standard input files containing extended ASCII characters %
+		%(8-bit code between 0 and 255). The line separtor of the %
+		%underlying file system is automatically converted to %%N %
+		%when read from the satndard input file. However `read_line' %
+		%and `read_new_line' are able to recognize '%%N', '%%R%%N' %
+		%and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"

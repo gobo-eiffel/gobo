@@ -2,7 +2,8 @@ indexing
 
 	description:
 
-		"Unix-like text output files"
+		"Unix-like text output files containing extended ASCII %
+		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"

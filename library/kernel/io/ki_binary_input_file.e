@@ -2,7 +2,8 @@ indexing
 
 	description:
 
-		"Interface for binary input files"
+		"Interface for binary input files containing extended ASCII %
+		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"

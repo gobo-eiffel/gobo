@@ -2,7 +2,8 @@ indexing
 
 	description:
 
-		"Interface for input files"
+		"Interface for input files containing extended ASCII %
+		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
@@ -25,7 +26,11 @@ inherit
 	KI_CHARACTER_INPUT_STREAM
 		undefine
 			is_closable, close
+		redefine
+			valid_unread_character
 		end
+
+	KL_SHARED_PLATFORM
 
 feature -- Status report
 
@@ -42,6 +47,23 @@ feature -- Status report
 			Result := end_of_file
 		ensure then
 			definition: Result = end_of_file
+		end
+
+	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+			-- Can `a_character' be put back in input stream?
+		do
+			Result := a_character.code <= Platform.Maximum_byte_code
+		ensure then
+			extended_ascii: Result = (a_character.code <= Platform.Maximum_byte_code)
+		end
+
+feature -- Access
+
+	last_character: CHARACTER is
+			-- Last character read
+		deferred
+		ensure then
+			extended_ascii: Result.code <= Platform.Maximum_byte_code
 		end
 
 feature -- Basic operations

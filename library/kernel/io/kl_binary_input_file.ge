@@ -2,7 +2,8 @@ indexing
 
 	description:
 
-		"Binary input files"
+		"Binary input files containing extended ASCII %
+		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
@@ -99,7 +100,9 @@ inherit
 			make as old_make,
 			is_connected as old_is_open_read,
 			end_of_input as old_end_of_file,
-			disconnect as old_close
+			disconnect as old_close,
+			read_byte as old_read_byte,
+			last_byte as old_last_byte
 		export
 			{NONE} all
 		end
@@ -139,13 +142,13 @@ feature {NONE} -- Implementation
 			-- Read a new character.
 			-- Make result available in `old_last_character'.
 		do
-			read_byte
+			old_read_byte
 		end
 
 	old_last_character: CHARACTER is
 			-- Last character read with `old_read_character'.
 		do
-			Result := last_byte.to_character
+			Result := old_last_byte.to_character
 		end
 
 #endif
