@@ -41,6 +41,27 @@ feature {NONE} -- Initialization
 			precursor (nb)
 		end
 
+feature -- Status report
+
+	has_feature (a_feature: ET_FEATURE): BOOLEAN is
+			-- Is `a_feature' listed in current list?
+			-- (The seeds of the creation procedure names must have been resolved first.)
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if a_feature.has_seed (feature_name (i).seed) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Access
 
 	create_keyword: ET_KEYWORD
