@@ -12,14 +12,12 @@ EIFFEL:
 
 - xml declaration for entities event and parsing (rm special scanner?)
 - Check that stand alone handling makes some sense
-- enhancement: strings mode to default to STRING-only latin1
+- enhancement: strings mode to default to STRING-only latin1 using Max_char_code
 - enhancement: Do CRLF normalisation before parser instead of downstream mess?
 - enhancement: review XM_EIFFEL_PARSER_NAME
 
 GENERAL:
 
-- XM_FORMATTER escaping of lt and amp and apos/quot in attributes
-- check XM_FORMATTER handling of namespaces
 - Tree pipe to include concatenation and comment filters
 - Tree attribute make require not duplicate attribute, or invariant
 - actually checking tree nodes's parent /= Void (creation issue)
@@ -31,13 +29,13 @@ GENERAL:
 - enhancement: XM_ELEMENT.is_root_element
 - enhancement: move DTD classes to own cluster
 - enhancement: tree, use DS_LIST is_addable
+- enhancement: XM_FORMATTER using whitespace for layout/ whitespace normalisation
 
 TESTS:
 
 - more extensive tree tests
 - full OASIS test suite to integrate
 - more DTD events testing (entities, notation)
-- XM_FORMATTER tests
 
 DOC:
 
