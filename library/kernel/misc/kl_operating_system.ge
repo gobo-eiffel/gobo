@@ -13,27 +13,76 @@ indexing
 
 class KL_OPERATING_SYSTEM
 
-feature -- Access
+feature -- Status report
 
-#ifdef WINDOWS
-	is_windows: BOOLEAN is True
-#else
-	is_windows: BOOLEAN is False
-#endif
+	is_windows: BOOLEAN is
 			-- Is underlying operating system Windows-like?
+		local
+			cwd: STRING
+		once
+			cwd := current_working_directory
+			if cwd.count >= 3 then
+				Result := (cwd.item (2) = ':' and cwd.item (3) = '\')
+			end
+		end
 
-#ifdef UNIX
-	is_unix: BOOLEAN is True
-#else
-	is_unix: BOOLEAN is False
-#endif
+	is_unix: BOOLEAN is
 			-- Is underlying operating system Unix-like?
+		local
+			cwd: STRING
+		once
+			cwd := current_working_directory
+			if cwd.count > 0 then
+				Result := cwd.item (1) = '/'
+			end
+		end
 
-#ifdef LINUX
-	is_linux: BOOLEAN is True
-#else
-	is_linux: BOOLEAN is False
+feature {NONE} -- Implementation
+
+	current_working_directory: STRING is
+			-- Name of current working directory;
+			-- Return absolute pathname with the naming 
+			-- convention of the underlying file system
+			-- (Return a new object at each call.)
+		do
+#ifdef SE
+			basic_directory.connect_to_current_working_directory
+			Result := clone (basic_directory.last_entry)
+			basic_directory.disconnect
 #endif
-			-- Is underlying operating system Linux-like?
+#ifdef ISE || HACT
+			Result := execution_environment.current_working_directory
+#endif
+#ifdef VE
+			Result := file_system_impl.current_cluster
+#endif
+		ensure
+			current_working_directory_not_void: Result /= Void
+		end
 
+#ifdef SE
+	basic_directory: BASIC_DIRECTORY
+			-- Implementation
+
+#endif
+#ifdef VE
+	file_system_impl: FILE_SYSTEM is
+			-- Implementation
+		once
+			!! Result.make
+		ensure
+			file_system_impl_not_void: Result /= Void
+		end
+
+#endif
+#ifdef ISE || HACT
+	execution_environment: EXECUTION_ENVIRONMENT is
+			-- Execution environment implementation
+		once
+			!! Result
+		ensure
+			execution_environment_not_void: Result /= Void
+		end
+
+#endif
 end -- class KL_OPERATING_SYSTEM
