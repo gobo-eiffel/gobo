@@ -83,7 +83,8 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	add_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER) is
+	add_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER;
+		a_pathname: ET_IDENTIFIER; an_exclude: ET_LACE_EXCLUDE) is
 			-- Add cluster named `a_name' with pathname `a_pathname' to
 			-- parent cluster named `a_parent'. The leading '$' sign in
 			-- `a_pathname' will be replaced by the full pathname of the
@@ -127,6 +128,7 @@ feature {NONE} -- Basic operations
 					!! a_full_pathname.make_with_position (a_full_pathname_string, a_pathname.line, a_pathname.column)
 				end
 				a_cluster := new_cluster (a_name, a_full_pathname)
+				a_cluster.set_exclude (an_exclude)
 				if a_parent_cluster.subclusters /= Void then
 					a_parent_cluster.add_subcluster (a_cluster)
 				else

@@ -29,14 +29,14 @@ creation
 %}
 
 %token                 L_SYSTEM L_ROOT L_END L_CLUSTER
-%token                 L_DEFAULT L_EXTERNAL L_OPTION
+%token                 L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
 %token                 L_ABSTRACT L_ALL L_EXCLUDE
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
 %token                 L_STRERR
 
 %type <ET_LACE_CLUSTER>		Cluster Nested_cluster Recursive_cluster Subcluster
 %type <ET_LACE_CLUSTERS>	Cluster_list Clusters_opt Subclusters_opt Subcluster_list
-%type <ET_LACE_EXCLUDE>		Exclude_opt Exclude_list
+%type <ET_LACE_EXCLUDE>		Excludes Exclude_list Cluster_options_opt
 %type <ET_IDENTIFIER>		Identifier
 
 %start Ace
@@ -45,7 +45,7 @@ creation
 --------------------------------------------------------------------------------
 
 Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
-	Defaults_opt Clusters_opt Externals_opt L_END
+	Defaults_opt Clusters_opt Externals_opt Generates_opt L_END
 		{
 			last_universe := new_universe ($8)
 			last_universe.set_root_class ($4)
@@ -60,9 +60,12 @@ Creation_procedure_opt: -- Empty
 	| ':' Identifier
 	;
 
-Defaults_opt: -- Empty
-	| L_DEFAULT
+Defaults: L_DEFAULT
 	| L_DEFAULT Default_list
+	;
+
+Defaults_opt: -- Empty
+	| Defaults
 	;
 
 Default_list: Default Default_terminator
@@ -90,18 +93,18 @@ Clusters_opt: -- Empty
 
 Cluster_list: Cluster
 		{ $$ := new_clusters ($1) }
-	| Identifier '(' Identifier ')' ':' Identifier Options_opt
+	| Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
 		{
-			add_subcluster ($1, $3, $6)
+			add_subcluster ($1, $3, $6, $7)
 			-- TODO:
 			abort
 		}
 	| Cluster_list Cluster_separator Cluster
 		{ $$ := $1; $$.put_last ($3) }
-	| Cluster_list Cluster_separator Identifier '(' Identifier ')' ':' Identifier Options_opt
+	| Cluster_list Cluster_separator Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
 		{
 			$$ := $1
-			add_subcluster ($3, $5, $8)
+			add_subcluster ($3, $5, $8, $9)
 		}
 	;
 
@@ -113,19 +116,21 @@ Cluster: L_ABSTRACT Nested_cluster
 		{ $$ := $1 }
 	;
 
-Nested_cluster: Identifier ':' Identifier Options_opt Subclusters_opt
+Nested_cluster: Identifier ':' Identifier Cluster_options_opt Subclusters_opt
 		{
 			$$ := new_cluster ($1, $3)
+			$$.set_exclude ($4)
 			$$.set_subclusters ($5)
 		}
-	| Identifier Options_opt Subclusters_opt
+	| Identifier Cluster_options_opt Subclusters_opt
 		{
 			$$ := new_cluster ($1, Void)
+			$$.set_exclude ($2)
 			$$.set_subclusters ($3)
 		}
 	;
 
-Recursive_cluster: Identifier ':' Identifier Exclude_opt Options_opt
+Recursive_cluster: Identifier ':' Identifier Cluster_options_opt
 		{
 			$$ := new_cluster ($1, $3)
 			$$.set_exclude ($4)
@@ -160,11 +165,20 @@ Subcluster: L_ABSTRACT Nested_cluster
 		{ $$ := $1 }
 	;
 
-Exclude_opt: -- Empty
-	| L_EXCLUDE L_END
-	| L_EXCLUDE Exclude_list L_END
+Cluster_options_opt: -- Empty
+		-- { $$ := Void }
+	| Excludes Defaults_opt Options_opt L_END
+		{ $$ := $1 }
+	| Defaults Options_opt L_END
+		-- { $$ := Void }
+	| Options L_END
+		-- { $$ := Void }
+	;
+
+Excludes: L_EXCLUDE
+	| L_EXCLUDE Exclude_list
 		{ $$ := $2 }
-	| L_EXCLUDE Exclude_list ';' L_END
+	| L_EXCLUDE Exclude_list ';'
 		{ $$ := $2 }
 	;
 
@@ -174,9 +188,12 @@ Exclude_list: Identifier
 		{ $$ := $1; $$.put_last ($3) }
 	;
 
+Options: L_OPTION
+	| L_OPTION Option_list
+	;
+
 Options_opt: -- Empty
-	| L_OPTION L_END
-	| L_OPTION Option_list L_END
+	| Options
 	;
 
 Option_list: Option Option_terminator
@@ -184,6 +201,7 @@ Option_list: Option Option_terminator
 	;
 
 Option: Identifier '(' Identifier ')' ':' Class_list
+--TODO: | Identifier ':' Class_list
 	;
 
 Class_list: Identifier
@@ -208,6 +226,7 @@ External_list: External External_terminator
 	;
 
 External: Identifier ':' External_items
+	| Identifier '(' Identifier ')'
 	;
 
 External_items: Identifier
@@ -220,6 +239,11 @@ External_terminator: -- Empty
 
 External_separator: -- Empty
 	| ';'
+	;
+
+Generates_opt: -- Empty
+	| L_GENERATE
+	| L_GENERATE External_list
 	;
 
 Identifier: L_IDENTIFIER

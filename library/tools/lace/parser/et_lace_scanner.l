@@ -57,6 +57,7 @@ creation
 [eE][nN][dD]						last_token := L_END
 [eE][xX][cC][lL][uU][dD][eE]		last_token := L_EXCLUDE
 [eE][xX][tT][eE][rR][nN][aA][lL]	last_token := L_EXTERNAL
+[gG][eE][nN][eE][rR][aA][tT][eE]	last_token := L_GENERATE
 [oO][pP][tT][iI][oO][nN]			last_token := L_OPTION
 [rR][oO][oO][tT]					last_token := L_ROOT
 [sS][yY][sS][tT][eE][mM]			last_token := L_SYSTEM
