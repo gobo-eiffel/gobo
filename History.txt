@@ -10,6 +10,11 @@ Version 3.1 - ?
 	* The task <ise> now takes advantage of ISE Eiffel incremental
 	  compiler.
 
+	getest:
+
+	* Fixed bug: only the first cluster listed in the config file
+	  was taken into account (reported by Guy Fokou).
+
 	Gobo Eiffel Kernel Library:
 
 	* Moved feature `close' up to KI_INPUT_STREAM and

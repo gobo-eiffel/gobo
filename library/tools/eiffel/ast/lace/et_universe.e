@@ -367,6 +367,9 @@ feature -- Parsing
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
+			eiffel_parser.set_universe (Current)
+			eiffel_parser.set_ast_factory (ast_factory)
+			eiffel_parser.set_error_handler (error_handler)
 			eiffel_parser.parse (a_file, a_filename, a_cluster)
 		end
 

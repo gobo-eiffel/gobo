@@ -100,6 +100,38 @@ feature -- Access
 	cluster: ET_CLUSTER
 			-- Cluster containing the class being parsed
 
+feature -- Setting
+
+	set_universe (a_universe: like universe) is
+			-- Set `universe' to `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+		ensure
+			universe_set: universe = a_universe
+		end
+
+	set_ast_factory (a_factory: like ast_factory) is
+			-- Set `ast_factory' to `a_factory'.
+		require
+			a_factory_not_void: a_factory /= Void
+		do
+			ast_factory := a_factory
+		ensure
+			ast_factory_set: ast_factory = a_factory
+		end
+
+	set_error_handler (a_handler: like error_handler) is
+			-- Set `error_handler' to `a_handler'.
+		require
+			a_handler_not_void: a_handler /= Void
+		do
+			error_handler := a_handler
+		ensure
+			error_handler_set: error_handler = a_handler
+		end
+
 feature -- Parsing
 
 	parse (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
