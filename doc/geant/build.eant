@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<project name="geant_documentation" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel Ant Documentation"
+		system: "Gobo Eiffel Ant Documentation"
+		copyright: "Copyright (c) 2002, Sven Ehrke and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel Ant Documentation.
+		</description>
+
+			<!-- Concepts: -->
+		<xslt input="introduction.xml" output="introduction.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="hello_world.xml" output="hello_world.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+
+<!-- TODO: finish the following:
+-->
+
+		<xslt input="tasks.xml" output="tasks.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl">
+			<parameter name="previous" value="introduction.html"/>
+			<parameter name="next" value="copy_task.html"/>
+			<parameter name="toc" value="toc.html"/>
+		</xslt>
+			<!-- Elements: -->
+<!-- TODO: finish the following:
+		<xslt input="fileset_element.xml" output="fileset_element.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="map_element.xml" output="map_element.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+-->
+
+			<!-- Tasks: -->
+		<xslt input="copy_task.xml" output="copy_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="delete_task.xml" output="delete_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="echo_task.xml" output="echo_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="exec_task.xml" output="exec_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+			<!-- Concepts: -->
+		<delete file="hello_world.html"/>
+		<delete file="introduction.html"/>
+		<delete file="tasks.html"/>
+
+			<!-- Elements: -->
+		<delete file="fileset_element.html"/>
+		<delete file="map_element.html"/>
+
+		<delete file="copy_task.html"/>
+		<delete file="delete_task.html"/>
+		<delete file="echo_task.html"/>
+		<delete file="exec_task.html"/>
+
+		<delete file="hello_world.html"/>
+	</target>
+
+</project>
