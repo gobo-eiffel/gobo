@@ -22,6 +22,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export{NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -183,10 +186,8 @@ feature -- Access
 					then
 						s := clone (a_map_filename)
 	
-	--					s.remove_head (filename_prefix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
-						s := string_remove_head (s, filename_prefix.count) -- workaround
-	--					s.remove_tail (filename_postfix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
-						s := string_remove_tail (s, filename_postfix.count) -- workaround
+						STRING_.remove_head (s, filename_prefix.count)
+						STRING_.remove_tail (s, filename_postfix.count)
 	
 						Result := clone (target_prefix)
 						Result.append_string (s)
