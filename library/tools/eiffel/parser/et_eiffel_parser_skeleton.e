@@ -234,8 +234,15 @@ feature {NONE} -- Basic operations
 		an_invariants: ET_INVARIANTS; a_second_indexing: ET_INDEXING_LIST;
 		an_end: ET_KEYWORD) is
 			-- Set various elements to `a_class'.
+		local
+			named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 		do
 			if a_class /= Void then
+				if a_class.named_features = Void then
+					!! named_features.make_map (0)
+					named_features.set_key_equality_tester (feature_name_tester)
+					a_class.set_named_features (named_features)
+				end
 				a_class.set_obsolete_message (an_obsolete)
 				a_class.set_parents (a_parents)
 				a_class.set_creators (a_creators)
