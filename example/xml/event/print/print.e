@@ -57,6 +57,10 @@ feature -- Processing
 				has_error := True
 			else
 				a_parser := event_parser
+				a_parser.set_dtd_resolver (new_file_resolver)
+				a_parser.set_entity_resolver (new_file_resolver)
+				
+				a_parser.set_dtd_callbacks (new_dtd_pretty_print)
 				a_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
 				a_parser.parse_from_stream (a_file)
 				if not a_parser.is_correct then
@@ -126,6 +130,20 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
+feature {NONE} -- DTD
+
+	new_dtd_pretty_print: XM_DTD_PRETTY_PRINT_FILTER is
+			-- DTD pretty printer
+		do
+			create Result.make_null
+		end
+		
+	new_file_resolver: XM_FILE_EXTERNAL_RESOLVER is
+			-- File loader for DTD or entities.
+		do
+			create Result.make
+		end
+		
 feature {NONE} -- Implementation
 
 	Usage_message: UT_USAGE_MESSAGE is
