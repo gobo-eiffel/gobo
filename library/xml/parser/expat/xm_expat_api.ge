@@ -194,6 +194,8 @@ feature -- Parsing
 			-- true; `len' may be zero for this call (or any other).
 		require
 			a_parser_not_null: a_parser /= default_pointer
+			s_not_null: s /= default_pointer
+			len_not_negative: len >= 0
 		external
 #ifdef SE || ISE
 			"C use <expat.h>"
@@ -1699,12 +1701,6 @@ feature -- XML_Content freeing
 			-- has been allocated by malloc so free likes it.
 		require
 			cp_points_to_something: cp /= default_pointer
-#ifdef VE
-		do
-			if not operating_system.is_windows then
-				ve_exml_XML_cp_free (cp)
-			end
-#else
 		external
 #ifdef SE || ISE
 			"C use <stdlib.h>"
@@ -1712,26 +1708,13 @@ feature -- XML_Content freeing
 #ifdef HACT
 			"C | <stdlib.h>"
 #endif
-		alias
-			"free"
-#endif
-		end
-
 #ifdef VE
-feature {NONE} -- XML_Content freeing
-
-	ve_exml_XML_cp_free (cp: POINTER) is
-			-- Free the Expat allocated XML_Content struct by assuming it
-			-- has been allocated by malloc so free likes it.
-		require
-			cp_points_to_something: cp /= default_pointer
-		external
 			"C"
+#endif
 		alias
 			"free"
 		end
 
-#endif
 feature -- Conversion
 
 	new_attribute_list_from_c (attr_spec_ptr: POINTER): DS_BILINKED_LIST [DS_PAIR [DS_PAIR [STRING, STRING], STRING]] is
@@ -1925,8 +1908,8 @@ feature -- Conversion: C Strings to STRING
 		end
 
 	new_string_from_c_zero_terminated_string_safe (psz: POINTER): STRING is
-			-- Same as `new_string_from_c_zero_terminated_string', 
-			-- except you may give it a `default_pointer' - in that case 
+			-- Same as `new_string_from_c_zero_terminated_string',
+			-- except you may give it a `default_pointer' - in that case
 			-- it will give you back Void
 		do
 			if psz /= default_pointer then
@@ -1937,8 +1920,8 @@ feature -- Conversion: C Strings to STRING
 feature -- Conversion: C Strings to UC_STRING
 
 	new_uc_string_from_c_utf8_zero_terminated_string_safe (psz: POINTER): UC_STRING is
-			-- Same as `new_string_from_c_utf8_zero_terminated_string', 
-			-- except you may give it a `default_pointer' - in that case 
+			-- Same as `new_string_from_c_utf8_zero_terminated_string',
+			-- except you may give it a `default_pointer' - in that case
 			-- it will give you back Void
 		do
 			if psz /= default_pointer then
