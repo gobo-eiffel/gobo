@@ -265,7 +265,7 @@ feature -- Processing
 						!GEANT_XSLT_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Outofdate_task_name) then
 							-- outofdate
-						!GEANT_OUT_OF_DATE_TASK! a_task.make_from_element (project, an_element)
+						!GEANT_OUTOFDATE_TASK! a_task.make_from_element (project, an_element)
 					else
 							-- Default:
 						a_task := Void
