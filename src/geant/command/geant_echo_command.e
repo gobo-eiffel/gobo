@@ -56,6 +56,7 @@ feature -- Execution
 		do
 			trace ("  [echo] ")
 			log (message + "%N")
+			exit_code := 0
 		end
 
 end -- class GEANT_ECHO_COMMAND

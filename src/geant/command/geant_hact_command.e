@@ -18,9 +18,6 @@ inherit
 
 	GEANT_COMMAND
 
-	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
 creation
 
 	make
@@ -117,6 +114,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
+			exit_code := 0
 			if is_compilable then
 				execute_compile
 			else
@@ -132,8 +130,8 @@ feature -- Execution
 		local
 			cmd: STRING
 			old_cwd: STRING
-			project_dir: STRING
-			old_name, new_name: STRING
+			project_dir, eifgen: STRING
+			a_filename: STRING
 		do
 			cmd := clone ("ibcomp -executable")
 			if finalize then
@@ -142,42 +140,38 @@ feature -- Execution
 			cmd.append_string (" -new -stop")
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -ace ")
-				cmd.append_string (ace_filename)
+				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
+				cmd.append_string (a_filename)
 			end
 			cmd.append_string (" -project ")
 			cmd.append_string (system_name)
 			cmd.append_string (".eif")
 			trace ("  [hact] " + cmd + "%N")
 			execute_shell (cmd)
-
-			if fish then
-				old_cwd := file_system.cwd
-				project_dir := system_name + "_gen"
+			if exit_code = 0 and then fish then
+				eifgen := system_name + "_gen"
 				if finalize then
-					project_dir.append_string ("/F_code")
+					project_dir := file_system.pathname (eifgen, "F_code")
 				else
-					project_dir.append_string ("/W_code")
+					project_dir := file_system.pathname (eifgen, "W_code")
 				end
 				trace ("  [hact] cd " + project_dir + "%N")
+				old_cwd := file_system.cwd
 				file_system.cd (project_dir)
 				cmd := clone ("fish")
 				trace ("  [hact] " + cmd + "%N")
 				execute_shell (cmd)
-				old_name := clone (system_name)
-				old_name.append_string (file_system.exe_extension)
-				new_name := clone ("../../")
-				new_name.append_string (old_name)
-				trace ("  [hact] copy " + old_name + " " + new_name + "%N")
-				file_system.copy_file (old_name, new_name)
-				if not finalize then
-					old_name := clone (system_name)
-					old_name.append_string (".h2o")
-					new_name := clone ("../../")
-					new_name.append_string (old_name)
-					trace ("  [hact] copy " + old_name + " " + new_name + "%N")
-					file_system.copy_file (old_name, new_name)
+				if exit_code = 0 then
+					a_filename := system_name + file_system.exe_extension
+					if not file_system.file_exists (a_filename) then
+						exit_code := -1
+					elseif not finalize then
+						a_filename := system_name + ".h2o"
+						if not file_system.file_exists (a_filename) then
+							exit_code := -2
+						end
+					end
 				end
-				trace ("  [hact] cd " + old_cwd + "%N")
 				file_system.cd (old_cwd)
 			end
 		end
@@ -188,18 +182,14 @@ feature -- Execution
 			is_cleanable: is_cleanable
 		local
 			a_name: STRING
-			a_dir: KL_DIRECTORY
 		do
-			a_name := clone (clean)
-			a_name.append_string ("_gen")
-			if file_system.is_directory_readable (a_name) then
-				!! a_dir.make (a_name)
+			a_name := clean + "_gen"
+			if file_system.directory_exists (a_name) then
 				trace ("  [hact] delete " + a_name + "%N")
-				a_dir.recursive_delete
+				file_system.recursive_delete_directory (a_name)
 			end
-			a_name := clone (clean)
-			a_name.append_string (".eif")
-			if file_system.is_file_readable (a_name) then
+			a_name := clean + ".eif"
+			if file_system.file_exists (a_name) then
 				trace ("  [hact] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end

@@ -18,9 +18,6 @@ inherit
 
 	GEANT_COMMAND
 
-	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
 creation
 
 	make
@@ -159,15 +156,16 @@ feature -- Execution
 			cmd: STRING
 			a_name: STRING
 		do
+			exit_code := 0
 			if is_cleanable then
 				cmd := new_clean_cmdline
-				a_name := clone (clean)
-				a_name.append_string (".id")
-				if file_system.is_file_readable (a_name) then
+				a_name := clean + ".id"
+				if file_system.file_exists (a_name) then
 						-- Execute the command only if the SmallEiffel
 						-- compiler has been used to compile this system.
 					trace ("  [se] " + cmd + "%N")
 					execute_shell (cmd)
+					exit_code := 0
 				end
 			else
 				if is_ace_configuration then
@@ -186,9 +184,12 @@ feature -- Command-line
 			-- Execution commandline for Ace configuration
 		require
 			is_ace_configuration: is_ace_configuration
+		local
+			a_filename: STRING
 		do
 			Result := clone ("compile ")
-			Result.append_string (ace_filename)
+			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
+			Result.append_string (a_filename)
 		ensure
 			command_line_not_void: Result /= Void
 			command_line_not_empty: Result.count > 0
@@ -198,11 +199,14 @@ feature -- Command-line
 			-- Execution commandline for traditional configuration
 		require
 			is_traditional_configuration: is_traditional_configuration
+		local
+			a_filename: STRING
 		do
 			Result := clone ("compile")
 
 			Result.append_string (" -o ")
-			Result.append_string (executable)
+			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
+			Result.append_string (a_filename)
 
 			if case_insensitive then
 				Result.append_string (" -case_insensitive")

@@ -17,7 +17,9 @@ class GEANT_SETENV_COMMAND
 inherit
 
 	GEANT_COMMAND
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
 
 creation
 
@@ -71,8 +73,9 @@ feature -- Execution
 	execute is
 			-- Put variable in project variables pool.
 		do
-			Execution_environment.set_variable_value (name, value)
 			trace ("  [setenv] " + name + "=" + value + "%N")
+			Execution_environment.set_variable_value (name, value)
+			exit_code := 0
 		end
 
 end -- class GEANT_SETENV_COMMAND

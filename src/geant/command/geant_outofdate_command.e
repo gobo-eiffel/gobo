@@ -15,7 +15,6 @@ class GEANT_OUTOFDATE_COMMAND
 
 inherit
 
-	KL_SHARED_FILE_SYSTEM
 	GEANT_COMMAND
 		redefine
 			make
@@ -121,44 +120,35 @@ feature -- Execution
 			-- Execute command.
 		local
 			i, nb: INTEGER
-			a_source_file: KI_FILE
-			a_target_file: KI_FILE
 			a_source_time: INTEGER
 			a_target_time: INTEGER
-			a_set_command: GEANT_SET_COMMAND
-			a_old_verbose: BOOLEAN
 			a_name: STRING
 		do
-			! KL_TEXT_INPUT_FILE ! a_target_file.make (target_filename)
-
-			a_target_time := a_target_file.time_stamp
-
+			exit_code := 0
+			a_name := file_system.pathname_from_file_system (target_filename, unix_file_system)
+			a_target_time := file_system.file_time_stamp (a_name)
 				-- Check timestamps:
 			nb := source_filenames.count
-			from i := 1 until i > nb or else is_out_of_date or else exit_code /= 0 loop
+			from i := 1 until i > nb loop
 				a_name := file_system.pathname_from_file_system (source_filenames.item (i), unix_file_system)
-				! KL_TEXT_INPUT_FILE ! a_source_file.make (a_name)
-				a_source_time := a_source_file.time_stamp
+				a_source_time := file_system.file_time_stamp (a_name)
 				if a_source_time = -1 then
-					log ("  [outofdate] error: '" + a_name + "'  not accessible.%N")
+					log ("  [outofdate] error: '" + source_filenames.item (i) + "'  not accessible.%N")
 					exit_code := 1
+					i := nb + 1 -- Jump out of the loop.
+				elseif a_target_time < a_source_time then
+					is_out_of_date := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
 				end
-				is_out_of_date := (a_target_time < a_source_time)
-
-				i := i + 1
 			end
 			if exit_code = 0 then
-				!! a_set_command.make (project)
-				a_set_command.set_name (variable_name)
-				a_old_verbose := project.verbose
-				project.set_verbose (False)
 				if is_out_of_date then
-					a_set_command.set_value (true_value)
+					project.variables.set_variable_value (variable_name, true_value)
 				else
-					a_set_command.set_value (false_value)
+					project.variables.set_variable_value (variable_name, false_value)
 				end
-				a_set_command.execute
-				project.set_verbose (a_old_verbose)
 			end
 		end
 

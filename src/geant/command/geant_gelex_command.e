@@ -21,8 +21,6 @@ inherit
 			make
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
-
 creation
 
 	make
@@ -196,6 +194,7 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
+			a_filename: STRING
 		do
 			cmd := clone ("gelex ")
 				-- Option -a
@@ -240,11 +239,12 @@ feature -- Execution
 				-- Option -o
 			if output_filename /= Void and then output_filename.count > 0 then
 				cmd.append_string ("-o ")
-				cmd.append_string (output_filename)
+				a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+				cmd.append_string (a_filename)
 				cmd.append_string (" ")
 			end
-
-			cmd.append_string (input_filename)
+			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			cmd.append_string (a_filename)
 
 			trace ("  [gelex] " + cmd + "%N")
 			execute_shell (cmd)

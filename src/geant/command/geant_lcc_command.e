@@ -74,12 +74,15 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
+			a_filename: STRING
 		do
 			cmd := clone ("lcc")
 			cmd.append_string (" -Fo")
-			cmd.append_string (executable)
+			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
+			cmd.append_string (a_filename)
 			cmd.append_string (" ")
-			cmd.append_string (source_filename)
+			a_filename := file_system.pathname_from_file_system (source_filename, unix_file_system)
+			cmd.append_string (a_filename)
 			trace ("  [lcc] " + cmd + "%N")
 			execute_shell (cmd)
 		end

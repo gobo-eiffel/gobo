@@ -16,7 +16,6 @@ class GEANT_GEANT_COMMAND
 inherit
 
 	GEANT_COMMAND
-	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -104,14 +103,16 @@ feature -- Execution
 			ucs: UC_STRING
 			a_variables: GEANT_VARIABLES
 			a_target: GEANT_TARGET
+			a_filename: STRING
 		do
+			exit_code := 0
 			if is_filename_executable then
 					-- Create a new project and run it's build process:
 				if reuse_variables then
 					a_variables := project.variables
 				end
-				
-				!! ucs.make_from_string (filename)
+				a_filename := file_system.pathname_from_file_system (filename, unix_file_system)
+				!! ucs.make_from_string (a_filename)
 				!! a_project.make_with_filename (ucs, a_variables, Void)
 				a_project.set_verbose (project.verbose)
 	

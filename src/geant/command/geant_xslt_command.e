@@ -109,15 +109,18 @@ feature -- Execution
 		local
 			cmd: STRING
 			i, nb: INTEGER
+			a_filename: STRING
 		do
 			cmd := clone ("testxslt ")
 			cmd.append_string (" -IN ")
-			cmd.append_string (input_filename)
+			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			cmd.append_string (a_filename)
 			cmd.append_string (" -XSL ")
-			cmd.append_string (stylesheet_filename)
+			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
+			cmd.append_string (a_filename)
 			cmd.append_string (" -OUT ")
-			cmd.append_string (output_filename)
-
+			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+			cmd.append_string (a_filename)
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop

@@ -17,7 +17,6 @@ class GEANT_MOVE_COMMAND
 inherit
 
 	GEANT_COMMAND
-	KL_SHARED_FILE_SYSTEM
 
 creation
 
@@ -104,7 +103,9 @@ feature -- Execution
 		local
 			a_to_file: STRING
 			a_basename: STRING
+			old_name, new_name: STRING
 		do
+			exit_code := 0
 			if is_to_directory_executable then
 				a_basename := unix_file_system.basename (file)
 				a_to_file := unix_file_system.pathname (to_directory, a_basename)
@@ -114,29 +115,26 @@ feature -- Execution
 				a_to_file := to_file
 			end
 			trace ("  [move] " + file + " to " + a_to_file + "%N")
-
 				-- Check that source file exists:
-			if not file_system.is_file_readable (file) then
+			old_name := file_system.pathname_from_file_system (file, unix_file_system)
+			new_name := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+			if not file_system.file_exists (old_name) then
 				log ("  [move] error: cannot find file '" + file + "'%N")
 				exit_code := 1
+			else
+				file_system.rename_file (old_name, new_name)
+				if not file_system.file_exists (new_name) then
+						-- The new file has not been created.
+					log ("  [move] error: cannot move file '" + file + "' to file '" + a_to_file + "'%N")
+					exit_code := 1
+				elseif file_system.file_exists (old_name) then
+					if not file_system.same_physical_file (old_name, new_name) then
+							-- The old file has not been removed.
+						log ("  [move] error: cannot remove file '" + file + "'%N")
+						exit_code := 1
+					end
+				end
 			end
-
-			if exit_code = 0 then
-				file_system.rename_file (file, a_to_file)
-			end
-
-				-- Check that new file has been created:
-			if exit_code = 0 and then not file_system.is_file_readable (a_to_file) then
-				log ("  [move] error: cannot move file '" + file + "' to file '" + a_to_file + "'%N")
-				exit_code := 1
-			end
-
-				-- Check that old file has been removed:
-			if exit_code = 0 and then file_system.is_file_readable (file) then
-				log ("  [move] error: cannot remove file '" + file + "'%N")
-				exit_code := 1
-			end
-
 		end
 
 end -- class GEANT_MOVE_COMMAND

@@ -17,7 +17,6 @@ class GEANT_MKDIR_COMMAND
 inherit
 
 	GEANT_COMMAND
-	KL_SHARED_FILE_SYSTEM
 
 creation
 
@@ -57,16 +56,14 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		local
-			a_directory: KI_DIRECTORY
 			a_name: STRING
 		do
+			exit_code := 0
 			trace ("  [mkdir] " + directory + "%N")
 			a_name := file_system.pathname_from_file_system (directory, unix_file_system)
-
-			! KL_DIRECTORY ! a_directory.make (a_name)
-			a_directory.recursive_create_directory
-			if not file_system.is_directory_readable (a_name) then
-					log ("  [mkdir] error: cannot create directory '" + a_name + "'%N")
+			file_system.recursive_create_directory (a_name)
+			if not file_system.directory_exists (a_name) then
+				log ("  [mkdir] error: cannot create directory '" + a_name + "'%N")
 				exit_code := 1
 			end
 		end

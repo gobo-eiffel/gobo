@@ -18,9 +18,6 @@ inherit
 
 	GEANT_COMMAND
 
-	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
 creation
 
 	make
@@ -117,6 +114,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
+			exit_code := 0
 			if is_compilable then
 				execute_compile
 			else
@@ -132,46 +130,44 @@ feature -- Execution
 		local
 			cmd: STRING
 			old_cwd: STRING
-			old_name, new_name: STRING
+			eifgen, project_dir: STRING
+			a_filename: STRING
 		do
 			cmd := clone ("ec -batch")
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -ace ")
-				cmd.append_string (ace_filename)
+				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
+				cmd.append_string (a_filename)
 			end
 			if finalize then
 				cmd.append_string (" -finalize")
 			end
 			trace ("  [ise] " + cmd + "%N")
 			execute_shell (cmd)
-
-			if finish_freezing then
-				old_cwd := file_system.cwd
+			if exit_code = 0 and then finish_freezing then
+				eifgen := "EIFGEN"
 				if finalize then
-					trace ("  [ise] cd EIFGEN/F_code%N")
-					file_system.cd ("EIFGEN/F_code")
+					project_dir := file_system.pathname (eifgen, "F_code")
 				else
-					trace ("  [ise] cd EIFGEN/W_code%N")
-					file_system.cd ("EIFGEN/W_code")
+					project_dir := file_system.pathname (eifgen, "W_code")
 				end
+				trace ("  [ise] cd " + project_dir + "%N")
+				old_cwd := file_system.cwd
+				file_system.cd (project_dir)
 				cmd := clone ("finish_freezing -silent")
 				trace ("  [ise] " + cmd + "%N")
 				execute_shell (cmd)
-				old_name := clone (system_name)
-				old_name.append_string (file_system.exe_extension)
-				new_name := clone ("../../")
-				new_name.append_string (old_name)
-				trace ("  [ise] copy " + old_name + " " + new_name + "%N")
-				file_system.copy_file (old_name, new_name)
-				if not finalize then
-					old_name := clone (system_name)
-					old_name.append_string (".melted")
-					new_name := clone ("../../")
-					new_name.append_string (old_name)
-					trace ("  [ise] copy " + old_name + " " + new_name + "%N")
-					file_system.copy_file (old_name, new_name)
+				if exit_code = 0 then
+					a_filename := system_name + file_system.exe_extension
+					if not file_system.file_exists (a_filename) then
+						exit_code := -1
+					elseif not finalize then
+						a_filename := system_name + ".melted"
+						if not file_system.file_exists (a_filename) then
+							exit_code := -2
+						end
+					end
 				end
-				trace ("  [ise] cd " + old_cwd + "%N")
 				file_system.cd (old_cwd)
 			end
 		end
@@ -182,29 +178,25 @@ feature -- Execution
 			is_cleanable: is_cleanable
 		local
 			a_name: STRING
-			a_dir: KL_DIRECTORY
 		do
-			a_name := clone (clean)
-			a_name.append_string (".epr")
-			if file_system.is_file_readable (a_name) then
+			a_name := clean + ".epr"
+			if file_system.file_exists (a_name) then
 				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
-			a_name := clone (clean)
-			a_name.append_string (".rc")
-			if file_system.is_file_readable (a_name) then
+			a_name := clean + ".rc"
+			if file_system.file_exists (a_name) then
 				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			a_name := "exception_trace.log"
-			if file_system.is_file_readable (a_name) then
+			if file_system.file_exists (a_name) then
 				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
-			if file_system.is_directory_readable ("EIFGEN") then
-				!! a_dir.make ("EIFGEN")
+			if file_system.directory_exists ("EIFGEN") then
 				trace ("  [ise] delete EIFGEN%N")
-				a_dir.recursive_delete
+				file_system.recursive_delete_directory ("EIFGEN")
 			end
 		end
 

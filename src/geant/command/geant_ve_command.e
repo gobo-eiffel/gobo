@@ -18,9 +18,6 @@ inherit
 
 	GEANT_COMMAND
 
-	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
 creation
 
 	make
@@ -97,10 +94,13 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
+			a_filename: STRING
 		do
+			exit_code := 0
 			if is_compilable then
 				cmd := clone ("vec -no -a:")
-				cmd.append_string (esd_filename)
+				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
+				cmd.append_string (a_filename)
 				trace ("  [ve] " + cmd + "%N")
 				execute_shell (cmd)
 			else
@@ -120,7 +120,7 @@ feature -- Execution
 			a_dir: KL_DIRECTORY
 		do
 			old_cwd := file_system.cwd
-			if file_system.is_directory_readable ("eCluster") then
+			if file_system.directory_exists ("eCluster") then
 					-- Execute the command only if the Visual Eiffel
 					-- compiler has been used to compile this system.
 				cmd := clone ("vec -dc -y -no")
@@ -130,18 +130,19 @@ feature -- Execution
 					trace ("  [ve] " + cmd + "%N")
 				end
 				execute_shell (cmd)
+				exit_code := 0
 			end
-			if file_system.is_file_readable ("Result.out") then
+			if file_system.file_exists ("Result.out") then
 				if recursive_clean then
-					trace ("  [ve] delete " + old_cwd + "/Result.out%N")
+					trace ("  [ve] [" + old_cwd + "] delete Result.out%N")
 				else
 					trace ("  [ve] delete Result.out%N")
 				end
 				file_system.delete_file ("Result.out")
 			end
-			if file_system.is_file_readable ("vec.xcp") then
+			if file_system.file_exists ("vec.xcp") then
 				if recursive_clean then
-					trace ("  [ve] delete " + old_cwd + "/vec.xcp%N")
+					trace ("  [ve] [" + old_cwd + "] delete vec.xcp%N")
 				else
 					trace ("  [ve] delete vec.xcp%N")
 				end
@@ -153,8 +154,11 @@ feature -- Execution
 				if a_dir.is_open_read then
 					from a_dir.read_entry until a_dir.end_of_input loop
 						a_name := a_dir.last_entry
-						if not a_name.is_equal (".") and not a_name.is_equal ("..") then
-							if file_system.is_directory_readable (a_name) then
+						if
+							not a_name.is_equal (file_system.relative_current_directory) and
+							not a_name.is_equal (file_system.relative_parent_directory)
+						then
+							if file_system.directory_exists (a_name) then
 								file_system.cd (a_name)
 								execute_clean
 								file_system.cd (old_cwd)

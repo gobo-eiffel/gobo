@@ -63,7 +63,7 @@ feature -- Access
 			-- ignored in order to preserve line numbering?
 
 	defines: DS_ARRAYED_LIST [STRING]
-			-- Defined values from the commandline (-D options)
+			-- Defined values from the command-line (-D options)
 
 feature -- Setting
 
@@ -104,6 +104,7 @@ feature -- Execution
 		local
 			cmd: STRING
 			i, nb: INTEGER
+			a_filename: STRING
 		do
 			cmd := clone ("gepp")
 				-- Add defines:
@@ -117,13 +118,14 @@ feature -- Execution
 				cmd.append_string (" --lines")
 			end
 			cmd.append_string (" ")
-			cmd.append_string (file_system.pathname_from_file_system (input_filename, unix_file_system))
+			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			cmd.append_string (a_filename)
 			cmd.append_string (" ")
-			cmd.append_string (file_system.pathname_from_file_system (output_filename, unix_file_system))
+			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+			cmd.append_string (a_filename)
 			
 			trace ("  [gepp] " + cmd + "%N")
 			execute_shell (cmd)
-
 		end
 
 invariant

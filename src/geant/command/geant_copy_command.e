@@ -17,7 +17,6 @@ class GEANT_COPY_COMMAND
 inherit
 
 	GEANT_COMMAND
-	KL_SHARED_FILE_SYSTEM
 
 creation
 
@@ -104,7 +103,9 @@ feature -- Execution
 		local
 			a_to_file: STRING
 			a_basename: STRING
+			new_name, old_name: STRING
 		do
+			exit_code := 0
 			if is_to_directory_executable then
 				a_basename := unix_file_system.basename (file)
 				a_to_file := unix_file_system.pathname (to_directory, a_basename)
@@ -112,23 +113,20 @@ feature -- Execution
 				check is_to_file_executable: is_to_file_executable end
 				a_to_file := to_file
 			end
-
 			trace ("  [copy] " + file + " to " + a_to_file + "%N")
-
-				-- Check that source file exists:
-			if not file_system.is_file_readable (file) then
+			old_name := file_system.pathname_from_file_system (file, unix_file_system)
+			new_name := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+			if not file_system.file_exists (old_name) then
+					-- Check that source file exists:
 				log ("  [copy] error: cannot find file '" + file + "'%N")
 				exit_code := 1
+			else
+				file_system.copy_file (old_name, new_name)
+				if not file_system.file_exists (new_name) then
+					log ("  [copy] error: cannot copy file '" + file + "' to file '" + a_to_file + "'%N")
+					exit_code := 1
+				end
 			end
-
-			if exit_code = 0 then
-				file_system.copy_file (file, a_to_file)
-			end
-			if exit_code = 0 and then not file_system.is_file_readable (a_to_file) then
-				log ("  [copy] error: cannot copy file '" + file + "' to file '" + a_to_file + "'%N")
-				exit_code := 1
-			end
-
 		end
 
 end -- class GEANT_COPY_COMMAND

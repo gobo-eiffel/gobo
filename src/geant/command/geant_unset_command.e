@@ -56,8 +56,9 @@ feature -- Execution
 	execute is
 			-- Remove variable from project variables pool.
 		do
-			project.variables.remove_variable (name)
 			trace ("  [unset] " + name + "%N")
+			project.variables.remove_variable (name)
+			exit_code := 0
 		end
 
 end -- class GEANT_UNSET_COMMAND
