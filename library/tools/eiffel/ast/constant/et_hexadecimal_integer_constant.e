@@ -127,6 +127,7 @@ feature -- Basic operations
 					i := i + 1
 				end
 			end
+			value := v
 		end
 
 feature -- Processing
