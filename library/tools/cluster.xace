@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<cluster name="tools" location="${GOBO}/library/tools">
+
+	<description>
+	</description>
+
+	<cluster name="xace" >
+		<cluster name="support" />
+		<cluster name="ast" />
+		<cluster name="generator" />
+		<cluster name="parse" />
+		<cluster name="error" />
+	</cluster>
+</cluster>
