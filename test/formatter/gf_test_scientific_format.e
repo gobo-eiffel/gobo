@@ -19,7 +19,7 @@ inherit
 
 	TS_TEST_CASE
 
-	GF_FORMAT
+	GF_FORMAT_ROUTINES
 
 
 feature -- Basic tests
