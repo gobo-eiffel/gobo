@@ -282,6 +282,7 @@ feature -- Duplication
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
+				internal_cursor := Void
 				if old_cursor /= Void then
 					internal_cursor := old_cursor
 				else

@@ -216,6 +216,7 @@ feature -- Duplication
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
+				internal_cursor := Void
 				if old_cursor = Void then
 						-- This may happen when `copy' is called from `clone'
 						-- and the target has not been properly initialized.
