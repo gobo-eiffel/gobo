@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE root [
 <!ELEMENT root EMPTY>
+<!ELEMENT other (a, b?, c*, d+)>
 <!ATTLIST root version CDATA #REQUIRED>
 <!ENTITY filename SYSTEM "myfile.e" NDATA gif>
 <!NOTATION gif SYSTEM "gimp">

@@ -40,8 +40,6 @@ inherit
 			on_doctype,
 			on_end_doctype,
 			on_notation_declaration,
-			on_start_namespace_declaration,
-			on_end_namespace_declaration,
 			on_not_standalone
 		end
 
@@ -57,116 +55,47 @@ feature -- Tests
 	test_callback is
 		do
 			-- report version
-			print ("Expat version: ")
-			print (version)
-			print ("%N")
+			assert ("Expat version", version /= Void)
 
-			-- also it should be namespace aware
 			parse_from_file_name ("test.xml")
-			if not is_correct then
-				print ("XML parsing failed with: ")
-				print (last_error_description)
-				print ("%N")
-			end
+			assert ("parsing is correct.",  is_correct)
 
 			-- report results
-			assert("on_xml_declaration called.", on_xml_declaration_called)
-			if not on_xml_declaration_matches then
-				print ("on_xml_declaration did not match input.%N")
-			end
+			assert ("on_xml_declaration called.", on_xml_declaration_called)
+			assert ("on_xml_declaration matches input.", on_xml_declaration_matches)
 
-			if not on_doctype_called then
-				print ("on_doctype not called.%N")
-			end
-			if not on_doctype_matches then
-				print ("on_doctype did not match input.%N")
-			end
-			if not on_end_doctype_called then
-				print ("on_end_doctype not called.%N")
-			end
+			assert ("on_doctype called.", on_doctype_called)
+			assert ("on_doctype matches input.", on_doctype_matches)
+			assert ("on_end_doctype not called.", on_end_doctype_called)
 
-			if on_not_standalone_called then
-				print ("on_not_standalone unexpectedly called.%N")
-			end
+			assert ("on_not_standalone should not be called.", not on_not_standalone_called)
 
-			if not on_element_declaration_called then
-				print ("on_element_declaration not called.%N")
-			end
-			if not on_element_declaration_matches then
-				print ("on_element_declaration did not match input.%N")
-			end
+			assert ("on_element_declaration called.", on_element_declaration_called)
+			assert ("on_element_declaration matches input.", on_element_declaration_matches)
 
-			if not on_attribute_declaration_called then
-				print ("on_attribute_declaration not called.%N")
-			end
-			if not on_attribute_declaration_matches then
-				print ("on_attribute_declaration did not match input.%N")
-			end
+			assert ("on_attribute_declaration called.",  on_attribute_declaration_called)
+			assert ("on_attribute_declaration matches input.", on_attribute_declaration_matches)
 
-			if not on_entity_declaration_called then
-				print ("on_entity_declaration not called.%N")
-			end
-			if not on_entity_declaration_matches then
-				print ("on_entity_declaration did not match input.%N")
-			end
+			assert ("on_entity_declaration called.", on_entity_declaration_called)
+			assert ("on_entity_declaration matches input.", on_entity_declaration_matches)
 
-			if not on_notation_declaration_called then
-				print ("on_notation_declaration not called.%N")
-			end
-			if not on_notation_declaration_matches then
-				print ("on_notation_declaration did not match input.%N")
-			end
+			assert ("on_notation_declaration called.", on_notation_declaration_called)
+			assert ("on_notation_declaration did match input.", on_notation_declaration_matches)
 
-			if not on_processing_instruction_called then
-				print ("on_processing_instruction not called.%N")
-			end
-			if not on_processing_instruction_matches then
-				print ("on_processing_instruction did not match input.%N")
-			end
+			assert ("on_processing_instruction called.", on_processing_instruction_called)
+			assert ("on_processing_instruction matches input.", on_processing_instruction_matches)
 
-			if not on_comment_called then
-				print ("on_comment not called.%N")
-			end
-			if not on_comment_matches then
-				print ("on_comment did not match input.%N")
-			end
+			assert ("on_comment called.", on_comment_called)
+			assert ("on_comment matches input.", on_comment_matches)
 
-			if not on_start_tag_called then
-				print ("on_start_tag not called.%N")
-			end
-			if not on_start_tag_matches then
-				print ("on_start_tag did not see the <root> tag.%N")
-			end
+			assert ("on_start_tag called.",  on_start_tag_called)
+			assert ("on_start_tag did see the <root> tag.", on_start_tag_matches)
 
-			if not on_end_tag_called then
-				print ("on_end_tag not called.%N")
-			end
-			if not on_end_tag_matches then
-				print ("on_end_tag did not see the </root> tag.%N")
-			end
+			assert ("on_end_tag called.", on_end_tag_called)
+			assert ("on_end_tag did see the </root> tag.",  on_end_tag_matches)
 
-			if not on_start_namespace_called then
-				print ("on_start_namespace not called.%N")
-			end
-			if not on_start_namespace_matches then
-				print ("on_start_namespace did not see the <root> tag.%N")
-			end
-
-			if not on_end_namespace_called then
-				print ("on_end_namespace not called.%N")
-			end
-			if not on_end_namespace_matches then
-				print ("on_end_namespace did not see the root prefix.%N")
-			end
-
-			if not on_content_called then
-				print ("on_content not called.%N")
-			end
-			if not on_content_matches then
-				print ("on_content did not match input.%N")
-			end
-
-			print ("End test callback.%N")
+			assert ("on_content called.",  on_content_called)
+			assert ("on_content did match input.",  on_content_matches)
 		end
 
 
@@ -204,12 +133,6 @@ feature -- State
 
 	on_end_tag_called,
 	on_end_tag_matches: BOOLEAN
-
-	on_start_namespace_called,
-	on_start_namespace_matches: BOOLEAN
-
-	on_end_namespace_called,
-	on_end_namespace_matches: BOOLEAN
 
 	on_content_called,
 	on_content_matches: BOOLEAN
@@ -280,9 +203,20 @@ feature -- Handlers
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 		do
 			on_element_declaration_called := True
-			on_element_declaration_matches :=
-				STRING_.same_unicode_string (a_name, Root) and
-				a_model.is_content_empty
+			if on_element_declaration_matches then
+				-- declaration for other
+				assert ("expected other", STRING_.same_unicode_string (a_name, "other"))
+				assert ("expected sequence", a_model.is_sequence)
+				assert ("expected 4 children", a_model.items.count = 4)
+				assert ("repeat <a> just once", a_model.items.item (1).is_one)
+				assert ("repeat <b> zero or one", a_model.items.item (2).is_zero_or_one)
+				assert ("repeat <c> zero or more", a_model.items.item (3).is_zero_or_more)
+				assert ("repeat <d> one or more", a_model.items.item (4).is_one_or_more)
+			else
+				on_element_declaration_matches :=
+					STRING_.same_unicode_string (a_name, Root) and
+					a_model.is_content_empty
+			end
 		end
 
 	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
@@ -369,21 +303,6 @@ feature -- Handlers
 			on_notation_declaration_matches :=
 				STRING_.same_unicode_string (notation_name, Entity_notation) and
 				STRING_.same_unicode_string (an_id.system_id, Gimp)
-		end
-
-	on_start_namespace_declaration (namespace_prefix, uri: STRING) is
-		do
-			on_start_namespace_called := True
-			on_start_namespace_matches :=
-				STRING_.same_unicode_string (namespace_prefix, Root) and
-				STRING_.same_unicode_string (uri, XMLSchema)
-		end
-
-	on_end_namespace_declaration (namespace_prefix: STRING) is
-		do
-			on_end_namespace_called := True
-			on_end_namespace_matches :=
-				STRING_.same_unicode_string (namespace_prefix, Root)
 		end
 
 	on_not_standalone: BOOLEAN is
