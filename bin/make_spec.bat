@@ -1,1 +1,1 @@
-bash -c ge2e.sh .
+ge2e.sh .
