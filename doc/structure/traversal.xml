@@ -195,7 +195,7 @@ to indicate whether the cursor is on the first item of the traversal and
 to abort the traversal and move the cursor after the last item.
 Also of interest is the feature
 <featurename flatshort="ds_linear_cursor">search_forth</featurename>
-which move the cursor to the next occurrence of an item according to
+which moves the cursor to the next occurrence of an item according to
 the <link linkend="container#ds_searchable">searchable mechanism
 criteria</link>. Following is a typical example of a linear traversal:
 
@@ -362,7 +362,7 @@ to indicate whether the cursor is on the last item of the traversal,
 <featurename flatshort="ds_bilinear_cursor">go_before</featurename>
 to abort the traversal and move the cursor before the first item and
 <featurename flatshort="ds_bilinear_cursor">search_back</featurename>
-which move the cursor to the previous occurrence of an item according
+which moves the cursor to the previous occurrence of an item according
 to the <link linkend="container#ds_searchable">searchable
 mechanism criteria</link>.
 </para>
