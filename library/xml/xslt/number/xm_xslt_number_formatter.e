@@ -1,6 +1,6 @@
 indexing
 
-	description: "Objects that format a list of integers as a chacter string under the control of a format string,"
+	description: "Objects that format a list of integers as a character string under the control of a format string"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
