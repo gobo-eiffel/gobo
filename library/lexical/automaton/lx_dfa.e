@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			from
-				i := start_states_count
+				i := start_states_count + 1
 				nb := count
 			until
 				Result /= Void or i > nb
