@@ -1,0 +1,117 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class NATIVE_ARRAY. %
+		%A native array is a zero-based indexed sequence of values, %
+		%equipped with features `put' and `item', but the clients %
+		%have to keep track of `count'."
+
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class KL_NATIVE_ARRAY_ROUTINES [G]
+
+inherit
+
+	KL_IMPORTED_NATIVE_ARRAY_TYPE [G]
+
+feature -- Initialization
+
+	make (n: INTEGER): like NATIVE_ARRAY_TYPE is
+			-- Create a new native array being able to contain `n' items.
+		require
+			non_negative_n: n >= 0
+#ifdef ISE
+		local
+			to_special: TO_SPECIAL [G]
+#endif
+		do
+#ifdef ISE
+			!! to_special.make_area (n)
+			Result := to_special.area
+#else
+#ifdef SE
+			if n > 0 then
+				Result := Result.calloc (n)
+			end
+#else
+			!! Result.make (0, n - 1)
+#endif
+#endif
+		ensure
+			native_array_not_void: Result /= Void
+			valid_native_array: valid_native_array (Result)
+		end
+
+feature -- Status report
+
+	valid_native_array (an_array: like NATIVE_ARRAY_TYPE): BOOLEAN is
+			-- Make sure that the lower bound of `an_array' is zero.
+		require
+			an_array_not_void: an_array /= Void
+		do
+#ifdef ISE || SE
+			Result := True
+#else
+			Result := an_array.lower = 0
+#endif
+		end
+
+feature -- Resizing
+
+	resize (an_array: like NATIVE_ARRAY_TYPE; old_size, new_size: INTEGER): like NATIVE_ARRAY_TYPE is
+			-- Resize `an_array' so that it contains `n' items.
+			-- Do not lose any previously entered items.
+			-- Note: the returned native array  might be `an_array'
+			-- or a newly created native array where items from
+			-- `an_array' have been copied to.
+		require
+			an_array_not_void: an_array /= Void
+			valid_native_array: valid_native_array (an_array)
+			old_size_positive: old_size >= 0
+			new_size_large_enough: new_size > old_size
+		do
+#ifdef ISE
+			if new_size > an_array.count then
+				Result := c_arycpy ($an_array, new_size, 0, an_array.count)
+			else
+				Result := an_array
+			end
+#else
+#ifdef SE
+			if old_size > 0 then
+				Result := an_array.realloc (old_size, new_size)
+			else
+				Result := Result.calloc (new_size)
+			end
+#else
+			Result := an_array
+			if new_size > an_array.count then
+				Result.resize (0, new_size - 1)
+			end
+#endif
+#endif
+		ensure
+			native_array_not_void: Result /= Void
+			valid_native_array: valid_native_array (Result)
+		end
+
+#ifdef ISE
+feature {NONE} -- Externals
+
+	c_arycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [G] is
+			-- New area of size `newsize' containing `n' items
+			-- from `oldarea'.
+			-- Old items are at position `s' in new area.
+		external
+			"C | %"eif_misc.h%""
+		alias
+			"arycpy"
+		end
+
+#endif
+end
