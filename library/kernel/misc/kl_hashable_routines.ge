@@ -18,6 +18,7 @@ feature -- Access
 			-- Hash code value
 		require
 			an_any_not_void: an_any /= Void
+#ifndef SE
 		local
 			hashable: HASHABLE
 		do
@@ -25,12 +26,12 @@ feature -- Access
 			if hashable /= Void then
 				Result := hashable.hash_code
 			else
-#ifdef VE || SE
-				Result := generating_type.hash_code
-#else
-				Result := generator.hash_code
-#endif
+				Result := an_any.generating_type.hash_code
 			end
+#else
+		do
+			Result := an_any.generating_type.hash_code
+#endif
 		ensure
 			hash_value_positive: Result >= 0
 		end
