@@ -64,13 +64,13 @@ feature {NONE} -- Initialization
 			items := FIXED_ITEM_ARRAY_.make (n)
 			clashes := FIXED_INTEGER_ARRAY_.make (n)
 			from
-				i := n - 1
+				i := 0
 				free_slot := i
 			until
-				i < 0
+				i >= n
 			loop
-				clashes.put (Free_offset - (i - 1), i)
-				i := i - 1
+				clashes.put (Free_offset - (i + 1), i)
+				i := i + 1
 			end
 			modulus := new_modulus (n)
 			slots := FIXED_INTEGER_ARRAY_.make (modulus + 1)
@@ -346,6 +346,30 @@ feature -- Element change
 			inserted: has (v) and then item (v) = v
 		end
 
+	put_new (v: G) is
+			-- Add `v' to set.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Do not move cursors.
+		require
+			not_full: not is_full
+			new_item: not has (v)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			i := free_slot
+			free_slot := Free_offset - clashes.item (i)
+			h := hash_position (v)
+			clashes.put (slots.item (h), i)
+			slots.put (i, h)
+			items.put (v, i)
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			inserted: has (v) and then item (v) = v
+		end
+
 	force (v: G) is
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
@@ -375,6 +399,33 @@ feature -- Element change
 			end
 		end
 
+	force_new (v: G) is
+			-- Add `v' to set.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Resize set if necessary.
+			-- Move cursors `off' when resizing.
+		require
+			new_item: not has (v)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			if count = capacity then
+				resize (new_capacity (count + 1))
+			end
+			i := free_slot
+			free_slot := Free_offset - clashes.item (i)
+			h := hash_position (v)
+			clashes.put (slots.item (h), i)
+			slots.put (i, h)
+			items.put (v, i)
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			inserted: has (v) and then item (v) = v
+		end
+
 feature -- Removal
 
 	remove (v: G) is
@@ -390,34 +441,49 @@ feature -- Removal
 			end
 		end
 
+	remove_found_item is
+			-- Remove item found by last call to `search'.
+			-- Move any cursors at this position `forth'.
+		require
+			item_found: found
+		do
+			remove_position (found_position)
+			unset_found_item
+		ensure
+			one_less: count = old count - 1
+		end
+
 	wipe_out is
 			-- Remove all items from set.
 			-- Move all cursors `off'.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			dead_item: G
 		do
 			move_all_cursors_after
 			unset_found_item
-			from
-				i := capacity - 1
-				free_slot := i
-			until
-				i < 0
-			loop
-				items.put (dead_item, i)
-				clashes.put (Free_offset - (i - 1), i)
-				i := i - 1
+			if count > 0 then
+				from
+					i := 0
+					nb := capacity
+					free_slot := i
+				until
+					i >= nb
+				loop
+					items.put (dead_item, i)
+					clashes.put (Free_offset - (i + 1), i)
+					i := i + 1
+				end
+				from
+					i := modulus
+				until
+					i < 0
+				loop
+					slots.put (No_position, i)
+					i := i - 1
+				end
+				count := 0
 			end
-			from
-				i := modulus
-			until
-				i < 0
-			loop
-				slots.put (No_position, i)
-				i := i - 1
-			end
-			count := 0
 			position := No_position
 		end
 
@@ -555,15 +621,12 @@ feature -- Resizing
 			clashes := FIXED_INTEGER_ARRAY_.resize (clashes, n)
 			from
 				i := capacity
-				clashes.put (Free_offset - free_slot, i)
-				i := i + 1
 			until
 				i >= n
 			loop
-				clashes.put (Free_offset - (i - 1), i)
+				clashes.put (Free_offset - (i + 1), i)
 				i := i + 1
 			end
-			free_slot := n - 1
 			capacity := n
 			position := No_position
 		end

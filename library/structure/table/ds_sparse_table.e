@@ -161,13 +161,13 @@ feature {NONE} -- Initialization
 			keys := FIXED_KEY_ARRAY_.make (n)
 			clashes := FIXED_INTEGER_ARRAY_.make (n)
 			from
-				i := n - 1
+				i := 0
 				free_slot := i
 			until
-				i < 0
+				i >= n
 			loop
-				clashes.put (Free_offset - (i - 1), i)
-				i := i - 1
+				clashes.put (Free_offset - (i + 1), i)
+				i := i + 1
 			end
 			modulus := new_modulus (n)
 			slots := FIXED_INTEGER_ARRAY_.make (modulus + 1)
@@ -212,6 +212,14 @@ feature -- Access
 			item_found: found
 		do
 			Result := items.item (found_position)
+		end
+
+	found_key: K is
+			-- Key of item found by last call to `search'
+		require
+			key_found: found
+		do
+			Result := keys.item (found_position)
 		end
 
 	first: G is
@@ -564,57 +572,59 @@ feature -- Removal
 	remove (k: K) is
 			-- Remove item associated with `k'.
 			-- Move any cursors at this position `forth'.
-		local
-			dead_key: K
-			dead_item: G
 		do
 			unset_found_item
 			search_position (k)
 			if position /= No_position then
-				move_cursors_forth (position)
-				if clashes_previous_position = No_position then
-					slots.put (clashes.item (position), slots_position)
-				else
-					clashes.put (clashes.item (position), clashes_previous_position)
-				end
-				clashes.put (Free_offset - free_slot, position)
-				items.put (dead_item, position)
-				keys.put (dead_key, position)
-				free_slot := position
-				count := count - 1
+				remove_position (position)
 			end
+		end
+
+	remove_found_item is
+			-- Remove item found by last call to `search'.
+			-- Move any cursors at this position `forth'.
+		require
+			item_found: found
+		do
+			remove_position (found_position)
+			unset_found_item
+		ensure
+			one_less: count = old count - 1
 		end
 
 	wipe_out is
 			-- Remove all items from table.
 			-- Move all cursors `off'.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			dead_key: K
 			dead_item: G
 		do
 			move_all_cursors_after
 			unset_found_item
-			from
-				i := capacity - 1
-				free_slot := i
-			until
-				i < 0
-			loop
-				items.put (dead_item, i)
-				keys.put (dead_key, i)
-				clashes.put (Free_offset - (i - 1), i)
-				i := i - 1
+			if count > 0 then
+				from
+					i := 0
+					nb := capacity
+					free_slot := i
+				until
+					i >= nb
+				loop
+					items.put (dead_item, i)
+					keys.put (dead_key, i)
+					clashes.put (Free_offset - (i + 1), i)
+					i := i + 1
+				end
+				from
+					i := modulus
+				until
+					i < 0
+				loop
+					slots.put (No_position, i)
+					i := i - 1
+				end
+				count := 0
 			end
-			from
-				i := modulus
-			until
-				i < 0
-			loop
-				slots.put (No_position, i)
-				i := i - 1
-			end
-			count := 0
 			position := No_position
 		end
 
@@ -652,15 +662,12 @@ feature -- Resizing
 			clashes := FIXED_INTEGER_ARRAY_.resize (clashes, n)
 			from
 				i := capacity
-				clashes.put (Free_offset - free_slot, i)
-				i := i + 1
 			until
 				i >= n
 			loop
-				clashes.put (Free_offset - (i - 1), i)
+				clashes.put (Free_offset - (i + 1), i)
 				i := i + 1
 			end
-			free_slot := n - 1
 			capacity := n
 			position := No_position
 		end
@@ -781,6 +788,32 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			valid_position: Result >= 0 and result <= modulus
+		end
+
+	remove_position (i: INTEGER) is
+			-- Remove item at position `i'.
+			-- Move any cursors at this position `forth'.
+		require
+			valid_position: valid_position (i)
+			valid_slot: valid_slot (i)
+		local
+			dead_item: G
+			dead_key: K
+		do
+			position := i
+			move_cursors_forth (position)
+			if clashes_previous_position = No_position then
+				slots.put (clashes.item (position), slots_position)
+			else
+				clashes.put (clashes.item (position), clashes_previous_position)
+			end
+			clashes.put (Free_offset - free_slot, position)
+			items.put (dead_item, position)
+			keys.put (dead_key, position)
+			free_slot := position
+			count := count - 1
+		ensure
+			one_less: count = old count - 1
 		end
 
 	slots: like FIXED_INTEGER_ARRAY_TYPE
