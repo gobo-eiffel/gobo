@@ -293,10 +293,13 @@ feature -- Operation
 			constraint2: not final_state.has_transition
 			constraint3: not other.start_state.connected (other.start_state)
 			constraint4: not other.final_state.has_transition
+		local
+			a_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
-			final_state.copy (other.start_state)
+			!! a_transition.make (other.start_state)
+			final_state.set_transition (a_transition)
 			final_state := other.final_state
-			count := count + other.count - 1
+			count := count + other.count
 			Result := Current
 		ensure
 			automaton: Result = Current

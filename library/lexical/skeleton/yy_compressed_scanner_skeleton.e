@@ -202,7 +202,7 @@ feature -- Scanning
 						end
 						yy_cp := yy_cp + 1
 					end
-					if yyReject_or_variable_trail_context then
+					if not yyReject_or_variable_trail_context then
 							-- Do the guaranteed-needed backing up
 							-- to find out the match.
 						yy_cp := yy_last_accepting_cpos
