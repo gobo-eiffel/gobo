@@ -83,6 +83,10 @@ feature -- Compilation report
 					info_file.put_string ("Degree 4.4 class ")
 					info_file.put_string (a_class.name.name)
 					info_file.put_new_line
+				elseif a_processor = a_universe.implementation_checker then
+					info_file.put_string ("Degree 3 class ")
+					info_file.put_string (a_class.name.name)
+					info_file.put_new_line
 				end
 			end
 			end
@@ -1289,6 +1293,28 @@ feature -- Validity errors
 			end
 		end
 
+	report_veen0a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report VEEN error: `an_identifier', appearing in `a_feature'
+			-- of `class', is not the final name of a feature in `a_class'
+			-- nor the name of a local variable or a formal argument of
+			-- `a_feature'.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen_error (a_class) then
+				create an_error.make_veen0a (a_class, an_identifier, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_veen2a_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE) is
 			-- Report VEEN-2 error: `a_result' appears in the body, postcondition
 			-- or rescue clause of `a_feature' in `a_class', but `a_feature' is
@@ -1306,6 +1332,140 @@ feature -- Validity errors
 		do
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2a (a_class, a_result, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc3a_error (a_class: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION;
+		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
+			-- Report VGCC-3 error: the explicit creation type in creation instruction
+			-- `a_creation' does not conform to the declared type of the target entity.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			explicit_creation_type: a_creation.type /= Void
+			a_creation_named_type_not_void: a_creation_named_type /= Void
+			a_creation_named_type: a_creation_named_type.is_named_type
+			a_target_named_type_not_void: a_target_named_type /= Void
+			a_target_named_type: a_target_named_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc3_error (a_class) then
+				create an_error.make_vgcc3a (a_class, a_creation, a_creation_named_type, a_target_named_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc3b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION;
+		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
+			-- Report VGCC-3 error: the explicit creation type in creation instruction
+			-- `a_creation' does not conform to the declared type of the target entity
+			-- when viewed from `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			explicit_creation_type: a_creation.type /= Void
+			a_creation_named_type_not_void: a_creation_named_type /= Void
+			a_creation_named_type: a_creation_named_type.is_named_type
+			a_target_named_type_not_void: a_target_named_type /= Void
+			a_target_named_type: a_target_named_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc3_error (a_class) then
+				create an_error.make_vgcc3b (a_class, a_class_impl, a_creation, a_creation_named_type, a_target_named_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc5a_error (a_class: ET_CLASS; a_creation: ET_CREATE_EXPRESSION; a_target: ET_CLASS) is
+			-- Report VGCC-5 error: the creation expression `a_creation',
+			-- appearing in `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc5_error (a_class) then
+				create an_error.make_vgcc5a (a_class, a_creation, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc5b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATE_EXPRESSION; a_target: ET_CLASS) is
+			-- Report VGCC-5 error: the creation expression `a_creation',
+			-- appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc5_error (a_class) then
+				create an_error.make_vgcc5b (a_class, a_class_impl, a_creation, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc5c_error (a_class: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+			-- Report VGCC-5 error: the creation instruction `a_creation',
+			-- appearing in `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc5_error (a_class) then
+				create an_error.make_vgcc5c (a_class, a_creation, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc5d_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+			-- Report VGCC-5 error: the creation instruction `a_creation',
+			-- appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc5_error (a_class) then
+				create an_error.make_vgcc5d (a_class, a_class_impl, a_creation, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -1414,6 +1574,185 @@ feature -- Validity errors
 		do
 			if reportable_vgcc6_error (a_class) then
 				create an_error.make_vgcc6e (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc6f_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation instruction in `a_class', is not a procedure.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc6_error (a_class) then
+				create an_error.make_vgcc6f (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc6g_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation instruction in `a_class_impl' and viewed from
+			-- one of its descendants `a_class', is not a procedure.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc6_error (a_class) then
+				create an_error.make_vgcc6g (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc6h_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class',
+			-- is not exported for creation to `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc6_error (a_class) then
+				create an_error.make_vgcc6h (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc6i_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class_impl',
+			-- is not exported for creation to `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc6_error (a_class) then
+				create an_error.make_vgcc6i (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc8a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation expression with creation procedure name `a_name' in `a_class',
+			-- is not listed as creation procedure for the formal parameter `a_formal'
+			-- in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc8_error (a_class) then
+				create an_error.make_vgcc8a (a_class, a_name, a_feature, a_target, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc8b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
+			-- and viewed from one of its descendants `a_class', is not listed as creation
+			-- procedure for the formal parameter `a_formal' in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc8_error (a_class) then
+				create an_error.make_vgcc8b (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc8c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class',
+			-- is not listed as creation procedure for the formal parameter `a_formal'
+			-- in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc8_error (a_class) then
+				create an_error.make_vgcc8c (a_class, a_name, a_feature, a_target, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc8d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
+			-- and viewed from one of its descendants `a_class', is not listed as creation
+			-- procedure for the formal parameter `a_formal' in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc8_error (a_class) then
+				create an_error.make_vgcc8d (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -1701,6 +2040,109 @@ feature -- Validity errors
 		do
 			if reportable_vhrc5_error (a_class) then
 				create an_error.make_vhrc5a (a_class, a_parent, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjar0a_error (a_class: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Report VJAR error: the source expression of `an_assignment' does
+			-- not conform to its target entity.
+			--
+			-- ETL2: p. 311
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assignment_not_void: an_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjar_error (a_class) then
+				create an_error.make_vjar0a (a_class, an_assignment, a_source_type, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjar0b_error (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Report VJAR error: the source expression of `an_assignment' does
+			-- not conform to its target entity when viewed from `a_class'.
+			--
+			-- ETL2: p. 311
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assignment_not_void: an_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjar_error (a_class) then
+				create an_error.make_vjar0b (a_class, a_class_impl, an_assignment, a_source_type, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjaw0a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- the associated feature `a_feature' is not an attribute.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create an_error.make_vjaw0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjaw0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- the associated feature `a_feature' is not an attribute.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create an_error.make_vjaw0b (a_class, a_class_impl, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjaw0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is a formal argument name of `a_feature'.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create an_error.make_vjaw0c (a_class, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -2292,9 +2734,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtcg0a_error (a_class: ET_CLASS; an_actual, a_constraint: ET_TYPE) is
-			-- Report VTCG error: actual generic paramater
-			-- `an_actual' in class `where' does not conform to
+	report_vtcg3a_error (a_class: ET_CLASS; an_actual, a_constraint: ET_TYPE) is
+			-- Report VTCG-3 error: actual generic paramater
+			-- `an_actual' in `a_class' does not conform to
 			-- constraint `a_constraint'.
 			--
 			-- ETL2: p.203
@@ -2307,8 +2749,98 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vtcg_error (a_class) then
-				create an_error.make_vtcg0a (a_class, an_actual, a_constraint)
+			if reportable_vtcg3_error (a_class) then
+				create an_error.make_vtcg3a (a_class, an_actual, a_constraint)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtcg4a_error (a_class: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
+		a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
+			-- Report VTCG-4 error: `an_actual_base_class' does not make
+			-- feature `a_name' available as creation procedure to `a_generic_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_base_class_not_void: an_actual_base_class /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtcg4_error (a_class) then
+				create an_error.make_vtcg4a (a_class, a_position, an_actual_index, a_name, an_actual_base_class, a_generic_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtcg4b_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
+		a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
+			-- Report VTCG-4 error: `an_actual_base_class' does not make
+			-- feature `a_name' available as creation procedure to `a_generic_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_base_class_not_void: an_actual_base_class /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtcg4_error (a_class) then
+				create an_error.make_vtcg4b (a_class, a_class_impl, a_position, an_actual_index, a_name, an_actual_base_class, a_generic_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtcg4c_error (a_class: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
+		a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
+			-- Report VTCG-4 error: `an_actual', which is a formal generic parameter
+			-- of `a_class' does not list feature `a_name' as creation procedure.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_not_void: an_actual /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtcg4_error (a_class) then
+				create an_error.make_vtcg4c (a_class, a_position, an_actual_index, a_name, an_actual, a_generic_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtcg4d_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; an_actual_index: INTEGER;
+		a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
+			-- Report VTCG-4 error: `an_actual', which is a formal generic parameter
+			-- of `a_class' does not list feature `a_name' as creation procedure.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_not_void: an_actual /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtcg4_error (a_class) then
+				create an_error.make_vtcg4d (a_class, a_class_impl, a_position, an_actual_index, a_name, an_actual, a_generic_class)
 				report_validity_error (an_error)
 			end
 		end
@@ -3146,6 +3678,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_veen_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VEEN error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VEEN-2 error be reported when it
 			-- appears in `a_class'?
@@ -3156,8 +3698,38 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vgcc3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCC-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcc5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCC-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VGCC-6 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcc8_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCC-8 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -3248,6 +3820,26 @@ feature -- Validity error status
 
 	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VHRC-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vjar_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VJAR error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vjaw_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VJAW error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -3376,8 +3968,18 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtcg_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VTCG error be reported when it
+	reportable_vtcg3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTCG-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vtcg4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTCG-4 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -3873,6 +4475,96 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giabg
+			report_internal_error (an_error)
+		end
+
+	report_giabh_error is
+			-- Report GIABH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabh
+			report_internal_error (an_error)
+		end
+
+	report_giabi_error is
+			-- Report GIABI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabi
+			report_internal_error (an_error)
+		end
+
+	report_giabj_error is
+			-- Report GIABJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabj
+			report_internal_error (an_error)
+		end
+
+	report_giabk_error is
+			-- Report GIABK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabk
+			report_internal_error (an_error)
+		end
+
+	report_giabl_error is
+			-- Report GIABL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabl
+			report_internal_error (an_error)
+		end
+
+	report_giabm_error is
+			-- Report GIABM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabm
+			report_internal_error (an_error)
+		end
+
+	report_giabn_error is
+			-- Report GIABN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabn
+			report_internal_error (an_error)
+		end
+
+	report_giabo_error is
+			-- Report GIABO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabo
+			report_internal_error (an_error)
+		end
+
+	report_giabp_error is
+			-- Report GIABP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabp
+			report_internal_error (an_error)
+		end
+
+	report_giabq_error is
+			-- Report GIABQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabq
 			report_internal_error (an_error)
 		end
 

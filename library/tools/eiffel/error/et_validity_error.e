@@ -60,12 +60,27 @@ creation
 	make_vdus2b,
 	make_vdus3a,
 	make_vdus4a,
+	make_veen0a,
 	make_veen2a,
+	make_vgcc3a,
+	make_vgcc3b,
+	make_vgcc5a,
+	make_vgcc5b,
+	make_vgcc5c,
+	make_vgcc5d,
 	make_vgcc6a,
 	make_vgcc6b,
 	make_vgcc6c,
 	make_vgcc6d,
 	make_vgcc6e,
+	make_vgcc6f,
+	make_vgcc6g,
+	make_vgcc6h,
+	make_vgcc6i,
+	make_vgcc8a,
+	make_vgcc8b,
+	make_vgcc8c,
+	make_vgcc8d,
 	make_vgcp1a,
 	make_vgcp2a,
 	make_vgcp2b,
@@ -80,6 +95,11 @@ creation
 	make_vhrc2a,
 	make_vhrc4a,
 	make_vhrc5a,
+	make_vjar0a,
+	make_vjar0b,
+	make_vjaw0a,
+	make_vjaw0b,
+	make_vjaw0c,
 	make_vkcn1a,
 	make_vkcn1b,
 	make_vkcn1c,
@@ -108,7 +128,11 @@ creation
 	make_vtbt0b,
 	make_vtbt0c,
 	make_vtbt0d,
-	make_vtcg0a,
+	make_vtcg3a,
+	make_vtcg4a,
+	make_vtcg4b,
+	make_vtcg4c,
+	make_vtcg4d,
 	make_vtct0a,
 	make_vtct0b,
 	make_vtct0c,
@@ -1845,6 +1869,50 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
+	make_veen0a (a_class: like current_class; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Create a new VEEN error: `an_identifier', appearing in `a_feature'
+			-- of `class', is not the final name of a feature in `a_class'
+			-- nor the name of a local variable or a formal argument of
+			-- `a_feature'.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := veen0a_template_code
+			etl_code := veen_etl_code
+			default_template := veen0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_identifier.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_identifier.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = identifier
+			-- dollar7: $7 = feature name
+		end
+
 	make_veen2a (a_class: like current_class; a_result: ET_RESULT; a_feature: ET_FEATURE) is
 			-- Create a new VEEN-2 error: `a_result' appears in the body, postcondition
 			-- or rescue clause of `a_feature' in `a_class', but `a_feature' is
@@ -1884,6 +1952,270 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name
+		end
+
+	make_vgcc3a (a_class: like current_class; a_creation: ET_CREATION_INSTRUCTION;
+		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
+			-- Create a new VGCC-3 error: the explicit creation type in creation instruction
+			-- `a_creation' does not conform to the declared type of the target entity.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			explicit_creation_type: a_creation.type /= Void
+			a_creation_named_type_not_void: a_creation_named_type /= Void
+			a_creation_named_type: a_creation_named_type.is_named_type
+			a_target_named_type_not_void: a_target_named_type /= Void
+			a_target_named_type: a_target_named_type.is_named_type
+		do
+			code := vgcc3a_template_code
+			etl_code := vgcc3_etl_code
+			default_template := vgcc3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_creation.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_creation_named_type.to_text, 6)
+			parameters.put (a_target_named_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = explicit creation type (named type)
+			-- dollar7: $7 = target type (named type)
+		end
+
+	make_vgcc3b (a_class: like current_class; a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION;
+		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
+			-- Create a new VGCC-3 error: the explicit creation type in creation instruction
+			-- `a_creation' does not conform to the declared type of the target entity
+			-- when viewed from `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			explicit_creation_type: a_creation.type /= Void
+			a_creation_named_type_not_void: a_creation_named_type /= Void
+			a_creation_named_type: a_creation_named_type.is_named_type
+			a_target_named_type_not_void: a_target_named_type /= Void
+			a_target_named_type: a_target_named_type.is_named_type
+		do
+			code := vgcc3b_template_code
+			etl_code := vgcc3_etl_code
+			default_template := vgcc3b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_creation.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.name.name, 6)
+			parameters.put (a_creation_named_type.to_text, 7)
+			parameters.put (a_target_named_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = explicit creation type (named type)
+			-- dollar8: $8 = target type (named type)
+		end
+
+	make_vgcc5a (a_class: like current_class; a_creation: ET_CREATE_EXPRESSION; a_target: ET_CLASS) is
+			-- Create a new VGCC-5 error: the creation expression `a_creation',
+			-- appearing in `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc5a_template_code
+			etl_code := vgcc5_etl_code
+			default_template := vgcc5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_creation.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_target.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation type base class name
+		end
+
+	make_vgcc5b (a_class: like current_class; a_class_impl: ET_CLASS; a_creation: ET_CREATE_EXPRESSION; a_target: ET_CLASS) is
+			-- Create a new VGCC-5 error: the creation expression `a_creation',
+			-- appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc5b_template_code
+			etl_code := vgcc5_etl_code
+			default_template := vgcc5b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_creation.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.name.name, 6)
+			parameters.put (a_target.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation type base class name
+		end
+
+	make_vgcc5c (a_class: like current_class; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+			-- Create a new VGCC-5 error: the creation instruction `a_creation',
+			-- appearing in `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc5c_template_code
+			etl_code := vgcc5_etl_code
+			default_template := vgcc5c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_creation.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_target.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation type base class name
+		end
+
+	make_vgcc5d (a_class: like current_class; a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+			-- Create a new VGCC-5 error: the creation instruction `a_creation',
+			-- appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class', has no Creation_call part but the
+			-- base class `a_target' of the creation type has a Creators part.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc5d_template_code
+			etl_code := vgcc5_etl_code
+			default_template := vgcc5d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_creation.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.name.name, 6)
+			parameters.put (a_target.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation type base class name
 		end
 
 	make_vgcc6a (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
@@ -2112,6 +2444,393 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name of the creation call
 			-- dollar8: $8 = name of corresponding feature in class $8
 			-- dollar9: $9 = base class of creation type
+		end
+
+	make_vgcc6f (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation instruction in `a_class', is not a procedure.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6f_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6f_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the creation call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of creation type
+		end
+
+	make_vgcc6g (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: the feature name `a_name', appearing
+			-- in a creation instruction in `a_class_impl' and viewed from one
+			-- of its descendants `a_class', is not a procedure.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6g_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6g_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the creation call
+			-- dollar8: $8 = name of corresponding feature in class $8
+			-- dollar9: $9 = base class of creation type
+		end
+
+	make_vgcc6h (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class',
+			-- is not exported for creation to `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6h_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6h_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the creation call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of creation type
+		end
+
+	make_vgcc6i (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class_impl',
+			-- is not exported for creation to `a_class'.
+			--
+			-- ETL2: p.286
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vgcc6i_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6i_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the creation call
+			-- dollar8: $8 = name of corresponding feature in class $8
+			-- dollar9: $9 = base class of creation type
+		end
+
+	make_vgcc8a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation expression with creation procedure name `a_name' in `a_class',
+			-- is not listed as creation procedure for the formal parameter `a_formal'
+			-- in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			code := vgcc8a_template_code
+			etl_code := vgcc8_etl_code
+			default_template := vgcc8a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			parameters.put (a_formal.index.out, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the creation call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of creation type
+			-- dollar9: $9 = index of formal parameter in class $5
+		end
+
+	make_vgcc8b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
+			-- and viewed from one of its descendants `a_class', is not listed as creation
+			-- procedure for the formal parameter `a_formal' in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			code := vgcc8b_template_code
+			etl_code := vgcc8_etl_code
+			default_template := vgcc8b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			parameters.put (a_formal.index.out, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the creation call
+			-- dollar8: $8 = name of corresponding feature in class $8
+			-- dollar9: $9 = base class of creation type
+			-- dollar10: $10 = index of formal parameter in class $5
+		end
+
+	make_vgcc8c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class',
+			-- is not listed as creation procedure for the formal parameter `a_formal'
+			-- in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			code := vgcc8c_template_code
+			etl_code := vgcc8_etl_code
+			default_template := vgcc8c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			parameters.put (a_formal.index.out, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the creation call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of creation type
+			-- dollar9: $9 = index of formal parameter in class $5
+		end
+
+	make_vgcc8d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
+			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
+			-- and viewed from one of its descendants `a_class', is not listed as creation
+			-- procedure for the formal parameter `a_formal' in `a_class'.
+			--
+			-- In ISE Eiffel only.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			code := vgcc8d_template_code
+			etl_code := vgcc8_etl_code
+			default_template := vgcc8d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			parameters.put (a_formal.index.out, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the creation call
+			-- dollar8: $8 = name of corresponding feature in class $8
+			-- dollar9: $9 = base class of creation type
+			-- dollar10: $10 = index of formal parameter in class $5
 		end
 
 	make_vgcp1a (a_class: like current_class; a_creator: ET_CREATOR) is
@@ -2695,6 +3414,224 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = new infix name
 			-- dollar7: $7 = old feature name
 			-- dollar8: $8 = parent base class
+		end
+
+	make_vjar0a (a_class: like current_class; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Create a new VJAR error: the source expression of `an_assignment' does
+			-- not conform to its target entity.
+			--
+			-- ETL2: p. 311
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_assignment_not_void: an_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			code := vjar0a_template_code
+			etl_code := vjar_etl_code
+			default_template := vjar0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_assignment.source.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_source_type.to_text, 6)
+			parameters.put (a_target_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = source type
+			-- dollar7: $7 = target type
+		end
+
+	make_vjar0b (a_class: like current_class; a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT;
+		a_source_type, a_target_type: ET_NAMED_TYPE) is
+			-- Create a new VJAR error: the source expression of `an_assignment' does
+			-- not conform to its target entity when viewed from `a_class'.
+			--
+			-- ETL2: p. 311
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_assignment_not_void: an_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			code := vjar0b_template_code
+			etl_code := vjar_etl_code
+			default_template := vjar0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_assignment.source.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_source_type.to_text, 7)
+			parameters.put (a_target_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = source type
+			-- dollar8: $8 = target type
+		end
+
+	make_vjaw0a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VJAW error: `a_name' is supposed to be a Writable but
+			-- the associated feature `a_feature' is not an attribute.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vjaw0a_template_code
+			etl_code := vjaw_etl_code
+			default_template := vjaw0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = name of corresponding feature in class $5
+		end
+
+	make_vjaw0b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- the associated feature `a_feature' is not an attribute.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vjaw0b_template_code
+			etl_code := vjaw_etl_code
+			default_template := vjaw0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = name of corresponding feature in class $6
+		end
+
+	make_vjaw0c (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is a formal argument name of `a_feature'.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vjaw0c_template_code
+			etl_code := vjaw_etl_code
+			default_template := vjaw0c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal argument name
+			-- dollar7: $7 = feature name
 		end
 
 	make_vkcn1a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
@@ -4045,9 +4982,9 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = invalid type
 		end
 
-	make_vtcg0a (a_class: like current_class; an_actual, a_constraint: ET_TYPE) is
-			-- Create a new VTCG error: actual generic paramater
-			-- `an_actual' in class `where' does not conform to
+	make_vtcg3a (a_class: like current_class; an_actual, a_constraint: ET_TYPE) is
+			-- Create a new VTCG-3 error: actual generic paramater
+			-- `an_actual' in `a_class' does not conform to
 			-- constraint `a_constraint'.
 			--
 			-- ETL2: p.203
@@ -4058,9 +4995,9 @@ feature {NONE} -- Initialization
 			an_actual_not_void: an_actual /= Void
 			a_constraint_not_void: a_constraint /= Void
 		do
-			code := vtcg0a_template_code
-			etl_code := vtcg_etl_code
-			default_template := vtcg0a_default_template
+			code := vtcg3a_template_code
+			etl_code := vtcg3_etl_code
+			default_template := vtcg3a_default_template
 			current_class := a_class
 			class_impl := a_class
 			position := an_actual.position
@@ -4086,6 +5023,204 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = actual generic parameter
 			-- dollar7: $7 = generic constraint
+		end
+
+	make_vtcg4a (a_class: like current_class; a_position: ET_POSITION; an_actual_index: INTEGER;
+		a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
+			-- Create a new VTCG-4 error: `an_actual_base_class' does not make
+			-- feature `a_name' available as creation procedure to `a_generic_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_base_class_not_void: an_actual_base_class /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		do
+			code := vtcg4a_template_code
+			etl_code := vtcg4_etl_code
+			default_template := vtcg4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_actual_index.out, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (an_actual_base_class.name.name, 8)
+			parameters.put (a_generic_class.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = actual generic parameter index
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = actual generic parameter base class name
+			-- dollar9: $9 = enclosing generic class name
+		end
+
+	make_vtcg4b (a_class: like current_class; a_class_impl: ET_CLASS; a_position: ET_POSITION;
+		an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual_base_class, a_generic_class: ET_CLASS) is
+			-- Create a new VTCG-4 error: `an_actual_base_class' does not make
+			-- feature `a_name' available as creation procedure to `a_generic_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_base_class_not_void: an_actual_base_class /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		do
+			code := vtcg4a_template_code
+			etl_code := vtcg4_etl_code
+			default_template := vtcg4a_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.name.name, 6)
+			parameters.put (an_actual_index.out, 7)
+			parameters.put (a_name.name, 8)
+			parameters.put (an_actual_base_class.name.name, 9)
+			parameters.put (a_generic_class.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = actual generic parameter index
+			-- dollar8: $8 = creation procedure name
+			-- dollar9: $9 = actual generic parameter base class name
+			-- dollar10: $10 = enclosing generic class name
+		end
+
+	make_vtcg4c (a_class: like current_class; a_position: ET_POSITION; an_actual_index: INTEGER;
+		a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
+			-- Create a new VTCG-4 error: `an_actual', which is a formal generic parameter
+			-- of `a_class' does not list feature `a_name' as creation procedure.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_not_void: an_actual /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		do
+			code := vtcg4c_template_code
+			etl_code := vtcg4_etl_code
+			default_template := vtcg4c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_actual_index.out, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (an_actual.index.out, 8)
+			parameters.put (a_generic_class.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = actual generic parameter index
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = index of formal generic parameter in class $5
+			-- dollar9: $9 = enclosing generic class name
+		end
+
+	make_vtcg4d (a_class: like current_class; a_class_impl: ET_CLASS; a_position: ET_POSITION;
+		an_actual_index: INTEGER; a_name: ET_FEATURE_NAME; an_actual: ET_FORMAL_PARAMETER; a_generic_class: ET_CLASS) is
+			-- Create a new VTCG-4 error: `an_actual', which is a formal generic parameter
+			-- of `a_class' does not list feature `a_name' as creation procedure.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_name_not_void: a_name /= Void
+			an_actual_not_void: an_actual /= Void
+			a_generic_class_not_void: a_generic_class /= Void
+		do
+			code := vtcg4d_template_code
+			etl_code := vtcg4_etl_code
+			default_template := vtcg4d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.name.name, 6)
+			parameters.put (an_actual_index.out, 7)
+			parameters.put (a_name.name, 8)
+			parameters.put (an_actual.index.out, 9)
+			parameters.put (a_generic_class.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = actual generic parameter index
+			-- dollar8: $8 = creation procedure name
+			-- dollar9: $9 = index of formal generic parameter in class $5
+			-- dollar10: $10 = enclosing generic class name
 		end
 
 	make_vtct0a (a_class: like current_class; a_type: ET_BASE_TYPE) is
@@ -5523,12 +6658,27 @@ feature {NONE} -- Implementation
 	vdus2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the attribute `$6'."
 	vdus3a_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the deferred feature `$6'."
 	vdus4a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
+	veen0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' appears in feature `$7', but it is not the final name of a feature in class $5 nor the name of a local variable or formal argument of feature `$7'."
 	veen2a_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
+	vgcc3a_default_template: STRING is "[$1] class $5 ($3,$4): explicit creation type '$6' does not conform to target entity type '$7'."
+	vgcc3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): explicit creation type '$7' does not conform to target entity type '$8'."
+	vgcc5a_default_template: STRING is "[$1] class $5 ($3,$4): creation expression with no Creation_call part, but $6 has a Creators part."
+	vgcc5b_default_template: STRING is "[$1] class $5 ($6,$3,$4): creation expression with no Creation_call part, but $7 has a Creators part."
+	vgcc5c_default_template: STRING is "[$1] class $5 ($3,$4): creation instruction with no Creation_call part, but $6 has a Creators part."
+	vgcc5d_default_template: STRING is "[$1] class $5 ($6,$3,$4): creation instruction with no Creation_call part, but $7 has a Creators part."
 	vgcc6a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the final name of a once-procedure."
 	vgcc6b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
 	vgcc6c_default_template: STRING is "[$1] class $5 ($6,$3,$4): `$8' is not the final name of a procedure in class $9."
 	vgcc6d_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
 	vgcc6e_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not exported for creation to class $5."
+	vgcc6f_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
+	vgcc6g_default_template: STRING is "[$1] class $5 ($6,$3,$4): `$8' is not the final name of a procedure in class $9."
+	vgcc6h_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
+	vgcc6i_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not exported for creation to class $5."
+	vgcc8a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not listed as creation procedure of the $9-th formal generic parameter of class $5."
+	vgcc8b_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5."
+	vgcc8c_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not listed as creation procedure of the $9-th formal generic parameter of class $5."
+	vgcc8d_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5."
 	vgcp1a_default_template: STRING is "[$1] class $5 ($3,$4): deferred class has a creation clause."
 	vgcp2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure."
 	vgcp2b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure."
@@ -5543,6 +6693,11 @@ feature {NONE} -- Implementation
 	vhrc2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears as first element of two Rename_pairs."
 	vhrc4a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
 	vhrc5a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
+	vjar0a_default_template: STRING is "[$1] class $5 ($3,$4): the source of the assignment (of type '$6') does not conform to its target entity (of type '$7')."
+	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform to its target entity (of type '$8')."
+	vjaw0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
+	vjaw0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' is not an attribute in class $5. A Writable is either a local variable (including Result) or an attribute."
+	vjaw0c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of feature `$7'. A Writable is either a local variable (including Result) or an attribute."
 	vkcn1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
 	vkcn1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): query `$8' of class $9 appears in a call instruction."
 	vkcn1c_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' appears in a call instruction."
@@ -5571,7 +6726,11 @@ feature {NONE} -- Implementation
 	vtbt0b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a feature."
 	vtbt0c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
 	vtbt0d_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
-	vtcg0a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' does not conform to constraint '$7'."
+	vtcg3a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' does not conform to constraint '$7'."
+	vtcg4a_default_template: STRING is "[$1] class $5 ($3,$4): base class $8 of the $6-th actual generic parameter of $9 does not make feature `$7' available as creation procedure to class $9."
+	vtcg4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8' available as creation procedure to class $10."
+	vtcg4c_default_template: STRING is "[$1] class $5 ($3,$4): the $6-th actual generic parameter of $9, which is the $8-th formal generic parameter of class $5, does not list feature `$7' as creation procedure in its generic constraint."
+	vtcg4d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its generic constraint."
 	vtct0a_default_template: STRING is "[$1] class $5 ($3,$4): type based on unknown class $6."
 	vtct0b_default_template: STRING is "[$1] class $5 ($3,$4): type based on unknown class $6."
 	vtct0c_default_template: STRING is "[$1] class $5: implicitly inherits from unknown class ANY."
@@ -5625,9 +6784,13 @@ feature {NONE} -- Implementation
 	vdus2_etl_code: STRING is "VDUS-2"
 	vdus3_etl_code: STRING is "VDUS-3"
 	vdus4_etl_code: STRING is "VDUS-4"
+	veen_etl_code: STRING is "VEEN"
 	veen2_etl_code: STRING is "VEEN-2"
 	vhpr1_etl_code: STRING is "VHPR-1"
+	vgcc3_etl_code: STRING is "VGCC-3"
+	vgcc5_etl_code: STRING is "VGCC-5"
 	vgcc6_etl_code: STRING is "VGCC-6"
+	vgcc8_etl_code: STRING is "VGCC-8"
 	vgcp1_etl_code: STRING is "VGCP-1"
 	vgcp2_etl_code: STRING is "VGCP-2"
 	vgcp3_etl_code: STRING is "VGCP-3"
@@ -5636,6 +6799,8 @@ feature {NONE} -- Implementation
 	vhrc2_etl_code: STRING is "VHRC-2"
 	vhrc4_etl_code: STRING is "VHRC-4"
 	vhrc5_etl_code: STRING is "VHRC-5"
+	vjar_etl_code: STRING is "VJAR"
+	vjaw_etl_code: STRING is "VJAW"
 	vkcn1_etl_code: STRING is "VKCN-1"
 	vkcn2_etl_code: STRING is "VKCN-2"
 	vmfn_etl_code: STRING is "VMFN"
@@ -5649,7 +6814,8 @@ feature {NONE} -- Implementation
 	vtat1_etl_code: STRING is "VTAT-1"
 	vtat2_etl_code: STRING is "VTAT-2"
 	vtbt_etl_code: STRING is "VTBT"
-	vtcg_etl_code: STRING is "VTCG"
+	vtcg3_etl_code: STRING is "VTCG-3"
+	vtcg4_etl_code: STRING is "VTCG-4"
 	vtct_etl_code: STRING is "VTCT"
 	vtgc_etl_code: STRING is "VTGC"
 	vtug1_etl_code: STRING is "VTUG-1"
@@ -5709,12 +6875,27 @@ feature {NONE} -- Implementation
 	vdus2b_template_code: STRING is "vdus2b"
 	vdus3a_template_code: STRING is "vdus3a"
 	vdus4a_template_code: STRING is "vdus4a"
+	veen0a_template_code: STRING is "veen0a"
 	veen2a_template_code: STRING is "veen2a"
+	vgcc3a_template_code: STRING is "vgcc3a"
+	vgcc3b_template_code: STRING is "vgcc3b"
+	vgcc5a_template_code: STRING is "vgcc5a"
+	vgcc5b_template_code: STRING is "vgcc5b"
+	vgcc5c_template_code: STRING is "vgcc5c"
+	vgcc5d_template_code: STRING is "vgcc5d"
 	vgcc6a_template_code: STRING is "vgcc6a"
 	vgcc6b_template_code: STRING is "vgcc6b"
 	vgcc6c_template_code: STRING is "vgcc6c"
 	vgcc6d_template_code: STRING is "vgcc6d"
 	vgcc6e_template_code: STRING is "vgcc6e"
+	vgcc6f_template_code: STRING is "vgcc6f"
+	vgcc6g_template_code: STRING is "vgcc6g"
+	vgcc6h_template_code: STRING is "vgcc6h"
+	vgcc6i_template_code: STRING is "vgcc6i"
+	vgcc8a_template_code: STRING is "vgcc8a"
+	vgcc8b_template_code: STRING is "vgcc8b"
+	vgcc8c_template_code: STRING is "vgcc8c"
+	vgcc8d_template_code: STRING is "vgcc8d"
 	vgcp1a_template_code: STRING is "vgcp1a"
 	vgcp2a_template_code: STRING is "vgcp2a"
 	vgcp2b_template_code: STRING is "vgcp2b"
@@ -5729,6 +6910,11 @@ feature {NONE} -- Implementation
 	vhrc2a_template_code: STRING is "vhrc2a"
 	vhrc4a_template_code: STRING is "vhrc4a"
 	vhrc5a_template_code: STRING is "vhrc5a"
+	vjar0a_template_code: STRING is "vjar0a"
+	vjar0b_template_code: STRING is "vjar0b"
+	vjaw0a_template_code: STRING is "vjaw0a"
+	vjaw0b_template_code: STRING is "vjaw0b"
+	vjaw0c_template_code: STRING is "vjaw0c"
 	vkcn1a_template_code: STRING is "vkcn1a"
 	vkcn1b_template_code: STRING is "vkcn1b"
 	vkcn1c_template_code: STRING is "vkcn1c"
@@ -5757,7 +6943,11 @@ feature {NONE} -- Implementation
 	vtbt0b_template_code: STRING is "vtbt0b"
 	vtbt0c_template_code: STRING is "vtbt0c"
 	vtbt0d_template_code: STRING is "vtbt0d"
-	vtcg0a_template_code: STRING is "vtcg0a"
+	vtcg3a_template_code: STRING is "vtcg3a"
+	vtcg4a_template_code: STRING is "vtcg4a"
+	vtcg4b_template_code: STRING is "vtcg4b"
+	vtcg4c_template_code: STRING is "vtcg4c"
+	vtcg4d_template_code: STRING is "vtcg4d"
 	vtct0a_template_code: STRING is "vtct0a"
 	vtct0b_template_code: STRING is "vtct0b"
 	vtct0c_template_code: STRING is "vtct0c"
