@@ -401,12 +401,36 @@ feature -- Execution
 		require
 			a_shell_command_not_void: a_shell_command /= Void
 			a_shell_command_not_empty: a_shell_command.count > 0
+		do
+			assert_exit_code_execute (a_shell_command, 0)
+		end
+
+	assert_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
+			-- Execute `a_shell_command' and check whether the
+			-- exit status code is `an_exit_code'.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
 		local
 			a_command: DP_SHELL_COMMAND
 		do
 			!! a_command.make (a_shell_command)
 			a_command.execute
-			assert (a_shell_command, a_command.exit_code = 0)
+			assert_equal (a_shell_command, an_exit_code, a_command.exit_code)
+		end
+
+	assert_not_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
+			-- Execute `a_shell_command' and check whether the
+			-- exit status code is not equal to `an_exit_code'.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			a_command: DP_SHELL_COMMAND
+		do
+			!! a_command.make (a_shell_command)
+			a_command.execute
+			assert_not_equal (a_shell_command, an_exit_code, a_command.exit_code)
 		end
 
 feature {NONE} -- Messages
