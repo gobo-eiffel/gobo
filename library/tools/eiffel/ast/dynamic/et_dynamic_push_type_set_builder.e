@@ -18,6 +18,7 @@ inherit
 		redefine
 			new_dynamic_type_set,
 			build_dynamic_type_sets,
+			report_catcall_error,
 			report_agent_open_operand,
 			report_assignment,
 			report_assignment_attempt,
@@ -126,6 +127,48 @@ feature -- Generation
 			end
 			check_catcall_validity
 			dynamic_calls.wipe_out
+		end
+
+feature {NONE} -- CAT-calls
+
+	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
+			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
+			-- argument of type `an_actual_type' which does not conform to the type of
+			-- the `arg'-th corresponding formal argument `a_formal_type'.
+		local
+			l_message: STRING
+			l_class_impl: ET_CLASS
+		do
+-- TODO: better error message reporting.
+			l_message := shared_error_message
+			STRING_.wipe_out (l_message)
+			l_message.append_string ("[CATCALL] class ")
+			l_message.append_string (a_call.current_type.base_type.to_text)
+			l_message.append_string (" (")
+			l_class_impl := a_call.current_feature.static_feature.implementation_class
+			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
+				l_message.append_string (l_class_impl.name.name)
+				l_message.append_character (',')
+			end
+			l_message.append_string (a_call.position.line.out)
+			l_message.append_character (',')
+			l_message.append_string (a_call.position.column.out)
+			l_message.append_string ("): type '")
+			l_message.append_string (an_actual_type.base_type.to_text)
+			l_message.append_string ("' of actual argument #")
+			l_message.append_string (arg.out)
+			l_message.append_string (" does not conform to type '")
+			l_message.append_string (a_formal_type.base_type.to_text)
+			l_message.append_string ("' of formal argument in feature `")
+			l_message.append_string (a_dynamic_feature.static_feature.name.name)
+			l_message.append_string ("' in class '")
+			l_message.append_string (a_target_type.base_type.to_text)
+			l_message.append_string ("%'")
+			set_fatal_error
+			error_handler.report_error_message (l_message)
+			STRING_.wipe_out (l_message)
 		end
 
 feature {NONE} -- Event handling

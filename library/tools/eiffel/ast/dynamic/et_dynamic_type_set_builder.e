@@ -506,7 +506,7 @@ feature {NONE} -- CAT-calls
 							l_source_type := l_source_type_set.first_type
 							if l_source_type /= Void then
 								if not l_source_type.conforms_to_type (l_target_type, current_system) then
---									report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
+									report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
 								end
 								l_other_types := l_source_type_set.other_types
 								if l_other_types /= Void then
@@ -514,7 +514,7 @@ feature {NONE} -- CAT-calls
 									from j := 1 until j > nb2 loop
 										l_source_type := l_other_types.item (j)
 										if not l_source_type.conforms_to_type (l_target_type, current_system) then
---											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
+											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
 										end
 										j := j + 1
 									end
@@ -539,38 +539,38 @@ feature {NONE} -- CAT-calls
 			a_formal_type_not_void: a_formal_type /= Void
 			an_actual_type_not_void: an_actual_type /= Void
 			a_call_not_void: a_call /= Void
-		local
-			l_message: STRING
-			l_class_impl: ET_CLASS
+--		local
+--			l_message: STRING
+--			l_class_impl: ET_CLASS
 		do
 -- TODO: better error message reporting.
-			l_message := shared_error_message
-			STRING_.wipe_out (l_message)
-			l_message.append_string ("[CATCALL] class ")
-			l_message.append_string (a_call.current_type.base_type.to_text)
-			l_message.append_string (" (")
-			l_class_impl := a_call.current_feature.static_feature.implementation_class
-			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-				l_message.append_string (l_class_impl.name.name)
-				l_message.append_character (',')
-			end
-			l_message.append_string (a_call.position.line.out)
-			l_message.append_character (',')
-			l_message.append_string (a_call.position.column.out)
-			l_message.append_string ("): type '")
-			l_message.append_string (an_actual_type.base_type.to_text)
-			l_message.append_string ("' of actual argument #")
-			l_message.append_string (arg.out)
-			l_message.append_string (" does not conform to type '")
-			l_message.append_string (a_formal_type.base_type.to_text)
-			l_message.append_string ("' of formal argument in feature `")
-			l_message.append_string (a_dynamic_feature.static_feature.name.name)
-			l_message.append_string ("' in class '")
-			l_message.append_string (a_target_type.base_type.to_text)
-			l_message.append_string ("%'")
-			set_fatal_error
-			error_handler.report_error_message (l_message)
-			STRING_.wipe_out (l_message)
+--			l_message := shared_error_message
+--			STRING_.wipe_out (l_message)
+--			l_message.append_string ("[CATCALL] class ")
+--			l_message.append_string (a_call.current_type.base_type.to_text)
+--			l_message.append_string (" (")
+--			l_class_impl := a_call.current_feature.static_feature.implementation_class
+--			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
+--				l_message.append_string (l_class_impl.name.name)
+--				l_message.append_character (',')
+--			end
+--			l_message.append_string (a_call.position.line.out)
+--			l_message.append_character (',')
+--			l_message.append_string (a_call.position.column.out)
+--			l_message.append_string ("): type '")
+--			l_message.append_string (an_actual_type.base_type.to_text)
+--			l_message.append_string ("' of actual argument #")
+--			l_message.append_string (arg.out)
+--			l_message.append_string (" does not conform to type '")
+--			l_message.append_string (a_formal_type.base_type.to_text)
+--			l_message.append_string ("' of formal argument in feature `")
+--			l_message.append_string (a_dynamic_feature.static_feature.name.name)
+--			l_message.append_string ("' in class '")
+--			l_message.append_string (a_target_type.base_type.to_text)
+--			l_message.append_string ("%'")
+--			set_fatal_error
+--			error_handler.report_error_message (l_message)
+--			STRING_.wipe_out (l_message)
 		end
 
 	shared_error_message: STRING is
