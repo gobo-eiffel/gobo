@@ -66,6 +66,9 @@ feature -- Setting
 			-- Set `a_clusters' to `clusters'.
 		do
 			clusters := a_clusters
+			if clusters /= Void then
+				clusters.set_library_prefix (library_prefix)
+			end
 		ensure
 			clusters_set: clusters = a_clusters
 		end
@@ -84,6 +87,9 @@ feature -- Setting
 			a_prefix_not_void: a_prefix /= Void
 		do
 			library_prefix := a_prefix
+			if clusters /= Void then
+				clusters.set_library_prefix (library_prefix)
+			end
 		ensure
 			library_prefix_set: library_prefix = a_prefix
 		end

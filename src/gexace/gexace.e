@@ -37,7 +37,7 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make is
 			-- Create and execute a new 'gexace'.
@@ -103,6 +103,17 @@ feature {NONE} -- Command-line processing
 			if match_long_option ("verbose") then
 				error_handler.enable_verbose
 				consume_option
+				if match_long_option ("shallow") then
+					is_shallow := True
+					consume_option
+				end
+			elseif match_long_option ("shallow") then
+				is_shallow := True
+				consume_option
+				if match_long_option ("verbose") then
+					error_handler.enable_verbose
+					consume_option
+				end
 			end
 		end
 
@@ -217,6 +228,7 @@ feature {NONE} -- Command-line processing
 			a_compiler_not_void: a_compiler /= Void
 		local
 			g: ET_XACE_GENERATOR
+			l_xml_generator: ET_XACE_XML_GENERATOR
 		do
 			if a_compiler.is_equal ("se") then
 				variables.force_last ("se", "GOBO_EIFFEL")
@@ -231,8 +243,11 @@ feature {NONE} -- Command-line processing
 				create {ET_XACE_VE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("xml") then
-				create {ET_XACE_XML_GENERATOR} g.make (variables, error_handler)
-				a_command.generators.force_last (g)
+				create l_xml_generator.make (variables, error_handler)
+				if not is_shallow then
+					l_xml_generator.set_flat (True)
+				end
+				a_command.generators.force_last (l_xml_generator)
 			end
 			if a_command.generators.is_empty then
 					-- Invalid compiler has been specified.
@@ -301,6 +316,11 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
+feature {NONE} -- Command-line options
+
+	is_shallow: BOOLEAN
+			-- Should Xace files not be flattened?
+
 feature {NONE} -- Usage message
 
 	report_usage_error is
@@ -314,7 +334,7 @@ feature {NONE} -- Usage message
 		once
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
-				%%Toptions:  --verbose%N%
+				%%Toptions:  --verbose|--shallow%N%
 				%%Tcommand:  --system=(se|ise|ve|xml) [--output=<filename>]%N%
 				%%Tcommand:  --library=(se|ise|ve|xml) [--output=<filename>]%N%
 				%%Tcommand:  --validate")
