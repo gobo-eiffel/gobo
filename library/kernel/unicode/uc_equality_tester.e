@@ -14,7 +14,7 @@ class UC_EQUALITY_TESTER
 
 obsolete
 
-	"[040315] Use US_STRING_EQUALITY_TESTER instead."
+	"[040315] Use UC_STRING_EQUALITY_TESTER instead."
 
 inherit
 
