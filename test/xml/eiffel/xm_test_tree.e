@@ -101,7 +101,7 @@ feature
 			assert_last
 			go_down
 			assert_first
-			assert_ns_attribute ("uri3", "a1", "foo1")
+			assert_ns_attribute ("", "a1", "foo1")
 			go_next
 			assert_ns_attribute ("uri4", "a2", "foo2")
 			assert_last

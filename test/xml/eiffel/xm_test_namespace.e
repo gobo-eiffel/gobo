@@ -33,7 +33,7 @@ feature -- Test
 		do
 			assert_namespace ("all",
 				"<a><b xmlns='uri1' xmlns:n2='uri2' n2:a='bar' c='foo'><z/></b><c/></a>",
-				<<"", "uri1", "uri2", "uri1", "uri1", "">>)
+				<<"", "uri1", "uri2", "", "uri1", "">>)
 		end
 		
 	test_element is
@@ -65,20 +65,20 @@ feature -- Test
 		do
 			assert_namespace ("simple",
 				"<doc xmlns='uri1' a='t'/>",
-				<<"uri1", "uri1">>)
+				<<"uri1", "">>)
 			assert_namespace ("named",
 				"<doc xmlns:n='uri1' n:a='t'/>",
 				<<"", "uri1">>)
 			assert_namespace ("default with named element",
 				"<doc xmlns:n='uri1'><n:a c='t'/></doc>",
-				<<"", "uri1", "uri1">>)
+				<<"", "uri1", "">>)
 			assert_namespace ("default down",
 				"<doc xmlns='uri1' xmlns:n='uri2'><a n:a='t' a='t'/></doc>",
-				<<"uri1", "uri1", "uri2", "uri1">>)
+				<<"uri1", "uri1", "uri2", "">>)
 				
 			assert_namespace ("together",
 				"<a xmlns:n1='uri1' xmlns:n2='uri2'><n2:b n1:a1='foo' n2:a1='bar' d='bar'/></a>",
-				<<"", "uri2", "uri1", "uri2", "uri2">>)
+				<<"", "uri2", "uri1", "uri2", "">>)
 		end
 
 feature {NONE} -- Implementation
