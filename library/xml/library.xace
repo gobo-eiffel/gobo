@@ -64,18 +64,6 @@
 					<option name="link" value="${EXPAT}/Libs/expat.lib"/>
 				</option>
 			</cluster>
-			<cluster name="eiffel" prefix="impl_eiffel">
-				<option name="abstract" value="true"/>
-				<cluster name="event"/>
-			</cluster>
-			<cluster name="tree_on_event" prefix="impl_tree_on_event_">
-				<option name="abstract" value="true"/>
-				<cluster name="tree"/>
-			</cluster>
-			<cluster name="no_expat" prefix="impl_no_expat_" unless="${GOBO_XML_EXPAT}">
-				<option name="abstract" value="true"/>
-				<cluster name="event"/>
-			</cluster>
 		</cluster>
 	</cluster>
 </library>
