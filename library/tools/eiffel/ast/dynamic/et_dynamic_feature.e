@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
+			builtin_code := not_builtin
 		ensure
 			static_feature_set: static_feature = a_feature
 		end
@@ -73,15 +74,15 @@ feature -- Access
 			-- Dynamic type sets of expressions within current feature;
 			-- Dynamic type sets for arguments are stored first
 
-	dynamic_type_set (an_expression: ET_EXPRESSION): ET_DYNAMIC_TYPE_SET is
-			-- Dynamic type set associated with `an_expression';
+	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set associated with `an_operand';
 			-- Void if unknown yet
 		require
-			an_expression_not_void: an_expression /= Void
+			an_operand_not_void: an_operand /= Void
 		local
 			i: INTEGER
 		do
-			i := an_expression.index
+			i := an_operand.index
 			if i >= 1 and i <= dynamic_type_sets.count then
 				Result := dynamic_type_sets.item (i)
 			end
@@ -236,6 +237,28 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_builtin: BOOLEAN is
+			-- Is current feature built-in?
+		do
+			Result := (builtin_code /= not_builtin)
+		end
+
+	is_builtin_call: BOOLEAN is
+			-- Is current feature the built-in feature 'call'?
+		do
+			Result := (builtin_code = builtin_call)
+		ensure
+			builtin: Result implies is_builtin
+		end
+
+	is_builtin_item: BOOLEAN is
+			-- Is current feature the built-in feature 'item'?
+		do
+			Result := (builtin_code = builtin_item)
+		ensure
+			builtin: Result implies is_builtin
+		end
+
 feature -- Status setting
 
 	set_built (b: BOOLEAN) is
@@ -310,6 +333,22 @@ feature -- Status setting
 			static_set: is_static = b
 		end
 
+	set_builtin_call is
+			-- Set `builtin_call' to True?
+		do
+			builtin_code := builtin_call
+		ensure
+			is_builtin_call: is_builtin_call
+		end
+
+	set_builtin_item is
+			-- Set `builtin_item' to True?
+		do
+			builtin_code := builtin_item
+		ensure
+			is_builtin_item: is_builtin_item
+		end
+
 feature -- Output
 
 	debug_output: STRING is
@@ -317,6 +356,16 @@ feature -- Output
 		do
 			Result := static_feature.debug_output
 		end
+
+feature {NONE} -- Built-in codes
+
+	builtin_code: INTEGER
+			-- Built-in code of current feature
+
+	not_builtin: INTEGER is 0
+	builtin_call: INTEGER is 1
+	builtin_item: INTEGER is 2
+			-- Built-in codes
 
 feature {NONE} -- Constants
 

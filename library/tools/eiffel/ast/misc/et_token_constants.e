@@ -220,6 +220,14 @@ feature -- Feature names
 			area_feature_name_not_void: Result /= Void
 		end
 
+	call_feature_name: ET_FEATURE_NAME is
+			-- 'call' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (call_name)
+		ensure
+			call_feature_name_not_void: Result /= Void
+		end
+
 	count_feature_name: ET_FEATURE_NAME is
 			-- 'count' feature name
 		once
@@ -258,6 +266,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (item_name)
 		ensure
 			item_feature_name_not_void: Result /= Void
+		end
+
+	last_result_feature_name: ET_FEATURE_NAME is
+			-- 'last_result' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (last_result_name)
+		ensure
+			last_result_feature_name_not_void: Result /= Void
 		end
 
 	lower_feature_name: ET_FEATURE_NAME is
@@ -1007,9 +1023,11 @@ feature -- Keyword and symbol names
 		-- Eiffel class names
 
 	area_name: STRING is "area"
+	call_name: STRING is "call"
 	count_name: STRING is "count"
 	default_create_name: STRING is "default_create"
 	item_name: STRING is "item"
+	last_result_name: STRING is "last_result"
 	lower_name: STRING is "lower"
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"

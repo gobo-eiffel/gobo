@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Lists of Eiffel attachments at run-time"
+		"Eiffel lists of agent implicit open arguments"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,11 +10,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_ATTACHMENT_LIST
+class ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
 
 inherit
 
-	ET_TAIL_LIST [ET_DYNAMIC_ATTACHMENT]
+	ET_AGENT_ARGUMENT_OPERANDS
+
+	ET_TAIL_LIST [ET_AGENT_IMPLICIT_OPEN_ARGUMENT]
+		rename
+			item as actual_argument
+		undefine
+			is_empty
+		end
 
 creation
 
@@ -22,7 +29,7 @@ creation
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_ATTACHMENT] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT] is
 			-- Fixed array routines
 		once
 			create Result

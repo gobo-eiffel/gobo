@@ -34,7 +34,6 @@ inherit
 			check_debug_instruction_validity,
 			check_loop_invariant_validity,
 			check_loop_variant_validity,
-			report_agent_open_operand,
 			report_assignment,
 			report_assignment_attempt,
 			report_attribute_assignment_target,
@@ -100,6 +99,8 @@ feature {NONE} -- Initialization
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
 			create dynamic_calls.make (100000)
+			create dynamic_qualified_agents.make (10000)
+			create dynamic_unqualified_agents.make (10000)
 			create current_index.make (0)
 			create result_index.make (0)
 			create character_index.make (0)
@@ -168,6 +169,7 @@ feature -- Generation
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_call: ET_DYNAMIC_CALL
+			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 			l_count: INTEGER
 			old_nb: INTEGER
 		do
@@ -256,12 +258,24 @@ feature -- Generation
 					i := i + 1
 				end
 				old_nb := nb
-					-- Process dynamic calls.
+					-- Process dynamic qualified calls.
 				nb := dynamic_calls.count
 				from i := 1 until i > nb loop
 					l_call := dynamic_calls.item (i)
 					l_count := l_call.count
-					propagate_call_types (l_call)
+					l_call.propagate_types (Current)
+					if l_call.count /= l_count then
+						is_built := False
+					end
+					i := i + 1
+				end
+					-- Process dynamic qualified agents.
+				nb := dynamic_qualified_agents.count
+				from i := 1 until i > nb loop
+					l_agent := dynamic_qualified_agents.item (i)
+					l_call := l_agent.qualified_call
+					l_count := l_call.count
+					l_call.propagate_types (Current)
 					if l_call.count /= l_count then
 						is_built := False
 					end
@@ -270,6 +284,38 @@ feature -- Generation
 			end
 			check_catcall_validity
 			dynamic_calls.wipe_out
+			dynamic_qualified_agents.wipe_out
+			dynamic_unqualified_agents.wipe_out
+		end
+
+feature {ET_DYNAMIC_CALL} -- Generation
+
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+			-- Propagate `a_type' from target type set `a_call'.
+		local
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_call: ET_CALL_COMPONENT
+			l_seed: INTEGER
+			l_feature: ET_FEATURE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			l_target_type_set := a_call.target_type_set
+			l_static_call := a_call.static_call
+			l_seed := l_static_call.name.seed
+			l_feature := a_type.base_class.seeded_feature (l_seed)
+			if l_feature = Void then
+				if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
+						-- Internal error: there should be a feature with seed
+						-- `l_seed' in all descendants of `l_target_type_set.static_type'.
+					set_fatal_error
+					error_handler.report_gibfl_error
+				else
+					-- The error has already been reported somewhere else.
+				end
+			else
+				l_dynamic_feature := a_type.dynamic_feature (l_feature, current_system)
+				l_dynamic_feature.set_regular (True)
+			end
 		end
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
@@ -284,6 +330,14 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
 		do
 			-- Do nothing.
+		end
+
+feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
+
+	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE) is
+			-- Build type set of argument type of `a_call_feature' from `an_agent_type'.
+		do
+			-- Do nothing
 		end
 
 feature {NONE} -- Generation
@@ -301,6 +355,7 @@ feature {NONE} -- Generation
 			old_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
+			had_error: BOOLEAN
 		do
 			old_feature := current_dynamic_feature
 			current_dynamic_feature := a_feature
@@ -315,10 +370,14 @@ feature {NONE} -- Generation
 				i := i + 1
 			end
 			a_feature.set_dynamic_type_sets (dynamic_type_sets)
+			had_error := has_fatal_error
 			if a_feature.is_precursor then
 				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
 			else
 				check_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+			end
+			if had_error then
+				set_fatal_error
 			end
 			nb := dynamic_type_sets.count
 			create l_dynamic_type_sets.make_with_capacity (nb)
@@ -345,82 +404,6 @@ feature {NONE} -- Generation
 			current_dynamic_type := old_type
 		end
 
-	propagate_call_types (a_call: ET_DYNAMIC_CALL) is
-			-- Propagate types from target type set in `a_call'.
-		require
-			a_call_not_void: a_call /= Void
-		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_count, old_count: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-			l_other_types: ET_DYNAMIC_TYPE_LIST
-			i, nb: INTEGER
-			j, nb2: INTEGER
-		do
-			l_target_type_set := a_call.target_type_set
-			old_count := a_call.count
-			l_count := l_target_type_set.count
-			if l_count /= old_count then
-				nb := l_count - old_count
-				a_call.set_count (l_count)
-				l_other_types := l_target_type_set.other_types
-				if l_other_types /= Void then
-					nb2 := l_other_types.count
-					from j := nb2 until j < 1 loop
-						propagate_call_type (l_other_types.item (j), a_call)
-						i := i + 1
-						if i < nb then
-							j := j - 1
-						else
-								-- Jump out of the loop.
-							j := 0
-						end
-					end
-				end
-				if i < nb then
-					l_type := l_target_type_set.first_type
-					if l_type /= Void then
-						propagate_call_type (l_type, a_call)
-					else
-							-- Internal error: the type counts are corrupted.
-						set_fatal_error
-						error_handler.report_gibfm_error
-					end
-				end
-			end
-		end
-
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
-			-- Propagate `a_type' from target type set `a_call'.
-		require
-			a_type_not_void: a_type /= Void
-			a_call_not_void: a_call /= Void
-		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_static_call: ET_FEATURE_CALL
-			l_seed: INTEGER
-			l_feature: ET_FEATURE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-		do
-			l_target_type_set := a_call.target_type_set
-			l_static_call := a_call.static_call
-			l_seed := l_static_call.name.seed
-			l_feature := a_type.base_class.seeded_feature (l_seed)
-			if l_feature = Void then
-				if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
-						-- Internal error: there should be a feature with seed
-						-- `l_seed' in all descendants of `l_target_type_set.static_type'.
-					set_fatal_error
-					error_handler.report_gibfl_error
-				else
-					-- The error has already been reported somewhere else.
-				end
-			else
-				l_dynamic_feature := a_type.dynamic_feature (l_feature, current_system)
-				l_dynamic_feature.set_regular (True)
-			end
-		end
-
 feature {NONE} -- CAT-calls
 
 	check_catcall_validity is
@@ -428,11 +411,18 @@ feature {NONE} -- CAT-calls
 		local
 			i, nb: INTEGER
 			l_call: ET_DYNAMIC_CALL
+			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 		do
 			nb := dynamic_calls.count
 			from i := 1 until i > nb loop
 				l_call := dynamic_calls.item (i)
 				check_catcall_call_validity (l_call)
+				i := i + 1
+			end
+			nb := dynamic_qualified_agents.count
+			from i := 1 until i > nb loop
+				l_agent := dynamic_qualified_agents.item (i)
+				check_catcall_call_validity (l_agent.qualified_call)
 				i := i + 1
 			end
 		end
@@ -470,7 +460,7 @@ feature {NONE} -- CAT-calls
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_actuals: ET_ARGUMENT_OPERANDS
 			l_current_feature: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
@@ -484,7 +474,7 @@ feature {NONE} -- CAT-calls
 			l_feature := a_type.base_class.seeded_feature (l_seed)
 			if l_feature = Void then
 					-- Internal error: there should be a feature with seed
-					-- `l_seed' in all descendants of `target_type.static_type'.
+					-- `l_seed' in all descendants of `a_call.target_type_set.static_type'.
 				set_fatal_error
 				error_handler.report_gibcc_error
 			else
@@ -547,7 +537,7 @@ feature {NONE} -- CAT-calls
 			-- argument of type `an_actual_type' which does not conform to the type of
 			-- the `arg'-th corresponding formal argument `a_formal_type'.
 		require
-			a_taarget_type_not_void: a_target_type /= Void
+			a_target_type_not_void: a_target_type /= Void
 			a_dynamic_feature_not_void: a_dynamic_feature /= Void
 			a_formal_type_not_void: a_formal_type /= Void
 			an_actual_type_not_void: an_actual_type /= Void
@@ -643,18 +633,6 @@ feature {NONE} -- Instruction validity
 		end
 
 feature {NONE} -- Event handling
-
-	report_agent_open_operand (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an agent open operand of type `a_type' 
-			-- in `a_context' has been processed.
-		local
---			l_type: ET_DYNAMIC_TYPE
-		do
---			if current_type = current_dynamic_type.base_type then
---				l_type := current_system.dynamic_type (a_type, a_context)
---				dynamic_type_set_stack.force (l_type)
---			end
-		end
 
 	report_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Report that an assignment instruction has been processed.
@@ -1072,89 +1050,102 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
---			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
---			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
---			l_call: ET_DYNAMIC_CALL
---			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
---			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
---			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
---			l_source, l_next: ET_DYNAMIC_ATTACHMENT
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_agent: ET_DYNAMIC_QUALIFIED_AGENT
+			l_dynamic_call: ET_DYNAMIC_CALL
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_target: ET_AGENT_TARGET
+			l_target_expression: ET_EXPRESSION
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_actual: ET_AGENT_ARGUMENT_OPERAND
+			l_actual_expression: ET_EXPRESSION
+			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
---				if dynamic_call_stack.is_empty then
---						-- Internal error: the stack of dynamic calls should 
---						-- at least contain the item for the current
---						-- qualified call.
---					set_fatal_error
---					error_handler.report_gibax_error
---				else
---					l_call := dynamic_call_stack.item
---					dynamic_call_stack.remove
---					if a_feature.arguments /= Void then
---						nb := a_feature.arguments.count
---					end
---					if dynamic_type_set_stack.count < nb + 1 then
---							-- Internal error: the stack of dynamic type sets should 
---							-- at least contain the items for the arguments of the
---							-- qualified call.
---						set_fatal_error
---						error_handler.report_gibay_error
---					else
---						l_dynamic_type_set := dynamic_type_set_stack.i_th (dynamic_type_set_stack.count - nb)
---						l_call.reset (an_expression.target, l_dynamic_type_set, an_expression.name, a_feature, current_feature, current_type, current_system)
---						if nb > 0 then
---							l_actuals := an_expression.arguments
---							if l_actuals = Void then
---									-- Agent's operands are store in the stack in reverse order.
---								from i := 1 until i > nb loop
---									l_dynamic_type_set := dynamic_type_set_stack.item
---									dynamic_type_set_stack.remove
---									create l_implicit.make (l_dynamic_type_set, an_expression.name, current_feature, current_type)
---									l_implicit.set_next_attachment (l_source)
---									l_source := l_implicit
---									i := i + 1
---								end
---								from until
---									l_source = Void
---								loop
---									l_next := l_source.next_attachment
---									l_source.set_next_attachment (Void)
---									l_call.put_argument_source (l_source)
---									l_source := l_next
---								end
---							elseif l_actuals.count /= nb then
---									-- Internal error: it has already been checked somewhere else
---									-- that there was the same number of actual and formal arguments.
---								set_fatal_error
---								error_handler.report_gibaz_error
---							else
---									-- Agent's operands are store in the stack in reverse order.
---								from i := 1 until i > nb loop
---									l_dynamic_type_set := dynamic_type_set_stack.item
---									dynamic_type_set_stack.remove
---									create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
---									l_attachment.set_next_attachment (l_source)
---									l_source := l_attachment
---									i := i + 1
---								end
---								from until
---									l_source = Void
---								loop
---									l_next := l_source.next_attachment
---									l_source.set_next_attachment (Void)
---									l_call.put_argument_source (l_source)
---									l_source := l_next
---								end
---							end
---						end
---							-- Remove target type.
---						dynamic_type_set_stack.remove
-						l_dynamic_type := current_system.dynamic_type (a_type, a_context)
---						dynamic_type_set_stack.force (l_dynamic_type)
-						set_dynamic_type_set (l_dynamic_type, an_expression)
---					end
---				end
+				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
+				l_dynamic_feature.set_regular (True)
+				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+				l_dynamic_type.set_alive
+				set_dynamic_type_set (l_dynamic_type, an_expression)
+				l_agent_type ?= l_dynamic_type
+				if l_agent_type = Void then
+						-- Internal error: the dynamic type of an agent should be an agent type.
+					set_fatal_error
+					error_handler.report_gibax_error
+				else
+					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+					nb2 := l_open_operand_type_sets.count
+					l_target := an_expression.target
+					l_target_expression ?= l_target
+					if l_target_expression /= Void then
+						l_target_type_set := dynamic_type_set (l_target_expression)
+					else
+							-- The agent is of the form:   agent {TYPE}.f
+							-- The dynamic type set of the target is the first of open operand dynamic type sets.
+						j := 1
+						if not l_open_operand_type_sets.is_empty then
+							l_target_type_set := l_open_operand_type_sets.item (1)
+							set_dynamic_type_set (l_target_type_set, l_target)
+						end
+					end
+						-- Set dynamic type sets of open operands.
+						-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
+					l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+					l_actuals := an_expression.arguments
+					if l_actuals /= Void then
+						nb := l_actuals.count
+						if nb = 0 then
+							-- Do nothing.
+						elseif l_argument_type_sets.count < nb then
+								-- Internal error: it has already been checked somewhere else
+								-- that there was the same number of actual and formal arguments.
+							set_fatal_error
+							error_handler.report_gibfo_error
+						else
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_expression ?= l_actual
+								if l_actual_expression /= Void then
+									-- Do nothing.
+								else
+										-- Open operand.
+									j := j + 1
+									if j > nb2 then
+											-- Internal error: missing open operands.
+										set_fatal_error
+										error_handler.report_gibhl_error
+									else
+										l_dynamic_type_set := l_open_operand_type_sets.item (j)
+										set_dynamic_type_set (l_dynamic_type_set, l_actual)
+									end
+								end
+								i := i + 1
+							end
+							if j < nb2 then
+									-- Internal error: too many open operands.
+								set_fatal_error
+								error_handler.report_gibhm_error
+							end
+						end
+					end
+					if l_target_type_set = Void then
+							-- Internal error: the dynamic type sets of the
+							-- target should be known at this stage.
+						set_fatal_error
+						error_handler.report_gibaz_error
+					else
+						create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+						l_dynamic_call.set_result_type_set (l_agent_type.result_type_set)
+						create l_dynamic_agent.make (an_expression, l_agent_type, l_dynamic_call, current_dynamic_feature, current_dynamic_type)
+						dynamic_qualified_agents.force_last (l_dynamic_agent)
+					end
+				end
 			end
 		end
 
@@ -1357,30 +1348,75 @@ feature {NONE} -- Event handling
 			-- of type `a_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
---			l_dynamic_agent: ET_DYNAMIC_UNQUALIFIED_AGENT
---			l_set_operands_feature: ET_FEATURE
---			l_set_operands_dynamic_feature: ET_DYNAMIC_FEATURE
---			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_agent: ET_DYNAMIC_UNQUALIFIED_AGENT
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_actual: ET_AGENT_ARGUMENT_OPERAND
+			l_actual_expression: ET_EXPRESSION
+			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
 				l_dynamic_feature.set_regular (True)
 				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
 				l_dynamic_type.set_alive
---				l_set_operands_feature := l_dynamic_type.base_class.named_feature (tokens.set_operands_feature_name)
---				if l_set_operands_feature /= Void then
---					l_set_operands_dynamic_feature := l_dynamic_type.dynamic_feature (l_set_operands_feature, current_system)
---					if l_set_operands_dynamic_feature.dynamic_type_sets.count > 0 then
---						l_open_operand_type_set := l_set_operands_dynamic_feature.dynamic_type_sets.item (1)
---						create l_dynamic_agent.make (an_expression, l_open_operand_type_set, l_dynamic_feature, current_dynamic_feature, current_dynamic_type)
---					else
--- TODO
---					end
---				else
--- TODO
---				end
 				set_dynamic_type_set (l_dynamic_type, an_expression)
+				l_agent_type ?= l_dynamic_type
+				if l_agent_type = Void then
+						-- Internal error: the dynamic type of an agent should be an agent type.
+					set_fatal_error
+					error_handler.report_gibfn_error
+				else
+						-- Set dynamic type sets of open operands.
+					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+					nb2 := l_open_operand_type_sets.count
+						-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
+					l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+					l_actuals := an_expression.arguments
+					if l_actuals /= Void then
+						nb := l_actuals.count
+						if nb = 0 then
+							-- Do nothing.
+						elseif l_argument_type_sets.count < nb then
+								-- Internal error: it has already been checked somewhere else
+								-- that there was the same number of actual and formal arguments.
+							set_fatal_error
+							error_handler.report_gibgl_error
+						else
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_expression ?= l_actual
+								if l_actual_expression /= Void then
+									-- Do nothing.
+								else
+										-- Open operand.
+									j := j + 1
+									if j > nb2 then
+											-- Internal error: missing open operands.
+										set_fatal_error
+										error_handler.report_gibhx_error
+									else
+										l_dynamic_type_set := l_open_operand_type_sets.item (j)
+										set_dynamic_type_set (l_dynamic_type_set, l_actual)
+									end
+								end
+								i := i + 1
+							end
+							if j < nb2 then
+									-- Internal error: too many open operands.
+								set_fatal_error
+								error_handler.report_gibhy_error
+							end
+						end
+					end
+					create l_dynamic_agent.make (an_expression, l_agent_type, l_dynamic_feature, current_dynamic_feature, current_dynamic_type)
+					dynamic_unqualified_agents.force_last (l_dynamic_agent)
+				end
 			end
 		end
 
@@ -1493,33 +1529,33 @@ feature {ET_FEATURE_CHECKER} -- Status report
 
 feature {NONE} -- Implementation
 
-	dynamic_type_set (an_expression: ET_EXPRESSION): ET_DYNAMIC_TYPE_SET is
-			-- Dynamic type set associated with `an_expression';
+	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set associated with `an_operand';
 			-- Void if unknown yet
 		require
-			an_expression_not_void: an_expression /= Void
+			an_operand_not_void: an_operand /= Void
 		local
 			i: INTEGER
 		do
-			i := an_expression.index
+			i := an_operand.index
 			if i >= 1 and i <= dynamic_type_sets.count then
 				Result := dynamic_type_sets.item (i)
 			end
 		end
 
-	set_dynamic_type_set (a_dynamic_type_set: ET_DYNAMIC_TYPE_SET; an_expression: ET_EXPRESSION) is
-			-- Set dynamic type set associated with `an_expression' to `a_dynamic_type_set'.
+	set_dynamic_type_set (a_dynamic_type_set: ET_DYNAMIC_TYPE_SET; an_operand: ET_OPERAND) is
+			-- Set dynamic type set associated with `an_operand' to `a_dynamic_type_set'.
 		require
 			a_dynamic_type_set_not_void: a_dynamic_type_set /= Void
-			an_expression_not_void: an_expression /= Void
+			an_operand_not_void: an_operand /= Void
 		local
 			i, nb: INTEGER
 			l_none: ET_DYNAMIC_TYPE
 		do
-			i := an_expression.index
+			i := an_operand.index
 			if i = 0 then
 				dynamic_type_sets.force_last (a_dynamic_type_set)
-				an_expression.set_index (dynamic_type_sets.count)
+				an_operand.set_index (dynamic_type_sets.count)
 			else
 				nb := dynamic_type_sets.count
 				if i <= nb then
@@ -1535,7 +1571,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			dynamic_type_set_set: dynamic_type_set (an_expression) = a_dynamic_type_set
+			dynamic_type_set_set: dynamic_type_set (an_operand) = a_dynamic_type_set
 		end
 
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -1543,6 +1579,12 @@ feature {NONE} -- Implementation
 
 	dynamic_calls: DS_ARRAYED_LIST [ET_DYNAMIC_CALL]
 			-- Dynamic qualified calls within current feature
+
+	dynamic_qualified_agents: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_AGENT]
+			-- Dynamic qualified agents within current feature
+
+	dynamic_unqualified_agents: DS_ARRAYED_LIST [ET_DYNAMIC_UNQUALIFIED_AGENT]
+			-- Dynamic unqualified agents within current feature
 
 	dummy_dynamic_type: ET_DYNAMIC_TYPE is
 			-- Dummy_dynamic type
@@ -1565,6 +1607,10 @@ invariant
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
 	dynamic_calls_not_void: dynamic_calls /= Void
 	no_void_dynamic_call: not dynamic_calls.has (Void)
+	dynamic_qualified_agents_not_void: dynamic_qualified_agents /= Void
+	no_void_dynamic_qualified_agent: not dynamic_qualified_agents.has (Void)
+	dynamic_unqualified_agents_not_void: dynamic_unqualified_agents /= Void
+	no_void_dynamic_unqualified_agent: not dynamic_unqualified_agents.has (Void)
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_index_not_void: current_index /= Void

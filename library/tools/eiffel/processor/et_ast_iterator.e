@@ -57,14 +57,14 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_bracket.process (Current)
 		end
 
-	process_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT_COMMA) is
+	process_agent_argument_operand_comma (an_argument: ET_AGENT_ARGUMENT_OPERAND_COMMA) is
 			-- Process `an_argument'.
 		do
 			an_argument.agent_actual_argument.process (Current)
 			an_argument.comma.process (Current)
 		end
 
-	process_agent_actual_argument_list (a_list: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -76,6 +76,28 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			a_list.right_parenthesis.process (Current)
+		end
+
+	process_agent_implicit_open_argument (an_argument: ET_AGENT_IMPLICIT_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+			-- Do nothing.
+		end
+
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+			an_argument.left_brace.process (Current)
+			an_argument.type.process (Current)
+			an_argument.right_brace.process (Current)
+		end
+
+	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
+			-- Process `a_target'.
+		do
+			a_target.left_brace.process (Current)
+			a_target.type.process (Current)
+			a_target.right_brace.process (Current)
 		end
 
 	process_all_export (an_export: ET_ALL_EXPORT) is
@@ -231,7 +253,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			a_target: ET_AGENT_TARGET
-			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
 			if a_target /= Void and an_expression.use_tilde then
@@ -244,7 +266,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 			an_expression.qualified_name.process (Current)
-			an_arguments := an_expression.arguments
+			an_arguments ?= an_expression.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end

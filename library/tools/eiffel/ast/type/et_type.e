@@ -35,6 +35,13 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+feature -- Initialization
+
+	reset is
+			-- Reset type as it was when it was first parsed.
+		do
+		end
+
 feature -- Access
 
 	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is

@@ -14,12 +14,7 @@ deferred class ET_TARGET_TYPE
 
 inherit
 
-	ET_AGENT_TARGET
-
-	ET_AGENT_ACTUAL_ARGUMENT
-		undefine
-			reset
-		end
+	ET_AST_NODE
 
 feature -- Access
 

@@ -19,6 +19,8 @@ inherit
 			reset
 		end
 
+	ET_CALL_COMPONENT
+
 creation
 
 	make
@@ -44,13 +46,18 @@ feature -- Initialization
 
 	reset is
 			-- Reset expression as it was when it was first parsed.
+		local
+			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			name.reset
 			if target /= Void then
 				target.reset
 			end
-			if arguments /= Void then
-				arguments.reset
+			l_actuals ?= arguments
+			if l_actuals /= Void then
+				l_actuals.reset
+			else
+				arguments := Void
 			end
 		end
 
@@ -69,11 +76,11 @@ feature -- Access
 			-- Feature name
 		do
 			Result := qualified_name.feature_name
-		ensure
+		ensure then
 			definition: Result = qualified_name.feature_name
 		end
 
-	arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
+	arguments: ET_AGENT_ARGUMENT_OPERANDS
 			-- Arguments
 
 	position: ET_POSITION is
@@ -107,9 +114,12 @@ feature -- Access
 
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
+		local
+			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if arguments /= Void then
-				Result := arguments.last_leaf
+			l_arguments ?= arguments
+			if l_arguments /= Void then
+				Result := l_arguments.last_leaf
 			else
 				Result := qualified_name.last_leaf
 			end
@@ -117,9 +127,12 @@ feature -- Access
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
+		local
+			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if arguments /= Void then
-				Result := arguments.break
+			l_arguments ?= arguments
+			if l_arguments /= Void then
+				Result := l_arguments.break
 			else
 				Result := qualified_name.break
 			end
@@ -148,6 +161,14 @@ feature -- Setting
 			agent_keyword_set: agent_keyword = an_agent
 		end
 
+	set_arguments (an_arguments: like arguments) is
+			-- Set `arguments' to `an_arguments'.
+		do
+			arguments := an_arguments
+		ensure
+			argumnts_set: arguments = an_arguments
+		end
+		
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

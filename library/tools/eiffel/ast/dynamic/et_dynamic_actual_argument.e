@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	actual_argument: ET_EXPRESSION
+	actual_argument: ET_ARGUMENT_OPERAND
 			-- Actual argument
 
 	position: ET_POSITION is

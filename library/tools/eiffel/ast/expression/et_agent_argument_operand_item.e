@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_AGENT_ACTUAL_ARGUMENT_ITEM
+deferred class ET_AGENT_ARGUMENT_OPERAND_ITEM
 
 inherit
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	agent_actual_argument: ET_AGENT_ACTUAL_ARGUMENT is
+	agent_actual_argument: ET_AGENT_ARGUMENT_OPERAND is
 			-- Agent actual argument in comma-separated list
 		deferred
 		ensure

@@ -37,13 +37,28 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT_COMMA) is
+	process_agent_argument_operand_comma (an_argument: ET_AGENT_ARGUMENT_OPERAND_COMMA) is
 			-- Process `an_argument'.
 		do
 		end
 
-	process_agent_actual_argument_list (a_list: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
 			-- Process `a_list'.
+		do
+		end
+
+	process_agent_implicit_open_argument (an_argument: ET_AGENT_IMPLICIT_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+		end
+
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+		end
+
+	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
+			-- Process `a_target'.
 		do
 		end
 

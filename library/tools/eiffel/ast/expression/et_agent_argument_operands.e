@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel feature calls"
+		"Eiffel agent actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,24 +10,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_FEATURE_CALL
+deferred class ET_AGENT_ARGUMENT_OPERANDS
 
 inherit
 
-	ET_CALL_COMPONENT
+	ET_ARGUMENT_OPERANDS
 		redefine
-			target, arguments
+			actual_argument
 		end
 
 feature -- Access
 
-	target: ET_EXPRESSION is
-			-- Target
-		deferred
-		end
-
-	arguments: ET_ACTUAL_ARGUMENTS is
-			-- Arguments
+	actual_argument (i: INTEGER): ET_AGENT_ARGUMENT_OPERAND is
+			-- Actual argument at index `i'
 		deferred
 		end
 

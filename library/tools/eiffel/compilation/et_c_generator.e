@@ -3150,7 +3150,7 @@ feature {NONE} -- Agent generation
 			an_expression_not_void: an_expression /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_arguments: ET_AGENT_ARGUMENT_OPERANDS
 			a_target: ET_AGENT_TARGET
 			an_expression_target: ET_EXPRESSION
 			a_type_target: ET_TARGET_TYPE
@@ -3183,7 +3183,7 @@ feature {NONE} -- Agent generation
 			end
 		end
 
-	print_unqualified_call_agent (a_name: ET_FEATURE_NAME; an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+	print_unqualified_call_agent (a_name: ET_FEATURE_NAME; an_actuals: ET_AGENT_ARGUMENT_OPERANDS) is
 			-- Print unqualified call agent.
 		require
 			a_name_not_void: a_name /= Void
@@ -3192,7 +3192,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_qualified_call_agent (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+		an_actuals: ET_AGENT_ARGUMENT_OPERANDS) is
 			-- Print qualified call agent.
 		require
 			a_target_not_void: a_target /= Void
@@ -3202,7 +3202,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_typed_call_agent (a_type: ET_TYPE; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+		an_actuals: ET_AGENT_ARGUMENT_OPERANDS) is
 			-- Print typed call agent.
 		require
 			a_type_not_void: a_type /= Void

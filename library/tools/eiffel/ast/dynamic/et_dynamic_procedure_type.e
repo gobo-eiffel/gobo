@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel dynamic TUPLE types at run-time"
+		"Eiffel dynamic PROCEDURE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_TUPLE_TYPE
+class ET_DYNAMIC_PROCEDURE_TYPE
 
 inherit
 
-	ET_DYNAMIC_TYPE
+	ET_DYNAMIC_ROUTINE_TYPE
 		rename
 			make as make_type
 		redefine
@@ -30,26 +30,29 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type: like base_type; a_class: like base_class; an_item_type_sets: like item_type_sets) is
-			-- Create a new TUPLE type.
+	make (a_type: like base_type; a_class: like base_class; an_open_operand_type_sets: like open_operand_type_sets) is
+			-- Create a new PROCEDURE type.
 		require
 			a_type_not_void: a_type /= Void
 			a_type_base_type: a_type.is_base_type
 			a_class_not_void: a_class /= Void
-			an_item_type_sets_not_void: an_item_type_sets /= Void
+			an_open_operand_type_sets_not_void: an_open_operand_type_sets /= Void
 		do
 			make_type (a_type, a_class)
-			item_type_sets := an_item_type_sets
+			open_operand_type_sets := an_open_operand_type_sets
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
-			item_type_sets_set: item_type_sets = an_item_type_sets
+			open_operand_type_sets_set: open_operand_type_sets = an_open_operand_type_sets
 		end
 
 feature -- Access
 
-	item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			-- Type sets of items
+	result_type_set: ET_DYNAMIC_TYPE_SET is
+			-- Type set of result, if any
+		do
+			-- Result := Void
+		end
 
 feature {NONE} -- Implementation
 
@@ -61,15 +64,14 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (a_feature, Current, a_system)
 			l_name := a_feature.name
-			if l_name.same_feature_name (tokens.put_feature_name) or l_name.same_feature_name (tokens.put_reference_feature_name) then
-				a_system.dynamic_type_set_builder.build_tuple_put (Current, Result)
-			elseif l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.infix_at_feature_name) or l_name.same_feature_name (tokens.reference_item_feature_name) then
-				a_system.dynamic_type_set_builder.build_tuple_item (Current, Result)
+			if l_name.same_feature_name (tokens.call_feature_name) then
+				Result.set_builtin_call
+				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end
 
 invariant
 
-	item_type_sets_not_void: item_type_sets /= Void
+	is_procedure: result_type_set = Void
 
 end

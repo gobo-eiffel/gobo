@@ -37,13 +37,30 @@ inherit
 			is_empty as is_empty_actual_argument
 		end
 
-	ET_TARGET
+	ET_ARGUMENT_OPERAND
+		redefine
+			index
+		end
 
-	ET_AGENT_ACTUAL_ARGUMENT
+	ET_AGENT_ARGUMENT_OPERAND
+		undefine
+			reset, set_index
+		redefine
+			index
+		end
+
+	ET_TARGET_OPERAND
+		undefine
+			reset, set_index
+		redefine
+			index
+		end
 
 	ET_AGENT_TARGET
 		undefine
-			reset
+			reset, set_index
+		redefine
+			index
 		end
 
 feature -- Access
@@ -72,18 +89,6 @@ feature -- Measurement
 
 	actual_argument_count: INTEGER is 1
 			-- Number of actual arguments
-
-feature -- Setting
-
-	set_index (i: INTEGER) is
-			-- Set `index' to `i'.
-		require
-			i_nonnegative: i >= 0
-		do
-			index := i
-		ensure
-			index_set: index = i
-		end
 
 invariant
 

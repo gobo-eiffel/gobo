@@ -133,8 +133,10 @@ inherit
 			new_actual_arguments,
 			new_actual_parameter_comma,
 			new_actual_parameters,
-			new_agent_actual_argument_comma,
-			new_agent_actual_arguments,
+			new_agent_argument_operand_comma,
+			new_agent_argument_operands,
+			new_agent_typed_open_argument,
+			new_agent_open_target,
 			new_all_export,
 			new_argument_name_comma,
 			new_assertion_semicolon,
@@ -1312,18 +1314,18 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT; a_comma: ET_SYMBOL): ET_AGENT_ACTUAL_ARGUMENT_ITEM is
-			-- New agent_actual_argument-comma
+	new_agent_argument_operand_comma (an_argument: ET_AGENT_ARGUMENT_OPERAND; a_comma: ET_SYMBOL): ET_AGENT_ARGUMENT_OPERAND_ITEM is
+			-- New agent_argument_operand-comma
 		do
 			if a_comma = Void then
 				Result := an_argument
 			elseif an_argument /= Void then
-				create {ET_AGENT_ACTUAL_ARGUMENT_COMMA} Result.make (an_argument, a_comma)
+				create {ET_AGENT_ARGUMENT_OPERAND_COMMA} Result.make (an_argument, a_comma)
 			end
 		end
 
-	new_agent_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ACTUAL_ARGUMENT_LIST is
-			-- New agent actual argument list with given capacity
+	new_agent_argument_operands (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ARGUMENT_OPERAND_LIST is
+			-- New agent argument operand list with given capacity
 		do
 			create Result.make_with_capacity (nb)
 			if a_left /= Void then
@@ -1331,6 +1333,34 @@ feature -- AST nodes
 			end
 			if a_right /= Void then
 				Result.set_right_parenthesis (a_right)
+			end
+		end
+
+	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT is
+			-- New agent open argument of the form '{TYPE}'
+		do
+			if a_type /= Void then
+				create Result.make (a_type)
+				if l /= Void then
+					Result.set_left_brace (l)
+				end
+				if r /= Void then
+					Result.set_right_brace (r)
+				end
+			end
+		end
+
+	new_agent_open_target (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_OPEN_TARGET is
+			-- New agent open target of the form '{TYPE}'
+		do
+			if a_type /= Void then
+				create Result.make (a_type)
+				if l /= Void then
+					Result.set_left_brace (l)
+				end
+				if r /= Void then
+					Result.set_right_brace (r)
+				end
 			end
 		end
 

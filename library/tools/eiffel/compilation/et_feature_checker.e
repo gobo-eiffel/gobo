@@ -5577,7 +5577,7 @@ feature {NONE} -- Agent validity
 		local
 			a_target: ET_AGENT_TARGET
 			an_expression_target: ET_EXPRESSION
-			a_type_target: ET_TARGET_TYPE
+			a_type_target: ET_AGENT_OPEN_TARGET
 		do
 			a_target := an_expression.target
 			if a_target = Void then
@@ -5608,7 +5608,9 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
 			a_feature: ET_FEATURE
 			a_type: ET_TYPE
@@ -5620,6 +5622,7 @@ feature {NONE} -- Agent validity
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_CLASS
 			had_error: BOOLEAN
+			i, nb: INTEGER
 		do
 			has_fatal_error := False
 			a_name := an_expression.name
@@ -5644,6 +5647,20 @@ feature {NONE} -- Agent validity
 						if a_feature /= Void then
 							a_seed := a_feature.first_seed
 							a_name.set_seed (a_seed)
+							an_actuals := an_expression.arguments
+							if an_actuals = Void then
+								a_formal_arguments := a_feature.arguments
+								if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+									nb := a_formal_arguments.count
+									create an_implicit_actuals.make_with_capacity (nb)
+									from i := 1 until i > nb loop
+										create an_implicit_actual.make (an_expression)
+										an_implicit_actuals.put_last (an_implicit_actual)
+										i := i + 1
+									end
+									an_expression.set_arguments (an_implicit_actuals)
+								end
+							end
 						else
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -5731,7 +5748,9 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -5746,6 +5765,7 @@ feature {NONE} -- Agent validity
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_CLASS
 			had_error: BOOLEAN
+			i, nb: INTEGER
 		do
 			has_fatal_error := False
 			a_name := an_expression.name
@@ -5781,6 +5801,20 @@ feature {NONE} -- Agent validity
 							if a_feature /= Void then
 								a_seed := a_feature.first_seed
 								a_name.set_seed (a_seed)
+								an_actuals := an_expression.arguments
+								if an_actuals = Void then
+									a_formal_arguments := a_feature.arguments
+									if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+										nb := a_formal_arguments.count
+										create an_implicit_actuals.make_with_capacity (nb)
+										from i := 1 until i > nb loop
+											create an_implicit_actual.make (an_expression)
+											an_implicit_actuals.put_last (an_implicit_actual)
+											i := i + 1
+										end
+										an_expression.set_arguments (an_implicit_actuals)
+									end
+								end
 							else
 								set_fatal_error
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -5895,7 +5929,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_TARGET_TYPE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of typed call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -5905,7 +5939,9 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -5919,6 +5955,7 @@ feature {NONE} -- Agent validity
 			an_agent_type: ET_GENERIC_CLASS_TYPE
 			an_agent_class: ET_CLASS
 			had_error: BOOLEAN
+			i, nb: INTEGER
 		do
 			has_fatal_error := False
 			a_name := an_expression.name
@@ -5938,7 +5975,6 @@ feature {NONE} -- Agent validity
 							error_handler.report_giacv_error
 						end
 					else
-						report_agent_open_operand (a_target_type, a_context)
 						a_context.force_last (a_target_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
@@ -5949,6 +5985,20 @@ feature {NONE} -- Agent validity
 							if a_feature /= Void then
 								a_seed := a_feature.first_seed
 								a_name.set_seed (a_seed)
+								an_actuals := an_expression.arguments
+								if an_actuals = Void then
+									a_formal_arguments := a_feature.arguments
+									if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+										nb := a_formal_arguments.count
+										create an_implicit_actuals.make_with_capacity (nb)
+										from i := 1 until i > nb loop
+											create an_implicit_actual.make (an_expression)
+											an_implicit_actuals.put_last (an_implicit_actual)
+											i := i + 1
+										end
+										an_expression.set_arguments (an_implicit_actuals)
+									end
+								end
 							else
 								set_fatal_error
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -5962,7 +6012,6 @@ feature {NONE} -- Agent validity
 					if a_feature = Void then
 						a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
 						if not has_fatal_error then
-							report_agent_open_operand (a_target_type, a_context)
 							a_context.force_last (a_target_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
@@ -6061,7 +6110,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_agent_arguments_validity (an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST;
+	check_agent_arguments_validity (an_actuals: ET_AGENT_ARGUMENT_OPERANDS;
 		a_context: ET_NESTED_TYPE_CONTEXT; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
 		a_class: ET_CLASS; an_open_operands: ET_ACTUAL_PARAMETER_LIST) is
 			-- Check actual arguments validity for agent on `a_feature' named `a_name'
@@ -6074,10 +6123,11 @@ feature {NONE} -- Agent validity
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		local
+			l_actual_list: ET_AGENT_ARGUMENT_OPERAND_LIST
 			a_class_impl: ET_CLASS
-			an_agent_actual: ET_AGENT_ACTUAL_ARGUMENT
+			an_agent_actual: ET_AGENT_ARGUMENT_OPERAND
 			an_actual: ET_EXPRESSION
-			an_agent_type: ET_TARGET_TYPE
+			an_agent_type: ET_AGENT_TYPED_OPEN_ARGUMENT
 			an_actual_type: ET_TYPE
 			a_question_mark: ET_QUESTION_MARK_SYMBOL
 			a_formals: ET_FORMAL_ARGUMENT_LIST
@@ -6092,28 +6142,26 @@ feature {NONE} -- Agent validity
 			a_convert_expression: ET_CONVERT_EXPRESSION
 			a_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 			a_convert_class: ET_CLASS
-			an_argument_comma: ET_AGENT_ACTUAL_ARGUMENT_COMMA
+			an_argument_comma: ET_AGENT_ARGUMENT_OPERAND_COMMA
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_type: ET_TYPE
 		do
 			has_fatal_error := False
 			a_formals := a_feature.arguments
-			if an_actuals = Void then
-				if a_formals /= Void then
+			l_actual_list ?= an_actuals
+			if l_actual_list = Void then
+				if a_formals /= Void and an_open_operands /= Void then
 					nb := a_formals.count
 					from i := nb until i < 1 loop
 						l_formal_type := a_formals.formal_argument (i).type
-						if an_open_operands /= Void then
-							an_open_operands.force_first (l_formal_type)
-						end
-						report_agent_open_operand (l_formal_type, a_context)
+						an_open_operands.force_first (l_formal_type)
 						i := i - 1
 					end
 				end
 			else
 				a_class_impl := feature_impl.implementation_class
-				if an_actuals.is_empty then
+				if l_actual_list.is_empty then
 					if a_formals /= Void and then not a_formals.is_empty then
 						set_fatal_error
 						if current_class = a_class_impl then
@@ -6130,7 +6178,7 @@ feature {NONE} -- Agent validity
 							error_handler.report_giacw_error
 						end
 					end
-				elseif a_formals = Void or else a_formals.count /= an_actuals.count then
+				elseif a_formals = Void or else a_formals.count /= l_actual_list.count then
 					set_fatal_error
 					if current_class = a_class_impl then
 						if a_class /= Void then
@@ -6153,10 +6201,10 @@ feature {NONE} -- Agent validity
 					l_actual_context.reset (current_type)
 					l_formal_context := a_context
 					l_formal_type := tokens.like_current
-					nb := an_actuals.count
+					nb := l_actual_list.count
 					from i := nb until i < 1 loop
 						a_formal := a_formals.formal_argument (i)
-						an_agent_actual := an_actuals.actual_argument (i)
+						an_agent_actual := l_actual_list.actual_argument (i)
 						an_actual ?= an_agent_actual
 						if an_actual /= Void then
 							has_fatal_error := False
@@ -6220,11 +6268,11 @@ feature {NONE} -- Agent validity
 											create a_convert_expression.make (an_actual, a_convert_feature)
 											a_convert_expression.set_index (an_actual.index)
 										end
-										an_argument_comma ?= an_actuals.item (i)
+										an_argument_comma ?= l_actual_list.item (i)
 										if an_argument_comma /= Void then
 											an_argument_comma.set_agent_actual_argument (a_convert_expression)
 										else
-											an_actuals.put (a_convert_expression, i)
+											l_actual_list.put (a_convert_expression, i)
 										end
 									end
 								else
@@ -6283,7 +6331,6 @@ feature {NONE} -- Agent validity
 										if an_open_operands /= Void then
 											an_open_operands.force_first (an_actual_type)
 										end
-										report_agent_open_operand (an_actual_type, a_context)
 									end
 								end
 							else
@@ -6292,7 +6339,6 @@ feature {NONE} -- Agent validity
 									if an_open_operands /= Void then
 										an_open_operands.force_first (a_formal.type)
 									end
-									report_agent_open_operand (a_formal.type, a_context)
 								else
 										-- Internal error: no other kind of agent actual arguments.
 									had_error := True
@@ -6313,17 +6359,6 @@ feature {NONE} -- Agent validity
 		end
 
 feature {NONE} -- Event handling
-
-	report_agent_open_operand (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an agent open operand of type `a_type' 
-			-- in `a_context' has been processed.
-		require
-			no_error: not has_fatal_error
-			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-		do
-		end
 
 	report_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Report that an assignment instruction has been processed.

@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_AGENT_ACTUAL_ARGUMENT_LIST
+class ET_AGENT_ARGUMENT_OPERAND_LIST
 
 inherit
 
+	ET_AGENT_ARGUMENT_OPERANDS
+
 	ET_AST_NODE
 
-	ET_HEAD_LIST [ET_AGENT_ACTUAL_ARGUMENT_ITEM]
+	ET_HEAD_LIST [ET_AGENT_ARGUMENT_OPERAND_ITEM]
+		undefine
+			is_empty
 		redefine
 			make, make_with_capacity
 		end
@@ -59,15 +63,10 @@ feature -- Initialization
 
 feature -- Access
 
-	actual_argument (i: INTEGER): ET_AGENT_ACTUAL_ARGUMENT is
+	actual_argument (i: INTEGER): ET_AGENT_ARGUMENT_OPERAND is
 			-- Actual argument at index `i' in list
-		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= count
 		do
 			Result := item (i).agent_actual_argument
-		ensure
-			argument_not_void: Result /= Void
 		end
 
 	left_parenthesis: ET_SYMBOL
@@ -128,7 +127,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_ACTUAL_ARGUMENT_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM] is
 			-- Fixed array routines
 		once
 			create Result
@@ -139,7 +138,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR) is
 			-- Process current node.
 		do
-			a_processor.process_agent_actual_argument_list (Current)
+			a_processor.process_agent_argument_operand_list (Current)
 		end
 
 invariant

@@ -1118,19 +1118,35 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT; a_comma: ET_SYMBOL): ET_AGENT_ACTUAL_ARGUMENT_ITEM is
-			-- New agent_actual_argument-comma
+	new_agent_argument_operand_comma (an_argument: ET_AGENT_ARGUMENT_OPERAND; a_comma: ET_SYMBOL): ET_AGENT_ARGUMENT_OPERAND_ITEM is
+			-- New agent_argument_operand-comma
 		do
 			Result := an_argument
 		end
 
-	new_agent_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ACTUAL_ARGUMENT_LIST is
-			-- New agent actual argument list with given capacity
+	new_agent_argument_operands (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ARGUMENT_OPERAND_LIST is
+			-- New agent argument operand list with given capacity
 		require
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
 				create Result.make_with_capacity (nb)
+			end
+		end
+
+	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT is
+			-- New agent open argument of the form '{TYPE}'
+		do
+			if a_type /= Void then
+				create Result.make (a_type)
+			end
+		end
+
+	new_agent_open_target (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_OPEN_TARGET is
+			-- New agent open target of the form '{TYPE}'
+		do
+			if a_type /= Void then
+				create Result.make (a_type)
 			end
 		end
 
@@ -1232,7 +1248,7 @@ feature -- AST nodes
 		end
 
 	new_call_agent (an_agent: ET_AST_LEAF; a_target: ET_AGENT_TARGET; a_name: ET_QUALIFIED_FEATURE_NAME;
-		args: ET_AGENT_ACTUAL_ARGUMENT_LIST): ET_CALL_AGENT is
+		args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_CALL_AGENT is
 			-- New call agent
 		do
 			if a_name /= Void then

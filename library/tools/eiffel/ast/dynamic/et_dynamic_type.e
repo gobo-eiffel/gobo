@@ -64,14 +64,8 @@ feature -- Status report
 			definition: Result = base_type.is_expanded
 		end
 
-	is_special: BOOLEAN is
-			-- Is current type a SPECIAL type?
-		do
-			-- Result := False
-		end
-
-	is_tuple: BOOLEAN is
-			-- Is current type a TUPLE type?
+	is_agent_type: BOOLEAN is
+			-- Is current type an agent type?
 		do
 			-- Result := False
 		end

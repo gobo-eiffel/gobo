@@ -18,7 +18,7 @@ inherit
 		redefine
 			make,
 			process_actual_argument_list,
-			process_agent_actual_argument_list,
+			process_agent_argument_operand_list,
 			process_assignment,
 			process_assignment_attempt,
 			process_attribute,
@@ -343,7 +343,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_agent_actual_argument_list (a_list: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -400,16 +400,16 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			a_target: ET_AGENT_TARGET
-			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			if internal_call then
 				a_target := an_expression.target
 				if a_target /= Void then
 					a_target.process (Current)
 				end
-				an_arguments := an_expression.arguments
+				an_arguments ?= an_expression.arguments
 				if an_arguments /= Void then
-					process_agent_actual_argument_list (an_arguments)
+					process_agent_argument_operand_list (an_arguments)
 				end
 			end
 		end

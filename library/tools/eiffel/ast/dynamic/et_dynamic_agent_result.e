@@ -2,8 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel agent implicit argument passings at run-time.%N%
-		%This is when we have 'agent f' instead of 'agent f (?)'."
+		"Eiffel agent result passings at run-time. This is when we have 'a_result := (agent f (...)).item ([...])'"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -11,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
+class ET_DYNAMIC_AGENT_RESULT
 
 inherit
 
@@ -28,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make (a_type_set: like source_type_set; a_name: like feature_name;
 		a_current_feature: like current_feature; a_current_type: like current_type) is
-			-- Create a new agent implicit argument passing.
+			-- Create a new agent result passing.
 		require
 			a_type_set_not_void: a_type_set /= Void
 			a_name_not_void: a_name /= Void
@@ -49,7 +48,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	feature_name: ET_FEATURE_NAME
-			-- Name of feature used with implicit argument passing
+			-- Name of feature returning the result
 
 	position: ET_POSITION is
 			-- Position of attachment
@@ -57,7 +56,7 @@ feature -- Access
 			Result := feature_name.position
 		end
 
-	description: STRING is "agent implicit actual argument"
+	description: STRING is "agent result"
 			-- Kind of attachment
 
 invariant

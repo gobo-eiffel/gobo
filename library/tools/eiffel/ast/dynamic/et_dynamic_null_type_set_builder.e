@@ -49,6 +49,13 @@ feature -- Generation
 			has_fatal_error := False
 		end
 
+feature {ET_DYNAMIC_CALL} -- Generation
+
+	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+			-- Propagate `a_type' from target type set `a_call'.
+		do
+		end
+
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is
@@ -58,6 +65,13 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE) is
 			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
+		do
+		end
+
+feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
+
+	build_agent_call (an_agent_type: ET_DYNAMIC_ROUTINE_TYPE; a_call_feature: ET_DYNAMIC_FEATURE) is
+			-- Build type set of argument type of `a_call_feature' from `an_agent_type'.
 		do
 		end
 

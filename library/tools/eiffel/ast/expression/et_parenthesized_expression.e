@@ -16,12 +16,14 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			reset
+			reset, index
 		end
 
 	ET_AGENT_TARGET
 		undefine
-			reset
+			reset, set_index
+		redefine
+			index
 		end
 
 creation
@@ -60,6 +62,10 @@ feature -- Access
 
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
+
+	index: INTEGER
+			-- Index of expression in enclosing feature;
+			-- Used to get dynamic information about this expression.
 
 	position: ET_POSITION is
 			-- Position of first character of

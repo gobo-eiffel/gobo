@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_AGENT_ACTUAL_ARGUMENT_COMMA
+class ET_AGENT_ARGUMENT_OPERAND_COMMA
 
 inherit
 
-	ET_AGENT_ACTUAL_ARGUMENT_ITEM
+	ET_AGENT_ARGUMENT_OPERAND_ITEM
 
 creation
 
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	agent_actual_argument: ET_AGENT_ACTUAL_ARGUMENT
+	agent_actual_argument: ET_AGENT_ARGUMENT_OPERAND
 			-- Agent actual argument in comma-separated list
 
 	comma: ET_SYMBOL
@@ -85,7 +85,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR) is
 			-- Process current node.
 		do
-			a_processor.process_agent_actual_argument_comma (Current)
+			a_processor.process_agent_argument_operand_comma (Current)
 		end
 
 invariant

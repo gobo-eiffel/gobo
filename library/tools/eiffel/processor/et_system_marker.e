@@ -18,11 +18,14 @@ inherit
 		redefine
 			process_actual_argument_list,
 			process_actual_parameter_list,
-			process_agent_actual_argument_list,
+			process_agent_argument_operand_list,
+			process_agent_typed_open_argument,
+			process_agent_open_target,
 			process_assignment,
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
+			process_braced_type,
 			process_braced_type_list,
 			process_call_agent,
 			process_call_expression,
@@ -136,7 +139,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_agent_actual_argument_list (a_list: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -146,6 +149,18 @@ feature {ET_AST_NODE} -- Processing
 				a_list.actual_argument (i).process (Current)
 				i := i + 1
 			end
+		end
+
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+			an_argument.type.process (Current)
+		end
+
+	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
+			-- Process `a_target'.
+		do
+			a_target.type.process (Current)
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
@@ -186,6 +201,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_braced_type (a_type: ET_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			a_type.type.process (Current)
+		end
+
 	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
 			-- Process `a_list'.
 		local
@@ -202,15 +223,15 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			a_target: ET_AGENT_TARGET
-			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
 			if a_target /= Void then
 				a_target.process (Current)
 			end
-			an_arguments := an_expression.arguments
+			an_arguments ?= an_expression.arguments
 			if an_arguments /= Void then
-				process_agent_actual_argument_list (an_arguments)
+				process_agent_argument_operand_list (an_arguments)
 			end
 		end
 

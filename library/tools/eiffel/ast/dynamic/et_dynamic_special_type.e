@@ -18,7 +18,6 @@ inherit
 		rename
 			make as make_type
 		redefine
-			is_special,
 			new_dynamic_feature
 		end
 
@@ -46,11 +45,6 @@ feature {NONE} -- Initialization
 			base_class_set: base_class = a_class
 			item_type_set_set: item_type_set = an_item_type_set
 		end
-
-feature -- Status report
-
-	is_special: BOOLEAN is True
-			-- Is current type a SPECIAL type?
 
 feature -- Access
 

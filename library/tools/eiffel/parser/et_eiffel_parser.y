@@ -98,9 +98,9 @@ creation
 %type <ET_ACTUAL_PARAMETER> Actual_parameter
 %type <ET_ACTUAL_PARAMETER_ITEM> Actual_parameter_comma
 %type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Actual_parameter_list Actual_parameters
-%type <ET_AGENT_ACTUAL_ARGUMENT> Agent_actual
-%type <ET_AGENT_ACTUAL_ARGUMENT_ITEM> Agent_actual_comma
-%type <ET_AGENT_ACTUAL_ARGUMENT_LIST> Agent_actuals_opt Agent_actual_list
+%type <ET_AGENT_ARGUMENT_OPERAND> Agent_actual
+%type <ET_AGENT_ARGUMENT_OPERAND_ITEM> Agent_actual_comma
+%type <ET_AGENT_ARGUMENT_OPERAND_LIST> Agent_actuals_opt Agent_actual_list
 %type <ET_AGENT_TARGET> Agent_target
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
 %type <ET_CALL_AGENT> Call_agent Tilde_call_agent
@@ -2917,23 +2917,23 @@ Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 	| E_CURRENT '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
 	| '{' Class_name '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3), $5, $6) }
+		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, new_named_type (Void, $2, Void), $3), $5, $6) }
 	| '{' Class_name Actual_parameters '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, new_named_type (Void, $2, $3), $4), $6, $7) }
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, new_named_type (Void, $2, $3), $4), $6, $7) }
 	| '{' E_EXPANDED Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
+		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_agent_open_target ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
 	| '{' E_SEPARATE Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
+		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_agent_open_target ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
 	| '{' E_REFERENCE Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
+		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_agent_open_target ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
 	| '{' Anchored_type '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_target_type ($1, $2, $3), $5, $6) }
+		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, $2, $3), $5, $6) }
 	| '{' E_BITTYPE Integer_constant '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, new_bit_n ($2, $3), $4), $6, $7) }
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, new_bit_n ($2, $3), $4), $6, $7) }
 	| '{' E_BITTYPE Identifier '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, ast_factory.new_bit_feature ($2, $3), $4), $6, $7) }
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, ast_factory.new_bit_feature ($2, $3), $4), $6, $7) }
 	| '{' E_TUPLE Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, new_tuple_type ($2, $3), $4), $6, $7) }
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, new_tuple_type ($2, $3), $4), $6, $7) }
 	;
 
 Agent_target: Identifier
@@ -2945,13 +2945,13 @@ Agent_target: Identifier
 	| E_CURRENT
 		{ $$ := $1 }
 	| '{' Type '}'
-		{ $$ := ast_factory.new_target_type ($1, $2, $3) }
+		{ $$ := ast_factory.new_agent_open_target ($1, $2, $3) }
 	;
 
 Agent_actuals_opt: -- Empty
 		-- { $$ := Void }
 	| '(' ')'
-		{ $$ := ast_factory.new_agent_actual_arguments ($1, $2, 0) }
+		{ $$ := ast_factory.new_agent_argument_operands ($1, $2, 0) }
 	| '('
 		{
 			add_symbol ($1)
@@ -2968,18 +2968,18 @@ Agent_actuals_opt: -- Empty
 Agent_actual_list: Agent_actual ')'
 		{
 			if $1 /= Void then
-				$$ := ast_factory.new_agent_actual_arguments (last_symbol, $2, counter_value + 1)
+				$$ := ast_factory.new_agent_argument_operands (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
 					$$.put_first ($1)
 				end
 			else
-				$$ := ast_factory.new_agent_actual_arguments (last_symbol, $2, counter_value)
+				$$ := ast_factory.new_agent_argument_operands (last_symbol, $2, counter_value)
 			end
 		}
 	| Agent_actual_comma ')'
 		-- TODO: syntax error.
 		{
-			$$ := ast_factory.new_agent_actual_arguments (last_symbol, $2, counter_value)
+			$$ := ast_factory.new_agent_argument_operands (last_symbol, $2, counter_value)
 			if $$ /= Void and $1 /= Void then
 				$$.put_first ($1)
 			end
@@ -3009,7 +3009,7 @@ Agent_actual_list: Agent_actual ')'
 
 Agent_actual_comma: Agent_actual ','
 		{
-			$$ := ast_factory.new_agent_actual_argument_comma ($1, $2)
+			$$ := ast_factory.new_agent_argument_operand_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -3021,23 +3021,23 @@ Agent_actual: Expression
 	| '?'
 		{ $$ := $1 }
 	| '{' Class_name '}'
-		{ $$ := ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type (Void, $2, Void), $3) }
 	| '{' Class_name Actual_parameters '}'
-		{ $$ := ast_factory.new_target_type ($1, new_named_type (Void, $2, $3), $4) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type (Void, $2, $3), $4) }
 	| '{' E_EXPANDED Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_SEPARATE Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_REFERENCE Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' Anchored_type '}'
-		{ $$ := ast_factory.new_target_type ($1, $2, $3) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, $2, $3) }
 	| '{' E_BITTYPE Integer_constant '}'
-		{ $$ := ast_factory.new_target_type ($1, new_bit_n ($2, $3), $4) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_bit_n ($2, $3), $4) }
 	| '{' E_BITTYPE Identifier '}'
-		{ $$ := ast_factory.new_target_type ($1, ast_factory.new_bit_feature ($2, $3), $4)  }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, ast_factory.new_bit_feature ($2, $3), $4)  }
 	| '{' E_TUPLE Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_target_type ($1, new_tuple_type ($2, $3), $4) }
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_tuple_type ($2, $3), $4) }
 	;
 
 ------------------------------------------------------------------------------------

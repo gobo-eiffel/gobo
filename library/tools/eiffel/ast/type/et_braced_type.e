@@ -15,9 +15,6 @@ class ET_BRACED_TYPE
 inherit
 
 	ET_TARGET_TYPE
-		redefine
-			reset
-		end
 
 creation
 

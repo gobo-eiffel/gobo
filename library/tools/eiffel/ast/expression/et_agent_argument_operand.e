@@ -10,22 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_AGENT_ACTUAL_ARGUMENT
+deferred class ET_AGENT_ARGUMENT_OPERAND
 
 inherit
 
-	ET_AGENT_ACTUAL_ARGUMENT_ITEM
+	ET_ARGUMENT_OPERAND
 
-feature -- Initialization
-
-	reset is
-			-- Reset actual argument as it was when it was first parsed.
-		do
-		end
+	ET_AGENT_ARGUMENT_OPERAND_ITEM
 
 feature -- Access
 
-	agent_actual_argument: ET_AGENT_ACTUAL_ARGUMENT is
+	agent_actual_argument: ET_AGENT_ARGUMENT_OPERAND is
 			-- Agent actual argument in comma-separated list
 		do
 			Result := Current

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel targets"
+		"Eiffel target operands (targets of either feature calls or agents)"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,10 +10,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_TARGET
+deferred class ET_TARGET_OPERAND
 
 inherit
 
-	ET_AST_NODE
+	ET_OPERAND
 
 end

@@ -14,13 +14,6 @@ deferred class ET_AGENT_TARGET
 
 inherit
 
-	ET_TARGET
-
-feature -- Initialization
-
-	reset is
-			-- Reset agent target as it was when it was first parsed.
-		do
-		end
+	ET_TARGET_OPERAND
 
 end
