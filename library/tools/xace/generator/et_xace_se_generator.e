@@ -36,18 +36,10 @@ feature -- Output
 		local
 			a_file: KL_OUTPUT_FILE
 			an_externals: ET_XACE_EXTERNALS
-			variables: ET_XACE_VARIABLES
 		do
 			!! a_file.make (ace_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				variables := a_system.variables
-				if variables = Void then
-					!! variables.make
-					a_system.set_variables (variables)
-				end
-				variables.define_value ("GOBO_EIFFEL", "se")
-				a_system.mount_clusters
 				an_externals := a_system.externals
 				if an_externals /= Void then
 					an_externals := an_externals.cloned_externals
@@ -59,7 +51,6 @@ feature -- Output
 					generate_cecil_file (a_system.externals)
 				end
 				a_system.set_externals (an_externals)
-				a_system.unmount_clusters
 			else
 				error_handler.report_cannot_write_file_error (ace_filename)
 			end
@@ -71,6 +62,9 @@ feature {NONE} -- Output
 			-- Print Ace `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
+			system_name_not_void: a_system.system_name /= Void
+			root_class_name_not_void: a_system.root_class_name /= Void
+			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
@@ -113,7 +107,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
-				print_clusters (a_clusters, a_system.variables, a_file)
+				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
 			an_external := a_system.externals
@@ -129,7 +123,7 @@ feature {NONE} -- Output
 						a_file.put_string ("%")")
 						a_file.put_new_line
 					end
-					print_link_libraries (an_external.link_libraries, a_system.variables, a_file)
+					print_link_libraries (an_external.link_libraries, a_file)
 					a_file.put_new_line
 				end
 			end
@@ -140,7 +134,7 @@ feature {NONE} -- Output
 			a_file.put_string ("no_split (yes)")
 			a_file.put_new_line
 			if an_external /= Void then
-				print_include_directories (an_external.include_directories, a_system.variables, a_file)
+				print_include_directories (an_external.include_directories, a_file)
 			end
 			a_file.put_new_line
 			a_file.put_string ("end")
@@ -186,7 +180,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; variables: ET_XACE_VARIABLES; a_file: KL_OUTPUT_FILE) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KL_OUTPUT_FILE) is
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -199,12 +193,12 @@ feature {NONE} -- Output
 			cluster_list := a_clusters.clusters
 			nb := cluster_list.count
 			from i := 1 until i > nb loop
-				print_cluster (cluster_list.item (i), variables, a_file)
+				print_cluster (cluster_list.item (i), a_file)
 				i := i + 1
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; variables: ET_XACE_VARIABLES; a_file: KL_OUTPUT_FILE) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KL_OUTPUT_FILE) is
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -220,9 +214,6 @@ feature {NONE} -- Output
 				a_file.put_string (a_cluster.full_name ('_'))
 				a_file.put_string (": %"")
 				a_pathname := a_cluster.full_pathname
-				if variables /= Void then
-					a_pathname := variables.expanded_variables (a_pathname)
-				end
 				a_file.put_string (a_pathname)
 				a_file.put_character ('%"')
 				an_option := a_cluster.options
@@ -242,7 +233,7 @@ feature {NONE} -- Output
 			end
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
-				print_clusters (subclusters, variables, a_file)
+				print_clusters (subclusters, a_file)
 			end
 		end
 
@@ -284,7 +275,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; variables: ET_XACE_VARIABLES; a_file: KL_OUTPUT_FILE) is
+	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KL_OUTPUT_FILE) is
 			-- Print `a_directories' to `a_file'.
 		require
 			a_directories_not_void: a_directories /= Void
@@ -304,9 +295,6 @@ feature {NONE} -- Output
 				a_cursor := a_directories.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_pathname := a_cursor.item
-					if variables /= Void then
-						a_pathname := variables.expanded_variables (a_pathname)
-					end
 					a_file.put_string ("-I")
 					a_file.put_string (a_pathname)
 					if not a_cursor.is_last then
@@ -319,7 +307,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; variables: ET_XACE_VARIABLES; a_file: KL_OUTPUT_FILE) is
+	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KL_OUTPUT_FILE) is
 			-- Print `a_libraries' to `a_file'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -339,9 +327,6 @@ feature {NONE} -- Output
 				a_cursor := a_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_pathname := a_cursor.item
-					if variables /= Void then
-						a_pathname := variables.expanded_variables (a_pathname)
-					end
 					a_file.put_string (a_pathname)
 					if not a_cursor.is_last then
 						a_file.put_character (' ')

@@ -17,7 +17,7 @@ inherit
 
 	ET_UNIVERSE
 		redefine
-			clusters, error_handler
+			clusters
 		end
 
 creation
@@ -46,12 +46,6 @@ feature -- Access
 
 	externals: ET_XACE_EXTERNALS
 			-- External clause
-
-	error_handler: ET_XACE_ERROR_HANDLER
-			-- Error handler
-
-	variables: ET_XACE_VARIABLES
-			-- Dollar variables defined for current universe
 
 feature -- Setting
 
@@ -98,41 +92,15 @@ feature -- Setting
 	set_mounted_clusters (a_clusters: like mounted_clusters) is
 			-- Set `mounted_clusters' to `a_clusters'.
 		do
-			mounted_clusters := a_clusters
-		ensure
-			mounted_clusters_set: mounted_clusters = a_clusters
-		end
-
-	set_variables (a_variables: like variables) is
-			-- Set `variables' to `a_variables'.
-		do
-			variables := a_variables
-		ensure
-			variables_set: variables = a_variables
-		end
-
-feature -- Mount
-
-	mount_clusters is
-			-- Mount clusters.
-		do
-			if clusters /= Void then
-				clusters.mount (Current)
-			end
-			if mounted_clusters /= Void then
-				mounted_clusters.mount_root (Current)
-			end
-		end
-
-	unmount_clusters is
-			-- Unmount clusters.
-		do
 			if mounted_clusters /= Void then
 				mounted_clusters.unmount_root (Current)
 			end
-			if clusters /= Void then
-				clusters.unmount (Current)
+			mounted_clusters := a_clusters
+			if mounted_clusters /= Void then
+				mounted_clusters.mount_root (Current)
 			end
+		ensure
+			mounted_clusters_set: mounted_clusters = a_clusters
 		end
 
 feature -- Basic operations

@@ -32,8 +32,10 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_factory: ET_XACE_AST_FACTORY
+			a_variables: ET_XACE_VARIABLES
 		do
-			!! a_factory.make
+			!! a_variables.make
+			!! a_factory.make (a_variables, an_error_handler)
 			make_with_factory (a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
@@ -81,23 +83,11 @@ feature -- Parsing
 						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							a_system := ast_factory.new_universe (xml_parser.document.root_element)
-							if a_system /= Void then
-								a_system.set_variables (variables)
-								a_system.mount_clusters
-								a_system.unmount_clusters
-							end
 						end
 					elseif a_root_name.is_equal (uc_cluster) then
 						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							a_cluster := ast_factory.new_cluster (xml_parser.document.root_element)
-							if a_cluster /= Void then
-								!! a_clusters.make (a_cluster)
-								!! a_system.make (a_clusters, error_handler)
-								a_system.set_variables (variables)
-								a_system.mount_clusters
-								a_system.unmount_clusters
-							end
 						end
 					else
 						error_handler.report_not_xace_file_error (INPUT_STREAM_.name (a_file))
@@ -117,19 +107,6 @@ feature -- Access
 
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
-
-	variables: ET_XACE_VARIABLES
-			-- Defined variables
-
-feature -- Setting
-
-	set_variables (a_variables: like variables) is
-			-- Set `variables' to `a_variables'.
-		do
-			variables := a_variables
-		ensure
-			variables_set: variables = a_variables
-		end
 
 feature {NONE} -- Implementation
 

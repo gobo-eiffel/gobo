@@ -36,6 +36,9 @@ feature -- Output
 			-- Generate a new Ace file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
+			system_name_not_void: a_system.system_name /= Void
+			root_class_name_not_void: a_system.root_class_name /= Void
+			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
 		deferred
 		end
 

@@ -35,50 +35,6 @@ feature -- Access
 			Result := clusters.item (i)
 		end
 
-feature -- Mount
-
-	mount (a_universe: ET_XACE_UNIVERSE) is
-			-- Mount `mounted_clusters' of current clusters
-			-- in the context of `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			i, nb: INTEGER
-			a_cluster: like cluster
-			mounted_subclusters: ET_XACE_MOUNTED_CLUSTERS
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				a_cluster := clusters.item (i)
-				mounted_subclusters := a_cluster.mounted_subclusters
-				if mounted_subclusters /= Void then
-					mounted_subclusters.mount (a_cluster, a_universe)
-				end
-				i := i + 1
-			end
-		end
-
-	unmount (a_universe: ET_XACE_UNIVERSE) is
-			-- Unmount `mounted_clusters' of current clusters
-			-- in the context of `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			i, nb: INTEGER
-			a_cluster: like cluster
-			mounted_subclusters: ET_XACE_MOUNTED_CLUSTERS
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				a_cluster := clusters.item (i)
-				mounted_subclusters := a_cluster.mounted_subclusters
-				if mounted_subclusters /= Void then
-					mounted_subclusters.unmount (a_universe)
-				end
-				i := i + 1
-			end
-		end
-
 feature -- Removal
 
 	remove_cluster (a_cluster_name: STRING) is

@@ -167,7 +167,13 @@ feature -- Setting
 	set_mounted_subclusters (a_subclusters: like mounted_subclusters) is
 			-- Set `mounted_subclusters' to `a_subclusters'.
 		do
+			if mounted_subclusters /= Void then
+				mounted_subclusters.unmount
+			end
 			mounted_subclusters := a_subclusters
+			if mounted_subclusters /= Void then
+				mounted_subclusters.mount (Current)
+			end
 		ensure
 			mounted_subclusters_set: mounted_subclusters = a_subclusters
 		end
@@ -182,14 +188,12 @@ feature {ET_XACE_CLUSTER, ET_XACE_CLUSTERS} -- Setting
 			parent_set: parent = a_parent
 		end
 
-feature -- Mount
+feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 
-	mount (a_parent: like mounted_parent; a_universe: ET_XACE_UNIVERSE) is
-			-- Mount current cluster to `a_parent' in the
-			-- context of `a_universe'.
+	mount (a_parent: like mounted_parent) is
+			-- Mount current cluster to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
-			a_universe_not_void: a_universe /= Void
 		local
 			a_subclusters: like subclusters
 		do
@@ -200,12 +204,6 @@ feature -- Mount
 				a_parent.set_subclusters (a_subclusters)
 			end
 			a_subclusters.put_last (Current)
-			if subclusters /= Void then
-				subclusters.mount (a_universe)
-			end
-			if mounted_subclusters /= Void then
-				mounted_subclusters.mount (Current, a_universe)
-			end
 		end
 
 	mount_root (a_universe: ET_XACE_UNIVERSE) is
@@ -223,28 +221,13 @@ feature -- Mount
 			else
 				a_clusters.put_last (Current)
 			end
-			if subclusters /= Void then
-				subclusters.mount (a_universe)
-			end
-			if mounted_subclusters /= Void then
-				mounted_subclusters.mount (Current, a_universe)
-			end
 		end
 
-	unmount (a_universe: ET_XACE_UNIVERSE) is
-			-- Unmount current cluster in the
-			-- context of `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
+	unmount is
+			-- Unmount current cluster.
 		local
 			a_subclusters: like subclusters
 		do
-			if mounted_subclusters /= Void then
-				mounted_subclusters.unmount (a_universe)
-			end
-			if subclusters /= Void then
-				subclusters.unmount (a_universe)
-			end
 			if mounted_parent /= Void then
 				a_subclusters := mounted_parent.subclusters
 				if a_subclusters /= Void then
@@ -264,12 +247,6 @@ feature -- Mount
 		local
 			a_clusters: like subclusters
 		do
-			if mounted_subclusters /= Void then
-				mounted_subclusters.unmount (a_universe)
-			end
-			if subclusters /= Void then
-				subclusters.unmount (a_universe)
-			end
 			a_clusters := a_universe.clusters
 			if a_clusters /= Void then
 				a_clusters.remove (Current)

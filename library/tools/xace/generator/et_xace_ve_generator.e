@@ -36,18 +36,10 @@ feature -- Output
 		local
 			a_file: KL_OUTPUT_FILE
 			an_externals: ET_XACE_EXTERNALS
-			variables: ET_XACE_VARIABLES
 		do
 			!! a_file.make (esd_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				variables := a_system.variables
-				if variables = Void then
-					!! variables.make
-					a_system.set_variables (variables)
-				end
-				variables.define_value ("GOBO_EIFFEL", "ve")
-				a_system.mount_clusters
 				an_externals := a_system.externals
 				if an_externals /= Void then
 					an_externals := an_externals.cloned_externals
@@ -56,7 +48,6 @@ feature -- Output
 				print_esd_file (a_system, a_file)
 				a_file.close
 				a_system.set_externals (an_externals)
-				a_system.unmount_clusters
 			else
 				error_handler.report_cannot_write_file_error (esd_filename)
 			end
@@ -68,6 +59,9 @@ feature {NONE} -- Output
 			-- Print ESD `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
+			system_name_not_void: a_system.system_name /= Void
+			root_class_name_not_void: a_system.root_class_name /= Void
+			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
@@ -99,7 +93,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
-				print_clusters (a_clusters, a_system.variables, a_file)
+				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
 			a_file.put_string ("option")
@@ -113,7 +107,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; variables: ET_XACE_VARIABLES; a_file: KL_OUTPUT_FILE) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KL_OUTPUT_FILE) is
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -126,12 +120,12 @@ feature {NONE} -- Output
 			cluster_list := a_clusters.clusters
 			nb := cluster_list.count
 			from i := 1 until i > nb loop
-				print_cluster (cluster_list.item (i), variables, a_file)
+				print_cluster (cluster_list.item (i), a_file)
 				i := i + 1
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; variables: ET_XACE_VARIABLES; a_file: KL_OUTPUT_FILE) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KL_OUTPUT_FILE) is
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -147,9 +141,6 @@ feature {NONE} -- Output
 				a_file.put_string (a_cluster.full_name ('_'))
 				a_file.put_string (" %"")
 				a_pathname := a_cluster.full_pathname
-				if variables /= Void then
-					a_pathname := variables.expanded_variables (a_pathname)
-				end
 					-- Visual Eiffel does not like the currly
 					-- brackets around environment variables.
 				a_pathname := remove_all_characters (a_pathname, '{')
@@ -160,7 +151,7 @@ feature {NONE} -- Output
 			end
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
-				print_clusters (subclusters, variables, a_file)
+				print_clusters (subclusters, a_file)
 			end
 		end
 

@@ -70,23 +70,35 @@ feature -- Removal
 			removed: not clusters.has (a_cluster)
 		end
 
-feature -- Mount
+feature {ET_XACE_CLUSTER} -- Mount
 
-	mount (a_parent: ET_XACE_CLUSTER; a_universe: ET_XACE_UNIVERSE) is
-			-- Mount clusters to `a_parent' in the
-			-- context of `a_universe'.
+	mount (a_parent: ET_XACE_CLUSTER) is
+			-- Mount clusters to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
-			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
-				clusters.item (i).mount (a_parent, a_universe)
+				clusters.item (i).mount (a_parent)
 				i := i + 1
 			end
 		end
+
+	unmount is
+			-- Unmount clusters.
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).unmount
+				i := i + 1
+			end
+		end
+
+feature {ET_XACE_UNIVERSE} -- Mount
 
 	mount_root (a_universe: ET_XACE_UNIVERSE) is
 			-- Mount clusters at the root of `a_universe'.
@@ -98,20 +110,6 @@ feature -- Mount
 			nb := clusters.count
 			from i := 1 until i > nb loop
 				clusters.item (i).mount_root (a_universe)
-				i := i + 1
-			end
-		end
-
-	unmount (a_universe: ET_XACE_UNIVERSE) is
-			-- Unmount clusters in the context of `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				clusters.item (i).unmount (a_universe)
 				i := i + 1
 			end
 		end

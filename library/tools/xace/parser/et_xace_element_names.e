@@ -123,24 +123,6 @@ feature -- Constants
 			uc_external_not_empty: not Result.empty
 		end
 
-	uc_true: UC_STRING is
-			-- "True" attribute value
-		once
-			!! Result.make_from_string ("True")
-		ensure
-			uc_true_not_void: Result /= Void
-			uc_true_not_empty: not Result.empty
-		end
-
-	uc_false: UC_STRING is
-			-- "False" attribute value
-		once
-			!! Result.make_from_string ("False")
-		ensure
-			uc_false_not_void: Result /= Void
-			uc_false_not_empty: not Result.empty
-		end
-
 	uc_enable: UC_STRING is
 			-- "enable" attribute name
 		once
