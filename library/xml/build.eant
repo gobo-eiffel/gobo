@@ -36,7 +36,8 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="xml" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/xml">
@@ -44,6 +45,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="clean"/>
 		<delete file="impl/eiffel/event/xf_scanner.e"/>
 		<delete file="impl/eiffel/event/xf_parser.e"/>
 		<delete file="impl/eiffel/event/xf_tokens.e"/>

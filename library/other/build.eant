@@ -30,14 +30,16 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="other" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/other">
 		<description>
 			Remove all generated files.
 		</description>
-		<!-- do nothing -->
+
+		<geant target="clean"/>
 	</target>
 
 </project>

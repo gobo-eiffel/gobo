@@ -34,7 +34,8 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="lexical" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/lexical">
@@ -42,6 +43,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="clean"/>
 		<delete file="lex/lx_lex_scanner.e"/>
 		<delete file="lex/lx_lex_parser.e"/>
 		<delete file="lex/lx_lex_tokens.e"/>

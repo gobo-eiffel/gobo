@@ -35,7 +35,8 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="tools" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/tools">
@@ -43,6 +44,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="clean"/>
 		<delete file="eiffel/parser/et_eiffel_scanner.e"/>
 		<delete file="eiffel/parser/et_eiffel_parser.e"/>
 		<delete file="eiffel/parser/et_eiffel_tokens.e"/>

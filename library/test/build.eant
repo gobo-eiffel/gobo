@@ -33,7 +33,8 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="test" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/test">
@@ -41,6 +42,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="clean"/>
 		<delete file="config/ts_config_scanner.e"/>
 		<delete file="config/ts_config_parser.e"/>
 		<delete file="config/ts_config_tokens.e"/>

@@ -33,7 +33,8 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="parse" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/parse">
@@ -41,6 +42,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="clean"/>
 		<delete file="yacc/pr_yacc_scanner.e"/>
 		<delete file="yacc/pr_yacc_parser.e"/>
 		<delete file="yacc/pr_yacc_tokens.e"/>

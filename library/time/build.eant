@@ -32,7 +32,8 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<!-- do nothing -->
+
+		<ve clean="time" recursive="true"/>
 	</target>
 
 	<target name="clobber" dir="${GOBO}/library/time">
@@ -40,6 +41,7 @@
 			Remove all generated files.
 		</description>
 
+		<geant target="clean"/>
 		<delete directory="spec" recursive="true"/>
 	</target>
 
