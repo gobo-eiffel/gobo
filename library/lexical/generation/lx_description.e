@@ -65,7 +65,12 @@ feature -- Initialization
 			actions_separated := False
 			inspect_used := False
 			reject_used := False
-			user_action_used := False
+			line_used := False
+			position_used := False
+			pre_action_used := False
+			post_action_used := False
+			pre_eof_action_used := False
+			post_eof_action_used := False
 			input_filename := Void
 			output_filename := Void
 			equiv_classes := Void
@@ -134,10 +139,33 @@ feature -- User-defined options
 	reject_used: BOOLEAN
 			-- Is `reject' used in semantic actions?
 			-- (Back-up tables must be generated.)
+			-- (%option reject)
 
-	user_action_used: BOOLEAN
-			-- Should routine `user_action' be called before
-			-- each semantic action?
+	line_used: BOOLEAN
+			-- Should code for line/column reporting be generated?
+			-- (%option line)
+
+	position_used: BOOLEAN
+			-- Should code for position reporting be generated?
+			-- (%option position)
+
+	pre_action_used: BOOLEAN
+			-- Should routine `pre_action' be called before
+			-- each semantic action? (%option pre-action)
+
+	post_action_used: BOOLEAN
+			-- Should routine `post_action' be called after
+			-- each semantic action? (%option post-action)
+
+	pre_eof_action_used: BOOLEAN
+			-- Should routine `pre_eof_action' be called
+			-- before each end-of-file semantic action?
+			-- (%option pre-eof-action)
+
+	post_eof_action_used: BOOLEAN
+			-- Should routine `post_eof_action' be called
+			-- after each end-of-file semantic action?
+			-- (%option post-eof-action)
 
 	input_filename: STRING
 			-- Name of input file
@@ -157,7 +185,7 @@ feature -- Option setting
 			array_size_set: array_size = i
 		end
 
-	set_backing_up_report (b: like backing_up_report) is
+	set_backing_up_report (b: BOOLEAN) is
 			-- Set `backing_up_report' to `b'.
 		do
 			backing_up_report := b
@@ -173,7 +201,7 @@ feature -- Option setting
 			backing_up_filename_set: backing_up_filename = a_filename
 		end
 
-	set_case_insensitive (b: like case_insensitive) is
+	set_case_insensitive (b: BOOLEAN) is
 			-- Set `case_insensitive' to `b'.
 		do
 			case_insensitive := b
@@ -181,7 +209,7 @@ feature -- Option setting
 			case_insensitive_set: case_insensitive = b
 		end
 
-	set_characters_count (nb: like characters_count) is
+	set_characters_count (nb: INTEGER) is
 			-- Set `characters_count' to `nb'.
 		require
 			positive_nb: nb > 0
@@ -191,7 +219,7 @@ feature -- Option setting
 			characters_count_set: characters_count = nb
 		end
 
-	set_debug_mode (b: like debug_mode) is
+	set_debug_mode (b: BOOLEAN) is
 			-- Set `debug_mode' to `b'.
 		do
 			debug_mode := b
@@ -199,7 +227,7 @@ feature -- Option setting
 			debug_mode_set: debug_mode = b
 		end
 
-	set_equiv_classes_used (b: like equiv_classes_used) is
+	set_equiv_classes_used (b: BOOLEAN) is
 			-- Set `equiv_classes_used' to `b'.
 		do
 			equiv_classes_used := b
@@ -207,7 +235,7 @@ feature -- Option setting
 			equiv_classes_used_set: equiv_classes_used = b
 		end
 
-	set_meta_equiv_classes_used (b: like meta_equiv_classes_used) is
+	set_meta_equiv_classes_used (b: BOOLEAN) is
 			-- Set `meta_equiv_classes_used' to `b'.
 		do
 			meta_equiv_classes_used := b
@@ -215,7 +243,7 @@ feature -- Option setting
 			meta_equiv_classes_used_set: meta_equiv_classes_used = b
 		end
 
-	set_full_table (b: like full_table) is
+	set_full_table (b: BOOLEAN) is
 			-- Set `full_table' to `b'.
 		do
 			full_table := b
@@ -223,7 +251,7 @@ feature -- Option setting
 			full_table_set: full_table = b
 		end
 
-	set_no_default_rule (b: like no_default_rule) is
+	set_no_default_rule (b: BOOLEAN) is
 			-- Set `no_default_rule' to `b'.
 		do
 			no_default_rule := b
@@ -231,7 +259,7 @@ feature -- Option setting
 			no_default_rule_set: no_default_rule = b
 		end
 
-	set_no_warning (b: like no_warning) is
+	set_no_warning (b: BOOLEAN) is
 			-- Set `no_warning' to `b'.
 		do
 			no_warning := b
@@ -239,7 +267,7 @@ feature -- Option setting
 			no_warning_set: no_warning = b
 		end
 
-	set_actions_separated (b: like actions_separated) is
+	set_actions_separated (b: BOOLEAN) is
 			-- Set `actions_separated' to `b'.
 		do
 			actions_separated := b
@@ -247,7 +275,7 @@ feature -- Option setting
 			actions_separated_set: actions_separated = b
 		end
 
-	set_inspect_used (b: like inspect_used) is
+	set_inspect_used (b: BOOLEAN) is
 			-- Set `inspect_used' to `b'.
 		do
 			inspect_used := b
@@ -255,7 +283,7 @@ feature -- Option setting
 			inspect_used_set: inspect_used = b
 		end
 
-	set_reject_used (b: like reject_used) is
+	set_reject_used (b: BOOLEAN) is
 			-- Set `reject_used' to `b'.
 		do
 			reject_used := b
@@ -263,12 +291,52 @@ feature -- Option setting
 			reject_used_set: reject_used = b
 		end
 
-	set_user_action_used (b: like user_action_used) is
-			-- Set `user_action_used' to `b'.
+	set_line_used (b: BOOLEAN) is
+			-- Set `line_used' to `b'.
 		do
-			user_action_used := b
+			line_used := b
 		ensure
-			user_action_used_set: user_action_used = b
+			line_used_set: line_used = b
+		end
+
+	set_position_used (b: BOOLEAN) is
+			-- Set `position_used' to `b'.
+		do
+			position_used := b
+		ensure
+			position_used_set: position_used = b
+		end
+
+	set_pre_action_used (b: BOOLEAN) is
+			-- Set `pre_action_used' to `b'.
+		do
+			pre_action_used := b
+		ensure
+			pre_action_used_set: pre_action_used = b
+		end
+
+	set_post_action_used (b: BOOLEAN) is
+			-- Set `post_action_used' to `b'.
+		do
+			post_action_used := b
+		ensure
+			post_action_used_set: post_action_used = b
+		end
+
+	set_pre_eof_action_used (b: BOOLEAN) is
+			-- Set `pre_eof_action_used' to `b'.
+		do
+			pre_eof_action_used := b
+		ensure
+			pre_eof_action_used_set: pre_eof_action_used = b
+		end
+
+	set_post_eof_action_used (b: BOOLEAN) is
+			-- Set `post_eof_action_used' to `b'.
+		do
+			post_eof_action_used := b
+		ensure
+			post_eof_action_used_set: post_eof_action_used = b
 		end
 
 	set_input_filename (fn: like input_filename) is
@@ -411,7 +479,12 @@ feature -- Conversion
 			actions_separated := other.actions_separated
 			inspect_used := other.inspect_used
 			reject_used := other.reject_used
-			user_action_used := other.user_action_used
+			line_used := other.line_used
+			position_used := other.position_used
+			pre_action_used := other.pre_action_used
+			post_action_used := other.post_action_used
+			pre_eof_action_used := other.pre_eof_action_used
+			post_eof_action_used := other.post_eof_action_used
 			input_filename := other.input_filename
 			output_filename := other.output_filename
 			start_conditions := other.start_conditions
