@@ -58,9 +58,7 @@ feature -- Access
 			has_default_target_name: has_default_target_name
 		do
 			Result := uc_attribute_value (Default_attribute_name).out
-			debug ("geant")
-				print ("*** default target: " + Result + "%N")
-			end
+			project.trace_debug ("*** default target: " + Result + "%N")
 		ensure
 			default_not_void: Result /= Void
 		end

@@ -70,7 +70,7 @@ feature -- Execution
 	execute is
 			-- Put variable in project variables pool.
 		do
-			trace ("  [set] " + name + "=" + value + "%N")
+			project.trace ("  [set] " + name + "=" + value + "%N")
 			project.variables.set_variable_value (name, value)
 			exit_code := 0
 		end

@@ -77,18 +77,14 @@ feature -- Status report
 			if has_uc_attribute (If_attribute_name) then
 				ucs := xml_element.attribute_value_by_name (If_attribute_name)
 				if_condition := project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
-				end
+				project.trace_debug (" if: '" + ucs.out + "': " + if_condition.out + "%N")
 			end
 
 				-- Look for an 'unless' XML attribute
 			if has_uc_attribute (Unless_attribute_name) then
 				ucs := xml_element.attribute_value_by_name (Unless_attribute_name)
 				unless_condition := project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
-				end
+				project.trace_debug (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
 			end
 
 			Result := if_condition and not unless_condition

@@ -107,7 +107,7 @@ feature -- Execution
 			end
 			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
 			cmd.append_string (a_filename)
-			trace ("  [getest] " + cmd + "%N")
+			project.trace ("  [getest] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

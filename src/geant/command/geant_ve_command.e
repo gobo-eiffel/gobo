@@ -136,7 +136,7 @@ feature -- Execution
 				cmd := clone ("vec -no -a:")
 				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
 				cmd.append_string (a_filename)
-				trace ("  [ve] " + cmd + "%N")
+				project.trace ("  [ve] " + cmd + "%N")
 				file_system.delete_file ("Result.out")
 				execute_shell (cmd)
 			elseif is_tunable then
@@ -170,7 +170,7 @@ feature -- Execution
 							%-zone_8_committed=8192 -zone_9_committed=8192 %
 							%-zone_10_committed=8192 -zone_11_committed=65536 %
 							%-zone_12_committed=8192 " + tuned_system
-						trace ("  [ve] " + cmd + "%N")
+						project.trace ("  [ve] " + cmd + "%N")
 						execute_shell (cmd)
 					elseif tuning_level.is_equal ("huge") then
 						cmd := "vetuner -c -zone_1_reserved=134217728 %
@@ -186,7 +186,7 @@ feature -- Execution
 							%-zone_8_committed=16384 -zone_9_committed=16384 %
 							%-zone_10_committed=16384 -zone_11_committed=131072 %
 							%-zone_12_committed=16384 " + tuned_system
-						trace ("  [ve] " + cmd + "%N")
+						project.trace ("  [ve] " + cmd + "%N")
 						execute_shell (cmd)
 					else
 						exit_code := 1
@@ -211,26 +211,26 @@ feature -- Execution
 					-- compiler has been used to compile this system.
 				cmd := clone ("vec -dc -y -no")
 				if recursive_clean then
-					trace ("  [ve] [" + old_cwd + "] " + cmd + "%N")
+					project.trace ("  [ve] [" + old_cwd + "] " + cmd + "%N")
 				else
-					trace ("  [ve] " + cmd + "%N")
+					project.trace ("  [ve] " + cmd + "%N")
 				end
 				execute_shell (cmd)
 				exit_code := 0
 			end
 			if file_system.file_exists ("Result.out") then
 				if recursive_clean then
-					trace ("  [ve] [" + old_cwd + "] delete Result.out%N")
+					project.trace ("  [ve] [" + old_cwd + "] delete Result.out%N")
 				else
-					trace ("  [ve] delete Result.out%N")
+					project.trace ("  [ve] delete Result.out%N")
 				end
 				file_system.delete_file ("Result.out")
 			end
 			if file_system.file_exists ("vec.xcp") then
 				if recursive_clean then
-					trace ("  [ve] [" + old_cwd + "] delete vec.xcp%N")
+					project.trace ("  [ve] [" + old_cwd + "] delete vec.xcp%N")
 				else
-					trace ("  [ve] delete vec.xcp%N")
+					project.trace ("  [ve] delete vec.xcp%N")
 				end
 				file_system.delete_file ("vec.xcp")
 			end

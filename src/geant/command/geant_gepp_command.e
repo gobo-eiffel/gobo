@@ -124,7 +124,7 @@ feature -- Execution
 			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
 			cmd.append_string (a_filename)
 			
-			trace ("  [gepp] " + cmd + "%N")
+			project.trace ("  [gepp] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

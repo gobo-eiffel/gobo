@@ -96,7 +96,7 @@ feature -- Setting
 				-- Setup wildcard for include patterns:
 			!LX_DFA_WILDCARD! include_wildcard.compile (include_wc_string, True)
 			if not include_wildcard.compiled then
-				log ("  [fileset] error: invalid include wildcard: '" + include_wc_string + "'%N")
+				project.log ("  [fileset] error: invalid include wildcard: '" + include_wc_string + "'%N")
 			end
 
 		ensure
@@ -115,7 +115,7 @@ feature -- Setting
 				-- Setup wildcard for exclude patterns:
 			!LX_DFA_WILDCARD! exclude_wildcard.compile (exclude_wc_string, True)
 			if not exclude_wildcard.compiled then
-				log ("  [fileset] error: invalid exclude wildcard: '" + exclude_wc_string + "'%N")
+				project.log ("  [fileset] error: invalid exclude wildcard: '" + exclude_wc_string + "'%N")
 			end
 
 		ensure
@@ -127,10 +127,8 @@ feature -- Execution
 	execute is
 			-- Populate `filenames'.
 		do
-			debug ("geant")
-				print ("directory_name: " + directory_name + "%N")
-				print ("include_wc_string: " + include_wc_string + "%N")
-			end
+			project.trace_debug ("[fileset] directory_name: " + directory_name + "%N")
+			project.trace_debug ("[fileset] include_wc_string: " + include_wc_string + "%N")
 			scan_internal (directory_name)
 		end
 
@@ -167,22 +165,16 @@ feature {NONE} -- Implementation/Processing
 							scan_internal (s)
 						else
 								-- Handle files:
-							debug ("geant")
-								print ("trying to match filename: " + s + "%N")
-							end
+--!!							project.trace_debug ("trying to match filename: " + s + "%N")
 							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
 							if include_wildcard = Void then
 								if exclude_wildcard = Void or else not exclude_wildcard.recognizes (smatch) then
-									debug ("geant")
-										print ("  [fileset] adding filename: " + s + "%N")
-									end
+									project.trace_debug ("[fileset] adding filename: " + s + "%N")
 									filenames.force_last (s)
 								end
 							elseif include_wildcard.recognizes (s) then
 								if exclude_wildcard = Void or else not exclude_wildcard.recognizes (smatch) then
-									debug ("geant")
-										print ("  [fileset] adding filename: " + s + "%N")
-									end
+									project.trace_debug ("[fileset] adding filename: " + s + "%N")
 									filenames.force_last (s)
 								end
 							end
@@ -193,27 +185,6 @@ feature {NONE} -- Implementation/Processing
 				a_dir.close
 			end
 		end
-
-feature {NONE} -- Internal/Output
-
-	trace (a_message: STRING) is
-			-- Write `a_message' to standard output unless `project.verbose' = False.
-		require
-			message_not_void: a_message /= Void
-		do
-			if project.verbose then
-				print (a_message)
-			end
-		end
-
-	log (a_message: STRING) is
-			-- Write `a_message' to standard output.
-		require
-			message_not_void: a_message /= Void
-		do
-			print (a_message)
-		end
-
 
 end -- class GEANT_FILESET
 

@@ -248,7 +248,7 @@ feature -- Execution
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
 			cmd.append_string (a_filename)
 
-			trace ("  [gelex] " + cmd + "%N")
+			project.trace ("  [gelex] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

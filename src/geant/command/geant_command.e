@@ -35,11 +35,6 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_STANDARD_FILES
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT) is
@@ -80,28 +75,6 @@ feature -- Setting
 			exit_code := a_exit_code
 		ensure
 			exit_code_set: exit_code = a_exit_code
-		end
-
-feature -- Output
-
-	trace (a_message: STRING) is
-			-- Write `a_message' to standard output unless `project.verbose' = False.
-		require
-			message_not_void: a_message /= Void
-		do
-			if project.verbose then
-				std.output.put_string (a_message)
-				std.output.flush
-			end
-		end
-
-	log (a_message: STRING) is
-			-- Write `a_message' to standard output.
-		require
-			message_not_void: a_message /= Void
-		do
-			std.output.put_string (a_message)
-			std.output.flush
 		end
 
 feature {NONE} -- Implementation

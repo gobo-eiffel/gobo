@@ -83,7 +83,7 @@ feature -- Execution
 			cmd.append_string (" ")
 			a_filename := file_system.pathname_from_file_system (source_filename, unix_file_system)
 			cmd.append_string (a_filename)
-			trace ("  [lcc] " + cmd + "%N")
+			project.trace ("  [lcc] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

@@ -56,7 +56,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			trace ("  [exec] " + command_line + "%N")
+			project.trace ("  [exec] " + command_line + "%N")
 			execute_shell (command_line)
 		end
 

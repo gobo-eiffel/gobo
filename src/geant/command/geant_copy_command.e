@@ -148,7 +148,7 @@ feature -- Execution
 					-- Check that directory named `to_directory' exists:
 				a_pathname := file_system.pathname_from_file_system (to_directory, unix_file_system)
 				if not file_system.directory_exists (a_pathname) then
-					log ("  [copy] error: directory '" + a_pathname + "' does not exist.%N")
+					project.log ("  [copy] error: directory '" + a_pathname + "' does not exist.%N")
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -163,7 +163,7 @@ feature -- Execution
 
 				a_pathname := file_system.pathname_from_file_system (to_directory, unix_file_system)
 				if not file_system.directory_exists (a_pathname) then
-					log ("  [copy] error: directory '" + a_pathname + "' does not exist.%N")
+					project.log ("  [copy] error: directory '" + a_pathname + "' does not exist.%N")
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -182,7 +182,7 @@ feature -- Execution
 							file_system.recursive_create_directory (a_pathname)
 						end
 						if not file_system.directory_exists (a_pathname) then
-							log ("  [copy] error: could not create directory '" + a_pathname + "'%N")
+							project.log ("  [copy] error: could not create directory '" + a_pathname + "'%N")
 							exit_code := 1
 						end
 						if exit_code = 0 then
@@ -216,18 +216,18 @@ feature {NONE} -- Implementation
 			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
 			if not file_system.file_exists (old_name) then
 					-- Check that source file exists:
-				trace ("  [copy] " + old_name + " to " + new_name + "%N")
-				log ("  [copy] error: cannot find file '" + old_name + "'%N")
+				project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
+				project.log ("  [copy] error: cannot find file '" + old_name + "'%N")
 				exit_code := 1
 			else
 					-- Copy file if target is out of date:
 				a_source_time := file_system.file_time_stamp (old_name)
 				a_target_time := file_system.file_time_stamp (new_name)
 				if a_target_time < a_source_time then
-					trace ("  [copy] " + old_name + " to " + new_name + "%N")
+					project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 					if not file_system.file_exists (new_name) then
-						log ("  [copy] error: cannot copy file '" + old_name + "' to file '" + new_name + "'%N")
+						project.log ("  [copy] error: cannot copy file '" + old_name + "' to file '" + new_name + "'%N")
 						exit_code := 1
 					end
 				end

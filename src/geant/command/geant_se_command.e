@@ -163,7 +163,7 @@ feature -- Execution
 				if file_system.file_exists (a_name) then
 						-- Execute the command only if the SmallEiffel
 						-- compiler has been used to compile this system.
-					trace ("  [se] " + cmd + "%N")
+					project.trace ("  [se] " + cmd + "%N")
 					execute_shell (cmd)
 					exit_code := 0
 				end
@@ -173,7 +173,7 @@ feature -- Execution
 				else
 					cmd := new_traditional_cmdline
 				end
-				trace ("  [se] " + cmd + "%N")
+				project.trace ("  [se] " + cmd + "%N")
 				execute_shell (cmd)
 			end
 		end

@@ -146,7 +146,7 @@ feature -- Execution
 			cmd.append_string (" -project ")
 			cmd.append_string (system_name)
 			cmd.append_string (".eif")
-			trace ("  [hact] " + cmd + "%N")
+			project.trace ("  [hact] " + cmd + "%N")
 			execute_shell (cmd)
 			if exit_code = 0 and then fish then
 				eifgen := system_name + "_gen"
@@ -155,11 +155,11 @@ feature -- Execution
 				else
 					project_dir := file_system.pathname (eifgen, "W_code")
 				end
-				trace ("  [hact] cd " + project_dir + "%N")
+				project.trace ("  [hact] cd " + project_dir + "%N")
 				old_cwd := file_system.cwd
 				file_system.cd (project_dir)
 				cmd := clone ("fish")
-				trace ("  [hact] " + cmd + "%N")
+				project.trace ("  [hact] " + cmd + "%N")
 				execute_shell (cmd)
 				if exit_code = 0 then
 					a_filename := system_name + file_system.exe_extension
@@ -185,12 +185,12 @@ feature -- Execution
 		do
 			a_name := clean + "_gen"
 			if file_system.directory_exists (a_name) then
-				trace ("  [hact] delete " + a_name + "%N")
+				project.trace ("  [hact] delete " + a_name + "%N")
 				file_system.recursive_delete_directory (a_name)
 			end
 			a_name := clean + ".eif"
 			if file_system.file_exists (a_name) then
-				trace ("  [hact] delete " + a_name + "%N")
+				project.trace ("  [hact] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 		end

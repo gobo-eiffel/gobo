@@ -116,21 +116,21 @@ feature -- Execution
 			end
 			old_name := file_system.pathname_from_file_system (file, unix_file_system)
 			new_name := file_system.pathname_from_file_system (a_to_file, unix_file_system)
-			trace ("  [move] " + old_name + " to " + new_name + "%N")
+			project.trace ("  [move] " + old_name + " to " + new_name + "%N")
 				-- Check that source file exists:
 			if not file_system.file_exists (old_name) then
-				log ("  [move] error: cannot find file '" + old_name + "'%N")
+				project.log ("  [move] error: cannot find file '" + old_name + "'%N")
 				exit_code := 1
 			else
 				file_system.rename_file (old_name, new_name)
 				if not file_system.file_exists (new_name) then
 						-- The new file has not been created.
-					log ("  [move] error: cannot move file '" + old_name + "' to file '" + new_name + "'%N")
+					project.log ("  [move] error: cannot move file '" + old_name + "' to file '" + new_name + "'%N")
 					exit_code := 1
 				elseif file_system.file_exists (old_name) then
 					if not file_system.same_physical_file (old_name, new_name) then
 							-- The old file has not been removed.
-						log ("  [move] error: cannot remove file '" + old_name + "'%N")
+						project.log ("  [move] error: cannot remove file '" + old_name + "'%N")
 						exit_code := 1
 					end
 				end

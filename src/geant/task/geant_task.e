@@ -82,9 +82,7 @@ feature -- Execution
 			if xml_element.has_attribute (Dir_attribute_name) then
 				a_new_task_cwd := project.variables.interpreted_string (
 					xml_element.attribute_value_by_name (Dir_attribute_name).out)
-				debug ("geant")
-					print (" changing to directory: '" + a_new_task_cwd + "'%N")
-				end
+				project.trace_debug ("changing to directory: '" + a_new_task_cwd + "'%N")
 				file_system.set_current_working_directory (a_new_task_cwd)
 			end
 
@@ -93,9 +91,7 @@ feature -- Execution
 				-- change back to previous directory even if "dir" attribute
 				-- was not provided since the command itself might have changed
 				-- the current working directory:
-			debug ("geant")
-				print (" changing to directory: '" + a_old_task_cwd + "'%N")
-			end
+			project.trace_debug ("changing to directory: '" + a_old_task_cwd + "'%N")
 			file_system.set_current_working_directory (a_old_task_cwd)
 		end
 

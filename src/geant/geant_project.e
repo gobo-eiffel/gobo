@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_SHARED_STANDARD_FILES
+		export
+			{NONE} all
+		end
+
 	GEANT_SHARED_PROPERTIES
 		export
 			{NONE} all
@@ -102,6 +107,9 @@ feature -- Access
 	verbose: BOOLEAN
 		-- Print additional information during build process?
 
+	debug_mode: BOOLEAN
+		-- Print additional, internal information during build process?
+
 	parent_project: like Current
 		-- Parent project if set by xml attribute 'inherit';
 		-- Void otherwise
@@ -140,9 +148,7 @@ feature -- Access
 					nb := a_project.targets.count
 					from i := 1 until i > nb or Result /= Void loop
 						a_target := a_project.targets.item (i)
-						debug ("geant")
-							print ("*** checking target name: '" + a_target.name + "'%N")
-						end
+						trace_debug ("checking target name: '" + a_target.name + "'%N")
 						if a_target.name.is_equal (a_name.out) then
 							Result := a_target
 						end
@@ -162,6 +168,14 @@ feature -- Setting
 			verbose := a_verbose
 		ensure
 			verbose_set: verbose = a_verbose
+		end
+
+	set_debug_mode (a_debug_mode: BOOLEAN) is
+			-- Set `debug_mode' to `a_debug_mode'
+		do
+			debug_mode := a_debug_mode
+		ensure
+			debug_mode_set: debug_mode = a_debug_mode
 		end
 
 	set_description (a_description: STRING) is
@@ -215,9 +229,8 @@ feature -- Processing
 	    do
 				-- Reset current project's state:
 			reset
-			if verbose then
-				print("Loading Project's configuration from " + build_filename.out + "%N")
-			end
+			trace ("Loading Project's configuration from " + build_filename.out + "%N")
+
 				-- Create xml parser:
 			if Parser_factory.is_expat_event_available then
 				xml_parser_impl := Parser_factory.new_expat_event_parser_imp
@@ -245,12 +258,11 @@ feature -- Processing
 					-- handle parent project if present:
 				if project_element.has_parent then
 					!! a_parent_project_filename.make_from_string (variables.interpreted_string (project_element.parent))
-					debug ("geant")
-						print ("inheriting from: " + a_parent_project_filename.out + "%N")
-					end
+					trace_debug ("inheriting from: " + a_parent_project_filename.out + "%N")
 					if not a_parent_project_filename.empty then
 						!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
 						parent_project.set_verbose (verbose)
+						parent_project.set_debug_mode (debug_mode)
 						parent_project.load (Void)
 					end
 				end
@@ -283,9 +295,7 @@ feature -- Processing
 						if target_with_name (ucs) /= Void then
 							tmp_start_target_name := ucs
 						else
-							debug ("geant")
-								print ("*** default target NOT found: " + project_element.default_target_name + "%N")
-							end
+							trace_debug ("default target NOT found: " + project_element.default_target_name + "%N")
 						end
 					else
 							-- Use first target in project file for start_target_name:
@@ -329,9 +339,7 @@ feature -- Processing
 		do
 				-- Get dependent targets:
 			a_target := a_depend_targets.item
-			debug ("geant")
-				print("**pushing target : " + a_target.name + "%N")
-			end
+			trace_debug ("pushing target: " + a_target.name + "%N")
 			a_tmp_dependent_targets := a_target.dependent_targets
 
 				-- Add all dependent targets to `build_targets':
@@ -410,6 +418,39 @@ feature -- Processing
 			project_element := Void
 			targets := Void
 			build_successful := True
+		end
+
+feature -- Output
+
+	trace (a_message: STRING) is
+			-- Write `a_message' to standard output unless `verbose' = False.
+		require
+			message_not_void: a_message /= Void
+		do
+			if verbose then
+				std.output.put_string (a_message)
+				std.output.flush
+			end
+		end
+
+	log (a_message: STRING) is
+			-- Write `a_message' to standard output.
+		require
+			message_not_void: a_message /= Void
+		do
+			std.output.put_string (a_message)
+			std.output.flush
+		end
+
+	trace_debug (a_message: STRING) is
+			-- Write `a_message' to standard output unless `debug_mode' = False.
+		require
+			message_not_void: a_message /= Void
+		do
+			if debug_mode then
+				std.output.put_string (a_message)
+				std.output.flush
+			end
 		end
 
 feature {GEANT_COMMAND} -- Access GEANT_COMMAND

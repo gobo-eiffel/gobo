@@ -91,15 +91,9 @@ feature -- Access
 			a_child: GEANT_XML_ELEMENT
 		do
 			nb := children.count
-			debug ("geant")
-				print ("*** number of children: " + nb.out + "%N")
-			end
 			!! Result.make (nb)
 			from i := 1 until i > nb loop
 				a_child := children.item (i)
-				debug ("geant")
-					print ("***** child name: " + a_child.name.out + "%N")
-				end
 				if a_child.name.is_equal (a_name) then
 					Result.put_last (a_child)
 				end

@@ -207,7 +207,7 @@ feature -- Execution
 				a_filename := file_system.pathname_from_file_system (xace_filename, unix_file_system)
 				cmd.append_string (" " + a_filename)
 			end
-			trace ("  [gexace] " + cmd + "%N")
+			project.trace ("  [gexace] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

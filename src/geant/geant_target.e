@@ -132,9 +132,7 @@ feature -- Processing
 				if xml_element.has_attribute (Dir_attribute_name) then
 					a_new_target_cwd := project.variables.interpreted_string (
 						xml_element.attribute_value_by_name (Dir_attribute_name).out)
-					debug ("geant")
-						print (" changing to directory: '" + a_new_target_cwd + "'%N")
-					end
+					project.trace_debug ("changing to directory: '" + a_new_target_cwd + "'%N")
 					a_old_target_cwd := file_system.current_working_directory
 					file_system.set_current_working_directory (a_new_target_cwd)
 				end
@@ -232,18 +230,14 @@ feature -- Processing
 								exit_application (a_task.exit_code, Void)
 							end
 						else
-							debug ("geant")
-								print ("task is disabled%N")
-							end
+							project.trace_debug ("task is disabled%N")
 						end
 					end
 					i := i + 1
 				end -- from
 
 				if has_uc_attribute (Dir_attribute_name) then
-					debug ("geant")
-						print (" changing to directory: '" + a_old_target_cwd + "'%N")
-					end
+					project.trace_debug ("changing to directory: '" + a_old_target_cwd + "'%N")
 					file_system.set_current_working_directory (a_old_target_cwd)
 
 				end
@@ -267,7 +261,7 @@ feature -- Processing
 					-- Check for targets separated by commas:
 				a_dependent_targets := string_tokens (a_value, ',')
 
-				debug ("geant")
+				if project.debug_mode then
 					show_dependent_targets (a_dependent_targets)
 				end
 

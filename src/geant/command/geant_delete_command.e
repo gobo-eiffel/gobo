@@ -119,18 +119,18 @@ feature -- Execution
 			exit_code := 0
 			if is_directory_executable then
 				a_name := file_system.pathname_from_file_system (directory, unix_file_system)
-				trace ("  [delete] " + a_name + "%N")
+				project.trace ("  [delete] " + a_name + "%N")
 				file_system.recursive_delete_directory (a_name)
 				if file_system.directory_exists (a_name) then
-					log ("  [delete] error: cannot delete directory '" + a_name + "'%N")
+					project.log ("  [delete] error: cannot delete directory '" + a_name + "'%N")
 					exit_code := 1
 				end
 			elseif is_file_executable then
 				a_name := file_system.pathname_from_file_system (file, unix_file_system)
-				trace ("  [delete] " + a_name + "%N")
+				project.trace ("  [delete] " + a_name + "%N")
 				file_system.delete_file (a_name)
 				if file_system.file_exists (a_name) then
-					log ("geant error: cannot delete file '" + a_name + "'%N")
+					project.log ("geant error: cannot delete file '" + a_name + "'%N")
 					exit_code := 1
 				end
 			else
@@ -142,10 +142,10 @@ feature -- Execution
 					fileset.filenames.after or else exit_code /= 0
 				loop
 					a_name := file_system.pathname_from_file_system (fileset.filenames.item_for_iteration, unix_file_system)
-					trace ("  [delete] " + a_name + "%N")
+					project.trace ("  [delete] " + a_name + "%N")
 					file_system.delete_file (a_name)
 					if file_system.file_exists (a_name) then
-						log ("geant error: cannot delete file '" + a_name + "'%N")
+						project.log ("geant error: cannot delete file '" + a_name + "'%N")
 						exit_code := 1
 					end
 

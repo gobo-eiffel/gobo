@@ -142,7 +142,7 @@ feature -- Execution
 			if finalize then
 				cmd.append_string (" -finalize")
 			end
-			trace ("  [ise] " + cmd + "%N")
+			project.trace ("  [ise] " + cmd + "%N")
 			execute_shell (cmd)
 			if exit_code = 0 and then finish_freezing then
 				eifgen := "EIFGEN"
@@ -151,11 +151,11 @@ feature -- Execution
 				else
 					project_dir := file_system.pathname (eifgen, "W_code")
 				end
-				trace ("  [ise] cd " + project_dir + "%N")
+				project.trace ("  [ise] cd " + project_dir + "%N")
 				old_cwd := file_system.cwd
 				file_system.cd (project_dir)
 				cmd := clone ("finish_freezing -silent")
-				trace ("  [ise] " + cmd + "%N")
+				project.trace ("  [ise] " + cmd + "%N")
 				execute_shell (cmd)
 				if exit_code = 0 then
 					a_filename := system_name + file_system.exe_extension
@@ -181,26 +181,26 @@ feature -- Execution
 		do
 			a_name := clean + ".epr"
 			if file_system.file_exists (a_name) then
-				trace ("  [ise] delete " + a_name + "%N")
+				project.trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			a_name := clean + ".rc"
 			if file_system.file_exists (a_name) then
-				trace ("  [ise] delete " + a_name + "%N")
+				project.trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			a_name := "exception_trace.log"
 			if file_system.file_exists (a_name) then
-				trace ("  [ise] delete " + a_name + "%N")
+				project.trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			a_name := "preferences.wb"
 			if file_system.file_exists (a_name) then
-				trace ("  [ise] delete " + a_name + "%N")
+				project.trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			if file_system.directory_exists ("EIFGEN") then
-				trace ("  [ise] delete EIFGEN%N")
+				project.trace ("  [ise] delete EIFGEN%N")
 				file_system.recursive_delete_directory ("EIFGEN")
 			end
 		end

@@ -115,6 +115,7 @@ feature -- Execution
 				!! ucs.make_from_string (a_filename)
 				!! a_project.make_with_filename (ucs, a_variables, Void)
 				a_project.set_verbose (project.verbose)
+				a_project.set_debug_mode (project.debug_mode)
 	
 					-- Load build configuration:
 				a_project.load (start_target_name)
@@ -134,7 +135,7 @@ feature -- Execution
 				if a_target /= Void then
 					project.build_target (a_target)
 				else
-					log ("  [geant] error: unknown target: " + start_target_name + "%N")
+					project.log ("  [geant] error: unknown target: " + start_target_name + "%N")
 					exit_code := 1
 				end
 			end

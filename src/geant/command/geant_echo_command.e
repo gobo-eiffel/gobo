@@ -54,8 +54,8 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			trace ("  [echo] ")
-			log (message + "%N")
+			project.trace ("  [echo] ")
+			project.log (message + "%N")
 			exit_code := 0
 		end
 

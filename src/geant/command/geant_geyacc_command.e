@@ -153,7 +153,7 @@ feature -- Execution
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
 			cmd.append_string (a_filename)
 
-			trace ("  [geyacc] " + cmd + "%N")
+			project.trace ("  [geyacc] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

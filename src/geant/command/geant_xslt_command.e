@@ -131,7 +131,7 @@ feature -- Execution
 				i := i + 1
 			end
 
-			trace ("  [xslt] " + cmd + "%N")
+			project.trace ("  [xslt] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 
