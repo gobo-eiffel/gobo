@@ -17,6 +17,8 @@ class GEANT_GEPP_TASK
 inherit
 
 	GEANT_TASK
+		redefine make_from_element
+	end
 	GEANT_GEPP_COMMAND
 
 creation
@@ -25,7 +27,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_element (an_element: GEANT_ELEMENT) is
+	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -33,6 +35,7 @@ feature {NONE} -- Initialization
 			define_element: GEANT_ELEMENT
 			i, nb: INTEGER
 		do
+			precursor (a_target, an_element)
 			make
 			if has_uc_attribute (an_element, Input_filename_attribute_name) then
 				a_value := uc_attribute_value (an_element, Input_filename_attribute_name).out

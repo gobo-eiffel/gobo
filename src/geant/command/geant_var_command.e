@@ -35,11 +35,12 @@ feature -- Status report
 			-- Can command be executed?
 		do
 			Result := (name /= Void and then name.count > 0)
-				and value /= Void
+				and value /= Void and project_variables /= Void
 		ensure then
 			name_not_void: Result implies name /= Void
 			name_not_empty: Result implies name.count > 0
 			value_not_void: Result implies value /= Void
+			project_variables_not_void: Result implies project_variables /= Void
 		end
 
 feature -- Access
@@ -49,6 +50,9 @@ feature -- Access
 
 	value: STRING
 			-- Value of variable
+
+	project_variables: GEANT_VARIABLES
+			-- Project variables
 
 feature -- Setting
 
@@ -73,13 +77,23 @@ feature -- Setting
 			value_set: value = a_value
 		end
 
+	set_project_variables (a_project_variables: like project_variables) is
+			-- Set `project_variables' to `a_project_variables'.
+		require
+			a_project_variables_not_void: a_project_variables /= Void
+		do
+			project_variables := a_project_variables
+		ensure
+			project_variables_set: project_variables = a_project_variables
+		end
+
 feature -- Execution
 
 	execute is
-			-- Put variable in global variables pool.
+			-- Put variable in project variables pool.
 		do
-			set_variable_value (name, value)
---			log ("  [var] " + name + "=" + value + ", " + variable_value (name) + "%N")
+			project_variables.set_variable_value (name, value)
+--			log ("  [var] " + name + "=" + value + ", " + project_variables.variable_value (name) + "%N")
 		end
 
 end -- class GEANT_VAR_COMMAND

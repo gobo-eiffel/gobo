@@ -17,6 +17,8 @@ class GEANT_GEXACE_TASK
 inherit
 
 	GEANT_TASK
+		redefine make_from_element
+	end
 	GEANT_GEXACE_COMMAND
 
 creation
@@ -25,12 +27,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_element (an_element: GEANT_ELEMENT) is
+	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 			b: BOOLEAN
 		do
+			precursor (a_target, an_element)
 			make
 				-- options (optional):
 			a_value := attribute_value_or_default (an_element, Options_attribute_name.out, "")

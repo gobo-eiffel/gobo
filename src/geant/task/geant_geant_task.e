@@ -17,6 +17,8 @@ class GEANT_GEANT_TASK
 inherit
 
 	GEANT_TASK
+		redefine make_from_element
+	end
 	GEANT_GEANT_COMMAND
 
 creation
@@ -25,11 +27,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_element (an_element: GEANT_ELEMENT) is
+	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
+			precursor (a_target, an_element)
+			make
+			set_project_variables (variables)
 				-- filename:
 			if an_element.has_attribute (Filename_attribute_name) then
 				a_value := attribute_value (an_element, Filename_attribute_name.out)
@@ -47,6 +52,10 @@ feature {NONE} -- Initialization
 				-- fork:
 			if has_uc_attribute (an_element, Fork_attribute_name) then
 				set_fork (uc_boolean_value(an_element, Fork_attribute_name))
+			end
+				-- reuse_variables:
+			if has_uc_attribute (an_element, Reuse_variables_attribute_name) then
+				set_reuse_variables (uc_boolean_value(an_element, Reuse_variables_attribute_name))
 			end
 		end
 
@@ -74,6 +83,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute Fork.
 		once
 			!! Result.make_from_string ("fork")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+	Reuse_variables_attribute_name: UC_STRING is
+			-- Name of xml attribute reuse_variables.
+		once
+			!! Result.make_from_string ("reuse_variables")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty

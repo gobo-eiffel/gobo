@@ -23,11 +23,29 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_from_element (an_element: GEANT_ELEMENT) is
+	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		require
 			an_element_not_void: an_element /= Void
-		deferred
+		do
+			set_target (a_target)
+		end
+
+feature -- Access
+
+	target: GEANT_TARGET
+			-- Target this task belongs to
+
+feature -- Setting
+
+	set_target (a_target: like target) is
+			-- Set `target' to `a_filename'.
+		require
+			a_target_not_void : a_target /= Void
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
 		end
 
 feature {NONE} -- Implementation
@@ -64,7 +82,7 @@ feature {NONE} -- Implementation
 		do
 			!! uc_name.make_from_string(an_attr_name)
 			s := (an_element.attribute_value_by_name (uc_name)).out
-			Result := interpreted_string (s)
+			Result := variables.interpreted_string (s)
 		end
 
 	boolean_value_or_default (an_element: GEANT_ELEMENT;
@@ -125,7 +143,7 @@ feature {NONE} -- Unicode implementation
 			s: STRING
 		do
 			if an_element.has_attribute (an_attr_name) then
-				s := interpreted_string (an_element.attribute_value_by_name (an_attr_name).out)
+				s := variables.interpreted_string (an_element.attribute_value_by_name (an_attr_name).out)
 				!! Result.make_from_string (s)
 			else
 				Result := a_default_value
@@ -144,7 +162,7 @@ feature {NONE} -- Unicode implementation
 		local
 			s: STRING
 		do
-			s := interpreted_string (an_element.attribute_value_by_name (an_attr_name).out)
+			s := variables.interpreted_string (an_element.attribute_value_by_name (an_attr_name).out)
 			!! Result.make_from_string (s)
 		ensure
 			value_not_void: Result /= Void
@@ -197,4 +215,9 @@ feature {NONE} -- Unicode implementation
 			Result := an_element.has_attribute (an_attr_name)
 		end
 
+	variables : GEANT_VARIABLES is
+			-- Project's variables
+		do
+			Result := target.project.variables
+		end
 end -- class GEANT_TASK

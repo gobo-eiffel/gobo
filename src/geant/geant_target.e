@@ -126,7 +126,7 @@ feature -- Processing
 				-- Look for an 'if' XML attribute
 			if target_element.has_attribute (If_attribute_name) then
 				ucs := target_element.attribute_value_by_name (If_attribute_name)
-				if_condition := has_variable (ucs.out)
+				if_condition := project.variables.has_variable (ucs.out)
 				if project.verbose then
 					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
 				end
@@ -135,7 +135,7 @@ feature -- Processing
 				-- Look for an 'unless' XML attribute
 			if target_element.has_attribute (Unless_attribute_name) then
 				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := has_variable (ucs.out)
+				unless_condition := project.variables.has_variable (ucs.out)
 				if project.verbose then
 					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
 				end
@@ -146,7 +146,8 @@ feature -- Processing
 			if if_condition and not unless_condition then
 					-- change to the specified directory if "dir" attribue is provided:
 				if target_element.has_attribute (Dir_attribute_name) then
-					new_cwd := interpreted_string (target_element.attribute_value_by_name (Dir_attribute_name).out)
+					new_cwd := project.variables.interpreted_string (
+						target_element.attribute_value_by_name (Dir_attribute_name).out)
 					if project.verbose then
 						print (" changing to directory: '" + new_cwd + "'%N")
 					end
@@ -168,43 +169,43 @@ feature -- Processing
 						-- Dispatch tasks:
 					if an_element.name.is_equal (Compile_se_task_name) then
 							-- compile_se: SmallEiffel compilation
-						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
+						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Exec_task_name) then
 							-- exec
-						!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
+						!GEANT_EXEC_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Lcc_task_name) then
 							-- lcc
-						!GEANT_LCC_TASK! a_task.make_from_element (an_element)
+						!GEANT_LCC_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Var_task_name) then
 							-- var
-						!GEANT_VAR_TASK! a_task.make_from_element (an_element)
+						!GEANT_VAR_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Gexace_task_name) then
 							-- gexace
-						!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
+						!GEANT_GEXACE_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Gelex_task_name) then
 							-- gelex
-						!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
+						!GEANT_GELEX_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Geyacc_task_name) then
 							-- geyacc
-						!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
+						!GEANT_GEYACC_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Gepp_task_name) then
 							-- gepp
-						!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
+						!GEANT_GEPP_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Getest_task_name) then
 							-- getest
-						!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
+						!GEANT_GETEST_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Geant_task_name) then
 							-- geant
-						!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
+						!GEANT_GEANT_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Echo_task_name) then
 							-- echo
-						!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
+						!GEANT_ECHO_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Mkdir_task_name) then
 							-- mkdir
-						!GEANT_MKDIR_TASK! a_task.make_from_element (an_element)
+						!GEANT_MKDIR_TASK! a_task.make_from_element (Current, an_element)
 					elseif an_element.name.is_equal (Delete_task_name) then
 							-- delete
-						!GEANT_DELETE_TASK! a_task.make_from_element (an_element)
+						!GEANT_DELETE_TASK! a_task.make_from_element (Current, an_element)
 					else
 							-- Default:
 						a_task := Void

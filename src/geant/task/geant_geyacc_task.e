@@ -17,6 +17,8 @@ class GEANT_GEYACC_TASK
 inherit
 
 	GEANT_TASK
+		redefine make_from_element
+	end
 	GEANT_GEYACC_COMMAND
 
 creation
@@ -25,11 +27,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_element (an_element: GEANT_ELEMENT) is
+	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
+			precursor (a_target, an_element)
+			make
 				-- separate_actions:
 			if has_uc_attribute (an_element, Separate_actions_attribute_name) then
 				set_separate_actions (uc_boolean_value(an_element, Separate_actions_attribute_name))

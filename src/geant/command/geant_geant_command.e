@@ -39,6 +39,7 @@ feature -- Status report
 		ensure then
 			filename_not_void: Result implies filename /= Void
 			filename_not_empty: Result implies filename.count > 0
+			project_variables_not_void: Result implies project_variables /= Void
 		end
 
 feature -- Access
@@ -49,8 +50,14 @@ feature -- Access
 	fork: BOOLEAN
 			-- Start command in a new process?
 
+	reuse_variables: BOOLEAN
+			-- Are variables reused in new project?
+
 	start_target_name: STRING
 			-- Name of the target the build process starts with
+
+	project_variables: GEANT_VARIABLES
+			-- Project variables
 
 feature -- Setting
 
@@ -74,6 +81,14 @@ feature -- Setting
 			fork_set: fork = a_fork
 		end
 
+	set_reuse_variables(a_reuse_variables: BOOLEAN) is
+			-- Set `reuse_variables' to a_reuse_variables
+		do
+			reuse_variables := a_reuse_variables
+		ensure
+			reuse_variables_set: reuse_variables = a_reuse_variables
+		end
+
 	set_start_target_name (a_start_target_name: like start_target_name) is
 			-- Set `start_target_name' to `a_start_target_name'.
 		require
@@ -86,6 +101,16 @@ feature -- Setting
 			start_target_name_set: start_target_name = a_start_target_name
 		end
 
+	set_project_variables (a_project_variables: like project_variables) is
+			-- Set `project_variables' to `a_project_variables'.
+		require
+			a_project_variables_not_void: a_project_variables /= Void
+		do
+			project_variables := a_project_variables
+		ensure
+			project_variables_set: project_variables = a_project_variables
+		end
+
 feature -- Execution
 
 	execute is
@@ -94,6 +119,7 @@ feature -- Execution
 			cmd: STRING
 			a_project: GEANT_PROJECT
 			ucs: UC_STRING
+			a_variables: GEANT_VARIABLES
 		do
 			if fork then
 					-- Launch a new geant process:
@@ -108,11 +134,17 @@ feature -- Execution
 				execute_shell (cmd)
 			else
 					-- Create a new project and run it's build process:
+				if reuse_variables then
+					a_variables := project_variables
+				else
+					a_variables := Void
+				end
+				
 				if filename /= Void and then filename.count > 0 then
 					!! ucs.make_from_string (filename)
-					!! a_project.make_with_filename (ucs)
+					!! a_project.make_with_filename (ucs, a_variables)
 				else
-					!! a_project.make
+					!! a_project.make (a_variables)
 				end
 
 					-- Load build configuration:

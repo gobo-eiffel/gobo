@@ -16,6 +16,8 @@ class GEANT_LCC_TASK
 inherit
 
 	GEANT_TASK
+		redefine make_from_element
+	end
 	GEANT_LCC_COMMAND
 
 creation
@@ -24,11 +26,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_element (an_element: GEANT_ELEMENT) is
+	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
+			precursor (a_target, an_element)
+			make
 				-- -Fo:
 			if has_uc_attribute (an_element, Executable_attribute_name) then
 				a_value := uc_attribute_value (an_element, Executable_attribute_name).out

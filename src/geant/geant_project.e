@@ -28,23 +28,31 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_variables: GEANT_VARIABLES) is
 			-- Create a new project using file `build.eant'.
 		do
-			make_with_filename (Default_build_filename)
+			make_with_filename (Default_build_filename, a_variables)
 		end
 
-	make_with_filename (a_filename: UC_STRING) is
+	make_with_filename (a_filename: UC_STRING; a_variables: GEANT_VARIABLES) is
 			-- Create a new project using file `a_filename'.
+			-- Set `variables' to `a_variables'. If Void create new variables
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.empty
 		do
 			build_filename := a_filename
+			if a_variables = Void then
+				!! variables.make
+			else
+				set_variables (a_variables)
+			end
 			!! build_targets.make (10)
 			!! executed_targets.make (10)
 		ensure
 			build_filename_set: build_filename = a_filename
+			variables_set: a_variables /= Void implies variables = a_variables
+			variables_created: a_variables = Void implies variables /= Void and variables.count = 0
 		end
 
 feature -- Access
@@ -55,6 +63,9 @@ feature -- Access
 
 	description: STRING
 		-- project description
+
+	variables: GEANT_VARIABLES
+		-- project variables
 
 	targets: DS_ARRAYED_LIST [GEANT_TARGET]
 			-- Target elements found in current project
@@ -106,6 +117,16 @@ feature -- Setting
 			description := a_description
 		ensure
 			description_set: description = a_description
+		end
+
+	set_variables (a_variables: like variables) is
+			-- Set `variables' to `a_variables'.
+		require
+			a_variables_not_void: a_variables /= Void
+		do
+			variables := a_variables
+		ensure
+			variables_set: variables = a_variables
 		end
 
 feature -- Processing
