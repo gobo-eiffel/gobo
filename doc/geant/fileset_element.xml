@@ -330,7 +330,7 @@ nested element.
 	</sect1>
 
 <sect1 id="obsolete_fileset_element">
-<title>Obsolete (GOBO 3.2) Fileset format</title>
+<title>Obsolete (GOBO 3.1) Fileset format</title>
 <para>
 To alleviate the migration of the former fileset format to the current one the
 following list describes the old format.
@@ -463,7 +463,7 @@ following list describes the old format.
 	</sect1>
 		
 	<sect1 id="fileset_specification">
-		<title>Obsolete (GOBO 3.2) RNG Specification</title>
+		<title>Obsolete (GOBO 3.1) RNG Specification</title>
 		
 		<programlisting><![CDATA[
   <define name="fileset">
