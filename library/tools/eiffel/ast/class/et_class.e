@@ -91,27 +91,35 @@ feature -- Initialization
 		local
 			i, nb: INTEGER
 		do
-			reset_interface_checked
 			reset_implementation_checked
+			reset_interface_checked
 			reset_qualified_signatures_resolved
 			reset_features_flattened
 			reset_ancestors_built
-			nb := declared_feature_count
-			from i := 1 until i > nb loop
-				features.item (i).reset
-				i := i + 1
-			end
-			if parents /= Void then
-				parents.reset
-			end
-			if invariants /= Void then
-				invariants.reset
-			end
-			if creators /= Void then
-				creators.reset
-			end
-			if convert_features /= Void then
-				convert_features.reset
+			if is_preparsed then
+				nb := declared_feature_count
+				from i := 1 until i > nb loop
+					features.item (i).reset
+					i := i + 1
+				end
+				if parents /= Void then
+					parents.reset
+				end
+				if invariants /= Void then
+					invariants.reset
+				end
+				if creators /= Void then
+					creators.reset
+				end
+				if convert_features /= Void then
+					convert_features.reset
+				end
+			else
+					-- When reporting VTCT errors on a class, `is_parsed'
+					-- is set to True even if it was not preparsed
+					-- (and hence not actually parsed).
+				has_syntax_error := False
+				is_parsed := False
 			end
 			index := 0
 			in_system := False
@@ -125,13 +133,14 @@ feature -- Initialization
 			-- i.e. before it was preparsed or parsed).
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
-			reset_interface_checked
 			reset_implementation_checked
+			reset_interface_checked
 			reset_qualified_signatures_resolved
 			reset_features_flattened
 			reset_ancestors_built
 			reset_parsed
 			reset_preparsed
+			index := 0
 			in_system := False
 		ensure
 			same_name: name = old name
@@ -164,7 +173,7 @@ feature -- Access
 			-- Class ID
 
 	index: INTEGER
-			-- Index of expression in enclosing universe;
+			-- Index of class in enclosing universe;
 			-- Used to get dynamic information about this class.
 
 	hash_code: INTEGER is

@@ -947,6 +947,11 @@ feature -- Parsing
 						if a_class2 /= Void then
 							a_modified := True
 							a_class.copy (a_class2)
+						elseif a_class.is_parsed then
+								-- When reporting VTCT errors on a class, `is_parsed'
+								-- is set to True even if it was not preparsed
+								-- (and hence not actually parsed).
+							a_modified := True
 						end
 					end
 					a_cursor.forth
@@ -1030,6 +1035,11 @@ feature -- Parsing
 						if a_class2 /= Void then
 							a_modified := True
 							a_class.copy (a_class2)
+						elseif a_class.is_parsed then
+								-- When reporting VTCT errors on a class, `is_parsed'
+								-- is set to True even if it was not preparsed
+								-- (and hence not actually parsed).
+							a_modified := True
 						end
 					end
 					a_cursor.forth
@@ -1116,6 +1126,11 @@ feature -- Parsing
 						if a_class2 /= Void then
 							a_modified := True
 							a_class.copy (a_class2)
+						elseif a_class.is_parsed then
+								-- When reporting VTCT errors on a class, `is_parsed'
+								-- is set to True even if it was not preparsed
+								-- (and hence not actually parsed).
+							a_modified := True
 						end
 					end
 					a_cursor.forth
@@ -1171,7 +1186,7 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_parsed then
+						if a_class2.is_preparsed and a_class2.is_parsed then
 							if a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
@@ -1190,7 +1205,7 @@ feature -- Parsing
 							a_class1.set_overridden_class (a_class2)
 						end
 					end
-					if a_class.is_parsed then
+					if a_class.is_preparsed and a_class.is_parsed then
 						if a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
