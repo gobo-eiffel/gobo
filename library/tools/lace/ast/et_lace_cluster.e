@@ -16,11 +16,13 @@ class ET_LACE_CLUSTER
 inherit
 
 	ET_CLUSTER
+		redefine
+			parent, subclusters,
+			is_valid_eiffel_filename,
+			is_valid_directory_name
+		end
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-	KL_IMPORTED_STRING_ROUTINES
-	KL_SHARED_EXECUTION_ENVIRONMENT
 
 creation
 
@@ -28,80 +30,39 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname) is
+	make (a_name: like name_id; a_pathname: like pathname_id) is
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
 		do
-			name := a_name
-			pathname := a_pathname
+			name_id := a_name
+			pathname_id := a_pathname
 		ensure
-			name_set: name = a_name
-			pathname_set: pathname = a_pathname
+			name_id_set: name_id = a_name
+			pathname_id_set: pathname_id = a_pathname
 		end
-
-feature -- Status report
-
-	is_abstract: BOOLEAN
-			-- Is there no classes in current cluster?
-			-- (i.e. 'abstract' keyword in HACT's LACE.)
-
-	is_recursive: BOOLEAN
-			-- Is current cluster recursive, in other words
-			-- should subdirectories be considered as subclusters?
-			-- (i.e. 'all' keyword in ISE's LACE.)
 
 feature -- Access
 
-	name: ET_IDENTIFIER
+	name: STRING is
 			-- Name
-
-	pathname: ET_IDENTIFIER
-			-- Directory pathname (may be Void)
-
-	full_name: STRING is
-			-- Full name
-		local
-			parent_name: STRING
-			a_basename: STRING
 		do
-			if parent /= Void then
-				parent_name := parent.full_name
-				a_basename := name.name
-				Result := STRING_.make (parent_name.count + a_basename.count + 1)
-				Result.append_string (parent_name)
-				Result.append_character ('.')
-				Result.append_string (a_basename)
-			else
-				Result := name.name
-			end
-		ensure
-			full_name_not_void: Result /= Void
-			full_name_not_empty: Result.count > 0
+			Result := name_id.name
 		end
 
-	full_pathname: STRING is
-			-- Full directory pathname
-		local
-			parent_pathname: STRING
-			a_basename: STRING
+	pathname: STRING is
+			-- Directory pathname (May be Void)
 		do
-			if pathname /= Void then
-				Result := pathname.name
-			elseif parent /= Void then
-				parent_pathname := parent.full_pathname
-				a_basename := name.name
-				Result := STRING_.make (parent_pathname.count + a_basename.count + 1)
-				Result.append_string (parent_pathname)
-				Result.append_character ('/')
-				Result.append_string (a_basename)
-			else
-				Result := name.name
+			if pathname_id /= Void then
+				Result := pathname_id.name
 			end
-		ensure
-			full_pathname_not_void: Result /= Void
-			full_pathname_not_empty: Result.count > 0
 		end
+
+	name_id: ET_IDENTIFIER
+			-- Name identifier
+
+	pathname_id: ET_IDENTIFIER
+			-- Directory pathname identifier (may be Void)
 
 feature -- Nested
 
@@ -116,39 +77,7 @@ feature -- Options
 	exclude: ET_LACE_EXCLUDE
 			-- Exclude clause
 
-feature -- Status setting
-
-	set_abstract (b: BOOLEAN) is
-			-- Set `is_abstract' to `b'.
-		do
-			is_abstract := b
-		ensure
-			abstract_set: is_abstract = b
-		end
-
-	set_recursive (b: BOOLEAN) is
-			-- Set `is_recursive' to `b'.
-		do
-			is_recursive := b
-		ensure
-			recursive_set: is_recursive = b
-		end
-
 feature -- Setting
-
-	set_subclusters (a_subclusters: like subclusters) is
-			-- Set `subclusters' to `a_subclusters'.
-		do
-			if subclusters /= Void then
-				subclusters.set_parent (Void)
-			end
-			subclusters := a_subclusters
-			if subclusters /= Void then
-				subclusters.set_parent (Current)
-			end
-		ensure
-			subclusters_set: subclusters = a_subclusters
-		end
 
 	set_exclude (an_exclude: like exclude) is
 			-- Set `exclude' to `an_exclude'.
@@ -156,69 +85,6 @@ feature -- Setting
 			exclude := an_exclude
 		ensure
 			exclude_set: exclude = an_exclude
-		end
-
-feature {ET_LACE_CLUSTER, ET_LACE_CLUSTERS} -- Setting
-
-	set_parent (a_parent: like parent) is
-			-- Set `parent' to `a_parent'.
-		do
-			parent := a_parent
-		ensure
-			parent_set: parent = a_parent
-		end
-
-feature -- Parsing
-
-	parse_all (a_universe: ET_UNIVERSE) is
-			-- Parse all classes in cluster.
-		local
-			a_filename: STRING
-			a_file: like INPUT_STREAM_TYPE
-			dir_name: STRING
-			dir: KL_DIRECTORY
-			s: STRING
-			a_name: ET_IDENTIFIER
-			a_cluster: ET_LACE_CLUSTER
-		do
-			if not is_abstract then
-				dir_name := Execution_environment.interpreted_string (full_pathname)
-				!! dir.make (dir_name)
-				dir.open_read
-				if dir.is_open_read then
-					from dir.read_entry until dir.end_of_input loop
-						s := dir.last_entry
-						if has_eiffel_extension (s) then
-							if exclude = Void or else not exclude.has (s) then
-								a_filename := clone (dir_name)
-								a_filename.append_character ('/')
-								a_filename.append_string (s)
-								a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-								if INPUT_STREAM_.is_open_read (a_file) then
-									a_universe.parse_file (a_file, a_filename, Current)
-									INPUT_STREAM_.close (a_file)
-								else
-								end
-							end
-						elseif is_recursive and then is_valid_directory_name (s) then
-							if exclude = Void or else not exclude.has (s) then
-								!! a_name.make (s, name.position)
-								!! a_cluster.make (a_name, Void)
-								a_cluster.set_parent (Current)
-								a_cluster.set_recursive (True)
-								a_cluster.set_exclude (exclude)
-								a_cluster.parse_all (a_universe)
-							end
-						end
-						dir.read_entry
-					end
-					dir.close
-				else
-				end
-			end
-			if subclusters /= Void then
-				subclusters.parse_all (a_universe)
-			end
 		end
 
 feature -- Output
@@ -252,43 +118,43 @@ feature -- Output
 				parent.print_flat_name (a_file)
 				a_file.put_character ('_')
 			end
-			a_file.put_string (name.name)
+			a_file.put_string (name)
 		end
 
 feature {NONE} -- Implementation
 
-	has_eiffel_extension (a_filename: STRING): BOOLEAN is
-			-- Has `a_filename' an Eiffel extension (.e)?
-		require
-			a_filename_not_void: a_filename /= Void
+	new_recursive_cluster (a_name: STRING): like Current is
+			-- New recursive cluster
 		local
-			nb: INTEGER
+			a_name_id: ET_IDENTIFIER
 		do
-			nb := a_filename.count
-			Result := nb > 2 and then
-				(a_filename.item (nb) = 'e' and
-				a_filename.item (nb - 1) = '.')
+			!! a_name_id.make (a_name, name_id.position)
+			!! Result.make (a_name_id, Void)
+			Result.set_parent (Current)
+			Result.set_recursive (True)
+			Result.set_exclude (exclude)
+		end
+
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+			-- Is `a_filename' an Eiffel filename which has
+			-- not been excluded?
+		do
+			if precursor (a_filename) then
+				Result := (exclude = Void or else not exclude.has (a_filename))
+			end
 		end
 
 	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
-			-- Is `a_dirname' not empty and different
-			-- from "." and ".."?
-		require
-			a_dirname_not_void: a_dirname /= Void
+			-- Is `a_dirname' a directory name other than "." and
+			-- ".." and which has not been excluded?
 		do
-			Result := a_dirname.count > 0 and
-				not a_dirname.is_equal (dot_directory_name) and
-				not a_dirname.is_equal (dot_dot_directory_name)
+			if precursor (a_dirname) then
+				Result := (exclude = Void or else not exclude.has (a_dirname))
+			end
 		end
-
-feature {NONE} -- Constants
-
-	dot_directory_name: STRING is "."
-	dot_dot_directory_name: STRING is ".."
-			-- Directory names
 
 invariant
 
-	name_not_void: name /= Void
+	name_id_not_void: name_id /= Void
 
 end -- class ET_LACE_CLUSTER

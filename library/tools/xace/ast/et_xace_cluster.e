@@ -16,10 +16,9 @@ class ET_XACE_CLUSTER
 inherit
 
 	ET_CLUSTER
-
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-	KL_IMPORTED_STRING_ROUTINES
-	KL_SHARED_EXECUTION_ENVIRONMENT
+		redefine
+			parent, subclusters
+		end
 
 creation
 
@@ -40,12 +39,6 @@ feature {NONE} -- Initialization
 			pathname_set: pathname = a_pathname
 		end
 
-feature -- Status report
-
-	is_abstract: BOOLEAN
-			-- Is there no classes in current cluster?
-			-- (i.e. 'abstract' keyword in HACT's LACE.)
-
 feature -- Access
 
 	name: STRING
@@ -53,51 +46,6 @@ feature -- Access
 
 	pathname: STRING
 			-- Directory pathname (May be Void)
-
-	full_name (a_separator: CHARACTER): STRING is
-			-- Full name (use `a_separator' as separator
-			-- between parents' names)
-		local
-			parent_name: STRING
-			a_basename: STRING
-		do
-			if parent /= Void then
-				parent_name := parent.full_name (a_separator)
-				a_basename := name
-				Result := STRING_.make (parent_name.count + a_basename.count + 1)
-				Result.append_string (parent_name)
-				Result.append_character (a_separator)
-				Result.append_string (a_basename)
-			else
-				Result := name
-			end
-		ensure
-			full_name_not_void: Result /= Void
-			full_name_not_empty: Result.count > 0
-		end
-
-	full_pathname: STRING is
-			-- Full directory pathname
-		local
-			parent_pathname: STRING
-			a_basename: STRING
-		do
-			if pathname /= Void and then pathname.count > 0 then
-				Result := pathname
-			elseif parent /= Void then
-				parent_pathname := parent.full_pathname
-				a_basename := name
-				Result := STRING_.make (parent_pathname.count + a_basename.count + 1)
-				Result.append_string (parent_pathname)
-				Result.append_character ('/')
-				Result.append_string (a_basename)
-			else
-				Result := name
-			end
-		ensure
-			full_pathname_not_void: Result /= Void
-			full_pathname_not_empty: Result.count > 0
-		end
 
 feature -- Nested
 
@@ -122,16 +70,6 @@ feature -- Options
 	externals: ET_XACE_EXTERNALS
 			-- External clause
 
-feature -- Status setting
-
-	set_abstract (b: BOOLEAN) is
-			-- Set `is_abstract' to `b'.
-		do
-			is_abstract := b
-		ensure
-			abstract_set: is_abstract = b
-		end
-
 feature -- Setting
 
 	set_options (an_options: like options) is
@@ -150,20 +88,6 @@ feature -- Setting
 			externals_set: externals = an_externals
 		end
 
-	set_subclusters (a_subclusters: like subclusters) is
-			-- Set `subclusters' to `a_subclusters'.
-		do
-			if subclusters /= Void then
-				subclusters.set_parent (Void)
-			end
-			subclusters := a_subclusters
-			if subclusters /= Void then
-				subclusters.set_parent (Current)
-			end
-		ensure
-			subclusters_set: subclusters = a_subclusters
-		end
-
 	set_mounted_subclusters (a_subclusters: like mounted_subclusters) is
 			-- Set `mounted_subclusters' to `a_subclusters'.
 		do
@@ -176,16 +100,6 @@ feature -- Setting
 			end
 		ensure
 			mounted_subclusters_set: mounted_subclusters = a_subclusters
-		end
-
-feature {ET_XACE_CLUSTER, ET_XACE_CLUSTERS} -- Setting
-
-	set_parent (a_parent: like parent) is
-			-- Set `parent' to `a_parent'.
-		do
-			parent := a_parent
-		ensure
-			parent_set: parent = a_parent
 		end
 
 feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
@@ -286,64 +200,14 @@ feature -- Basic operations
 			end
 		end
 
-feature -- Parsing
-
-	parse_all (a_universe: ET_UNIVERSE) is
-			-- Parse all classes in cluster.
-		local
-			a_filename: STRING
-			a_file: like INPUT_STREAM_TYPE
-			dir_name: STRING
-			dir: KL_DIRECTORY
-			s: STRING
-		do
-			if not is_abstract then
-				dir_name := Execution_environment.interpreted_string (full_pathname)
-				!! dir.make (dir_name)
-				dir.open_read
-				if dir.is_open_read then
-					from dir.read_entry until dir.end_of_input loop
-						s := dir.last_entry
-						if has_eiffel_extension (s) then
-							a_filename := clone (dir_name)
-							a_filename.append_character ('/')
-							a_filename.append_string (s)
-							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-							if INPUT_STREAM_.is_open_read (a_file) then
-								a_universe.parse_file (a_file, a_filename, Current)
-								INPUT_STREAM_.close (a_file)
-							else
-							end
-						end
-						dir.read_entry
-					end
-					dir.close
-				else
-				end
-			end
-			if subclusters /= Void then
-				subclusters.parse_all (a_universe)
-			end
-		end
-
 feature {NONE} -- Implementation
 
-	has_eiffel_extension (a_filename: STRING): BOOLEAN is
-			-- Has `a_filename' an Eiffel extension (.e)?
-		require
-			a_filename_not_void: a_filename /= Void
-		local
-			nb: INTEGER
+	new_recursive_cluster (a_name: STRING): like Current is
+			-- New recursive cluster
 		do
-			nb := a_filename.count
-			Result := nb > 2 and then
-				(a_filename.item (nb) = 'e' and
-				a_filename.item (nb - 1) = '.')
+			!! Result.make (a_name, Void)
+			Result.set_parent (Current)
+			Result.set_recursive (True)
 		end
-
-invariant
-
-	name_not_void: name /= Void
-	name_not_empty: name.count > 0
 
 end -- class ET_XACE_CLUSTER
