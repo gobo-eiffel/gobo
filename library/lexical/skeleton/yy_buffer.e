@@ -66,6 +66,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	name: STRING is
+			-- Name of buffer
+		do
+				-- TODO: this routine should be a once-function but
+				-- there is a bug in SE -0.74b22 in the generated C
+				-- code of the postcondition "name_not_void" in the
+				-- redefined routine YY_FILE_BUFFER.name.
+			Result := Name_constant
+		ensure
+			name_not_void: Result /= Void
+		end
+
 	content: KL_CHARACTER_BUFFER
 			-- Input buffer characters
 
@@ -265,6 +277,9 @@ feature {NONE} -- Constants
 
 	End_of_buffer_character: CHARACTER is '%U'
 			-- End of buffer character
+
+	Name_constant: STRING is "<string>"
+			-- Name of string buffer
 
 invariant
 

@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_from_string
 		redefine
-			fill, wipe_out
+			name, fill, wipe_out
 		end
 
 creation
@@ -61,6 +61,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	name: STRING is
+			-- Name of buffer
+		do
+			Result := file.name
+		end
 
 	file: KI_CHARACTER_INPUT_STREAM
 			-- Input file
