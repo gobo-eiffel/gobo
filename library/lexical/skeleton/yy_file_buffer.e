@@ -127,7 +127,7 @@ feature -- Element change
 --					end
 					nb2 := STRING_BUFFER_.copy_from_stream (buff, upper + 1, file, nb)
 					if nb2 < nb then
-						end_of_file := True
+						end_of_file := INPUT_STREAM_.end_of_input (file)
 					end
 					if nb2 > 0 then
 						filled := True
