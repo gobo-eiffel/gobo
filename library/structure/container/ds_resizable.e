@@ -37,6 +37,15 @@ feature -- Measurement
 		deferred
 		end
 
+	default_capacity: INTEGER is
+			-- Initial capacity in `make_default'
+			-- (Default value: 10)
+		once
+			Result := 10
+		ensure
+			default_capacity_positive: Result >= 0
+		end
+
 feature -- Status report
 
 	is_full: BOOLEAN is
@@ -69,11 +78,6 @@ feature {NONE} -- Configuration
 		ensure
 			definition: Result >= n
 		end
-
-feature {NONE} -- Constants
-
-	default_capacity: INTEGER is 10
-			-- Initial capacity in `make_default'
 
 invariant
 
