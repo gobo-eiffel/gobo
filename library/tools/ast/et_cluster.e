@@ -150,27 +150,32 @@ feature -- Parsing
 			dir: KL_DIRECTORY
 			s: STRING
 		do
-			dir_name := Execution_environment.interpreted_string (full_pathname)
-			!! dir.make (dir_name)
-			dir.open_read
-			if dir.is_open_read then
-				from dir.read_entry until dir.end_of_input loop
-					s := dir.last_entry
-					if s.count > 2 and then (s.item (s.count) = 'e' and s.item (s.count - 1) = '.') then
-						a_filename := clone (dir_name)
-						a_filename.append_character ('/')
-						a_filename.append_string (s)
-						a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-						if INPUT_STREAM_.is_open_read (a_file) then
-							a_universe.parse_file (a_file, a_filename, Current)
-							INPUT_STREAM_.close (a_file)
-						else
+			if not is_abstract then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				!! dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if s.count > 2 and then (s.item (s.count) = 'e' and s.item (s.count - 1) = '.') then
+							a_filename := clone (dir_name)
+							a_filename.append_character ('/')
+							a_filename.append_string (s)
+							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+							if INPUT_STREAM_.is_open_read (a_file) then
+								a_universe.parse_file (a_file, a_filename, Current)
+								INPUT_STREAM_.close (a_file)
+							else
+							end
 						end
+						dir.read_entry
 					end
-					dir.read_entry
+					dir.close
+				else
 				end
-				dir.close
-			else
+			end
+			if subclusters /= Void then
+				subclusters.parse_all (a_universe)
 			end
 		end
 
