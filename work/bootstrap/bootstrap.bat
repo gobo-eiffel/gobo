@@ -15,25 +15,11 @@ set CC=%1
 set EIF=%2
 
 if .%GOBO%. == .. goto gobo
-if .%GOBO_OS%. == .. goto gobo_os
-if .%GOBO_OS%. == .windows. goto windows
-goto unix
+goto windows
 
 :gobo
 	echo Environment variable GOBO must be set
 	goto exit
-
-:gobo_os
-	echo Environment variable GOBO_OS must be set
-	goto exit
-
-:unix
-	set CP=cp
-	set MV=mv
-	set RM=rm
-	set OBJ=.o
-	set EXE=
-	goto c_compilation
 
 :windows
 	set CP=copy

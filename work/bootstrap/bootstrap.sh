@@ -25,24 +25,13 @@ if [ "$GOBO" = "" ]; then
 	exit 1
 fi
 
-if [ "$GOBO_OS" = "" ]; then
-	echo "Environment variable GOBO_OS must be set"
-	exit 1
-elif [ "$GOBO_OS" = "windows" ]; then
-	CP=copy
-	MV=rename
-	RM=del
-	OBJ=.obj
-	EXE=.exe
-else
-	CP=cp
-	MV=mv
-	RM=rm
-	OBJ=.o
-	EXE=
-fi
-
+CP=cp
+MV=mv
+RM=rm
+OBJ=.o
+EXE=
 BIN_DIR=$GOBO/bin
+
 cd $GOBO/work/bootstrap
 
 if [ "$CC" = "" ]; then
