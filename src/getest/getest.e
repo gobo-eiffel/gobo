@@ -51,6 +51,10 @@ feature -- Processing
 					std.output.put_new_line
 				end
 				!! config_parser.make (error_handler)
+				config_parser.set_compiler_ise (compiler_ise)
+				config_parser.set_compiler_hact (compiler_hact)
+				config_parser.set_compiler_se (compiler_se)
+				config_parser.set_compiler_ve (compiler_ve)
 				config_parser.parse (a_file)
 				INPUT_STREAM_.close (a_file)
 				a_config := config_parser.last_config
@@ -73,6 +77,7 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			arg: STRING
+			a_file: KL_TEXT_INPUT_FILE
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -82,28 +87,28 @@ feature -- Processing
 				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
 					report_usage_message
 				elseif arg.is_equal ("--se") then
-					if config_filename /= Void then
+					if compiler_specified then
 						report_usage_error
 					else
-						config_filename := SE_config_filename
+						compiler_se := True
 					end
 				elseif arg.is_equal ("--ise") then
-					if config_filename /= Void then
+					if compiler_specified then
 						report_usage_error
 					else
-						config_filename := ISE_config_filename
+						compiler_ise := True
 					end
 				elseif arg.is_equal ("--hact") then
-					if config_filename /= Void then
+					if compiler_specified then
 						report_usage_error
 					else
-						config_filename := HACT_config_filename
+						compiler_hact := True
 					end
 				elseif arg.is_equal ("--ve") then
-					if config_filename /= Void then
+					if compiler_specified then
 						report_usage_error
 					else
-						config_filename := VE_config_filename
+						compiler_ve := True
 					end
 				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--compile=") then
 					if arg.count > 10 then
@@ -127,6 +132,35 @@ feature -- Processing
 					report_usage_error
 				end
 				i := i + 1
+			end
+			if config_filename = Void then
+				if compiler_ise then
+					!! a_file.make (ISE_config_filename)
+					if a_file.exists then
+						config_filename := ISE_config_filename
+					end
+				elseif compiler_hact then
+					!! a_file.make (HACT_config_filename)
+					if a_file.exists then
+						config_filename := HACT_config_filename
+					end
+				elseif compiler_se then
+					!! a_file.make (SE_config_filename)
+					if a_file.exists then
+						config_filename := SE_config_filename
+					end
+				elseif compiler_ve then
+					!! a_file.make (VE_config_filename)
+					if a_file.exists then
+						config_filename := VE_config_filename
+					end
+				end
+			end
+			if config_filename = Void then
+				!! a_file.make (cfg_config_filename)
+				if a_file.exists then
+					config_filename := cfg_config_filename
+				end
 			end
 			if config_filename = Void then
 				config_filename := Execution_environment.variable_value (Getest_config_variable)
@@ -249,6 +283,22 @@ feature -- Status report
 	must_execute: BOOLEAN
 			-- Should the testcases be executed?
 
+	compiler_ise: BOOLEAN
+	compiler_hact: BOOLEAN
+	compiler_se: BOOLEAN
+	compiler_ve: BOOLEAN
+			-- Compiler specified on the command-line
+			-- (--ise, --hact, --se or --ve)
+
+	compiler_specified: BOOLEAN is
+			-- Has an Eiffel compiler been specified on the command-line?
+			-- (--ise, --hact, --se or --ve)
+		do
+			Result := (compiler_ise or compiler_hact or compiler_se or compiler_ve)
+		ensure
+			definition: Result = (compiler_ise or compiler_hact or compiler_se or compiler_ve)
+		end
+
 feature {NONE} -- Error handling
 
 	report_usage_error is
@@ -314,6 +364,7 @@ feature {NONE} -- Constants
 	ISE_config_filename: STRING is "getest.ise"
 	SE_config_filename: STRING is "getest.se"
 	VE_config_filename: STRING is "getest.ve"
+	cfg_config_filename: STRING is "getest.cfg"
 			-- Default configuration filenames
 
 invariant

@@ -85,6 +85,48 @@ feature -- Access
 			-- Directory where test classes are generated;
 			-- Void means current directory
 
+feature -- Status report
+
+	compiler_ise: BOOLEAN
+	compiler_hact: BOOLEAN
+	compiler_se: BOOLEAN
+	compiler_ve: BOOLEAN
+			-- Compiler which will be used to compile the test classes
+
+feature -- Status setting
+
+	set_compiler_ise (b: BOOLEAN) is
+			-- Set `compiler_ise' to `b'.
+		do
+			compiler_ise := b
+		ensure
+			compiler_ise_set: compiler_ise = b
+		end
+
+	set_compiler_se (b: BOOLEAN) is
+			-- Set `compiler_se' to `b'.
+		do
+			compiler_se := b
+		ensure
+			compiler_se_set: compiler_se = b
+		end
+
+	set_compiler_hact (b: BOOLEAN) is
+			-- Set `compiler_hact' to `b'.
+		do
+			compiler_hact := b
+		ensure
+			compiler_hact_set: compiler_hact = b
+		end
+
+	set_compiler_ve (b: BOOLEAN) is
+			-- Set `compiler_ve' to `b'.
+		do
+			compiler_ve := b
+		ensure
+			compiler_ve_set: compiler_ve = b
+		end
+
 feature -- AST factory
 
 	new_config (a_root_class: STRING; a_testgen: STRING;
@@ -188,7 +230,17 @@ feature -- Defaults
 		require
 			root_class_not_void: root_class /= Void
 		do
-			Result := "geant compile"
+			if compiler_ise then
+				Result := "geant compile_ise"
+			elseif compiler_hact then
+				Result := "geant compile_hact"
+			elseif compiler_se then
+				Result := "geant compile_se"
+			elseif compiler_ve then
+				Result := "geant compile_ve"
+			else
+				Result := "geant compile"
+			end
 		ensure
 			default_compile_not_void: Result /= Void
 		end
