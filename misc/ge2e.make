@@ -6,6 +6,8 @@
 # revision:   "$Revision$"
 
 
+include $(GOBO)/misc/platform.make
+
 all: spec
 
 depend: Makefile.dep
