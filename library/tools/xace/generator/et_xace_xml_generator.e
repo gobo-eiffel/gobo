@@ -5,7 +5,7 @@ indexing
 		"Ace file generators to XML files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -213,6 +213,12 @@ feature {NONE} -- Output
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
+			end
+			if an_option.is_callback_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"callback%" value=%"")
+				a_file.put_string (an_option.callback)
+				a_file.put_line ("%"/>")
 			end
 			if an_option.is_case_insensitive_declared then
 				print_indentation (indent, a_file)
@@ -825,11 +831,13 @@ feature {NONE} -- Output
 			a_feature_cursor := an_option_list.new_cursor
 			from a_feature_cursor.start until a_feature_cursor.after loop
 				a_feature_options := a_feature_cursor.item
+				print_indentation (indent, a_file)
 				a_file.put_string ("<feature name=%"")
 				a_file.put_string (a_feature_options.feature_name)
 				a_file.put_line ("%">")
 				print_options (a_feature_options.options, indent + 1, a_file)
 				a_feature_cursor.forth
+				print_indentation (indent, a_file)
 				a_file.put_line ("</feature>")
 			end
 		end
