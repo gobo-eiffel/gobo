@@ -12,7 +12,7 @@ indexing
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2000, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,11 @@ indexing
 class KL_EXECUTION_ENVIRONMENT
 
 inherit
+
+	KL_VALUES [STRING, STRING]
+		rename
+			value as variable_value
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 

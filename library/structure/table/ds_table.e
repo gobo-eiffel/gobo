@@ -5,7 +5,7 @@ indexing
 		"Data structures whose items are accessible through keys"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,11 @@ inherit
 
 	DS_CONTAINER [G]
 
+	KL_VALUES [G, K]
+		undefine
+			is_equal, copy
+		end
+
 feature -- Access
 
 	infix "@", item (k: K): G is
@@ -23,6 +28,17 @@ feature -- Access
 		require
 			has_k: has (k)
 		deferred
+		end
+
+	value (k: K): G is
+			-- Item associated with `k';
+			-- Return default value if no such item
+		require else
+			True
+		do
+			if has (k) then
+				Result := item (k)
+			end 
 		end
 
 feature -- Status report
