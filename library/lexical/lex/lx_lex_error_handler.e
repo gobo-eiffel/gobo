@@ -400,7 +400,7 @@ feature -- Status setting
 			no_warning_set: no_warning = b
 		end
 
-feature {NONE} -- Error handling
+feature -- Error handling
 
 	error_message (message: ARRAY [STRING]) is
 			-- Report an error message and terminate.
@@ -421,7 +421,7 @@ feature {NONE} -- Error handling
 				io.error.put_string (message.item (i))
 				i := i + 1
 			end
-			io.error.new_line
+			io.error.put_character ('%N')
 			terminate (1)
 		end
 
@@ -442,7 +442,7 @@ feature {NONE} -- Error handling
 				io.put_string (message.item (i))
 				i := i + 1
 			end
-			io.new_line
+			io.put_character ('%N')
 			terminate (0)
 		end
 
@@ -484,7 +484,7 @@ feature {NONE} -- Error handling
 					io.error.put_string (message.item (i))
 					i := i + 1
 				end
-				io.error.new_line
+				io.error.put_character ('%N')
 			end
 		end
 
@@ -512,7 +512,7 @@ feature {NONE} -- Error handling
 				io.error.put_string (message.item (i))
 				i := i + 1
 			end
-			io.error.new_line
+			io.error.put_character ('%N')
 		end
 
 end -- class LX_LEX_ERROR_HANDLER
