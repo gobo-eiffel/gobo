@@ -884,8 +884,7 @@ feature {NONE} -- Access
 			-- Base type where the type appears
 
 	current_feature: ET_FEATURE
-			-- Feature where the type appears;
-			-- Void if the type does not appear in a feature
+			-- Feature where the type appears
 
 feature {NONE} -- Implementation
 
