@@ -57,13 +57,15 @@ feature {NONE} -- Parent processing
 	before_addition (a_node: XM_DOCUMENT_NODE) is
 			-- Remove node from original parent if not us.
 		do
-			if a_node /= Void and then a_node.parent /= Current then
+			if a_node /= Void then
 					-- Remove from previous parent.
-				a_node.parent.equality_delete (a_node)
-				a_node.set_parent (Current)
+				if a_node.parent /= Void then
+					a_node.parent.equality_delete (a_node)
+				end
+				a_node.node_set_parent (Current)
 			end
 		ensure then
-			parent_accepted: a_node.parent = Current
+			parent_accepted: a_node /= Void implies a_node.parent = Current
 		end
 		
 feature {XM_NODE} -- Removal
@@ -119,17 +121,17 @@ feature -- Setting
 				a_cursor.after
 			loop
 				if a_cursor.item = root_element then
-					a_cursor.remove
-					a_cursor.go_after
+				   a_cursor.remove
+				   a_cursor.go_after
 				else
-					a_cursor.forth
+				   a_cursor.forth
 				end
 			end
-
-			root_element.set_parent (Current)
+			
 			root_element := an_element
 			
-				-- Composite operations:
+				-- Add to list, also remove previous root element from 
+				-- composite and sets parent.
 			force_last (an_element)
 		ensure
 			root_element_parent: root_element.parent = Current
