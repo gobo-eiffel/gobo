@@ -18,6 +18,7 @@ inherit
 
 	GEANT_ELEMENT_NAMES
 		export {NONE} all end
+	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -25,21 +26,247 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_element: GEANT_ELEMENT)is
+	make (a_project: GEANT_PROJECT; a_target_element: GEANT_ELEMENT)is
 			-- Create a new target
-		precursor
-			element_not_void: a_element /= Void
+		require
+			project_not_void: a_project /= Void
+			target_element_not_void: a_target_element /= Void
+			target_element_has_name: a_target_element.has_attribute (Name_attribute_name)
 		do
-			element := a_element
+			project := a_project
+			target_element := a_target_element
+			set_name (target_element.attribute_value_by_name (Name_attribute_name).out)
 		ensure
-			element_set: element = a_element
+			project_set: project = a_project
+			target_element_set: target_element = a_target_element
 		end
+
+feature -- Access
+
+	has_dependencies: BOOLEAN is
+			-- Has current target dependent on other targets?
+		do
+			Result := target_element.has_attribute (Depends_attribute_name)
+		end
+
+	dependencies: UC_STRING is
+			-- UC_STRING representation of dependencies
+		do
+			Result := target_element.attribute_value_by_name (Depends_attribute_name)
+		end
+
+	name: STRING
+			-- Name of target
+
+	project: GEANT_PROJECT
+			-- Project to which this target belongs
+
+feature -- Setting
+
+	set_name (a_name: STRING) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
+feature -- Processing
+
+	execute  is
+			-- Execute all tasks of `a_target' in sequential order
+		require
+			target_not_void: a_target /= Void
+		local
+			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			i, nb: INTEGER
+			an_element: GEANT_ELEMENT
+			a_task: GEANT_TASK
+		do
+			children := target_element.children
+			nb := children.count
+			from i := 1 until i > nb loop
+				an_element := children.item (i)
+					-- Dispatch tasks:
+				if an_element.name.is_equal (Compile_se_task_name) then
+						-- compile_se: SmallEiffel compilation
+					!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Exec_task_name) then
+						-- exec
+					!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Lcc_task_name) then
+						-- lcc
+					!GEANT_LCC_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Var_task_name) then
+						-- var
+					!GEANT_VAR_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Gexace_task_name) then
+						-- gexace
+					!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Gelex_task_name) then
+						-- gelex
+					!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Geyacc_task_name) then
+						-- geyacc
+					!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Gepp_task_name) then
+						-- gepp
+					!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Getest_task_name) then
+						-- getest
+					!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Geant_task_name) then
+						-- geant
+					!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Echo_task_name) then
+						-- echo
+					!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
+				else
+						-- Default:
+					a_task := Void
+				end
+					-- Execute task:
+				if a_task = Void then
+					print ("WARNING: unknown task : " + an_element.name.out + "%N")
+				elseif not a_task.is_executable then
+					print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
+				else
+					a_task.execute
+				end
+				i := i + 1
+			end
+		end
+
+	dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET] is
+			-- All dependent targets
+		local
+			a_dependent_target: GEANT_TARGET
+			a_value: UC_STRING
+			a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]
+			i: INTEGER
+		do
+			!! Result.make (10)
+			if has_dependencies then
+				a_value := dependencies
+
+					-- Check for targets separated by commas:
+				a_dependent_targets := string_tokens (a_value)
+
+				if project.verbose then
+					show_dependent_targets (a_dependent_targets)
+				end
+
+					-- Find all targets
+				from i := 1 until i > a_dependent_targets.count loop
+					a_value := a_dependent_targets.item (i)
+					a_dependent_target := project.target_with_name (a_value)
+					if a_dependent_target /= Void then
+						Result.force (a_dependent_target)
+					else
+						print ("geant error: unknown dependent target '" + a_value.out + "'%N")
+						Exceptions.die (1)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			dependent_targets_not_void: Result /= Void
+		end
+
+	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]) is
+		local
+			i: INTEGER
+		do
+			print ("======= DEPENDENCIES ==========%N")
+			from i := 1 until i > a_dependent_targets.count loop
+				print (a_dependent_targets.item (i).out + "%N")
+				i := i + 1
+			end
+			print ("=================%N")
+		end
+
+	string_tokens (a_string: UC_STRING): DS_ARRAYED_LIST [UC_STRING] is
+			-- Strings delimited by commas in `a_string'
+			-- Candidate for STRING_ROUTINES
+		require
+			string_not_void: a_string /= Void
+		local
+			a_delimiter: UC_CHARACTER
+			s: UC_STRING
+			ucs: UC_STRING
+			p_start: INTEGER
+			p_end: INTEGER
+			nice_string: BOOLEAN
+		do
+			s := clone (a_string)
+			!! Result.make (5)
+			a_delimiter.make_from_character (',')
+
+				-- Cleanup String:
+			from
+				s.left_adjust
+				s.right_adjust
+			until
+				nice_string
+			loop
+				nice_string := True
+				if s.count > 0 then
+					if s.item (1) = a_delimiter then
+						s.tail(s.count - 1)
+						nice_string := False
+					end
+				end
+	
+				if s.count > 0 then
+					if s.item (s.count) = a_delimiter then
+						s.head(s.count - 1)
+						nice_string := False
+					end
+				end
+
+			end
+
+				-- Find Tokens:
+			from 
+				p_start := 1
+				p_end := s.index_of (a_delimiter, p_start)
+			until
+				p_end = 0 or p_start > s.count
+			loop
+				ucs := s.substring (p_start, p_end - 1)
+				ucs.left_adjust
+				ucs.right_adjust
+				if ucs.count > 0 then
+					Result.force_last (ucs)
+				end
+				p_start := p_end + 1
+
+				if p_start <= s.count then
+					p_end := s.index_of (a_delimiter, p_start)
+				end
+			end
+
+				-- Append last token:
+			if p_start <= s.count then
+				ucs := s.substring (p_start, s.count)
+				ucs.left_adjust
+				ucs.right_adjust
+				if ucs.count > 0 then
+					Result.force_last (ucs)
+				end
+			end
+
+		end
+
 
 feature {NONE} -- Implementation
 
-	element : GEANT_ELMENT
+	target_element : GEANT_ELEMENT
 		-- Xml element defining this target
 
 invariant
-	element_not_void: element /= Void
+	target_element_not_void: element /= Void
 end -- class GEANT_TARGET

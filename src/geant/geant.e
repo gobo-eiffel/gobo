@@ -49,9 +49,8 @@ feature {NONE} -- Initialization
 			else
 				!! a_project.make
 			end
-
+			a_project.set_verbose (verbose)
 			a_project.load (start_target_name)
-
 			if a_project.targets /= Void then
 				a_project.build
 				if not a_project.build_successful then
@@ -73,6 +72,8 @@ feature -- Access
 	start_target_name: STRING
 			-- Name of the target the build process starts with
 
+	verbose: BOOLEAN
+		-- Print additional information during build process?
 
 	read_command_line is
 			-- Read command line arguments.
@@ -86,8 +87,10 @@ feature -- Access
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
-				if arg.is_equal ("--version") or arg.is_equal ("-V") then
+				if arg.is_equal ("--version") then
 					report_version_number
+				elseif arg.is_equal ("--verbose") or arg.is_equal ("-v") then
+					set_verbose (true)
 				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
 					report_usage_message
 				elseif arg.is_equal ("-b") then
@@ -113,6 +116,16 @@ feature -- Access
 				end
 				i := i + 1
 			end
+		end
+
+feature -- Setting
+
+	set_verbose (a_verbose: BOOLEAN) is
+			-- Set `verbose' to `a_verbose'
+		do
+			verbose := a_verbose
+		ensure
+			verbose_set: verbose = a_verbose
 		end
 
 feature {NONE} -- Error handling

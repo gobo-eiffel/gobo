@@ -100,6 +100,10 @@ feature -- Execution
 				cmd := clone ("geant ")
 				cmd.append_string ("-b ")
 				cmd.append_string (filename)
+				if start_target_name /= Void then
+					cmd.append_string (" ")
+					cmd.append_string (start_target_name)
+				end
 				log ("  [geant] " + cmd + "%N")
 				execute_shell (cmd)
 			else
