@@ -155,8 +155,10 @@ feature -- Comparison
 			-- Is list equal to `other'?
 		local
 			i, nb: INTEGER
+			other_storage: like storage
 		do
 			if same_type (other) and other.count = count then
+				other_storage := other.storage
 				from
 					i := 1
 					nb := count
@@ -164,7 +166,7 @@ feature -- Comparison
 				until
 					not Result or i > nb
 				loop
-					Result := storage.item (i) = other.item (i)
+					Result := storage.item (i) = other_storage.item (i)
 					i := i + 1
 				end
 			end
@@ -506,10 +508,12 @@ feature -- Resizing
 			storage.resize (1, n)
 		end
 
-feature {NONE} -- Implementation
+feature {DS_ARRAYED_LIST} -- Implementation
 
 	storage: ARRAY [G]
 			-- Storage for items of the list
+
+feature {NONE} -- Implementation
 
 	move_right (index, offset: INTEGER) is
 			-- Move items at and after `index' position
