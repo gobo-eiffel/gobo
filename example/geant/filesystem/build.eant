@@ -16,21 +16,27 @@
 	</target>
 
 	<target name="copyfile">
-		<description>copies the Readme from $GOBO to $GOBO/examples/geant/filesystem</description>
+		<description>copies the Readme from $GOBO to $GOBO/example/geant/filesystem</description>
 		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
 		<copy file="build.eant" to_file="ttt2.txt"/>
 	</target>
 
 	<target name="copyfile2" dir="${GOBO}">
-		<description>copies the Readme from $GOBO to $GOBO/examples/geant/filesystem</description>
-		<copy file="Readme.txt" to_directory="examples/geant/filesystem"/>
+		<description>copies the Readme from $GOBO to $GOBO/example/geant/filesystem</description>
+		<copy file="Readme.txt" to_directory="example/geant/filesystem"/>
 	</target>
 
 	<target name="movefile">
-		<description>copies the Readme from $GOBO to $GOBO/examples/geant/filesystem</description>
+		<description>copies the Readme from $GOBO to $GOBO/example/geant/filesystem</description>
 		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
 		<move file="ttt1.txt" to_file="ttt2.txt"/>
 		<move file="ttt2.txt" to_file="${GOBO}/ttt2.txt"/>
+	</target>
+
+	<target name="movefile2" dir="${GOBO}">
+		<description>copies Readme.txt from $GOBO to $GOBO/ttt.txt</description>
+		<copy file="Readme.txt" to_file="ttt.txt"/>
+		<move file="ttt.txt" to_directory="example/geant/filesystem"/>
 	</target>
 
 	<target name="delfile">
