@@ -16,7 +16,7 @@
 	<title>Quick start</title>
 
   <para>
-    Inheriting from <classname>GF_FORMAT</classname> adds the feature
+    Inheriting from <classname>ST_FORMAT</classname> adds the feature
     <featurename>format</featurename> to the current
     class. <featurename>format</featurename> takes two arguments: a <link
     linkend="scientific_format">format specification</link> and an
@@ -40,7 +40,7 @@ class
 
 inherit
 
-  GF_FORMAT
+  ST_FORMAT_ROUTINES
 
 creation
 
