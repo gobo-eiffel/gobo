@@ -56,19 +56,19 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Name_attribute_name: UC_STRING is
+	Name_attribute_name: STRING is
 			-- "name" attribute name
 		once
-			Result := new_unicode_string ("name")
+			Result := "name"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: UC_STRING is
+	Value_attribute_name: STRING is
 			-- Name of xml attribute "value" of subelement <define>
 		once
-			Result := new_unicode_string ("value")
+			Result := "value"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
