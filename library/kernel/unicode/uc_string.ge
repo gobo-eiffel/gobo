@@ -1006,7 +1006,7 @@ feature -- Access
 		do
 			nb := count
 			if nb = byte_count then
-				Result := string.hash_code
+				Result := precursor
 			else
 				fit_in_string := True
 				nb := byte_count
@@ -1019,7 +1019,11 @@ feature -- Access
 					i := next_byte_index (i)
 				end
 				if fit_in_string then
+#ifdef ISE || HACT
 					Result := string.hash_code
+#else
+					Result := precursor
+#endif
 				end
 			end
 			if Result < 0 then
