@@ -213,7 +213,7 @@ feature -- File handling
 			a_string_not_void: a_string /= Void
 		do
 			a_file.put_character ('%"')
-			put_quoted_eiffel_string (a_file, a_string)
+			put_eiffel_string (a_file, a_string)
 			a_file.put_character ('%"')
 		end
 
