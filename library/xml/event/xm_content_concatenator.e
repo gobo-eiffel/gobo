@@ -65,9 +65,8 @@ feature -- Content
 			-- Eat comment when in content, otherwise the event would be 
 			-- out of order.
 		do
-			if last_content = Void then
-				Precursor (a_comment)
-			end
+			flush_content
+			Precursor (a_comment)
 		end
 
 feature -- Events
