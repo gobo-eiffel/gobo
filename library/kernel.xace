@@ -96,7 +96,7 @@
 			</cluster>
 			<cluster name="kernel"/>
 			<cluster name="misc"/>
-			<cluster name="number"/>
+			<cluster name="number" unless="${SE_2_0}"/>
 			<cluster name="numeric" if="${SE_2_0}">
 				<cluster name="internal"/>
 			</cluster>
