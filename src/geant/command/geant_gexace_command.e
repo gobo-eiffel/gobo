@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			precursor (a_project)
 			options := ""
 			compile := False
+			!! defines.make (10)
 		end
 
 feature -- Status report
@@ -65,6 +66,9 @@ feature -- Access
 			-- Should compilation be started right after generation?
 			-- default: false
 			-- implementation note: do not use compile as name here, causes conflicts
+
+	defines: DS_ARRAYED_LIST [DS_PAIR [STRING, STRING]]
+			-- Defined values from the commandline (--define option)
 
 feature -- Setting
 
@@ -125,8 +129,27 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
+			i: INTEGER
+			nb: INTEGER
 		do
 			cmd := clone ("gexace ")
+
+				-- Add defines if they exist:
+			nb := defines.count
+			if nb > 0 then
+				cmd.append_string ("--define=%"")
+				from i := 1 until i > nb loop
+					if i > 1 then
+						cmd.append_string (" ")
+					end
+					cmd.append_string (defines.item (i).first)
+					cmd.append_string ("=")
+					cmd.append_string (defines.item (i).second)
+					i := i + 1
+				end
+				cmd.append_string ("%"")
+			end
+
 			cmd.append_string (options)
 			cmd.append_string (" --" + command)
 			cmd.append_string (" --" + command_options)
@@ -142,5 +165,10 @@ feature -- Execution
 				execute_shell (cmd)
 			end
 		end
+
+invariant
+
+	defines_not_void: defines /= Void
+	no_void_define: not defines.has (Void)
 
 end -- class GEANT_GEXACE_COMMAND
