@@ -14,23 +14,23 @@ deferred class DS_SEARCHER [G]
 
 feature -- Status report
 
-	has (container: DS_SEARCHABLE [G]; v: G): BOOLEAN is
-			-- Does `container' include `v'?
+	has (a_container: DS_SEARCHABLE [G]; v: G): BOOLEAN is
+			-- Does `a_container' include `v'?
 		require
-			container_not_void: container /= Void
+			a_container_not_void: a_container /= Void
 		deferred
 		ensure
-			not_empty: Result implies not container.is_empty
+			not_empty: Result implies not a_container.is_empty
 		end
 
 feature -- Measurement
 
-	occurrences (container: DS_SEARCHABLE [G]; v: G): INTEGER is
-			-- Number of times `v' appears in `container'
+	occurrences (a_container: DS_SEARCHABLE [G]; v: G): INTEGER is
+			-- Number of times `v' appears in `a_container'
 		deferred
 		ensure
 			positive: Result >= 0
-			has: container.has (v) implies Result >= 1
+			has: a_container.has (v) implies Result >= 1
 		end
 
 end -- class DS_SEARCHER
