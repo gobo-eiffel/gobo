@@ -4,8 +4,11 @@ indexing
 
 		"Reports information about Namespace declarations in XML files"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class NAMESPACES
 
@@ -13,45 +16,51 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
-	KL_SHARED_EXCEPTIONS
-
-	UC_UNICODE_FACTORY
-		export {NONE} all end
-
 creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		do
-			check_parsers
 			process_arguments
-			check_file_readable
-			process_data_file
+			if not has_error then
+				check_file_readable
+				if not has_error then
+					process_data_file
+				end 
+			end
 		end
+
+feature -- Access
 
 	process_data_file is
 		local
 			formatter: NS_FORMATTER
+			in: KL_TEXT_INPUT_FILE
 		do
 			io.put_string ("parsing data...%N")
-			tree_parser.parse_from_file_name (file_name)
+			
+			!! in.make (file_name)
+			in.open_read
+			if in.is_open_read then
+				event_parser.parse_from_stream (in)
+				in.close
 
-			if not tree_parser.is_correct then
-				io.put_string (tree_parser.last_error_extended_description)
-				io.put_new_line
-			else
-				tree_parser.document.root_element.resolve_namespaces_start
-				tree_parser.document.root_element.remove_namespace_declarations_from_attributes
-				io.put_string ("printing document...%N")
-				!! formatter.make
-				formatter.process_document (tree_parser.document)
-				io.put_string (formatter.last_string.to_utf8)
-				io.put_new_line
+				if tree_pipe.error.has_error then
+					io.put_string (tree_pipe.last_error)
+					io.put_new_line
+				else
+					tree_pipe.document.root_element.resolve_namespaces_start
+					tree_pipe.document.root_element.remove_namespace_declarations_from_attributes
+					io.put_string ("printing document...%N")
+					!! formatter.make
+					formatter.process_document (tree_pipe.document)
+					io.put_string (formatter.last_string.to_utf8)
+					io.put_new_line
+				end
 			end
-
 			io.put_string ("exiting...%N")
 		end
 
@@ -63,109 +72,85 @@ feature
 		do
 			if Arguments.argument_count /= 2 then
 				io.put_string (usage_string)
-				Exceptions.die (1)
+				has_error := True
+			else
+				parser_switch := Arguments.argument (1)
+				if parser_switch.is_equal ("--expat") then
+					if not fact.is_expat_available then
+						io.put_string ("expat is not availabe, please choose %
+							%other parser backend%N")
+						has_error := True
+					else
+						event_parser := fact.new_expat_parser
+					end
+				else
+					!XM_EIFFEL_PARSER! event_parser.make
+				end
+				
+				-- create and bind tree pipe
+				!! tree_pipe.make
+				event_parser.set_callbacks (tree_pipe.start)
+				
+				file_name := Arguments.argument (2)
 			end
 
-			parser_switch := Arguments.argument (1)
-			if parser_switch.is_equal ("--expat") then
-				if not fact.is_expat_event_available then
-					io.put_string ("expat is not availabe, please choose %
-						%other parser backend%N")
-					Exceptions.die (1)
-				end
-				tree_parser := fact.new_toe_expat_tree_parser
-			elseif parser_switch.is_equal ("--eiffel") then
-				if not fact.is_eiffel_event_available then
-					io.put_string ("eiffel is not availabe, please choose %
-						%other parser backend%N")
-					Exceptions.die (1)
-				end
-				tree_parser := fact.new_toe_eiffel_tree_parser
-			else
-				io.put_string (usage_string)
-				Exceptions.die (1)
-			end
-			file_name := new_unicode_string (Arguments.argument (2))
 		ensure
-			file_name_not_void: file_name /= Void
-			tree_parser_not_void: tree_parser /= Void
+			file_name_not_void: not has_error implies file_name /= Void
+			parser_not_void: not has_error implies event_parser /= Void
 		end
 
 feature -- Checks we have to do before we can run
-
-	check_parsers is
-		do
-				-- toe must be there
-				-- and one or both of [expat,native]
-			if not fact.is_any_toe_tree_available then
-				io.put_string ("No XML parser backends available, please %
-					%recompile application%N")
-				Exceptions.die (1)
-			end
-		end
 
 	check_file_readable is
 			-- check if file_name is readable
 		local
 			s: KL_TEXT_INPUT_FILE
 		do
-			!! s.make (file_name.to_utf8)
+			!! s.make (file_name)
 			s.open_read
 			if not s.is_open_read then
-				io.put_string ("Unable to open input file:")
-				io.put_string (file_name.to_utf8)
-				io.put_string ("%N")
-				Exceptions.die (1)
+				io.put_string ("Unable to open input file: " + file_name)
+				io.put_new_line
+				has_error := True
 			else
 				s.close
 			end
 		end
 
-feature
+feature -- Parser
 
-	tree_parser: XM_TREE_PARSER
-
-	fact: XM_PARSER_FACTORY is
+	fact: XM_EXPAT_PARSER_FACTORY is
+			-- Shared factory.
 		once
-			!! Result.make
+			!! Result
 		ensure
 			factory_not_void: Result /= Void
 		end
 
+	event_parser: XM_PARSER
+			-- This is the actual parser
+
+	tree_pipe: XM_TREE_CALLBACKS_PIPE
+			-- Tree generating callbacks
+			
 feature
 
 	usage_string: STRING is
 		once
 			Result := clone ("usage: namespaces ")
-			if fact.is_expat_event_available then
-				Result.append_string ("--expat")
-				if fact.is_eiffel_event_available then
-					Result.append_string ("|")
-				end
+			if fact.is_expat_available then
+				Result.append_string ("--expat|")
 			end
-			if fact.is_eiffel_event_available then
-				Result.append_string ("--eiffel")
-			end
+			Result.append_string ("--eiffel")
 			Result.append_string (" <input-file>%N")
 		end
 
 feature
 
-	file_name: UC_STRING
+	file_name: STRING
+			-- File name.
+
+	has_error: BOOLEAN
+			-- Error status.
 
 end
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolki
---| Copyright (C) 1999  Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.a
---| www: http://exml.sourceforge.ne
---|-------------------------------------------------------------------------
-
