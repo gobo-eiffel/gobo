@@ -1,6 +1,5 @@
 indexing
 
-
 	description:
 
 		"Abstract factory for event based XML parsers"
