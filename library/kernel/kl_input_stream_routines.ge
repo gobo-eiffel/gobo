@@ -37,7 +37,7 @@ feature -- Initialization
 			a_file: PLAIN_TEXT_FILE
 #else
 #ifdef SE
-			a_file: STD_FILE_READ
+			a_file: TEXT_FILE_READ
 #else
 #ifdef TOWER
 			a_file: FILE
@@ -84,7 +84,7 @@ feature -- Access
 			a_stream_void: a_stream /= Void
 #ifdef SE
 		local
-			a_file: STD_FILE_READ
+			a_file: TEXT_FILE_READ
 			a_std_input: STD_INPUT
 #endif
 		do
@@ -164,7 +164,7 @@ feature -- Status setting
 			not_closed: not is_closed (a_stream)
 #ifdef SE
 		local
-			a_file: STD_FILE_READ
+			a_file: TEXT_FILE_READ
 #endif
 		do
 #ifdef SE
