@@ -368,7 +368,7 @@ feature -- Content (mixed)
 		do
 			Result := is_choice and is_character_data_allowed
 		ensure
-			empty: Result implies (not is_name and items.count = 0)
+			empty: Result implies (not is_name)
 		end
 
 	set_content_mixed is
