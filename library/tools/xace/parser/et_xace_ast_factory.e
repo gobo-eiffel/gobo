@@ -280,7 +280,7 @@ feature -- AST factory
 							a_cluster := cluster_parser.last_cluster
 							if a_cluster /= Void then
 								!! clusters.make (a_cluster)
-								!! Result.make (a_pathname ,clusters)
+								!! Result.make (a_pathname, clusters)
 								Result.set_excluded (an_excluded)
 							end
 						else
