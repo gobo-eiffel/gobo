@@ -38,6 +38,8 @@ inherit
 			remove as remove_i_th,
 			prune as prune_i_th
 		export
+			{DS_LINKED_STACK} new_cursor
+			{DS_LINKED_STACK, DS_LINKED_LIST_CURSOR, DS_LINKED_LIST_SEARCHER} first_cell, last_cell
 			{NONE} all
 		redefine
 			searcher
