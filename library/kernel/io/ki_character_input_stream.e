@@ -19,7 +19,8 @@ inherit
 		rename
 			read as read_character,
 			unread as unread_character,
-			last_item as last_character
+			last_item as last_character,
+			valid_unread_item as valid_unread_character
 		end
 
 feature -- Input
@@ -83,6 +84,14 @@ feature -- Access
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
+		end
+
+feature -- Status report
+
+	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+			-- Can `a_character' be put back in input stream?
+		do
+			Result := True
 		end
 
 end -- class KI_CHARACTER_INPUT_STREAM
