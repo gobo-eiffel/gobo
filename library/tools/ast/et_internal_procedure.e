@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -24,16 +24,18 @@ feature {NONE} -- Initialization
 		a_preconditions: like preconditions; a_locals: like locals;
 		a_compound: like compound; a_postconditions: like postconditions;
 		a_rescue: like rescue_clause; a_clients: like clients;
-		a_class: like base_class) is
+		a_class: like implementation_class; an_id: INTEGER) is
 			-- Create a new internal procedure.
 		require
 			a_name_not_void: a_name /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
+			an_id_positive: an_id >= 0
 		do
+			!! seeds.make (an_id)
 			make_with_seeds (a_name, args, an_obsolete, a_preconditions,
 				a_locals, a_compound, a_postconditions, a_rescue,
-				a_clients, a_class, new_seeds)
+				a_clients, a_class, seeds, an_id)
 		ensure
 			name_set: name = a_name
 			arguments_set: arguments = args
@@ -44,25 +46,26 @@ feature {NONE} -- Initialization
 			postconditions_set: postconditions = a_postconditions
 			rescue_clause_set: rescue_clause = a_rescue
 			clients_set: clients = a_clients
-			version_set: version = Current
-			base_class_set: base_class = a_class
+			version_set: version = an_id
 			implementation_class_set: implementation_class = a_class
+			id_set: id = an_id
 		end
 
 	make_with_seeds (a_name: like name; args: like arguments; an_obsolete: like obsolete_message;
 		a_preconditions: like preconditions; a_locals: like locals;
 		a_compound: like compound; a_postconditions: like postconditions;
 		a_rescue: like rescue_clause; a_clients: like clients;
-		a_class: like base_class; a_seeds: like seeds) is
+		a_class: like implementation_class; a_seeds: like seeds; an_id: INTEGER) is
 			-- Create a new internal procedure.
 		require
 			a_name_not_void: a_name /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 			a_seeds_not_void: a_seeds /= Void
-			a_seeds_valid: valid_seeds (a_seeds)
+			an_id_positive: an_id >= 0
 		do
 			name := a_name
+			id := an_id
 			arguments := args
 			obsolete_message := an_obsolete
 			preconditions := a_preconditions
@@ -71,8 +74,7 @@ feature {NONE} -- Initialization
 			postconditions := a_postconditions
 			rescue_clause := a_rescue
 			clients := a_clients
-			version := Current
-			base_class := a_class
+			version := an_id
 			implementation_class := a_class
 			seeds := a_seeds
 		ensure
@@ -85,10 +87,10 @@ feature {NONE} -- Initialization
 			postconditions_set: postconditions = a_postconditions
 			rescue_clause_set: rescue_clause = a_rescue
 			clients_set: clients = a_clients
-			version_set: version = Current
-			base_class_set: base_class = a_class
+			version_set: version = an_id
 			implementation_class_set: implementation_class = a_class
 			seeds_set: seeds = a_seeds
+			id_set: id = an_id
 		end
 
 end -- class ET_INTERNAL_PROCEDURE

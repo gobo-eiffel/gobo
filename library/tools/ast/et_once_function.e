@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,22 +23,21 @@ creation
 
 feature -- Duplication
 
-	synonym (a_name: like name): like Current is
+	synonym (a_name: like name; an_id: INTEGER): like Current is
 			-- Synonym feature
 		do
 			!! Result.make (a_name, arguments, type, obsolete_message, preconditions,
-				locals, compound, postconditions, rescue_clause, clients, base_class)
+				locals, compound, postconditions, rescue_clause, clients, implementation_class, an_id)
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like name; a_class: like base_class): like Current is
+	renamed_feature (a_name: like name; an_id: INTEGER): like Current is
 			-- Renamed version of current feature
 		do
 			!! Result.make_with_seeds (a_name, arguments, type, obsolete_message, preconditions,
-				locals, compound, postconditions, rescue_clause, clients, a_class, seeds)
+				locals, compound, postconditions, rescue_clause, clients, implementation_class, seeds, an_id)
 			Result.set_version (version)
-			Result.set_implementation_class (implementation_class)
 		end
 
 end -- class ET_ONCE_FUNCTION
