@@ -390,8 +390,8 @@ feature -- Processing
 					print (s)
 				end
 				a_target.execute
-				current_target := Void
 			end
+			current_target := Void
 		ensure
 			current_target_void: current_target = Void
 		end
