@@ -111,6 +111,14 @@ feature -- Status report
 			valid_unicode: Result implies unicode.valid_code (code)
 		end
 
+	is_ascii: BOOLEAN is
+			-- Is this entity representing an ASCII character?
+		do
+			Result := code <= 127
+		ensure
+			definition: Result = (code <= 127)
+		end
+		
 feature -- Conversion
 
 	to_character: CHARACTER is

@@ -30,6 +30,9 @@ inherit
 			normalized_newline,
 			has_normalized_newline
 		end
+		
+	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -127,7 +130,10 @@ feature -- Scanner: set input buffer
 			elseif is_literal then
 					-- Literal string.
 				reset
-				set_input_buffer (new_string_buffer (value))
+				-- the value we get may be UC_STRING, so it must be
+				-- converted back to UTF8 for the scanner which operates 
+				-- on UTF8-in-STRING input
+				set_input_buffer (new_string_buffer (utf8.to_utf8(value)))
 			else
 					-- External entity in a file.
 				reset

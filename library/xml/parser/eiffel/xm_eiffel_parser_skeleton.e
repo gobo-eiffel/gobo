@@ -296,7 +296,7 @@ feature {NONE} -- DTD
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make_name (onstring (a_name))
+			!! Result.make_name (a_name)
 		ensure
 			element_name_not_void: Result /= Void
 		end
@@ -313,7 +313,7 @@ feature {NONE} -- DTD
 			a_cursor := some_attributes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 					-- TODO: missing part
-				on_attribute_declaration (onstring (ele_name), a_cursor.item.name, a_cursor.item)
+				on_attribute_declaration (ele_name, a_cursor.item.name, a_cursor.item)
 				a_cursor.forth
 			end
 		end
@@ -487,6 +487,8 @@ feature {NONE} -- Scanner implementation
 
 	read_token is
 			-- Read token from scanner.
+		local
+			last_text: STRING
 		do
 				-- Read token from scanner.
 			scanner.read_token
@@ -506,15 +508,25 @@ feature {NONE} -- Scanner implementation
 				scanners.remove
 				read_token
 			end
+				-- If this is a PE entity reference, temporarily
+				-- switch scanner. Token is left for validation.
+			last_text ?= last_value
+			--check for_all tokens_below: last_value is STRING end
+			
 			if last_token = DOCTYPE_PEREFERENCE then
-					-- If this is a PE entity reference, temporarily
-					-- switch scanner. Token is left for validation.
-				process_pe_entity (last_value.out)
-			elseif last_token = CONTENT_ENTITY  then
+				process_pe_entity (onstring_ascii (last_text))
+			elseif last_token = DOCTYPE_PEREFERENCE_UTF8 then
+				process_pe_entity (onstring_utf8 (last_text))
 				-- Same if content entity reference.
-				process_entity (last_value.out)
+			elseif last_token = CONTENT_ENTITY  then
+				process_entity (onstring_ascii (last_text))
+			elseif last_token = CONTENT_ENTITY_UTF8  then
+				process_entity (onstring_utf8 (last_text))
+
 			elseif last_token = ATTRIBUTE_ENTITY then
-				process_attribute_entity (last_value.out)
+				process_attribute_entity (onstring_ascii (last_text))
+			elseif last_token = ATTRIBUTE_ENTITY_UTF8 then
+				process_attribute_entity (onstring_utf8 (last_text))
 			end
 		end
 
@@ -579,33 +591,58 @@ feature {NONE} -- Scanner entity processing
 			end
 		end
 
-feature {NONE} -- String
+feature {NONE} -- String mode
 
-	onstring (a_string: STRING): STRING is
-			-- Convert string from inside the parser to string as 
-			-- seen by callback interface.
+	onstring_ascii (a_string: STRING): STRING is
+			-- Incoming ascii string.
+		require
+			ascii: unicode.is_ascii_string (a_string)
 		do
-			if a_string /= Void then
-				if is_string_mode_unicode then
-					Result := new_unicode_string_from_utf8 (a_string)
-				elseif not unicode.is_ascii_string (a_string) then
-					if is_string_mode_ascii then
-						force_error (Error_unicode_in_ascii_string_mode)
-					else
-						Result := new_unicode_string_from_utf8 (a_string)
-					end
-				else
-					Result := a_string
-				end
+			if is_string_mode_unicode then -- force all unicode
+				Result := new_unicode_string_from_utf8 (a_string)
+			else
+				Result := a_string
 			end
 		end
-
+		
+	onstring_utf8 (a_string: STRING): STRING is
+			-- Incoming UTF8 encoded string.
+		require
+			not_ascii: not unicode.is_ascii_string (a_string)
+		do
+			if is_string_mode_ascii then
+				force_error (Error_unicode_in_ascii_string_mode)
+			else
+				Result := new_unicode_string_from_utf8 (a_string)
+			end
+		end
+		
 	shared_empty_string: STRING is
-			-- Shared empty string
+			-- Shared empty string (type depends on string mode)
+		do
+			if is_string_mode_unicode then
+				Result := shared_empty_string_uc
+			else
+				Result := shared_empty_string_string
+			end
+		ensure
+			empty_string_not_void: Result /= Void
+		end
+				
+feature {NONE} -- String mode: shared empty string implementation
+
+	shared_empty_string_string: STRING is
+			-- Empty string of type STRING
 		once
 			!! Result.make (0)
 		ensure
-			empty_string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+		end
+		
+	shared_empty_string_uc: UC_STRING is
+			-- Empty string of type UC_STRING
+		once
+			!! Result.make (0)
 		end
 
 invariant

@@ -35,7 +35,9 @@ creation
 
 %type <XM_EIFFEL_PARSER_NAME> namespace_name s_tag_name s_tag e_tag attribute
 %type <DS_HASH_SET [XM_EIFFEL_PARSER_NAME]> s_tag_trail
-%type <STRING> namespace_name_second nm_token doctype_name
+%type <STRING> namespace_name_second nm_token doctype_name doctype_system_token
+%type <STRING> char_data tagname_first tagname_atom name_token pi_target_token 
+%type <STRING> doctype_pe_reference entityvalue_pe_reference
 %type <STRING> entity_value entity_value_trail
 %type <STRING> att_value att_value_trail att_value_trail_item
 %type <STRING> value_reference entity_value_reference
@@ -49,13 +51,13 @@ creation
 %type <XM_DTD_ATTRIBUTE_CONTENT> att_def att_type att_tokenized_type enumerated_type default_decl
 %type <DS_BILINKED_LIST [STRING]> enumeration enumeration_trail
 
-%token <STRING> NAME 
-%token <STRING> NMTOKEN
+%token <STRING> NAME NAME_UTF8
+%token <STRING> NMTOKEN NMTOKEN_UTF8
 %token <STRING> EQ
 %token <STRING> SPACE
-%token <STRING> CHARDATA
+%token <STRING> CHARDATA CHARDATA_UTF8
 %token <STRING> COMMENT_START COMMENT_END COMMENT_DASHDASH
-%token <STRING> PI_START PI_TARGET PI_END PI_RESERVED
+%token <STRING> PI_START PI_TARGET PI_TARGET_UTF8 PI_END PI_RESERVED
 %token <STRING> XMLDECLARATION_START
 %token <STRING> XMLDECLARATION_END
 %token <STRING> XMLDECLARATION_VERSION
@@ -74,7 +76,7 @@ creation
 %token <STRING> DOCTYPE_GROUP_ZEROONE DOCTYPE_GROUP_ANY DOCTYPE_GROUP_ONEMORE
 %token <STRING> DOCTYPE_PCDATA
 %token <STRING> DOCTYPE_PUBLIC
-%token <STRING> DOCTYPE_SYSTEM
+%token <STRING> DOCTYPE_SYSTEM DOCTYPE_SYSTEM_UTF8
 %token <STRING> DOCTYPE_REQUIRED DOCTYPE_IMPLIED DOCTYPE_FIXED
 %token <STRING> DOCTYPE_ATT_CDATA DOCTYPE_ATT_ID 
 %token <STRING> DOCTYPE_ATT_IDREF DOCTYPE_ATT_IDREFS
@@ -82,8 +84,8 @@ creation
 %token <STRING> DOCTYPE_ATT_NMTOKEN DOCTYPE_ATT_NMTOKENS
 %token <STRING> DOCTYPE_ATT_NOTATION
 %token <STRING> DOCTYPE_PERCENT
-%token <STRING> DOCTYPE_PEREFERENCE
-%token <STRING> ENTITYVALUE_PEREFERENCE
+%token <STRING> DOCTYPE_PEREFERENCE DOCTYPE_PEREFERENCE_UTF8
+%token <STRING> ENTITYVALUE_PEREFERENCE ENTITYVALUE_PEREFERENCE_UTF8
 %token <STRING> DOCTYPE_IGNORE DOCTYPE_INCLUDE
 %token <STRING> DOCTYPE_NDATA
 %token <STRING> DOCTYPE_CONDITIONAL_START
@@ -95,11 +97,11 @@ creation
 %token <STRING> TAG_START_END
 %token <STRING> TAG_END_EMPTY
 %token <STRING> TAG_END
-%token <STRING> TAG_NAME_FIRST
-%token <STRING> TAG_NAME_ATOM
+%token <STRING> TAG_NAME_FIRST TAG_NAME_FIRST_UTF8
+%token <STRING> TAG_NAME_ATOM TAG_NAME_ATOM_UTF8
 %token <STRING> TAG_NAME_COLON
-%token <STRING> CONTENT_ENTITY CONTENT_CONDITIONAL_END
-%token <STRING> ATTRIBUTE_ENTITY ATTRIBUTE_LT
+%token <STRING> CONTENT_ENTITY CONTENT_ENTITY_UTF8 CONTENT_CONDITIONAL_END
+%token <STRING> ATTRIBUTE_ENTITY ATTRIBUTE_ENTITY_UTF8 ATTRIBUTE_LT
 %token <STRING> ENTITY_INVALID INPUT_INVALID
 
 %%
@@ -120,7 +122,7 @@ document: prolog element misc_maybe
 -- namespace names (outside of DTD declarations) are handled as a list 
 -- of colon-separated atoms.
 
-namespace_name: TAG_NAME_FIRST
+namespace_name: tagname_first
 		{
 			$$ := new_namespace_name
 			$$.force_last ($1)
@@ -142,19 +144,56 @@ namespace_name: TAG_NAME_FIRST
 		}
 	;
 
-namespace_name_second: TAG_NAME_ATOM { $$ := $1 }
-	| TAG_NAME_FIRST { $$ := $1 }
+namespace_name_second: tagname_atom { $$ := $1 }
+	| tagname_first { $$ := $1 }
 	;
 
+	
+-- Common for split UTF8/ascii tokens
+
+
+char_data: CHARDATA { $$ := onstring_ascii ($1) }
+	| CHARDATA_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+	
+tagname_first: TAG_NAME_FIRST { $$ := onstring_ascii ($1) }
+	| TAG_NAME_FIRST_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+
+tagname_atom: TAG_NAME_ATOM { $$ := onstring_ascii ($1) }
+	| TAG_NAME_ATOM_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+	
 nm_token: doctype_name { $$ := $1 }
-	| NMTOKEN { $$ := $1 }
+	| NMTOKEN { $$ := onstring_ascii ($1) }
+	| NMTOKEN_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+	
+name_token: NAME { $$ := onstring_ascii ($1) }
+	| NAME_UTF8 { $$ := onstring_utf8 ($1) }
 	;
 
+pi_target_token: PI_TARGET { $$ := onstring_ascii ($1) }
+	| PI_TARGET_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+	
+doctype_pe_reference: DOCTYPE_PEREFERENCE { $$ := onstring_ascii ($1) }
+	| DOCTYPE_PEREFERENCE_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+	
+entityvalue_pe_reference: ENTITYVALUE_PEREFERENCE { $$ := onstring_ascii ($1) }
+	| ENTITYVALUE_PEREFERENCE_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+
+doctype_system_token: DOCTYPE_SYSTEM { $$ := onstring_ascii ($1) }
+	| DOCTYPE_SYSTEM_UTF8 { $$ := onstring_utf8 ($1) }
+	;
+	
 -- Within the DTD name = keywords + ordinary words
 -- This is not handled within the scanner because the position 
 -- of a word determines whether it is a keyword or not.
 
-doctype_name: NAME { $$ := $1 }
+doctype_name: name_token { $$ := $1 }
 	| DOCTYPE_ATT_CDATA { $$ := $1 }
 	| DOCTYPE_ATT_ID { $$ := $1 }
 	| DOCTYPE_ATT_IDREF { $$ := $1 }
@@ -180,7 +219,7 @@ req_space: space_item
 	;
 
 space_item: SPACE
-	| DOCTYPE_PEREFERENCE 
+	| doctype_pe_reference 
 		{ 
 				-- Really applies only in DTD, but token cannot appear in content
 				-- and test above would catch, if unintentionally.
@@ -198,19 +237,19 @@ entity_value: VALUE_START VALUE_END
 		{ $$ := $2 }
 	;
 
-entity_value_trail: CHARDATA
+entity_value_trail: char_data
 		{ $$ := $1 }
 	| entity_value_reference
 		{ $$ := $1 }
-	| entity_value_trail CHARDATA
+	| entity_value_trail char_data
 		{ $$ := STRING_.concat ($1, $2) }
 	| entity_value_trail entity_value_reference
 		{ $$ := STRING_.concat ($1, $2) }
 	;
 
-entity_value_reference: ENTITYVALUE_PEREFERENCE
+entity_value_reference: entityvalue_pe_reference
 		{ $$ := entity_referenced_in_entity_value ($1) }
--- character_reference now CHARDATA
+-- character_reference now char_data
 -- bypassed entity handled by scanner
 	;
 
@@ -226,20 +265,21 @@ att_value_trail: att_value_trail_item
 		{ $$ := STRING_.concat ($1, $2) }
 	;
 
-att_value_trail_item: CHARDATA { $$ := $1 }
+att_value_trail_item: char_data { $$ := $1 }
 	| value_reference { $$ := $1 }
 	| ATTRIBUTE_LT { force_error (Error_lt_not_allowed_attribute_value) }
 	;
 
 value_reference: ATTRIBUTE_ENTITY { $$ := shared_empty_string } -- really handled by `read_token'
+	| ATTRIBUTE_ENTITY_UTF8 { $$ := shared_empty_string }
 	;
 
 -- 2.5 Comments
 
 comment: COMMENT_START comment_content COMMENT_END
-		{ on_comment (onstring ($2)) }
+		{ on_comment ($2) }
 	| COMMENT_START COMMENT_END
-		{ on_comment (onstring (shared_empty_string)) }
+		{ on_comment (shared_empty_string) }
 	;
 
 comment_content: comment_content_item
@@ -248,18 +288,18 @@ comment_content: comment_content_item
 		{ $$ := STRING_.concat ($1, $2) }
 	;
 
-comment_content_item: CHARDATA { $$ := $1 }
+comment_content_item: char_data { $$ := $1 }
 	| COMMENT_DASHDASH { force_error (Error_no_dash_dash_in_comment) }
 	;
 
 -- 2.6 Processing instructions
 
-pi: PI_START PI_TARGET req_space pi_content_first pi_content_trail PI_END
-		{ on_processing_instruction (onstring ($2), onstring (STRING_.concat ($4,$5))) }
-	| PI_START PI_TARGET req_space pi_content_first PI_END
-		{ on_processing_instruction (onstring ($2), onstring ($4)) }
-	| PI_START PI_TARGET maybe_space PI_END
-		{ on_processing_instruction (onstring ($2), onstring (shared_empty_string)) }
+pi: PI_START pi_target_token req_space pi_content_first pi_content_trail PI_END
+		{ on_processing_instruction ($2, STRING_.concat ($4,$5)) }
+	| PI_START pi_target_token req_space pi_content_first PI_END
+		{ on_processing_instruction ($2, $4) }
+	| PI_START pi_target_token maybe_space PI_END
+		{ on_processing_instruction ($2, shared_empty_string) }
 	| PI_RESERVED { force_error (Error_pi_xml_reserved) }
 	;
 
@@ -269,26 +309,26 @@ pi_content_trail: pi_content_item
 		{ $$ := STRING_.concat ($1, $2) }
 	;
 
-pi_content_item: CHARDATA { $$ := $1 }
-	| PI_TARGET { $$ := $1 }
+pi_content_item: char_data { $$ := $1 }
+	| pi_target_token { $$ := $1 }
 	| SPACE { $$ := $1 }
 	;
 
-pi_content_first: CHARDATA { $$ := $1 }
-	| PI_TARGET { $$ := $1 }
+pi_content_first: char_data { $$ := $1 }
+	| pi_target_token { $$ := $1 }
 	;
 
 -- 2.7 CDATA section
 
 cd_sect: CDATA_START CDATA_END
-		{ on_content (onstring (shared_empty_string)) }
+		{ on_content (shared_empty_string) }
 	| CDATA_START cdata_body CDATA_END
-		{ on_content (onstring ($2)) }
+		{ on_content ($2) }
 	;
 
-cdata_body: CHARDATA
+cdata_body: char_data
 		{ $$ := $1 }
-	| cdata_body CHARDATA
+	| cdata_body char_data
 		{ $$ := STRING_.concat ($1, $2) }
 	;
 
@@ -338,12 +378,12 @@ doctype_decl: doctype_decl_internal
 	;
 
 doctype_decl_internal: DOCTYPE_START req_space doctype_name maybe_space doctype_decl_declaration DOCTYPE_END
-	{ on_doctype (onstring ($3), Void, True) }
+	{ on_doctype ($3, Void, True) }
 	;
 
 doctype_decl_external: DOCTYPE_START req_space doctype_name req_space external_id maybe_space doctype_decl_declaration DOCTYPE_END
 	 {
-		on_doctype (onstring ($3), $5, False)
+		on_doctype ($3, $5, False)
 		debug ("xml_parser")
 			std.output.put_string ("[dtd: in]")
 		end
@@ -398,7 +438,7 @@ markup_decl: element_decl
 	| PI
 	| comment
 	| SPACE -- not in XML1.0:29?
-	| DOCTYPE_PEREFERENCE
+	| doctype_pe_reference
 	;
 
 -- 2.9 Stand-alone document declaration
@@ -445,19 +485,19 @@ s_tag: TAG_START s_tag_name TAG_END
 empty_elem_tag: TAG_START s_tag_name TAG_END_EMPTY
 		{
 			on_start_tag_finish -- makes empty attributes
-			on_end_tag (Void, onstring ($2.ns_prefix), onstring ($2.local_part))
+			on_end_tag (Void, $2.ns_prefix, $2.local_part)
 		}
 	| TAG_START s_tag_name req_space s_tag_trail TAG_END_EMPTY
 		{
 			on_start_tag_finish
-			on_end_tag (Void, onstring ($2.ns_prefix), onstring ($2.local_part))
+			on_end_tag (Void, $2.ns_prefix, $2.local_part)
 		}
 	;
 
 s_tag_name: namespace_name
 		{
 			$$ := $1
-			on_start_tag (Void, onstring ($1.ns_prefix), onstring ($1.local_part))
+			on_start_tag (Void, $1.ns_prefix, $1.local_part)
 		}
 	;
 
@@ -480,7 +520,7 @@ s_tag_trail: attribute
 attribute: namespace_name EQ att_value
 		{
 			$$ := $1
-			on_attribute (Void, onstring ($1.ns_prefix), onstring ($1.local_part), onstring ($3))
+			on_attribute (Void, $1.ns_prefix, $1.local_part, $3)
 		}
 	| namespace_name error 
 		{ force_error (Error_attribute) }
@@ -489,7 +529,7 @@ attribute: namespace_name EQ att_value
 e_tag: TAG_START_END namespace_name TAG_END
 		{
 			$$ := $2
-			on_end_tag (Void, onstring ($2.ns_prefix), onstring ($2.local_part))
+			on_end_tag (Void, $2.ns_prefix, $2.local_part)
 		}
 	| TAG_START_END error { force_error (Error_end_tag) }
 	;
@@ -498,7 +538,7 @@ content: content_item
 	| content content_item
 	;
 
-content_item: content_text { on_content (onstring ($1)) }
+content_item: content_text { on_content ($1) }
 	| cd_sect
 	| element
 	| pi
@@ -508,10 +548,11 @@ content_item: content_text { on_content (onstring ($1)) }
 	;
 
 entity_in_content: CONTENT_ENTITY -- no action, switched in read_token
+	| CONTENT_ENTITY_UTF8 -- no action, switched in read_token
 	| XMLDECLARATION_END { force_error (Error_entity_xml_declaration) }
 	;
 
-content_text: CHARDATA -- includes character_reference
+content_text: char_data -- includes character_reference
 		{ $$ := $1 }
 	| SPACE 
 		{ $$ := $1 }
@@ -520,7 +561,7 @@ content_text: CHARDATA -- includes character_reference
 -- 3.2 Element type declaration
 
 element_decl: DOCTYPE_ELEMENT req_space doctype_name req_space content_spec DOCTYPE_END
-		{ on_element_declaration (onstring ($3),$5) }
+		{ on_element_declaration ($3,$5) }
 	| DOCTYPE_ELEMENT error { force_error (Error_doctype_element) }
 	;
 
@@ -639,7 +680,7 @@ attlist_decl_trail: att_def
 	;
 
 att_def: req_space doctype_name req_space att_type req_space default_decl
-		{ $$ := $4; $$.set_name (onstring ($2)); $$.copy_default ($6) }
+		{ $$ := $4; $$.set_name ($2); $$.copy_default ($6) }
 	| req_space doctype_name error { force_error (Error_doctype_attribute_item) }
 	;
 
@@ -695,9 +736,9 @@ default_decl: DOCTYPE_REQUIRED
 	| DOCTYPE_IMPLIED
 		{ $$ := new_dtd_attribute_content; $$.set_value_implied }
 	| DOCTYPE_FIXED req_space att_value
-		{ $$ := new_dtd_attribute_content; $$.set_value_fixed (onstring ($3)) }
+		{ $$ := new_dtd_attribute_content; $$.set_value_fixed ($3) }
 	| att_value
-		{ $$ := new_dtd_attribute_content; $$.set_default_value (onstring($1)) }
+		{ $$ := new_dtd_attribute_content; $$.set_default_value ($1) }
 	;
 
 -- 3.4 Conditional section
@@ -729,7 +770,7 @@ ignore_sect_items: ignore_sect_item
 	| ignore_sect_items ignore_sect_item
 	;
 
-ignore_sect_item: CHARDATA
+ignore_sect_item: char_data
 	| DOCTYPE_CONDITIONAL_START ignore_sect_content DOCTYPE_CONDITIONAL_END
 	;
 
@@ -748,18 +789,18 @@ ge_decl: DOCTYPE_ENTITY req_space doctype_name req_space entity_value maybe_spac
 		{
 				-- Internal entity.
 			when_entity_declared ($3, new_literal_entity ($5))
-			on_entity_declaration (onstring ($3), False, onstring ($5), Void, Void)
+			on_entity_declaration ($3, False, $5, Void, Void)
 		}
 	| DOCTYPE_ENTITY req_space doctype_name req_space external_id maybe_space DOCTYPE_END
 		{
 				-- External entity.
 			when_entity_declared ($3, new_external_entity ($5))
-			on_entity_declaration (onstring ($3), False, Void, $5, Void)
+			on_entity_declaration ($3, False, Void, $5, Void)
 		}
 	| DOCTYPE_ENTITY req_space doctype_name req_space external_id ndata_decl maybe_space DOCTYPE_END
 		{
 				-- Unparsed NDATA entity.
-			on_entity_declaration (onstring ($3), False, Void, $5, onstring ($6))
+			on_entity_declaration ($3, False, Void, $5, $6)
 		}
 	;
 
@@ -767,25 +808,25 @@ pe_decl: DOCTYPE_ENTITY req_space DOCTYPE_PERCENT req_space doctype_name req_spa
 		{
 				-- Internal PE entity.
 			when_pe_entity_declared ($5, new_literal_entity ($7))
-			on_entity_declaration (onstring ($5), True, onstring ($7), Void, Void) 
+			on_entity_declaration ($5, True, $7, Void, Void) 
 		}
 	| DOCTYPE_ENTITY req_space DOCTYPE_PERCENT req_space doctype_name req_space external_id maybe_space DOCTYPE_END
 		{
 				-- External PE entity.
 			when_pe_entity_declared ($5, new_external_entity ($7)) 
-			on_entity_declaration (onstring ($5), True, Void, $7, Void)
+			on_entity_declaration ($5, True, Void, $7, Void)
 		}
 	;
 
-external_id: DOCTYPE_SYSTEM
-		{ $$ := new_dtd_external_id; $$.set_system (onstring ($1)) }
+external_id: doctype_system_token
+		{ $$ := new_dtd_external_id; $$.set_system ($1) }
 	;
 
 -- See problem in scanner
---external_id: DOCTYPE_SYSTEM
---		{ $$ := new_dtd_external_id; $$.set_system (onstring ($1)) }
---	| DOCTYPE_PUBLIC DOCTYPE_SYSTEM
---		{ $$ := new_dtd_external_id; $$.set_public (onstring ($1)); $$.set_system (onstring ($2)) }
+--external_id: doctype_system_token
+--		{ $$ := new_dtd_external_id; $$.set_system ($1) }
+--	| DOCTYPE_PUBLIC doctype_system_token
+--		{ $$ := new_dtd_external_id; $$.set_public ($1); $$.set_system ($2) }
 --	;
 
 ndata_decl: req_space DOCTYPE_NDATA req_space doctype_name -- $2 is 'NDATA'
@@ -806,15 +847,15 @@ encoding_decl: XMLDECLARATION_ENCODING
 -- 4.7 Notation declaration
 
 notation_decl: DOCTYPE_NOTATION req_space doctype_name req_space external_id maybe_space DOCTYPE_END
-		{ on_notation_declaration (onstring ($3), $5) }
+		{ on_notation_declaration ($3, $5) }
 	| DOCTYPE_NOTATION req_space doctype_name req_space public_id maybe_space DOCTYPE_END
-		{ on_notation_declaration (onstring ($3), $5) }
+		{ on_notation_declaration ($3, $5) }
 	| DOCTYPE_NOTATION error
 		{ force_error (Error_doctype_notation) }
 	;
 
 public_id: DOCTYPE_PUBLIC
-		{ $$ := new_dtd_external_id; $$.set_system (onstring ($1)) }
+		{ $$ := new_dtd_external_id; $$.set_system ($1) }
 	;
 
 %%

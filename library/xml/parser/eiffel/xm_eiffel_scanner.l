@@ -16,7 +16,7 @@ indexing
 
 	-- TODO:
 	-- system literal accepts non-CHAR
-	-- use CONTENTCHAR+ for attribute value?
+	-- use NOAPOSCHAR/NOQUOTCHAR for attribute value?
 
 class XM_EIFFEL_SCANNER
 
@@ -44,38 +44,63 @@ creation
 %}
 
 
--- NAMECHAR* is too tolerant: all >= 0x80 accepted (more or less works with UTF8)
 -- XML1.0:85 non-conformance: unicode letters
 -- XML1.0:88 non-conformance: unicode digits
 -- XML1.0:89 extender &xb7; + unicode
 
 APOS [']
 QUOT ["]
-CHAR [\r\n\t\x20-\xFF]
+
+ASCIICHAR [\r\n\t\x20-\x7F]
+-- NOSPASCIICHAR [\x21-\x7F]
+UTF8CHAR (([\xC2-\xDF][\x80-\xBF])|(\xE0[\xA0-\xBF][\x80-\xBF])|([\xE1-\xEF][\x80-\xBF][\x80-\xBF])|(\xF0[\x90-\xBF][\x80-\xBF][\x80-\xBF])|([\xF1-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]))
+
+-- CHARUTF8 only accepts legal UTF8 sequences.
+--
+-- this include disallowing sequence encoding below the minimum number of
+-- bits, so the data part may not be zero in either the first or 
+-- the second byte of the encoding.
+--
+--          zero		  min           max            first trail   trail  min   total
+-- 2 bytes  -			  110 00010 C2  110 11111 DF   10000000 80   6      8     11
+-- 3 bytes  1110 0000 E0  1110 0001 E1  1110 1111 EF   10100000 A0   12     12    16
+-- 4 bytes  11110 000 F0  11110 001 F1  11110 111 F7   10010000 90   18     17    21
+-- trail                  10 000000 80  10 111111 BF
+--
+-- open issue: disable surrogates, max char 10FFFF?
+
 SPACECHAR [\r\n\t ]
 
 VALIDENCODING (("us-ascii"|"US-ASCII")|(("utf-"|"UTF-")("8"|"16")))
 
 EQUAL [\r\n\t ]*[=][\r\n\t ]*
 
--- CONTENTCHAR = CHAR - [\r\n\t&<]]
--- COMMENTCHAR = CHAR - [\r\n\t\-]
+CONTENTCHARASCII [\x21-\x25\x27-\x3B\x3D-\X5C\x5E-\x7F]
+-- = NOSPASCIICHAR less &<]
 
-CONTENTCHAR [\x21-\x25\x27-\x3B\x3D-\x5C\x5E-\xFF] 
-COMMENTCHAR [\x20-\x2C\x2E-\xFF]
+PIASCIICHAR [\x21-\x3E\x40-\x7F]
+-- = NOSPASCIICHAR less "?" = \x3F
 
-NAMECHAR [:A-Za-z0-9._\-\x80-\xFF]
-NAMECHAR_NOCOLON [A-Za-z0-9._\-\x80-\xFF]
+CDATAASCIICHAR [\t\x20-\x5C\x5E-\x7F]
+-- = ASCIICHAR less \r\n]
 
-NAMECHAR_FIRST [:A-Za-z_\x80-\xFF]
-NAMECHAR_FIRST_NOCOLON [A-Za-z_\x80-\xFF]
+COMMENTASCIICHAR [\x20-\x2C\x2E-\x7F]
+-- = ASCIICHAR - [\r\n\t\-]
+
+NAMECHAR [:A-Za-z0-9._\-]
+NAMECHAR_NOCOLON [A-Za-z0-9._\-]
+
+NAMECHAR_FIRST [:A-Za-z_]
+NAMECHAR_FIRST_NOCOLON [A-Za-z_]
+
 
 -- PUBIDLITERAL class has no ' when starting with '
 -- SYSTEMLITERAL class is CHAR - quote
 
 PUBIDLITERAL ((['][ \r\na-zA-Z0-9\-()+,./:=?;!*#@$_%]*['])|(["][' \r\na-zA-Z0-9\-()+,./:=?;!*#@$_%]*["]))
-SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 
+NOAPOSSYSLITCHAR [\r\n\t\x20-&(-\x7F]
+NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 
 %x comment_state
 %x processinginstruction
@@ -123,14 +148,19 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (COMMENT_DASHDASH) -- conformance error XML1.0:2.5
 			last_value := text
 		}
-		
-		{COMMENTCHAR}+ {
+				
+		({SPACECHAR}|{COMMENTASCIICHAR})+ {
 			set_last_token (CHARDATA)
 			last_value := text
 		}
 			
-		{CHAR} {
-			set_last_token (CHARDATA) 
+		({SPACECHAR}|{COMMENTASCIICHAR}|{UTF8CHAR})+ {
+			set_last_token (CHARDATA_UTF8)
+			last_value := text
+		}
+		
+		"-" {
+			set_last_token (CHARDATA)
 			last_value := text
 		}
 	}
@@ -196,16 +226,26 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (PI_TARGET)
 			last_value := text
 		}
+		
+		({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})* {
+			set_last_token (PI_TARGET_UTF8)
+			last_value := text
+		}
+		
 		{SPACECHAR}+ {
 			set_last_token (SPACE)
 			last_value := text
 		}
-		{NAMECHAR}+ {
-				-- Get more than one at a time.
+		({PIASCIICHAR})+ {
 			set_last_token (CHARDATA)
 			last_value := text
 		}
-		{CHAR} { 
+		({PIASCIICHAR}|{UTF8CHAR})+ {
+			set_last_token (CHARDATA_UTF8)
+			last_value := text
+		}
+		-- stand alone "?"
+		"?" { 
 			set_last_token (CHARDATA) 
 			last_value := text
 		}
@@ -229,12 +269,18 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (CHARDATA)
 			last_value := normalized_newline
 		}
-		{CONTENTCHAR}+ {
-				-- Big chunks in `last_value'.
+		-- ASCIICHAR less ]
+		({CDATAASCIICHAR})+ {
 			set_last_token (CHARDATA)
 			last_value := text
 		}
-		{CHAR} { 
+		({CDATAASCIICHAR}|{UTF8CHAR})+ {
+				-- Big chunks in `last_value'.
+			set_last_token (CHARDATA_UTF8)
+			last_value := text
+		}
+		-- standalone "]"
+		"]" { 
 			set_last_token (CHARDATA) 
 			last_value := text
 		}
@@ -366,7 +412,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			pop_start_condition
 		}
 
-		{CHAR} {
+		({ASCIICHAR}|{UTF8CHAR}) {
 			set_last_token (CHARDATA)
 		}
 	}
@@ -405,6 +451,10 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (NAME) 
 			last_value := text
 		}
+		({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})* { 
+			set_last_token (NAME_UTF8) 
+			last_value := text
+		}
 		{SPACECHAR}+ {
 			set_last_token (SPACE)
 		}
@@ -415,14 +465,25 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		-- `system_literal_text' does microparsing of last quoted 
 		-- value. Inelegant to do microparsing in a scanner, but 
 		-- PUBLIC and SYSTEM are not keywords and can also be 
-		-- names. PUBIDLITERAL and SYSTEMLITERAL also match quoted 
-		-- values which are not literals.
+		-- names. The quoted values after PUBLIC and SYSTEM also 
+		-- match quoted values which are not literals, but 
+		-- they allow a different character set.
 
 		-- Problem: if declaration merged from processing entity 
 		-- (PE cuts on space token boundaries).
 
-		"PUBLIC"{SPACECHAR}+{PUBIDLITERAL}{SPACECHAR}+{SYSTEMLITERAL} {
+		("SYSTEM"|("PUBLIC"{SPACECHAR}+{PUBIDLITERAL})){SPACECHAR}+(([']{NOAPOSSYSLITCHAR}*['])|(["]{NOQUOTSYSLITCHAR}*["])) {
 			set_last_token (DOCTYPE_SYSTEM)
+			last_value := system_literal_text
+		}
+
+		("SYSTEM"|("PUBLIC"{SPACECHAR}+{PUBIDLITERAL})){SPACECHAR}+[']({NOAPOSSYSLITCHAR}|{UTF8CHAR})*['] {
+			set_last_token (DOCTYPE_SYSTEM_UTF8)
+			last_value := system_literal_text
+		}
+		
+		("SYSTEM"|("PUBLIC"{SPACECHAR}+{PUBIDLITERAL})){SPACECHAR}+["]({NOQUOTSYSLITCHAR}|{UTF8CHAR})*["] {
+			set_last_token (DOCTYPE_SYSTEM_UTF8)
 			last_value := system_literal_text
 		}
 
@@ -430,11 +491,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (DOCTYPE_PUBLIC)
 			last_value := system_literal_text
 		}
-
-		"SYSTEM"{SPACECHAR}+{SYSTEMLITERAL} {
-			set_last_token (DOCTYPE_SYSTEM)
-			last_value := system_literal_text
-		}
+		
 	}
 
 <dtd_element, dtd_attlist>
@@ -449,6 +506,10 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 
 		{NAMECHAR}+ {
 			set_last_token (NMTOKEN) 
+			last_value := text
+		}
+		({NAMECHAR}|{UTF8CHAR})+ {
+			set_last_token (NMTOKEN_UTF8) 
 			last_value := text
 		}
 	}
@@ -474,6 +535,11 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (DOCTYPE_PEREFERENCE)
 			last_value := text_substring (2, text_count - 1)
 		}
+		
+		"%"({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})*";" {
+			set_last_token (DOCTYPE_PEREFERENCE_UTF8)
+			last_value := text_substring (2, text_count - 1)
+		}
 		"%" {
 			set_last_token (ENTITY_INVALID)
 		}
@@ -483,6 +549,10 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 	{
 		"%"{NAMECHAR_FIRST}{NAMECHAR}*";" {
 			set_last_token (ENTITYVALUE_PEREFERENCE)
+			last_value := text_substring (2, text_count - 1)
+		}
+		"%"({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})*";" {
+			set_last_token (ENTITYVALUE_PEREFERENCE_UTF8)
 			last_value := text_substring (2, text_count - 1)
 		}
 	}
@@ -526,8 +596,16 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (TAG_NAME_FIRST)
 			last_value := text
 		}
+		({NAMECHAR_FIRST_NOCOLON}|{UTF8CHAR})({NAMECHAR_NOCOLON}|{UTF8CHAR})* { 
+			set_last_token (TAG_NAME_FIRST_UTF8)
+			last_value := text
+		}
 		{NAMECHAR_NOCOLON}+ { 
 			set_last_token (TAG_NAME_ATOM) 
+			last_value := text
+		}
+		({NAMECHAR_NOCOLON}|{UTF8CHAR})+ { 
+			set_last_token (TAG_NAME_ATOM_UTF8) 
 			last_value := text
 		}
 		{SPACECHAR}+ {
@@ -582,12 +660,20 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 				set_last_token (CONTENT_ENTITY) 
 				last_value := text_substring (2, text_count - 1)
 			}
+		"&"({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})*";" { 
+				set_last_token (CONTENT_ENTITY_UTF8) 
+				last_value := text_substring (2, text_count - 1)
+			}
 	}
 
 <entity_value_single,entity_value_double>
 	{
 		"&"{NAMECHAR_FIRST}{NAMECHAR}*";" { 
 				set_last_token (CHARDATA) -- Bypassed
+				last_value := text
+			}
+		"&"({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})*";" { 
+				set_last_token (CHARDATA_UTF8) -- Bypassed
 				last_value := text
 			}
 
@@ -603,6 +689,10 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 	{
 		"&"{NAMECHAR_FIRST}{NAMECHAR}*";" { 
 				set_last_token (ATTRIBUTE_ENTITY)
+				last_value := text_substring (2, text_count - 1)
+			}
+		"&"({NAMECHAR_FIRST}|{UTF8CHAR})({NAMECHAR}|{UTF8CHAR})*";" { 
+				set_last_token (ATTRIBUTE_ENTITY_UTF8)
 				last_value := text_substring (2, text_count - 1)
 			}
 
@@ -631,7 +721,11 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		"&#"[0-9]+";" { 
 			character_entity.from_decimal (text_substring (3, text_count - 1))
 			if character_entity.is_valid then
-				set_last_token (CHARDATA)
+				if character_entity.is_ascii then
+					set_last_token (CHARDATA)
+				else
+					set_last_token (CHARDATA_UTF8)
+				end
 				last_value := character_entity.to_utf8
 			else
 				set_last_token (ENTITY_INVALID)
@@ -641,7 +735,11 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		"&#x"[0-9a-fA-F]+";" {
 			character_entity.from_hexadecimal (text_substring (4, text_count - 1))
 			if character_entity.is_valid then
-				set_last_token (CHARDATA)
+				if character_entity.is_ascii then
+					set_last_token (CHARDATA)
+				else
+					set_last_token (CHARDATA_UTF8)
+				end
 				last_value := character_entity.to_utf8
 			else
 				set_last_token (ENTITY_INVALID)
@@ -669,9 +767,13 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (VALUE_END) 
 			pop_start_condition
 		}
-		{CHAR} {
-				-- After apos.
+		-- After apos.
+		{ASCIICHAR} {
 			set_last_token (CHARDATA) 
+			last_value := text
+		}
+		{UTF8CHAR} {
+			set_last_token (CHARDATA_UTF8) 
 			last_value := text
 		}
 	}
@@ -682,9 +784,13 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (VALUE_END)
 			pop_start_condition
 		}
-		{CHAR} {
-				-- After quot.
+		-- After quot.
+		{ASCIICHAR} {
 			set_last_token (CHARDATA) 
+			last_value := text
+		}
+		{UTF8CHAR} {
+			set_last_token (CHARDATA_UTF8) 
 			last_value := text
 		}
 	}
@@ -719,15 +825,18 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 	last_value := text
 }
 
-{CONTENTCHAR}+ { 
-		-- Get more than one at a time. Could be more formal...
+{CONTENTCHARASCII}+ { 
 	set_last_token (CHARDATA)
 	last_value := text
 }
 
-{CHAR} { 
-		-- Catch remaining correct characters.
-	set_last_token (CHARDATA) 
+({CONTENTCHARASCII}|{UTF8CHAR})+ { 
+	set_last_token (CHARDATA_UTF8)
+	last_value := text
+}
+
+"]" {
+	set_last_token (CHARDATA)
 	last_value := text
 }
 
