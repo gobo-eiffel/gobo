@@ -61,4 +61,11 @@
 		</para>
 	</section>
 
+	<section id="verbose">
+		<title>verbose</title>
+		<para>
+			This variable is set (to 'true') when geant is run in verbose mode.
+		</para>
+	</section>
+
 </chapter>

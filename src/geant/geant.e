@@ -46,6 +46,11 @@ feature {NONE} -- Initialization
 			create error_handler.make_standard
 			read_command_line
 
+				-- Verbose:
+			if verbose then
+				Default_builtin_variables.set_variable_value ("verbose", "true")
+			end
+
 				-- Create project variables:
 			create a_variables.make
 

@@ -57,6 +57,10 @@ feature {NONE} -- Initialization
 			if not Project_variables_resolver.has (a_name) then
 				set_variable_value (a_name, Default_builtin_variables.value (a_name))
 			end
+			a_name := "verbose"
+			if not Project_variables_resolver.has (a_name) and Default_builtin_variables.has (a_name) then
+				set_variable_value (a_name, Default_builtin_variables.value (a_name))
+			end
 		end
 
 end
