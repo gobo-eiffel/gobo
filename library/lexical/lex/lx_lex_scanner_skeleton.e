@@ -263,6 +263,8 @@ feature {NONE} -- Implementation
 		local
 			bracketed_name: STRING
 			parenthesised_definition: STRING
+			i, nb: INTEGER
+			stop: BOOLEAN
 		do
 			bracketed_name := STRING_.make (a_name.count + 2)
 			bracketed_name.append_character ('{')
@@ -273,9 +275,27 @@ feature {NONE} -- Implementation
 			end
 			parenthesised_definition := STRING_.make (a_definition.count + 2)
 			parenthesised_definition.append_character ('(')
-			parenthesised_definition.append_string (a_definition)
 				-- Skip trailing white spaces.
-			parenthesised_definition.right_adjust
+			from
+				nb := a_definition.count
+				i := nb
+			until
+				i < 1 or stop
+			loop
+				inspect a_definition.item (i)
+				when ' ', '%T', '%R', '%N' then
+					i := i - 1
+				else
+					stop := True
+				end
+			end
+			if i >= 1 then
+				if i < nb then
+					parenthesised_definition.append_string (a_definition.substring (1, i))
+				else
+					parenthesised_definition.append_string (a_definition)
+				end
+			end
 			parenthesised_definition.append_character (')')
 			name_definitions.force (parenthesised_definition, bracketed_name)
 		end
