@@ -18,7 +18,8 @@ inherit
 
 	ANY
 		rename
-			rename_file as se_rename_file
+			rename_file as se_rename_file,
+			file_exists as se_file_exists
 		end
 
 #endif
@@ -46,6 +47,48 @@ feature -- File handling
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
+		end
+
+	file_exists (a_filename: STRING): BOOLEAN is
+			-- Does file named `a_filename' physically exist on disk?
+			-- (Note that with SmallEiffel this routine actually returns `is_readable'.)
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename_not_void: a_filename /= Void
+		deferred
+		end
+
+	file_count (a_filename: STRING): INTEGER is
+			-- Number of bytes in file named `a_filename';
+			-- Return -1 if the number of bytes was not available,
+			-- if the file did not exist for example.
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename_not_void: a_filename /= Void
+		deferred
+		ensure
+			valid_values: Result = -1 or Result >= 0
+		end
+
+	file_time_stamp (a_filename: STRING): INTEGER is
+			-- Time stamp (number of seconds since 1 January 1970
+			-- at 00:00:00 UTC) of last modification to file `a_filename';
+			-- Return -1 if the time stamp was not available, if the
+			-- file did not exist for example, or if the time stamp
+			-- didn't fit into an INTEGER. (Use DT_DATE_TIME.make_from_epoch
+			-- to convert this time stamp to a human readable format.)
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename_not_void: a_filename /= Void
+		deferred
+		ensure
+			valid_values: Result = -1 or Result >= 0
 		end
 
 	rename_file (old_name, new_name: STRING) is
@@ -134,6 +177,17 @@ feature -- Directory handling
 		deferred
 		end
 
+	directory_exists (a_dirname: STRING): BOOLEAN is
+			-- Does directory named `a_dirname' physically exist on disk?
+			-- (Note that with SmallEiffel this routine actually returns `is_readable'.)
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_dirname_not_void: a_dirname /= Void
+		deferred
+		end
+
 	create_directory (a_dirname: STRING) is
 			-- Create a new directory named `a_dirname'.
 			-- Do nothing if the directory could not
@@ -148,10 +202,37 @@ feature -- Directory handling
 		deferred
 		end
 
+	recursive_create_directory (a_dirname: STRING) is
+			-- Create a new directory named `a_dirname' on disk.
+			-- Create its parent directories if they do not exist yet.
+			-- Do nothing if the directory could not be created,
+			-- if it already existed or `name' is a nested directory
+			-- name and its parent directory does not exist and 
+			-- could not be created.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_dirname_not_void: a_dirname /= Void
+		deferred
+		end
+
 	delete_directory (a_dirname: STRING) is
 			-- Delete directory named `a_dirname'.
 			-- Do nothing if the directory could not be deleted,
 			-- if it did not exist or if it is not empty.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_dirname_not_void: a_dirname /= Void
+		deferred
+		end
+
+	recursive_delete_directory (a_dirname: STRING) is
+			-- Delete directory named `a_dirname', its files
+			-- and its subdirectories recursively. Do nothing if
+			-- the directory could not be deleted, if it did not exist.
 			-- (`a_dirname' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
