@@ -47,7 +47,7 @@ feature -- Status report
 		local
 			a_comparator: DS_REVERSE_PART_COMPARATOR [G]
 		do
-			if a_container.is_empty then
+			if a_container.count = 0 then
 				Result := True
 			else
 				!! a_comparator.make (comparator)
@@ -143,7 +143,7 @@ feature -- Sort
 		local
 			a_comparator: DS_REVERSE_PART_COMPARATOR [G]
 		do
-			if not a_container.is_empty then
+			if a_container.count /= 0 then
 				!! a_comparator.make (comparator)
 				sort_with_comparator (a_container, a_comparator)
 			end
