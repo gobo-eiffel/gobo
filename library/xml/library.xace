@@ -54,15 +54,15 @@
 					<option name="abstract" value="true"/>
 					<cluster name="${GOBO_EIFFEL}" prefix="impl_expat_spec_"/>
 				</cluster>
-				<external unless="${GOBO_OS}=windows">
-					<include_dir location="${EXPAT}/include"/>
-					<link_library location="-lexpat" unless="${GOBO_EIFFEL}=ve"/>
-					<link_library location="${EXPAT}/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
-				</external>
-				<external if="${GOBO_OS}=windows">
-					<include_dir location="${EXPAT}/Source/lib"/>
-					<link_library location="${EXPAT}/Libs/expat.lib"/>
-				</external>
+				<option unless="${GOBO_OS}=windows">
+					<option name="header" value="${EXPAT}/include"/>
+					<option name="link" value="-lexpat" unless="${GOBO_EIFFEL}=ve"/>
+					<option name="link" value="${EXPAT}/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
+				</option>
+				<option if="${GOBO_OS}=windows">
+					<option name="header" value="${EXPAT}/Source/lib"/>
+					<option name="link" value="${EXPAT}/Libs/expat.lib"/>
+				</option>
 			</cluster>
 			<cluster name="eiffel" prefix="impl_eiffel">
 				<option name="abstract" value="true"/>
