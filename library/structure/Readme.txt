@@ -54,4 +54,6 @@ A more detailed documentation for this library, in HTML format, is
 provided in "$GOBO\doc\structure".
 
 --
-Eric Bezault <ericb@gobo.demon.co.uk>
+Copyright (c) 1998, Eric Bezault
+mailto:ericb@gobo.demon.co.uk
+http://www.gobo.demon.co.uk
