@@ -133,7 +133,11 @@ feature -- Execution
 		do
 			exit_code := 0
 			if is_compilable then
-				cmd := clone ("vec -no -a:")
+				cmd := clone ("vec")
+				if not project.verbose then
+					cmd.append_string (" -no")
+				end
+				cmd.append_string (" -a:")
 				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
 				cmd.append_string (a_filename)
 				project.trace ("  [ve] " + cmd + "%N")
