@@ -597,6 +597,31 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
+	new_anchored_type (a_name: STRING): PR_TYPE is
+			-- Anchored type of  the form "like `a_name'";
+			-- Create a new type if it does not exist yet.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		local
+			lower_name: STRING
+			an_id: INTEGER
+		do
+			lower_name := STRING_.to_lower (a_name)
+			if types.has (lower_name) then
+				Result := types.item (lower_name)
+			else
+					-- Types are indexed from 1.
+					-- (0 is reserved for no-type)
+				an_id := last_grammar.types.count + 1
+				!! Result.make_anchored (an_id, a_name)
+				types.force (Result, lower_name)
+				last_grammar.put_type (Result)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
 	new_action (a_text: STRING): UT_COMMAND is
 			-- Action associated with `a_text'.
 		require

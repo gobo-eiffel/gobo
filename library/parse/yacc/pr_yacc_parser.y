@@ -31,7 +31,7 @@ creation
 %}
 
 %token T_TOKEN T_LEFT T_RIGHT T_NONASSOC T_EXPECT T_PREC T_START T_TYPE
-%token T_2PERCENTS T_UNKNOWN
+%token T_LIKE T_2PERCENTS T_UNKNOWN
 
 %token <STRING>		T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_CHAR T_STR
 %token <STRING>		T_INTEGER T_BOOLEAN T_CHARACTER T_REAL T_DOUBLE T_POINTER
@@ -147,6 +147,10 @@ Eiffel_type: T_IDENTIFIER
 	| T_IDENTIFIER Eiffel_generics
 		{
 			$$ := new_generic_type ($1, $2)
+		}
+	| T_LIKE T_IDENTIFIER
+		{
+			$$ := new_anchored_type ($2)
 		}
 	;
 

@@ -21,7 +21,7 @@ inherit
 
 creation
 
-	make, make_generic
+	make, make_generic, make_anchored
 
 feature {NONE} -- Initialization
 
@@ -67,6 +67,22 @@ feature {NONE} -- Initialization
 				end
 				name.append_character (']')
 			end
+		ensure
+			id_set: id = an_id
+		end
+
+	make_anchored (an_id: INTEGER; a_name: like name) is
+			-- Create a new anchored type
+			-- of the form "like `a_name'".
+		require
+			valid_id: id >= 0
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		do
+			id := an_id
+			name := STRING_.make (a_name.count + 5)
+			name.append_string ("like ")
+			name.append_string (a_name)
 		ensure
 			id_set: id = an_id
 		end
