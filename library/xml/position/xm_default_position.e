@@ -1,6 +1,5 @@
 indexing
 
-
 	description:
 
 		"Position in a XML document which has been parsed from a stream"
@@ -11,7 +10,6 @@ indexing
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:		"$Date$"
 	revision:	"$Revision$"
-indexing
 
 class XM_DEFAULT_POSITION
 
