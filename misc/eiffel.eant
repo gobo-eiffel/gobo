@@ -221,6 +221,7 @@
 		<set name="gexace_output" value="" unless="${gexace_output}"/>
 		<gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
+			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_OS" value="${GOBO_OS}"/>
 		</gexace>
 	</target>
