@@ -72,6 +72,16 @@ feature -- Access
 			-- expressions in `exclude_wc_string';
 			-- available after execute has been performed.
 
+	map: GEANT_MAP
+			-- Map for filenames
+
+	has_map: BOOLEAN is
+			-- Does current fileset have a map?
+		do
+			Result := map /= Void
+		ensure
+			definition: Result = (map /= Void)
+		end
 feature -- Setting
 
 	set_directory_name (a_directory_name: STRING) is
@@ -122,6 +132,16 @@ feature -- Setting
 			exclude_wc_string_set: exclude_wc_string = a_exclude_wc_string
 		end
 
+	set_map (a_map: like map) is
+			-- Set `map' to `a_map'.
+		require
+			a_map_not_void: a_map /= Void
+		do
+			map := a_map
+		ensure
+			map_set: map = a_map
+		end
+
 feature -- Execution
 
 	execute is
@@ -164,22 +184,28 @@ feature {NONE} -- Implementation/Processing
 						not a_name.is_equal (file_system.relative_current_directory) and
 						not a_name.is_equal (file_system.relative_parent_directory)
 					then
-						s := unix_file_system.pathname (a_directory_name, a_name)
+							-- remove possibly leading './':
+						s := unix_file_system.canonical_pathname (a_directory_name)
+						if a_directory_name.is_equal (file_system.relative_current_directory) then
+							s := clone ("")
+						end
+						s := unix_file_system.pathname (s, a_name)
 						if file_system.is_directory_readable (s) then
 							scan_internal (s)
 						else
 								-- Handle files:
---!!							project.trace_debug ("trying to match filename: " + s + "%N")
+--!!							project.trace_debug ("filename: " + s + "%N")
 							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
+--!!							project.trace_debug ("  trying to match: " + smatch + "%N")
 							if include_wildcard = Void then
 								if exclude_wildcard = Void or else not exclude_wildcard.recognizes (smatch) then
-									project.trace_debug ("[fileset] adding filename: " + s + "%N")
+									project.trace_debug ("[fileset] adding filename: " + smatch + "%N")
 									filenames.force_last (s)
 								end
-							elseif include_wildcard.recognizes (s) then
+							elseif include_wildcard.recognizes (smatch) then
 								if exclude_wildcard = Void or else not exclude_wildcard.recognizes (smatch) then
-									project.trace_debug ("[fileset] adding filename: " + s + "%N")
-									filenames.force_last (s)
+									project.trace_debug ("[fileset] adding filename: " + smatch + "%N")
+									filenames.force_last (smatch)
 								end
 							end
 						end
