@@ -63,7 +63,9 @@ feature -- Parsing
 		do
 			reset
 			filename := a_filename
-			set_input_buffer (new_file_buffer (a_file))
+			input_buffer := Eiffel_buffer
+			Eiffel_buffer.set_file (a_file)
+			yy_load_input_buffer
 			yyparse
 		end
 
@@ -1258,7 +1260,6 @@ feature -- AST factory
 			unique_attribute_not_void: Result /= Void
 		end
 
-
 feature -- Error handling
 
 	report_error (a_message: STRING) is
@@ -1283,6 +1284,16 @@ feature {NONE} -- Implementation
 
 	feature_list_count: INTEGER
 	rename_list_count: INTEGER
+
+feature {NONE} -- Constants
+
+	Eiffel_buffer: YY_FILE_BUFFER is
+			-- Eiffel file input buffer
+		once
+			!! Result.make (std.input)
+		ensure
+			eiffel_buffer_not_void: Result /= Void
+		end
 
 invariant
 
