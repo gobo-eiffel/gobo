@@ -105,7 +105,7 @@ feature -- Status report
 				Result := True
 			elseif other.count /= count then
 					-- Error VTUG-2 has already been reported
-					-- in ET_CLASS_TYPE.check_*_validity*.
+					-- in ET_CLASS_TYPE.check_*_validity.
 				Result := False
 			else
 				nb := count
@@ -137,7 +137,8 @@ feature -- Validity
 			formals_not_void: formals /= Void
 			same_count: formals.count = count
 			formal_class_not_void: formal_class /= Void
-			valid_formals: formal_class.ancestors_searched and then not formal_class.has_ancestors_error
+			ancestors_searched: formal_class.ancestors_searched
+			no_ancestors_error: not formal_class.has_ancestors_error
 			an_heir_not_void: an_heir /= Void
 		local
 			i, nb: INTEGER
@@ -186,7 +187,8 @@ feature -- Validity
 			formals_not_void: formals /= Void
 			same_count: formals.count = count
 			formal_class_not_void: formal_class /= Void
-			valid_formals: formal_class.ancestors_searched and then not formal_class.has_ancestors_error
+			ancestors_searched: formal_class.ancestors_searched
+			no_ancestors_error: not formal_class.has_ancestors_error
 			a_formal_not_void: a_formal /= Void
 			a_class_not_void: a_class /= Void
 			a_sorter_not_void: a_sorter /= Void
