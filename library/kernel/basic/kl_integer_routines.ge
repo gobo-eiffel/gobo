@@ -39,11 +39,11 @@ feature -- Conversion
 		end
 
 	to_hexadecimal (an_int: INTEGER; uppercase: BOOLEAN): STRING is
-			-- Hexadecimal representation of `an_int' to `a_string'.
+			-- Hexadecimal representation of `an_int';
 			-- Return a new string at each call.
 			-- Regexp:
-			--		uppercase: 0|[1-9A-F][0-9A-F]*
-			--		not uppercase: 0|[1-9a-f][0-9a-f]*
+			--    uppercase: 0|[1-9A-F][0-9A-F]*
+			--    not uppercase: 0|[1-9a-f][0-9a-f]*
 		require
 			an_int_positive: an_int >= 0
 		do
@@ -51,6 +51,7 @@ feature -- Conversion
 			append_hexadecimal_integer (Result, an_int, uppercase)
 		ensure
 			hexadecimal_not_void: Result /= Void
+			is_string: Result.same_type ("")
 		end
 
 feature -- Output
@@ -58,91 +59,79 @@ feature -- Output
 	append_hexadecimal_integer (a_string: STRING; an_int: INTEGER; uppercase: BOOLEAN) is
 			-- Append a hexadecimal representation of `an_int' to `a_string'.
 			-- Regexp:
-			--		uppercase: 0|[1-9A-F][0-9A-F]*
-			--		not uppercase: 0|[1-9a-f][0-9a-f]*
+			--    uppercase: 0|[1-9A-F][0-9A-F]*
+			--    not uppercase: 0|[1-9a-f][0-9a-f]*
+			-- Note: works even when `a_string' is a UC_STRING.
 		require
 			a_string_not_void: a_string /= Void
 			an_int_positive: an_int >= 0
 		local
-			j, k, i, nb: INTEGER
-			c: CHARACTER
+			k: INTEGER
 		do
 			if an_int = 0 then
 				a_string.append_character ('0')
 			else
-				from k := an_int until k = 0 loop
-					inspect k \\ 16
-					when 0 then
-						a_string.append_character ('0')
-					when 1 then
-						a_string.append_character ('1')
-					when 2 then
-						a_string.append_character ('2')
-					when 3 then
-						a_string.append_character ('3')
-					when 4 then
-						a_string.append_character ('4')
-					when 5 then
-						a_string.append_character ('5')
-					when 6 then
-						a_string.append_character ('6')
-					when 7 then
-						a_string.append_character ('7')
-					when 8 then
-						a_string.append_character ('8')
-					when 9 then
-						a_string.append_character ('9')
-					when 10 then
-						if uppercase then
-							a_string.append_character ('A')
-						else
-							a_string.append_character ('a')
-						end
-					when 11 then
-						if uppercase then
-							a_string.append_character ('B')
-						else
-							a_string.append_character ('b')
-						end
-					when 12 then
-						if uppercase then
-							a_string.append_character ('C')
-						else
-							a_string.append_character ('c')
-						end
-					when 13 then
-						if uppercase then
-							a_string.append_character ('D')
-						else
-							a_string.append_character ('d')
-						end
-					when 14 then
-						if uppercase then
-							a_string.append_character ('E')
-						else
-							a_string.append_character ('e')
-						end
-					when 15 then
-						if uppercase then
-							a_string.append_character ('F')
-						else
-							a_string.append_character ('f')
-						end
-					end
-					k := k // 16
-					nb := nb + 1
+				k := an_int // 16
+				if k /= 0 then
+					append_hexadecimal_integer (a_string, k, uppercase)
 				end
-				from
-					j := a_string.count
-					i := j - nb + 1
-				until
-					i >= j
-				loop
-					c := a_string.item (i)
-					a_string.put (a_string.item (j), i)
-					a_string.put (c, j)
-					i := i + 1
-					j := j - 1
+				inspect an_int \\ 16
+				when 0 then
+					a_string.append_character ('0')
+				when 1 then
+					a_string.append_character ('1')
+				when 2 then
+					a_string.append_character ('2')
+				when 3 then
+					a_string.append_character ('3')
+				when 4 then
+					a_string.append_character ('4')
+				when 5 then
+					a_string.append_character ('5')
+				when 6 then
+					a_string.append_character ('6')
+				when 7 then
+					a_string.append_character ('7')
+				when 8 then
+					a_string.append_character ('8')
+				when 9 then
+					a_string.append_character ('9')
+				when 10 then
+					if uppercase then
+						a_string.append_character ('A')
+					else
+						a_string.append_character ('a')
+					end
+				when 11 then
+					if uppercase then
+						a_string.append_character ('B')
+					else
+						a_string.append_character ('b')
+					end
+				when 12 then
+					if uppercase then
+						a_string.append_character ('C')
+					else
+						a_string.append_character ('c')
+					end
+				when 13 then
+					if uppercase then
+						a_string.append_character ('D')
+					else
+						a_string.append_character ('d')
+					end
+				when 14 then
+					if uppercase then
+						a_string.append_character ('E')
+					else
+						a_string.append_character ('e')
+					end
+				when 15 then
+					if uppercase then
+						a_string.append_character ('F')
+					else
+						a_string.append_character ('f')
+					end
 				end
 			end
 		end
