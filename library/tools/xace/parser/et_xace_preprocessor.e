@@ -62,7 +62,30 @@ feature -- Preprocessing
 			a_composite_not_void: a_composite /= Void
 			a_position_table_not_void: a_position_table /= Void
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_composite.process (typer)
+			if typer.is_document then
+				preprocess_element (typer.document.root_element, a_position_table)
+			elseif typer.is_element then
+				preprocess_element (typer.element, a_position_table)
+			else
+				check unknowm_composite_type: false end
+			end
+		end
+		
+feature {NONE} -- Preprocessing
+
+	preprocess_element (a_composite: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+			-- Expand variables in all attributes from `a_composite' and strip
+			-- elements if they have "if" or "unless" attributes which do not
+			-- evaluate to `True'.
+		require
+			a_composite_not_void: a_composite /= Void
+			a_position_table_not_void: a_position_table /= Void
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_ELEMENT_NODE]
 			a_child_element: XM_ELEMENT
 			should_remove: BOOLEAN
 		do
@@ -75,7 +98,7 @@ feature -- Preprocessing
 					if should_strip_element (a_child_element, a_position_table) then
 						should_remove := True
 					else
-						preprocess_composite (a_child_element, a_position_table)
+						preprocess_element (a_child_element, a_position_table)
 					end
 				end
 				if should_remove then
