@@ -56,6 +56,34 @@ feature -- Logarithms
 #endif
 		end
 
+	log2 (d: DOUBLE): DOUBLE is
+			-- Base 2 logarithm of `d'
+		require
+			d_positive: d > 0.0
+#ifdef VE || SE
+		local
+#endif
+#ifdef SE
+			a: DOUBLE
+#endif
+#ifdef VE
+			a: REAL
+#endif
+		do
+#ifdef ISE
+			Result := log_2 (d)
+#endif
+#ifdef VE || SE
+			a := 2.0
+#endif
+#ifdef SE
+			Result := d.log / a.log
+#endif
+#ifdef VE
+			Result := old_log (d.truncated_to_real) / log (a)
+#endif
+		end
+
 	log10 (d: DOUBLE): DOUBLE is
 			-- Base 10 logarithm of `d'
 		require
