@@ -75,7 +75,7 @@ feature -- Genealogy status
 			from a_parent := parents until a_parent = Void loop
 				if not a_parent.ancestors_searched then
 					Result := False
-					a_parent := Void  -- Jump out of the loop.
+					a_parent := Void -- Jump out of the loop.
 				else
 					a_parent := a_parent.next
 				end
@@ -240,7 +240,7 @@ feature -- Flattening status
 			from a_parent := parents until a_parent = Void loop
 				if not a_parent.is_flattened then
 					Result := False
-					a_parent := Void  -- Jump out of the loop.
+					a_parent := Void -- Jump out of the loop.
 				else
 					a_parent := a_parent.next
 				end
@@ -255,7 +255,7 @@ feature -- Flattening status
 			from a_parent := parents until a_parent = Void loop
 				if a_parent.has_flatten_error then
 					Result := True
-					a_parent := Void  -- Jump out of the loop.
+					a_parent := Void -- Jump out of the loop.
 				else
 					a_parent := a_parent.next
 				end
