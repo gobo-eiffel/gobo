@@ -25,7 +25,7 @@ goto no_verbose
 	set EIF=%3
 	goto do_it
 
-:do_it:
+:do_it
 	if .%GOBO%. == .. goto gobo
 	goto windows
 
@@ -165,6 +165,7 @@ goto exit
 	%MV% geant%EXE% geant1%EXE%
 	cd %GOBO%
 	geant1 %VERBOSE% bootstrap1
+	if .%ERRORLEVEL%. == .. goto bootstrap2
 	if %ERRORLEVEL% == 0 goto bootstrap2
 	goto exit
 
