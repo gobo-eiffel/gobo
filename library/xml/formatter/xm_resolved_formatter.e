@@ -25,7 +25,7 @@ creation
 
 	make
 	
-feature
+feature {NONE} -- Implementation
 
 	process_named_element (a_node: XM_ELEMENT) is
 			-- Process named node `a_node'.
@@ -38,8 +38,6 @@ feature
 		do
 			process_named (a_node)
 		end
-		
-feature {NONE}
 
 	process_named (a_node: XM_NAMED_NODE) is
 			-- Process named node: display resolved namespace 
