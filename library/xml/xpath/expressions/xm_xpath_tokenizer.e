@@ -51,7 +51,7 @@ feature -- Tokenizer states
 
 	Operator_state: INTEGER is 2
 			-- State in which the next thing to be read is an operator
-			-- TODO: review -  these last two are the same - I think that is because
+			--  review -  these last two are the same - I think that is because
 			-- Saxon supports XQuery as well as XSLT.
 
 feature -- Access
@@ -351,7 +351,6 @@ feature --Element change
 			end
 		ensure
 			tokens_set_if_no_error: not is_lexical_error implies last_token_value /= Void
-			-- TODO - meaningfull `last_token_value' - only non-empty when appropriate
 		end
 	
 feature {NONE} -- Status setting

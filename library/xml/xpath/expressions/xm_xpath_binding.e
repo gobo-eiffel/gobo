@@ -12,4 +12,23 @@ indexing
 
 deferred class XM_XPATH_BINDING
 
+feature -- Access
+
+	required_type: XM_XPATH_SEQUENCE_TYPE is
+			-- Static type of variable
+		deferred
+		end
+	
+	name: STRING
+			-- name of variable
+
+feature -- Evaluation
+
+	evaluate (context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Evaluate variable
+		require
+			context_not_void: context /= Void
+		deferred
+		end
+
 end

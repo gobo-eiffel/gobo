@@ -18,9 +18,6 @@ class XM_XPATH_RANGE_VARIABLE_DECLARATION
 inherit
 
 	XM_XPATH_VARIABLE_DECLARATION
-		redefine
-			fingerprint
-		end
 
 creation
 

@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_CARDINALITY
+
 creation
 
 	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic,
@@ -25,14 +27,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (type: INTEGER; cardinality: ARRAY [BOOLEAN]) is
+	make (type: INTEGER; card: INTEGER) is
 			-- Create a specific sequence
 		require
-			valid_cardinality: cardinality /= Void and then cardinality.count = 3
+			valid_cardinality: is_valid_required_cardinality (card)
 		do
 			primary_type := type
-			are_cardinalities_computed := True
-			cardinalities := cardinality
+			set_cardinality (card)
 		end
 
 	make_any_sequence is

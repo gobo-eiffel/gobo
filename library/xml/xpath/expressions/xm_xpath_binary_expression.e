@@ -12,9 +12,6 @@ indexing
 
 deferred class XM_XPATH_BINARY_EXPRESSION
 
-	-- TODO??: binary expressions could be modelled as functions, allowing the same
-	-- table-driven logic to be used as for system function calls.
-
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION

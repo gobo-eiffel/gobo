@@ -15,7 +15,9 @@ class XM_XPATH_EXPRESSION_PARSER
 inherit
 
 	XM_XPATH_TOKENS
-	
+
+	XM_XPATH_CARDINALITY
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
@@ -349,7 +351,6 @@ feature {NONE} -- Expression parsers
 			rv: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			assignment: XM_XPATH_ASSIGNATION
 			single_item, a_sequence: XM_XPATH_SEQUENCE_TYPE
-			cardinality: ARRAY [BOOLEAN]
 		do
 			internal_last_expression := Void
 			create clause_list.make_equal (5)
@@ -451,9 +452,7 @@ feature {NONE} -- Expression parsers
 						-- calls in the action expression have not yet been resolved. We rely on the ability
 						-- of all expressions to return some kind of type information even if this is imprecise.
 
-						create cardinality.make (1,3)
-						cardinality.put (True, 2) -- excatly one
-						create a_sequence.make (clause.sequence.item_type, cardinality)
+						create a_sequence.make (clause.sequence.item_type, Required_cardinality_exactly_one)
 						-- TODO clause.range_variable.set_required_type (a_sequence)
 
 						if operator = For_token then

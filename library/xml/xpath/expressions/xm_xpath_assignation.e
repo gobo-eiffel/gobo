@@ -25,6 +25,8 @@ inherit
 
 	XM_XPATH_TOKENS
 
+	XM_XPATH_CARDINALITY
+
 feature -- Access
 
 	operator: INTEGER
@@ -52,6 +54,15 @@ feature -- Status report
 		do
 			Result := declaration /= Void
 		end
+
+feature -- Evaluation
+
+	evaluate (context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Evaluate variable
+		do
+			Result := context.evaluate_local_variable (slot_number)
+		end
+
 	
 feature -- Analysis
 
@@ -127,6 +138,9 @@ feature {XM_XPATH_ASSIGNATION} -- Implementation
 
 	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			-- Range variable
+
+	slot_number: INTEGER
+			-- Slot number for range variable
 
 invariant
 

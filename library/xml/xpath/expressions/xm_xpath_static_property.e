@@ -2,15 +2,19 @@ indexing
 
 	description:
 
-		"Constants identifying dependencies that an XPath expression might have on its context"
+		"Dependencies that an XPath expression might have on its context"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class XM_XPATH_STATIC_PROPERTY
+
+inherit
+
+	XM_XPATH_CARDINALITY
 
 feature -- Status report
 
@@ -35,21 +39,21 @@ feature -- Dependencies
 	intrinsic_dependencies: ARRAY [BOOLEAN]
 			-- Intrinsic dependencies of expression (ignoring sub-expressions)
 	
-	Depends_upon_current_item: BOOLEAN is
+	depends_upon_current_item: BOOLEAN is
 		-- Expression depends upon current item
 		require
 			dependencies_computed: are_dependencies_computed
 		do
 			Result := dependencies.item (1)
 		end
-	Depends_upon_context_item: BOOLEAN is
+	depends_upon_context_item: BOOLEAN is
 		-- Expression depends upon context item
 		require
 			dependencies_computed: are_dependencies_computed
 		do
 			Result := dependencies.item (2)
 		end
-	Depends_upon_position: BOOLEAN is
+	depends_upon_position: BOOLEAN is
 		-- Expression depends upon position
 		require
 			dependencies_computed: are_dependencies_computed
@@ -57,7 +61,7 @@ feature -- Dependencies
 			Result := dependencies.item (3)
 		end
 
-	Depends_upon_last: BOOLEAN is
+	depends_upon_last: BOOLEAN is
 		-- Expression depends upon last()
 		require
 			dependencies_computed: are_dependencies_computed
@@ -65,7 +69,7 @@ feature -- Dependencies
 			Result := dependencies.item (4)
 		end
 
-	Depends_upon_context_document: BOOLEAN is
+	depends_upon_context_document: BOOLEAN is
 		-- Expression depends upon document containing context item
 		require
 			dependencies_computed: are_dependencies_computed
@@ -73,7 +77,7 @@ feature -- Dependencies
 			Result := dependencies.item (5)
 		end
 
-	Depends_upon_current_group: BOOLEAN is
+	depends_upon_current_group: BOOLEAN is
 		-- Expression depends upon current-group() and/or current-grouping-key() and/or regex-group() 
 		require
 			dependencies_computed: are_dependencies_computed
@@ -81,7 +85,7 @@ feature -- Dependencies
 			Result := dependencies.item (6)
 		end
 	
-	Depends_upon_xslt_context: BOOLEAN is
+	depends_upon_xslt_context: BOOLEAN is
 			-- Expression depends upon the XSLT context
 		require
 			dependencies_computed: are_dependencies_computed
@@ -89,7 +93,7 @@ feature -- Dependencies
 			Result := Depends_upon_current_item or else Depends_upon_current_group
 		end
 
-	Depends_upon_focus: BOOLEAN is
+	depends_upon_focus: BOOLEAN is
 			-- Expression depends upon focus
 		require
 			dependencies_computed: are_dependencies_computed
@@ -100,7 +104,7 @@ feature -- Dependencies
 				or else Depends_upon_context_document
 		end
 
-	Depends_upon_non_document_focus: BOOLEAN is
+	depends_upon_non_document_focus: BOOLEAN is
 			-- Expression depends upon focus, but not the current document
 		require
 			dependencies_computed: are_dependencies_computed
@@ -110,14 +114,36 @@ feature -- Dependencies
 				or else Depends_upon_last
 		end
 
-
 feature -- Cardinality
 
 	cardinalities: ARRAY [BOOLEAN]
 
 			-- The following values represent an index into the `cardinalities' array:
-	
-	Cardinality_allows_zero, Allow_empty: BOOLEAN is
+
+	cardinality: INTEGER is
+			-- cardinality
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			if cardinality_exactly_one then
+				Result := Required_cardinality_exactly_one
+			elseif cardinality_allows_zero_or_more then
+				Result := Required_cardinality_zero_or_more
+			elseif cardinality_allows_one_or_more then
+				Result := Required_cardinality_one_or_more
+			elseif cardinality_allows_one then
+				Result := Required_cardinality_optional
+			else
+					check
+						empty: cardinality_allows_zero and not cardinality_allows_many
+					end
+				Result := Required_cardinality_empty
+			end
+		ensure
+			valid_cardinality: is_valid_required_cardinality (Result)
+		end
+
+	cardinality_allows_zero: BOOLEAN is
 			-- `True' if an empty sequence is allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -125,7 +151,7 @@ feature -- Cardinality
 			Result := cardinalities.item (1)
 		end
 
-	Cardinality_allows_one: BOOLEAN is
+	cardinality_allows_one: BOOLEAN is
 			-- `True' if a single value is allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -133,7 +159,7 @@ feature -- Cardinality
 			Result := cardinalities.item (2)
 		end
 
-	Cardinality_exactly_one: BOOLEAN is
+	cardinality_exactly_one: BOOLEAN is
 			-- `True' if a single value is allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -143,7 +169,7 @@ feature -- Cardinality
 				and then not Cardinality_allows_many
 		end
 
-	Cardinality_allows_many: BOOLEAN is
+	cardinality_allows_many: BOOLEAN is
 			-- `True' if multiple values are allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -151,7 +177,7 @@ feature -- Cardinality
 			Result := cardinalities.item (3)
 		end
 
-	Cardinality_allows_one_or_more: BOOLEAN is
+	cardinality_allows_one_or_more: BOOLEAN is
 			-- Occurrence indicator for one or more (+)
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -159,7 +185,7 @@ feature -- Cardinality
 			Result := Cardinality_allows_one and then Cardinality_allows_many
 		end
 
-	Cardinality_allows_zero_or_more: BOOLEAN is
+	cardinality_allows_zero_or_more: BOOLEAN is
 			-- Occurrence indicator for zero or more (*)
 		require
 			cardinalities_computed: are_cardinalities_computed
@@ -168,6 +194,93 @@ feature -- Cardinality
 				and then Cardinality_allows_one
 				and then Cardinality_allows_many
 		end
+	
+feature -- Setting cardinality
+
+	set_cardinality (requested_cardinality: INTEGER) is
+			-- Set cardinality to `requested_cardinality'.
+		require
+			valid_cardinality: is_valid_required_cardinality (requested_cardinality)
+		do
+			inspect
+				requested_cardinality
+			when Required_cardinality_empty then
+				set_cardinality_empty
+			when Required_cardinality_optional then
+				set_cardinality_optional
+			when Required_cardinality_exactly_one then
+				set_cardinality_exactly_one
+			when Required_cardinality_one_or_more then
+				set_cardinality_one_or_more
+			when Required_cardinality_zero_or_more then
+				set_cardinality_zero_or_more
+			end
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
+
+	set_cardinality_empty is
+			-- Allow no items
+		do
+			if not are_cardinalities_computed then
+				create cardinalities.make (1,3)
+				are_cardinalities_computed := True
+			end
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
+
+	set_cardinality_optional is
+			-- Allow zero or one items
+		do
+			if not are_cardinalities_computed then
+				create cardinalities.make (1,3)
+				are_cardinalities_computed := True
+			end
+			cardinalities.put (True, 1)
+			cardinalities.put (True, 2)
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
+
+	set_cardinality_zero_or_more is
+			-- Allow any number of items
+		do
+			if not are_cardinalities_computed then
+				create cardinalities.make (1,3)
+				are_cardinalities_computed := True
+			end
+			cardinalities.put (True, 1)
+			cardinalities.put (True, 2)
+			cardinalities.put (True, 3)
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
+
+	set_cardinality_one_or_more is
+			-- Allow any number of items other than zero
+		do
+			if not are_cardinalities_computed then
+				create cardinalities.make (1,3)
+				are_cardinalities_computed := True
+			end
+			cardinalities.put (True, 2)
+			cardinalities.put (True, 3)
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
+
+	set_cardinality_exactly_one is
+			-- Allow exactly one item
+		do
+			if not are_cardinalities_computed then
+				create cardinalities.make (1,3)
+				are_cardinalities_computed := True
+			end
+			cardinalities.put (True, 2)
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
 
 feature -- Special properties
 	
@@ -175,7 +288,7 @@ feature -- Special properties
 
 
 
-	Context_document_nodeset: BOOLEAN is
+	context_document_nodeset: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes in the result are
 			-- guaranteed all to be in the same document as the context node. For
@@ -186,7 +299,7 @@ feature -- Special properties
 			Result := special_properties.item (1)
 		end
 
-	Ordered_nodeset: BOOLEAN is
+	ordered_nodeset: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes
 			-- in the result are in document order.
@@ -196,7 +309,7 @@ feature -- Special properties
 			Result := special_properties.item (2)
 		end
 
-	Reverse_document_order: BOOLEAN is
+	reverse_document_order: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression that delivers items in the reverse
 			-- of correct order, when unordered retrieval is requested.
@@ -206,7 +319,7 @@ feature -- Special properties
 			Result := special_properties.item (3)
 		end
 
-	Peer_nodeset: BOOLEAN is
+	peer_nodeset: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression that delivers a set of nodes with the guarantee that no node in the
 			-- set will be an ancestor of any other. This property is useful in deciding whether the
@@ -218,7 +331,7 @@ feature -- Special properties
 			Result := special_properties.item (4)
 		end
 
-	Subtree_nodeset: BOOLEAN is
+	subtree_nodeset: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression that delivers a set of nodes with the guarantee that every node in the
 			-- result will be a descendant or self, or attribute or namespace, of the context node
@@ -228,7 +341,7 @@ feature -- Special properties
 			Result := special_properties.item (5)
 		end
 
-	Attribute_ns_nodeset: BOOLEAN is
+	attribute_ns_nodeset: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression that delivers a set of nodes with the guarantee that every node in the
 			-- result will be an attribute or namespace of the context node

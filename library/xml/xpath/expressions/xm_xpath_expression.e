@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_STATIC_PROPERTY
 
+	XM_XPATH_PROMOTION_ACTIONS
+
 feature -- Access
 	
 	item_type: INTEGER is
@@ -160,10 +162,7 @@ feature {XM_XPATH_EXPRESSION} -- Helper routines
 		local
 			offer: XM_XPATH_PROMOTION_OFFER
 		do
-			create offer
-			-- TODO - uncomment next two lines
---			offer.set_action (Unordered)
---			offer.set_eliminate_duplicates (eliminate_duplicates)
+			create offer.make (Unordered, Void, Void, eliminate_duplicates, False)
 			Result := Current.promote (offer)
 		ensure
 			result_not_void: Result /= Void

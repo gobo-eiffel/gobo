@@ -44,6 +44,7 @@
   <cluster name="eiffel_testgen" location="TESTGEN"/>
   <mount location="${GOBO}/library/test/library.xace"/>
   <mount location="${GOBO}/library/kernel/library.xace"/>
+  <mount location="${GOBO}/library/time/library.xace"/>
   <mount location="${GOBO}/library/structure/library.xace"/>
   <mount location="${GOBO}/library/utility/library.xace"/>
   <mount location="${GOBO}/library/pattern/library.xace"/>
