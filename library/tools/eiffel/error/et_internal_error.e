@@ -180,7 +180,9 @@ creation
 	make_gibbz,
 	make_gibca,
 	make_gibcb,
-	make_gibcc
+	make_gibcc,
+	make_gibcd,
+	make_gibce
 
 feature {NONE} -- Initialization
 
@@ -2303,6 +2305,32 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_gibcd is
+			-- Create a new GIBCD error.
+		do
+			code := gibcd_template_code
+			etl_code := gibcd_etl_code
+			default_template := gibcd_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibce is
+			-- Create a new GIBCE error.
+		do
+			code := gibce_template_code
+			etl_code := gibce_etl_code
+			default_template := gibce_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -2468,6 +2496,8 @@ feature {NONE} -- Implementation
 	gibca_default_template: STRING is "[$1] internal error."
 	gibcb_default_template: STRING is "[$1] internal error."
 	gibcc_default_template: STRING is "[$1] internal error."
+	gibcd_default_template: STRING is "[$1] internal error."
+	gibce_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -2633,6 +2663,8 @@ feature {NONE} -- Implementation
 	gibca_etl_code: STRING is "GIBCA"
 	gibcb_etl_code: STRING is "GIBCB"
 	gibcc_etl_code: STRING is "GIBCC"
+	gibcd_etl_code: STRING is "GIBCD"
+	gibce_etl_code: STRING is "GIBCE"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -2798,6 +2830,8 @@ feature {NONE} -- Implementation
 	gibca_template_code: STRING is "gibca"
 	gibcb_template_code: STRING is "gibcb"
 	gibcc_template_code: STRING is "gibcc"
+	gibcd_template_code: STRING is "gibcd"
+	gibce_template_code: STRING is "gibce"
 			-- Template error codes
 
 end

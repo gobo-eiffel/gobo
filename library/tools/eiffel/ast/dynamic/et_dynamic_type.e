@@ -183,7 +183,9 @@ feature -- Element change
 			-- Add `a_type' to current set.
 		do
 			if a_type /= Current then
--- TODO: report error.
+					-- Internal error: cannot put another type to current type.
+				a_system.set_fatal_error
+				a_system.error_handler.report_gibcd_error
 			end
 		end
 
@@ -191,7 +193,9 @@ feature -- Element change
 			-- Add `a_source' to current set.
 			-- (Sources are sub-sets of current set.)
 		do
--- TODO: error
+				-- Internal error: dynamic types cannot have sources.
+			a_system.set_fatal_error
+			a_system.error_handler.report_gibce_error
 		end
 
 feature -- Output

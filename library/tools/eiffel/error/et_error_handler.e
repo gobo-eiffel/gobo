@@ -7412,6 +7412,24 @@ feature -- Internal errors
 			report_internal_error (an_error)
 		end
 
+	report_gibcd_error is
+			-- Report GIBCD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcd
+			report_internal_error (an_error)
+		end
+
+	report_gibce_error is
+			-- Report GIBCE internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibce
+			report_internal_error (an_error)
+		end
+
 -- Codes not used anymore:
 --				error_handler.report_giadl_error
 --				error_handler.report_giadu_error
