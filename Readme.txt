@@ -90,7 +90,7 @@ Note that if you downloaded this package from CVS on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
-5.4.0827 (Classic and .NET), SmartEiffel 1.1, Visual Eiffel 4.1 (Build 4802).
+5.4.0901 (Classic and .NET), SmartEiffel 1.1, Visual Eiffel 4.1 (Build 4802).
 Halstenbach is not supported anymore. For more details about the supported
 Eiffel compilers, please see the file "Release_notes.txt". This software
 might work with other Eiffel compilers and/or other compiler versions,
