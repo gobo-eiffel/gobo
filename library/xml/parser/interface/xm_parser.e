@@ -249,14 +249,14 @@ feature {NONE} -- Implementation
 		do
 			if a_string = Void then
 				Result := Safe_error_component_undefined
-			elseif a_string.count > Safe_error_component_maximum_size then
-				Result := Safe_error_component_too_big
 			else
 				create Result.make_empty
 				from
 					i := 1
+				variant
+					a_string.count + 1 - i
 				until
-					i > a_string.count
+					i > a_string.count or i > Safe_error_component_maximum_size
 				loop
 					if is_safe_error_character (a_string.item (i)) then
 						Result.append_character (a_string.item (i))
@@ -264,6 +264,11 @@ feature {NONE} -- Implementation
 						Result.append_character ('?')
 					end
 					i := i + 1
+				end
+				
+				if i > Safe_error_component_maximum_size then
+					Result.append_string (Safe_error_component_too_big)
+					i := a_string.count + 1
 				end
 			end
 		ensure
@@ -284,7 +289,7 @@ feature {NONE} -- Implementation
 	Safe_error_component_maximum_size: INTEGER is 100
 			-- Safe error component maximum size
 			
-	Safe_error_component_too_big: STRING is "value-too-big"
+	Safe_error_component_too_big: STRING is "(TRUNCATED)"
 			-- Error component too big error
 	
 	Safe_error_component_undefined: STRING is "undefined"
