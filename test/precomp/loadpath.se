@@ -1,0 +1,3 @@
+${GOBO}/library/loadpath.se
+${GOBO}/library/other/EiffelBase/
+${GOBO}/library/other/EiffelTime/
