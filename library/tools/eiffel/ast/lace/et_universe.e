@@ -159,6 +159,15 @@ feature -- Access
 			no_void_descendant: not Result.has (Void)
 		end
 
+	eiffel_parser: ET_EIFFEL_PARSER is
+			-- Eiffel parser
+		once
+			!! Result.make_with_factory (Current, ast_factory, error_handler)
+			Result.set_use_create_keyword (True)
+		ensure
+			eiffel_parser_not_void: Result /= Void
+		end
+
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
@@ -178,6 +187,24 @@ feature -- Basic classes
 
 	any_parents: ET_PARENTS
 			-- Default parents
+
+feature -- Measurement
+
+	parsed_classes_count: INTEGER is
+			-- Number of parsed classes in universe
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+		do
+			a_cursor := classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				if a_cursor.item.is_parsed then
+					Result := Result + 1
+				end
+				a_cursor.forth
+			end
+		ensure
+			parsed_classes_count_positive: Result >= 0
+		end
 
 feature -- Factory
 
@@ -608,15 +635,6 @@ feature -- Compilation
 		end
 
 feature {NONE} -- Implementation
-
-	eiffel_parser: ET_EIFFEL_PARSER is
-			-- Eiffel parser
-		once
-			!! Result.make_with_factory (Current, ast_factory, error_handler)
-			Result.set_use_create_keyword (True)
-		ensure
-			eiffel_parser_not_void: Result /= Void
-		end
 
 	eiffel_preparser: ET_EIFFEL_PREPARSER is
 			-- Eiffel preparser
