@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 	make (a_type: like type; a_renames: like renames; an_exports: like exports;
 		an_undefines: like undefines; a_redefines: like redefines; a_selects: like selects) is
 			-- Create a new parent clause.
+			
 		require
 			a_type_not_void: a_type /= Void
 			no_void_rename: a_renames /= Void implies not ANY_ARRAY_.has (a_renames, Void)
@@ -72,28 +73,128 @@ feature -- Access
 	next: ET_PARENT
 			-- Next parent in parent list
 
-feature -- Compilation
+feature -- Genealogy status
 
-	flatten is
-			-- Flatten features of current parent.
+	ancestors_searched: BOOLEAN is
+			-- Have ancestors of parent class already
+			-- been searched?
 		do
-			type.base_class.flatten
-		ensure
-			is_flattened: is_flattened
+			Result := type.base_class.ancestors_searched
 		end
 
-feature -- Compilation status
+	has_ancestors_error: BOOLEAN is
+			-- Has a fatal error occurred during
+			-- ancestors searching?
+		do
+			Result := type.base_class.has_ancestors_error
+		end
+
+feature -- Genealogy
+
+	add_to_ancestors (an_heir: ET_CLASS; anc: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]) is
+			-- Add current parent and its ancestors to the
+			-- list of ancestors `anc' of class `an_heir'.
+		require
+			an_heir_not_void: an_heir /= Void
+			anc_not_void: anc /= Void
+			no_void_ancestor: not anc.has_item (Void)
+			ancestors_searched: ancestors_searched
+			no_ancestors_error: not has_ancestors_error
+		local
+			a_class: ET_CLASS
+			a_type, anc_type: ET_CLASS_TYPE
+			has_error: BOOLEAN
+			actual_parameters: ARRAY [ET_TYPE]
+			i, nb: INTEGER
+			an_actual: ET_TYPE
+			a_formal: ET_FORMAL_GENERIC_TYPE
+			generics: ET_ACTUAL_GENERIC_PARAMETERS
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS_TYPE, ET_CLASS]
+		do
+				-- Add current parent to the ancestors
+				-- of `an_heir'.
+			a_class := type.base_class
+			anc.search (a_class)
+			if anc.found then
+				anc_type := anc.found_item
+				if not anc_type.same_syntactical_type (type) then
+					has_error := True
+					an_heir.error_handler.report_gagp_error (an_heir, anc_type, type)
+				end
+			end
+			if not has_error then
+				anc.force (type, a_class)
+					-- Find out whether formal parameters have
+					-- been given actual derivations.
+				generics := type.generic_parameters
+				if generics /= Void then
+					nb := generics.count
+					from i := 1 until i > nb loop
+						an_actual := generics.item (i)
+						a_formal ?= a_type
+						if a_formal = Void or else a_formal.index /= i then
+							if actual_parameters = Void then
+								!! actual_parameters.make (1, nb)
+							end
+							actual_parameters.put (an_actual, i)
+						end
+						i := i + 1
+					end
+				end
+					-- Add proper ancestors of current parent
+					-- to the ancestors of `an_heir'.
+				a_cursor := a_class.ancestors.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_type := a_cursor.item
+					if actual_parameters /= Void and then a_type.has_formal_parameters (actual_parameters) then
+						a_type := a_type.deep_cloned_type
+						a_type := a_type.resolved_formal_parameters (actual_parameters)
+					end
+					a_class := a_type.base_class
+					anc.search (a_class)
+					if anc.found then
+						anc_type := anc.found_item
+						if not anc_type.same_syntactical_type (a_type) then
+							an_heir.error_handler.report_gagp_error (an_heir, anc_type, a_type)
+							has_error := True
+							a_cursor.go_after -- Jump out of the loop.
+						end
+					end
+					if not has_error then
+						anc.force (a_type, a_class)
+						a_cursor.forth
+					end
+				end
+			end
+			if has_error then
+				an_heir.set_ancestors_error (True)
+			end
+		end
+
+feature -- Generic derivation
+
+	check_generic_derivation (an_heir: ET_CLASS): BOOLEAN is
+			-- Check whether current parent is valid
+			-- generic derivations. Report errors if
+			-- not valid.
+		require
+			an_heir_not_void: an_heir /= Void
+		do
+			Result := type.check_parent_validity2 (an_heir)
+		end
+
+feature -- Flattening status
 
 	is_flattened: BOOLEAN is
-			-- Has features of current parent been flattened?
+			-- Have features of parent class been flattened?
 		do
 			Result := type.base_class.is_flattened
 		end
 
-	flatten_error: BOOLEAN is
+	has_flatten_error: BOOLEAN is
 			-- Has a fatal error occurred during feature flattening?
 		do
-			Result := type.base_class.flatten_error
+			Result := type.base_class.has_flatten_error
 		end
 
 feature -- Setting
