@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pretty printers as XML document (as in James Clark's canonical XML)"
+		"Pretty printer, output as XML document"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
