@@ -56,7 +56,13 @@ feature {NONE} -- Initialization
 			init_api
 			is_correct := True
 			last_error := Xml_err_none
+			
 			!XM_STRING_SOURCE! source
+			
+			!XM_CALLBACKS_NULL! callbacks.make
+			
+			!XM_NULL_PARSER_RESOLVER! dtd_resolver
+			entity_resolver := dtd_resolver
 		end
 
 feature -- Status report
