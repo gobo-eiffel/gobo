@@ -62,6 +62,9 @@ feature -- Status report
 					-- `a_class' is a descendant of any class in list then this
 					-- class is in the universe (it is possible to specify class
 					-- names in client clauses which are not in the universe).
+				if a_class.is_preparsed and then not a_class.is_parsed then
+					a_class.parse
+				end
 				if a_class.is_parsed and then not a_class.has_syntax_error then
 					a_class.search_ancestors
 					if not a_class.has_ancestors_error then
@@ -75,6 +78,8 @@ feature -- Status report
 								else
 									i := i + 1
 								end
+							else
+								i := i + 1
 							end
 						end
 					end
