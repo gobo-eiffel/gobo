@@ -8,7 +8,7 @@ root
 
 default
 	no_style_warning (yes)
-			assertion (ensure)
+			assertion (all)
 cluster
 	geant: "${GOBO}/src/geant"
 		default

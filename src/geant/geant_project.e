@@ -287,7 +287,7 @@ feature -- Processing
 			-- Execute `a_target' if not executed before;
 			-- Execute anyway if `a_force' is True.
 		require
-			target_not_void: a_target = Void
+			target_not_void: a_target /= Void
 		do
 			if a_force or else not a_target.is_executed then
 				current_target := a_target

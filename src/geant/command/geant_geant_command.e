@@ -131,7 +131,12 @@ feature -- Execution
 					-- call target of current project:
 				!! ucs.make_from_string (start_target_name)
 				a_target := project.target_with_name (ucs)
-				project.build_target (a_target)
+				if a_target /= Void then
+					project.build_target (a_target)
+				else
+					print ("geant error: unknown target: " + start_target_name + "%N")
+					Exceptions.die (1)
+				end
 			end
 		end
 
