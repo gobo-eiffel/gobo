@@ -215,8 +215,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_end
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.end_keyword
 		end
 
 	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -375,8 +374,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_is
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.is_keyword
 		end
 
 	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -721,8 +719,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_comma
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.comma_symbol
 		end
 
 	new_div_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
@@ -757,8 +754,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_dot
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.dot_symbol
 		end
 
 	new_dotdot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -910,8 +906,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_right_array
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.right_array_symbol
 		end
 
 	new_right_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -919,8 +914,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_right_brace
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.right_brace_symbol
 		end
 
 	new_right_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -928,8 +922,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_right_bracket
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.right_bracket_symbol
 		end
 
 	new_right_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -937,8 +930,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_right_parenthesis
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.right_parenthesis_symbol
 		end
 
 	new_semicolon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SEMICOLON_SYMBOL is
@@ -946,8 +938,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.semicolon_symbol
 		end
 
 	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
