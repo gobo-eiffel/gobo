@@ -50,16 +50,6 @@ feature {ANY}
 			parse
 		end
 
-	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-		local
-			an_input_buffer: YY_BUFFER
-		do
-			reset
-			!! an_input_buffer.make_from_buffer (a_buffer)
-			set_input_buffer (an_input_buffer)
-			parse
-		end
-
 	parse_from_string (data: STRING) is
 		do
 			reset
@@ -70,13 +60,6 @@ feature {ANY}
 feature {ANY} -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
-		do
-			check
-				False   -- Not supported
-			end
-		end
-
-	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
 		do
 			check
 				False   -- Not supported

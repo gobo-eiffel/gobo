@@ -70,15 +70,6 @@ feature {ANY} -- Parsing
 			implementation.parse_from_stream (a_stream)
 		end
 
-	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-			-- Parse XML Document from GOBO string buffer. This is
-			-- faster that parsing from a ordinary STRING on some systems.
-		require
-			a_buffer_not_void: a_buffer /= Void
-		do
-			implementation.parse_from_string_buffer (a_buffer)
-		end
-
 	parse_from_string (data: STRING) is
 			-- Parse `data'.
 		require
@@ -98,17 +89,6 @@ feature {ANY} -- Incremental parsing
 			a_stream_not_void: a_stream /= Void
 		do
 			implementation.parse_incremental_from_stream (a_stream)
-		end
-
-	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-			-- Parse partial XML document from GOBO input stream.
-			-- After the last part of the data has been fed into the parser,
-			-- Parse XML Document from GOBO string buffer. This is
-			-- faster that parsing from a regular STRING on some systems.
-		require
-			a_buffer_not_void: a_buffer /= Void
-		do
-			implementation.parse_incremental_from_string_buffer (a_buffer)
 		end
 
 	parse_incremental_from_string (data: STRING) is
@@ -165,8 +145,7 @@ feature -- Status
 	last_error_extended_description: STRING is
 			-- Same as `last_error_description', but more verbose.
 		do
-			!! Result.make (0)
-			Result.append_string (last_error_description)
+			Result := clone (last_error_description)
 			Result.append_string ("(")
 			Result.append_string (position.out)
 			Result.append_string (")")
