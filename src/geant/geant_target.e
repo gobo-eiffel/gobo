@@ -233,6 +233,9 @@ feature -- Processing
 					elseif an_element.name.is_equal (Copy_task_name) then
 							-- copy
 						!GEANT_COPY_TASK! a_task.make_from_element (project, an_element)
+					elseif an_element.name.is_equal (Move_task_name) then
+							-- move
+						!GEANT_MOVE_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Setenv_task_name) then
 							-- setenv
 						!GEANT_SETENV_TASK! a_task.make_from_element (project, an_element)
