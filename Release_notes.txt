@@ -2,7 +2,7 @@ HACT 3.0 (Halstenbach)
 
 ISE 4.5 (ISE Eiffel)
 
-SE -0.76 (SmallEiffel)
+SE -0.75 (SmallEiffel)
 
     . Although this is perfectly correct Eiffel, SmallEiffel complains about
       Eiffel identifiers containing upper-case letters. There is a lot of
