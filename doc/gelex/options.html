@@ -138,7 +138,7 @@ Following is <em>gelex</em> command-line usage message:</p>
 <blockquote>
     <pre><font color="#800000">gelex </font>[<font
 color="#800000">--version</font>][<font color="#800000">--help</font>][<font
-color="#800000">-bcefhimsVw?</font>][<font color="#800000">-a size</font>][<font
+color="#800000">-bcefhimsVwxz?</font>][<font color="#800000">-a size</font>][<font
 color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
 </blockquote>
 
@@ -196,6 +196,16 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
     <dt><font color="#800000"><tt>-w</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#nowarn"><font
         color="#800000"><tt>nowarn</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-x</tt></font></dt>
+    <dd>Write each semantic action into a separate routine. The
+        default is to write all actions into the same routine,
+        which can become too large for C back-end compilers to
+        handle.</dd>
+    <dt><font color="#800000"><tt>-z</tt></font></dt>
+    <dd><font size="3">The generated code uses an <em>inspect</em>
+        instruction to find out which action to execute. The
+        default is to use binary-search implemented with <em>if</em>
+        instructions.</font></dd>
     <dt><font color="#800000"><tt>-?</tt></font></dt>
     <dd><font size="3">Synonym for </font><a href="#--help"><font
         color="#800000"><tt>--help</tt></font></a><font size="3">.</font></dd>
@@ -220,7 +230,7 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -230,7 +240,7 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 August 1998</font><br>
+            <strong>Last Updated:</strong> 17 February 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
