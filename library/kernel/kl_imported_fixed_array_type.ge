@@ -20,7 +20,11 @@ feature -- Type anchors
 #ifdef ISE
 	FIXED_ARRAY_TYPE: SPECIAL [G] is do end
 #else
+#ifdef SE
+	FIXED_ARRAY_TYPE: FIXED_ARRAY [G] is do end
+#else
 	FIXED_ARRAY_TYPE: ARRAY [G] is do end
+#endif
 #endif
 			-- Type anchor
 
