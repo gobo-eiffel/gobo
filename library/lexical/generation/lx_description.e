@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
 			characters_count := 256
+			array_size := 3000
 			!! rules.make (Initial_max_rules)
 			!! eof_rules.make (Initial_max_start_conditions)
 			!! eiffel_header.make (1)
@@ -48,6 +49,7 @@ feature -- Initialization
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
 			characters_count := 256
+			array_size := 3000
 			rules.wipe_out
 			eof_rules.wipe_out
 			eiffel_header.wipe_out
@@ -70,6 +72,9 @@ feature -- Initialization
 		end
 
 feature -- User-defined options
+
+	array_size: INTEGER
+			-- Maximum size supported for manifest array
 
 	backing_up_report: BOOLEAN
 			-- Should a backing-up report be generated?
@@ -126,6 +131,16 @@ feature -- User-defined options
 			-- Name of output file
 
 feature -- Option setting
+
+	set_array_size (i: INTEGER) is
+			-- Set `array_size' to `i'.
+		require
+			i_positive: i >= 0
+		do
+			array_size := i
+		ensure
+			array_size_set: array_size = i
+		end
 
 	set_backing_up_report (b: like backing_up_report) is
 			-- Set `backing_up_report' to `b'.
@@ -351,6 +366,7 @@ feature -- Conversion
 		require
 			other_not_void: other /= Void
 		do
+			array_size := other.array_size
 			backing_up_report := other.backing_up_report
 			backing_up_filename := other.backing_up_filename
 			case_insensitive := other.case_insensitive
@@ -442,5 +458,6 @@ invariant
 	positive_characters_count: characters_count > 0
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has (Void)
+	array_size_positive: array_size >= 0
 
 end -- class LX_DESCRIPTION

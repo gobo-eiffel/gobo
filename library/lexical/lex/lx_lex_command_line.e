@@ -16,6 +16,8 @@ inherit
 
 	ARGUMENTS
 
+	KL_SHARED_STRING_ROUTINES
+
 creation
 
 	make
@@ -44,6 +46,8 @@ feature -- Parsing
 			equiv_classes_used: BOOLEAN
 			meta_equiv_classes_used: BOOLEAN
 			j, arg_count: INTEGER
+			str: STRING
+			a_size: INTEGER
 		do
 				-- Read options.
 			from
@@ -77,10 +81,31 @@ feature -- Parsing
 							options.set_output_filename (argument (i))
 						else
 							options.set_output_filename (Void)
+							error_handler.usage_message
+						end
+					when 'a' then
+						str := Void
+						if arg_count > 2 then
+							str := arg.substring (3, arg_count)
+						elseif i < nb then
+							i := i + 1
+							str := argument (i)
+						end
+						if str /= Void and then string_.is_integer (str) then
+							a_size := str.to_integer
+							if a_size >= 0 then
+								options.set_array_size (a_size)
+							else
+								error_handler.usage_message
+							end
+						else
+							error_handler.usage_message
 						end
 					else
 						from j := 2 until j > arg_count loop
 							inspect arg.item (j)
+							when 'a' then
+								error_handler.separated_a_flag
 							when 'b' then
 								options.set_backing_up_report (True)
 							when 'c' then

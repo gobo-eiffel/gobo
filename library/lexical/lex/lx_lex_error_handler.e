@@ -67,6 +67,13 @@ feature -- Command line info messages
 
 feature -- Command line error messages
 
+	separated_a_flag is
+			-- Report that "-a" flag must be given separately
+			-- and then terminate.
+		do
+			error_message (<<"-a flag must be given separately">>)
+		end
+
 	separated_o_flag is
 			-- Report that "-o" flag must be given separately
 			-- and then terminate.

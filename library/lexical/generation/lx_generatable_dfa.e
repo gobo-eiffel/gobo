@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
 			characters_count := a_description.characters_count
+			array_size := a_description.array_size
 			eiffel_code := a_description.eiffel_code
 			eiffel_header := a_description.eiffel_header
 			bol_needed := a_description.bol_needed
@@ -511,20 +512,24 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_array (a_table: ARRAY [INTEGER]; a_file: like OUTPUT_STREAM_TYPE) is
-			-- Print code for `a_table''s items to `a_file'.
+	print_array (a_table: ARRAY [INTEGER]; start_pos, end_pos: INTEGER;
+		a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print code for `a_table''s items within bounds
+			-- `start_pos' and `end_pos' to `a_file'.
 		require
 			a_table_not_void: a_table /= Void
+			valid_start_pos: a_table.valid_index (start_pos)
+			valid_end_pos: a_table.valid_index (end_pos)
+			valid_bounds: start_pos <= end_pos + 1
 			a_file_not_void: a_file /= Void
 			a_file_open_write: output_stream_.is_open_write (a_file)
 		local
-			i, nb, an_item: INTEGER
+			i, an_item: INTEGER
 			nb_line, nb_colon: INTEGER
 		do
 			a_file.put_string (Indentation)
 			nb_line := 1
-			nb := a_table.upper
-			from i := a_table.lower until i > nb loop
+			from i := start_pos until i > end_pos loop
 				nb_colon := nb_colon + 1
 				if nb_colon > Max_nb_colon then
 					a_file.put_character ('%N')
@@ -548,7 +553,7 @@ feature {NONE} -- Generation
 					a_file.put_character (' ')
 				end
 				a_file.put_integer (an_item)
-				if i < nb then
+				if i < end_pos then
 					a_file.put_character (',')
 				end
 				i := i + 1
@@ -571,11 +576,15 @@ feature {NONE} -- Generation
 			a_file.put_string (a_name)
 			a_file.put_string (": ARRAY [INTEGER] is%N%
 				%%T%Tonce%N")
-			nb := a_table.count // 3000 + 1
+			if array_size = 0 then
+				nb := 1
+			else
+				nb := a_table.count // array_size + 1
+			end
 			if nb = 1 then
 				a_file.put_string
 					("%T%T%TResult := integer_array_.make_from_array (<<%N")
-				print_array (a_table, a_file)
+				print_array (a_table, a_table.lower, a_table.upper, a_file)
 				a_file.put_string (">>, ")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (")%N%T%Tend%N")
@@ -588,7 +597,6 @@ feature {NONE} -- Generation
 				from j := 1 until j > nb loop
 					a_file.put_string (Indentation)
 					a_file.put_string (a_name)
-					a_file.put_character ('_')
 					a_file.put_integer (j)
 					a_file.put_string (" (Result)%N")
 					j := j + 1
@@ -601,27 +609,21 @@ feature {NONE} -- Generation
 				until
 					j > nb
 				loop
-					a_file.put_character ('%N')
-					a_file.put_character ('%T')
+					a_file.put_string ("%N%T")
 					a_file.put_string (a_name)
-					a_file.put_character ('_')
 					a_file.put_integer (j)
 					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
-						%%T%Tdo%N")
-					from
-						k := a_table_upper.min (i + 3000 - 1)
-					until
-						i > k
-					loop
-						a_file.put_string (Indentation)
-						a_file.put_string ("an_array.put (")
-						a_file.put_integer (a_table.item (i))
-						a_file.put_string (", ")
-						a_file.put_integer (i)
-						a_file.put_string (")%N")
-						i := i + 1
-					end
-					a_file.put_string ("%T%Tend%N")
+						%%T%Tdo%N%T%T%Tinteger_array_.subcopy (an_array, <<%N")
+					k := a_table_upper.min (i + array_size - 1)
+					print_array (a_table, i, k, a_file)
+					a_file.put_string (">>,%N%T%T%T")
+					a_file.put_integer (1)
+					a_file.put_string (", ")
+					a_file.put_integer (k - i + 1)
+					a_file.put_string (", ")
+					a_file.put_integer (i)
+					a_file.put_string (")%N%T%Tend%N")
+					i := k + 1
 					j := j + 1
 				end
 			end
@@ -891,6 +893,9 @@ feature {NONE} -- Access
 			-- handled by the generated scanners
 			-- (The character set is always assumed to start from 0.)
 
+	array_size: INTEGER
+			-- Maximum size supported for manifest arrays
+
 feature {NONE} -- Constants
 
 	Two_spaces: STRING is "  "
@@ -910,5 +915,6 @@ invariant
 	no_void_eiffel_header: eiffel_header /= Void implies
 		not eiffel_header.has (Void)
 	characters_count_positive: characters_count > 0
+	array_size_positive: array_size >= 0
 
 end -- class LX_GENERATABLE_DFA
