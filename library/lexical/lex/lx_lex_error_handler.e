@@ -476,7 +476,7 @@ feature -- Error handling
 			i, nb: INTEGER
 		do
 			if not no_warning then
-				io.error.put_string ("%"")
+				io.error.put_character ('%"')
 				io.error.put_string (filename)
 				io.error.put_string ("%", line ")
 				io.error.put_integer (line)
@@ -504,7 +504,7 @@ feature -- Error handling
 		local
 			i, nb: INTEGER
 		do
-			io.error.put_string ("%"")
+			io.error.put_character ('%"')
 			io.error.put_string (filename)
 			io.error.put_string ("%", line ")
 			io.error.put_integer (line)
