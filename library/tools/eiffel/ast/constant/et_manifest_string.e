@@ -15,6 +15,9 @@ deferred class ET_MANIFEST_STRING
 inherit
 
 	ET_CONSTANT
+		redefine
+			is_string_constant
+		end
 
 	ET_MANIFEST_STRING_ITEM
 
@@ -51,6 +54,9 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_string_constant: BOOLEAN is True
+			-- Is current constant a STRING constant?
 
 	computed: BOOLEAN is
 			-- Has manifest string been succesfully computed?

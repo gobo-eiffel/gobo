@@ -15,6 +15,9 @@ deferred class ET_CHARACTER_CONSTANT
 inherit
 
 	ET_CONSTANT
+		redefine
+			is_character_constant
+		end
 
 	ET_CHOICE_CONSTANT
 
@@ -25,5 +28,10 @@ inherit
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
 		end
+
+feature -- Status report
+
+	is_character_constant: BOOLEAN is True
+			-- Is current constant a CHARACTER constant?
 
 end

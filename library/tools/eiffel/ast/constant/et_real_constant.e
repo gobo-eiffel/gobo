@@ -23,8 +23,16 @@ inherit
 		end
 
 	ET_CONSTANT
+		redefine
+			is_real_constant
+		end
 
 	ET_INDEXING_TERM
+
+feature -- Status report
+
+	is_real_constant: BOOLEAN is True
+			-- Is current constant a REAL constant?
 
 feature -- Access
 

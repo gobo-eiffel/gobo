@@ -23,6 +23,9 @@ inherit
 		end
 
 	ET_CONSTANT
+		redefine
+			is_integer_constant
+		end
 
 	ET_CHOICE_CONSTANT
 
@@ -60,6 +63,9 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_integer_constant: BOOLEAN is True
+			-- Is current constant an INTEGER constant?
 
 	has_value_error: BOOLEAN
 			-- Has an overflow or underflow occurred during

@@ -15,6 +15,9 @@ class ET_BIT_CONSTANT
 inherit
 
 	ET_CONSTANT
+		redefine
+			is_bit_constant
+		end
 
 	ET_INDEXING_TERM
 
@@ -43,6 +46,11 @@ feature {NONE} -- Initialization
 			line_set: line = no_line
 			column_set: column = no_column
 		end
+
+feature -- Status report
+
+	is_bit_constant: BOOLEAN is True
+			-- Is current constant a BIT constant?
 
 feature -- Access
 

@@ -15,6 +15,9 @@ deferred class ET_BOOLEAN_CONSTANT
 inherit
 
 	ET_CONSTANT
+		redefine
+			is_boolean_constant
+		end
 
 	ET_INDEXING_TERM
 
@@ -22,5 +25,10 @@ inherit
 		undefine
 			process
 		end
+
+feature -- Status report
+
+	is_boolean_constant: BOOLEAN is True
+			-- Is current constant a BOOLEAN constant?
 
 end
