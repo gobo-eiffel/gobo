@@ -19,6 +19,9 @@ inherit
 			make
 		end
 
+	KL_IMPORTED_BOOLEAN_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -41,13 +44,11 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := (is_validate_executable and not (is_system_executable or is_cluster_executable)) or
-				(is_system_executable and not (is_validate_executable or is_cluster_executable)) or
-				(is_cluster_executable and not (is_validate_executable or is_system_executable))
+			Result := BOOLEAN_.nxor (<<is_validate_executable,
+				is_system_executable, is_library_executable>>)
 		ensure then
-			definition: Result = ((is_validate_executable and not (is_system_executable or is_cluster_executable)) or
-				(is_system_executable and not (is_validate_executable or is_cluster_executable)) or
-				(is_cluster_executable and not (is_validate_executable or is_system_executable)))
+			exclusive: Result implies BOOLEAN_.nxor (<<is_validate_executable,
+				is_system_executable, is_library_executable>>)
 		end
 
 	is_validate_executable: BOOLEAN is
@@ -68,13 +69,13 @@ feature -- Status report
 			system_command_not_empty: Result implies system_command.count > 0
 		end
 
-	is_cluster_executable: BOOLEAN is
-			-- Can 'cluster' command be executed?
+	is_library_executable: BOOLEAN is
+			-- Can 'library' command be executed?
 		do
-			Result := (cluster_command /= Void and then cluster_command.count > 0)
+			Result := (library_command /= Void and then library_command.count > 0)
 		ensure
-			cluster_command_not_void: Result implies cluster_command /= Void
-			cluster_command_not_empty: Result implies cluster_command.count > 0
+			library_command_not_void: Result implies library_command /= Void
+			library_command_not_empty: Result implies library_command.count > 0
 		end
 
 feature -- Access
@@ -85,8 +86,8 @@ feature -- Access
 	system_command: STRING
 			-- System command compiler name
 
-	cluster_command: STRING
-			-- Cluster command compiler name
+	library_command: STRING
+			-- Library command compiler name
 
 	validate_command: BOOLEAN
 			-- Validate command
@@ -129,15 +130,15 @@ feature -- Setting
 			system_command_set: system_command = a_command
 		end
 
-	set_cluster_command (a_command: like cluster_command) is
-			-- Set `cluster_command' to `a_command'.
+	set_library_command (a_command: like library_command) is
+			-- Set `library_command' to `a_command'.
 		require
 			a_command_not_void: a_command /= Void
 			a_command_not_empty: a_command.count > 0
 		do
-			cluster_command := a_command
+			library_command := a_command
 		ensure
-			cluster_command_set: cluster_command = a_command
+			library_command_set: library_command = a_command
 		end
 
 	set_xace_filename (a_filename: like xace_filename) is
@@ -197,9 +198,9 @@ feature -- Execution
 					cmd.append_string (" --system=%"")
 					cmd := STRING_.appended_string (cmd, system_command)
 					cmd.append_string ("%"")
-				elseif is_cluster_executable then
-					cmd.append_string (" --cluster=%"")
-					cmd := STRING_.appended_string (cmd, cluster_command)
+				elseif is_library_executable then
+					cmd.append_string (" --library=%"")
+					cmd := STRING_.appended_string (cmd, library_command)
 					cmd.append_string ("%"")
 				end
 				if output_filename /= Void then
