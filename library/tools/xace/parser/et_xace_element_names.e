@@ -283,7 +283,6 @@ feature -- Constants
 			!! Result.make_from_character ('=')
 		ensure
 			uc_equal_not_void: Result /= Void
-			uc_equal_not_empty: not Result.empty
 		end
 
 end -- class ET_XACE_ELEMENT_NAMES
