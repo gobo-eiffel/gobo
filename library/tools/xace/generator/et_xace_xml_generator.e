@@ -138,7 +138,6 @@ feature {NONE} -- Output
 				a_file.put_string (a_prefix)
 			end
 			a_file.put_line ("%">")
-			print_indentation (1, a_file)
 			an_option := a_library.options
 			if an_option /= Void then
 				print_options (an_option, 1, a_file)
