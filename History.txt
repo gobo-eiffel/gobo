@@ -34,10 +34,16 @@ Version ?
 
 	geyacc:
 
+	* Following the changes made in version 3.2, YY_PARSER_SKELETON is
+	  not a synonym of YY_OLD_PARSER_SKELETON anymore and can now be
+	  used as a replacement of YY_NEW_PARSER_SKELETON. Also the default
+	  command-line option is now '--new_typing'.
 	* Added command-line option '--pragma=[no]line' in order for
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
 	  appeared in the input description file.
+	* Added command-line option '--doc=(html|xml)' to generate
+	  documentation about the grammar in HTML or XML format.
 
 	getest:
 
