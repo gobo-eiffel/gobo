@@ -183,7 +183,7 @@ Hello Bart Simpson
 
 	<sect1>
 		<title>exec</title>
-		<para>cd to examples/exec and open the buildfile 'dir.eant' (for Windows only):
+		<para>cd to examples/exec and open the buildfile 'dir.eant' (for Windows only):</para>
 		<programlisting><![CDATA[
   <project name="dir" default="dir">
     <target name="dir">
@@ -193,7 +193,6 @@ Hello Bart Simpson
     </target>
   </project>
         	]]></programlisting>
-		</para>
 
 		<para>'geant -v -b dir.eant' produces:</para>
 		<programlisting><![CDATA[
