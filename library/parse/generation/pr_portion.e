@@ -7,8 +7,9 @@ indexing
 		%generation of parser engines"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -17,6 +18,9 @@ class PR_PORTION
 inherit
 
 	COMPARABLE
+		redefine
+			is_equal
+		end
 
 creation
 
@@ -175,6 +179,15 @@ feature -- Comparison
 			Result := is_state = other.is_state and
 				width = other.width and count = other.count
 		ensure
+			definition: Result = not (Current < other or other < Current)
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Are current portion and `other' considered
+			-- equal according to the order relationship?
+		do
+			Result := order_is_equal (other)
+		ensure then
 			definition: Result = not (Current < other or other < Current)
 		end
 
