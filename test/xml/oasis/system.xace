@@ -16,22 +16,25 @@
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 	</option>
 	<option if="${DEBUG}">
-		<option name="assertion" value="all"/>
+			<!--
+				Run out of memory when compiled with all assertions
+				ON with Visual Eiffel.
+			-->
+		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="require" if="${GOBO_EIFFEL}=ve"/>
 		<option name="garbage_collector" value="none"/>
 		<option name="finalize" value="false"/>
 	</option>
 
-	<cluster name="xmloasis" location="${GOBO}/test/xml/oasis">
-		<cluster name="testgen" location="TESTGEN"/>
-	</cluster>
-
-	<mount location="${GOBO}/library/test/library.xace" prefix="ts_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
-	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
-	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
-	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
-	<mount location="${GOBO}/library/xml/library.xace" prefix="xm_"/>
+	<cluster name="xmloasis" location="${GOBO}/test/xml/oasis"/>
+	<cluster name="xmloasis_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/parse/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace" />
 </system>
