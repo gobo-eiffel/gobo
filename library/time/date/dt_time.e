@@ -491,8 +491,6 @@ feature -- Output
 	append_precise_time_to_string (a_string: STRING) is
 			-- Append printable representation (hh:mm:ss.sss)
 			-- to `a_string'.
-		local
-			ms: INTEGER
 		do
 			append_time_to_string (a_string)
 			if millisecond = 0 then
