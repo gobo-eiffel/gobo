@@ -242,8 +242,6 @@ feature {NONE} -- managing storage
 
    add_to_storage_count (o: INTEGER) is
 	 -- shrink or enlarge storage by `o' octets.
-      require
-         non_negative: o >= 0;
       do
 	 if o > 0 then
 	    if storage_count + o > storage.count then
@@ -252,7 +250,8 @@ feature {NONE} -- managing storage
 	 end
 	 storage_count := storage_count + o
       ensure
-         storage_count = (old storage_count) + o
+         storage_count = (old storage_count) + o;
+         non_negative_size: storage_count >= 0;
       end
 
 feature {NONE} -- mapping to storage indices
