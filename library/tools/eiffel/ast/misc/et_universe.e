@@ -74,7 +74,6 @@ feature {NONE} -- Initialization
 			create null_processor.make (Current)
 			ancestor_builder := null_processor
 			feature_flattener := null_processor
-			qualified_signature_resolver := null_processor
 			interface_checker := null_processor
 			implementation_checker := null_processor
 		ensure
@@ -1438,18 +1437,10 @@ feature -- Compilation
 				end
 				a_cursor.forth
 			end
-				-- Resolve qualified anchored types in signatures.
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if a_class.features_flattened then
-					a_class.process (qualified_signature_resolver)
-				end
-				a_cursor.forth
-			end
 				-- Check interface.
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
-				if a_class.qualified_signatures_resolved then
+				if a_class.features_flattened then
 					a_class.process (interface_checker)
 				end
 				a_cursor.forth
@@ -1650,9 +1641,6 @@ feature -- Processors
 	feature_flattener: ET_AST_PROCESSOR
 			-- Feature flattener
 
-	qualified_signature_resolver: ET_AST_PROCESSOR
-			-- Qualified signature resolver
-
 	interface_checker: ET_AST_PROCESSOR
 			-- Interface checker
 
@@ -1674,9 +1662,6 @@ feature -- Processors
 			if feature_flattener = null_processor then
 				create l_feature_flattener.make (Current)
 				feature_flattener := l_feature_flattener
-			end
-			if qualified_signature_resolver = null_processor then
-				create {ET_QUALIFIED_SIGNATURE_RESOLVER} qualified_signature_resolver.make (Current)
 			end
 			if interface_checker = null_processor then
 				create l_interface_checker.make (Current)
@@ -1705,16 +1690,6 @@ feature -- Processors
 			feature_flattener := a_feature_flattener
 		ensure
 			feature_flattener_set: feature_flattener = a_feature_flattener
-		end
-
-	set_qualified_signature_resolver (a_resolver: like qualified_signature_resolver) is
-			-- Set `qualified_signature_resolver' to `a_resolver'.
-		require
-			a_resolver_not_void: a_resolver /= Void
-		do
-			qualified_signature_resolver := a_resolver
-		ensure
-			qualified_signature_resolver_not_void: qualified_signature_resolver = a_resolver
 		end
 
 	set_interface_checker (an_interface_checker: like interface_checker) is
@@ -1851,7 +1826,6 @@ invariant
 	void_seed_non_negative: void_seed >= 0
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void
-	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void
 	interface_checker_not_void: interface_checker /= Void
 	implementation_checker_not_void: implementation_checker /= Void
 	null_processor_not_void: null_processor /= Void

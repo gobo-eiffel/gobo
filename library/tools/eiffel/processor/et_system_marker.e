@@ -77,8 +77,6 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
-			process_qualified_braced_type,
-			process_qualified_like_type,
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
@@ -978,18 +976,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			an_expression.expression.process (Current)
-		end
-
-	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
-			-- Process `a_type'.
-		do
-			a_type.target_type.process (Current)
-		end
-
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
-			-- Process `a_type'.
-		do
-			a_type.target_type.process (Current)
 		end
 
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is

@@ -23,13 +23,11 @@ inherit
 			has_anchored_type,
 			has_formal_type,
 			has_formal_types,
-			has_qualified_type,
 			same_syntactical_bit_type,
 			same_syntactical_class_type,
 			same_syntactical_formal_parameter_type,
 			same_syntactical_like_current,
 			same_syntactical_like_feature,
-			same_syntactical_qualified_type,
 			same_syntactical_tuple_type,
 			same_named_bit_type,
 			same_named_class_type,
@@ -513,9 +511,7 @@ feature -- Status report
 		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a formal parameter when viewed from
-			-- `a_context', or if it is a qualified type is its
-			-- target type (recursively) a formal parameter?
+			-- Is current type a formal parameter when viewed from `a_context'?
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -529,32 +525,6 @@ feature -- Status report
 					Result := True
 				else
 					Result := an_actual.is_formal_type (a_context.root_context, a_universe)
-				end
-			else
-					-- Internal error: does current type really
-					-- appear in `a_context'?
-				Result := False
-			end
-		end
-
-	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of current type a qualified anchored type (other
-			-- than of the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively) contain qualified
-			-- types?
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count (a_universe) then
-				an_actual := a_context.base_type_actual (index, a_universe)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := False
-				else
-					Result := an_actual.has_qualified_type (a_context.root_context, a_universe)
 				end
 			else
 					-- Internal error: does current type really
@@ -866,38 +836,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_syntactical_qualified_type (other: ET_QUALIFIED_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Are current type appearing in `a_context' and `other'
-			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
-			-- Therefore anchored types are considered the same
-			-- only if they have the same anchor. An anchor type
-			-- is not considered the same as any other type even
-			-- if they have the same base type.)
-			-- no_cycle: no cycle in anchored types involved.
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count (a_universe) then
-				an_actual := a_context.base_type_actual (index, a_universe)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := False
-				else
-					Result := an_actual.same_syntactical_qualified_type (other, other_context, a_context.root_context, a_universe)
-				end
-			else
-					-- Internal error: does current type really
-					-- appear in `a_context'?
-				Result := False
-			end
-		end
-
 	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
@@ -1138,9 +1076,7 @@ feature -- Conformance
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1170,9 +1106,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1200,9 +1134,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1231,9 +1163,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -1340,9 +1270,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE

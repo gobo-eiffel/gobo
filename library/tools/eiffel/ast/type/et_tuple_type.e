@@ -291,10 +291,7 @@ feature -- Conformance
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
@@ -310,10 +307,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			other_base_class: ET_CLASS
 		do
@@ -329,10 +323,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_parameters: like actual_parameters
 			other_parameters: ET_ACTUAL_PARAMETER_LIST

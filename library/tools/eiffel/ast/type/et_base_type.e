@@ -22,7 +22,6 @@ inherit
 			has_anchored_type,
 			has_formal_type,
 			has_formal_types,
-			has_qualified_type,
 			direct_base_class,
 			conforms_from_bit_type,
 			conforms_from_formal_parameter_type,
@@ -58,7 +57,6 @@ inherit
 			conforms_from_tuple_type as context_conforms_from_tuple_type,
 			has_formal_type as context_has_formal_type,
 			has_formal_types as context_has_formal_types,
-			has_qualified_type as context_has_qualified_type,
 			base_type_has_class as context_base_type_has_class,
 			named_type_has_class as context_named_type_has_class
 		redefine
@@ -251,20 +249,6 @@ feature -- Status report
 			end
 		end
 
-	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of current type a qualified anchored type (other
-			-- than of the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively) contain qualified
-			-- types?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_qualified_type (a_context, a_universe)
-			end
-		end
-
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -272,10 +256,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_base_class: ET_CLASS
 			any_type: ET_CLASS_TYPE
@@ -299,10 +280,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			an_index: INTEGER
 			a_formal: ET_FORMAL_PARAMETER
@@ -348,10 +326,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_base_class: ET_CLASS
 			any_type: ET_CLASS_TYPE
@@ -508,14 +483,6 @@ feature -- Type context
 			Result := has_formal_types (Current, a_universe)
 		end
 
-	context_has_qualified_type (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of current context a qualified anchored type
-			-- (other than of the form 'like Current.b'), or do its actual
-			-- generic parameters (recursively) contain qualified types?
-		do
-			Result := has_qualified_type (Current, a_universe)
-		end
-
 	context_base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the base type of current context contain `a_class'
 			-- in `a_universe'?
@@ -547,10 +514,7 @@ feature -- Type context
 	context_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current context conform to `other' type appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_to_type (other, other_context, Current, a_universe)
 		end
@@ -618,10 +582,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 	context_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_from_bit_type (other, other_context, Current, a_universe)
 		end
@@ -629,10 +590,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 	context_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_from_class_type (other, other_context, Current, a_universe)
 		end
@@ -641,10 +599,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_from_formal_parameter_type (other, other_context, Current, a_universe)
 		end
@@ -652,10 +607,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 	context_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_from_tuple_type (other, other_context, Current, a_universe)
 		end

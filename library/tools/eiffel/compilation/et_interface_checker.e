@@ -84,10 +84,9 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 			if not current_class.interface_checked then
-					-- Resolve qualified anchored types in signatures of features
-					-- of `current_class' if not already done.
-				current_class.process (universe.qualified_signature_resolver)
-				if not current_class.has_qualified_signatures_error then
+					-- Flatten features of `current_class' if not already done.
+				current_class.process (universe.feature_flattener)
+				if not current_class.has_flattening_error then
 					current_class.set_interface_checked
 						-- Process parents first.
 					a_parents := current_class.parents

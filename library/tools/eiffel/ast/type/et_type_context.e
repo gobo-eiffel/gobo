@@ -184,17 +184,6 @@ feature -- Status report
 		deferred
 		end
 
-	has_qualified_type (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of current context a qualified anchored type
-			-- (other than of the form 'like Current.b'), or do its actual
-			-- generic parameters (recursively) contain qualified types?
-		require
-			valid_context: is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
 	base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the base type of current context contain `a_class'
 			-- in `a_universe'?
@@ -362,10 +351,7 @@ feature -- Conformance
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current context conform to `other' type appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -381,10 +367,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -398,10 +381,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -416,10 +396,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void
@@ -434,10 +411,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			valid_context: is_valid_context
 			other_not_void: other /= Void

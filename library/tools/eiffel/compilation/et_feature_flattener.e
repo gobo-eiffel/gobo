@@ -954,10 +954,7 @@ feature {NONE} -- Signature resolving
 	resolve_identifier_signature (a_feature: ET_FEATURE) is
 			-- Resolve identifier types (e.g. "like identifier"
 			-- or "BIT identifier") in signature of `a_feature'
-			-- in `current_class'. Do not try to resolve qualified
-			-- anchored types other than those of the form
-			-- 'like Current.b'. This is done after the features
-			-- of the corresponding classes have been flattened.
+			-- in `current_class'.
 			-- Also check whether an argument name does not appear
 			-- twice and whether none of the argument names are
 			-- the final name of a feature in `current_class'.
@@ -1025,10 +1022,6 @@ feature {NONE} -- Signature validity
 	check_anchored_signatures is
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `current_class'.
-			-- Do not try to follow qualified anchored types other
-			-- than those of the form 'like Current.b'. This is done
-			-- after the features of the corresponding classes have
-			-- been flattened.
 		do
 			anchored_type_checker.check_signatures (current_class)
 		end

@@ -227,30 +227,6 @@ feature -- Status report
 			end
 		end
 
-	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of one of current types a qualified type (other
-			-- than of the form 'like Current.b') when viewed from `a_context',
-			-- or do their actual generic parameters (recursively) contain
-			-- qualified types?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		local
-			i, nb: INTEGER
-		do
-			nb := count - 1
-			from i := 0 until i > nb loop
-				if storage.item (i).type.has_qualified_type (a_context, a_universe) then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-		end
-
 	named_types_have_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does one of the named types of current parameters contain
 			-- `a_class' when it appears in `a_context' in `a_universe'?
@@ -361,9 +337,7 @@ feature -- Conformance
 			-- to `other' actual parameters appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_type_resolver' is
-			-- used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -401,9 +375,7 @@ feature -- Conformance
 			-- conform to `other' actual parameters appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_type_resolver' is
-			-- used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -452,9 +424,7 @@ feature -- Conformance
 			-- conform to `other' actual parameters appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_type_resolver' is
-			-- used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void

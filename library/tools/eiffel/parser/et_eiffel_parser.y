@@ -180,7 +180,6 @@ creation
 %type <ET_PRECURSOR_EXPRESSION> Qualified_precursor_expression
 %type <ET_PRECURSOR_INSTRUCTION> Qualified_precursor_instruction
 %type <ET_PRECONDITIONS> Precondition_opt
-%type <ET_QUALIFIED_TYPE> Qualified_type
 %type <ET_REAL_CONSTANT> Real_constant
 %type <ET_RENAME_ITEM> Rename Rename_comma
 %type <ET_RENAME_LIST> Rename_clause Rename_list
@@ -2097,18 +2096,6 @@ Anchored_type: E_LIKE Identifier
 		{ $$ := ast_factory.new_like_feature ($1, $2) }
 	| E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2) }
-	| Qualified_type
-		{ $$ := $1 }
-	;
-
-Qualified_type: E_LIKE Identifier '.' Identifier
-		{ $$ := ast_factory.new_qualified_like_feature (ast_factory.new_like_feature ($1, $2), ast_factory.new_dot_feature_name ($3, $4)) }
-	| E_LIKE E_CURRENT '.' Identifier
-		{ $$ := ast_factory.new_qualified_like_current (ast_factory.new_like_current ($1, $2), ast_factory.new_dot_feature_name ($3, $4)) }
-	| E_LIKE '{' Type '}' '.' Identifier
-		{ $$ := ast_factory.new_qualified_braced_type ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6)) }
-	| Qualified_type '.' Identifier
-		{ $$ := ast_factory.new_qualified_like_type ($1, ast_factory.new_dot_feature_name ($2, $3)) }
 	;
 
 ------------------------------------------------------------------------------------

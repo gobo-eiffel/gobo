@@ -186,8 +186,6 @@ creation
 	make_vscn0a,
 	make_vtat1a,
 	make_vtat1b,
-	make_vtat1c,
-	make_vtat1d,
 	make_vtat2a,
 	make_vtbt0a,
 	make_vtbt0b,
@@ -7605,91 +7603,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = feature name
 		end
 
-	make_vtat1c (a_class: like current_class; a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Create a new VTAT error: the anchor in the
-			-- Anchored_type must be the final name of a query
-			-- in `a_class'.
-			--
-			-- ETL2: p.214
-			-- ETL3 (4.82-00-00): p.252
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			code := vtat1c_template_code
-			etl_code := vtat1_etl_code
-			default_template := vtat1c_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.name.position
-			create parameters.make (1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_type.to_text, 6)
-			parameters.put (a_type.name.name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = invalid type
-			-- dollar7: $7 = anchor name
-		end
-
-	make_vtat1d (a_class: like current_class; a_type: ET_QUALIFIED_TYPE; other_class: ET_CLASS) is
-			-- Create a new VTAT error: the anchor in the Anchored_type
-			-- must be the final name of a query in `other_class'.
-			--
-			-- Not in ETL
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			other_class_not_void: other_class /= Void
-		do
-			code := vtat1d_template_code
-			etl_code := vtat1_etl_code
-			default_template := vtat1d_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.name.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_type.to_text, 6)
-			parameters.put (a_type.name.name, 7)
-			parameters.put (other_class.name.name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = invalid type
-			-- dollar7: $7 = anchor name
-			-- dollar8: $8 = remote class name
-		end
-
 	make_vtat2a (a_class: like current_class; a_cycle: DS_LIST [ET_LIKE_IDENTIFIER]) is
 			-- Create a new VTAT error: the anchors in `a_cycle'
 			-- are cyclic anchors in `a_class'.
@@ -9898,8 +9811,6 @@ feature {NONE} -- Implementation
 	vscn0a_default_template: STRING is "[$1] class $5: class appears in files '$7' and '$9'."
 	vtat1a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
 	vtat1b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
-	vtat1c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
-	vtat1d_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query in class $8."
 	vtat2a_default_template: STRING is "[$1] class $5 ($3,$4): anchor cycle $6."
 	vtbt0a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a constant attribute of type INTEGER."
 	vtbt0b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a feature."
@@ -10220,8 +10131,6 @@ feature {NONE} -- Implementation
 	vscn0a_template_code: STRING is "vscn0a"
 	vtat1a_template_code: STRING is "vtat1a"
 	vtat1b_template_code: STRING is "vtat1b"
-	vtat1c_template_code: STRING is "vtat1c"
-	vtat1d_template_code: STRING is "vtat1d"
 	vtat2a_template_code: STRING is "vtat2a"
 	vtbt0a_template_code: STRING is "vtbt0a"
 	vtbt0b_template_code: STRING is "vtbt0b"

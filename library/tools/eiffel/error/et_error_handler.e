@@ -77,12 +77,9 @@ feature -- Compilation report
 					info_file.put_string ("Degree 5 class ")
 					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.ancestor_builder then
-					info_file.put_string ("Degree 4.4 class ")
-					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.feature_flattener then
 					info_file.put_string ("Degree 4.3 class ")
 					info_file.put_line (a_class.name.name)
-				elseif a_processor = a_universe.qualified_signature_resolver then
+				elseif a_processor = a_universe.feature_flattener then
 					info_file.put_string ("Degree 4.2 class ")
 					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.interface_checker then
@@ -4131,44 +4128,6 @@ feature -- Validity errors
 		do
 			if reportable_vtat_error (a_class) then
 				create an_error.make_vtat1b (a_class, a_feature, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtat1c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Report VTAT error: the anchor in the Anchored_type
-			-- must be the final name of a query in `a_class'.
-			--
-			-- ETL2: p.214
-			-- ETL3 (4.82-00-00): p.252
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtat_error (a_class) then
-				create an_error.make_vtat1c (a_class, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtat1d_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_TYPE; other_class: ET_CLASS) is
-			-- Report VTAT error: the anchor in the Anchored_type
-			-- must be the final name of a query in `other_class'.
-			--
-			-- Not in ETL
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			other_class_not_void: other_class /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtat_error (a_class) then
-				create an_error.make_vtat1d (a_class, a_type, other_class)
 				report_validity_error (an_error)
 			end
 		end
@@ -8987,5 +8946,6 @@ feature -- Internal errors
 --							a_builder.error_handler.report_gibgo_error
 --						a_builder.error_handler.report_gibgp_error
 --										a_builder.error_handler.report_gibgq_error
+--				error_handler.report_giaac_error
 
 end

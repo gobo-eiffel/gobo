@@ -248,23 +248,7 @@ feature -- Status report
 		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a formal parameter when viewed from
-			-- `a_context', or if it is a qualified type is its
-			-- target type (recursively) a formal parameter?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of current type a qualified anchored type (other
-			-- than of the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively)
-			-- contain qualified types?
+			-- Is current type a formal parameter when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
@@ -476,28 +460,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Result := False
 		end
 
-	same_syntactical_qualified_type (other: ET_QUALIFIED_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Are current type appearing in `a_context' and `other'
-			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
-			-- Therefore anchored types are considered the same
-			-- only if they have the same anchor. An anchor type
-			-- is not considered the same as any other type even
-			-- if they have the same base type.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
 	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
@@ -656,10 +618,7 @@ feature -- Conformance
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -678,10 +637,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -699,10 +655,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -721,10 +674,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -743,10 +693,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void

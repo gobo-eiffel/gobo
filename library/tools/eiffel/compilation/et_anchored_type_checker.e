@@ -21,10 +21,6 @@ inherit
 			process_class_type,
 			process_generic_class_type,
 			process_like_feature,
-			process_qualified_braced_type,
-			process_qualified_like_current,
-			process_qualified_like_feature,
-			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -66,10 +62,6 @@ feature -- Type checking
 	check_signatures (a_class: ET_CLASS) is
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `a_class'.
-			-- Do not try to follow qualified anchored types other
-			-- than those of the form 'like Current.b'. This is done
-			-- after the features of the corresponding classes have
-			-- been flattened.
 		require
 			a_class_not_void: a_class /= Void
 		local
@@ -160,46 +152,6 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	add_qualified_like_current_to_sorter (a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Add to `anchored_type_sorter' anchored types whose
-			-- anchors' types are (or contain) also anchored types.
-		local
-			a_feature: ET_FEATURE
-			a_seed: INTEGER
-			a_query_type: ET_TYPE
-		do
-			if current_anchored_type /= Void then
-				anchored_type_sorter.force_relation (a_type, current_anchored_type)
-			else
-					-- We consider 'like Current.b' as a 'like b'.
-				a_seed := a_type.seed
-				if a_seed /= 0 then
-					a_feature := current_class.seeded_feature (a_seed)
-					if a_feature /= Void then
-						a_query_type := a_feature.type
-						if a_query_type /= Void then
-							current_anchored_type := a_type
-							internal_call := True
-							a_query_type.process (Current)
-							internal_call := False
-							current_anchored_type := Void
-						end
-					end
-				end
-			end
-		end
-
-	add_qualified_type_to_sorter (a_type: ET_QUALIFIED_TYPE) is
-			-- Add to `anchored_type_sorter' anchored types whose
-			-- anchors' types are (or contain) also anchored types.
-		do
-				-- We need to process 'like a' in types of
-				-- the form 'like a.b' and 'like {like a}.b'.
-			internal_call := True
-			a_type.target_type.process (Current)
-			internal_call := False
-		end
-
 	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
@@ -258,42 +210,6 @@ feature {ET_AST_NODE} -- Type processing
 			if internal_call then
 				internal_call := False
 				add_like_feature_to_sorter (a_type)
-			end
-		end
-
-	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				add_qualified_type_to_sorter (a_type)
-			end
-		end
-
-	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				add_qualified_like_current_to_sorter (a_type)
-			end
-		end
-
-	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				add_qualified_type_to_sorter (a_type)
-			end
-		end
-
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				add_qualified_type_to_sorter (a_type)
 			end
 		end
 

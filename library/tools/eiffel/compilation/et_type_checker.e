@@ -24,10 +24,6 @@ inherit
 			process_generic_class_type,
 			process_like_current,
 			process_like_feature,
-			process_qualified_braced_type,
-			process_qualified_like_current,
-			process_qualified_like_feature,
-			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -675,53 +671,6 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_qualified_like_current_validity (a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Check validity of `a_type'.
-			-- Resolve 'identifier' in 'like Current.identifier'.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			a_name: ET_FEATURE_NAME
-			a_feature: ET_FEATURE
-			a_class_impl: ET_CLASS
-		do
-			a_name := a_type.name
-			if a_name.seed = 0 then
-					-- Not resolved yet.
-				a_class_impl := current_feature.implementation_class
-				a_class_impl.process (universe.interface_checker)
-				if a_class_impl.has_interface_error then
-					set_fatal_error
-				else
-						-- We consider 'like Current.b' as a 'like b'.
-					a_feature := a_class_impl.named_feature (a_name)
-					if a_feature /= Void then
-						a_type.resolve_identifier_type (a_feature.first_seed)
-					else
-						set_fatal_error
-						if current_class = a_class_impl then
-							error_handler.report_vtat1c_error (current_class, a_type)
-						else
--- TODO
-							error_handler.report_vtat1c_error (a_class_impl, a_type)
-						end
-					end
-				end
-			end
-		end
-
-	check_qualified_type_validity (a_type: ET_QUALIFIED_TYPE) is
-			-- Check validity of `a_type'.
-			-- Resolve 'identifier' in 'like identifier.b'
-			-- and 'like {like identifier}.b'.
-		require
-			a_type_not_void: a_type /= Void
-		do
-			internal_call := True
-			a_type.target_type.process (Current)
-			internal_call := False
-		end
-
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
 			-- Check validity of `a_type'.
 		require
@@ -798,42 +747,6 @@ feature {ET_AST_NODE} -- Type processing
 			if internal_call then
 				internal_call := False
 				check_like_feature_validity (a_type)
-			end
-		end
-
-	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				check_qualified_type_validity (a_type)
-			end
-		end
-
-	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				check_qualified_like_current_validity (a_type)
-			end
-		end
-
-	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				check_qualified_type_validity (a_type)
-			end
-		end
-
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				check_qualified_type_validity (a_type)
 			end
 		end
 

@@ -22,10 +22,6 @@ inherit
 			process_class_type,
 			process_generic_class_type,
 			process_like_feature,
-			process_qualified_braced_type,
-			process_qualified_like_current,
-			process_qualified_like_feature,
-			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -71,11 +67,7 @@ feature -- Type resolving
 	resolve_type (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Resolve identifiers (such as 'like identifier' and
 			-- 'BIT identifier') in type `a_type' when in appears
-			-- in `a_feature' in `a_class'. Do not try to resolve
-			-- qualified anchored types other than those of
-			-- the form 'like Current.b'. This is done after the
-			-- features of the corresponding classes have been
-			-- flattened.
+			-- in `a_feature' in `a_class'.
 		require
 			a_type_not_void: a_type /= Void
 			a_feature_registered: a_feature /= Void implies a_feature.is_registered
@@ -174,32 +166,6 @@ feature {NONE} -- Type resolving
 			end
 		end
 
-	resolve_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Resolve 'identifier' in 'like Current.identifier'.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			a_feature: ET_FEATURE
-		do
-				-- We consider 'like Current.b' as a 'like b'.
-			a_feature := current_class.named_feature (a_type.name)
-			if a_feature /= Void then
-				a_type.resolve_identifier_type (a_feature.first_seed)
-			else
-				set_fatal_error
-				error_handler.report_vtat1c_error (current_class, a_type)
-			end
-		end
-
-	resolve_qualified_type (a_type: ET_QUALIFIED_TYPE) is
-			-- Resolve 'identifier' in 'like identifier.b'
-			-- and 'like {like identifier}.b'.
-		require
-			a_type_not_void: a_type /= Void
-		do
-			resolve_type (a_type.target_type, current_feature, current_class)
-		end
-
 	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Resolve the actual parameter types.
 		require
@@ -282,42 +248,6 @@ feature {ET_AST_NODE} -- Type processing
 			if internal_call then
 				internal_call := False
 				resolve_like_feature (a_type)
-			end
-		end
-
-	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				resolve_qualified_type (a_type)
-			end
-		end
-
-	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				resolve_qualified_like_current (a_type)
-			end
-		end
-
-	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				resolve_qualified_type (a_type)
-			end
-		end
-
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
-			-- Process `a_type'.
-		do
-			if internal_call then
-				internal_call := False
-				resolve_qualified_type (a_type)
 			end
 		end
 

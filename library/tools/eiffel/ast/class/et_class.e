@@ -93,7 +93,6 @@ feature -- Initialization
 		do
 			reset_implementation_checked
 			reset_interface_checked
-			reset_qualified_signatures_resolved
 			reset_features_flattened
 			reset_ancestors_built
 			if is_preparsed then
@@ -135,7 +134,6 @@ feature -- Initialization
 		do
 			reset_implementation_checked
 			reset_interface_checked
-			reset_qualified_signatures_resolved
 			reset_features_flattened
 			reset_ancestors_built
 			reset_parsed
@@ -1024,43 +1022,6 @@ feature -- Feature flattening status
 			no_flattening_error: not has_flattening_error
 		end
 
-feature -- Qualified signature resolving status
-
-	qualified_signatures_resolved: BOOLEAN
-			-- Have the qualified anchored types in the signatures of
-			-- features of current class been resolved?
-
-	has_qualified_signatures_error: BOOLEAN
-			-- Has a fatal error occurred during qualified signature resolving?
-
-	set_qualified_signatures_resolved is
-			-- Set `qualified_signatures_resolved' to True.
-		do
-			qualified_signatures_resolved := True
-		ensure
-			qualified_signatures_resolved: qualified_signatures_resolved
-		end
-
-	set_qualified_signatures_error is
-			-- Set `has_qualified_signatures_error' to True.
-		require
-			qualified_signatures_resolved: qualified_signatures_resolved
-		do
-			has_qualified_signatures_error := True
-		ensure
-			has_qualified_signatures_error: has_qualified_signatures_error
-		end
-
-	reset_qualified_signatures_resolved is
-			-- Set `qualified_signatures_resolved' to False.
-		do
-			has_qualified_signatures_error := False
-			qualified_signatures_resolved := False
-		ensure
-			qualified_signatures_not_resolved: not qualified_signatures_resolved
-			no_qualified_signatures_error: not has_qualified_signatures_error
-		end
-
 feature -- Interface checking status
 
 	interface_checked: BOOLEAN
@@ -1290,7 +1251,6 @@ invariant
 	no_void_supplier: suppliers /= Void implies not suppliers.has (Void)
 	ancestors_error: has_ancestors_error implies ancestors_built
 	flattening_error: has_flattening_error implies features_flattened
-	qualified_signatures_error: has_qualified_signatures_error implies qualified_signatures_resolved
 	interface_error: has_interface_error implies interface_checked
 	implementation_error: has_implementation_error implies implementation_checked
 

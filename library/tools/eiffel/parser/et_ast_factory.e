@@ -2590,46 +2590,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_qualified_braced_type (a_like: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_BRACED_TYPE is
-			-- New qualified anchored type of the form 'like {A}.b'
-		do
-			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type, a_name)
-				if a_like /= Void and then not a_like.position.is_null then
-					Result.set_like_keyword (a_like)
-				end
-			end
-		end
-
 	new_qualified_call (a_name: ET_QUALIFIED_FEATURE_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_QUALIFIED_CALL is
 			-- New qualified call
 		do
 			if a_name /= Void then
 				create Result.make (a_name, args)
-			end
-		end
-
-	new_qualified_like_current (a_type: ET_LIKE_CURRENT; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_CURRENT is
-			-- New qualified anchored type of the form 'like Current.b'
-		do
-			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type, a_name)
-			end
-		end
-
-	new_qualified_like_feature (a_type: ET_LIKE_FEATURE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_FEATURE is
-			-- New qualified anchored type of the form 'like a.b'
-		do
-			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type, a_name)
-			end
-		end
-
-	new_qualified_like_type (a_type: ET_QUALIFIED_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_TYPE is
-			-- New qualified anchored type of the form 'like a.b.c'
-		do
-			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type, a_name)
 			end
 		end
 

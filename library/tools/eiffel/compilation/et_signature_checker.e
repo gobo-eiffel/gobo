@@ -164,12 +164,8 @@ feature {NONE} -- Signature validity
 			a_parent_feature: ET_PARENT_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_resolver: ET_AST_PROCESSOR
 			i, nb: INTEGER
 		do
-				-- We don't want the qualified anchored types in signatures to be resolved yet.
-			a_resolver := universe.qualified_signature_resolver
-			universe.set_qualified_signature_resolver (universe.null_processor)
 			a_flattened_feature := a_feature.flattened_feature
 			a_type := a_flattened_feature.type
 			parent_context.set (other.parent.type, current_class)
@@ -194,21 +190,12 @@ feature {NONE} -- Signature validity
 					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 				end
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
+				set_fatal_error
+				if a_feature.is_inherited then
+					a_parent_feature := a_feature.inherited_feature.flattened_parent
+					error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 				else
-					set_fatal_error
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-					end
+					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 				end
 			elseif a_feature.is_redeclared and other_precursor.is_attribute then
 				if not a_flattened_feature.is_attribute then
@@ -243,27 +230,17 @@ feature {NONE} -- Signature validity
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
 					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-						if
-							a_type.has_qualified_type (current_class, universe) or
-							other_type.has_qualified_type (parent_context, universe)
-						then
-								-- We have to delay until qualified
-								-- anchored types have been resolved.
-							has_qualified_type := True
+						set_fatal_error
+						if a_feature.is_inherited then
+							a_parent_feature := a_feature.inherited_feature.flattened_parent
+							error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 						else
-							set_fatal_error
-							if a_feature.is_inherited then
-								a_parent_feature := a_feature.inherited_feature.flattened_parent
-								error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-							else
-								error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-							end
+							error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 						end
 					end
 					i := i + 1
 				end
 			end
-			universe.set_qualified_signature_resolver (a_resolver)
 		end
 
 	check_selected_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
@@ -283,12 +260,8 @@ feature {NONE} -- Signature validity
 			a_parent_feature: ET_PARENT_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_resolver: ET_AST_PROCESSOR
 			i, nb: INTEGER
 		do
-				-- We don't want the qualified anchored types in signatures to be resolved yet.
-			a_resolver := universe.qualified_signature_resolver
-			universe.set_qualified_signature_resolver (universe.null_processor)
 			a_flattened_feature := a_feature.flattened_feature
 			a_type := a_flattened_feature.type
 			parent_context.set (other.parent.type, current_class)
@@ -313,21 +286,12 @@ feature {NONE} -- Signature validity
 					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
+				set_fatal_error
+				if a_feature.is_inherited then
+					a_parent_feature := a_feature.inherited_feature.flattened_parent
+					error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 				else
-					set_fatal_error
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-					end
+					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
 			end
 			an_arguments := a_flattened_feature.arguments
@@ -356,27 +320,17 @@ feature {NONE} -- Signature validity
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
 					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-						if
-							a_type.has_qualified_type (current_class, universe) or
-							other_type.has_qualified_type (parent_context, universe)
-						then
-								-- We have to delay until qualified
-								-- anchored types have been resolved.
-							has_qualified_type := True
+						set_fatal_error
+						if a_feature.is_inherited then
+							a_parent_feature := a_feature.inherited_feature.flattened_parent
+							error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 						else
-							set_fatal_error
-							if a_feature.is_inherited then
-								a_parent_feature := a_feature.inherited_feature.flattened_parent
-								error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-							else
-								error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-							end
+							error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 						end
 					end
 					i := i + 1
 				end
 			end
-			universe.set_qualified_signature_resolver (a_resolver)
 		end
 
 	check_joined_signature_validity (a_feature: ET_INHERITED_FEATURE; other: ET_PARENT_FEATURE) is
@@ -410,17 +364,8 @@ feature {NONE} -- Signature validity
 				set_fatal_error
 				error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 			elseif not a_type.same_syntactical_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
-				else
-					set_fatal_error
-					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
-				end
+				set_fatal_error
+				error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 			end
 			an_arguments := a_joined_feature.arguments
 			other_arguments := other_precursor.arguments
@@ -436,17 +381,8 @@ feature {NONE} -- Signature validity
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
 					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then
-						if
-							a_type.has_qualified_type (current_class, universe) or
-							other_type.has_qualified_type (parent_context, universe)
-						then
-								-- We have to delay until qualified
-								-- anchored types have been resolved.
-							has_qualified_type := True
-						else
-							set_fatal_error
-							error_handler.report_vdjr0b_error (current_class, a_feature.flattened_parent, other, i)
-						end
+						set_fatal_error
+						error_handler.report_vdjr0b_error (current_class, a_feature.flattened_parent, other, i)
 					end
 					i := i + 1
 				end
@@ -472,13 +408,6 @@ feature {NONE} -- Implementation
 
 	parent_context: ET_NESTED_TYPE_CONTEXT
 			-- Parent context for type conformance checking
-
-	has_qualified_type: BOOLEAN
-			-- Is there a qualified anchored type in (or reachable
-			-- from) the signature of the feature being analyzed?
-			-- If this is the case we will have to check again the
-			-- signature of this feature after the features of the
-			-- corresponding classes have been flattened.
 
 invariant
 

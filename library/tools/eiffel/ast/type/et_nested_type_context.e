@@ -312,26 +312,6 @@ feature -- Status report
 			end
 		end
 
-	has_qualified_type (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is the named type of current context a qualified anchored type
-			-- (other than of the form 'like Current.b'), or do its actual
-			-- generic parameters (recursively) contain qualified types?
-		local
-			l_type: ET_TYPE
-		do
-			inspect count
-			when 0 then
-				Result := root_context.context_has_qualified_type (a_universe)
-			when 1 then
-				Result := last.has_qualified_type (root_context, a_universe)
-			else
-				l_type := last
-				remove_last
-				Result := l_type.has_qualified_type (Current, a_universe)
-				put_last (l_type)
-			end
-		end
-
 	base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the base type of current context contain `a_class'
 			-- in `a_universe'?
@@ -651,10 +631,7 @@ feature -- Conformance
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current context conform to `other' type appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
 			a_context: ET_NESTED_TYPE_CONTEXT
@@ -684,10 +661,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
 			a_context: ET_NESTED_TYPE_CONTEXT
@@ -715,10 +689,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
 			a_context: ET_NESTED_TYPE_CONTEXT
@@ -747,10 +718,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
 			a_context: ET_NESTED_TYPE_CONTEXT
@@ -778,10 +746,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
 			a_context: ET_NESTED_TYPE_CONTEXT

@@ -115,7 +115,6 @@ feature {NONE} -- Constraint validity
 			a_formal: ET_FORMAL_PARAMETER
 			a_constraint: ET_TYPE
 			a_class: ET_CLASS
-			a_resolver: ET_AST_PROCESSOR
 		do
 			a_class := a_type.direct_base_class (universe)
 			if a_class.is_generic then
@@ -127,9 +126,6 @@ feature {NONE} -- Constraint validity
 						-- formal generic parameters validity checking.
 					set_fatal_error
 				else
-						-- We don't want the qualified anchored to be resolved here.
-					a_resolver := universe.qualified_signature_resolver
-					universe.set_qualified_signature_resolver (universe.null_processor)
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
@@ -157,7 +153,6 @@ feature {NONE} -- Constraint validity
 						end
 						i := i + 1
 					end
-					universe.set_qualified_signature_resolver (a_resolver)
 				end
 			end
 		end

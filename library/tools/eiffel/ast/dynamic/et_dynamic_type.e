@@ -78,10 +78,7 @@ feature -- Conformance
 	conforms_to_type (other: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): BOOLEAN is
 			-- Does current type conform to `other' type?
 			-- (Note: 'a_system.universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_system.universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
+			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 			a_system_not_void: a_system /= Void
