@@ -15,8 +15,6 @@ inherit
 
 	YY_PARSER_SKELETON [DOUBLE]
 
-	KL_SHARED_STANDARD_FILES
-
 	KL_SHARED_STRING_ROUTINES
 
 	KL_SHARED_INPUT_STREAM_ROUTINES
@@ -53,7 +51,7 @@ feature {NONE} -- Tables
 
 	yytranslate_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,    10,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -84,21 +82,21 @@ feature {NONE} -- Tables
 
 	yyr1_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
     13,    13,    14,    14,    14,    15,    15,    15,    15,    15,
     15,    15>>, 0)
 		end
 
 	yyr2_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      0,     2,     1,     2,     2,     1,     3,     3,     3,     3,
      2,     3>>, 0)
 		end
 
 	yydefact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     1,
+			Result := INTEGER_ARRAY_.make_from_array (<<     1,
      0,     0,     6,     0,     3,     0,     2,     0,     5,    11,
      0,     0,     0,     0,     0,     4,    12,     8,     7,     9,
     10,     0,     0>>, 0)
@@ -106,13 +104,13 @@ feature {NONE} -- Tables
 
 	yydefgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     1,
+			Result := INTEGER_ARRAY_.make_from_array (<<     1,
      7,     8>>, 0)
 		end
 
 	yypact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<-32768,
+			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
      0,    -8,-32768,    18,-32768,    18,-32768,    26,-32768,-32768,
     13,    18,    18,    18,    18,-32768,-32768,     2,     2,-32768,
 -32768,     6,-32768>>, 0)
@@ -120,7 +118,7 @@ feature {NONE} -- Tables
 
 	yypgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<-32768,
+			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
 -32768,     1>>, 0)
 		end
 
@@ -128,7 +126,7 @@ feature {NONE} -- Tables
 
 	yytable_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    22,
+			Result := INTEGER_ARRAY_.make_from_array (<<    22,
      2,     9,     3,     4,    10,    23,    11,    14,    15,     5,
      6,     0,    18,    19,    20,    21,    12,    13,    14,    15,
      3,     4,     0,     0,    17,     0,     0,     0,     6,    12,
@@ -137,7 +135,7 @@ feature {NONE} -- Tables
 
 	yycheck_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     0,
+			Result := INTEGER_ARRAY_.make_from_array (<<     0,
      1,    10,     3,     4,     4,     0,     6,     6,     7,    10,
     11,    -1,    12,    13,    14,    15,     4,     5,     6,     7,
      3,     4,    -1,    -1,    12,    -1,    -1,    -1,    11,     4,
@@ -151,35 +149,35 @@ feature {NONE} -- Semantic actions
 			inspect yy_act
 
 when 4 then
---#line 45 "calc.y"
+--#line 43 "calc.y"
  print (yyvs.item (yyvsp - 1)); print ('%N') 
 
 when 5 then
---#line 46 "calc.y"
+--#line 44 "calc.y"
  recover 
 
 when 7 then
---#line 51 "calc.y"
+--#line 49 "calc.y"
  yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp) 
 
 when 8 then
---#line 52 "calc.y"
+--#line 50 "calc.y"
  yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp) 
 
 when 9 then
---#line 53 "calc.y"
+--#line 51 "calc.y"
  yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp) 
 
 when 10 then
---#line 54 "calc.y"
+--#line 52 "calc.y"
  yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp) 
 
 when 11 then
---#line 55 "calc.y"
+--#line 53 "calc.y"
  yyval := -yyvs.item (yyvsp) 
 
 when 12 then
---#line 56 "calc.y"
+--#line 54 "calc.y"
  yyval := yyvs.item (yyvsp - 1) 
 
 			else
@@ -223,32 +221,32 @@ feature {NONE} -- Scanner
 					c := std.input.last_character
 				end
 			until
-				input_stream_.end_of_input (std.input) or else
+				INPUT_STREAM_.end_of_input (std.input) or else
 				(c /= ' ' and c /= '%T')
 			loop
 				std.input.read_character
 				c := std.input.last_character
 			end
-			if input_stream_.end_of_input (std.input) then
+			if INPUT_STREAM_.end_of_input (std.input) then
 					-- Return end-of-file
 				last_token := 0
 			elseif c = '.' or (c >= '0' and c <= '9') then
 					-- Process numbers
 				last_token := NUM
 				from
-					buffer := string_.make (10)
+					buffer := STRING_.make (10)
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
 				until
-					input_stream_.end_of_input (std.input) or else
+					INPUT_STREAM_.end_of_input (std.input) or else
 					(c /= '.' and (c < '0' or c > '9'))
 				loop
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
 				end
-				if not input_stream_.end_of_input (std.input) then
+				if not INPUT_STREAM_.end_of_input (std.input) then
 					pending_character := c
 					has_pending_character := True
 				end

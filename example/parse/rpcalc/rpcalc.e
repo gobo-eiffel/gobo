@@ -15,8 +15,6 @@ inherit
 
 	YY_PARSER_SKELETON [DOUBLE]
 
-	KL_SHARED_STANDARD_FILES
-
 	KL_SHARED_STRING_ROUTINES
 
 	KL_SHARED_INPUT_STREAM_ROUTINES
@@ -53,7 +51,7 @@ feature {NONE} -- Tables
 
 	yytranslate_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     4,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -84,39 +82,39 @@ feature {NONE} -- Tables
 
 	yyr1_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
     10,    10,    11,    11,    12,    12,    12,    12,    12,    12>>, 0)
 		end
 
 	yyr2_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      0,     2,     1,     2,     1,     3,     3,     3,     3,     2>>, 0)
 		end
 
 	yydefact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     1,
+			Result := INTEGER_ARRAY_.make_from_array (<<     1,
      0,     5,     3,     2,     0,     4,    10,     0,     6,     7,
      8,     9,     0,     0>>, 0)
 		end
 
 	yydefgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     1,
+			Result := INTEGER_ARRAY_.make_from_array (<<     1,
      4,     8>>, 0)
 		end
 
 	yypact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<-32768,
+			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
     11,-32768,-32768,-32768,     4,-32768,-32768,    -3,-32768,-32768,
 -32768,-32768,     1,-32768>>, 0)
 		end
 
 	yypgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<-32768,
+			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
 -32768,     8>>, 0)
 		end
 
@@ -124,14 +122,14 @@ feature {NONE} -- Tables
 
 	yytable_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     2,
+			Result := INTEGER_ARRAY_.make_from_array (<<     2,
     14,     9,    10,    11,    12,     7,     2,     6,     5,     0,
     13,     0,     7,     2,     3>>, 0)
 		end
 
 	yycheck_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     3,
+			Result := INTEGER_ARRAY_.make_from_array (<<     3,
      0,     5,     6,     7,     8,     9,     3,     4,     1,    -1,
      0,    -1,     9,     3,     4>>, 0)
 		end
@@ -143,27 +141,27 @@ feature {NONE} -- Semantic actions
 			inspect yy_act
 
 when 4 then
---#line 40 "rpcalc.y"
+--#line 38 "rpcalc.y"
  print (yyvs.item (yyvsp - 1)); print ('%N') 
 
 when 6 then
---#line 44 "rpcalc.y"
+--#line 42 "rpcalc.y"
  yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp - 1) 
 
 when 7 then
---#line 45 "rpcalc.y"
+--#line 43 "rpcalc.y"
  yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp - 1) 
 
 when 8 then
---#line 46 "rpcalc.y"
+--#line 44 "rpcalc.y"
  yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp - 1) 
 
 when 9 then
---#line 47 "rpcalc.y"
+--#line 45 "rpcalc.y"
  yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp - 1) 
 
 when 10 then
---#line 49 "rpcalc.y"
+--#line 47 "rpcalc.y"
  yyval := -yyvs.item (yyvsp - 1) 
 
 			else
@@ -206,32 +204,32 @@ feature {NONE} -- Scanner
 					c := std.input.last_character
 				end
 			until
-				input_stream_.end_of_input (std.input) or else
+				INPUT_STREAM_.end_of_input (std.input) or else
 				(c /= ' ' and c /= '%T')
 			loop
 				std.input.read_character
 				c := std.input.last_character
 			end
-			if input_stream_.end_of_input (std.input) then
+			if INPUT_STREAM_.end_of_input (std.input) then
 					-- Return end-of-file
 				last_token := 0
 			elseif c = '.' or (c >= '0' and c <= '9') then
 					-- Process numbers
 				last_token := NUM
 				from
-					buffer := string_.make (10)
+					buffer := STRING_.make (10)
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
 				until
-					input_stream_.end_of_input (std.input) or else
+					INPUT_STREAM_.end_of_input (std.input) or else
 					(c /= '.' and (c < '0' or c > '9'))
 				loop
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
 				end
-				if not input_stream_.end_of_input (std.input) then
+				if not INPUT_STREAM_.end_of_input (std.input) then
 					pending_character := c
 					has_pending_character := True
 				end

@@ -23,6 +23,10 @@ inherit
 			make as make_eiffel_scanner
 		end
 
+	KL_SHARED_EXCEPTIONS
+
+	KL_SHARED_ARGUMENTS
+
 creation
 
 	make, execute, benchmark
@@ -55,7 +59,7 @@ feature {NONE} -- Tables
 
 	yytranslate_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -96,7 +100,7 @@ feature {NONE} -- Tables
 
 	yyr1_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
    124,   125,   125,   125,   126,   126,   127,   127,   127,   128,
    128,   128,   129,   129,   130,   130,   131,   131,   131,   132,
    132,   133,   133,   134,   134,   135,   135,   136,   136,   136,
@@ -133,7 +137,7 @@ feature {NONE} -- Tables
 
 	yyr2_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      9,     2,     3,     3,     0,     2,     0,     1,     2,     1,
      3,     1,     1,     3,     1,     1,     0,     2,     3,     2,
      4,     0,     2,     0,     2,     0,     2,     0,     1,     2,
@@ -170,7 +174,7 @@ feature {NONE} -- Tables
 
 	yydefact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     5,
+			Result := INTEGER_ARRAY_.make_from_array (<<     5,
      7,     0,   299,   304,   308,    15,   301,   303,   300,   307,
    311,   302,   298,   297,     0,   312,    12,     6,     8,    10,
     13,    16,   291,   292,   295,   296,   293,   294,     0,     0,
@@ -222,7 +226,7 @@ feature {NONE} -- Tables
 
 	yydefgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<   467,
+			Result := INTEGER_ARRAY_.make_from_array (<<   467,
     32,     2,    18,    19,    20,    21,    43,    53,    57,    55,
     62,    67,    68,    82,    83,    84,    85,    86,    87,    88,
    118,    89,   123,   108,   109,   147,   114,    94,   133,   128,
@@ -238,7 +242,7 @@ feature {NONE} -- Tables
 
 	yypact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    75,
+			Result := INTEGER_ARRAY_.make_from_array (<<    75,
    305,   265,-32768,-32768,-32768,   -52,-32768,-32768,-32768,-32768,
 -32768,-32768,-32768,-32768,    66,-32768,-32768,   305,-32768,    -7,
 -32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,   177,   184,
@@ -290,7 +294,7 @@ feature {NONE} -- Tables
 
 	yypgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<-32768,
+			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
 -32768,-32768,-32768,   407,   393,   392,-32768,-32768,   364,   130,
 -32768,-32768,   372,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
 -32768,   356,-32768,-32768,   337,-32768,   151,   -10,-32768,   377,
@@ -308,7 +312,7 @@ feature {NONE} -- Tables
 
 	yytable_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    24,
+			Result := INTEGER_ARRAY_.make_from_array (<<    24,
     25,    23,    26,   215,   243,   234,   281,   119,   268,   237,
    238,   239,   240,   241,   131,   242,    24,    25,    23,    26,
    307,    51,   111,   362,   268,   293,   179,  -192,  -192,     7,
@@ -434,7 +438,7 @@ feature {NONE} -- Tables
 
 	yycheck_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     1,
+			Result := INTEGER_ARRAY_.make_from_array (<<     1,
      1,     1,     1,   143,   205,   194,    20,    79,     6,   198,
    199,   200,   201,   202,     6,   204,    18,    18,    18,    18,
    289,     6,     6,   332,     6,   270,   129,    21,    22,     7,
@@ -588,19 +592,19 @@ feature {NONE} -- Initialization
 			a_file: like INPUT_STREAM_TYPE
 		do
 			make
-			n := argument_count
+			n := Arguments.argument_count
 			if n = 0 then
 				std.error.put_string ("usage: eiffel_parser filename ...%N")
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
 				from j := 1 until j > n loop
-					a_filename := argument (j)
-					a_file := input_stream_.make_file_open_read (a_filename)
-					if input_stream_.is_open_read (a_file) then
+					a_filename := Arguments.argument (j)
+					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+					if INPUT_STREAM_.is_open_read (a_file) then
 						reset
 						set_input_buffer (new_file_buffer (a_file))
 						parse
-						input_stream_.close (a_file)
+						INPUT_STREAM_.close (a_file)
 					else
 						std.error.put_string ("eiffel_parser: cannot read %'")
 						std.error.put_string (a_filename)
@@ -620,26 +624,26 @@ feature {NONE} -- Initialization
 		do
 			make
 			if
-				argument_count < 2 or else
-				not string_.is_integer (argument (1))
+				Arguments.argument_count < 2 or else
+				not STRING_.is_integer (Arguments.argument (1))
 			then
 				std.error.put_string ("usage: eiffel_parser nb filename%N")
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
-				n := argument (1).to_integer
-				a_filename := argument (2)
+				n := Arguments.argument (1).to_integer
+				a_filename := Arguments.argument (2)
 				from j := 1 until j > n loop
-					a_file := input_stream_.make_file_open_read (a_filename)
-					if input_stream_.is_open_read (a_file) then
+					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+					if INPUT_STREAM_.is_open_read (a_file) then
 						reset
 						set_input_buffer (new_file_buffer (a_file))
 						parse
-						input_stream_.close (a_file)
+						INPUT_STREAM_.close (a_file)
 					else
 						std.error.put_string ("eiffel_parser: cannot read %'")
 						std.error.put_string (a_filename)
 						std.error.put_string ("%'%N")
-						exceptions_.die (1)
+						Exceptions.die (1)
 					end
 					j := j + 1
 				end
