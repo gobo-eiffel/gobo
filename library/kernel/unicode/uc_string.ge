@@ -1731,7 +1731,7 @@ feature -- Removal
 		do
 			if n >= count then
 				wipe_out
-			elseif n > 0 then
+			elseif n /= 0 then
 				keep_tail (count - n)
 			end
 		end
@@ -1745,7 +1745,7 @@ feature -- Removal
 		do
 			if n >= count then
 				wipe_out
-			elseif n > 0 then
+			elseif n /= 0 then
 				keep_head (count - n)
 			end
 		end
