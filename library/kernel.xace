@@ -137,21 +137,9 @@
 		</cluster>
 		<cluster name="TimeDate" if="${VE_4_1}"/>
 		<mount location="${VE_Lib}/kernel/library.xace" unless="${VE_4_1}"/>
-		<mount location="${VE_Lib}/platform/win32/api/library.xace" unless="${VE_4_1}"/>
-		<option unless="${VE_4_1}">
-			<option name="link" value="${VE_Bin}\comctl32.imp"/>
-			<option name="link" value="${VE_Bin}\ole32.imp"/>
-			<option name="link" value="${VE_Bin}\oleaut32.imp"/>
-		</option>
 		<mount location="${VE_Lib}/misc/pool/library.xace" unless="${VE_4_1}"/>
-		<mount location="${VE_Lib}/misc/ve/environment/library.xace" unless="${VE_4_1}"/>
 		<mount location="${VE_Lib}/tool/gargs/library.xace" unless="${VE_4_1}"/>
 		<mount location="${VE_Lib}/timedate/library.xace" unless="${VE_4_1}"/>
-		<option unless="${VE_4_1}">
-			<option name="link" value="${VE_Lib}\timedate\c\sys_time.lib" if="${VE_OS}=Win32"/>
-			<option name="link" value="-L${VE_Lib}/timedate/c" if="${VE_OS}=Linux"/>
-			<option name="link" value="-lsys_time" if="${VE_OS}=Linux"/>
-		</option>
 	</cluster>
 
 </library>

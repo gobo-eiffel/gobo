@@ -16,7 +16,9 @@
 		<cluster name="elks"/>
 		<cluster name="io"/>
 		<cluster name="misc">
-			<option name="include" value="**/*.e.${VE_OS}" unless="${VE_4_1}"/>
+			<option if="${GOBO_EIFFEL}=ve">
+				<option name="include" value="**/*.e.${VE_OS}" unless="${VE_4_1}"/>
+			</option>
 		</cluster>
 		<cluster name="unicode"/>
 		<cluster name="support"/>
