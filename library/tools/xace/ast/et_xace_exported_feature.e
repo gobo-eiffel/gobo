@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_feature_name_not_void: a_feature_name /= Void
 			a_feature_name_not_empty: a_feature_name.count > 0
 			a_external_name_not_void: a_external_name /= Void
-			a_external_name_not_void: external_name.count > 0
+			a_external_name_not_void: a_external_name.count > 0
 		do
 			feature_name := a_feature_name
 			external_name := a_external_name
