@@ -29,16 +29,30 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
+	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 			i: INTEGER
 			ucs: UC_STRING
 			a_source_filenames: DS_ARRAYED_LIST [UC_STRING]
+			a_xml_subelement: GEANT_XML_ELEMENT
+			a_fs_element: GEANT_FILESET_ELEMENT
 		do
 			!! command.make (a_project)
-			task_make (command, an_xml_element)
+			task_make (command, a_xml_element)
+
+			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
+			if a_xml_subelement /= Void then
+				!! a_fs_element.make (project, a_xml_subelement)
+				a_fs_element.fileset.execute
+				command.set_source_filenames (a_fs_element.fileset.filenames)
+				project.trace_debug ("[outofdate] fileset directory: " + a_fs_element.fileset.directory_name + "%N")
+				project.trace_debug ("[outofdate] number of sourcefilenames: " + a_fs_element.fileset.filenames.count.out + "%N")
+			else
+				project.trace_debug ("[outofdate] no <fileset> subelement.%N")
+			end
+
 			if has_uc_attribute (Source_attribute_name) then
 				ucs := uc_attribute_value (Source_attribute_name)
 				a_source_filenames := string_tokens (ucs, ',')
@@ -50,8 +64,8 @@ feature {NONE} -- Initialization
 
 					i := i + 1
 				end
-
 			end
+			
 			if has_uc_attribute (Target_attribute_name) then
 				a_value := uc_attribute_value (Target_attribute_name).out
 				if a_value.count > 0 then
@@ -132,6 +146,15 @@ feature {NONE} -- Constants
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
+		end
+
+	Fileset_element_name: UC_STRING is
+			-- Name of xml subelement for fileset
+		once
+			!! Result.make_from_string ("fileset")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: not Result.empty
 		end
 
 end -- class GEANT_OUTOFDATE_TASK

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Create a new 'outofdate' command.
 		do
 			precursor (a_project)
-			!! source_filenames.make (10)
+			!DS_HASH_SET [STRING]! source_filenames.make (10)
 		end
 
 feature -- Status report
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Access
 
-	source_filenames: DS_ARRAYED_LIST [STRING]
+	source_filenames: DS_SET [STRING]
 			-- Source filesnames
 
 	target_filename: STRING
@@ -69,6 +69,17 @@ feature -- Access
 			-- in case `is_out_of_date' is evaluated to `False'
 
 feature -- Setting
+
+
+	set_source_filenames (a_source_filenames: like source_filenames) is
+			-- Set `source_filenames' to `a_filename'.
+		require
+			a_source_filenames_not_void : a_source_filenames /= Void
+		do
+			source_filenames := a_source_filenames
+		ensure
+			source_filenames_set: source_filenames = a_source_filenames
+		end
 
 	set_target_filename (a_filename: like target_filename) is
 			-- Set `target_filename' to `a_filename'.
@@ -119,30 +130,33 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		local
-			i, nb: INTEGER
 			a_source_time: INTEGER
 			a_target_time: INTEGER
 			a_name: STRING
+			a_done: BOOLEAN
 		do
 			exit_code := 0
 			a_name := file_system.pathname_from_file_system (target_filename, unix_file_system)
 			a_target_time := file_system.file_time_stamp (a_name)
 				-- Check timestamps:
-			nb := source_filenames.count
-			from i := 1 until i > nb loop
-				a_name := file_system.pathname_from_file_system (source_filenames.item (i), unix_file_system)
+			from
+				source_filenames.start
+			until
+				source_filenames.after or else exit_code /= 0 or else a_done
+			loop
+				a_name := file_system.pathname_from_file_system (source_filenames.item_for_iteration, unix_file_system)
+				project.trace_debug ("[outofdate] filename: " + a_name + "%N")
 				a_source_time := file_system.file_time_stamp (a_name)
 				if a_source_time = -1 then
-					log ("  [outofdate] error: '" + a_name + "'  not accessible.%N")
+					project.log ("  [outofdate] error: '" + a_name + "'  not accessible.%N")
 					exit_code := 1
-					i := nb + 1 -- Jump out of the loop.
 				elseif a_target_time < a_source_time then
 					is_out_of_date := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
+					a_done := True
 				end
+				source_filenames.forth
 			end
+
 			if exit_code = 0 then
 				if is_out_of_date then
 					project.variables.set_variable_value (variable_name, true_value)
