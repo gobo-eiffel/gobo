@@ -961,8 +961,11 @@ feature {NONE} -- Constants
 
 	Portion_sorter: DS_BUBBLE_SORTER [PR_PORTION] is
 			-- Table portion sorter
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [PR_PORTION]
 		once
-			!! Result
+			!! a_comparator.make
+			!! Result.make (a_comparator)
 		ensure
 			table_portion_sorter_not_void: Result /= Void
 		end

@@ -152,8 +152,11 @@ feature -- Sort
 
 	sorter: DS_SHELL_SORTER [INTEGER] is
 			-- Shell sorter
-		do
-			!! Result
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+		once
+			!! a_comparator.make
+			!! Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end

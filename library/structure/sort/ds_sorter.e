@@ -29,6 +29,15 @@ feature -- Status report
 		deferred
 		end
 
+	sorted_with_comparator (a_container: DS_SORTABLE [G]; a_comparator: DS_COMPARATOR [G]): BOOLEAN is
+			-- Is `a_container' sorted according to
+			-- `a_comparator''s comparison criterion?
+		require
+			a_container_not_void: a_container /= Void
+			a_comparator_not_void: a_comparator /= Void
+		deferred
+		end
+
 feature -- Sort
 
 	sort (a_container: DS_SORTABLE [G]) is
@@ -47,6 +56,17 @@ feature -- Sort
 		deferred
 		ensure
 			sorted: reverse_sorted (a_container)
+		end
+
+	sort_with_comparator (a_container: DS_SORTABLE [G]; a_comparator: DS_COMPARATOR [G]) is
+			-- Sort `a_container' according to
+			-- `a_comparator''s comparison criterion?
+		require
+			a_container_not_void: a_container /= Void
+			a_comparator_not_void: a_comparator /= Void
+		deferred
+		ensure
+			sorted: sorted_with_comparator (a_container, a_comparator)
 		end
 
 end -- class DS_SORTER

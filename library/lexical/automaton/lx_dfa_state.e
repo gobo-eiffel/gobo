@@ -257,16 +257,22 @@ feature {NONE} -- Sort
 
 	bubble_sorter: DS_BUBBLE_SORTER [LX_NFA_STATE] is
 			-- NFA state bubble sorter
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [LX_NFA_STATE]
 		once
-			!! Result
+			!! a_comparator.make
+			!! Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end
 
 	rule_sorter: DS_BUBBLE_SORTER [LX_RULE] is
 			-- Rule bubble sorter
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [LX_RULE]
 		once
-			!! Result
+			!! a_comparator.make
+			!! Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end

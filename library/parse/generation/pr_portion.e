@@ -195,8 +195,11 @@ feature -- Constants
 
 	Integer_sorter: DS_BUBBLE_SORTER [INTEGER] is
 			-- Integer sorter
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
 		once
-			!! Result
+			!! a_comparator.make
+			!! Result.make (a_comparator)
 		ensure
 			integer_sorter_not_void: Result /= Void
 		end

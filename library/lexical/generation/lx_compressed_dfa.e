@@ -101,7 +101,6 @@ feature -- Access
 			i, j, k: INTEGER
 			a_state: LX_DFA_STATE
 			a_nfa_state: LX_NFA_STATE
-			a_sorter: DS_BUBBLE_SORTER [LX_RULE]
 			acc_set: DS_ARRAYED_LIST [LX_RULE]
 		do
 			!! Result.make (yy_rules.count)
@@ -132,8 +131,7 @@ feature -- Access
 					i := i - 1
 				end
 			end
-			!! a_sorter
-			Result.sort (a_sorter)
+			Result.sort (Rule_sorter)
 		ensure
 			rules_not_void: Result /= Void
 			no_void_rule: not Result.has (Void)
@@ -1028,6 +1026,17 @@ feature {NONE} -- Constants
 			-- a state must be of the number of total out-transitions
 			-- of the state in order to consider making a template from
 			-- the state
+
+	Rule_sorter: DS_BUBBLE_SORTER [LX_RULE] is
+			-- Rule sorter
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [LX_RULE]
+		once
+			!! a_comparator.make
+			!! Result.make (a_comparator)
+		ensure
+			sorter_not_void: Result /= Void
+		end
 
 invariant
 

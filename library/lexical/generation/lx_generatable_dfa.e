@@ -711,7 +711,6 @@ feature {NONE} -- Generation
 			a_nfa_state: LX_NFA_STATE
 			line_numbers: DS_ARRAYED_LIST [INTEGER]
 			line_nb: INTEGER
-			bubble_sorter: DS_BUBBLE_SORTER [INTEGER]
 			a_rule: LX_RULE
 		do
 			nb := a_state.count
@@ -735,8 +734,7 @@ feature {NONE} -- Generation
 				end
 				i := i + 1
 			end
-			!! bubble_sorter
-			line_numbers.sort (bubble_sorter)
+			line_numbers.sort (Integer_sorter)
 			a_file.put_string (" associated rule line numbers:")
 			nb := line_numbers.count
 			from i := 1 until i > nb loop
@@ -987,6 +985,17 @@ feature {NONE} -- Access
 feature {NONE} -- Constants
 
 	Indentation: STRING is "%T%T%T"
+
+	Integer_sorter: DS_BUBBLE_SORTER [INTEGER] is
+			-- Integer sorter
+		local
+			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+		once
+			!! a_comparator.make
+			!! Result.make (a_comparator)
+		ensure
+			sorter_not_void: Result /= Void
+		end
 
 invariant
 
