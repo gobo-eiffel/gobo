@@ -61,6 +61,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			mark_unreplaced
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
 			Precursor (a_context)
 		end

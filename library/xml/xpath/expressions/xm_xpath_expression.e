@@ -72,9 +72,6 @@ feature -- Status report
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error value
 
-	analyzed: BOOLEAN
-			-- Has `analyze' been called yet?
-
 	was_expression_replaced: BOOLEAN
 			-- Did `analyze' create a replacement expression for `Current'?
 
@@ -93,15 +90,6 @@ feature -- Status report
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
 
-	may_analyze: BOOLEAN is
-			-- OK to call `analyze'?
-			-- (Overridden by some descendants.)
-		do
-			if not analyzed then Result := True end
-		ensure
-			not_analyzed_if_true: Result implies not analyzed
-		end
-
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		require
@@ -111,13 +99,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_analyzed is
-			-- Set `Current' has been analyzed.
-		do
-			analyzed := True
-		ensure
-			set: analyzed = True
-		end
 
 	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set `error_value'.
@@ -146,6 +127,44 @@ feature -- Status setting
 			in_error: is_error
 		end
 
+	mark_unreplaced is
+			-- Reset replacement status.
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			was_expression_replaced := False
+			replacement_expression := Void
+			from
+				a_cursor := sub_expressions.new_cursor
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if a_cursor.item.was_expression_replaced then
+					a_cursor.item.mark_unreplaced
+				end
+				a_cursor.forth
+			end
+		ensure
+			no_longer_marked_as_replaced: not was_expression_replaced and then replacement_expression = Void
+		end
+
+	set_replacement (an_expression: XM_XPATH_EXPRESSION) is
+			-- Set replacement for `Current'.
+		require
+			not_in_error: not is_error
+			replacement_expression_not_void: an_expression /= Void
+		do
+			debug ("XPath expression replacement")
+				std.error.put_string ("An " + an_expression.generating_type + " is about to be set as a replacement for an " + generating_type + "%N")
+			end
+			replacement_expression := an_expression
+			was_expression_replaced := True
+		ensure
+			marked_as_replaced: was_expression_replaced
+			replacement_set: replacement_expression = an_expression
+		end
+
 feature -- Optimization
 
 	simplified_expression: XM_XPATH_EXPRESSION is
@@ -168,16 +187,14 @@ feature -- Optimization
 			--  variables will only be accurately known if they have been explicitly declared.
 		require
 			context_not_void: a_context /= Void
-			ok_to_analyze: may_analyze
 			no_previous_error: not is_error
 		deferred
 		ensure
-			analyzed: analyzed
 			expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Promoted version of this subexpression;
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 			-- The offer will be accepted if the subexpression is not dependent on
 			--  the factors (e.g. the context item) identified in `an_offer'.
 			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
@@ -187,8 +204,6 @@ feature -- Optimization
 			offer_not_void: an_offer /= Void
 			no_previous_error: not is_error
 		deferred
-		ensure
-			expression_not_void: Result /= Void
 		end
 
 feature -- Evaluation
@@ -201,7 +216,6 @@ feature -- Evaluation
 		require
 			context_may_be_void: True
 			not_in_error: not is_error
-			analyzed: analyzed -- TODO: check this out
 		deferred
 		ensure
 			value_not_void_but_may_be_in_error: Result /= Void
@@ -301,9 +315,8 @@ feature -- Evaluation
 			if last_evaluation = Void then
 				create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 			end
-			last_evaluation.set_analyzed
 		ensure
-			evaluated: last_evaluation /= Void and then last_evaluation.analyzed
+			evaluated: last_evaluation /= Void
 		end
 
 	lazily_evaluate (a_context: XM_XPATH_CONTEXT) is
@@ -342,9 +355,8 @@ feature -- Evaluation
 					last_evaluation := Expression_factory.created_closure (Current, a_context)
 				end
 			end
-			last_evaluation.set_analyzed
 		ensure
-			evaluated: last_evaluation /= Void and then last_evaluation.analyzed
+			evaluated: last_evaluation /= Void
 		end
 
 feature -- Element change
@@ -380,15 +392,13 @@ feature -- Element change
 
 feature {XM_XPATH_EXPRESSION} -- Local
 
-	unsorted (eliminate_duplicates: BOOLEAN): XM_XPATH_EXPRESSION is
+	set_unsorted (eliminate_duplicates: BOOLEAN) is
 			-- Remove unwanted sorting from an expression, at compile time
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
 		do
 			create an_offer.make (Unordered, Void, Void, eliminate_duplicates, False)
-			Result := promoted_expression (an_offer)
-		ensure
-			result_not_void: Result /= Void
+			promote (an_offer)
 		end
 
 	indentation (a_level: INTEGER): STRING is

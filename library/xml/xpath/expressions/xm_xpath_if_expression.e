@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, evaluate_item, promoted_expression, iterator, sub_expressions
+			simplified_expression, evaluate_item, promote, iterator, sub_expressions
 		end
 
 creation
@@ -144,67 +144,53 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions	
 		do
-				check
-					condition.may_analyze
-				end
+			mark_unreplaced
 			condition.analyze (a_context)
 			if condition.was_expression_replaced then
 				set_condition (condition.replacement_expression)
-				condition.set_analyzed
 			end
 			if condition.is_error then
 				set_last_error (condition.error_value)
 			else
-					check
-						then_expression.may_analyze
-					end
 				then_expression.analyze (a_context)
 				if then_expression.was_expression_replaced then
 					set_then_expression (then_expression.replacement_expression)
-					then_expression.set_analyzed
 				end
 				if then_expression.is_error then
 					set_last_error (then_expression.error_value)
 				else
-						check
-							else_expression.may_analyze
-						end
 					else_expression.analyze (a_context)
 					if else_expression.was_expression_replaced then
 						set_else_expression (else_expression.replacement_expression)
-						else_expression.set_analyzed
 					end
 					if else_expression.is_error then
 						set_last_error (else_expression.error_value)
 					end
 				end
 				if not is_error then
-					replacement_expression := simplified_expression
-					replacement_expression.set_analyzed
-					was_expression_replaced := True
+					set_replacement (simplified_expression)
 				end
 			end
-			set_analyzed
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			an_if_expression: XM_XPATH_IF_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
-			an_expression := an_offer.accepted_expression
-			if an_expression /= Void then
-				Result := an_expression
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
 			else
-			an_if_expression := clone (Current)
-			an_if_expression.set_condition (condition.promoted_expression (an_offer))
+				condition.promote (an_offer)
+				if condition.was_expression_replaced then set_condition (condition.replacement_expression) end
 				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references then
-					an_if_expression.set_then_expression (then_expression.promoted_expression (an_offer))
-					an_if_expression.set_else_expression (else_expression.promoted_expression (an_offer))
+					then_expression.promote (an_offer)
+					if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
+					else_expression.promote (an_offer)
+					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end					
 				end
-				Result := an_if_expression
 			end
 		end
 
@@ -249,8 +235,10 @@ feature -- Element change
 			condition_not_void: a_condition /= Void
 		do
 			condition := a_condition
+			if condition.was_expression_replaced then condition.mark_unreplaced end
 		ensure
 			condition_set: condition = a_condition
+			condition_not_marked_for_replacement: not condition.was_expression_replaced
 		end
 
 	set_then_expression (a_then_expression: XM_XPATH_EXPRESSION) is
@@ -259,8 +247,10 @@ feature -- Element change
 			then_not_void: a_then_expression /= Void
 		do
 			then_expression := a_then_expression
+			if then_expression.was_expression_replaced then then_expression.mark_unreplaced end
 		ensure
 			then_set: then_expression = a_then_expression
+				then_expression_not_marked_for_replacement: not then_expression.was_expression_replaced
 		end
 
 	set_else_expression (an_else_expression: XM_XPATH_EXPRESSION) is
@@ -269,8 +259,10 @@ feature -- Element change
 			else_not_void: an_else_expression /= Void
 		do
 			else_expression := an_else_expression
+			if else_expression.was_expression_replaced then else_expression.mark_unreplaced end
 		ensure
 			else_set: else_expression = an_else_expression
+			else_expression_not_marked_for_replacement: not else_expression.was_expression_replaced
 		end	
 
 feature {XM_XPATH_EXPRESSION} -- Restrictes

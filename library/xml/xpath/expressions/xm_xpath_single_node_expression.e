@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			iterator, evaluate_item, effective_boolean_value
+			iterator, evaluate_item, effective_boolean_value, compute_intrinsic_dependencies
 		end
 
 	-- N.B. This class is supposed to have intrinsic dependency on the context item
@@ -46,12 +46,20 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Status setting
+
+	compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+			set_intrinsically_depends_upon_context_item
+		end
+			
 feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			set_analyzed			
+			mark_unreplaced
 		end
 
 feature -- Evaluation

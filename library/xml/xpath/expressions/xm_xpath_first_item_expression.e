@@ -69,6 +69,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			mark_unreplaced
 			todo ("analyze", False)
 			-- TODO
 		end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze, same_expression, promoted_expression, iterator, evaluate_item
+			same_expression, promote, iterator, evaluate_item
 		end
 
 	XM_XPATH_BINDING_REFERENCE
@@ -85,18 +85,6 @@ feature -- Status report
 	last_evaluated_binding: XM_XPATH_VALUE
 			-- Value from calling evaluated_binding
 
-	may_analyze: BOOLEAN is
-			-- OK to call `analyze'?
-		do
-			if not analyzed then
-				if constant_value /= Void then
-					Result := True
-				elseif static_type /= Void then
-					Result := True
-				end
-			end
-		end
-
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -127,29 +115,26 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions;		
 		do
+			mark_unreplaced
+				check
+					static_type_not_void: static_type /= Void
+				end
 			if constant_value /= Void then
-				replacement_expression := constant_value
-				was_expression_replaced := True
-				replacement_expression.set_analyzed
+				set_replacement (constant_value)
 			end
-			set_analyzed
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			a_result_expression: XM_XPATH_FILTER_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			if an_offer.action = Inline_variable_references then
 				an_offer.accept (Current)
-				a_result_expression ?= an_offer.accepted_expression
-				if a_result_expression /= Void then
-					Result := a_result_expression
-				else
-					Result := Current
+				a_promotion := an_offer.accepted_expression
+				if a_promotion /= Void then
+					set_replacement (a_promotion)
 				end
-			else
-				Result := Current
 			end
 		end
 

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Run-time properties of a varioable"
+		"Run-time properties of a variable"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

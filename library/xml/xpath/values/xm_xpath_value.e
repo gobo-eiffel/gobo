@@ -61,13 +61,14 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			set_analyzed
+			mark_unreplaced
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			Result := Current
+			do_nothing
 		end
 
 feature -- Conversion

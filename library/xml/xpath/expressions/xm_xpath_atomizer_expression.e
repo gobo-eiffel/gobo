@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promoted_expression, sub_expressions, iterator, evaluate_item
+			simplified_expression, promote, sub_expressions, iterator, evaluate_item
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -94,32 +94,33 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-			if base_expression.may_analyze then	base_expression.analyze (a_context) end
+			mark_unreplaced
+			base_expression.analyze (a_context)
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
 				if base_expression.was_expression_replaced then
-					base_expression := base_expression.replacement_expression
+					set_base_expression (base_expression.replacement_expression)
 				end
 				if is_sub_type (base_expression.item_type, Atomic_type) then
-					was_expression_replaced := True
-					replacement_expression := base_expression
+					set_replacement (base_expression)
 				end
 			end
-			set_analyzed
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			a_result_expression: XM_XPATH_ATOMIZER_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
-			Result := an_offer.accepted_expression
-			if Result = Void then
-				a_result_expression := clone (Current)
-				a_result_expression.set_base_expression (base_expression.promoted_expression (an_offer))
-				Result := a_result_expression
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
+			else
+				base_expression.promote (an_offer)
+				if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression)
+				end
 			end
 		end
 
@@ -200,8 +201,10 @@ feature -- Element change
 			base_expression_not_void: a_base_expression /= Void
 		do
 			base_expression := a_base_expression
+			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
 		ensure
 			base_expression_set: base_expression = a_base_expression
+			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

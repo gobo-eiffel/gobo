@@ -70,6 +70,7 @@ feature -- Optimization
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			-- TODO
+			mark_unreplaced
 			todo ("analyze", False)
 		end
 

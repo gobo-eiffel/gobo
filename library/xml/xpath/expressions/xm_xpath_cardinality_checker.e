@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promoted_expression, sub_expressions, iterator, evaluate_item, compute_special_properties
+			simplified_expression, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -113,10 +113,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			set_analyzed
-				check
-					sequence.may_analyze
-				end
+			mark_unreplaced
 			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
@@ -125,23 +122,18 @@ feature -- Optimization
 				set_last_error (sequence.error_value)
 			else
 				if required_cardinality = Required_cardinality_zero_or_more then
-					was_expression_replaced := True
-					replacement_expression := sequence
+					set_replacement (sequence)
 				elseif sequence.cardinality_subsumes (required_cardinality) then
-					was_expression_replaced := True
-					replacement_expression := sequence
+					set_replacement (sequence)
 				end
 			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
-		local
-			a_result_expression: XM_XPATH_CARDINALITY_CHECKER
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.promoted_expression (an_offer))
-			Result := a_result_expression
+			sequence.promote (an_offer)
+			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 		end
 
 feature -- Evaluation

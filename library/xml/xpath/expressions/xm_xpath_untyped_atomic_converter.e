@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, simplified_expression, promoted_expression, evaluate_item, iterator
+			sub_expressions, simplified_expression, promote, evaluate_item, iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -100,12 +100,10 @@ feature -- Optimization
 		local
 			a_type: INTEGER
 		do
-			if sequence.may_analyze then
-				sequence.analyze (a_context)
-				if sequence.was_expression_replaced then
-					set_sequence (sequence.replacement_expression)
-					sequence.set_analyzed
-				end
+			mark_unreplaced
+			sequence.analyze (a_context)
+			if sequence.was_expression_replaced then
+				set_sequence (sequence.replacement_expression)
 			end
 			if sequence.is_error then
 				set_last_error (sequence.error_value)
@@ -117,23 +115,20 @@ feature -- Optimization
 						-- The sequence can't contain any untyped atomic values,
 						--  so there's no need for a converter
 
-						was_expression_replaced := True
-						replacement_expression := sequence
-						replacement_expression.set_analyzed
+						set_replacement (sequence)
 					end
 				end
 			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
-		local
-			a_result_expression: XM_XPATH_UNTYPED_ATOMIC_CONVERTER
+
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.promoted_expression (an_offer))
-			Result := a_result_expression
+			sequence.promote (an_offer)
+			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 		end
+
 
 feature -- Evaluation
 

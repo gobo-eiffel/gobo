@@ -53,11 +53,8 @@ feature -- Status setting
 	compute_intrinsic_dependencies is
 			-- Determine the intrinsic dependencies of an expression.
 		do
-			create intrinsic_dependencies.make (1, 6)
-			-- Now all are `False', but we want depends_upon_last and depends_upon_position so:
-			intrinsic_dependencies.put (True, 3)
-			intrinsic_dependencies.put (True, 4)
-			are_intrinsic_dependencies_computed := True
+			set_intrinsically_depends_upon_position
+			set_intrinsically_depends_upon_last
 		end
 
 feature -- Status report
@@ -81,7 +78,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			set_analyzed
+			mark_unreplaced
 		end
 
 feature -- Evaluation

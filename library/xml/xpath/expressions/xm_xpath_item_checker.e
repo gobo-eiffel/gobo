@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promoted_expression, sub_expressions, iterator, evaluate_item, compute_special_properties
+			simplified_expression, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -116,33 +116,25 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			set_analyzed
-				check
-					sequence.may_analyze
-				end
+			mark_unreplaced
 			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
-				sequence.set_analyzed
 			end
 			if sequence.is_error then
 				set_last_error (sequence.error_value)
 			else
 				if required_content_type = Any_item and then is_sub_type (sequence.item_type, required_item_type) then
-					was_expression_replaced := True
-					replacement_expression := sequence
+					set_replacement (sequence)
 				end
 			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
-		local
-			a_result_expression: XM_XPATH_ITEM_CHECKER
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.promoted_expression (an_offer))
-			Result := a_result_expression
+			sequence.promote (an_offer)
+			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 		end
 
 feature -- Evaluation
@@ -189,8 +181,10 @@ feature {XM_XPATH_ITEM_CHECKER} -- Local
 			underlying_expression_not_void: a_sequence /= Void
 		do
 			sequence := a_sequence
+			if sequence.was_expression_replaced then sequence.mark_unreplaced end
 		ensure
 			sequence_set: sequence = a_sequence
+			sequence_not_marked_for_replacement: not sequence.was_expression_replaced
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

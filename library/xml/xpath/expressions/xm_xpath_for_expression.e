@@ -98,18 +98,18 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_cardinality_set: ARRAY [BOOLEAN] 
 		do
+			mark_unreplaced
 
 			-- The order of events is critical here. First we ensure that the type of the
 			--  sequence expression is established. This is used to establish the type of the variable,
 			--  which in turn is required when type-checking the action part.
 
-			if sequence.may_analyze then sequence.analyze (a_context) end
+			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
 			end
 			if sequence.is_error then
-				was_expression_replaced := True
-				replacement_expression := sequence
+				set_replacement (sequence)
 			else
 				create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
 				create a_role.make (Variable_role, name, 1)
@@ -122,19 +122,13 @@ feature -- Optimization
 					a_cardinality_set.put (True, 2) -- Exactly One
 					set_sequence (a_type_checker.checked_expression)
 					declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
-					set_declaration_void -- Also marks as analyzed
-
-						check
-							action.may_analyze
-							-- This BETTER be right!
-						end
+					set_declaration_void
 					action.analyze (a_context)
 					if action.was_expression_replaced then
-						action := action.replacement_expression
+						replace_action (action.replacement_expression)
 					end
 					if action.is_error then
-						was_expression_replaced := True
-						replacement_expression := action
+						set_replacement (action)
 					end
 				end
 			end

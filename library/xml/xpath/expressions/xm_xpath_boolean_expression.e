@@ -40,6 +40,7 @@ feature -- Optimization
 		local
 			a_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION
 		do
+			mark_unreplaced
 			Precursor (a_context)
 			if was_expression_replaced then
 				a_boolean_expression ?= replacement_expression
@@ -47,13 +48,9 @@ feature -- Optimization
 				a_boolean_expression := Current
 			end
 			if a_boolean_expression /= Void and then not a_boolean_expression.is_error then
-				set_first_operand (first_operand.unsorted (False))
-				set_second_operand (second_operand.unsorted (False))
-				a_boolean_expression.set_analyzed
-				replacement_expression := a_boolean_expression
-				was_expression_replaced := True
-			else
-				set_analyzed
+				first_operand.set_unsorted (False)
+				second_operand.set_unsorted (False)
+				set_replacement (a_boolean_expression)
 			end
 		end
 

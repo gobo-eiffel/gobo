@@ -64,7 +64,7 @@ feature -- Access
 			-- In the case of `Range_independent', identifies the range variable whose dependencies we are looking for
 
 	containing_expression: XM_XPATH_EXPRESSION
-			-- In the case of identifies the level to which the promotion should occur;
+			-- In the case `Focus_independent' of identifies the level to which the promotion should occur;
 			-- When a subexpression is promoted, an expression of the form let $VAR := SUB return ORIG is created,
 			--  and this replaces the original `containing_expression' within `Current'.
 

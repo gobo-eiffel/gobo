@@ -62,17 +62,18 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			mark_unreplaced
 
 			-- Analysis proceeds top-down through the sub-expressions
 
-			if first_operand.may_analyze then first_operand.analyze (a_context) end
+			first_operand.analyze (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				if second_operand.may_analyze then second_operand.analyze (a_context) end
+				second_operand.analyze (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -80,12 +81,11 @@ feature -- Optimization
 					set_last_error (second_operand.error_value)
 				end
 				if not is_error then
-					set_first_operand (first_operand.unsorted (False))
-					set_second_operand (second_operand.unsorted (False))
+					first_operand.set_unsorted (False)
+					second_operand.set_unsorted (False)
 					operands_not_in_error_so_analyze (a_context)
 				end
 			end
-			set_analyzed
 		end
 
 feature -- Evaluation
@@ -259,17 +259,12 @@ feature {NONE} -- Implementation
 			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
 			an_expression := an_expression.simplified_expression
 			if not an_expression.is_error then
-					check
-						an_expression.may_analyze
-					end
 				an_expression.analyze (a_context)
 				if an_expression.was_expression_replaced then
-					replacement_expression := an_expression.replacement_expression
-					replacement_expression.set_analyzed
+					set_replacement (an_expression.replacement_expression)
 				else
-					replacement_expression := an_expression
+					set_replacement (an_expression)
 				end
-				was_expression_replaced := True
 			end
 		end
 
@@ -355,12 +350,10 @@ feature {NONE} -- Implementation
 			create a_singleton_comparison.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
 			a_singleton_comparison.analyze (a_context)
 			if a_singleton_comparison.was_expression_replaced then
-				replacement_expression := a_singleton_comparison.replacement_expression
-				replacement_expression.set_analyzed
+				set_replacement (a_singleton_comparison.replacement_expression)
 			else
-				replacement_expression := a_singleton_comparison
+				set_replacement (a_singleton_comparison)
 			end
-			was_expression_replaced := True
 		end
 
 
@@ -374,12 +367,10 @@ feature {NONE} -- Implementation
 			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
 			a_general_comparison.analyze (a_context)
 			if a_general_comparison.was_expression_replaced then
-				replacement_expression := a_general_comparison.replacement_expression
-				replacement_expression.set_analyzed
+				set_replacement (a_general_comparison.replacement_expression)
 			else
-				replacement_expression := a_general_comparison
+				set_replacement (a_general_comparison)
 			end
-			was_expression_replaced := True
 		end
 
 	analyze_n_to_m_equals_i (a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION) is
@@ -390,16 +381,17 @@ feature {NONE} -- Implementation
 		local
 			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
 			a_position: XM_XPATH_POSITION
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			an_integer_value ?= a_range_expression.lower_bound
 			another_integer_value ?= a_range_expression.upper_bound
 			a_position ?= second_operand
 			if an_integer_value /= Void and then another_integer_value /= Void and then a_position /= Void then
-				create {XM_XPATH_POSITION_RANGE} replacement_expression.make (an_integer_value.value, another_integer_value.value)
+				create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer_value.value, another_integer_value.value)
 			else
-				create {XM_XPATH_INTEGER_RANGE_TEST} replacement_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
+				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
 			end
-			was_expression_replaced := True
+			set_replacement (an_expression)
 		end
 
 	analyze_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; another_type: INTEGER) is
@@ -424,7 +416,6 @@ feature {NONE} -- Implementation
 			a_type_checker.static_type_check (first_operand, a_numeric_type, is_backwards_compatible_mode, a_role)
 			if a_type_checker.is_static_type_check_error then
 				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
-				set_analyzed
 			else
 				set_first_operand (a_type_checker.checked_expression)
 				if not is_sub_type (another_type, Number_type) then
@@ -437,12 +428,10 @@ feature {NONE} -- Implementation
 						create a_minimax_comparison.make (first_operand, operator, second_operand)
 						a_minimax_comparison.analyze (a_context)
 						if a_minimax_comparison.was_expression_replaced then
-							replacement_expression := a_minimax_comparison.replacement_expression
-							replacement_expression.set_analyzed
+							set_replacement (a_minimax_comparison.replacement_expression)
 						else
-							replacement_expression := a_minimax_comparison
+							set_replacement (a_minimax_comparison)
 						end
-						was_expression_replaced := True
 					end
 				end
 			end
@@ -457,9 +446,7 @@ feature {NONE} -- Implementation
 			another_value ?= second_operand
 			if a_value /= Void and then another_value /= Void then
 				evaluate_item (Void)
-				replacement_expression := last_evaluation
-				replacement_expression.set_analyzed
-				was_expression_replaced := True
+				set_replacement (last_evaluation)
 			end
 		end
 

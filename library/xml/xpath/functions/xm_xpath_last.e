@@ -78,8 +78,7 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			replacement_expression := Current
-			was_expression_replaced := True			
+			set_replacement (Current)
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted

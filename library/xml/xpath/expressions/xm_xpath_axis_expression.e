@@ -121,10 +121,7 @@ feature -- Status setting
 	compute_intrinsic_dependencies is
 			-- Determine the intrinsic dependencies of an expression.
 		do
-			create intrinsic_dependencies.make (1, 6)
-			-- Now all are `False'
-			intrinsic_dependencies.put (True, 2) -- Depends_upon_context_item
-			are_intrinsic_dependencies_computed := True
+			set_intrinsically_depends_upon_context_item
 		end
 
 feature -- Optimization
@@ -149,10 +146,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-
-			-- Nothing to do
-
-			set_analyzed
+			mark_unreplaced
 		end
 
 feature -- Evaluation

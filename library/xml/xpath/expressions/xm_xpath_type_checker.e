@@ -106,7 +106,6 @@ feature -- Optimization
 						end
 					end				
 				end
-				if checked_expression /= Void then checked_expression.set_analyzed end
 			end
 		ensure
 			no_static_error_implies_non_void_result: not is_static_type_check_error implies checked_expression /= Void

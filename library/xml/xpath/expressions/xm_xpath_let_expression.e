@@ -17,11 +17,11 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			promoted_expression, iterator, evaluate_item, compute_special_properties
+			promote, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_ROLE
-
+	
 	XM_XPATH_PROMOTION_ACTIONS
 
 creation
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; an_action: XM_XPATH_EXPRESSION) is
 		require
 			range_variable_not_void: a_range_variable /= Void
-			sequence_expression_not_void: a_sequence_expression /= Void
-			action_not_void: an_action /= Void
+			sequence_expression_not_replace: a_sequence_expression /= Void and then not a_sequence_expression.was_expression_replaced 
+			action_not_replaced: an_action /= Void and then not an_action.was_expression_replaced
 		do
 			operator := Let_token
 			set_declaration (a_range_variable)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
@@ -71,7 +71,11 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "let $")
-			a_string := STRING_.appended_string (a_string, declaration.name)
+			if declaration = Void then
+				a_string := STRING_.appended_string (a_string, "<range variable>")
+			else
+				a_string := STRING_.appended_string (a_string, declaration.name)
+			end
 			std.error.put_string (a_string)
 			if is_error then
 				std.error.put_string (" in error%N")
@@ -96,96 +100,98 @@ feature -- Optimization
 			a_type: INTEGER
 			a_value: XM_XPATH_VALUE
 		do
-				check
-					declaration /= Void
-				end
-			
-			-- The order of events is critical here. First we ensure that the type of the
-			-- sequence expression is established. This is used to establish the type of the variable,
-			-- which in turn is required when type-checking the action part.
-
-			if	sequence.may_analyze then
-				sequence.analyze (a_context)
-			end	
-			if sequence.is_error then
-				set_last_error (sequence.error_value)
+			mark_unreplaced
+			if	declaration = Void then
+				do_nothing
 			else
-				if sequence.was_expression_replaced then
-					an_expression := sequence.replacement_expression
-					an_expression.set_analyzed
+			
+				-- The order of events is critical here. First we ensure that the type of the
+				-- sequence expression is established. This is used to establish the type of the variable,
+				-- which in turn is required when type-checking the action part.
+				
+				sequence.analyze (a_context)
+				if sequence.is_error then
+					set_last_error (sequence.error_value)
 				else
-					an_expression := sequence
+					if sequence.was_expression_replaced then
+						an_expression := sequence.replacement_expression
+					else
+						an_expression := sequence
+					end
+					create a_role.make (Variable_role, declaration.name, 1)
+					create a_type_checker
+					a_type_checker.static_type_check (an_expression, declaration.required_type, False, a_role)
+					if a_type_checker.is_static_type_check_error then
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					else
+						set_sequence (a_type_checker.checked_expression)
+					end
 				end
-				create a_role.make (Variable_role, declaration.name, 1)
-				create a_type_checker
-				a_type_checker.static_type_check (an_expression, declaration.required_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
-				else
-					set_sequence (a_type_checker.checked_expression)
-					sequence.set_analyzed
-					a_type := sequence.item_type
-					a_value ?= sequence
+			end
+			
+			if not is_error then
+				a_type := sequence.item_type
+				a_value ?= sequence
 
-					-- Now set the static type of the binding reference, more accurately:
-					
-					declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
-					set_declaration_void -- also sets `analyzed' to `True'
-
-					if	action.may_analyze then
-						action.analyze (a_context)
-					end
-					if action.was_expression_replaced then
-						set_action (action.replacement_expression)
-						action.set_analyzed
-					end
-					if action.is_error then
-						set_last_error (action.error_value)
-					end
+				-- Now set the static type of the binding reference, more accurately:
+				
+				declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
+				set_declaration_void 
+				
+				action.analyze (a_context)
+				if action.was_expression_replaced then
+					replace_action (action.replacement_expression)
+				end
+				if action.is_error then
+					set_last_error (action.error_value)
 				end
 			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_result_expression: XM_XPATH_LET_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			another_offer: XM_XPATH_PROMOTION_OFFER
 		do
 			an_offer.accept (Current)
-			an_expression := an_offer.accepted_expression
-			if an_expression /= Void then
-				Result := an_expression
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
 			else
-				a_result_expression := clone (Current)
 
 				-- Pass the offer on to the sequence expression
 
-				an_expression := sequence.promoted_expression (an_offer)
-				a_result_expression.set_sequence (sequence)
-				if an_offer.action = Inline_variable_references
-					or else an_offer.action = Unordered then
+				sequence.mark_unreplaced
+				sequence.promote (an_offer)
+				if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
+				
+				if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
 
-					a_result_expression.set_action (action.promoted_expression (an_offer))
+					action.mark_unreplaced
+					action.promote (an_offer)
+					if action.was_expression_replaced then replace_action (action.replacement_expression) end
 				end
 
 				-- If this results in the expression (let $x := $y return Z), replace all references to
 				-- to $x by references to $y in the Z part, and eliminate this LetExpression by
 				-- returning the action part.
 
-				a_variable_reference ?= a_result_expression.sequence
+				a_variable_reference ?= sequence
 				if a_variable_reference /= Void then
 					create another_offer.make (Inline_variable_references, Current, a_variable_reference, False, False)
-					Result := a_result_expression.action.promoted_expression (another_offer)
+					action.promote (another_offer)
+					if action.was_expression_replaced then
+						set_replacement (action.replacement_expression)
+					else
+						set_replacement (action)
+					end
 				end
-				
-				if Result = Void then Result := a_result_expression end
 			end
 		end
 
@@ -199,7 +205,7 @@ feature -- Evaluation
 		do
 			sequence.lazily_evaluate (a_context)
 			a_value := last_evaluation
-			--a_context.set_local_variable (slot_number, a_value)
+			a_context.set_local_variable (slot_number, a_value)
 			action.evaluate_item (a_context)
 		end
 
@@ -210,10 +216,9 @@ feature -- Evaluation
 		do
 			sequence.lazily_evaluate (a_context)
 			a_value ?= sequence.last_evaluation
-			
-			--a_context.set_local_variable (slot_number, a_value)
+			a_context.set_local_variable (slot_number, a_value)
 			Result := action.iterator (a_context)
-			end
+		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 

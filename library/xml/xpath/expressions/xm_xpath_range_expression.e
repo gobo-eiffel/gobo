@@ -59,18 +59,17 @@ feature -- Optimization
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
-			if first_operand.may_analyze then first_operand.analyze (a_context) end
+			mark_unreplaced
+			first_operand.analyze (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
-				first_operand.set_analyzed
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				if second_operand.may_analyze then second_operand.analyze (a_context) end
+				second_operand.analyze (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
-					second_operand.set_analyzed
 				end
 				if second_operand.is_error then
 					set_last_error (second_operand.error_value)
@@ -89,14 +88,11 @@ feature -- Optimization
 							set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
-							replacement_expression := simplified_expression
-							was_expression_replaced := True
-							if not replacement_expression.analyzed then replacement_expression.set_analyzed end
+							set_replacement (simplified_expression)
 						end
 					end
 				end
 			end
-			if not analyzed then set_analyzed end
 		end
 
 feature -- Evaluation

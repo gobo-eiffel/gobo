@@ -106,21 +106,16 @@ feature -- Optimization
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			actual_item_type: INTEGER
-			an_offer: XM_XPATH_PROMOTION_OFFER
-			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
-			
+			mark_unreplaced
+
 			-- The order of events is critical here. First we ensure that the type of the
 			-- sequence expression is established. This is used to establish the type of the variable,
 			-- which in turn is required when type-checking the action part.
 			
-				check
-					sequence.may_analyze
-				end
 			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
-				sequence.set_analyzed
 			end
 			if sequence.is_error then
 				set_last_error (sequence.error_value)
@@ -130,7 +125,7 @@ feature -- Optimization
 				
 				-- "some" and "every" have no ordering constraints
 
-				set_sequence (sequence.unsorted (False))
+				sequence.set_unsorted (False)
 				a_declaration_type := declaration.required_type
 				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 				create a_role.make (Variable_role, declaration.name, 1)
@@ -142,18 +137,15 @@ feature -- Optimization
 					set_sequence (a_type_checker.checked_expression)
 					actual_item_type := sequence.item_type
 					declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
-					set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again. Also sets analyzed to `True'
-					if	action.may_analyze then
-						action.analyze (a_context)
-					end
+					set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
+					action.analyze (a_context)
 					if action.was_expression_replaced then
-						set_action (action.replacement_expression)
-						action.set_analyzed
+						replace_action (action.replacement_expression)
 					end
 					if action.is_error then
 						set_last_error (action.error_value)
 					end
-					-- TODO debug and reinstate promotion code at end of file
+					promote_subexpressions (a_context)
 				end
 			end
 		end
@@ -235,28 +227,32 @@ feature {NONE} -- Implementation
 			set_cardinality_exactly_one
 		end
 
+	promote_subexpressions (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Extract subexpressions that don't depend on the range variable.
+		local
+			an_offer: XM_XPATH_PROMOTION_OFFER
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+		do
+			create an_offer.make (Range_independent, Current, Current, False, False)
+			action.mark_unreplaced
+			action.promote (an_offer)
+			if action.was_expression_replaced then replace_action (action.replacement_expression) end
+			a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
+				a_let_expression.analyze (a_context)
+				if a_let_expression.is_error then
+					set_last_error (a_let_expression.error_value)
+				elseif a_let_expression.was_expression_replaced then
+					an_offer.set_containing_expression (a_let_expression.replacement_expression)
+				end
+			end
+			if not is_error and then an_offer.containing_expression /= Current then
+				set_replacement (an_offer.containing_expression)
+			end
+		end
+
 invariant
 
 	valid_operator:  operator = Every_token or operator = Some_token
 
 end
-	
-					--create an_offer.make (Range_independent, Current, Current, False, False)
-					--action := action.promoted_expression (an_offer)
-					--a_let_expression ?= an_offer.containing_expression
-					--if a_let_expression /= Void then
-					--		check
-					--			let_expression_not_analyzed: a_let_expression.may_analyze
-					--		end
-					--	a_let_expression.analyze (a_context)
-					--	if a_let_expression.is_error then
-					--		set_last_error (a_let_expression.error_value)
-					--	else
-					--		was_expression_replaced := True
-					--		if a_let_expression.was_expression_replaced then
-					--			replacement_expression := a_let_expression.replacement_expression
-					--		else
-					--			replacement_expression := a_let_expression
-					--		end
-					--	end
-					--end
+

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, sub_expressions, promoted_expression, evaluate_item
+			simplified_expression, sub_expressions, promote, evaluate_item
 		end
 
 	XM_XPATH_ROLE
@@ -120,7 +120,8 @@ feature -- Optimization
 			a_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			if source.may_analyze then source.analyze (a_context) end
+			mark_unreplaced
+			source.analyze (a_context)
 			if source.was_expression_replaced then
 				set_source (source.replacement_expression)
 			end
@@ -136,43 +137,34 @@ feature -- Optimization
 				else
 					an_expression := a_type_checker.checked_expression
 					if is_sub_type (an_expression.item_type, target_type) then
-						was_expression_replaced := True
-						replacement_expression := an_expression -- TODO: wrong, should change the type label?
+						set_replacement (an_expression) -- TODO: wrong, should change the type label?
 					elseif is_sub_type (target_type, Qname_type) then
 						create a_qname_cast.make (an_expression)
 						a_qname_cast.analyze (a_context)
 						if a_qname_cast.is_error then
 							set_last_error (a_qname_cast.error_value)
 						else
-							was_expression_replaced := True
-							replacement_expression := a_qname_cast
-							if not replacement_expression.analyzed then replacement_expression.set_analyzed end
+							set_replacement (a_qname_cast)
 						end
 					else
 						an_atomic_value ?= an_expression
 						if an_atomic_value /= Void then
 							an_atomic_value.evaluate_item (Void)
-							was_expression_replaced := True
 							an_atomic_value ?= an_atomic_value.last_evaluated_item
-							replacement_expression := an_atomic_value
-							if not replacement_expression.analyzed then replacement_expression.set_analyzed end
+							set_replacement (an_atomic_value)
 						else
 							set_source (an_expression)
 						end
 					end
 				end
 			end
-			if not analyzed then set_analyzed end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
-		local
-			a_result_expression: XM_XPATH_CAST_EXPRESSION
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_source (source.promoted_expression (an_offer))
-			Result := a_result_expression
+			source.promote (an_offer)
+			if source.was_expression_replaced then set_source (source.replacement_expression) end
 		end
 
 feature -- Evaluation
@@ -205,8 +197,10 @@ feature {XM_XPATH_CAST_EXPRESSION} -- Local
 			source_not_void: a_source /= Void
 		do
 			source := a_source
+			if source.was_expression_replaced then source.mark_unreplaced end
 		ensure
 			source_set:	source = a_source
+			source_not_marked_for_replacement: not source.was_expression_replaced
 		end
 
 feature {NONE} -- Implementation

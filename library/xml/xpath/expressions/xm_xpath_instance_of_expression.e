@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, simplified_expression, promoted_expression, effective_boolean_value, evaluate_item
+			sub_expressions, simplified_expression, promote, effective_boolean_value, evaluate_item
 		end
 
 creation
@@ -101,11 +101,9 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			a_value: XM_XPATH_VALUE
+			an_expression: XM_XPATH_EXPRESSION
 		do
-			set_analyzed
-				check
-					source.may_analyze
-				end
+			mark_unreplaced
 			source.analyze (a_context)
 			if source.was_expression_replaced then
 				set_source (source.replacement_expression)
@@ -115,9 +113,7 @@ feature -- Optimization
 			else
 				a_value ?= source
 				if a_value /= Void then
-					was_expression_replaced := True
-					create {XM_XPATH_BOOLEAN_VALUE} replacement_expression.make (True)
-					replacement_expression.set_analyzed
+					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
 				else
 					
 					-- See if we can get the answer by static analysis.
@@ -126,21 +122,18 @@ feature -- Optimization
 						is_sub_type (source.item_type, target_type.primary_type) and then
 						target_type.content_type = Any_item then
 
-						was_expression_replaced := True
-						create {XM_XPATH_BOOLEAN_VALUE} replacement_expression.make (True)
+						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
 					end
 				end
+				if an_expression /= Void then set_replacement (an_expression) end
 			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
-		local
-			a_result_expression: XM_XPATH_INSTANCE_OF_EXPRESSION
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_source (source.promoted_expression (an_offer))
-			Result := a_result_expression
+			source.promote (an_offer)
+			if source.was_expression_replaced then set_source (source.replacement_expression) end
 		end
 
 feature -- Evaluation
@@ -202,8 +195,10 @@ feature {XM_XPATH_INSTANCE_OF_EXPRESSION} -- Local
 			source_expression_not_void: a_source /= Void
 		do
 			source := a_source
+			if source.was_expression_replaced then source.mark_unreplaced end
 		ensure
 			source_set: source = a_source
+			source_not_marked_for_replacement: not source.was_expression_replaced
 		end
 
 feature {NONE} -- Implementation

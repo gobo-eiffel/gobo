@@ -45,14 +45,15 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_single_node: XM_XPATH_SEQUENCE_TYPE
 		do
-			if first_operand.may_analyze then first_operand.analyze (a_context) end
+			mark_unreplaced
+			first_operand.analyze (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				if second_operand.may_analyze then second_operand.analyze (a_context) end
+				second_operand.analyze (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -77,7 +78,6 @@ feature -- Optimization
 					end
 				end
 			end
-			set_analyzed
 		end
 
 feature -- Evaluation

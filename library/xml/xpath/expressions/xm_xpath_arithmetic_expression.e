@@ -57,6 +57,7 @@ feature -- Optimization
 			an_expression: XM_XPATH_EXPRESSION
 			an_arithmetic_expression: XM_XPATH_ARITHMETIC_EXPRESSION
 		do
+			mark_unreplaced
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
 
 			-- TODO: this is using the function call rules. Arithetic expressions have slightly different rules.
@@ -77,7 +78,7 @@ feature -- Optimization
 					set_second_operand (a_type_checker.checked_expression)
 					Precursor (a_context)
 
-					-- Now, we may or may not still be an arithmetic expression. We ARE marked as analyzed
+					-- Now, we may or may not still be an arithmetic expression.
 
 					if was_expression_replaced then
 						an_expression := replacement_expression
@@ -182,6 +183,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			a_string: STRING
 			finished: BOOLEAN
 			a_value, another_value: XM_XPATH_VALUE
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_type := first_operand.item_type
 			another_type := second_operand.item_type
@@ -189,15 +191,15 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			inspect
 				an_action
 			when Numeric_arithmetic_action then
-				create {XM_XPATH_NUMERIC_ARITHMETIC} replacement_expression.make (first_operand, operator, second_operand)
+				create {XM_XPATH_NUMERIC_ARITHMETIC} an_expression.make (first_operand, operator, second_operand)
 			when Duration_addition_action then
-				create {XM_XPATH_DURATION_ADDITION} replacement_expression.make (first_operand, operator, second_operand)
+				create {XM_XPATH_DURATION_ADDITION} an_expression.make (first_operand, operator, second_operand)
 			when Duration_multiplication_action then
-				create {XM_XPATH_DURATION_MULTIPLICATION} replacement_expression.make (first_operand, operator, second_operand)
+				create {XM_XPATH_DURATION_MULTIPLICATION} an_expression.make (first_operand, operator, second_operand)
 			when Date_and_duration_action then
-				create {XM_XPATH_DATE_AND_DURATION} replacement_expression.make (first_operand, operator, second_operand)
+				create {XM_XPATH_DATE_AND_DURATION} an_expression.make (first_operand, operator, second_operand)
 			when Date_difference_action then
-				create {XM_XPATH_DATE_DIFFERENCE} replacement_expression.make (first_operand, operator, second_operand)
+				create {XM_XPATH_DATE_DIFFERENCE} an_expression.make (first_operand, operator, second_operand)
 			else
 
 				-- Either the types are not known yet, or they are wrong
@@ -219,12 +221,13 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				end
 			end
 			if not finished and not is_error then
-				was_expression_replaced := True
 				a_value ?= first_operand
 				another_value ?= second_operand
 				if a_value /= Void and then another_value /= Void then
 					eagerly_evaluate (Void)
-					replacement_expression := last_evaluation
+					set_replacement (last_evaluation)
+				else
+					set_replacement (an_expression)
 				end
 			end
 		end

@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
+	KL_SHARED_STANDARD_FILES
+
 feature -- Status report
 
 	are_intrinsic_dependencies_computed: BOOLEAN
@@ -119,6 +121,38 @@ feature -- Dependencies
 				or else depends_upon_last
 		end
 
+	print_dependencies is
+			-- Debugging routtine.
+		do
+			std.error.put_string ("Dependencies:%N")
+			if	depends_upon_current_item then
+				std.error.put_string ("Expression dependes upon current item.%N")
+			end
+			if	depends_upon_context_item then
+				std.error.put_string ("Expression dependes upon context item.%N")
+			end
+			if	depends_upon_position then
+				std.error.put_string ("Expression dependes upon position.%N")
+			end
+			if	depends_upon_last then
+				std.error.put_string ("Expression dependes upon last.%N")
+			end
+			if	depends_upon_context_document then
+				std.error.put_string ("Expression dependes upon context document.%N")
+			end
+			if	depends_upon_current_group then
+				std.error.put_string ("Expression dependes upon current group.%N")
+			end
+			if	depends_upon_xslt_context then
+				std.error.put_string ("Expression dependes upon XSLT context.%N")
+			end
+			if	depends_upon_focus then
+				std.error.put_string ("Expression dependes upon focus.%N")
+			end
+			if	depends_upon_non_document_focus then
+				std.error.put_string ("Expression dependes upon non-document focus.%N")
+			end
+		end
 feature -- Setting dependencies
 
 	set_dependencies (a_dep: ARRAY [BOOLEAN]) is
@@ -144,6 +178,114 @@ feature -- Setting dependencies
 			dependencies_computed: are_dependencies_computed
 		end
 
+	set_intrinsically_depends_upon_current_item is
+			-- Set expression to depend upon current item.
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1,6)
+			end
+			intrinsic_dependencies.put (True, 1)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_context_item is
+		-- Set expression to depend upon context item.
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1,6)
+			end
+			dependencies.put (True, 2)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_context_item is
+			-- Set expression to depend upon context item.
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1,6)
+			end
+			intrinsic_dependencies.put (True, 2)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_position is
+		-- Set expression to depend upon context position.
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1,6)
+			end
+			dependencies.put (True, 3)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_position is
+			-- Set expression to depend upon context position.
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1,6)
+			end
+			intrinsic_dependencies.put (True, 3)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_last is
+		-- Set expression to depend upon last.
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1,6)
+			end
+			dependencies.put (True, 4)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_last is
+			-- Set expression to depend upon last.
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1,6)
+			end
+			intrinsic_dependencies.put (True, 4)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_context_document is
+		-- Set expression to depend upon context document.
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1,6)
+			end
+			dependencies.put (True, 5)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_context_document is
+			-- Set expression to depend upon context document.
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1,6)
+			end
+			intrinsic_dependencies.put (True, 5)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
 	set_depends_upon_current_group is
 			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
 		do
@@ -154,6 +296,18 @@ feature -- Setting dependencies
 			dependencies.put (True, 6)
 		ensure
 			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_current_group is
+			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1,6)
+			end
+			intrinsic_dependencies.put (True, 6)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		end
 
 feature -- Cardinality

@@ -99,23 +99,33 @@ feature -- Status setting
 		require
 			not_yet_computed: not are_dependencies_computed
 		local
-			sub_exprs: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			an_index: INTEGER
-			a_value: BOOLEAN
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			create dependencies.make (1, 6)
+			dependencies := clone (intrinsic_dependencies)
 			from
-				sub_exprs := sub_expressions
-				an_index := 1
+				a_cursor := sub_expressions.new_cursor
+				a_cursor.start
 			variant
-				sub_exprs.count + 1 - an_index
+				sub_expressions.count + 1 - a_cursor.index
 			until
-				an_index > sub_exprs.count
+				a_cursor.after
 			loop
-				a_value := dependencies.item (an_index) or else intrinsic_dependencies.item (an_index)
-				dependencies.put (a_value, an_index)
-				an_index := an_index + 1
+				from
+					an_index := 1
+				variant
+					7 - an_index
+				until
+					an_index > 6
+				loop
+					if not dependencies.item (an_index) and then a_cursor.item.dependencies .item (an_index) then
+						dependencies.put (True, an_index)
+					end
+					an_index := an_index + 1
+				end
+
+				a_cursor.forth
 			end
 			
 			are_dependencies_computed := True
@@ -134,12 +144,12 @@ feature -- Optimization
 			Result := Current
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Promoted version of this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		do
-			Result := Current
+			do_nothing
 		end
-
+	
 feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze, simplified_expression, promoted_expression, sub_expressions, allocate_slots
+			simplified_expression, sub_expressions, allocate_slots, promote
 		end
 	
 	XM_XPATH_BINDING
@@ -50,14 +50,6 @@ feature -- Access
 			Result.put (action, 2)
 		end
 
-feature -- Status report
-
-		may_analyze: BOOLEAN is
-			-- OK to call `analyze'?
-		do
-			if not analyzed then Result := declaration /= Void end
-		end	
-			
 feature -- Optimization
 
 	simplified_expression: XM_XPATH_EXPRESSION is
@@ -81,26 +73,27 @@ feature -- Optimization
 			Result := a_simplified_assignation
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
 			a_promotion: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
 			a_promotion := an_offer.accepted_expression
 			if a_promotion /= Void then
-				Result := a_promotion
+				set_replacement (a_promotion)
 			else
-				sequence := sequence.promoted_expression (an_offer)
+				sequence.promote (an_offer)
+				if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					-- them to say we are interested in subexpressions that don't depend on either the
 					-- outer context or the inner context.
 					
-					action := action.promoted_expression (an_offer)
+					action.promote (an_offer)
+					if action.was_expression_replaced then replace_action (action.replacement_expression) end
 				end
-				Result := Current
 			end
 		end
 
@@ -130,8 +123,22 @@ feature -- Element change
 			sequence_not_void: a_sequence /= Void
 		do
 			sequence := a_sequence
+			if sequence.was_expression_replaced then sequence.mark_unreplaced end
 		ensure
 			sequence_set: sequence = a_sequence
+			sequence_not_marked_for_replacement: not sequence.was_expression_replaced
+		end
+
+	replace_action (an_action: XM_XPATH_EXPRESSION) is
+			-- Set `action'.
+		require
+			action_not_void: an_action /= Void
+		do
+			action := an_action
+			if action.was_expression_replaced then action.mark_unreplaced end
+		ensure
+			action_set: action = an_action
+			action_not_marked_for_replacement: not action.was_expression_replaced
 		end
 
 	set_action (an_action: XM_XPATH_EXPRESSION) is
@@ -140,7 +147,7 @@ feature -- Element change
 			action_not_void: an_action /= Void
 			declaration_not_void: declaration /= Void
 		do
-			action := an_action
+			replace_action (an_action)
 			declaration.fix_up_references (Current)
 		ensure
 			action_set: action = an_action
@@ -165,10 +172,8 @@ feature -- Element change
 			declaration_not_void: declaration /= Void
 		do
 			declaration := Void
-			analyzed := True
 		ensure
 			declaration_void: declaration = Void
-			analyzed: analyzed
 		end
 
 	set_slot_number (a_slot_number: INTEGER) is
@@ -191,7 +196,5 @@ invariant
 	valid_operator: operator = For_token or operator = Some_token or operator = Every_token or operator = Let_token
 	sequence_not_void: sequence /= Void
 	action_not_void: action /= Void
-	declaration_not_void_until_analysis: not analyzed implies declaration /= Void
-	declaration_void_after_analysis: analyzed implies declaration = Void
 	
 end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promoted_expression, simplified_expression, sub_expressions, same_expression
+			promote, simplified_expression, sub_expressions, same_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -144,14 +144,15 @@ feature -- Optimization
 		local
 			a_value, another_value: XM_XPATH_VALUE
 		do
-			if first_operand.may_analyze then first_operand.analyze (a_context) end
+			mark_unreplaced
+			first_operand.analyze (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				if second_operand.may_analyze then second_operand.analyze (a_context) end
+				second_operand.analyze (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -163,34 +164,28 @@ feature -- Optimization
 
 					a_value ?= first_operand; another_value ?= second_operand
 					if a_value /= Void and then another_value /= Void then
-						set_analyzed
 						eagerly_evaluate (Void)
-						was_expression_replaced := True
-						replacement_expression := last_evaluation
+						set_replacement (last_evaluation)
 					end
 				end
 			end
-			if not analyzed then set_analyzed end
 		end
 	
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_result_expression: XM_XPATH_BINARY_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
-			an_expression := an_offer.accepted_expression
-			if an_expression /= Void then
-				Result := an_expression
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
 			else
 				if an_offer.action = Unordered then
-					a_result_expression := clone (Current)
-					a_result_expression.set_first_operand (first_operand.promoted_expression (an_offer))
-					a_result_expression.set_second_operand (second_operand.promoted_expression (an_offer))
-					Result := a_result_expression
-				else
-					Result := Current
+					first_operand.promote (an_offer)
+					if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
+					second_operand.promote (an_offer)
+					if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
 				end
 			end
 		end
@@ -203,8 +198,10 @@ feature -- Element change
 			operand_not_void: an_operand /= Void
 		do
 			first_operand := an_operand
+			if first_operand.was_expression_replaced then first_operand.mark_unreplaced end
 		ensure
 			first_operand_set: first_operand = an_operand
+			first_operand_not_marked_for_replacement: not first_operand.was_expression_replaced
 		end
 
 	set_second_operand (an_operand: XM_XPATH_EXPRESSION) is
@@ -213,8 +210,10 @@ feature -- Element change
 			operand_not_void: an_operand /= Void
 		do
 			second_operand := an_operand
+			if second_operand.was_expression_replaced then second_operand.mark_unreplaced end
 		ensure
 			second_operand_set: second_operand = an_operand
+			second_operand_not_marked_for_replacement: not second_operand.was_expression_replaced
 		end
 
 feature {NONE} -- Implementation

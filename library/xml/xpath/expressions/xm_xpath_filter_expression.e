@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			compute_dependencies, compute_special_properties, simplified_expression, promoted_expression, sub_expressions, same_expression, iterator
+			compute_dependencies, compute_special_properties, simplified_expression, promote, sub_expressions, same_expression, iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -167,7 +167,6 @@ feature -- Status setting
 					a_computed_expression.compute_dependencies
 				end
 			end
-
 			set_dependencies (base_expression.dependencies)
 
 			-- If filter depends upon XSLT context then so does `Current'.
@@ -250,21 +249,17 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-			set_analyzed
-			if base_expression.may_analyze then
-				base_expression.analyze (a_context)
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression)
-				end
+			mark_unreplaced
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_error then
 					set_last_error (base_expression.error_value)
 			else
-				if filter.may_analyze then
-					filter.analyze (a_context)
-					if filter.was_expression_replaced then
-						set_filter (filter.replacement_expression)
-					end
+				filter.analyze (a_context)
+				if filter.was_expression_replaced then
+					set_filter (filter.replacement_expression)
 				end
 				
 				if filter.is_error then
@@ -275,30 +270,31 @@ feature -- Optimization
 			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			a_result_expression: XM_XPATH_FILTER_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
-			a_result_expression ?= an_offer.accepted_expression
-			if a_result_expression /= Void then
-				do_nothing
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
 			else
-				a_result_expression := clone (Current)
 				if not (an_offer.action = Unordered and then filter_is_positional) then
-					a_result_expression.set_base_expression (a_result_expression.base_expression.promoted_expression (an_offer))
+					base_expression.promote (an_offer)
+					if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end
 				end
-
 				if an_offer.action = Inline_variable_references then
+
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
-					a_result_expression.set_filter (a_result_expression.filter.promoted_expression (an_offer))
+
+					filter.promote (an_offer)
+					if filter.was_expression_replaced then set_filter (filter.replacement_expression) end
 				end
 			end
-			Result := a_result_expression
-		end
+		end	
 
 feature -- Evaluation
 
@@ -377,8 +373,10 @@ feature -- Element change
 			base_expression_not_void: a_base_expression /= Void
 		do
 			base_expression := a_base_expression
+			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
 		ensure
 			base_expression_set: base_expression = a_base_expression
+			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
 		end
 
 	set_filter (a_filter: XM_XPATH_EXPRESSION) is
@@ -387,8 +385,10 @@ feature -- Element change
 			filter_not_void: a_filter /= Void
 		do
 			filter := a_filter
+			if filter.was_expression_replaced then filter.mark_unreplaced end
 		ensure
 			filter_set: filter = a_filter
+			filter_not_marked_for_replacement: not filter.was_expression_replaced
 		end
 
 feature {NONE} -- Implementation
@@ -528,38 +528,36 @@ feature {NONE} -- Implementation
 			a_position_range: XM_XPATH_POSITION_RANGE
 			an_integer: XM_XPATH_INTEGER_VALUE
 			a_min, a_max: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
 		do
 						
 			--	The filter expression never needs to be sorted.
 			
-			set_filter (filter.unsorted (False))
+			filter.set_unsorted (False)
 			
 			-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 			-- and treat them specially.
 			
 			an_integer ?= filter; if an_integer /= Void and then an_integer.value = 1 then
-				create {XM_XPATH_FIRST_ITEM_EXPRESSION} replacement_expression.make (base_expression)
-				was_expression_replaced := True
-				replacement_expression.set_analyzed
+				create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
+				set_replacement (an_expression)
 			else
 				a_position_range ?= filter; if a_position_range /= Void then
 					a_min := a_position_range.minimum_position
 					a_max := a_position_range.maximum_position
 					if a_min = 1 and then a_max = 1 then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} replacement_expression.make (base_expression)
-						was_expression_replaced := True
-						replacement_expression.set_analyzed
+						create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
+						set_replacement (an_expression)
 					elseif a_max = Platform.Maximum_integer then
 						create {XM_XPATH_TAIL_EXPRESSION} replacement_expression.make (base_expression, a_min)
-						was_expression_replaced := True
-						replacement_expression.set_analyzed
+						set_replacement (an_expression)
 					end
 				end
 				if not was_expression_replaced then
 					optimize_positional_filter (a_context)
 				end
 				if not was_expression_replaced then
-					promote_sub_expressions
+					promote_sub_expressions (a_context)
 				end
 			end
 		end
@@ -570,8 +568,6 @@ feature {NONE} -- Implementation
 			an_expression, another_expression, a_third_expression: XM_XPATH_EXPRESSION
 			a_filter, another_filter: XM_XPATH_FILTER_EXPRESSION
 			a_boolean_filter: XM_XPATH_BOOLEAN_EXPRESSION
-			an_offer: XM_XPATH_PROMOTION_OFFER
-			a_let_expression: XM_XPATH_LET_EXPRESSION
 			finished: BOOLEAN
 		do
 			filter_is_positional := is_positional_filter (filter)
@@ -588,12 +584,10 @@ feature {NONE} -- Implementation
 					create another_filter.make (a_filter, a_third_expression)
 					another_filter.analyze (a_context)
 					if another_filter.was_expression_replaced then
-						replacement_expression := another_filter.replacement_expression
-						replacement_expression.set_analyzed
+						set_replacement (another_filter.replacement_expression)
 					else
-						replacement_expression := another_filter
+						set_replacement (another_filter)
 					end
-					was_expression_replaced := True
 				elseif is_explicitly_positional_filter (a_boolean_filter.second_operand)
 					and then not is_explicitly_positional_filter (a_boolean_filter.first_operand) then
 					another_expression := force_to_boolean (a_boolean_filter.first_operand)
@@ -602,43 +596,35 @@ feature {NONE} -- Implementation
 					create another_filter.make (a_filter, another_expression)
 					another_filter.analyze (a_context)
 					if another_filter.was_expression_replaced then
-						replacement_expression := another_filter.replacement_expression
-						replacement_expression.set_analyzed
+						set_replacement (another_filter.replacement_expression)
 					else
-						replacement_expression := another_filter
+						set_replacement (another_filter)
 					end
-					was_expression_replaced := True
 				end
 			end
 		end
 
-	promote_sub_expressions is				
-			-- If any subexpressions within the filter are not dependent on the focus,
-			-- promote them: this causes them to be evaluated once, outside the filter
-			-- expression.
-		
-			-- promotions just don't work - something is wrong
-			
-			--								create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
-			--								set_filter (filter.promoted_expression (an_offer))
-			--								a_let_expression ?= an_offer.containing_expression
-			--								if a_let_expression /= Void then
-			--									if a_let_expression.may_analyze then
-			--										a_let_expression.analyze (a_context)
-			--									end
-			--									if a_let_expression.is_error then
-			--										set_last_error (a_let_expression.error_value)
-			--										an_expression := a_let_expression
-			--									elseif a_let_expression.was_expression_replaced then
-			--										an_expression := a_let_expression.replacement_expression
-			--									else
-			--										an_expression := a_let_expression
-			--									end
-			--										an_offer.set_containing_expression (an_expression)
-			--								end
-			--								was_expression_replaced := True
-			--								replacement_expression := an_offer.containing_expression
+	promote_sub_expressions  (a_context: XM_XPATH_STATIC_CONTEXT) is				
+			-- This causes them to be evaluated once, outside the path  expression.
+		local
+			an_offer: XM_XPATH_PROMOTION_OFFER
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_path: XM_XPATH_PATH_EXPRESSION
 		do
+			create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
+			filter.promote (an_offer)
+			if filter.was_expression_replaced then set_filter(filter.replacement_expression) end
+			a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
+			a_let_expression.analyze (a_context)
+				if a_let_expression.is_error then
+					set_last_error (a_let_expression.error_value)
+				elseif a_let_expression.was_expression_replaced then
+					an_offer.set_containing_expression (a_let_expression.replacement_expression)
+				end
+			end
+			if not is_error and then an_offer.containing_expression /= Current then
+				set_replacement (an_offer.containing_expression)
+			end
 		end
 
 invariant

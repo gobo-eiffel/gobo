@@ -159,12 +159,6 @@ feature -- Evaluation
 							an_expression.display (1, static_context.name_pool)
 						end
 						an_expression.allocate_slots (1)
-						debug ("XPath evaluator")
-							if not an_expression.analyzed then
-								std.error.put_string ("Analyzed expression not marked analyzed:%N")
-								an_expression.display (1, static_context.name_pool)
-							end
-						end
 						evaluate_post_analysis (an_expression)
 					end
 				end
@@ -208,7 +202,7 @@ feature {NONE} -- Implementation
 	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION) is
 			-- perform evaluation on `an_expression'.
 		require
-			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error and then an_expression.analyzed
+			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error
 		local
 			a_controller: XM_XPATH_CONTROLLER
 			a_context: XM_XPATH_CONTEXT

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promoted_expression, sub_expressions
+			simplified_expression, promote, sub_expressions
 		end
 
 feature -- Access
@@ -119,6 +119,7 @@ feature -- Optimization
 			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
+			mark_unreplaced
 			from
 				fixed_values := True -- until we find otherwise
 				arguments_cursor := arguments.new_cursor
@@ -128,72 +129,59 @@ feature -- Optimization
 			until
 				is_error or else arguments_cursor.after
 			loop
-				if arguments_cursor.item.may_analyze then
-					arguments_cursor.item.analyze (a_context)
-					if arguments_cursor.item.is_error then
-						set_last_error (arguments_cursor.item.error_value)
-					else
-						if arguments_cursor.item.was_expression_replaced then
-							arguments_cursor.replace (arguments_cursor.item.replacement_expression)
-						end
-						
-						a_value ?= arguments_cursor.item
-						if a_value = Void then fixed_values := False end
+				arguments_cursor.item.analyze (a_context)
+				if arguments_cursor.item.is_error then
+					set_last_error (arguments_cursor.item.error_value)
+				else
+					if arguments_cursor.item.was_expression_replaced then
+						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
+						arguments_cursor.item.mark_unreplaced
 					end
-					arguments_cursor.forth
-				end
-
-				if not is_error then check_arguments (a_context) end
 					
-				-- Now, if any of the arguments has a static type error,
-				--  then `Current' as a whole has too.
-			
-				if not is_error and then fixed_values then
-					pre_evaluate (a_context) -- May or may not be in error
+					a_value ?= arguments_cursor.item
+					if a_value = Void then fixed_values := False end
 				end
+				arguments_cursor.forth
 			end
-			set_analyzed
+			
+			if not is_error then check_arguments (a_context) end
+			
+			-- Now, if any of the arguments has a static type error,
+			--  then `Current' as a whole has too.
+			
+			if not is_error and then fixed_values then
+				pre_evaluate (a_context) -- May or may not be in error
+			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			an_expression:  XM_XPATH_EXPRESSION
-			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			an_argument: XM_XPATH_EXPRESSION
-			a_result_expression: XM_XPATH_FUNCTION_CALL
+			a_promotion: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			an_offer.accept (Current)
-			an_expression := an_offer.accepted_expression
-			if an_expression = Void then
-				if an_offer.action = Unordered then
-					Result := Current					
-				else
-					result_arguments := clone (arguments)
-					a_cursor := result_arguments.new_cursor
-					from
-						a_cursor.start
-					variant
-						result_arguments.count + 1 - a_cursor.index
-					until
-						result_arguments.after
-					loop
-						an_argument := a_cursor.item.promoted_expression (an_offer)
-						a_cursor.replace (an_argument)
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
+			elseif an_offer.action /= Unordered then
+				a_cursor := arguments.new_cursor
+				from
+					a_cursor.start
+				variant
+					arguments.count + 1 - a_cursor.index
+				until
+						arguments.after
+				loop
+					a_cursor.item.promote (an_offer)
+					if a_cursor.item.was_expression_replaced then
+						a_cursor.replace (a_cursor.item.replacement_expression)
+						a_cursor.item.mark_unreplaced
 						a_cursor.forth
 					end
-					a_result_expression ?= an_expression
-						check
-							promoted_expression_not_void: a_result_expression /= Void
-						end
-					a_result_expression.set_arguments (result_arguments)
-					Result := a_result_expression
 				end
-			else
-				Result := an_expression
 			end
-		end
+		end	
 
 feature -- Evaluation
 
@@ -207,11 +195,7 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 		do
 			eagerly_evaluate (Void)
-			replacement_expression := last_evaluation
-			was_expression_replaced := True
-			if not replacement_expression.analyzed then replacement_expression.set_analyzed end
-		ensure
-			evaluated: was_expression_replaced
+			set_replacement (last_evaluation)
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

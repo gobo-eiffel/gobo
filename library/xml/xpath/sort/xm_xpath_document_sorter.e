@@ -16,7 +16,7 @@ inherit
 
 		XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, compute_special_properties, sub_expressions, promoted_expression, iterator, effective_boolean_value
+			simplified_expression, compute_special_properties, sub_expressions, promote, iterator, effective_boolean_value
 		end
 
 creation
@@ -106,34 +106,28 @@ feature -- Optimization
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
-				check
-					base_expression.may_analyze
-				end
-				base_expression.analyze (a_context)
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression)
-				end
-				if base_expression.is_error then
-					set_last_error (base_expression.error_value)
-				end
-			set_analyzed
+			mark_unreplaced
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			end
 		end
 
-	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
 		local
-			a_result_expression: XM_XPATH_DOCUMENT_SORTER
-			an_expression: XM_XPATH_EXPRESSION		
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
-			an_expression := an_offer.accepted_expression
-			if an_expression = Void then
-				a_result_expression := clone (Current)
-				an_expression := base_expression.promoted_expression (an_offer)
-				a_result_expression.set_base_expression (an_expression)
-				Result := a_result_expression
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
 			else
-				Result := an_expression
+				base_expression.promote (an_offer)
+				if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression ) end
 			end
 		end
 
@@ -162,8 +156,10 @@ feature {XM_XPATH_DOCUMENT_SORTER} -- Local
 			expression_not_void: an_expression /= Void
 		do
 			base_expression := an_expression
+			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
 		ensure
 			set: base_expression = an_expression
+			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
 		end
 
 feature {NONE} -- Implementation

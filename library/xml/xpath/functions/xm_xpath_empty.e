@@ -85,7 +85,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			counter: INTEGER
 		do
 			Precursor (a_context)
-			arguments.put (arguments.item (1).unsorted (False), 1)
+			arguments.item (1).set_unsorted (False)
 		end
 
 end
