@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<project name="C">
+
+	<target name="hello">
+		<description>say 'hello'</description>
+		<echo message="hello"/>
+	</target>
+
+	<target name="goodbye">
+		<description>call `fc'</description>
+		<geant target="fc"/>
+	</target>
+
+<!-- {B} -->
+
+	<target name="fb" export="B">
+		<description>say 'fb'</description>
+		<echo message="fb"/>
+	</target>
+
+<!-- {A} -->
+
+	<target name="fa" export="A">
+		<description>say 'fa'</description>
+		<echo message="fa"/>
+	</target>
+
+<!-- {C} -->
+
+	<target name="fc" export="C">
+		<description>say 'fc'</description>
+		<echo message="fc"/>
+	</target>
+
+<!-- {NONE} Implementation -->
+
+	<target name="secret" export="NONE">
+		<description>say 'secret'</description>
+		<echo message="secret"/>
+	</target>
+
+</project>

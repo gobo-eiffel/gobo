@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="B">
+
+	<inherit>
+		<parent location="a.eant"/>
+	</inherit>
+
+	<target name="hello">
+		<geant file="c.eant" target="hello"/>
+		<geant file="c.eant" target="goodbye"/>
+		<geant file="c.eant" target="fb"/>
+		<geant file="c.eant" target="fa"/>
+		<geant file="c.eant" target="secret"/>
+	</target>
+
+</project>
