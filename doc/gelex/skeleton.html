@@ -28,7 +28,7 @@ content="text/html; charset=iso-8859-1">
     description</em>:<em> &quot;General lexical analyzers&quot;
     library</em>:<em>     &quot;Gobo Eiffel Lexical Library&quot;
     author</em>:<em>      &quot;Eric Bezault &lt;ericb@gobo.demon.co.uk&gt;&quot;
-    copyright</em>:<em>   &quot;Copyright (c) 1997, Eric Bezault&quot;
+    copyright</em>:<em>   &quot;Copyright (c) 1998, Eric Bezault&quot;
 
 </em><em><strong>deferred</strong></em><em> </em><em><strong>class</strong></em><em> YY_SCANNER
 
@@ -206,20 +206,15 @@ name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Output<em>
 
-    </em><a href="actions.html#output_file" name="output_file"><em>output_file</em></a>:<em> FILE
-           </em> -- Output file<em>
-
-    </em><a href="actions.html#set_output_file"
-name="set_output_file"><em>set_output_file</em></a><em> </em>(<em>a_file: </em><em><strong>like</strong></em><em> output_file</em>)<em>
-            </em>-- Set <em>output_file</em> to <em>a_file</em>.<em>
+    </em><a href="actions.html#output" name="output"><em>output</em></a><em> </em>(<em>a_text: </em><em><strong>like</strong></em><em> text</em>)<em>
+            </em>-- Output <em>a_text</em>.
+            -- (Note: this routine can be redefined in descendant
+            -- classes. Default: print <em>a_text</em> to standard output.)<em>
         </em><em><strong>require</strong></em><em>
-            a_file_not_void</em>:<em> a_file </em>/= <em>Void
-            a_file_open_write</em>:<em> a_file.is_open_write
-        </em><em><strong>ensure</strong></em><em>
-            output_file_set</em>:<em> output_file </em>=<em> a_file
+            a_text_not_void</em>:<em> a_text </em>/= <em>Void
 
     </em><a href="actions.html#echo" name="echo"><em>echo</em></a><em> 
-            </em>-- Copy <em>text</em> to <em>output_file</em>.<em>
+            </em>-- Output <em>text</em> using feature <em>output</em>.<em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Error handling<em>
 
@@ -232,8 +227,6 @@ name="set_output_file"><em>set_output_file</em></a><em> </em>(<em>a_file: </em><
 </em><em><strong>invariant</strong></em><em>
 
     input_buffer_not_void</em>:<em> input_buffer </em>/=<em> Void
-    output_not_void</em>:<em> output_file </em>/= <em>Void
-    output_open_write</em>:<em> output_file.is_open_write
 
 </em><em><strong>end</strong></em> -- class YY_SCANNER</pre>
 
@@ -242,7 +235,7 @@ name="set_output_file"><em>set_output_file</em></a><em> </em>(<em>a_file: </em><
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -252,7 +245,7 @@ name="set_output_file"><em>set_output_file</em></a><em> </em>(<em>a_file: </em><
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 19 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

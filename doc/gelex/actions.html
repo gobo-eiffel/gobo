@@ -68,7 +68,7 @@ can be used in actions:</p>
     <dt><a href="skeleton.html#echo" name="echo"><font
         color="#008080"><em><tt>echo</tt></em></font></a></dt>
     <dd>Copy <font color="#008080"><em><tt>text</tt></em></font>
-        to the scanner's output file.</dd>
+        to the scanner's output file using <font color="#008080"><em><tt>output</tt></em></font>.</dd>
     <dt><a href="skeleton.html#flush_input_buffer"
         name="flush_input_buffer"><font color="#008080"><em><tt>flush_input_buffer</tt></em></font></a></dt>
     <dd>Flush the scanner's internal buffer so that the next time
@@ -147,13 +147,14 @@ can be used in actions:</p>
         so the <font color="#008080"><em><tt>echo</tt></em></font>
         for the &quot;<tt>kludge</tt>&quot; rule will actually
         write &quot;<tt>mega-kludge</tt>&quot;.</dd>
-    <dt><a href="skeleton.html#output_file" name="output_file"><font
-        color="#008080"><em><tt>output_file</tt></em></font></a><font
-        color="#008080"><tt>:</tt><em><tt> FILE</tt></em></font></dt>
-    <dd>File to which <font color="#008080"><em><tt>echo</tt></em></font>
-        actions are done. It is set to the standard output by
-        default and can be reassigned using feature <font
-        color="#008080"><em><tt>set_output_file</tt></em></font>.</dd>
+    <dt><a href="skeleton.html#output" name="output"><font
+        color="#008080"><em><tt>output</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_text</tt></em><tt>:</tt><em><tt>
+        </tt></em><em><strong><tt>like</tt></strong></em><em><tt>
+        text</tt></em><tt>)</tt></font></dt>
+    <dd>Writes <font color="#008080"><em><tt>a_text </tt></em></font>to
+        the standard output by default. This behavior can easily
+        be modified through redefinition.</dd>
     <dt><a href="skeleton.html#read_character"
         name="read_character"><font color="#008080"><em><tt>read_character</tt></em></font></a></dt>
     <dd>Read the next character from the input stream. Make the
@@ -273,13 +274,6 @@ color="#0000FF">{</font>
         INTEGER</tt></em><tt>)</tt></font></dt>
     <dd>Set <font color="#008080"><em><tt>last_token</tt></em></font>
         to <font color="#008080"><em><tt>a_token</tt></em></font>.</dd>
-    <dt><a href="skeleton.html#set_output_file"
-        name="set_output_file"><font color="#008080"><em><tt>set_output_file</tt></em></font></a><font
-        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
-        </tt></em><em><strong><tt>like</tt></strong></em><em><tt>
-        output_file</tt></em><tt>)</tt></font></dt>
-    <dd>Set <font color="#008080"><em><tt>output_file</tt></em></font>
-        to <font color="#008080"><em><tt>a_file</tt></em></font>.</dd>
     <dt><a href="skeleton.html#set_start_condition"
         name="set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_start_condition</tt></em><tt>:</tt><em><tt>
@@ -316,7 +310,7 @@ color="#0000FF">{</font>
         which computes the number of characters matched by the
         corresponding pattern. If efficiency is a concern and
         this function is called several times in the same action,
-        its result can be stored in a temporariry variable.</dd>
+        its result can be stored in a temporary variable.</dd>
     <dt><a href="skeleton.html#text_item" name="text_item"><font
         color="#008080"><em><tt>text_item</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>i</tt></em><tt>:</tt><em><tt>
@@ -376,7 +370,7 @@ color="#0000FF">{</font>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -386,7 +380,7 @@ color="#0000FF">{</font>
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 18 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
