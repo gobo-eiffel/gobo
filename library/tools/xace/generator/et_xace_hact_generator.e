@@ -399,7 +399,9 @@ feature {NONE} -- Output
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			may_close_statement: BOOLEAN
-			lib_contains_path: BOOLEAN
+			lib_contains_path,
+			has_dot_lib_extension,
+			lib_needs_option: BOOLEAN
 		do
 			if
 				not link_libraries.is_empty or else
@@ -412,7 +414,13 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
 					lib_contains_path := a_cursor.item.has ('/') or a_cursor.item.has ('\')
-					if not lib_contains_path then
+					if lib_contains_path then
+						lib_needs_option := False
+					else
+						has_dot_lib_extension := a_cursor.item.count > 4 and then a_cursor.item.substring (a_cursor.item.count - 3, a_cursor.item.count).is_equal (".lib")
+						lib_needs_option := not has_dot_lib_extension
+					end
+					if lib_needs_option then
 						a_file.put_string ("%"-l")
 					else
 						a_file.put_character ('%"')
