@@ -51,6 +51,8 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 
 	EXCEPTIONS
+
+	STD_FILES
 	
 creation
 	make
@@ -241,6 +243,157 @@ feature -- Access
 			end
 		end
 
+	fingerprint (uri: STRING; local_name: STRING): INTEGER is
+			-- Fingerprint for the name with a given uri and local name;
+			-- The fingerprint has the property that if two fingerprint are the same,
+			-- the names are the same (i.e. same local name and same URI);
+			-- (A read-only version of allocate_name)
+		require
+			uri_not_void: uri /= Void
+			local_name_not_void: local_name /= Void
+		local
+			hash_code, depth: INTEGER
+			uri_code, counter: INTEGER -- should be INTEGER_16
+			found, finished: BOOLEAN
+			entry, next: XM_XPATH_NAME_ENTRY
+		do
+			from
+				uri_code := -1
+			until
+				counter >= uris_used or found = True
+			loop
+				if uris.item (counter).is_equal (uri) then
+					uri_code := counter
+					found := True
+				end
+			end
+			if uri_code = -1 then
+				Result := -1
+			else
+				hash_code := (local_name.hash_code & 0x7fffffff) \\ 1023
+
+				if hash_slots.item (hash_code) = Void then
+					Result := -1
+				else
+					entry :=	hash_slots.item (hash_code)
+					from
+					until
+						finished = True
+					loop
+						if entry.local_name.is_equal (local_name) and entry.uri_code = uri_code then
+							finished := True
+						else
+							next := entry.next
+							depth := depth + 1
+							if next = Void then
+								Result := -1
+							else
+								entry := next
+							end
+						end
+					end
+					Result := (depth |<< 10) + hash_code
+				end
+			end
+		ensure
+			correct_range: Result > -2 and Result <= 0xfffff
+		end
+
+	fingerprint_from_expanded_name (expanded_name: STRING): INTEGER is
+			-- Fingerprint for the name with a given uri and local name;
+		require
+			valid_expanded_name: expanded_name /= Void and then expanded_name.count > 0
+		local
+			local_name, namespace: STRING
+			closing_brace: INTEGER
+		do
+			if expanded_name.item (1).is_equal ('{') then
+				closing_brace := expanded_name.index_of ('}', 1)
+				if closing_brace = 0 then raise ("No closing '}' in parameter name") end
+				if closing_brace = expanded_name.count then raise ("Missing local part in parameter name") end
+				namespace := expanded_name.substring (2, closing_brace - 1)
+				local_name := expanded_name.substring (closing_brace + 1, expanded_name.count)
+			else
+				namespace := ""
+				local_name := expanded_name
+			end
+			Result := allocate_name ("", namespace, local_name)
+		ensure
+			valid_name_code: Result > 0 and Result <= 0xfffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+		end
+
+feature -- Status report
+
+	diagnostic_dump is
+			-- Diagnostic print of the namepool contents
+		local
+			hash_code, depth, prefix_count, uri_count: INTEGER
+			entry, next: XM_XPATH_NAME_ENTRY
+		do
+			error.put_string ("Contents of NamePool ")
+			error.put_string (out)
+			error.put_new_line
+			from
+				hash_code := 0
+			variant
+				1024 - hash_code
+			until
+				hash_code = 1024
+			loop
+				entry := hash_slots.item (hash_code)
+				depth := 0
+				from
+				until
+					entry = Void
+				loop
+					error.put_string ("Fingerprint ")
+					error.put_string (depth.out)
+					error.put_string ("/")
+					error.put_string (hash_code.out)
+					error.put_new_line
+					error.put_string ("  local name = ")
+					error.put_string (entry.local_name)
+					error.put_string (" uri code = ")
+					error.put_string (entry.uri_code.out)
+					error.put_new_line
+
+					entry := entry.next
+					depth := depth + 1
+				end
+			end
+			from
+				prefix_count := 0
+			until
+				prefix_count = prefixes_used
+			loop
+				error.put_string ("Prefix ")
+				error.put_string (prefix_count.out)
+				error.put_string (" = ")
+				error.put_string (prefixes.item (prefix_count))
+				error.put_new_line
+
+				prefix_count := prefix_count + 1
+			end
+			from
+				uri_count := 0
+			until
+				uri_count = uris_used
+			loop
+				error.put_string ("URI ")
+				error.put_string (uri_count.out)
+				error.put_string (" = ")
+				error.put_string (uris.item (uri_count))
+				error.put_new_line
+				error.put_string ("Prefixes for URI ")
+				error.put_string (uri_count.out)
+				error.put_string (" = ")
+				error.put_string (prefixes_for_uri.item (uri_count))
+				error.put_new_line
+				
+				uri_count := uri_count + 1
+			end
+		end
+	
 feature -- Element change
 
 	allocate_document_number (doc: XM_XPATH_TINY_DOCUMENT): INTEGER is
@@ -361,7 +514,7 @@ feature -- Element change
 				end
 			Result := allocate_name_using_uri_code (xml_prefix, uri_code, local_name)
 		ensure
-			valid_name_code: Result > 0 and Result <= 0xfffff
+			valid_name_code: Result > 0 and Result <= 0xfffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
 	allocate_name_using_uri_code (xml_prefix: STRING; uri_code: INTEGER; local_name: STRING): INTEGER is
@@ -425,7 +578,118 @@ feature -- Element change
 		ensure
 			valid_name_code: Result > 0 and Result <= 0xfffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
-			
+
+feature -- Conversion
+
+	namespace_uri_from_name_code (name_code: INTEGER): STRING is
+			-- Namespace-URI of a name, given its name code or fingerprint
+		require
+			positive_name_code: name_code >= 0
+		local
+			entry: XM_XPATH_NAME_ENTRY
+		do
+			entry := name_entry (name_code)
+			if entry = Void then
+				unknown_name_code (name_code) -- raises an exception
+			else
+				Result := uris.item (entry.uri_code)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	uri_code_from_name_code (name_code: INTEGER): INTEGER is -- should be INTEGER_16
+			-- URI code of a name, given its name code or fingerprint
+	require
+			positive_name_code: name_code >= 0
+		local
+			entry: XM_XPATH_NAME_ENTRY
+		do
+			if entry = Void then
+				unknown_name_code (name_code) -- raises an exception
+			else
+				Result := entry.uri_code
+			end	
+		end
+
+	local_name_from_name_code (name_code: INTEGER): STRING is
+			-- Local part of a name, given its name code or fingerprint
+		require
+			positive_name_code: name_code >= 0
+		local
+			entry: XM_XPATH_NAME_ENTRY
+		do
+			entry := name_entry (name_code)
+			if entry = Void then
+				unknown_name_code (name_code) -- raises an exception
+			else
+				Result := entry.local_name
+			end
+		ensure
+			result_not_void: Result /= Void
+		end		
+
+	prefix_from_name_code (name_code: INTEGER): STRING is
+			-- Local part of a name, given its name code or fingerprint
+		require
+			positive_name_code: name_code >= 0
+		local
+			uri_code: INTEGER -- should be INTEGER_16
+			the_prefix_index: INTEGER
+		do
+			uri_code := uri_code_from_name_code (name_code)
+			the_prefix_index := (name_code |>> 20) & 0xff
+			Result := prefix_with_index (uri_code, the_prefix_index)
+		ensure
+			result_may_be_void: True
+		end
+
+	display_name_from_name_code (name_code: INTEGER): STRING is
+			-- Display form of a name (the QName), given its name code or fingerprint
+		require
+			positive_name_code: name_code >= 0
+		local
+			entry: XM_XPATH_NAME_ENTRY
+			the_prefix_index: INTEGER
+		do
+			entry := name_entry (name_code)
+			if entry = Void then
+				unknown_name_code (name_code) -- raises an exception
+			else
+				the_prefix_index := (name_code |>> 20) & 0xff
+				if the_prefix_index = 0 then
+					Result := entry.local_name
+				else
+					Result := prefix_with_index (entry.uri_code, the_prefix_index)
+					Result.append_character (':')
+					Result.append_string (entry.local_name)
+				end
+			end	
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	uri_from_namespace_code (a_namespace_code: INTEGER): STRING is
+			-- Namespace URI from `namespace_code'
+		do
+			Result := uris.item (a_namespace_code & 0xffff)
+		end
+		
+	uri_from_uri_code (uri_code: INTEGER): STRING is
+			-- Namespace URI from `uri_code'
+		require
+			valid_code: uri_code >= 0 and uri_code <= 32000
+		do
+			Result := uris.item (uri_code)
+		end
+
+	prefix_from_namespace_code (a_namespace_code: INTEGER): STRING is
+			-- Namespace prefix from `namespace_code'
+		do
+			Result := prefixes.item (a_namespace_code |>> 16)
+		end
+		
+
 feature {NONE} -- Implementation
 
 	name_entry (name_code: INTEGER): XM_XPATH_NAME_ENTRY is
@@ -501,6 +765,20 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid_result: Result > -2 and Result < 255
+		end
+
+	unknown_name_code (name_code: INTEGER) is
+		-- Raise an exception
+		require
+			always_valid: True
+		local
+			result_string: STRING
+		do
+			create result_string.make_from_string ("Unknown name code ")
+			result_string.append (name_code.out)
+			raise (result_string)
+		ensure
+			impossible: False
 		end
 	
 	default_pool: XM_XPATH_SHARED_NAME_POOL is
