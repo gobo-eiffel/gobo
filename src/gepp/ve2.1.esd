@@ -1,0 +1,49 @@
+-- system:     "'ge2e' preprocessor"
+-- compiler:   "Visual Eiffel 2.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	ge2e
+
+root
+
+	GE2E
+
+creation
+
+	execute
+		
+cluster
+
+	"." end
+	"$GOBO\src\ge2e" end
+
+		-- Gobo Eiffel Lexical Library
+	"$GOBO\library\lexical\skeleton" end
+
+		-- Gobo Eiffel Parse Library
+	"$GOBO\library\parse\skeleton" end
+
+		-- Gobo Eiffel Structure Library
+	"$GOBO\library\structure\container" end
+	"$GOBO\library\structure\cursor" end
+	"$GOBO\library\structure\list" end
+	"$GOBO\library\structure\search" end
+	"$GOBO\library\structure\sort" end
+	"$GOBO\library\structure\support" end
+	"$GOBO\library\structure\table" end
+	"$GOBO\library\structure\stack" end
+
+		-- Kernel
+	"$VE_LIB\kernel" end
+
+option
+
+	target exe console
+	code native
+
+end

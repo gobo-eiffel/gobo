@@ -1,0 +1,59 @@
+-- system:     "'ge2e' preprocessor"
+-- compiler:   "Halstenbach ISS-BASE 1.5"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	ge2e
+
+root
+
+	GE2E (ge2e): "execute"
+		
+default
+
+	--debug (yes);
+	--assertion (all);
+	--precompiled ("$ISS_BASE\spec\$PLATFORM\precomp\base"")
+
+cluster
+
+	ge2e:			"$GOBO\src\ge2e";
+
+		-- Gobo Eiffel Lexical Library
+	lx_skeleton:	"$GOBO\library\lexical\skeleton";
+
+		-- Gobo Eiffel Parse Library
+	pa_skeleton:	"$GOBO\library\parse\skeleton";
+
+		-- Gobo Eiffel Structure Library
+	ds_container:   "$GOBO\library\structure\container";
+	ds_cursor:      "$GOBO\library\structure\cursor";
+	ds_list:        "$GOBO\library\structure\list";
+	ds_search:      "$GOBO\library\structure\search";
+	ds_sort:        "$GOBO\library\structure\sort";
+	ds_support:     "$GOBO\library\structure\support";
+	ds_stack:       "$GOBO\library\structure\stack";
+	ds_table:       "$GOBO\library\structure\table";
+
+		-- ISS-Baselib
+	kernel:			"$ISS_BASE\library\base\kernel";
+	misc:			"$ISS_BASE\library\base\misc";
+	access:			"$ISS_BASE\library\base\structures\access";
+	cursors:		"$ISS_BASE\library\base\structures\cursors";
+	cursor_trees:	"$ISS_BASE\library\base\structures\cursor_tree";
+	dispenser:		"$ISS_BASE\library\base\structures\dispenser";
+	iteration:		"$ISS_BASE\library\base\structures\iteration";
+	list:			"$ISS_BASE\library\base\structures\list";
+	obsolete:		"$ISS_BASE\library\base\structures\obsolete";
+	set:			"$ISS_BASE\library\base\structures\set";
+	sort:			"$ISS_BASE\library\base\structures\sort";
+	storage:		"$ISS_BASE\library\base\structures\storage";
+	table:			"$ISS_BASE\library\base\structures\table";
+	traversing:		"$ISS_BASE\library\base\structures\traversing";
+	tree:			"$ISS_BASE\library\base\structures\tree";
+
+end

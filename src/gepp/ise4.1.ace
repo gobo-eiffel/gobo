@@ -1,0 +1,58 @@
+-- system:     "'ge2e' preprocessor"
+-- compiler:   "ISE Eiffel 4.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	ge2e
+
+root
+
+	GE2E (ge2e): "execute"
+		
+default
+
+	--debug (yes);
+	--assertion (all);
+	--precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+
+cluster
+
+	ge2e:			"$GOBO\src\ge2e";
+
+		-- Gobo Eiffel Lexical Library
+	lx_skeleton:	"$GOBO\library\lexical\skeleton";
+
+		-- Gobo Eiffel Parse Library
+	pa_skeleton:	"$GOBO\library\parse\skeleton";
+
+		-- Gobo Eiffel Structure Library
+	ds_container:   "$GOBO\library\structure\container";
+	ds_cursor:      "$GOBO\library\structure\cursor";
+	ds_list:        "$GOBO\library\structure\list";
+	ds_search:      "$GOBO\library\structure\search";
+	ds_sort:        "$GOBO\library\structure\sort";
+	ds_support:     "$GOBO\library\structure\support";
+	ds_table:       "$GOBO\library\structure\table";
+	ds_stack:       "$GOBO\library\structure\stack";
+
+		-- EiffelBase
+	kernel:			"$EIFFEL4\library\base\kernel";
+	support:		"$EIFFEL4\library\base\support";
+	access:			"$EIFFEL4\library\base\structures\access";
+	cursors:		"$EIFFEL4\library\base\structures\cursors";
+	cursor_trees:	"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
+	iteration:		"$EIFFEL4\library\base\structures\iteration";
+	list:			"$EIFFEL4\library\base\structures\list";
+	set:			"$EIFFEL4\library\base\structures\set";
+	sort:			"$EIFFEL4\library\base\structures\sort";
+	storage:		"$EIFFEL4\library\base\structures\storage";
+	table:			"$EIFFEL4\library\base\structures\table";
+	traversing:		"$EIFFEL4\library\base\structures\traversing";
+	tree:			"$EIFFEL4\library\base\structures\tree";
+
+end
