@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<project name="b" default="main">
+	
+	<inherit>
+		<parent location="a.eant">
+			<redefine target="f1"/>
+		</parent>
+	</inherit>
+
+	<target name="f1">
+		<argument name="first_argument"/>
+		<echo message="b.f1: first_argument: ${first_argument}"/>
+		<precursor>
+			<argument name="first_argument" value="hello2a"/>
+		</precursor>
+		<precursor arguments="hello2b"/>
+		<echo message="b.f1: first_argument: ${first_argument}"/>
+	</target>
+
+	<target name="main">
+		<geant target="f1">
+			<argument name="first_argument" value="hello1"/>
+		</geant>
+	</target>
+</project>
+

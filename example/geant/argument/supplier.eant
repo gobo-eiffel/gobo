@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+
+<project name="supplier">
+	
+	<target name="s1">
+		<argument name="first_argument"/>
+		<echo message="supplier.s1: first_argument: ${first_argument}"/>
+	</target>
+
+	<target name="s2">
+		<argument name="first_argument"/>
+		
+		<echo message="s2: fs.filename: ${fs.filename}, first_argument: ${first_argument}"/>
+	</target>
+
+
+</project>
+

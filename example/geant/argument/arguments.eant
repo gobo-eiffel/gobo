@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+
+<project name="geant_arguments" default="main">
+	
+	<target name="main">
+		<!-- Verbose argument usage: -->
+		<echo message="Calling target 't1' with arguments in verbose way:"/>
+		<set name="var1" value="value1"/>
+		<geant target="t1">
+			<argument name="a_message1" value="hello1"/>
+			<argument name="a_message2" value="hello2"/>
+			<argument name="a_message3" value="hello3"/>
+			<argument name="a_message4" value="hello4"/>
+		</geant>
+
+		<!-- Terse argument usage: -->
+		<echo message=""/>
+		<echo message="Calling target 't1' with arguments in terse way:"/>
+		<geant target="t1" arguments="hello1,hello2,  hello3,	hello4"/>
+
+		<!-- Call three level deep target call with intermediate argumentless target: -->
+		<echo message=""/>
+		<geant target="a1" arguments="hello1"/>
+
+	</target>
+
+	<target name="t2">
+		<argument name="a_message1"/>
+
+		<echo message="t2: a_message1: '$a_message1'"/>
+		<echo message="t2: var1: '$var1'"/>
+	</target>
+
+	<target name="t1">
+		<argument name="a_message1"/>
+		<argument name="a_message2"/>
+		<argument name="a_message3"/>
+		<argument name="a_message4"/>
+
+		<echo message="t1: before t2-call: a_message1: '$a_message1'"/>
+		<echo message="t1: before t2-call: a_message2: '$a_message2'"/>
+		<echo message="t1: before t2-call: a_message3: '$a_message3'"/>
+		<echo message="t1: before t2-call: a_message4: '$a_message4'"/>
+		<echo message="t1: before t2-call: var1: '$var1'"/>
+		<geant target="t2">
+			<argument name="a_message1" value="another message"/>
+		</geant>
+		<echo message="t1: after t2-call: a_message1: '$a_message1'"/>
+		<echo message="t1: after t2-call: var1: '$var1'"/>
+	</target>
+
+	<target name="a1">
+		<argument name="a_message1"/>
+
+		<echo message="a1: a_message1: '$a_message1'"/>
+		<geant target="a2"/>
+	</target>
+
+	<target name="a2">
+		<echo message="a2: no arguments used"/>
+		<echo message="a2: a_message2: '$a_message2'"/>
+		<geant target="a3" arguments="hello3"/>
+	</target>
+
+	<target name="a3">
+		<argument name="a_message3"/>
+
+		<echo message="a3: a_message3: '$a_message3'"/>
+	</target>
+
+</project>
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<project name="client" default="main">
+	
+	<target name="c1">
+		<argument name="first_argument"/>
+		
+		<echo message="c1: fs.filename: ${fs.filename}, first_argument: ${first_argument}"/>
+	</target>
+
+	<target name="main">
+		<echo message="Calling target `f1' of current project using fileset and pass arguments:"/>
+		<geant target="c1" arguments="hello">
+			<fileset dir="." include="@(*.eant)"/>
+		</geant>
+
+		<echo message="Calling target of another project and pass arguments:"/>
+		<geant file="supplier.eant" target="s1" arguments="hello"/>
+
+		<echo message="Calling target of another project using fileset and pass arguments:"/>
+		<geant file="supplier.eant" target="s2" arguments="hello" reuse_variables="true">
+			<fileset dir="." include="@(*.eant)"/>
+		</geant>
+	</target>
+
+</project>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<project name="a">
+	
+	<target name="f1">
+		<argument name="first_argument"/>
+		<echo message="a.f1: first_argument: ${first_argument}"/>
+	</target>
+
+
+</project>
+

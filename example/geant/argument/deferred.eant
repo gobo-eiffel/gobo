@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+
+<project name="geant_deferred_arguments" default="main">
+	
+	<target name="t1">
+		<argument name="a_message1"/>
+		<argument name="a_message2"/>
+		<echo message="t1: a_message1: '${a_message1}'"/>
+		<echo message="t1: a_message2: '${a_message2}'"/>
+		<set name="programming_languague" value="Eiffel"/>
+		<echo message="t1: a_message1: '${a_message1}'"/>
+		<echo message="t1: a_message2: '${a_message2}'"/>
+	</target>
+
+	<target name="main">
+		<!-- Verbose argument usage: -->
+		<echo message="Calling target 't1' with arguments in verbose way:"/>
+		<set name="message2" value=""/>
+		<set name="message1" value=""/>
+		<geant target="t1">
+			<argument name="a_message1" value="programming language is ${programming_languague}"/>
+			<argument name="a_message2" value="My favorite ${a_message1}"/>
+		</geant>
+
+		<!-- Terse argument usage: -->
+		<unset name="message1"/>
+		<unset name="message2"/>
+		<unset name="programming_languague"/>
+		<set name="message2" value="My favorite ${message1}"/>
+		<set name="message1" value="programming language is ${programming_languague}"/>
+
+		<echo message=""/>
+		<echo message="Calling target 't1' with arguments in terse way:"/>
+		<geant target="t1" arguments="$message1,$message2"/>
+	</target>
+
+</project>
+
