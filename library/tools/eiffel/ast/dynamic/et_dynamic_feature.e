@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			l_type := a_feature.type
 			if l_type /= Void then
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-				create {ET_NESTED_DYNAMIC_TYPE_SET} result_type.make (l_dynamic_type)
+				create {ET_NESTED_DYNAMIC_TYPE_SET} result_type_set.make (l_dynamic_type)
 			end
 			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	result_type: ET_DYNAMIC_TYPE_SET
+	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of result, if any
 
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -158,12 +158,12 @@ feature -- Setting
 			dynamic_type_sets_set: dynamic_type_sets = a_dynamic_type_sets
 		end
 
-	set_result_type (a_result_type: like result_type) is
-			-- Set `result_type' to `a_result_type'.
+	set_result_type_set (a_result_type_set: like result_type_set) is
+			-- Set `result_type_set' to `a_result_type_set'.
 		do
-			result_type := a_result_type
+			result_type_set := a_result_type_set
 		ensure
-			result_type_set: result_type = a_result_type
+			result_type_set_set: result_type_set = a_result_type_set
 		end
 
 	set_id (i: INTEGER) is
@@ -193,7 +193,7 @@ feature -- Status report
 		do
 			Result := static_feature.is_function
 		ensure
-			query: Result implies result_type /= Void
+			query: Result implies result_type_set /= Void
 		end
 
 	is_attribute: BOOLEAN is
@@ -201,7 +201,7 @@ feature -- Status report
 		do
 			Result := static_feature.is_attribute
 		ensure
-			query: Result implies result_type /= Void
+			query: Result implies result_type_set /= Void
 		end
 
 	is_constant_attribute: BOOLEAN is
@@ -209,7 +209,7 @@ feature -- Status report
 		do
 			Result := static_feature.is_constant_attribute
 		ensure
-			query: Result implies result_type /= Void
+			query: Result implies result_type_set /= Void
 		end
 
 	is_unique_attribute: BOOLEAN is
@@ -217,7 +217,7 @@ feature -- Status report
 		do
 			Result := static_feature.is_unique_attribute
 		ensure
-			query: Result implies result_type /= Void
+			query: Result implies result_type_set /= Void
 		end
 
 	is_procedure: BOOLEAN is
@@ -225,7 +225,7 @@ feature -- Status report
 		do
 			Result := static_feature.is_procedure
 		ensure
-			definition: Result = (result_type = Void)
+			definition: Result = (result_type_set = Void)
 		end
 
 	is_precursor: BOOLEAN is

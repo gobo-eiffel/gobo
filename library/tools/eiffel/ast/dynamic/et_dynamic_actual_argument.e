@@ -22,21 +22,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type: like source_type; an_actual: like actual_argument;
+	make (a_type_set: like source_type_set; an_actual: like actual_argument;
 		a_current_feature: like current_feature; a_current_type: like current_type) is
 			-- Create a new argument passing.
 		require
-			a_type_not_void: a_type /= Void
+			a_type_set_not_void: a_type_set /= Void
 			an_actual_not_void: an_actual /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 		do
-			source_type := a_type
+			source_type_set := a_type_set
 			actual_argument := an_actual
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
-			source_type_set: source_type = a_type
+			source_type_set_set: source_type_set = a_type_set
 			actual_argument_set: actual_argument = an_actual
 			current_feature_set: current_feature = a_current_feature
 			current_type_set: current_type = a_current_type
@@ -58,7 +58,7 @@ feature -- Duplication
 	cloned_attachment: like Current is
 			-- Cloned version of current attachment
 		do
-			create Result.make (source_type, actual_argument, current_feature, current_type)
+			create Result.make (source_type_set, actual_argument, current_feature, current_type)
 		end
 
 invariant

@@ -23,21 +23,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type: like source_type; a_name: like feature_name;
+	make (a_type_set: like source_type_set; a_name: like feature_name;
 		a_current_feature: like current_feature; a_current_type: like current_type) is
 			-- Create a new agent implicit argument passing.
 		require
-			a_type_not_void: a_type /= Void
+			a_type_set_not_void: a_type_set /= Void
 			a_name_not_void: a_name /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 		do
-			source_type := a_type
+			source_type_set := a_type_set
 			feature_name := a_name
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
-			source_type_set: source_type = a_type
+			source_type_set_set: source_type_set = a_type_set
 			feature_name_set: feature_name = a_name
 			current_feature_set: current_feature = a_current_feature
 			current_type_set: current_type = a_current_type
@@ -59,7 +59,7 @@ feature -- Duplication
 	cloned_attachment: like Current is
 			-- Cloned version of current attachment
 		do
-			create Result.make (source_type, feature_name, current_feature, current_type)
+			create Result.make (source_type_set, feature_name, current_feature, current_type)
 		end
 
 invariant

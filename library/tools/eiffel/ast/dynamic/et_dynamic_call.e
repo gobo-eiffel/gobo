@@ -18,13 +18,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_target_type: like target_type; a_name: like feature_name;
+	make (a_target: like target; a_target_type_set: like target_type_set; a_name: like feature_name;
 		a_feature: like static_feature; a_current_feature: like current_feature;
 		a_current_type: like current_type; a_system: ET_SYSTEM) is
 			-- Create a new dynamic call.
 		require
 			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_current_feature_not_void: a_current_feature /= Void
@@ -36,21 +36,21 @@ feature {NONE} -- Initialization
 			l_dynamic_type_set: ET_NESTED_DYNAMIC_TYPE_SET
 		do
 			target := a_target
-			target_type := a_target_type
+			target_type_set := a_target_type_set
 			feature_name := a_name
 			static_feature := a_feature
 			l_type := a_feature.type
 			argument_sources := empty_argument_sources
 			if l_type /= Void then
-				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.static_type.base_type)
+				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type_set.static_type.base_type)
 				create l_dynamic_type_set.make (l_dynamic_type)
-				result_type := l_dynamic_type_set
+				result_type_set := l_dynamic_type_set
 			end
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
 			target_set: target = a_target
-			target_type_set: target_type = a_target_type
+			target_type_set_set: target_type_set = a_target_type_set
 			feature_name_set: feature_name = a_name
 			static_feature_set: static_feature = a_feature
 			current_feature_set: current_feature = a_current_feature
@@ -62,7 +62,7 @@ feature -- Access
 	target: ET_TARGET
 			-- Target of call
 
-	target_type: ET_DYNAMIC_TYPE_SET
+	target_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of target
 
 	feature_name: ET_FEATURE_NAME
@@ -74,7 +74,7 @@ feature -- Access
 	argument_sources: ET_DYNAMIC_ATTACHMENT_LIST
 			-- Sources of arguments, if any
 
-	result_type: ET_DYNAMIC_TYPE_SET
+	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of Result, if any
 
 	current_feature: ET_FEATURE
@@ -122,11 +122,11 @@ feature -- Element change
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
-			l_count := target_type.count
+			l_count := target_type_set.count
 			if l_count /= count then
 				nb := l_count - count
 				count := l_count
-				l_other_types := target_type.other_types
+				l_other_types := target_type_set.other_types
 				if l_other_types /= Void then
 					nb2 := l_other_types.count
 					from j := 1 until j > nb2 loop
@@ -141,7 +141,7 @@ feature -- Element change
 					end
 				end
 				if i < nb then
-					l_type := target_type.first_type
+					l_type := target_type_set.first_type
 					if l_type /= Void then
 						propagate_type (l_type, a_system)
 					end
@@ -161,16 +161,16 @@ feature {NONE} -- Element change
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
-			l_result_type: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_attachment: ET_NULL_DYNAMIC_ATTACHMENT
 		do
 			l_seed := static_feature.first_seed
 			l_feature := a_type.base_class.seeded_feature (l_seed)
 			if l_feature = Void then
-				if a_type.conforms_to_type (target_type.static_type, a_system) then
+				if a_type.conforms_to_type (target_type_set.static_type, a_system) then
 						-- Internal error: there should be a feature with seed
-						-- `l_seed' in all descendants of `target_type.static_type'.
+						-- `l_seed' in all descendants of `target_type_set.static_type'.
 					a_system.set_fatal_error
 					a_system.error_handler.report_gibbt_error
 				else
@@ -197,18 +197,18 @@ feature {NONE} -- Element change
 						end
 					end
 				end
-				l_result_type := l_dynamic_feature.result_type
-				if result_type /= Void then
-					if l_result_type = Void then
+				l_result_type_set := l_dynamic_feature.result_type_set
+				if result_type_set /= Void then
+					if l_result_type_set = Void then
 							-- Internal error: it has already been checked somewhere else
 							-- that the redeclaration of a query should be a query.
 						a_system.set_fatal_error
 						a_system.error_handler.report_gibbw_error
 					else
-						create l_attachment.make (l_result_type, current_feature, current_type)
-						result_type.put_source (l_attachment, a_system)
+						create l_attachment.make (l_result_type_set, current_feature, current_type)
+						result_type_set.put_source (l_attachment, a_system)
 					end
-				elseif l_result_type /= Void then
+				elseif l_result_type_set /= Void then
 						-- Internal error: it has already been checked somewhere else
 						-- that the redeclaration of a procedure should be a procedure.
 					a_system.set_fatal_error
@@ -231,7 +231,7 @@ feature {NONE} -- Constants
 invariant
 
 	target_not_void: target /= Void
-	target_type_not_void: target_type /= Void
+	target_type_set_not_void: target_type_set /= Void
 	feature_name_not_void: feature_name /= Void
 	static_feature_not_void: static_feature /= Void
 	argument_sources_not_void: argument_sources /= Void

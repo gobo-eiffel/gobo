@@ -244,7 +244,7 @@ feature {NONE} -- Feature generation
 				if a_feature.is_regular then
 					current_file.put_string (c_extern)
 					current_file.put_character (' ')
-					print_type_declaration (a_feature.result_type.static_type)
+					print_type_declaration (a_feature.result_type_set.static_type)
 					current_file.put_character (' ')
 					print_routine_name (a_feature, a_type)
 					current_file.put_character ('(')
@@ -283,7 +283,7 @@ feature {NONE} -- Feature generation
 				if a_feature.is_static then
 					current_file.put_string (c_extern)
 					current_file.put_character (' ')
-					print_type_declaration (a_feature.result_type.static_type)
+					print_type_declaration (a_feature.result_type_set.static_type)
 					current_file.put_character (' ')
 					print_static_routine_name (a_feature, a_type)
 					current_file.put_character ('(')
@@ -581,7 +581,7 @@ feature {NONE} -- Feature generation
 			valid_feature: current_feature.static_feature = a_feature
 			is_static: a_static implies current_feature.is_static
 		local
-			l_result_type: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			i, j, nb: INTEGER
@@ -600,9 +600,9 @@ feature {NONE} -- Feature generation
 			l_comma: BOOLEAN
 		do
 			print_feature_name_comment (a_feature, current_type)
-			l_result_type := current_feature.result_type
-			if l_result_type /= Void then
-				print_type_declaration (l_result_type.static_type)
+			l_result_type_set := current_feature.result_type_set
+			if l_result_type_set /= Void then
+				print_type_declaration (l_result_type_set.static_type)
 			else
 				current_file.put_string (c_void)
 			end
@@ -652,9 +652,9 @@ feature {NONE} -- Feature generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_result_type /= Void then
+			if l_result_type_set /= Void then
 				print_indentation
-				print_type_declaration (l_result_type.static_type)
+				print_type_declaration (l_result_type_set.static_type)
 				current_file.put_character (' ')
 				current_file.put_character ('R')
 				current_file.put_character (' ')
@@ -748,7 +748,7 @@ feature {NONE} -- Feature generation
 						current_file.put_line (l_c_code)
 					end
 				end
-			elseif l_result_type /= Void then
+			elseif l_result_type_set /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character ('R')
@@ -810,19 +810,19 @@ feature {NONE} -- Feature generation
 			is_static: a_static implies current_feature.is_static
 			is_creation: a_creation implies current_feature.is_creation
 		local
-			l_result_type: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_local_type: ET_DYNAMIC_TYPE_SET
+			l_local_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_compound: ET_COMPOUND
 			l_comma: BOOLEAN
 		do
 			print_feature_name_comment (a_feature, current_type)
-			l_result_type := current_feature.result_type
-			if l_result_type /= Void then
-				print_type_declaration (l_result_type.static_type)
+			l_result_type_set := current_feature.result_type_set
+			if l_result_type_set /= Void then
+				print_type_declaration (l_result_type_set.static_type)
 			elseif a_creation then
 				print_type_declaration (current_type)
 			else
@@ -877,9 +877,9 @@ feature {NONE} -- Feature generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_result_type /= Void then
+			if l_result_type_set /= Void then
 				print_indentation
-				print_type_declaration (l_result_type.static_type)
+				print_type_declaration (l_result_type_set.static_type)
 				current_file.put_character (' ')
 				current_file.put_character ('R')
 				current_file.put_character (' ')
@@ -893,15 +893,15 @@ feature {NONE} -- Feature generation
 			if l_locals /= Void then
 				nb := l_locals.count
 				from i := 1 until i > nb loop
-					l_local_type := current_feature.dynamic_type_set (l_locals.local_variable (i).name)
-					if l_local_type = Void then
+					l_local_type_set := current_feature.dynamic_type_set (l_locals.local_variable (i).name)
+					if l_local_type_set = Void then
 							-- Internal error: the dynamic type of local variable
 							-- should be known at this stage.
 						set_fatal_error
 						error_handler.report_gibdx_error
 					else
 						print_indentation
-						print_type_declaration (l_local_type.static_type)
+						print_type_declaration (l_local_type_set.static_type)
 						current_file.put_character (' ')
 						current_file.put_character ('l')
 						current_file.put_integer (i)
@@ -956,7 +956,7 @@ feature {NONE} -- Feature generation
 					print_compound (l_compound)
 				end
 			end
-			if l_result_type /= Void then
+			if l_result_type_set /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -2640,7 +2640,7 @@ feature {NONE} -- Expression generation
 			an_expression_not_void: an_expression /= Void
 		local
 			l_local_index: INTEGER
-			l_result_type: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			a_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			a_dynamic_type: ET_DYNAMIC_TYPE
 		do
@@ -2656,13 +2656,13 @@ feature {NONE} -- Expression generation
 				local_count := local_count + 1
 				l_local_index := local_count
 				print_typed_pointer_local_declaration (l_local_index, a_dynamic_type)
-				l_result_type := current_feature.result_type
-				if l_result_type = Void then
+				l_result_type_set := current_feature.result_type_set
+				if l_result_type_set = Void then
 						-- Internal error: it should have been checked elsewhere that
 						-- the current feature is a function.
 					set_fatal_error
 					error_handler.report_gibdk_error
-				elseif l_result_type.static_type.is_expanded then
+				elseif l_result_type_set.static_type.is_expanded then
 --					current_file.put_character ('&')
 --					current_file.put_character ('R')
 					current_file.put_character ('z')
@@ -3203,7 +3203,7 @@ feature {NONE} -- Type generation
 								l_feature := l_features.item (j)
 								if l_feature.is_attribute then
 									current_file.put_character (' ')
-									print_type_declaration (l_feature.result_type.static_type)
+									print_type_declaration (l_feature.result_type_set.static_type)
 									current_file.put_character (' ')
 									current_file.put_character ('a')
 									current_file.put_integer (l_feature.id)

@@ -19,7 +19,7 @@ feature -- Status report
 		require
 			a_type_not_void: a_type /= Void
 		do
-			Result := source_type.has_type (a_type)
+			Result := source_type_set.has_type (a_type)
 		end
 
 	is_null_attachment: BOOLEAN is
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Access
 
-	source_type: ET_DYNAMIC_TYPE_SET
+	source_type_set: ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set of source of attachment
 
 	current_feature: ET_FEATURE
@@ -49,7 +49,7 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of types in `source_type' when
+			-- Number of types in `source_type_set' when
 			-- `propagate_types' was last called
 
 feature -- Element change
@@ -66,11 +66,11 @@ feature -- Element change
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
-			l_count := source_type.count
+			l_count := source_type_set.count
 			if l_count /= count then
 				nb := l_count - count
 				count := l_count
-				l_other_types := source_type.other_types
+				l_other_types := source_type_set.other_types
 				if l_other_types /= Void then
 					nb2 := l_other_types.count
 					from j := 1 until j > nb2 loop
@@ -85,7 +85,7 @@ feature -- Element change
 					end
 				end
 				if i < nb then
-					l_type := source_type.first_type
+					l_type := source_type_set.first_type
 					if l_type /= Void then
 						a_target.put_type (l_type, a_system)
 					end
@@ -118,7 +118,7 @@ feature -- Link
 invariant
 
 	count_non_negative: count >= 0
-	source_type_not_void: source_type /= Void
+	source_type_set_not_void: source_type_set /= Void
 	current_feature_not_void: current_feature /= Void
 	current_type_not_void: current_type /= Void
 

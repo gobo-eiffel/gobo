@@ -205,7 +205,7 @@ feature -- Generation
 					if l_call.count /= l_count then
 						is_built := False
 					end
-					l_target := l_call.result_type
+					l_target := l_call.result_type_set
 					if l_target /= Void then
 						l_count := l_target.count
 						l_target.propagate_types (current_system)
@@ -344,7 +344,7 @@ feature {NONE} -- Generation
 					i := i + 1
 				end
 			end
-			l_target := a_feature.result_type
+			l_target := a_feature.result_type_set
 			if l_target /= Void then
 				l_count := l_target.count
 				l_target.propagate_types (current_system)
@@ -379,10 +379,10 @@ feature {NONE} -- CAT-calls
 			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 		do
-			l_type := a_call.target_type.first_type
+			l_type := a_call.target_type_set.first_type
 			if l_type /= Void then
 				check_catcall_target_validity (l_type, a_call)
-				l_other_types := a_call.target_type.other_types
+				l_other_types := a_call.target_type_set.other_types
 				if l_other_types /= Void then
 					nb := l_other_types.count
 					from i := 1 until i > nb loop
@@ -416,7 +416,7 @@ feature {NONE} -- CAT-calls
 			l_base_type: ET_BASE_TYPE
 			l_static_feature: ET_FEATURE
 		do
-			l_static_type := a_call.target_type.static_type
+			l_static_type := a_call.target_type_set.static_type
 			if a_type.conforms_to_type (l_static_type, current_system) then
 				l_static_feature := a_call.static_feature
 				l_seed := l_static_feature.first_seed
@@ -452,7 +452,7 @@ feature {NONE} -- CAT-calls
 							from i := 1 until i > nb loop
 								l_target_type := l_argument_types.item (i).static_type
 								l_source := l_argument_sources.item (i)
-								l_source_type_set := l_source.source_type
+								l_source_type_set := l_source.source_type_set
 								l_source_type := l_source_type_set.first_type
 								if l_source_type /= Void then
 									if l_source_type.base_type.conforms_to_type (l_formal_arguments.formal_argument (i).type, l_base_type, universe.any_class, universe) then
@@ -539,7 +539,7 @@ feature {NONE} -- CAT-calls
 			l_message.append_string (a_target_type.base_type.to_text)
 			l_message.append_string ("'%N")
 			from
-				l_type_set := a_call.target_type
+				l_type_set := a_call.target_type_set
 			until
 				l_type_set = Void
 			loop
@@ -576,7 +576,7 @@ feature {NONE} -- CAT-calls
 							end
 							l_source_stack.force (l_source)
 							l_visited_sources.force_last (l_source)
-							l_type_set := l_source.source_type
+							l_type_set := l_source.source_type_set
 								-- Jump out of the loop.
 							l_source := Void
 						else
@@ -637,7 +637,7 @@ feature {NONE} -- CAT-calls
 					l_message.append_string (")%N")
 					nb := nb + 1
 				end
-				l_type_set := l_source.source_type
+				l_type_set := l_source.source_type_set
 			until
 				l_type_set = Void
 			loop
@@ -674,7 +674,7 @@ feature {NONE} -- CAT-calls
 							end
 							l_source_stack.force (l_source)
 							l_visited_sources.force_last (l_source)
-							l_type_set := l_source.source_type
+							l_type_set := l_source.source_type_set
 								-- Jump out of the loop.
 							l_source := Void
 						else
@@ -852,7 +852,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type_set := current_dynamic_type.dynamic_feature (an_attribute, current_system).result_type
+				l_dynamic_type_set := current_dynamic_type.dynamic_feature (an_attribute, current_system).result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of an attribute cannot be void.
 					set_fatal_error
@@ -929,7 +929,7 @@ feature {NONE} -- Event handling
 				else
 					create l_dynamic_call.make (l_target, l_dynamic_type_set, an_expression.name, a_feature, current_feature, current_type, current_system)
 					dynamic_calls.force_last (l_dynamic_call)
-					l_dynamic_type_set := l_dynamic_call.result_type
+					l_dynamic_type_set := l_dynamic_call.result_type_set
 					if l_dynamic_type_set = Void then
 							-- Internal error: the result type set of a query cannot be void.
 						set_fatal_error
@@ -1256,7 +1256,7 @@ feature {NONE} -- Event handling
 						error_handler.report_gibch_error
 					else
 						l_special_type.set_alive (True)
-						l_item_type_set := l_special_type.item_type
+						l_item_type_set := l_special_type.item_type_set
 						nb := an_expression.count
 						from i := 1 until i > nb loop
 							l_expression := an_expression.expression (i)
@@ -1355,7 +1355,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_query.result_type
+				l_dynamic_type_set := l_query.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
@@ -1420,14 +1420,14 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
-			i, nb: INTEGER
+--			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_call: ET_DYNAMIC_CALL
-			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
-			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
-			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
-			l_source, l_next: ET_DYNAMIC_ATTACHMENT
+--			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+--			l_call: ET_DYNAMIC_CALL
+--			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+--			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
+--			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
+--			l_source, l_next: ET_DYNAMIC_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 --				if dynamic_call_stack.is_empty then
@@ -1551,7 +1551,7 @@ feature {NONE} -- Event handling
 							end
 						end
 					end
-					l_dynamic_type_set := l_dynamic_call.result_type
+					l_dynamic_type_set := l_dynamic_call.result_type_set
 					if l_dynamic_type_set = Void then
 							-- Internal error: the result type set of a query cannot be void.
 						set_fatal_error
@@ -1618,7 +1618,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type_set := current_dynamic_feature.result_type
+				l_dynamic_type_set := current_dynamic_feature.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a function cannot be void.
 					set_fatal_error
@@ -1642,7 +1642,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type_set := current_dynamic_feature.result_type
+				l_dynamic_type_set := current_dynamic_feature.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a function cannot be void.
 					set_fatal_error
@@ -1706,7 +1706,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_query.result_type
+				l_dynamic_type_set := l_query.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
@@ -1815,14 +1815,14 @@ feature {NONE} -- Event handling
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
-			i, nb: INTEGER
+--			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
+--			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
-			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
-			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
+--			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+--			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+--			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
+--			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
@@ -1913,7 +1913,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_query.result_type
+				l_dynamic_type_set := l_query.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error

@@ -28,18 +28,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type: like source_type; a_current_feature: like current_feature; a_current_type: like current_type) is
+	make (a_type_set: like source_type_set; a_current_feature: like current_feature; a_current_type: like current_type) is
 			-- Create a new null attachment.
 		require
-			a_type_not_void: a_type /= Void
+			a_type_set_not_void: a_type_set /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 		do
-			source_type := a_type
+			source_type_set := a_type_set
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
-			source_type_set: source_type = a_type
+			source_type_set_set: source_type_set = a_type_set
 			current_feature_set: current_feature = a_current_feature
 			current_type_set: current_type = a_current_type
 		end
@@ -62,7 +62,7 @@ feature -- Duplication
 	cloned_attachment: like Current is
 			-- Cloned version of current attachment
 		do
-			create Result.make (source_type, current_feature, current_type)
+			create Result.make (source_type_set, current_feature, current_type)
 		end
 
 end

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			an_item_type_not_void: an_item_type /= Void
 		do
 			make_type (a_type, a_class)
-			create item_type.make (an_item_type)
+			create item_type_set.make (an_item_type)
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
@@ -53,8 +53,8 @@ feature -- Status report
 
 feature -- Access
 
-	item_type: ET_NESTED_DYNAMIC_TYPE_SET
-			-- Type of items
+	item_type_set: ET_NESTED_DYNAMIC_TYPE_SET
+			-- Type set of items
 
 feature {NONE} -- Implementation
 
@@ -64,25 +64,25 @@ feature {NONE} -- Implementation
 		local
 			l_name: ET_FEATURE_NAME
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_result_type: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			create Result.make (a_feature, Current, a_system)
 			l_name := a_feature.name
 			if l_name.same_feature_name (tokens.put_feature_name) then
 				l_dynamic_type_sets := Result.dynamic_type_sets
-				if l_dynamic_type_sets.count > 1 and then l_dynamic_type_sets.item (1).static_type = item_type.static_type then
-					l_dynamic_type_sets.put (item_type, 1)
+				if l_dynamic_type_sets.count > 1 and then l_dynamic_type_sets.item (1).static_type = item_type_set.static_type then
+					l_dynamic_type_sets.put (item_type_set, 1)
 				end
 			elseif l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.infix_at_feature_name) then
-				l_result_type := Result.result_type
-				if l_result_type /= Void and then l_result_type.static_type = item_type.static_type then
-					Result.set_result_type (item_type)
+				l_result_type_set := Result.result_type_set
+				if l_result_type_set /= Void and then l_result_type_set.static_type = item_type_set.static_type then
+					Result.set_result_type_set (item_type_set)
 				end
 			end
 		end
 
 invariant
 
-	item_type_not_void: item_type /= Void
+	item_type_set_not_void: item_type_set /= Void
 
 end
