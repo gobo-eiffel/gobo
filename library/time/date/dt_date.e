@@ -4,6 +4,7 @@ indexing
 
 		"Dates (Gregorian calendar)"
 
+	note: "year 0 means 1 BCE, year -1 means 2 BCE, etc."
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -25,6 +26,13 @@ inherit
 		end
 
 	DT_GREGORIAN_CALENDAR
+		undefine
+			out
+		end
+
+	DT_SHARED_WEEK_DAYS_FROM_MONDAY
+		export
+			{NONE} all
 		undefine
 			out
 		end
@@ -124,11 +132,14 @@ feature -- Access
 		end
 
 	week_day: INTEGER is
-		obsolete "Use day_of_week instead"	
+			-- Day of week for `Current'
+		obsolete
+			"[041224] Use `day_of_week' instead."
 		local
 			d: INTEGER
 		do
-			d := day_count + 4
+				-- 1 January 1970 is a Thursday.
+			d := day_count + 4 -- (Thursday - Sunday = 4)
 			if d < 0 then
 				Result := Saturday - (-(d + 1) \\ Days_in_week)
 			else
@@ -139,12 +150,12 @@ feature -- Access
 		end
 
 	day_of_week: DT_WEEK_DAY is
-            -- Day of week for `Current' date
-        do
-            create {DT_WEEK_DAY_FROM_MONDAY} Result.make_from_date (Current)
-        ensure
-            day_of_week_not_void: Result /= Void
-        end
+			-- Day of week for `Current'
+		do
+			Result := week_days_from_monday.week_day_from_date (Current)
+		ensure
+			day_of_week_not_void: Result /= Void
+		end
 
 	duration (other: like Current): DT_DATE_DURATION is
 			-- Duration between `other' and `Current'
@@ -185,7 +196,7 @@ feature -- Access
 		end
 
 	days_in_current_month: INTEGER is
-			-- Number of days in current month
+			-- Number of days in `Current''s month
 		do
 			Result := days_in_month (month, year)
 		ensure
@@ -194,7 +205,7 @@ feature -- Access
 		end
 
 	days_in_previous_month: INTEGER is
-			-- Number of days in previous month
+			-- Number of days in `Current''s previous month
 		local
 			mm, yy: INTEGER
 		do
@@ -262,9 +273,7 @@ feature -- Setting
 			d_small_enough: d <= days_in_month (m, y)
 		do
 			if y < 0 then
-				storage := -((-y) * Year_shift +
-					Year_shift - m * Month_shift +
-					Month_shift - d)
+				storage := -((-y) * Year_shift + Year_shift - m * Month_shift + Month_shift - d)
 			else
 				storage := y * Year_shift + m * Month_shift + d
 			end
@@ -296,9 +305,7 @@ feature -- Setting
 					st := storage
 					mm := (st \\ Year_shift) // Month_shift
 					dd := st \\ Month_shift
-					storage := -((-y) * Year_shift +
-						Year_shift - mm * Month_shift +
-						Month_shift - dd)
+					storage := -((-y) * Year_shift + Year_shift - mm * Month_shift + Month_shift - dd)
 				else
 					storage := y * Year_shift + storage \\ Year_shift
 				end
@@ -321,12 +328,9 @@ feature -- Setting
 			st := storage
 			if st < 0 then
 				st := -st
-				storage := -((st // Year_shift) * Year_shift +
-					Year_shift - m * Month_shift +
-					st \\ Month_shift)
+				storage := -((st // Year_shift) * Year_shift + Year_shift - m * Month_shift + st \\ Month_shift)
 			else
-				storage := (st // Year_shift) * Year_shift +
-					m * Month_shift + st \\ Month_shift
+				storage := (st // Year_shift) * Year_shift + m * Month_shift + st \\ Month_shift
 			end
 		ensure
 			month_set: month = m
@@ -341,8 +345,7 @@ feature -- Setting
 			d_small_enough: d <= days_in_month (month, year)
 		do
 			if storage < 0 then
-				storage := -(((-storage) // Month_shift) * Month_shift +
-					Month_shift - d)
+				storage := -(((-storage) // Month_shift) * Month_shift + Month_shift - d)
 			else
 				storage := (storage // Month_shift) * Month_shift + d
 			end
@@ -510,8 +513,8 @@ feature -- Comparison
 feature -- Output
 
 	append_date_to_string (a_string: STRING) is
-			-- Append printable representation
-			-- (yyyy/mm/dd) to `a_string'.
+			-- Append printable representation to `a_string'.
+			-- The day and month parts are printing with exactly two digits.
 		local
 			yy, mm, dd: INTEGER
 		do

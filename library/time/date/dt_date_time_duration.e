@@ -4,6 +4,8 @@ indexing
 
 		"Date/time durations (Gregorian calendar)"
 
+	note1: "year 0 means 1 BCE, year -1 means 2 BCE, etc."
+	note2: "Do not take leap seconds into account"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2000, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -590,12 +592,12 @@ feature -- Comparison
 				Result := ms = 0 and d = 0
 			end
 		ensure
--- Commented out because of possible overflow:
---			definition: Result =
---				(((day * Milliseconds_in_day + millisecond_count) =
---					(other.day * Milliseconds_in_day + other.millisecond_count)) and
---				((year * Months_in_year + month) =
---					(other.year * Months_in_year + other.month)))
+			-- Commented out because of possible overflow:
+			-- definition: Result =
+			--    (((day * Milliseconds_in_day + millisecond_count) =
+			--        (other.day * Milliseconds_in_day + other.millisecond_count)) and
+			--    ((year * Months_in_year + month) =
+			--        (other.year * Months_in_year + other.month)))
 		end
 
 feature -- Conversion

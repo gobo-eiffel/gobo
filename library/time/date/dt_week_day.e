@@ -14,7 +14,10 @@ deferred class DT_WEEK_DAY
 
 inherit
 
-	DT_SHARED_GREGORIAN_CALENDAR
+	ANY
+		redefine
+			is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -84,27 +87,6 @@ feature {NONE} -- Initialization
 			code_set: code = a_code
 		end
 
-	make_from_date (a_date: DT_DATE) is
-			-- Create a day for `a_date'.
-		require
-			a_date_not_void: a_date /= Void
-		deferred
-		end
-
-	make_from_year_month_day (a_year, a_month, a_day: INTEGER) is
-			--	Create a day for `day' in `a_month' of `a_year'.
-		require
-			month_large_enough: a_month >= calendar.January
-			month_small_enough: a_month <= calendar.December
-			day_large_enough: a_day >= 1
-			day_small_enough: a_day <= calendar.days_in_month (a_month, a_year)
-		local
-			a_date: DT_DATE
-		do
-			create a_date.make (a_year, a_month, a_day)
-			make_from_date (a_date)
-		end
-
 feature -- Status report
 
 	is_monday: BOOLEAN is
@@ -161,6 +143,23 @@ feature -- Status report
 			Result := code = sunday_code
 		ensure
 			definition: Result = (code = sunday_code)
+		end
+
+feature -- Comparison
+
+	same_week_day (other: DT_WEEK_DAY): BOOLEAN is
+			-- Are `Current' and `other' the same week day?
+		require
+			other_not_void: other /= Void
+		deferred
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Are `Current' and `other' the same week day?
+		do
+			if same_type (other) then
+				Result := same_week_day (other)
+			end
 		end
 
 feature -- Access
@@ -231,21 +230,14 @@ feature -- Access
 		deferred
 		end
 
-	shared_day_from_code (a_code: INTEGER): like Current is
-			-- Shared object corresponding to `a_code'
-		require
-			valid_code: a_code >= 1 and a_code <= Days_in_week
-			deferred
-		ensure
-			shared_object_not_void: Result /= Void
-		end
-
 feature -- Measurement
 
-	Days_in_week: INTEGER is 7
+	Days_in_week: INTEGER is
 			-- Number of days in a week
---		ensure
---			definition: Result = 7
+		deferred
+		ensure
+			definition: Result = 7
+		end
 
 feature -- Conversion
 
@@ -289,5 +281,4 @@ invariant
 	valid_sunday: sunday_code >= 1 and sunday_code <= Days_in_week
 
 end
-
 	

@@ -85,7 +85,7 @@ feature -- Access
 			-- Number of day from the beginning of the week
 			-- sunday is 1, etc.., saturday is 7
 		do
-			Result := week_day
+			Result := day_of_week.as_week_day_from_sunday.code
 		ensure
 			day_of_the_week_range: Result > 0 and then Result < 8
 		end

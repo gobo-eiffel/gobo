@@ -19,7 +19,7 @@ inherit
 feature -- Year
 
 	leap_year (y: INTEGER): BOOLEAN is
-		-- Is `y' a leap year?
+			-- Is `y' a leap year?
 		do
 			Result := (y \\ 4 = 0) and ((y \\ 100 /= 0) or (y \\ 400 = 0))
 		end
@@ -133,15 +133,17 @@ feature -- Week day
 	Thursday: INTEGER is 5
 	Friday: INTEGER is 6
 	Saturday: INTEGER is 7
-			-- All the above are obsolete - use DT_WEEK_DAY instead
+			-- Week days
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
 
 	Days_in_week: INTEGER is 7
-			-- Obsolete - use DT_WEEK_DAY instead
---		ensure
---			definition: Result = (Saturday - Sunday + 1)
+			-- Number of days in a week
 
 	next_day (d: INTEGER): INTEGER is
-			obsolete "{DT_WEEK_DAY}.next_day instead"
+			-- Week day after `d'
+		obsolete
+			"[041224] Use `next_day' from DT_WEEK_DAY instead."
 		require
 			d_large_enough: d >= Sunday
 			d_small_enough: d <= Saturday
@@ -162,7 +164,9 @@ feature -- Week day
 		end
 
 	previous_day (d: INTEGER): INTEGER is
-		obsolete "{DT_WEEK_DAY}.previous_day instead"
+			-- Week day before `d'
+		obsolete
+			"[041224] Use `previous_day' from DT_WEEK_DAY instead."
 		require
 			d_large_enough: d >= Sunday
 			d_small_enough: d <= Saturday
