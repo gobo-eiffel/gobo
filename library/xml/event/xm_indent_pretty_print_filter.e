@@ -92,7 +92,7 @@ feature -- Events
 		do
 			check space_preserved_not_void: space_preserved /= Void end
 			
-			if STRING_.same_string (Xml_prefix, a_prefix) and STRING_.same_string (Xml_space, a_local_part) then
+			if has_xml_space (a_prefix, a_local_part) then
 					--Replace value for current element.
 				space_preserved.remove
 				space_preserved.force (STRING_.same_string (Xml_space_preserve, a_value))
@@ -133,6 +133,14 @@ feature {NONE} -- Implementation
 			
 feature {NONE} -- Space preserve
 
+	has_xml_space (a_prefix: STRING; a_local_part: STRING): BOOLEAN is
+			-- Is this attribute xml:space?
+		do
+			Result := has_prefix (a_prefix)
+				and then STRING_.same_string (Xml_prefix, a_prefix) 
+					and then STRING_.same_string (Xml_space, a_local_part) 
+		end
+		
 	space_preserved: DS_ARRAYED_STACK [BOOLEAN]
 			-- Space preserved value.
 	
