@@ -10,7 +10,16 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Introduction to Geyacc</h1>
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Introduction to Geyacc</strong></font></td>
+        <td align="right"><a href="index.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="stages.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
 
 <hr size="1">
 
@@ -283,74 +292,40 @@ their semantic values may reflect this). Typically the lexical
 analyzer makes the tokens by parsing characters of text, but <em>geyacc</em>
 does not depend on this.</p>
 
-<h2>Stages in Using Geyacc</h2>
-
-<p>The actual language-design process using <em>geyacc</em>, from
-grammar specification to a working compiler or interpreter, has
-these parts:</p>
-
-<ol>
-    <li>Formally specify the grammar in a <a
-        href="description.html">form</a> recognized by <em>geyacc</em>.
-        For each grammatical rule in the language, describe the
-        action that is to be taken when an instance of that rule
-        is recognized. The action is described by a sequence of
-        Eiffel instructions.</li>
-    <li>Write a <a href="parser.html#lexical_analyzer">lexical
-        analyzer</a> to process input and pass tokens to the
-        parser. The lexical analyzer may be written by hand in
-        Eiffel. It could also be produced using <a
-        href="../gelex/index.html"><em>gelex</em></a>.</li>
-    <li>Redefine feature <a href="actions.html#report_error"><font
-        color="#008080"><em><tt>report_error</tt></em></font></a>
-        and or <a href="actions.html#clear_all"><font
-        color="#008080"><em><tt>clear_all</tt></em></font></a> if
-        necessary.</li>
-</ol>
-
-<p>To turn this source code as written into a runnable program,
-you must follow these steps:</p>
-
-<ol>
-    <li>Run <em>geyacc</em> on the grammar to produce the parser
-        class.</li>
-    <li>Add the following clusters to your Ace file (ISE Eiffel,
-        Halstenbach, <em><strong>Tower</strong></em><em>Eiffel</em>),
-        your <font size="2">ESD</font> file (Visual Eiffel) or
-        your loadpath file (SmallEiffel) depending on the Eiffel
-        compiler you are using:<pre><font size="3">    </font><font
-color="#800000" size="3">$GOBO\library\parse\skeleton
-    $GOBO\library\kernel
-    $GOBO\library\kernel\spec\&lt;compiler&gt;</font></pre>
-        <p>where <font color="#800000"><tt>&lt;compiler&gt;</tt></font>
-        is either <font color="#800000"><tt>ise</tt></font>, <font
-        color="#800000"><tt>hact</tt></font>, <font
-        color="#800000"><tt>tower</tt></font>, <font
-        color="#800000"><tt>ve</tt></font> or <font
-        color="#800000"><tt>se</tt></font>. </p>
-    </li>
-    <li>Compile the class output by <em>geyacc</em>, as well as
-        any other classes in the system.</li>
-</ol>
-
 <hr size="1">
-<div align="left">
 
-<address>
-    <font size="2"><b>Copyright © 1997</b></font><font size="1"><b>,
-    </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
-    </strong><font size="2"><br>
-    </font><a href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
-    size="2"> <br>
-    </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
-    size="2"><br>
-    <strong>Last Updated:</strong> 7 September 1997</font><br>
-    <!--webbot bot="PurpleText"
-    preview="
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1997</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+            size="2">ericb@gobo.demon.co.uk</font></a><font
+            size="2"> <br>
+            </font><a href="http://www.gobo.demon.co.uk"><font
+            size="2">http://www.gobo.demon.co.uk</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
 $Date$ 
 $Revision$"
-    --> 
-</address>
-</div>
+            --> 
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobo.demon.co.uk"><img
+        src="../../../WWW/EIFFEL/NICE/image/home.gif" alt="Home"
+        border="0" width="40" height="40"></a><a
+        href="index.html"><img src="../image/toc.gif" alt="Toc"
+        border="0" width="40" height="40"></a><a
+        href="index.html"><img src="../image/previous.gif"
+        alt="Previous" border="0" width="40" height="40"></a><a
+        href="stages.html"><img src="../image/next.gif"
+        alt="Next" border="0" width="40" height="40"></a></td>
+    </tr>
+</table>
 </body>
 </html>
