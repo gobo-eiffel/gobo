@@ -86,6 +86,7 @@ feature {NONE} -- Implementation
 	hash_code (k: K): INTEGER is
 			-- Hash code of key `k'
 		require
+			k_not_void: k /= Void
 			valid_key: valid_key (k)
 		do
 			Result := k.hash_code
