@@ -24,7 +24,20 @@ inherit
 	
 feature
 
-	test_valid_latin1 is
+	test_valid_tag is
+		do
+			assert_output(
+				"<?xml version='1.0' encoding='iso-8859-1'?><é></é>",
+				"<%/195/%/169/></%/195/%/169/>")
+			assert_output(
+				"<?xml version='1.0' encoding='iso-8859-1'?><é/>",
+				"<%/195/%/169/></%/195/%/169/>")
+			assert_output(
+				"<?xml version='1.0' encoding='iso-8859-1'?><doc é=''/>",
+				"<doc %/195/%/169/=%"%"></doc>")
+		end
+		
+	test_valid_content is
 		do
 			assert_output(
 				"<?xml version='1.0' encoding='iso-8859-1'?><doc>é</doc>",
