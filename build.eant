@@ -57,6 +57,7 @@
 	<target name="develop" depend="init">
 		<description>
 			Install developer package.
+			The bootstrap should be run first.
 		</description>
 
 		<geant target="clobber"/>
@@ -66,7 +67,8 @@
 
 	<target name="delivery" depend="init">
 		<description>
-			Install delivery package.
+			Build delivery package.
+			The bootstrap should be run first.
 		</description>
 
 		<geant target="clobber"/>
@@ -78,6 +80,10 @@
 		<delete>
 			<fileset directory="." include="@(**/.cvsignore)"/>
 		</delete>
+		<delete>
+			<directoryset directory="." include="@(**/CVS)"/>
+		</delete>
+		<delete file="bin/gelint${exe}"/>
 	</target>
 
 	<target name="bootstrap1" depend="init">
