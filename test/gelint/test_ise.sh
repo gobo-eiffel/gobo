@@ -9,7 +9,7 @@ export GOBO_UNIX
 for dir in `ls -d $GOBO_UNIX/test/gelint/*/*/test*` ; do
 	cd $dir
 	if [ -r Makefile ]; then
-		make -s se
+		make -s ise
 	fi
 	cd $root_dir
 done
