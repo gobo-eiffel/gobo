@@ -103,7 +103,7 @@ feature -- AST factory
 	new_universe (a_clusters: ET_CLUSTERS): ET_UNIVERSE is
 			-- New class universe
 		do
-			!! Result.make (a_clusters, ast_factory, error_handler)
+			Result := ast_factory.new_universe (a_clusters, ast_factory, error_handler)
 		ensure
 			universe_not_void: Result /= Void
 		end
