@@ -1,0 +1,504 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20030119155927/www2.hursley.ibm.com/decimal/damodel.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - The Arithmetic Model</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.08 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>8 Jan 2003</TD></TR>
+  <TR>
+    <TD>[<A
+      href="dascope.html">previous</A> | <A
+      href="decarith.html">contents</A> | <A
+      href="daconvs.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=refmodel><FONT face=helvetica color=#006644>The Arithmetic
+Model</FONT></A></H1>This specification is based on a model of decimal
+arithmetic which is a formalization of the decimal system of numeration
+(Algorism) as further defined and constrained by the relevant standards (IEEE
+854 and ANSI X3-274).
+<P>There are three components to the model:
+<OL>
+  <LI><I>numbers</I> – which represent the values which can be manipulated by,
+  or be the results of, the core operations defined in this specification
+  <LI><I>operations</I> – the core operations (such as addition, multiplication,
+  <I>etc.</I>) which can be carried out on numbers
+  <LI><I>context</I> – which represents the user-selectable parameters and rules
+  which govern the results of arithmetic operations (for example, the precision
+  to be used). </LI></OL>
+<P>This specification defines these components in the abstract. It neither
+defines the way in which operations are expressed (which might vary depending on
+the computer language or other interface being used),<A name=backref.1><A
+href="damodel.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp; nor does it define the <I>concrete
+representation</I> (specific layout in storage, or in a processor's register,
+for example) of numbers or context.
+<P>The remainder of this section describes the abstract model for each
+component.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refnumber><FONT face=helvetica color=#006644>Abstract representation
+of numbers</FONT></A></H3><I>Numbers</I> represent the values which can be
+manipulated by, or be the results of, the core operations defined in this
+specification.
+<P>Numbers may be <I>finite numbers</I> (numbers whose value can be represented
+exactly) or they may be <I>special values</I> (infinities and other values which
+are not finite numbers).
+<H4><A name=reffinite><FONT face=helvetica color=#006644>Finite
+numbers</FONT></A></H4><I>Finite numbers</I> are defined by three integer
+parameters:
+<OL>
+  <LI><I>sign</I> – a value which must be either 0 or 1, where 1 indicates that
+  the number is negative or is the negative zero and 0 indicates that the number
+  is zero or positive.
+  <LI><I>coefficient</I> – an integer which may be zero or positive. <BR>In the
+  abstract, there is no upper limit on the maximum size of the
+  <I>coefficient</I>. In practice, an implementation may need to define a
+  specific upper limit (for example, the length of the maximum coefficient
+  supported by the concrete representation). This limit must be expressed as an
+  integral number of decimal digits.<A name=backref.2><A
+  href="damodel.html#footnote.2"><FONT
+  size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+  <LI><I>exponent</I> – a signed integer which indicates the power of ten by
+  which the <I>coefficient</I> is multiplied. <BR>In the abstract, there is no
+  upper limit on the absolute value of the <I>exponent</I>. In practice there
+  may be some upper limit, E<SUB>limit</SUB>, on the absolute value of the
+  <I>exponent</I>. It is recommended that this limit be expressed as an integral
+  number of decimal digits or be one of the numbers 1, 5, or 25, multiplied by
+  an positive integral power of ten and optionally reduced by one (for example,
+  49 or 50). <BR>If the coefficient has a maximum length then it is required<A
+  name=backref.3><A
+  href="damodel.html#footnote.3"><FONT
+  size=3><SUP>[3]</SUP></FONT></A></A>&nbsp; that E<SUB>limit</SUB> be greater
+  than 5 × <TT>mlength</TT>, where <TT>mlength</TT> is the maximum length of the
+  <I>coefficient</I> in decimal digits. It is recommended that E<SUB>limit</SUB>
+  be greater than 10 × <TT>mlength</TT>. <BR>The <I>adjusted exponent</I> is the
+  value of the exponent of a number when that number is expressed as though in
+  scientific notation with one digit (non-zero unless the coefficient is 0)
+  before any decimal point. This is given by the value of the
+  <I>exponent</I>+(<TT>clength</TT>–1), where <TT>clength</TT> is the length of
+  the <I>coefficient</I> in decimal digits. <BR>When a limit to the
+  <I>exponent</I> applies, it must result in a balanced range of positive or
+  negative numbers,<A name=backref.4><A
+  href="damodel.html#footnote.4"><FONT
+  size=3><SUP>[4]</SUP></FONT></A></A>&nbsp; taking into account the magnitude
+  of the <I>coefficient</I>. To achieve this balanced range, the minimum and
+  maximum values of the <I>adjusted exponent</I> (E<SUB>min</SUB> and
+  E<SUB>max</SUB> respectively) must have the same magnitude. E<SUB>max</SUB>
+  will always equal E<SUB>limit</SUB> (the largest value of the exponent) and
+  E<SUB>min</SUB> will always equal –E<SUB>max</SUB>. <BR>Therefore, if the
+  length of the <I>coefficient</I> is <TT>clength</TT> digits, the
+  <I>exponent</I> may take any of the values
+  –E<SUB>limit</SUB>–(<TT>clength</TT>–1) through
+  E<SUB>limit</SUB>–(<TT>clength</TT>–1). <BR>For example, if the
+  <I>coefficient</I> had the value 123456789 (9 digits) and the <I>exponent</I>
+  had an E<SUB>limit</SUB> of 999 (3 digits), then the exponent could range from
+  –1007 through +991. This would allow positive values of the number to range
+  from 1.23456789E–999 through 1.23456789E+999. </LI></OL><I></I>The numerical
+<I>value</I> of a finite number is given by: (–1)<SUP><I>sign</I></SUP> ×
+<I>coefficient</I> × 10<SUP><I>exponent</I></SUP>
+<P><B>Notes:</B>
+<OL>
+  <LI>Many concrete representations for finite numbers have been used
+  successfully. Typically, the <I>coefficient</I> is represented in some form of
+  binary coded or packed decimal, or is encoded using a base which is a higher
+  power of ten. It may also be expressed as a binary integer. The
+  <I>exponent</I> is typically represented by a twos complement or biased binary
+  integer. Some possible concrete representations are described in detail
+  at:<TT> <A
+  href="deccode.html">http://www2.hursley.ibm.com/decimal/deccode.html</A>
+  </TT>
+  <LI>This abstract definition deliberately allows for multiple representations
+  of values which are numerically equal but are visually distinct (such as 1 and
+  1.00). However, there is a one-to-one mapping between the abstract
+  representation and the result of the primary conversion to string using <A
+  href="daconvs.html#reftostr"><B>to-scientific-string</B></A>
+  on that abstract representation. In other words, if one number has a different
+  abstract representation to another, then the primary string conversion will
+  also be different. <BR>No such constraint applies to the concrete
+  representation (that is, there may be multiple concrete representations of a
+  single abstract representation).
+  <LI>A number with a <I>coefficient</I> of 0 is permitted to have a non-zero
+  <I>sign</I>. This <I>negative zero</I> is accepted as an operand for all
+  operations (see IEEE 854 §3.1). </LI></OL>
+<H4><FONT face=helvetica color=#006644>Special values</FONT></H4>In addition to
+the <I>finite numbers</I>, numbers must also be able to represent one of three
+named <I>special values</I>:
+<OL>
+  <LI><I>infinity</I> – a value representing a number whose magnitude is
+  infinitely large (<FONT face=Symbol>¥</FONT>, see IEEE 854 §6.1)
+  <LI><I>quiet NaN</I> – a value representing undefined results (‘Not a Number’)
+  which does not cause an Invalid operation condition. IEEE 854 recommends that
+  additional diagnostic information be associated with quiet NaNs (see IEEE 854
+  §6.2)
+  <LI><I>signaling NaN</I> – a value representing undefined results (‘Not a
+  Number’) which will cause an Invalid operation condition if used in any
+  operation defined in this specification (see IEEE 854 §6.2).
+</LI></OL><I></I>When a number has one of these special values, its
+<I>coefficient</I> and <I>exponent</I> are undefined.<A name=backref.5><A
+href="damodel.html#footnote.5"><FONT
+size=3><SUP>[5]</SUP></FONT></A></A>&nbsp; The <I>sign</I>, however, is
+significant (that is, it is possible to have both positive and negative
+infinity, and the <I>sign</I> of a NaN is always 0).
+<H4><A name=refsubnorm><FONT face=helvetica color=#006644>Subnormal numbers and
+Underflow</FONT></A></H4>Numbers whose adjusted exponents are less than
+E<SUB>min</SUB> are called <I>subnormal</I> numbers.<A name=backref.6><A
+href="damodel.html#footnote.6"><FONT
+size=3><SUP>[6]</SUP></FONT></A></A>&nbsp; These subnormal numbers are accepted
+as operands for all operations, and may result from any operation. If a result
+is subnormal, before any rounding, then the Subnormal condition is raised.
+<P>For a subnormal result, the minimum value of the exponent becomes
+–E<SUB>limit</SUB>–(<I>precision</I>–1), called E<SUB>tiny</SUB>, where
+<I>precision</I> is the working precision, as described <A
+href="damodel.html#precision">below</A>. The
+result will be rounded, if necessary, to ensure that the exponent is no smaller
+than E<SUB>tiny</SUB>. If, during this rounding, the result becomes inexact,
+then the Underflow condition is raised. A subnormal result does not necessarily
+raise Underflow, therefore, but is always indicated by the Subnormal condition
+(even if, after rounding, its value is 0).
+<P>When a number underflows to zero during a calculation, its <I>exponent</I>
+will be E<SUB>tiny</SUB>. The maximum value of the <I>exponent</I> is
+unaffected.
+<P>Note that the minimum value of the exponent for subnormal numbers is the same
+as the minimum value of exponent which can arise during operations which do not
+result in subnormal numbers, which occurs in the case where <TT>clength</TT> =
+<I>precision</I>.
+<H4><FONT face=helvetica color=#006644>Notation</FONT></H4>In later sections of
+this document, a specific finite number is described by its abstract
+representation, using the triad notation: [<I>sign</I>, <I>coefficient</I>,
+<I>exponent</I>], where each value is an integer. Only the <I>exponent</I> can
+be negative.
+<P>Similarly, duples are used to indicate the special values. These have the
+form [<I>sign</I>, <I>special-value</I>], where the <I>sign</I> is indicated as
+before, and the <I>special-value</I> is one of <TT>inf</TT>, <TT>qNaN</TT>, or
+<TT>sNaN</TT>, representing <I>infinity</I>, <I>quiet NaN</I>, or <I>signaling
+NaN</I>, respectively.
+<P>So, for example, the triad <TT>[0,2708,-2]</TT> represents the number
+<TT>27.08</TT>, the triad <TT>[1,1953,0]</TT> represents the integer
+<TT>-1953</TT>, the duple <TT>[1,inf]</TT> represents the number –<FONT
+face=Symbol>¥</FONT>, and the duple <TT>[0,qNaN]</TT> represents a quiet NaN.
+<P>
+<HR align=left width="20%">
+
+<H3><FONT face=helvetica color=#006644>Abstract representation of
+operations</FONT></H3>The core operations which must be provided by an
+implementation are described in later sections which define <A
+href="daconvs.html#refconvs">Conversions</A>
+and <A href="daops.html#refops">Arithmetic
+Operations</A>. Each operation is given an abstract name (for example, ‘add’),
+and its semantics are strictly defined. However, the implementation of each
+operation and the manner by which each is effected is not defined by this
+specification.
+<P>For example, in a object-oriented language, the addition operation might be
+effected by a method called <TT>add</TT>, whereas in a calculator application it
+might be effected by clicking on a button icon. In other uses, an infix
+‘<TT>+</TT>’ symbol might be used to indicate addition. And in all cases, the
+operation might be carried out in software, hardware, or some combination of
+these.
+<P>Similarly, operations which are distinct in the specification need not be
+mapped one-to-one to distinct operations in the implementation – it is only
+necessary that all the core operations are available. For example, conversions
+to a string could be handled by a single method, with variations determined from
+context or additional arguments.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refcontext><FONT face=helvetica color=#006644>Abstract
+representation of context</FONT></A></H3>The <I>context</I> represents the
+user-selectable parameters and rules which govern the results of arithmetic
+operations (for example, the precision to be used). It is defined by the
+following parameters:
+<DL>
+  <P>
+  <DT><A name=precision><I>precision</I></A>
+  <DD>
+  <P>An integer which must be positive (greater than 0). This sets the maximum
+  number of significant digits that can result from an arithmetic operation.
+  <P>In the abstract, there is no upper bound on the precision (although a
+  specific precision must always be provided). In practice there may need to be
+  some upper limit to it (for example, the length of the maximum
+  <I>coefficient</I> supported by a concrete representation). This limit must be
+  expressed as an integral number of decimal digits.
+  <P>Similarly, there may be a lower bound on the setting on precision, which
+  may be the same as the upper bound (for example, if it is implied by the
+  length of the maximum <I>coefficient</I> supported by a concrete
+  representation). This limit must also be expressed as an integral number of
+  decimal digits.
+  <P>An implementation must designate a precision to be known as <I>single
+  precision</I> (see IEEE 854 §3.2.1). This must be greater than 5 (see IEEE 854
+  §3.1) and within the range of implemented precisions. It is recommended that
+  it be at least 9.<A name=backref.7><A
+  href="damodel.html#footnote.7"><FONT
+  size=3><SUP>[7]</SUP></FONT></A></A>&nbsp;
+  <P>An implementation may also designate a precision to be known as <I>double
+  precision</I>, which must be within the range of implemented precisions (see
+  IEEE 854 §3.2.2). If a double precision is designated, then the following
+  constraints apply:
+  <UL>
+    <LI>If the value of <I>single precision</I> is given by P<SUB>s</SUB>, and
+    the value of <I>double precision</I> is given by P<SUB>d</SUB>, then
+    P<SUB>d</SUB> must be greater than or equal to 2 × P<SUB>s</SUB> + 1 (see
+    IEEE 854 §3.2.2).
+    <LI>The maximum <I>exponent</I> (E<SUB>limit</SUB>) at the designated single
+    precision must be at least 1 less than the E<SUB>limit</SUB> at double
+    precision, divided by 8 (see IEEE 854 §3.2.2).<A name=backref.8><A
+    href="damodel.html#footnote.8"><FONT
+    size=3><SUP>[8]</SUP></FONT></A></A>&nbsp; </LI></UL><I></I>If these
+  constraints cannot be implemented (for example, an implementation may support
+  very large exponents and not be able to have different exponent limits for
+  differing precisions), then a double precision must not be designated.
+  <P></P>
+  <DT><I>rounding</I>
+  <DD>
+  <P>A named value which indicates the algorithm to be used when rounding is
+  necessary. Rounding is applied when a result <I>coefficient</I> has more
+  significant digits than the value of <I>precision</I>; in this case the result
+  coefficient is shortened to <I>precision</I> digits and may then be
+  incremented by one (which may require a further shortening), depending on the
+  rounding algorithm selected and the remaining digits of the original
+  <I>coefficient</I>. The <I>exponent</I> is adjusted to compensate for any
+  shortening.
+  <P>The following rounding algorithms are defined and must be supported:<A
+  name=backref.9><A
+  href="damodel.html#footnote.9"><FONT
+  size=3><SUP>[9]</SUP></FONT></A></A>&nbsp;
+  <DL>
+    <P>
+    <DT><I>round-down</I>
+    <DD>
+    <P>(Truncate.) The discarded digits are ignored; the result is unchanged.
+    <P></P>
+    <DT><I>round-half-up</I>
+    <DD>
+    <P>If the discarded digits represent greater than or equal to half (0.5) of
+    the value of a one in the next left position then the result should be
+    incremented by 1 (rounded up). Otherwise the discarded digits are ignored.
+    <P></P>
+    <DT><I>round-half-even</I>
+    <DD>
+    <P>If the discarded digits represent greater than half (0.5) the value of a
+    one in the next left position then the result should be incremented by 1
+    (rounded up). If they represent less than half, then the result is not
+    adjusted (that is, the discarded digits are ignored).
+    <P>Otherwise (they represent exactly half) the result is unaltered if its
+    rightmost digit is even, or incremented by 1 (rounded up) if its rightmost
+    digit is odd (to make an even digit).
+    <P></P>
+    <DT><I>round-ceiling</I>
+    <DD>
+    <P>(Round toward <TT>+</TT><FONT face=Symbol>¥</FONT>.) If all of the
+    discarded digits are zero or if the <I>sign</I> is 1 the result is
+    unchanged. Otherwise, the result should be incremented by 1 (rounded up). If
+    this would cause overflow then the result will be <TT>[0,inf]</TT>.
+    <P></P>
+    <DT><I>round-floor</I>
+    <DD>
+    <P>(Round toward –<FONT face=Symbol>¥</FONT>.) If all of the discarded
+    digits are zero or if the <I>sign</I> is 0 the result is unchanged.
+    Otherwise, the sign is 1 and the coefficient should be incremented by 1. If
+    this would cause overflow then the result will be <TT>[1,inf]</TT>.
+  </P></DD></DL><I></I>When a result is rounded, the <I>coefficient</I> may
+  become longer than the current <I>precision</I>. In this case the least
+  significant digit of the coefficient (it will be a zero) is removed (reducing
+  the precision by one), and the <I>exponent</I> is incremented by one. This in
+  turn may give rise to an <A
+  href="daexcep.html#refexcep">overflow
+  condition</A>.
+  <P></P>
+  <DT><I>flags and trap-enablers</I>
+  <DD>
+  <P>The <A
+  href="daexcep.html#refexcep">exceptional
+  conditions</A> are grouped into <I>signals</I>, which can be controlled
+  individually. The context contains a <I>flag</I> (which is either 0 or 1) and
+  a <I>trap-enabler</I> (which also is either 0 or 1) for each signal.
+  <P>For each of the signals, the corresponding flag is set to 1 when the signal
+  occurs. It is only reset to 0 by explicit user action.
+  <P>For each of the signals, the corresponding trap-enabler indicates which
+  action is to be taken when the signal occurs (see IEEE 854 §7). If 0, a
+  defined result is supplied, and execution continues (for example, an overflow
+  is perhaps converted to a positive or negative infinity). If 1, then execution
+  of the operation is ended or paused and control passes to a ‘trap handler’,
+  which will have access to the defined result.
+  <P>The signals are:
+  <DL>
+    <P>
+    <DT><I>division-by-zero</I>
+    <DD>
+    <P>raised when a non-zero dividend is divided by zero
+    <P></P>
+    <DT><I>inexact</I>
+    <DD>
+    <P>raised when a result is not exact (one or more non-zero coefficient
+    digits were discarded during rounding)
+    <P></P>
+    <DT><I>invalid-operation</I>
+    <DD>
+    <P>raised when a result would be undefined or impossible
+    <P>This signal cannot occur, and is therefore optional, in an implementation
+    where the lower bound for <I>precision</I> is equal to the maximum length of
+    the <I>coefficient</I>.
+    <P></P>
+    <DT><I>overflow</I>
+    <DD>
+    <P>raised when the exponent of a result is too large to be represented
+    <P></P>
+    <DT><I>rounded</I>
+    <DD>
+    <P>raised when a result has been rounded (that is, some zero or non-zero
+    coefficient digits were discarded)
+    <P></P>
+    <DT><I>subnormal</I>
+    <DD>
+    <P>raised when a result is subnormal (its adjusted exponent is less than
+    E<SUB>min</SUB>), before any rounding
+    <P></P>
+    <DT><I>underflow</I>
+    <DD>
+    <P>raised when a result is both subnormal and inexact. </P></DD></DL>
+  <P>This specification does not define the means by which flags and traps are
+  reset or altered, respectively, or the means by which traps are effected.<A
+  name=backref.10><A
+  href="damodel.html#footnote.10"><FONT
+  size=3><SUP>[10]</SUP></FONT></A></A>&nbsp; </P></DD></DL>
+<P><B>Notes:</B>
+<OL>
+  <LI>The setting of <I>precision</I> may be used to reduce a result from double
+  to single precision, using the <B>plus</B> operation. This meets the
+  requirements of IEEE 854 § 4.3.
+  <LI>IEEE 854 was designed under the assumption that some small number of known
+  precisions would be available to users. This specification extends this
+  concept to allow (but not require) variable precisions, as specified by ANSI
+  X3.274. This generalization allows improved interoperation between software
+  arbitrary-precision decimal packages and hardware implementations (which are
+  expected to have relatively low maximum precision limits, typically just tens
+  of digits).
+  <LI><I>precision</I> can be set to positive values lower than nine. Small
+  values, however, should be used with care – the loss of precision and rounding
+  thus requested will affect all computations affected by the context, including
+  comparisons. To conform to IEEE 854, this value should not be set less than 6.
+
+  <LI>For completeness, it is recommended that implementations also offer two
+  further rounding modes: <I>round-half-down</I> (round to nearest, where a 0.5
+  case is rounded down) and <I>round-up</I> (round away from zero).
+  <LI>The concrete representation of <I>rounding</I> is often a series of
+  integer constants, or an enumeration, held in an object or control register.
+  <LI>It has been proposed that each exceptional condition should have its own,
+  distinct, signal and trap-enabler. This specification may change to this
+  approach. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refcontext><FONT face=helvetica color=#006644>Default
+contexts</FONT></A></H3>This specification defines two <I>default contexts</I>,
+which define suitable settings for basic arithmetic and for the extended
+arithmetic defined by IEEE 854. It is recommended that the default contexts be
+easily selectable by the user.
+<H4><FONT face=helvetica color=#006644>Basic default context</FONT></H4>In the
+<I>basic default context</I>, the parameters are set as follows:
+<UL>
+  <LI><I>flags</I> – all set to 0
+  <LI><I>trap-enablers</I> – <I>inexact</I>, <I>rounded</I>, and
+  <I>subnormal</I> are set to 0; all others are set to 1 (that is, the other
+  conditions are treated as errors)
+  <LI><I>precision</I> – is set to 9
+  <LI><I>rounding</I> – is set to <I>round-half-up</I> </LI></UL>
+<H4><FONT face=helvetica color=#006644>Extended default context</FONT></H4>In
+the <I>extended default context</I>, the parameters are set as follows:
+<UL>
+  <LI><I>flags</I> – all set to 0
+  <LI><I>trap-enablers</I> – all set to 0 (IEEE 854 §7)
+  <LI><I>precision</I> – is set to the designated <I>single precision</I>
+  <LI><I>rounding</I> – is set to <I>round-half-even</I> (IEEE 854 §4.1)
+</LI></UL>
+<P>It is recommended that if a <I>double precision</I> is designated then a
+third <I>extended double default context</I> be provided, with the same settings
+as the extended default context except that the <I>precision</I> is set to the
+double precision.
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="damodel.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>Indeed, some variations of operations could be selected
+      by using context settings outside the scope of this specification.
+    </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="damodel.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>That is, the maximum value of the <I>coefficient</I> will
+      be an integral power of ten, less one – for example, 99999999999999999999.
+      </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="damodel.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2>See IEEE 854 §3.1. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="damodel.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>This rule, a requirement for both ANSI X3.274 and IEEE
+      854, constrains the number of values which would overflow or underflow
+      when inverted (divided into 1). </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.5><A
+      href="damodel.html#backref.5">[5]</A></A></FONT></TD>
+    <TD><FONT size=2>Typically, in a concrete representation, certain
+      out-of-range values of the exponent are used to indicate the special
+      values, and the coefficient is used to carry additional diagnostic
+      information for quiet NaNs. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.6><A
+      href="damodel.html#backref.6">[6]</A></A></FONT></TD>
+    <TD><FONT size=2>IEEE 854 defines <I>subnormal</I> numbers as numbers
+      whose absolute value is non-zero and is closer to zero than ten to the
+      power of E<SUB>min</SUB>. This definition includes zeros with tiny
+      exponents. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.7><A
+      href="damodel.html#backref.7">[7]</A></A></FONT></TD>
+    <TD><FONT size=2>This is the ‘narrowest basic precision’ described in IEEE
+      854 §3.2.1. Strictly speaking, <I>single precision</I> should be the
+      narrowest precision supported; however it is assumed that when precision
+      is fully variable the intent of IEEE 854 is that the designation applies
+      to the narrowest <I>default</I> precision – the programmer is permitted to
+      specify a narrower precision explicitly. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.8><A
+      href="damodel.html#backref.8">[8]</A></A></FONT></TD>
+    <TD><FONT size=2>This constraint is very slightly tighter than that
+      defined by IEEE 854, which specifies that E<SUB>limit</SUB> for double be
+      greater than or equal to 8 × E<SUB>limit</SUB> for double, plus 7. There
+      is a preference for human-oriented limits, so it is suggested that the
+      E<SUB>limit</SUB> for single be one tenth of, or one digit shorter than,
+      the E<SUB>limit</SUB> for double. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.9><A
+      href="damodel.html#backref.9">[9]</A></A></FONT></TD>
+    <TD><FONT size=2>The term ‘round to nearest’ is not used because it is
+      ambiguous. <I>round-half-up</I> is the usual round-to-nearest algorithm
+      used in European countries, in international financial dealings, and in
+      the USA for tax calculations. <I>round-half-even</I> is often used for
+      other applications in the USA, where it is usually called ‘round to
+      nearest’ and is sometimes called ‘banker's rounding’. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.10><A
+      href="damodel.html#backref.10">[10]</A></A></FONT></TD>
+    <TD><FONT size=2>IEEE 854 suggests that there be a mechanism allowing
+      traps to return a substitute result to the operation that raised the
+      exception, but this may not be possible in some environments (including
+      some object-oriented environments). </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="dascope.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="daconvs.html">next</A>]
+ </BODY></HTML>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20030119160329/www2.hursley.ibm.com/decimal/dascope.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Scope</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.08 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>8 Jan 2003</TD></TR>
+  <TR>
+    <TD>[<A
+      href="daintro.html">previous</A> | <A
+      href="decarith.html">contents</A> | <A
+      href="damodel.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=refscope><FONT face=helvetica color=#006644>Scope</FONT></A></H1>
+<P>
+<HR align=left width="20%">
+
+<H3><FONT face=helvetica color=#006644>Objectives</FONT></H3>This document
+defines a general purpose decimal arithmetic. A correct implementation of this
+specification will conform to the decimal arithmetic defined in ANSI/IEEE
+standard 854-1987,<A name=backref.1><A
+href="dascope.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp; except for some minor <A
+href="dascope.html#restrict">restrictions</A>,
+and will also provide unrounded decimal arithmetic<A name=backref.2><A
+href="dascope.html#footnote.2"><FONT
+size=3><SUP>[2]</SUP></FONT></A></A>&nbsp; and integer arithmetic as proper
+subsets.
+<P>
+<HR align=left width="20%">
+
+<H3><FONT face=helvetica color=#006644>Inclusions</FONT></H3>This specification
+defines the following:
+<UL>
+  <LI>Constraints on the values of decimal numbers
+  <LI>Operations on decimal numbers, including
+  <UL>
+    <LI>Required conversions between string and internal representations of
+    numbers
+    <LI>Arithmetical operations on decimal numbers (addition, subtraction,
+    <I>etc.</I>) </LI></UL>
+  <LI>Context information which alters the results of operation, and default
+  contexts.
+  <LI>Exceptional conditions, such as overflow, underflow, undefined results,
+  and other exceptional situations which may occur during operations. </LI></UL>
+<P>
+<HR align=left width="20%">
+
+<H3><FONT face=helvetica color=#006644>Exclusions</FONT></H3>This specification
+does not define the following:
+<UL>
+  <LI>Concrete representations (storage format) of decimal numbers<A
+  name=backref.3><A
+  href="dascope.html#footnote.3"><FONT
+  size=3><SUP>[3]</SUP></FONT></A></A>&nbsp;
+  <LI>Concrete representations (storage format) of context information
+  <LI>The means by which operations are effected </LI></UL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=restrict><FONT face=helvetica
+color=#006644>Restrictions</FONT></A></H3>This specification deviates from the
+requirements of IEEE 854 in the following respects:
+<OL>
+  <LI>The remainder-near operator is restricted to those values where the
+  intermediate integer can be represented in the current precision.<A
+  name=backref.4><A
+  href="dascope.html#footnote.4"><FONT
+  size=3><SUP>[4]</SUP></FONT></A></A>&nbsp;
+  <LI>This specification does not require that values returned after overflow
+  and underflow change if the exception trap-enabler is set, and the criteria
+  for underflow similarly do not change if its trap-enabler is set (the
+  Subnormal condition has been added to allow the alternative underflow
+  condition to be detected).<A name=backref.5><A
+  href="dascope.html#footnote.5"><FONT
+  size=3><SUP>[5]</SUP></FONT></A></A>&nbsp;
+  <LI>The string representations of NaN values are <TT>"NaN"</TT> and
+  <TT>"sNaN"</TT>, instead of just <TT>"NaN"</TT> with an optional sign.<A
+  name=backref.6><A
+  href="dascope.html#footnote.6"><FONT
+  size=3><SUP>[6]</SUP></FONT></A></A>&nbsp; </LI></OL><I></I>Note that all other
+requirements of IEEE 854 (such as subnormal numbers and the negative zero) are
+included in this specification.
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="dascope.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>IEEE 854-1987 – <CITE>IEEE Standard for Radix-Independent
+      Floating-Point Arithmetic</CITE>, The Institute of Electrical and
+      Electronics Engineers, Inc., New York, 1987. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="dascope.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>Sometimes called ‘fixed-point’ decimal arithmetic.
+    </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="dascope.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2>Some proposed representations can be found in: <BR><TT><A
+      href="http://www2.hursley.ibm.com/decimal/deccode.pdf">http://www2.hursley.ibm.com/decimal/deccode.pdf</A>
+      </TT></FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="dascope.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>This is because the conventional implementation of this
+      operator would be unacceptably long-running for the range of numbers
+      allowed by this specification (with up to nine digits of exponent). For
+      restricted-range numbers, an implementation can easily be made to conform
+      to IEEE 854 in this respect. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.5><A
+      href="dascope.html#backref.5">[5]</A></A></FONT></TD>
+    <TD><FONT size=2>This follows the current proposals of the IEEE 754R
+      committee which is revising IEEE 754 and IEEE 854. Dependence on the
+      trap-enabler setting is difficult to make thread-safe, and also the IEEE
+      854 definition does not generalize to the power operator (the required
+      replacement value may itself overflow or underflow). An implementation may
+      provide the IEEE values, if feasible, to a trap handler via some separate
+      mechanism, but this is not required by this specification. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.6><A
+      href="dascope.html#backref.6">[6]</A></A></FONT></TD>
+    <TD><FONT size=2>This follows the current proposals of the IEEE 754R
+      committee which is revising IEEE 754 and IEEE 854.
+  </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="daintro.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="damodel.html">next</A>]
+ </BODY></HTML>

@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20020826000209/www2.hursley.ibm.com/decimal/dtnotes.html -->
+<HTML><HEAD><TITLE>Decimal Testcases - Notes</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2002.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><B>Decimal Testcases</B> <BR><EM>Copyright (c) IBM Corporation, 2002.
+      All rights reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>Draft of 5 Jul 2002</TD></TR>
+  <TR>
+    <TD>[<A
+      href="dtfile.html">previous</A> | <A
+      href="dectest.html">contents</A> | <A
+      href="dtchange.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=notes><FONT color=#006644>Notes</FONT></A></H1>This section
+describes the testcases included in the testcase package (<TT>decTest.zip</TT>),
+and their history.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=groups><FONT color=#006644>Testcase groups and
+coverage</FONT></A></H3>The following groups cover the operations of the
+specification.
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1>
+        <TBODY>
+        <TR vAlign=top>
+          <TD width="23%"><B>Group</B> </TD>
+          <TD><B>Description</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>abs</TT> </TD>
+          <TD>Tests the <TT>abs</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>add</TT> </TD>
+          <TD>Tests the <TT>add</TT> operation, including both positive and
+            negative numbers for the operands. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>base</TT> </TD>
+          <TD>Tests the base string conversions (<TT>toSci</TT> and
+            <TT>toEng</TT> operations), including strings which are not valid
+            numbers. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>compare</TT> </TD>
+          <TD>Tests the <TT>compare</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>divide</TT> </TD>
+          <TD>Tests the <TT>divide</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>divideint</TT> </TD>
+          <TD>Tests the <TT>divideint</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>integer</TT> </TD>
+          <TD>Tests the <TT>integer</TT> (round-to-integer) operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>max</TT> </TD>
+          <TD>Tests the <TT>max</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>min</TT> </TD>
+          <TD>Tests the <TT>min</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>minus</TT> </TD>
+          <TD>Tests the <TT>minus</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>multiply</TT> </TD>
+          <TD>Tests the <TT>multiply</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>remainder</TT> </TD>
+          <TD>Tests the <TT>remainder</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>remaindernear</TT> </TD>
+          <TD>Tests the <TT>remaindernear</TT> (IEEE remainder) operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>rescale</TT> </TD>
+          <TD>Tests the <TT>rescale</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>subtract</TT> </TD>
+          <TD>Tests the <TT>subtract</TT> operation. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>trim</TT> </TD>
+          <TD>Tests the <TT>trim</TT> operation.
+</TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>The following groups cover more general aspects of the base operations.
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="23%"><B>Group</B> </TD>
+          <TD><B>Description</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>inexact</TT> </TD>
+          <TD>Tests edge cases for the <TT>inexact</TT> and <TT>rounded</TT>
+            conditions, using a selection of operations. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>power</TT> </TD>
+          <TD>Tests the <TT>power</TT> operation <I>(currently under
+            review)</I>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>randoms</TT> </TD>
+          <TD>4000 randomly-generated tests, using the <TT>add</TT>,
+            <TT>compare</TT>, <TT>divide</TT>, <TT>divideint</TT>,<TT>
+            multiply</TT>, <TT>power</TT>, <TT>remainder</TT>, and
+            <TT>subtract</TT> base operations. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>rounding</TT> </TD>
+          <TD>Tests the different <I>rounding</I> modes. Each rounding mode is
+            tested for each of the major operations.
+  </TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>Two testcase groups are designed for testing the boundary conditions
+associated with the proposed concrete representations described in the
+<B>Standard Decimal Arithmetic Encoding</B> document,<A name=backref.1><A
+href="dtnotes.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp; and a further three include random
+tests for these representations and for boundary conditions around 32 digits:
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="23%"><B>Group</B> </TD>
+          <TD><B>Description</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>double</TT> </TD>
+          <TD>Boundary condition tests for the ‘double precision’ decimal data
+            type (33 digits, maximum exponent +9999). </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>randomBound32</TT> </TD>
+          <TD>2400 tests, as in the <TT>randoms</TT> group, with precisions 31
+            through 33 and maximum exponent +9999. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>randomDouble</TT> </TD>
+          <TD>4000 tests, as in the <TT>randoms</TT> group, for the ‘double
+            precision’ decimal data type (33 digits, maximum exponent +9999).
+</TD>
+        <TR vAlign=top></TD>
+          <TD><TT>randomSingle</TT> </TD>
+          <TD>4000 tests, as in the <TT>randoms</TT> group, for the ‘single
+            precision’ decimal data type (15 digits, maximum exponent +999). </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>single</TT> </TD>
+          <TD>Boundary condition tests for the ‘single precision’ decimal data
+            type (15 digits, maximum exponent +999).
+  </TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>All the above groups apear twice:
+<UL>
+  <LI>once with the name as shown above – in these groups the <I>extended</I>
+  directive is set to 1
+  <LI>once with the name as shown above with the suffix 0 – in these groups the
+  <I>extended</I> directive is set to 0. </LI></UL><I></I>This separation makes it
+easier to test the full or subset arithmetics separately.
+<P>The final testcase simply runs all the testcases described above:
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="23%"><B>Group</B> </TD>
+          <TD><B>Description</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>testall</TT> </TD>
+          <TD>Runs all the testcases described above (about 40,100 tests).
+        </TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>Coverage of these testcases is (of course) not exhaustive. Instead, the
+testcases assure the basic operations of the arithmetic and concentrate on
+‘difficult cases’; those tests where the result may not be immediately obvious,
+or where some implementation in the past has shown a problem.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=history><FONT color=#006644>Testcase history</FONT></A></H3>The
+tests in the testcase groups are derived from a number of sources, and are
+intended to cover the paths and edge cases found in:
+<UL>
+  <LI>Testcases and examples used by the X3 (now NCITS) J18 committee (1991+)
+  which developed the ANSI standard X3.274-1996.<A name=backref.2><A
+  href="dtnotes.html#footnote.2"><FONT
+  size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+  <LI>IBM VM/CMS S/370 Rexx implementation testcases (1981+)
+  <LI>IBM Vienna Laboratory Rexx compiler testcases (1988+)
+  <LI>NetRexx testcases (1996+)
+  <LI>DiagBigDecimal – the open source testcases for the
+  <TT>com.ibm.math.BigDecimal</TT> Java class (1997+)
+  <LI>New testcases, <I>e.g.</I>, for the typical concrete representations' edge
+  cases, for extended values and operations, and the random tests. </LI></UL>
+<P>The authoritative sources for how the underlying operations should work are:
+<UL>
+  <LI>for base decimal arithmetic: <B>ANSI X3.274-1996</B> (plus errata,
+  1997–2001)<A name=backref.3><A
+  href="dtnotes.html#footnote.3"><FONT
+  size=3><SUP>[3]</SUP></FONT></A></A>&nbsp;
+  <LI>for conversions, conditions, and rounding modes, and the precise
+  definition of result coefficients: the <B>Standard Decimal Arithmetic
+  Specification</B>.<A name=backref.4><A
+  href="dtnotes.html#footnote.4"><FONT
+  size=3><SUP>[4]</SUP></FONT></A></A>&nbsp;
+  <LI>for extended floating-point arithmetic, including subnormal and special
+  values (but excluding the deviations noted in the Standard Decimal Arithmetic
+  Specification): <B>ANSI/IEEE standard 854-1987</B>.<A name=backref.5><A
+  href="dtnotes.html#footnote.5"><FONT
+  size=3><SUP>[5]</SUP></FONT></A></A>&nbsp; </LI></UL>
+<P>Please send suggestions for improvements to the testcases to the author, Mike
+Cowlishaw (<TT>mfc@uk.ibm.com</TT>).
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="dtnotes.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>See <TT><A
+      href="deccode.html">http://www2.hursley.ibm.com/decimal/deccode.html</A>
+      </TT></FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="dtnotes.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2><CITE>American National Standard for Information
+      Technology – Programming Language REXX, X3.274-1996</CITE>, American
+      National Standards Institute, New York, 1996. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="dtnotes.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2><I>ibid.</I> </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="dtnotes.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>See <TT><A
+      href="decarith.html">http://www2.hursley.ibm.com/decimal/decarith.html</A>
+      </TT></FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.5><A
+      href="dtnotes.html#backref.5">[5]</A></A></FONT></TD>
+    <TD><FONT size=2>IEEE 854-1987 – <CITE>IEEE Standard for Radix-Independent
+      Floating-Point Arithmetic</CITE>, The Institute of Electrical and
+      Electronics Engineers, Inc., New York, 1987.
+</FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="dtfile.html">previous</A> | <A
+href="dectest.html">contents</A> | <A
+href="dtchange.html">next</A>]
+ </BODY></HTML>

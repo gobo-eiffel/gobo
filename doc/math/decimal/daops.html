@@ -1,0 +1,749 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0081)http://web.archive.org/web/20030119160355/www2.hursley.ibm.com/decimal/daops.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Arithmetic operations</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.08 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>8 Jan 2003</TD></TR>
+  <TR>
+    <TD>[<A
+      href="daconvs.html">previous</A> | <A
+      href="decarith.html">contents</A> | <A
+      href="daexcep.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=refops><FONT face=helvetica color=#006644>Arithmetic
+operations</FONT></A></H1>This section describes the arithmetic operations on
+numbers, including subnormal numbers, negative zeros, and special values (see
+also IEEE 854 §6).
+<H4><FONT face=helvetica color=#006644>Arithmetic operation
+notation</FONT></H4>In this section, a simplified notation is used to illustrate
+arithmetic operations: a number is shown as the string that would result from
+using the <B>to-scientific-string</B> operation. Single quotes are used to
+indicate that a number converted from an abstract representation is implied.
+<P>Also, operations are indicated as functions (taking either one or two
+operands), and the sequence <TT>==&gt;</TT> means ‘results in’. Hence: <PRE>  add('12', '7.00') ==&gt; '19.00'
+</PRE><I></I>means that the result of the <B>add</B> operation with the operands
+<TT>[0,12,0]</TT> and <TT>[0,700,-2]</TT> is <TT>[0,1900,-2]</TT>.
+<P>Finally, in this example and in the examples below, the context is assumed to
+have <I>precision</I> set to 9, <I>rounding</I> set to <I>round-half-up</I>, and
+all <I>trap-enablers</I> set to 0.
+<H4><FONT face=helvetica color=#006644>Arithmetic operation rules</FONT></H4>The
+following general rules apply to all arithmetic operations.
+<UL>
+  <LI>Every operation on finite numbers is carried out (as described under the
+  individual operations below) as though an exact mathematical result is
+  computed, using integer arithmetic on the coefficient where possible. <BR>If
+  the coefficient of the theoretical exact result has no more than
+  <I>precision</I> digits, then (unless there is an underflow or overflow) it is
+  used for the result without change. Otherwise (it has more than
+  <I>precision</I> digits) it is rounded (shortened) to exactly <I>precision</I>
+  digits, using the current <I>rounding</I> algorithm, and the <I>exponent</I>
+  is increased by the number of digits removed. <BR>If the value of the <A
+  href="damodel.html#reffinite"><I>adjusted
+  exponent</I></A> of the result is less than E<SUB>min</SUB>, then an
+  exceptional condition (subnormal) results. In this case, the calculated
+  coefficient and exponent form the result, unless the value of the
+  <I>exponent</I></A> is less than E<SUB>tiny</SUB>, in which case the
+  <I>exponent</I> will be set to E<SUB>tiny</SUB>, the coefficient will be
+  rounded (possibly to zero) to match the adjustment of the exponent, and the
+  <I>sign</I> is unchanged. If this rounding gives an inexact result then the <A
+  href="daexcep.html#refunderf">Underflow
+  Exceptional condition</A> is raised. <BR>If the value of the <I>adjusted
+  exponent</I> of the result is larger than <A
+  href="damodel.html#reffinite">E<SUB>max</SUB></A>,
+  then an exceptional condition (overflow) results. In this case, the result is
+  as defined under the <A
+  href="daexcep.html#refoverf">Overflow
+  Exceptional condition</A>, and may be infinite. It will have the same sign as
+  the theoretical result.<A name=backref.1><A
+  href="daops.html#footnote.1"><FONT
+  size=3><SUP>[1]</SUP></FONT></A></A>&nbsp;
+  <LI>Arithmetic using the special value <I>infinity</I> follows the usual
+  rules, where <TT>[1,inf]</TT> is less than every finite number and
+  <TT>[0,inf]</TT> is greater than every finite number. Under these rules, an
+  infinite result is always exact. Certain uses of infinity raise an <A
+  href="daexcep.html#refinvop">Invalid
+  operation condition</A>.
+  <LI><I>signaling NaNs</I> always raise the Invalid operation condition when
+  used as an operand to an arithmetic operation. The result in this case is
+  <TT>[0,qNaN]</TT>.
+  <LI>The result of any arithmetic operation which has an operand which is a NaN
+  (a <I>quiet NaN</I>, or <I>signaling NaNs</I> when the
+  <I>invalid-operation</I> trap enabler is 0) is <TT>[0,qNaN]</TT>. In this
+  case, the signs of the operands are ignored (the following rules do not
+  apply).
+  <LI>The <I>sign</I> of the result of a multiplication or division will be 1
+  only if the operands have different signs and neither is a NaN.
+  <LI>The <I>sign</I> of the result of an addition or subtraction will be 1 only
+  if the result is less than zero and neither operand is a NaN, except for the
+  special cases below where the result is a negative 0.
+  <LI>A result which is a negative zero (<TT>[1,0,<I>n</I>]</TT>) can occur
+  under the following conditions only:
+  <UL>
+    <LI>a result is rounded to zero, and the value before rounding had a
+    <I>sign</I> of 1.
+    <LI>the operation is an addition of <TT>[1,0,0]</TT> to <TT>[1,0,0]</TT>, or
+    a subtraction of <TT>[0,0,0]</TT> from <TT>[1,0,0]</TT>
+    <LI>the operation is an addition of operands with opposite signs (or is a
+    subtraction of operands with the same sign), the result has a
+    <I>coefficient</I> of 0, and the <I>rounding</I> is <I>round-floor</I>.
+    <LI>the operation is a multiplication or division and the result has a
+    <I>coefficient</I> of 0 and the signs of the operands are different.
+    <LI>the operation is <B>power</B>, the left-hand operand is
+    <TT>[1,0,0]</TT>, and the right-hand operand is odd (and positive).
+    <LI>the operation is <B>rescale</B> or <B>round-to-integer</B>, the
+    left-hand operand is negative, and the magnitude of the result is zero. In
+    the case of <B>rescale</B> the final exponent may also be non-zero.
+    <LI>the operation is <B>square-root</B> and the operand is <TT>[1,0,0]</TT>.
+    </LI></UL></LI></UL>
+<P><B>Examples involving special values:</B> <PRE>  add('Infinity', '1')        ==&gt;  'Infinity'
+  add('NaN', '1')             ==&gt;  'NaN'
+  subtract('1', 'Infinity')   ==&gt;  '-Infinity'
+  multiply('-1', 'Infinity')  ==&gt;  '-Infinity'
+  subtract('-0', '0')         ==&gt;  '-0'
+  multiply('-1', '0')         ==&gt;  '-0'
+  divide('-1', 'Infinity')    ==&gt;  '-0'
+  divide('1', '0')            ==&gt;  'Infinity'
+  divide('1', '-0')           ==&gt;  '-Infinity'
+  divide('-1', '0')           ==&gt;  '-Infinity'
+</PRE><B>Notes:</B>
+<OL>
+  <LI>Operands may have more than <I>precision</I> digits and are not rounded
+  before use.
+  <LI>Quiet NaNs are permitted to propagate diagnostic information pertaining to
+  the origin of the NaN (see IEEE 854 §6.2). Any such diagnostic information,
+  and the means by which it is propagated, is outside the scope of this
+  specification.
+  <LI>The rules above imply that the <B>compare</B> operation can return a quiet
+  NaN as a result, which indicates an ‘unordered’ comparison (see IEEE 854
+  §5.7).
+  <LI>An implementation may use the <B>compare</B> operation ‘under the covers’
+  to implement a closed set of comparison operations (greater than, equal,
+  <I>etc.</I>) if desired. In this case, the additional constraints detailed in
+  IEEE 854 §5.7 will apply; that is, a comparison (such a ‘greater than’) which
+  does not explicitly allow for an ‘unordered’ result yet would require an
+  unordered result will give rise to an <A
+  href="daexcep.html#refinvop">Invalid
+  operation condition</A>.
+  <LI>If a result is rounded, remains finite, and is not subnormal, its
+  coefficient will have exactly <I>precision</I> digits (except after the
+  <B>rescale</B>, <B>round-to-integer</B>, or <B>square-root</B> operations, as
+  described below). That is, only unrounded or subnormal coefficients can have
+  fewer than <I>precision</I> digits.
+  <LI>Trailing zeros are not removed after operations. That is, results are
+  unnormalized. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refabs><FONT face=helvetica
+color=#006644>abs</FONT></A></H3><B>abs</B> takes one operand. If the operand is
+negative, the result is the same as using the <A
+href="daops.html#refplusmin"><B>minus</B>
+operation</A> on the operand. Otherwise, the result is the same as using the <A
+href="daops.html#refplusmin"><B>plus</B>
+operation</A> on the operand.
+<P><B>Examples:</B> <PRE>  abs('2.1')    ==&gt;  '2.1'
+  abs('-100')   ==&gt;  '100'
+  abs('101.5')  ==&gt;  '101.5'
+  abs('-101.5') ==&gt;  '101.5'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refaddsub><FONT face=helvetica color=#006644>add and
+subtract</FONT></A></H3><B>add</B> and <B>subtract</B> both take two operands.
+If either operand is a <I>special value</I> then the general rules apply.
+<P>Otherwise, the operands are added (after inverting the <I>sign</I> used for
+the second operand if the operation is a subtraction), as follows:
+<UL>
+  <LI>The <I>coefficient</I> of the result is computed by adding or subtracting
+  the aligned coefficients of the two operands. The aligned coefficients are
+  computed by comparing the exponents of the operands:
+  <UL>
+    <LI>If they have the same exponent, the aligned coefficients are the same as
+    the original coefficients.
+    <LI>Otherwise the aligned coefficient of the number with the larger exponent
+    is its original coefficient multiplied by 10<SUP><TT>n</TT></SUP>, where
+    <TT>n</TT> is the absolute difference between the exponents, and the aligned
+    coefficient of the other operand is the same as its original coefficient.
+    </LI></UL><I></I>If the signs of the operands differ then the smaller aligned
+  coefficient is subtracted from the larger; otherwise they are added.
+  <LI>The <I>exponent</I> of the result is the minimum of the exponents of the
+  two operands.
+  <LI>The <I>sign</I> of the result is determined as follows:
+  <UL>
+    <LI>If the result is non-zero then the sign of the result is the sign of the
+    operand having the larger absolute value.
+    <LI>Otherwise, the <I>sign</I> of a zero result is 0 unless either both
+    operands were negative or the signs of the operands were different and the
+    <I>rounding</I> is <I>round-floor</I>. </LI></UL></LI></UL><I></I>The result is
+then rounded to to <I>precision</I> digits if necessary, counting from the most
+significant digit of the result.
+<P><B>Examples:</B> <PRE>  add('12', '7.00')        ==&gt;  '19.00'
+  add('1E+2', '1E+4')      ==&gt;  '1.01E+4'
+  subtract('1.3', '1.07')  ==&gt;  '0.23'
+  subtract('1.3', '1.30')  ==&gt;  '0.00'
+  subtract('1.3', '2.07')  ==&gt;  '-0.77'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refnumco><FONT face=helvetica
+color=#006644>compare</FONT></A></H3><B>compare</B> takes two operands and
+compares their values numerically. If either operand is a <I>special value</I>
+then the general rules apply.
+<P>Otherwise, the operands are compared as follows.
+<P>If the signs of the operands differ, a value representing each operand
+(<TT>'-1'</TT> if the operand is less than zero, <TT>'0'</TT> if the operand is
+zero or negative zero, or <TT>'1'</TT> if the operand is greater than zero) is
+used in place of that operand for the comparison instead of the actual
+operand.<A name=backref.2><A
+href="daops.html#footnote.2"><FONT
+size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+<P>The comparison is then effected by subtracting the second operand from the
+first and then returning a value according to the result of the subtraction:
+<TT>'-1'</TT> if the result is less than zero, <TT>'0'</TT> if the result is
+zero or negative zero, or <TT>'1'</TT> if the result is greater than zero.
+<P>An implementation may use this operation ‘under the covers’ to implement a
+closed set of comparison operations (greater than, equal, <I>etc.</I>) if
+desired. It need not, in this case, expose the <B>compare</B> operation itself.
+<P><B>Examples:</B> <PRE>  compare('2.1', '3')     ==&gt;  '-1'
+  compare('2.1', '2.1')   ==&gt;  '0'
+  compare('2.1', '2.10')  ==&gt;  '0'
+  compare('3', '2.1')     ==&gt;  '1'
+  compare('2.1', '-3')    ==&gt;  '1'
+  compare('-3', '2.1')    ==&gt;  '-1'
+</PRE>Note that the result of a compare is always exact and unrounded.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refdivide><FONT face=helvetica
+color=#006644>divide</FONT></A></H3><B>divide</B> takes two operands. If either
+operand is a <I>special value</I> then the general rules apply.
+<P>Otherwise, if the divisor is zero then either the Division undefined
+condition is raised (if the dividend is zero) and the result is NaN, or the
+Division by zero condition is raised and the result is an Infinity with a sign
+which is the <I>exclusive or</I> of the signs of the operands.
+<P>Otherwise, a ‘long division’ is effected, with the division being complete
+when either <I>precision</I> digits have been accumulated or the remainder from
+a subtraction in the division is zero, as follows:
+<UL>
+  <LI>An integer variable, <TT>adjust</TT>, is initialized to 0.
+  <LI>If the dividend is non-zero, the <I>coefficient</I> of the result is
+  computed as follows (using working copies of the operand coefficients, as
+  necessary):
+  <OL>
+    <LI>The operand coefficients are adjusted so that the coefficient of the
+    dividend is greater than or equal to the coefficient of the divisor and is
+    also less than ten times the coefficient of the divisor, thus:
+    <UL>
+      <LI>While the coefficient of the dividend is less than the coefficient of
+      the divisor it is multiplied by 10 and <TT>adjust</TT> is incremented by
+      1.
+      <LI>While the coefficient of the dividend is greater than or equal to ten
+      times the coefficient of the divisor the coefficient of the divisor is
+      multiplied by 10 and <TT>adjust</TT> is decremented by 1. </LI></UL>
+    <LI>The result coefficient is initialized to 0.
+    <LI>The following steps are then repeated until the division is complete:
+    <UL>
+      <LI>While the coefficient of the divisor is smaller than or equal to the
+      coefficient of the dividend the former is subtracted from the latter and
+      the coefficient of the result is incremented by 1.
+      <LI>If the coefficient of the dividend is now 0 and <TT>adjust</TT> is
+      greater than or equal to 0, or if the coefficient of the result has
+      <I>precision</I> digits, the division is complete. <BR>Otherwise, the
+      coefficients of the result and the dividend are multiplied by 10 and
+      <TT>adjust</TT> is incremented by 1. </LI></UL>
+    <LI>Any remainder (the final coefficient of the dividend) is recorded and
+    taken into account for rounding.<A name=backref.3><A
+    href="daops.html#footnote.3"><FONT
+    size=3><SUP>[3]</SUP></FONT></A></A>&nbsp; </LI></OL><I></I>Otherwise (the
+  dividend is zero), the the <I>coefficient</I> of the result is zero and
+  <TT>adjust</TT> is set as described in step 1 above, calculated as if the
+  dividend coefficient were 1. (It will then have a value which is one less than
+  the length of the coefficient of the divisor.)
+  <LI>The <I>exponent</I> of the result is computed by subtracting the sum of
+  the original exponent of the divisor and the value of <TT>adjust</TT> at the
+  end of the coefficient calculation from the original exponent of the dividend.
+
+  <LI>The <I>sign</I> of the result is the <I>exclusive or</I> of the signs of
+  the operands. </LI></UL><I></I>The result is then rounded to <I>precision</I>
+digits, if necessary, according to the <I>rounding</I> algorithm and taking into
+account the remainder from the division.
+<P><B>Examples:</B> <PRE>  divide('1', '3'  )      ==&gt;  '0.333333333'
+  divide('2', '3'  )      ==&gt;  '0.666666667'
+  divide('5', '2'  )      ==&gt;  '2.5'
+  divide('1', '10' )      ==&gt;  '0.1'
+  divide('12', '12')      ==&gt;  '1'
+  divide('8.00', '2')     ==&gt;  '4.00'
+  divide('2.400', '2.0')  ==&gt;  '1.20'
+  divide('1000', '100')   ==&gt;  '10'
+  divide('1000', '1')     ==&gt;  '1000'
+  divide('2.40E+6', '2')  ==&gt;  '1.20E+6'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refdivint><FONT face=helvetica
+color=#006644>divide-integer</FONT></A></H3><B>divide-integer</B> takes two
+operands; it divides two numbers and returns the integer part of the result. If
+either operand is a <I>special value</I> then the general rules apply.
+<P>Otherwise, the result returned is defined to be that which would result from
+repeatedly subtracting the divisor from the dividend while the dividend is
+larger than the divisor. During this subtraction, the absolute values of both
+the dividend and the divisor are used: the sign of the final result is the same
+as that which would result if normal division were used.
+<P>In other words, if the operands <I>x</I> and <I>y</I> were given to the
+<B>divide-integer</B> and <B>remainder</B> operations, resulting in <I>i</I> and
+<I>r</I> respectively, then the identity <PRE>  <I>x</I> = <I>i</I>×<I>y</I> + <I>r</I>
+</PRE><I></I>holds.
+<P>The <I>exponent</I> of the result must be 0. Hence, if the result cannot be
+expressed exactly within <I>precision</I> digits, the operation is in error and
+will fail – that is, the result cannot have more digits than the value of
+<I>precision</I> in effect for the operation, and will not be rounded. For
+example, <TT>divide-integer('10000000000', '3')</TT> requires ten digits to
+express the result exactly (<TT>'3333333333'</TT>) and would therefore fail if
+<I>precision</I> were in the range <TT>1</TT> through <TT>9</TT>.
+<P><B>Notes:</B>
+<OL>
+  <LI>The divide-integer operation may not give the same result as truncating
+  normal division (which could be affected by rounding).
+  <LI>The divide-integer and remainder operations are defined so that they may
+  be calculated as a by-product of the standard division operation (described
+  above). The division process is ended as soon as the integer result is
+  available; the residue of the dividend is the remainder.
+  <LI>The divide and divide-integer operation on the same operands give results
+  of the same numerical value if no error occurs and there is no residue from
+  the divide-integer operation. </LI></OL>
+<P><B>Examples:</B> <PRE>  divide-integer('2', '3')    ==&gt;  '0'
+  divide-integer('10', '3')   ==&gt;  '3'
+  divide-integer('1', '0.3')  ==&gt;  '3'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refmax><FONT face=helvetica
+color=#006644>max</FONT></A></H3><B>max</B> takes two operands, compares their
+values numerically, and returns the maximum. If either operand is a NaN then the
+general rules apply.
+<P>Otherwise, the operands are compared as as though by the <A
+href="daops.html#refnumco"><B>compare</B>
+operation</A>. If they are numerically equal then the left-hand operand is
+chosen as the result. Otherwise the maximum (closer to positive infinity) of the
+two operands is chosen as the result. In either case, the result is the same as
+using the <A
+href="daops.html#refplusmin"><B>plus</B>
+operation</A> on the chosen operand.
+<P><B>Examples:</B> <PRE>  max('3', '2')    ==&gt;  '3'
+  max('-10', '3')  ==&gt;  '3'
+  max('1.0', '1')  ==&gt;  '1.0'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refmin><FONT face=helvetica
+color=#006644>min</FONT></A></H3><B>min</B> takes two operands, compares their
+values numerically, and returns the minimum. If either operand is a NaN then the
+general rules apply.
+<P>Otherwise, the operands are compared as as though by the <A
+href="daops.html#refnumco"><B>compare</B>
+operation</A>. If they are numerically equal then the left-hand operand is
+chosen as the result. Otherwise the minimum (closer to negative infinity) of the
+two operands is chosen as the result. In either case, the result is the same as
+using the <A
+href="daops.html#refplusmin"><B>plus</B>
+operation</A> on the chosen operand.
+<P><B>Examples:</B> <PRE>  min('3', '2')    ==&gt;  '2'
+  min('-10', '3')  ==&gt;  '-10'
+  min('1.0', '1')  ==&gt;  '1.0'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refplusmin><FONT face=helvetica color=#006644>minus and
+plus</FONT></A></H3><B>minus</B> and <B>plus</B> both take one operand, and
+correspond to the prefix minus and plus operators in programming languages.
+<P>The operations are evaluated using the same rules as <B>add</B> and
+<B>subtract</B>; the operations <TT>plus(a)</TT> and <TT>minus(a)</TT> (where
+<TT>a</TT> and <TT>b</TT> refer to any numbers) are calculated as the operations
+<TT>add('0', a)</TT> and <TT>subtract('0', b)</TT> respectively, where the
+<TT>'0'</TT> has the same exponent as the operand.
+<P><B>Examples:</B> <PRE>  plus('1.3')    ==&gt;  '1.3'
+  plus('-1.3')   ==&gt;  '-1.3'
+  minus('1.3')   ==&gt;  '-1.3'
+  minus('-1.3')  ==&gt;  '1.3'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refmult><FONT face=helvetica
+color=#006644>multiply</FONT></A></H3><B>multiply</B> takes two operands. If
+either operand is a <I>special value</I> then the general rules apply.
+<P>Otherwise, the the operands are multiplied together (‘long multiplication’),
+resulting in a number which may be as long as the sum of the lengths of the two
+operands, as follows:
+<UL>
+  <LI>The <I>coefficient</I> of the result, before rounding, is computed by
+  multiplying together the coefficients of the operands.
+  <LI>The <I>exponent</I> of the result, before rounding, is the sum of the
+  exponents of the two operands.
+  <LI>The <I>sign</I> of the result is the <I>exclusive or</I> of the signs of
+  the operands. </LI></UL><I></I>The result is then rounded to to <I>precision</I>
+digits if necessary, counting from the most significant digit of the result.
+<P><B>Examples:</B> <PRE>  multiply('1.20', '3')         ==&gt;  '3.60'
+  multiply('7', '3')            ==&gt;  '21'
+  multiply('0.9', '0.8')        ==&gt;  '0.72'
+  multiply('0.9', '-0')         ==&gt;  '-0.0'
+  multiply('654321', '654321')  ==&gt;  '4.28135971E+11'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refnorm><FONT face=helvetica
+color=#006644>normalize</FONT></A></H3><B>normalize</B> takes one operand. It
+has the same semantics as the <B>plus</B> operation, except that the final
+result is reduced to its simplest form, with all trailing zeros removed.
+<P>That is, while the <I>coefficient</I> is non-zero and a multiple of ten the
+<I>coefficient</I> is divided by ten and the <I>exponent</I> is incremented by
+1. Alternatively, if the <I>coefficient</I> is zero the <I>exponent</I> is set
+to 0. In all cases the <I>sign</I> is unchanged.
+<P><B>Examples:</B> <PRE>  normalize('2.1')    ==&gt;  '2.1'
+  normalize('-2.0')   ==&gt;  '-2'
+  normalize('1.200')  ==&gt;  '1.2'
+  normalize('-120')   ==&gt;  '-1.2E+2'
+  normalize('120.00') ==&gt;  '1.2E+2'
+  normalize('0.00')   ==&gt;  '0'
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refremain><FONT face=helvetica
+color=#006644>remainder</FONT></A></H3><B>remainder</B> takes two operands; it
+returns the remainder from integer division. If either operand is a <I>special
+value</I> then the general rules apply.
+<P>Otherwise, the result is the residue of the dividend after the operation of
+calculating integer division as described for <B>divide-integer</B>, rounded to
+<I>precision</I> digits if necessary. The sign of the result, if non-zero, is
+the same as that of the original dividend.
+<P>This operation will fail under the same conditions as integer division (that
+is, if integer division on the same two operands would fail, the remainder
+cannot be calculated).
+<P><B>Examples:</B> <PRE>  remainder('2.1', '3')    ==&gt;  '2.1'
+  remainder('10', '3')     ==&gt;  '1'
+  remainder('-10', '3')    ==&gt;  '-1'
+  remainder('10.2', '1')   ==&gt;  '0.2'
+  remainder('10', '0.3')   ==&gt;  '0.1'
+  remainder('3.6', '1.3')  ==&gt;  '1.0'
+</PRE><B>Notes:</B>
+<OL>
+  <LI>The divide-integer and remainder operations are defined so that they may
+  be calculated as a by-product of the standard division operation (described
+  above). The division process is ended as soon as the integer result is
+  available; the residue of the dividend is the remainder.
+  <LI>The remainder operation differs from the remainder operation defined in
+  IEEE 854 (the <B>remainder-near</B> operator), in that it gives the same
+  results for numbers whose values are equal to integers as would the usual
+  remainder operator on integers. <BR>For example, the result of the operation
+  <TT>remainder('10', '6')</TT> as defined here is <TT>'4'</TT>, and
+  <TT>remainder('10.0', '6')</TT> would give <TT>'4.0'</TT> (as would
+  <TT>remainder('10', '6.0')</TT> or <TT>remainder('10.0', '6.0')</TT>). The
+  IEEE 854 remainder operation would, however, give the result <TT>'-2'</TT>
+  because its integer division step chooses the closest integer, not the one
+  nearer zero. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refremnear><FONT face=helvetica
+color=#006644>remainder-near</FONT></A></H3><B>remainder-near</B> takes two
+operands. If either operand is a <I>special value</I> then the general rules
+apply.
+<P>Otherwise, if the operands are given by <I>x</I> and <I>y</I>, then the
+result is defined to be <I>x</I> – <I>y</I>&nbsp;×&nbsp;<I>n</I>, where <I>n</I>
+is the integer nearest the exact value of <I>x</I>&nbsp;÷&nbsp;<I>y</I> (if two
+integers are equally near then the even one is chosen). If the result is equal
+to 0 then its sign will be the sign of <I>x</I>. (See IEEE §5.1.)
+<P>
+<P>This operation will fail under the same conditions as integer division (that
+is, if integer division on the same two operands would fail, the remainder
+cannot be calculated).<A name=backref.4><A
+href="daops.html#footnote.4"><FONT
+size=3><SUP>[4]</SUP></FONT></A></A>&nbsp;
+<P><B>Examples:</B> <PRE>  remainder-near('2.1', '3')    ==&gt;  '-0.9'
+  remainder-near('10', '6')     ==&gt;  '-2'
+  remainder-near('10', '3')     ==&gt;  '1'
+  remainder-near('-10', '3')    ==&gt;  '-1'
+  remainder-near('10.2', '1')   ==&gt;  '0.2'
+  remainder-near('10', '0.3')   ==&gt;  '0.1'
+  remainder-near('3.6', '1.3')  ==&gt;  '-0.3'
+</PRE><B>Notes:</B>
+<OL>
+  <LI>The <B>remainder-near</B> operation differs from the <B>remainder</B>
+  operation in that it does not give the same results for numbers whose values
+  are equal to integers as would the usual remainder operator on integers. For
+  example, the operation <TT>remainder('10', '6')</TT> gives the result
+  <TT>'4'</TT>, and <TT>remainder('10.0', '6')</TT> gives <TT>'4.0'</TT> (as
+  would the operations <TT>remainder('10', '6.0')</TT> or <TT>remainder('10.0',
+  '6.0')</TT>). However, <TT>remainder-near('10', '6')</TT> gives the result
+  <TT>'-2'</TT> because its integer division step chooses the closest integer,
+  not the one nearer zero.
+  <LI>The result of this operation is always exact.
+  <LI>This operation is sometimes known as ‘IEEE remainder’. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refnumresc><FONT face=helvetica
+color=#006644>rescale</FONT></A></H3><B>rescale</B> takes two operands. If
+either operand is a <I>special value</I> then the general rules apply (and
+infinities are unchanged), except that if the right-hand operand is infinite, an
+<A href="daexcep.html#refinvop">Invalid
+operation condition</A> is raised, and the result is <TT>[0,qNaN]</TT>.
+<P>Otherwise, it returns the number which is equal in value (except for any
+rounding) and sign to the first (left-hand) operand and which has an
+<I>exponent</I> set to the value of the second (right-hand) operand.
+<P>The right-hand operand must be a whole number whose integer part (after any
+exponent has been applied) is no more than E<SUB>max</SUB> and no less then
+E<SUB>tiny</SUB>, and whose fractional part (if any) is all zeros.
+<P>The <I>coefficient</I> of the result is derived from that of the left-hand
+operand. It may be rounded using the current <I>rounding</I> setting (if the
+<I>exponent</I> is being increased), multiplied by a positive power of ten (if
+the <I>exponent</I> is being decreased), or is unchanged (if the <I>exponent</I>
+is already equal to the right-hand operand).
+<P>Unlike other operations, if the length of the <I>coefficient</I> after the
+rescaling would be greater than <I>precision</I> then an Overflow condition
+results. This guarantees that, unless there is an error condition, the
+<I>exponent</I> of the result of a rescale is always the value specified by the
+right-hand operand.
+<P><B>Examples:</B> <PRE>  rescale('2.17', '-3')         ==&gt;  '2.170'
+  rescale('2.17', '-2')         ==&gt;  '2.17'
+  rescale('2.17', '-1')         ==&gt;  '2.2'
+  rescale('2.17', '0')          ==&gt;  '2'
+  rescale('2.17', '1')          ==&gt;  '0E+1'
+  rescale('2', 'Infinity')      ==&gt;  'NaN'
+  rescale('-0.1', '0')          ==&gt;  '-0'
+  rescale('-0', '5')            ==&gt;  '-0E+5'
+  rescale('+35236450.6', '-2')  ==&gt;  'Infinity'
+  rescale('-35236450.6', '-2')  ==&gt;  '-Infinity'
+  rescale('217',  '-1')         ==&gt;  '217.0'
+  rescale('217',  '0')          ==&gt;  '217'
+  rescale('217',  '1')          ==&gt;  '2.2E+2'
+  rescale('217',  '2')          ==&gt;  '2E+2'
+</PRE><I></I>Note that in the penultimate example the number is
+<TT>[0,22,1]</TT>, leading to the string in scientific notation as shown.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refrtoi><FONT face=helvetica
+color=#006644>round-to-integer</FONT></A></H3><B>round-to-integer</B> takes one
+operand. Its result is the same as using the <B>rescale</B> operation using the
+given operand as the left-hand-operand and 0 as the right-hand-operand.<A
+name=backref.5><A
+href="daops.html#footnote.5"><FONT
+size=3><SUP>[5]</SUP></FONT></A></A>&nbsp;
+<P><B>Examples:</B> <PRE>  round-to-integer('2.1')    ==&gt;  '2'
+  round-to-integer('100')    ==&gt;  '100'
+  round-to-integer('100.0')  ==&gt;  '100'
+  round-to-integer('101.5')  ==&gt;  '102'
+  round-to-integer('-101.5') ==&gt;  '-102'
+  round-to-integer('10E+5')  ==&gt;  '1000000'
+</PRE>
+<P><B>Note:</B> IEEE 854 refers to §4 for this operation, but then implies that
+<I>round-half-even</I> rounding should always be used (whereas §4 specifically
+allows directed rounding). It is assumed that it was not intended to exclude
+directed rounding.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refsqrt><FONT face=helvetica
+color=#006644>square-root</FONT></A></H3><B>square-root</B> takes one operand,
+If the operand is a <I>special value</I> then the general rules apply.
+<P>Otherwise, the operand must be greater than or equal to 0. If the value of
+the operand is –0 then the result is <TT>[1,0,0]</TT>.
+<P>Otherwise, the result is the exact square root of the operand, rounded
+according to the setting of <I>precision</I> using the <I>round-half-even</I>
+algorithm, and then normalized (as though by the <B>normalize</B> operation).
+<P><B>Examples:</B> <PRE>  square-root('0')     ==&gt; '0'
+  square-root('-0')    ==&gt; '-0'
+  square-root('0.39')  ==&gt; '0.6244998'
+  square-root('1.00')  ==&gt; '1'
+  square-root('7')     ==&gt; '2.64575131'
+  square-root('10')    ==&gt; '3.16227766'
+</PRE><B>Notes:</B>
+<OL>
+  <LI>The <I>rounding</I> setting in the context is not used; this means that
+  the algorithm described in <I>Properly Rounded Variable Precision Square
+  Root</I> by T. E. Hull and A. Abrham (ACM Transactions on Mathematical
+  Software, Vol 11 #3, pp229-237, ACM, September 1985) may be used for this
+  operation.
+  <LI>A subnormal result is only possible if the working precision is greater
+  than E<SUB>max</SUB>+1.
+  <LI>The result of this operation is normalized because an unnormalized result
+  with an integer coefficient cannot always be defined (<I>e.g.</I>,
+  <TT>square-root('4.0')</TT>); this normalization may cause the Rounded
+  condition. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refpower><FONT face=helvetica color=#006644>power</FONT></A></H3>
+<TABLE cellPadding=10 border=1>
+  <TBODY>
+  <TR>
+    <TD><FONT color=green><I>The following operation is under review. It will
+      probably either be removed or be changed to simply state that the the
+      result must be within one ulp. The definition in this section is included
+      as it defines the results for the</I> <TT>power</TT> <I>testcase group and
+      for the reference implementation.</I> </FONT></TD></TR></TBODY></TABLE>
+<P><B>power</B> takes two operands, and raises a number (the left-hand operand)
+to a whole number power (the right-hand operand). If either operand is a
+<I>special value</I> then the general rules apply, except as stated below.
+<P>Otherwise, the right-hand operand must be a whole number whose integer part
+(after any exponent has been applied) has no more than 9 digits and whose
+fractional part (if any) is all zeros before any rounding. The operand may be
+positive, negative, or zero; if negative, the absolute value of the power is
+used, and the left-hand operand is inverted (divided into 1) before use.
+<P>For calculating the power, the number (left-hand operand) is in theory
+multiplied by itself for the number of times expressed by the power.
+<P>In practice (see the note below for the reasons), the power is calculated by
+the process of left-to-right binary reduction. For <TT>power(x, n)</TT>:
+‘<TT>n</TT>’ is converted to binary, and a temporary accumulator is set to 1. If
+‘<TT>n</TT>’ has the value 0 then the initial calculation is complete. Otherwise
+each bit (starting at the first non-zero bit) is inspected from left to right.
+If the current bit is 1 then the accumulator is multiplied by ‘<TT>x</TT>’. If
+all bits have now been inspected then the initial calculation is complete,
+otherwise the accumulator is squared by multiplication and the next bit is
+inspected.
+<P>The multiplications and initial division are done under the normal arithmetic
+operation and rounding rules, using the context supplied for the operation,
+except that the multiplications (and the division, if needed) are carried out
+using an increased precision of <I>precision</I><TT>+elength+1</TT> digits.
+Here, <TT>elength</TT> is the length in decimal digits of the integer part
+(coefficient) of the whole number ‘<TT>n</TT>’ (<I>i.e.</I>, excluding any sign,
+decimal part, decimal point, or insignificant leading zeros.<A name=backref.6><A
+href="daops.html#footnote.6"><FONT
+size=3><SUP>[6]</SUP></FONT></A></A>&nbsp;
+<P>If the increased precision needed for the intermediate calculations exceeds
+the capabilities of the implementation then an <B>Invalid operation</B>
+condition is raised.
+<P>If, when raising to a negative power, an underflow occurs during the division
+into 1, the operation is not halted at that point but continues.<A
+name=backref.7><A
+href="daops.html#footnote.7"><FONT
+size=3><SUP>[7]</SUP></FONT></A></A>&nbsp;
+<P>In addition:
+<UL>
+  <LI>If both operands are zero, an <A
+  href="daexcep.html#refinvop">Invalid
+  operation condition</A> results.
+  <LI>If the right-hand operand is infinite, an <A
+  href="daexcep.html#refinvop">Invalid
+  operation condition</A> is raised, the result is <TT>[0,qNaN]</TT>, and the
+  following rules do not apply.
+  <LI>If the left-hand operand is infinite, the result will be infinite if the
+  right-hand side is positive, 1 if the right-hand side is zero, and zero if the
+  right-hand side is negative. The <I>sign</I> of the result will be 0 if the
+  right-hand-side is even (or zero), or will be the same as the <I>sign</I> of
+  the left-hand-side if the right-hand-side is odd.
+  <LI>If the operation overflows or underflows, the <I>sign</I> of the result
+  will be 0 if the right-hand-side is even, or will be the same as the
+  <I>sign</I> of the left-hand-side if the right-hand-side is odd. </LI></UL>
+<P><B>Examples:</B> <PRE>  power('2', '3')           ==&gt;  '8'
+  power('2', '-3')          ==&gt;  '0.125'
+  power('1.7', '8')         ==&gt;  '69.7575744'
+  power('Infinity', '-2')   ==&gt;  '0'
+  power('Infinity', '-1')   ==&gt;  '0'
+  power('Infinity', '0')    ==&gt;  '1'
+  power('Infinity', '1')    ==&gt;  'Infinity'
+  power('Infinity', '2')    ==&gt;  'Infinity'
+  power('-Infinity', '-2')  ==&gt;  '0'
+  power('-Infinity', '-1')  ==&gt;  '-0'
+  power('-Infinity', '0')   ==&gt;  '1'
+  power('-Infinity', '1')   ==&gt;  '-Infinity'
+  power('-Infinity', '2')   ==&gt;  'Infinity'
+  power('0', '0')           ==&gt;  'NaN'
+</PRE><B>Notes:</B>
+<OL>
+  <LI>The result of the power operator is negative if (and only if) the
+  left-hand operand is negative and the right-hand operand is odd.
+  <LI>A particular algorithm for calculating powers is described, since it is
+  efficient (though not optimal) and considerably reduces the number of actual
+  multiplications performed. It therefore gives better performance than the
+  simpler definition of repeated multiplication. Since results can occasionally
+  differ from those of repeated multiplication, the algorithm must be defined
+  here so that different implementations will give identical results for the
+  same operation on the same values. Other algorithms for this (and other)
+  operations may always be used, so long as they give identical results to those
+  described here.
+  <LI>Mathematical and transcendental functions are outside the scope of this
+  specification. However, implementations are encouraged to provide a power
+  operator which will accept a non-integral right-hand operand when the
+  left-hand operand is non-negative. In this case it is not required that the
+  more general function return identical results to the operation described
+  above. </LI></OL>
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="daops.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>In practice, it is only necessary to work with
+      intermediate results of up to twice the current precision. Some rounding
+      settings may require some inspection of possible remainders or additional
+      digits (for example, to determine whether a result is exactly 0.5 in the
+      next position), though their actual values would not be required. <BR>For
+      <I>round-half-up</I>, rounding can be effected by truncating the result to
+      <I>precision</I> (and adding the count of truncated digits to the
+      <I>exponent</I>). The first truncated digit is then inspected, and if it
+      has the value 5 through 9 the result is incremented by 1. This could cause
+      the result to again exceed <I>precision</I> digits, in which case it is
+      divided by 10 and the <I>exponent</I> is incremented by 1. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="daops.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>This rule removes the possibility of an arithmetic
+      overflow during a numeric comparison. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="daops.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2>In practice, only two bits need to be noted, indicating
+      whether the remainder was 0, or was exactly half of the final coefficient
+      of the divisor, or was in one of the two ranges above or below the
+      half-way point. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="daops.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>This is a deviation from IEEE 854, necessary to assure
+      realistic execution times when the operands have a wide range of
+      exponents. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.5><A
+      href="daops.html#backref.5">[5]</A></A></FONT></TD>
+    <TD><FONT size=2>This operation is defined in order to provide the Round
+      Floating-Point Number to Integral Value operator described in IEEE 854
+      §5.5. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.6><A
+      href="daops.html#backref.6">[6]</A></A></FONT></TD>
+    <TD><FONT size=2>The precision specified for the intermediate calculations
+      ensures that the final result will differ by at most 1, in the least
+      significant position, from the ‘true’ result (given that the operands are
+      expressed precisely under the current setting of <B>digits</B>). Half of
+      this maximum error comes from the intermediate calculation, and half from
+      the final rounding. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.7><A
+      href="daops.html#backref.7">[7]</A></A></FONT></TD>
+    <TD><FONT size=2>It can only be halted early if the result becomes zero.
+      </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="daconvs.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="daexcep.html">next</A>]
+ </BODY></HTML>

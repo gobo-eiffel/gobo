@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20030119160748/www2.hursley.ibm.com/decimal/daexcep.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Exceptional conditions</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.08 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>8 Jan 2003</TD></TR>
+  <TR>
+    <TD>[<A href="daops.html">previous</A>
+      | <A href="decarith.html">contents</A>
+      | <A href="dax3274.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=refexcep><FONT face=helvetica color=#006644>Exceptional
+conditions</FONT></A></H1>This section lists, in the abstract, the exceptional
+conditions that may arise during the operations defined in this specification.
+<P>For each condition, the corresponding <I>signal</I> in the <A
+href="damodel.html#refcontext"><I>context</I></A>
+is given, along with the defined result. The value of the trap-enabler for each
+signal in the context determines whether an operation is completed after the
+condition is detected or whether the condition is trapped and hence not
+necessarily completed (see IEEE 854 §8).
+<P>This specification does not define the manner in which exceptions are
+reported or handled. For example, in a object-oriented language, an Arithmetic
+Exception object might be signalled or thrown, whereas in a calculator
+application an error message or other indication might be displayed.
+<P>The following exceptional conditions can occur:
+<DL>
+  <P>
+  <DT><B>Conversion syntax</B>
+  <DD>
+  <P>This occurs and signals <I>invalid-operation</I> if an string is being
+  converted to a number and it does not conform to the <A
+  href="daconvs.html#refnumsyn">numeric
+  string syntax</A>. The result is <TT>[0,qNaN]</TT>.
+  <P></P>
+  <DT><B>Division by zero</B>
+  <DD>
+  <P>This occurs and signals <I>division-by-zero</I> if division by zero was
+  attempted (during a <B>divide-integer</B> or <B>divide</B> operation, or a
+  <B>power</B> operation with negative right-hand operand), and the dividend was
+  not zero.
+  <P>The result of the operation is <TT>[</TT><I>sign</I><TT>,inf]</TT>, where
+  <I>sign</I> is the sign of the dividend.
+  <P></P>
+  <DT><B>Division impossible</B>
+  <DD>
+  <P>This occurs and signals <I>invalid-operation</I> if the integer result of a
+  <B>divide-integer</B> or <B>remainder</B> operation had too many digits (would
+  be longer than <I>precision</I>). The result is <TT>[0,qNaN]</TT>.
+  <P></P>
+  <DT><B>Division undefined</B>
+  <DD>
+  <P>This occurs and signals <I>invalid-operation</I> if division by zero was
+  attempted (during a <B>divide-integer</B>, <B>divide</B>, or <B>remainder</B>
+  operation), and the dividend is also zero. The result is <TT>[0,qNaN]</TT>.
+  <P></P>
+  <DT><B>Inexact</B>
+  <DD>
+  <P>This occurs and signals <I>inexact</I> whenever the result of an operation
+  is not exact (that is, it needed to be rounded and any discarded digits were
+  non-zero), or if an overflow or underflow condition occurs. The result in all
+  cases is unchanged.
+  <P>The <I>inexact</I> signal may be tested (or trapped) to determine if a
+  given operation (or sequence of operations) was inexact.<A name=backref.1><A
+  href="daexcep.html#footnote.1"><FONT
+  size=3><SUP>[1]</SUP></FONT></A></A>&nbsp;
+  <P></P>
+  <DT><B>Insufficient storage</B>
+  <DD>
+  <P>For many implementations, storage is needed for calculations and
+  intermediate results, and on occasion an arithmetic operation may fail due to
+  lack of storage. This is considered an operating environment error, which can
+  be either be handled as appropriate for the environment, or treated as an
+  <B>Invalid operation</B> condition. The result is <TT>[0,qNaN]</TT>.
+  <P></P>
+  <DT><B>Invalid context</B>
+  <DD>
+  <P>This occurs and signals <I>invalid-operation</I> if an invalid context was
+  detected during an operation. This can occur if contexts are not checked on
+  creation and either the <I>precision</I> exceeds the capability of the
+  underlying concrete representation or an unknown or unsupported
+  <I>rounding</I> was specified. These aspects of the context need only be
+  checked when the values are required to be used. The result is
+  <TT>[0,qNaN]</TT>.
+  <P></P>
+  <DT><A name=refinvop><B>Invalid operation</B></A>
+  <DD>
+  <P>This occurs and signals <I>invalid-operation</I> if:
+  <UL>
+    <LI>an operand to an operation is <TT>[0,sNaN]</TT> (<I>signaling NaN</I>)
+    <LI>an attempt is made to add <TT>[0,inf]</TT> to <TT>[1,inf]</TT> during an
+    addition or subtraction operation
+    <LI>an attempt is made to multiply 0 by <TT>[0,inf]</TT> or <TT>[1,inf]</TT>
+
+    <LI>an attempt is made to divide either <TT>[0,inf]</TT> or <TT>[1,inf]</TT>
+    by either <TT>[0,inf]</TT> or <TT>[1,inf]</TT>
+    <LI>the divisor for a remainder operation is zero
+    <LI>the dividend for a remainder operation is either <TT>[0,inf]</TT> or
+    <TT>[1,inf]</TT>
+    <LI>the right-hand operand of the <B>rescale</B> operation has a non-zero
+    fractional part, or is outside the permitted range
+    <LI>the operand of the <B>square-root</B> operation has a <I>sign</I> of 1
+    and a non-zero <I>coefficient</I>
+    <LI>both operands of the <B>power</B> operation are zero, or the right-hand
+    operand has a non-zero fractional part, or has more than 9 digits, or is
+    infinite
+    <LI>An operand is invalid. For example, certain values of concrete
+    representations may not correspond to numbers; an implementation is
+    permitted (but is not required) to detect these invalid values and raise
+    this condition. </LI></UL><I></I>The result of the operation after any of
+  these invalid operations is <TT>[0,qNaN]</TT>.
+  <P></P>
+  <DT><A name=refoverf><B>Overflow</B></A>
+  <DD>
+  <P>This occurs and signals <I>overflow</I> if the <I>adjusted exponent</I> of
+  a result (from a conversion or from an operation that is not an attempt to
+  divide by zero) would be greater than the largest value that can be handled by
+  the implementation (the value E<SUB>max</SUB>). It also occurs if a
+  <B>rescale</B> operation would require greater precision than is available.
+  <P>The result depends on the rounding mode:
+  <UL>
+    <LI>For <I>round-half-up</I> and <I>round-half-even</I> (and for
+    <I>round-half-down</I> and <I>round-up</I>, if implemented), the result of
+    the operation is <TT>[</TT><I>sign</I><TT>,inf]</TT>, where <I>sign</I> is
+    the sign of the intermediate result.
+    <LI>For <I>round-down</I>, the result is the largest finite number that can
+    be represented in the current <I>precision</I>, with the sign of the
+    intermediate result.
+    <LI>For <I>round-ceiling</I>, the result is the same as for
+    <I>round-down</I> if the sign of the intermediate result is 1, or is
+    <TT>[0,inf]</TT> otherwise.
+    <LI>For <I>round-floor</I>, the result is the same as for <I>round-down</I>
+    if the sign of the intermediate result is 0, or is <TT>[1,inf]</TT>
+    otherwise. </LI></UL><I></I>In all cases, Inexact and Rounded will also be
+  raised.
+  <P><B>Note:</B> IEEE 854 §7.3 requires that the result delivered to a trap
+  handler be different, depending on whether the overflow was the result of a
+  conversion or of an arithmetic operation. This specification deviates from
+  IEEE 854 in this respect; however, an implementation could comply with IEEE
+  854 by providing a separate mechanism for the special result to a trap
+  handler.
+  <P></P>
+  <DT><B>Rounded</B>
+  <DD>
+  <P>This occurs and signals <I>rounded</I> whenever the result of an operation
+  is rounded (that is, some zero or non-zero digits were discarded from the
+  coefficient), or if an overflow or underflow condition occurs. The result in
+  all cases is unchanged.
+  <P>The <I>rounded</I> signal may be tested (or trapped) to determine if a
+  given operation (or sequence of operations) caused a loss of precision.
+  <P></P>
+  <DT><B>Subnormal</B>
+  <DD>
+  <P>This occurs and signals <I>subnormal</I> whenever the result of a
+  conversion or operation is subnormal (that is, its adjusted exponent is less
+  than E<SUB>min</SUB>, before any rounding). The result in all cases is
+  unchanged.
+  <P>The <I>subnormal</I> signal may be tested (or trapped) to determine if a
+  given or operation (or sequence of operations) yielded a subnormal result.
+  <P></P>
+  <DT><A name=refunderf><B>Underflow</B></A>
+  <DD>
+  <P>This occurs and signals <I>underflow</I> if a result is inexact and the
+  <I>adjusted exponent</I> of the result would be smaller (more negative) than
+  the smallest value that can be handled by the implementation (the value
+  E<SUB>min</SUB>). That is, the result is both inexact and subnormal.<A
+  name=backref.2><A
+  href="daexcep.html#footnote.2"><FONT
+  size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+  <P>The result after an underflow will be a subnormal number rounded, if
+  necessary, so that its exponent is not less than E<SUB>tiny</SUB>. This may
+  result in 0 with the sign of the intermediate result and an exponent of
+  E<SUB>tiny</SUB>.
+  <P>In all cases, Inexact, Rounded, and Subnormal will also be raised.
+  <P><B>Note:</B> IEEE 854 §7.4 requires that the result delivered to a trap
+  handler be different, depending on whether the underflow was the result of a
+  conversion or of an arithmetic operation. This specification deviates from
+  IEEE 854 in this respect; however, an implementation could comply with IEEE
+  854 by providing a separate mechanism for the result to a trap handler.
+  </P></DD></DL>
+<P>The Inexact, Rounded, and Subnormal conditions can coincide with each other
+or with other conditions. In these cases then any trap enabled for another
+condition takes precedence over (is handled before) all of these, any Subnormal
+trap takes precedence over Inexact, and any Inexact trap takes precedence over
+Rounded.
+<P>It is recommended that implementations distinguish the different conditions
+listed above, and also provide additional information about exceptional
+conditions where possible (for example, the operation being attempted and the
+values of the operand or operands involved – see also IEEE 854 §8.1).
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="daexcep.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>Note that IEEE 854 is inconsistent in its treatment of
+      Inexact in that it states in §7 that the Inexact exception can coincide
+      with Underflow, but does not allow the possibility of Underflow signaling
+      Inexact in §7.5. It is assumed that the latter is an accidental omission.
+      </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="daexcep.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>See IEEE 854 §7.4. </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="daops.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="dax3274.html">next</A>]
+<SCRIPT language=Javascript>
+ </BODY></HTML>

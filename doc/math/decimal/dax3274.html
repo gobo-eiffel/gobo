@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20030318072534/www2.hursley.ibm.com/decimal/dax3274.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Appendix A -- The X3.274 subset</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.11 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>28 Feb 2003</TD></TR>
+  <TR>
+    <TD>[<A
+      href="daexcep.html">previous</A> | <A
+      href="decarith.html">contents</A> | <A
+      href="daconcep.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=x3274><FONT face=helvetica color=#006644>Appendix A – The X3.274
+subset</FONT></A></H1>The full specification in the body of this document
+defines a decimal floating-point arithmetic which gives exact results and
+preserves exponents where possible. If insufficient precision is available for
+this, then numbers are handled according to the rules of IEEE 854. The use of
+IEEE 854 rules implies that special values (infinities and NaNs) are allowed, as
+subnormal values and the value –0.
+<P>For some applications and programming languages (especially those intended
+for use by people who are not mathematically sophisticated), it may be
+appropriate to provide an arithmetic where infinite, NaN, or subnormal results
+are always treated as errors, –0 results are hidden, and other (largely
+cosmetic) changes are provided to aid acceptance of results.
+<P>The arithmetic defined in ANSI X3.274 is such an arithmetic; this appendix
+describes the differences between this and the full specification.
+Implementations which support this subset explicitly might provide the subset
+behavior under the control of a parameter in the <I>context</I><A
+name=backref.1><A
+href="dax3274.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp; or might provide a different
+interface (additional or parameterized methods, for example).
+<H4><FONT face=helvetica color=#006644>Simplified number set</FONT></H4>In the
+subset arithmetic, a reduced set of number values is supported and (where
+appropriate) numbers with positive exponents have their exponent reduced to
+zero. Specifically:
+<UL>
+  <LI>In the <B>to-number</B> conversion, if the <I>coefficient</I> for a finite
+  number has the value zero, then the <I>sign</I> and the <I>exponent</I> are
+  both set to 0.
+  <LI>If the <I>coefficient</I> in a result has the value zero, then the
+  <I>sign</I> is set to 0 and (unless the operation is <B>rescale</B>) the
+  <I>exponent</I> is set to 0.<A name=backref.2><A
+  href="dax3274.html#footnote.2"><FONT
+  size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+  <LI>In the <B>to-number</B> conversion, strings which represent special values
+  are not permitted. (That is, only finite numbers are accepted.)
+  <LI>Subnormal numbers are not permitted. If the result from a conversion or
+  operation would be subnormal then an Underflow error results (see below).
+  <LI>After any operation and the rounding of its result (unless the operation
+  is <B>rescale</B>), a result with a positive exponent is converted to an
+  integer provided that the resulting <I>coefficient</I> would have no more than
+  <I>precision</I> digits. In other words, in this case a positive exponent is
+  reduced to 0 by multiplying the <I>coefficient</I> by
+  10<SUP><I>exponent</I></SUP> (which has the effect of suffixing
+  <I>exponent</I> zeros).<A name=backref.3><A
+  href="dax3274.html#footnote.3"><FONT
+  size=3><SUP>[3]</SUP></FONT></A></A>&nbsp; </LI></UL>
+<H4><FONT face=helvetica color=#006644>Operation differences</FONT></H4>In the
+subset arithmetic, operands are rounded before use if necessary (as in Numerical
+Turing<A name=backref.4><A
+href="dax3274.html#footnote.4"><FONT
+size=3><SUP>[4]</SUP></FONT></A></A>&nbsp; and Rexx), the <I>Lost digits</I>
+condition is added to the context, the results of some operations are trimmed,
+the rounding rule after a subtraction is less conservative, and raising 0 to the
+power 0 is not treated as an error. Specifically:
+<UL>
+  <LI>If the number of decimal digits in the <I>coefficient</I> of an operand to
+  an operation is greater than the current <I>precision</I> in the context then
+  the operand is rounded to <I>precision</I> significant digits using the
+  <I>rounding</I> algorithm described by the context before being used in the
+  computation. In other words, an automatic ‘convert to shorter’ is applied
+  before the operation.
+  <LI>The <B>Lost digits</B> condition is added to the abstract context; it
+  should be set to 0 in default contexts. <BR>This condition is raised when
+  non-zero digits are discarded before an operation. This can occur when an
+  operand which has more leading significant digits in its <I>coefficient</I>
+  than the <I>precision</I> setting is rounded to <I>precision</I> digits before
+  use <BR>Note that the lost digits test does not treat trailing decimal zeros
+  in the <I>coefficient</I> as significant. For example, if <I>precision</I> had
+  the value 5, then the operands <PRE>  [0,12345,-5]
+  [0,12345,-2]
+  [0,12345,0]
+  [1,12345,0]
+  [0,123450000,-4]
+  [0,1234500000,0]
+</PRE>would not cause an exception (whereas <TT>[0,123451,-1]</TT> or
+  <TT>[0,1234500001,0]</TT> would).
+  <LI>After a <B>divide</B> or <B>power</B> operation is complete and the result
+  has been rounded, any insignificant trailing zeros are removed. That is, if
+  the <I>exponent</I> is not zero and the <I>coefficient</I> is a multiple of a
+  positive power of ten then the <I>coefficient</I> is divided by that power of
+  ten and the <I>exponent</I> increased accordingly. If the <I>exponent</I> was
+  negative it will not be increased above zero.
+  <LI>After an addition operation, the result is rounded to <I>precision</I>
+  digits if necessary, taking into account any extra (carry) digit on the left
+  after an addition, but otherwise counting from the position corresponding to
+  the most significant digit of the operands being added or subtracted (rather
+  than the most significant digit of the result).
+  <LI>If both operands to a <B>power</B> operation are zero then the result is 1
+  (instead of being an error).
+  <LI>If the right-hand operand to a <B>power</B> operation is negative, the
+  left-hand operand is used as-is and the final result is inverted. The integer
+  part of the right-hand operand must fit in <I>precision</I> digits.
+  <LI>The integer part of the right-hand operand to a <B>rescale</B> operation
+  must fit in <I>precision</I> digits. </LI></UL>
+<H4><FONT face=helvetica color=#006644>Exceptional condition and rounding mode
+rules</FONT></H4>In the subset arithmetic, exceptional conditions other than the
+informational conditions (Lost digits, Inexact, Rounded, and Subnormal) must be
+treated as errors, and results after these errors are undefined. Special values
+and subnormal numbers, therefore, are not part of the arithmetic.
+<P>In the subset, only the Lost digits trap enabler is required. Inexact,
+Rounded, and Subnormal trap enablers are optional, and the others are (in
+effect) always set. Similarly, the status bits in the <I>context</I> are
+optional.
+<P>Only the <I>round-half-up</I> rounding mode is required.
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="dax3274.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>The decNumber package, for example, provides the subset
+      behavior if the <I>extended</I> bit is set to 0. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="dax3274.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>This rule, together with the <B>to-number</B> definition,
+      ensures that numbers with values such as <TT>-</TT>0 or 0.0000 will not
+      result from general operations in the subset arithmetic. This allows a
+      concrete representation for the subset to comprise simply two integers in
+      twos complement form. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="dax3274.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2>The rule preserves integers as specified by ANSI X3.274,
+      and in particular ensures that the results of the <B>divide</B> and
+      <B>divide-integer</B> operations are identical when the result is an exact
+      integer. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="dax3274.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>See: T. E. Hull, A. Abrham, M. S. Cohen, A. F. X. Curley,
+      C. B. Hall, D. A. Penny, and J. T. M. Sawchuk, <I>Numerical Turing</I>,
+      SIGNUM Newsletter, vol. 20 #3, pp26-34, ACM, May 1985.
+  </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="daexcep.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="daconcep.html">next</A>]
+
+ </BODY></HTML>

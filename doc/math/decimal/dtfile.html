@@ -1,0 +1,510 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0082)http://web.archive.org/web/20030116161741/www2.hursley.ibm.com/decimal/dtfile.html -->
+<HTML><HEAD><TITLE>Decimal Testcases - Testcase file format</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2002.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Testcases</B></FONT>, version 2.09
+      <BR><EM>Copyright (c) IBM Corporation, 2002. All rights reserved. ©</EM>
+    </TD>
+    <TD vAlign=top align=right>3 Nov 2002</TD></TR>
+  <TR>
+    <TD>[<A
+      href="dtintro.html">previous</A> | <A
+      href="dectest.html">contents</A> | <A
+      href="dtnotes.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=file><FONT face=helvetica color=#006644>Testcase file
+format</FONT></A></H1>This section describes the format of the testcase files.
+These are distributed as plain text files with a file name that identifies the
+<I>group</I> of tests contained in the file and a file extension (if
+appropriate) of <TT>.decTest</TT>. File names will not have embedded blanks.
+<P>The files are encoded using one byte per character, using 7-bit ASCII
+encoding. These may be converted to Unicode by treating them as UTF-8-encoded
+files or by directly converting each 7-bit character to Unicode by prefixing
+nine 0 bits.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=syntax><FONT face=helvetica color=#006644>Testcase
+syntax</FONT></A></H3>Each testcase file consists of one or more lines (the line
+delimiter mechanism may vary, depending on the operating system). Within each
+line, control characters (those with encodings in the range 0 through 31) are
+not used.
+<P>Each line is treated as a sequence of <I>tokens</I>, delimited by the start
+of the line, spaces between tokens, or (after the final token) the end of the
+line. There may be more than one space between tokens, and spaces may also
+appear before the first token on a line and after the last token on a line.
+<P>If the first two characters of a token are two hyphens (<TT>--</TT>) the
+token indicates the start of a comment. The two-hyphen sequence and any
+characters that follow it, up to the end of the line on which the sequence
+occurs, are ignored (that is, they are treated as commentary).
+<P>The lines in a file may be:
+<DL>
+  <P>
+  <DT><I>empty</I>
+  <DD>Lines with no characters, or only space characters. These lines are
+  treated as commentary and are ignored.
+  <P></P>
+  <DT><I>comments</I>
+  <DD>Lines whose first token starts a comment. These are also ignored.
+  <P></P>
+  <DT><I>directives</I>
+  <DD>Lines which are used to control the testcase environment in some way, for
+  example to change the working precision. These lines have two tokens and are
+  of the form: <PRE>  <I>keyword</I>: <I>value</I>
+</PRE><I></I>where the case-independent <I>keyword</I> describes the purpose
+  of the directive, and the <I>value</I> is a parameter associated with the
+  directive. The possible keywords and their values are described <A
+  href="dtfile.html#direct">below</A>.
+  <P></P>
+  <DT><I>tests</I>
+  <DD>Lines which describe a specific test. These lines have at least five
+  tokens, and are of the form:
+  <P><TT>&nbsp;&nbsp;</TT><I>id</I> <I>operation</I> <I>operand1</I>
+  <I>operand2</I> <TT>-&gt;</TT> <I>result</I> <I>conditions</I>
+  <P>where the named tokens are as follows:
+  <DL>
+    <P>
+    <DT><I>id</I>
+    <DD>A short name which identifies the test. It is case-independent and
+    unique in the file. In the current testcases it comprises three or four
+    alphabetic characters followed by three or four digits (for example,
+    <TT>divx101</TT>).
+    <P></P>
+    <DT><I>operation</I>
+    <DD>A case-independent keyword which describes the <A
+    href="dtfile.html#ops">operation</A> to
+    be carried out for this test (for example, <TT>divide</TT>).
+    <P></P>
+    <DT><I>operand1</I>
+    <DD>The first (or only) operand required for the operation. The token may be
+    quoted (see below). If it is not quoted then its value is the sequence of
+    characters comprising the token, taken exactly as written.
+    <P>If the token is not quoted and its value is the octothorpe character
+    (<TT>#</TT>, also called the hash or pound sign), the operand is a <I>null
+    reference</I>. Null references are used for testing the behavior of
+    implementations which can be passed numbers by reference, where a null
+    reference would be an error. If this concept is not supported then tests
+    containing null references should be skipped.
+    <P>Otherwise, the value of the token is treated as a string, which should be
+    converted to a number using the <B>to-number</B> conversion of the
+    arithmetic specification. This will raise a condition if the token is not a
+    valid number. If the value of the token is not a valid number then it must
+    be quoted.<A name=backref.1><A
+    href="dtfile.html#footnote.1"><FONT
+    size=3><SUP>[1]</SUP></FONT></A></A>&nbsp;
+    <P></P>
+    <DT><I>operand2</I>
+    <DD>An optional second operand, if required for the operation. If present,
+    it has the same syntax and follows the same rules as <I>operand1</I>.
+    <P></P>
+    <DT><I>result</I>
+    <DD>This defines the result of carrying out the <I>operation</I> on the
+    operand or operands. It will either be the string form of a valid number
+    (which may be quoted) or it will be the question mark character (<TT>?</TT>)
+    which indicates that the result is undefined (for example, in tests for the
+    X3.274 subset of the specification this is used when an error condition is
+    expected).
+    <P>When the result is a number, the string will be that produced by the
+    <B>to-scientific-string</B> conversion in the specification, unless the
+    <I>operation</I> is <A
+    href="dtfile.html#ops"><TT>toEng</TT></A>
+    in which case the string will be that produced by the
+    <B>to-engineering-string</B> conversion.
+    <P>Note that when <I>extended</I> is set (see below) then results will be
+    defined even after an error, and may have the values <TT>NaN</TT> (Not a
+    Number), <TT>sNaN</TT> (signaling NaN), <TT>Infinity</TT>,
+    <TT>-Infinity</TT>, or <TT>-0</TT>. Zeros may also have a fractional part.
+    <P></P>
+    <DT><I>conditions</I>
+    <DD>Zero or more tokens each of which is the case-independent name of a <A
+    href="dtfile.html#condition"><I>condition</I></A>
+    set by the operation. If no condition is set then no condition tokens will
+    be present. </DD></DL></DD></DL>
+<P>Any operand or result token may be quoted. That is, it may begin with a
+delimiter which is a single or double quote character and it is then only ended
+by a matching quote (which must be present and on the same line). A quote which
+matches the starting quote may be included inside a quoted operand by doubling
+up the quote; in this case it does not end the token.
+<P>The content of the quoted token (after the delimiters have been removed and
+any doubled delimiter quotes have been reduced to a single instance) forms the
+value of the token. The value may contain any 7-bit ASCII characters (other than
+the control characters, whose encodings are in the range 0 through 31),
+including spaces or the comment start sequence.
+<P>When the value of an operand token is converted to a number before use, using
+the <B>to-number</B> conversion, it is subject to the values set by <A
+href="dtfile.html#direct">directives</A>,
+except that the <TT>precision</TT> directive is only used when the <A
+href="dtfile.html#ops">operation</A> is
+<TT>toSci</TT> or <TT>toEng</TT>. For other operations, sufficient precision is
+used so that rounding of the operand is avoided.<A name=backref.2><A
+href="dtfile.html#footnote.2"><FONT
+size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+<P><B>Example:</B>
+<P>Here is an example of a small testcase file, comprising some commentary, four
+directives which set the version and context, and some tests. <PRE>  -- simple.decTest
+  -- Testcase for some simple operations.
+  Version: 2.09
+
+  Extended:    1
+  Precision:   9
+  Rounding:    half_up
+  MaxExponent: 999
+
+  simp001  add       1 1 -&gt; 2   -- can we get this right?
+  simp002  multiply  2 2 -&gt; 4
+  simp003  divide    1 3 -&gt; 0.333333333   Inexact Rounded
+  simp004  divide    1 0 -&gt; NaN Division_by_zero
+  simp005  toSci  '1..2' -&gt; NaN Conversion_syntax
+</PRE>
+<P><B>Note:</B> Tokens and lines do not have a defined length limit, however the
+current testcases are limited to a maximum token length of 1050 characters and a
+maximum line length of 4000 characters.
+<P>
+<HR align=left width="20%">
+
+<H3><A name=direct><FONT face=helvetica
+color=#006644>Directives</FONT></A></H3>Directives are used to control the
+testcase environment in some way. Each has a <I>keyword</I> (which is
+immediately followed by a colon) and a <I>value</I>.
+<P>The first three directives are required; no tests can be run without these
+three settings being specified (that is, there is no default value for these
+settings). Once set, each setting remains in force until a new directive with
+the same keyword is encountered; the setting is then replaced by the new value.
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1>
+        <TBODY>
+        <TR vAlign=top>
+          <TD width="20%"><B>Keyword</B> </TD>
+          <TD><B>Value</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>precision</TT> </TD>
+          <TD>An unsigned positive integer. Its value is used to set the
+            <I>precision</I> in the context for the following tests.
+            <P>If the setting exceeds the maximum precision that can be handled
+            by an implementation then following tests should be skipped (until
+            the setting is suitably reduced or the end of the file is reached).
+            </P></TD>
+        <TR vAlign=top></TD>
+          <TD><TT>rounding</TT> </TD>
+          <TD>A word which describes the <I>rounding</I> mode to set in the
+            context for the following tests. It is case-independent and will be
+            one of:
+            <P><TT>&nbsp;&nbsp;ceiling <BR>&nbsp;&nbsp;down
+            <BR>&nbsp;&nbsp;floor <BR>&nbsp;&nbsp;half_down
+            <BR>&nbsp;&nbsp;half_even <BR>&nbsp;&nbsp;half_up
+            <BR>&nbsp;&nbsp;up</TT>
+            <P>If an unsupported rounding mode is set, then following tests
+            should be skipped (until the setting is changed to a supported mode
+            or the end of the file is reached). </P></TD>
+        <TR vAlign=top></TD>
+          <TD><TT>maxexponent</TT> </TD>
+          <TD>An unsigned integer which may be zero or positive. This value
+            describes the absolute value of the adjusted exponent beyond which
+            overflow or underflow will be raised. The following tests will
+            indicate an <A
+            href="dtfile.html#condition">overflow
+            or underflow condition</A> if the magnitude of the adjusted exponent
+            exceeds this setting. (Note that if <I>extended</I> is set, a larger
+            range of exponents can be handled because subnormal values are
+            allowed.)
+            <P>Implementations, in general, will have fixed maximum exponent
+            limits, which may not match the setting in the testcase:
+            <UL>
+              <LI>If the setting of <TT>maxexponent</TT> is larger than can be
+              handled, then following tests should be skipped (until the setting
+              is suitably reduced or the end of the file is reached).
+              <LI>If the setting of <TT>maxexponent</TT> is smaller than can be
+              enforced, then following tests which indicate an overflow or
+              underflow condition should be skipped (until the setting is
+              suitably changed or the end of the file is reached).
+        </LI></UL></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>The next two directives are optional:
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="20%"><B>Keyword</B> </TD>
+          <TD><B>Value</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>version</TT> </TD>
+          <TD>A number which describes the version of the testcases which
+            follow. This may be up to five digits, or four digits with an
+            embedded decimal point. For example:
+            <P><TT>&nbsp;&nbsp;version: 2.01 </TT>
+            <P>The meaning of the version number is not defined, except that
+            later versions of testcases should have a larger version number.
+          </P></TD>
+        <TR vAlign=top></TD>
+          <TD><TT>extended</TT> </TD>
+          <TD>Either 0 or 1. This directive indicates the level of arithmetic
+            needed for the following tests.
+            <P>When set to 1, numbers whose value is zero may have non-zero sign
+            and exponent, operations may result in subnormal values, extra
+            checking is performed on the length of operands, the power operator
+            has extra checking, and the results of operations are defined after
+            errors (they may be 0, infinite, or NaN values). For example:
+            <P><TT>&nbsp;&nbsp;extended: 1 -- enable extended values
+            <BR>&nbsp;&nbsp;div0 divide -1 0 -&gt; -Infinity Division_by_zero
+            </TT>
+            <P>When set to 0 (the default), only the X3.274 subset of the
+            arithmetic is required, where the sign of a zero value result is
+            always 0, subnormal values raise underflow, and some other
+            differences are expected.
+            <P>If an implementation does not support testcases as selected by
+            the <I>extended</I> setting then following tests should be skipped
+            (until the extended setting is changed to an acceptable value or the
+            end of the file is reached). </P></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>The final directive allows testcase groups (files) to themselves be grouped
+together in a hierarchy:
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="20%"><B>Keyword</B> </TD>
+          <TD><B>Value</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>dectest</TT> </TD>
+          <TD>A word specifying the file name (without extension) of another
+            testcase file to be processed at this point. For example, a testcase
+            which simply runs the testcases for the three division operations
+            might read:
+            <P><TT>&nbsp;&nbsp;-- divides.decTest -- Test divisions
+            <BR>&nbsp;&nbsp;dectest: divide <BR>&nbsp;&nbsp;dectest: divideint
+            <BR>&nbsp;&nbsp;dectest: remainder </TT>
+            <P>Note that this directive is not an ‘include’; the current
+            settings are <I>not</I> inherited by the file to be processed – that
+            file must be processed in exactly the same way as if it were the
+            only testcase being run. </P></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=ops><FONT face=helvetica
+color=#006644>Operations</FONT></A></H3>Each <I>test</I> line identifies an
+<I>operation</I> by means of a case-independent keyword, which is always the
+second token of the line. The following operations are defined.
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="20%"><B>Keyword</B> </TD>
+          <TD><B>Definition</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>abs</TT> </TD>
+          <TD>If the operand is negative, this is the same as <TT>minus</TT>;
+            otherwise it is the same as <TT>plus</TT>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>add</TT> </TD>
+          <TD>The two operands are added together using <B>add</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>compare</TT> </TD>
+          <TD>The operands are compared using <B>compare</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>divide</TT> </TD>
+          <TD>The first operand (the <I>dividend</I>) is divided by the second
+            (the <I>divisor</I>) using <B>divide</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>divideint</TT> </TD>
+          <TD>The first operand (the <I>dividend</I>) is divided by the second
+            (the <I>divisor</I>) to give an integer result, using
+            <B>divide-integer</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>integer</TT> </TD>
+          <TD>The operand is rounded to an integer, using
+            <B>round-to-integer</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>max</TT> </TD>
+          <TD>The operands are compared using <B>compare</B> and the larger is
+            returned (or the first, if they are equal). </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>min</TT> </TD>
+          <TD>The operands are compared using <B>compare</B> and the smaller
+            is returned (or the first, if they are equal). </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>minus</TT> </TD>
+          <TD>The operand is subtracted from zero, using <B>minus</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>multiply</TT> </TD>
+          <TD>The operands are multiplied together using <B>multiply</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>normalize</TT> </TD>
+          <TD>Trailing zeros are removed, using <B>normalize</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>plus</TT> </TD>
+          <TD>The operand is added to zero, using <B>plus</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>power</TT> </TD>
+          <TD>The first operand is raised to an integer power (the second
+            operand), using <B>power</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>remainder</TT> </TD>
+          <TD>The first operand (the <I>dividend</I>) is divided by the second
+            (the <I>divisor</I>) to give a remainder after integer division,
+            using <B>remainder</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>remaindernear</TT> </TD>
+          <TD>The first operand (the <I>dividend</I>) is divided by the second
+            (the <I>divisor</I>) to give a remainder after division to the
+            nearest integer, using <B>remainder-near</B> from the extended
+            specification (IEEE remainder). </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>rescale</TT> </TD>
+          <TD>The first operand is rescaled so that its <I>exponent</I> is set
+            to the value of the second operand, using <B>rescale</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>squareroot</TT> </TD>
+          <TD>The square root of the operand is computed, using
+            <B>square-root</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>subtract</TT> </TD>
+          <TD>The second operand is subtracted from the first, using
+            <B>subtract</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>toEng</TT> </TD>
+          <TD>The operand is converted to a string using
+            <B>to-engineering-string</B>. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>toSci</TT> </TD>
+          <TD>The operand is converted to a string using
+            <B>to-scientific-string</B>. This operation is the ‘base’ test for
+            conversions – typically, the value of the first operand is converted
+            to some internal representation and is then converted to the
+            canonical string form. </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>trim</TT> </TD>
+          <TD>Insignificant fractional zeros are removed, using <B>trim</B>.
+        </TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=condition><FONT face=helvetica
+color=#006644>Conditions</FONT></A></H3>Each <I>test</I> may cause zero or more
+<I>conditions</I> to be raised. The case-independent names of these conditions
+(if any) are listed following the <I>result</I> token of each test.
+<P>Only those conditions occuring during the tested operation are listed unless
+the operation is <TT>toSci</TT> or <TT>toEng</TT>. For these operations,
+conditions raised during the conversion of the operand are included (this allows
+the testing of conversions in both directions).
+<P>The following condition names are defined, together with the name used for it
+in the arithmetic specification and the IEEE 854 exception which would be raised
+by the condition.
+<TABLE cellPadding=8>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellPadding=4 border=1></TR>
+        <TBODY>
+        <TR vAlign=top></TD>
+          <TD width="30%"><B>Condition</B> </TD>
+          <TD width="35%"><B>Specification name</B> </TD>
+          <TD><B>IEEE exception</B> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>conversion_syntax</TT> </TD>
+          <TD><B>Conversion syntax</B> </TD>
+          <TD>Invalid operation </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>division_by_zero</TT> </TD>
+          <TD><B>Division by zero</B> </TD>
+          <TD>Division by zero </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>division_impossible</TT> </TD>
+          <TD><B>Division impossible</B> </TD>
+          <TD>Invalid operation </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>division_undefined</TT> </TD>
+          <TD><B>Division undefined</B> </TD>
+          <TD>Invalid operation </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>inexact</TT> </TD>
+          <TD><B>Inexact</B> </TD>
+          <TD>Inexact </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>insufficient_storage</TT> </TD>
+          <TD><B>Insufficient storage</B> </TD>
+          <TD>Invalid operation </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>invalid_context</TT> </TD>
+          <TD><B>Invalid context</B> </TD>
+          <TD>Invalid operation </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>invalid_operation</TT> </TD>
+          <TD><B>Invalid operation</B> </TD>
+          <TD>Invalid operation </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>lost_digits</TT> </TD>
+          <TD><B>Lost digits</B> </TD>
+          <TD><I>(no equivalent)</I> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>overflow</TT> </TD>
+          <TD><B>Overflow</B> </TD>
+          <TD>Overflow </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>rounded</TT> </TD>
+          <TD><B>Rounded</B> </TD>
+          <TD><I>(no equivalent)</I> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>subnormal</TT> </TD>
+          <TD><B>Subnormal</B> </TD>
+          <TD><I>(no equivalent)</I> </TD>
+        <TR vAlign=top></TD>
+          <TD><TT>underflow</TT> </TD>
+          <TD><B>Underflow</B> </TD>
+          <TD>Underflow </TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<P><B>Notes:</B>
+<OL>
+  <LI>The condition names are simply the names from the arithmetic
+  specification, with spaces changed to underscores so each forms a single
+  token.
+  <LI>The <TT>inexact</TT>, <TT>rounded</TT>, and <TT>subnormal</TT> conditions
+  are included in the testcases, even when <I>extended</I> is 0, to aid analysis
+  and debugging. (Underflow implies all three.) <BR>The <TT>rounded</TT>
+  condition indicates that an operand or the result of a test has had one or
+  more zero or non-zero digits removed by rounding. That is, the number of
+  digits in the <I>coefficient</I> of the result is fewer than in the
+  <I>coefficient</I> of the ‘ideal’ result. <BR>In contrast, the
+  <TT>inexact</TT> condition indicates only that non-zero trailing digits were
+  removed (that is, the result would compare unequal to the ideal result).
+  <LI>The <TT>lost_digits</TT> condition can only occur if <I>extended</I> is 0.
+
+  <LI>The <TT>insufficient_storage</TT> condition is not a predictable condition
+  and so will not appear in any testcases. It is listed here as a reminder that
+  some implementations could raise this condition for some tests. </LI></OL>
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="dtfile.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>This rule allows future extensions to the syntax of
+      tests. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="dtfile.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>This rule allows the testing of rounding in the
+      <TT>toSci</TT> and <TT>toEng</TT> operations, and also permits the testing
+      of the <TT>lost_digits</TT> condition in the other operations.
+    </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="dtintro.html">previous</A> | <A
+href="dectest.html">contents</A> | <A
+href="dtnotes.html">next</A>]
+ </BODY></HTML>

@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0084)http://web.archive.org/web/20030119161243/www2.hursley.ibm.com/decimal/dachange.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Appendix C -- Changes</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.08 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>8 Jan 2003</TD></TR>
+  <TR>
+    <TD>[<A
+      href="daconcep.html">previous</A> | <A
+      href="decarith.html">contents</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=changes><FONT face=helvetica color=#006644>Appendix C –
+Changes</FONT></A></H1>This appendix is not part of the specification. It
+documents changes to the combined arithmetic specification, including changes to
+the earlier two-layer specifications.
+<P>Changes with draft number 0.nn refer to changes in the original base
+specification since the first public draft of that specification (0.65, 26 Jul
+2000).
+<P>Changes with draft number x.nn (for example, x.40) refer to changes in the
+original extended specification (inserted in their chronological position) since
+the first public draft of that specification (0.30, 9 Aug 2000).
+<P>Changes with version number 1.nn refer to changes in the combined arithmetic
+specification.
+<H4><A name=refch066><FONT face=helvetica color=#006644>Changes in Draft 0.66
+(28 Jul 2000)</FONT></A></H4>
+<UL>
+  <LI>The rules constraining any limits applied to the <I>exponent</I> of a <A
+  href="damodel.html#refnumber">number</A>
+  have been added.
+  <LI>Minor corrections and clarifications have been added. </LI></UL>
+<H4><A name=refch069><FONT face=helvetica color=#006644>Changes in Draft 0.69 (9
+Aug 2000)</FONT></A></H4>
+<UL>
+  <LI>A number produced by the <B>to-number</B> conversion operation has a
+  <I>sign</I> of zero if the <I>coefficient</I> is 0; similarly, arithmetic
+  operations cannot produce a result of <TT>-</TT>0. These rules allow concrete
+  representations comprising two simple integers. Note that the Extended
+  specification provides a mechanism for preserving and producing <TT>-</TT>0.
+  <LI>The <A
+  href="daexcep.html#refexcep">Exceptional
+  conditions</A> section has been extended to separate out more exceptions and
+  to align them with IEEE 854.
+  <LI>The names of some operations have been changed to achieve a consistent
+  style.
+  <LI>Minor corrections and clarifications have been added. </LI></UL>
+<H4><A name=refch074><FONT face=helvetica color=#006644>Changes in Draft 0.74
+(27 Nov 2000)</FONT></A></H4>
+<UL>
+  <LI>The rules constraining the limits applied to the <I>exponent</I> of a <A
+  href="damodel.html#refnumber">number</A>
+  have been corrected (E<SUB>min</SUB> did not take into account the length of
+  the <I>coefficient</I>).
+  <LI>The rules for converting a number to a <A
+  href="daconvs.html#reftostr">scientific
+  string</A> have been rephrased and corrected (the previous rules incorrectly
+  converted some zero values).
+  <LI>The <A
+  href="daexcep.html#refexcep">Exceptional
+  conditions</A> section has been alphabetized, and the <B>Invalid context</B>
+  condition has been added.
+  <LI>Minor corrections, clarifications, and additional examples have been
+  added. </LI></UL>
+<H4><A name=refch081><FONT face=helvetica color=#006644>Changes in Draft 0.81 (5
+Jan 2001)</FONT></A></H4>
+<UL>
+  <LI>The <I>round-down</I> (truncation) rounding algorithm has been added.
+  <LI>The rules constraining the right-hand operand of the <B>power</B>
+  operation have been clarified, and the <B>Invalid operation</B> condition has
+  been added for reporting errors.
+  <LI>The rules for reporting underflow or overflow during a <B>power</B>
+  operation to a negative power have been specified.
+  <LI>The rules for preserving integers and removing insignificant zeros have
+  been clarified.
+  <LI>Minor clarifications and additional examples have been added. </LI></UL>
+<H4><A name=refchx40><FONT face=helvetica color=#006644>Changes in Draft x.40
+(14 May 2001)</FONT></A></H4>
+<UL>
+  <LI>The <A
+  href="daexcep.html#refexcep"><I>Exceptional
+  conditions</I> section</A> has been revised and sorted. Additional cases where
+  the <B>Invalid operation</B> condition can be raised have been identified, and
+  the <B>Invalid context</B> condition has been added.
+  <LI>Subnormal numbers are explicitly permitted as operands and for results,
+  provided that special values are also permitted.
+  <LI>The string representations of NaN values have been changed to conform to
+  recent discussions of the IEEE 754R committee (further changes may be
+  necessary).
+  <LI>Minor corrections and clarifications have been made. </LI></UL>
+<H4><A name=refch083><FONT face=helvetica color=#006644>Changes in Draft 0.83
+(25 May 2001)</FONT></A></H4>
+<UL>
+  <LI>The significand of a number has been renamed from <I>integer</I> to
+  <I>coefficient</I>, to remove possible ambiguities.
+  <LI>The <A
+  href="daops.html#refnumresc"><B>rescale</B>
+  operation</A> has been added, because it is available in most existing
+  implementations in some form and is required for many formatting operations.
+  It needs to be part of the base specification because it uses the parameters
+  of the <I>context</I>.
+  <LI>The treatment of zeros with exponents or fractional parts in the
+  <B>to-number</B> conversion has been corrected.
+  <LI>Minor clarifications and editorial changes have been made. </LI></UL>
+<H4><A name=refchx41><FONT face=helvetica color=#006644>Changes in Draft x.41
+(25 May 2001)</FONT></A></H4>
+<UL>
+  <LI>The significand of a number has been renamed from <I>integer</I> to
+  <I>coefficient</I>, to remove possible ambiguities.
+  <LI>The treatment of zeros with exponents or fractional parts in
+  <B>to-extended-number</B> has been clarified. </LI></UL>
+<H4><A name=refchx43><FONT face=helvetica color=#006644>Changes in Draft x.43
+(28 June 2001)</FONT></A></H4>
+<UL>
+  <LI>The <I>rounded</I> condition (with associated signal and trap-enabler) has
+  been added. </LI></UL>
+<H4><A name=refchx51><FONT face=helvetica color=#006644>Changes in Draft x.52
+(15 October 2001)</FONT></A></H4>
+<UL>
+  <LI>The <I>special-values</I> flag in the context has been renamed
+  <I>extended-values</I> to better reflect its effect and avoid confusion (the
+  term <I>special values</I> refers only to infinities and NaNs).
+  <LI>In order to permit more efficient implementations, the specification no
+  longer requires that special and extended values raise an Invalid operation
+  condition if a context with a <I>extended-values</I> of 0 is in use.
+  <LI>For the same reason, extended zeros can no longer have non-zero exponents;
+  in extended operations the precision of a zero should be ignored.
+  <LI>Similarly, NaNs can no longer have a <I>sign</I> of 1. (An implementation
+  can allow signed NaNs, but they would not be visible using the conversions
+  specified.)
+  <LI>The string conversion from <TT>[0,sNaN]</TT> has been changed to
+  <TT>"sNaN"</TT>, as proposed in recent IEEE 754R discussions.
+  <LI>Minor corrections and clarifications have been made, and additional
+  examples have been added. </LI></UL>
+<H4><A name=refch086><FONT face=helvetica color=#006644>Changes in Draft 0.86
+(30 October 2001)</FONT></A></H4>
+<UL>
+  <LI>If the divisor of the <B>remainder</B> operation is 0, an Invalid
+  operation condition is raised (instead of Division by zero), for compatibility
+  with IEEE 854.
+  <LI>Minor clarifications and editorial changes have been made. </LI></UL>
+<H4><A name=refchx57><FONT face=helvetica color=#006644>Changes in Draft x.57
+(28 November 2001)</FONT></A></H4>
+<UL>
+  <LI>The operation of the <B>power</B> and <B>rescale</B> operators has been
+  clarified.
+  <LI>The behaviors of the Overflow and Underflow exceptional conditions have
+  been clarified.
+  <LI>The <I>trap-result</I> parameter of the <I>context</I> has been removed,
+  as it is no longer needed for the exceptional conditions as specified.
+  <LI>Additional cases where a result of –0 is possible have been documented.
+  <LI>Minor corrections and clarifications have been made, additional examples
+  have been added, and differences from IEEE 854 have been identified. </LI></UL>
+<H4><A name=refch087><FONT face=helvetica color=#006644>Changes in Draft 0.87
+(23 April 2002)</FONT></A></H4>
+<UL>
+  <LI>The definition of the <B>rescale</B> operation has been changed so the the
+  exponent is always set as specified, even if the coefficient is 0.
+  <LI>Minor clarifications and editorial changes have been made. </LI></UL>
+<H4><A name=refchx58><FONT face=helvetica color=#006644>Changes in Draft x.58
+(23 April 2002)</FONT></A></H4>
+<UL>
+  <LI>The operation of the <B>rescale</B> operator has been extended to match
+  the base specification (the exponent is now always set as given, even if the
+  coefficient is 0). </LI></UL>
+<H4><A name=refch0100><FONT face=helvetica color=#006644>Changes in Draft 1.00
+(5 July 2002)</FONT></A></H4>This version combines the original base and
+extended specifications. There are necessarily extensive editorial changes. In
+addition, the following significant technical changes have been made:
+<UL>
+  <LI>The <B>abs</B>, <B>max</B>, <B>min</B>, and <B>trim</B> operators have
+  been added.
+  <LI>A <I>precision</I> setting may now have a lower bound as well as an upper
+  bound. This permits ‘fixed precision’ implementations, for example, in
+  hardware.
+  <LI>The symbols E<SUB>min</SUB> and E<SUB>max</SUB> have been redefined to
+  match the usage in IEEE 854 (that is, they now refer to the <I>adjusted
+  exponent</I>).
+  <LI>The <B>divide</B> operator no longer trims trailing zeros automatically.
+  The <B>trim</B> operator has been added to provide this capability
+  independently.
+  <LI>The calculation of the <I>sign</I>, <I>coefficient</I>, and
+  <I>exponent</I> has been separately detailed for addition, subtraction,
+  multiplication, and division.
+  <LI>Zero values accepted by <B>to-number</B> and produced by various
+  operations may now have a non-zero <I>exponent</I>.
+  <LI>The <B>rescale</B> operator now accepts a infinite left-hand operand. This
+  has allowed the <B>round-to-integer</B> operator to be defined as a special
+  case of <B>rescale</B>.
+  <LI>The <B>power</B> operator is marked as ‘under review’; it may be redefined
+  or removed in a later version. (It is currently included because it defines
+  the results as presented in <TT>power.decTest</TT>.) </LI></UL>
+<H4><A name=refch0103><FONT face=helvetica color=#006644>Changes in Draft 1.03
+(1 September 2002)</FONT></A></H4>
+<UL>
+  <LI>The specification allowed subnormal numbers to be more precise than
+  permitted by IEEE 854. It has been changed to enforce a minimum
+  <I>exponent</I> of E<SUB>tiny</SUB>; this exponent will also be used when a
+  conversion or calculation underflows to zero.
+  <LI>The Underflow condition is now raised according to the IEEE 854 untrapped
+  underflow criteria (instead of according to the IEEE 854 trapped criteria).
+  That is, underflow is now only raised when a result is both subnormal and
+  inexact.
+  <LI>The Subnormal condition has been added, to allow detection of subnormal
+  results even if Underflow is not raised.
+  <LI>If an overflow or underflow occurs, the Overflow or Underflow conditions
+  are raised, respectively, instead of special conversion conditions. This
+  aligns the specification more closely with IEEE 854.
+  <LI>The <B>power</B> operator has been changed to allow subnormals after
+  raising a number to a negative power.
+  <LI>The <B>to-number</B> conversion has been enhanced to round the converted
+  <I>coefficient</I> (if necessary) instead of raising overflow.
+  <LI>Minor clarifications and editorial changes have been made. </LI></UL>
+<H4><A name=refch0106><FONT face=helvetica color=#006644>Changes in Draft 1.06
+(9 October 2002)</FONT></A></H4>
+<UL>
+  <LI>The <B>normalize</B> operation has been added; it reduces a number to a
+  canonical form. (This replaces the <B>trim</B> operator, which only removed
+  trailing fractional zeros.)
+  <LI>The definition of the <B>squareroot</B> operation has been simplified and
+  now returns a result which is independent of the rounding mode in the context.
+  This allows simpler implementations, and also allows the use of Hull and
+  Abrham's variable-precision algorithm.<A name=backref.1><A
+  href="dachange.html#footnote.1"><FONT
+  size=3><SUP>[1]</SUP></FONT></A></A>&nbsp;
+  <LI>Input operands to the arithmetic operations are no longer rounded before
+  use (this rounding, and the associated Lost digits condition, can therefore
+  only occur in the X3.274 subset arithmetic). This change aligns the arithmetic
+  with Java unlimited arithmetic, and also significantly simplifies hardware
+  implementations which provide precision control.
+  <LI>Minor clarifications and editorial changes have been made. </LI></UL>
+<H4><A name=refch0108><FONT face=helvetica color=#006644>Changes in Draft 1.08
+(14 November 2002)</FONT></A></H4>
+<UL>
+  <LI>The description of the <B>compare</B> operation has been clarified; its
+  result is always exact and unrounded.
+  <LI>Two errors in the description of the <B>divide</B> operation have been
+  corrected (‘dividend’ and ‘divisor’ were swapped in the second While loop, and
+  the calculation of the exponent when the dividend is zero was described
+  incorrectly). </LI></UL>
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="dachange.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>See <I>Properly Rounded Variable Precision Square
+      Root</I>, T. E. Hull and A. Abrham, ACM Transactions on Mathematical
+      Software, Vol 11 #3, pp229-237, ACM, September 1985.
+  </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="daconcep.html">previous</A> | <A
+href="decarith.html">contents</A>]
+ </BODY></HTML>

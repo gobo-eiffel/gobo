@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0084)http://web.archive.org/web/20030119160722/www2.hursley.ibm.com/decimal/daconcep.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Appendix B -- Design concepts</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2003.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.08 <BR><EM>Copyright (c) IBM Corporation, 2003. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>8 Jan 2003</TD></TR>
+  <TR>
+    <TD>[<A
+      href="dax3274.html">previous</A> | <A
+      href="decarith.html">contents</A> | <A
+      href="dachange.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=concepts><FONT face=helvetica color=#006644>Appendix B – Design
+concepts</FONT></A></H1>This appendix summarizes the concepts underlying the
+arithmetic described in this document, as background information. It is not part
+of the specification.
+<P>The decimal arithmetic specified in this document is based on a
+floating-point model which was designed with people in mind, and necessarily has
+a paramount guiding principle – <I>computers must provide an arithmetic that
+works in the same way as the arithmetic that people learn at school</I>.<A
+name=backref.1><A
+href="daconcep.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp;
+<P>Many people are unaware that the algorithms taught for ‘manual’ decimal
+arithmetic are quite different in different countries, but fortunately (and not
+surprisingly) the end results differ only in details of rounding and
+presentation. The particular model chosen was based on an extensive study of
+decimal arithmetic and was then evolved over several years (1979–1982) in
+response to feedback from thousands of users in more than forty countries.
+Numerous implementations have been written since 1982, and minor refinements to
+the definition were made during the process of ANSI standardization
+(1991–1996).<A name=backref.2><A
+href="daconcep.html#footnote.2"><FONT
+size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+<P>This base floating-point model has proved suitable for extension to meet the
+additional requirements and facilities defined in ANSI/IEEE 854-1987,<A
+name=backref.3><A
+href="daconcep.html#footnote.3"><FONT
+size=3><SUP>[3]</SUP></FONT></A></A>&nbsp; and the full specification is, in
+effect, the union of the floating-point specifications of the two standards.
+This means that the same number system and arithmetic supports, without
+prejudice, both exact unrounded decimal arithmetic (sometimes called
+‘fixed-point’ arithmetic) and rounded floating-point arithmetic. The latter
+includes the facilities and number values which are now widespread in binary
+floating-point implementations.
+<H4><FONT face=helvetica color=#006644>Fundamental concepts</FONT></H4>When
+people carry out arithmetic operations, such as adding or multiplying two
+numbers together, they commonly use decimal arithmetic where the decimal point
+‘floats’ as required, and the result that they eventually write down depends on
+three factors:
+<OL>
+  <LI>the specific operation carried out
+  <LI>the explicit information in the operand or operands to the operation
+  <LI>the information from the implied context in which the calculation is
+  carried out (the precision required, <I>etc.</I>). </LI></OL>
+<P>The information explicit in the written representation of an operand is more
+than that conventionally encoded for floating-point arithmetic. Specifically,
+there is:
+<UL>
+  <LI>an optional <I>sign</I> (only significant when negative)
+  <LI>a numeric part, which may include a decimal point (which is only
+  significant if followed by any digits)
+  <LI>an optional <I>exponent</I>, which denotes a power of ten by which the
+  numeric is multiplied (significant if both the numeric and exponent are
+  non-zero). </LI></UL>The length of the numeric and original position of the
+decimal point are not encoded in traditional floating-point representations,
+such as ANSI/IEEE 754-1985,<A name=backref.4><A
+href="daconcep.html#footnote.4"><FONT
+size=3><SUP>[4]</SUP></FONT></A></A>&nbsp; yet they are essential information if
+the expected result is to be obtained.
+<P>For example, people expect trailing zeros to be indicated conventionally in a
+result: the sum <TT>1.57 + 2.03</TT> is expected to result in <TT>3.60</TT>, not
+<TT>3.6</TT>; however, if the positional information has been lost during the
+operation it is no longer possible to show the expected result. For some
+applications the loss of trailing zeros is materially significant.
+<P>Fortunately, the later standard ANSI/IEEE 854-1987, which is intended for
+decimal as well as binary floating-point arithmetic, does not proscribe
+representations which do preserve the desired information. A suitable internal
+representation for decimal numbers therefore comprises a sign, an integer
+(called the <I>coefficient</I> in this document), and an exponent (which is an
+integral power of ten).
+<P>Similarly, decimal arithmetic in a scientific or engineering context is based
+on a floating-point model, not a fixed-point or fixed-scale model (indeed, this
+is the original basis for the concepts behind binary floating-point).
+Fixed-point decimal arithmetic packages such as ADAR<A name=backref.5><A
+href="daconcep.html#footnote.5"><FONT
+size=3><SUP>[5]</SUP></FONT></A></A>&nbsp; or the BigDecimal class in Java 1.1
+are therefore only useful for a subset of the problems for which arithmetic is
+used.
+<P>The information contained in the context of a calculation is also important.
+It usually applies to an entire sequence of operations, rather than to a single
+operation, and is not associated with individual operands. In practice, sensible
+defaults can be assumed, though provision for user control is necessary for many
+applications.
+<P>The most important contextual information is the desired precision for the
+calculation. This can range from rather small values (such as six digits)
+through very large values (hundreds or thousands of digits) for certain problems
+in Mathematics and Physics. Some decimal arithmetics (for example, the decimal
+arithmetic<A name=backref.6><A
+href="daconcep.html#footnote.6"><FONT
+size=3><SUP>[6]</SUP></FONT></A></A>&nbsp; in the Atari Operating System) offer
+just one or two alternatives for precision – in some cases, for apparently
+arbitrary reasons. Again, this does not match the user model of decimal
+arithmetic; one designed for people to use must provide a wide range of
+available precisions.
+<P>This specification provides for user selection of precision; the
+representation (especially if it is to conform to the IEEE 854-1987 standard
+referred to above) may have a fixed maximum precision, but up to the maximum
+allowed by the representation the precision used for operations may be chosen by
+the programmer.
+<P>The provision of context for arithmetic operations is therefore a necessary
+precondition if the desired results are to be achieved, just as a ‘locale’ is
+needed for operations involving text.
+<P>This specification provides for explicit control over three aspects of the
+context: the required <I>precision</I> – the point at which rounding is applied,
+the <I>rounding</I> algorithm to be used when digits have to be discarded, and
+finally a set of <I>flags and trap-enablers</I> which report exceptional
+conditional and control how they are handled.
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="daconcep.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>For more discussion on why this is important, see the
+      <B>Frequently Asked Questions</B> about decimal arithmetic at <TT><A
+      href="decifaq.html">http://www2.hursley.ibm.com/decimal/decifaq.html</A>
+      </TT></FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="daconcep.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>See ANSI standard X3.274-1996: <CITE>American National
+      Standard for Information Technology – Programming Language REXX,
+      X3.274-1996</CITE>, American National Standards Institute, New York, 1996.
+      </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="daconcep.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2>ANSI/IEEE 854-1987 – <CITE>IEEE Standard for
+      Radix-Independent Floating-Point Arithmetic</CITE>, The Institute of
+      Electrical and Electronics Engineers, Inc., New York, 1987.
+</FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="daconcep.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>ANSI/IEEE 754-1985 – <CITE>IEEE Standard for Binary
+      Floating-Point Arithmetic</CITE>, The Institute of Electrical and
+      Electronics Engineers, Inc., New York, 1985. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.5><A
+      href="daconcep.html#backref.5">[5]</A></A></FONT></TD>
+    <TD><FONT size=2>‘Ada Decimal Arithmetic and Representations’ <BR>See
+      <I>An Ada Decimal Arithmetic Capability</I>, Brosgol et al. 1993.<TT>
+      <BR><A
+      href="http://www.cdrom.com/pub/ada/swcomps/adar/">http://www.cdrom.com/pub/ada/swcomps/adar/</A>
+      </TT></FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.6><A
+      href="daconcep.html#backref.6">[6]</A></A></FONT></TD>
+    <TD><FONT size=2>See, for example, <I>The [Atari] Floating Point
+      Arithmetic Package</I>, C. Lisowski.<TT> <BR><A
+      href="http://intrepid.mcs.kent.edu/~clisowsk/8bit/atr11.html">http://intrepid.mcs.kent.edu/~clisowsk/8bit/atr11.html</A>
+      </TT></FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="dax3274.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="dachange.html">next</A>]
+ </BODY></HTML>

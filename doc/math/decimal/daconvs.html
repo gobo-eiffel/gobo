@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20021107155803/www2.hursley.ibm.com/decimal/daconvs.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Conversions</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2002.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.07 <BR><EM>Copyright (c) IBM Corporation, 2002. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>6 Nov 2002</TD></TR>
+  <TR>
+    <TD>[<A
+      href="damodel.html">previous</A> | <A
+      href="decarith.html">contents</A> | <A
+      href="daops.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=refconvs><FONT face=helvetica
+color=#006644>Conversions</FONT></A></H1>This section defines the required
+conversions between the abstract representation of numbers and string
+(character) form.<A name=backref.1><A
+href="daconvs.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp; Two number-to-string conversions and
+one string-to-number conversion are defined.
+<P>It is recommended that implementations also provide conversions to and from
+binary floating-point or integer numbers, if appropriate (that is, if such
+encodings are supported in the environment of the implementation). It is
+suggested that such conversions be exact, if possible (that is, when converting
+from binary to decimal), or alternatively give the same results as converting
+using an appropriate string representation as an intermediate form. It is also
+recommended that if a number is too large to be converted to a given binary
+integer format then an exceptional or error condition be raised, rather than
+losing high-order significant bits (decapitating).
+<P>It is recommended that implementations also provide additional number
+formatting routines (including some which are locale-dependent), and if
+available should accept non-Arabic decimal digits in strings.
+<P><B>Notes:</B>
+<OL>
+  <LI>The setting of <I>precision</I> may be used to convert a number from any
+  precision to any other precision, using the <B>plus</B> operation. This meets
+  the requirements of IEEE 854 §5.3.
+  <LI>Integers are a proper subset of numbers, hence no conversion operation
+  from an integer to a number is necessary. Conversion from a number to an
+  integer is effected by using the <A
+  href="daops.html#refrtoi"><B>round-to-integer</B>
+  operation</A>. This meets the requirements of IEEE 854 §5.4 and §5.5. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=refnumsyn><FONT face=helvetica color=#006644>Numeric string
+syntax</FONT></A></H3>Strings which are acceptable for conversion to the
+abstract representation of numbers, or which might result from conversion from
+the abstract representation to a string, are called <I>numeric strings</I>.
+<P>A <I>numeric string</I> is a character string that describes either a
+<I>finite number</I> or a <I>special value</I>.
+<UL>
+  <LI>If it describes a <I>finite number</I>, it includes one or more decimal
+  digits, with an optional decimal point. The decimal point may be embedded in
+  the digits, or may be prefixed or suffixed to them. The group of digits (and
+  optional point) thus constructed may have an optional sign (‘<TT>+</TT>’ or
+  ‘<TT>-</TT>’) which must come before any digits or decimal point. <BR>The
+  string thus described may optionally be followed by an ‘<TT>E</TT>’
+  (indicating an exponential part), an optional sign, and an integer following
+  the sign that represents a power of ten that is to be applied. The
+  ‘<TT>E</TT>’ may be in uppercase or lowercase.
+  <LI>If it describes a <I>special value</I>, it is one of the case-independent
+  names ‘<TT>Infinity</TT>’, ‘<TT>Inf</TT>’, ‘<TT>NaN</TT>’, or ‘<TT>sNaN</TT>’
+  (where the first two represent <I>infinity</I> and may be preceded by an
+  optional sign, as for finite numbers, and the second two represent <I>quiet
+  NaN</I> and <I>signaling NaN</I> respectively). </LI></UL><I></I>No blanks or
+other white space characters are permitted in a numeric string.
+<P>Formally:<A name=backref.2><A
+href="daconvs.html#footnote.2"><FONT
+size=3><SUP>[2]</SUP></FONT></A></A>&nbsp; <PRE>  sign           ::=  '+' | '-'
+  digit          ::=  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  indicator      ::=  'e' | 'E'
+  digits         ::=  digit [digit]...
+  decimal-part   ::=  digits '.' [digits] | ['.'] digits
+  exponent-part  ::=  indicator [sign] digits
+  infinity       ::=  'Infinity' | 'Inf'
+  nan            ::=  'NaN' | 'sNaN'
+  numeric-value  ::=  decimal-part [exponent-part] | infinity
+  numeric-string ::=  [sign] numeric-value | nan
+</PRE><I></I>where the characters in the strings accepted for <TT>infinity</TT>
+and <TT>nan</TT> may be in any case.
+<P><B>Examples:</B>
+<P>Some numeric strings are: <PRE>       "0"         -- zero
+      "12"         -- a whole number
+     "-76"         -- a signed whole number
+      "12.70"      -- some decimal places
+      "+0.003"     -- a plus sign is allowed, too
+     "017."        -- the same as 17
+        ".5"       -- the same as 0.5
+      "4E+9"       -- exponential notation
+       "0.73e-7"   -- exponential notation, negative power
+      "Inf"        -- the same as Infinity
+      "-infinity"  -- the same as -Inf
+      "NaN"        -- not-a-Number
+</PRE><B>Notes:</B>
+<OL>
+  <LI>A single period alone or with a sign is not a valid numeric string.
+  <LI>A sign alone is not a valid numeric string.
+  <LI>Leading zeros are permitted. </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=reftostr><FONT face=helvetica color=#006644>to-scientific-string –
+conversion to numeric string</FONT></A></H3>This operation converts a number to
+a string, using scientific notation if an exponent is needed. The operation is
+not affected by the <I>context</I>.
+<P>If the number is a <I>finite number</I> then:
+<UL>
+  <LI>The <I>coefficient</I> is first converted to a string in base ten using
+  the characters 0 through 9 with no leading zeros (except if its value is zero,
+  in which case a single 0 character is used). <BR>Next, the <I>adjusted
+  exponent</I> is calculated; this is the <I>exponent</I>, plus the number of
+  characters in the converted <I>coefficient</I>, less one. That is,
+  <I>exponent</I><TT>+</TT>(<TT>clength</TT><TT>-</TT>1), where <TT>clength</TT>
+  is the length of the <I>coefficient</I> in decimal digits. <BR>If the
+  <I>exponent</I> is less than or equal to zero and the <I>adjusted exponent</I>
+  is greater than or equal to <TT>-</TT>6, the number will be converted to a
+  character form without using exponential notation. In this case, if the
+  <I>exponent</I> is zero then no decimal point is added. Otherwise (the
+  <I>exponent</I> will be negative), a decimal point will be inserted with the
+  absolute value of the <I>exponent</I> specifying the number of characters to
+  the right of the decimal point. ‘0’ characters are added to the left of the
+  converted <I>coefficient</I> as necessary. If no character precedes the
+  decimal point after this insertion then a conventional ‘0’ character is
+  prefixed. <BR>Otherwise (that is, if the <I>exponent</I> is positive, or the
+  <I>adjusted exponent</I> is less than <TT>-</TT>6), the number will be
+  converted to a character form using exponential notation. In this case, if the
+  converted <I>coefficient</I> has more than one digit a decimal point is
+  inserted after the first digit. An exponent in character form is then suffixed
+  to the converted <I>coefficient</I> (perhaps with inserted decimal point);
+  this comprises the letter ‘<TT>E</TT>’ followed immediately by the <I>adjusted
+  exponent</I> converted to a character form. The latter is in base ten, using
+  the characters 0 through 9 with no leading zeros, always prefixed by a sign
+  character (‘<TT>-</TT>’ if the calculated exponent is negative, ‘<TT>+</TT>’
+  otherwise). <BR>Finally, the entire string is prefixed by a minus sign
+  character<A name=backref.3><A
+  href="daconvs.html#footnote.3"><FONT
+  size=3><SUP>[3]</SUP></FONT></A></A>&nbsp; (‘<TT>-</TT>’) if <I>sign</I> is 1.
+  No sign character is prefixed if <I>sign</I> is 0. </LI></UL><I></I>Otherwise
+(the number is a <I>special value</I>):
+<UL>
+  <LI>If the <I>special value</I> is <I>quiet NaN</I> then the resulting string
+  is ‘<TT>NaN</TT>’.
+  <LI>If the <I>special value</I> is <I>signaling NaN</I> then the resulting
+  string is ‘<TT>sNaN</TT>’.<A name=backref.4><A
+  href="daconvs.html#footnote.4"><FONT
+  size=3><SUP>[4]</SUP></FONT></A></A>&nbsp;
+  <LI>If the <I>special value</I> is <I>infinity</I> then the resulting string
+  is ‘<TT>Infinity</TT>’. In this case, if the <I>sign</I> of the number is 1
+  then the string is preceded by a ‘–’ character. Otherwise (the <I>sign</I> is
+  is 0) no sign character is prefixed. </LI></UL>
+<P><B>Examples:</B>
+<P>For each abstract representation [<I>sign</I>, <I>coefficient</I>,
+<I>exponent</I>] or [<I>sign</I>, <I>special-value</I>] on the left, the
+resulting string is shown on the right. <PRE>  [0,123,0]       "123"
+  [1,123,0]       "-123"
+  [0,123,1]       "1.23E+3"
+  [0,123,3]       "1.23E+5"
+  [0,123,-1]      "12.3"
+  [0,123,-5]      "0.00123"
+  [0,123,-10]     "1.23E-8"
+  [1,123,-12]     "-1.23E-10"
+  [0,0,0]         "0"
+  [0,0,-2]        "0.00"
+  [0,0,2]         "0E+2"
+  [1,0,0]         "-0"
+  [0,inf]         "Infinity"
+  [1,inf]         "-Infinity"
+  [0,qNaN]        "NaN"
+  [0,sNaN]        "sNaN"
+</PRE><B>Notes:</B>
+<OL>
+  <LI>There is a one-to-one mapping between abstract representations and the
+  result of this conversion. That is, every abstract representation has a unique
+  <B>to-scientific-string</B> representation. Also, if that string
+  representation is converted back to an abstract representation using <A
+  href="daconvs.html#reftonum"><B>to-number</B></A>
+  with sufficient precision, then the original abstract representation will be
+  recovered. <BR>This one-to-one mapping guarantees that there is no hidden
+  information in the internal representation of the numbers (‘what you see is
+  exactly what you've got’).
+  <LI>The values <I>quiet NaN</I> and <I>signaling NaN</I> are distinguished in
+  string form in order to preserve the one-to-one mapping just described. The
+  strings chosen are those currently under consideration by the IEEE 754 review
+  committee.
+  <LI>The digits required for an exponent may be more than the number of digits
+  required for E<SUB>max</SUB> when a finite number is <A
+  href="damodel.html#refsubnorm">subnormal</A>.
+
+  <LI>IEEE 854 allows additional information to be suffixed to the string
+  representation of special values. Any such suffixes are not permitted by this
+  specification (again, to preserve the one-to-one mapping). It is suggested
+  that if additional information is held in a concrete representation then a
+  separate mechanism or operation is provided for accessing that information.
+  </LI></OL>
+<P>
+<HR align=left width="20%">
+
+<H3><FONT face=helvetica color=#006644>to-engineering-string – conversion to
+numeric string</FONT></H3>This operation converts a number to a string, using
+engineering notation if an exponent is needed.
+<P>The conversion exactly follows the rules for conversion to scientific numeric
+string except in the case of finite numbers where exponential notation is used.
+In this case, the converted exponent is adjusted to be a multiple of three
+(engineering notation) by positioning the decimal point with one, two, or three
+characters preceding it (that is, the part before the decimal point will range
+from <TT>1</TT> through <TT>999</TT>). This may require the addition of either
+one or two trailing zeros.
+<P>If after the adjustment the decimal point would not be followed by a digit
+then it is not added. If the final exponent is zero then no indicator letter and
+exponent is suffixed.
+<P><B>Examples:</B>
+<P>For each abstract representation [<I>sign</I>, <I>coefficient</I>,
+<I>exponent</I>] on the left, the resulting string is shown on the right. <PRE>  [0,123,1]       "1.23E+3"
+  [0,123,3]       "123E+3"
+  [0,123,-10]     "12.3E-9"
+  [1,123,-12]     "-123E-12"
+  [0,7,-7]        "700E-9"
+  [0,7,1]         "70"
+</PRE>
+<P>
+<HR align=left width="20%">
+
+<H3><A name=reftonum><FONT face=helvetica color=#006644>to-number – conversion
+from numeric string</FONT></A></H3>This operation converts a string to a number,
+as defined by its abstract representation. The string is expected to conform to
+the <A href="daconvs.html#refnumsyn">numeric
+string syntax</A>.
+<P>Specifically, if the string represents a <I>finite number</I> then:
+<UL>
+  <LI>If it has a leading sign, then the <I>sign</I> in the resulting abstract
+  representation is set appropriately (1 for ‘<TT>-</TT>’, 0 for ‘<TT>+</TT>’).
+  Otherwise the <I>sign</I> is set to 0. <BR>The decimal-part and exponent-part
+  (if any) are then extracted from the string and the exponent-part (following
+  the indicator) is converted to form the integer <I>exponent</I> which will be
+  negative if the exponent-part began with a ‘<TT>-</TT>’ sign. If there is no
+  exponent-part, the <I>exponent</I> is set to 0. <BR>If the decimal-part
+  included a decimal point the <I>exponent</I> is then reduced by the count of
+  digits following the decimal point (which may be zero) and the decimal point
+  is removed. The remaining string of digits has any leading zeros removed
+  (except for the rightmost digit) and is then converted to form the
+  <I>coefficient</I> which will be zero or positive. <BR>A numeric string to
+  finite number conversion is always exact unless there is an underflow or
+  overflow (see below) or the number of digits in the decimal-part of the string
+  is greater than the <I>precision</I> in the context. In this latter case the
+  coefficient will be rounded (shortened) to exactly <I>precision</I> digits,
+  using the <I>rounding</I> algorithm, and the <I>exponent</I> is increased by
+  the number of digits removed. <BR>If the value of the <A
+  href="damodel.html#reffinite"><I>adjusted
+  exponent</I></A> is less than E<SUB>min</SUB>, then the number is <A
+  href="damodel.html#refsubnorm">subnormal</A>.
+  In this case, the calculated coefficient and exponent form the result, unless
+  the value of the <I>exponent</I></A> is less than E<SUB>tiny</SUB>, in which
+  case the <I>exponent</I> will be set to <A
+  href="damodel.html#refsubnorm">E<SUB>tiny</SUB></A>,
+  and the coefficient will be rounded (possibly to zero) to match the adjustment
+  of the exponent, with the <I>sign</I> remaining as set above. If this rounding
+  gives an inexact result then the <A
+  href="daexcep.html#refunderf">Underflow
+  Exceptional condition</A> is raised. <BR>If (after any rounding of the
+  coefficient) the value of the <I>adjusted exponent</I> is larger than <A
+  href="damodel.html#reffinite">E<SUB>max</SUB></A>,
+  then an exceptional condition (overflow) results. In this case, the result is
+  as defined under the <A
+  href="daexcep.html#refoverf">Overflow
+  Exceptional condition</A>, and may be infinite. It will have the <I>sign</I>
+  as set above. </LI></UL>
+<P>If the string represents a <I>special value</I> then:
+<UL>
+  <LI>The string ‘<TT>NaN</TT>’, independent of case, is converted to <I>quiet
+  NaN</I>, with <I>sign</I> 0.
+  <LI>The string ‘<TT>sNaN</TT>’, independent of case, is converted to
+  <I>signaling NaN</I>, with <I>sign</I> 0.
+  <LI>The strings ‘<TT>Infinity</TT>’ and ‘<TT>Inf</TT>’, optionally preceded by
+  a sign character and independent of case, will be converted to
+  <I>infinity</I>. In this case, the <I>sign</I> of the number is set to 1 if
+  the string is preceded by a ‘–’. Otherwise the <I>sign</I> is set to 0.
+</LI></UL><I></I>The result of attempting to convert a string which does not
+have the syntax of a <I>numeric string</I> is <TT>[0,qNaN]</TT>.
+<P><B>Examples:</B>
+<P>For each string on the left, the resulting abstract representation
+[<I>sign</I>, <I>coefficient</I>, <I>exponent</I>] or [<I>sign</I>,
+<I>special-value</I>] is shown on the right. <I>precision</I> is at least 3. <PRE>  "0"            [0,0,0]
+  "0.00"         [0,0,-2]
+  "123"          [0,123,0]
+  "-123"         [1,123,0]
+  "1.23E3"       [0,123,1]
+  "1.23E+3"      [0,123,1]
+  "12.3E+7"      [0,123,6]
+  "12.0"         [0,120,-1]
+  "12.3"         [0,123,-1]
+  "0.00123"      [0,123,-5]
+  "-1.23E-12"    [1,123,-14]
+  "1234.5E-4"    [0,12345,-5]
+  "-0"           [1,0,0]
+  "-0.00"        [1,0,-2]
+  "0E+7"         [0,0,7]
+  "-0E-7"        [1,0,-7]
+  "inf"          [0,inf]
+  "+inFiniTy"    [0,inf]
+  "-Infinity"    [1,inf]
+  "NAN"          [0,qNaN]
+  "SNaN"         [0,sNaN]
+  "Fred"         [0,qNaN]
+</PRE>
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="daconvs.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>See also IEEE 854 §5.6. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="daconvs.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>Where quotes surround terminal characters, ‘<TT>::=</TT>’
+      means ‘is defined as’, ‘<TT>|</TT>’ means ‘or’, ‘<TT>[]</TT>’ encloses an
+      optional item, and ‘<TT>[]...</TT>’ encloses an item which is repeated 0
+      or more times. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="daconvs.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2>This specification defines only the glyph representing a
+      minus sign character. Depending on the implementation, this will often
+      correspond to a hyphen rather than to a distinguishable ‘minus’ character.
+      </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.4><A
+      href="daconvs.html#backref.4">[4]</A></A></FONT></TD>
+    <TD><FONT size=2>This is a deviation from IEEE 854-1987 (see Notes).
+      </FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="damodel.html">previous</A> | <A
+href="decarith.html">contents</A> | <A
+href="daops.html">next</A>]
+ </BODY></HTML>

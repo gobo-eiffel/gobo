@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0084)http://web.archive.org/web/20030116161354/www2.hursley.ibm.com/decimal/dtchange.html -->
+<HTML><HEAD><TITLE>Decimal Testcases - Appendix A -- Changes</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2002.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Testcases</B></FONT>, version 2.09
+      <BR><EM>Copyright (c) IBM Corporation, 2002. All rights reserved. ©</EM>
+    </TD>
+    <TD vAlign=top align=right>3 Nov 2002</TD></TR>
+  <TR>
+    <TD>[<A
+      href="dtnotes.html">previous</A> | <A
+      href="dectest.html">contents</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=changes><FONT face=helvetica color=#006644>Appendix A –
+Changes</FONT></A></H1>This appendix lists changes since the first public draft
+of this document.
+<H4><A name=chang018><FONT face=helvetica color=#006644>Changes in Draft 0.18
+(13 July 2001)</FONT></A></H4>
+<UL>
+  <LI>Two new testcase groups, <TT>randomDouble</TT> and <TT>randomSingle</TT>,
+  have been added.
+  <LI>Minor corrections and clarifications have been made. </LI></UL>
+<H4><A name=chang020><FONT face=helvetica color=#006644>Changes in Draft 0.20
+(25 September 2001)</FONT></A></H4>
+<UL>
+  <LI>The <TT>rounding</TT> testcase group now includes tests for the
+  <B>ceiling</B> and <B>floor</B> modes. </LI></UL>
+<H4><A name=chang100><FONT face=helvetica color=#006644>Changes in Version 1.00
+(21 November 2001)</FONT></A></H4>The specification has been enhanced to include
+tests for extended value arithmetic (including subnormal values and values such
+as <TT>NaN</TT> and <TT>Infinity</TT>). In particular:
+<UL>
+  <LI>A new <TT>version</TT> directive has been added to allow a formal version
+  number to be indicated.
+  <LI>A new <TT>extended</TT> directive controls the <I>extended-values</I>
+  setting.
+  <LI>Operands and results with extended values are now possible.
+  <LI>A new operation, <TT>integer</TT> (round-to-integer) has been added.
+  <LI>Three new testcase groups, <TT>extend</TT>, <TT>integer</TT>, and
+  <TT>randomBound32</TT>, have been added. </LI></UL>
+<H4><A name=chang102><FONT face=helvetica color=#006644>Changes in Version 1.02
+(30 November 2001)</FONT></A></H4>
+<UL>
+  <LI>A new operation, <TT>remaindernear</TT> (IEEE remainder) has been added,
+  together with a testcase group of the same name.
+  <LI>Some underflow and overflow exception results and conditions have been
+  corrected. </LI></UL>
+<H4><A name=chang103><FONT face=helvetica color=#006644>Changes in Version 1.03
+(20 March 2002)</FONT></A></H4>
+<UL>
+  <LI>Three new operations and testcase groups (<TT>abs</TT>, <TT>max</TT>, and
+  <TT>min</TT>) have been added.
+  <LI>Corrected the description of the <TT>maxexponent</TT> directive; a value
+  of zero is permitted. </LI></UL>
+<H4><A name=chang201><FONT face=helvetica color=#006644>Changes in Version 2.01
+(3 July 2002)</FONT></A></H4>This version marks a major update of the testcases
+to match the new combined arithmetic specification. The underlying syntax,
+<I>etc.</I>, of the testcases is unchanged, but specific changes include:
+<P>
+<UL>
+  <LI>Each testcase group has been split into two groups, one with the
+  <I>extended</I> directive set to 1 and the other with it set to 0.
+  <LI>One new operation and (pair of) testcase groups (<TT>trim</TT>) has been
+  added.
+  <LI>The <TT>extended</TT> testcase group has been removed and its testcases
+  incorporated into other groups. </LI></UL>
+<H4><A name=chang206><FONT face=helvetica color=#006644>Changes in Version 2.06
+(1 September 2002)</FONT></A></H4>This version incorporates updates to testcases
+for subnormal numbers (previous testcases included subnormals which were more
+precise than allowed by IEEE 854), and also adds testcases for rounding
+<B>to-number</B> conversions. The <TT>subnormal</TT> condition has been added,
+and subnormal numbers may be rounded and/or inexact (in the latter case,
+underflow is raised).
+<P>In this document:
+<P>
+<UL>
+  <LI>The <TT>subnormal</TT> condition has been added.
+  <LI>The <TT>conversion&nbsp;underflow</TT> and
+  <TT>conversion&nbsp;overflow</TT> conditions have been removed (these
+  conditions now raise <TT>underflow</TT> or <TT>overflow</TT>, respectively).
+  <LI>The operand to the <TT>toSci</TT> and <TT>toEng</TT> operations is now
+  subject to rounding.
+  <LI>Minor clarifications have been added. </LI></UL>
+<H4><A name=chang209><FONT face=helvetica color=#006644>Changes in Version 2.09
+(8 October 2002)</FONT></A></H4>
+<UL>
+  <LI>The <TT>normalize</TT> and <TT>squareroot</TT> operations and testcase
+  groups have been added.
+  <LI>Extended tests now admit unrounded long operands without input rounding;
+  the Lost_digits condition can therefore only occur when <I>extended</I> is 0.
+  <LI>Three cases in <TT>remaindernear.decTest</TT> which should have produced
+  Division_impossible, but did not, have been corrected (and extra tests have
+  been added). </LI></UL>
+<HR>
+[<A href="dtnotes.html">previous</A> | <A
+href="dectest.html">contents</A>]
+ </BODY></HTML>

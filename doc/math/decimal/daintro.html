@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0083)http://web.archive.org/web/20021107160150/www2.hursley.ibm.com/decimal/daintro.html -->
+<HTML><HEAD><TITLE>Decimal Arithmetic - Introduction</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Copyright (c) IBM Corporation, 2002.  All rights reserved. -->
+<META content="MSHTML 6.00.2800.1276" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<TABLE cellPadding=3 width="100%">
+  <TBODY>
+  <TR>
+    <TD><FONT face=helvetica><B>Decimal Arithmetic Specification</B></FONT>,
+      version 1.07 <BR><EM>Copyright (c) IBM Corporation, 2002. All rights
+      reserved. ©</EM> </TD>
+    <TD vAlign=top align=right>6 Nov 2002</TD></TR>
+  <TR>
+    <TD>[<A
+      href="decarith.html">contents</A> | <A
+      href="dascope.html">next</A>]
+  </TD></TR></TBODY></TABLE>
+<HR>
+
+<H1><A name=refintro><FONT face=helvetica
+color=#006644>Introduction</FONT></A></H1>This document defines a general
+purpose decimal arithmetic. A correct implementation of this specification is a
+decimal arithmetic which conforms to the requirements of the ANSI/IEEE standard
+854-1987,<A name=backref.1><A
+href="daintro.html#footnote.1"><FONT
+size=3><SUP>[1]</SUP></FONT></A></A>&nbsp; while supporting integer and
+unrounded floating-point arithmetic as a subset.
+<P>The primary audience for this document is implementers, so examples and other
+explanatory material are included. Explanatory material is identified as Notes,
+Examples, or footnotes, and is not part of the formal specification. Additional
+explanatory material can be found in the article <CITE>A Proposed Radix- and
+Word-length-independent Standard for Floating-point Arithmetic</CITE>.<A
+name=backref.2><A
+href="daintro.html#footnote.2"><FONT
+size=3><SUP>[2]</SUP></FONT></A></A>&nbsp;
+<P><A href="dax3274.html#x3274">Appendix
+A</A> describes a simplified subset of the full arithmetic which implements the
+decimal floating-point arithmetic defined in the ANSI standard X3.274-1996<A
+name=backref.3><A
+href="daintro.html#footnote.3"><FONT
+size=3><SUP>[3]</SUP></FONT></A></A>&nbsp; (this provides the model for the
+unrounded floating-point rules).
+<P><A href="daconcep.html#concepts">Appendix
+B</A> summarizes the design concepts behind the decimal arithmetic.
+<P><A href="dachange.html#changes">Appendix
+C</A> summarizes changes to this specification.
+<P>This document in various softcopy formats, together with a reference
+implementation, testcases, proposed concrete representations, and background
+information may be found at <TT><A
+href="http://www2.hursley.ibm.com/decimal">http://www2.hursley.ibm.com/decimal</A>
+</TT>
+<P>Comments on this draft are welcome. Please send any comments, suggestions,
+and corrections to the author, Mike Cowlishaw (<TT>mfc@uk.ibm.com</TT>).
+<H4><FONT face=helvetica color=#006644>Acknowledgements</FONT></H4>Very many
+people have contributed to the arithmetic described in this document, especially
+the 1980 Rexx Language Committee, the IBM Rexx Architecture Review Board, the
+IBM Vienna Compiler group, the X3 (now NCITS) J18 technical committee, the
+authors of the IEEE 854 standard, and the members of the current IEEE 754R
+(revision) committee. Special thanks for their contributions to the current
+design and this document are due to Aahz, Joshua Bloch, Dirk Bosmans,
+Paul-Georges Crismer, Joe Darcy, John Ehrman, Kit George, Peter Golde, Brian
+Marks, Dave Raggett, and Fred Ris.
+<HR>
+<FONT size=2>Footnotes:</FONT>
+<TABLE cellPadding=5>
+  <TBODY>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.1><A
+      href="daintro.html#backref.1">[1]</A></A></FONT></TD>
+    <TD><FONT size=2>IEEE 854-1987 – <CITE>IEEE Standard for Radix-Independent
+      Floating-Point Arithmetic</CITE>, The Institute of Electrical and
+      Electronics Engineers, Inc., New York, 1987. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.2><A
+      href="daintro.html#backref.2">[2]</A></A></FONT></TD>
+    <TD><FONT size=2>by W. J. Cody <I>et al</I>, published in the IEEE Micro
+      magazine, August 1984, pp86–100. </FONT></TD></TD>
+  <TR vAlign=top>
+    <TD><FONT size=2><A name=footnote.3><A
+      href="daintro.html#backref.3">[3]</A></A></FONT></TD>
+    <TD><FONT size=2><CITE>American National Standard for Information
+      Technology – Programming Language REXX, X3.274-1996</CITE>, American
+      National Standards Institute, New York, 1996.
+</FONT></TD></TD></TR></TBODY></TABLE>
+<HR>
+[<A href="decarith.html">contents</A> | <A
+href="dascope.html">next</A>]
+ </BODY></HTML>
