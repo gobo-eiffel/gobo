@@ -190,7 +190,7 @@ feature -- Input operations
 				from i := nb_char until i < 1 loop
 					a_stream.read_character
 					if not a_stream.end_of_input then
-						a_buffer.append_character (a_stream.last_character)
+						Result.append_character (a_stream.last_character)
 						i := i - 1
 					else
 						i := 0
