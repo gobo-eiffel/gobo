@@ -36,10 +36,10 @@ Eiffel</em> <em>Project</em></a>. The <em>Gobo Eiffel Structure
 Library</em> contains the classic containers needed in everyday
 programming, such as lists, stacks or tables, and provides
 different implementations such as linked, bilinked, arrayed or
-hashed. More data structures such as sets or queues may be added
-in the future if there is a need for them. There is nothing
-really new in this library. Most of the ideas come from other
-existing data structure libraries.</p>
+hashed. More data structures may be added in the future if there
+is a need for them. There is nothing really new in this library.
+Most of the ideas come from other existing data structure
+libraries.</p>
 
 <p>This documentation is structured as follows:</p>
 
@@ -50,12 +50,9 @@ existing data structure libraries.</p>
         <dt><a href="container.html">General Abstractions</a></dt>
         <dd>Abstract properties of data structures [cluster <font
             color="#800000"><em><tt>container</tt></em></font>].</dd>
-        <dt><a href="cursor.html">Traversable Containers</a></dt>
+        <dt><a href="traversal.html">Traversable Containers</a></dt>
         <dd>Data structure traversal mechanism [cluster <font
             color="#800000"><em><tt>cursor</tt></em></font>].</dd>
-        <dt><a href="search.html">Searchable Containers</a></dt>
-        <dd>Comparison criteria for object inclusion in
-            containers [cluster <font color="#800000"><em><tt>search</tt></em></font>].</dd>
         <dt><a href="sort.html">Sortable Containers</a></dt>
         <dd>Algorithms for sorting items in containers [cluster <font
             color="#800000"><em><tt>sort</tt></em></font>].</dd>
@@ -65,13 +62,17 @@ existing data structure libraries.</p>
         <dt><a href="table.html">Tables</a></dt>
         <dd>Containers whose items are accessed by keys [cluster <font
             color="#800000"><em><tt>table</tt></em></font>].</dd>
-        <dt><a href="stack.html">Stacks</a></dt>
-        <dd>First-In Last-Out (FILO) data structures [cluster <font
-            color="#800000"><em><tt>stack</tt></em></font>].</dd>
+        <dt><a href="dispenser.html">Dispensers</a></dt>
+        <dd>FIFO and FILO data structures [cluster <font
+            color="#800000"><em><tt>dispenser</tt></em></font>].</dd>
+        <dt><a href="base.html">EiffelBase Containers</a></dt>
+        <dd>Main <em>EiffelBase</em> containers implemented with <em>Gobo</em>
+            classes [cluster <font color="#800000"><em><tt>base</tt></em></font>].</dd>
         <dt><a href="see_also.html">See Also</a></dt>
         <dd>Bibliographical references, related resources and
             acknowledgments.</dd>
-        <dt><a href="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+        <dt><a
+            href="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
             Instructions</a></dt>
         <dd>License agreement and downloading instructions.</dd>
     </dl>
@@ -82,7 +83,7 @@ existing data structure libraries.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -92,7 +93,7 @@ existing data structure libraries.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 11 August 1998</font><br>
+            <strong>Last Updated:</strong> 21 August 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
