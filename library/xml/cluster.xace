@@ -71,10 +71,15 @@
 			<cluster name="spec" abstract="True">
 				<cluster name="compiler" location="${GOBO}/library/xml/impl/expat/spec/${GOBO_EIFFEL}"/>
 			</cluster>
-			<external>
-				<include_dir location="${GOBO}/library/xml/impl/expat/spec/c"/>
-				<link_library location="${GOBO}/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.a"/>
+			<external unless="${GOBO_OS}=windows">
+				<include_dir location="$(GOBO)/library/xml/impl/expat/spec/c"/>
+				<link_library location="$(GOBO)/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.a"/>
 				<link_library location="-lexpat"/>
+			</external>
+			<external if="${GOBO_OS}=windows">
+				<include_dir location="$(GOBO)/library/xml/impl/expat/spec/c"/>
+				<link_library location="$(GOBO)/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.lib"/>
+				<link_library location="$(EXPAT)/Libs/expat.lib"/>
 			</external>
 		</cluster>
 		<cluster name="eiffel" abstract="True">
