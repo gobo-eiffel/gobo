@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			nb: INTEGER
 			define_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			define_element: GEANT_ELEMENT
-			a_define: DS_PAIR [STRING, STRING]
 		do
 			precursor (a_project, an_element)
 				-- options (optional):
@@ -87,8 +86,7 @@ feature {NONE} -- Initialization
 					a_value := uc_attribute_value (define_element, Value_attribute_name).out
 
 					if a_name.count > 0 then
-						!! a_define.make (a_name, a_value)
-						defines.force_last (a_define)
+						defines.force (a_value, a_name)
 					end
 
 				end

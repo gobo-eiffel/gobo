@@ -67,7 +67,7 @@ feature -- Access
 			-- default: false
 			-- implementation note: do not use compile as name here, causes conflicts
 
-	defines: DS_ARRAYED_LIST [DS_PAIR [STRING, STRING]]
+	defines: DS_HASH_TABLE [STRING, STRING]
 			-- Defined values from the commandline (--define option)
 
 feature -- Setting
@@ -129,7 +129,6 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
-			i: INTEGER
 			nb: INTEGER
 		do
 			cmd := clone ("gexace ")
@@ -138,14 +137,19 @@ feature -- Execution
 			nb := defines.count
 			if nb > 0 then
 				cmd.append_string ("--define=%"")
-				from i := 1 until i > nb loop
-					if i > 1 then
+				from
+					defines.start
+				until
+					defines.after
+				loop
+					cmd.append_string (defines.key_for_iteration)
+					cmd.append_string ("=")
+					cmd.append_string (defines.item_for_iteration)
+
+					defines.forth
+					if not defines.after then
 						cmd.append_string (" ")
 					end
-					cmd.append_string (defines.item (i).first)
-					cmd.append_string ("=")
-					cmd.append_string (defines.item (i).second)
-					i := i + 1
 				end
 				cmd.append_string ("%"")
 			end
