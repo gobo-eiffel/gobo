@@ -169,14 +169,14 @@ feature -- General
 			elseif is_content_empty then
 				Result := "EMPTY"
 			else
-				Result := "("
+				Result := clone ("(")
 				from
 					a_cursor := items.new_cursor
 					a_cursor.start
 				until
 					a_cursor.after
 				loop
-					Result := STRING_.concat (Result, a_cursor.item.out)
+					Result := STRING_.appended_string (Result, a_cursor.item.out)
 					a_cursor.forth
 					if not a_cursor.after then
 						if is_content_mixed then
@@ -186,7 +186,7 @@ feature -- General
 						end
 					end
 				end
-				Result := STRING_.concat (Result, ")")
+				Result.append_character (')')
 				Result.append_character (repetition)
 			end
 		end
