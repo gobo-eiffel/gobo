@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -44,7 +44,7 @@
 		<geant target="other_install"/>
 	</target>
 
-	<target name="compile" depend="init">
+	<target name="compile" depend="prepare_compile">
 		<description>
 			Compile '${system}'.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
@@ -55,7 +55,7 @@
 		<geant target="compile_${eiffel}"/>
 	</target>
 
-	<target name="compile_ise" depend="init">
+	<target name="compile_ise" depend="prepare_compile">
 		<description>
 			Compile '${system}' with ISE Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -73,7 +73,7 @@
 		<move file="EIFGEN/W_code/${system}.melted" to_directory="." if="${debug}"/>
 	</target>
 
-	<target name="compile_hact" depend="init">
+	<target name="compile_hact" depend="prepare_compile">
 		<description>
 			Compile '${system}' with Halstenbach Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -91,7 +91,7 @@
 		<move file="${system}_gen/W_code/${system}.h2o" to_directory="." if="${debug}"/>
 	</target>
 
-	<target name="compile_ve" depend="init">
+	<target name="compile_ve" depend="prepare_compile">
 		<description>
 			Compile '${system}' with Visual Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -107,7 +107,7 @@
 		<ve tune="${system}${exe}" level="${vetuner}" if="${vetuner}"/>
 	</target>
 
-	<target name="compile_se" depend="init">
+	<target name="compile_se" depend="prepare_compile">
 		<description>
 			Compile '${system}' with SmallEiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -120,7 +120,7 @@
 		<se ace="compile_se.ace"/>
 	</target>
 
-	<target name="compile_debug" depend="init">
+	<target name="compile_debug" depend="prepare_compile">
 		<description>
 			Compile '${system}' in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
@@ -131,7 +131,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_ise" depend="init">
+	<target name="compile_debug_ise" depend="prepare_compile">
 		<description>
 			Compile '${system}' with ISE Eiffel in debug mode.
 		</description>
@@ -141,7 +141,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_hact" depend="init">
+	<target name="compile_debug_hact" depend="prepare_compile">
 		<description>
 			Compile '${system}' with Halstenbach Eiffel in debug mode.
 		</description>
@@ -151,7 +151,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_ve" depend="init">
+	<target name="compile_debug_ve" depend="prepare_compile">
 		<description>
 			Compile '${system}' with Visual Eiffel in debug mode.
 			If '${vetuner}' is set, set call 'vetuner'
@@ -163,7 +163,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_se" depend="init">
+	<target name="compile_debug_se" depend="prepare_compile">
 		<description>
 			Compile '${system}' with SmallEiffel in debug mode.
 		</description>
@@ -227,6 +227,14 @@
 			<define name="GOBO_OS" value="${GOBO_OS}"/>
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 		</gexace>
+	</target>
+
+	<target name="prepare_compile" depend="init">
+		<description>
+			Prepare compilation if necessary.
+		</description>
+
+		<!-- To be redefined in descendant if necessary -->
 	</target>
 
 	<target name="other_install" depend="init">
