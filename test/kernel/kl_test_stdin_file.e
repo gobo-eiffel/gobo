@@ -93,6 +93,35 @@ feature -- Test
 			end
 		end
 
+	test_read_line is
+			-- Test feature `read_line'.
+		local
+			a_file: KL_STDIN_FILE
+			last_string, last_string2: STRING
+		do
+			if read_from_console then
+				!! a_file.make
+				assert ("is_open", a_file.is_open_read)
+				assert ("not_eof", not a_file.end_of_file)
+				std.output.put_string ("Type 'gobo': ")
+				std.output.flush
+				a_file.read_line
+				assert ("not_eof2", not a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read1", "gobo", last_string)
+				assert ("not_eof3", not a_file.end_of_file)
+				assert_equal ("read2", "gobo", a_file.last_string)
+				assert ("not_eof4", not a_file.end_of_file)
+				std.output.put_string ("Type 'foobar': ")
+				std.output.flush
+				a_file.read_line
+				last_string2 := a_file.last_string
+				assert ("not_eof5", not a_file.end_of_file)
+				assert_equal ("read3", "foobar", last_string2)
+				assert_same ("same_last_string", last_string, last_string2)
+			end
+		end
+
 	test_read_to_string is
 			-- Test feature `read_to_string'.
 		local

@@ -115,6 +115,104 @@ feature -- Test
 			end
 		end
 
+	test_read_line1 is
+			-- Test feature `read_line'.
+			-- The last line has no line-separator.
+		local
+			a_file: KL_INPUT_FILE
+			a_name: STRING
+			last_string, last_string2: STRING
+		do
+			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data/gobo.txt")
+			!! a_file.make (a_name)
+			a_file.open_read
+			if a_file.is_open_read then
+				assert ("not_eof", not a_file.end_of_file)
+				a_file.read_line
+				assert ("not_eof2", not a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read1", "This is the first line,", last_string)
+				assert ("not_eof3", not a_file.end_of_file)
+				assert_equal ("read2", "This is the first line,", a_file.last_string)
+				assert ("not_eof4", not a_file.end_of_file)
+				a_file.read_line
+				last_string2 := a_file.last_string
+				assert ("not_eof5", not a_file.end_of_file)
+				assert_equal ("read3", "this is the second line.", last_string2)
+				assert_same ("same_last_string", last_string, last_string2)
+				a_file.read_line
+				assert ("eof1", a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read4", "#", last_string)
+				a_file.close
+				assert ("is_closed", a_file.is_closed)
+			else
+				assert ("is_opened", False)
+			end
+		end
+
+	test_read_line2 is
+			-- Test feature `read_line'.
+			-- The last line has a line-separator.
+		local
+			a_file: KL_INPUT_FILE
+			a_name: STRING
+			last_string, last_string2: STRING
+		do
+			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data/booleans.txt")
+			!! a_file.make (a_name)
+			a_file.open_read
+			if a_file.is_open_read then
+				assert ("not_eof", not a_file.end_of_file)
+				a_file.read_line
+				assert ("not_eof2", not a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read1", "True", last_string)
+				assert ("not_eof3", not a_file.end_of_file)
+				assert_equal ("read2", "True", a_file.last_string)
+				assert ("not_eof4", not a_file.end_of_file)
+				a_file.read_line
+				last_string2 := a_file.last_string
+				assert ("not_eof5", not a_file.end_of_file)
+				assert_equal ("read3", "False", last_string2)
+				assert_same ("same_last_string", last_string, last_string2)
+				a_file.read_line
+				assert ("eof1", a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read4", "", last_string)
+				a_file.close
+				assert ("is_closed", a_file.is_closed)
+			else
+				assert ("is_opened", False)
+			end
+		end
+
+	test_read_line3 is
+			-- Test feature `read_line'.
+			-- Empty file.
+		local
+			a_file: KL_INPUT_FILE
+			a_name: STRING
+			last_string: STRING
+		do
+			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data/empty.txt")
+			!! a_file.make (a_name)
+			a_file.open_read
+			if a_file.is_open_read then
+				assert ("not_eof", not a_file.end_of_file)
+				a_file.read_line
+				assert ("eof1", a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read1", "", last_string)
+				assert ("eof2", a_file.end_of_file)
+				assert_equal ("read2", "", a_file.last_string)
+				a_file.close
+				assert ("is_closed", a_file.is_closed)
+			else
+				assert ("is_opened", False)
+			end
+		end
+
 	test_read_to_string is
 			-- Test feature `read_to_string'.
 		local
