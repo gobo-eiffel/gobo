@@ -780,7 +780,7 @@ feature {NONE} -- Clients
 				end
 				if Result /= Void then
 					from client_names.start until client_names.after loop
-						if not Result.has (client_names.item_for_iteration) then
+						if not Result.has_class_name (client_names.item_for_iteration) then
 							Result := Void
 							client_names.go_after -- Jump out of the loop.
 						else
