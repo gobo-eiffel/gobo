@@ -15,6 +15,8 @@ class UC_UTF8_ROUTINES
 inherit
 
 	UC_IMPORTED_UNICODE_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 	UC_STRING_HANDLER
 
 feature -- Status report
@@ -311,6 +313,122 @@ feature -- Measurement
 		ensure
 			character_byte_count_large_enough: Result >= 1
 			character_byte_count_small_enough: Result <= 6
+		end
+
+feature -- Conversion
+
+	to_utf8 (a_string: STRING): STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-8 representation of `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		local
+			uc_string: UC_STRING
+			i, nb: INTEGER
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string.to_utf8
+			else
+				nb := a_string.count
+				Result := STRING_.make (nb)
+				from i := 1 until i > nb loop
+					append_code_to_utf8 (Result, a_string.item_code (i))
+					i := i + 1
+				end
+			end
+		ensure
+			to_utf8_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			valid_utf8: valid_utf8 (Result)
+		end
+
+feature -- Element change
+
+	append_code_to_utf8 (a_utf8: STRING; a_code: INTEGER) is
+			-- Add UTF-8 encoded character of code `a_code'
+			-- at the end of `a_utf8'.
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: a_utf8.same_type ("")
+			a_utf8_valid: valid_utf8 (a_utf8)
+			valid_code: unicode.valid_code (a_code)
+		local
+			b2, b3, b4, b5, b6: CHARACTER
+			c: INTEGER
+		do
+			inspect code_byte_count (a_code)
+			when 1 then
+					-- 0xxxxxxx
+				a_utf8.append_character (INTEGER_.to_character (a_code))
+			when 2 then
+				c := a_code
+				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+					-- 110xxxxx
+				a_utf8.append_character (INTEGER_.to_character (c + 192))
+				a_utf8.append_character (b2)
+			when 3 then
+				c := a_code
+				b3 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+					-- 1110xxxx
+				a_utf8.append_character (INTEGER_.to_character (c + 224))
+				a_utf8.append_character (b2)
+				a_utf8.append_character (b3)
+			when 4 then
+				c := a_code
+				b4 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b3 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+					-- 11110xxx
+				a_utf8.append_character (INTEGER_.to_character (c + 240))
+				a_utf8.append_character (b2)
+				a_utf8.append_character (b3)
+				a_utf8.append_character (b4)
+			when 5 then
+				c := a_code
+				b5 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b4 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b3 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+					-- 111110xx
+				a_utf8.append_character (INTEGER_.to_character (c + 248))
+				a_utf8.append_character (b2)
+				a_utf8.append_character (b3)
+				a_utf8.append_character (b4)
+				a_utf8.append_character (b5)
+			when 6 then
+				c := a_code
+				b6 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b5 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b4 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b3 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				c := c // 64
+					-- 1111110x
+				a_utf8.append_character (INTEGER_.to_character (c + 252))
+				a_utf8.append_character (b2)
+				a_utf8.append_character (b3)
+				a_utf8.append_character (b4)
+				a_utf8.append_character (b5)
+				a_utf8.append_character (b6)
+			end
+		ensure
+			a_utf8_valid: valid_utf8 (a_utf8)
 		end
 
 feature {NONE} -- Constants
