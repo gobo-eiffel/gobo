@@ -5,7 +5,7 @@ indexing
 		"Unicode factories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,7 @@ class UC_UNICODE_FACTORY
 inherit
 
 	UC_IMPORTED_UTF8_ROUTINES
+	UC_IMPORTED_UTF16_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
 
 feature -- Access
@@ -34,6 +35,7 @@ feature -- Access
 			-- from `a_string' encoded in UTF-8
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ("")
 			valid_utf8: utf8.valid_utf8 (a_string)
 		do
 			!UC_UTF8_STRING! Result.make_from_utf8 (a_string)
@@ -44,36 +46,14 @@ feature -- Access
 	new_unicode_string_from_utf16 (a_string: STRING): UC_STRING is
 			-- New unicode string made up of the characters
 			-- from `a_string' encoded in UTF-16
-			-- TODO: surrogate characters
 		require
 			a_string_not_void: a_string /= Void
-			valid_utf16_count: (a_string.count \\ 2) = 0
-		local
-			msb_first: BOOLEAN
-			i, cnt: INTEGER
+			a_string_is_string: a_string.same_type ("")
+			valid_utf16: utf16.valid_utf16 (a_string)
 		do
-			if a_string.item_code (1) = 254 and a_string.item_code (2) = 255 then
-				msb_first := True
-				i := 3
-			elseif a_string.item_code (1) = 255 and a_string.item_code (2) = 254 then
-				msb_first := False
-				i := 3
-			end
-			from
-				cnt := a_string.count
-				Result := new_unicode_string_with_capacity (cnt // 2)
-			until 
-				i > cnt
-			loop
-				if msb_first then
-					Result.append_code (a_string.item_code (i) * 256 + a_string.item_code (i+1))
-				else
-					Result.append_code (a_string.item_code (i+1) * 256 + a_string.item_code (i))
-				end
-				i := i + 2
-			end
+			!UC_UTF8_STRING! Result.make_from_utf16 (a_string)
 		end
-				
+
 	new_unicode_string_with_capacity (suggested_capacity: INTEGER): UC_STRING is
 			-- New empty unicode string
 		require
@@ -149,33 +129,4 @@ feature -- Access
 			code_set: Result.code = a_char.code
 		end
 
-	forced_unicode_string (a_string: STRING): UC_STRING is
-			-- Force string to be UC_STRING.
-		local
-			uc_string: UC_STRING
-		do
-			if a_string /= Void then
-				uc_string ?= a_string
-				if uc_string /= Void then
-					Result := uc_string
-				else
-					Result := new_unicode_string (a_string)
-				end
-			end
-		ensure
-			void: (Result = Void) = (a_string = Void)
-			--same_if_input_unicode: is_uc_string (a_string) implies (Result = a_string)
-		end
-	
-feature -- Query
-
-	is_unicode_string (a_string: STRING): BOOLEAN is
-			-- Is this string an instance of UC_STRING?
-		local
-			a_uc: UC_STRING
-		do
-			a_uc ?= a_string
-			Result := a_uc /= Void
-		end
-		
 end
