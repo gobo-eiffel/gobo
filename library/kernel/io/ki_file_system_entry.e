@@ -47,6 +47,11 @@ feature -- Status report
 			definition: Result = not is_open
 		end
 
+	is_readable: BOOLEAN is
+			-- Can file system entry be opened in read mode?
+		deferred
+		end
+
 feature -- Basic operations
 
 	open is
