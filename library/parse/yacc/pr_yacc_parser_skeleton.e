@@ -687,6 +687,7 @@ feature {NONE} -- Implementation
 			if a_rule.action /= No_action then
 					-- A mid-rule action has been detected.
 				dummy_variable := new_dummy_variable
+				dummy_variable.set_type (a_rule.lhs.type)
 				dummy_rule := new_rule (dummy_variable)
 				dummy_rule.set_action (a_rule.action)
 				dummy_rule.set_line_nb (a_rule.line_nb)
@@ -711,6 +712,7 @@ feature {NONE} -- Implementation
 			if a_rule.action /= No_action then
 					-- A mid-rule action has been detected.
 				dummy_variable := new_dummy_variable
+				dummy_variable.set_type (a_rule.lhs.type)
 				dummy_rule := new_rule (dummy_variable)
 				dummy_rule.set_action (a_rule.action)
 				dummy_rule.set_line_nb (a_rule.line_nb)
