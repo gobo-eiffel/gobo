@@ -32,21 +32,21 @@ inherit
 		undefine
 			out
 		end
-	
+
 	XM_UNICODE_STRUCTURE_FACTORY
 		export
 			{NONE} all
 		undefine
 			out
 		end
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
 		undefine
 			out
 		end
-	
+
 creation
 
 	make_name, make_list,
@@ -281,7 +281,7 @@ feature -- Repetition (derived)
 			-- Maximum occurrences.
 		do
 			Result := 1
-			
+
 			if is_one_or_more or is_zero_or_more then
 				Result := Platform.Maximum_integer
 			end
