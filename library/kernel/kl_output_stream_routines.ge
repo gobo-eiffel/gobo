@@ -125,4 +125,31 @@ feature -- Status setting
 #endif
 		end
 
+feature -- Element change
+
+	flush (a_stream: like OUTPUT_STREAM_TYPE) is
+			-- Flush data of `a_stream' to disk.
+		require
+			a_stream_not_void: a_stream /= Void
+			not_closed: not is_closed (a_stream)
+#ifdef SE
+		do
+			a_stream.flush
+#else
+#ifdef ISE || HACT
+		local
+			a_file: FILE
+		do
+			a_file ?= a_stream
+			if a_file /= Void then
+				a_file.flush
+			end
+#else
+#ifdef VE
+		do
+#endif
+#endif
+#endif
+		end
+
 end -- class KL_OUTPUT_STREAM_ROUTINES
