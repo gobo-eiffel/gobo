@@ -75,5 +75,6 @@ feature -- Parser errors
 	Error_cannot_parse_external_dtd: STRING is "Cannot parse external DTD"
 	
 	Error_unicode_in_ascii_string_mode: STRING is "Unexpected non-ASCII character in ASCII-only mode"
+	Error_unicode_in_latin1_string_mode: STRING is "Unexpected non-latin1 character in latin1-only mode"
 
 end
