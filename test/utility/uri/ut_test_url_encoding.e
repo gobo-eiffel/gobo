@@ -16,7 +16,10 @@ inherit
 	
 	TS_TEST_CASE
 	
-feature
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+		
+feature -- Tests
 
 	test_decoding is
 			-- Test URL encoding.
@@ -42,6 +45,24 @@ feature
 			assert_equal ("space", "a+b", encoder.escape_string ("a b"))
 			assert_equal ("percent", "%%25", encoder.escape_string ("%%")) 
 			assert_equal ("sequence", "%%2B+ab", encoder.escape_string ("+ ab")) 
+			assert_equal ("custom_space", "%%20", encoder.escape_custom (" ", encoder.new_character_set (""), False))
+			assert_equal ("custom_space_plus", "+", encoder.escape_custom (" ", encoder.new_character_set (""), True))
+		end
+		
+	test_utf8 is
+			-- Test escaping with UTF8.
+		local
+			a_string: STRING
+			escaped_string: STRING
+		do
+			create encoder
+			
+			a_string := "%/226/%/137/%/160/"
+			escaped_string := "%%E2%%89%%A0"
+			assert_equal ("utf_encoding", escaped_string, encoder.escape_utf8 (new_unicode_string_from_utf8 (a_string)))
+			assert_equal ("utf_raw_decoding", a_string, encoder.unescape_string (escaped_string))
+			assert_equal ("utf_decoding", 8800, encoder.unescape_utf8 (escaped_string).item_code (1))
+			assert_equal ("utf_decoding_count", 1, encoder.unescape_utf8 (escaped_string).count)
 		end
 		
 feature {NONE} -- Implementation
