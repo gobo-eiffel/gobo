@@ -30,6 +30,9 @@ inherit
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make_null,
@@ -95,7 +98,7 @@ feature -- Element
 							element_prefix, element_local_part)
 					on_delayed_attributes
 				else
-					error_msg :=  Undeclared_namespace_error + " in tag <" + element_prefix + ":" + element_local_part + ">"
+					error_msg :=  Undeclared_namespace_error + " in tag <" + STRING_.as_string (element_prefix) + ":" + STRING_.as_string (element_local_part) + ">"
 					on_error (error_msg)
 				end
 			else
