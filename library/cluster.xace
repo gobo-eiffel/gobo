@@ -8,4 +8,5 @@
 	<mount location="${GOBO}/library/tools/cluster.xace"/>
 	<mount location="${GOBO}/library/utility/cluster.xace"/>
 	<mount location="${GOBO}/library/xml/cluster.xace"/>
+	<mount location="${GOBO}/library/pattern/cluster.xace"/>
 </cluster>
