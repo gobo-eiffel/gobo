@@ -858,6 +858,51 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdrd2c_error (a_class: ET_CLASS; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
+			-- Report VDRD-2 error: the inherited feature `f2', replicated
+			-- in `a_class', is implicitly redeclared to the selected redeclared
+			-- feature `f1' in `a_class', but the signature of `f1' in `a_class'
+			-- does not conform to the signature of `f2' in its parent class.
+			--
+			-- ETL2: p.163
+			-- ETR: p.39
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd2_error (a_class) then
+				create an_error.make_vdrd2c (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdrd2d_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE) is
+			-- Report VDRD-2 error: the inherited feature `f2', replicated
+			-- in `a_class', is implicitly redeclared to the selected
+			-- inherited feature `f1' in `a_class', but the signature of
+			-- `f1' in `a_class' does not conform to the signature of `f2'
+			-- in its parent class.
+			--
+			-- ETL2: p.163
+			-- ETR: p.39
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd2_error (a_class) then
+				create an_error.make_vdrd2d (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdrd3a_error (a_class: ET_CLASS; p: ET_PRECONDITIONS; f: ET_FLATTENED_FEATURE) is
 			-- Report VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its preconditions do not begin with

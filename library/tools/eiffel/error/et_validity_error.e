@@ -41,6 +41,8 @@ creation
 	make_vdjr0c,
 	make_vdrd2a,
 	make_vdrd2b,
+	make_vdrd2c,
+	make_vdrd2d,
 	make_vdrd3a,
 	make_vdrd3b,
 	make_vdrd4a,
@@ -936,7 +938,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
 			parameters.put (f1.name.name, 6)
-			parameters.put (f2.name.name, 7)
+			parameters.put (f2.precursor_feature.name.name, 7)
 			parameters.put (f2.parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
@@ -983,7 +985,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.name.name, 5)
 			parameters.put (f1.name.name, 6)
 			parameters.put (f1.parent.type.name.name, 7)
-			parameters.put (f2.name.name, 8)
+			parameters.put (f2.precursor_feature.name.name, 8)
 			parameters.put (f2.parent.type.name.name, 9)
 			set_compilers (True)
 		ensure
@@ -1001,6 +1003,101 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class of feature
 			-- dollar8: $8 = redeclared feature name
 			-- dollar9: $9 = parent base class of redeclared feature
+		end
+
+	make_vdrd2c (a_class: like current_class; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
+			-- Create a new VDRD-2 error: the inherited feature `f2', replicated
+			-- in `a_class', is implicitly redeclared to the selected redeclared
+			-- feature `f1' in `a_class', but the signature of `f1' in `a_class'
+			-- does not conform to the signature of `f2' in its parent class.
+			--
+			-- ETL2: p.163
+			-- ETR: p.39
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vdrd2c_template_code
+			etl_code := vdrd2_etl_code
+			default_template := vdrd2c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f1.name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f2.precursor_feature.name.name, 7)
+			parameters.put (f2.parent.type.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = selected feature name
+			-- dollar7: $7 = replicated feature name
+			-- dollar8: $8 = parent base class of replicated feature
+		end
+
+	make_vdrd2d (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
+			-- Create a new VDRD-2 error: the inherited feature `f2', replicated
+			-- in `a_class', is implicitly redeclared to the selected
+			-- inherited feature `f1' in `a_class', but the signature of
+			-- `f1' in `a_class' does not conform to the signature of `f2'
+			-- in its parent class.
+			--
+			-- ETL2: p.163
+			-- ETR: p.39
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vdrd2d_template_code
+			etl_code := vdrd2_etl_code
+			default_template := vdrd2d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f1.parent.type.name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.precursor_feature.name.name, 8)
+			parameters.put (f2.parent.type.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = selected feature name
+			-- dollar7: $7 = parent base class of selected feature
+			-- dollar8: $8 = replicated feature name
+			-- dollar9: $9 = parent base class of replicated feature
 		end
 
 	make_vdrd3a (a_class: like current_class; p: ET_PRECONDITIONS; f: ET_FLATTENED_FEATURE) is
@@ -5370,6 +5467,8 @@ feature {NONE} -- Implementation
 	vdjr0c_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
 	vdrd2a_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
 	vdrd2b_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
+	vdrd2c_default_template: STRING is "[$1] class $5 ($3,$4): signature of selected feature `$6' does not conform to the signature of replicated feature `$7' in parent $8."
+	vdrd2d_default_template: STRING is "[$1] class $5 ($3,$4): signature of selected feature `$6' inherited from $7 does not conform to the signature of replicated feature `$8' in parent $9."
 	vdrd3a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is redeclared but its preconditions do not begin with 'require else'."
 	vdrd3b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is redeclared but its postconditions do not begin with 'ensure then'."
 	vdrd4a_default_template: STRING is "[$1] class $5 ($3,$4): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
@@ -5552,6 +5651,8 @@ feature {NONE} -- Implementation
 	vdjr0c_template_code: STRING is "vdjr0c"
 	vdrd2a_template_code: STRING is "vdrd2a"
 	vdrd2b_template_code: STRING is "vdrd2b"
+	vdrd2c_template_code: STRING is "vdrd2c"
+	vdrd2d_template_code: STRING is "vdrd2d"
 	vdrd3a_template_code: STRING is "vdrd3a"
 	vdrd3b_template_code: STRING is "vdrd3b"
 	vdrd4a_template_code: STRING is "vdrd4a"
