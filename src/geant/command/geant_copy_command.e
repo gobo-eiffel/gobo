@@ -50,7 +50,6 @@ feature -- Status report
 
 	is_fileset_to_directory_executable: BOOLEAN is
 			-- Can command be executed on source fileset `fileset' to targetdirectory `to_directory'?
-			-- Can command be executed on a to_directory?
 		do
 			Result := fileset /= Void and then
 				to_directory /= Void and then to_directory.count > 0
@@ -87,6 +86,11 @@ feature -- Access
 
 	fileset: GEANT_FILESET
 		-- Fileset for current command
+
+	force: BOOLEAN
+		-- Should source files be copied over target files,
+		-- provided the target files exist, even when target files
+		-- are newer than their corresponding source files?
 
 feature -- Setting
 
@@ -133,6 +137,14 @@ feature -- Setting
 			fileset_set: fileset = a_fileset
 		end
 
+	set_force (b: BOOLEAN) is
+			-- Set `force' to `b'.
+		do
+			force := b
+		ensure
+			force_set: force = b
+		end
+
 feature -- Execution
 
 	execute is
@@ -140,7 +152,6 @@ feature -- Execution
 		local
 			a_from_file: STRING
 			a_to_file: STRING
-			a_filename: STRING
 			a_basename: STRING
 		do
 			exit_code := 0
@@ -159,35 +170,25 @@ feature -- Execution
 			else
 				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
 
+				if not fileset.is_executable then
+					project.log ("  [copy] error: fileset definition wrong%N")
+					exit_code := 1
+				end
+
 				if exit_code = 0 then
 					fileset.execute
 					from
-						fileset.filenames.start
+						fileset.start
 					until
-						fileset.filenames.after or else exit_code /= 0
+						fileset.after or else exit_code /= 0
 					loop
-						a_filename := fileset.filenames.item_for_iteration
-						a_from_file := unix_file_system.pathname(fileset.directory_name, a_filename)
-						if fileset.map /= Void then
-							if fileset.map.is_executable then
-								a_filename := fileset.map.mapped_filename (a_filename)
-							else
-								project.log ("  [copy] error: map definition wrong'%N")
-								exit_code := 1
-							end
-						else
-							project.trace_debug ("  map is Void%N")
-						end
-						if exit_code = 0 then
-							a_to_file := unix_file_system.pathname(to_directory, a_filename)
-								-- Create target directory if necessary:
-							create_directory_for_pathname (a_to_file)
-							copy_file (a_from_file, a_to_file)
-						else
-							project.log ("  [copy] error: cannot copy%N")
-						end
+						a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
+						a_to_file := unix_file_system.pathname (to_directory, fileset.item_mapped_filename)
+							-- Create target directory if necessary:
+						create_directory_for_pathname (a_to_file)
+						copy_file (a_from_file, a_to_file)
 	
-						fileset.filenames.forth
+						fileset.forth
 					end
 				end
 			end
@@ -216,12 +217,14 @@ feature {NONE} -- Implementation
 				exit_code := 1
 			else
 					-- Copy file if target is out of date:
-				if is_file_outofdate (old_name, new_name) then
+				if force or else is_file_outofdate (old_name, new_name) then
 					project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
-					file_system.copy_file (old_name, new_name)
-					if not file_system.file_exists (new_name) then
-						project.log ("  [copy] error: cannot copy file '" + old_name + "' to file '" + new_name + "'%N")
-						exit_code := 1
+					if not project.no_exec then
+						file_system.copy_file (old_name, new_name)
+						if not file_system.file_exists (new_name) then
+							project.log ("  [copy] error: cannot copy file '" + old_name + "' to file '" + new_name + "'%N")
+							exit_code := 1
+						end
 					end
 				end
 			end
