@@ -92,7 +92,7 @@ feature -- Setting
 		do
 			command_line := a_command_line
 		ensure
-			command_list_set: command_line = a_command_line
+			command_line_set: command_line = a_command_line
 		end
 
 	set_accept_errors (b: BOOLEAN) is
