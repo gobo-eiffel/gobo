@@ -384,7 +384,7 @@ feature -- Access
 			end
 		ensure
 			attribute_not_void: has_attribute_by_name (a_name) = (Result /= Void)
-			namespace: Result /= Void implies same_namespace (Result)
+			namespace: Result /= Void implies (not Result.has_prefix)
 		end
 
 	attribute_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ATTRIBUTE is
