@@ -161,7 +161,7 @@ feature -- Access
 					elseif arg.count > 2 and then p = 0 then
 							-- define commandline variable:
 						a_variable_name := clone (arg.substring (3, arg.count))
-						Commandline_variables.force ("True", a_variable_name)
+						Commandline_variables.force ("true", a_variable_name)
 					end
 				elseif i = nb then
 					start_target_name := arg
