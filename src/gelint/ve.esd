@@ -25,13 +25,6 @@ cluster
 
 		-- Gobo Eiffel Library
 	[Gobo				"$GOBO/library"] end
-	[ast				"$GOBO/library/tools/ast"] end
-	[error				"$GOBO/library/tools/error"] end
-	[parser				"$GOBO/library/tools/parser"] end
-
-		-- Visual Eiffel Kernel
-	[Kernel				"$VE_LIB/kernel"] end
-	[gArgs				"$VE_LIB/Tools/gArgs"] end
 
 option
 
