@@ -257,7 +257,11 @@ feature {NONE} -- Output
 			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
 			an_inlining: DS_HASH_SET [STRING]
 			a_warning: STRING
+			is_version_3: BOOLEAN
 		do
+				-- Some options have been introduced in HACT 4.0 and
+				-- are not supported in HACT 3.
+			is_version_3 := variables.is_defined ("GOBO_HACT_3")
 			if an_option.address_expression then
 				print_indentation (indent, a_file)
 				a_file.put_line ("address_expression (yes);")
@@ -312,12 +316,16 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("console_application (no);")
 			end
-			if an_option.create_keyword_extension then
-				print_indentation (indent, a_file)
-				a_file.put_line ("create_keyword_extension (yes);")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("create_keyword_extension (no);")
+			if not is_version_3 then
+					-- This option has been introduced in HACT 4.0 and
+					-- are not supported in HACT 3.
+				if an_option.create_keyword_extension then
+					print_indentation (indent, a_file)
+					a_file.put_line ("create_keyword_extension (yes);")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("create_keyword_extension (no);")
+				end
 			end
 			a_dead_code_removal := an_option.dead_code_removal
 			if a_dead_code_removal.has (options.all_value) then
@@ -357,12 +365,16 @@ feature {NONE} -- Output
 				a_file.put_line ("%");")
 				a_debug_tag_cursor.forth
 			end
-			if an_option.dynamic_runtime then
-				print_indentation (indent, a_file)
-				a_file.put_line ("dynamic_runtime_library (yes);")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("dynamic_runtime_library (no);")
+			if not is_version_3 then
+					-- This option has been introduced in HACT 4.0 and
+					-- are not supported in HACT 3.
+				if an_option.dynamic_runtime then
+					print_indentation (indent, a_file)
+					a_file.put_line ("dynamic_runtime_library (yes);")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("dynamic_runtime_library (no);")
+				end
 			end
 			if an_option.exception_trace then
 				print_indentation (indent, a_file)
@@ -371,12 +383,16 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("exception_trace (no);")
 			end
-			if an_option.garbage_collector.is_equal (options.boehm_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("garbage_collector (%"boehm%");")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("garbage_collector (%"internal%");")
+			if not is_version_3 then
+					-- This option has been introduced in HACT 4.0 and
+					-- are not supported in HACT 3.
+				if an_option.garbage_collector.is_equal (options.boehm_value) then
+					print_indentation (indent, a_file)
+					a_file.put_line ("garbage_collector (%"boehm%");")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("garbage_collector (%"internal%");")
+				end
 			end
 			an_inlining := an_option.inlining
 			if an_inlining.has (options.all_value) then
@@ -399,19 +415,27 @@ feature {NONE} -- Output
 			a_file.put_string ("inlining_size (%"")
 			a_file.put_integer (an_option.inlining_size)
 			a_file.put_line ("%");")
-			if an_option.linux_fpu_double_precision then
-				print_indentation (indent, a_file)
-				a_file.put_line ("linux_fpu_double_precision (yes);")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("linux_fpu_double_precision (no);")
+			if not is_version_3 then
+					-- This option has been introduced in HACT 4.0 and
+					-- are not supported in HACT 3.
+				if an_option.linux_fpu_double_precision then
+					print_indentation (indent, a_file)
+					a_file.put_line ("linux_fpu_double_precision (yes);")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("linux_fpu_double_precision (no);")
+				end
 			end
-			if an_option.portable_code_generation then
-				print_indentation (indent, a_file)
-				a_file.put_line ("portable_code_generation (yes);")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("portable_code_generation (no);")
+			if not is_version_3 then
+					-- This option has been introduced in HACT 4.0 and
+					-- are not supported in HACT 3.
+				if an_option.portable_code_generation then
+					print_indentation (indent, a_file)
+					a_file.put_line ("portable_code_generation (yes);")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("portable_code_generation (no);")
+				end
 			end
 			if an_option.is_precompiled_declared then
 				print_indentation (indent, a_file)
@@ -431,16 +455,20 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.precompiled)
 				a_file.put_line ("%");")
 			end
-			a_warning := an_option.warning
-			if a_warning.is_equal (options.default_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("warning_level (%"default%");")
-			elseif a_warning.is_equal (options.all_value) then
-				print_indentation (indent, a_file)
-				a_file.put_line ("warning_level (all);")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("warning_level (no);")
+			if not is_version_3 then
+					-- This option has been introduced in HACT 4.0 and
+					-- are not supported in HACT 3.
+				a_warning := an_option.warning
+				if a_warning.is_equal (options.default_value) then
+					print_indentation (indent, a_file)
+					a_file.put_line ("warning_level (%"default%");")
+				elseif a_warning.is_equal (options.all_value) then
+					print_indentation (indent, a_file)
+					a_file.put_line ("warning_level (all);")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("warning_level (no);")
+				end
 			end
 		end
 
