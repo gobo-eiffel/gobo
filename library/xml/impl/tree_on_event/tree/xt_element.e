@@ -31,8 +31,8 @@ creation
 feature {NONE} -- Implementation
 
 	make_root (a_name, a_ns_prefix: UC_STRING) is
-				-- make a new root element based on the information held in a 
-				-- XM_START_TAG object. This will fill in the name and the attributes
+			-- make a new root element based on the information held in a 
+			-- XM_START_TAG object. This will fill in the name and the attributes
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -44,8 +44,8 @@ feature {NONE} -- Implementation
 		end
 	
 	make_child (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: UC_STRING) is
-				-- make a new child element based on the information held in a 
-				-- XM_START_TAG object. This will fill in the name and the attributes
+			-- make a new child element based on the information held in a 
+			-- XM_START_TAG object. This will fill in the name and the attributes
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
