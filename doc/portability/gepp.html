@@ -87,12 +87,28 @@ using the notation <font color="#800000"><tt>-D</tt><em><tt>name</tt></em></font
 where <font color="#800000"><em><tt>name</tt></em></font> is the
 name being defined.</p>
 
+<p>A Unix-like usage message of <em>gepp</em> can be invoked
+using one of the following commands:</p>
+
+<blockquote>
+    <pre><font color="#800000">gepp --help
+gepp -h
+gepp -?</font></pre>
+</blockquote>
+
+<p>and one can get <em>gepp</em>'s version number with either:</p>
+
+<blockquote>
+    <pre><font color="#800000">gepp --version
+gepp -V</font></pre>
+</blockquote>
+
 <p><em>Gepp</em> behaves much like the well-known C-preprocessor,
 but only a small subset of the preprocessing instructions is
 actually supported. Keywords making up <em>gepp</em> instructions
-typically start with the character # at the beginning of the
-line. The preprocessor instructions supported by <em>gepp</em>
-are as follows:</p>
+typically start with the character <font color="#0000FF">#</font>
+at the beginning of the line. The preprocessor instructions
+supported by <em>gepp</em> are as follows:</p>
 
 <h4>Name definition</h4>
 
@@ -177,7 +193,7 @@ is either:</p>
             color="#800080" size="2" face="Courier New"><em> </em></font>is
             true if <font color="#800080"><em><tt>Condition1</tt></em></font><font
             color="#800080" size="2" face="Courier New"><em> </em></font>is
-            true, false otherwise.</dd>
+            false, false otherwise.</dd>
     </dl>
 </blockquote>
 
@@ -218,8 +234,8 @@ href="inheritance.html">adaptation by inheritance</a> and the <a
 href="client.html">client adaptation</a> techniques are not
 applicable. This can happen due to a language, rather than a
 kernel class, incompatibility between Eiffel compilers. For
-example, in a previous release of Visual Eiffel, there was a bug
-in the <em>select</em> clause. In class <font color="#008080"><em><tt>FOO</tt></em></font>
+example, in a early release of Visual Eiffel, there was a bug in
+the <em>select</em> clause. In class <font color="#008080"><em><tt>FOO</tt></em></font>
 sketched below, the compiler was reporting a validity error
 unless two select clauses were specified, one in <font
 color="#008080"><em><tt>NUMERIC</tt></em></font> and one in <font
@@ -422,8 +438,8 @@ Eiffel philosophy to use such mechanism and none of the existing
 Eiffel compilers provide support for such preprocessing. Eiffel
 is by nature an elegant and very readable language which should
 not be soiled with ugly preprocessing instructions. As a
-consequence, this technique has only been used in cases where no
-other solutions were satisfactory.</p>
+consequence, this technique has only been used in very rare cases
+where no other solutions were satisfactory.</p>
 
 <hr size="1">
 <div align="left">
@@ -436,7 +452,7 @@ other solutions were satisfactory.</p>
     size="2"> <br>
     </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
     size="2"><br>
-    <strong>Last Updated:</strong> 4 October 1997</font><br>
+    <strong>Last Updated:</strong> 7 February 1998</font><br>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
