@@ -103,8 +103,6 @@ feature -- Encoding
 
 	is_valid_encoding (an_encoding: STRING): BOOLEAN is
 			-- Is this encoding known?
-		local
-			lower_encoding: STRING
 		do
 			check filter_set: input_filter /= Void end
 			Result := input_filter.is_valid_encoding (an_encoding)
