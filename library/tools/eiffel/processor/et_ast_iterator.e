@@ -186,6 +186,20 @@ feature {ET_AST_NODE} -- Processing
 			a_type.right_brace.process (Current)
 		end
 
+	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_brace.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_brace.process (Current)
+		end
+
 	process_break (a_break: ET_BREAK) is
 			-- Process `a_break'.
 		do
@@ -316,6 +330,7 @@ feature {ET_AST_NODE} -- Processing
 			an_obsolete_message: ET_OBSOLETE
 			a_parents: ET_PARENT_LIST
 			a_creators: ET_CREATOR_LIST
+			a_convert_features: ET_CONVERT_FEATURE_LIST
 			an_invariants: ET_INVARIANTS
 		do
 			process_break (a_class.leading_break)
@@ -352,6 +367,10 @@ feature {ET_AST_NODE} -- Processing
 			a_creators := a_class.creators
 			if a_creators /= Void then
 				a_creators.process (Current)
+			end
+			a_convert_features := a_class.convert_features
+			if a_convert_features /= Void then
+				a_convert_features.process (Current)
 			end
 			process_features (a_class)
 			an_invariants := a_class.invariants
@@ -477,6 +496,43 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			a_list.end_keyword.process (Current)
+		end
+
+	process_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE_COMMA) is
+			-- Process `a_convert_feature'.
+		do
+			a_convert_feature.convert_feature.process (Current)
+			a_convert_feature.comma.process (Current)
+		end
+
+	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.convert_keyword.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
+	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION) is
+			-- Process `a_convert_function'.
+		do
+			a_convert_function.name.process (Current)
+			a_convert_function.colon.process (Current)
+			a_convert_function.types.process (Current)
+		end
+
+	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is
+			-- Process `a_convert_procedure'.
+		do
+			a_convert_procedure.name.process (Current)
+			a_convert_procedure.left_parenthesis.process (Current)
+			a_convert_procedure.types.process (Current)
+			a_convert_procedure.right_parenthesis.process (Current)
 		end
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is

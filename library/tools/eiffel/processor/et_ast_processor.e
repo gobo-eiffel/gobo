@@ -146,6 +146,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		require
@@ -276,6 +283,34 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE_COMMA) is
+			-- Process `a_convert_feature'.
+		require
+			a_convert_feature_not_void: a_convert_feature /= Void
+		deferred
+		end
+
+	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST) is
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION) is
+			-- Process `a_convert_function'.
+		require
+			a_convert_function_not_void: a_convert_function /= Void
+		deferred
+		end
+
+	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is
+			-- Process `a_convert_procedure'.
+		require
+			a_convert_procedure_not_void: a_convert_procedure /= Void
 		deferred
 		end
 

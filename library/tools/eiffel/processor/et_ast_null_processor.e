@@ -97,6 +97,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
+			-- Process `a_list'.
+		do
+		end
+
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -189,6 +194,26 @@ feature {ET_AST_NODE} -- Processing
 
 	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR) is
 			-- Process `a_list'.
+		do
+		end
+
+	process_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE_COMMA) is
+			-- Process `a_convert_feature'.
+		do
+		end
+
+	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST) is
+			-- Process `a_list'.
+		do
+		end
+
+	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION) is
+			-- Process `a_convert_function'.
+		do
+		end
+
+	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is
+			-- Process `a_convert_procedure'.
 		do
 		end
 
