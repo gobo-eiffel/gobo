@@ -84,7 +84,7 @@ feature -- Processing
 				if output_filename /= Void then
 					out_file := OUTPUT_STREAM_.make_file_open_write (output_filename)
 					if OUTPUT_STREAM_.is_open_write (out_file) then
-						parser_generator.print_parser (tokens_needed, out_file)
+						parser_generator.print_parser (tokens_needed, actions_separated, out_file)
 						OUTPUT_STREAM_.close (out_file)
 					else
 						!! cannot_write.make (output_filename)
@@ -92,7 +92,7 @@ feature -- Processing
 						Exceptions.die (1)
 					end
 				else
-					parser_generator.print_parser (tokens_needed, std.output)
+					parser_generator.print_parser (tokens_needed, actions_separated, std.output)
 				end
 			end
 		end
@@ -140,23 +140,37 @@ feature -- Processing
 					report_usage_message
 				elseif arg.is_equal ("-t") or arg.is_equal ("-d") then
 					i := i + 1
-					token_classname := STRING_.to_upper (Arguments.argument (i))
+					if i > nb then
+						report_usage_error
+					else
+						token_classname := STRING_.to_upper (Arguments.argument (i))
+					end
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--tokens=") then
 					token_classname := STRING_.to_upper (arg.substring (10, arg.count))
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--defines=") then
 					token_classname := STRING_.to_upper (arg.substring (11, arg.count))
 				elseif arg.is_equal ("-o") then
 					i := i + 1
-					output_filename := Arguments.argument (i)
+					if i > nb then
+						report_usage_error
+					else
+						output_filename := Arguments.argument (i)
+					end
 				elseif arg.count > 14 and then arg.substring (1, 14).is_equal ("--output-file=") then
 					output_filename := arg.substring (15, arg.count)
 				elseif arg.is_equal ("-v") then
 					i := i + 1
-					verbose_filename := Arguments.argument (i)
+					if i > nb then
+						report_usage_error
+					else
+						verbose_filename := Arguments.argument (i)
+					end
+				elseif arg.is_equal ("-x") then
+					actions_separated := True
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--verbose=") then
 					verbose_filename := arg.substring (11, arg.count)
 				elseif i = nb then
-					input_filename := Arguments.argument (i)
+					input_filename := arg
 				else
 					report_usage_error
 				end
@@ -173,6 +187,7 @@ feature -- Access
 	output_filename: STRING
 	token_classname: STRING
 	verbose_filename: STRING
+	actions_separated: BOOLEAN
 			-- Command line arguments
 
 	grammar: PR_GRAMMAR
@@ -183,7 +198,7 @@ feature -- Access
 
 feature -- Constants
 
-	Version_number: STRING is "1.2"
+	Version_number: STRING is "1.4"
 	Eiffel_extension: STRING is ".e"
 
 feature {NONE} -- Error handling
@@ -216,7 +231,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gelex usage message
 		once
-			!! Result.make ("[-hV?][-t classname][-v filename][-o filename] filename")
+			!! Result.make ("[-hxV?][-t classname][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
