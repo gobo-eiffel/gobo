@@ -147,7 +147,7 @@
 					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>flase</para>
+					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
 
