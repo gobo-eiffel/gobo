@@ -124,7 +124,7 @@ feature -- Status report
 					if state = other then
 						Result := True
 					elseif not marked_states.has (state) then
-						marked_states.put_last (state)
+						marked_states.force_last (state)
 						nb := nb + 1
 					end
 				end
@@ -133,7 +133,7 @@ feature -- Status report
 					if state = other then
 						Result := True
 					elseif not marked_states.has (state) then
-						marked_states.put_last (state)
+						marked_states.force_last (state)
 						nb := nb + 1
 					end
 				end
