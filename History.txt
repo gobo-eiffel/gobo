@@ -1,4 +1,4 @@
-Version 1.4 - 29 March 1999
+Version 1.4 - 14 April 1999
 
 	* Multiple types for semantic values now supported
 	  in geyacc.

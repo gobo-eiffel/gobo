@@ -100,4 +100,4 @@ for your specific needs. Thank you in advance.
 Copyright (c) 1999, Eric Bezault
 mailto:ericb@gobo.demon.co.uk
 http://www.gobo.demon.co.uk
-29 March 1999
+14 April 1999
