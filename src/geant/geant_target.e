@@ -108,8 +108,6 @@ feature -- Processing
 			a_task: GEANT_TASK
 			a_old_target_cwd: STRING
 			a_new_target_cwd: STRING
-			a_old_task_cwd: STRING
-			a_new_task_cwd: STRING
 		do
 			children := xml_element.children
 			nb := children.count
@@ -213,28 +211,9 @@ feature -- Processing
 						print ("WARNING: cannot execute task : " + a_xml_element.name.out + "%N")
 					else
 						if a_task.is_enabled then
-								-- change to task directory if "dir" attribute is provided:
-							if a_task.xml_element.has_attribute (Dir_attribute_name) then
-								a_new_task_cwd := project.variables.interpreted_string (
-									a_task.xml_element.attribute_value_by_name (Dir_attribute_name).out)
-								debug ("geant")
-									print (" changing to directory: '" + a_new_task_cwd + "'%N")
-								end
-								a_old_task_cwd := file_system.current_working_directory
-								file_system.set_current_working_directory (a_new_task_cwd)
-							end
-
 							a_task.execute
 							if a_task.exit_code /= 0 then
 								exit_application (a_task.exit_code, Void)
-							end
-
-								-- change back to previous directory if "dir" attribute is provided:
-							if a_task.xml_element.has_attribute (Dir_attribute_name) then
-								debug ("geant")
-									print (" changing to directory: '" + a_old_task_cwd + "'%N")
-								end
-								file_system.set_current_working_directory (a_old_task_cwd)
 							end
 						else
 							debug ("geant")
