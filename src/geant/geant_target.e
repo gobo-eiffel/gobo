@@ -179,9 +179,18 @@ feature -- Processing
 				loop
 					an_element := children.item (i)
 						-- Dispatch tasks:
-					if an_element.name.is_equal (Compile_se_task_name) then
-							-- compile_se: SmallEiffel compilation
-						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (project, an_element)
+					if an_element.name.is_equal (Se_task_name) then
+							-- se: SmallEiffel compilation
+						!GEANT_SE_TASK! a_task.make_from_element (project, an_element)
+					elseif an_element.name.is_equal (Ise_task_name) then
+							-- ise: ISE Eiffel compilation
+						!GEANT_ISE_TASK! a_task.make_from_element (project, an_element)
+					elseif an_element.name.is_equal (Hact_task_name) then
+							-- hact: Halstenbach Eiffel compilation
+						!GEANT_HACT_TASK! a_task.make_from_element (project, an_element)
+					elseif an_element.name.is_equal (Ve_task_name) then
+							-- ve: Visual Eiffel compilation
+						!GEANT_VE_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Exec_task_name) then
 							-- exec
 						!GEANT_EXEC_TASK! a_task.make_from_element (project, an_element)

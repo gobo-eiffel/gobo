@@ -118,10 +118,37 @@ feature -- Attribute names and values
 
 feature -- Task names
 
-	Compile_se_task_name: UC_STRING is
-			-- "compiler_se" task name
+	Se_task_name: UC_STRING is
+			-- "se" task name
 		once
-			!! Result.make_from_string ("compile_se")
+			!! Result.make_from_string ("se")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+	Ise_task_name: UC_STRING is
+			-- "ise" task name
+		once
+			!! Result.make_from_string ("ise")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+	Hact_task_name: UC_STRING is
+			-- "hact" task name
+		once
+			!! Result.make_from_string ("hact")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+	Ve_task_name: UC_STRING is
+			-- "ve" task name
+		once
+			!! Result.make_from_string ("ve")
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: not Result.empty
