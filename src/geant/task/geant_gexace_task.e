@@ -53,11 +53,23 @@ feature {NONE} -- Initialization
 					command.set_system_command (a_value)
 				end
 			end
-				-- cluster:
+				-- cluster (obsolete, use library):
+				-- Note: this attribute will be removed in Gobo 3.0 + 2 releases
 			if has_attribute (Cluster_attribute_name) then
-				a_value := attribute_value (Cluster_attribute_name)
+				project.trace (<<"Project '", project.name,
+					"': WARNING: Obsolete attribute 'cluster' found for task 'gexace'.%N",
+					"Use attribute 'library' instead.">>)
+
+				a_value := attribute_value (Library_attribute_name)
 				if a_value.count > 0 then
-					command.set_cluster_command (a_value)
+					command.set_library_command (a_value)
+				end
+			end
+				-- library:
+			if has_attribute (Library_attribute_name) then
+				a_value := attribute_value (Library_attribute_name)
+				if a_value.count > 0 then
+					command.set_library_command (a_value)
 				end
 			end
 				-- xace_filename:
@@ -130,8 +142,18 @@ feature {NONE} -- Constants
 
 	Cluster_attribute_name: STRING is
 			-- Name of xml attribute for 'cluster'
+			-- TODO: remove after obsolete period (Gobo 3.0 + 2 releases)
 		once
 			Result := "cluster"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Library_attribute_name: STRING is
+			-- Name of xml attribute for 'library'
+		once
+			Result := "library"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
