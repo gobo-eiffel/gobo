@@ -29,9 +29,27 @@ inherit
 			expression as expression_item
 		end
 
+	ET_ACTUAL_ARGUMENTS
+		rename
+			count as actual_argument_count,
+			is_empty as is_empty_actual_argument
+		end
+
+	ET_TARGET
+
 	ET_AGENT_ACTUAL_ARGUMENT
 
+	ET_AGENT_TARGET
+
 feature -- Access
+
+	actual_argument (i: INTEGER): ET_EXPRESSION is
+			-- Actual argument at index `i'
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
 
 	expression_item: ET_EXPRESSION is
 			-- Current expression
@@ -40,5 +58,10 @@ feature -- Access
 		ensure then
 			definition: Result = Current
 		end
+
+feature -- Measurement
+
+	actual_argument_count: INTEGER is 1
+			-- Number of actual arguments
 
 end
