@@ -25,6 +25,8 @@ inherit
 			reset as reset_gepp_scanner
 		end
 
+	KL_SHARED_EXCEPTIONS
+
 creation
 
 	make
@@ -34,6 +36,7 @@ feature
 
 %token P_IFDEF P_IFNDEF P_INCLUDE P_DEFINE P_UNDEF
 %token P_NAME P_DEF_VALUE P_ELSE P_ENDIF P_EOL
+%token P_STRING
 %left P_OR
 %left P_AND
 %right '!'
@@ -65,9 +68,10 @@ Instruction: If_condition Instructions Endif
 				undefine_value (dollar_to_string ($2))
 			end
 		}
-	| P_INCLUDE P_EOL
+	| P_INCLUDE P_STRING P_EOL
 		{
 			if not ignored then
+				process_include (dollar_to_string ($2))
 			end
 		}
 	;
@@ -139,6 +143,7 @@ feature {NONE} -- Initialization
 			make_gepp_scanner
 			make_parser_skeleton
 			!! defined_values.make (10)
+			!! include_stack.make
 		end
 
 feature -- Initialization
@@ -150,6 +155,7 @@ feature -- Initialization
 			if_level := 0
 			ignored_level := 0
 			defined_values.wipe_out
+			include_stack.wipe_out
 		end
 
 feature -- Parsing
@@ -171,6 +177,31 @@ feature -- Parsing
 		do
 			set_input_buffer (new_string_buffer (a_string))
 			parse
+		end
+
+feature -- Processing
+
+	process_include (a_filename: STRING) is
+			-- Parse include file `a_filename'.
+			-- Do not allow more than 10 nested include files.
+		require
+			a_filname_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			a_file: like INPUT_STREAM_TYPE
+		do
+			if include_stack.count < Max_include_depth then
+				a_file := input_stream_.make_file_open_read (a_filename)
+				if input_stream_.is_open_read (a_file) then
+					include_stack.put (input_buffer)
+					set_input_buffer (new_file_buffer (a_file))
+				else
+					std.error.put_string ("gepp: cannot open %'")
+					std.error.put_string (a_filename)
+					std.error.put_string ("%'%N")
+					exceptions_.die (1)
+				end
+			end
 		end
 
 feature -- Status report
@@ -239,6 +270,12 @@ feature {NONE} -- Implementation
 			-- Level of #ifdef or #ifndef which specified
 			-- that subsequent lines should be ignored;
 			-- 0 if lines should not be ignored
+
+	include_stack: DS_LINKED_STACK [YY_BUFFER]
+			-- Input buffers not completely parsed yet
+
+	Max_include_depth: INTEGER is 10
+			-- Maximum number of nested include files
 
 invariant
 
