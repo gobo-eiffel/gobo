@@ -4,538 +4,499 @@ indexing
 
 		"Skeletons for parsers implemented with tables"
 
-	note:		"This class is an adaptation of class LALR1_PARSER %
-				%delivered with iss-yacc from Halstenbach ACT GMBH %
-				%so that it can compile on other Eiffel compilers."
-	library:	"Gobo Eiffel Parse Library"
-	author:		"Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:	"Copyright (c) 1997, Eric Bezault"
-	date:		"$Date$"
-	revision:	"Revision: $"
+	library:    "Gobo Eiffel Parse Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 deferred class YY_PARSER_SKELETON [G]
 
 inherit
 
---	YY_PARSER [G]
-
-	KL_SHARED_ARRAY_ROUTINES
+	YY_PARSER [G]
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- lexical analyser interface
+feature {NONE} -- Initialization
 
-	read_token is
-			-- this feature is called when next token is needed.
-		deferred
-		ensure
-			valid_token: last_token >= Token_eof
+	make is
+			-- Create a new parser.
+		do
+			!! yyvs.make (1, yyInitial_stack_size)
+			!! yyss.make (1, yyInitial_stack_size)
+			yy_build_parser_tables
 		end
 
-	last_token: INTEGER is deferred end				-- last token read by `read_token'
-
-	last_value: G is deferred end			-- last value read by `read_token'
-
-	void_value: G			-- the void value
-
-	Token_undefined: INTEGER is -1	-- value for undefined token
-
-	Token_eof: INTEGER is 0			-- value for eof token
-
-	Token_error: INTEGER is 256		-- value for error token
-
-feature -- Initialization
-
-	initial_stack_size: INTEGER is 150	-- initial stack size
-
-	reset is
-			-- reset parser to initial state.
-		do
-			if yyexca = Void then
-				yyexca := integer_array_.make_from_array (yyexca_m, 0)
-				yyact := integer_array_.make_from_array(yyact_m, 0)
-				yypact := integer_array_.make_from_array(yypact_m, 0)
-				yypgo := integer_array_.make_from_array(yypgo_m, 0)
-				yyr1 := integer_array_.make_from_array(yyr1_m, 0)
-				yyr2 := integer_array_.make_from_array(yyr2_m, 0)
-				yychk := integer_array_.make_from_array(yychk_m, 0)
-				yydef := integer_array_.make_from_array(yydef_m, 0)
-			end
-			yyaccept := 0
-			yystate := 0
-			clear_input
-			clear_error
-			!!yysstack.make(initial_stack_size)
-			!!yyvstack.make(initial_stack_size)
-			yysstack.put(yystate)
-			yyvstack.put(void_value)
-
-			debug
-				std.output.put_string ("reset parser: push state ")
-				std.output.put_integer (yystate)
-				std.output.put_string (", value ")
-				print_item (void_value)
-				std.output.put_character ('%N')
-			end
-		ensure
-			reset: is_reset
-		end -- reset
-
-feature -- status report
-
-	is_reset: BOOLEAN is
-			-- is parser reset?
-		do
-			Result := yysstack /= Void and yyvstack /= Void
-						and yyexca /= Void and yyact /= Void and yypact /= Void
-						and yypgo /= Void and yyr1 /= Void and yyr2 /= Void
-						and yychk /= Void and yydef /= Void and yylast > 0
-						and not is_accepted and not is_rejected
-		end
-
-	is_accepted: BOOLEAN is
-			-- is input accepted?
-		do
-			Result := yyaccept = 1
-		end
-
-	is_rejected: BOOLEAN is
-			-- is input rejected?
-		do
-			Result := yyaccept = -1
-		end
-
-feature -- parse control
-
-	clear_input is
-			-- set current input to undefined value.
-		deferred
-		ensure
-			last_token_cleared: last_token = Token_undefined
-			last_value_cleared: last_value = void_value
-		end
-
-	clear_error is
-			-- reset error recovering.
-		do
-			yyerrflag := 0
-		end
-
-	set_error is
-			-- begin error recovering.
-		require
-			reset: is_reset
-		do
-			yyerrflag := 3
-			if not yy_find_error_state then
-				set_rejected
-				abort
-			end
-		end -- set_error
-
-	set_accepted is
-			-- set status to accepted.
-		do
-			yyaccept := 1
-		end
-
-	set_rejected is
-			-- set status to rejected.
-		do
-			yyaccept := -1
-		end
+feature -- Parsing
 
 	parse is
-			-- do parsing.
-		require
-			reset: is_reset
+			-- Parse input stream.
+			-- Set `syntax_error' to True if
+			-- parsing has not been successful.
 		local
-			action, n: INTEGER
+			yystacksize: INTEGER
+			yystate: INTEGER
+				-- Current state
+			yylen: INTEGER
+				-- Number of elements in the current rule
+			yyn: INTEGER
+			yychar1: INTEGER
+			index, yyss_top: INTEGER
+			yy_goto: INTEGER
+			void_value: G
 		do
+				-- This routine is implemented with a loop whose body
+				-- is a big inspect instruction. This is a mere
+				-- translation of C gotos into Eiffel. Needless to
+				-- say that I'm not very proud of this piece of code.
+				-- However I performed some benchmarks and the results
+				-- were that this implementation runs amazingly faster
+				-- than an alternative implementation with no loop nor
+				-- inspect instructions and where every branch of the
+				-- old inspect instruction was written in a separate
+				-- routine. I think that the performance penalty is due
+				-- to the routine call overhead and the depth of the call
+				-- stack. Anyway, I prefer to provide you with a big and
+				-- ugly but fast parsing routine rather than a nice and
+				-- slow version. I hope you won't blame me for that! :-)
 			from
-				-- resetting is done explicite
+				error_count := 0
+				yy_lookahead_needed := True
+				yyerrstatus := 0
+				yyvsp := 0
+				yyssp := 0
+				yystacksize := yyss.count
+				yy_parsing_status := yyContinue
+				yy_goto := yyNewstate
 			until
-				yyaccept /= 0
+				yy_parsing_status /= yyContinue
 			loop
-				if not yy_shift_state then
-					action := yy_find_action
-					if action < 0 then
-						set_accepted
-					elseif action = 0 then
-							-- have an error
-						if yyerrflag = 3 then
-							debug
-								std.output.put_string ("recovery discards token ")
-								yy_print_token (last_token)
-								std.output.put_character ('%N')
-							end
-												-- no shift yet; eat a token
-							if last_token = Token_eof then
-								set_rejected
-								abort
-							else
-								clear_input
-							end
-						else
-							if yyerrflag = 0 then
-								syntax_error	-- new error
-							end
-												-- incomplete recovered error
-							set_error
+				inspect yy_goto
+				when yyNewstate then
+					yyssp := yyssp + 1
+					if yyssp > yystacksize then
+						yystacksize := yystacksize + yyInitial_stack_size
+						yyvs.resize (1, yystacksize)
+						yyss.resize (1, yystacksize)
+						debug ("GEYACC")
+							std.error.put_string ("Stack size increased to ")
+							std.error.put_integer (yystacksize)
+							std.error.put_character ('%N')
 						end
+					end
+					debug ("GEYACC")
+						std.error.put_string ("Entering state ")
+						std.error.put_integer (yystate)
+						std.error.put_character ('%N')
+					end
+					yyss.put (yystate, yyssp)
+						-- Do appropriate processing given the current state.
+						-- Read a lookahead token if one is needed.
+					yyn := yypact.item (yystate)
+						-- First try to decide what to do without reference
+						-- lookahead token.
+					if yyn = yyFlag then
+						yy_goto := yyDefault
 					else
-						-- reduction by production 'action'
-						n := yyr2.item(action) // 2
-						debug
-							std.output.put_string ("reduce by (")
-							std.output.put_integer (action)
-							std.output.put_string (") %"")
-							std.output.put_string (yyreds.item(action))
-							std.output.put_string ("%"%N")
-							yy_print_vstack (n)
+							-- Not known => get a lookahead token if don't
+							-- already have one.
+						if yy_lookahead_needed then
+							debug ("GEYACC")
+								std.error.put_string ("Reading a token%N")
+							end
+							read_token
+							yy_lookahead_needed := False
 						end
-						if (yyr2.item(action) \\ 2) = 1 then
-							yy_do_action(action, n)
+							-- Convert token to internal form (in `yychar1')
+							-- for indexing tables.
+						if last_token <= yyEof then
+								-- This means end of input.
+							yychar1 := 0
+							debug ("GEYACC")
+								std.error.put_string ("Now at end of input.%N")
+							end
 						else
-							yy_do_default_action(n)
+							yychar1 := yy_translate (last_token)
+							debug ("GEYACC")
+								std.error.put_string ("Next token is ")
+								std.error.put_integer (last_token)
+								std.error.put_string (" (")
+								-- std.error.put_string (yytname.item (yychar1))
+								-- print_token (std.error, last_token, last_value)
+								std.error.put_string (")%N")
+							end
 						end
-						if yyaccept = 0 then
-							yysstack.remove(n)
-							yyvstack.remove(n)
-							yy_find_next_state(action)
-							yysstack.put(yystate)
-							yyvstack.put(yyval)
-							debug
-								std.output.put_string ("push state ")
-								std.output.put_integer (yystate)
-								std.output.put_string (", value ")
-								print_item (yyval)
-								std.output.put_character ('%N')
+						yyn := yyn + yychar1
+						if
+							(yyn < 0 or yyn > yyLast) or else
+							yycheck.item (yyn) /= yychar1
+						then
+							yy_goto := yyDefault
+						else
+							yyn := yytable.item (yyn)
+								-- `yyn' is what to do for this token type in
+								-- this state:
+								-- Negative => reduce, -`yyn' is rule number.
+								-- Positive => shift, `yyn' is new state.
+								-- New state is final state => don't bother to
+								--		shift, just return success.
+								-- 0, or most negative number => error.
+							if yyn < 0 then
+								if yyn = yyFlag then
+									yy_goto := yyErrlab
+								else
+									yyn := -yyn
+									yy_goto := yyReduce
+								end
+							elseif yyn = 0 then
+								yy_goto := yyErrlab
+							elseif yyn = yyFinal then
+								accept
+							else
+									-- Shift the lookahead token.
+								debug ("GEYACC")
+									std.error.put_string ("Shifting token ")
+									std.error.put_integer (last_token)
+									std.error.put_string (" (")
+									-- std.error.put_string (yytname.item (yychar1))
+									std.error.put_string (")%N")
+								end
+									-- Discard the token being shifted
+									-- unless it is eof.
+								if last_token > yyEof then
+									yy_lookahead_needed := True
+								end
+								yyvsp := yyvsp + 1
+								yyvs.put (last_value, yyvsp)
+									-- Count tokens shifted since error;
+									-- after three, turn off error status.
+								if yyerrstatus /= 0 then
+									yyerrstatus := yyerrstatus - 1
+								end
+								yystate := yyn
+								check
+									newstate: yy_goto = yyNewstate
+								end
 							end
 						end
 					end
+				when yyDefault then
+						-- Do the default action for the current state.
+					yyn := yydefact.item (yystate)
+					if yyn = 0 then
+						yy_goto := yyErrlab
+					else
+						yy_goto := yyReduce
+					end
+				when yyReduce then
+						-- Do a reduction. `yyn' is the number of a rule
+						-- to reduce with.
+					yylen := yyr2.item (yyn)
+					if yylen > 0 then
+						yyval := yyvs.item (yyvsp - yylen + 1)
+					end
+					debug ("GEYACC")
+						-- TO DO
+					end
+					yy_do_action (yyn)
+					inspect yy_parsing_status
+					when yyContinue then
+						yyssp := yyssp - yylen
+						debug ("GEYACC")
+								-- TO DO
+						end
+						yyvsp := yyvsp - yylen + 1
+						yyvs.put (yyval, yyvsp)
+							-- Now "shift" the result of the reduction.
+							-- Determine what state that goes to,
+							-- based on the state we popped back to 
+							-- and the rule number reduced by.
+						yyn := yyr1.item (yyn)
+						yyss_top := yyss.item (yyssp)
+						index := yyn - yyNtbase
+						yystate := yypgoto.item (index) + yyss_top
+						if
+							(yystate >= 0 and yystate <= yyLast) and then
+							yycheck.item (yystate) = yyss_top
+						then
+							yystate := yytable.item (yystate)
+						else
+							yystate := yydefgoto.item (index)
+						end
+						yy_goto := yyNewstate
+					when yyError_raised then
+							-- Handle error raised explicitly by an action.
+						yy_parsing_status := yyContinue
+						yy_goto := yyErrlab
+					else
+							-- Accepted or aborted.
+					end
+				when yyErrlab then
+						-- Detect error.
+					if yyerrstatus = 3 then
+							-- If just tried and failed to reuse lookahead
+							-- token after an error, discard it. Return
+							-- failure if at end of input.
+						if last_token <= yyEof then
+							abort
+						else
+							debug ("GEYACC")
+								std.error.put_string ("Discarding token ")
+								std.error.put_integer (last_token)
+								std.error.put_string (" (")
+								-- std.error.put_string (yytname.item (yychar1))
+								std.error.put_string (").%N")
+							end
+							yy_lookahead_needed := True
+							yy_goto := yyErrhandle
+						end
+					else
+						if yyerrstatus = 0 then
+								-- If not already recovering from an error,
+								-- report this error.
+							error_count := error_count + 1
+							report_error ("parse error")
+						end
+						yyerrstatus := 3
+						yy_goto := yyErrhandle
+					end
+				when yyErrhandle then
+						-- Handle error.
+					yyn := yypact.item (yystate)
+					if yyn = yyFlag then
+						yy_goto := yyErrpop
+					else
+						yyn := yyn + yyTerror
+						if
+							(yyn < 0 or yyn > yyLast) or else
+							yycheck.item (yyn) /= yyTerror
+						then
+							yy_goto := yyErrpop
+						else
+							yyn := yytable.item (yyn)
+							if yyn < 0 then
+								if yyn = yyFlag then
+									yy_goto := yyErrpop
+								else
+									yyn := -yyn
+									yy_goto := yyReduce
+								end
+							elseif yyn = 0 then
+								yy_goto := yyErrpop
+							elseif yyn = yyFinal then
+								accept
+							else
+								yyvsp := yyvsp + 1
+								yyvs.put (last_value, yyvsp)
+								yystate := yyn
+								yy_goto := yyNewstate
+							end
+						end
+					end
+				when yyErrpop then
+						-- Pop the current state because it cannot handle
+						-- the error token.
+					if yyssp = 0 then
+						abort
+					else
+						yyvsp := yyvsp - 1
+						yyssp := yyssp - 1
+						yystate := yyss.item (yyssp)
+						yy_goto := yyErrhandle
+						debug ("GEYACC")
+							-- TO DO
+						end
+					end
 				end
-			end -- loop
-
-			debug
-				std.output.put_string ("maximum stack size reached: ")
-				std.output.put_integer (yysstack.max_count)
-				std.output.put_character ('%N')
 			end
-		end -- parse
+			yyval := void_value
+			--yyvs.clear_all
+			--yyss.clear_all
+		rescue
+			abort
+		end
 
-	syntax_error is
-			-- this feature is called when a syntax_error is encountered.
-			-- default print "syntax error"
+feature -- Status report
+
+	syntax_error: BOOLEAN is
+			-- Has last parsing been unsuccesful?
 		do
-			std.output.put_string ("%Nsyntax error%N")
+			Result := yy_parsing_status = yyAccepted
+		end
+
+feature -- Access
+
+	error_count: INTEGER
+			-- Number of errors detected during last parsing
+
+feature {YY_PARSER_ACTION} -- Status report
+
+	is_recovering: BOOLEAN is
+			-- Is current parser recovering from a syntax error?
+		do
+			Result := yyerrstatus /= 0
+		end
+
+feature {YY_PARSER_ACTION} -- Element change
+
+	accept is
+			-- Stop parsing successfully.
+		do
+			yy_parsing_status := yyAccepted
 		end
 
 	abort is
-			-- this feature is called when parsing aborts from error.
-			-- default do nothing
+			-- Abort parsing.
+			-- Do not print error message.
 		do
+			yy_parsing_status := yyAborted
 		end
 
-feature -- debuging
-
-	print_item (v: G) is
-			-- print item 'v'.
+	raise_error is
+			-- Raise a syntax error.
+			-- Report error using `report_error' and
+			-- perform normal error recovery if possible.
 		do
-			-- default: output separator only
-			std.output.put_character (' ')
+			yy_parsing_status := yyError_raised
 		end
 
-feature {NONE}
-
-	yyaccept: INTEGER						-- acception status
-
-	yyerrflag: INTEGER						-- actual error state
-
-	yyexca: ARRAY [INTEGER]					-- exception table
-
-	yyact: ARRAY [INTEGER]						-- action table
-
-	yypact: ARRAY [INTEGER]					-- state action table
-
-	yypgo: ARRAY [INTEGER]						-- state goto table
-
-	yyr1: ARRAY [INTEGER]						-- reduce table for next state
-
-	yyr2: ARRAY [INTEGER]						-- reduce table parameter count
-
-	yychk: ARRAY [INTEGER]						-- check table
-
-	yydef: ARRAY [INTEGER]						-- definition table
-
-	yystate: INTEGER						-- actual state
-
-	yysstack: PARSER_STACK[INTEGER]			-- state stack
-
-	yyval: G						-- LHS value
-
-	yyvstack: PARSER_STACK[G]		-- value stack
-
-	yylast: INTEGER is
-			-- highest state value
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yyexca_m: ARRAY[INTEGER] is
-			-- exception table
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yyact_m: ARRAY[INTEGER] is
-			-- action table
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yypact_m: ARRAY[INTEGER] is
-			-- state action table
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yypgo_m: ARRAY[INTEGER] is
-			-- state goto table
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yyr1_m: ARRAY[INTEGER] is
-			-- reduce table for next state
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yyr2_m: ARRAY[INTEGER] is
-			-- reduce table parameter count
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yychk_m: ARRAY[INTEGER] is
-			-- check table
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yydef_m: ARRAY[INTEGER] is
-			-- definition table
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yyreds: ARRAY[STRING] is
-			-- table with rules in source format
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yytoks: ARRAY[STRING] is
-			-- table with token and terminal as strings
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yytokv: ARRAY[INTEGER] is
-			-- table with token and terminal as numbers
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yy_do_action (yy_a, yy_n: INTEGER) is
-			-- this feature is called when a production action is executed
-			-- the feature is generated by the ibyacc compiler
-		deferred
-		end
-
-	yy_do_default_action (n: INTEGER) is
-			-- do default action
+	recover is
+			-- Recover immediately after a parse error.
 		do
-			if n > 0 then
-				yyval := yyvstack.item(1 - n)
+			yyerrstatus := 0
+			yy_parsing_status := yyContinue
+		end
+
+	report_error (a_message: STRING) is
+			-- Print error message.
+		do
+			std.error.put_string (a_message)
+			std.error.put_character ('%N')
+		end
+
+	clear_token is
+			-- Clear the previous lookahead token.
+			-- Used in error-recovery rule actions.
+		do
+			yy_lookahead_needed := True
+		end
+
+feature {NONE} -- Tables
+
+	yytranslate: ARRAY [INTEGER]
+	yyr1: ARRAY [INTEGER]
+	yyr2: ARRAY [INTEGER]
+	yydefact: ARRAY [INTEGER]
+	yydefgoto: ARRAY [INTEGER]
+	yypact: ARRAY [INTEGER]
+	yypgoto: ARRAY [INTEGER]
+	yytable: ARRAY [INTEGER]
+	yycheck: ARRAY [INTEGER]
+
+feature {NONE} -- Implementation
+
+	yy_translate (i: INTEGER): INTEGER is
+			-- Translate lexical token `i' into 
+			-- geyacc internal token code.
+		require
+			i_positive: i >= 0
+		do
+			if i <= yyMax_token then
+				Result := yytranslate.item (i)
 			else
-				yyval := void_value
+				Result := yyNsyms
 			end
 		end
 
-	yy_shift_state: BOOLEAN is
-			-- test for shift state action
-		local
-			state: INTEGER
-		do
-			state := yypact.item(yystate)
-			if state > -1000 then
-				if last_token = Token_undefined then
-					read_token
-					debug
-						std.output.put_string ("receive token ")
-						yy_print_token (last_token)
-						std.output.put_character ('%N')
-					end
-				end
-				state := state + last_token
-				if state >= 0 and then state < yylast then
-					state := yyact.item(state)
-					if last_token = yychk.item(state) then
-							-- valid shift
-						yystate := state
-						yysstack.put(state)
-						yyvstack.put(last_value)
-						debug
-							std.output.put_string ("push state ")
-							std.output.put_integer (state)
-							std.output.put_string (", value ")
-							print_item (last_value)
-							std.output.put_character ('%N')
-						end
-						clear_input
-						if yyerrflag > 0 then
-							yyerrflag := yyerrflag - 1
-						end
-						Result := true
-					end				
-				end
-			end
-		end -- yy_shift_state
+	yy_do_action (yy_act: INTEGER) is
+			-- Execute semantic action.
+		deferred
+		end
 
-	yy_find_action: INTEGER is
-			-- find next action to do
-		local
-			i: INTEGER
-		do
-				-- default state action
-			Result := yydef.item(yystate)
-			if Result = -2 then
-				if last_token = Token_undefined then
-					read_token
-					debug
-						std.output.put_string ("receive token ")
-						yy_print_token (last_token)
-						std.output.put_character ('%N')
-					end
-				end
-					-- look through exception table
-				from
-					i := 0
-				until
-					yyexca.item(i) = -1
-					and then yyexca.item(i + 1) = yystate
-				loop
-					i := i + 2
-				end
-				from
-					i := i + 2
-				until
-					yyexca.item(i) < 0
-					or else yyexca.item(i) = last_token
-				loop
-					i := i + 2
-				end
-				Result := yyexca.item(i + 1)
-			end
-		end -- yy_find_action
+	yy_build_parser_tables is
+			-- Build parser tables.
+		deferred
+		ensure
+			yytranslate_not_void: yytranslate /= Void
+			yyr1_not_void: yyr1 /= Void
+			yyr2_not_void: yyr2 /= Void
+			yydefact_not_void: yydefact /= Void
+			yydefgoto_not_void: yydefgoto /= Void
+			yypact_not_void: yypact /= Void
+			yypgoto_not_void: yypgoto /= Void
+			yytable_not_void: yytable /= Void
+			yycheck_not_void: yycheck /= Void
+		end
 
-	yy_find_next_state (a: INTEGER) is
-			-- find next state for action 'a'
-		local
-			i, j: INTEGER
-		do
-			-- consult goto table to find next state
-			i := yyr1.item(a)
-			j := yypgo.item(i) + yysstack.item(0) + 1
-			if j < yylast then
-				yystate := yyact.item(j)
-			end
-			if j >= yylast or else yychk.item(yystate) /= -i then
-				yystate := yyact.item(yypgo.item(i))
-			end
-		end -- yy_find_next_state
+	yyvs: ARRAY [G]
+			-- Semantic value stack
 
-	yy_find_error_state: BOOLEAN is
-			-- find state where "error" is a legal shift action
-		local
-			state: INTEGER
-		do
-			from
-			until
-				yysstack.empty or else Result
-			loop
-				state := yypact.item(yysstack.item(0)) + Token_error
-				if state >= 0 and then state < yylast and then
-				   yychk.item(yyact.item(state)) = Token_error then
-					yystate := yyact.item(state)
-						-- simulate shift of "error"
-					yysstack.put(yystate)
-					yyvstack.put(void_value)
-					debug
-						std.output.put_string ("push state ")
-						std.output.put_integer (yystate)
-						std.output.put_string (", value ")
-						print_item (void_value)
-						std.output.put_character ('%N')
-					end
-					Result := true
-				else
-						-- current state has no shift on "error", pop stack
-					debug
-						std.output.put_string ("recovery pops ")
-						std.output.put_integer (yysstack.item(0))
-						std.output.put_string (", value ")
-						print_item (yyvstack.item(0))
-						std.output.put_character ('%N')
-					end
-					yysstack.remove(1)
-					yyvstack.remove(1)
-				end
-			end
-		end -- yy_find_error_state
+	yyss: ARRAY [INTEGER]
+			-- State stack
 
-	yy_print_token (t: INTEGER) is
-			-- print token 't'
-		local
-			i: INTEGER
-		do
-			if t = 0 then
-				std.output.put_string ("end-of-file")
-			elseif t < 0 then
-				std.output.put_string ("-none-")
-			else
-				from
-					i := 1
-				until
-					yytokv.item(i) < 0 or yytokv.item(i) = t
-				loop
-					i := i + 1
-				end
-				if yytokv.item(i) = t then
-					std.output.put_string (yytoks.item(i))
-				end
-			end
-		end -- yy_print_token
+	yyvsp: INTEGER
+			-- Top of semantic value stack
 
-	yy_print_vstack (n: INTEGER) is
-			-- print value stack
-		local
-			i: INTEGER
-		do
-			from
-				i := n - 1
-			until
-				i < 0
-			loop
-				std.output.put_string ("item(")
-				std.output.put_integer (n - i)
-				std.output.put_string ("):")
-				print_item (yyvstack.item(-i))
-				i := i - 1
-			end
-			std.output.put_character ('%N')
-		end -- yy_print_vstack
+	yyssp: INTEGER
+			-- Top of state stack
+
+	yyval: G
+			-- Semantic value from action
+
+	yy_lookahead_needed: BOOLEAN
+			-- Is a lookahead token needed?
+
+	yyerrstatus: INTEGER
+			-- Number of tokens to shift before
+			-- error messages enabled
+
+	yy_parsing_status: INTEGER
+			-- Parsing status
+
+feature {NONE} -- Constants
+
+	yyNewstate: INTEGER is Unique
+	yyDefault: INTEGER is Unique
+	yyReduce: INTEGER is Unique
+	yyErrlab: INTEGER is Unique
+	yyErrhandle: INTEGER is Unique
+	yyErrpop: INTEGER is Unique
+			-- Goto constants
+
+	yyAccepted: INTEGER is Unique
+	yyAborted: INTEGER is Unique
+	yyError_raised: INTEGER is Unique
+	yyContinue: INTEGER is Unique
+			-- Parsing status
+
+	yyTerror: INTEGER is 1
+	yyEof: INTEGER is 0
+			-- Grammar-independent constants
+
+	yyFinal: INTEGER is deferred end
+	yyFlag: INTEGER is deferred end
+	yyNtbase: INTEGER is deferred end
+	yyLast: INTEGER is deferred end
+	yyMax_token: INTEGER is deferred end
+	yyNsyms: INTEGER is deferred end
+			-- Grammar-dependent constants
+
+	yyInitial_stack_size: INTEGER is 200
+			-- Initial size of parser's stacks
+
+invariant
+
+	yyvs_not_void: yyvs /= Void
+	yyss_not_void: yyss /= Void
+	yytranslate_not_void: yytranslate /= Void
+	yyr1_not_void: yyr1 /= Void
+	yyr2_not_void: yyr2 /= Void
+	yydefact_not_void: yydefact /= Void
+	yydefgoto_not_void: yydefgoto /= Void
+	yypact_not_void: yypact /= Void
+	yypgoto_not_void: yypgoto /= Void
+	yytable_not_void: yytable /= Void
+	yycheck_not_void: yycheck /= Void
 
 end -- class YY_PARSER_SKELETON
