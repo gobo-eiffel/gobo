@@ -83,7 +83,7 @@ feature -- Access
 		end
 
 	elements: DS_LIST [XM_ELEMENT] is
-			-- List of all attributes in current element
+			-- List of all direct child elements in current element
 			-- (Create a new list at each call.)
 		local
 			a_cursor: like new_cursor
