@@ -49,7 +49,7 @@ feature -- Bits
 			-- Number of bits in a value of type CHARACTER
 		deferred
 		ensure
-			-- Postcondition commented out to avoid recursive
+			-- Note: Postcondition commented out to avoid recursive
 			-- call in once-function in KL_PLATFORM:
 			-- definition: Result = Character_bytes * Byte_bits
 			more_than_byte: Result >= Byte_bits
@@ -59,7 +59,7 @@ feature -- Bits
 			-- Number of bits in a value of type DOUBLE
 		deferred
 		ensure
-			-- Postcondition commented out to avoid recursive
+			-- Note: Postcondition commented out to avoid recursive
 			-- call in once-function in KL_PLATFORM:
 			-- definition: Result = Double_bytes * Byte_bits
 			more_than_real: Result >= Real_bits
@@ -69,7 +69,7 @@ feature -- Bits
 			-- Number of bits in a value of type INTEGER
 		deferred
 		ensure
-			-- Postcondition commented out to avoid recursive
+			-- Note: Postcondition commented out to avoid recursive
 			-- call in once-function in KL_PLATFORM:
 			-- definition: Result = Integer_bytes * Byte_bits
 			more_than_character: Result >= Character_bits
@@ -79,7 +79,7 @@ feature -- Bits
 			-- Number of bits in a value of type POINTER
 		deferred
 		ensure
-			-- Postcondition commented out to avoid recursive
+			-- Note: Postcondition commented out to avoid recursive
 			-- call in once-function in KL_PLATFORM:
 			-- definition: Result = Pointer_bytes * Byte_bits
 		end
@@ -88,7 +88,7 @@ feature -- Bits
 			-- Number of bits in a value of type REAL
 		deferred
 		ensure
-			-- Postcondition commented out to avoid recursive
+			-- Note: Postcondition commented out to avoid recursive
 			-- call in once-function in KL_PLATFORM:
 			-- definition: Result = Real_bytes * Byte_bits
 		end
