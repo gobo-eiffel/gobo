@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator:   "geyacc version 1.1"
+	generator: "geyacc version 1.2"
 
 class GEPP_TOKENS
 
