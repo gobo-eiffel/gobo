@@ -92,6 +92,16 @@ inherit
 #ifndef HACT
 			is_empty as old_is_empty,
 #endif
+#ifdef ISE
+			clear_all as old_clear_all,
+#endif
+#ifdef ISE || HACT
+				-- Note: The postconditions of `wipe_out' in HACT 4.0.1
+				-- and ISE 5.1 does not allow an optimized ELKS compliant
+				-- redefinition here. In particular we don't want to
+				-- reset the capacity to zero.
+			wipe_out as old_wipe_out,
+#endif
 			make as old_make,
 			item as latin1_item,
 			put as put_latin1,
@@ -150,8 +160,16 @@ inherit
 #ifdef SE
 			old_prepend, old_remove_prefix,
 #endif
+#ifdef ISE || HACT
+			old_wipe_out,
+#else
+			wipe_out,
+#endif
+#ifdef ISE
+			old_clear_all,
+#endif
 			old_infix_plus, old_latin1_substring_index,
-			copy, infix "@", wipe_out
+			copy, infix "@"
 		end
 
 	COMPARABLE
@@ -954,10 +972,6 @@ feature -- Removal
 			-- Remove all characters.
 			-- (ELKS 2001 STRING)
 		do
-#ifdef ISE || HACT
-				-- Preserve postcondition inherited from STRING.
-			precursor
-#endif
 			byte_count := 0
 			set_count (0)
 		end
@@ -1406,9 +1420,10 @@ feature {UC_STRING} -- Inapplicable
 		end
 
 #endif
-#ifdef SE
+#ifdef SE || HACT || ISE
 feature {NONE} -- Inapplicable
 
+#ifdef SE
 	old_prepend (other: like Current) is
 			-- Prepend `other' to `Current'.
 			-- (Changed the signature (`other' is declared of type
@@ -1438,6 +1453,26 @@ feature {NONE} -- Inapplicable
 			remove_head (s.count)
 		end
 
+#endif
+#ifdef HACT || ISE
+	old_wipe_out is
+			-- Remove all characters.
+			-- (ELKS 2001 STRING)
+		do
+				-- Preserve postcondition inherited from STRING.
+			precursor
+			wipe_out
+		end
+
+#endif
+#ifdef ISE
+	old_clear_all is
+			-- Remove all characters.
+		do
+			wipe_out
+		end
+
+#endif
 #endif
 invariant
 
