@@ -51,6 +51,12 @@ feature -- Status report
 
 feature -- Access
 
+	attachment: ET_AST_NODE is
+			-- Attachment
+		do
+			-- Result := Void
+		end
+
 	position: ET_POSITION is
 			-- Position of attachment
 		once

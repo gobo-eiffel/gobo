@@ -15,6 +15,9 @@ class ET_DYNAMIC_CREATION_INSTRUCTION
 inherit
 
 	ET_DYNAMIC_ATTACHMENT
+		rename
+			attachment as creation_instruction
+		end
 
 creation
 

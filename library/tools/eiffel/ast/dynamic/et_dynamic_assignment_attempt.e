@@ -15,6 +15,9 @@ class ET_DYNAMIC_ASSIGNMENT_ATTEMPT
 inherit
 
 	ET_DYNAMIC_ATTACHMENT
+		rename
+			attachment as assignment_attempt
+		end
 
 creation
 

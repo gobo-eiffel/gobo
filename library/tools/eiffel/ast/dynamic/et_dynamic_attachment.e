@@ -53,6 +53,15 @@ feature -- Access
 	current_type: ET_DYNAMIC_TYPE
 			-- Type to which `current_feature' belongs
 
+	attachment: ET_AST_NODE is
+			-- Attachment
+		require
+			not_null: not is_null_attachment
+		deferred
+		ensure
+			attachment_not_void: Result /= Void
+		end
+		
 	position: ET_POSITION is
 			-- Position of attachment
 		deferred

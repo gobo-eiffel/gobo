@@ -15,6 +15,9 @@ class ET_DYNAMIC_MANIFEST_STRING_AREA
 inherit
 
 	ET_DYNAMIC_ATTACHMENT
+		rename
+			attachment as expression
+		end
 
 creation
 

@@ -40,6 +40,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	attachment: ET_AST_NODE is
+			-- Attachment
+		do
+			Result := current_feature.static_feature
+		end
+
 	position: ET_POSITION is
 			-- Position of attachment
 		do
