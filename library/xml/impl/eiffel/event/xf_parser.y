@@ -31,8 +31,10 @@ feature {ANY}
 %}
 
 %token T_LT T_GT T_SLASH T_COLON T_EQUAL T_DOUBLE_QUOTES
-%token T_LT_SL T_SL_GT T_LT_QM T_QM_GT T_XML T_START_COMMENT T_END_COMMENT
+%token T_LT_SL T_SL_GT T_LT_QM T_QM_GT T_START_COMMENT T_END_COMMENT
 %token T_GT_ENTITY T_LT_ENTITY T_AMP_ENTITY
+%token T_XML T_VERSION T_ENCODING T_STANDALONE
+%token T_DOCTYPE T_SYSTEM T_LITERAL T_PUBLIC
 
 %token <UC_STRING> T_TEXT
 %token <UC_STRING> T_WORD
@@ -42,7 +44,9 @@ feature {ANY}
 %token <UC_STRING> T_COMMENT_CONTENT
 
 %type <UC_STRING>	xml_attr_value xml_attr_text
-%type <UC_STRING>	xml_decl_version
+%type <UC_STRING>	attr_version
+%type <UC_STRING>	attr_encoding
+%type <BOOLEAN>	attr_standalone
 
 %type <DS_PAIR [UC_STRING, UC_STRING]>	xml_attr_name
 %type <DS_PAIR [DS_PAIR [UC_STRING, UC_STRING],UC_STRING]>	xml_attr
@@ -56,26 +60,68 @@ feature {ANY}
 xml_document:
 	-- nothing
 	| xml_element
-	| xml_decl xml_element
-	| xml_decl xml_pis xml_element
-        ;
+	| xml_prolog xml_element
+	;
 
 ----------------
-xml_pis:
+xml_prolog:
+	xml_decl xml_misc_list xml_doctype xml_misc_list
+	| xml_decl xml_misc_list xml_doctype
+	| xml_decl xml_misc_list
+	| xml_decl xml_doctype
+	| xml_decl
+	| xml_misc_list xml_doctype xml_misc_list
+	| xml_misc_list xml_doctype
+	| xml_misc_list
+	| xml_doctype
+	;
+
+----------------
+xml_misc_list:
+	xml_misc
+	| xml_misc xml_misc_list
+	;
+
+----------------
+xml_misc:
 	xml_pi
-	|xml_pis xml_pi
+	| xml_comment
 	;
 
 ----------------
 xml_decl:
-	T_LT_QM T_XML xml_decl_version T_QM_GT { on_xml_declaration ($3, empty_ucstring, True) }
+	T_LT_QM T_XML attr_version T_QM_GT
+		{ on_xml_declaration ($3, empty_ucstring, True) }
+	| T_LT_QM T_XML attr_version attr_encoding T_QM_GT
+		{ on_xml_declaration ($3, $4, True) }
+	| T_LT_QM T_XML attr_version attr_encoding attr_standalone T_QM_GT
+		{ on_xml_declaration ($3, $4, $5) }
+	| T_LT_QM T_XML attr_version attr_standalone T_QM_GT
+		{ on_xml_declaration ($3, empty_ucstring, $4) }
 	;
 
 ----------------
-xml_decl_version: T_WORD T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
+attr_version:
+	T_VERSION T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
 		{ $$ := $4 }
-	| T_WORD T_EQUAL T_DOUBLE_QUOTES T_DOUBLE_QUOTES
-		{ $$ := new_unicode_string ("") }
+	;
+
+----------------
+attr_encoding:
+	T_ENCODING T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
+		{ $$ := $4 }
+	;
+
+----------------
+attr_standalone:
+	T_STANDALONE T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
+		{ $$ := $4.out.is_equal ("yes") }
+	;
+
+----------------
+xml_doctype:
+	T_DOCTYPE T_WORD T_SYSTEM T_LITERAL T_GT
+	| T_DOCTYPE T_WORD T_PUBLIC T_LITERAL T_LITERAL T_GT
 	;
 
 ----------------
@@ -86,7 +132,7 @@ p_text:
 ----------------
 xml_element_content:
         -- nothing
-        | xml_element_content xml_element 
+        | xml_element_content xml_element
         | xml_element_content p_text
         | xml_element_content xml_pi
         | xml_element_content xml_comment
@@ -95,7 +141,7 @@ xml_element_content:
 ----------------
 xml_element:
         xml_empty_tag
-        |xml_start_tag xml_element_content xml_end_tag
+        | xml_start_tag xml_element_content xml_end_tag
         ;
 
 
@@ -105,9 +151,9 @@ xml_empty_tag:
           {
   		on_start_tag ($2, empty_ucstring, $3)
   		on_end_tag ($2, empty_ucstring)
-		
+
           }
-          |T_LT T_NS_WORD xml_attr_list T_SL_GT
+          | T_LT T_NS_WORD xml_attr_list T_SL_GT
           {
   		tmp_uc_pair := split_name_and_prefix ($2)
   		on_start_tag (tmp_uc_pair.first, tmp_uc_pair.second, $3)
@@ -145,10 +191,10 @@ xml_end_tag:
           ;
 
 ----------------
-xml_attr_list: 
+xml_attr_list:
 	-- empty
-	{ 
-		!! $$.make 
+	{
+		!! $$.make
 	}
 	| xml_attr_list xml_attr
 	{
@@ -158,7 +204,7 @@ xml_attr_list:
         ;
 
 ----------------
-xml_attr: 
+xml_attr:
 	xml_attr_name T_EQUAL xml_attr_value
         {
 		!! $$.make ($1, $3)
@@ -166,7 +212,7 @@ xml_attr:
         ;
 
 ----------------
-xml_attr_name: 
+xml_attr_name:
 	T_WORD
         {
 		!!$$.make ($1, empty_ucstring)
@@ -216,16 +262,16 @@ xml_attr_text: T_ATTR_TEXT
 	;
 
 ----------------
-xml_pi: 
-	T_LT_QM T_WORD T_QM_GT 
+xml_pi:
+	T_LT_QM T_WORD T_QM_GT
 	{
 		on_processing_instruction ($2, empty_ucstring)
-	} 
-	|T_LT_QM T_WORD T_PI_CONTENT T_QM_GT 
+	}
+	|T_LT_QM T_WORD T_PI_CONTENT T_QM_GT
 	{
 		on_processing_instruction ($2, $3)
-	} 
-  	; 
+	}
+  	;
 
 ----------------
 xml_comment:
@@ -246,13 +292,13 @@ feature {ANY} -- creation
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			    --	Parse from `a_file'
-		   require
+		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
-		   do
+		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
-		   end
+		end
 
 	parse_string (a_string: STRING) is
 			-- Parse from `a_string'.
@@ -264,8 +310,9 @@ feature {ANY} -- creation
 		end
 
 feature {ANY} -- Error Handling
+
 	report_error (m: STRING) is
-		     do
+		do
 			print ("found error at:")
 			print (line)
 			print (", ")
@@ -273,8 +320,10 @@ feature {ANY} -- Error Handling
 			print (": ")
 			print (m)
 			print ("%N")
-		     end
+		end
+
 feature {NONE} -- Helper functions
+
 	tmp_uc_pair: DS_PAIR [UC_STRING, UC_STRING]
 
 	uc_collon: UC_CHARACTER is
@@ -290,7 +339,7 @@ feature {NONE} -- Helper functions
 		local
 			n: INTEGER
 		do
-			n := str.index_of (uc_collon, 1)			
+			n := str.index_of (uc_collon, 1)
 			check
 				n_not_zero: n /= 0
 			end
@@ -305,13 +354,15 @@ feature {NONE} -- Helper functions
 feature {ANY} -- Access
 
 feature {ANY} -- Debuging
+
 feature	{NONE} -- temp vars for actions
+
 feature
 
 	on_start_tag (a_name, ns_prefix: UC_STRING; attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
 		deferred
 		end
-   
+
 	on_end_tag (a_name, a_prefix: UC_STRING) is
 		deferred
 		end

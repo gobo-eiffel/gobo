@@ -36,8 +36,8 @@ creation
 %option nodefault outfile="xf_scanner.e"
 %option line position
 
-S_LT_QM		"<?"
-S_QM_GT		"?>"
+S_LT_QM         "<?"
+S_QM_GT         "?>"
 S_LT            "<"
 S_LT_SL         "</"
 S_GT            ">"
@@ -48,13 +48,20 @@ S_SLASH         "/"
 S_EQUAL         "="
 --S_COLON       ":"
 S_DOUBLE_QUOTES         "\""
+--"
 --S_TEXT        [a-zA-Z0-9()\ \t\r_!#$%&'\(+\-]*
 S_TEXT        [a-zA-Z0-9\t\r_\x20-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
 S_ATTR_TEXT   [a-zA-Z0-9\t\r_\x20\x21\x23-\x25\x27-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
-S_GT_ENTITY "&gt;"
-S_LT_ENTITY "&lt;"
+S_GT_ENTITY  "&gt;"
+S_LT_ENTITY  "&lt;"
 S_AMP_ENTITY "&amp;"
-S_XML	      [x|X][m|M][l|L]
+S_XML	       "xml"
+S_VERSION    "version"
+S_ENCODING   "encoding"
+S_STANDALONE "standalone"
+S_DOCTYPE       "<!DOCTYPE"
+S_SYSTEM        "SYSTEM"
+S_PUBLIC        "PUBLIC"
 S_START_COMMENT "<!--"
 S_END_COMMENT "-->"
 
@@ -63,14 +70,14 @@ S_END_COMMENT "-->"
 S_WORD        [.+\-a-zA-Z0-9()_]*
 S_NS_WORD     {S_WORD}:{S_WORD}
 
-%s B_IN_TAG B_IN_CONTENT B_IN_PI B_IN_XML_DECL
+%s B_IN_TAG B_IN_CONTENT B_IN_PI B_IN_XML_DECL B_IN_DOCTYPE
 %s B_IN_PI_AFTER_TARGET B_IN_COMMENT B_IN_COMMENT_AFTER_CONTENT
 %x B_IN_ATTR_TEXT B_IN_XML_DECL_ATTR_TEXT
 
 %%
 
 {S_WS}          -- Ignore whitespaces.
-                
+
 {S_NL}          -- ignore newline
 
 {S_LT}  {
@@ -100,7 +107,7 @@ S_NS_WORD     {S_WORD}:{S_WORD}
         set_start_condition(B_IN_CONTENT)
   }
 
--- xml decls
+-- xml decls <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 {S_LT_QM}/{S_XML}	{
 			last_token := T_LT_QM
 			set_start_condition (B_IN_XML_DECL)
@@ -109,10 +116,21 @@ S_NS_WORD     {S_WORD}:{S_WORD}
 <B_IN_XML_DECL>{S_XML} {
 			last_token := T_XML
 			}
-
-<B_IN_XML_DECL>{S_WORD} {
-			last_token := T_WORD
+<B_IN_XML_DECL>{S_VERSION} {
+			last_token := T_VERSION
 			}
+
+<B_IN_XML_DECL>{S_ENCODING} {
+			last_token := T_ENCODING
+			}
+
+<B_IN_XML_DECL>{S_STANDALONE} {
+			last_token := T_STANDALONE
+			}
+
+--  <B_IN_XML_DECL>{S_WORD} {
+--  			last_token := T_WORD
+--  			}
 
 <B_IN_XML_DECL>{S_DOUBLE_QUOTES}	{
 					last_token := T_DOUBLE_QUOTES
@@ -123,23 +141,48 @@ S_NS_WORD     {S_WORD}:{S_WORD}
 					last_token := T_DOUBLE_QUOTES
 					set_start_condition (B_IN_XML_DECL)
 					}
+
 <B_IN_XML_DECL_ATTR_TEXT>{S_ATTR_TEXT}	{
 					last_token := T_ATTR_TEXT
 					handle_found_text
 					}
+
 <B_IN_XML_DECL_ATTR_TEXT>.|\n	{
 					last_token := text_item (1).code
 					}
+
 <B_IN_XML_DECL>{S_EQUAL}	{
 				last_token := T_EQUAL
 				}
-
 
 <B_IN_XML_DECL>{S_QM_GT}	{
 			last_token := T_QM_GT
 			set_start_condition (B_IN_CONTENT)
 			}
 
+-- doctype <!DOCTYPE root SYSTEM "example.dtd">
+{S_DOCTYPE}		{
+			last_token := T_DOCTYPE
+			set_start_condition (B_IN_DOCTYPE)
+			}
+
+<B_IN_DOCTYPE>{S_SYSTEM}	{
+			last_token := T_SYSTEM
+			}
+
+<B_IN_DOCTYPE>(\"[^\"]*\")|('[^']*')	{ --"
+			handle_found_text
+			last_token := T_LITERAL
+			}
+
+<B_IN_DOCTYPE>{S_PUBLIC}	{
+			last_token := T_PUBLIC
+			}
+
+<B_IN_DOCTYPE>{S_WORD}	{
+			handle_found_text
+			last_token := T_WORD
+			}
 
 -- processing inistruction
 {S_LT_QM}		{
@@ -211,6 +254,7 @@ S_NS_WORD     {S_WORD}:{S_WORD}
         handle_found_text
         set_start_condition(B_IN_TAG)
         }
+
 <B_IN_ATTR_TEXT>.|\n	{
 	last_token := text_item (1).code
 	}
@@ -226,7 +270,7 @@ S_NS_WORD     {S_WORD}:{S_WORD}
         handle_found_text
   }
 
--- comments 
+-- comments
 
 <B_IN_CONTENT>{S_START_COMMENT}	{
 			last_token := T_START_COMMENT
@@ -246,7 +290,7 @@ S_NS_WORD     {S_WORD}:{S_WORD}
 
 
 . {
-	handle_found_text 
+	handle_found_text
   }
 
 %%
@@ -266,18 +310,4 @@ feature -- Access
 	last_value: UC_STRING
 			-- Last value read (only valid for some tokens)
 
-end 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end
