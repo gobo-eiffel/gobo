@@ -18,11 +18,6 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_EXCEPTIONS
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
