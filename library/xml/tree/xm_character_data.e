@@ -20,11 +20,12 @@ inherit
 
 creation
 
-	make
+	make,
+	make_last
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; c: like content) is
+	make (a_parent: XM_ELEMENT; c: like content) is
 			-- Create a new character data node.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -37,6 +38,21 @@ feature {NONE} -- Initialization
 			content_set: content = c
 		end
 
+	make_last (a_parent: XM_ELEMENT; c: like content) is
+			-- Create a new character data node,
+			-- and add it to parent.
+		require
+			a_parent_not_void: a_parent /= Void
+			c_not_void: c /= Void
+		do
+			content := c
+			a_parent.force_last (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			content_set: content = c
+		end
+		
 feature -- Access
 
 	content: STRING

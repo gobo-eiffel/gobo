@@ -20,7 +20,9 @@ inherit
 
 creation
 
-	make
+	make,
+	make_last,
+	make_last_in_document
 
 feature {NONE} -- Initialization
 
@@ -30,14 +32,49 @@ feature {NONE} -- Initialization
 			a_target_not_void: a_target /= Void
 			a_data_not_void: a_data /= Void
 		do
-			parent := a_parent
 			target := a_target
 			data := a_data
+			parent := a_parent
 		ensure
+			parent_set: parent = a_parent
 			target_set: target = a_target
 			data_set: data = a_data
 		end
-
+	
+	make_last (a_parent: XM_ELEMENT; a_target: like target; a_data: like data) is
+			-- Create a new processing instruction node,
+			-- and add it to parent.
+		require
+			a_target_not_void: a_target /= Void
+			a_data_not_void: a_data /= Void
+		do
+			target := a_target
+			data := a_data
+			a_parent.force_last (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			target_set: target = a_target
+			data_set: data = a_data
+		end
+	
+	make_last_in_document (a_parent: XM_DOCUMENT; a_target: like target; a_data: like data) is
+			-- Create a new processing instruction node.
+			-- and add it to parent.
+		require
+			a_target_not_void: a_target /= Void
+			a_data_not_void: a_data /= Void
+		do
+			target := a_target
+			data := a_data
+			a_parent.force_last (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			target_set: target = a_target
+			data_set: data = a_data
+		end
+		
 feature -- Access
 
 	target: STRING

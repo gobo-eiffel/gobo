@@ -106,6 +106,16 @@ feature -- Element change
 			parent_set: parent = a_parent
 		end
 
+feature {XM_COMPOSITE} -- Element change
+
+	node_set_parent (a_parent: like parent) is
+			-- Set `parent' to `a_parent'.
+		do
+			parent := a_parent
+		ensure
+			parent_set: parent = a_parent
+		end
+
 feature -- Processing
 
 	process (a_processor: XM_NODE_PROCESSOR) is

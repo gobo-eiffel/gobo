@@ -24,7 +24,8 @@ inherit
 
 creation
 
-	make
+	make,
+	make_last
 
 feature {NONE} -- Initialization
 
@@ -41,12 +42,33 @@ feature {NONE} -- Initialization
 			value := a_value
 			parent := a_parent
 		ensure
+			parent_set: parent = a_parent
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 			value_set: value = a_value
-			parent_set: parent = a_parent
 		end
 
+	make_last (a_name: like name; a_ns: like namespace; a_value: like value; a_parent: XM_ELEMENT) is
+			-- Create a new attribute,
+			-- and add it to parent..
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_value_not_void: a_value /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			name := a_name
+			namespace := a_ns
+			value := a_value
+			a_parent.force_last (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			name_set: name = a_name
+			ns_prefix_set: namespace = a_ns
+			value_set: value = a_value
+		end
+		
 feature -- Status report
 
 	is_namespace_declaration: BOOLEAN is

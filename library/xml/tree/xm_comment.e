@@ -20,7 +20,9 @@ inherit
 	
 creation
 
-	make
+	make,
+	make_last,
+	make_last_in_document
 
 feature {NONE} -- Initialization
 
@@ -37,6 +39,36 @@ feature {NONE} -- Initialization
 			data_set: data = a_data
 		end
 
+	make_last (a_parent: XM_ELEMENT; a_data: like data) is
+			-- Create a new comment node.
+			-- and add it to parent.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_data_not_void: a_data /= Void
+		do
+			data := a_data
+			a_parent.force_last (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			data_set: data = a_data
+		end
+		
+	make_last_in_document (a_parent: XM_DOCUMENT; a_data: like data) is
+			-- Create a new comment node,
+			-- and add it to parent.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_data_not_void: a_data /= Void
+		do
+			data := a_data
+			a_parent.force_last (Current)
+		ensure
+			parent_set: parent = a_parent
+			in_parent: parent.last = Current
+			data_set: data = a_data
+		end
+		
 feature -- Access
 
 	data: STRING
