@@ -210,19 +210,55 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
+			needed: BOOLEAN
+			a_parent, a_child: ET_XACE_CLUSTER
+			a_subclusters: ET_XACE_CLUSTERS
+			a_cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+			i, nb: INTEGER
 			an_option: ET_XACE_OPTIONS
 			subclusters: ET_XACE_CLUSTERS
 			need_end_keyword: BOOLEAN
 			an_externals: ET_XACE_EXTERNALS
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_EXPORTED_CLASS]
 		do
-			if not a_cluster.is_abstract then
+			needed := not a_cluster.is_abstract
+			if not needed then
+				a_subclusters := a_cluster.subclusters
+				if a_subclusters /= Void then
+					a_cluster_list := a_subclusters.clusters
+					nb := a_cluster_list.count
+					from i := 1 until i > nb loop
+						a_child := a_cluster_list.item (i)
+						if a_child.parent = a_cluster and a_child.pathname = Void then
+								-- (Note that the parent from `a_child'
+								-- can be different from `a_cluster'
+								-- if it has been mounted.)
+							needed := True
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+			if needed then
 				print_indentation (1, a_file)
-				a_file.put_string (a_cluster.full_name ('_'))
-				a_file.put_string (": %"")
-				a_file.put_string (a_cluster.full_pathname)
-				a_file.put_character ('%"')
-				a_file.put_new_line
+				a_parent := a_cluster.parent
+				if a_parent /= Void and a_cluster.pathname = Void then
+					a_file.put_string (a_cluster.full_name ('_'))
+					a_file.put_string (" (")
+					a_file.put_string (a_parent.full_name ('_'))
+					a_file.put_string ("): %"$/")
+					a_file.put_string (a_cluster.name)
+					a_file.put_character ('%"')
+					a_file.put_new_line
+				else
+					a_file.put_string (a_cluster.full_name ('_'))
+					a_file.put_string (": %"")
+					a_file.put_string (a_cluster.full_pathname)
+					a_file.put_character ('%"')
+					a_file.put_new_line
+				end
 				an_option := a_cluster.options
 				if an_option /= Void then
 					print_indentation (2, a_file)
