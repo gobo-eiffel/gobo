@@ -310,9 +310,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			Result := authority /= Void and then not authority.is_empty
 			if Result then
 				p := authority.index_of ('@', 1)
-				Result := (p > 1) -- User info not empty
-					and then
-						is_valid_host_port (authority.substring (p + 1, authority.count))
+				Result := is_valid_host_port (authority.substring (p + 1, authority.count))
 			end
 		end
 				
