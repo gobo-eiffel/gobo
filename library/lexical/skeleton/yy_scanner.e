@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,9 +16,7 @@ deferred class YY_SCANNER
 inherit
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 	KL_SHARED_STANDARD_FILES
 
 feature {NONE} -- Initialization
@@ -413,6 +411,17 @@ feature -- Error handling
 		do
 			std.error.put_string (a_message)
 			std.error.put_character ('%N')
+		end
+
+feature -- Debugging
+
+	print_last_token is
+			-- Print to standard error debug information
+			-- about the last token read. Can be redefined
+			-- in descendant classes to print more information.
+			-- (Called at the end of `read_token' when compiled
+			-- with 'debug ("GELEX")' enabled).
+		deferred
 		end
 
 feature {NONE} -- Constants

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -288,6 +288,48 @@ feature -- Input
 		do
 			input_buffer.flush
 			yy_load_input_buffer
+		end
+
+feature -- Debugging
+
+	print_last_token is
+			-- Print to standard error debug information
+			-- about the last token read. Can be redefined
+			-- in descendant classes to print more information.
+			-- (Called at the end of `read_token' when compiled
+			-- with 'debug ("GELEX")' enabled).
+		do
+			std.error.put_string ("Last token code: ")
+			std.error.put_integer (last_token)
+			std.error.put_character ('%N')
+			if yyLine_used then
+					-- Line and column numbers are used.
+				std.error.put_string ("Last token line: ")
+				std.error.put_integer (line)
+				std.error.put_string ("%NLast token column: ")
+				std.error.put_integer (column)
+				std.error.put_character ('%N')
+			end
+			if yyPosition_used then
+					-- Position number is used.
+				std.error.put_string ("Last token position: ")
+				std.error.put_integer (position)
+				std.error.put_character ('%N')
+			end
+			std.error.put_string ("Last token text: ")
+			inspect last_token
+			when yyEOF_token then
+				std.error.put_string ("EOF token%N")
+			when yyError_token then
+				std.error.put_string ("Error token%N")
+			when yyUnknown_token then
+					-- Should never happen.
+				std.error.put_string ("Unknown token%N")
+			else
+				std.error.put_character ('%"')
+				std.error.put_string (text)
+				std.error.put_string ("%"%N")
+			end
 		end
 
 feature {NONE} -- Implementation
