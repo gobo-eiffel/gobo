@@ -38,6 +38,8 @@ feature -- Processing
 			tokens_needed: BOOLEAN
 			verbose_file: like OUTPUT_STREAM_TYPE
 		do
+			if False then resurrect_code end
+
 			Arguments.set_program_name ("geyacc")
 			!! error_handler.make_standard
 			read_command_line
@@ -234,6 +236,21 @@ feature {NONE} -- Error handling
 			!! Result.make ("[-hxV?][-t classname][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	resurrect_code is
+			-- Make sure that SmallEiffel does not complain about possible
+			-- "calls on a Void target in the living Eiffel code".
+		local
+			et1: DS_EQUALITY_TESTER [PR_RULE]
+			et2: DS_EQUALITY_TESTER [PR_TOKEN]
+			et3: DS_EQUALITY_TESTER [PR_VARIABLE]
+		do
+			!! et1
+			!! et2
+			!! et3
 		end
 
 invariant

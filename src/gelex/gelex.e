@@ -30,6 +30,8 @@ feature -- Processing
 		local
 			command_line: GELEX_COMMAND_LINE
 		do
+			if False then resurrect_code end
+
 			Arguments.set_program_name ("gelex")
 			!! error_handler.make_standard
 			!! description.make
@@ -192,6 +194,25 @@ feature -- Access
 
 	dfa: LX_GENERATABLE_DFA 
 			-- Generated DFA
+
+feature {NONE} -- Implementation
+
+	resurrect_code is
+			-- Make sure that SmallEiffel does not complain about possible
+			-- "calls on a Void target in the living Eiffel code".
+		local
+			et1: DS_EQUALITY_TESTER [LX_DFA_STATE]
+			et2: DS_EQUALITY_TESTER [LX_NFA_STATE]
+			et3: DS_EQUALITY_TESTER [LX_START_CONDITION]
+			et4: DS_EQUALITY_TESTER [LX_RULE]
+			et5: DS_EQUALITY_TESTER [INTEGER]
+		do
+			!! et1
+			!! et2
+			!! et3
+			!! et4
+			!! et5
+		end
 
 invariant
 
