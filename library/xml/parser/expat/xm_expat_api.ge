@@ -161,12 +161,40 @@ feature -- Creating and destroying parsers
 			"XML_ParserFree"
 		end
 
+
 feature -- Parsing
+
+	exml_XML_GetBuffer (a_parser: POINTER; len: INTEGER): POINTER is
+			-- Obtain a buffer of size len to read a piece of the
+			-- document into. `default_pointer' value is returned if
+			-- expat can't allocate enough memory for this buffer. This
+			-- has to be called prior to every call to XML_ParseBuffer.
+		require
+			a_parser_not_null: a_parser /= default_pointer
+			len_not_negative: len >= 0
+		external
+#ifdef SE || ISE
+			"C use <expat.h>"
+#endif
+#ifdef HACT
+			"C | <expat.h>"
+#endif
+#ifdef VE
+			"C"
+#endif
+		alias
+			"XML_GetBuffer"
+		ensure
+			we_dont_handle_nil_yet: Result /= default_pointer
+		end
 
 	exml_XML_Parse_string (a_parser: POINTER; str: STRING; is_final: BOOLEAN): INTEGER is
 			-- Parse some input. Return 0 if a fatal error is
 			-- detected. The last call to XML_Parse must have `is_final'
 			-- true; `str' may be empty.
+			-- You should not change the contents of `str' while Expat
+			-- might still need it. So be extremely careful with
+			-- last_string type of loops.
 		require
 			a_parser_not_null: a_parser /= default_pointer
 			str_not_void: str /= Void
@@ -208,6 +236,31 @@ feature -- Parsing
 #endif
 		alias
 			"XML_Parse"
+		end
+
+	exml_XML_ParseBuffer (a_parser: POINTER; len: INTEGER; is_final: INTEGER): INTEGER is
+			-- This is just like XML_Parse, except in this case expat
+			-- provides the buffer. By obtaining the buffer from expat
+			-- with the XML_GetBuffer function, the application can avoid
+			-- double copying of the input.
+			-- Return 0 if a fatal error is detected. The last call to
+			-- XML_ParseBuffer must have `is_final' true; `len' may be zero for
+			-- this call (or any other).
+		require
+			a_parser_not_null: a_parser /= default_pointer
+			len_not_negative: len >= 0
+		external
+#ifdef SE || ISE
+			"C use <expat.h>"
+#endif
+#ifdef HACT
+			"C | <expat.h>"
+#endif
+#ifdef VE
+			"C"
+#endif
+		alias
+			"XML_ParseBuffer"
 		end
 
 feature -- Error reporting
