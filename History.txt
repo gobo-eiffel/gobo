@@ -10,7 +10,17 @@ Version 3.1 - ?
 	* Moved feature `close' up to KI_INPUT_STREAM and
 	  KI_OUTPUT_STREAM and added feature `is_closable'
 	  (suggested by Franck Arnaud).
+	  
+	Gobo XML Library:
 
+	* Tree: `namespace' in named nodes is now an object, which 
+	  contains URI and prefix. It may be shared.
+	* Tree: `*_by_name' routines check the namespace is the
+	  same.
+	* Tree: `is_first' and `is_last' in XM_COMPOSITE for 
+	  checking position within parent.
+	* Tree: added `elements' to XM_COMPOSITE.
+	
 Version 3.0 - 1 September 2002
 
 	gelex:
