@@ -67,6 +67,14 @@ feature -- Access
 				Result := target.position
 			else
 				Result := agent_keyword.position
+				if Result.is_null then
+					if target /= Void then
+						Result := target.position
+					end
+				end
+			end
+			if Result.is_null then
+				Result := name.position
 			end
 		end
 
