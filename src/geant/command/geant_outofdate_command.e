@@ -15,46 +15,60 @@ class GEANT_OUTOFDATE_COMMAND
 
 inherit
 
-	GEANT_COMMAND
-		redefine
-			make
-		end
+	GEANT_FILESYSTEM_COMMAND
 
 creation
 
 	make
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make (a_project: GEANT_PROJECT) is
-			-- Create a new 'outofdate' command.
+	is_file_executable: BOOLEAN is
+			-- Can command be executed on sourcefile `source_filename' to targetfile `target_filename'?
 		do
-			precursor (a_project)
-			!DS_HASH_SET [STRING]! source_filenames.make (10)
+			Result := source_filename /= Void and then source_filename.count > 0
+			Result := Result and then target_filename /= Void and then target_filename.count > 0
+			Result := Result and then fileset = Void
+		ensure
+			source_filename_not_void: Result implies source_filename /= Void
+			source_filename_not_empty: Result implies source_filename.count > 0
+			target_filename_not_void: Result implies target_filename /= Void
+			target_filename_not_empty: Result implies target_filename.count > 0
+			fileset_void: Result implies fileset = Void
 		end
 
-feature -- Status report
+	is_fileset_executable: BOOLEAN is
+			-- Can command be executed on `fileset' as input to target defined by `fileset.map'?
+		do
+			Result := source_filename = Void
+			Result := Result and then target_filename = Void
+			Result := Result and then fileset /= Void and then fileset.is_executable
+		ensure
+			fileset_not_void: Result implies fileset /= Void
+			fileset_executable: Result implies fileset.is_executable
+			source_filename_void: Result implies source_filename = Void
+			target_filename_void: Result implies target_filename = Void
+		end
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := (target_filename /= Void and then target_filename.count > 0)
+			Result := is_file_executable xor is_fileset_executable
 		ensure then
-			target_filename_not_void: Result implies target_filename /= Void
-			target_filename_not_empty: Result implies target_filename.count > 0
+			file_xor_fileset: Result implies is_file_executable xor is_fileset_executable
 		end
 
 feature -- Access
 
-	source_filenames: DS_SET [STRING]
-			-- Source filesnames
+	source_filename: STRING
+			-- Source filesname
 
 	target_filename: STRING
 			-- Output filename
 
 	is_out_of_date: BOOLEAN
-			-- Is an filesystem entry in `source_filenames' newer than
-			-- the one named `target_filename';
+			-- Is a file named `source_filename' newer than
+			-- the one named `target_filename'?;
 			-- available after `execute' has been processed
 
 	variable_name: STRING
@@ -68,17 +82,20 @@ feature -- Access
 			-- Value to be set for variable named `variable_name'
 			-- in case `is_out_of_date' is evaluated to `False'
 
+	fileset: GEANT_FILESET
+		-- Fileset for current command
+
 feature -- Setting
 
 
-	set_source_filenames (a_source_filenames: like source_filenames) is
-			-- Set `source_filenames' to `a_filename'.
+	set_source_filename (a_source_filename: like source_filename) is
+			-- Set `source_filename' to `a_source_filename'.
 		require
-			a_source_filenames_not_void : a_source_filenames /= Void
+			a_source_filename_not_void : a_source_filename /= Void
 		do
-			source_filenames := a_source_filenames
+			source_filename := a_source_filename
 		ensure
-			source_filenames_set: source_filenames = a_source_filenames
+			source_filename_set: source_filename = a_source_filename
 		end
 
 	set_target_filename (a_filename: like target_filename) is
@@ -125,51 +142,73 @@ feature -- Setting
 			false_value_set: false_value = a_false_value
 		end
 
+	set_fileset (a_fileset: like fileset) is
+			-- Set `fileset' to `a_fileset'.
+		require
+			a_fileset_not_void: a_fileset /= Void
+		do
+			fileset := a_fileset
+		ensure
+			fileset_set: fileset = a_fileset
+		end
+
 feature -- Execution
 
 	execute is
 			-- Execute command.
 		local
-			a_source_time: INTEGER
-			a_target_time: INTEGER
-			a_name: STRING
-			a_done: BOOLEAN
+			a_from_file: STRING
+			a_to_file: STRING
 		do
-			exit_code := 0
-			a_name := file_system.pathname_from_file_system (target_filename, unix_file_system)
-			a_target_time := file_system.file_time_stamp (a_name)
-				-- Check timestamps:
-			from
-				source_filenames.start
-			until
-				source_filenames.after or else exit_code /= 0 or else a_done
-			loop
-				a_name := file_system.pathname_from_file_system (source_filenames.item_for_iteration, unix_file_system)
-				project.trace_debug ("[outofdate] filename: " + a_name + "%N")
-				a_source_time := file_system.file_time_stamp (a_name)
-				if a_source_time = -1 then
-					project.log ("  [outofdate] error: '" + a_name + "'  not accessible.%N")
+			if is_file_executable then
+				a_from_file := file_system.pathname_from_file_system (source_filename, unix_file_system)
+				if not file_system.file_exists (a_from_file) then
+					project.log ("  [outofdate] error: cannot find source file '" + a_from_file + "'%N")
 					exit_code := 1
-				elseif a_target_time < a_source_time then
-					is_out_of_date := True
-					a_done := True
 				end
-				source_filenames.forth
-			end
+				if exit_code = 0 then
+					a_to_file := file_system.pathname_from_file_system (target_filename, unix_file_system)
+					is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
+					if is_out_of_date then
+						project.variables.set_variable_value (variable_name, true_value)
+					else
+						project.variables.set_variable_value (variable_name, false_value)
+					end
+				end
+			else
+				check is_fileset_executable: is_fileset_executable end
+	
+				if not fileset.is_executable then
+					project.log ("  [outofdate] error: fileset definition wrong%N")
+					exit_code := 1
+				end
+				if exit_code = 0 then
+					fileset.execute
+					from
+						fileset.start
+					until
+						is_out_of_date or else fileset.after or else exit_code /= 0
+					loop
+						a_from_file := file_system.pathname_from_file_system (fileset.item_filename, unix_file_system)
+						if not file_system.file_exists (a_from_file) then
+							project.log ("  [outofdate] error: cannot find source file '" + a_from_file + "'%N")
+							exit_code := 1
+						end
+						if exit_code = 0 then
+							a_to_file := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
+							is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
+						end
 
-			if exit_code = 0 then
-				if is_out_of_date then
-					project.variables.set_variable_value (variable_name, true_value)
-				else
-					project.variables.set_variable_value (variable_name, false_value)
+						fileset.forth
+					end -- loop
+					if is_out_of_date then
+						project.variables.set_variable_value (variable_name, true_value)
+					else
+						project.variables.set_variable_value (variable_name, false_value)
+					end
 				end
 			end
 		end
-
-invariant
-
-	source_filenames_not_void: source_filenames /= Void
-	no_void_source_filename: not source_filenames.has (Void)
 
 end -- class GEANT_OUTOFDATE_COMMAND
 
