@@ -24,13 +24,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_id: like id) is
+	make (an_id: like id; a_pattern: like pattern; an_action: like action) is
 			-- Create a new rule.
+		require
+			a_pattern_not_void: a_pattern /= Void
+			an_action_not_void: an_action /= Void
 		do
 			id := an_id
-			action := Default_action
+			pattern := a_pattern
+			action := an_action
 		ensure
 			id_set: id = an_id
+			pattern_set: pattern = a_pattern
+			action_set: action = an_action
 		end
 
 feature -- Access
@@ -38,15 +44,18 @@ feature -- Access
 	id: INTEGER
 			-- Identification number
 
-	head_count, trail_count: INTEGER
-			-- Size of the head and trailing context,
-			-- 0 when variable size
-
 	action: UT_COMMAND
 			-- Associated semantic action
 
+	pattern: LX_NFA
+			-- Associated pattern
+
 	line_nb: INTEGER
 			-- Line number associated of current rule
+
+	head_count, trail_count: INTEGER
+			-- Size of the head and trailing context,
+			-- 0 when variable size
 
 feature -- Status report
 
@@ -71,6 +80,16 @@ feature -- Setting
 			action := an_action
 		ensure
 			action_set: action = an_action
+		end
+
+	set_pattern (a_pattern: like pattern) is
+			-- Set `pattern' to `a_pattern'.
+		require
+			a_pattern_not_void: a_pattern /= Void
+		do
+			pattern := a_pattern
+		ensure
+			pattern_set: pattern = a_pattern
 		end
 
 	set_id (an_id: like id) is
@@ -116,20 +135,10 @@ feature -- Comparison
 			Result := id < other.id
 		end
 
-feature {NONE} -- Implementation
-
-	Default_action: UT_COMMAND is
-			-- Default action
-			-- (Default: empty action)
-		once
-			!LX_ACTION! Result.make ("")
-		ensure
-			default_action_not_void: Result /= Void
-		end
-
 invariant
 
 	action_not_void: action /= Void
+	pattern_not_void: pattern /= Void
 	positive_head_count: head_count >= 0
 	positive_trail_count: trail_count >= 0
 
