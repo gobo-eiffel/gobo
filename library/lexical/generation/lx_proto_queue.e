@@ -9,13 +9,13 @@ indexing
 		%processed later will have many of the same out-transitions), %
 		%with the hope that most states will find a proto which is %
 		%similar enough to be usable, and therefore compacting the %
-		%output tables";
+		%output tables"
 
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_PROTO_QUEUE
