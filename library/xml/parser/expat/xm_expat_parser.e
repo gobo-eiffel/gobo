@@ -204,6 +204,8 @@ feature -- Incremental parsing
 				on_finish
 				free_parser
 			end
+		ensure
+			parser_not_created: not is_parser_created
 		end
 
 
