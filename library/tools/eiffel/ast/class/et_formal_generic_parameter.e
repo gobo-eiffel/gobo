@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -14,6 +14,8 @@ indexing
 class ET_FORMAL_GENERIC_PARAMETER
 
 inherit
+
+	ET_FORMAL_GENERIC_PARAMETER_ITEM
 
 	HASHABLE
 
@@ -23,17 +25,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_constraint: like constraint) is
+	make (a_name: like name) is
 			-- Create a new formal generic parameter.
 		require
 			a_name_not_void: a_name /= Void
 		do
 			name := a_name
-			constraint := a_constraint
 			index := 1
 		ensure
 			name_set: name = a_name
-			constraint_set: constraint = a_constraint
 		end
 
 feature -- Access
@@ -41,8 +41,17 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Name
 
-	constraint: ET_TYPE
+	constraint: ET_TYPE is
 			-- Generic constraint
+		do
+			-- Result := Void
+		end
+
+	creation_procedures: ET_CONSTRAINT_CREATOR is
+			-- Creation procedures expected in `constraint'
+		do
+			-- Result := Void
+		end
 
 	index: INTEGER
 			-- Position in list of generic parameters
@@ -53,15 +62,26 @@ feature -- Access
 			Result := index
 		end
 
-feature -- Setting
-
-	set_constraint (a_constraint: like constraint) is
-			-- Set `a_constraint' to `constraint'.
+	formal_generic_parameter_item: ET_FORMAL_GENERIC_PARAMETER is
+			-- Formal generic parameter in comma-separated list
 		do
-			constraint := a_constraint
-		ensure
-			constraint_set: constraint = a_constraint
+			Result := Current
 		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := name.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
+
+feature -- Setting
 
 	set_index (an_index: INTEGER) is
 			-- Set `index' to `an_index'.
@@ -71,6 +91,14 @@ feature -- Setting
 			index := an_index
 		ensure
 			index_set: index = an_index
+		end
+
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in the constraints.
+		do
 		end
 
 invariant

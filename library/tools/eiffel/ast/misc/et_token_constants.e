@@ -33,6 +33,22 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	class_keyword: ET_TOKEN is
+			-- 'class' keyword
+		once
+			!! Result.make (class_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	create_keyword: ET_TOKEN is
+			-- 'create' keyword
+		once
+			!! Result.make (create_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	creation_keyword: ET_TOKEN is
 			-- 'creation' keyword
 		once
@@ -61,6 +77,14 @@ feature -- Keywords
 			-- 'export' keyword
 		once
 			!! Result.make (export_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	inherit_keyword: ET_TOKEN is
+			-- 'inherit' keyword
+		once
+			!! Result.make (inherit_keyword_name)
 		ensure
 			keyword_not_void: Result /= Void
 		end

@@ -17,6 +17,7 @@ inherit
 
 	HASHABLE
 	ET_SHARED_FEATURE_NAME_TESTER
+	ET_SHARED_TOKEN_CONSTANTS
 
 creation
 
@@ -34,6 +35,8 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := an_id
 			universe := a_universe
+			class_keyword := tokens.class_keyword
+			end_keyword := tokens.end_keyword
 			!! named_features.make (100)
 			named_features.set_key_equality_tester (feature_name_tester)
 		ensure
@@ -61,8 +64,23 @@ feature -- Access
 	name: ET_CLASS_NAME
 			-- Class name
 
+	obsolete_message: ET_OBSOLETE
+			-- Obsolete message
+
+	first_indexing: ANY
+			-- Indexing clause at the beginning of the class
+
+	second_indexing: ANY
+			-- Indexing clause at the end of the class
+
 	invariants: ET_INVARIANTS
 			-- Invariants
+
+	class_keyword: ET_TOKEN
+			-- 'class' keyword
+
+	end_keyword: ET_TOKEN
+			-- 'end' keyword
 
 	id: INTEGER
 			-- Class ID
@@ -346,6 +364,17 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			is_separate: is_separate
 		end
 
+	set_name (a_name: like name) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			same_class_name: name.same_class_name (a_name)
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
 	set_generic_parameters (a_generic_parameters: like generic_parameters) is
 			-- Set `generic_parameters' to `a_generic_parameters'.
 		do
@@ -354,12 +383,64 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			generic_parameters_set: generic_parameters = a_generic_parameters
 		end
 
+	set_obsolete_message (an_obsolete_message: like obsolete_message) is
+			-- Set `obsolete_message' to `an_obsolete_message'.
+		do
+			obsolete_message := an_obsolete_message
+		ensure
+			obsolete_message_set: obsolete_message = an_obsolete_message
+		end
+
 	set_parents (a_parents: like parents) is
 			-- Set `parents' to `a_parents'.
 		do
 			parents := a_parents
 		ensure
 			parents_set: parents = a_parents
+		end
+
+	set_invariants (an_invariants: like invariants) is
+			-- Set `invariants' to `an_invariants'.
+		do
+			invariants := an_invariants
+		ensure
+			invariants_set: invariants = an_invariants
+		end
+
+	set_first_indexing (an_indexing: like first_indexing) is
+			-- Set `first_indexing' to `an_indexing'
+		do
+			first_indexing := an_indexing
+		ensure
+			first_indexing_set: first_indexing = an_indexing
+		end
+
+	set_second_indexing (an_indexing: like second_indexing) is
+			-- Set `second_indexing' to `an_indexing'
+		do
+			second_indexing := an_indexing
+		ensure
+			second_indexing_set: second_indexing = an_indexing
+		end
+
+	set_class_keyword (a_class: like class_keyword) is
+			-- Set `class_keyword' to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			class_keyword := a_class
+		ensure
+			class_keyword_set: class_keyword = a_class
+		end
+
+	set_end_keyword (an_end: like end_keyword) is
+			-- Set `end_keyword' to `an_end'.
+		require
+			an_end_not_void: an_end /= Void
+		do
+			end_keyword := an_end
+		ensure
+			end_keyword_set: end_keyword = an_end
 		end
 
 	put_feature (a_feature: ET_FEATURE) is
@@ -753,5 +834,7 @@ invariant
 	no_void_feature: not named_features.has_item (Void)
 	no_void_seeded_feature: seeded_features /= Void implies not seeded_features.has_item (Void)
 	no_void_ancestor: ancestors /= Void implies not ancestors.has_item (Void)
+	class_keyword_not_void: class_keyword /= Void
+	end_keyword_not_void: end_keyword /= Void
 
 end -- class ET_CLASS

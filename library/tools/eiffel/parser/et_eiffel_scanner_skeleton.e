@@ -76,16 +76,12 @@ feature -- Initialization
 			precursor
 			verbatim_marker := Void
 			verbatim_open_white_characters := Void
-			last_class := Void
 		end
 
 feature -- Access
 
 	filename: STRING
 			-- Name of file being parsed
-
-	last_class: ET_CLASS
-			-- Class being parsed
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser

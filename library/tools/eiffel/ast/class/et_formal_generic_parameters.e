@@ -6,44 +6,95 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class ET_FORMAL_GENERIC_PARAMETERS
 
+inherit
+
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_FORMAL_GENERIC_PARAMETER_ITEM]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity,
+			item as formal_generic_parameter_item
+		redefine
+			put_first
+		end
+
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_parameter: ET_FORMAL_GENERIC_PARAMETER) is
-			-- Create a new formal generic parameter list
-			-- with initially one formal parameter `a_parameter'.
+	make (l: like left_bracket; r: like right_bracket) is
+			-- Create an empty formal generic parameter list.
 		require
-			a_parameter_not_void: a_parameter /= Void
+			l_not_void: l /= Void
+			r_not_void: r /= Void
 		do
-			!! generic_parameters.make (1, 1)
-			put (a_parameter)
+			left_bracket := l
+			right_bracket := r
+			make_ast_list
 		ensure
-			count_set: count = 1
-			inserted: item (1) = a_parameter
-			index_set: a_parameter.index = 1
+			left_bracket_set: left_bracket = l
+			right_bracket_set: right_bracket = r
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (l: like left_bracket; r: like right_bracket; nb: INTEGER) is
+			-- Create an empty formal generic parameter list with capacity `nb'.
+		require
+			l_not_void: l /= Void
+			r_not_void: r /= Void
+			nb_positive: nb >= 0
+		do
+			left_bracket := l
+			right_bracket := r
+			make_ast_list_with_capacity (nb)
+		ensure
+			left_bracket_set: left_bracket = l
+			right_bracket_set: right_bracket = r
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
+	left_bracket: ET_SYMBOL
+			-- Left bracket
+
+	right_bracket: ET_SYMBOL
+			-- Right bracket
+
 	item (i: INTEGER): ET_FORMAL_GENERIC_PARAMETER is
-			-- `i'-th formal generic parameter
+			-- Type of `i'-th formal generic parameter
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := generic_parameters.item (i)
+			Result := formal_generic_parameter_item (i).formal_generic_parameter_item
 		ensure
-			parameter_not_void: Result /= Void
+			item_not_void: Result /= Void
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := left_bracket.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := right_bracket.break
 		end
 
 	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
@@ -55,9 +106,9 @@ feature -- Access
 			i, nb: INTEGER
 			a_parameter: ET_FORMAL_GENERIC_PARAMETER
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				a_parameter :=  generic_parameters.item (i)
+				a_parameter :=  item (i)
 				if a_parameter.name.same_identifier (a_name) then
 					Result := a_parameter
 					i := nb + 1  -- Jump out of the loop.
@@ -70,11 +121,6 @@ feature -- Access
 			same_name: Result /= Void implies Result.name.same_identifier (a_name)
 		end
 
-feature -- Measurement
-
-	count: INTEGER
-			-- Number of generic parameters
-
 feature -- Status report
 
 	has_generic_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
@@ -84,9 +130,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				if generic_parameters.item (i).name.same_identifier (a_name) then
+				if item (i).name.same_identifier (a_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -217,50 +263,77 @@ feature -- Type processing
 			ast_factory_not_void: ast_factory /= Void
 		local
 			i, nb: INTEGER
-			a_formal: ET_FORMAL_GENERIC_PARAMETER
+			a_constrained_formal: ET_CONSTRAINED_FORMAL_GENERIC_PARAMETER
 			a_constraint: ET_TYPE
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				a_formal := item (i)
-				a_constraint := a_formal.constraint
-				if a_constraint /= Void then
-					a_formal.set_constraint (a_constraint.resolved_named_types (a_class, ast_factory))
+				a_constrained_formal ?= item (i)
+				if a_constrained_formal /= Void then
+					a_constraint := a_constrained_formal.constraint
+					a_constrained_formal.set_constraint (a_constraint.resolved_named_types (a_class, ast_factory))
 				end
 				i := i + 1
 			end
 		end
 
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in the constraints.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				item (i).add_to_system
+				i := i + 1
+			end
+		end
+
+feature -- Setting
+
+	set_left_bracket (l: like left_bracket) is
+			-- Set `left_bracket' to `l'.
+		require
+			l_not_void: l /= Void
+		do
+			left_bracket := l
+		ensure
+			left_bracket_set: left_bracket = l
+		end
+
+	set_right_bracket (r: like right_bracket) is
+			-- Set `right_bracket' to `r'.
+		require
+			r_not_void: r /= Void
+		do
+			right_bracket := r
+		ensure
+			right_bracket_set: right_bracket = r
+		end
+
 feature -- Element change
 
-	put (a_parameter: ET_FORMAL_GENERIC_PARAMETER) is
-			-- Add formal generic parameter `a_parameter'
-			-- to formal generic parameter list.
-		require
-			a_parameter_not_void: a_parameter /= Void
+	put_first (an_item: like formal_generic_parameter_item) is
+			-- Put `an_item' at first position in list.
 		do
-			count := count + 1
-			a_parameter.set_index (count)
-			if generic_parameters.upper < count then
-				generic_parameters.resize (1, count)
-			end
-			generic_parameters.put (a_parameter, count)
-		ensure
-			one_more: count = old count + 1
-			inserted: item (count) = a_parameter
-			index_set: a_parameter.index = count
+			precursor (an_item)
+			an_item.formal_generic_parameter_item.set_index (capacity - count + 1)
 		end
 
 feature {NONE} -- Implementation
 
-	generic_parameters: ARRAY [ET_FORMAL_GENERIC_PARAMETER]
-			-- Formal generic parameters
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FORMAL_GENERIC_PARAMETER_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
+		end
 
 invariant
 
-	not_empty: count > 0
-	generic_parameters_not_void: generic_parameters /= Void
-	generic_parameters_lower: generic_parameters.lower = 1
-	generic_parameters_upper: generic_parameters.upper >= count
+	left_bracket_not_void: left_bracket /= Void
+	right_bracket_not_void: right_bracket /= Void
 
 end -- class ET_FORMAL_GENERIC_PARAMETERS

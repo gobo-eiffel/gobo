@@ -22,6 +22,9 @@ inherit
 			reset
 		end
 
+	ET_SHARED_EIFFEL_BUFFER
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make (a_universe: ET_UNIVERSE; an_error_handler: like error_handler) is
@@ -159,19 +162,6 @@ feature -- Error handling
 			-- Print error message.
 		do
 			error_handler.report_syntax_error (current_position)
-			if last_class /= Void then
-				last_class.set_syntax_error (True)
-			end
-		end
-
-feature {NONE} -- Constants
-
-	Eiffel_buffer: YY_FILE_BUFFER is
-			-- Eiffel file input buffer
-		once
-			!! Result.make (std.input)
-		ensure
-			eiffel_buffer_not_void: Result /= Void
 		end
 
 invariant

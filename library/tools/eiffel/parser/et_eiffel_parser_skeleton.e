@@ -30,6 +30,9 @@ inherit
 			reset
 		end
 
+	ET_SHARED_EIFFEL_BUFFER
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make (a_universe: ET_UNIVERSE; an_error_handler: like error_handler) is
@@ -57,6 +60,7 @@ feature {NONE} -- Initialization
 		do
 			universe := a_universe
 			!! counters.make (Initial_counters_capacity)
+			!! class_stack.make (Initial_class_stack_capacity)
 			!! assertions.make (Initial_assertions_capacity)
 			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
 			make_parser_skeleton
@@ -73,6 +77,7 @@ feature -- Initialization
 		do
 			precursor
 			counters.wipe_out
+			class_stack.wipe_out
 			assertions.wipe_out
 			last_clients := Void
 			cluster := Void
@@ -85,9 +90,6 @@ feature -- Access
 
 	cluster: ET_CLUSTER
 			-- Cluster containing the class being parsed
-
-	last_clients: ET_CLASS_NAME_LIST
-			-- Last clients read
 
 feature -- Parsing
 
@@ -116,7 +118,7 @@ feature {NONE} -- Basic operations
 			-- Register `a_feature' in `last_class'.
 		require
 			a_feature_not_void: a_feature /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			last_class.put_feature (a_feature)
 		end
@@ -125,7 +127,7 @@ feature {NONE} -- Basic operations
 			-- Register `a_feature' in `last_class'.
 		require
 			a_feature_not_void: a_feature /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			a_feature.set_frozen
 			last_class.put_feature (a_feature)
@@ -137,10 +139,13 @@ feature {NONE} -- Basic operations
 			-- Set formal generic parameters of `last_class'.
 		require
 			a_generics_not_void: a_generics /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
+		local
+			a_class: like last_class
 		do
-			last_class.set_generic_parameters (a_generics)
-			a_generics.resolve_named_types (last_class, ast_factory)
+			a_class := last_class
+			a_class.set_generic_parameters (a_generics)
+			a_generics.resolve_named_types (a_class, ast_factory)
 		end
 
 	add_expression_assertion (an_expression: ET_EXPRESSION; a_semicolon: ET_SYMBOL) is
@@ -318,7 +323,7 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_attribute (a_name, a_type, last_clients, last_class)
 		ensure
@@ -461,6 +466,7 @@ feature {NONE} -- AST factory
 			Result := universe.eiffel_class (a_name)
 			Result.set_filename (filename)
 			Result.set_cluster (cluster)
+			Result.set_name (a_name)
 			Result.set_parsed
 
 			debug ("GELINT")
@@ -592,11 +598,50 @@ feature {NONE} -- AST factory
 			a_type_not_void: a_type /= Void
 			a_constant_not_void: a_constant /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_constant_attribute (a_name, a_type, a_constant, last_clients, last_class)
 		ensure
 			constant_attribute_not_void: Result /= Void
+		end
+
+	new_constrained_formal_generic (a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
+		a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_GENERIC_PARAMETER is
+			-- New constrained formal generic parameter
+		require
+			a_name_not_void: a_name /= Void
+			an_arrow_not_void: an_arrow /= Void
+			a_constraint_not_void: a_constraint /= Void
+		do
+			Result := ast_factory.new_constrained_formal_generic (a_name, an_arrow, a_constraint, a_creation)
+		ensure
+			constrained_formal_generic_not_void: Result /= Void
+		end
+
+	new_constraint_creator (a_create: ET_TOKEN; an_end: ET_TOKEN): ET_CONSTRAINT_CREATOR is
+			-- New constraint creation clause
+		require
+			a_create_not_void: a_create /= Void
+			an_end_not_void: an_end /= Void
+		do
+			Result := ast_factory.new_constraint_creator (a_create, an_end)
+		ensure
+			constraint_creator_not_void: Result /= Void
+		end
+
+	new_constraint_creator_with_capacity (nb: INTEGER): ET_CONSTRAINT_CREATOR is
+			-- New constraint creation clause with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_create: ET_TOKEN
+			an_end: ET_TOKEN
+		do
+			a_create := tokens.create_keyword
+			an_end := tokens.end_keyword
+			Result := ast_factory.new_constraint_creator_with_capacity (a_create, an_end, nb)
+		ensure
+			constraint_creator_not_void: Result /= Void
 		end
 
 	new_constraint_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
@@ -769,7 +814,7 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_deferred_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_postconditions,
@@ -785,7 +830,7 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_deferred_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_postconditions,
@@ -803,7 +848,7 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_do_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_locals,
@@ -821,7 +866,7 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_do_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_locals, a_compound,
@@ -961,7 +1006,7 @@ feature {NONE} -- AST factory
 			a_type_not_void: a_type /= Void
 			a_language_not_void: a_language /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_external_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_language, an_alias,
@@ -979,7 +1024,7 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			a_language_not_void: a_language /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_external_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_language, an_alias,
@@ -1106,23 +1151,54 @@ feature {NONE} -- AST factory
 			formal_arguments_not_void: Result /= Void
 		end
 
-	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_PARAMETER is
+	new_formal_generic (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
 			-- New formal generic parameter
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := ast_factory.new_formal_generic (a_name, a_constraint)
+			Result := ast_factory.new_formal_generic (a_name)
 		ensure
 			formal_generic_not_void: Result /= Void
 		end
 
-	new_formal_generics (a_parameter: ET_FORMAL_GENERIC_PARAMETER): ET_FORMAL_GENERIC_PARAMETERS is
-			-- New formal generic parameter list with initially
-			-- one formal generic parameter `a_parameter'
+	new_formal_generic_comma (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_comma: ET_SYMBOL): ET_FORMAL_GENERIC_PARAMETER_ITEM is
+			-- New formal_generic_parameter-comma
 		require
-			a_parameter_not_void: a_parameter /= Void
+			a_formal_not_void: a_formal /= Void
+			a_comma_not_void: a_comma /= Void
 		do
-			Result := ast_factory.new_formal_generics (a_parameter)
+			if keep_all_breaks then
+				Result := ast_factory.new_formal_generic_comma (a_formal, a_comma)
+			elseif keep_all_comments and a_comma.has_comment then
+				Result := ast_factory.new_formal_generic_comma (a_formal, a_comma)
+			else
+				Result := a_formal
+			end
+		ensure
+			formal_generic_parameter_comma_not_void: Result /= Void
+		end
+
+	new_formal_generics (a_left, a_right: ET_SYMBOL): ET_FORMAL_GENERIC_PARAMETERS is
+			-- New formal generic parameter list
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+		do
+			Result := ast_factory.new_formal_generics (a_left, a_right)
+		ensure
+			formal_generics_not_void: Result /= Void
+		end
+
+	new_formal_generics_with_capacity (nb: INTEGER): ET_FORMAL_GENERIC_PARAMETERS is
+			-- New formal generic parameter list with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_left, a_right: ET_SYMBOL
+		do
+			a_left := tokens.symbol
+			a_right := tokens.symbol
+			Result := ast_factory.new_formal_generics_with_capacity (a_left, a_right, nb)
 		ensure
 			formal_generics_not_void: Result /= Void
 		end
@@ -1648,12 +1724,14 @@ feature {NONE} -- AST factory
 			-- New Eiffel class type or formal generic paramater
 		require
 			a_name_not_void: a_name /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		local
 			a_parameter: ET_FORMAL_GENERIC_PARAMETER
+			a_last_class: ET_CLASS
 			a_class: ET_CLASS
 		do
-			a_parameter := last_class.generic_parameter (a_name)
+			a_last_class := last_class
+			a_parameter := a_last_class.generic_parameter (a_name)
 			if a_parameter /= Void then
 				if a_generics /= Void then
 					-- Error
@@ -1664,7 +1742,7 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_formal_generic_type (a_name, a_parameter.index)
 			else
 				a_class := universe.eiffel_class (a_name)
-				if last_class.in_system then
+				if a_last_class.in_system then
 					a_class.add_to_system
 				end
 				if a_generics /= Void then
@@ -1720,7 +1798,7 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_once_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_locals, a_compound,
@@ -1737,7 +1815,7 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_once_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_locals, a_compound,
@@ -1747,21 +1825,28 @@ feature {NONE} -- AST factory
 		end
 
 	new_parent (a_name: ET_IDENTIFIER; a_generic_parameters: like new_actual_generics;
-		a_renames: ET_RENAMES; an_exports: ET_EXPORTS;
-		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST): ET_PARENT is
+		a_renames: ET_RENAMES; an_exports: ET_EXPORTS; an_undefines, a_redefines,
+		a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_TOKEN): ET_PARENT is
 			-- New parent
 		require
 			a_name_not_void: a_name /= Void
-			last_class_not_void: last_class /= Void
+			a_renames_constraint: a_renames /= Void implies an_end /= Void
+			an_exports_constraint: an_exports /= Void implies an_end /= Void
+			an_undefines_constraint: an_undefines /= Void implies an_end /= Void
+			a_redefines_constraint: a_redefines /= Void implies an_end /= Void
+			a_selects_constraint: a_selects /= Void implies an_end /= Void
+			has_last_class: has_last_class
 		local
 			a_type: ET_CLASS_TYPE
+			a_last_class: like last_class
 			a_class: ET_CLASS
 		do
-			if last_class.has_generic_parameter (a_name) then
+			a_last_class := last_class
+			if a_last_class.has_generic_parameter (a_name) then
 				-- Error
 			end
 			a_class := universe.eiffel_class (a_name)
-			if last_class.in_system then
+			if a_last_class.in_system then
 				a_class.add_to_system
 			end
 			if a_generic_parameters /= Void then
@@ -1769,10 +1854,27 @@ feature {NONE} -- AST factory
 			else
 				!! a_type.make (Void, a_name, a_class)
 			end
-			Result := ast_factory.new_parent (a_type, a_renames,
-				an_exports, an_undefines, a_redefines, a_selects)
+			Result := ast_factory.new_parent (a_type, a_renames, an_exports,
+				an_undefines, a_redefines, a_selects, an_end)
 		ensure
 			parent_not_void: Result /= Void
+		end
+
+	new_parent_semicolon (a_parent: ET_PARENT; a_semicolon: ET_SYMBOL): ET_PARENT_ITEM is
+			-- New parent-semicolon
+		require
+			a_parent_not_void: a_parent /= Void
+			a_semicolon_not_void: a_semicolon /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_parent_semicolon (a_parent, a_semicolon)
+			elseif keep_all_comments and a_semicolon.has_comment then
+				Result := ast_factory.new_parent_semicolon (a_parent, a_semicolon)
+			else
+				Result := a_parent
+			end
+		ensure
+			parent_semicolon_not_void: Result /= Void
 		end
 
 	new_parenthesized_expression (l: ET_SYMBOL; e: ET_EXPRESSION; r: ET_SYMBOL): ET_PARENTHESIZED_EXPRESSION is
@@ -1787,12 +1889,25 @@ feature {NONE} -- AST factory
 			parenthesized_expression_not_void: Result /= Void
 		end
 
-	new_parents (a_parent: ET_PARENT): ET_PARENTS is
-			-- New parent list with one parent `a_parent'
+	new_parents (an_inherit: ET_TOKEN): ET_PARENTS is
+			-- New class parent list
 		require
-			a_parent_not_void: a_parent /= Void
+			an_inherit_not_void: an_inherit /= Void
 		do
-			Result := ast_factory.new_parents (a_parent)
+			Result := ast_factory.new_parents (an_inherit)
+		ensure
+			parents_not_void: Result /= Void
+		end
+
+	new_parents_with_capacity (nb: INTEGER): ET_PARENTS is
+			-- New class parent list with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			an_inherit: ET_TOKEN
+		do
+			an_inherit := tokens.inherit_keyword
+			Result := ast_factory.new_parents_with_capacity (an_inherit, nb)
 		ensure
 			parents_not_void: Result /= Void
 		end
@@ -2271,7 +2386,7 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
-			last_class_not_void: last_class /= Void
+			has_last_class: has_last_class
 		do
 			Result := universe.new_unique_attribute (a_name, a_type, last_clients, last_class)
 		ensure
@@ -2327,12 +2442,60 @@ feature -- Error handling
 			-- Print error message.
 		do
 			error_handler.report_syntax_error (current_position)
-			if last_class /= Void then
+			if has_last_class then
 				last_class.set_syntax_error (True)
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
+
+	last_clients: ET_CLASS_NAME_LIST
+			-- Last clients read
+
+	last_class: ET_CLASS is
+			-- Class being parsed
+		require
+			has_last_class: has_last_class
+		do
+			Result := class_stack.item
+		ensure
+			last_class_not_void: Result /= Void
+		end
+
+	has_last_class: BOOLEAN is
+			-- Is there a `last_class' available?
+		do
+			Result := not class_stack.is_empty
+		ensure
+			definition: Result = not class_stack.is_empty
+		end
+
+	add_last_class (a_class: ET_CLASS) is
+			-- Add `a_class' to `class_stack'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			class_stack.force (a_class)
+		ensure
+			one_more: class_stack.count = old class_stack.count + 1
+			has_last_class: has_last_class
+			added: last_class = a_class
+		end
+
+	remove_last_class is
+			-- Remove `last_class' from `class_stack'.
+		require
+			has_last_class: has_last_class
+		do
+			class_stack.remove
+		ensure
+			one_less: class_stack.count = old class_stack.count - 1
+		end
+
+	class_stack: DS_ARRAYED_STACK [ET_CLASS]
+			-- Stack of classes being parsed
+
+feature {NONE} -- Counters
 
 	counters: DS_ARRAYED_STACK [INTEGER]
 			-- Counters currently in use by the parser
@@ -2386,13 +2549,8 @@ feature {NONE} -- Constants
 	Initial_counters_capacity: INTEGER is 10
 			-- Initial capacity for `counters'
 
-	Eiffel_buffer: YY_FILE_BUFFER is
-			-- Eiffel file input buffer
-		once
-			!! Result.make (std.input)
-		ensure
-			eiffel_buffer_not_void: Result /= Void
-		end
+	Initial_class_stack_capacity: INTEGER is 1
+			-- Initial capacity for `class_stack'
 
 	assertions: DS_ARRAYED_LIST [ET_ASSERTION_ITEM]
 			-- List of assertions currently being parsed
@@ -2417,6 +2575,8 @@ invariant
 
 	universe_not_void: universe /= Void
 	counters_not_void: counters /= Void
+	class_stack_not_void: class_stack /= Void
+	no_void_class: not class_stack.has (Void)
 	assertions_not_void: assertions /= Void
 	no_void_assertions: not assertions.has (Void)
 

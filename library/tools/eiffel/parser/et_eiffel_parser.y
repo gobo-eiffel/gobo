@@ -111,11 +111,12 @@ creation
 %type <ET_CHOICE>              Choice
 %type <ET_CHOICE_CONSTANT>     Choice_constant
 %type <ET_CHOICE_LIST>         Choices Choices_opt
-%type <ET_CLASS>               Class_header
+%type <ET_CLASS>               Class_header Class_to_end
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
 %type <ET_COMPOUND>            Compound Rescue_opt Do_compound Once_compound Then_compound
                                Else_compound Rescue_compound From_compound Loop_compound
 %type <ET_CONSTANT>            Manifest_constant
+%type <ET_CONSTRAINT_CREATOR>  Constraint_create Constraint_create_procedure_list
 %type <ET_CREATOR>             Creation_clause Creation_procedure_list
 %type <ET_CREATORS>            Creators Creators_opt
 %type <ET_CURRENT>             Current
@@ -154,7 +155,7 @@ creation
 %type <ET_MANIFEST_TUPLE>      Manifest_tuple Manifest_tuple_expression_list
 %type <ET_OBSOLETE>            Obsolete_opt
 %type <ET_PARENTHESIZED_EXPRESSION>  Parenthesized_expression
-%type <ET_PARENTS>             Parent_list_to_end Inheritance_to_end
+%type <ET_PARENTS>             Parent_list_to_end
 %type <ET_POSTCONDITIONS>      Postcondition_opt
 %type <ET_PRECONDITIONS>       Precondition_opt
 %type <ET_QUALIFIED_PRECURSOR_EXPRESSION>  Qualified_precursor_expression
@@ -170,11 +171,11 @@ creation
 %type <ET_STRIP_EXPRESSION>    Strip_expression Strip_feature_name_list
 %type <ET_SYMBOL>              Assign Bang Bangbang Colon Comma Dollar Dot Left_array Right_array
                                Left_brace Right_brace Left_bracket Right_bracket Left_parenthesis
-                               Right_parenthesis Reverse Dotdot
+                               Right_parenthesis Reverse Dotdot Arrow
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
                                Rename Redefine Export Undefine All Creation As Do Once
-                               Rescue Like Bit Local Obsolete
+                               Rescue Like Bit Local Obsolete Inherit Class
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
@@ -184,12 +185,16 @@ creation
 %start Class_declarations
 
 %%
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Class_declarations: Class_declaration
 	;
 
 Class_declaration: Indexing_opt Class_to_end
+		{
+			$2.set_first_indexing ($1)
+			remove_last_class
+		}
 	;
 
 Class_declaration_opt: -- Empty
@@ -197,16 +202,29 @@ Class_declaration_opt: -- Empty
 	;
 
 Class_to_end: Class_header Formal_generics_opt Obsolete_opt
-		Creators_opt Features_opt Invariant_clause_opt Indexing_opt End Class_declaration_opt
+	   Creators_opt Features_opt Invariant_clause_opt Indexing_opt End Class_declaration_opt
+		{
+			$$ := $1
+			$$.set_obsolete_message ($3)
+			$$.set_creators ($4)
+			$$.set_invariants ($6)
+			$$.set_second_indexing ($7)
+			$$.set_end_keyword ($8)
+		}
 	| Class_header Formal_generics_opt Obsolete_opt Inheritance_to_end
-		{ $1.set_parents ($4) }
+		{
+			$$ := $1
+			$$.set_obsolete_message ($3)
+		}
 	;
 
-Class_to_end_opt: -- Empty
-	| Class_to_end
-	;
-
-Creators_features_invariant_opt: Creators_opt Features_opt Invariant_clause_opt
+Creators_to_end: Creators_opt Features_opt Invariant_clause_opt Indexing_opt End Class_declaration_opt
+		{
+			last_class.set_creators ($1)
+			last_class.set_invariants ($3)
+			last_class.set_second_indexing ($4)
+			last_class.set_end_keyword ($5)
+		}
 	;
 
 --------------------------------------------------------------------------------
@@ -258,56 +276,107 @@ SS: -- Empty
 
 --------------------------------------------------------------------------------
 
-Class_header: E_CLASS Identifier
-		{ last_class := new_class ($2); $$ := last_class }
-	| E_DEFERRED E_CLASS Identifier
-		{ last_class := new_deferred_class ($3); $$ := last_class }
-	| Expanded E_CLASS Identifier
-		{ last_class := new_expanded_class ($3); $$ := last_class }
-	| Separate E_CLASS Identifier
-		{ last_class := new_separate_class ($3); $$ := last_class }
+Class_header: Class Identifier
+		{
+			$$ := new_class ($2)
+			$$.set_class_keyword ($1)
+			add_last_class ($$)
+		}
+	| E_DEFERRED Class Identifier
+		{
+			$$ := new_deferred_class ($3)
+			$$.set_class_keyword ($2)
+			add_last_class ($$)
+		}
+	| Expanded Class Identifier
+		{
+			$$ := new_expanded_class ($3)
+			$$.set_class_keyword ($2)
+			add_last_class ($$)
+		}
+	| Separate Class Identifier
+		{
+			$$ := new_separate_class ($3)
+			$$.set_class_keyword ($2)
+			add_last_class ($$)
+		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Formal_generics_opt: -- Empty
 		-- { $$ := Void }
-	| '[' ']'
+	| Left_bracket Right_bracket
 		-- Warning!
-		-- { $$ := Void }
-	| '[' Formal_generic_list ']'
-		{ set_formal_generic_parameters ($2) }
+		{
+			 $$ := new_formal_generics ($1, $2)
+			set_formal_generic_parameters ($$)
+		}
+	| Left_bracket
+		{ add_counter }
+	  Formal_generic_list Right_bracket
+		{
+			$$ := $3
+			$$.set_left_bracket ($1)
+			$$.set_right_bracket ($4)
+			remove_counter
+			set_formal_generic_parameters ($$)
+		}
 	;
 
 Formal_generic_list: Formal_generic
 		{
-			$$ := new_formal_generics ($1)
+			$$ := new_formal_generics_with_capacity (counter_value + 1)
+			$$.put_first ($1)
 		}
-	| Formal_generic_list ',' Formal_generic
+	| Formal_generic Comma
+		{ increment_counter }
+	  Formal_generic_list
 		{
-			$$ := $1
-			$$.put ($3)
+			$$ := $4
+			$$.put_first (new_formal_generic_comma ($1, $2))
 		}
 	;
 
 Formal_generic: Identifier
-		{ $$ := new_formal_generic ($1, Void) }
-	| Identifier E_ARROW Constraint_type Constraint_create_opt
-		{ $$ := new_formal_generic ($1, $3) }
+		{ $$ := new_formal_generic ($1) }
+	| Identifier Arrow Constraint_type
+		{ $$ := new_constrained_formal_generic ($1, $2, $3, Void) }
+	| Identifier Arrow Constraint_type Constraint_create
+		{ $$ := new_constrained_formal_generic ($1, $2, $3, $4) }
 	;
 
-Constraint_create_opt: -- Empty
-	| Create Procedure_list_opt End
+Constraint_create: Create End
+		{ $$ := new_constraint_creator ($1, $2) }
+	| Create
+		{ add_counter }
+	  Constraint_create_procedure_list End
+		{
+			$$ := $3
+			$$.set_create_keyword ($1)
+			$$.set_end_keyword ($4)
+			remove_counter
+		}
 	;
 
-Procedure_list_opt: -- Empty
-		-- { $$ := Void }
-	| Procedure_list
-		{ $$ := $1 }
-	;
-
-Procedure_list: Identifier
-	| Identifier Comma Procedure_list
+Constraint_create_procedure_list: Identifier
+		{
+			$$ := new_constraint_creator_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Identifier Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_constraint_creator_with_capacity (counter_value + 1)
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
+	| Identifier Comma 
+		{ increment_counter }
+	  Constraint_create_procedure_list
+		{
+			$$ := $4
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
 	;
 
 Constraint_type: Class_name Constraint_actual_generics_opt
@@ -366,65 +435,215 @@ Obsolete_opt: -- Empty
 		{ $$ := new_obsolete ($1, $2) }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-Inheritance_to_end: E_INHERIT Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		-- { $$ := Void }
-	| E_INHERIT Parent_list_to_end
-		{ $$ := $2 }
+Inheritance_to_end: Inherit Creators_to_end
+		{
+			last_class.set_parents (new_parents ($1))
+		}
+	| Inherit
+		{ add_counter }
+	  Parent_list_to_end
+		{
+			last_class.set_parents ($3)
+			last_class.parents.set_inherit_keyword ($1)
+			remove_counter
+		}
 	;
 
-Parent_list_to_end: Class_name Actual_generics_opt
-	  Rename_clause New_exports_opt Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, $3, $4, $5, $6, $7)) }
-	| Class_name Actual_generics_opt
-	  New_exports Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, $3, $4, $5, $6)) }
-	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt Select_clause_opt End
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, $3, $4, $5)) }
-	| Class_name Actual_generics_opt Redefine_clause Select_clause_opt End
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, $3, $4)) }
-	| Class_name Actual_generics_opt Select_clause End
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, $3)) }
-	| Class_name Actual_generics_opt End
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| Class_name Actual_generics_opt
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
+Parent_list_to_end: Class_name Actual_generics_opt Rename_clause New_exports_opt
+	  Undefine_clause_opt Redefine_clause_opt Select_clause_opt End Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, $3, $4, $5, $6, $7, $8))
+		}
+	| Class_name Actual_generics_opt Rename_clause New_exports_opt Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, $3, $4, $5, $6, $7, $8), $9))
+		}
+	| Class_name Actual_generics_opt New_exports Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, $3, $4, $5, $6, $7))
+		}
+	| Class_name Actual_generics_opt New_exports Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, $3, $4, $5, $6, $7), $8))
+		}
+	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt
+	  Select_clause_opt End Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, $3, $4, $5, $6))
+		}
+	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt
+	  Select_clause_opt End Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, $3, $4, $5, $6), $7))
+		}
+	| Class_name Actual_generics_opt Redefine_clause Select_clause_opt End Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, $3, $4, $5))
+		}
+	| Class_name Actual_generics_opt Redefine_clause
+	  Select_clause_opt End Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, $3, $4, $5), $6))
+		}
+	| Class_name Actual_generics_opt Select_clause End Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, $3, $4))
+		}
+	| Class_name Actual_generics_opt Select_clause End Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, $3, $4), $5))
+		}
+	| Class_name Actual_generics_opt End Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, $3))
+		}
+	| Class_name Actual_generics_opt End Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, Void, $3), $4))
+		}
+	| Class_name Actual_generics_opt Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, Void))
+		}
+	| Class_name Actual_generics_opt Semicolon Creators_to_end
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, Void, Void), $3))
+		}
 	| Class_name Actual_generics_opt End Indexing End Class_declaration_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| Class_name Actual_generics_opt End Indexing_opt Class_to_end_opt
-		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, $3))
+			last_class.set_second_indexing ($4)
+			last_class.set_end_keyword ($5)
+		}
+	| Class_name Actual_generics_opt End Class_declaration_opt
+		{
+			$$ := new_parents_with_capacity (counter_value + 1)
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, Void))
+			last_class.set_end_keyword ($3)
+		}
 
-	| Class_name Actual_generics_opt
-	  Rename_clause New_exports_opt Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
-	  Parent_separator Parent_list_to_end
-		{ $$ := $10; $$.put_first (new_parent ($1, $2, $3, $4, $5, $6, $7)) }
-	| Class_name Actual_generics_opt
-	  New_exports Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
-	  Parent_separator Parent_list_to_end
-		{ $$ := $9; $$.put_first (new_parent ($1, $2, Void, $3, $4, $5, $6)) }
+	| Class_name Actual_generics_opt Rename_clause New_exports_opt Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $10
+			$$.put_first (new_parent ($1, $2, $3, $4, $5, $6, $7, $8))
+		}
+	| Class_name Actual_generics_opt Rename_clause New_exports_opt Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $11
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, $3, $4, $5, $6, $7, $8), $9))
+		}
+	| Class_name Actual_generics_opt New_exports Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $9
+			$$.put_first (new_parent ($1, $2, Void, $3, $4, $5, $6, $7))
+		}
+	| Class_name Actual_generics_opt New_exports Undefine_clause_opt
+	  Redefine_clause_opt Select_clause_opt End Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $10
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, $3, $4, $5, $6, $7), $8))
+		}
 	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt Select_clause_opt End
-	  Parent_separator Parent_list_to_end
-		{ $$ := $8; $$.put_first (new_parent ($1, $2, Void, Void, $3, $4, $5)) }
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $8
+			$$.put_first (new_parent ($1, $2, Void, Void, $3, $4, $5, $6))
+		}
+	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt Select_clause_opt End Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $9
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, $3, $4, $5, $6), $7))
+		}
 	| Class_name Actual_generics_opt Redefine_clause Select_clause_opt End
-	  Parent_separator Parent_list_to_end
-		{ $$ := $7; $$.put_first (new_parent ($1, $2, Void, Void, Void, $3, $4)) }
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $7
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, $3, $4, $5))
+		}
+	| Class_name Actual_generics_opt Redefine_clause Select_clause_opt End Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $8
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, $3, $4, $5), $6))
+		}
 	| Class_name Actual_generics_opt Select_clause End
-	  Parent_separator Parent_list_to_end
-		{ $$ := $6; $$.put_first (new_parent ($1, $2, Void, Void, Void, Void, $3)) }
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $6
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, $3, $4))
+		}
+	| Class_name Actual_generics_opt Select_clause End Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $7
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, $3, $4), $5))
+		}
 	| Class_name Actual_generics_opt End
-	  Parent_separator Parent_list_to_end
-		{ $$ := $5; $$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $5
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, $3))
+		}
+	| Class_name Actual_generics_opt End Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $6
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, Void, $3), $4))
+		}
 	| Class_name Actual_generics_opt
-	  Parent_separator Parent_list_to_end
-		{ $$ := $4; $$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $4
+			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, Void))
+		}
+	| Class_name Actual_generics_opt Semicolon
+		{ increment_counter }
+	  Parent_list_to_end
+		{
+			$$ := $5
+			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, Void, Void), $3))
+		}
 	;
 
 		-- Note: The two constructs above are a workaround to solve
@@ -434,14 +653,6 @@ Parent_list_to_end: Class_name Actual_generics_opt
 		-- been parsed with 'end' being recognized as the
 		-- end of the feature adaptation of BAR instead of
 		-- as the end of the class FOO.
-
-Parent_terminator: -- Empty
-	| ';'
-	;
-
-Parent_separator: -- Empty
-	| ';'
-	;
 
 --DONE------------------------------------------------------------------------------
 
@@ -2693,6 +2904,17 @@ Check: E_CHECK
 		}
 	;
 
+Class: E_CLASS
+		{ $$ := $1 }
+	| E_CLASS E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Create: E_CREATE
 		{ $$ := $1 }
 	| E_CREATE E_BREAK
@@ -2826,6 +3048,17 @@ From: E_FROM
 If: E_IF
 		{ $$ := $1 }
 	| E_IF E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Inherit: E_INHERIT
+		{ $$ := $1 }
+	| E_INHERIT E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
@@ -3284,6 +3517,17 @@ Bangbang: E_BANGBANG
 Dotdot: E_DOTDOT 
 		{ $$ := $1 }
 	|  E_DOTDOT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Arrow: E_ARROW 
+		{ $$ := $1 }
+	|  E_ARROW E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then

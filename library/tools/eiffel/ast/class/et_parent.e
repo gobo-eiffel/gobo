@@ -6,12 +6,16 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class ET_PARENT
+
+inherit
+
+	ET_PARENT_ITEM
 
 creation
 
@@ -20,11 +24,16 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_type: like type; a_renames: like renames; an_exports: like exports;
-		an_undefines: like undefines; a_redefines: like redefines; a_selects: like selects) is
+		an_undefines: like undefines; a_redefines: like redefines;
+		a_selects: like selects; an_end: like end_keyword) is
 			-- Create a new parent clause.
-			
 		require
 			a_type_not_void: a_type /= Void
+			a_renames_constraint: a_renames /= Void implies an_end /= Void
+			an_exports_constraint: an_exports /= Void implies an_end /= Void
+			an_undefines_constraint: an_undefines /= Void implies an_end /= Void
+			a_redefines_constraint: a_redefines /= Void implies an_end /= Void
+			a_selects_constraint: a_selects /= Void implies an_end /= Void
 		do
 			type := a_type
 			renames := a_renames
@@ -32,6 +41,7 @@ feature {NONE} -- Initialization
 			undefines := an_undefines
 			redefines := a_redefines
 			selects := a_selects
+			end_keyword := an_end
 		ensure
 			type_set: type = a_type
 			renames_set: renames = a_renames
@@ -39,6 +49,7 @@ feature {NONE} -- Initialization
 			undefines_set: undefines = an_undefines
 			redefines_set: redefines = a_redefines
 			selects_set: selects = a_selects
+			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Access
@@ -61,8 +72,31 @@ feature -- Access
 	selects: ET_KEYWORD_FEATURE_NAME_LIST
 			-- Select clause
 
-	next: ET_PARENT
-			-- Next parent in parent list
+	end_keyword: ET_TOKEN
+			-- 'end' keyword
+
+	parent_item: ET_PARENT is
+			-- Class parent in semicolon-separated list
+		do
+			Result := Current
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := type.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			if end_keyword /= Void then
+				Result := end_keyword.break
+			else
+				Result := type.break
+			end
+		end
 
 feature -- Genealogy status
 
@@ -203,18 +237,13 @@ feature -- Exports
 			end
 		end
 
-feature -- Setting
-
-	set_next (a_parent: like next) is
-			-- Set `next' to `a_parent'.
-		do
-			next := a_parent
-		ensure
-			next_set: next = a_parent
-		end
-
 invariant
 
 	type_not_void: type /= Void
+	renames_constraint: renames /= Void implies end_keyword /= Void
+	exports_constraint: exports /= Void implies end_keyword /= Void
+	undefines_constraint: undefines /= Void implies end_keyword /= Void
+	redefines_constraint: redefines /= Void implies end_keyword /= Void
+	selects_constraint: selects /= Void implies end_keyword /= Void
 
 end -- class ET_PARENT

@@ -460,6 +460,42 @@ feature -- AST factory
 			constant_attribute_not_void: Result /= Void
 		end
 
+	new_constrained_formal_generic (a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
+		a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_GENERIC_PARAMETER is
+			-- New constrained formal generic parameter
+		require
+			a_name_not_void: a_name /= Void
+			an_arrow_not_void: an_arrow /= Void
+			a_constraint_not_void: a_constraint /= Void
+		do
+			!! Result.make (a_name, an_arrow, a_constraint, a_creation)
+		ensure
+			constrained_formal_generic_not_void: Result /= Void
+		end
+
+	new_constraint_creator (a_create: ET_TOKEN; an_end: ET_TOKEN): ET_CONSTRAINT_CREATOR is
+			-- New constraint creation clause
+		require
+			a_create_not_void: a_create /= Void
+			an_end_not_void: an_end /= Void
+		do
+			!! Result.make (a_create, an_end)
+		ensure
+			constraint_creator_not_void: Result /= Void
+		end
+
+	new_constraint_creator_with_capacity (a_create: ET_TOKEN; an_end: ET_TOKEN; nb: INTEGER): ET_CONSTRAINT_CREATOR is
+			-- New constraint creation clause with given capacity
+		require
+			a_create_not_void: a_create /= Void
+			an_end_not_void: an_end /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_create, an_end, nb)
+		ensure
+			constraint_creator_not_void: Result /= Void
+		end
+
 	new_create_expression (a_create: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL): ET_CREATE_EXPRESSION is
 			-- New create expression
@@ -927,14 +963,25 @@ feature -- AST factory
 			formal_arguments_not_void: Result /= Void
 		end
 
-	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_PARAMETER is
+	new_formal_generic (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
 			-- New formal generic parameter
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_name, a_constraint)
+			!! Result.make (a_name)
 		ensure
 			formal_generic_not_void: Result /= Void
+		end
+
+	new_formal_generic_comma (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_comma: ET_SYMBOL): ET_FORMAL_GENERIC_PARAMETER_COMMA is
+			-- New formal_generic_parameter-comma
+		require
+			a_formal_not_void: a_formal /= Void
+			a_comma_not_void: a_comma /= Void
+		do
+			!! Result.make (a_formal, a_comma)
+		ensure
+			formal_generic_parameter_comma_not_void: Result /= Void
 		end
 
 	new_formal_generic_type (a_name: ET_IDENTIFIER; an_index: INTEGER): ET_FORMAL_GENERIC_TYPE is
@@ -947,13 +994,25 @@ feature -- AST factory
 			formal_generic_type_not_void: Result /= Void
 		end
 
-	new_formal_generics (a_parameter: ET_FORMAL_GENERIC_PARAMETER): ET_FORMAL_GENERIC_PARAMETERS is
-			-- New formal generic parameter list with initially
-			-- one formal generic parameter `a_parameter'
+	new_formal_generics (a_left, a_right: ET_SYMBOL): ET_FORMAL_GENERIC_PARAMETERS is
+			-- New formal generic parameter list
 		require
-			a_parameter_not_void: a_parameter /= Void
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
 		do
-			!! Result.make (a_parameter)
+			!! Result.make (a_left, a_right)
+		ensure
+			formal_generics_not_void: Result /= Void
+		end
+
+	new_formal_generics_with_capacity (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_GENERIC_PARAMETERS is
+			-- New formal generic parameter list with given capacity
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_left, a_right, nb)
 		ensure
 			formal_generics_not_void: Result /= Void
 		end
@@ -1721,12 +1780,30 @@ feature -- AST factory
 		end
 
 	new_parent (a_type: ET_CLASS_TYPE; a_renames: ET_RENAMES; an_exports: ET_EXPORTS;
-		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST): ET_PARENT is
+		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_TOKEN): ET_PARENT is
 			-- New parent
+		require
+			a_type_not_void: a_type /= Void
+			a_renames_constraint: a_renames /= Void implies an_end /= Void
+			an_exports_constraint: an_exports /= Void implies an_end /= Void
+			an_undefines_constraint: an_undefines /= Void implies an_end /= Void
+			a_redefines_constraint: a_redefines /= Void implies an_end /= Void
+			a_selects_constraint: a_selects /= Void implies an_end /= Void
 		do
-			!! Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects)
+			!! Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects, an_end)
 		ensure
 			parent_not_void: Result /= Void
+		end
+
+	new_parent_semicolon (a_parent: ET_PARENT; a_semicolon: ET_SYMBOL): ET_PARENT_SEMICOLON is
+			-- New parent-semicolon
+		require
+			a_parent_not_void: a_parent /= Void
+			a_semicolon_not_void: a_semicolon /= Void
+		do
+			!! Result.make (a_parent, a_semicolon)
+		ensure
+			parent_semicolon_not_void: Result /= Void
 		end
 
 	new_parenthesized_expression (l: ET_SYMBOL; e: ET_EXPRESSION; r: ET_SYMBOL): ET_PARENTHESIZED_EXPRESSION is
@@ -1741,12 +1818,23 @@ feature -- AST factory
 			parenthesized_expression_not_void: Result /= Void
 		end
 
-	new_parents (a_parent: ET_PARENT): ET_PARENTS is
-			-- New parent list with one parent `a_parent'
+	new_parents (an_inherit: ET_TOKEN): ET_PARENTS is
+			-- New class parent list
 		require
-			a_parent_not_void: a_parent /= Void
+			an_inherit_not_void: an_inherit /= Void
 		do
-			!! Result.make (a_parent)
+			!! Result.make (an_inherit)
+		ensure
+			parents_not_void: Result /= Void
+		end
+
+	new_parents_with_capacity (an_inherit: ET_TOKEN; nb: INTEGER): ET_PARENTS is
+			-- New class parent list with given capacity
+		require
+			an_inherit_not_void: an_inherit /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (an_inherit, nb)
 		ensure
 			parents_not_void: Result /= Void
 		end

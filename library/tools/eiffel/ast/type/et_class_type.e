@@ -163,7 +163,7 @@ feature -- Validity
 				Result := False
 			else
 				formals := base_class.generic_parameters
-				if formals = Void then
+				if formals = Void or else formals.is_empty then
 					Result := True
 				else
 					Result := False
@@ -192,7 +192,7 @@ feature -- Validity
 				Result := False
 			else
 				formals := base_class.generic_parameters
-				if formals = Void then
+				if formals = Void or else formals.is_empty then
 					Result := True
 				else
 					Result := False

@@ -163,9 +163,13 @@ feature -- Validity
 			else
 				formals := base_class.generic_parameters
 				actuals := generic_parameters
-				if formals = Void then
-					Result := False
-					an_heir.error_handler.report_vtug1_error (an_heir, Current)
+				if formals = Void or else formals.is_empty then
+					if is_generic then
+						Result := False
+						an_heir.error_handler.report_vtug1_error (an_heir, Current)
+					else
+						Result := True
+					end
 				elseif actuals.count /= formals.count then
 					Result := False
 					an_heir.error_handler.report_vtug2_error (an_heir, Current)
@@ -205,9 +209,13 @@ feature -- Validity
 			else
 				formals := base_class.generic_parameters
 				actuals := generic_parameters
-				if formals = Void then
-					Result := False
-					a_class.error_handler.report_vtug1_error (a_class, Current)
+				if formals = Void or else formals.is_empty then
+					if is_generic then
+						Result := False
+						a_class.error_handler.report_vtug1_error (a_class, Current)
+					else
+						Result := True
+					end
 				elseif actuals.count /= formals.count then
 					Result := False
 					a_class.error_handler.report_vtug2_error (a_class, Current)

@@ -17,6 +17,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	ET_SHARED_CLASS_NAME_TESTER
+	ET_SHARED_TOKEN_CONSTANTS
 
 creation
 
@@ -78,8 +79,9 @@ feature {NONE} -- Initialization
 			!! a_name.make ("NONE")
 			none_class := eiffel_class (a_name)
 			!! any_type.make (Void, any_class.name, any_class)
-			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
-			!! any_parents.make (any_parent)
+			!! any_parent.make (any_type, Void, Void, Void, Void, Void, Void)
+			!! any_parents.make_with_capacity (tokens.inherit_keyword, 1)
+			any_parents.put_first (any_parent)
 		ensure
 			any_class_not_void: any_class /= Void
 			general_class_not_void: general_class /= Void
@@ -583,13 +585,13 @@ feature -- Compilation
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
-				if a_class.in_system then
+--				if a_class.in_system then
 					nb := nb + 1
 					if a_class.is_parsed and then not a_class.has_syntax_error then
 						a_class.flatten
 --						a_class.search_ancestors
 					end
-				end
+--				end
 				a_cursor.forth
 			end
 			print ("Flattened ")
