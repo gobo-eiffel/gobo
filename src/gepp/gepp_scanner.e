@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_
 		end
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -178,7 +178,7 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_do_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER) is
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc

@@ -24,7 +24,6 @@ inherit
 	GE2E_SCANNER
 		rename
 			make as make_ge2e_scanner,
-			yy_do_action as ge2e_scanner_do_action,
 			reset as reset_ge2e_scanner
 		redefine
 			last_value, last_token
