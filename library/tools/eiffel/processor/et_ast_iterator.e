@@ -1661,9 +1661,9 @@ feature {ET_AST_NODE} -- Processing
 	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
 			-- Process `an_expression'.
 		do
-			an_expression.left_symbol.process (Current)
+			an_expression.left_brace.process (Current)
 			an_expression.type.process (Current)
-			an_expression.right_symbol.process (Current)
+			an_expression.right_brace.process (Current)
 		end
 
 	process_none_clients (a_list: ET_NONE_CLIENTS) is
