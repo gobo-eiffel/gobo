@@ -5,7 +5,7 @@ indexing
 		"XPath expression"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 	XM_XPATH_STATIC_PROPERTY
 
 	XM_XPATH_PROMOTION_ACTIONS
-
+	
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
 feature -- Access
@@ -53,8 +53,6 @@ feature -- Access
 			-- This returns `False' if the value is the empty sequence,
 			-- a zero-length string, a number equal to zero, or the boolean
 			-- `False'. Otherwise it returns `True'.
-		require
-			context_not_void: context /= Void
 		deferred
 		end
 

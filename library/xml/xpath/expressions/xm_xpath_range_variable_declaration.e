@@ -66,6 +66,16 @@ feature -- Element change
 			references.put_last (ref)
 		end
 
+	set_required_type (req: XM_XPATH_SEQUENCE_TYPE) is
+			-- Set `required_type.
+		require
+			required_type_not_void: req /= Void
+		do
+			required_type := req
+		ensure
+			required_type_set: required_type = req
+		end
+
 feature {NONE} -- Implementation
 
 	references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]

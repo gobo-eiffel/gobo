@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
+	XM_XPATH_TYPE
+
 feature -- Access
 
 	last_expression: XM_XPATH_EXPRESSION is
@@ -82,6 +84,7 @@ feature -- Parsers
 			environment := env
 			create tokenizer.make
 			tokenizer.tokenize (expression_text)
+			is_parse_error := False
 			parse_expression
 			
 			if	tokenizer.is_lexical_error then
@@ -107,6 +110,7 @@ feature -- Parsers
 			environment := env
 			create tokenizer.make
 			tokenizer.tokenize (pattern_text)
+			is_parse_error := False
 			parse_union_pattern
 
 			if	tokenizer.is_lexical_error then
@@ -123,6 +127,7 @@ feature -- Parsers
 
 	parse_sequence_type (input_string: STRING; env: XM_XPATH_STATIC_CONTEXT) is
 			-- Parse `input_string', which represents a sequence type.
+			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty" "(" ")")
 		require
 			sequence_text_not_void: input_string /= Void
 			static_context_not_void: env /= Void
@@ -132,7 +137,8 @@ feature -- Parsers
 			environment := env
 			create tokenizer.make
 			tokenizer.tokenize (input_string)
-			-- TODO parse_sequence
+			is_parse_error := False
+			parse_sequence
 
 			if	tokenizer.is_lexical_error then
 				grumble (tokenizer.last_lexical_error)
@@ -157,6 +163,30 @@ feature -- Helper routines
 		end
 
 feature {NONE} -- Expression parsers
+
+	parse_sequence is
+			-- Parse the sequence type production.
+		require
+			static_context_not_void: environment /= Void
+			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			no_previous_parse_error: not is_parse_error
+		local
+			primary_type: INTEGER
+			message: STRING
+		do
+			internal_last_sequence_type := Void
+			primary_type := Any_item
+			if tokenizer.last_token = Name_token then
+				-- TODO
+			elseif tokenizer.last_token = Node_kind_token then
+				-- TODO
+			else
+				message := STRING_.appended_string ("Expected type name in SequenceType, found ", display_current_token)
+				grumble (message)
+			end
+		ensure
+			expression_not_void_unless_error: not is_parse_error implies internal_last_sequence_type /= Void
+		end
 
 	parse_expression is
 			-- Parse a top-level expression.
@@ -215,10 +245,75 @@ feature {NONE} -- Expression parsers
 			when Every_token then
 				parse_quantified_expression
 			when If_token then
--- TODO				parse_if_expression
+				parse_if_expression
 			when Typeswitch_token then -- XQuery only
 				parse_typeswitch_expression
 			else
+			end
+		ensure
+			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+		end
+
+	parse_if_expression is
+			-- Parse an IfExpr.
+			-- "if" "(" Expr ")" "then" ExprSingle "else" ExprSingle
+		require
+			static_context_not_void: environment /= Void
+			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			no_previous_parse_error: not is_parse_error
+		local
+			condition, then_expression, else_expression: XM_XPATH_EXPRESSION
+			if_expression: XM_XPATH_IF_EXPRESSION
+			message: STRING
+		do
+			internal_last_expression := Void
+
+			-- The Left_parenthesis_token has already been read.
+			
+			tokenizer.next
+			if tokenizer.is_lexical_error then
+				grumble (tokenizer.last_lexical_error)
+			else
+				parse_expression
+				if not is_parse_error then
+					condition := internal_last_expression
+					if tokenizer.last_token /= Right_parenthesis_token then
+						message := "expected %")%", found "
+						message := STRING_.appended_string (message, display_current_token)
+						grumble (message)
+					else
+						tokenizer.next
+						if tokenizer.is_lexical_error then
+							grumble (tokenizer.last_lexical_error)
+						elseif tokenizer.last_token /= Then_token then
+							message := "expected %"then%", found "
+							message := STRING_.appended_string (message, display_current_token)
+							grumble (message)
+						else
+							parse_expression
+							if  not is_parse_error then
+								then_expression := internal_last_expression
+								if tokenizer.last_token /= Right_parenthesis_token then
+									message := "expected %"else%", found "
+									message := STRING_.appended_string (message, display_current_token)
+									grumble (message)
+								else
+									tokenizer.next
+									if tokenizer.is_lexical_error then
+										grumble (tokenizer.last_lexical_error)
+									else
+										parse_single_expression
+										if not is_parse_error then
+											else_expression := internal_last_expression
+											create if_expression.make (condition, then_expression, else_expression)
+											internal_last_expression := if_expression
+										end
+									end
+								end
+							end
+						end
+					end
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
@@ -347,7 +442,7 @@ feature {NONE} -- Expression parsers
 			clause: XM_XPATH_FOR_CLAUSE
 			action: XM_XPATH_EXPRESSION
 			clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]
-			operator, name_code, an_index: INTEGER
+			operator, name_code, an_index, a_line_number: INTEGER
 			finished: BOOLEAN
 			message, token_value: STRING
 			rv: XM_XPATH_RANGE_VARIABLE_DECLARATION
@@ -362,9 +457,7 @@ feature {NONE} -- Expression parsers
 			until
 				finished
 			loop
-				create clause
-				-- TODO - reinstate clause.set_line_number (tokenizer.line_number)
-				clause_list.put_last (clause)
+				a_line_number := tokenizer.line_number
 				tokenizer.next
 				if tokenizer.is_lexical_error then
 					grumble (tokenizer.last_lexical_error)
@@ -383,12 +476,6 @@ feature {NONE} -- Expression parsers
 					else
 						token_value := tokenizer.last_token_value
 
-						-- Declare the range variable
-
-						create single_item.make_single_item
-						create rv.make (token_value, make_name_code (token_value, False) // bits_20, single_item)
-						-- TODO - reinstate or erwork clause.set_range_variable (rv)
-
 						tokenizer.next
 						if tokenizer.is_lexical_error then
 							grumble (tokenizer.last_lexical_error)
@@ -405,8 +492,11 @@ feature {NONE} -- Expression parsers
 							else
 								parse_single_expression
 								if not is_parse_error then
-									-- TODO clause.set_sequence (internal_last_expression)
+									create single_item.make_single_item
+									create rv.make (token_value, make_name_code (token_value, False) // bits_20, single_item)
+									create clause.make (rv, internal_last_expression, a_line_number)
 									declare_range_variable (clause.range_variable)
+									clause_list.put_last (clause)
 								end
 							end
 						end
@@ -455,7 +545,7 @@ feature {NONE} -- Expression parsers
 						-- of all expressions to return some kind of type information even if this is imprecise.
 
 						create a_sequence.make (clause.sequence.item_type, Required_cardinality_exactly_one)
-						-- TODO clause.range_variable.set_required_type (a_sequence)
+						clause.range_variable.set_required_type (a_sequence)
 
 						if operator = For_token then
 							create {XM_XPATH_FOR_EXPRESSION} assignment.make (clause.range_variable, clause.sequence, action)
@@ -494,12 +584,45 @@ feature {NONE} -- Pattern parsers
 	parse_union_pattern is
 			-- Parse a Union Pattern;
 			--  pathPattern ( | pathPattern )*
+		require
+			static_context_not_void: environment /= Void
+			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			no_previous_parse_error: not is_parse_error
+		local
+			pat1, pat2: XM_XPATH_PATTERN
+			finished: BOOLEAN
 		do
-			-- TODO
+			internal_last_pattern := Void
+			parse_path_pattern
+			if not is_parse_error then
+				from
+					pat1 := internal_last_pattern
+					finished := tokenizer.last_token /= Union_token
+				until
+					finished or tokenizer.last_token /= Union_token
+				loop
+					tokenizer.next
+					if tokenizer.is_lexical_error then
+						grumble (tokenizer.last_lexical_error)
+						finished := True
+					else
+						internal_last_pattern := Void
+						parse_path_pattern
+						if not is_parse_error then
+							pat2 := internal_last_pattern
+							create {XM_XPATH_UNION_PATTERN} internal_last_pattern.make (pat1, pat2)
+						end
+					end
+				end
+			end
 		ensure
-			pattern_not_void_unless_error: not is_parse_error implies last_pattern /= Void
+			pattern_not_void_unless_error: not is_parse_error implies internal_last_pattern /= Void
 		end
 
+	parse_path_pattern is
+			-- TODO
+		do
+		end
 
 feature {NONE} -- Implementation
 
