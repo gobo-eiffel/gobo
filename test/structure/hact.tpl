@@ -29,13 +29,13 @@ cluster
 	ds_testgen:			"TESTGEN";
 	ds_tester:			"$GOBO/test/structure";
 
-#include "$GOBO/library/structure/hact.ace"
+#include "${GOBO}/library/structure/hact.ace"
 
-#include "$GOBO/library/test/hact-skl.ace"
+#include "${GOBO}/library/test/hact-skl.ace"
 
-#include "$GOBO/library/kernel/hact.ace"
+#include "${GOBO}/library/kernel/hact.ace"
 
-#include "$GOBO/library/utility/hact.ace"
+#include "${GOBO}/library/utility/hact.ace"
 
 component
 

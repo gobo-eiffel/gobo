@@ -9,7 +9,7 @@
 TARGET=gelint
 ROOT_CLASS=GELINT
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/src/gelint
+ROOT_DIR=${GOBO}/src/gelint
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk

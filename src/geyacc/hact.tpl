@@ -28,15 +28,15 @@ cluster
 
 	geyacc:				"$GOBO/src/geyacc";
 
-#include "$GOBO/library/lexical/hact-skl.ace"
+#include "${GOBO}/library/lexical/hact-skl.ace"
 
-#include "$GOBO/library/parse/hact.ace"
+#include "${GOBO}/library/parse/hact.ace"
 
-#include "$GOBO/library/utility/hact.ace"
+#include "${GOBO}/library/utility/hact.ace"
 
-#include "$GOBO/library/kernel/hact.ace"
+#include "${GOBO}/library/kernel/hact.ace"
 
-#include "$GOBO/library/structure/hact.ace"
+#include "${GOBO}/library/structure/hact.ace"
 
 component
 

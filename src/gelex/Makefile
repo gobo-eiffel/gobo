@@ -9,7 +9,7 @@
 TARGET=gelex
 ROOT_CLASS=GELEX
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/src/gelex
+ROOT_DIR=${GOBO}/src/gelex
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk

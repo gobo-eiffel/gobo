@@ -9,7 +9,7 @@
 TARGET=getest
 ROOT_CLASS=GETEST
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/src/getest
+ROOT_DIR=${GOBO}/src/getest
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk

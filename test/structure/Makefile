@@ -9,7 +9,8 @@
 TARGET=xstructure
 ROOT_CLASS=XSTRUCTURE
 CREATION_ROUTINE=make
-ROOT_DIR=$(GOBO)/test/structure
+ROOT_DIR=${GOBO}/test/structure
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk
+include ${GOBO}/misc/test.mk

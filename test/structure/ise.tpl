@@ -30,29 +30,19 @@ cluster
 	ds_testgen:			"TESTGEN";
 	ds_tester:			"$GOBO/test/structure";
 
-#include "$GOBO/library/structure/ise.ace"
+#include "${GOBO}/library/structure/ise.ace"
 
-#include "$GOBO/library/test/ise-skl.ace"
+#include "${GOBO}/library/test/ise-skl.ace"
 
-#include "$GOBO/library/kernel/ise.ace"
+#include "${GOBO}/library/kernel/ise.ace"
 
-#include "$GOBO/library/utility/ise.ace"
+#include "${GOBO}/library/utility/ise.ace"
 
 		-- EiffelBase
-	kernel:				"$EIFFEL4/library/base/kernel";
-	support:			"$EIFFEL4/library/base/support";
-	access:				"$EIFFEL4/library/base/structures/access";
-	cursors:			"$EIFFEL4/library/base/structures/cursors";
-	cursor_trees:		"$EIFFEL4/library/base/structures/cursor_tree";
-	dispenser:			"$EIFFEL4/library/base/structures/dispenser";
-	iteration:			"$EIFFEL4/library/base/structures/iteration";
-	list:				"$EIFFEL4/library/base/structures/list";
-	set:				"$EIFFEL4/library/base/structures/set";
-	sort:				"$EIFFEL4/library/base/structures/sort";
-	storage:			"$EIFFEL4/library/base/structures/storage";
-	table:				"$EIFFEL4/library/base/structures/table";
-	traversing:			"$EIFFEL4/library/base/structures/traversing";
-	tree:				"$EIFFEL4/library/base/structures/tree";
+	all base:			"$EIFFEL4/library/base"
+		exclude
+			"desc"; "table_eiffel3"
+		end
 
 external
 

@@ -9,18 +9,18 @@
 TARGET=gepp
 ROOT_CLASS=GEPP
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/src/gepp
+ROOT_DIR=${GOBO}/src/gepp
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk
 
 parser: gepp_parser.e
 scanner: gepp_scanner.e
 
 gepp_parser.e: gepp_parser.y
-	$(GEYACC) --version
-	$(GEYACC) -t GEPP_TOKENS -o gepp_parser.e gepp_parser.y
+	${GEYACC} --version
+	${GEYACC} -t GEPP_TOKENS -o gepp_parser.e gepp_parser.y
 
 gepp_scanner.e: gepp_scanner.l
-	$(GELEX) --version
-	$(GELEX) gepp_scanner.l
+	${GELEX} --version
+	${GELEX} gepp_scanner.l

@@ -9,7 +9,7 @@
 TARGET=geyacc
 ROOT_CLASS=GEYACC
 CREATION_ROUTINE=execute
-ROOT_DIR=$(GOBO)/src/geyacc
+ROOT_DIR=${GOBO}/src/geyacc
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk

@@ -9,7 +9,8 @@
 TARGET=xtime
 ROOT_CLASS=XTIME
 CREATION_ROUTINE=make
-ROOT_DIR=$(GOBO)/test/time
+ROOT_DIR=${GOBO}/test/time
 
-include $(GOBO)/misc/platform.make
-include $(GOBO)/misc/eiffel.make
+include ${GOBO}/misc/platform.mk
+include ${GOBO}/misc/eiffel.mk
+include ${GOBO}/misc/test.mk
