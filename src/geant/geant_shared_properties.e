@@ -58,13 +58,16 @@ feature -- Access
 			-- Default built-in variables
 		once
 			create Result.make
-				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
+				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe.
 			if operating_system.is_windows then
 				Result.set_variable_value ("GOBO_OS", "windows")
 				Result.set_variable_value ("is_windows", "true")
+				Result.set_variable_value ("is_unix", "false")
 				Result.set_variable_value ("path_separator", "\")
-			elseif operating_system.is_unix then
+			else
+					-- Use Unix-like file system by default.
 				Result.set_variable_value ("GOBO_OS", "unix")
+				Result.set_variable_value ("is_windows", "false")
 				Result.set_variable_value ("is_unix", "true")
 				Result.set_variable_value ("path_separator", "/")
 			end
