@@ -96,7 +96,7 @@ feature -- Cluster errors
 			an_error_not_void: an_error /= Void
 		do
 			report_error (an_error)
-			if error_file /= Void then
+			if error_file = std.error then
 				error_file.put_line ("----")
 			end
 		end
@@ -370,7 +370,7 @@ feature -- Validity errors
 			an_error_not_void: an_error /= Void
 		do
 			report_error (an_error)
-			if error_file /= Void then
+			if error_file = std.error then
 				error_file.put_line ("----")
 			end
 		end
@@ -3546,7 +3546,7 @@ feature -- Internal errors
 			an_error_not_void: an_error /= Void
 		do
 			report_error (an_error)
-			if error_file /= Void then
+			if error_file = std.error then
 				error_file.put_line ("----")
 			end
 		end
