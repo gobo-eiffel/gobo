@@ -142,7 +142,11 @@ feature {NONE} -- Implementation
 			-- not been excluded?
 		do
 			if precursor (a_filename) then
-				Result := (exclude = Void or else not exclude.has (a_filename))
+				if operating_system.is_windows then
+					Result := (exclude = Void or else not exclude.has_case_insensitive (a_filename))
+				else
+					Result := (exclude = Void or else not exclude.has (a_filename))
+				end
 			end
 		end
 
@@ -151,7 +155,11 @@ feature {NONE} -- Implementation
 			-- ".." and which has not been excluded?
 		do
 			if precursor (a_dirname) then
-				Result := (exclude = Void or else not exclude.has (a_dirname))
+				if operating_system.is_windows then
+					Result := (exclude = Void or else not exclude.has_case_insensitive (a_dirname))
+				else
+					Result := (exclude = Void or else not exclude.has (a_dirname))
+				end
 			end
 		end
 

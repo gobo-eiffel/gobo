@@ -12,6 +12,13 @@ indexing
 
 class ET_LACE_EXCLUDE
 
+inherit
+
+	ANY
+
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -36,6 +43,25 @@ feature -- Status report
 			nb := identifiers.count
 			from i := 1 until i > nb loop
 				if identifiers.item (i).name.is_equal (a_name) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_case_insensitive (a_name: STRING): BOOLEAN is
+			-- Does current exclude clause list `a_name'?
+			-- Case-insensitive version.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := identifiers.count
+			from i := 1 until i > nb loop
+				if STRING_.same_case_insensitive (identifiers.item (i).name, a_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

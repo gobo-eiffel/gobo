@@ -329,7 +329,11 @@ feature {NONE} -- Implementation
 			if precursor (a_filename) then
 				if options /= Void and then options.is_exclude_declared then
 					an_exclude := options.exclude
-					Result := not an_exclude.has (a_filename)
+					if operating_system.is_windows then
+						Result := not has_case_insensitive (an_exclude, a_filename)
+					else
+						Result := not an_exclude.has (a_filename)
+					end
 				else
 					Result := True
 				end
@@ -345,9 +349,33 @@ feature {NONE} -- Implementation
 			if precursor (a_dirname) then
 				if options /= Void and then options.is_exclude_declared then
 					an_exclude := options.exclude
-					Result := not an_exclude.has (a_dirname)
+					if operating_system.is_windows then
+						Result := not has_case_insensitive (an_exclude, a_dirname)
+					else
+						Result := not an_exclude.has (a_dirname)
+					end
 				else
 					Result := True
+				end
+			end
+		end
+
+	has_case_insensitive (a_set: DS_HASH_SET [STRING]; v: STRING): BOOLEAN is
+			-- Does `a_set' contain `v' in a case-insensitive way?
+		require
+			a_set_not_void: a_set /= Void
+			no_void_item: not a_set.has (Void)
+			v_not_void: v /= Void
+		local
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
+		do
+			a_cursor := a_set.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				if STRING_.same_case_insensitive (a_cursor.item, v) then
+					Result := True
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
 				end
 			end
 		end
