@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	argument (i: INTEGER): ET_AGENT_ACTUAL_ARGUMENT is
+	actual_argument (i: INTEGER): ET_AGENT_ACTUAL_ARGUMENT is
 			-- Actual argument at index `i' in list
 		require
 			i_large_enough: i >= 1
