@@ -28,7 +28,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" depend="init" dir="${system_dir}">
+	<target name="install" depend="init">
 		<description>
 			Install ${system} directory.
 		</description>
@@ -44,7 +44,7 @@
 		<geant target="other_install"/>
 	</target>
 
-	<target name="compile" depend="init" dir="${system_dir}">
+	<target name="compile" depend="init">
 		<description>
 			Compile '${system}'.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
@@ -55,7 +55,7 @@
 		<geant target="compile_${eiffel}"/>
 	</target>
 
-	<target name="compile_ise" depend="init" dir="${system_dir}">
+	<target name="compile_ise" depend="init">
 		<description>
 			Compile '${system}' with ISE Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -67,7 +67,7 @@
 		<ise ace="ise.ace" system="${system}" finalize="false" finish_freezing="true" if="${debug}"/>
 	</target>
 
-	<target name="compile_hact" depend="init" dir="${system_dir}">
+	<target name="compile_hact" depend="init">
 		<description>
 			Compile '${system}' with Halstenbach Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -79,7 +79,7 @@
 		<hact ace="hact.ace" system="${system}" finalize="false" fish="true" if="${debug}"/>
 	</target>
 
-	<target name="compile_ve" depend="init" dir="${system_dir}">
+	<target name="compile_ve" depend="init">
 		<description>
 			Compile '${system}' with Visual Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -90,7 +90,7 @@
 		<ve esd="ve.esd"/>
 	</target>
 
-	<target name="compile_se" depend="init" dir="${system_dir}">
+	<target name="compile_se" depend="init">
 		<description>
 			Compile '${system}' with SmallEiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -101,7 +101,7 @@
 		<se ace="se.ace"/>
 	</target>
 
-	<target name="compile_debug" depend="init" dir="${system_dir}">
+	<target name="compile_debug" depend="init">
 		<description>
 			Compile '${system}' in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
@@ -112,7 +112,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_ise" depend="init" dir="${system_dir}">
+	<target name="compile_debug_ise" depend="init">
 		<description>
 			Compile '${system}' with ISE Eiffel in debug mode.
 		</description>
@@ -122,7 +122,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_hact" depend="init" dir="${system_dir}">
+	<target name="compile_debug_hact" depend="init">
 		<description>
 			Compile '${system}' with Halstenbach Eiffel in debug mode.
 		</description>
@@ -132,7 +132,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_ve" depend="init" dir="${system_dir}">
+	<target name="compile_debug_ve" depend="init">
 		<description>
 			Compile '${system}' with Visual Eiffel in debug mode.
 		</description>
@@ -142,7 +142,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_se" depend="init" dir="${system_dir}">
+	<target name="compile_debug_se" depend="init">
 		<description>
 			Compile '${system}' with SmallEiffel in debug mode.
 		</description>
@@ -152,7 +152,7 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="clean" depend="init" dir="${system_dir}">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
@@ -164,7 +164,7 @@
 		<geant target="other_clean"/>
 	</target>
 
-	<target name="clobber" depend="init" dir="${system_dir}">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
@@ -183,7 +183,7 @@
 
 <!-- Implementation -->
 
-	<target name="xace" depend="init" dir="${system_dir}">
+	<target name="xace" depend="init">
 		<description>
 			Build Ace file of ESD file for Eiffel compiler ${eiffel}.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
@@ -191,12 +191,12 @@
 			necessary.
 		</description>
 
-		<gexace command="build" command_options="${eiffel}">
+		<gexace command="build" command_options="${eiffel}" xace_filename="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 		</gexace>
 	</target>
 
-	<target name="other_install" depend="init" dir="${system_dir}">
+	<target name="other_install" depend="init">
 		<description>
 			Install other items in ${system} directory.
 		</description>
@@ -204,7 +204,7 @@
 		<!-- To be redefined in descendant if necessary -->
 	</target>
 
-	<target name="other_clean" depend="init" dir="${system_dir}">
+	<target name="other_clean" depend="init">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -212,7 +212,7 @@
 		<!-- To be redefined in descendant if necessary -->
 	</target>
 
-	<target name="other_clobber" depend="init" dir="${system_dir}">
+	<target name="other_clobber" depend="init">
 		<description>
 			Remove other generated files.
 		</description>

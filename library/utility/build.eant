@@ -19,14 +19,14 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" dir="${GOBO}/library/utility">
+	<target name="install">
 		<description>
 			Install the Gobo Eiffel Utility Library.
 		</description>
 		<!-- do nothing -->
 	</target>
 
-	<target name="clean" dir="${GOBO}/library/utility">
+	<target name="clean">
 		<description>
 			Remove intermediary generated files.
 		</description>
@@ -34,7 +34,7 @@
 		<ve clean="utility" recursive="true"/>
 	</target>
 
-	<target name="clobber" dir="${GOBO}/library/utility">
+	<target name="clobber">
 		<description>
 			Remove all generated files.
 		</description>

@@ -38,7 +38,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="test" depend="init" dir="${system_dir}">
+	<target name="test" depend="init">
 		<description>
 			Test '${system}'.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
@@ -51,7 +51,7 @@
 		<getest config="getest.cfg" compile="geant compile${debug_suffix}_${eiffel} ${compilation_log}"/>
 	</target>
 
-	<target name="test_ise" depend="init" dir="${system_dir}">
+	<target name="test_ise" depend="init">
 		<description>
 			Test '${system}' with ISE Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -61,7 +61,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_hact" depend="init" dir="${system_dir}">
+	<target name="test_hact" depend="init">
 		<description>
 			Test '${system}' with Halstenbach Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -71,7 +71,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_ve" depend="init" dir="${system_dir}">
+	<target name="test_ve" depend="init">
 		<description>
 			Test '${system}' with Visual Eiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -81,7 +81,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_se" depend="init" dir="${system_dir}">
+	<target name="test_se" depend="init">
 		<description>
 			Test '${system}' with SmallEiffel.
 			Compile in debug mode if ${debug} is defined.
@@ -91,7 +91,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug" depend="init" dir="${system_dir}">
+	<target name="test_debug" depend="init">
 		<description>
 			Test '${system}' in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
@@ -102,7 +102,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_ise" depend="init" dir="${system_dir}">
+	<target name="test_debug_ise" depend="init">
 		<description>
 			Test '${system}' with ISE Eiffel in debug mode.
 		</description>
@@ -112,7 +112,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_hact" depend="init" dir="${system_dir}">
+	<target name="test_debug_hact" depend="init">
 		<description>
 			Test '${system}' with Halstenbach Eiffel in debug mode.
 		</description>
@@ -122,7 +122,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_ve" depend="init" dir="${system_dir}">
+	<target name="test_debug_ve" depend="init">
 		<description>
 			Test '${system}' with Visual Eiffel in debug mode.
 		</description>
@@ -132,7 +132,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_se" depend="init" dir="${system_dir}">
+	<target name="test_debug_se" depend="init">
 		<description>
 			Test '${system}' with SmallEiffel in debug mode.
 		</description>
@@ -142,7 +142,7 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="clean" depend="init" dir="${system_dir}">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
@@ -156,6 +156,7 @@
 		<delete file="${system}.h2o"/>
 		<delete directory="TESTGEN"/>
 		<delete file="xcompile.log"/>
+		<geant target="other_clean"/>
 	</target>
 
 

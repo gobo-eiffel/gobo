@@ -134,11 +134,11 @@ else
 	exit 1
 fi
 
-cd $GOBO
-geant bootstrap1
 cd $BIN_DIR
-$RM geant$EXE
-$MV geant1$EXE geant$EXE
+$MV geant$EXE geant1$EXE
+cd $GOBO
+geant1 bootstrap1
+cd $BIN_DIR
+$RM geant1$EXE
 cd $GOBO
 geant bootstrap2
-cd $BIN_DIR
