@@ -31,7 +31,7 @@ creation
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING L_ALL
 %token L_SYSTEM L_ROOT L_END L_CLUSTER
 %token L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
-%token L_ABSTRACT L_EXCLUDE L_LIBRARY
+%token L_ABSTRACT L_EXCLUDE L_VISIBLE L_LIBRARY
 %token L_STRERR
 
 %type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
@@ -197,11 +197,13 @@ Subcluster: L_ABSTRACT Nested_cluster
 
 Cluster_options_opt: -- Empty
 		-- { $$ := Void }
-	| Excludes Defaults_opt Options_opt L_END
+	| Excludes Defaults_opt Options_opt Visibles_opt L_END
 		{ $$ := $1 }
-	| Defaults Options_opt L_END
+	| Defaults Options_opt Visibles_opt L_END
 		-- { $$ := Void }
-	| Options L_END
+	| Options Visibles_opt L_END
+		-- { $$ := Void }
+	| Visibles L_END
 		-- { $$ := Void }
 	;
 
@@ -244,6 +246,27 @@ Option_terminator: -- Empty
 	;
 
 Option_separator: -- Empty
+	| ';'
+	;
+
+Visibles: L_VISIBLE
+	| L_VISIBLE Visible_list
+	;
+
+Visibles_opt: -- Empty
+	| Visibles
+	;
+
+Visible_list: Identifier L_END
+	| Visible ';'
+	| Visible Visible_separator Visible_list
+	;
+
+Visible: Identifier
+	| Identifier L_END
+	;
+
+Visible_separator: -- Empty
 	| ';'
 	;
 

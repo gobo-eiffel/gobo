@@ -65,6 +65,7 @@ creation
 [oO][pP][tT][iI][oO][nN]			last_token := L_OPTION
 [rR][oO][oO][tT]					last_token := L_ROOT
 [sS][yY][sS][tT][eE][mM]			last_token := L_SYSTEM
+[vV][iI][sS][iI][bB][lL][eE]		last_token := L_VISIBLE
 
 
 ----------/** Lace identifiers **/--------------------------------------------
