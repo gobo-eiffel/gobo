@@ -1,10 +1,10 @@
 <project name="if_demo" default="C" >
 
-	<target name="A" unless="$runa" >
+	<target name="A" unless="runa" >
 		<echo message="A" />
 	</target>
 
-	<target name="B" unless="$runb" >
+	<target name="B" unless="runb" >
 		<echo message="B" />
 	</target>
 

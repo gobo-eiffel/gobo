@@ -1,14 +1,22 @@
 <project name="if_demo" default="info">
 
-	<target name="check_eiffel" unless="$GOBO_EIFFEL">
-		<echo message="You have to set $GOBO_EIFFEL to one of (ise,hact,se,ve)"/>
+	<target name="check_eiffel" unless="GOBO_EIFFEL">
+		<echo message="You have to set GOBO_EIFFEL to one of (ise,hact,se,ve)"/>
 	</target>
 
 	<target name="eiffel" if="$GOBO_EIFFEL=se" depend="check_eiffel">
 		<echo message="You are using SmallEiffel"/>
 	</target>
 
-	<target name="check_os" unless="$GOBO_OS">
+	<target name="eiffel2" if="se=$GOBO_EIFFEL" depend="check_eiffel">
+		<echo message="You are using SmallEiffel"/>
+	</target>
+
+	<target name="eiffel3" if="se=${GOBO_EIFFEL}" depend="check_eiffel">
+		<echo message="You are using SmallEiffel"/>
+	</target>
+
+	<target name="check_os" unless="GOBO_OS">
 		<echo message="You have to set $GOBO_OS to one of (windows,unix,linux,macos,vms)"/>
 	</target>
 
@@ -16,7 +24,7 @@
 		<echo message="You are using SmallEiffel"/>
 	</target>
 
-	<target name="info" depend="os,eiffel">
+	<target name="info" depend="os,eiffel,eiffel2,eiffel3">
 	</target>
 
 </project>
