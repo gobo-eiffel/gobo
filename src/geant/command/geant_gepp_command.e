@@ -217,7 +217,11 @@ feature -- Execution
 					until
 						fileset.after or else exit_code /= 0
 					loop
-						a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
+						if fileset.is_in_gobo_31_format then
+							a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
+						else
+							a_from_file := fileset.item_filename
+						end
 						if fileset.has_map then
 							a_to_file := fileset.item_mapped_filename
 							if to_directory /= Void and then to_directory.count > 0 then
