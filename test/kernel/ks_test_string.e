@@ -31,16 +31,16 @@ feature -- Test
 		do
 				-- Creation routine.
 			create a_string.make (5)
-			assert_equal ("count1", 0, a_string.count)
+			assert_integers_equal ("count1", 0, a_string.count)
 			create a_string.make (0)
-			assert_equal ("count2", 0, a_string.count)
+			assert_integers_equal ("count2", 0, a_string.count)
 				-- Regular routine.
 			a_string := "foobar"
 			a_string.make (5)
-			assert_equal ("count3", 0, a_string.count)
+			assert_integers_equal ("count3", 0, a_string.count)
 			a_string := "foobar"
 			a_string.make (0)
-			assert_equal ("count4", 0, a_string.count)
+			assert_integers_equal ("count4", 0, a_string.count)
 		end
 
 	test_make_from_string is
@@ -107,7 +107,7 @@ feature -- Test
 			a_string: STRING
 		do
 			create a_string.make_empty
-			assert_equal ("empty", 0, a_string.count)
+			assert_integers_equal ("empty", 0, a_string.count)
 		end
 
 	test_make_filled is
@@ -127,11 +127,11 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := clone ("foo")
-			assert_equal ("count1", 3, a_string.count)
+			assert_integers_equal ("count1", 3, a_string.count)
 			a_string := clone ("")
-			assert_equal ("count2", 0, a_string.count)
+			assert_integers_equal ("count2", 0, a_string.count)
 			a_string := clone ("foobar")
-			assert_equal ("count3", 6, a_string.count)
+			assert_integers_equal ("count3", 6, a_string.count)
 		end
 
 	test_valid_index is
@@ -156,9 +156,9 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := clone ("bar")
-			assert_equal ("item1", 'b', a_string.item (1)) 
-			assert_equal ("item2", 'a', a_string.item (2)) 
-			assert_equal ("item3", 'r', a_string.item (3)) 
+			assert_characters_equal ("item1", 'b', a_string.item (1)) 
+			assert_characters_equal ("item2", 'a', a_string.item (2)) 
+			assert_characters_equal ("item3", 'r', a_string.item (3)) 
 		end
 
 	test_item_code is
@@ -167,9 +167,9 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := clone ("bar")
-			assert_equal ("item_code1", ('b').code, a_string.item_code (1)) 
-			assert_equal ("item_code2", ('a').code, a_string.item_code (2)) 
-			assert_equal ("item_code3", ('r').code, a_string.item_code (3)) 
+			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1)) 
+			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2)) 
+			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3)) 
 		end
 
 	test_infix_at is
@@ -178,9 +178,9 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := clone ("bar")
-			assert_equal ("item1", 'b', a_string @ 1) 
-			assert_equal ("item2", 'a', a_string @ 2) 
-			assert_equal ("item3", 'r', a_string @ 3) 
+			assert_characters_equal ("item1", 'b', a_string @ 1) 
+			assert_characters_equal ("item2", 'a', a_string @ 2) 
+			assert_characters_equal ("item3", 'r', a_string @ 3) 
 		end
 
 	test_put is
@@ -190,17 +190,17 @@ feature -- Test
 		do
 			a_string := clone ("bar")
 			a_string.put ('f', 1)
-			assert_equal ("item1", 'f', a_string.item (1)) 
-			assert_equal ("item2", 'a', a_string.item (2)) 
-			assert_equal ("item3", 'r', a_string.item (3)) 
+			assert_characters_equal ("item1", 'f', a_string.item (1)) 
+			assert_characters_equal ("item2", 'a', a_string.item (2)) 
+			assert_characters_equal ("item3", 'r', a_string.item (3)) 
 			a_string.put ('o', 2)
-			assert_equal ("item4", 'f', a_string.item (1)) 
-			assert_equal ("item5", 'o', a_string.item (2)) 
-			assert_equal ("item6", 'r', a_string.item (3)) 
+			assert_characters_equal ("item4", 'f', a_string.item (1)) 
+			assert_characters_equal ("item5", 'o', a_string.item (2)) 
+			assert_characters_equal ("item6", 'r', a_string.item (3)) 
 			a_string.put ('z', 3)
-			assert_equal ("item7", 'f', a_string.item (1)) 
-			assert_equal ("item8", 'o', a_string.item (2)) 
-			assert_equal ("item9", 'z', a_string.item (3)) 
+			assert_characters_equal ("item7", 'f', a_string.item (1)) 
+			assert_characters_equal ("item8", 'o', a_string.item (2)) 
+			assert_characters_equal ("item9", 'z', a_string.item (3)) 
 		end
 
 	test_string is
@@ -421,24 +421,24 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := clone ("bar")
-			assert_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
-			assert_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
-			assert_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
-			assert_equal ("index_of_b4", 0, a_string.index_of ('b', 4)) 
-			assert_equal ("index_of_a1", 2, a_string.index_of ('a', 1)) 
-			assert_equal ("index_of_a2", 2, a_string.index_of ('a', 2)) 
-			assert_equal ("index_of_a3", 0, a_string.index_of ('a', 3)) 
-			assert_equal ("index_of_a4", 0, a_string.index_of ('a', 4)) 
-			assert_equal ("index_of_r1", 3, a_string.index_of ('r', 1)) 
-			assert_equal ("index_of_r2", 3, a_string.index_of ('r', 2)) 
-			assert_equal ("index_of_r3", 3, a_string.index_of ('r', 3)) 
-			assert_equal ("index_of_r4", 0, a_string.index_of ('r', 4)) 
-			assert_equal ("index_of_z1", 0, a_string.index_of ('z', 1)) 
-			assert_equal ("index_of_z2", 0, a_string.index_of ('z', 2)) 
-			assert_equal ("index_of_z3", 0, a_string.index_of ('z', 3)) 
-			assert_equal ("index_of_z4", 0, a_string.index_of ('z', 4)) 
+			assert_integers_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
+			assert_integers_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
+			assert_integers_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
+			assert_integers_equal ("index_of_b4", 0, a_string.index_of ('b', 4)) 
+			assert_integers_equal ("index_of_a1", 2, a_string.index_of ('a', 1)) 
+			assert_integers_equal ("index_of_a2", 2, a_string.index_of ('a', 2)) 
+			assert_integers_equal ("index_of_a3", 0, a_string.index_of ('a', 3)) 
+			assert_integers_equal ("index_of_a4", 0, a_string.index_of ('a', 4)) 
+			assert_integers_equal ("index_of_r1", 3, a_string.index_of ('r', 1)) 
+			assert_integers_equal ("index_of_r2", 3, a_string.index_of ('r', 2)) 
+			assert_integers_equal ("index_of_r3", 3, a_string.index_of ('r', 3)) 
+			assert_integers_equal ("index_of_r4", 0, a_string.index_of ('r', 4)) 
+			assert_integers_equal ("index_of_z1", 0, a_string.index_of ('z', 1)) 
+			assert_integers_equal ("index_of_z2", 0, a_string.index_of ('z', 2)) 
+			assert_integers_equal ("index_of_z3", 0, a_string.index_of ('z', 3)) 
+			assert_integers_equal ("index_of_z4", 0, a_string.index_of ('z', 4)) 
 			a_string := clone ("")
-			assert_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
+			assert_integers_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
 		end
 
 	test_substring_index1 is
@@ -447,29 +447,29 @@ feature -- Test
 			a_string1: STRING
 		do
 			a_string1 := "foobar"
-			assert_equal ("index1", 4, a_string1.substring_index ("bar", 1))
-			assert_equal ("index2", 4, a_string1.substring_index ("bar", 4))
-			assert_equal ("index3", 0, a_string1.substring_index ("bar", 5))
-			assert_equal ("index4", 0, a_string1.substring_index ("bar", 7))
-			assert_equal ("index5", 3, a_string1.substring_index ("oba", 2))
-			assert_equal ("index6", 1, a_string1.substring_index ("fo", 1))
-			assert_equal ("index7", 2, a_string1.substring_index ("o", 1))
-			assert_equal ("index8", 3, a_string1.substring_index ("o", 3))
-			assert_equal ("index9", 5, a_string1.substring_index ("", 5))
+			assert_integers_equal ("index1", 4, a_string1.substring_index ("bar", 1))
+			assert_integers_equal ("index2", 4, a_string1.substring_index ("bar", 4))
+			assert_integers_equal ("index3", 0, a_string1.substring_index ("bar", 5))
+			assert_integers_equal ("index4", 0, a_string1.substring_index ("bar", 7))
+			assert_integers_equal ("index5", 3, a_string1.substring_index ("oba", 2))
+			assert_integers_equal ("index6", 1, a_string1.substring_index ("fo", 1))
+			assert_integers_equal ("index7", 2, a_string1.substring_index ("o", 1))
+			assert_integers_equal ("index8", 3, a_string1.substring_index ("o", 3))
+			assert_integers_equal ("index9", 5, a_string1.substring_index ("", 5))
 			if not operating_system.is_dotnet then
 					-- Bug in ISE 5.5 for .NET.
-				assert_equal ("index10", 7, a_string1.substring_index ("", 7))
+				assert_integers_equal ("index10", 7, a_string1.substring_index ("", 7))
 			end
-			assert_equal ("index11", 0, a_string1.substring_index ("gobo", 2))
-			assert_equal ("index12", 0, a_string1.substring_index ("gobogobogobo", 1))
-			assert_equal ("index13", 0, a_string1.substring_index (a_string1, 2))
-			assert_equal ("index14", 1, a_string1.substring_index (a_string1, 1))
-			assert_equal ("index15", 0, a_string1.substring_index (a_string1, 7))
+			assert_integers_equal ("index11", 0, a_string1.substring_index ("gobo", 2))
+			assert_integers_equal ("index12", 0, a_string1.substring_index ("gobogobogobo", 1))
+			assert_integers_equal ("index13", 0, a_string1.substring_index (a_string1, 2))
+			assert_integers_equal ("index14", 1, a_string1.substring_index (a_string1, 1))
+			assert_integers_equal ("index15", 0, a_string1.substring_index (a_string1, 7))
 			a_string1 := ""
-			assert_equal ("index16", 0, a_string1.substring_index ("gobo", 1))
+			assert_integers_equal ("index16", 0, a_string1.substring_index ("gobo", 1))
 			if not operating_system.is_dotnet then
 					-- Bug in ISE 5.5 for .NET.
-				assert_equal ("index17", 1, a_string1.substring_index ("", 1))
+				assert_integers_equal ("index17", 1, a_string1.substring_index ("", 1))
 			end
 		end
 
@@ -480,20 +480,20 @@ feature -- Test
 		do
 			a_string := "foobar"
 			a_string2 := "bar"
-			assert_equal ("index1", 4, a_string.substring_index (a_string2, 1)) 
-			assert_equal ("index2", 4, a_string.substring_index (a_string2, 2)) 
-			assert_equal ("index3", 4, a_string.substring_index (a_string2, 3)) 
-			assert_equal ("index4", 4, a_string.substring_index (a_string2, 4)) 
-			assert_equal ("index5", 0, a_string.substring_index (a_string2, 5)) 
-			assert_equal ("index6", 0, a_string.substring_index (a_string2, 6)) 
+			assert_integers_equal ("index1", 4, a_string.substring_index (a_string2, 1)) 
+			assert_integers_equal ("index2", 4, a_string.substring_index (a_string2, 2)) 
+			assert_integers_equal ("index3", 4, a_string.substring_index (a_string2, 3)) 
+			assert_integers_equal ("index4", 4, a_string.substring_index (a_string2, 4)) 
+			assert_integers_equal ("index5", 0, a_string.substring_index (a_string2, 5)) 
+			assert_integers_equal ("index6", 0, a_string.substring_index (a_string2, 6)) 
 			a_string := "bar"
 			a_string2 := "foobar"
-			assert_equal ("index6", 0, a_string.substring_index (a_string2, 1)) 
-			assert_equal ("index7", 0, a_string.substring_index (a_string2, 2)) 
-			assert_equal ("index8", 0, a_string.substring_index (a_string2, 3)) 
-			assert_equal ("index9", 1, a_string.substring_index (a_string, 1)) 
-			assert_equal ("index10", 0, a_string.substring_index (a_string, 2)) 
-			assert_equal ("index11", 0, a_string.substring_index (a_string, 3)) 
+			assert_integers_equal ("index6", 0, a_string.substring_index (a_string2, 1)) 
+			assert_integers_equal ("index7", 0, a_string.substring_index (a_string2, 2)) 
+			assert_integers_equal ("index8", 0, a_string.substring_index (a_string2, 3)) 
+			assert_integers_equal ("index9", 1, a_string.substring_index (a_string, 1)) 
+			assert_integers_equal ("index10", 0, a_string.substring_index (a_string, 2)) 
+			assert_integers_equal ("index11", 0, a_string.substring_index (a_string, 3)) 
 		end
 
 	test_has is
@@ -536,14 +536,14 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := clone ("foobar")
-			assert_equal ("b", 1, a_string.occurrences ('b')) 
-			assert_equal ("a", 1, a_string.occurrences ('a')) 
-			assert_equal ("r", 1, a_string.occurrences ('r')) 
-			assert_equal ("o", 2, a_string.occurrences ('o')) 
-			assert_equal ("f", 1, a_string.occurrences ('f')) 
-			assert_equal ("z", 0, a_string.occurrences ('z')) 
+			assert_integers_equal ("b", 1, a_string.occurrences ('b')) 
+			assert_integers_equal ("a", 1, a_string.occurrences ('a')) 
+			assert_integers_equal ("r", 1, a_string.occurrences ('r')) 
+			assert_integers_equal ("o", 2, a_string.occurrences ('o')) 
+			assert_integers_equal ("f", 1, a_string.occurrences ('f')) 
+			assert_integers_equal ("z", 0, a_string.occurrences ('z')) 
 			a_string := clone ("")
-			assert_equal ("x", 0, a_string.occurrences ('x')) 
+			assert_integers_equal ("x", 0, a_string.occurrences ('x')) 
 		end
 
 	test_keep_head is
@@ -938,17 +938,17 @@ feature -- Test
 		do
 			a_string := clone ("foo")
 			a_string2 := clone ("bar")
-			assert_equal ("compare1", 1, a_string.three_way_comparison (a_string2))
-			assert_equal ("compare2", 0, a_string.three_way_comparison (a_string))
-			assert_equal ("compare3", -1, a_string2.three_way_comparison (a_string))
+			assert_integers_equal ("compare1", 1, a_string.three_way_comparison (a_string2))
+			assert_integers_equal ("compare2", 0, a_string.three_way_comparison (a_string))
+			assert_integers_equal ("compare3", -1, a_string2.three_way_comparison (a_string))
 			a_string := clone ("")
 			a_string2 := clone ("foo")
-			assert_equal ("compare4", -1, a_string.three_way_comparison (a_string2))
-			assert_equal ("compare5", 1, a_string2.three_way_comparison (a_string))
+			assert_integers_equal ("compare4", -1, a_string.three_way_comparison (a_string2))
+			assert_integers_equal ("compare5", 1, a_string2.three_way_comparison (a_string))
 			a_string := clone ("foo")
 			a_string2 := clone ("foo")
-			assert_equal ("compare6", 0, a_string.three_way_comparison (a_string2))
-			assert_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
+			assert_integers_equal ("compare6", 0, a_string.three_way_comparison (a_string2))
+			assert_integers_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
 		end
 
 	test_manifest_string_0 is
@@ -957,7 +957,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/0/"
-			assert_equal ("code_0", 0, a_string.item (1).code)
+			assert_integers_equal ("code_0", 0, a_string.item (1).code)
 		end
 
 	test_manifest_string_1 is
@@ -966,7 +966,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/1/"
-			assert_equal ("code_1", 1, a_string.item (1).code)
+			assert_integers_equal ("code_1", 1, a_string.item (1).code)
 		end
 
 	test_manifest_string_2 is
@@ -975,7 +975,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/2/"
-			assert_equal ("code_2", 2, a_string.item (1).code)
+			assert_integers_equal ("code_2", 2, a_string.item (1).code)
 		end
 
 	test_manifest_string_3 is
@@ -984,7 +984,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/3/"
-			assert_equal ("code_3", 3, a_string.item (1).code)
+			assert_integers_equal ("code_3", 3, a_string.item (1).code)
 		end
 
 	test_manifest_string_4 is
@@ -993,7 +993,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/4/"
-			assert_equal ("code_4", 4, a_string.item (1).code)
+			assert_integers_equal ("code_4", 4, a_string.item (1).code)
 		end
 
 	test_manifest_string_5 is
@@ -1002,7 +1002,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/5/"
-			assert_equal ("code_5", 5, a_string.item (1).code)
+			assert_integers_equal ("code_5", 5, a_string.item (1).code)
 		end
 
 	test_manifest_string_6 is
@@ -1011,7 +1011,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/6/"
-			assert_equal ("code_6", 6, a_string.item (1).code)
+			assert_integers_equal ("code_6", 6, a_string.item (1).code)
 		end
 
 	test_manifest_string_7 is
@@ -1020,7 +1020,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/7/"
-			assert_equal ("code_7", 7, a_string.item (1).code)
+			assert_integers_equal ("code_7", 7, a_string.item (1).code)
 		end
 
 	test_manifest_string_8 is
@@ -1029,7 +1029,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/8/"
-			assert_equal ("code_8", 8, a_string.item (1).code)
+			assert_integers_equal ("code_8", 8, a_string.item (1).code)
 		end
 
 	test_manifest_string_9 is
@@ -1038,7 +1038,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/9/"
-			assert_equal ("code_9", 9, a_string.item (1).code)
+			assert_integers_equal ("code_9", 9, a_string.item (1).code)
 		end
 
 	test_manifest_string_10 is
@@ -1047,7 +1047,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/10/"
-			assert_equal ("code_10", 10, a_string.item (1).code)
+			assert_integers_equal ("code_10", 10, a_string.item (1).code)
 		end
 
 	test_manifest_string_11 is
@@ -1056,7 +1056,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/11/"
-			assert_equal ("code_11", 11, a_string.item (1).code)
+			assert_integers_equal ("code_11", 11, a_string.item (1).code)
 		end
 
 	test_manifest_string_12 is
@@ -1065,7 +1065,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/12/"
-			assert_equal ("code_12", 12, a_string.item (1).code)
+			assert_integers_equal ("code_12", 12, a_string.item (1).code)
 		end
 
 	test_manifest_string_13 is
@@ -1074,7 +1074,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/13/"
-			assert_equal ("code_13", 13, a_string.item (1).code)
+			assert_integers_equal ("code_13", 13, a_string.item (1).code)
 		end
 
 	test_manifest_string_14 is
@@ -1083,7 +1083,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/14/"
-			assert_equal ("code_14", 14, a_string.item (1).code)
+			assert_integers_equal ("code_14", 14, a_string.item (1).code)
 		end
 
 	test_manifest_string_15 is
@@ -1092,7 +1092,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/15/"
-			assert_equal ("code_15", 15, a_string.item (1).code)
+			assert_integers_equal ("code_15", 15, a_string.item (1).code)
 		end
 
 	test_manifest_string_16 is
@@ -1101,7 +1101,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/16/"
-			assert_equal ("code_16", 16, a_string.item (1).code)
+			assert_integers_equal ("code_16", 16, a_string.item (1).code)
 		end
 
 	test_manifest_string_17 is
@@ -1110,7 +1110,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/17/"
-			assert_equal ("code_17", 17, a_string.item (1).code)
+			assert_integers_equal ("code_17", 17, a_string.item (1).code)
 		end
 
 	test_manifest_string_18 is
@@ -1119,7 +1119,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/18/"
-			assert_equal ("code_18", 18, a_string.item (1).code)
+			assert_integers_equal ("code_18", 18, a_string.item (1).code)
 		end
 
 	test_manifest_string_19 is
@@ -1128,7 +1128,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/19/"
-			assert_equal ("code_19", 19, a_string.item (1).code)
+			assert_integers_equal ("code_19", 19, a_string.item (1).code)
 		end
 
 	test_manifest_string_20 is
@@ -1137,7 +1137,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/20/"
-			assert_equal ("code_20", 20, a_string.item (1).code)
+			assert_integers_equal ("code_20", 20, a_string.item (1).code)
 		end
 
 	test_manifest_string_21 is
@@ -1146,7 +1146,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/21/"
-			assert_equal ("code_21", 21, a_string.item (1).code)
+			assert_integers_equal ("code_21", 21, a_string.item (1).code)
 		end
 
 	test_manifest_string_22 is
@@ -1155,7 +1155,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/22/"
-			assert_equal ("code_22", 22, a_string.item (1).code)
+			assert_integers_equal ("code_22", 22, a_string.item (1).code)
 		end
 
 	test_manifest_string_23 is
@@ -1164,7 +1164,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/23/"
-			assert_equal ("code_23", 23, a_string.item (1).code)
+			assert_integers_equal ("code_23", 23, a_string.item (1).code)
 		end
 
 	test_manifest_string_24 is
@@ -1173,7 +1173,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/24/"
-			assert_equal ("code_24", 24, a_string.item (1).code)
+			assert_integers_equal ("code_24", 24, a_string.item (1).code)
 		end
 
 	test_manifest_string_25 is
@@ -1182,7 +1182,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/25/"
-			assert_equal ("code_25", 25, a_string.item (1).code)
+			assert_integers_equal ("code_25", 25, a_string.item (1).code)
 		end
 
 	test_manifest_string_26 is
@@ -1191,7 +1191,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/26/"
-			assert_equal ("code_26", 26, a_string.item (1).code)
+			assert_integers_equal ("code_26", 26, a_string.item (1).code)
 		end
 
 	test_manifest_string_27 is
@@ -1200,7 +1200,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/27/"
-			assert_equal ("code_27", 27, a_string.item (1).code)
+			assert_integers_equal ("code_27", 27, a_string.item (1).code)
 		end
 
 	test_manifest_string_28 is
@@ -1209,7 +1209,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/28/"
-			assert_equal ("code_28", 28, a_string.item (1).code)
+			assert_integers_equal ("code_28", 28, a_string.item (1).code)
 		end
 
 	test_manifest_string_29 is
@@ -1218,7 +1218,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/29/"
-			assert_equal ("code_29", 29, a_string.item (1).code)
+			assert_integers_equal ("code_29", 29, a_string.item (1).code)
 		end
 
 	test_manifest_string_30 is
@@ -1227,7 +1227,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/30/"
-			assert_equal ("code_30", 30, a_string.item (1).code)
+			assert_integers_equal ("code_30", 30, a_string.item (1).code)
 		end
 
 	test_manifest_string_31 is
@@ -1236,7 +1236,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/31/"
-			assert_equal ("code_31", 31, a_string.item (1).code)
+			assert_integers_equal ("code_31", 31, a_string.item (1).code)
 		end
 
 	test_manifest_string_32 is
@@ -1245,7 +1245,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/32/"
-			assert_equal ("code_32", 32, a_string.item (1).code)
+			assert_integers_equal ("code_32", 32, a_string.item (1).code)
 		end
 
 	test_manifest_string_33 is
@@ -1254,7 +1254,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/33/"
-			assert_equal ("code_33", 33, a_string.item (1).code)
+			assert_integers_equal ("code_33", 33, a_string.item (1).code)
 		end
 
 	test_manifest_string_34 is
@@ -1263,7 +1263,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/34/"
-			assert_equal ("code_34", 34, a_string.item (1).code)
+			assert_integers_equal ("code_34", 34, a_string.item (1).code)
 		end
 
 	test_manifest_string_35 is
@@ -1272,7 +1272,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/35/"
-			assert_equal ("code_35", 35, a_string.item (1).code)
+			assert_integers_equal ("code_35", 35, a_string.item (1).code)
 		end
 
 	test_manifest_string_36 is
@@ -1281,7 +1281,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/36/"
-			assert_equal ("code_36", 36, a_string.item (1).code)
+			assert_integers_equal ("code_36", 36, a_string.item (1).code)
 		end
 
 	test_manifest_string_37 is
@@ -1290,7 +1290,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/37/"
-			assert_equal ("code_37", 37, a_string.item (1).code)
+			assert_integers_equal ("code_37", 37, a_string.item (1).code)
 		end
 
 	test_manifest_string_38 is
@@ -1299,7 +1299,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/38/"
-			assert_equal ("code_38", 38, a_string.item (1).code)
+			assert_integers_equal ("code_38", 38, a_string.item (1).code)
 		end
 
 	test_manifest_string_39 is
@@ -1308,7 +1308,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/39/"
-			assert_equal ("code_39", 39, a_string.item (1).code)
+			assert_integers_equal ("code_39", 39, a_string.item (1).code)
 		end
 
 	test_manifest_string_40 is
@@ -1317,7 +1317,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/40/"
-			assert_equal ("code_40", 40, a_string.item (1).code)
+			assert_integers_equal ("code_40", 40, a_string.item (1).code)
 		end
 
 	test_manifest_string_41 is
@@ -1326,7 +1326,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/41/"
-			assert_equal ("code_41", 41, a_string.item (1).code)
+			assert_integers_equal ("code_41", 41, a_string.item (1).code)
 		end
 
 	test_manifest_string_42 is
@@ -1335,7 +1335,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/42/"
-			assert_equal ("code_42", 42, a_string.item (1).code)
+			assert_integers_equal ("code_42", 42, a_string.item (1).code)
 		end
 
 	test_manifest_string_43 is
@@ -1344,7 +1344,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/43/"
-			assert_equal ("code_43", 43, a_string.item (1).code)
+			assert_integers_equal ("code_43", 43, a_string.item (1).code)
 		end
 
 	test_manifest_string_44 is
@@ -1353,7 +1353,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/44/"
-			assert_equal ("code_44", 44, a_string.item (1).code)
+			assert_integers_equal ("code_44", 44, a_string.item (1).code)
 		end
 
 	test_manifest_string_45 is
@@ -1362,7 +1362,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/45/"
-			assert_equal ("code_45", 45, a_string.item (1).code)
+			assert_integers_equal ("code_45", 45, a_string.item (1).code)
 		end
 
 	test_manifest_string_46 is
@@ -1371,7 +1371,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/46/"
-			assert_equal ("code_46", 46, a_string.item (1).code)
+			assert_integers_equal ("code_46", 46, a_string.item (1).code)
 		end
 
 	test_manifest_string_47 is
@@ -1380,7 +1380,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/47/"
-			assert_equal ("code_47", 47, a_string.item (1).code)
+			assert_integers_equal ("code_47", 47, a_string.item (1).code)
 		end
 
 	test_manifest_string_48 is
@@ -1389,7 +1389,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/48/"
-			assert_equal ("code_48", 48, a_string.item (1).code)
+			assert_integers_equal ("code_48", 48, a_string.item (1).code)
 		end
 
 	test_manifest_string_49 is
@@ -1398,7 +1398,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/49/"
-			assert_equal ("code_49", 49, a_string.item (1).code)
+			assert_integers_equal ("code_49", 49, a_string.item (1).code)
 		end
 
 	test_manifest_string_50 is
@@ -1407,7 +1407,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/50/"
-			assert_equal ("code_50", 50, a_string.item (1).code)
+			assert_integers_equal ("code_50", 50, a_string.item (1).code)
 		end
 
 	test_manifest_string_51 is
@@ -1416,7 +1416,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/51/"
-			assert_equal ("code_51", 51, a_string.item (1).code)
+			assert_integers_equal ("code_51", 51, a_string.item (1).code)
 		end
 
 	test_manifest_string_52 is
@@ -1425,7 +1425,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/52/"
-			assert_equal ("code_52", 52, a_string.item (1).code)
+			assert_integers_equal ("code_52", 52, a_string.item (1).code)
 		end
 
 	test_manifest_string_53 is
@@ -1434,7 +1434,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/53/"
-			assert_equal ("code_53", 53, a_string.item (1).code)
+			assert_integers_equal ("code_53", 53, a_string.item (1).code)
 		end
 
 	test_manifest_string_54 is
@@ -1443,7 +1443,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/54/"
-			assert_equal ("code_54", 54, a_string.item (1).code)
+			assert_integers_equal ("code_54", 54, a_string.item (1).code)
 		end
 
 	test_manifest_string_55 is
@@ -1452,7 +1452,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/55/"
-			assert_equal ("code_55", 55, a_string.item (1).code)
+			assert_integers_equal ("code_55", 55, a_string.item (1).code)
 		end
 
 	test_manifest_string_56 is
@@ -1461,7 +1461,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/56/"
-			assert_equal ("code_56", 56, a_string.item (1).code)
+			assert_integers_equal ("code_56", 56, a_string.item (1).code)
 		end
 
 	test_manifest_string_57 is
@@ -1470,7 +1470,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/57/"
-			assert_equal ("code_57", 57, a_string.item (1).code)
+			assert_integers_equal ("code_57", 57, a_string.item (1).code)
 		end
 
 	test_manifest_string_58 is
@@ -1479,7 +1479,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/58/"
-			assert_equal ("code_58", 58, a_string.item (1).code)
+			assert_integers_equal ("code_58", 58, a_string.item (1).code)
 		end
 
 	test_manifest_string_59 is
@@ -1488,7 +1488,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/59/"
-			assert_equal ("code_59", 59, a_string.item (1).code)
+			assert_integers_equal ("code_59", 59, a_string.item (1).code)
 		end
 
 	test_manifest_string_60 is
@@ -1497,7 +1497,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/60/"
-			assert_equal ("code_60", 60, a_string.item (1).code)
+			assert_integers_equal ("code_60", 60, a_string.item (1).code)
 		end
 
 	test_manifest_string_61 is
@@ -1506,7 +1506,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/61/"
-			assert_equal ("code_61", 61, a_string.item (1).code)
+			assert_integers_equal ("code_61", 61, a_string.item (1).code)
 		end
 
 	test_manifest_string_62 is
@@ -1515,7 +1515,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/62/"
-			assert_equal ("code_62", 62, a_string.item (1).code)
+			assert_integers_equal ("code_62", 62, a_string.item (1).code)
 		end
 
 	test_manifest_string_63 is
@@ -1524,7 +1524,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/63/"
-			assert_equal ("code_63", 63, a_string.item (1).code)
+			assert_integers_equal ("code_63", 63, a_string.item (1).code)
 		end
 
 	test_manifest_string_64 is
@@ -1533,7 +1533,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/64/"
-			assert_equal ("code_64", 64, a_string.item (1).code)
+			assert_integers_equal ("code_64", 64, a_string.item (1).code)
 		end
 
 	test_manifest_string_65 is
@@ -1542,7 +1542,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/65/"
-			assert_equal ("code_65", 65, a_string.item (1).code)
+			assert_integers_equal ("code_65", 65, a_string.item (1).code)
 		end
 
 	test_manifest_string_66 is
@@ -1551,7 +1551,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/66/"
-			assert_equal ("code_66", 66, a_string.item (1).code)
+			assert_integers_equal ("code_66", 66, a_string.item (1).code)
 		end
 
 	test_manifest_string_67 is
@@ -1560,7 +1560,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/67/"
-			assert_equal ("code_67", 67, a_string.item (1).code)
+			assert_integers_equal ("code_67", 67, a_string.item (1).code)
 		end
 
 	test_manifest_string_68 is
@@ -1569,7 +1569,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/68/"
-			assert_equal ("code_68", 68, a_string.item (1).code)
+			assert_integers_equal ("code_68", 68, a_string.item (1).code)
 		end
 
 	test_manifest_string_69 is
@@ -1578,7 +1578,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/69/"
-			assert_equal ("code_69", 69, a_string.item (1).code)
+			assert_integers_equal ("code_69", 69, a_string.item (1).code)
 		end
 
 	test_manifest_string_70 is
@@ -1587,7 +1587,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/70/"
-			assert_equal ("code_70", 70, a_string.item (1).code)
+			assert_integers_equal ("code_70", 70, a_string.item (1).code)
 		end
 
 	test_manifest_string_71 is
@@ -1596,7 +1596,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/71/"
-			assert_equal ("code_71", 71, a_string.item (1).code)
+			assert_integers_equal ("code_71", 71, a_string.item (1).code)
 		end
 
 	test_manifest_string_72 is
@@ -1605,7 +1605,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/72/"
-			assert_equal ("code_72", 72, a_string.item (1).code)
+			assert_integers_equal ("code_72", 72, a_string.item (1).code)
 		end
 
 	test_manifest_string_73 is
@@ -1614,7 +1614,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/73/"
-			assert_equal ("code_73", 73, a_string.item (1).code)
+			assert_integers_equal ("code_73", 73, a_string.item (1).code)
 		end
 
 	test_manifest_string_74 is
@@ -1623,7 +1623,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/74/"
-			assert_equal ("code_74", 74, a_string.item (1).code)
+			assert_integers_equal ("code_74", 74, a_string.item (1).code)
 		end
 
 	test_manifest_string_75 is
@@ -1632,7 +1632,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/75/"
-			assert_equal ("code_75", 75, a_string.item (1).code)
+			assert_integers_equal ("code_75", 75, a_string.item (1).code)
 		end
 
 	test_manifest_string_76 is
@@ -1641,7 +1641,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/76/"
-			assert_equal ("code_76", 76, a_string.item (1).code)
+			assert_integers_equal ("code_76", 76, a_string.item (1).code)
 		end
 
 	test_manifest_string_77 is
@@ -1650,7 +1650,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/77/"
-			assert_equal ("code_77", 77, a_string.item (1).code)
+			assert_integers_equal ("code_77", 77, a_string.item (1).code)
 		end
 
 	test_manifest_string_78 is
@@ -1659,7 +1659,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/78/"
-			assert_equal ("code_78", 78, a_string.item (1).code)
+			assert_integers_equal ("code_78", 78, a_string.item (1).code)
 		end
 
 	test_manifest_string_79 is
@@ -1668,7 +1668,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/79/"
-			assert_equal ("code_79", 79, a_string.item (1).code)
+			assert_integers_equal ("code_79", 79, a_string.item (1).code)
 		end
 
 	test_manifest_string_80 is
@@ -1677,7 +1677,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/80/"
-			assert_equal ("code_80", 80, a_string.item (1).code)
+			assert_integers_equal ("code_80", 80, a_string.item (1).code)
 		end
 
 	test_manifest_string_81 is
@@ -1686,7 +1686,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/81/"
-			assert_equal ("code_81", 81, a_string.item (1).code)
+			assert_integers_equal ("code_81", 81, a_string.item (1).code)
 		end
 
 	test_manifest_string_82 is
@@ -1695,7 +1695,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/82/"
-			assert_equal ("code_82", 82, a_string.item (1).code)
+			assert_integers_equal ("code_82", 82, a_string.item (1).code)
 		end
 
 	test_manifest_string_83 is
@@ -1704,7 +1704,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/83/"
-			assert_equal ("code_83", 83, a_string.item (1).code)
+			assert_integers_equal ("code_83", 83, a_string.item (1).code)
 		end
 
 	test_manifest_string_84 is
@@ -1713,7 +1713,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/84/"
-			assert_equal ("code_84", 84, a_string.item (1).code)
+			assert_integers_equal ("code_84", 84, a_string.item (1).code)
 		end
 
 	test_manifest_string_85 is
@@ -1722,7 +1722,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/85/"
-			assert_equal ("code_85", 85, a_string.item (1).code)
+			assert_integers_equal ("code_85", 85, a_string.item (1).code)
 		end
 
 	test_manifest_string_86 is
@@ -1731,7 +1731,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/86/"
-			assert_equal ("code_86", 86, a_string.item (1).code)
+			assert_integers_equal ("code_86", 86, a_string.item (1).code)
 		end
 
 	test_manifest_string_87 is
@@ -1740,7 +1740,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/87/"
-			assert_equal ("code_87", 87, a_string.item (1).code)
+			assert_integers_equal ("code_87", 87, a_string.item (1).code)
 		end
 
 	test_manifest_string_88 is
@@ -1749,7 +1749,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/88/"
-			assert_equal ("code_88", 88, a_string.item (1).code)
+			assert_integers_equal ("code_88", 88, a_string.item (1).code)
 		end
 
 	test_manifest_string_89 is
@@ -1758,7 +1758,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/89/"
-			assert_equal ("code_89", 89, a_string.item (1).code)
+			assert_integers_equal ("code_89", 89, a_string.item (1).code)
 		end
 
 	test_manifest_string_90 is
@@ -1767,7 +1767,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/90/"
-			assert_equal ("code_90", 90, a_string.item (1).code)
+			assert_integers_equal ("code_90", 90, a_string.item (1).code)
 		end
 
 	test_manifest_string_91 is
@@ -1776,7 +1776,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/91/"
-			assert_equal ("code_91", 91, a_string.item (1).code)
+			assert_integers_equal ("code_91", 91, a_string.item (1).code)
 		end
 
 	test_manifest_string_92 is
@@ -1785,7 +1785,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/92/"
-			assert_equal ("code_92", 92, a_string.item (1).code)
+			assert_integers_equal ("code_92", 92, a_string.item (1).code)
 		end
 
 	test_manifest_string_93 is
@@ -1794,7 +1794,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/93/"
-			assert_equal ("code_93", 93, a_string.item (1).code)
+			assert_integers_equal ("code_93", 93, a_string.item (1).code)
 		end
 
 	test_manifest_string_94 is
@@ -1803,7 +1803,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/94/"
-			assert_equal ("code_94", 94, a_string.item (1).code)
+			assert_integers_equal ("code_94", 94, a_string.item (1).code)
 		end
 
 	test_manifest_string_95 is
@@ -1812,7 +1812,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/95/"
-			assert_equal ("code_95", 95, a_string.item (1).code)
+			assert_integers_equal ("code_95", 95, a_string.item (1).code)
 		end
 
 	test_manifest_string_96 is
@@ -1821,7 +1821,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/96/"
-			assert_equal ("code_96", 96, a_string.item (1).code)
+			assert_integers_equal ("code_96", 96, a_string.item (1).code)
 		end
 
 	test_manifest_string_97 is
@@ -1830,7 +1830,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/97/"
-			assert_equal ("code_97", 97, a_string.item (1).code)
+			assert_integers_equal ("code_97", 97, a_string.item (1).code)
 		end
 
 	test_manifest_string_98 is
@@ -1839,7 +1839,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/98/"
-			assert_equal ("code_98", 98, a_string.item (1).code)
+			assert_integers_equal ("code_98", 98, a_string.item (1).code)
 		end
 
 	test_manifest_string_99 is
@@ -1848,7 +1848,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/99/"
-			assert_equal ("code_99", 99, a_string.item (1).code)
+			assert_integers_equal ("code_99", 99, a_string.item (1).code)
 		end
 
 	test_manifest_string_100 is
@@ -1857,7 +1857,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/100/"
-			assert_equal ("code_100", 100, a_string.item (1).code)
+			assert_integers_equal ("code_100", 100, a_string.item (1).code)
 		end
 
 	test_manifest_string_101 is
@@ -1866,7 +1866,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/101/"
-			assert_equal ("code_101", 101, a_string.item (1).code)
+			assert_integers_equal ("code_101", 101, a_string.item (1).code)
 		end
 
 	test_manifest_string_102 is
@@ -1875,7 +1875,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/102/"
-			assert_equal ("code_102", 102, a_string.item (1).code)
+			assert_integers_equal ("code_102", 102, a_string.item (1).code)
 		end
 
 	test_manifest_string_103 is
@@ -1884,7 +1884,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/103/"
-			assert_equal ("code_103", 103, a_string.item (1).code)
+			assert_integers_equal ("code_103", 103, a_string.item (1).code)
 		end
 
 	test_manifest_string_104 is
@@ -1893,7 +1893,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/104/"
-			assert_equal ("code_104", 104, a_string.item (1).code)
+			assert_integers_equal ("code_104", 104, a_string.item (1).code)
 		end
 
 	test_manifest_string_105 is
@@ -1902,7 +1902,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/105/"
-			assert_equal ("code_105", 105, a_string.item (1).code)
+			assert_integers_equal ("code_105", 105, a_string.item (1).code)
 		end
 
 	test_manifest_string_106 is
@@ -1911,7 +1911,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/106/"
-			assert_equal ("code_106", 106, a_string.item (1).code)
+			assert_integers_equal ("code_106", 106, a_string.item (1).code)
 		end
 
 	test_manifest_string_107 is
@@ -1920,7 +1920,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/107/"
-			assert_equal ("code_107", 107, a_string.item (1).code)
+			assert_integers_equal ("code_107", 107, a_string.item (1).code)
 		end
 
 	test_manifest_string_108 is
@@ -1929,7 +1929,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/108/"
-			assert_equal ("code_108", 108, a_string.item (1).code)
+			assert_integers_equal ("code_108", 108, a_string.item (1).code)
 		end
 
 	test_manifest_string_109 is
@@ -1938,7 +1938,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/109/"
-			assert_equal ("code_109", 109, a_string.item (1).code)
+			assert_integers_equal ("code_109", 109, a_string.item (1).code)
 		end
 
 	test_manifest_string_110 is
@@ -1947,7 +1947,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/110/"
-			assert_equal ("code_110", 110, a_string.item (1).code)
+			assert_integers_equal ("code_110", 110, a_string.item (1).code)
 		end
 
 	test_manifest_string_111 is
@@ -1956,7 +1956,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/111/"
-			assert_equal ("code_111", 111, a_string.item (1).code)
+			assert_integers_equal ("code_111", 111, a_string.item (1).code)
 		end
 
 	test_manifest_string_112 is
@@ -1965,7 +1965,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/112/"
-			assert_equal ("code_112", 112, a_string.item (1).code)
+			assert_integers_equal ("code_112", 112, a_string.item (1).code)
 		end
 
 	test_manifest_string_113 is
@@ -1974,7 +1974,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/113/"
-			assert_equal ("code_113", 113, a_string.item (1).code)
+			assert_integers_equal ("code_113", 113, a_string.item (1).code)
 		end
 
 	test_manifest_string_114 is
@@ -1983,7 +1983,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/114/"
-			assert_equal ("code_114", 114, a_string.item (1).code)
+			assert_integers_equal ("code_114", 114, a_string.item (1).code)
 		end
 
 	test_manifest_string_115 is
@@ -1992,7 +1992,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/115/"
-			assert_equal ("code_115", 115, a_string.item (1).code)
+			assert_integers_equal ("code_115", 115, a_string.item (1).code)
 		end
 
 	test_manifest_string_116 is
@@ -2001,7 +2001,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/116/"
-			assert_equal ("code_116", 116, a_string.item (1).code)
+			assert_integers_equal ("code_116", 116, a_string.item (1).code)
 		end
 
 	test_manifest_string_117 is
@@ -2010,7 +2010,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/117/"
-			assert_equal ("code_117", 117, a_string.item (1).code)
+			assert_integers_equal ("code_117", 117, a_string.item (1).code)
 		end
 
 	test_manifest_string_118 is
@@ -2019,7 +2019,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/118/"
-			assert_equal ("code_118", 118, a_string.item (1).code)
+			assert_integers_equal ("code_118", 118, a_string.item (1).code)
 		end
 
 	test_manifest_string_119 is
@@ -2028,7 +2028,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/119/"
-			assert_equal ("code_119", 119, a_string.item (1).code)
+			assert_integers_equal ("code_119", 119, a_string.item (1).code)
 		end
 
 	test_manifest_string_120 is
@@ -2037,7 +2037,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/120/"
-			assert_equal ("code_120", 120, a_string.item (1).code)
+			assert_integers_equal ("code_120", 120, a_string.item (1).code)
 		end
 
 	test_manifest_string_121 is
@@ -2046,7 +2046,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/121/"
-			assert_equal ("code_121", 121, a_string.item (1).code)
+			assert_integers_equal ("code_121", 121, a_string.item (1).code)
 		end
 
 	test_manifest_string_122 is
@@ -2055,7 +2055,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/122/"
-			assert_equal ("code_122", 122, a_string.item (1).code)
+			assert_integers_equal ("code_122", 122, a_string.item (1).code)
 		end
 
 	test_manifest_string_123 is
@@ -2064,7 +2064,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/123/"
-			assert_equal ("code_123", 123, a_string.item (1).code)
+			assert_integers_equal ("code_123", 123, a_string.item (1).code)
 		end
 
 	test_manifest_string_124 is
@@ -2073,7 +2073,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/124/"
-			assert_equal ("code_124", 124, a_string.item (1).code)
+			assert_integers_equal ("code_124", 124, a_string.item (1).code)
 		end
 
 	test_manifest_string_125 is
@@ -2082,7 +2082,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/125/"
-			assert_equal ("code_125", 125, a_string.item (1).code)
+			assert_integers_equal ("code_125", 125, a_string.item (1).code)
 		end
 
 	test_manifest_string_126 is
@@ -2091,7 +2091,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/126/"
-			assert_equal ("code_126", 126, a_string.item (1).code)
+			assert_integers_equal ("code_126", 126, a_string.item (1).code)
 		end
 
 	test_manifest_string_127 is
@@ -2100,7 +2100,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/127/"
-			assert_equal ("code_127", 127, a_string.item (1).code)
+			assert_integers_equal ("code_127", 127, a_string.item (1).code)
 		end
 
 	test_manifest_string_128 is
@@ -2109,7 +2109,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/128/"
-			assert_equal ("code_128", 128, a_string.item (1).code)
+			assert_integers_equal ("code_128", 128, a_string.item (1).code)
 		end
 
 	test_manifest_string_129 is
@@ -2118,7 +2118,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/129/"
-			assert_equal ("code_129", 129, a_string.item (1).code)
+			assert_integers_equal ("code_129", 129, a_string.item (1).code)
 		end
 
 	test_manifest_string_130 is
@@ -2127,7 +2127,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/130/"
-			assert_equal ("code_130", 130, a_string.item (1).code)
+			assert_integers_equal ("code_130", 130, a_string.item (1).code)
 		end
 
 	test_manifest_string_131 is
@@ -2136,7 +2136,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/131/"
-			assert_equal ("code_131", 131, a_string.item (1).code)
+			assert_integers_equal ("code_131", 131, a_string.item (1).code)
 		end
 
 	test_manifest_string_132 is
@@ -2145,7 +2145,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/132/"
-			assert_equal ("code_132", 132, a_string.item (1).code)
+			assert_integers_equal ("code_132", 132, a_string.item (1).code)
 		end
 
 	test_manifest_string_133 is
@@ -2154,7 +2154,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/133/"
-			assert_equal ("code_133", 133, a_string.item (1).code)
+			assert_integers_equal ("code_133", 133, a_string.item (1).code)
 		end
 
 	test_manifest_string_134 is
@@ -2163,7 +2163,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/134/"
-			assert_equal ("code_134", 134, a_string.item (1).code)
+			assert_integers_equal ("code_134", 134, a_string.item (1).code)
 		end
 
 	test_manifest_string_135 is
@@ -2172,7 +2172,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/135/"
-			assert_equal ("code_135", 135, a_string.item (1).code)
+			assert_integers_equal ("code_135", 135, a_string.item (1).code)
 		end
 
 	test_manifest_string_136 is
@@ -2181,7 +2181,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/136/"
-			assert_equal ("code_136", 136, a_string.item (1).code)
+			assert_integers_equal ("code_136", 136, a_string.item (1).code)
 		end
 
 	test_manifest_string_137 is
@@ -2190,7 +2190,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/137/"
-			assert_equal ("code_137", 137, a_string.item (1).code)
+			assert_integers_equal ("code_137", 137, a_string.item (1).code)
 		end
 
 	test_manifest_string_138 is
@@ -2199,7 +2199,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/138/"
-			assert_equal ("code_138", 138, a_string.item (1).code)
+			assert_integers_equal ("code_138", 138, a_string.item (1).code)
 		end
 
 	test_manifest_string_139 is
@@ -2208,7 +2208,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/139/"
-			assert_equal ("code_139", 139, a_string.item (1).code)
+			assert_integers_equal ("code_139", 139, a_string.item (1).code)
 		end
 
 	test_manifest_string_140 is
@@ -2217,7 +2217,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/140/"
-			assert_equal ("code_140", 140, a_string.item (1).code)
+			assert_integers_equal ("code_140", 140, a_string.item (1).code)
 		end
 
 	test_manifest_string_141 is
@@ -2226,7 +2226,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/141/"
-			assert_equal ("code_141", 141, a_string.item (1).code)
+			assert_integers_equal ("code_141", 141, a_string.item (1).code)
 		end
 
 	test_manifest_string_142 is
@@ -2235,7 +2235,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/142/"
-			assert_equal ("code_142", 142, a_string.item (1).code)
+			assert_integers_equal ("code_142", 142, a_string.item (1).code)
 		end
 
 	test_manifest_string_143 is
@@ -2244,7 +2244,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/143/"
-			assert_equal ("code_143", 143, a_string.item (1).code)
+			assert_integers_equal ("code_143", 143, a_string.item (1).code)
 		end
 
 	test_manifest_string_144 is
@@ -2253,7 +2253,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/144/"
-			assert_equal ("code_144", 144, a_string.item (1).code)
+			assert_integers_equal ("code_144", 144, a_string.item (1).code)
 		end
 
 	test_manifest_string_145 is
@@ -2262,7 +2262,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/145/"
-			assert_equal ("code_145", 145, a_string.item (1).code)
+			assert_integers_equal ("code_145", 145, a_string.item (1).code)
 		end
 
 	test_manifest_string_146 is
@@ -2271,7 +2271,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/146/"
-			assert_equal ("code_146", 146, a_string.item (1).code)
+			assert_integers_equal ("code_146", 146, a_string.item (1).code)
 		end
 
 	test_manifest_string_147 is
@@ -2280,7 +2280,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/147/"
-			assert_equal ("code_147", 147, a_string.item (1).code)
+			assert_integers_equal ("code_147", 147, a_string.item (1).code)
 		end
 
 	test_manifest_string_148 is
@@ -2289,7 +2289,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/148/"
-			assert_equal ("code_148", 148, a_string.item (1).code)
+			assert_integers_equal ("code_148", 148, a_string.item (1).code)
 		end
 
 	test_manifest_string_149 is
@@ -2298,7 +2298,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/149/"
-			assert_equal ("code_149", 149, a_string.item (1).code)
+			assert_integers_equal ("code_149", 149, a_string.item (1).code)
 		end
 
 	test_manifest_string_150 is
@@ -2307,7 +2307,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/150/"
-			assert_equal ("code_150", 150, a_string.item (1).code)
+			assert_integers_equal ("code_150", 150, a_string.item (1).code)
 		end
 
 	test_manifest_string_151 is
@@ -2316,7 +2316,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/151/"
-			assert_equal ("code_151", 151, a_string.item (1).code)
+			assert_integers_equal ("code_151", 151, a_string.item (1).code)
 		end
 
 	test_manifest_string_152 is
@@ -2325,7 +2325,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/152/"
-			assert_equal ("code_152", 152, a_string.item (1).code)
+			assert_integers_equal ("code_152", 152, a_string.item (1).code)
 		end
 
 	test_manifest_string_153 is
@@ -2334,7 +2334,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/153/"
-			assert_equal ("code_153", 153, a_string.item (1).code)
+			assert_integers_equal ("code_153", 153, a_string.item (1).code)
 		end
 
 	test_manifest_string_154 is
@@ -2343,7 +2343,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/154/"
-			assert_equal ("code_154", 154, a_string.item (1).code)
+			assert_integers_equal ("code_154", 154, a_string.item (1).code)
 		end
 
 	test_manifest_string_155 is
@@ -2352,7 +2352,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/155/"
-			assert_equal ("code_155", 155, a_string.item (1).code)
+			assert_integers_equal ("code_155", 155, a_string.item (1).code)
 		end
 
 	test_manifest_string_156 is
@@ -2361,7 +2361,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/156/"
-			assert_equal ("code_156", 156, a_string.item (1).code)
+			assert_integers_equal ("code_156", 156, a_string.item (1).code)
 		end
 
 	test_manifest_string_157 is
@@ -2370,7 +2370,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/157/"
-			assert_equal ("code_157", 157, a_string.item (1).code)
+			assert_integers_equal ("code_157", 157, a_string.item (1).code)
 		end
 
 	test_manifest_string_158 is
@@ -2379,7 +2379,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/158/"
-			assert_equal ("code_158", 158, a_string.item (1).code)
+			assert_integers_equal ("code_158", 158, a_string.item (1).code)
 		end
 
 	test_manifest_string_159 is
@@ -2388,7 +2388,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/159/"
-			assert_equal ("code_159", 159, a_string.item (1).code)
+			assert_integers_equal ("code_159", 159, a_string.item (1).code)
 		end
 
 	test_manifest_string_160 is
@@ -2397,7 +2397,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/160/"
-			assert_equal ("code_160", 160, a_string.item (1).code)
+			assert_integers_equal ("code_160", 160, a_string.item (1).code)
 		end
 
 	test_manifest_string_161 is
@@ -2406,7 +2406,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/161/"
-			assert_equal ("code_161", 161, a_string.item (1).code)
+			assert_integers_equal ("code_161", 161, a_string.item (1).code)
 		end
 
 	test_manifest_string_162 is
@@ -2415,7 +2415,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/162/"
-			assert_equal ("code_162", 162, a_string.item (1).code)
+			assert_integers_equal ("code_162", 162, a_string.item (1).code)
 		end
 
 	test_manifest_string_163 is
@@ -2424,7 +2424,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/163/"
-			assert_equal ("code_163", 163, a_string.item (1).code)
+			assert_integers_equal ("code_163", 163, a_string.item (1).code)
 		end
 
 	test_manifest_string_164 is
@@ -2433,7 +2433,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/164/"
-			assert_equal ("code_164", 164, a_string.item (1).code)
+			assert_integers_equal ("code_164", 164, a_string.item (1).code)
 		end
 
 	test_manifest_string_165 is
@@ -2442,7 +2442,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/165/"
-			assert_equal ("code_165", 165, a_string.item (1).code)
+			assert_integers_equal ("code_165", 165, a_string.item (1).code)
 		end
 
 	test_manifest_string_166 is
@@ -2451,7 +2451,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/166/"
-			assert_equal ("code_166", 166, a_string.item (1).code)
+			assert_integers_equal ("code_166", 166, a_string.item (1).code)
 		end
 
 	test_manifest_string_167 is
@@ -2460,7 +2460,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/167/"
-			assert_equal ("code_167", 167, a_string.item (1).code)
+			assert_integers_equal ("code_167", 167, a_string.item (1).code)
 		end
 
 	test_manifest_string_168 is
@@ -2469,7 +2469,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/168/"
-			assert_equal ("code_168", 168, a_string.item (1).code)
+			assert_integers_equal ("code_168", 168, a_string.item (1).code)
 		end
 
 	test_manifest_string_169 is
@@ -2478,7 +2478,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/169/"
-			assert_equal ("code_169", 169, a_string.item (1).code)
+			assert_integers_equal ("code_169", 169, a_string.item (1).code)
 		end
 
 	test_manifest_string_170 is
@@ -2487,7 +2487,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/170/"
-			assert_equal ("code_170", 170, a_string.item (1).code)
+			assert_integers_equal ("code_170", 170, a_string.item (1).code)
 		end
 
 	test_manifest_string_171 is
@@ -2496,7 +2496,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/171/"
-			assert_equal ("code_171", 171, a_string.item (1).code)
+			assert_integers_equal ("code_171", 171, a_string.item (1).code)
 		end
 
 	test_manifest_string_172 is
@@ -2505,7 +2505,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/172/"
-			assert_equal ("code_172", 172, a_string.item (1).code)
+			assert_integers_equal ("code_172", 172, a_string.item (1).code)
 		end
 
 	test_manifest_string_173 is
@@ -2514,7 +2514,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/173/"
-			assert_equal ("code_173", 173, a_string.item (1).code)
+			assert_integers_equal ("code_173", 173, a_string.item (1).code)
 		end
 
 	test_manifest_string_174 is
@@ -2523,7 +2523,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/174/"
-			assert_equal ("code_174", 174, a_string.item (1).code)
+			assert_integers_equal ("code_174", 174, a_string.item (1).code)
 		end
 
 	test_manifest_string_175 is
@@ -2532,7 +2532,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/175/"
-			assert_equal ("code_175", 175, a_string.item (1).code)
+			assert_integers_equal ("code_175", 175, a_string.item (1).code)
 		end
 
 	test_manifest_string_176 is
@@ -2541,7 +2541,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/176/"
-			assert_equal ("code_176", 176, a_string.item (1).code)
+			assert_integers_equal ("code_176", 176, a_string.item (1).code)
 		end
 
 	test_manifest_string_177 is
@@ -2550,7 +2550,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/177/"
-			assert_equal ("code_177", 177, a_string.item (1).code)
+			assert_integers_equal ("code_177", 177, a_string.item (1).code)
 		end
 
 	test_manifest_string_178 is
@@ -2559,7 +2559,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/178/"
-			assert_equal ("code_178", 178, a_string.item (1).code)
+			assert_integers_equal ("code_178", 178, a_string.item (1).code)
 		end
 
 	test_manifest_string_179 is
@@ -2568,7 +2568,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/179/"
-			assert_equal ("code_179", 179, a_string.item (1).code)
+			assert_integers_equal ("code_179", 179, a_string.item (1).code)
 		end
 
 	test_manifest_string_180 is
@@ -2577,7 +2577,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/180/"
-			assert_equal ("code_180", 180, a_string.item (1).code)
+			assert_integers_equal ("code_180", 180, a_string.item (1).code)
 		end
 
 	test_manifest_string_181 is
@@ -2586,7 +2586,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/181/"
-			assert_equal ("code_181", 181, a_string.item (1).code)
+			assert_integers_equal ("code_181", 181, a_string.item (1).code)
 		end
 
 	test_manifest_string_182 is
@@ -2595,7 +2595,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/182/"
-			assert_equal ("code_182", 182, a_string.item (1).code)
+			assert_integers_equal ("code_182", 182, a_string.item (1).code)
 		end
 
 	test_manifest_string_183 is
@@ -2604,7 +2604,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/183/"
-			assert_equal ("code_183", 183, a_string.item (1).code)
+			assert_integers_equal ("code_183", 183, a_string.item (1).code)
 		end
 
 	test_manifest_string_184 is
@@ -2613,7 +2613,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/184/"
-			assert_equal ("code_184", 184, a_string.item (1).code)
+			assert_integers_equal ("code_184", 184, a_string.item (1).code)
 		end
 
 	test_manifest_string_185 is
@@ -2622,7 +2622,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/185/"
-			assert_equal ("code_185", 185, a_string.item (1).code)
+			assert_integers_equal ("code_185", 185, a_string.item (1).code)
 		end
 
 	test_manifest_string_186 is
@@ -2631,7 +2631,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/186/"
-			assert_equal ("code_186", 186, a_string.item (1).code)
+			assert_integers_equal ("code_186", 186, a_string.item (1).code)
 		end
 
 	test_manifest_string_187 is
@@ -2640,7 +2640,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/187/"
-			assert_equal ("code_187", 187, a_string.item (1).code)
+			assert_integers_equal ("code_187", 187, a_string.item (1).code)
 		end
 
 	test_manifest_string_188 is
@@ -2649,7 +2649,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/188/"
-			assert_equal ("code_188", 188, a_string.item (1).code)
+			assert_integers_equal ("code_188", 188, a_string.item (1).code)
 		end
 
 	test_manifest_string_189 is
@@ -2658,7 +2658,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/189/"
-			assert_equal ("code_189", 189, a_string.item (1).code)
+			assert_integers_equal ("code_189", 189, a_string.item (1).code)
 		end
 
 	test_manifest_string_190 is
@@ -2667,7 +2667,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/190/"
-			assert_equal ("code_190", 190, a_string.item (1).code)
+			assert_integers_equal ("code_190", 190, a_string.item (1).code)
 		end
 
 	test_manifest_string_191 is
@@ -2676,7 +2676,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/191/"
-			assert_equal ("code_191", 191, a_string.item (1).code)
+			assert_integers_equal ("code_191", 191, a_string.item (1).code)
 		end
 
 	test_manifest_string_192 is
@@ -2685,7 +2685,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/192/"
-			assert_equal ("code_192", 192, a_string.item (1).code)
+			assert_integers_equal ("code_192", 192, a_string.item (1).code)
 		end
 
 	test_manifest_string_193 is
@@ -2694,7 +2694,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/193/"
-			assert_equal ("code_193", 193, a_string.item (1).code)
+			assert_integers_equal ("code_193", 193, a_string.item (1).code)
 		end
 
 	test_manifest_string_194 is
@@ -2703,7 +2703,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/194/"
-			assert_equal ("code_194", 194, a_string.item (1).code)
+			assert_integers_equal ("code_194", 194, a_string.item (1).code)
 		end
 
 	test_manifest_string_195 is
@@ -2712,7 +2712,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/195/"
-			assert_equal ("code_195", 195, a_string.item (1).code)
+			assert_integers_equal ("code_195", 195, a_string.item (1).code)
 		end
 
 	test_manifest_string_196 is
@@ -2721,7 +2721,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/196/"
-			assert_equal ("code_196", 196, a_string.item (1).code)
+			assert_integers_equal ("code_196", 196, a_string.item (1).code)
 		end
 
 	test_manifest_string_197 is
@@ -2730,7 +2730,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/197/"
-			assert_equal ("code_197", 197, a_string.item (1).code)
+			assert_integers_equal ("code_197", 197, a_string.item (1).code)
 		end
 
 	test_manifest_string_198 is
@@ -2739,7 +2739,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/198/"
-			assert_equal ("code_198", 198, a_string.item (1).code)
+			assert_integers_equal ("code_198", 198, a_string.item (1).code)
 		end
 
 	test_manifest_string_199 is
@@ -2748,7 +2748,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/199/"
-			assert_equal ("code_199", 199, a_string.item (1).code)
+			assert_integers_equal ("code_199", 199, a_string.item (1).code)
 		end
 
 	test_manifest_string_200 is
@@ -2757,7 +2757,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/200/"
-			assert_equal ("code_200", 200, a_string.item (1).code)
+			assert_integers_equal ("code_200", 200, a_string.item (1).code)
 		end
 
 	test_manifest_string_201 is
@@ -2766,7 +2766,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/201/"
-			assert_equal ("code_201", 201, a_string.item (1).code)
+			assert_integers_equal ("code_201", 201, a_string.item (1).code)
 		end
 
 	test_manifest_string_202 is
@@ -2775,7 +2775,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/202/"
-			assert_equal ("code_202", 202, a_string.item (1).code)
+			assert_integers_equal ("code_202", 202, a_string.item (1).code)
 		end
 
 	test_manifest_string_203 is
@@ -2784,7 +2784,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/203/"
-			assert_equal ("code_203", 203, a_string.item (1).code)
+			assert_integers_equal ("code_203", 203, a_string.item (1).code)
 		end
 
 	test_manifest_string_204 is
@@ -2793,7 +2793,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/204/"
-			assert_equal ("code_204", 204, a_string.item (1).code)
+			assert_integers_equal ("code_204", 204, a_string.item (1).code)
 		end
 
 	test_manifest_string_205 is
@@ -2802,7 +2802,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/205/"
-			assert_equal ("code_205", 205, a_string.item (1).code)
+			assert_integers_equal ("code_205", 205, a_string.item (1).code)
 		end
 
 	test_manifest_string_206 is
@@ -2811,7 +2811,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/206/"
-			assert_equal ("code_206", 206, a_string.item (1).code)
+			assert_integers_equal ("code_206", 206, a_string.item (1).code)
 		end
 
 	test_manifest_string_207 is
@@ -2820,7 +2820,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/207/"
-			assert_equal ("code_207", 207, a_string.item (1).code)
+			assert_integers_equal ("code_207", 207, a_string.item (1).code)
 		end
 
 	test_manifest_string_208 is
@@ -2829,7 +2829,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/208/"
-			assert_equal ("code_208", 208, a_string.item (1).code)
+			assert_integers_equal ("code_208", 208, a_string.item (1).code)
 		end
 
 	test_manifest_string_209 is
@@ -2838,7 +2838,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/209/"
-			assert_equal ("code_209", 209, a_string.item (1).code)
+			assert_integers_equal ("code_209", 209, a_string.item (1).code)
 		end
 
 	test_manifest_string_210 is
@@ -2847,7 +2847,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/210/"
-			assert_equal ("code_210", 210, a_string.item (1).code)
+			assert_integers_equal ("code_210", 210, a_string.item (1).code)
 		end
 
 	test_manifest_string_211 is
@@ -2856,7 +2856,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/211/"
-			assert_equal ("code_211", 211, a_string.item (1).code)
+			assert_integers_equal ("code_211", 211, a_string.item (1).code)
 		end
 
 	test_manifest_string_212 is
@@ -2865,7 +2865,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/212/"
-			assert_equal ("code_212", 212, a_string.item (1).code)
+			assert_integers_equal ("code_212", 212, a_string.item (1).code)
 		end
 
 	test_manifest_string_213 is
@@ -2874,7 +2874,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/213/"
-			assert_equal ("code_213", 213, a_string.item (1).code)
+			assert_integers_equal ("code_213", 213, a_string.item (1).code)
 		end
 
 	test_manifest_string_214 is
@@ -2883,7 +2883,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/214/"
-			assert_equal ("code_214", 214, a_string.item (1).code)
+			assert_integers_equal ("code_214", 214, a_string.item (1).code)
 		end
 
 	test_manifest_string_215 is
@@ -2892,7 +2892,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/215/"
-			assert_equal ("code_215", 215, a_string.item (1).code)
+			assert_integers_equal ("code_215", 215, a_string.item (1).code)
 		end
 
 	test_manifest_string_216 is
@@ -2901,7 +2901,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/216/"
-			assert_equal ("code_216", 216, a_string.item (1).code)
+			assert_integers_equal ("code_216", 216, a_string.item (1).code)
 		end
 
 	test_manifest_string_217 is
@@ -2910,7 +2910,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/217/"
-			assert_equal ("code_217", 217, a_string.item (1).code)
+			assert_integers_equal ("code_217", 217, a_string.item (1).code)
 		end
 
 	test_manifest_string_218 is
@@ -2919,7 +2919,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/218/"
-			assert_equal ("code_218", 218, a_string.item (1).code)
+			assert_integers_equal ("code_218", 218, a_string.item (1).code)
 		end
 
 	test_manifest_string_219 is
@@ -2928,7 +2928,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/219/"
-			assert_equal ("code_219", 219, a_string.item (1).code)
+			assert_integers_equal ("code_219", 219, a_string.item (1).code)
 		end
 
 	test_manifest_string_220 is
@@ -2937,7 +2937,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/220/"
-			assert_equal ("code_220", 220, a_string.item (1).code)
+			assert_integers_equal ("code_220", 220, a_string.item (1).code)
 		end
 
 	test_manifest_string_221 is
@@ -2946,7 +2946,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/221/"
-			assert_equal ("code_221", 221, a_string.item (1).code)
+			assert_integers_equal ("code_221", 221, a_string.item (1).code)
 		end
 
 	test_manifest_string_222 is
@@ -2955,7 +2955,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/222/"
-			assert_equal ("code_222", 222, a_string.item (1).code)
+			assert_integers_equal ("code_222", 222, a_string.item (1).code)
 		end
 
 	test_manifest_string_223 is
@@ -2964,7 +2964,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/223/"
-			assert_equal ("code_223", 223, a_string.item (1).code)
+			assert_integers_equal ("code_223", 223, a_string.item (1).code)
 		end
 
 	test_manifest_string_224 is
@@ -2973,7 +2973,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/224/"
-			assert_equal ("code_224", 224, a_string.item (1).code)
+			assert_integers_equal ("code_224", 224, a_string.item (1).code)
 		end
 
 	test_manifest_string_225 is
@@ -2982,7 +2982,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/225/"
-			assert_equal ("code_225", 225, a_string.item (1).code)
+			assert_integers_equal ("code_225", 225, a_string.item (1).code)
 		end
 
 	test_manifest_string_226 is
@@ -2991,7 +2991,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/226/"
-			assert_equal ("code_226", 226, a_string.item (1).code)
+			assert_integers_equal ("code_226", 226, a_string.item (1).code)
 		end
 
 	test_manifest_string_227 is
@@ -3000,7 +3000,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/227/"
-			assert_equal ("code_227", 227, a_string.item (1).code)
+			assert_integers_equal ("code_227", 227, a_string.item (1).code)
 		end
 
 	test_manifest_string_228 is
@@ -3009,7 +3009,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/228/"
-			assert_equal ("code_228", 228, a_string.item (1).code)
+			assert_integers_equal ("code_228", 228, a_string.item (1).code)
 		end
 
 	test_manifest_string_229 is
@@ -3018,7 +3018,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/229/"
-			assert_equal ("code_229", 229, a_string.item (1).code)
+			assert_integers_equal ("code_229", 229, a_string.item (1).code)
 		end
 
 	test_manifest_string_230 is
@@ -3027,7 +3027,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/230/"
-			assert_equal ("code_230", 230, a_string.item (1).code)
+			assert_integers_equal ("code_230", 230, a_string.item (1).code)
 		end
 
 	test_manifest_string_231 is
@@ -3036,7 +3036,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/231/"
-			assert_equal ("code_231", 231, a_string.item (1).code)
+			assert_integers_equal ("code_231", 231, a_string.item (1).code)
 		end
 
 	test_manifest_string_232 is
@@ -3045,7 +3045,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/232/"
-			assert_equal ("code_232", 232, a_string.item (1).code)
+			assert_integers_equal ("code_232", 232, a_string.item (1).code)
 		end
 
 	test_manifest_string_233 is
@@ -3054,7 +3054,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/233/"
-			assert_equal ("code_233", 233, a_string.item (1).code)
+			assert_integers_equal ("code_233", 233, a_string.item (1).code)
 		end
 
 	test_manifest_string_234 is
@@ -3063,7 +3063,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/234/"
-			assert_equal ("code_234", 234, a_string.item (1).code)
+			assert_integers_equal ("code_234", 234, a_string.item (1).code)
 		end
 
 	test_manifest_string_235 is
@@ -3072,7 +3072,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/235/"
-			assert_equal ("code_235", 235, a_string.item (1).code)
+			assert_integers_equal ("code_235", 235, a_string.item (1).code)
 		end
 
 	test_manifest_string_236 is
@@ -3081,7 +3081,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/236/"
-			assert_equal ("code_236", 236, a_string.item (1).code)
+			assert_integers_equal ("code_236", 236, a_string.item (1).code)
 		end
 
 	test_manifest_string_237 is
@@ -3090,7 +3090,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/237/"
-			assert_equal ("code_237", 237, a_string.item (1).code)
+			assert_integers_equal ("code_237", 237, a_string.item (1).code)
 		end
 
 	test_manifest_string_238 is
@@ -3099,7 +3099,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/238/"
-			assert_equal ("code_238", 238, a_string.item (1).code)
+			assert_integers_equal ("code_238", 238, a_string.item (1).code)
 		end
 
 	test_manifest_string_239 is
@@ -3108,7 +3108,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/239/"
-			assert_equal ("code_239", 239, a_string.item (1).code)
+			assert_integers_equal ("code_239", 239, a_string.item (1).code)
 		end
 
 	test_manifest_string_240 is
@@ -3117,7 +3117,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/240/"
-			assert_equal ("code_240", 240, a_string.item (1).code)
+			assert_integers_equal ("code_240", 240, a_string.item (1).code)
 		end
 
 	test_manifest_string_241 is
@@ -3126,7 +3126,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/241/"
-			assert_equal ("code_241", 241, a_string.item (1).code)
+			assert_integers_equal ("code_241", 241, a_string.item (1).code)
 		end
 
 	test_manifest_string_242 is
@@ -3135,7 +3135,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/242/"
-			assert_equal ("code_242", 242, a_string.item (1).code)
+			assert_integers_equal ("code_242", 242, a_string.item (1).code)
 		end
 
 	test_manifest_string_243 is
@@ -3144,7 +3144,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/243/"
-			assert_equal ("code_243", 243, a_string.item (1).code)
+			assert_integers_equal ("code_243", 243, a_string.item (1).code)
 		end
 
 	test_manifest_string_244 is
@@ -3153,7 +3153,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/244/"
-			assert_equal ("code_244", 244, a_string.item (1).code)
+			assert_integers_equal ("code_244", 244, a_string.item (1).code)
 		end
 
 	test_manifest_string_245 is
@@ -3162,7 +3162,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/245/"
-			assert_equal ("code_245", 245, a_string.item (1).code)
+			assert_integers_equal ("code_245", 245, a_string.item (1).code)
 		end
 
 	test_manifest_string_246 is
@@ -3171,7 +3171,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/246/"
-			assert_equal ("code_246", 246, a_string.item (1).code)
+			assert_integers_equal ("code_246", 246, a_string.item (1).code)
 		end
 
 	test_manifest_string_247 is
@@ -3180,7 +3180,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/247/"
-			assert_equal ("code_247", 247, a_string.item (1).code)
+			assert_integers_equal ("code_247", 247, a_string.item (1).code)
 		end
 
 	test_manifest_string_248 is
@@ -3189,7 +3189,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/248/"
-			assert_equal ("code_248", 248, a_string.item (1).code)
+			assert_integers_equal ("code_248", 248, a_string.item (1).code)
 		end
 
 	test_manifest_string_249 is
@@ -3198,7 +3198,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/249/"
-			assert_equal ("code_249", 249, a_string.item (1).code)
+			assert_integers_equal ("code_249", 249, a_string.item (1).code)
 		end
 
 	test_manifest_string_250 is
@@ -3207,7 +3207,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/250/"
-			assert_equal ("code_250", 250, a_string.item (1).code)
+			assert_integers_equal ("code_250", 250, a_string.item (1).code)
 		end
 
 	test_manifest_string_251 is
@@ -3216,7 +3216,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/251/"
-			assert_equal ("code_251", 251, a_string.item (1).code)
+			assert_integers_equal ("code_251", 251, a_string.item (1).code)
 		end
 
 	test_manifest_string_252 is
@@ -3225,7 +3225,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/252/"
-			assert_equal ("code_252", 252, a_string.item (1).code)
+			assert_integers_equal ("code_252", 252, a_string.item (1).code)
 		end
 
 	test_manifest_string_253 is
@@ -3234,7 +3234,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/253/"
-			assert_equal ("code_253", 253, a_string.item (1).code)
+			assert_integers_equal ("code_253", 253, a_string.item (1).code)
 		end
 
 	test_manifest_string_254 is
@@ -3243,7 +3243,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/254/"
-			assert_equal ("code_254", 254, a_string.item (1).code)
+			assert_integers_equal ("code_254", 254, a_string.item (1).code)
 		end
 
 	test_manifest_string_255 is
@@ -3252,7 +3252,7 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "%/255/"
-			assert_equal ("code_255", 255, a_string.item (1).code)
+			assert_integers_equal ("code_255", 255, a_string.item (1).code)
 		end
 
 end

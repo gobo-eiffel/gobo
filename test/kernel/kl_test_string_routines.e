@@ -29,11 +29,11 @@ feature -- Test
 			a_string := STRING_.make (3)
 			assert ("not_void1", a_string /= Void) 
 			assert ("string_type1", a_string.same_type ("")) 
-			assert_equal ("is_empty1", 0, a_string.count) 
+			assert_integers_equal ("is_empty1", 0, a_string.count) 
 			a_string := STRING_.make (0)
 			assert ("not_void2", a_string /= Void) 
 			assert ("string_type2", a_string.same_type ("")) 
-			assert_equal ("is_empty2", 0, a_string.count) 
+			assert_integers_equal ("is_empty2", 0, a_string.count) 
 		end
 
 	test_make_from_string is
@@ -72,7 +72,7 @@ feature -- Test
 			a_string := STRING_.make_empty
 			assert ("not_void", a_string /= Void) 
 			assert ("string_type", a_string.same_type ("")) 
-			assert_equal ("is_empty", 0, a_string.count) 
+			assert_integers_equal ("is_empty", 0, a_string.count) 
 		end
 
 	test_make_filled is
@@ -98,11 +98,11 @@ feature -- Test
 			a_string := STRING_.make_buffer (4)
 			assert ("not_void1", a_string /= Void) 
 			assert ("string_type1", a_string.same_type ("")) 
-			assert_equal ("count1", 4,  a_string.count) 
+			assert_integers_equal ("count1", 4,  a_string.count) 
 			a_string := STRING_.make_buffer (0)
 			assert ("not_void2", a_string /= Void) 
 			assert ("string_type2", a_string.same_type ("")) 
-			assert_equal ("count2", 0,  a_string.count) 
+			assert_integers_equal ("count2", 0,  a_string.count) 
 		end
 
 	test_has_substring is
@@ -227,21 +227,21 @@ feature -- Test
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
 			a_string1 := clone ("foobar")
-			assert_equal ("index1", 4, STRING_.substring_index (a_string1, "bar", 1))
-			assert_equal ("index2", 0, STRING_.substring_index (a_string1, "bar", 5))
-			assert_equal ("index3", 0, STRING_.substring_index (a_string1, "bar", 7))
+			assert_integers_equal ("index1", 4, STRING_.substring_index (a_string1, "bar", 1))
+			assert_integers_equal ("index2", 0, STRING_.substring_index (a_string1, "bar", 5))
+			assert_integers_equal ("index3", 0, STRING_.substring_index (a_string1, "bar", 7))
 			create uc_string1.make_from_string ("oba")
-			assert_equal ("index4", 3, STRING_.substring_index (a_string1, uc_string1, 2))
+			assert_integers_equal ("index4", 3, STRING_.substring_index (a_string1, uc_string1, 2))
 			uc_string1.put_code (2345, 2)
-			assert_equal ("index5", 0, STRING_.substring_index (a_string1, uc_string1, 1))
+			assert_integers_equal ("index5", 0, STRING_.substring_index (a_string1, uc_string1, 1))
 			create uc_string1.make_from_string ("foobar")
 			uc_string1.put_code (432, 1)
-			assert_equal ("index6", 2, STRING_.substring_index (uc_string1, "oob", 1))
-			assert_equal ("index7", 0, STRING_.substring_index (uc_string1, "gobo", 2))
+			assert_integers_equal ("index6", 2, STRING_.substring_index (uc_string1, "oob", 1))
+			assert_integers_equal ("index7", 0, STRING_.substring_index (uc_string1, "gobo", 2))
 			create uc_string2.make_from_string ("foo")
 			uc_string2.put_code (432, 1)
-			assert_equal ("index8", 1, STRING_.substring_index (uc_string1, uc_string2, 1))
-			assert_equal ("index9", 0, STRING_.substring_index (uc_string1, uc_string2, 7))
+			assert_integers_equal ("index8", 1, STRING_.substring_index (uc_string1, uc_string2, 1))
+			assert_integers_equal ("index9", 0, STRING_.substring_index (uc_string1, uc_string2, 7))
 		end
 
 	test_case_insensitive_hash_code is
@@ -841,11 +841,11 @@ feature -- Test
 		do
 			a_string := clone ("foobar")
 			STRING_.wipe_out (a_string)
-			assert_equal ("wiped_out1", 0, a_string.count)
+			assert_integers_equal ("wiped_out1", 0, a_string.count)
 			create uc_string.make_from_string ("foobar")
 			uc_string.put_code (365, 3)
 			STRING_.wipe_out (uc_string)
-			assert_equal ("wiped_out2", 0, uc_string.count)
+			assert_integers_equal ("wiped_out2", 0, uc_string.count)
 		end
 
 	test_resize_buffer is
@@ -856,9 +856,9 @@ feature -- Test
 			a_string := STRING_.make_buffer (4)
 			assert ("not_void1", a_string /= Void) 
 			assert ("string_type1", a_string.same_type ("")) 
-			assert_equal ("count1", 4,  a_string.count) 
+			assert_integers_equal ("count1", 4,  a_string.count) 
 			STRING_.resize_buffer (a_string, 6)
-			assert_equal ("count2", 6,  a_string.count) 
+			assert_integers_equal ("count2", 6,  a_string.count) 
 		end
 
 	test_hexadecimal_to_integer is
@@ -868,9 +868,9 @@ feature -- Test
 			uc_string: UC_UTF8_STRING
 		do
 			a_string := clone ("1A")
-			assert_equal ("hexa1", 26,  STRING_.hexadecimal_to_integer (a_string))
+			assert_integers_equal ("hexa1", 26,  STRING_.hexadecimal_to_integer (a_string))
 			create uc_string.make_from_string ("B5")
-			assert_equal ("hexa2", 181,  STRING_.hexadecimal_to_integer (uc_string))
+			assert_integers_equal ("hexa2", 181,  STRING_.hexadecimal_to_integer (uc_string))
 		end
 
 	test_same_case_insensitive is

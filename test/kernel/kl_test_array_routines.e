@@ -55,19 +55,19 @@ feature -- Test
 			l_ai1 := <<1, 2, 3, 4, 5, 6>>
 			l_ai2 := l_ri.subarray (l_ai1, 3, 5, 7)
 			assert_iarrays_same ("same_items", <<3, 4, 5>>, l_ai2)
-			assert_equal ("lower_set", 7, l_ai2.lower)
-			assert_equal ("upper_set", 9, l_ai2.upper)
+			assert_integers_equal ("lower_set", 7, l_ai2.lower)
+			assert_integers_equal ("upper_set", 9, l_ai2.upper)
 				-- Empty subarray.
 			l_ai2 := l_ri.subarray (l_ai1, 6, 5, 9)
-			assert_equal ("same_items2", 0, l_ai2.count)
-			assert_equal ("lower_set2", 9, l_ai2.lower)
-			assert_equal ("upper_set2", 8, l_ai2.upper)
+			assert_integers_equal ("same_items2", 0, l_ai2.count)
+			assert_integers_equal ("lower_set2", 9, l_ai2.lower)
+			assert_integers_equal ("upper_set2", 8, l_ai2.upper)
 				-- Subarray of an empty array.
 			create l_ai1.make (4, 3)
 			l_ai2 := l_ri.subarray (l_ai1, 4, 3, 2)
-			assert_equal ("same_items3", 0, l_ai2.count)
-			assert_equal ("lower_set3", 2, l_ai2.lower)
-			assert_equal ("upper_set3", 1, l_ai2.upper)
+			assert_integers_equal ("same_items3", 0, l_ai2.count)
+			assert_integers_equal ("lower_set3", 2, l_ai2.lower)
+			assert_integers_equal ("upper_set3", 1, l_ai2.upper)
 		end
 
 	test_subcopy is

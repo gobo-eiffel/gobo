@@ -51,9 +51,9 @@ feature
 	test_surrogate is
 			-- Test feature `surrogate_from_bytes'
 		do
-			assert_equal ("surrogate 0x10000", utf16.surrogate_from_bytes (216, 0, 220, 0), 65536)
-			assert_equal ("surrogate 0x10001", utf16.surrogate_from_bytes (216, 0, 220, 1), 65537)
-			assert_equal ("surrogate 0x10ffff", utf16.surrogate_from_bytes (219, 255, 223, 255), 1114111)
+			assert_integers_equal ("surrogate 0x10000", utf16.surrogate_from_bytes (216, 0, 220, 0), 65536)
+			assert_integers_equal ("surrogate 0x10001", utf16.surrogate_from_bytes (216, 0, 220, 1), 65537)
+			assert_integers_equal ("surrogate 0x10ffff", utf16.surrogate_from_bytes (219, 255, 223, 255), 1114111)
 		end
 
 feature {NONE} -- Constants

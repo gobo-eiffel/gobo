@@ -26,7 +26,7 @@ feature -- Test
 		do
 			create a_buffer.make (5)
 			assert ("a_buffer_not_void", a_buffer /= Void)
-			assert_equal ("count_set", 5, a_buffer.count)
+			assert_integers_equal ("count_set", 5, a_buffer.count)
 		end
 
 	test_make_from_string is
@@ -36,7 +36,7 @@ feature -- Test
 		do
 			create a_buffer.make_from_string ("my buffer")
 			assert ("a_buffer_not_void", a_buffer /= Void)
-			assert_equal ("count_set", 9, a_buffer.count)
+			assert_integers_equal ("count_set", 9, a_buffer.count)
 			assert_equal ("characters_set", "my buffer", a_buffer.to_text)
 		end
 
@@ -60,10 +60,10 @@ feature -- Test
 			a_buffer: KL_CHARACTER_BUFFER
 		do
 			create a_buffer.make_from_string ("gobo")
-			assert_equal ("item1", 'g', a_buffer.item (1))
-			assert_equal ("item2", 'o', a_buffer.item (2))
-			assert_equal ("item3", 'b', a_buffer.item (3))
-			assert_equal ("item4", 'o', a_buffer.item (4))
+			assert_characters_equal ("item1", 'g', a_buffer.item (1))
+			assert_characters_equal ("item2", 'o', a_buffer.item (2))
+			assert_characters_equal ("item3", 'b', a_buffer.item (3))
+			assert_characters_equal ("item4", 'o', a_buffer.item (4))
 		end
 
 	test_substring is
@@ -142,11 +142,11 @@ feature -- Test
 				assert ("not_eof", not a_file.end_of_file)
 				nb := a_buffer.fill_from_stream (a_file, 1, 11)
 				assert ("not_eof2", not a_file.end_of_file)
-				assert_equal ("nb_char1", 11, nb)
+				assert_integers_equal ("nb_char1", 11, nb)
 				assert_equal ("read1", "This is the", a_buffer.to_text)
 				nb := a_buffer.fill_from_stream (a_file, 5, 3)
 				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("nb_char2", 3, nb)
+				assert_integers_equal ("nb_char2", 3, nb)
 				assert_equal ("read2", "This fi the", a_buffer.to_text)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
@@ -181,9 +181,9 @@ feature -- Test
 			a_buffer: KL_CHARACTER_BUFFER
 		do
 			create a_buffer.make_from_string ("gobo")
-			assert_equal ("count_set", 4, a_buffer.count)
+			assert_integers_equal ("count_set", 4, a_buffer.count)
 			a_buffer.resize (6)
-			assert_equal ("new_count", 6, a_buffer.count)
+			assert_integers_equal ("new_count", 6, a_buffer.count)
 			a_buffer.put ('#', 5)
 			a_buffer.put ('#', 6)
 			assert_equal ("resized", "gobo##", a_buffer.to_text)
