@@ -5,7 +5,7 @@ indexing
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,17 +66,40 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_CHARACTER_ROUTINES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 creation
 
-	make
+	make, make_with_hash_code
 
 feature {NONE} -- Initialization
 
 	make (a_name: like name) is
 			-- Create a new identifier.
 		do
-			hash_code := STRING_.case_insensitive_hash_code (a_name)
-			precursor (a_name)
+			make_with_hash_code (a_name, new_hash_code (a_name))
+		end
+
+	make_with_hash_code (a_name: like name; a_code: INTEGER) is
+			-- Create a new identifier with hash code `a_code'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_code_not_void: a_code >= 0
+		do
+			hash_code := a_code
+			name := a_name
+			make_leaf
+		ensure
+			name_set: name = a_name
+			line_set: line = no_line
+			column_set: column = no_column
+			hash_code_set: hash_code = a_code
 		end
 
 feature -- Access
@@ -133,8 +156,8 @@ feature -- Comparison
 			else
 				an_id ?= other
 				if an_id /= Void then
-					l_name := an_id.name
 					if hash_code = an_id.hash_code then
+						l_name := an_id.name
 						if l_name = name then
 							Result := True
 						else
@@ -157,8 +180,8 @@ feature -- Comparison
 			else
 				an_id ?= other
 				if an_id /= Void then
-					l_name := an_id.name
 					if hash_code = an_id.hash_code then
+						l_name := an_id.name
 						if l_name = name then
 							Result := True
 						else
@@ -198,6 +221,42 @@ feature -- Processing
 			-- Process current node.
 		do
 			a_processor.process_identifier (Current)
+		end
+
+feature {NONE} -- Implementation
+
+	new_hash_code (a_name: STRING): INTEGER is
+			-- Hash code value of `a_name' which doesn't
+			-- take case sensitivity into account
+		require
+			a_name_not_void: a_name /= Void
+		local
+			c: INTEGER
+			i, nb: INTEGER
+		do
+			nb := a_name.count
+			from i := 1 until i > nb loop
+				c := CHARACTER_.as_upper (a_name.item (i)).code - 48
+				inspect i \\ 5
+				when 0 then
+					Result := Result + c
+				when 1 then
+					Result := Result + c * 64 -- 2^6
+				when 2 then
+					Result := Result + c * 4096 -- 2^12
+				when 3 then
+					Result := Result + c * 262144 -- 2^18
+				when 4 then
+					Result := Result + c * 16777216 -- 2^24
+				else
+				end
+				i := i + 1
+			end
+			if Result < 0 then
+				Result := - (Result + 1)
+			end
+		ensure
+			new_hash_code_non_negatige: Result >= 0
 		end
 
 end

@@ -15,6 +15,10 @@ class ET_CLASS_NAME_LIST
 inherit
 
 	ET_AST_LIST [ET_CLASS_NAME_ITEM]
+		export
+			{ET_CLASS_NAME_LIST} storage
+		end
+		
 	ET_SHARED_CLASS_NAME_TESTER
 	ET_SHARED_TOKEN_CONSTANTS
 
@@ -42,7 +46,7 @@ feature -- Status report
 			-- class name "NONE" or is empty?
 		do
 			if count = 1 then
-				Result := class_name (1).same_class_name (tokens.none_class_name)
+				Result := storage.item (0).class_name.same_class_name (tokens.none_class_name)
 			elseif count = 0 then
 				Result := True
 			end
@@ -62,9 +66,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if class_name_tester.test (a_name, class_name (i)) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if class_name_tester.test (a_name, storage.item (i).class_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -111,9 +115,9 @@ feature -- Status report
 				else
 					a_class.process (a_processor)
 					if a_class.ancestors_built and then not a_class.has_ancestors_error then
-						nb := count
-						from i := 1 until i > nb loop
-							a_name := class_name (i)
+						nb := count - 1
+						from i := 0 until i > nb loop
+							a_name := storage.item (i).class_name
 							if a_universe.has_class (a_name) then
 								if a_class.has_ancestor (a_universe.eiffel_class (a_name), a_universe) then
 									Result := True
@@ -138,14 +142,15 @@ feature -- Comparison
 			other_not_void: other /= Void
 		local
 			i, nb: INTEGER
+			other_storage: like storage
 		do
 			if other = Current then
 				Result := True
 			else
 				Result := True
-				nb := count
-				from i := 1 until i > nb loop
-					if not other.has_class_name (class_name (i)) then
+				nb := count - 1
+				from i := 0 until i > nb loop
+					if not other.has_class_name (storage.item (i).class_name) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -153,9 +158,10 @@ feature -- Comparison
 					end
 				end
 				if Result then
-					nb := other.count
-					from i := 1 until i > nb loop
-						if not has_class_name (other.class_name (i)) then
+					other_storage := other.storage
+					nb := other.count - 1
+					from i := 0 until i > nb loop
+						if not has_class_name (other_storage.item (i).class_name) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -175,10 +181,12 @@ feature -- Element change
 			not_full: count + other.count <= capacity
 		local
 			i, nb: INTEGER
+			other_storage: like storage
 		do
-			nb := other.count
-			from i := 1 until i > nb loop
-				put_first (other.item (i))
+			other_storage := other.storage
+			nb := other.count - 1
+			from i := 0 until i > nb loop
+				put_first (other_storage.item (i))
 				i := i + 1
 			end
 		end

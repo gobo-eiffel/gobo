@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,8 @@ feature {NONE} -- Initialization
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			eiffel_class := Current
+			master_class := Current
+			time_stamp := no_time_stamp
 		ensure
 			name_set: name = a_name
 			id_set: id = an_id
@@ -72,6 +74,8 @@ feature {NONE} -- Initialization
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			eiffel_class := Current
+			master_class := Current
+			time_stamp := no_time_stamp
 		ensure
 			name_set: name = a_name
 			id_set: id = 0
@@ -89,9 +93,7 @@ feature -- Initialization
 			reset_ancestors_built
 			reset_parsed
 			reset_preparsed
-			has_deferred_features := False
 			in_system := False
-			overridden_class := Void
 		ensure
 			same_name: name = old name
 			same_id: id = old id
@@ -228,8 +230,13 @@ feature -- Preparsing
 			-- Time stamp of the file when it was last parsed
 
 	overridden_class: ET_CLASS
-			-- Class that has been overridden by current class
-			-- (when current class is in an override_cluster)
+			-- Class that has the same name as current class
+			-- (Name clash is resolved if current class is in an
+			-- override cluster and `overridden_class' is not.)
+
+	master_class: ET_CLASS
+			-- Class known by the universe with same name as current class
+			-- (This class is the current class when it is not overridden.)
 
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
@@ -262,9 +269,23 @@ feature -- Preparsing
 	set_overridden_class (a_class: like overridden_class) is
 			-- Set `overridden_class' to `a_class'.
 		do
+			if a_class /= Void then
+				a_class.set_master_class (master_class)
+			end
 			overridden_class := a_class
 		ensure
 			overridden_class_set: overridden_class = a_class
+			master_class_set: a_class /= Void implies a_class.master_class = master_class
+		end
+
+	set_master_class (a_class: like master_class) is
+			-- Set `master_class' to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			master_class := a_class
+		ensure
+			master_class_set: master_class = a_class
 		end
 
 feature -- Preparsing status
@@ -286,6 +307,14 @@ feature -- Preparsing status
 			if cluster /= Void then
 				Result := cluster.is_override
 			end
+		end
+
+	is_overridden: BOOLEAN is
+			-- Is current class overridden by another class?
+		do
+			Result := (master_class /= Current)
+		ensure
+			definition: Result = (master_class /= Current)
 		end
 
 	has_name_clash: BOOLEAN is
@@ -318,6 +347,7 @@ feature -- Preparsing status
 		do
 			filename := Void
 			cluster := Void
+			time_stamp := no_time_stamp
 		ensure
 			not_preparsed: not is_preparsed
 		end
@@ -910,6 +940,7 @@ feature -- Feature flattening status
 		do
 			has_flattening_error := False
 			features_flattened := False
+			has_deferred_features := False
 		ensure
 			features_not_flattened: not features_flattened
 			no_flattening_error: not has_flattening_error
@@ -1144,9 +1175,13 @@ feature {NONE} -- Constants
 			capacity_positive: Result > 0
 		end
 
+	no_time_stamp: INTEGER is -2
+			-- No time stamp marker
+
 invariant
 
 	id_positive: id >= 0
+	master_class_not_void: master_class /= Void
 	ancestors_not_void: ancestors /= Void
 	features_not_void: features /= Void
 	-- features_registered: forall f in features, f.is_registered

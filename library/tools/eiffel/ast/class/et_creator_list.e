@@ -36,9 +36,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if item (i).is_exported_to (a_name, a_client, a_processor) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).is_exported_to (a_name, a_client, a_processor) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -60,9 +60,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if item (i).is_directly_exported_to (a_name, a_client) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).is_directly_exported_to (a_name, a_client) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

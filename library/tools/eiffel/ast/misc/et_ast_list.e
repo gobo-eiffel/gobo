@@ -58,7 +58,7 @@ feature -- Access
 		require
 			not_empty: not is_empty
 		do
-			Result := item (1)
+			Result := storage.item (count - 1)
 		ensure
 			first_not_void: Result /= Void
 			definition: Result = item (1)
@@ -69,7 +69,7 @@ feature -- Access
 		require
 			not_empty: not is_empty
 		do
-			Result := item (count)
+			Result := storage.item (0)
 		ensure
 			last_not_void: Result /= Void
 			definition: Result = item (count)
@@ -104,9 +104,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if item (i) = an_item then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i) = an_item then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

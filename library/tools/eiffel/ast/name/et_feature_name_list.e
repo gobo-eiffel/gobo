@@ -40,9 +40,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if a_name.same_feature_name (feature_name (i)) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if a_name.same_feature_name (storage.item (i).feature_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

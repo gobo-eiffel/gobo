@@ -52,13 +52,15 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			elseif other.is_infix_freeop then
+			else
 				op ?= other
-				if op /= Void then
-					if op.free_operator_name = free_operator_name then
-						Result := True
-					else
-						Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
+				if op /= Void and then op.is_infix_freeop then
+					if hash_code = op.hash_code then
+						if op.free_operator_name = free_operator_name then
+							Result := True
+						else
+							Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
+						end
 					end
 				end
 			end

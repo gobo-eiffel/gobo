@@ -23,18 +23,6 @@ inherit
 			reset
 		end
 
-	ET_CLASS_PROCESSOR
-		rename
-			make as make_class_processor,
-			process_identifier as process_ast_identifier,
-			process_c1_character_constant as process_ast_c1_character_constant,
-			process_c2_character_constant as process_ast_c2_character_constant,
-			process_regular_manifest_string as process_ast_regular_manifest_string
-		redefine
-			process_class,
-			error_handler
-		end
-
 	ET_EIFFEL_TOKENS
 		export {NONE} all end
 
@@ -44,38 +32,36 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_PLATFORM
+	KL_SHARED_EIFFEL_COMPILER
 	ET_SHARED_TOKEN_CONSTANTS
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING; a_universe: like universe; an_error_handler: like error_handler) is
+	make (a_filename: STRING; an_error_handler: like error_handler) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_universe_not_void: a_universe /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_factory: ET_AST_FACTORY
 		do
 			create a_factory.make
-			make_with_factory (a_filename, a_universe, a_factory, an_error_handler)
+			make_with_factory (a_filename, a_factory, an_error_handler)
 		ensure
 			filename_set: filename = a_filename
-			universe_set: universe = a_universe
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_filename: STRING; a_universe: like universe;
+	make_with_factory (a_filename: STRING;
 		a_factory: like ast_factory; an_error_handler: like error_handler) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_universe_not_void: a_universe /= Void
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			make_with_buffer (Empty_buffer)
-			make_class_processor (a_universe)
+			build_basic_strings
 			last_text_count := 1
 			last_literal_start := 1
 			filename := a_filename
@@ -90,7 +76,6 @@ feature {NONE} -- Initialization
 			set_use_void_keyword (True)
 		ensure
 			filename_set: filename = a_filename
-			universe_set: universe = a_universe
 			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -124,18 +109,6 @@ feature -- Access
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
-
-feature -- Setting
-
-	set_universe (a_universe: like universe) is
-			-- Set `universe' to `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-		ensure
-			universe_set: universe = a_universe
-		end
 
 feature -- Status report
 
@@ -240,61 +213,6 @@ feature -- Error handling
 			has_syntax_error: a_class.has_syntax_error
 		end
 
-feature -- AST processing
-
-	process_class (a_class: ET_CLASS) is
-			-- Parse `a_class'.
-			-- The class may end up with a syntax error status its
-			-- `filename' didn't contain this class after all (i.e.
-			-- if the preparsing phase gave errouneous result).
-		local
-			a_filename: STRING
-			a_time_stamp: INTEGER
-			a_cluster: ET_CLUSTER
-			a_file: KL_TEXT_INPUT_FILE
-			an_overridden_class: ET_CLASS
-		do
-			if a_class = none_class then
-				a_class.set_parsed
-			elseif current_class /= unknown_class then
-					-- Internal error (recursive call)
-					-- This internal error is fatal.
-				set_fatal_error (a_class)
-				error_handler.report_giaae_error
-			elseif a_class /= unknown_class then
-				current_class := a_class
-				if not current_class.is_parsed then
-					if not current_class.is_preparsed then
-						universe.preparse
-					end
-					if current_class.is_preparsed then
-						a_filename := current_class.filename
-						a_cluster := current_class.cluster
-						an_overridden_class := current_class.overridden_class
-						current_class.reset_all
-						current_class.set_overridden_class (an_overridden_class)
-						a_file := tmp_file
-						a_file.reset (a_filename)
-						a_time_stamp := a_file.time_stamp
-						a_file.open_read
-						if a_file.is_open_read then
-							universe.parse_file (a_file, a_filename, a_time_stamp, a_cluster)
-							a_file.close
-						else
-							set_fatal_error (current_class)
-							error_handler.report_gcaab_error (a_cluster, a_filename)
-						end
-					end
-					if not current_class.is_parsed then
-						set_fatal_error (current_class)
-					end
-				end
-				current_class := unknown_class
-			end
-		ensure then
-			is_parsed: a_class.is_parsed
-		end
-
 feature -- Tokens
 
 	has_break: BOOLEAN is
@@ -330,6 +248,36 @@ feature -- Tokens
 			last_literal_not_void: Result /= Void
 		end
 
+	last_identifier: ET_IDENTIFIER is
+			-- Last identifier scanned
+		local
+			a_string: STRING
+			a_name: STRING
+			a_code: INTEGER
+		do
+			a_string := string_buffer
+			STRING_.wipe_out (a_string)
+			append_text_substring_to_string (last_literal_start, last_literal_end, a_string)
+			strings.search (a_string)
+			if strings.found then
+				a_name := strings.found_key
+				a_code := strings.found_item
+				if a_code >= 0 then
+					create Result.make_with_hash_code (a_name, a_code)
+				else
+					create Result.make (a_name)
+					strings.replace_found_item (Result.hash_code)
+				end
+			else
+				a_name := STRING_.make (a_string.count)
+				a_name.append_string (a_string)
+				create Result.make (a_name)
+				strings.force_new (Result.hash_code, a_name)
+			end
+		ensure
+			last_identifier_not_void: Result /= Void
+		end
+
 	last_break: STRING is
 			-- Last break scanned
 		require
@@ -363,11 +311,11 @@ feature -- Tokens
 			append_text_to_string (a_string)
 			strings.search (a_string)
 			if strings.found then
-				Result := strings.found_item
+				Result := strings.found_key
 			else
 				Result := STRING_.make (a_string.count)
 				Result.append_string (a_string)
-				strings.force_new (Result)
+				strings.force_new (-1, Result)
 			end
 		end
 
@@ -382,11 +330,11 @@ feature -- Tokens
 			append_text_substring_to_string (s, e, a_string)
 			strings.search (a_string)
 			if strings.found then
-				Result := strings.found_item
+				Result := strings.found_key
 			else
 				Result := STRING_.make (a_string.count)
 				Result.append_string (a_string)
-				strings.force_new (Result)
+				strings.force_new (-1, Result)
 			end
 		end
 
@@ -401,10 +349,11 @@ feature {NONE} -- Positions
 
 feature {NONE} -- String handler
 
-	strings: DS_HASH_SET [STRING] is
-			-- Strings known by the current scanner
+	strings: DS_HASH_TABLE [INTEGER, STRING] is
+			-- Strings known by the current scanner, and the associated
+			-- hash codes when they are used as identifier
 		once
-			create Result.make_equal (1000)
+			create Result.make_equal (100000)
 		ensure
 			strings_not_void: Result /= Void
 			no_void_string: not Result.has (Void)
@@ -416,6 +365,143 @@ feature {NONE} -- String handler
 			Result := STRING_.make (30)
 		ensure
 			string_buffer_not_void: Result /= Void
+		end
+
+	build_basic_strings is
+			-- Insert basic strings in `strings'.
+		local
+			a_strings: like strings
+		do
+			a_strings := strings
+			a_strings.force_new (-1, tokens.capitalized_any_name)
+			a_strings.force_new (-1, tokens.capitalized_array_name)
+			a_strings.force_new (-1, tokens.capitalized_bit_name)
+			a_strings.force_new (-1, tokens.capitalized_boolean_name)
+			a_strings.force_new (-1, tokens.capitalized_character_name)
+			a_strings.force_new (-1, tokens.capitalized_double_name)
+			a_strings.force_new (-1, tokens.capitalized_function_name)
+			a_strings.force_new (-1, tokens.capitalized_general_name)
+			a_strings.force_new (-1, tokens.capitalized_integer_name)
+			a_strings.force_new (-1, tokens.capitalized_integer_8_name)
+			a_strings.force_new (-1, tokens.capitalized_integer_16_name)
+			a_strings.force_new (-1, tokens.capitalized_integer_64_name)
+			a_strings.force_new (-1, tokens.capitalized_none_name)
+			a_strings.force_new (-1, tokens.capitalized_pointer_name)
+			a_strings.force_new (-1, tokens.capitalized_predicate_name)
+			a_strings.force_new (-1, tokens.capitalized_procedure_name)
+			a_strings.force_new (-1, tokens.capitalized_real_name)
+			a_strings.force_new (-1, tokens.capitalized_string_name)
+			a_strings.force_new (-1, tokens.capitalized_tuple_name)
+			a_strings.force_new (-1, tokens.capitalized_typed_pointer_name)
+			a_strings.force_new (-1, tokens.capitalized_wide_character_name)
+			a_strings.force_new (-1, tokens.capitalized_unknown_name)
+			a_strings.force_new (-1, tokens.default_create_name)
+			a_strings.force_new (-1, tokens.capitalized_current_keyword_name)
+			a_strings.force_new (-1, tokens.capitalized_false_keyword_name)
+			a_strings.force_new (-1, tokens.capitalized_precursor_keyword_name)
+			a_strings.force_new (-1, tokens.capitalized_result_keyword_name)
+			a_strings.force_new (-1, tokens.capitalized_true_keyword_name)
+			a_strings.force_new (-1, tokens.capitalized_void_keyword_name)
+			a_strings.force_new (-1, tokens.capitalized_unique_keyword_name)
+			a_strings.force_new (-1, tokens.agent_keyword_name)
+			a_strings.force_new (-1, tokens.alias_keyword_name)
+			a_strings.force_new (-1, tokens.all_keyword_name)
+			a_strings.force_new (-1, tokens.and_keyword_name)
+			a_strings.force_new (-1, tokens.as_keyword_name)
+			a_strings.force_new (-1, tokens.assign_keyword_name)
+			a_strings.force_new (-1, tokens.attribute_keyword_name)
+			a_strings.force_new (-1, tokens.cat_keyword_name)
+			a_strings.force_new (-1, tokens.check_keyword_name)
+			a_strings.force_new (-1, tokens.class_keyword_name)
+			a_strings.force_new (-1, tokens.convert_keyword_name)
+			a_strings.force_new (-1, tokens.create_keyword_name)
+			a_strings.force_new (-1, tokens.creation_keyword_name)
+			a_strings.force_new (-1, tokens.current_keyword_name)
+			a_strings.force_new (-1, tokens.debug_keyword_name)
+			a_strings.force_new (-1, tokens.deferred_keyword_name)
+			a_strings.force_new (-1, tokens.do_keyword_name)
+			a_strings.force_new (-1, tokens.else_keyword_name)
+			a_strings.force_new (-1, tokens.elseif_keyword_name)
+			a_strings.force_new (-1, tokens.end_keyword_name)
+			a_strings.force_new (-1, tokens.ensure_keyword_name)
+			a_strings.force_new (-1, tokens.expanded_keyword_name)
+			a_strings.force_new (-1, tokens.export_keyword_name)
+			a_strings.force_new (-1, tokens.external_keyword_name)
+			a_strings.force_new (-1, tokens.false_keyword_name)
+			a_strings.force_new (-1, tokens.feature_keyword_name)
+			a_strings.force_new (-1, tokens.from_keyword_name)
+			a_strings.force_new (-1, tokens.frozen_keyword_name)
+			a_strings.force_new (-1, tokens.if_keyword_name)
+			a_strings.force_new (-1, tokens.implies_keyword_name)
+			a_strings.force_new (-1, tokens.indexing_keyword_name)
+			a_strings.force_new (-1, tokens.infix_keyword_name)
+			a_strings.force_new (-1, tokens.inherit_keyword_name)
+			a_strings.force_new (-1, tokens.inspect_keyword_name)
+			a_strings.force_new (-1, tokens.invariant_keyword_name)
+			a_strings.force_new (-1, tokens.is_keyword_name)
+			a_strings.force_new (-1, tokens.like_keyword_name)
+			a_strings.force_new (-1, tokens.local_keyword_name)
+			a_strings.force_new (-1, tokens.loop_keyword_name)
+			a_strings.force_new (-1, tokens.not_keyword_name)
+			a_strings.force_new (-1, tokens.obsolete_keyword_name)
+			a_strings.force_new (-1, tokens.old_keyword_name)
+			a_strings.force_new (-1, tokens.once_keyword_name)
+			a_strings.force_new (-1, tokens.or_keyword_name)
+			a_strings.force_new (-1, tokens.precursor_keyword_name)
+			a_strings.force_new (-1, tokens.prefix_keyword_name)
+			a_strings.force_new (-1, tokens.redefine_keyword_name)
+			a_strings.force_new (-1, tokens.recast_keyword_name)
+			a_strings.force_new (-1, tokens.reference_keyword_name)
+			a_strings.force_new (-1, tokens.rename_keyword_name)
+			a_strings.force_new (-1, tokens.require_keyword_name)
+			a_strings.force_new (-1, tokens.rescue_keyword_name)
+			a_strings.force_new (-1, tokens.result_keyword_name)
+			a_strings.force_new (-1, tokens.retry_keyword_name)
+			a_strings.force_new (-1, tokens.select_keyword_name)
+			a_strings.force_new (-1, tokens.separate_keyword_name)
+			a_strings.force_new (-1, tokens.strip_keyword_name)
+			a_strings.force_new (-1, tokens.then_keyword_name)
+			a_strings.force_new (-1, tokens.true_keyword_name)
+			a_strings.force_new (-1, tokens.undefine_keyword_name)
+			a_strings.force_new (-1, tokens.unique_keyword_name)
+			a_strings.force_new (-1, tokens.until_keyword_name)
+			a_strings.force_new (-1, tokens.variant_keyword_name)
+			a_strings.force_new (-1, tokens.void_keyword_name)
+			a_strings.force_new (-1, tokens.when_keyword_name)
+			a_strings.force_new (-1, tokens.xor_keyword_name)
+			a_strings.force_new (-1, tokens.arrow_symbol_name)
+			a_strings.force_new (-1, tokens.assign_symbol_name)
+			a_strings.force_new (-1, tokens.assign_attempt_symbol_name)
+			a_strings.force_new (-1, tokens.bang_symbol_name)
+			a_strings.force_new (-1, tokens.colon_symbol_name)
+			a_strings.force_new (-1, tokens.comma_symbol_name)
+			a_strings.force_new (-1, tokens.div_symbol_name)
+			a_strings.force_new (-1, tokens.divide_symbol_name)
+			a_strings.force_new (-1, tokens.dollar_symbol_name)
+			a_strings.force_new (-1, tokens.dot_symbol_name)
+			a_strings.force_new (-1, tokens.dotdot_symbol_name)
+			a_strings.force_new (-1, tokens.equal_symbol_name)
+			a_strings.force_new (-1, tokens.ge_symbol_name)
+			a_strings.force_new (-1, tokens.gt_symbol_name)
+			a_strings.force_new (-1, tokens.le_symbol_name)
+			a_strings.force_new (-1, tokens.left_array_symbol_name)
+			a_strings.force_new (-1, tokens.left_brace_symbol_name)
+			a_strings.force_new (-1, tokens.left_bracket_symbol_name)
+			a_strings.force_new (-1, tokens.left_parenthesis_symbol_name)
+			a_strings.force_new (-1, tokens.lt_symbol_name)
+			a_strings.force_new (-1, tokens.minus_symbol_name)
+			a_strings.force_new (-1, tokens.mod_symbol_name)
+			a_strings.force_new (-1, tokens.not_equal_symbol_name)
+			a_strings.force_new (-1, tokens.plus_symbol_name)
+			a_strings.force_new (-1, tokens.power_symbol_name)
+			a_strings.force_new (-1, tokens.question_mark_symbol_name)
+			a_strings.force_new (-1, tokens.right_array_symbol_name)
+			a_strings.force_new (-1, tokens.right_brace_symbol_name)
+			a_strings.force_new (-1, tokens.right_bracket_symbol_name)
+			a_strings.force_new (-1, tokens.right_parenthesis_symbol_name)
+			a_strings.force_new (-1, tokens.semicolon_symbol_name)
+			a_strings.force_new (-1, tokens.tilde_symbol_name)
+			a_strings.force_new (-1, tokens.times_symbol_name)
 		end
 
 feature {NONE} -- Multi-line manifest strings
@@ -2825,7 +2911,6 @@ feature {NONE} -- Implementation
 invariant
 
 	filename_not_void: filename /= Void
-	universe_not_void: universe /= Void
 	ast_factory_not_void: ast_factory /= Void
 	error_handler_not_void: error_handler /= Void
 	last_text_count_positive: last_text_count >= 0

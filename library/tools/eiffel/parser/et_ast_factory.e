@@ -1005,7 +1005,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_identifier
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 

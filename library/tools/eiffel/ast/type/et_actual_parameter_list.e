@@ -17,6 +17,8 @@ inherit
 	ET_AST_NODE
 
 	ET_AST_LIST [ET_ACTUAL_PARAMETER_ITEM]
+		export
+			{ET_ACTUAL_PARAMETER_LIST} storage
 		redefine
 			make, make_with_capacity
 		end
@@ -86,13 +88,14 @@ feature -- Access
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
-			i, j: INTEGER
+			i, j, nb: INTEGER
 			a_parameter: ET_ACTUAL_PARAMETER
 			a_named_parameter: ET_ACTUAL_PARAMETER
 		do
 			Result := Current
-			from i := count until i < 1 loop
-				a_parameter := actual_parameter (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				a_parameter := storage.item (i).actual_parameter
 				a_named_parameter := a_parameter.named_parameter (a_context, a_universe)
 				if Result /= Current then
 					Result.put_first (a_named_parameter)
@@ -100,13 +103,13 @@ feature -- Access
 					create Result.make_with_capacity (count)
 					Result.set_left_bracket (left_bracket)
 					Result.set_right_bracket (right_bracket)
-					from j := count until j <= i loop
-						Result.put_first (actual_parameter (j))
-						j := j - 1
+					from j := 0 until j >= i loop
+						Result.put_first (storage.item (j).actual_parameter)
+						j := j + 1
 					end
 					Result.put_first (a_named_parameter)
 				end
-				i := i - 1
+				i := i + 1
 			end
 		ensure
 			named_types_not_void: Result /= Void
@@ -143,9 +146,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if type (i).has_anchored_type (a_context, a_universe) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.has_anchored_type (a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -165,9 +168,9 @@ feature -- Status report
 		local
 			j, nb: INTEGER
 		do
-			nb := count
-			from j := 1 until j > nb loop
-				if type (j).has_formal_type (i, a_context, a_universe) then
+			nb := count - 1
+			from j := 0 until j > nb loop
+				if storage.item (j).type.has_formal_type (i, a_context, a_universe) then
 					Result := True
 					j := nb + 1 -- Jump out of the loop.
 				else
@@ -187,9 +190,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if type (i).has_formal_types (a_context, a_universe) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.has_formal_types (a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -211,9 +214,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if type (i).has_qualified_type (a_context, a_universe) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.has_qualified_type (a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -235,9 +238,9 @@ feature -- Status report
 			i, nb: INTEGER
 			a_parameter: ET_ACTUAL_PARAMETER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_parameter := actual_parameter (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				a_parameter := storage.item (i).actual_parameter
 				if a_parameter.named_parameter_has_class (a_class, a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
@@ -267,6 +270,7 @@ feature -- Comparison
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
@@ -275,9 +279,10 @@ feature -- Comparison
 				Result := False
 			else
 				Result := True
-				nb := count
-				from i := 1 until i > nb loop
-					if not type (i).same_syntactical_type (other.type (i), other_context, a_context, a_universe) then
+				other_storage := other.storage
+				nb := count - 1
+				from i := 0 until i > nb loop
+					if not storage.item (i).type.same_syntactical_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -300,6 +305,7 @@ feature -- Comparison
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
@@ -308,9 +314,10 @@ feature -- Comparison
 				Result := False
 			else
 				Result := True
-				nb := count
-				from i := 1 until i > nb loop
-					if not type (i).same_named_type (other.type (i), other_context, a_context, a_universe) then
+				other_storage := other.storage
+				nb := count - 1
+				from i := 0 until i > nb loop
+					if not storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -340,6 +347,7 @@ feature -- Conformance
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
 			other_parameter: ET_ACTUAL_PARAMETER
 			other_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
 		do
@@ -347,11 +355,12 @@ feature -- Conformance
 			if not Result and then a_universe.searching_dog_types then
 				if non_cat_conforms_to_types (other, other_context, a_context, a_universe) then
 					Result := True
-					nb := count
-					from i := 1 until i > nb loop
-						other_parameter := other.actual_parameter (i)
+					other_storage := other.storage
+					nb := count - 1
+					from i := 0 until i > nb loop
+						other_parameter := other_storage.item (i).actual_parameter
 						if other_parameter.has_cat_parameter_mark then
-							if not actual_parameter (i).is_cat_parameter (a_context, a_universe) then
+							if not storage.item (i).actual_parameter.is_cat_parameter (a_context, a_universe) then
 								other_qualified_parameter ?= other_parameter
 								if other_qualified_parameter /= Void then
 									if other_qualified_parameter.cat_keyword /= Void then
@@ -359,13 +368,13 @@ feature -- Conformance
 										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
 									end
 								end
-								if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+								if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 									Result := False
 									i := nb + 1 -- Jump out of the loop.
 								else
 									i := i + 1
 								end
-							elseif not type (i).same_named_type (other.type (i), other_context, a_context, a_universe) then
+							elseif not storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 								other_qualified_parameter ?= other_parameter
 								if other_qualified_parameter /= Void then
 									if other_qualified_parameter.cat_keyword /= Void then
@@ -373,7 +382,7 @@ feature -- Conformance
 										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
 									end
 								end
-								if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+								if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 									Result := False
 									i := nb + 1 -- Jump out of the loop.
 								else
@@ -382,7 +391,7 @@ feature -- Conformance
 							else
 								i := i + 1
 							end
-						elseif not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+						elseif not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -411,6 +420,7 @@ feature -- Conformance
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
@@ -419,17 +429,18 @@ feature -- Conformance
 				Result := False
 			else
 				Result := True
-				nb := count
-				from i := 1 until i > nb loop
-					if other.actual_parameter (i).has_cat_parameter_mark then
-						Result := actual_parameter (i).is_cat_parameter (a_context, a_universe) and then
-							type (i).same_named_type (other.type (i), other_context, a_context, a_universe)
+				other_storage := other.storage
+				nb := count - 1
+				from i := 0 until i > nb loop
+					if other_storage.item (i).actual_parameter.has_cat_parameter_mark then
+						Result := storage.item (i).actual_parameter.is_cat_parameter (a_context, a_universe) and then
+							storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context, a_universe)
 						if Result then
 							i := i + 1
 						else
 							i := nb + 1 -- Jump out of the loop.
 						end
-					elseif not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+					elseif not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -457,6 +468,7 @@ feature -- Conformance
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
@@ -465,9 +477,10 @@ feature -- Conformance
 				Result := False
 			else
 				Result := True
-				nb := count
-				from i := 1 until i > nb loop
-					if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+				other_storage := other.storage
+				nb := count - 1
+				from i := 0 until i > nb loop
+					if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -641,17 +654,19 @@ feature -- Type processing
 			-- from their corresponding formal parameters because
 			-- of the generic derivation?
 		local
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 			a_formal: ET_FORMAL_PARAMETER_TYPE
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_formal ?= type (i)
-				if a_formal = Void or else a_formal.index /= i then
+			nb := count - 1
+			j := count
+			from i := 0 until i > nb loop
+				a_formal ?= storage.item (i).type
+				if a_formal = Void or else a_formal.index /= j then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1
+					j := j - 1
 				end
 			end
 		end
@@ -663,12 +678,13 @@ feature -- Type processing
 		require
 			a_parameters_not_void: a_parameters /= Void
 		local
-			i, j: INTEGER
+			i, j, nb: INTEGER
 			a_parameter, a_resolved_parameter: ET_ACTUAL_PARAMETER_ITEM
 		do
 			Result := Current
-			from i := count until i < 1 loop
-				a_parameter := item (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				a_parameter := storage.item (i)
 				a_resolved_parameter := a_parameter.resolved_formal_parameters (a_parameters)
 				if Result /= Current then
 					Result.put_first (a_resolved_parameter)
@@ -676,13 +692,13 @@ feature -- Type processing
 					create Result.make_with_capacity (count)
 					Result.set_left_bracket (left_bracket)
 					Result.set_right_bracket (right_bracket)
-					from j := count until j <= i loop
-						Result.put_first (item (j))
-						j := j - 1
+					from j := 0 until j >= i loop
+						Result.put_first (storage.item (j))
+						j := j + 1
 					end
 					Result.put_first (a_resolved_parameter)
 				end
-				i := i - 1
+				i := i + 1
 			end
 		ensure
 			resolved_parameters_not_void: Result /= Void

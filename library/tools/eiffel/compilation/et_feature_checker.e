@@ -389,6 +389,7 @@ feature -- Validity checking
 			a_formal_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_convert_class: ET_CLASS
 			an_expression_comma: ET_EXPRESSION_COMMA
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_type: ET_TYPE
@@ -470,14 +471,32 @@ feature -- Validity checking
 							end
 						end
 						if a_convert_feature /= Void then
-								-- Insert the conversion feature call in the AST.
-							a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
-							if a_convert_expression /= Void then
-								an_expression_comma ?= an_actual_list.item (i)
-								if an_expression_comma /= Void then
-									an_expression_comma.set_expression (a_convert_expression)
-								else
-									an_actual_list.put (a_convert_expression, i)
+							if a_convert_feature.is_convert_from then
+								a_convert_class := l_formal_context.base_class (universe)
+							elseif a_convert_feature.is_convert_to then
+								a_convert_class := actual_context.base_class (universe)
+							else
+								a_convert_class := Void
+							end
+							if a_convert_class /= Void then
+								a_convert_class.process (universe.feature_flattener)
+								if a_convert_class.has_flattening_error then
+										-- Error already reported by the feature flattener.
+									had_error := True
+									set_fatal_error
+									a_convert_feature := Void
+								end
+							end
+							if a_convert_feature /= Void then
+									-- Insert the conversion feature call in the AST.
+								a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+								if a_convert_expression /= Void then
+									an_expression_comma ?= an_actual_list.item (i)
+									if an_expression_comma /= Void then
+										an_expression_comma.set_expression (a_convert_expression)
+									else
+										an_actual_list.put (a_convert_expression, i)
+									end
 								end
 							end
 						else
@@ -1432,6 +1451,7 @@ feature {NONE} -- Instruction validity
 			a_target_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_convert_class: ET_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1462,16 +1482,33 @@ feature {NONE} -- Instruction validity
 						a_convert_feature := Void
 					end
 					if a_convert_feature /= Void then
-							-- Insert the conversion feature call in the AST.
-						a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
-						if a_convert_expression /= Void then
-							an_instruction.set_source (a_convert_expression)
--- TODO:
---							report_convert_expression
-							report_assignment (an_instruction)
+						if a_convert_feature.is_convert_from then
+							a_convert_class := a_target_context.base_class (universe)
+						elseif a_convert_feature.is_convert_to then
+							a_convert_class := a_source_context.base_class (universe)
 						else
-							set_fatal_error
+							a_convert_class := Void
+						end
+						if a_convert_class /= Void then
+							a_convert_class.process (universe.feature_flattener)
+							if a_convert_class.has_flattening_error then
+									-- Error already reported by the feature flattener.
+								set_fatal_error
+								a_convert_feature := Void
+							end
+						end
+						if a_convert_feature /= Void then
+								-- Insert the conversion feature call in the AST.
+							a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
+							if a_convert_expression /= Void then
+								an_instruction.set_source (a_convert_expression)
+-- TODO:
+--								report_convert_expression
+								report_assignment (an_instruction)
+							else
+								set_fatal_error
 -- TODO: error
+							end
 						end
 					else
 						set_fatal_error
@@ -3311,6 +3348,7 @@ feature {NONE} -- Expression validity
 			an_actual_type, a_formal_type: ET_NAMED_TYPE
 			a_like: ET_LIKE_FEATURE
 			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_class: ET_CLASS
 			a_convert_expression: ET_CONVERT_EXPRESSION
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
@@ -3449,11 +3487,29 @@ feature {NONE} -- Expression validity
 									a_convert_feature := Void
 								end
 								if a_convert_feature /= Void then
-										-- Insert the conversion feature call in the AST.
-									a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
-									if a_convert_expression /= Void then
-										an_expression.set_right (a_convert_expression)
-										an_actual := a_convert_expression
+									if a_convert_feature.is_convert_from then
+										a_convert_class := l_formal_context.base_class (universe)
+									elseif a_convert_feature.is_convert_to then
+										a_convert_class := l_actual_context.base_class (universe)
+									else
+										a_convert_class := Void
+									end
+									if a_convert_class /= Void then
+										a_convert_class.process (universe.feature_flattener)
+										if a_convert_class.has_flattening_error then
+												-- Error already reported by the feature flattener.
+											had_error := True
+											set_fatal_error
+											a_convert_feature := Void
+										end
+									end
+									if a_convert_feature /= Void then
+											-- Insert the conversion feature call in the AST.
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_expression.set_right (a_convert_expression)
+											an_actual := a_convert_expression
+										end
 									end
 								else
 									had_error := True
@@ -3474,8 +3530,26 @@ feature {NONE} -- Expression validity
 											if other_feature.is_exported_to (current_class, universe.ancestor_builder) then
 												a_convert_feature := type_checker.convert_feature (l_formal_context, l_actual_context)
 												if a_convert_feature /= Void then
-													a_convert_expression := universe.ast_factory.new_convert_expression (a_target, a_convert_feature)
-													a_cast_expression := universe.ast_factory.new_infix_cast_expression (a_convert_expression, l_actual_context.named_type (universe))
+													if a_convert_feature.is_convert_from then
+														a_convert_class := l_actual_context.base_class (universe)
+													elseif a_convert_feature.is_convert_to then
+														a_convert_class := l_formal_context.base_class (universe)
+													else
+														a_convert_class := Void
+													end
+													if a_convert_class /= Void then
+														a_convert_class.process (universe.feature_flattener)
+														if a_convert_class.has_flattening_error then
+																-- Error already reported by the feature flattener.
+															had_error := True
+															set_fatal_error
+															a_convert_feature := Void
+														end
+													end
+													if a_convert_feature /= Void then
+														a_convert_expression := universe.ast_factory.new_convert_expression (a_target, a_convert_feature)
+														a_cast_expression := universe.ast_factory.new_infix_cast_expression (a_convert_expression, l_actual_context.named_type (universe))
+													end
 												else
 														-- If it does not convert, it might conform!
 													l_actual_type := tokens.like_current
@@ -5689,6 +5763,7 @@ feature {NONE} -- Agent validity
 			a_formal_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_convert_class: ET_CLASS
 			an_argument_comma: ET_AGENT_ACTUAL_ARGUMENT_COMMA
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
@@ -5771,14 +5846,32 @@ feature {NONE} -- Agent validity
 									a_convert_feature := Void
 								end
 								if a_convert_feature /= Void then
-										-- Insert the conversion feature call in the AST.
-									a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
-									if a_convert_expression /= Void then
-										an_argument_comma ?= an_actuals.item (i)
-										if an_argument_comma /= Void then
-											an_argument_comma.set_agent_actual_argument (a_convert_expression)
-										else
-											an_actuals.put (a_convert_expression, i)
+									if a_convert_feature.is_convert_from then
+										a_convert_class := l_formal_context.base_class (universe)
+									elseif a_convert_feature.is_convert_to then
+										a_convert_class := l_actual_context.base_class (universe)
+									else
+										a_convert_class := Void
+									end
+									if a_convert_class /= Void then
+										a_convert_class.process (universe.feature_flattener)
+										if a_convert_class.has_flattening_error then
+												-- Error already reported by the feature flattener.
+											had_error := True
+											set_fatal_error
+											a_convert_feature := Void
+										end
+									end
+									if a_convert_feature /= Void then
+											-- Insert the conversion feature call in the AST.
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_argument_comma ?= an_actuals.item (i)
+											if an_argument_comma /= Void then
+												an_argument_comma.set_agent_actual_argument (a_convert_expression)
+											else
+												an_actuals.put (a_convert_expression, i)
+											end
 										end
 									end
 								else

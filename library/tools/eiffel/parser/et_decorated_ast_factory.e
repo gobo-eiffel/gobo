@@ -1215,7 +1215,7 @@ feature -- AST leaves
 	new_identifier (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_IDENTIFIER is
 			-- New identifier
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_identifier
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end

@@ -30,10 +30,29 @@ inherit
 			reset
 		end
 
+	ET_CLASS_PROCESSOR
+		rename
+			make as make_class_processor,
+			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
+			process_c2_character_constant as process_ast_c2_character_constant,
+			process_regular_manifest_string as process_ast_regular_manifest_string
+		undefine
+			error_handler
+		redefine
+			process_class
+		end
+
 	ET_SHARED_EIFFEL_BUFFER
 		export {NONE} all end
 
 	ET_SHARED_FEATURE_NAME_TESTER
+		export {NONE} all end
+
+	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
 feature {NONE} -- Initialization
@@ -67,7 +86,8 @@ feature {NONE} -- Initialization
 			create assertions.make (Initial_assertions_capacity)
 			create features.make (Initial_features_capacity)
 			create constraints.make (Initial_constraints_capacity)
-			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
+			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
+			make_class_processor (a_universe)
 			make_parser_skeleton
 		ensure
 			universe_set: universe = a_universe
@@ -107,6 +127,16 @@ feature -- Access
 
 feature -- Setting
 
+	set_universe (a_universe: like universe) is
+			-- Set `universe' to `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+		ensure
+			universe_set: universe = a_universe
+		end
+
 	set_ast_factory (a_factory: like ast_factory) is
 			-- Set `ast_factory' to `a_factory'.
 		require
@@ -129,7 +159,7 @@ feature -- Setting
 
 feature -- Parsing
 
-	parse (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
 			-- Parse all classes in `a_file' within cluster `a_cluster'.
 			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
 			-- its time stamp just before it was open.
@@ -154,6 +184,255 @@ feature -- Parsing
 			reset
 		rescue
 			reset
+		end
+
+	parse_cluster (a_cluster: ET_CLUSTER) is
+			-- Parse all classes in `a_cluster' (recursively).
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_INPUT_FILE
+			a_time_stamp: INTEGER
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			l_subclusters: ET_CLUSTERS
+		do
+			debug ("GELINT")
+				std.error.put_string ("Parse cluster '")
+				std.error.put_string (a_cluster.full_pathname)
+				std.error.put_line ("%'")
+			end
+			if not a_cluster.is_abstract then
+				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+				dir := tmp_directory
+				dir.reset (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if a_cluster.is_valid_eiffel_filename (s) then
+							a_filename := file_system.pathname (dir_name, s)
+							a_file := tmp_file
+							a_file.reset (a_filename)
+							if eiffel_compiler.is_se then
+									-- KL_FILE.time_stamp is too slow with SE.
+								a_time_stamp := -1
+							else
+								a_time_stamp := a_file.time_stamp
+							end
+							a_file.open_read
+							if a_file.is_open_read then
+								parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+								a_file.close
+							else
+								error_handler.report_gcaab_error (a_cluster, a_filename)
+							end
+						elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster.add_recursive_cluster (s)
+							end
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					error_handler.report_gcaaa_error (a_cluster, dir_name)
+				end
+			end
+			l_subclusters := a_cluster.subclusters
+			if l_subclusters /= Void then
+				parse_clusters (l_subclusters)
+			end
+		end
+
+	parse_clusters (a_clusters: ET_CLUSTERS) is
+			-- Parse all classes in `a_clusters' (recursively).
+		require
+			a_clusters_not_void: a_clusters /= Void
+		local
+			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
+			i, nb: INTEGER
+		do
+			l_clusters := a_clusters.clusters
+			nb := l_clusters.count
+			from i := 1 until i > nb loop
+				parse_cluster (l_clusters.item (i))
+				i := i + 1
+			end
+		end
+
+	reparse_cluster (a_cluster: ET_CLUSTER) is
+			-- Parse all classes in `a_cluster' (recursively) again.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_INPUT_FILE
+			a_time_stamp: INTEGER
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			l_subclusters: ET_CLUSTERS
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_class: ET_CLASS
+			i, nb: INTEGER
+		do
+			debug ("GELINT")
+				std.error.put_string ("Parse cluster '")
+				std.error.put_string (a_cluster.full_pathname)
+				std.error.put_line ("%'")
+			end
+			if not a_cluster.is_abstract then
+				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+				dir := tmp_directory
+				dir.reset (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if a_cluster.is_valid_eiffel_filename (s) then
+							a_filename := file_system.pathname (dir_name, s)
+							if l_classes = Void then
+								l_classes := universe.classes_by_cluster (a_cluster)
+							end
+							l_class := Void
+							nb := l_classes.count
+							from i := 1 until i > nb loop
+								l_class := l_classes.item (i)
+								if STRING_.same_string (l_class.filename, a_filename) then
+									i := nb + 1
+								else
+									l_class := Void
+									i := i + 1
+								end
+							end
+							if l_class = Void then
+									-- This file is either new or has been marked as modified.
+									-- We need to analyze it again.
+								a_file := tmp_file
+								a_file.reset (a_filename)
+								if eiffel_compiler.is_se then
+										-- KL_FILE.time_stamp is too slow with SE.
+									a_time_stamp := -1
+								else
+									a_time_stamp := a_file.time_stamp
+								end
+								a_file.open_read
+								if a_file.is_open_read then
+									parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+									a_file.close
+								else
+									error_handler.report_gcaab_error (a_cluster, a_filename)
+								end
+							end
+						elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster.add_recursive_cluster (s)
+							end
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					error_handler.report_gcaaa_error (a_cluster, dir_name)
+				end
+			end
+			l_subclusters := a_cluster.subclusters
+			if l_subclusters /= Void then
+				reparse_clusters (l_subclusters)
+			end
+		end
+
+	reparse_clusters (a_clusters: ET_CLUSTERS) is
+			-- Parse all classes in `a_clusters' (recursively) again.
+		require
+			a_clusters_not_void: a_clusters /= Void
+		local
+			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
+			l_cluster: ET_CLUSTER
+			dir_name: STRING
+			i, nb: INTEGER
+		do
+			l_clusters := a_clusters.clusters
+			nb := l_clusters.count
+			from i := 1 until i > nb loop
+				l_cluster := l_clusters.item (i)
+				if l_cluster.is_implicit then
+					dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
+					if not file_system.directory_exists (dir_name) then
+						l_clusters.remove (i)
+						nb := nb - 1
+					else
+						reparse_cluster (l_cluster)
+						i := i + 1
+					end
+				else
+					reparse_cluster (l_cluster)
+					i := i + 1
+				end
+			end
+		end
+
+feature -- AST processing
+
+	process_class (a_class: ET_CLASS) is
+			-- Parse `a_class'.
+			-- The class may end up with a syntax error status its
+			-- `filename' didn't contain this class after all (i.e.
+			-- if the preparsing phase gave errouneous result).
+		local
+			a_filename: STRING
+			a_time_stamp: INTEGER
+			a_cluster: ET_CLUSTER
+			a_file: KL_TEXT_INPUT_FILE
+			an_overridden_class: ET_CLASS
+		do
+			if a_class = none_class then
+				a_class.set_parsed
+			elseif current_class /= unknown_class then
+					-- Internal error (recursive call)
+					-- This internal error is fatal.
+				set_fatal_error (a_class)
+				error_handler.report_giaae_error
+			elseif a_class /= unknown_class then
+				current_class := a_class
+				if not current_class.is_parsed then
+					if not current_class.is_preparsed then
+						universe.preparse
+					end
+					if current_class.is_preparsed then
+						a_filename := current_class.filename
+						a_cluster := current_class.cluster
+						an_overridden_class := current_class.overridden_class
+						current_class.reset_all
+						current_class.set_overridden_class (an_overridden_class)
+						a_file := tmp_file
+						a_file.reset (a_filename)
+						if eiffel_compiler.is_se then
+								-- KL_FILE.time_stamp is too slow with SE.
+							a_time_stamp := -1
+						else
+							a_time_stamp := a_file.time_stamp
+						end
+						a_file.open_read
+						if a_file.is_open_read then
+							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+							a_file.close
+						else
+							set_fatal_error (current_class)
+							error_handler.report_gcaab_error (a_cluster, a_filename)
+						end
+					end
+					if not current_class.is_parsed then
+						set_fatal_error (current_class)
+					end
+				end
+				current_class := unknown_class
+			end
+		ensure then
+			is_parsed: a_class.is_parsed
 		end
 
 feature {NONE} -- Basic operations
@@ -1221,6 +1500,28 @@ feature {NONE} -- Constants
 			Result := universe.any_type
 		ensure
 			dummy_type_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	tmp_directory: KL_DIRECTORY is
+			-- Temporary directory object
+		do
+			Result := shared_directory
+			if not Result.is_closed then
+				create Result.make (dummy_name)
+			end
+		ensure
+			directory_not_void: Result /= Void
+			directory_closed: Result.is_closed
+		end
+
+	shared_directory: KL_DIRECTORY is
+			-- Shared directory object
+		once
+			create Result.make (dummy_name)
+		ensure
+			directory_not_void: Result /= Void
 		end
 
 invariant

@@ -21,7 +21,7 @@ feature -- Class names
 	any_class_name: ET_CLASS_NAME is
 			-- "ANY" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("ANY")
+			create {ET_IDENTIFIER} Result.make (capitalized_any_name)
 		ensure
 			any_class_name_not_void: Result /= Void
 		end
@@ -29,7 +29,7 @@ feature -- Class names
 	none_class_name: ET_CLASS_NAME is
 			-- "NONE" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("NONE")
+			create {ET_IDENTIFIER} Result.make (capitalized_none_name)
 		ensure
 			none_class_name_not_void: Result /= Void
 		end
@@ -37,7 +37,7 @@ feature -- Class names
 	general_class_name: ET_CLASS_NAME is
 			-- "GENERAL" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("GENERAL")
+			create {ET_IDENTIFIER} Result.make (capitalized_general_name)
 		ensure
 			general_class_name_not_void: Result /= Void
 		end
@@ -45,7 +45,7 @@ feature -- Class names
 	tuple_class_name: ET_CLASS_NAME is
 			-- "TUPLE" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("TUPLE")
+			create {ET_IDENTIFIER} Result.make (capitalized_tuple_name)
 		ensure
 			tuple_class_name_not_void: Result /= Void
 		end
@@ -53,7 +53,7 @@ feature -- Class names
 	bit_class_name: ET_CLASS_NAME is
 			-- "BIT" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("BIT")
+			create {ET_IDENTIFIER} Result.make (capitalized_bit_name)
 		ensure
 			bit_class_name_not_void: Result /= Void
 		end
@@ -61,7 +61,7 @@ feature -- Class names
 	string_class_name: ET_CLASS_NAME is
 			-- "STRING" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("STRING")
+			create {ET_IDENTIFIER} Result.make (capitalized_string_name)
 		ensure
 			string_class_name_not_void: Result /= Void
 		end
@@ -69,7 +69,7 @@ feature -- Class names
 	array_class_name: ET_CLASS_NAME is
 			-- "ARRAY" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("ARRAY")
+			create {ET_IDENTIFIER} Result.make (capitalized_array_name)
 		ensure
 			array_class_name_not_void: Result /= Void
 		end
@@ -77,7 +77,7 @@ feature -- Class names
 	boolean_class_name: ET_CLASS_NAME is
 			-- "BOOLEAN" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("BOOLEAN")
+			create {ET_IDENTIFIER} Result.make (capitalized_boolean_name)
 		ensure
 			boolean_class_name_not_void: Result /= Void
 		end
@@ -85,7 +85,7 @@ feature -- Class names
 	character_class_name: ET_CLASS_NAME is
 			-- "CHARACTER" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("CHARACTER")
+			create {ET_IDENTIFIER} Result.make (capitalized_character_name)
 		ensure
 			character_class_name_not_void: Result /= Void
 		end
@@ -93,7 +93,7 @@ feature -- Class names
 	wide_character_class_name: ET_CLASS_NAME is
 			-- "WIDE_CHARACTER" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("WIDE_CHARACTER")
+			create {ET_IDENTIFIER} Result.make (capitalized_wide_character_name)
 		ensure
 			wide_character_class_name_not_void: Result /= Void
 		end
@@ -101,7 +101,7 @@ feature -- Class names
 	integer_class_name: ET_CLASS_NAME is
 			-- "INTEGER" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("INTEGER")
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_name)
 		ensure
 			integer_class_name_not_void: Result /= Void
 		end
@@ -109,7 +109,7 @@ feature -- Class names
 	integer_8_class_name: ET_CLASS_NAME is
 			-- "INTEGER_8" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("INTEGER_8")
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_8_name)
 		ensure
 			integer_8_class_name_not_void: Result /= Void
 		end
@@ -117,7 +117,7 @@ feature -- Class names
 	integer_16_class_name: ET_CLASS_NAME is
 			-- "INTEGER_16" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("INTEGER_16")
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_16_name)
 		ensure
 			integer_16_class_name_not_void: Result /= Void
 		end
@@ -125,7 +125,7 @@ feature -- Class names
 	integer_64_class_name: ET_CLASS_NAME is
 			-- "INTEGER_64" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("INTEGER_64")
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_name)
 		ensure
 			integer_64_class_name_not_void: Result /= Void
 		end
@@ -133,7 +133,7 @@ feature -- Class names
 	real_class_name: ET_CLASS_NAME is
 			-- "REAL" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("REAL")
+			create {ET_IDENTIFIER} Result.make (capitalized_real_name)
 		ensure
 			real_class_name_not_void: Result /= Void
 		end
@@ -141,7 +141,7 @@ feature -- Class names
 	double_class_name: ET_CLASS_NAME is
 			-- "DOUBLE" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("DOUBLE")
+			create {ET_IDENTIFIER} Result.make (capitalized_double_name)
 		ensure
 			double_class_name_not_void: Result /= Void
 		end
@@ -149,7 +149,7 @@ feature -- Class names
 	pointer_class_name: ET_CLASS_NAME is
 			-- "POINTER" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("POINTER")
+			create {ET_IDENTIFIER} Result.make (capitalized_pointer_name)
 		ensure
 			pointer_class_name_not_void: Result /= Void
 		end
@@ -157,7 +157,7 @@ feature -- Class names
 	typed_pointer_class_name: ET_CLASS_NAME is
 			-- "TYPED_POINTER" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("TYPED_POINTER")
+			create {ET_IDENTIFIER} Result.make (capitalized_typed_pointer_name)
 		ensure
 			typed_pointer_class_name_not_void: Result /= Void
 		end
@@ -165,7 +165,7 @@ feature -- Class names
 	procedure_class_name: ET_CLASS_NAME is
 			-- "PROCEDURE" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("PROCEDURE")
+			create {ET_IDENTIFIER} Result.make (capitalized_procedure_name)
 		ensure
 			procedure_class_name_not_void: Result /= Void
 		end
@@ -173,7 +173,7 @@ feature -- Class names
 	predicate_class_name: ET_CLASS_NAME is
 			-- "PREDICATE" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("PREDICATE")
+			create {ET_IDENTIFIER} Result.make (capitalized_predicate_name)
 		ensure
 			predicate_class_name_not_void: Result /= Void
 		end
@@ -181,7 +181,7 @@ feature -- Class names
 	function_class_name: ET_CLASS_NAME is
 			-- "FUNCTION" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("FUNCTION")
+			create {ET_IDENTIFIER} Result.make (capitalized_function_name)
 		ensure
 			function_class_name_not_void: Result /= Void
 		end
@@ -189,7 +189,7 @@ feature -- Class names
 	unknown_class_name: ET_CLASS_NAME is
 			-- "*UNKNOWN*" class name
 		once
-			create {ET_IDENTIFIER} Result.make ("*UNKNOWN*")
+			create {ET_IDENTIFIER} Result.make (capitalized_unknown_name)
 		ensure
 			unknown_class_name_not_void: Result /= Void
 		end
@@ -199,7 +199,7 @@ feature -- Feature names
 	default_create_feature_name: ET_FEATURE_NAME is
 			-- 'default_create' feature name
 		once
-			create {ET_IDENTIFIER} Result.make ("default_create")
+			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
 		end
@@ -207,7 +207,7 @@ feature -- Feature names
 	void_feature_name: ET_FEATURE_NAME is
 			-- 'Void' feature name
 		once
-			create {ET_IDENTIFIER} Result.make ("Void")
+			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
 		end
@@ -215,7 +215,7 @@ feature -- Feature names
 	invariant_feature_name: ET_FEATURE_NAME is
 			-- Fictitious 'invariant' feature name
 		once
-			create {ET_IDENTIFIER} Result.make ("invariant")
+			create {ET_IDENTIFIER} Result.make (invariant_keyword_name)
 		ensure
 			invariant_feature_name_not_void: Result /= Void
 		end
@@ -461,7 +461,7 @@ feature -- Keywords
 	bit_keyword: ET_IDENTIFIER is
 			-- 'BIT' keyword
 		once
-			create Result.make (capitalized_bit_keyword_name)
+			create Result.make (capitalized_bit_name)
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -829,7 +829,7 @@ feature -- Keywords
 	tuple_keyword: ET_IDENTIFIER is
 			-- 'TUPLE' keyword
 		once
-			create Result.make (capitalized_tuple_keyword_name)
+			create Result.make (capitalized_tuple_name)
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -884,13 +884,38 @@ feature -- Keywords
 
 feature -- Keyword and symbol names
 
-	capitalized_bit_keyword_name: STRING is "BIT"
+	capitalized_any_name: STRING is "ANY"
+	capitalized_array_name: STRING is "ARRAY"
+	capitalized_bit_name: STRING is "BIT"
+	capitalized_boolean_name: STRING is "BOOLEAN"
+	capitalized_character_name: STRING is "CHARACTER"
+	capitalized_double_name: STRING is "DOUBLE"
+	capitalized_function_name: STRING is "FUNCTION"
+	capitalized_general_name: STRING is "GENERAL"
+	capitalized_integer_name: STRING is "INTEGER"
+	capitalized_integer_8_name: STRING is "INTEGER_8"
+	capitalized_integer_16_name: STRING is "INTEGER_16"
+	capitalized_integer_64_name: STRING is "INTEGER_64"
+	capitalized_none_name: STRING is "NONE"
+	capitalized_pointer_name: STRING is "POINTER"
+	capitalized_predicate_name: STRING is "PREDICATE"
+	capitalized_procedure_name: STRING is "PROCEDURE"
+	capitalized_real_name: STRING is "REAL"
+	capitalized_string_name: STRING is "STRING"
+	capitalized_tuple_name: STRING is "TUPLE"
+	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"
+	capitalized_wide_character_name: STRING is "WIDE_CHARACTER"
+	capitalized_unknown_name: STRING is "*UNKNOWN*"
+		-- Eiffel class names
+
+	default_create_name: STRING is "default_create"
+		-- Eiffel feature names
+
 	capitalized_current_keyword_name: STRING is "Current"
 	capitalized_false_keyword_name: STRING is "False"
 	capitalized_precursor_keyword_name: STRING is "Precursor"
 	capitalized_result_keyword_name: STRING is "Result"
 	capitalized_true_keyword_name: STRING is "True"
-	capitalized_tuple_keyword_name: STRING is "TUPLE"
 	capitalized_void_keyword_name: STRING is "Void"
 	capitalized_unique_keyword_name: STRING is "Unique"
 			-- Eiffel keyword names with first letter in upper-case

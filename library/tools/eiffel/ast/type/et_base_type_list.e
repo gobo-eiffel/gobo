@@ -31,9 +31,9 @@ feature -- Access
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if item (i).direct_base_class (a_universe) = a_class then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).direct_base_class (a_universe) = a_class then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -52,9 +52,9 @@ feature -- Access
 			i, nb: INTEGER
 			a_type: ET_BASE_TYPE
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_type := item (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				a_type := storage.item (i)
 				if a_type.direct_base_class (a_universe) = a_class then
 					Result := a_type
 					i := nb + 1 -- Jump out of the loop.

@@ -51,9 +51,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if a_feature.has_seed (feature_name (i).seed) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if a_feature.has_seed (storage.item (i).feature_name.seed) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

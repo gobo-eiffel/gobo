@@ -70,10 +70,10 @@ feature -- Access
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if formal_argument (i).name.same_identifier (a_name) then
-					Result := i
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).formal_argument.name.same_identifier (a_name) then
+					Result := count - i
 					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1
@@ -131,13 +131,14 @@ feature -- Type processing
 		require
 			a_parameters_not_void: a_parameters /= Void
 		local
-			i, j: INTEGER
+			i, j, nb: INTEGER
 			arg, new_arg: ET_FORMAL_ARGUMENT
 			a_type, new_type: ET_DECLARED_TYPE
 		do
 			Result := Current
-			from i := count until i < 1 loop
-				arg := formal_argument (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				arg := storage.item (i).formal_argument
 				if arg.declared_type = a_type then
 						-- This argument shares the same
 						-- type as the previous argument.
@@ -157,13 +158,13 @@ feature -- Type processing
 					create Result.make_with_capacity (count)
 					Result.set_left_parenthesis (left_parenthesis)
 					Result.set_right_parenthesis (right_parenthesis)
-					from j := count until j <= i loop
-						Result.put_first (item (j))
-						j := j - 1
+					from j := 0 until j >= i loop
+						Result.put_first (storage.item (j))
+						j := j + 1
 					end
 					Result.put_first (new_arg)
 				end
-				i := i - 1
+				i := i + 1
 			end
 		ensure
 			inherited_arguments_not_void: Result /= Void

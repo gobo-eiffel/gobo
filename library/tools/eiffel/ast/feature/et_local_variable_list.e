@@ -65,10 +65,10 @@ feature -- Access
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if local_variable (i).name.same_identifier (a_name) then
-					Result := i
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).local_variable.name.same_identifier (a_name) then
+					Result := count - i
 					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1

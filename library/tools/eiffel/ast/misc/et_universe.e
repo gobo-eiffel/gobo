@@ -16,6 +16,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_STANDARD_FILES
+	KL_SHARED_FILE_SYSTEM
+	KL_SHARED_EXECUTION_ENVIRONMENT
 	ET_SHARED_CLASS_NAME_TESTER
 	ET_SHARED_TOKEN_CONSTANTS
 
@@ -69,7 +71,6 @@ feature {NONE} -- Initialization
 			set_use_reference_keyword (True)
 			set_use_void_keyword (True)
 			make_basic_classes
-			create cluster_processor.make (Current)
 			create null_processor.make (Current)
 			ancestor_builder := null_processor
 			feature_flattener := null_processor
@@ -230,6 +231,23 @@ feature -- Access
 	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
 
+	eiffel_class (a_name: ET_CLASS_NAME): ET_CLASS is
+			-- Class named `a_name' in universe;
+			-- add this class to universe if not found
+		require
+			a_name_not_void: a_name /= Void
+		do
+			classes.search (a_name)
+			if classes.found then
+				Result := classes.found_item
+			else
+				Result := ast_factory.new_class (a_name, classes.count + 1)
+				classes.force_last (Result, a_name)
+			end
+		ensure
+			eiffel_class_not_void: Result /= Void
+		end
+
 	class_by_name (a_name: STRING): ET_CLASS is
 			-- Class named `a_name' in universe;
 			-- Void if not such class
@@ -246,21 +264,65 @@ feature -- Access
 			end
 		end
 
-	eiffel_class (a_name: ET_CLASS_NAME): ET_CLASS is
-			-- Class named `a_name' in universe;
-			-- add this class to universe if not found
+	classes_by_cluster (a_cluster: ET_CLUSTER): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Classes in universe which are in `a_cluster';
+			-- Create a new list at each call
 		require
-			a_name_not_void: a_name /= Void
+			a_cluster_not_void: a_cluster /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
 		do
-			classes.search (a_name)
-			if classes.found then
-				Result := classes.found_item
-			else
-				Result := ast_factory.new_class (a_name, classes.count + 1)
-				classes.force_last (Result, a_name)
+			create Result.make (initial_classes_by_cluster_capacity)
+			a_cursor := classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				from
+					a_class := a_cursor.item
+				until
+					a_class = Void
+				loop
+					if a_class.cluster = a_cluster then
+						Result.force_last (a_class)
+					end
+					a_class := a_class.overridden_class
+				end
+				a_cursor.forth
 			end
 		ensure
-			eiffel_class_not_void: Result /= Void
+			classes_not_void: Result /= Void
+			no_void_class: not Result.has (Void)
+		end
+
+	classes_by_clusters: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_CLUSTER] is
+			-- Classes in universe indexed by clusters;
+			-- Create a new data structure at each call
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			l_class: ET_CLASS
+			l_cluster: ET_CLUSTER
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+		do
+			create Result.make_map (cluster_count)
+			l_cursor := classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				from
+					l_class := l_cursor.item
+				until
+					l_class = Void
+				loop
+					l_cluster := l_class.cluster
+					Result.search (l_cluster)
+					if Result.found then
+						l_classes := Result.found_item
+					else
+						create l_classes.make (initial_classes_by_cluster_capacity)
+						Result.force_last (l_classes, l_cluster)
+					end
+					l_classes.force_last (l_class)
+					l_class := l_class.overridden_class
+				end
+				l_cursor.forth
+			end
 		end
 
 	error_handler: ET_ERROR_HANDLER
@@ -636,7 +698,64 @@ feature -- Element change
 			-- the `preparse_*' or `parse_all' routines.
 		do
 			if clusters /= Void then
-				cluster_processor.add_implicit_subclusters_to_clusters (clusters)
+				add_implicit_subclusters_to_clusters (clusters)
+			end
+		end
+
+feature {NONE} -- Element change
+
+	add_implicit_subclusters_to_clusters (a_clusters: ET_CLUSTERS) is
+			-- Add (recursively) implicit subclusters `a_clusters' when they are recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_*_all' routines.
+		require
+			a_clusters_not_void: a_clusters /= Void
+		local
+			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
+			i, nb: INTEGER
+		do
+			l_clusters := a_clusters.clusters
+			nb := l_clusters.count
+			from i := 1 until i > nb loop
+				add_implicit_subclusters_to_cluster (l_clusters.item (i))
+				i := i + 1
+			end
+		end
+
+	add_implicit_subclusters_to_cluster (a_cluster: ET_CLUSTER) is
+			-- Add (recursively) implicit subclusters to `a_cluster' when it is recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_*_all' routines.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			l_subclusters: ET_CLUSTERS
+		do
+			if not a_cluster.is_abstract and a_cluster.is_recursive then
+				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+				create dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if not has_eiffel_extension (s) and a_cluster.is_valid_directory_name (s) then
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster.add_recursive_cluster (s)
+							end
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					error_handler.report_gcaaa_error (a_cluster, dir_name)
+				end
+			end
+			l_subclusters := a_cluster.subclusters
+			if l_subclusters /= Void then
+				add_implicit_subclusters_to_clusters (l_subclusters)
 			end
 		end
 
@@ -650,6 +769,8 @@ feature -- Parsing
 			-- can be redefined in descendants).
 		do
 			preparse_multiple
+		ensure
+			preparsed: is_preparsed
 		end
 
 	preparse_shallow is
@@ -660,10 +781,12 @@ feature -- Parsing
 		do
 			if not is_preparsed then
 				if clusters /= Void then
-					cluster_processor.preparse_clusters_shallow (clusters)
+					eiffel_preparser.preparse_clusters_shallow (clusters)
 				end
 				is_preparsed := True
 			end
+		ensure
+			preparsed: is_preparsed
 		end
 
 	preparse_single is
@@ -675,10 +798,12 @@ feature -- Parsing
 		do
 			if not is_preparsed then
 				if clusters /= Void then
-					cluster_processor.preparse_clusters_single (clusters)
+					eiffel_preparser.preparse_clusters_single (clusters)
 				end
 				is_preparsed := True
 			end
+		ensure
+			preparsed: is_preparsed
 		end
 
 	preparse_multiple is
@@ -689,38 +814,277 @@ feature -- Parsing
 		do
 			if not is_preparsed then
 				if clusters /= Void then
-					cluster_processor.preparse_clusters_multiple (clusters)
+					eiffel_preparser.preparse_clusters_multiple (clusters)
 				end
 				is_preparsed := True
 			end
+		ensure
+			preparsed: is_preparsed
 		end
 
-	preparse_single_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
-			-- Scan Eiffel file `a_file' to find the name of the class it
-			-- contains. The file is supposed to contain exactly one class.
-			-- Add the class to `classes', but do not parse it.
-			-- `a_filename' is the filename of `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-			a_filename_not_void: a_filename /= Void
-			a_cluster_not_void: a_cluster /= Void
+	repreparse_shallow is
+			-- Traverse all clusters again and rebuild the mapping between class names
+			-- and filenames in each cluster. Modified classes are reset and left
+			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Filenames are supposed to be of the form 'classname.e'.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_modified: BOOLEAN
+			a_time_stamp: INTEGER
 		do
-			eiffel_preparser.preparse_single (a_file, a_filename, a_cluster)
+			if not is_preparsed then
+				preparse_shallow
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist anymore).
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							elseif a_class2.is_parsed then
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							elseif not file_system.file_exists (a_class2.filename) then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							end
+						else
+							a_class2 := a_class2.overridden_class
+							a_class1.set_overridden_class (a_class2)
+						end
+					end
+					if a_class.is_preparsed then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						elseif a_class.is_parsed then
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						elseif not file_system.file_exists (a_class.filename) then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						end
+					else
+						a_class2 := a_class.overridden_class
+						if a_class2 /= Void then
+							a_modified := True
+							a_class.copy (a_class2)
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+-- TODO.
+				end
+				eiffel_preparser.repreparse_clusters_shallow (clusters)
+			end
+		ensure
+			preparsed: is_preparsed
 		end
 
-	preparse_multiple_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
-			-- Scan Eiffel file `a_file' to find the names of the classes
-			-- it contains. The file can contain more than one class. Add
-			-- the classes to `classes', but do not parse them.
-			-- `a_filename' is the filename of `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-			a_filename_not_void: a_filename /= Void
-			a_cluster_not_void: a_cluster /= Void
+	repreparse_single is
+			-- Traverse all clusters again and rebuild the mapping between class names
+			-- and filenames in each cluster. Modified classes are reset and left
+			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Each Eiffel file is supposed to contain exactly one class.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_modified: BOOLEAN
 		do
-			eiffel_preparser.preparse_multiple (a_file, a_filename, a_cluster)
+			if not is_preparsed then
+				preparse_single
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist
+					-- anymore, or they have been modified and may contain another class).
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						else
+							a_class2 := a_class2.overridden_class
+							a_class1.set_overridden_class (a_class2)
+						end
+					end
+					if a_class.is_preparsed then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						else
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						end
+					else
+						a_class2 := a_class.overridden_class
+						if a_class2 /= Void then
+							a_modified := True
+							a_class.copy (a_class2)
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+-- TODO.
+				end
+				eiffel_preparser.repreparse_clusters_single (clusters)
+			end
+		ensure
+			preparsed: is_preparsed
+		end
+
+	repreparse_multiple is
+			-- Traverse all clusters again and rebuild the mapping between class names
+			-- and filenames in each cluster. Modified classes are reset and left
+			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Each Eiffel file can contain more than one class.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_modified: BOOLEAN
+		do
+			if not is_preparsed then
+				preparse_single
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist
+					-- anymore, or they have been modified and may contain another class).
+					-- Note that if a file contains two classes and is modified between the
+					-- time we check the first class and the second class then the preparse
+					-- will give inconsistent results and will need to be rerun again.
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						else
+							a_class2 := a_class2.overridden_class
+							a_class1.set_overridden_class (a_class2)
+						end
+					end
+					if a_class.is_preparsed then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						else
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						end
+					else
+						a_class2 := a_class.overridden_class
+						if a_class2 /= Void then
+							a_modified := True
+							a_class.copy (a_class2)
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+-- TODO.
+				end
+				eiffel_preparser.repreparse_clusters_multiple (clusters)
+			end
+		ensure
+			preparsed: is_preparsed
 		end
 
 	parse_all is
@@ -730,9 +1094,99 @@ feature -- Parsing
 			-- clusters and parse all Eiffel files anyway.
 		do
 			if clusters /= Void then
-				cluster_processor.parse_clusters_all (clusters)
+				eiffel_parser.parse_clusters (clusters)
 			end
 			is_preparsed := True
+		ensure
+			preparsed: is_preparsed
+		end
+
+	reparse_all is
+			-- Parse whole universe again.
+			-- There is not need to call one of the preparse routines
+			-- beforehand since the current routine will traverse all
+			-- clusters and parse all Eiffel files anyway.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_modified: BOOLEAN
+		do
+			if not is_preparsed then
+				parse_all
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist
+					-- anymore, or they have been modified and may contain another class).
+					-- Note that if a file contains two classes and is modified between the
+					-- time we check the first class and the second class then the preparse
+					-- will give inconsistent results and will need to be rerun again.
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_parsed then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						else
+							a_class2 := a_class2.overridden_class
+							a_class1.set_overridden_class (a_class2)
+						end
+					end
+					if a_class.is_parsed then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						else
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						end
+					else
+						a_modified := True
+						a_class2 := a_class.overridden_class
+						if a_class2 /= Void then
+							a_class.copy (a_class2)
+						else
+							a_class.reset_all
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+-- TODO.
+				end
+				eiffel_parser.reparse_clusters (clusters)
+			end
+		ensure
+			preparsed: is_preparsed
 		end
 
 	parse_system is
@@ -767,19 +1221,6 @@ feature -- Parsing
 					end
 				end
 			end
-		end
-
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
-			-- Parse all classes in `a_file' within cluster `a_cluster'.
-			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
-			-- its time stamp just before it was open.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-			a_filename_not_void: a_filename /= Void
-			a_cluster_not_void: a_cluster /= Void
-		do
-			eiffel_parser.parse (a_file, a_filename, a_time_stamp, a_cluster)
 		end
 
 feature -- Compilation
@@ -1385,9 +1826,6 @@ feature -- Forget features
 
 feature -- Processors
 
-	cluster_processor: ET_CLUSTER_PROCESSOR
-			-- Cluster processor
-
 	eiffel_preparser: ET_EIFFEL_PREPARSER is
 			-- Eiffel preparser
 		do
@@ -1535,6 +1973,41 @@ feature {NONE} -- Implementation
 	internal_eiffel_parser: ET_EIFFEL_PARSER
 			-- Eiffel parser
 
+	has_eiffel_extension (a_filename: STRING): BOOLEAN is
+			-- Has `a_filename' an Eiffel extension (.e)?
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			nb: INTEGER
+			c: CHARACTER
+		do
+			nb := a_filename.count
+			if nb > 2 and then a_filename.item (nb - 1) = '.' then
+				c := a_filename.item (nb)
+				if c = 'e' then
+					Result := True
+				elseif operating_system.is_windows and then c = 'E' then
+					Result := True
+				end
+			end
+		ensure
+			definition: Result = (a_filename.count > 2 and then
+				((a_filename.item (a_filename.count) = 'e' or
+				(operating_system.is_windows and then
+				a_filename.item (a_filename.count) = 'E')) and
+				a_filename.item (a_filename.count - 1) = '.'))
+		end
+
+feature {NONE} -- Constants
+
+	initial_classes_by_cluster_capacity: INTEGER is
+			-- Initial capacity for `classes_by_cluster'
+		once
+			Result := 20
+		ensure
+			capacity_positive: Result > 0
+		end
+
 invariant
 
 	classes_not_void: classes /= Void
@@ -1578,7 +2051,6 @@ invariant
 	double_convert_feature_not_void: double_convert_feature /= Void
 	default_create_seed_non_negative: default_create_seed >= 0
 	void_seed_non_negative: void_seed >= 0
-	cluster_processor_not_void: cluster_processor /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void
 	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void

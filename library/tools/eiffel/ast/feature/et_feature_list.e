@@ -28,33 +28,37 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			a_feature: ET_FEATURE
 			an_id: ET_IDENTIFIER
+			a_hash_code: INTEGER
 		do
 				-- This assignment attempt is to avoid too many polymorphic
 				-- calls to `same_feature_name'.
 			an_id ?= a_name
 			if an_id /= Void then
-				nb := count
-				from i := 1 until i > nb loop
-					a_feature := item (i)
-					if an_id.same_feature_name (a_feature.name) then
-						Result := a_feature
-						i := nb + 1 -- Jump out of the loop
+				a_hash_code := an_id.hash_code
+				from i := count - 1 until i < 0 loop
+					a_feature := storage.item (i)
+					if a_hash_code = a_feature.hash_code then
+						if an_id.same_feature_name (a_feature.name) then
+							Result := a_feature
+							i := -1 -- Jump out of the loop
+						else
+							i := i - 1
+						end
 					else
-						i := i + 1
+						i := i - 1
 					end
 				end
 			else
-				nb := count
-				from i := 1 until i > nb loop
-					a_feature := item (i)
+				from i := count - 1 until i < 0 loop
+					a_feature := storage.item (i)
 					if a_feature.name.same_feature_name (a_name) then
 						Result := a_feature
-						i := nb + 1 -- Jump out of the loop
+						i := -1 -- Jump out of the loop
 					else
-						i := i + 1
+						i := i - 1
 					end
 				end
 			end
@@ -67,9 +71,9 @@ feature -- Access
 			i, nb: INTEGER
 			a_feature: ET_FEATURE
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_feature := item (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				a_feature := storage.item (i)
 				if a_feature.has_seed (a_seed) then
 					Result := a_feature
 					i := nb + 1 -- Jump out of the loop

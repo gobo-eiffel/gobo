@@ -48,9 +48,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if type (i).same_named_type (other, other_context, a_context, a_universe) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.same_named_type (other, other_context, a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out o fthe loop.
 				else

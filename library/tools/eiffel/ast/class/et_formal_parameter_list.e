@@ -52,9 +52,9 @@ feature -- Access
 			i, nb: INTEGER
 			a_parameter: ET_FORMAL_PARAMETER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_parameter := formal_parameter (i)
+			nb := count - 1
+			from i := 0 until i > nb loop
+				a_parameter := storage.item (i).formal_parameter
 				if a_parameter.name.same_identifier (a_name) then
 					Result := a_parameter
 					i := nb + 1  -- Jump out of the loop.
@@ -76,9 +76,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if formal_parameter (i).name.same_identifier (a_name) then
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).formal_parameter.name.same_identifier (a_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

@@ -106,9 +106,9 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			elseif is_infix_freeop then
-				if other.is_infix_freeop then
-					an_infix_op ?= other
-					if an_infix_op /= Void then
+				an_infix_op ?= other
+				if an_infix_op /= Void and then an_infix_op.is_infix_freeop then
+					if hash_code = an_infix_op.hash_code then
 						if an_infix_op.free_operator_name = free_operator_name then
 							Result := True
 						else
@@ -117,9 +117,9 @@ feature -- Comparison
 					end
 				end
 			else
-				if other.is_prefix_freeop then
-					a_prefix_op ?= other
-					if a_prefix_op /= Void then
+				a_prefix_op ?= other
+				if a_prefix_op /= Void and then a_prefix_op.is_prefix_freeop then
+					if hash_code = a_prefix_op.hash_code then
 						if a_prefix_op.free_operator_name = free_operator_name then
 							Result := True
 						else
