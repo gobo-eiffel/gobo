@@ -27,6 +27,7 @@
 				<cluster name="name"/>
 				<cluster name="type"/>
 			</cluster>
+			<cluster name="compilation"/>
 			<cluster name="error"/>
 			<cluster name="parser"/>
 			<cluster name="processor"/>
