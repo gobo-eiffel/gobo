@@ -22,7 +22,7 @@ creation
 	make
 %}
 
-%x MS MSN MSN1
+%x MS MSN MSN1 VS
 %option nodefault line outfile="et_eiffel_scanner.e"
 
 %%
@@ -529,6 +529,30 @@ creation
 				last_token := E_STRING
 				last_value := new_manifest_string (text_substring (2, text_count - 1))
 			}
+
+\"\[\r?\n	{
+					-- Verbatim string.
+				set_start_condition (VS)
+			}
+
+\"\[[ \t\r]+\r?\n	{
+					-- Verbatim string.
+				set_start_condition (VS)
+			}
+
+<VS>{
+	[ \t\r]*\]\"	{
+				last_token := E_STRING
+				set_start_condition (INITIAL)
+			}
+	([^\"\n]*|\".*|.*[^\]\n]\".*)\n?	{
+			}
+	<<EOF>>	{
+					-- Syntax error: 
+				last_token := E_STRERR
+				set_start_condition (INITIAL)
+			}
+}
 
 \"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"	{
 					-- Manifest string with special characters.
