@@ -23,6 +23,7 @@ inherit
 	XM_DTD_CALLBACKS_SOURCE
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 feature -- Parsing
 
