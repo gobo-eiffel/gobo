@@ -50,34 +50,27 @@ feature -- Status report
 
 feature -- Validity
 
-	check_parent_validity1 (an_heir: ET_CLASS): BOOLEAN is
+	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current type is valid when
 			-- it appears in parent clause of `an_heir'.
-			-- Do not check conformance to generic
-			-- constraints. Report errors if not valid.
+			-- Report errors if not valid.
 		require
 			an_heir_not_void: an_heir /= Void
 		deferred
 		end
 
-	check_parent_validity2 (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Check conformance to generic constraints.
+	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+			-- Check whether current type is valid when it
+			-- appears in a constraint of the formal generic
+			-- parameter `a_formal' in class `a_class'.
+			-- `a_sorter' is used to find possible cycle in
+			-- formal generic parameter declaration.
 			-- Report errors if not valid.
 		require
-			an_heir_not_void: an_heir /= Void
-		do
-			Result := check_parent_validity1 (an_heir)
-		end
-
-	check_constraint_validity (a_class: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when it
-			-- appears in a constraint of a formal generic
-			-- parameter of class `a_class'. Report errors
-			-- if not valid.
-		require
+			a_formal_not_void: a_formal /= Void
 			a_class_not_void: a_class /= Void
+			a_sorter_not_void: a_sorter /= Void
 		deferred
 		end
 
@@ -127,6 +120,21 @@ feature -- Type processing
 			a_feature_not_void: a_feature /= Void
 			a_flattener_not_void: a_flattener /= Void
 			immediate_or_redeclared: a_feature.implementation_class = a_flattener.current_class
+		do
+			Result := Current
+		ensure
+			resolved_type_not_void: Result /= Void
+		end
+
+	resolved_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY): ET_TYPE is
+			-- Replace in current type unresolved named types
+			-- by corresponding class types or formal generic
+			-- parameter names. `a_class' is the class where
+			-- current type appears in the source code.
+			-- (Warning: this is a side-effect function.)
+		require
+			a_class_not_void: a_class /= Void
+			ast_factory_not_void: ast_factory /= Void
 		do
 			Result := Current
 		ensure
