@@ -113,20 +113,23 @@ feature -- Processing
 				i := 1
 			until
 				i > args_count or stop
-			loop	
+			loop
 				an_arg := Arguments.argument (i)
 				nb := an_arg.count
-				if
-					nb < 2 or else
-					an_arg.item (1) /= '-'
-					or else an_arg.item (2) /= 'D'
-				then
-					stop := True
-				else
-					if nb > 2 then
-						parser.define_value ("", an_arg.substring (3, nb))
+				if nb >= 2 and then an_arg.item (1) = '-' then
+					if an_arg.item (2) = 'D' then
+						if nb > 2 then
+							parser.define_value ("", an_arg.substring (3, nb))
+						end
+						i := i + 1
+					elseif nb = 2 and an_arg.item (2) = 'M' then
+						parser.set_makefile_dependencies (True)
+						i := i + 1
+					else
+						stop := True
 					end
-					i := i + 1
+				else
+					stop := True
 				end
 			end
 				-- Read filenames.
@@ -208,7 +211,7 @@ feature -- Error handling
 			-- Gepp usage message.
 		once
 			!! Result.make
-				("[--version] [--help] [-hV?]%N%
+				("[--version] [--help] [-hV?M]%N%
 					%%T[-Dname ...] [filename | -] [filename | -]")
 		ensure
 			usage_message_not_void: Result /= Void

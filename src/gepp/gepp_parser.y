@@ -26,6 +26,8 @@ inherit
 		rename
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
+		redefine
+			echo
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -181,6 +183,9 @@ feature -- Parsing
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
+			if makefile_dependencies then
+				output ("%N")
+			end
 		end
 
 	parse_string (a_string: STRING) is
@@ -206,7 +211,11 @@ feature -- Processing
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if not include_stack.is_full then
-				a_file := INPUT_STREAM_.make_file_open_read (dos_filename (Execution_environment.interpreted_string (a_filename)))
+				if makefile_dependencies then
+					output (" \%N%T")
+					output (a_filename)
+				end
+				a_file := INPUT_STREAM_.make_file_open_read (Execution_environment.interpreted_string (a_filename))
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
@@ -260,6 +269,10 @@ feature -- Status report
 			Result := defined_values.has (a_name)
 		end
 
+	makefile_dependencies: BOOLEAN
+			-- Should Makefile dependencies be generated to
+			-- `output_file' instead of the preprocessed output?
+
 feature -- Element change
 
 	define_value (a_value: STRING; a_name: STRING) is
@@ -283,6 +296,26 @@ feature -- Element change
 			a_name_undefined: not is_defined (a_name)
 		end
 
+	set_makefile_dependencies (b: BOOLEAN) is
+			-- Set `makefile_dependencies' to `b'.
+		do
+			makefile_dependencies := b
+		ensure
+			makefile_dependencies_set: makefile_dependencies = b
+		end
+
+feature -- Output
+
+	echo is
+			-- Output `text' using feature `output'.
+			-- Do not echo if option -M has been 
+			-- specified on the command-line.
+		do
+			if not makefile_dependencies then
+				output (text)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	defined_values: DS_HASH_TABLE [STRING, STRING]
@@ -301,34 +334,6 @@ feature {NONE} -- Implementation
 
 	Max_include_depth: INTEGER is 10
 			-- Maximum number of nested include files
-
-	dos_filename (a_filename: STRING): STRING is
-			-- Replace leading '//D/' by 'D:\' where
-			-- 'D' is a drive letter
-		require
-			a_filename_not_void: a_filename /= Void
-		local
-			nb: INTEGER
-		do
-			nb := a_filename.count
-			if
-				nb >= 4 and then
-				a_filename.item (1) = '/' and then
-				a_filename.item (2) = '/' and then
-				a_filename.item (4) = '/'
-			then
-				Result := STRING_.make (nb - 1)
-				Result.append_character (a_filename.item (3))
-				Result.append_string (":\")
-				if nb > 4 then
-					Result.append_string (a_filename.substring (4, nb))
-				end
-			else
-				Result := a_filename
-			end
-		ensure
-			dos_filename_not_void: Result /= Void
-		end
 
 invariant
 

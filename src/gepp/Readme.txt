@@ -16,7 +16,7 @@ To compile this program:
    'make ise', 'make hact', 'make ve' or 'make se'.
 2. Run Gepp using:
 
-       gepp [-Dname ...] [filename | -] [filename | -]
+       gepp [-M] [-Dname ...] [filename | -] [filename | -]
 
 A small "User's Manual" documentation in HTML format is available in
 "$GOBO/doc/portability/gepp.html".
