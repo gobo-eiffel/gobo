@@ -101,16 +101,20 @@ feature -- Compliation
 			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
 			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
 			a_tree_builder: XM_XPATH_TREE_BUILDER
+			a_parser: XM_EIFFEL_PARSER
 		do
 			load_stylesheet_module_failed := False
 			load_stylesheet_module_error := Void
 			last_loaded_module := Void
-			create a_tree_builder.make (a_name_pool, a_node_factory)
-			-- a_tree_builder.set_line_numbering (True)
-			a_tree_builder.set_system_id (a_source.system_id)
+			create a_parser.make
+			a_parser.set_resolver (a_configuration.entity_resolver)
+			a_parser.copy_string_mode (a_configuration)
+
+			create a_tree_builder.make (a_parser, a_name_pool, a_node_factory)
+			a_tree_builder.set_line_numbering (a_configuration.is_line_numbering)
 			create a_stylesheet_stripper.make (a_name_pool, a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
-			a_source.send (a_configuration, a_comment_stripper, a_name_pool, True)
+			a_source.send (a_parser, a_comment_stripper, a_name_pool, True)
 			if a_tree_builder.has_error then
 				load_stylesheet_module_failed := True
 				load_stylesheet_module_error := a_tree_builder.last_error
@@ -149,7 +153,7 @@ feature -- Compliation
 
 				-- Compile the stylesheet, retaining the resulting  executable
 
-				--a_stylesheet.compile (compile_to_eiffel)
+				a_stylesheet.compile_stylesheet (configuration, compile_to_eiffel)
 				if a_stylesheet.is_error then
 					todo ("create_style_sheet_executable - compile failed", True)
 				else
@@ -159,7 +163,6 @@ feature -- Compliation
 						-- as {XM_XSLT_STYLESHEET}.compile produces an
 						-- executable if no error.
 						end
-					--executable.set_configuration (configuration)
 				end
 			end
 		ensure

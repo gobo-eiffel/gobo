@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 		do
 			style_element := a_style_element
 			name_pool := style_element.target_name_pool
+			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
 		ensure
 			style_element_set: style_element = a_style_element
 		end

@@ -33,14 +33,22 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
+		local
+			a_code_point_collator: ST_COLLATOR
 		do
 			target_name_pool := a_document.name_pool
 			create named_templates_index.make_map (5)
 			create variables_index.make_map (5)
 			create namespace_alias_list.make (5)
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			create key_manager.make
+			create decimal_format_manager.make
+			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
+			create a_code_point_collator
+			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator)
+			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Access
@@ -72,6 +80,9 @@ feature -- Access
 	key_manager: XM_XSLT_KEY_MANAGER
 			-- Manger of key definitions
 
+	decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER
+			-- Manager of decimal formats
+
 	includes_processed: BOOLEAN
 			-- Has import/include processing been performed?
 
@@ -87,7 +98,7 @@ feature -- Access
 				Result := import_precedence
 			end
 		end
-
+	
 	namespace_alias (a_uri_code: INTEGER): INTEGER is
 			-- Declared namespace alias for a given namespace URI code if there is one.
 			-- If there is more than one, we get the last.
@@ -118,6 +129,26 @@ feature -- Access
 			end
 		end
 
+	find_collator (a_collator_uri: STRING): ST_COLLATOR is
+			-- Does `a_collator_uri' represent a defined collator?
+		require
+			collator_uri_not_void: a_collator_uri /= Void
+			collator_is_defined: is_collator_defined (a_collator_uri)
+		do
+			Result := collation_map.item (a_collator_uri)
+		ensure
+			collator_not_void: Result /= Void
+		end
+
+	module_number (a_system_id: STRING): INTEGER is
+			-- Module number of `a_system_id'
+		require
+			system_id_not_void: a_system_id /= Void
+			module_registered: is_module_registered (a_system_id)
+		do
+			Result := stylesheet_module_map.item (a_system_id)
+		end
+
 feature -- Status report
 
 	was_included: BOOLEAN
@@ -125,6 +156,14 @@ feature -- Status report
 
 	indices_built: BOOLEAN
 			-- Have the indices been built?
+
+	is_module_registered (a_system_id: STRING): BOOLEAN is
+			-- Is `a_system_id' registered as a module?
+		require
+			system_id_not_void: a_system_id /= Void
+		do
+			Result := stylesheet_module_map.has (a_system_id)
+		end
 
 	has_namespace_aliases: BOOLEAN is
 			-- Have any namespace aliases been declared?
@@ -155,7 +194,47 @@ feature -- Status report
 			end
 		end
 
+	is_collator_defined (a_collator_uri: STRING): BOOLEAN is
+			-- Does `a_collator_uri' represent a defined collator?
+		require
+			collator_uri_not_void: a_collator_uri /= Void
+		do
+			Result := collation_map.has (a_collator_uri)
+		end
+
 feature -- Element change
+
+	register_module (a_system_id: STRING) is
+			-- Register `a_system_id' as a stylesheet module.
+		require
+			system_id_not_void: a_system_id /= Void
+			module_not_registered: not is_module_registered (a_system_id)
+		do
+			if stylesheet_module_map.is_full then
+				stylesheet_module_map.resize (2 * stylesheet_module_map.count)
+			end
+			stylesheet_module_map.put (stylesheet_module_map.count + 1, a_system_id)
+		ensure
+			module_registered: is_module_registered (a_system_id)
+		end
+
+	declare_collation (a_name: STRING; a_collator: ST_COLLATOR) is
+			-- Declare a collation.
+		require
+			collation_name_not_void: a_name /= Void -- TODO and then is a URI
+			collator_not_void: a_collator /= Void
+		do
+			if collation_map.has (a_name) then
+				collation_map.replace (a_collator, a_name)
+			else
+				if collation_map.is_full then
+					collation_map.resize (2 * collation_map.count)
+				end
+				collation_map.put (a_collator, a_name)
+			end
+		ensure
+			collator_declared: is_collator_defined (a_name)
+		end
 
 	allocate_local_slots (a_variable_count: INTEGER) is
 			-- Ensure there is enough space for local variables or parameters in any template.
@@ -176,6 +255,7 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name: STRING
 		do
+			default_validation := Validation_strip
 			from
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
@@ -283,7 +363,8 @@ feature -- Element change
 				end
 				
 				a_cursor.forth
-			end	
+			end
+			post_validated := True
 		ensure
 			indices_built: indices_built
 		end
@@ -303,7 +384,7 @@ feature -- Element change
 			create top_level_elements.make (children.count)
 			minimum_import_precedence := import_precedence
 			a_previous_style_element := Current
-
+			register_module (system_id)
 			from
 				a_child_iterator := new_axis_iterator (Child_axis)
 				a_child_iterator.start
@@ -389,12 +470,49 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, or to Eiffel code.
 		do
-			report_compile_error ("compile not implemented yet")
-			todo ("compile", False)
+			do_nothing -- `compile_stylesheet' is used instead
+		end
+
+	compile_stylesheet (a_configuration: XM_XSLT_CONFIGURATION; compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+		require
+			configuration_not_void: a_configuration /= Void
+			compile_to_eiffel_not_supported: not compile_to_eiffel
+		local
+			an_executable: XM_XSLT_EXECUTABLE
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			an_instruction: XM_XSLT_INSTRUCTION
+		do
+			create an_executable.make (a_configuration)
+
+			-- Call compile method for each top-level object in the stylesheet
+
+			from
+				a_cursor := top_level_elements.new_cursor
+				a_cursor.start
+			variant
+				top_level_elements.count + 1 - a_cursor.index
+			until
+				any_compile_errors or else a_cursor.after
+			loop
+				a_cursor.item.compile (an_executable, compile_to_eiffel)
+				if not compile_to_eiffel then
+					if a_cursor.item.any_compile_errors then
+						any_compile_errors := True -- this shouldn't happen
+					else
+						an_instruction := a_cursor.item.last_generated_instruction						
+						-- TODO: add location information to the compiled instruction
+					end
+				else
+					todo ("compile - compile-to-Eiffel not implemented", True)
+				end
+				a_cursor.forth
+			end
+				
+			todo ("compile_stylesheet", True)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
@@ -443,6 +561,12 @@ feature {NONE} -- Implementation
 
 	largest_stack_frame: INTEGER
 			-- Maximum number of local variables in any template
+
+	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
+			-- Map of collation names to collators
+
+	stylesheet_module_map: DS_HASH_TABLE [INTEGER, STRING]
+			-- Map of SYSTEM IDs to module numbers
 
 	build_indices is
 			-- Build indices from selected top-level declarations.
@@ -645,5 +769,8 @@ invariant
 	named_templates_index_not_void: named_templates_index /= Void
 	variables_index_not_void: variables_index /= Void
 	positive_largest_stack_frame: largest_stack_frame >= 0
+	key_manager_not_void: key_manager /= Void
+	decimal_format_manager_not_void: decimal_format_manager /= Void
+	stylesheet_module_map_not_void: stylesheet_module_map /= Void
 
 end

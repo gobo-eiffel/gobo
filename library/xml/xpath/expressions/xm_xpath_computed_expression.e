@@ -85,9 +85,7 @@ feature -- Status setting
 			-- Determine the intrinsic dependencies of an expression.
 		require	not_yet_computed: not are_intrinsic_dependencies_computed
 		do
-			create intrinsic_dependencies.make (1, 6)
-			-- Now all are `False'
-			are_intrinsic_dependencies_computed := True
+			initialize_intrinsic_dependencies
 		ensure
 			computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
 		end
@@ -317,9 +315,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		require
 			not_yet_computed: not are_special_properties_computed			
 		do
-			create special_properties.make (1, 6)
-			-- All `False' by default
-			are_special_properties_computed := True
+			initialize_special_properties
 		ensure
 			computed: are_special_properties_computed and then special_properties /= Void
 		end

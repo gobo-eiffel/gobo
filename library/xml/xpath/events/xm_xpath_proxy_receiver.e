@@ -15,9 +15,9 @@ class	XM_XPATH_PROXY_RECEIVER
 inherit
 
 	XM_XPATH_RECEIVER
-		redefine
-			set_name_pool
-		end
+--		redefine
+--			set_name_pool
+--		end
 
 feature -- Access
 
@@ -103,23 +103,23 @@ feature -- Events
 
 feature -- Element change
 
-	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
+--	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Set the name pool in which all name codes can be found
-		do
-			if a_name_pool /= name_pool then
-				name_pool := a_name_pool
-				base_receiver.set_name_pool (name_pool)
-			end
-		end
+--		do
+--			if a_name_pool /= name_pool then
+--				name_pool := a_name_pool
+--				base_receiver.set_name_pool (name_pool)
+--			end
+--		end
 
-	set_system_id (a_system_id: STRING) is
+--	set_system_id (a_system_id: STRING) is
 			-- Set the system-id of the destination tree
-		do
-			if a_system_id /= system_id then
-				system_id := a_system_id
-				base_receiver.set_system_id (system_id)
-			end
-		end
+--		do
+--			if a_system_id /= system_id then
+--				system_id := a_system_id
+--				base_receiver.set_system_id (system_id)
+--			end
+--		end
 
 invariant
 

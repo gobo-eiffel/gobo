@@ -155,7 +155,30 @@ feature -- Dependencies
 		end
 feature -- Setting dependencies
 
+	initialize_dependencies is
+			-- Inititialize `dependencied' to no dependencies.
+		require
+			dependencies_not_computed: not are_dependencies_computed
+		do
+			are_dependencies_computed := True
+			create dependencies.make (1,6)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	initialize_intrinsic_dependencies is
+			-- Inititialize `intrinsic_dependencied' to no dependencies.
+		require
+			intrinsic_dependencies_not_computed: not are_intrinsic_dependencies_computed
+		do
+			are_intrinsic_dependencies_computed := True
+			create intrinsic_dependencies.make (1,6)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
 	set_dependencies (a_dep: ARRAY [BOOLEAN]) is
+			-- Set all dependencies from `a_dep'.
 		require
 			dependencies_not_void: a_dep /= Void and then a_dep.count = 6
 		do
@@ -166,6 +189,28 @@ feature -- Setting dependencies
 			dependencies_computed: are_dependencies_computed
 		end
 
+	merge_dependencies (a_dep: ARRAY [BOOLEAN]) is
+		-- Merge all dependencies from `a_dep' into current.
+		require
+			dependencies_not_void: a_dep /= Void and then a_dep.count = 6
+			dependencies_computed: are_dependencies_computed
+		local
+			an_index: INTEGER
+		do
+			from
+				an_index := 1
+			variant
+				7 - an_index
+			until
+				an_index > 6
+			loop
+				if a_dep.item (an_index) then
+					dependencies.put (True, an_index)
+				end
+				an_index := an_index + 1
+			end
+		end
+			
 	set_depends_upon_current_item is
 			-- Set expression to depend upon current item.
 		do
@@ -629,7 +674,31 @@ feature -- Special properties
 			Result := special_properties.item (6)
 		end
 
+	creates_nodes: BOOLEAN is
+			-- Expression property: this is 1True' in the case of an expression that
+			--  may return newly created nodes, or a value that depends on the identity
+			--  of newly created nodes (for example generate-id(new-node())).
+			-- Such expressions cannot be moved out of loops unless they are used in a context where the
+			--  identity of the nodes is known to be immaterial, e.g. if the nodes are
+			--  immediately atomized.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (6)
+		end
+
 feature -- Setting special properties
+
+	initialize_special_properties is
+			-- initialize `special_properties' to nothing special.
+		require
+			special_properties_not_computed: not are_special_properties_computed
+		do
+			create special_properties.make (1, 7)
+			are_special_properties_computed := True
+		ensure
+			special_properties_computed: are_special_properties_computed
+		end
 
 	clone_special_properties (other: XM_XPATH_STATIC_PROPERTY) is
 			-- Set `special_properties' from `other'.
@@ -645,7 +714,7 @@ feature -- Setting special properties
 
 	set_special_properties (properties: ARRAY [BOOLEAN]) is
 		require
-			properties_not_void: properties /= Void and then properties.count = 6
+			properties_not_void: properties /= Void and then properties.count = 7
 		do
 			special_properties := properties
 			are_special_properties_computed := True
@@ -717,4 +786,21 @@ feature -- Setting special properties
 			attribute_ns_nodeset: attribute_ns_nodeset
 		end
 
+	set_creates_nodes is
+			-- Mark `Current' as creating new nodes.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 7)
+		ensure
+			creates_nodes: creates_nodes
+		end
+
+invariant
+
+	special_properties: are_special_properties_computed implies special_properties /= Void and then special_properties.count = 7
+	intrinsic_dependencies: are_intrinsic_dependencies_computed implies intrinsic_dependencies /= Void and then intrinsic_dependencies.count = 6
+	dependencies: are_dependencies_computed implies dependencies /= Void and then dependencies.count = 6
+	cardinalities: are_cardinalities_computed implies cardinalities /= Void and then cardinalities.count = 3
+	
 end

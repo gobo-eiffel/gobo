@@ -24,6 +24,8 @@ inherit
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
+	XM_RESOLVER_FACTORY
+
 		-- These tests test the ability to build a tiny-tree,
 		-- and exercise the DOM-like navigation features,
 		-- and the XPath axes.
@@ -39,7 +41,7 @@ feature
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
-			make_parser ("")
+			make_parser
 			parser.parse_from_string ("<doc><a/><b/></doc>")
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
@@ -84,7 +86,7 @@ feature
 	test_with_dtd is
 			-- Read a file with a DTD
 		local
-			input_stream: KL_TEXT_INPUT_FILE
+			system_id: STRING
 			document: XM_XPATH_TINY_DOCUMENT
 			document_element, books_element, an_element, item_element, categories_element: XM_XPATH_TINY_ELEMENT
 			an_attribute: XM_XPATH_TINY_ATTRIBUTE
@@ -103,12 +105,9 @@ feature
 			found: BOOLEAN
 		do
 			conformance.set_basic_xslt_processor
-			make_parser ("./books.xml")
-			-- TODO: restore to this line, when resolver architecture sorted: create input_stream.make ("./data/books.xml")
-			create input_stream.make ("./books.xml")
-			input_stream.open_read
-			assert ("Inout file open", input_stream.is_open_read)
-			parser.parse_from_stream (input_stream)
+			system_id := "./data/books.xml"
+			make_parser
+			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
@@ -291,18 +290,15 @@ feature
 	test_with_namespaces is
 			-- Read a file with namespaces
 		local
-			input_stream: KL_TEXT_INPUT_FILE
+			system_id: STRING
 			document: XM_XPATH_TINY_DOCUMENT
 			document_element: XM_XPATH_TINY_ELEMENT
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
-			make_parser ("./books.xsl")
-			-- TODO: move this file
-			create input_stream.make ("./books.xsl")
-			input_stream.open_read
-			assert ("Inout file open", input_stream.is_open_read)
-			parser.parse_from_stream (input_stream)
+			system_id := "./data/books.xsl"
+			make_parser
+			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
@@ -319,28 +315,26 @@ feature
 			-- Test production of error messages.
 		do
 			conformance.set_basic_xslt_processor
-			make_parser ("")
+			make_parser
 			parser.parse_from_string ("<doc><a><b/></doc>")
 			assert ("Parsing error", tree_pipe.tree.has_error)
 		end
 
 feature {NONE} -- Implementation
 
-	make_parser (a_system_id: STRING) is
-		require
-			system_id_not_void: a_system_id /= Void
+	make_parser is
 		local
-			entity_resolver: XM_FILE_EXTERNAL_RESOLVER
+			entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			create entity_resolver.make
+			entity_resolver := new_file_resolver_current_directory
 			create parser.make
 			parser.set_resolver (entity_resolver)
-			create tree_pipe.make (a_system_id)
+			create tree_pipe.make (parser, False)
 			parser.set_callbacks (tree_pipe.start)
 			parser.set_dtd_callbacks (tree_pipe.emitter)
-			parser.set_string_mode_unicode
+			parser.set_string_mode_ascii
 		end
-		
+
 	parser: XM_EIFFEL_PARSER
 	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
 

@@ -36,6 +36,18 @@ inherit
 
 feature -- Access
 
+	system_id: STRING is
+			-- SYSTEM id of `Current', or `Void' if not known
+		deferred
+		ensure
+			system_id_not_void: Result /= Void
+		end
+
+	line_number: INTEGER is
+			-- Line number of node in original source document, or -1 if not known
+		deferred
+		end
+
 	document: XM_XPATH_DOCUMENT is
 			-- Document that owns this node
 		deferred

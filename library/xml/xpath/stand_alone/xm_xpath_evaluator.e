@@ -26,20 +26,24 @@ inherit
 
 	MA_SHARED_DECIMAL_CONTEXT
 
+	XM_RESOLVER_FACTORY
+
 creation
 
 	make
 
 feature {NONE} -- Initializtion
 
-	make (digits: INTEGER) is
-			-- Set precision for decimal arithmetic.
+	make (digits: INTEGER; on_or_off: BOOLEAN) is
+			-- Set precision for decimal arithmetic, and line numbering status.
 		require
 			sufficient_precision: digits = 0 or else digits >= 18
 		do
 			shared_decimal_context.set_digits (digits)
+			is_line_numbering := on_or_off
 		ensure
 			precision_set: shared_decimal_context.digits = digits
+			line_numbering_set: is_line_numbering = on_or_off
 		end
 	
 feature -- Access
@@ -54,6 +58,9 @@ feature -- Access
 			-- Results from `evaluate'
 	
 feature -- Status report
+
+	is_line_numbering: BOOLEAN
+			-- Is_line numbering turned on?
 
 	was_build_error: BOOLEAN
 			-- Did an error occur building the static context?
@@ -89,44 +96,36 @@ feature -- Element change
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
 			warnings: warnings implies xpath_one_compatibility
 		local
-			input_stream: KL_TEXT_INPUT_FILE
 			a_context_node: XM_XPATH_NODE
 			has_error: BOOLEAN
 		do
-			create input_stream.make (a_source_uri)
-			input_stream.open_read
-			if input_stream.is_open_read then
-				make_parser (a_source_uri, use_tiny_tree_model)
-				parser.parse_from_stream (input_stream)
+			make_parser (use_tiny_tree_model)
+			parser.parse_from_system (a_source_uri)
+			if use_tiny_tree_model then
+				has_error := tiny_tree_pipe.tree.has_error
+			else
+				has_error := tree_pipe.tree.has_error
+			end
+			if has_error then
+				was_build_error := True
 				if use_tiny_tree_model then
-					has_error := tiny_tree_pipe.tree.has_error
+					internal_error_message := tiny_tree_pipe.tree.last_error
 				else
-					has_error := tree_pipe.tree.has_error
-				end
-				if has_error then
-					was_build_error := True
-					if use_tiny_tree_model then
-						internal_error_message := tiny_tree_pipe.tree.last_error
-					else
-						internal_error_message := tree_pipe.tree.last_error
-					end
-				else
-					if use_tiny_tree_model then
-						context_item := tiny_tree_pipe.document
-					else
-						context_item := tree_pipe.document
-					end
-					a_context_node ?= context_item
-						check
-							context_item_is_node: a_context_node /= Void
-							-- because tree_pipe.document is a document node
-						end
-					document := a_context_node.document_root
-					create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (document.name_pool, warnings, xpath_one_compatibility)
+					internal_error_message := tree_pipe.tree.last_error
 				end
 			else
-				was_build_error := True
-				internal_error_message := "Failed to open input source"
+				if use_tiny_tree_model then
+					context_item := tiny_tree_pipe.document
+				else
+					context_item := tree_pipe.document
+				end
+				a_context_node ?= context_item
+				check
+					context_item_is_node: a_context_node /= Void
+					-- because tree_pipe.document is a document node
+				end
+				document := a_context_node.document_root
+				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (document.name_pool, warnings, xpath_one_compatibility)
 			end
 		ensure
 			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
@@ -209,22 +208,20 @@ feature {NONE} -- Implementation
 	is_space_stripped: BOOLEAN
 			-- Do we strip white space?
 
-	make_parser (a_system_id: STRING; use_tiny_tree_model: BOOLEAN) is
-		require
-			system_id_not_void: a_system_id /= Void
+	make_parser (use_tiny_tree_model: BOOLEAN) is
 		local
-			entity_resolver: XM_FILE_EXTERNAL_RESOLVER
+			entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			create entity_resolver.make
+			entity_resolver := new_file_resolver_current_directory
 			create parser.make
 			parser.copy_string_mode (Current)
 			parser.set_resolver (entity_resolver)
 			if use_tiny_tree_model then
-				create tiny_tree_pipe.make (a_system_id)
+				create tiny_tree_pipe.make (parser, is_line_numbering)
 				parser.set_callbacks (tiny_tree_pipe.start)
 				parser.set_dtd_callbacks (tiny_tree_pipe.emitter)
 			else
-				create tree_pipe.make (a_system_id)
+				create tree_pipe.make (parser, is_line_numbering)
 				parser.set_callbacks (tree_pipe.start)
 				parser.set_dtd_callbacks (tree_pipe.emitter)
 			end

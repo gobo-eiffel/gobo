@@ -20,7 +20,7 @@ inherit
 		undefine
 			local_part
 		redefine
-			name_code, sequence_number, parent
+			name_code, sequence_number, parent, line_number
 		end
 	
 creation
@@ -41,6 +41,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
+	line_number: INTEGER is
+			-- Line number of node in original source document, or -1 if not known
+		do
+			Result := parent.line_number
+		end
+
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order)
 		do

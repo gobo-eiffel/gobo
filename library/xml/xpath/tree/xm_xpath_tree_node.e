@@ -32,6 +32,24 @@ feature -- Access
 	document: XM_XPATH_TREE_DOCUMENT
 			-- Document that owns this node
 
+	system_id: STRING is
+			-- SYSTEM id of `Current'
+		do
+
+			-- default implementation for child nodes
+
+			Result := parent.system_id
+		end
+
+	line_number: INTEGER is
+			-- Line number
+		do
+
+			-- default implementation for child nodes
+
+			Result := parent.line_number
+		end
+			
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order)
 			-- In this implementation, parent nodes (elements and roots)

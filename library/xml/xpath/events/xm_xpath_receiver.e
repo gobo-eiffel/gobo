@@ -122,22 +122,22 @@ feature -- Events
 
 feature -- Element change
 
-	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool in which all name codes can be found.
-		require
-			name_pool_not_void: a_name_pool /= Void
-		do
-			name_pool := a_name_pool
-		ensure
-			name_pool_set: name_pool = a_name_pool
-		end
+--	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
+--			-- Set the name pool in which all name codes can be found.
+--		require
+--			name_pool_not_void: a_name_pool /= Void
+--		do
+--			name_pool := a_name_pool
+--		ensure
+--			name_pool_set: name_pool = a_name_pool
+--		end
 
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree.
-		require
-			system_id_not_void: a_system_id /= Void
-		deferred
-		end
+--	set_system_id (a_system_id: STRING) is
+--			-- Set the system-id of the destination tree.
+--		require
+--			system_id_not_void: a_system_id /= Void
+--		deferred
+--		end
 	
 end
 

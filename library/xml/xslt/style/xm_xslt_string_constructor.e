@@ -17,24 +17,24 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, may_contain_template_body
+			make_style_element, validate, may_contain_sequence_constructor
 		end
 
 feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
 			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Status report
 
-	may_contain_template_body: BOOLEAN is
-			-- Is `Current' allowed to contain a template-body?
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence_constructor?
 		do
 			Result := True
 		end
@@ -77,10 +77,17 @@ feature -- Element change
 			end
 		end	
 
-	compile_content is
+	compile_content (an_executable: XM_XSLT_EXECUTABLE; a_string_constructor: XM_XSLT_TEXT_CONSTRUCTOR) is
 			-- Compile content.
+		require
+			executable_not_void: an_executable /= Void
+			string_constructor_not_void: a_string_constructor /= Void
 		do
-			todo ("compile_content", False)
+			if select_expression /= Void then
+				a_string_constructor.set_select_expression (select_expression)
+			else
+				compile_children (an_executable, a_string_constructor)
+			end
 		end
 
 feature {NONE} -- Implementation

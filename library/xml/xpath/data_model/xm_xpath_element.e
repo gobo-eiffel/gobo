@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPOSITE_NODE
 		redefine
-			type_annotation, is_nilled
+			type_annotation, is_nilled, base_uri
 		end
 
 	XM_UNICODE_CHARACTERS_1_1
@@ -41,6 +41,28 @@ feature -- Access
 			end			
 		end
 
+	base_uri: STRING is
+			-- Base URI
+		local
+			an_xml_base, an_initial_system_id: STRING
+			a_parent: XM_XPATH_COMPOSITE_NODE
+		do
+			an_xml_base := attribute_value (Xml_base_type_code)
+			if an_xml_base /= Void then
+				Result := an_xml_base
+			else
+				an_initial_system_id := system_id
+				a_parent := parent
+				if a_parent = Void then
+					Result := an_initial_system_id
+				elseif
+					STRING_.same_string (a_parent.system_id, an_initial_system_id) then
+					Result := a_parent.base_uri
+				else
+					Result := an_initial_system_id
+				end
+			end
+		end
 
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute

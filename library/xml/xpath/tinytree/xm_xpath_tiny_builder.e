@@ -14,7 +14,7 @@ class XM_XPATH_TINY_BUILDER
 
 inherit
 
-	XM_XPATH_RECEIVER
+	XM_XPATH_BUILDER
 
 	XM_XPATH_TYPE
 
@@ -30,15 +30,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_parser: XM_PARSER; a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Set the name pool in which all name codes can be found
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
 			name_pool := a_name_pool
-			system_id := ""
+			parser := a_parser
+			resolver ?= parser.entity_resolver
 		ensure
 			name_pool_set: name_pool = a_name_pool
+			parser_set: parser = a_parser
 		end
 	
 feature -- Access
@@ -46,9 +48,12 @@ feature -- Access
 	document: XM_XPATH_TINY_DOCUMENT
 			-- Resulting document
 
-	system_id: STRING
-			-- The SYSTEM id of the document being processed
+	parser: XM_PARSER
+			-- XML parser
 
+	resolver: XM_URI_EXTERNAL_RESOLVER
+			-- Entity resolver
+	
 feature -- Status report
 
 	has_error: BOOLEAN
@@ -73,12 +78,17 @@ feature -- Events
 			last_error := Void
 
 			-- TODO add timing information
+
+			system_id := resolver.uri.full_reference
 			if defaults_overridden then
 				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)
 			else
 				create document.make_with_defaults (name_pool, system_id)
 			end
 			current_depth := 1
+			if is_line_numbering then
+				document.set_line_numbering
+			end
 			document.add_node (Document_node, current_depth, -1, -1, -1)
 			create previously_at_depth.make (1, 100)
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
@@ -128,7 +138,10 @@ feature -- Events
 			end
 			previously_at_depth.put (-1, current_depth) -- no previous sibling
 
-			-- TODO - locator stuff
+			document.set_system_id_for_node (node_number, resolver.uri.full_reference)
+			if is_line_numbering then
+				document.set_line_number_for_node (node_number, parser.position.row)
+			end
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -201,13 +214,18 @@ feature -- Events
 			document.store_comment (a_data_string)
 			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, a_data_string.count, a_name_code)
 			node_number := document.last_node_added
-			
+
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
 				document.set_next_sibling (node_number, a_previous_sibling)
 			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.put (node_number, current_depth)		
+			previously_at_depth.put (node_number, current_depth)
+
+			document.set_system_id_for_node (node_number, resolver.uri.full_reference)
+			if is_line_numbering then
+				document.set_line_number_for_node (node_number, parser.position.row)
+			end
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
@@ -218,7 +236,7 @@ feature -- Events
 			document.store_comment (a_content_string)
 			document.add_node (Comment_node, current_depth, document.comment_buffer_length, a_content_string.count, -1)
 			node_number := document.last_node_added
-			
+
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
 				document.set_next_sibling (node_number, a_previous_sibling)
@@ -281,14 +299,6 @@ feature -- Status setting
 			default_parameters_overridden: defaults_overridden = True
 		end
 
-feature -- Element change
-
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree
-		do
-			system_id := a_system_id
-		end
-
 feature {NONE} -- Implementation
 
 	defaults_overridden: BOOLEAN
@@ -307,6 +317,7 @@ feature {NONE} -- Implementation
 invariant
 	positive_depth: current_depth >= 0
 	name_pool_not_void: name_pool /= Void
-	system_id_not_void: system_id /= Void
+	parser_not_void: parser /= Void
+	resolver_not_void: resolver /= Void
 
 end

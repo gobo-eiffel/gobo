@@ -185,9 +185,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_special_properties is
 			-- Compute special properties.
 		do
-			create special_properties.make (1, 6)
-			-- All `False' by default
-			are_special_properties_computed := True
+			initialize_special_properties
 			set_context_document_nodeset
 			if is_forward_axis (axis) then
 				set_ordered_nodeset

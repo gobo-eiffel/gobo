@@ -248,7 +248,7 @@ feature -- Evaluation
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a String
+			-- Evaluate as a String.
 			-- This procedure must only be called in contexts where it is known
 			--  that the expression will evaluate to a single string (or where an empty sequence
 			--  is to be treated as a zero-length string). Implementations should not attempt to convert

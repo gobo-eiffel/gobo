@@ -66,6 +66,7 @@ feature -- Element change
 			if a_name_attribute = Void then
 				report_absence ("name")
 			else
+				key_name := a_name_attribute
 				generate_name_code (a_name_attribute)
 				if last_generated_name_code = -1 then
 					report_compile_error (error_message)
@@ -91,15 +92,18 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		local
+			a_key_manager: XM_XSLT_KEY_MANAGER
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
+			a_collation_name: STRING
 		do
 			check_top_level
 			if use /= Void then
 				check_empty_with_attribute ("use")
 			else
 				check_not_empty_missing_attribute ("use")
+				todo ("validate - sequence constructor is not yet supported", True)
 			end
 			if not any_compile_errors then
 				create a_type_checker
@@ -121,21 +125,45 @@ feature -- Element change
 			if not any_compile_errors and then match /= Void then
 				type_check_pattern ("match", match)
 			end
-			
-			-- TODO check that the collation for this key is consistent
-			--  with other key definitions of the same name
 
+			if collation_uri = Void then
+				collation_uri := static_context.default_collation_name
+			end
+			a_key_manager := principal_stylesheet.key_manager
+			if a_key_manager.has_key (key_fingerprint) then
+				a_collation_name := a_key_manager.collation_uri (key_fingerprint)
+				if not STRING_.same_string (a_collation_name, collation_uri) then
+					report_compile_error (STRING_.appended_string("inconsistent collation names for key ", key_name))
+				end
+			end
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
+		local
+			a_key_manager: XM_XSLT_KEY_MANAGER
+			a_key_definition: XM_XSLT_KEY_DEFINITION
+			a_collator: ST_COLLATOR
+			a_message: STRING
 		do
-			todo ("compile", False)
+			last_generated_instruction := Void
+			if not principal_stylesheet.is_collator_defined (collation_uri) = Void then
+				a_message := STRING_.appended_string ("The collation named '", collation_uri)
+				report_compile_error (STRING_.appended_string (a_message, "' has not been defined"))
+			else
+				a_collator := principal_stylesheet.find_collator (collation_uri)
+			end
+			a_key_manager := principal_stylesheet.key_manager
+			create a_key_definition.make (match, use, a_collator, collation_uri)
+			a_key_manager.add_key_definition (a_key_definition, key_fingerprint)
 		end
 
 feature {NONE} -- Implementation
+
+	key_name: STRING
+			-- Name of key (for diagnostic purposes)
 
 	key_fingerprint: INTEGER
 			-- Fingerprint of the key's QName
@@ -148,5 +176,11 @@ feature {NONE} -- Implementation
 
 	collation_uri: STRING
 			-- Collation URI to use when comparing key names
+
+invariant
+
+	use: not any_compile_errors and then validated implies use /= Void
+	key_name: attributes_prepared and then not any_compile_errors implies key_name /= Void
+	collation_uri: not any_compile_errors and then validated implies collation_uri /= Void
 
 end

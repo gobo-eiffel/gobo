@@ -17,8 +17,10 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, returned_item_type, may_contain_template_body
+			validate, returned_item_type, may_contain_sequence_constructor
 		end
+
+	XM_XSLT_PROCEDURE
 
 	XM_XPATH_ROLE
 
@@ -86,8 +88,8 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_template_body: BOOLEAN is
-			-- Is `Current' allowed to contain a template-body?
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
@@ -97,6 +99,12 @@ feature -- Status report
 
 	is_global_variable: BOOLEAN
 			-- Is `Current' a global variable?
+
+	is_required_parameter: BOOLEAN
+			-- Is this a required parameter?
+
+	is_tunnel_parameter: BOOLEAN
+			-- Is this a tunnel parameter?
 
 feature -- Status setting
 	
@@ -183,9 +191,9 @@ feature -- Status setting
 			end
 			if a_tunnel_attribute /= Void then
 				if STRING_.same_string (a_tunnel_attribute, "yes") then
-					is_tunnel := True
+					is_tunnel_parameter := True
 				elseif STRING_.same_string (a_tunnel_attribute, "no") then
-					is_tunnel := False
+					is_tunnel_parameter := False
 				else
 					report_compile_error ("The attribute 'tunnel' must be set to 'yes' or 'no'")
 				end
@@ -207,12 +215,12 @@ feature -- Status setting
 			a_parameter: XM_XSLT_PARAM
 		do
 			a_stylesheet ?= parent
-			is_global := a_stylesheet /= Void
+			is_global_variable := a_stylesheet /= Void
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.appended_string ("An ", node_name)
 				report_compile_error (STRING_.appended_string (a_message, " element with a select attribute must be empty"))
 			else
-				check_against_required_type
+				if as_type /= Void then check_against_required_type (as_type) end
 				if not any_compile_errors then
 					if select_expression = Void and then allows_value then
 						is_text_only := True
@@ -266,30 +274,29 @@ feature -- Status setting
 			end
 		end
 
-	check_against_required_type is
+	check_against_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE) is
 			-- Check the expression conforms to `as_type'.
 		require
 			no_compile_errors: not any_compile_errors
+			required_type_not_void: a_required_type /= Void
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
-			if as_type /= Void then
-				create a_role.make (Variable_role, variable_name, 1)
-				if select_expression /= Void then
-					create a_type_checker
-					a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
-					if a_type_checker.is_static_type_check_error	then
-						report_compile_error (a_type_checker.static_type_check_error_message)
-					else
-						select_expression := a_type_checker.checked_expression
-					end
+			create a_role.make (Variable_role, variable_name, 1)
+			if select_expression /= Void then
+				create a_type_checker
+				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					report_compile_error (a_type_checker.static_type_check_error_message)
 				else
-
-					-- TODO: check the type of the instruction sequence statically
-
-					todo ("check_against_required_type", True)
+					select_expression := a_type_checker.checked_expression
 				end
+			else
+				
+				-- TODO: check the type of the instruction sequence statically
+				
+				todo ("check_against_required_type", True)
 			end
 		end
 
@@ -309,19 +316,36 @@ feature {NONE} -- Implementation
 
 	cached_variable_fingerprint: INTEGER
 
-	is_required_parameter: BOOLEAN
-			-- Is this a required parameter?
-
-	is_tunnel: BOOLEAN
-			-- Is this a tunnel parameter?
-
 	is_text_only: BOOLEAN
 			-- Is the value of `Current' computed solely from text nodes?
 
-	is_global: BOOLEAN
-			-- Is `Current' a global variable/parameter?
-
 	constant_text: STRING
 			-- Value of `Current' when it has a single text node child
+
+	initialize_instruction (an_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_COMPILED_GENERAL_VARIABLE) is
+			-- Initialize - common code called from the `compile' routine of all subclasses.
+		require
+			executable_not_void: an_executable /= Void
+			variable_not_void: a_variable /= Void
+		local
+			a_document: XM_XSLT_COMPILED_DOCUMENT
+		do
+			a_variable.initialize (select_expression, as_type, variable_fingerprint)
+			a_variable.set_global_variable (is_global_variable)
+			a_variable.set_required_parameter (is_required_parameter)
+			a_variable.set_tunnel_parameter (is_tunnel_parameter)
+			a_variable.set_contains_locals (is_global_variable and then number_of_variables > 0)
+
+			-- Handle the "temporary tree" case by creating a Document sub-instruction
+			-- to construct and return a document node.
+
+			if has_child_nodes and then as_type = Void then
+				create a_document.make (is_text_only, constant_text, base_uri)
+				compile_children (an_executable, a_document)
+				a_variable.set_selector (a_document)
+			else
+				compile_children (an_executable, a_variable)
+			end
+		end
 
 end

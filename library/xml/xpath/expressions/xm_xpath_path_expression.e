@@ -552,9 +552,7 @@ feature {NONE} -- Implementation
 		local
 			an_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
-			create special_properties.make (1, 6)
-			are_special_properties_computed := True
-			-- All `False' by default
+			initialize_special_properties
 
 			if not are_cardinalities_computed then compute_cardinality end
 			if not start.are_special_properties_computed then

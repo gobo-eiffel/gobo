@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
 			mode_name_code := -1 -- default mode
 			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Status setting
@@ -109,13 +109,18 @@ feature -- Element change
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			a_rule_manager: XM_XSLT_RULE_MANAGER
 		do
 			check_within_template
 
 			-- get the mode object
 
 			if not use_current_mode then
-				mode := principal_stylesheet.rule_manager.mode (mode_name_code)
+				a_rule_manager := principal_stylesheet.rule_manager
+				if not a_rule_manager.is_mode_registered (mode_name_code) then
+					a_rule_manager.register_mode (mode_name_code)
+				end
+				mode := a_rule_manager.mode (mode_name_code)
 			end
 
 			from
@@ -161,7 +166,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
 		do

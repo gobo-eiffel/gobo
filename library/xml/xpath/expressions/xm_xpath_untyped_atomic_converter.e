@@ -184,14 +184,17 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 	
+	sequence: XM_XPATH_EXPRESSION
+			-- Base expression 
+
+	target_type: XM_XPATH_ITEM_TYPE
+			-- Target type 
+
 	compute_cardinality is
 			-- Compute cardinality.
 		do
 			clone_cardinality (sequence)
 		end
-
-	sequence: XM_XPATH_EXPRESSION
-			-- Base expression 
 
 	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
 			-- Set `sequence'
@@ -203,8 +206,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			sequence_set: sequence = a_sequence
 		end
 
-	target_type: XM_XPATH_ITEM_TYPE
-			-- Target type 
 
 invariant
 

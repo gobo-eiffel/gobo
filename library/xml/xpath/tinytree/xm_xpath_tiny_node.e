@@ -24,6 +24,18 @@ inherit
 
 feature -- Access
 
+	system_id: STRING is
+			-- SYSTEM id of `Current', or `Void' if not known
+		do
+			Result := document.system_id_for_node (node_number)
+		end
+
+	line_number: INTEGER is
+			-- Line number of node in original source document, or -1 if not known
+		do
+			Result := document.line_number_for_node (node_number)
+		end
+
 	node_number: INTEGER
 			-- Uniquely identifies this node within the document (when combined with `node_kind')
 

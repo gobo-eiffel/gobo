@@ -72,7 +72,7 @@ feature -- Element change
 			end
 			if a_separator_attribute /= Void then
 				generate_attribute_value_template (a_separator_attribute, static_context)
-				separator := last_generated_expression
+				seperator_expression := last_generated_expression
 			end
 			attributes_prepared := True
 		end
@@ -90,21 +90,42 @@ feature -- Element change
 					select_expression := select_expression.replacement_expression
 				end
 			end
-			if separator /= Void and then not separator.is_error then
-				type_check_expression ("separator", separator)
-				if separator.was_expression_replaced then
-					separator := separator.replacement_expression
+			if seperator_expression /= Void and then not seperator_expression.is_error then
+				type_check_expression ("separator", seperator_expression)
+				if seperator_expression.was_expression_replaced then
+					seperator_expression := seperator_expression.replacement_expression
 				end
 			end			
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+		local
+			a_value_of: XM_XSLT_COMPILED_VALUE_OF
 		do
-			-- compile_content
-			todo ("compile", False)
+			if seperator_expression = Void and then select_expression /= Void
+			 and then is_backwards_compatible_processing_enabled then
+				if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
+					create {XM_XPATH_ATOMIZER_EXPRESSION} select_expression.make (select_expression)
+				end
+				if select_expression.cardinality_allows_many then
+					create {XM_XPATH_FIRST_ITEM_EXPRESSION} select_expression.make (select_expression)
+				end
+				if not is_sub_type (select_expression.item_type, type_factory.string_type) then
+					create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} select_expression.make (select_expression, type_factory.string_type)
+				end
+			elseif seperator_expression = Void then
+				if select_expression = Void then
+					create {XM_XPATH_STRING_VALUE} seperator_expression.make ("")
+				else
+					create {XM_XPATH_STRING_VALUE} seperator_expression.make (" ")
+				end
+			end
+			create a_value_of.make (select_expression)
+			compile_content (an_executable, a_value_of)
+			a_value_of.set_separator_expression (seperator_expression)
+			last_generated_instruction := a_value_of
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -117,7 +138,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature {NONE} -- Implementation
 
-	separator: XM_XPATH_EXPRESSION
+	seperator_expression: XM_XPATH_EXPRESSION
 			-- String used to separate adjacent items in the output sequence
 
 end

@@ -21,6 +21,8 @@ inherit
 
 	XM_XSLT_STRING_ROUTINES
 
+	XM_XPATH_ROLE
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -29,13 +31,13 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
 			cached_variable_fingerprint := -1
 			create references.make (5)
 			allows_tunnel := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Access
@@ -133,11 +135,51 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+		local
+			a_function: XM_XSLT_FUNCTION
+			a_slot_number: INTEGER
+			a_conversion: XM_XPATH_EXPRESSION
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_supplied_parameter_reference: XM_XSLT_SUPPLIED_PARAMETER_REFERENCE
+			a_param: XM_XSLT_COMPILED_PARAM
 		do
-			todo ("compile", False)
+			last_generated_instruction := Void
+			if is_global_variable and then not is_redundant_variable then
+				principal_stylesheet.allocate_local_slots (number_of_variables)
+			end
+			a_function ?= parent
+			if a_function /= Void then
+				
+				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
+            --  the general-purpose XM_XSLT_COMPILED_PARAM object
+				todo ("compile", True)
+			else
+				a_slot_number := slot_number
+				if as_type /= Void then
+					create a_type_checker
+					create a_role.make (Variable_role, variable_name, 1)
+					create a_supplied_parameter_reference.make (a_slot_number)
+					a_type_checker.static_type_check (static_context, a_supplied_parameter_reference, as_type, False, a_role)
+					if a_type_checker.is_static_type_check_error then
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					else
+						a_conversion := a_type_checker.checked_expression
+					end
+				end
+				if is_error then
+					report_compile_error (error_value.error_message)
+				else
+					create a_param.make (variable_name, a_slot_number)
+					initialize_instruction (an_executable, a_param)
+					a_param.set_required_type (required_type)
+					a_param.set_conversion (a_conversion)
+					fixup_binding (a_param)
+					last_generated_instruction := a_param
+				end
+			end
 		end
 
 end

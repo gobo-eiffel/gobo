@@ -23,9 +23,9 @@ inherit
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			is_nilled, local_part
+			is_nilled, local_part, base_uri
 		redefine
-			name_code
+			name_code, system_id, line_number
 		end
 
 	XM_XPATH_ERROR_TYPES
@@ -41,12 +41,11 @@ creation {XM_XPATH_NODE_FACTORY}
 feature {NONE} -- Initialization
 
 	make (a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-			a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+			a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		require
 			document_not_void: a_document /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
-			base_uri_not_void: a_base_uri /= Void
 		do
 			document := a_document
 			parent_node := a_parent
@@ -64,8 +63,6 @@ feature {NONE} -- Initialization
 				create namespace_code_list.make (5)
 			end
 			sequence_number_high_word := a_sequence_number
-			-- TODO root.set_line_number (a_line_number, a_sequence_number)
-			-- TODO root.set_system_id (a_base_uri, a_sequence_number)
 		ensure
 			name_code_set: name_code = a_name_code
 		end
@@ -100,6 +97,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	system_id: STRING is
+			-- SYSTEM id of `Current', or `Void' if not known
+		do
+			Result := document.system_id_for_node (sequence_number_high_word)
+		end
+
+	line_number: INTEGER is
+			-- Line number of node in original source document, or -1 if not known
+		do
+			Result := document.line_number_for_node (sequence_number_high_word)
+		end
 
 	name_code: INTEGER
 			-- Name code of this node - used in displaying names

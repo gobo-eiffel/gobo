@@ -16,10 +16,12 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, mark_tail_calls, may_contain_template_body
+			make_style_element, validate, returned_item_type, mark_tail_calls, may_contain_sequence_constructor
 		end
 
 	XM_XSLT_PROCEDURE
+
+	XM_XSLT_MODE_CONSTANTS
 
 creation {XM_XSLT_NODE_FACTORY}
 
@@ -29,19 +31,14 @@ feature {NONE} -- Initialization
 		
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
 			internal_fingerprint := -1 -- Not yet calculated, or not a named template
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Access
-
-	-- These next two need moving elsewhere
-
-	Default_mode: INTEGER is -1
-	All_modes: INTEGER is -2
 
 	priority: DOUBLE
 			-- Priority of this template
@@ -51,6 +48,9 @@ feature -- Access
 
 	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Required type for constructed sequence
+
+	compiled_template: XM_XSLT_COMPILED_TEMPLATE
+			-- Compiled version of `Current'
 
 	template_fingerprint: INTEGER is
 			-- Fingerprint of named template;
@@ -78,8 +78,8 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_template_body: BOOLEAN is
-			-- Is `Current' allowed to contain a template-body?
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
@@ -186,13 +186,52 @@ feature -- Element change
 			if match /= Void then type_check_pattern ("match", match) end
 			mark_tail_calls
 			validated := True
+			create compiled_template.make -- so `{XM_XSLT_CALL_TEMPLATE}.compile' can forward-referenece to it
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
+		local
+			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
+			a_rule_manager: XM_XSLT_RULE_MANAGER
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_mode: XM_XSLT_MODE
+			a_name_code: INTEGER
+			a_rule_value: XM_XSLT_RULE_VALUE
 		do
-			todo ("compile", False)
+			create a_sequence_instruction.make (Void, required_type)
+			compile_children (an_executable, a_sequence_instruction)
+			is_stack_frame_needed := number_of_variables > 0
+			compiled_template.initialize (a_sequence_instruction, is_stack_frame_needed, precedence, minimum_import_precedence, system_id, line_number)
+			if match /= Void then
+				a_rule_manager := principal_stylesheet.rule_manager
+				from
+					a_cursor := mode_name_codes.new_cursor
+					a_cursor.start
+				variant
+					mode_name_codes.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_name_code := a_cursor.item
+					if not a_rule_manager.is_mode_registered (a_name_code) then
+						a_rule_manager.register_mode (a_name_code)
+					end
+					a_mode := a_rule_manager.mode (a_name_code)
+					if a_name_code /= Default_mode and then  a_name_code /= All_modes then
+						a_mode.set_name (target_name_pool.display_name_from_name_code (a_name_code))
+					end
+					create a_rule_value.make (compiled_template)
+					if is_priority_specified then
+						a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
+					else
+						a_rule_manager.set_handler_with_default_priority (match, a_rule_value, a_mode, precedence)
+					end
+					a_cursor.forth
+				end
+			end
+			principal_stylesheet.allocate_local_slots (number_of_variables)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -214,7 +253,25 @@ feature {NONE} -- Implementation
 
 	mode_name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes for the modes applicable to this template
-	
+
+	is_stack_frame_needed: BOOLEAN
+			-- Is a stack fram needed?
+
+	is_priority_specified: BOOLEAN
+			-- has the priority been specified?
+
+	minimum_import_precedence: INTEGER is
+			-- Lowest import pecedence
+		local
+			a_stylesheet: XM_XSLT_STYLESHEET
+		do
+			a_stylesheet ?= document_element
+			check
+				stylesheet: a_stylesheet /= Void
+			end
+			Result := a_stylesheet.minimum_import_precedence
+		end
+
 	prepare_mode_attribute (a_mode_attribute: STRING; is_match_attribute_void: BOOLEAN) is
 			-- Prepare mode attribute
 		require
@@ -283,7 +340,7 @@ feature {NONE} -- Implementation
 					if last_generated_name_code = -1 then
 						report_compile_error (error_message)
 					else
-						internal_fingerprint := last_generated_name_code // bits_20
+						internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					end
 				else
 					report_compile_error ("Template 'name' attribute must be a QName")
@@ -297,6 +354,7 @@ feature {NONE} -- Implementation
 			a_message: STRING
 		do
 			if a_priority_attribute /= Void then
+				is_priority_specified := True
 				if is_match_attribute_void then
 					report_compile_error ("The priority attribute must be absent if the match attribute is absent")
 				else

@@ -17,7 +17,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			may_contain_template_body, validate, compile
+			may_contain_sequence_constructor, validate, compile
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -26,8 +26,8 @@ creation {XM_XSLT_NODE_FACTORY}
 
 feature -- Status report
 
-	may_contain_template_body: BOOLEAN is
-			-- Is `Current' allowed to contain a template-body?
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
@@ -48,7 +48,7 @@ feature -- Element change
 			report_compile_error (a_message)
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
 		do

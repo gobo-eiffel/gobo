@@ -1088,13 +1088,6 @@ feature -- Element change
 		
 feature -- Conversion
 
-	fingerprint_from_name_code (a_name_code: INTEGER): INTEGER is
-			-- Fingerprint of a name, given its name code
-		local
-		do
-			Result := a_name_code - ((a_name_code // bits_20) * bits_20)
-		end
-	
 	namespace_uri_from_name_code (a_name_code: INTEGER): STRING is
 			-- Namespace-URI of a name, given its name code or fingerprint
 		require

@@ -57,6 +57,13 @@ feature -- Status report
 
 feature -- Conversion
 
+	fingerprint_from_name_code (a_name_code: INTEGER): INTEGER is
+			-- Fingerprint of a name, given its name code
+		local
+		do
+			Result := a_name_code - ((a_name_code // bits_20) * bits_20)
+		end
+	
 	local_name_from_expanded_name (an_expanded_name: STRING): STRING is
 			-- Local name from `an_expanded_name'
 		require

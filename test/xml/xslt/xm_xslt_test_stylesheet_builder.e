@@ -31,7 +31,6 @@ feature
 		local
 			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			a_configuration: XM_XSLT_CONFIGURATION
-			a_uri: UT_URI
 			a_uri_source: XM_XSLT_URI_SOURCE
 			a_document_element: XM_XSLT_STYLESHEET
 			a_key: XM_XSLT_KEY
@@ -59,10 +58,10 @@ feature
 			conformance.set_basic_xslt_processor
 			create a_system_function_factory
 			function_factory.register_system_function_factory (a_system_function_factory)
-			create a_configuration
+			create a_configuration.make_with_defaults
+			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet.make (a_configuration)
-			create a_uri.make ("../xpath/data/books.xsl")
-			create a_uri_source.make (a_uri)
+			create a_uri_source.make ("../xpath/data/books.xsl")
 			a_stylesheet.prepare (a_uri_source, False)
 			assert ("Stylesheet compiled without errors", not a_stylesheet.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= void)

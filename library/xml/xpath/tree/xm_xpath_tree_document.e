@@ -22,7 +22,7 @@ inherit
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part
+			document_number, base_uri, local_part, system_id, line_number
 		redefine
 			document_element, next_sibling, previous_sibling, root, document_root
 		end
@@ -42,9 +42,10 @@ feature {NONE} -- Initialization
 			document := Current
 			node_type := Document_node
 			create children.make (5)
+			create system_id_map.make
 			sequence_number_high_word := 1
 			name_pool := a_name_pool
-			base_uri := a_system_id
+			set_system_id (a_system_id)
 			name_pool.allocate_document_number (Current)
 			document_number := name_pool.document_number (Current)
 		ensure
@@ -53,6 +54,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	system_id: STRING is
+			-- SYSTEM id of `Current', or `Void' if not known
+		do
+			Result := system_id_map.system_id (sequence_number_high_word)
+		end
+
+	line_number: INTEGER is
+			-- Line number of node in original source document, or -1 if not known
+		do
+			Result := 0
+		end
 
 	document_element: XM_XPATH_TREE_ELEMENT
 			-- Document element
@@ -173,11 +186,7 @@ feature -- Access
 	document_uri: STRING is
 			-- Absoulte URI of the source from which the document was constructed
 		do
-			if system_id_map = Void then
-				Result := Void
-			else
-				Result := system_id_map.system_id (1)
-			end
+			Result := system_id_map.system_id (1)
 		end
 
 	select_id (an_id: STRING): XM_XPATH_ELEMENT is
@@ -198,9 +207,65 @@ feature -- Access
 			valid_node_number: a_node_number > 0
 		do
 			Result := system_id_map.system_id (a_node_number)
+		ensure
+			system_id_not_void: Result /= Void
 		end
-		
+
+	line_number_for_node (a_node_number: INTEGER): INTEGER is
+			-- Line number of `a_node_number' in original source document, or -1 if not known
+		do
+			if line_number_map /= Void then
+				Result := line_number_map.line_number (a_node_number)
+			end
+		end
+
+feature -- Status report
+
+	is_line_numbering: BOOLEAN is
+			-- is line numbering turned on?
+		do
+			Result := line_number_map /= Void
+		end
+
 feature -- Element change
+
+	set_system_id (a_system_id: STRING) is
+			-- Set the SYSTEM ID.
+		require
+			system_id_not_void: a_system_id /= Void
+		do
+			set_system_id_for_node (1, a_system_id)
+		end
+
+	set_system_id_for_node (a_node_number: INTEGER; a_system_id: STRING) is
+			-- Set the SYSTEM ID for `a_node_number'.
+		require
+			system_id_not_void: a_system_id /= Void
+			valid_node_number: a_node_number > 0
+		do
+			system_id_map.set_system_id(a_node_number, a_system_id)
+		end
+
+	set_line_numbering is
+			-- Turn on line numbering
+		require
+			no_line_numbering: not is_line_numbering
+		do
+			create line_number_map.make
+			set_line_number_for_node (1, 0)
+		ensure
+			line_number_map_not_void: line_number_map /= Void
+		end
+
+	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
+			-- Set the line number for `a_node_number'.
+		require
+			valid_node_number: a_node_number > 0
+		do
+			if line_number_map /= Void then
+				line_number_map.set_line_number(a_node_number, a_line_number)
+			end
+		end
 
 	set_document_element (an_element: XM_XPATH_TREE_ELEMENT) is
 			-- Set `document_element'.
@@ -234,9 +299,13 @@ feature {NONE} -- Implementation
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element or processing-instruction sequence numbers to system-ids
 
+	line_number_map: XM_XPATH_LINE_NUMBER_MAP
+			-- Maps sequence numbers to line numbers
+
 invariant
 
 	no_parent: parent_node = Void
+	system_id_map: system_id_map /= Void
 
 end
 	

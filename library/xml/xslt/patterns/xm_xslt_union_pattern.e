@@ -45,6 +45,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	left_hand_side, right_hand_side: XM_XSLT_PATTERN
+			-- Patterns forming union
+
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
@@ -92,9 +95,6 @@ feature -- Matching
 		end
 
 feature {NONE} -- Implementation
-
-	left_hand_side, right_hand_side: XM_XSLT_PATTERN
-			-- Patterns forming union
 
 	node_type: INTEGER
 			-- Type of nodes in this pattern

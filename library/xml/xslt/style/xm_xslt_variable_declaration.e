@@ -21,8 +21,6 @@ inherit
 
 	XM_XPATH_VARIABLE_DECLARATION
 
-	XM_XSLT_PROCEDURE
-
 feature -- Access
 
 	required_type: XM_XPATH_SEQUENCE_TYPE is
@@ -36,11 +34,12 @@ feature -- Access
 	slot_number: INTEGER is
 			-- Slot number 
 		require
-			non_redundant_global_variable: is_global_variable and then not is_redundant_variable
+			--non_redundant_global_variable: is_global_variable and then not is_redundant_variable
 		do
 			Result := internal_slot_number
 		ensure
-			strictly_positive_result: Result > 0
+			--strictly_positive_result: Result > 0
+			positive_result: Result >= 0
 		end
 			
 	references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]
@@ -48,7 +47,7 @@ feature -- Access
 										  
 feature -- Element change
 
-		register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
 			-- Register `ref' as a reference to this variable for fix-up.
 			-- This routine is called by the XPath parser when
 			-- each reference to the variable is enountered.
@@ -62,7 +61,7 @@ feature -- Element change
 			references.put_last (a_reference)
 		end
 
-		fixup_references is
+	fixup_references is
 			-- Fix up references from XPath expressions.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -102,7 +101,7 @@ feature -- Element change
 			Precursor
 		end
 
-		validate is
+	validate is
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -133,6 +132,26 @@ feature {NONE} -- Implementation
 
 	internal_slot_number: INTEGER
 			-- Slot number
+
+	fixup_binding (a_binding: XM_XPATH_BINDING) is
+			-- Notify all variable references of the Binding instruction.
+		require
+			binding_not_void: a_binding /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
+		do
+			from
+				a_cursor := references.new_cursor
+				a_cursor.start
+			variant
+				references.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_cursor.item.fix_up (a_binding)
+				a_cursor.forth
+			end
+		end
 
 invariant
 

@@ -112,7 +112,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
 		do
@@ -166,7 +166,8 @@ feature {NONE} -- Implementation
 				create {XM_XPATH_EMPTY_SEQUENCE} data_type.make
 			end
 			if a_lang_attribute = Void then
-				create {XM_XPATH_STRING_VALUE} language.make ("") -- TODO
+				create {XM_XPATH_STRING_VALUE} language.make ("")
+				todo ("prepare_attributes_2 - lang", True)
 			else
 				generate_attribute_value_template (a_lang_attribute, static_context)
 				language := last_generated_expression
@@ -175,7 +176,7 @@ feature {NONE} -- Implementation
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
 			else
-				create {XM_XPATH_STRING_VALUE} collation_name.make ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint")
+				create {XM_XPATH_STRING_VALUE} collation_name.make (static_context.default_collation_name)
 			end
 		end
 

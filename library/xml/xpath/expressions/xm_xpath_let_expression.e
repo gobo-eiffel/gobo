@@ -230,7 +230,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute special properties.
 		do
 			clone_special_properties (action)
-			are_special_properties_computed := True
 		end
 
 feature {NONE} -- Implementation

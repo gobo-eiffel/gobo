@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			type_annotation, has_attributes, local_part
+			type_annotation, has_attributes, local_part, base_uri
 		end
 
 creation
@@ -69,10 +69,10 @@ feature -- Access
 					document.number_of_attributes	+ 1 - an_alpha_value
 				until
 					finished or else an_alpha_value > document.number_of_attributes
-						or else document.attribute_parent (an_alpha_value) = node_number
+						or else document.attribute_parent (an_alpha_value) /= node_number
 				loop
 					a_name_code := document.attribute_name_code (an_alpha_value)
-					if a_name_code // bits_20 = a_fingerprint then
+					if fingerprint_from_name_code (a_name_code) = a_fingerprint then
 						Result := document.attribute_value (an_alpha_value)
 						finished := True
 					end

@@ -74,12 +74,21 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+		local
+			a_comment: XM_XSLT_COMPILED_COMMENT
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			-- calls compile_content
-			todo ("compile", False)
+			create a_comment.make
+			compile_content (an_executable, a_comment)
+			if select_expression = Void then
+				create a_string_value.make ("")
+			else
+				create a_string_value.make (" ")
+			end
+			a_comment.set_separator_expression (a_string_value)
+			last_generated_instruction := a_comment
 		end
 
 end

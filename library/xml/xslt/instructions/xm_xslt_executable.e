@@ -12,31 +12,14 @@ indexing
 
 class XM_XSLT_EXECUTABLE
 
-inherit
+creation
 
-	XM_XSLT_INSTRUCTION
+	make
 
-feature --Access
+feature {NONE} -- Initialization
 
-	configuration: XM_XSLT_CONFIGURATION
-			-- User configuration options
-
-feature -- Evaluation
-
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
-			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
-		do
-
-			-- This is called to initialize processing, but currently does nothing.
-			-- The transformer takes charge of finding the initial template.
-			
-			last_tail_call := Void
-		end
-
-feature -- Element change
-
-	set_configuration (a_configuration: XM_XSLT_CONFIGURATION) is
-			-- Set `configuration'.
+	make (a_configuration: XM_XSLT_CONFIGURATION) is
+			-- Establish invariant.
 		require
 			configuration_not_void: a_configuration /= Void
 		do
@@ -44,6 +27,15 @@ feature -- Element change
 		ensure
 			configuration_set: configuration = a_configuration
 		end
+
+feature --Access
+
+	configuration: XM_XSLT_CONFIGURATION
+			-- User configuration options
+
+invariant
+
+	configuration_not_void: configuration /= Void
 
 end
 	

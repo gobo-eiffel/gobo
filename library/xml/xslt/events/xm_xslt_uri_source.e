@@ -16,8 +16,6 @@ inherit
 
 	XM_XSLT_SOURCE
 
-	XM_STRING_MODE
-
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -26,19 +24,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_uri: UT_URI) is
+	make (a_system_id: STRING) is
 			-- Set `system_id'.
 		require
-			uri_not_void: a_uri /= Void
-			temporarily_only_supports_file: a_uri.has_valid_scheme implies STRING_.same_string (a_uri.scheme, "file")
+			system_id_not_void: a_system_id /= Void
 		do
-
-			-- temporary bodge
-
-			set_system_id (a_uri.path)
+			system_id := a_system_id
 		ensure
-			-- system_id_set: STRING_.same_string (system_id, a_uri.full_reference)
-			system_id_set: STRING_.same_string (system_id, a_uri.path)
+			system_id_set: STRING_.same_string (system_id, a_system_id)
 		end
 
 feature -- Access
@@ -48,7 +41,7 @@ feature -- Access
 
 feature -- Events
 
-	send (a_configuration: XM_XSLT_CONFIGURATION; a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL; is_stylesheet: BOOLEAN) is
+	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
 		do
 			create content_emitter.make (a_receiver, a_name_pool)
@@ -56,14 +49,9 @@ feature -- Events
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create start.set_next (attributes)
-			create entity_resolver.make
-			create entity_resolver.make
-			create parser.make
-			parser.set_resolver (entity_resolver)
-			parser.copy_string_mode (Current)
-			parser.set_callbacks (start)
-			parser.set_dtd_callbacks (content_emitter)
-			parser.parse_from_system (system_id)
+			a_parser.set_callbacks (start)
+			a_parser.set_dtd_callbacks (content_emitter)
+			a_parser.parse_from_system (system_id)
 		end
 
 feature -- Element change
@@ -76,12 +64,6 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 		
-	parser: XM_EIFFEL_PARSER
-			-- Eiffel parse
-	
-	entity_resolver: XM_FILE_EXTERNAL_RESOLVER
-			-- Entity resolver
-
 	content_emitter :XM_XPATH_CONTENT_EMITTER
 			-- Content emitter
 

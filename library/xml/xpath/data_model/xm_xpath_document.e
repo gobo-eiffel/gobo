@@ -26,8 +26,11 @@ feature -- Access
 	document_number: INTEGER
 			-- Uniquely identifies this document.
 
-	base_uri: STRING
+	base_uri: STRING is
 			-- Base URI
+		do
+			Result := system_id
+		end
 
 	node_kind: STRING is
 			-- Kind of node
@@ -86,6 +89,5 @@ feature -- Access
 invariant
 
 	name_pool_not_void: name_pool /= Void
-	base_uri_not_void: base_uri /= Void
 
 end

@@ -24,13 +24,10 @@ feature {NONE} -- Initialization
 	make_value is
 			-- Establish static properties
 		do
-			create special_properties.make (1, 6) -- All False
-			create dependencies.make (1, 6) -- All False
-			intrinsic_dependencies := dependencies
+			initialize_special_properties
+			initialize_dependencies
+			initialize_intrinsic_dependencies 
 			set_cardinality_zero_or_more
-			are_intrinsic_dependencies_computed := True
-			are_dependencies_computed := True
-			are_special_properties_computed := True
 		end
 	
 feature -- Access

@@ -13,7 +13,7 @@ class XM_XPATH_TREE_BUILDER
 
 inherit
 
-	XM_XPATH_RECEIVER
+	XM_XPATH_BUILDER
 
 	XM_XPATH_TYPE
 
@@ -29,29 +29,34 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_factory: XM_XPATH_NODE_FACTORY) is
+	make (a_parser: XM_PARSER; a_name_pool: XM_XPATH_NAME_POOL; a_node_factory: XM_XPATH_NODE_FACTORY) is
 			-- Set name pool and node factory..
 		require
 			name_pool_not_void: a_name_pool /= Void
-			node_factory_not_void: a_node_factory /= void
+			node_factory_not_void: a_node_factory /= Void
+			parser_not_void: a_parser /= Void
 		do
 			name_pool := a_name_pool
-			system_id := ""
 			node_factory := a_node_factory
+			parser := a_parser
+			resolver ?= parser.entity_resolver
 		ensure
 			name_pool_set: name_pool = a_name_pool
 			node_factory_set: node_factory = a_node_factory
+			parser_set: parser = a_parser
 		end
 
 feature -- Access
 
-
 	document: XM_XPATH_TREE_DOCUMENT
 			-- Resulting document
 
-	system_id: STRING
-			-- The SYSTEM id of the document being processed
+	parser: XM_PARSER
+			-- XML parser
 
+	resolver: XM_URI_EXTERNAL_RESOLVER
+			-- Entity resolver
+	
 feature -- Status report
 
 	has_error: BOOLEAN
@@ -77,10 +82,14 @@ feature -- Events
 
 			-- TODO add timing information
 
+			system_id := resolver.uri.full_reference
 			create document.make (name_pool, system_id)
 			current_depth := 1
 			next_node_number := 2
 			current_composite_node := document
+			if is_line_numbering then
+				document.set_line_numbering
+			end
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -144,11 +153,16 @@ feature -- Events
 			a_counter: INTEGER
 		do
 			if not has_error then
-				an_element := node_factory.new_element_node (document, current_composite_node, pending_attributes, pending_namespaces, pending_element_name_code, next_node_number)
+				an_element := node_factory.new_element_node (document, current_composite_node, pending_attributes, pending_namespaces,
+																			pending_element_name_code, next_node_number)
 				if an_element.is_error then
 					has_error := True
 					last_error := an_element.error_value.error_message
 				else
+					document.set_system_id_for_node (next_node_number, resolver.uri.full_reference)
+					if is_line_numbering then
+						document.set_line_number_for_node (next_node_number, parser.position.row)
+					end
 					next_node_number := next_node_number + 1
 					current_depth := current_depth + 1
 					if current_composite_node = document then
@@ -201,9 +215,8 @@ feature -- Events
 				end
 				create a_processing_instruction.make (document, a_name_code, a_data_string)
 				current_composite_node.add_child (a_processing_instruction)
-				
-				-- TODO: locator info
-				
+
+				a_processing_instruction.set_location (resolver.uri.full_reference, parser.position.row)
 			end
 		end
 
@@ -227,14 +240,6 @@ feature -- Events
 
 			current_composite_node := Void
 			node_factory := Void
-		end
-
-feature -- Element change
-
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree
-		do
-			system_id := a_system_id
 		end
 
 feature {NONE} -- Implementation
@@ -265,6 +270,8 @@ feature {NONE} -- Implementation
 invariant
 
 	last_error_not_void: has_error implies last_error /= Void
+	parser_not_void: parser /= Void
+	resolver_not_void: resolver /= Void
 
 end
 	

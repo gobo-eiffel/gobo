@@ -33,7 +33,7 @@ inherit
 		undefine
 			document_number, base_uri, local_part
 		redefine
-			root, document_root
+			root, document_root, system_id, line_number
 		end
 	
 	XM_XPATH_STANDARD_NAMESPACES
@@ -68,7 +68,8 @@ feature {NONE} -- Initialization
 			node_number := 1
 			document := Current
 			node_type := Document_node
-			
+
+			create system_id_map.make
 			create node_kinds.make (1, an_estimated_node_count)
 			create depth.make (1, an_estimated_node_count)
 			create next_sibling_indices.make (1, an_estimated_node_count)
@@ -85,12 +86,12 @@ feature {NONE} -- Initialization
 			create namespace_codes.make (an_estimated_namespace_count)
 
 			name_pool := a_name_pool
-			base_uri := a_system_id
+			set_system_id (a_system_id)
 			name_pool.allocate_document_number (Current)
 			document_number := name_pool.document_number (Current)
 		ensure
 			name_pool_set: name_pool = a_name_pool
-			base_uri_set: STRING_.same_string (base_uri, a_system_id)
+			--base_uri_set: STRING_.same_string (base_uri, a_system_id)
 		end
 
 	make_with_defaults (a_name_pool: XM_XPATH_NAME_POOL; a_system_id: STRING) is
@@ -101,10 +102,22 @@ feature {NONE} -- Initialization
 			make (4000, 100, 20, 4000, a_name_pool, a_system_id)
 		ensure
 			name_pool_set: name_pool = a_name_pool
-			base_uri_set: STRING_.same_string (base_uri, a_system_id)
+			--base_uri_set: STRING_.same_string (base_uri, a_system_id)
 		end
 
 feature -- Access
+
+	system_id: STRING is
+			-- SYSTEM id of `Current', or `Void' if not known
+		do
+			Result := system_id_map.system_id (node_number)
+		end
+
+	line_number: INTEGER is
+			-- Line number of node in original source document, or -1 if not known
+		do
+			Result := 0
+		end
 
 	character_buffer: STRING
 			-- The document contents
@@ -206,11 +219,7 @@ feature -- Access
 	document_uri: STRING is
 			-- Absoulte URI of the source from which the document was constructed
 		do
-			if system_id_map = Void then
-				Result := Void
-			else
-				Result := system_id_map.system_id (node_number)
-			end
+			Result := system_id_map.system_id (node_number)
 		end
 
 	alpha_value (a_node_number: INTEGER): INTEGER is
@@ -440,6 +449,20 @@ feature -- Access
 			valid_node_number: is_node_number_valid (a_node_number)
 		do
 			Result := system_id_map.system_id (a_node_number)
+		ensure
+			system_id_not_void: Result /= Void
+		end
+
+	line_number_for_node (a_node_number: INTEGER): INTEGER is
+			-- Line number of node referenced by `a_node_number'
+		require
+			valid_node_number: is_node_number_valid (a_node_number)
+		do
+			if line_number_map /= Void then
+				Result := line_number_map.line_number (a_node_number)
+			else
+				Result := -1
+			end
 		end
 		
 	last_node_added: INTEGER
@@ -463,6 +486,12 @@ feature -- Status report
 			-- Does `an_namespace_number' represent a valid namespace?
 		do
 			Result := an_namespace_number > 0 and then an_namespace_number <= number_of_namespaces
+		end
+
+	is_line_numbering: BOOLEAN is
+			-- is line numbering turned on?
+		do
+			Result := line_number_map /= Void
 		end
 
 	number_of_attributes: INTEGER is
@@ -642,6 +671,44 @@ feature -- Element change
 			correct_beta: beta.item (number_of_nodes) = a_beta_value
 			correct_name_codes: name_codes.item (number_of_nodes) = a_new_name_code
 			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
+		end
+
+	set_system_id (a_system_id: STRING) is
+			-- Set the SYSTEM ID.
+		require
+			system_id_not_void: a_system_id /= Void
+		do
+			set_system_id_for_node (1, a_system_id)
+		end
+
+	set_system_id_for_node (a_node_number: INTEGER; a_system_id: STRING) is
+			-- Set the SYSTEM ID for `a_node_number'.
+		require
+			system_id_not_void: a_system_id /= Void
+			valid_node_number: (a_node_number = 1 and last_node_added = 0) or else is_node_number_valid (a_node_number)
+		do
+			system_id_map.set_system_id(a_node_number, a_system_id)
+		end
+
+	set_line_numbering is
+			-- Turn on line numbering
+		require
+			no_line_numbering: not is_line_numbering
+		do
+			create line_number_map.make
+			set_line_number_for_node (1, 0)
+		ensure
+			line_number_map_not_void: line_number_map /= Void
+		end
+
+	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
+			-- Set the line number for `a_node_number'.
+		require
+			valid_node_number: (a_node_number = 1 and last_node_added = 0) or else is_node_number_valid (a_node_number)
+		do
+			if line_number_map /= Void then
+				line_number_map.set_line_number(a_node_number, a_line_number)
+			end
 		end
 
 	set_element_annotation (which_node: INTEGER; a_new_type: INTEGER) is
@@ -907,6 +974,9 @@ feature {NONE} -- Implementation
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element or processing-instruction sequence numbers to system-ids
 			
+	line_number_map: XM_XPATH_LINE_NUMBER_MAP
+			-- Maps sequence numbers to line numbers
+			
 invariant
 
 	node_kinds_not_void: node_kinds /= Void
@@ -923,5 +993,6 @@ invariant
 	positive_node_count: number_of_nodes >= 0
 	positive_attribute_count: number_of_attributes >= 0 and number_of_attributes = attribute_values.count
 	namespace_count: number_of_namespaces >= 0 and then number_of_namespaces < 32768
+	system_id_map: system_id_map /= Void
 
 end

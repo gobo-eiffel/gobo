@@ -34,18 +34,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_system_id: STRING) is
+	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN) is
 			-- Create a new pipe.
 		require
-			system_id_not_void: a_system_id /= Void
+			parser_not_void: a_parser /= Void
 		local
 			a_namespace_resolver: XM_NAMESPACE_RESOLVER
 			a_node_factory: XM_XPATH_NODE_FACTORY
 		do
 			shared_pool := default_pool.default_pool
 			create a_node_factory
-			create tree.make (shared_pool, a_node_factory)
-			tree.set_system_id (a_system_id)
+			create tree.make (a_parser, shared_pool, a_node_factory)
+			tree.set_line_numbering (is_line_numbering)
 			create emitter.make (tree, shared_pool)
 			create a_namespace_resolver.set_next (emitter)
 			a_namespace_resolver.set_forward_xmlns (True)

@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
 			cached_variable_fingerprint := -1
 			is_instruction := True
 			create references.make (5)
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
 feature -- Access
@@ -89,11 +89,25 @@ feature -- Element change
 			end
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
+		local
+			a_variable: XM_XSLT_COMPILED_VARIABLE
 		do
-			todo ("compile", False)
+			if references.count = 0 then
+				is_redundant_variable := True
+			end
+			if is_global_variable and not is_redundant_variable then
+				principal_stylesheet.allocate_local_slots (number_of_variables)
+			end
+			if not is_redundant_variable then
+				create a_variable.make (variable_name, slot_number)
+				initialize_instruction (an_executable, a_variable)
+				a_variable.set_required_type (required_type)
+				fixup_binding (a_variable)
+				last_generated_instruction := a_variable
+			end
 		end
 
 invariant

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, validate_children, may_contain_template_body
+			validate, validate_children, may_contain_sequence_constructor
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -25,8 +25,8 @@ creation {XM_XSLT_NODE_FACTORY}
 
 feature -- Status report
 
-	may_contain_template_body: BOOLEAN is
-			-- Is `Current' allowed to contain a template-body?
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
@@ -148,11 +148,54 @@ feature -- Element change
 			end
 		end
 
-	compile (compile_to_eiffel: BOOLEAN) is
-			-- Compile `Current' to an excutable instruction, 
-			--  or to Eiffel code.
+	compile (an_executable: XM_XSLT_EXECUTABLE; compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, or to Eiffel code.
+		local
+			a_fixed_element: XM_XSLT_FIXED_ELEMENT
+			direct_children, attributes: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
+			a_stylesheet: XM_XSLT_STYLESHEET
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_fixed_attribute: XM_XSLT_FIXED_ATTRIBUTE
 		do
-			todo ("compile", False)
+			if is_top_level then
+				last_generated_instruction := Void
+			else
+				translate (result_name_code)
+				create a_fixed_element.make (last_translated_name_code, namespace_codes, Void, Void, validation)
+				compile_children (an_executable, a_fixed_element) 
+				direct_children := last_generated_instruction_list
+				if attribute_name_codes.count > 0 then
+					create attributes.make (attribute_name_codes.count)
+					a_stylesheet := principal_stylesheet
+					from
+						a_cursor := attribute_name_codes.new_cursor
+						a_cursor.start
+					variant
+						attribute_name_codes.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						create a_fixed_attribute.make (a_cursor.item, Validation_strip, Void, -1)
+						a_fixed_attribute.set_select_expression (attribute_values.item (a_cursor.index))
+						a_fixed_attribute.set_executable (an_executable)
+						check
+							module_registered: a_stylesheet.is_module_registered (system_id)
+						end
+						a_fixed_attribute.set_source_location (a_stylesheet.module_number (system_id), line_number)
+						if attribute_clean_flags.item (a_cursor.index) then
+							a_fixed_attribute.set_no_special_characters
+						end
+						attributes.put_last (a_fixed_attribute)
+						a_cursor.forth
+					end
+					if not direct_children.extendible (attributes.count) then
+						direct_children.resize (direct_children.count + attributes.count)
+					end
+					direct_children.extend_last (attributes)
+				end
+
+				last_generated_instruction := a_fixed_element
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -333,11 +376,10 @@ feature {NONE} -- Implementation
 			if a_type_attribute /= Void then
 				report_compile_error ("The xsl:type attribute is available only with a schema-aware XSLT processor")
 			end
-			validation := Validation_strict
 			a_validation_attribute := attribute_value (Xslt_validation_type_code)
 			if a_validation_attribute /= Void then
 				validation := validation_code (a_validation_attribute)
-				if validation /= Validation_strict then
+				if validation /= Validation_strip then
 					report_compile_error ("To perform validation, a schema-aware XSLT processor is needed")
 				end
 			else
