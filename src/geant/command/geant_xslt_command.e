@@ -132,9 +132,4 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-invariant
-
-	defines_not_void: defines /= Void
-	no_void_define: not defines.has (Void)
-
 end -- class GEANT_XSLT_COMMAND
