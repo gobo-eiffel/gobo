@@ -1,0 +1,33 @@
+-- system:     "System clock example"
+-- compiler:   "Visual Eiffel 3.3"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 2001, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	clock
+
+root
+
+	CLOCK
+
+creation
+
+	execute
+
+cluster
+
+	[clock_project		"."] end
+	[clock				"$GOBO/example/time/system_clock"] end
+
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
+
+option
+
+	target exe console
+
+end
