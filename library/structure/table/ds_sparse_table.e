@@ -18,14 +18,15 @@ inherit
 
 	DS_TABLE [G, K]
 		rename
-			put as force
+			put as force,
+			put_new as force_new
 		end
 
 	DS_BILINEAR [G]
 		rename
 			has as has_item
 		redefine
-			has_item, occurrences, new_cursor
+			has_item, occurrences
 		end
 
 	DS_RESIZABLE [G]
@@ -33,7 +34,21 @@ inherit
 			new_capacity
 		end
 
-	KL_IMPORTED_FIXED_ARRAY_TYPE [DS_PAIR [G, K]]
+	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
+		rename
+			FIXED_ARRAY_TYPE as FIXED_ITEM_ARRAY_TYPE
+		undefine
+			is_equal, copy
+		end
+
+	KL_IMPORTED_FIXED_ARRAY_TYPE2 [K]
+		rename
+			FIXED_ARRAY_TYPE as FIXED_KEY_ARRAY_TYPE
+		undefine
+			is_equal, copy
+		end
+
+	KL_IMPORTED_FIXED_ARRAY_ROUTINES
 		undefine
 			is_equal, copy
 		end
@@ -47,14 +62,30 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		local
-			dead_item: G
-			dead_key: K
+			i: INTEGER
 		do
-			!! FIXED_ARRAY_
-			slots := new_slots (n)
-			storage := FIXED_ARRAY_.make (slots + 1)
+			!! FIXED_ITEM_ARRAY_
+			!! FIXED_KEY_ARRAY_
+			items := FIXED_ITEM_ARRAY_.make (n)
+			keys := FIXED_KEY_ARRAY_.make (n)
+			clashes := FIXED_INTEGER_ARRAY_.make (n)
+			from
+				i := n - 1
+				free_slot := i
+			until
+				i < 0
+			loop
+				clashes.put (Free_offset - (i - 1), i)
+				i := i - 1
+			end
+			modulus := new_modulus (n)
+			slots := FIXED_INTEGER_ARRAY_.make (modulus + 1)
+			from i := modulus until i < 0 loop
+				slots.put (No_position, i)
+				i := i - 1
+			end
 			capacity := n
-			!! dead_cell.make (dead_item, dead_key)
+			position := No_position
 			internal_cursor := new_cursor
 		ensure
 			empty: is_empty
@@ -83,8 +114,8 @@ feature -- Access
 			-- Item associated with `k'
 		do
 			search_position (k)
-			check has_k: valid_cell (storage.item (position)) end
-			Result := storage.item (position).first
+			check hash_k: position /= No_position end
+			Result := items.item (position)
 		end
 
 	key (k: K): K is
@@ -93,14 +124,17 @@ feature -- Access
 			has_k: has (k)
 		do
 			search_position (k)
-			check has_k: valid_cell (storage.item (position)) end
-			Result := storage.item (position).second
+			check hash_k: position /= No_position end
+			Result := keys.item (position)
 		end
 
-	found_item: G
+	found_item: G is
 			-- Item found by last call to `search'
---		require
---			item_found: found
+		require
+			item_found: found
+		do
+			Result := items.item (found_position)
+		end
 
 	first: G is
 			-- First item in table
@@ -108,11 +142,11 @@ feature -- Access
 			i: INTEGER
 		do
 			from until
-				valid_cell (storage.item (i))
+				clashes.item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
-			Result := storage.item (i).first
+			Result := items.item (i)
 		end
 
 	last: G is
@@ -121,13 +155,13 @@ feature -- Access
 			i: INTEGER
 		do
 			from
-				i := slots
+				i := capacity - 1
 			until
-				valid_cell (storage.item (i))
+				clashes.item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
-			Result := storage.item (i).first
+			Result := items.item (i)
 		end
 
 	key_for_iteration: K is
@@ -140,7 +174,8 @@ feature -- Access
 
 	new_cursor: DS_SPARSE_TABLE_CURSOR [G, K] is
 			-- New external cursor for traversal
-		deferred
+		do
+			!! Result.make (Current)
 		end
 
 feature -- Measurement
@@ -157,25 +192,26 @@ feature -- Measurement
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_cell: like dead_cell
 			a_tester: like equality_tester
 		do
-			i := slots
+			i := capacity - 1
 			a_tester := equality_tester
 			if a_tester /= Void then
 				from until i < 0 loop
-					a_cell := storage.item (i)
-					if valid_cell (a_cell) and then a_tester.test (a_cell.first, v) then
-						Result := Result + 1
+					if clashes.item (i) > Free_watermark then
+						if a_tester.test (items.item (i), v) then
+							Result := Result + 1
+						end
 					end
 					i := i - 1
 				end
 			else
 					-- Use `=' as comparison criterion.
 				from until i < 0 loop
-					a_cell := storage.item (i)
-					if valid_cell (a_cell) and then a_cell.first = v then
-						Result := Result + 1
+					if clashes.item (i) > Free_watermark then
+						if items.item (i) = v then
+							Result := Result + 1
+						end
 					end
 					i := i - 1
 				end
@@ -186,12 +222,9 @@ feature -- Status report
 
 	has (k: K): BOOLEAN is
 			-- Is there an item associated with `k'?
-		local
-			current_cell: like dead_cell
 		do
 			search_position (k)
-			current_cell := storage.item (position)
-			Result := valid_cell (current_cell)
+			Result := position /= No_position
 		end
 
 	has_item (v: G): BOOLEAN is
@@ -200,15 +233,16 @@ feature -- Status report
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_cell: like dead_cell
 			a_tester: like equality_tester
 		do
-			i := slots
+			i := capacity - 1
 			a_tester := equality_tester
 			if a_tester /= Void then
 				from until i < 0 loop
-					a_cell := storage.item (i)
-					if valid_cell (a_cell) and then a_tester.test (a_cell.first, v) then
+					if
+						clashes.item (i) > Free_watermark and then
+						a_tester.test (items.item (i), v)
+					then
 						Result := True
 						i := -1  -- Jump out of the loop.
 					else
@@ -218,8 +252,10 @@ feature -- Status report
 			else
 					-- Use `=' as comparison criterion.
 				from until i < 0 loop
-					a_cell := storage.item (i)
-					if valid_cell (a_cell) and then a_cell.first = v then
+					if
+						clashes.item (i) > Free_watermark and then
+						items.item (i) = v
+					then
 						Result := True
 						i := -1  -- Jump out of the loop.
 					else
@@ -229,8 +265,13 @@ feature -- Status report
 			end
 		end
 
-	found: BOOLEAN
+	found: BOOLEAN is
 			-- Did last call to `search' succeed?
+		do
+			Result := found_position /= No_position
+		ensure
+			definition: Result = (found_position /= No_position)
+		end
 
 	valid_key (k: K): BOOLEAN is
 			-- Is `k' a valid key?
@@ -246,17 +287,9 @@ feature -- Search
 			-- Search for item at key `k'.
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `k'.
-		local
-			default_item: G
-			a_cell: like dead_cell
 		do
 			search_position (k)
-			a_cell := storage.item (position)
-			if valid_cell (a_cell) then
-				set_found_item (a_cell.first)
-			else
-				unset_found_item
-			end
+			found_position := position
 		ensure
 			found_set: found = has (k)
 			found_item_set: found implies (found_item = item (k))
@@ -271,22 +304,20 @@ feature -- Comparison
 		local
 			a_key: K
 			i: INTEGER
-			a_cell: like dead_cell
 		do
 			if Current = other then
 				Result := True
 			elseif same_type (other) and count = other.count then
 				from
-					i := slots
+					i := capacity - 1
 					Result := True
 				until
 					not Result or i < 0
 				loop
-					a_cell := storage.item (i)
-					if valid_cell (a_cell) then
-						a_key := a_cell.second
+					if clashes.item (i) > Free_watermark then
+						a_key := keys.item (i)
 						Result := other.has (a_key) and then
-							other.item (a_key) = a_cell.first
+							other.item (a_key) = items.item (i)
 					end
 					i := i - 1
 				end
@@ -299,8 +330,6 @@ feature -- Duplication
 			-- Copy `other' to current table.
 			-- Move all cursors `off' (unless `other = Current').
 		local
-			i: INTEGER
-			current_cell: like dead_cell
 			old_cursor: like new_cursor
 		do
 			if other /= Current then
@@ -313,14 +342,10 @@ feature -- Duplication
 					internal_cursor := new_cursor
 				end
 				unset_found_item
-				storage := clone (storage)
-				from i := slots until i < 0 loop
-					current_cell := storage.item (i)
-					if valid_cell (current_cell) then
-						storage.put (clone (current_cell), i)
-					end
-					i := i - 1
-				end
+				items := clone (items)
+				keys := clone (keys)
+				slots := clone (slots)
+				clashes := clone (clashes)
 			end
 		end
 
@@ -332,8 +357,8 @@ feature -- Element change
 		do
 			unset_found_item
 			search_position (k)
-			check has_k: valid_cell (storage.item (position)) end
-			storage.item (position).put_first (v)
+			check has_k: position /= No_position end
+			items.put (v, position)
 		end
 
 	put (v: G; k: K) is
@@ -343,17 +368,21 @@ feature -- Element change
 			not_full: not is_full
 			valid_key: valid_key (k)
 		local
-			current_cell: like dead_cell
+			i, h: INTEGER
 		do
 			unset_found_item
 			search_position (k)
-			current_cell := storage.item (position)
-			if not valid_cell (current_cell) then
-				!! current_cell.make (v, k)
-				storage.put (current_cell, position)
-				count := count + 1
+			if position /= No_position then
+				items.put (v, position)
 			else
-				current_cell.put_first (v)
+				i := free_slot
+				free_slot := Free_offset - clashes.item (i)
+				h := slots_position
+				clashes.put (slots.item (h), i)
+				slots.put (i, h)
+				items.put (v, i)
+				keys.put (k, i)
+				count := count + 1
 			end
 		ensure
 			same_count: (old has (k)) implies (count = old count)
@@ -366,22 +395,84 @@ feature -- Element change
 			-- Resize table if necessary.
 			-- Move cursors `off' when resizing.
 		local
-			current_cell: like dead_cell
+			i, h: INTEGER
 		do
 			unset_found_item
 			search_position (k)
-			current_cell := storage.item (position)
-			if not valid_cell (current_cell) then
+			if position /= No_position then
+				items.put (v, position)
+			else
 				if count = capacity then
 					resize (new_capacity (count + 1))
-					search_position (k)
+					h := hash_position (k)
+				else
+					h := slots_position
 				end
-				!! current_cell.make (v, k)
-				storage.put (current_cell, position)
+				i := free_slot
+				free_slot := Free_offset - clashes.item (i)
+				clashes.put (slots.item (h), i)
+				slots.put (i, h)
+				items.put (v, i)
+				keys.put (k, i)
 				count := count + 1
-			else
-				current_cell.put_first (v)
 			end
+		end
+
+	put_new (v: G; k: K) is
+			-- Associate `v' with key `k'.
+			-- Do not move cursors.
+		require
+			not_full: not is_full
+			valid_key: valid_key (k)
+			new_item: not has (k)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			i := free_slot
+			free_slot := Free_offset - clashes.item (i)
+			h := hash_position (k)
+			clashes.put (slots.item (h), i)
+			slots.put (i, h)
+			items.put (v, i)
+			keys.put (k, i)
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			inserted: has (k) and then item (k) = v
+		end
+
+	force_new (v: G; k: K) is
+			-- Associate `v' with key `k'.
+			-- Resize table if necessary.
+			-- Move cursors `off' when resizing.
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			if count = capacity then
+				resize (new_capacity (count + 1))
+			end
+			i := free_slot
+			free_slot := Free_offset - clashes.item (i)
+			h := hash_position (k)
+			clashes.put (slots.item (h), i)
+			slots.put (i, h)
+			items.put (v, i)
+			keys.put (k, i)
+			count := count + 1
+		end
+
+	replace_found_item (v: G) is
+			-- Replace item associated with
+			-- the key of `found_item' by `v'.
+		require
+			item_found: found
+		do
+			items.put (v, found_position)
+		ensure
+			replaced: found_item = v
+			same_count: count = old count
 		end
 
 feature -- Removal
@@ -389,12 +480,23 @@ feature -- Removal
 	remove (k: K) is
 			-- Remove item associated with `k'.
 			-- Move any cursors at this position `forth'.
+		local
+			dead_key: K
+			dead_item: G
 		do
 			unset_found_item
 			search_position (k)
-			if valid_slot (position) then
+			if position /= No_position then
 				move_cursors_forth (position)
-				storage.put (dead_cell, position)
+				if clashes_previous_position = No_position then
+					slots.put (clashes.item (position), slots_position)
+				else
+					clashes.put (clashes.item (position), clashes_previous_position)
+				end
+				clashes.put (Free_offset - free_slot, position)
+				items.put (dead_item, position)
+				keys.put (dead_key, position)
+				free_slot := position
 				count := count - 1
 			end
 		end
@@ -404,14 +506,32 @@ feature -- Removal
 			-- Move all cursors `off'.
 		local
 			i: INTEGER
+			dead_key: K
+			dead_item: G
 		do
 			move_all_cursors_after
 			unset_found_item
-			from i := slots until i < 0 loop
-				storage.put (Void, i)
+			from
+				i := capacity - 1
+				free_slot := i
+			until
+				i < 0
+			loop
+				items.put (dead_item, i)
+				keys.put (dead_key, i)
+				clashes.put (Free_offset - (i - 1), i)
+				i := i - 1
+			end
+			from
+				i := modulus
+			until
+				i < 0
+			loop
+				slots.put (No_position, i)
 				i := i - 1
 			end
 			count := 0
+			position := No_position
 		end
 
 feature -- Resizing
@@ -421,106 +541,161 @@ feature -- Resizing
 			-- at least `n' items. Do not lose any item.
 			-- Move all cursors `off'.
 		local
-			old_storage: like storage
-			current_cell: like dead_cell
-			i, old_slots: INTEGER
+			i, h: INTEGER
 		do
 			move_all_cursors_after
 			unset_found_item
-			old_storage := storage
-			old_slots := slots
-			slots := new_slots (n)
-			storage := FIXED_ARRAY_.make (slots + 1)
-			capacity := n
-			from i := old_slots until i < 0 loop
-				current_cell := old_storage.item (i)
-				if valid_cell (current_cell) then
-					search_position (current_cell.second)
-					storage.put (current_cell, position)
+			modulus := new_modulus (n)
+			slots := FIXED_INTEGER_ARRAY_.resize (slots, modulus + 1)
+			from i := modulus until i < 0 loop
+				slots.put (No_position, i)
+				i := i - 1
+			end
+			from
+				i := capacity - 1
+			until
+				i < 0
+			loop
+				if clashes.item (i) > Free_watermark then
+					h := hash_position (keys.item (i))
+					clashes.put (slots.item (h), i)
+					slots.put (i, h)
 				end
 				i := i - 1
 			end
+			items := FIXED_ITEM_ARRAY_.resize (items, n)
+			keys := FIXED_KEY_ARRAY_.resize (keys, n)
+			clashes := FIXED_INTEGER_ARRAY_.resize (clashes, n)
+			from
+				i := capacity
+				clashes.put (Free_offset - free_slot, i)
+				i := i + 1
+			until
+				i >= n
+			loop
+				clashes.put (Free_offset - (i - 1), i)
+				i := i + 1
+			end
+			free_slot := n - 1
+			capacity := n
+			position := No_position
 		end
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Implementation
 
-	storage: like FIXED_ARRAY_TYPE
-			-- Storage for items of the table indexed from 0 to `slots';
-			-- entry at index `slots' is reserved for void keys
+	items: like FIXED_ITEM_ARRAY_TYPE
+			-- Storage for items of the table indexed from 0 to `capacity-1'
 
-	slots: INTEGER
-			-- Upper bound of `storage'
+	keys: like FIXED_KEY_ARRAY_TYPE
+			-- Storage for keys of the table indexed from 0 to `capacity-1'
 
-	valid_cell (cell: like dead_cell): BOOLEAN is
-			-- Does `cell' contain an item?
-		do
-			Result := cell /= Void and cell /= dead_cell
-		ensure
-			cell_not_void: Result implies cell /= Void
-		end
-
-	valid_slot (i: INTEGER): BOOLEAN is
-			-- Is there a valid cell at position `i'?
-		require
-			valid_i: valid_position (i)
-		do
-			Result := valid_cell (storage.item (i))
-		end
+	clashes: like FIXED_INTEGER_ARRAY_TYPE
+			-- Indexes in `items' and `keys' when there is clashes
+			-- in `slots'. Each entry points to the next alternative
+			-- until `No_position' is reached. Also keep track of
+			-- free slot positions with indexes less that or equal
+			-- to `Free_watermark'
 
 	valid_position (i: INTEGER): BOOLEAN is
 			-- Is there a slot at position `i'?
 		do
-			Result := 0 <= i and i <= slots
+			Result := 0 <= i and i < capacity
 		ensure
-			definition: Result = (0 <= i and i <= slots)
+			definition: Result = (0 <= i and i < capacity)
 		end
 
-	dead_cell: DS_PAIR [G, K]
-			-- Mark for deleted items
-
-	position: INTEGER
-			-- Last position found by `search_position'
+	valid_slot (i: INTEGER): BOOLEAN is
+			-- Is there an item at position `i'?
+		require
+			valid_i: valid_position (i)
+		do
+			Result := clashes.item (i) > Free_watermark
+		end
 
 feature {NONE} -- Implementation
 
 	search_position (k: K) is
-			-- Search for position where key is equal to `k'
-			-- or to possible insertion position otherwise.
+			-- Search for position where key is equal to `k'.
 		require
 			valid_key: valid_key (k)
 		deferred
+		ensure
+			slots_position_set: slots_position = hash_position (k)
+			clashes_previous_previous_set: (position /= No_position and
+				clashes_previous_position /= No_position) implies
+					(clashes.item (clashes_previous_position) = position)
+			clashes_previous_previous_not_set: (position /= No_position and
+				clashes_previous_position = No_position) implies
+					(slots.item (slots_position) = position)
 		end
 
-	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [DS_PAIR [G, K]]
+	hash_position (k: K): INTEGER is
+			-- Hash position of `k' in `slots'
+		require
+			valid_key: valid_key (k)
+		deferred
+		ensure
+			valid_position: Result >= 0 and result <= modulus
+		end
+
+	slots: like FIXED_INTEGER_ARRAY_TYPE
+			-- Indexes in `items' and `keys', indexed by hash codes
+			-- from 0 to `modulus' (the entry at index `modulus'
+			-- being reserved for void keys)
+
+	modulus: INTEGER
+			-- Upper bound of `slots'
+
+	free_slot: INTEGER
+			-- Index of first free slot in `items' and `keys';
+			-- `No_position' if table is full
+
+	position: INTEGER
+			-- Last position in `keys' and `items'
+			-- found by `search_position'
+
+	slots_position: INTEGER
+			-- Last position in `slots' found by `search_position'
+
+	clashes_previous_position: INTEGER
+			-- Previous position of the last position in
+			-- `clashes' found by `search_position'
+
+	found_position: INTEGER
+			-- Position of the last item found by `search';
+			-- `No_position' if not found
+
+	FIXED_ITEM_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
 			-- Routines that ought to be in FIXED_ARRAY
 
-	set_found_item (v: G) is
-			-- Set `found_item' to `v'.
-		do
-			found_item := v
-			found := True
-		ensure
-			found: found
-			found_item_set: found_item = v
-		end
+	FIXED_KEY_ARRAY_: KL_FIXED_ARRAY_ROUTINES [K]
+			-- Routines that ought to be in FIXED_ARRAY
 
 	unset_found_item is
 			-- Get rig of `found_item'.
-		local
-			default_item: G
 		do
-			found := False
-			found_item := default_item
+			found_position := No_position
 		ensure
 			not_found: not found
+			found_position_unset: found_position = No_position
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Constants
+
+	No_position: INTEGER is -1
+			-- Not valid position mark
+
+	Free_watermark: INTEGER is -2
+			-- Limit between free and occupied slots in `clashes'
+
+	Free_offset: INTEGER is -3
+			-- Offset used to make sure that free slot indexes
+			-- are below `Free_watermark' in `clashes'
+
+feature {NONE} -- Cursor movements
 
 	internal_cursor: like new_cursor
 			-- Internal cursor
-
-feature {NONE} -- Cursor movements
 
 	move_all_cursors_after is
 			-- Move `after' all cursors.
@@ -540,7 +715,7 @@ feature {NONE} -- Cursor movements
 			-- to position `new_position'.
 		require
 			valid_old_position: valid_position (old_position)
-			valid_new_position: valid_slot (new_position)
+			valid_new_position: valid_position (new_position) and then valid_slot (new_position)
 		local
 			a_cursor: like new_cursor
 		do
@@ -584,18 +759,19 @@ feature {NONE} -- Cursor movements
 		require
 			valid_old_position: valid_position (old_position)
 		local
-			i: INTEGER
+			i, nb: INTEGER
 		do
 				-- Search next valid position.
 			from
 				i := old_position + 1
+				nb := capacity - 1
 			until
-				i > slots or else
-				valid_slot (i)
+				i > nb or else
+				clashes.item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
-			if i > slots then
+			if i > nb then
 				move_cursors_after (old_position)
 			else
 				move_all_cursors (old_position, i)
@@ -611,23 +787,28 @@ feature {NONE} -- Configuration
 			Result := 2 * n
 		end
 
-	new_slots (a_capacity: INTEGER): INTEGER is
-			-- Value for `slots' which can accommodate
+	new_modulus (a_capacity: INTEGER): INTEGER is
+			-- Value for `modulus' which can accommodate
 			-- `a_capacity' items
 		require
 			a_capacity_positive: a_capacity >= 0
 		do
 			Result := (a_capacity + 1) * 3 // 2
 		ensure
-			slots_large_enough: Result > a_capacity
+			modulus_large_enough: Result > a_capacity
 		end
 
 invariant
 
-	storage_not_void: storage /= Void
-	dead_cell: dead_cell /= Void
-	valid_position: valid_position (position)
-	slots_definition: slots = (storage.count - 1)
-	capacity_constraint: capacity < slots
+	items_not_void: items /= Void
+	items_count: items.count = capacity
+	keys_not_void: keys /= Void
+	keys_count: keys.count = capacity
+	clashes_not_void: clashes /= Void
+	clashes_count: clashes.count = capacity
+	slots_not_void: slots /= Void
+	slots_count: slots.count = modulus + 1
+	valid_position: position = No_position or else valid_position (position)
+	capacity_constraint: capacity < (modulus + 1)
 
 end -- class DS_SPARSE_TABLE
