@@ -99,7 +99,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name, index)
+			create Result.make (name, index)
 			Result.set_like_keyword (like_keyword)
 		end
 

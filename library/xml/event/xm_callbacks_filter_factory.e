@@ -17,7 +17,7 @@ feature -- Filters
 	new_null: XM_CALLBACKS_NULL is
 			-- New null callback consumer
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			null_callback_not_void: Result /= Void
 		end
@@ -25,7 +25,7 @@ feature -- Filters
 	new_pretty_print: XM_PRETTY_PRINT_FILTER is
 			-- New pretty printer (to standard io)
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			pretty_print_not_void: Result /= Void
 		end
@@ -42,7 +42,7 @@ feature -- Filters
 	new_canonical_pretty_print: XM_CANONICAL_PRETTY_PRINT_FILTER is
 			-- James Clark' canonical XML output
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			pretty_print_not_void: Result /= Void
 		end
@@ -50,7 +50,7 @@ feature -- Filters
 	new_end_tag_checker: XM_END_TAG_CHECKER is
 			-- New end tag checker filter
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			checker_not_void: Result /= Void
 		end
@@ -58,7 +58,7 @@ feature -- Filters
 	new_unicode_validation: XM_UNICODE_VALIDATION_FILTER is
 			-- New unicode validation filter
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			unicode_validation_not_void: Result /= Void
 		end
@@ -66,7 +66,7 @@ feature -- Filters
 	new_namespace_resolver: XM_NAMESPACE_RESOLVER is
 			-- New namespace resolver
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			namespace_resolver_not_void: Result /= Void
 		end
@@ -74,7 +74,7 @@ feature -- Filters
 	new_stop_on_error: XM_STOP_ON_ERROR_FILTER is
 			-- New stop-on-error filter
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			stop_on_error_not_void: Result /= Void
 		end
@@ -82,7 +82,7 @@ feature -- Filters
 	new_shared_strings: XM_SHARED_STRINGS_FILTER is
 			-- New shared strings filter
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			shared_string_not_void: Result /= Void
 		end
@@ -90,7 +90,7 @@ feature -- Filters
 	new_tree_builder: XM_CALLBACKS_TO_TREE_FILTER is
 			-- New tree construction filter
 		do
-			!! Result.make_null
+			create Result.make_null
 		ensure
 			tree_builder_not_void: Result /= Void
 		end

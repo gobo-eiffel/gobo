@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new exclude clause.
 		do
-			!! identifiers.make (identifiers_initial_capacity)
+			create identifiers.make (identifiers_initial_capacity)
 		end
 
 feature -- Status report

@@ -402,7 +402,7 @@ feature -- Conversion
 	to_date_time_duration: DT_DATE_TIME_DURATION is
 			-- Date time duration equivalent to current time duration
 		do
-			!! Result.make_precise (0, 0, 0, hour, minute, second, millisecond)
+			create Result.make_precise (0, 0, 0, hour, minute, second, millisecond)
 		ensure
 			date_time_duration_not_void: Result /= Void
 			year_set: Result.year = 0
@@ -417,7 +417,7 @@ feature -- Conversion
 	to_canonical: like Current is
 			-- Canonical version of current time duration
 		do
-			!! Result.make_precise_canonical (millisecond_count)
+			create Result.make_precise_canonical (millisecond_count)
 		ensure
 			canonical_duration_not_void: Result /= Void
 				-- TODO: The following assertion has been commented out

@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			a_variables: ET_XACE_VARIABLES
 			a_factory: ET_XACE_AST_FACTORY
 		do
-			!! a_variables.make
-			!! a_factory.make
+			create a_variables.make
+			create a_factory.make
 			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		local
 			a_variables: ET_XACE_VARIABLES
 		do
-			!! a_variables.make
+			create a_variables.make
 			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
 		ensure
 			ast_factory_set: ast_factory = a_factory
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 		local
 			a_factory: ET_XACE_AST_FACTORY
 		do
-			!! a_factory.make
+			create a_factory.make
 			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
@@ -84,28 +84,28 @@ feature {NONE} -- Initialization
 		do
 			error_handler := an_error_handler
 			ast_factory := a_factory
-			!! parsed_libraries.make (10)
+			create parsed_libraries.make (10)
 				-- We must not create a new ET_XACE_LIBRARY_PARSER
 				-- object if `Current' is one already, or we will
 				-- recurse in this routine forever.
 			library_parser ?= Current
 			if library_parser = Void then
-				!! library_parser.make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+				create library_parser.make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
 				library_parser.set_parsed_libraries (parsed_libraries)
 			end
-			!! xml_preprocessor.make (a_variables, error_handler)
-			!! xml_validator.make (an_error_handler)
+			create xml_preprocessor.make (a_variables, error_handler)
+			create xml_validator.make (an_error_handler)
 				-- Use an Expat parser if available,
 				-- an Eiffel parser otherwise.
-			!! an_expat_parser_factory
+			create an_expat_parser_factory
 			if an_expat_parser_factory.is_expat_parser_available then
 				xml_parser := an_expat_parser_factory.new_expat_parser
 			else
-				!XM_EIFFEL_PARSER! xml_parser.make
+				create {XM_EIFFEL_PARSER} xml_parser.make
 			end
 			xml_parser.set_string_mode_mixed
 				-- The parser will build a tree.
-			!! tree_pipe.make
+			create tree_pipe.make
 			xml_parser.set_callbacks (tree_pipe.start)
 			tree_pipe.tree.enable_position_table (xml_parser)
 		ensure

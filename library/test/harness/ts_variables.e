@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new empty variables.
 		do
-			!! variables.make (10)
+			create variables.make (10)
 		end
 
 feature -- Status report

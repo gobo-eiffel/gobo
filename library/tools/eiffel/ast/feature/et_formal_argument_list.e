@@ -225,7 +225,7 @@ feature -- Duplication
 			i: INTEGER
 		do
 			i := count
-			!! Result.make_with_capacity (i)
+			create Result.make_with_capacity (i)
 			Result.set_left_parenthesis (left_parenthesis)
 			Result.set_right_parenthesis (right_parenthesis)
 			from until i < 1 loop
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FORMAL_ARGUMENT_ITEM] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 invariant

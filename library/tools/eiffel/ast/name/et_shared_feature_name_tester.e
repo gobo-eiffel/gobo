@@ -17,7 +17,7 @@ feature -- Access
 	feature_name_tester: ET_FEATURE_NAME_TESTER is
 			-- Feature name equality tester
 		once
-			!! Result
+			create Result
 		ensure
 			feature_name_tester_not_void: Result /= Void
 		end

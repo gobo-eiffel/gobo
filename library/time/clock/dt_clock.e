@@ -24,7 +24,7 @@ feature -- Access
 			-- Current time
 			-- (Create a new time object at each call.)
 		do
-			!! Result.make_from_storage (0)
+			create Result.make_from_storage (0)
 			set_time_to_now (Result)
 		ensure
 			time_now_not_void: Result /= Void
@@ -34,7 +34,7 @@ feature -- Access
 			-- Current date
 			-- (Create a new date object at each call.)
 		do
-			!! Result.make_from_storage (0)
+			create Result.make_from_storage (0)
 			set_date_to_now (Result)
 		ensure
 			date_now_not_void: Result /= Void
@@ -44,7 +44,7 @@ feature -- Access
 			-- Current date time
 			-- (Create a new date time object at each call.)
 		do
-			!! Result.make_from_storage (0, 0)
+			create Result.make_from_storage (0, 0)
 			set_date_time_to_now (Result)
 		ensure
 			date_time_now_not_void: Result /= Void

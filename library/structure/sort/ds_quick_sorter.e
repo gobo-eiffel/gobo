@@ -41,8 +41,8 @@ feature -- Sort
 			end
 			i := i + 10
 			from
-				!! lowers.make (1, i)
-				!! uppers.make (1, i)
+				create lowers.make (1, i)
+				create uppers.make (1, i)
 				lowers.put (lower, 1)
 				uppers.put (upper, 1)
 				i := 1

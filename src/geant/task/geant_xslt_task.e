@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			a_is_xalan_java_processor: BOOLEAN
 			a_is_xsltproc_processor: BOOLEAN
 		do
-			!! command.make (a_project)
+			create command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Processor_attribute_name) then
 				a_value := attribute_value (Processor_attribute_name)

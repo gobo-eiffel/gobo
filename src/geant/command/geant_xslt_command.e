@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			processor := Processor_xalan_cpp
 
 			set_indent ("4")
-			!! parameters.make (10)
+			create parameters.make (10)
 		end
 
 feature -- Status report

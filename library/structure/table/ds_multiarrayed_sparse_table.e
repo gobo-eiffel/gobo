@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion for items.
 			-- Use `equal' as comparison criterion for keys.
 		do
-			!! key_equality_tester
+			create key_equality_tester
 			make_with_chunk_size_and_equality_testers (n,
 				default_chunk_size, Void, key_equality_tester)
 		ensure then
@@ -66,8 +66,8 @@ feature {NONE} -- Initialization
 			-- Use `equal' as comparison criterion for items.
 			-- Use `equal' as comparison criterion for keys.
 		do
-			!! equality_tester
-			!! key_equality_tester
+			create equality_tester
+			create key_equality_tester
 			make_with_chunk_size_and_equality_testers (n,
 				default_chunk_size, equality_tester, key_equality_tester)
 		ensure then
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 			a_chunk_size_positive: a_chunk_size > 0
 		do
-			!! key_equality_tester
+			create key_equality_tester
 			make_with_chunk_size_and_equality_testers (n,
 				a_chunk_size, Void, key_equality_tester)
 		ensure
@@ -104,8 +104,8 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 			a_chunk_size_positive: a_chunk_size > 0
 		do
-			!! equality_tester
-			!! key_equality_tester
+			create equality_tester
+			create key_equality_tester
 			make_with_chunk_size_and_equality_testers (n,
 				a_chunk_size, equality_tester, key_equality_tester)
 		ensure
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion for items.
 			-- Use `equal' as comparison criterion for keys.
 		do
-			!! key_equality_tester
+			create key_equality_tester
 			make_with_chunk_size_and_equality_testers (default_capacity,
 				default_chunk_size, Void, key_equality_tester)
 		ensure then
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			-- Use `equal' as comparison criterion for items.
 			-- Use `=' as comparison criterion for keys.
 		do
-			!! equality_tester
+			create equality_tester
 			make_with_chunk_size_and_equality_testers (n,
 				default_chunk_size, equality_tester, Void)
 		ensure then
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 			a_chunk_size_positive: a_chunk_size > 0
 		do
-			!! equality_tester
+			create equality_tester
 			make_with_chunk_size_and_equality_testers (n,
 				a_chunk_size, equality_tester, Void)
 		ensure
@@ -257,7 +257,7 @@ feature -- Access
 	new_cursor: DS_MULTIARRAYED_SPARSE_TABLE_CURSOR [G, K] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -332,8 +332,8 @@ feature {NONE} -- Implementation
 	make_items (n: INTEGER) is
 			-- Create `items'.
 		do
-			!! FIXED_ITEM_ARRAY_
-			!! items.make (0, ((n - 1) // chunk_size))
+			create FIXED_ITEM_ARRAY_
+			create items.make (0, ((n - 1) // chunk_size))
 		end
 
 	clone_items is
@@ -373,8 +373,8 @@ feature {NONE} -- Implementation
 	make_keys (n: INTEGER) is
 			-- Create `keys'.
 		do
-			!! FIXED_KEY_ARRAY_
-			!! keys.make (0, ((n - 1) // chunk_size))
+			create FIXED_KEY_ARRAY_
+			create keys.make (0, ((n - 1) // chunk_size))
 		end
 
 	keys_put (k: K; i: INTEGER) is
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 	make_clashes (n: INTEGER) is
 			-- Create `clashes'.
 		do
-			!! clashes.make (0, ((n - 1) // chunk_size))
+			create clashes.make (0, ((n - 1) // chunk_size))
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER) is
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER) is
 			-- Create `slots'.
 		do
-			!! slots.make (0, ((n - 1) // chunk_size))
+			create slots.make (0, ((n - 1) // chunk_size))
 		end
 
 	slots_item (i: INTEGER): INTEGER is

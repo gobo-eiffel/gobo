@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			shell_command: DP_SHELL_COMMAND
 		do
 			if not project.options.no_exec then
-				!! shell_command.make (a_command)
+				create shell_command.make (a_command)
 				shell_command.execute
 				exit_code := shell_command.exit_code
 			end

@@ -26,7 +26,7 @@ feature -- Basic operations
 			i, nb, mark: INTEGER
 		do
 			from
-				!! Result.make
+				create Result.make
 				i := 1
 				nb := s.count
 				mark := i
@@ -88,9 +88,9 @@ feature -- Basic operations
 				second := STRING_.new_empty_string (s, 0)
 			end
 			if first = Void then
-				!! Result.make (second, Void)
+				create Result.make (second, Void)
 			else
-				!! Result.make (first, second)
+				create Result.make (first, second)
 			end
 		ensure
 			result_not_void: Result /= Void

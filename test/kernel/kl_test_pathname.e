@@ -23,7 +23,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert ("a_pathname_not_void", a_pathname /= Void)
 			assert ("not_relative", not a_pathname.is_relative)
 		end
@@ -33,7 +33,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert ("not_relative1", not a_pathname.is_relative)
 			a_pathname.set_relative (True)
 			assert ("relative", a_pathname.is_relative)
@@ -46,7 +46,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert ("no_drive", a_pathname.drive = Void)
 			a_pathname.set_drive ("c:")
 			assert_equal ("drive", "c:",  a_pathname.drive)
@@ -57,7 +57,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert ("no_hostname", a_pathname.hostname = Void)
 			a_pathname.set_hostname ("gobo")
 			assert_equal ("hostname", "gobo",  a_pathname.hostname)
@@ -68,7 +68,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty", 0, a_pathname.count)
 			a_pathname.append_name ("foo")
 				-- "/foo"
@@ -86,7 +86,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty", 0, a_pathname.count)
 			a_pathname.append_name ("gobo")
 				-- "/gobo"
@@ -105,7 +105,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty1", 0, a_pathname.count)
 			a_pathname.append_name ("foo")
 				-- "/foo"
@@ -122,7 +122,7 @@ feature -- Test
 			assert_equal ("foo3", "foo",  a_pathname.item (1))
 			assert ("current3", a_pathname.is_current (2))
 			assert_equal ("bar3", "bar",  a_pathname.item (3))
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty2", 0, a_pathname.count)
 			a_pathname.set_relative (True)
 			a_pathname.append_current
@@ -136,7 +136,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty1", 0, a_pathname.count)
 			a_pathname.append_name ("foo")
 				-- "/foo"
@@ -153,7 +153,7 @@ feature -- Test
 			assert_equal ("foo3", "foo",  a_pathname.item (1))
 			assert ("parent3", a_pathname.is_parent (2))
 			assert_equal ("bar3", "bar",  a_pathname.item (3))
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty2", 0, a_pathname.count)
 			a_pathname.set_relative (True)
 			a_pathname.append_parent
@@ -167,7 +167,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			assert_equal ("empty1", 0, a_pathname.count)
 			a_pathname.append_name ("foo")
 				-- "/foo"
@@ -215,7 +215,7 @@ feature -- Test
 		local
 			a_pathname1, a_pathname2: KL_PATHNAME
 		do
-			!! a_pathname1.make
+			create a_pathname1.make
 			a_pathname1.set_relative (True)
 			a_pathname1.append_parent
 			a_pathname1.append_name ("foo")
@@ -230,7 +230,7 @@ feature -- Test
 			assert ("current1", a_pathname1.is_current (3))
 			assert_equal ("bar1", "bar", a_pathname1.item (4))
 			assert ("same_pathname1", a_pathname1.same_pathname (a_pathname1))
-			!! a_pathname2.make
+			create a_pathname2.make
 			a_pathname2.set_relative (True)
 			a_pathname2.append_parent
 			a_pathname2.append_name ("foo")
@@ -258,7 +258,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.append_parent
 			assert_equal ("count1", 1, a_pathname.count)
 			assert ("parent1", a_pathname.is_parent (1))
@@ -280,7 +280,7 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.append_current
 			assert_equal ("count1", 1, a_pathname.count)
 			assert ("current1", a_pathname.is_current (1))
@@ -302,29 +302,29 @@ feature -- Test
 		local
 			a_pathname: KL_PATHNAME
 		do
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_names (<<"foo", "bar">>)
 				-- "foo/bar"
 			assert ("canonical1", a_pathname.is_canonical)
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_current
 				-- "."
 			assert ("canonical2", a_pathname.is_canonical)
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_parent
 			a_pathname.append_name ("foo")
 				-- "../foo"
 			assert ("canonical3", a_pathname.is_canonical)
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_name ("foo")
 			a_pathname.append_parent
 				-- "foo/.."
 			assert ("not_canonical1", not a_pathname.is_canonical)
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_name ("foo")
 			a_pathname.append_current

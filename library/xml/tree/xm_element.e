@@ -83,7 +83,7 @@ feature -- Status report
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
-			!! typer
+			create typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
@@ -118,7 +118,7 @@ feature -- Access
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
-			!! typer
+			create typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
@@ -146,11 +146,11 @@ feature -- Access
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
-			!! typer
+			create typer
 			if namespace_declarations_cache /= Void then
 				Result := namespace_declarations_cache
 			else
-				!! Result.make
+				create Result.make
 				a_cursor := new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_cursor.item.process (typer)
@@ -173,8 +173,8 @@ feature -- Access
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
-			!! typer
-			!DS_BILINKED_LIST [XM_ATTRIBUTE]! Result.make
+			create typer
+			create {DS_BILINKED_LIST [XM_ATTRIBUTE]} Result.make
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
@@ -196,7 +196,7 @@ feature {XM_PARSER} -- Element change
 		local
 			an_attribute: XM_ATTRIBUTE
 		do
-			!! an_attribute.make (a_name, a_ns, a_value, Current)
+			create an_attribute.make (a_name, a_ns, a_value, Current)
 			force_last (an_attribute)
 		ensure
 			attribute_added: has_attribute_by_name (a_name)
@@ -213,7 +213,7 @@ feature -- Removal
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
-			!! typer
+			create typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
@@ -241,7 +241,7 @@ feature -- Removal
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
-			!! typer
+			create typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		require
 			version_not_void: version /= Void
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (version, 1)
 		end
 

@@ -154,8 +154,8 @@ feature {NONE} -- Initialization
 			make_gepp_scanner
 			make_parser_skeleton
 			error_handler := a_handler
-			!! defined_values.make (10)
-			!! include_stack.make (Max_include_depth)
+			create defined_values.make (10)
+			create include_stack.make (Max_include_depth)
 		ensure
 			error_handler_set: error_handler = a_handler
 		end
@@ -214,18 +214,18 @@ feature -- Processing
 					output (" \%N%T")
 					output (a_filename)
 				end
-				!! a_file.make (Execution_environment.interpreted_string (a_filename))
+				create a_file.make (Execution_environment.interpreted_string (a_filename))
 				a_file.open_read
 				if a_file.is_open_read then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
 				else
-					!! cannot_read.make (a_filename)
+					create cannot_read.make (a_filename)
 					error_handler.report_error (cannot_read)
 					abort
 				end
 			else
-				!! too_many_includes.make (include_stack.count + 1)
+				create too_many_includes.make (include_stack.count + 1)
 				error_handler.report_error (too_many_includes)
 				abort
 			end
@@ -249,7 +249,7 @@ feature -- Error handling
 			else
 				filename := "string"
 			end
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 		end
 

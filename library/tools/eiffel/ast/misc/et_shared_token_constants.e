@@ -17,7 +17,7 @@ feature -- Access
 	tokens: ET_TOKEN_CONSTANTS is
 			-- Shared token and symbol constants
 		once
-			!! Result
+			create Result
 		ensure
 			tokens_not_void: Result /= Void
 		end

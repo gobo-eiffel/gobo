@@ -31,7 +31,7 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		do
-			!! Result.make (a_name, a_pathname)
+			create Result.make (a_name, a_pathname)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -41,7 +41,7 @@ feature -- AST factory
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			!! Result.make (a_cluster)
+			create Result.make (a_cluster)
 		ensure
 			clusters_not_void: Result /= Void
 		end
@@ -49,7 +49,7 @@ feature -- AST factory
 	new_library: ET_XACE_LIBRARY is
 			-- New Xace library
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			library_not_void: Result /= Void
 		end
@@ -61,7 +61,7 @@ feature -- AST factory
 			a_library_not_void: a_library /= Void
 			a_position_not_void: a_position /= Void
 		do
-			!! Result.make (a_pathname, a_library, a_position)
+			create Result.make (a_pathname, a_library, a_position)
 		ensure
 			mounted_library_not_void: Result /= Void
 		end
@@ -69,7 +69,7 @@ feature -- AST factory
 	new_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES is
 			-- New mounted library list
 		do
-			!! Result.make_empty
+			create Result.make_empty
 		ensure
 			mounted_libraries_not_void: Result /= Void
 		end
@@ -77,7 +77,7 @@ feature -- AST factory
 	new_options: ET_XACE_OPTIONS is
 			-- New option clause
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			options_not_void: Result /= Void
 		end
@@ -89,7 +89,7 @@ feature -- AST factory
 			a_name_not_empty: a_name.count > 0
 			an_option_not_void: an_option /= Void
 		do
-			!! Result.make (a_name, an_option)
+			create Result.make (a_name, an_option)
 		ensure
 			class_options_not_void: Result /= Void
 		end
@@ -101,7 +101,7 @@ feature -- AST factory
 			a_name_not_empty: a_name.count > 0
 			an_option_not_void: an_option /= Void
 		do
-			!! Result.make (a_name, an_option)
+			create Result.make (a_name, an_option)
 		ensure
 			feature_options_not_void: Result /= Void
 		end
@@ -109,7 +109,7 @@ feature -- AST factory
 	new_system (a_clusters: ET_XACE_CLUSTERS): ET_XACE_SYSTEM is
 			-- New Xace system
 		do
-			!! Result.make (a_clusters)
+			create Result.make (a_clusters)
 		ensure
 			system_not_void: Result /= Void
 		end
@@ -121,7 +121,7 @@ feature -- AST factory
 			an_error_handler_not_void: an_error_handler /= Void
 			a_factory_not_void: a_factory /= Void
 		do
-			!! Result.make_with_factory (a_clusters, a_factory, an_error_handler)
+			create Result.make_with_factory (a_clusters, a_factory, an_error_handler)
 		ensure
 			universe_not_void: Result /= Void
 		end
@@ -134,7 +134,7 @@ feature -- Eiffel AST factory
 			if ast_factory /= Void then
 				Result := ast_factory
 			else
-				!! Result.make
+				create Result.make
 			end
 		ensure
 			ast_factory_not_void: Result /= Void
@@ -143,7 +143,7 @@ feature -- Eiffel AST factory
 	new_error_handler: ET_ERROR_HANDLER is
 			-- New error handler for Eiffel parser
 		do
-			!! Result.make_standard
+			create Result.make_standard
 		ensure
 			error_handler_not_void: Result /= Void
 		end

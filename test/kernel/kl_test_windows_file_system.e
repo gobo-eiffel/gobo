@@ -24,7 +24,7 @@ feature -- Creation
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- The file system has been created.
 			assert ("a_file_system_not_void", a_file_system /= Void)
 		end
@@ -38,7 +38,7 @@ feature -- File handling
 			a_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- The following two files, whose pathnames have a non-empty
 				-- dirname, are readable.
 			a_name := gobo_filename
@@ -71,7 +71,7 @@ feature -- File handling
 				-- file and check than it is not readable anymore.
 			a_name := new_filename ("gobo", ".tmp")
 			assert ("not_readable5", not a_file_system.is_file_readable (a_name))
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -93,11 +93,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -128,7 +128,7 @@ feature -- File handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Old file and new file do not exist.
@@ -149,11 +149,11 @@ feature -- File handling
 			old_name, new_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create new file.
-			!! a_file.make (new_name)
+			create a_file.make (new_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -185,18 +185,18 @@ feature -- File handling
 			old_name, new_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create new file.
-			!! a_file.make (new_name)
+			create a_file.make (new_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
 				a_file.close
 				assert ("is_closed1", a_file.is_closed)
 					-- Create old file.
-				!! a_file.make (old_name)
+				create a_file.make (old_name)
 				a_file.open_write
 				if a_file.is_open_write then
 					a_file.put_string ("This is the first line,")
@@ -236,11 +236,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := ""
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -274,11 +274,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := file_system.pathname (new_dirname ("gobo"), new_filename ("gobo", ".tmp"))
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -312,11 +312,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := clone (old_name)
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -351,11 +351,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := file_system.pathname (file_system.cwd, old_name)
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -390,11 +390,11 @@ feature -- File handling
 			old_name, new_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := ""
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create new file.
-			!! a_file.make (new_name)
+			create a_file.make (new_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -426,11 +426,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -464,7 +464,7 @@ feature -- File handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Old file and new file do not exist.
@@ -485,11 +485,11 @@ feature -- File handling
 			old_name, new_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create new file.
-			!! a_file.make (new_name)
+			create a_file.make (new_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -521,18 +521,18 @@ feature -- File handling
 			old_name, new_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create new file.
-			!! a_file.make (new_name)
+			create a_file.make (new_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
 				a_file.close
 				assert ("is_closed1", a_file.is_closed)
 					-- Create old file.
-				!! a_file.make (old_name)
+				create a_file.make (old_name)
 				a_file.open_write
 				if a_file.is_open_write then
 					a_file.put_string ("This is the first line,")
@@ -575,11 +575,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := ""
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -613,11 +613,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := file_system.pathname (new_dirname ("gobo"), new_filename ("gobo", ".tmp"))
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -651,11 +651,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := clone (old_name)
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -690,11 +690,11 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := file_system.pathname (file_system.cwd, old_name)
 				-- Create old file.
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -729,11 +729,11 @@ feature -- File handling
 			old_name, new_name: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			old_name := ""
 			new_name := new_filename ("gobo", ".tmp")
 				-- Create new file.
-			!! a_file.make (new_name)
+			create a_file.make (new_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -764,10 +764,10 @@ feature -- File handling
 			a_file: KL_TEXT_OUTPUT_FILE
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Create a new file and then delete it.
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -800,7 +800,7 @@ feature -- File handling
 			a_file: KI_TEXT_INPUT_FILE
 			a_windows_file: KL_WINDOWS_INPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			a_name := new_filename ("gobo", ".tmp")
 			a_file := a_file_system.new_input_file (a_name)
 			assert ("not_void", a_file /= Void)
@@ -818,7 +818,7 @@ feature -- File handling
 			a_file: KI_TEXT_OUTPUT_FILE
 			a_windows_file: KL_WINDOWS_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			a_name := new_filename ("gobo", ".tmp")
 			a_file := a_file_system.new_output_file (a_name)
 			assert ("not_void", a_file /= Void)
@@ -833,7 +833,7 @@ feature -- File handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("eol", "%R%N", a_file_system.eol)
 		end
 
@@ -845,7 +845,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- The following directory, whose pathname has a non-empty
 				-- dirname, is readable.
 			a_name := data_dirname
@@ -891,7 +891,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Create a new directory, whose pathname has
 				-- an empty dirname, and the delete it.
 			a_name := new_dirname ("gobo")
@@ -910,14 +910,14 @@ feature -- Directory handling
 			a_name, a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Create a new directory and create a file in it.
 			a_name := new_dirname ("gobo")
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.create_directory (a_name)
 			assert ("readable1", a_file_system.is_directory_readable (a_name))
 			a_filename := file_system.pathname (a_name, new_filename ("gobo", ".tmp"))
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -949,7 +949,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			a_parent := new_dirname ("gobo")
 			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_parent))
@@ -986,7 +986,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Try to create a new directory with an empty pathname.
 			a_name := ""
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
@@ -1002,7 +1002,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Create an empty directory and then delete it.
 			a_name := new_dirname ("gobo")
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
@@ -1019,7 +1019,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Try to delete a non-existing directory.
 			a_name := new_dirname ("gobo")
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
@@ -1035,14 +1035,14 @@ feature -- Directory handling
 			a_name, a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Create a new directory and create a file in it.
 			a_name := new_dirname ("gobo")
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.create_directory (a_name)
 			assert ("readable1", a_file_system.is_directory_readable (a_name))
 			a_filename := file_system.pathname (a_name, new_filename ("gobo", ".tmp"))
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -1074,7 +1074,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Create a new directory and a subdirectory.
 			a_parent := new_dirname ("gobo")
 			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
@@ -1103,7 +1103,7 @@ feature -- Directory handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 				-- Try to delete a non-existing directory with an empty pathname.
 			a_name := ""
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
@@ -1120,7 +1120,7 @@ feature -- Working directory
 			a_name: STRING
 			cwd: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 					-- The current working directory is a readable directory.
 				cwd := a_file_system.current_working_directory
@@ -1157,7 +1157,7 @@ feature -- Working directory
 			a_name: STRING
 			cwd: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 					-- The current working directory is a readable directory.
 				cwd := a_file_system.cwd
@@ -1195,7 +1195,7 @@ feature -- Working directory
 			cwd: STRING
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.current_working_directory
 				assert ("readable0", a_file_system.is_directory_readable (cwd))
@@ -1257,7 +1257,7 @@ feature -- Working directory
 			cwd: STRING
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
 				assert ("readable0", a_file_system.is_directory_readable (cwd))
@@ -1319,7 +1319,7 @@ feature -- Working directory
 			cwd: STRING
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.current_working_directory
 				assert ("readable1", a_file_system.is_directory_readable (cwd))
@@ -1350,7 +1350,7 @@ feature -- Working directory
 			cwd: STRING
 			a_name: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
 				assert ("readable1", a_file_system.is_directory_readable (cwd))
@@ -1380,7 +1380,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert ("absolute1", a_file_system.is_absolute_pathname ("c:\gobo"))
 			assert ("absolute2", a_file_system.is_absolute_pathname ("d:\"))
 			assert ("absolute3", a_file_system.is_absolute_pathname ("\\foo\bar"))
@@ -1398,7 +1398,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert ("relative1", a_file_system.is_relative_pathname ("foo"))
 			assert ("relative2", a_file_system.is_relative_pathname ("foo\bar"))
 			assert ("relative3", a_file_system.is_relative_pathname (".\foo"))
@@ -1417,7 +1417,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert ("root1", a_file_system.is_root_directory ("\"))
 			assert ("root2", a_file_system.is_root_directory ("c:\"))
 			assert ("root3", a_file_system.is_root_directory ("\\foo\"))
@@ -1433,7 +1433,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("basename1", "bar", a_file_system.basename ("foo\bar"))
 			assert_equal ("basename2", "bar", a_file_system.basename ("foo\\bar"))
 			assert_equal ("basename3", "foo/bar", a_file_system.basename ("foo/bar"))
@@ -1452,7 +1452,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("dirname1", "foo", a_file_system.dirname ("foo\bar"))
 			assert_equal ("dirname2", "foo", a_file_system.dirname ("foo\\bar"))
 			assert_equal ("dirname3", ".", a_file_system.dirname ("foo/bar"))
@@ -1471,7 +1471,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("pathname1", "foo\bar", a_file_system.pathname ("foo", "bar"))
 			assert_equal ("pathname2", "c:\foo\bar\gobo", a_file_system.pathname ("c:\foo", "bar\gobo"))
 			assert_equal ("pathname3", "foo\bar", a_file_system.pathname ("foo\", "bar"))
@@ -1486,7 +1486,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("pathname1", "foo\bar", a_file_system.canonical_pathname ("foo\.\bar"))
 			assert_equal ("pathname2", ".", a_file_system.canonical_pathname ("."))
 			assert_equal ("pathname3", "foo", a_file_system.canonical_pathname ("foo\"))
@@ -1501,7 +1501,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("current", ".", a_file_system.relative_current_directory)
 		end
 
@@ -1510,7 +1510,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("parent", "..", a_file_system.relative_parent_directory)
 		end
 
@@ -1519,7 +1519,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("root", "\", a_file_system.root_directory)
 		end
 
@@ -1529,7 +1529,7 @@ feature -- Pathname handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			cwd: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
 				assert_equal ("absolute1", "c:\foo\bar", a_file_system.absolute_pathname ("c:\foo\bar"))
@@ -1548,7 +1548,7 @@ feature -- Pathname handling
 			cwd: STRING
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
 				a_name := Execution_environment.interpreted_string ("$GOBO\test\kernel")
@@ -1569,7 +1569,7 @@ feature -- Pathname handling
 			cwd: STRING
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
 				a_name := Execution_environment.interpreted_string ("$GOBO\test")
@@ -1594,7 +1594,7 @@ feature -- Pathname handling
 			cwd: STRING
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
 					-- Non-existing directory.
@@ -1617,7 +1617,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				assert_equal ("root", a_file_system.current_drive + "\", a_file_system.absolute_root_directory)
 			end
@@ -1629,24 +1629,24 @@ feature -- Pathname handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_pathname: KL_PATHNAME
 		do
-			!! a_file_system.make
-			!! a_pathname.make
+			create a_file_system.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_names (<<"foo", "bar">>)
 			assert ("relative1", a_file_system.string_to_pathname ("foo\bar").same_pathname (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_current
 			assert ("relative2", a_file_system.string_to_pathname (".").same_pathname (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.append_name ("foo")
 			assert ("absolute1", a_file_system.string_to_pathname ("\foo").same_pathname (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.set_drive ("c:")
 			assert ("absolute2", a_file_system.string_to_pathname ("c:\").same_pathname (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.set_hostname ("gobo")
 			a_pathname.append_names (<<"foo", "bar">>)
@@ -1659,24 +1659,24 @@ feature -- Pathname handling
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 			a_pathname: KL_PATHNAME
 		do
-			!! a_file_system.make
-			!! a_pathname.make
+			create a_file_system.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_names (<<"foo", "bar">>)
 			assert_equal ("relative1", "foo\bar", a_file_system.pathname_to_string (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (True)
 			a_pathname.append_current
 			assert_equal ("relative2", ".", a_file_system.pathname_to_string (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.append_name ("foo")
 			assert_equal ("absolute1", "\foo", a_file_system.pathname_to_string (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.set_drive ("c:")
 			assert_equal ("absolute2", "c:\", a_file_system.pathname_to_string (a_pathname))
-			!! a_pathname.make
+			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.set_hostname ("gobo")
 			a_pathname.append_names (<<"foo", "bar">>)
@@ -1688,7 +1688,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("unix1", "foo\bar", a_file_system.pathname_from_file_system ("foo/bar", unix_file_system))
 			assert_equal ("unix2", "\foo\bar", a_file_system.pathname_from_file_system ("/foo/bar", unix_file_system))
 			assert_equal ("windows1", "foo\bar", a_file_system.pathname_from_file_system ("foo\bar", windows_file_system))
@@ -1701,7 +1701,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert ("extension1", a_file_system.has_extension ("foo\bar.e", ".e"))
 			assert ("extension2", a_file_system.has_extension ("foo\bar", "ar"))
 			assert ("extension3", a_file_system.has_extension ("foo\bar.exe", ".exe"))
@@ -1713,7 +1713,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("extension1", ".e", a_file_system.extension ("foo\bar.e"))
 			assert_equal ("extension2", "", a_file_system.extension ("foo\bar"))
 			assert_equal ("extension3", "", a_file_system.extension ("foo.e\bar"))
@@ -1725,7 +1725,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("exe_extension", ".exe", a_file_system.exe_extension)
 		end
 
@@ -1734,7 +1734,7 @@ feature -- Pathname handling
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			create a_file_system.make
 			assert_equal ("directory_separator", '\', a_file_system.directory_separator)
 		end
 

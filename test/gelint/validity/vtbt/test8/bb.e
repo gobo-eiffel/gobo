@@ -8,7 +8,7 @@ feature
 
 	f is
 		do
-			!! item
+			create item
 		end
 
 end -- class BB

@@ -141,7 +141,7 @@ feature -- Access
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 		do
-			!! Result.make (Initial_classes_capacity)
+			create Result.make (Initial_classes_capacity)
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
@@ -247,13 +247,13 @@ feature -- Parsing
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				!! dir.make (dir_name)
+				create dir.make (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) and has_eiffel_extension (s) then
-							!! a_classname.make (s.substring (1, s.count - 2))
+							create a_classname.make (s.substring (1, s.count - 2))
 							a_class := a_universe.eiffel_class (a_classname)
 							if a_class.is_preparsed then
 								-- TODO:
@@ -298,7 +298,7 @@ feature -- Parsing
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				!! dir.make (dir_name)
+				create dir.make (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
@@ -307,7 +307,7 @@ feature -- Parsing
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
 							a_filename := STRING_.appended_string (a_filename, s)
-							!! a_file.make (a_filename)
+							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.preparse_single_file (a_file, a_filename, Current)
@@ -348,7 +348,7 @@ feature -- Parsing
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				!! dir.make (dir_name)
+				create dir.make (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
@@ -357,7 +357,7 @@ feature -- Parsing
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
 							a_filename := STRING_.appended_string (a_filename, s)
-							!! a_file.make (a_filename)
+							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.preparse_multiple_file (a_file, a_filename, Current)
@@ -400,7 +400,7 @@ feature -- Parsing
 			end
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				!! dir.make (dir_name)
+				create dir.make (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
@@ -409,7 +409,7 @@ feature -- Parsing
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
 							a_filename := STRING_.appended_string (a_filename, s)
-							!! a_file.make (a_filename)
+							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.parse_file (a_file, a_filename, Current)

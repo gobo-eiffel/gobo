@@ -116,7 +116,7 @@ feature {NONE} -- Walk navigation
 			-- Go to root node.
 		do
 			node := tree_pipe.document
-			!! typer
+			create typer
 		end
 	
 	go_up is
@@ -304,8 +304,8 @@ feature {NONE} -- Implementation
 		
 	make_parser is
 		do
-			!! parser.make
-			!! tree_pipe.make
+			create parser.make
+			create tree_pipe.make
 			parser.set_callbacks (tree_pipe.start)
 		end
 		

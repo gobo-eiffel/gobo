@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			end
 			set_options (a_options)
 			create selected_targets.make_map (5)
-			!! a_tester
+			create a_tester
 			selected_targets.set_key_equality_tester (a_tester)
 			build_successful := True
 		ensure

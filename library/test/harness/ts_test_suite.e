@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			variables := a_variables
-			!! tests.make
+			create tests.make
 		ensure
 			name_set: name = a_name
 			variables_set: variables = a_variables

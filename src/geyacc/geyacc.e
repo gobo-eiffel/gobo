@@ -40,45 +40,45 @@ feature -- Processing
 			if False then resurrect_code end
 
 			Arguments.set_program_name ("geyacc")
-			!! error_handler.make_standard
+			create error_handler.make_standard
 			read_command_line
 			parse_input_file
 			if grammar /= Void then
 				if verbose_filename /= Void then
 						-- Verbose mode.
-					!! verbose_file.make (verbose_filename)
+					create verbose_file.make (verbose_filename)
 					verbose_file.open_write
 					if verbose_file.is_open_write then
 						grammar.reduce_verbose (error_handler, verbose_file)
 						grammar.set_nullable
-						!! fsm.make (grammar)
+						create fsm.make (grammar)
 						fsm.resolve_conflicts_verbose (error_handler, verbose_file)
 						fsm.print_machine (verbose_file)
 						verbose_file.close
 					else
-						!! cannot_write.make (verbose_filename)
+						create cannot_write.make (verbose_filename)
 						error_handler.report_error (cannot_write)
 						Exceptions.die (1)
 					end
 				else
 					grammar.reduce (error_handler)
 					grammar.set_nullable
-					!! fsm.make (grammar)
+					create fsm.make (grammar)
 					fsm.resolve_conflicts (error_handler)
 				end
-				!! parser_generator.make (fsm)
+				create parser_generator.make (fsm)
 				if input_filename /= Void then
 					parser_generator.set_input_filename (input_filename)
 				end
 				if token_classname /= Void then
 						-- Print class text with token code constants.
-					!! token_file.make (token_filename)
+					create token_file.make (token_filename)
 					token_file.open_write
 					if token_file.is_open_write then
 						parser_generator.print_token_class (token_classname, Version_number, token_file)
 						token_file.close
 					else
-						!! cannot_write.make (token_filename)
+						create cannot_write.make (token_filename)
 						error_handler.report_error (cannot_write)
 						Exceptions.die (1)
 					end
@@ -86,13 +86,13 @@ feature -- Processing
 					tokens_needed := True
 				end
 				if output_filename /= Void then
-					!! out_file.make (output_filename)
+					create out_file.make (output_filename)
 					out_file.open_write
 					if out_file.is_open_write then
 						parser_generator.print_parser (tokens_needed, actions_separated, out_file)
 						out_file.close
 					else
-						!! cannot_write.make (output_filename)
+						create cannot_write.make (output_filename)
 						error_handler.report_error (cannot_write)
 						Exceptions.die (1)
 					end
@@ -109,15 +109,15 @@ feature -- Processing
 			a_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
-			!! parser.make (error_handler)
+			create parser.make (error_handler)
 			if input_filename /= Void then
-				!! a_file.make (input_filename)
+				create a_file.make (input_filename)
 				a_file.open_read
 				if a_file.is_open_read then
 					parser.parse_file (a_file)
 					a_file.close
 				else
-					!! cannot_read.make (input_filename)
+					create cannot_read.make (input_filename)
 					error_handler.report_error (cannot_read)
 					Exceptions.die (1)
 				end
@@ -250,7 +250,7 @@ feature {NONE} -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make (Version_number)
+			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 			Exceptions.die (0)
 		end
@@ -258,7 +258,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geyacc usage message
 		once
-			!! Result.make ("[-hxV?][-t classname][-k filename][-v filename][-o filename] filename")
+			create Result.make ("[-hxV?][-t classname][-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -283,19 +283,19 @@ feature {NONE} -- Implementation
 			et12: KL_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_VARIABLE]]
 			et13: KL_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_STATE]]
 		do
-			!! et1
-			!! et2
-			!! et3
-			!! et4
-			!! et5
-			!! et6
-			!! et7
-			!! et8
-			!! et9
-			!! et10
-			!! et11
-			!! et12
-			!! et13
+			create et1
+			create et2
+			create et3
+			create et4
+			create et5
+			create et6
+			create et7
+			create et8
+			create et9
+			create et10
+			create et11
+			create et12
+			create et13
 		end
 
 invariant

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		local
 			a_factory: ET_LACE_AST_FACTORY
 		do
-			!! a_factory.make
+			create a_factory.make
 			make_with_factory (a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			ast_factory := a_factory
-			!! named_clusters.make (100)
+			create named_clusters.make (100)
 			make_lace_scanner ("unknown file", an_error_handler)
 			make_parser_skeleton
 		ensure
@@ -115,7 +115,7 @@ feature {NONE} -- Basic operations
 					a_parent_full_pathname := a_parent_cluster.full_pathname
 					if nb = 1 then
 						a_full_pathname_string := a_parent_full_pathname
-						!! a_full_pathname.make (a_full_pathname_string)
+						create a_full_pathname.make (a_full_pathname_string)
 						a_full_pathname.set_position (a_pathname.line, a_pathname.column)
 					else
 						inspect a_pathname_string.item (2)
@@ -123,7 +123,7 @@ feature {NONE} -- Basic operations
 							a_full_pathname_string := STRING_.make (a_parent_full_pathname.count + nb - 1)
 							a_full_pathname_string.append_string (a_parent_full_pathname)
 							a_full_pathname_string.append_string (a_pathname_string.substring (2, nb))
-							!! a_full_pathname.make (a_full_pathname_string)
+							create a_full_pathname.make (a_full_pathname_string)
 							a_full_pathname.set_position (a_pathname.line, a_pathname.column)
 						else
 							a_full_pathname := a_pathname

@@ -68,7 +68,7 @@ feature -- Duplication
 			-- Cloned formal argument;
 			-- Do not recursively clone the type
 		do
-			!! Result.make (formal_argument, semicolon)
+			create Result.make (formal_argument, semicolon)
 		end
 
 feature -- Processing

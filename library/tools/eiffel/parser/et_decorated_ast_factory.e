@@ -290,7 +290,7 @@ feature -- Eiffel keywords
 	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'agent' keyword
 		do
-			!! Result.make_agent
+			create Result.make_agent
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -299,7 +299,7 @@ feature -- Eiffel keywords
 	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'alias' keyword
 		do
-			!! Result.make_alias
+			create Result.make_alias
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -308,7 +308,7 @@ feature -- Eiffel keywords
 	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'all' keyword
 		do
-			!! Result.make_all
+			create Result.make_all
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -317,7 +317,7 @@ feature -- Eiffel keywords
 	new_and_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
 			-- New 'and' keyword
 		do
-			!! Result.make_and
+			create Result.make_and
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -326,7 +326,7 @@ feature -- Eiffel keywords
 	new_as_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'as' keyword
 		do
-			!! Result.make_as
+			create Result.make_as
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -335,7 +335,7 @@ feature -- Eiffel keywords
 	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'check' keyword
 		do
-			!! Result.make_check
+			create Result.make_check
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -344,7 +344,7 @@ feature -- Eiffel keywords
 	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'class' keyword
 		do
-			!! Result.make_class
+			create Result.make_class
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -353,7 +353,7 @@ feature -- Eiffel keywords
 	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'create' keyword
 		do
-			!! Result.make_create
+			create Result.make_create
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -362,7 +362,7 @@ feature -- Eiffel keywords
 	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'creation' keyword
 		do
-			!! Result.make_creation
+			create Result.make_creation
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -371,7 +371,7 @@ feature -- Eiffel keywords
 	new_current_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_CURRENT is
 			-- New 'current' keyword
 		do
-			!! Result.make
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -380,7 +380,7 @@ feature -- Eiffel keywords
 	new_debug_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'debug' keyword
 		do
-			!! Result.make_debug
+			create Result.make_debug
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -389,7 +389,7 @@ feature -- Eiffel keywords
 	new_deferred_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'deferred' keyword
 		do
-			!! Result.make_deferred
+			create Result.make_deferred
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -398,7 +398,7 @@ feature -- Eiffel keywords
 	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'do' keyword
 		do
-			!! Result.make_do
+			create Result.make_do
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -407,7 +407,7 @@ feature -- Eiffel keywords
 	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'else' keyword
 		do
-			!! Result.make_else
+			create Result.make_else
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -416,7 +416,7 @@ feature -- Eiffel keywords
 	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'elseif' keyword
 		do
-			!! Result.make_elseif
+			create Result.make_elseif
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -425,7 +425,7 @@ feature -- Eiffel keywords
 	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'end' keyword
 		do
-			!! Result.make_end
+			create Result.make_end
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -434,7 +434,7 @@ feature -- Eiffel keywords
 	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'ensure' keyword
 		do
-			!! Result.make_ensure
+			create Result.make_ensure
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -443,7 +443,7 @@ feature -- Eiffel keywords
 	new_expanded_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'expanded' keyword
 		do
-			!! Result.make_expanded
+			create Result.make_expanded
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -452,7 +452,7 @@ feature -- Eiffel keywords
 	new_export_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'export' keyword
 		do
-			!! Result.make_export
+			create Result.make_export
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -461,7 +461,7 @@ feature -- Eiffel keywords
 	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'external' keyword
 		do
-			!! Result.make_external
+			create Result.make_external
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -470,7 +470,7 @@ feature -- Eiffel keywords
 	new_false_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FALSE_CONSTANT is
 			-- New 'false' keyword
 		do
-			!! Result.make
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -479,7 +479,7 @@ feature -- Eiffel keywords
 	new_feature_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'feature' keyword
 		do
-			!! Result.make_feature
+			create Result.make_feature
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -488,7 +488,7 @@ feature -- Eiffel keywords
 	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'from' keyword
 		do
-			!! Result.make_from
+			create Result.make_from
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -497,7 +497,7 @@ feature -- Eiffel keywords
 	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'frozen' keyword
 		do
-			!! Result.make_frozen
+			create Result.make_frozen
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -506,7 +506,7 @@ feature -- Eiffel keywords
 	new_if_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'if' keyword
 		do
-			!! Result.make_if
+			create Result.make_if
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -515,7 +515,7 @@ feature -- Eiffel keywords
 	new_implies_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
 			-- New 'implies' keyword
 		do
-			!! Result.make_implies
+			create Result.make_implies
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -524,7 +524,7 @@ feature -- Eiffel keywords
 	new_indexing_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'indexing' keyword
 		do
-			!! Result.make_indexing
+			create Result.make_indexing
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -533,7 +533,7 @@ feature -- Eiffel keywords
 	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'infix' keyword
 		do
-			!! Result.make_infix
+			create Result.make_infix
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -542,7 +542,7 @@ feature -- Eiffel keywords
 	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'inherit' keyword
 		do
-			!! Result.make_inherit
+			create Result.make_inherit
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -551,7 +551,7 @@ feature -- Eiffel keywords
 	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'inspect' keyword
 		do
-			!! Result.make_inspect
+			create Result.make_inspect
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -560,7 +560,7 @@ feature -- Eiffel keywords
 	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'invariant' keyword
 		do
-			!! Result.make_invariant
+			create Result.make_invariant
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -569,7 +569,7 @@ feature -- Eiffel keywords
 	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'is' keyword
 		do
-			!! Result.make_is
+			create Result.make_is
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -578,7 +578,7 @@ feature -- Eiffel keywords
 	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'like' keyword
 		do
-			!! Result.make_like
+			create Result.make_like
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -587,7 +587,7 @@ feature -- Eiffel keywords
 	new_local_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'local' keyword
 		do
-			!! Result.make_local
+			create Result.make_local
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -596,7 +596,7 @@ feature -- Eiffel keywords
 	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'loop' keyword
 		do
-			!! Result.make_loop
+			create Result.make_loop
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -605,7 +605,7 @@ feature -- Eiffel keywords
 	new_not_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
 			-- New 'not' keyword
 		do
-			!! Result.make_not
+			create Result.make_not
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -614,7 +614,7 @@ feature -- Eiffel keywords
 	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'obsolete' keyword
 		do
-			!! Result.make_obsolete
+			create Result.make_obsolete
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -623,7 +623,7 @@ feature -- Eiffel keywords
 	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'old' keyword
 		do
-			!! Result.make_old
+			create Result.make_old
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -632,7 +632,7 @@ feature -- Eiffel keywords
 	new_once_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'once' keyword
 		do
-			!! Result.make_once
+			create Result.make_once
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -641,7 +641,7 @@ feature -- Eiffel keywords
 	new_or_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
 			-- New 'or' keyword
 		do
-			!! Result.make_or
+			create Result.make_or
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -650,7 +650,7 @@ feature -- Eiffel keywords
 	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'precursor' keyword
 		do
-			!! Result.make_precursor
+			create Result.make_precursor
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -659,7 +659,7 @@ feature -- Eiffel keywords
 	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'prefix' keyword
 		do
-			!! Result.make_prefix
+			create Result.make_prefix
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -668,7 +668,7 @@ feature -- Eiffel keywords
 	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'redefine' keyword
 		do
-			!! Result.make_redefine
+			create Result.make_redefine
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -677,7 +677,7 @@ feature -- Eiffel keywords
 	new_reference_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'reference' keyword
 		do
-			!! Result.make_reference
+			create Result.make_reference
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -686,7 +686,7 @@ feature -- Eiffel keywords
 	new_rename_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'rename' keyword
 		do
-			!! Result.make_rename
+			create Result.make_rename
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -695,7 +695,7 @@ feature -- Eiffel keywords
 	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'require' keyword
 		do
-			!! Result.make_require
+			create Result.make_require
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -704,7 +704,7 @@ feature -- Eiffel keywords
 	new_rescue_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'rescue' keyword
 		do
-			!! Result.make_rescue
+			create Result.make_rescue
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -713,7 +713,7 @@ feature -- Eiffel keywords
 	new_result_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RESULT is
 			-- New 'result' keyword
 		do
-			!! Result.make
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -722,7 +722,7 @@ feature -- Eiffel keywords
 	new_retry_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RETRY_INSTRUCTION is
 			-- New 'retry' keyword
 		do
-			!! Result.make
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -731,7 +731,7 @@ feature -- Eiffel keywords
 	new_select_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'select' keyword
 		do
-			!! Result.make_select
+			create Result.make_select
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -740,7 +740,7 @@ feature -- Eiffel keywords
 	new_separate_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'separate' keyword
 		do
-			!! Result.make_separate
+			create Result.make_separate
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -749,7 +749,7 @@ feature -- Eiffel keywords
 	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'strip' keyword
 		do
-			!! Result.make_strip
+			create Result.make_strip
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -758,7 +758,7 @@ feature -- Eiffel keywords
 	new_then_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'then' keyword
 		do
-			!! Result.make_then
+			create Result.make_then
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -767,7 +767,7 @@ feature -- Eiffel keywords
 	new_true_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TRUE_CONSTANT is
 			-- New 'true' keyword
 		do
-			!! Result.make
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -776,7 +776,7 @@ feature -- Eiffel keywords
 	new_undefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'undefine' keyword
 		do
-			!! Result.make_undefine
+			create Result.make_undefine
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -785,7 +785,7 @@ feature -- Eiffel keywords
 	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'unique' keyword
 		do
-			!! Result.make_unique
+			create Result.make_unique
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
@@ -794,7 +794,7 @@ feature -- Eiffel keywords
 	new_until_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'until' keyword
 		do
-			!! Result.make_until
+			create Result.make_until
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -803,7 +803,7 @@ feature -- Eiffel keywords
 	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'variant' keyword
 		do
-			!! Result.make_variant
+			create Result.make_variant
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -812,7 +812,7 @@ feature -- Eiffel keywords
 	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'when' keyword
 		do
-			!! Result.make_when
+			create Result.make_when
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -821,7 +821,7 @@ feature -- Eiffel keywords
 	new_xor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
 			-- New 'xor' keyword
 		do
-			!! Result.make_xor
+			create Result.make_xor
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -832,7 +832,7 @@ feature -- Eiffel symbols
 	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '->' symbol
 		do
-			!! Result.make_arrow
+			create Result.make_arrow
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -840,7 +840,7 @@ feature -- Eiffel symbols
 	new_assign_attempt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '?=' symbol
 		do
-			!! Result.make_assign_attempt
+			create Result.make_assign_attempt
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -848,7 +848,7 @@ feature -- Eiffel symbols
 	new_assign_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New ':=' symbol
 		do
-			!! Result.make_assign
+			create Result.make_assign
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -856,7 +856,7 @@ feature -- Eiffel symbols
 	new_bang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '!' symbol
 		do
-			!! Result.make_bang
+			create Result.make_bang
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -864,7 +864,7 @@ feature -- Eiffel symbols
 	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New ':' symbol
 		do
-			!! Result.make_colon
+			create Result.make_colon
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -872,7 +872,7 @@ feature -- Eiffel symbols
 	new_comma_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New ',' symbol
 		do
-			!! Result.make_comma
+			create Result.make_comma
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -880,7 +880,7 @@ feature -- Eiffel symbols
 	new_div_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '//' symbol
 		do
-			!! Result.make_div
+			create Result.make_div
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -888,7 +888,7 @@ feature -- Eiffel symbols
 	new_divide_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '/' symbol
 		do
-			!! Result.make_divide
+			create Result.make_divide
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -896,7 +896,7 @@ feature -- Eiffel symbols
 	new_dollar_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '$' symbol
 		do
-			!! Result.make_dollar
+			create Result.make_dollar
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -904,7 +904,7 @@ feature -- Eiffel symbols
 	new_dot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '.' symbol
 		do
-			!! Result.make_dot
+			create Result.make_dot
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -912,7 +912,7 @@ feature -- Eiffel symbols
 	new_dotdot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '..' symbol
 		do
-			!! Result.make_dotdot
+			create Result.make_dotdot
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -920,7 +920,7 @@ feature -- Eiffel symbols
 	new_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '=' symbol
 		do
-			!! Result.make_equal
+			create Result.make_equal
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -928,7 +928,7 @@ feature -- Eiffel symbols
 	new_ge_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '>=' symbol
 		do
-			!! Result.make_ge
+			create Result.make_ge
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -936,7 +936,7 @@ feature -- Eiffel symbols
 	new_gt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '>' symbol
 		do
-			!! Result.make_gt
+			create Result.make_gt
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -944,7 +944,7 @@ feature -- Eiffel symbols
 	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '<=' symbol
 		do
-			!! Result.make_le
+			create Result.make_le
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -952,7 +952,7 @@ feature -- Eiffel symbols
 	new_left_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '<<' symbol
 		do
-			!! Result.make_left_array
+			create Result.make_left_array
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -960,7 +960,7 @@ feature -- Eiffel symbols
 	new_left_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '{' symbol
 		do
-			!! Result.make_left_brace
+			create Result.make_left_brace
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -968,7 +968,7 @@ feature -- Eiffel symbols
 	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '[' symbol
 		do
-			!! Result.make_left_bracket
+			create Result.make_left_bracket
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -976,7 +976,7 @@ feature -- Eiffel symbols
 	new_left_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '(' symbol
 		do
-			!! Result.make_left_parenthesis
+			create Result.make_left_parenthesis
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -984,7 +984,7 @@ feature -- Eiffel symbols
 	new_lt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '<' symbol
 		do
-			!! Result.make_lt
+			create Result.make_lt
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -992,7 +992,7 @@ feature -- Eiffel symbols
 	new_minus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '-' symbol
 		do
-			!! Result.make_minus
+			create Result.make_minus
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1000,7 +1000,7 @@ feature -- Eiffel symbols
 	new_mod_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '\\' symbol
 		do
-			!! Result.make_mod
+			create Result.make_mod
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1008,7 +1008,7 @@ feature -- Eiffel symbols
 	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '/=' symbol
 		do
-			!! Result.make_not_equal
+			create Result.make_not_equal
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1016,7 +1016,7 @@ feature -- Eiffel symbols
 	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '+' symbol
 		do
-			!! Result.make_plus
+			create Result.make_plus
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1024,7 +1024,7 @@ feature -- Eiffel symbols
 	new_power_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '^' symbol
 		do
-			!! Result.make_power
+			create Result.make_power
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1032,7 +1032,7 @@ feature -- Eiffel symbols
 	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_QUESTION_MARK_SYMBOL is
 			-- New '?' symbol
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1040,7 +1040,7 @@ feature -- Eiffel symbols
 	new_right_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '>>' symbol
 		do
-			!! Result.make_right_array
+			create Result.make_right_array
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1048,7 +1048,7 @@ feature -- Eiffel symbols
 	new_right_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '}' symbol
 		do
-			!! Result.make_right_brace
+			create Result.make_right_brace
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1056,7 +1056,7 @@ feature -- Eiffel symbols
 	new_right_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New ']' symbol
 		do
-			!! Result.make_right_bracket
+			create Result.make_right_bracket
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1064,7 +1064,7 @@ feature -- Eiffel symbols
 	new_right_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New ')' symbol
 		do
-			!! Result.make_right_parenthesis
+			create Result.make_right_parenthesis
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1072,7 +1072,7 @@ feature -- Eiffel symbols
 	new_semicolon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SEMICOLON_SYMBOL is
 			-- New ';' symbol
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1080,7 +1080,7 @@ feature -- Eiffel symbols
 	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
 			-- New '~' symbol
 		do
-			!! Result.make_tilde
+			create Result.make_tilde
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1088,7 +1088,7 @@ feature -- Eiffel symbols
 	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '*' symbol
 		do
-			!! Result.make_times
+			create Result.make_times
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1098,7 +1098,7 @@ feature -- AST leaves
 	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BIT_CONSTANT is
 			-- New bit constant
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1106,13 +1106,13 @@ feature -- AST leaves
 	new_break (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BREAK is
 			-- New break
 		do
-			!! Result.make (a_scanner.last_break)
+			create Result.make (a_scanner.last_break)
 		end
 
 	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C1_CHARACTER_CONSTANT is
 			-- New character constant of the form 'A'
 		do
-			!! Result.make (a_value)
+			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1120,7 +1120,7 @@ feature -- AST leaves
 	new_c2_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C2_CHARACTER_CONSTANT is
 			-- New character constant of the form '%A'
 		do
-			!! Result.make (a_value)
+			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1128,7 +1128,7 @@ feature -- AST leaves
 	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C3_CHARACTER_CONSTANT is
 			-- New character constant of the form '%/code/`'
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1136,13 +1136,13 @@ feature -- AST leaves
 	new_comment (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_COMMENT is
 			-- New comment
 		do
-			!! Result.make (a_scanner.last_comment)
+			create Result.make (a_scanner.last_comment)
 		end
 
 	new_free_operator (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FREE_OPERATOR is
 			-- New free operator
 		do
-			!! Result.make_prefix (a_scanner.last_literal)
+			create Result.make_prefix (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1150,7 +1150,7 @@ feature -- AST leaves
 	new_hexadecimal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_HEXADECIMAL_INTEGER_CONSTANT is
 			-- New integer constant in hexadecimal format
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1158,7 +1158,7 @@ feature -- AST leaves
 	new_identifier (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_IDENTIFIER is
 			-- New identifier
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1166,7 +1166,7 @@ feature -- AST leaves
 	new_regular_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_INTEGER_CONSTANT is
 			-- New integer constant with no underscore
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1174,7 +1174,7 @@ feature -- AST leaves
 	new_regular_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_MANIFEST_STRING is
 			-- New manifest string with no special character
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1182,7 +1182,7 @@ feature -- AST leaves
 	new_regular_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_REAL_CONSTANT is
 			-- New real constant with no underscore
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1190,7 +1190,7 @@ feature -- AST leaves
 	new_special_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SPECIAL_MANIFEST_STRING is
 			-- New manifest string with special characters
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1198,7 +1198,7 @@ feature -- AST leaves
 	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_INTEGER_CONSTANT is
 			-- New integer constant with underscores
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1206,7 +1206,7 @@ feature -- AST leaves
 	new_underscored_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_REAL_CONSTANT is
 			-- New real constant with underscores
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1214,7 +1214,7 @@ feature -- AST leaves
 	new_verbatim_string (a_marker, an_open, a_close: STRING; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING is
 			-- New verbatim string
 		do
-			!! Result.make (a_scanner.last_literal, a_marker, an_open, a_close)
+			create Result.make (a_scanner.last_literal, a_marker, an_open, a_close)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1224,7 +1224,7 @@ feature -- AST nodes
 	new_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_ARGUMENT_LIST is
 			-- New actual argument list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_symbol (a_left)
 			end
@@ -1236,7 +1236,7 @@ feature -- AST nodes
 	new_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_PARAMETER_LIST is
 			-- New actual generic parameter list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_bracket (a_left)
 			end
@@ -1251,14 +1251,14 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := an_argument
 			elseif an_argument /= Void then
-				!ET_AGENT_ACTUAL_ARGUMENT_COMMA! Result.make (an_argument, a_comma)
+				create {ET_AGENT_ACTUAL_ARGUMENT_COMMA} Result.make (an_argument, a_comma)
 			end
 		end
 
 	new_agent_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ACTUAL_ARGUMENT_LIST is
 			-- New agent actual argument list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_parenthesis (a_left)
 			end
@@ -1273,7 +1273,7 @@ feature -- AST nodes
 			a_braced_type: ET_BRACED_TYPE
 		do
 			if a_type /= Void then
-				!! a_braced_type.make (a_type)
+				create a_braced_type.make (a_type)
 				if l /= Void then
 					a_braced_type.set_left_brace (l)
 				end
@@ -1288,7 +1288,7 @@ feature -- AST nodes
 			-- New 'all' export clause
 		do
 			if a_clients /= Void then
-				!! Result.make (a_clients)
+				create Result.make (a_clients)
 				if an_all /= Void then
 					Result.set_all_keyword (an_all)
 				end
@@ -1301,7 +1301,7 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_name
 			elseif a_name /= Void then
-				!ET_IDENTIFIER_COMMA! Result.make (a_name, a_comma)
+				create {ET_IDENTIFIER_COMMA} Result.make (a_name, a_comma)
 			end
 		end
 
@@ -1311,7 +1311,7 @@ feature -- AST nodes
 			if a_semicolon = Void then
 				Result := an_assertion
 			elseif an_assertion /= Void then
-				!ET_ASSERTION_SEMICOLON! Result.make (an_assertion, a_semicolon)
+				create {ET_ASSERTION_SEMICOLON} Result.make (an_assertion, a_semicolon)
 			end
 		end
 
@@ -1319,7 +1319,7 @@ feature -- AST nodes
 			-- New assignment instruction
 		do
 			if a_target /= Void and a_source /= Void then
-				!! Result.make (a_target, a_source)
+				create Result.make (a_target, a_source)
 				if an_assign /= Void then
 					Result.set_assign_symbol (an_assign)
 				end
@@ -1330,7 +1330,7 @@ feature -- AST nodes
 			-- New assignment-attempt instruction
 		do
 			if a_target /= Void and a_source /= Void then
-				!! Result.make (a_target, a_source)
+				create Result.make (a_target, a_source)
 				if an_assign_attempt /= Void then
 					Result.set_assign_attempt_symbol (an_assign_attempt)
 				end
@@ -1343,7 +1343,7 @@ feature -- AST nodes
 			-- New attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, a_type, a_clients, a_class)
+				create Result.make (a_name, a_type, a_clients, a_class)
 				Result.set_semicolon (a_semicolon)
 				Result.set_feature_clause (a_feature_clause)
 			end
@@ -1353,7 +1353,7 @@ feature -- AST nodes
 			-- New bang creation instruction
 		do
 			if a_target /= Void then
-				!! Result.make (a_type, a_target, a_call)
+				create Result.make (a_type, a_target, a_call)
 				if l /= Void then
 					Result.set_left_bang (l)
 				end
@@ -1367,7 +1367,7 @@ feature -- AST nodes
 			-- New 'BIT Identifier' type
 		do
 			if an_id /= Void then
-				!! Result.make (an_id)
+				create Result.make (an_id)
 				if a_bit /= Void then
 					Result.set_bit_keyword (a_bit)
 				end
@@ -1378,7 +1378,7 @@ feature -- AST nodes
 			-- New 'BIT N' type
 		do
 			if an_int /= Void then
-				!! Result.make (an_int)
+				create Result.make (an_int)
 				if a_bit /= Void then
 					Result.set_bit_keyword (a_bit)
 				end
@@ -1388,7 +1388,7 @@ feature -- AST nodes
 	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CHECK_INSTRUCTION is
 			-- New check instruction with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_check /= Void then
 				Result.set_check_keyword (a_check)
 			end
@@ -1403,14 +1403,14 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_choice
 			elseif a_choice /= Void then
-				!ET_CHOICE_COMMA! Result.make (a_choice, a_comma)
+				create {ET_CHOICE_COMMA} Result.make (a_choice, a_comma)
 			end
 		end
 
 	new_choice_list (a_when: ET_KEYWORD; nb: INTEGER): ET_CHOICE_LIST is
 			-- New choice list with capacity `nb'
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_when /= Void then
 				Result.set_when_keyword (a_when)
 			end
@@ -1420,7 +1420,7 @@ feature -- AST nodes
 			-- New choice range
 		do
 			if a_lower /= Void and an_upper /= Void then
-				!! Result.make (a_lower, an_upper)
+				create Result.make (a_lower, an_upper)
 				if a_dotdot /= Void then
 					Result.set_dotdot (a_dotdot)
 				end
@@ -1433,14 +1433,14 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_name
 			elseif a_name /= Void then
-				!ET_CLASS_NAME_COMMA! Result.make (a_name, a_comma)
+				create {ET_CLASS_NAME_COMMA} Result.make (a_name, a_comma)
 			end
 		end
 
 	new_clients (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CLIENTS is
 			-- New client clause with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_brace (a_left)
 			end
@@ -1455,14 +1455,14 @@ feature -- AST nodes
 			if a_colon = Void then
 				Result := a_type
 			elseif a_type /= Void then
-				!ET_COLON_TYPE! Result.make (a_colon, a_type)
+				create {ET_COLON_TYPE} Result.make (a_colon, a_type)
 			end
 		end
 
 	new_compound (nb: INTEGER): ET_COMPOUND is
 			-- New instruction compound with capacity `nb'
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_conditional (a_keyword: ET_KEYWORD; an_expression: ET_EXPRESSION): ET_CONDITIONAL is
@@ -1471,7 +1471,7 @@ feature -- AST nodes
 			if a_keyword = Void then
 				Result := an_expression
 			elseif an_expression /= Void then
-				!ET_KEYWORD_EXPRESSION! Result.make (a_keyword, an_expression)
+				create {ET_KEYWORD_EXPRESSION} Result.make (a_keyword, an_expression)
 			end
 		end
 
@@ -1482,7 +1482,7 @@ feature -- AST nodes
 			-- New constant attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_constant /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, a_type, a_constant, a_clients, a_class)
+				create Result.make (a_name, a_type, a_constant, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -1496,7 +1496,7 @@ feature -- AST nodes
 			-- New constrained formal generic parameter
 		do
 			if a_name /= Void and a_constraint /= Void then
-				!! Result.make (a_name, a_constraint, a_creation)
+				create Result.make (a_name, a_constraint, a_creation)
 				if an_arrow /= Void then
 					Result.set_arrow_symbol (an_arrow)
 				end
@@ -1506,7 +1506,7 @@ feature -- AST nodes
 	new_constraint_creator (a_create: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CONSTRAINT_CREATOR is
 			-- New constraint creation clause with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_create /= Void then
 				Result.set_create_keyword (a_create)
 			end
@@ -1519,7 +1519,7 @@ feature -- AST nodes
 			-- New create expression
 		do
 			if a_type /= Void then
-				!! Result.make (a_type, a_call)
+				create Result.make (a_type, a_call)
 				if a_create /= Void then
 					Result.set_create_keyword (a_create)
 				end
@@ -1530,7 +1530,7 @@ feature -- AST nodes
 			-- New create instruction
 		do
 			if a_target /= Void then
-				!! Result.make (a_type, a_target, a_call)
+				create Result.make (a_type, a_target, a_call)
 				if a_create /= Void then
 					Result.set_create_keyword (a_create)
 				end
@@ -1543,7 +1543,7 @@ feature -- AST nodes
 			a_braced_type: ET_BRACED_TYPE
 		do
 			if a_type /= Void then
-				!! a_braced_type.make (a_type)
+				create a_braced_type.make (a_type)
 				if l /= Void then
 					a_braced_type.set_left_brace (l)
 				end
@@ -1558,7 +1558,7 @@ feature -- AST nodes
 			-- New creation clause with given capacity
 		do
 			if a_clients /= Void then
-				!! Result.make_with_capacity (a_clients, nb)
+				create Result.make_with_capacity (a_clients, nb)
 				if a_creation /= Void then
 					Result.set_creation_keyword (a_creation)
 				end
@@ -1568,7 +1568,7 @@ feature -- AST nodes
 	new_current_address (d: ET_SYMBOL; c: ET_CURRENT): ET_CURRENT_ADDRESS is
 			-- New address of Current
 		do
-			!! Result.make
+			create Result.make
 			if d /= Void then
 				Result.set_dollar (d)
 			end
@@ -1593,7 +1593,7 @@ feature -- AST nodes
 	new_debug_instruction (a_keys: ET_MANIFEST_STRING_LIST; a_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_DEBUG_INSTRUCTION is
 			-- New debug instruction
 		do
-			!! Result.make (a_keys, a_compound)
+			create Result.make (a_keys, a_compound)
 			if an_end /= Void then
 				Result.set_end_keyword (an_end)
 			end
@@ -1608,7 +1608,7 @@ feature -- AST nodes
 			-- New deferred function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -1632,7 +1632,7 @@ feature -- AST nodes
 			-- New deferred procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -1670,7 +1670,7 @@ feature -- AST nodes
 			-- New do function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -1692,7 +1692,7 @@ feature -- AST nodes
 			-- New do procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -1711,7 +1711,7 @@ feature -- AST nodes
 			if a_dot = Void then
 				Result := a_name
 			elseif a_name /= Void then
-				!ET_DOT_FEATURE_NAME! Result.make (a_dot, a_name)
+				create {ET_DOT_FEATURE_NAME} Result.make (a_dot, a_name)
 			end
 		end
 
@@ -1731,7 +1731,7 @@ feature -- AST nodes
 	new_exports (an_export: ET_KEYWORD; nb: INTEGER): ET_EXPORT_LIST is
 			-- New export clause with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_export /= Void then
 				Result.set_export_keyword (an_export)
 			end
@@ -1741,7 +1741,7 @@ feature -- AST nodes
 			-- New expression address
 		do
 			if e /= Void then
-				!! Result.make (e)
+				create Result.make (e)
 				if d /= Void then
 					Result.set_dollar (d)
 				end
@@ -1754,7 +1754,7 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := an_expression
 			elseif an_expression /= Void then
-				!ET_EXPRESSION_COMMA! Result.make (an_expression, a_comma)
+				create {ET_EXPRESSION_COMMA} Result.make (an_expression, a_comma)
 			end
 		end
 
@@ -1764,7 +1764,7 @@ feature -- AST nodes
 			if a_keyword = Void then
 				Result := a_string
 			elseif a_string /= Void then
-				!ET_KEYWORD_MANIFEST_STRING! Result.make (a_keyword, a_string)
+				create {ET_KEYWORD_MANIFEST_STRING} Result.make (a_keyword, a_string)
 			end
 		end
 
@@ -1777,7 +1777,7 @@ feature -- AST nodes
 			-- New external function
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -1796,7 +1796,7 @@ feature -- AST nodes
 			if a_keyword = Void then
 				Result := a_string
 			elseif a_string /= Void then
-				!ET_KEYWORD_MANIFEST_STRING! Result.make (a_keyword, a_string)
+				create {ET_KEYWORD_MANIFEST_STRING} Result.make (a_keyword, a_string)
 			end
 		end
 
@@ -1809,7 +1809,7 @@ feature -- AST nodes
 			-- New external procedure
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -1826,7 +1826,7 @@ feature -- AST nodes
 			-- New feature address
 		do
 			if a_name /= Void then
-				!! Result.make (a_name)
+				create Result.make (a_name)
 				if d /= Void then
 					Result.set_dollar (d)
 				end
@@ -1837,7 +1837,7 @@ feature -- AST nodes
 			-- New fetaure clause
 		do
 			if a_clients /= Void then
-				!! Result.make (a_clients)
+				create Result.make (a_clients)
 				if a_feature /= Void then
 					Result.set_feature_keyword (a_feature)
 				end
@@ -1850,7 +1850,7 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_name
 			elseif a_name /= Void then
-				!ET_FEATURE_NAME_COMMA! Result.make (a_name, a_comma)
+				create {ET_FEATURE_NAME_COMMA} Result.make (a_name, a_comma)
 			end
 		end
 
@@ -1860,14 +1860,14 @@ feature -- AST nodes
 			if a_semicolon = Void then
 				Result := an_argument
 			elseif an_argument /= Void then
-				!ET_FORMAL_ARGUMENT_SEMICOLON! Result.make (an_argument, a_semicolon)
+				create {ET_FORMAL_ARGUMENT_SEMICOLON} Result.make (an_argument, a_semicolon)
 			end
 		end
 
 	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST is
 			-- New formal argument list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_parenthesis (a_left)
 			end
@@ -1882,14 +1882,14 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_formal
 			elseif a_formal /= Void then
-				!ET_FORMAL_PARAMETER_COMMA! Result.make (a_formal, a_comma)
+				create {ET_FORMAL_PARAMETER_COMMA} Result.make (a_formal, a_comma)
 			end
 		end
 
 	new_formal_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_PARAMETER_LIST is
 			-- New formal generic parameter list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_bracket (a_left)
 			end
@@ -1917,7 +1917,7 @@ feature -- AST nodes
 			-- New if instruction
 		do
 			if a_conditional /= Void then
-				!! Result.make (a_conditional, a_then_compound)
+				create Result.make (a_conditional, a_then_compound)
 				Result.set_elseif_parts (an_elseif_parts)
 				Result.set_else_compound (an_else_compound)
 				if an_end /= Void then
@@ -1930,7 +1930,7 @@ feature -- AST nodes
 			-- New indexing clause
 		do
 			if a_terms /= Void then
-				!! Result.make (a_terms)
+				create Result.make (a_terms)
 			end
 		end
 
@@ -1940,7 +1940,7 @@ feature -- AST nodes
 			if a_semicolon = Void then
 				Result := an_indexing
 			elseif an_indexing /= Void then
-				!ET_INDEXING_SEMICOLON! Result.make (an_indexing, a_semicolon)
+				create {ET_INDEXING_SEMICOLON} Result.make (an_indexing, a_semicolon)
 			end
 		end
 
@@ -1950,20 +1950,20 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_term
 			elseif a_term /= Void then
-				!ET_INDEXING_TERM_COMMA! Result.make (a_term, a_comma)
+				create {ET_INDEXING_TERM_COMMA} Result.make (a_term, a_comma)
 			end
 		end
 
 	new_indexing_terms (nb: INTEGER): ET_INDEXING_TERM_LIST is
 			-- New indexing terms with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_indexings (an_indexing: ET_KEYWORD; nb: INTEGER): ET_INDEXING_LIST is
 			-- New indexing clause with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_indexing /= Void then
 				Result.set_indexing_keyword (an_indexing)
 			end
@@ -1973,7 +1973,7 @@ feature -- AST nodes
 			-- New infix "and" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_and (an_operator)
+				create Result.make_and (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1984,7 +1984,7 @@ feature -- AST nodes
 			-- New infix "and then" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_and_then (an_operator)
+				create Result.make_and_then (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1994,7 +1994,7 @@ feature -- AST nodes
 	new_infix_and_then_operator (an_and: ET_KEYWORD; a_then: ET_KEYWORD): ET_INFIX_AND_THEN_OPERATOR is
 			-- New binary "and then" operator
 		do
-			!! Result.make
+			create Result.make
 			if an_and /= Void then
 				Result.set_and_keyword (an_and)
 			end
@@ -2007,7 +2007,7 @@ feature -- AST nodes
 			-- New infix "//" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_div (an_operator)
+				create Result.make_div (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2018,7 +2018,7 @@ feature -- AST nodes
 			-- New infix "//" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_divide (an_operator)
+				create Result.make_divide (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2030,7 +2030,7 @@ feature -- AST nodes
 		do
 			if an_operator /= Void then
 				if an_operator.computed and then an_operator.value.count > 0 then
-					!! Result.make (an_operator)
+					create Result.make (an_operator)
 					if an_infix /= Void then
 						Result.set_infix_keyword (an_infix)
 					end
@@ -2042,7 +2042,7 @@ feature -- AST nodes
 			-- New infix ">=" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_ge (an_operator)
+				create Result.make_ge (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2053,7 +2053,7 @@ feature -- AST nodes
 			-- New infix ">" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_gt (an_operator)
+				create Result.make_gt (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2064,7 +2064,7 @@ feature -- AST nodes
 			-- New infix "implies" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_implies (an_operator)
+				create Result.make_implies (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2075,7 +2075,7 @@ feature -- AST nodes
 			-- New infix "<=" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_le (an_operator)
+				create Result.make_le (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2086,7 +2086,7 @@ feature -- AST nodes
 			-- New infix "<" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_lt (an_operator)
+				create Result.make_lt (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2097,7 +2097,7 @@ feature -- AST nodes
 			-- New infix "-" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_minus (an_operator)
+				create Result.make_minus (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2108,7 +2108,7 @@ feature -- AST nodes
 			-- New infix "\\" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_mod (an_operator)
+				create Result.make_mod (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2119,7 +2119,7 @@ feature -- AST nodes
 			-- New infix "or" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_or (an_operator)
+				create Result.make_or (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2130,7 +2130,7 @@ feature -- AST nodes
 			-- New infix "or else" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_or_else (an_operator)
+				create Result.make_or_else (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2140,7 +2140,7 @@ feature -- AST nodes
 	new_infix_or_else_operator (an_or: ET_KEYWORD; an_else: ET_KEYWORD): ET_INFIX_OR_ELSE_OPERATOR is
 			-- New binary "or else" operator
 		do
-			!! Result.make
+			create Result.make
 			if an_or /= Void then
 				Result.set_or_keyword (an_or)
 			end
@@ -2153,7 +2153,7 @@ feature -- AST nodes
 			-- New infix "+" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_plus (an_operator)
+				create Result.make_plus (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2164,7 +2164,7 @@ feature -- AST nodes
 			-- New infix "^" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_power (an_operator)
+				create Result.make_power (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2175,7 +2175,7 @@ feature -- AST nodes
 			-- New infix "*" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_times (an_operator)
+				create Result.make_times (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2186,7 +2186,7 @@ feature -- AST nodes
 			-- New infix "xor" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_xor (an_operator)
+				create Result.make_xor (an_operator)
 				if an_infix /= Void then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2198,7 +2198,7 @@ feature -- AST nodes
 			-- New inspect instruction
 		do
 			if a_conditional /= Void then
-				!! Result.make (a_conditional, a_when_parts)
+				create Result.make (a_conditional, a_when_parts)
 				Result.set_else_compound (an_else_compound)
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
@@ -2209,7 +2209,7 @@ feature -- AST nodes
 	new_invariants (an_invariant: ET_KEYWORD; nb: INTEGER): ET_INVARIANTS is
 			-- New invariants with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_invariant /= Void then
 				Result.set_invariant_keyword (an_invariant)
 			end
@@ -2218,14 +2218,14 @@ feature -- AST nodes
 	new_keyword_feature_name_list (a_keyword: ET_KEYWORD; nb: INTEGER): ET_KEYWORD_FEATURE_NAME_LIST is
 			-- New feature name list, with a given capacity, preceded by a keyword
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			Result.set_keyword (a_keyword)
 		end
 
 	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
 			-- New 'like Current' type
 		do
-			!! Result.make
+			create Result.make
 			if a_like /= Void then
 				Result.set_like_keyword (a_like)
 			end
@@ -2238,7 +2238,7 @@ feature -- AST nodes
 			-- New 'like Identifier' type
 		do
 			if a_name /= Void then
-				!! Result.make (a_name)
+				create Result.make (a_name)
 				if a_like /= Void then
 					Result.set_like_keyword (a_like)
 				end
@@ -2251,7 +2251,7 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_name
 			elseif a_name /= Void then
-				!ET_IDENTIFIER_COMMA! Result.make (a_name, a_comma)
+				create {ET_IDENTIFIER_COMMA} Result.make (a_name, a_comma)
 			end
 		end
 
@@ -2261,14 +2261,14 @@ feature -- AST nodes
 			if a_semicolon = Void then
 				Result := a_variable
 			elseif a_variable /= Void then
-				!ET_LOCAL_VARIABLE_SEMICOLON! Result.make (a_variable, a_semicolon)
+				create {ET_LOCAL_VARIABLE_SEMICOLON} Result.make (a_variable, a_semicolon)
 			end
 		end
 
 	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST is
 			-- New local variable list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_local /= Void then
 				Result.set_local_keyword (a_local)
 			end
@@ -2293,7 +2293,7 @@ feature -- AST nodes
 			-- New loop instruction
 		do
 			if an_until_conditional /= Void then
-				!! Result.make (a_from_compound, an_until_conditional, a_loop_compound)
+				create Result.make (a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
 				if an_end /= Void then
@@ -2305,7 +2305,7 @@ feature -- AST nodes
 	new_manifest_array (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_MANIFEST_ARRAY is
 			-- New manifest array with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_symbol (a_left)
 			end
@@ -2320,14 +2320,14 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_string
 			elseif a_string /= Void then
-				!ET_MANIFEST_STRING_COMMA! Result.make (a_string, a_comma)
+				create {ET_MANIFEST_STRING_COMMA} Result.make (a_string, a_comma)
 			end
 		end
 
 	new_manifest_string_list (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_MANIFEST_STRING_LIST is
 			-- New list of manifest strings with capacity `nb'.
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_parenthesis (a_left)
 			end
@@ -2339,7 +2339,7 @@ feature -- AST nodes
 	new_manifest_tuple (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_MANIFEST_TUPLE is
 			-- New manifest tuple with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_symbol (a_left)
 			end
@@ -2366,7 +2366,7 @@ feature -- AST nodes
 			if an_obsolete = Void then
 				Result := a_message
 			elseif a_message /= Void then
-				!ET_KEYWORD_MANIFEST_STRING! Result.make (an_obsolete, a_message)
+				create {ET_KEYWORD_MANIFEST_STRING} Result.make (an_obsolete, a_message)
 			end
 		end
 
@@ -2374,7 +2374,7 @@ feature -- AST nodes
 			-- New old expression
 		do
 			if e /= Void then
-				!! Result.make (e)
+				create Result.make (e)
 				if an_old /= Void then
 					Result.set_old_keyword (an_old)
 				end
@@ -2403,7 +2403,7 @@ feature -- AST nodes
 			-- New once function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2420,7 +2420,7 @@ feature -- AST nodes
 			-- New once manifest string
 		do
 			if a_string /= Void then
-				!! Result.make (a_string)
+				create Result.make (a_string)
 				if a_once /= Void then
 					Result.set_once_keyword (a_once)
 				end
@@ -2436,7 +2436,7 @@ feature -- AST nodes
 			-- New once procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
@@ -2454,7 +2454,7 @@ feature -- AST nodes
 			-- New parent
 		do
 			if a_type /= Void then
-				!! Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects)
+				create Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects)
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
 				end
@@ -2467,14 +2467,14 @@ feature -- AST nodes
 			if a_semicolon = Void then
 				Result := a_parent
 			elseif a_parent /= Void then
-				!ET_PARENT_SEMICOLON! Result.make (a_parent, a_semicolon)
+				create {ET_PARENT_SEMICOLON} Result.make (a_parent, a_semicolon)
 			end
 		end
 
 	new_parents (an_inherit: ET_KEYWORD; nb: INTEGER): ET_PARENT_LIST is
 			-- New class parent list with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_inherit /= Void then
 				Result.set_inherit_keyword (an_inherit)
 			end
@@ -2484,7 +2484,7 @@ feature -- AST nodes
 			-- New parenthesized expression
 		do
 			if e /= Void then
-				!! Result.make (e)
+				create Result.make (e)
 				if l /= Void then
 					Result.set_left_parenthesis (l)
 				end
@@ -2497,7 +2497,7 @@ feature -- AST nodes
 	new_postconditions (an_ensure: ET_KEYWORD; a_then: ET_KEYWORD; nb: INTEGER): ET_POSTCONDITIONS is
 			-- New postconditions with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_ensure /= Void then
 				Result.set_ensure_keyword (an_ensure)
 			end
@@ -2509,7 +2509,7 @@ feature -- AST nodes
 	new_preconditions (a_require: ET_KEYWORD; an_else: ET_KEYWORD; nb: INTEGER): ET_PRECONDITIONS is
 			-- New preconditions with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_require /= Void then
 				Result.set_require_keyword (a_require)
 			end
@@ -2524,7 +2524,7 @@ feature -- AST nodes
 			a_braced_name: ET_BRACED_CLASS_NAME
 		do
 			if a_name /= Void then
-				!! a_braced_name.make (a_name)
+				create a_braced_name.make (a_name)
 				if l /= Void then
 					a_braced_name.set_left_brace (l)
 				end
@@ -2538,7 +2538,7 @@ feature -- AST nodes
 	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION is
 			-- New precursor expression
 		do
-			!! Result.make (a_parent, args)
+			create Result.make (a_parent, args)
 			Result.set_parent_prefixed (is_parent_prefixed)
 			if a_precursor /= Void then
 				Result.set_precursor_keyword (a_precursor)
@@ -2548,7 +2548,7 @@ feature -- AST nodes
 	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION is
 			-- New precursor instruction
 		do
-			!! Result.make (a_parent, args)
+			create Result.make (a_parent, args)
 			Result.set_parent_prefixed (is_parent_prefixed)
 			if a_precursor /= Void then
 				Result.set_precursor_keyword (a_precursor)
@@ -2560,7 +2560,7 @@ feature -- AST nodes
 		do
 			if an_operator /= Void then
 				if an_operator.computed and then an_operator.value.count > 0 then
-					!! Result.make (an_operator)
+					create Result.make (an_operator)
 					if a_prefix /= Void then
 						Result.set_prefix_keyword (a_prefix)
 					end
@@ -2572,7 +2572,7 @@ feature -- AST nodes
 			-- New prefix "-" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_minus (an_operator)
+				create Result.make_minus (an_operator)
 				if a_prefix /= Void then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2583,7 +2583,7 @@ feature -- AST nodes
 			-- New prefix "not" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_not (an_operator)
+				create Result.make_not (an_operator)
 				if a_prefix /= Void then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2594,7 +2594,7 @@ feature -- AST nodes
 			-- New prefix "+" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_plus (an_operator)
+				create Result.make_plus (an_operator)
 				if a_prefix /= Void then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2605,7 +2605,7 @@ feature -- AST nodes
 			-- New rename pair
 		do
 			if old_name /= Void and new_name /= Void then
-				!! Result.make (old_name, new_name)
+				create Result.make (old_name, new_name)
 				if an_as /= Void then
 					Result.set_as_keyword (an_as)
 				end
@@ -2620,9 +2620,9 @@ feature -- AST nodes
 		do
 			if old_name /= Void and new_name /= Void then
 				if a_comma = Void then
-					!! a_rename.make (old_name, new_name)
+					create a_rename.make (old_name, new_name)
 				else
-					!ET_RENAME_COMMA! a_rename.make (old_name, new_name, a_comma)
+					create {ET_RENAME_COMMA} a_rename.make (old_name, new_name, a_comma)
 				end
 				if an_as /= Void then
 					a_rename.set_as_keyword (an_as)
@@ -2634,7 +2634,7 @@ feature -- AST nodes
 	new_renames (a_rename: ET_KEYWORD; nb: INTEGER): ET_RENAME_LIST is
 			-- New rename clause with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_rename /= Void then
 				Result.set_rename_keyword (a_rename)
 			end
@@ -2656,7 +2656,7 @@ feature -- AST nodes
 	new_result_address (d: ET_SYMBOL; r: ET_RESULT): ET_RESULT_ADDRESS is
 			-- New address of 'Result'
 		do
-			!! Result.make
+			create Result.make
 			if d /= Void then
 				Result.set_dollar (d)
 			end
@@ -2670,7 +2670,7 @@ feature -- AST nodes
 			-- New static call expression
 		do
 			if a_type /= Void and a_name /= Void then
-				!! Result.make (a_type, a_name, args)
+				create Result.make (a_type, a_name, args)
 				if a_feature /= Void then
 					Result.set_feature_keyword (a_feature)
 				end
@@ -2682,7 +2682,7 @@ feature -- AST nodes
 			-- New static call instruction
 		do
 			if a_type /= Void and a_name /= Void then
-				!! Result.make (a_type, a_name, args)
+				create Result.make (a_type, a_name, args)
 				if a_feature /= Void then
 					Result.set_feature_keyword (a_feature)
 				end
@@ -2695,7 +2695,7 @@ feature -- AST nodes
 			a_braced_type: ET_BRACED_TYPE
 		do
 			if a_type /= Void then
-				!! a_braced_type.make (a_type)
+				create a_braced_type.make (a_type)
 				if l /= Void then
 					a_braced_type.set_left_brace (l)
 				end
@@ -2709,7 +2709,7 @@ feature -- AST nodes
 	new_strip_expression (a_strip: ET_KEYWORD; l, r: ET_SYMBOL; nb: INTEGER): ET_STRIP_EXPRESSION is
 			-- New strip expression with given capacity
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_strip /= Void then
 				Result.set_strip_keyword (a_strip)
 			end
@@ -2727,7 +2727,7 @@ feature -- AST nodes
 			if a_colon = Void then
 				Result := a_name
 			elseif a_name /= Void then
-				!ET_IDENTIFIER_COLON! Result.make (a_name, a_colon)
+				create {ET_IDENTIFIER_COLON} Result.make (a_name, a_colon)
 			end
 		end
 
@@ -2735,7 +2735,7 @@ feature -- AST nodes
 			-- New tagged indexing clause
 		do
 			if a_tag /= Void and a_terms /= Void then
-				!! Result.make (a_tag, a_terms)
+				create Result.make (a_tag, a_terms)
 			end
 		end
 
@@ -2758,7 +2758,7 @@ feature -- AST nodes
 			if a_comma = Void then
 				Result := a_type
 			elseif a_type /= Void then
-				!ET_TYPE_COMMA! Result.make (a_type, a_comma)
+				create {ET_TYPE_COMMA} Result.make (a_type, a_comma)
 			end
 		end
 
@@ -2769,7 +2769,7 @@ feature -- AST nodes
 			-- New unique attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, a_type, a_clients, a_class)
+				create Result.make (a_name, a_type, a_clients, a_class)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -2784,7 +2784,7 @@ feature -- AST nodes
 	new_variant (a_variant: ET_KEYWORD; a_tag: ET_TAG; an_expression: ET_EXPRESSION): ET_VARIANT is
 			-- New loop variant
 		do
-			!! Result.make (a_tag, an_expression)
+			create Result.make (a_tag, an_expression)
 			if a_variant /= Void then
 				Result.set_variant_keyword (a_variant)
 			end

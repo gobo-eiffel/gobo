@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 			-- Create a new topological sorter.
 			-- Set initial capacity to `nb'.
 		do
-			!! items.make (nb)
-			!! indexes.make_map (nb)
-			!! counts.make (nb)
-			!! successors.make (nb)
+			create items.make (nb)
+			create indexes.make_map (nb)
+			create counts.make (nb)
+			create successors.make (nb)
 		end
 
 feature -- Access

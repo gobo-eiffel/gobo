@@ -29,7 +29,7 @@ feature -- Access
 	new_cursor: DS_HASH_SET_CURSOR [G] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature {NONE} -- Implementation

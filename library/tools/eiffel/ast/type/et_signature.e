@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 		do
 			result_type := a_result
 			if args = Void then
-				!! arguments.make (1, 0)
+				create arguments.make (1, 0)
 			else
 				nb := args.count
-				!! arguments.make (1, nb)
+				create arguments.make (1, nb)
 				from i := 1 until i > nb loop
 					arguments.put (args.formal_argument (i).type, i)
 					i := i + 1

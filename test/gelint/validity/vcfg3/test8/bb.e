@@ -11,9 +11,9 @@ feature
 			d: DD
 			e: EE
 		do
-			!! d
+			create d
 			item1 := d
-			!! e
+			create e
 			item2 := e
 		end
 

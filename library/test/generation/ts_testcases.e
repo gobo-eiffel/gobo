@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		require
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			!! testcases.make (10)
+			create testcases.make (10)
 			testgen := a_testgen
 			error_handler := an_error_handler
 		ensure
@@ -49,7 +49,7 @@ feature -- Element change
 		local
 			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
 		do
-			!! a_pair.make (feature_names, class_prefix)
+			create a_pair.make (feature_names, class_prefix)
 			testcases.force (a_pair, class_name)
 		end
 
@@ -93,7 +93,7 @@ feature -- Generation
 			if testgen /= Void and then testgen.count > 0 then
 				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
 				a_dirname := Execution_environment.interpreted_string (a_dirname)
-				!! a_dir.make (a_dirname)
+				create a_dir.make (a_dirname)
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 				end
@@ -103,7 +103,7 @@ feature -- Generation
 				a_filename.append_string (STRING_.to_lower (new_name))
 				a_filename.append_string (".e")
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("class ")
@@ -167,7 +167,7 @@ feature -- Generation
 				a_file.put_line ("end")
 				a_file.close
 			else
-				!! cannot_write.make (a_filename)
+				create cannot_write.make (a_filename)
 				error_handler.report_error (cannot_write)
 			end
 		end
@@ -192,7 +192,7 @@ feature -- Generation
 			if testgen /= Void and then testgen.count > 0 then
 				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
 				a_dirname := Execution_environment.interpreted_string (a_dirname)
-				!! a_dir.make (a_dirname)
+				create a_dir.make (a_dirname)
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 				end
@@ -202,7 +202,7 @@ feature -- Generation
 				a_filename.append_string (STRING_.to_lower (class_name))
 				a_filename.append_string (".e")
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				upper_class_name := STRING_.to_upper (class_name)
@@ -236,7 +236,7 @@ feature -- Generation
 					a_file.put_line ("%T%T%Ta_test: TS_TEST")
 				end
 				a_file.put_line ("%T%Tdo")
-				a_file.put_string ("%T%T%T!! Result.make (%"")
+				a_file.put_string ("%T%T%Tcreate Result.make (%"")
 				a_file.put_string (class_name)
 				a_file.put_line ("%", variables)")
 				from a_cursor.start until a_cursor.after loop
@@ -244,10 +244,10 @@ feature -- Generation
 					a_pair := a_cursor.item
 					nb := a_pair.first.count
 					from i := 1 until i > nb loop
-						a_file.put_string ("%T%T%T!")
+						a_file.put_string ("%T%T%Tcreate {")
 						a_file.put_string (a_pair.second)
 						a_file.put_string (test_name)
-						a_file.put_string ("! a_test.make (")
+						a_file.put_string ("} a_test.make (")
 						a_file.put_integer (i)
 						a_file.put_line (", variables)")
 						a_file.put_line ("%T%T%TResult.put_test (a_test)")
@@ -260,7 +260,7 @@ feature -- Generation
 				a_file.put_line ("end")
 				a_file.close
 			else
-				!! cannot_write.make (a_filename)
+				create cannot_write.make (a_filename)
 				error_handler.report_error (cannot_write)
 			end
 		end

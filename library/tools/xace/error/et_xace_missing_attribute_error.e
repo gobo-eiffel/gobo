@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			an_attribute_name_not_empty: an_attribute_name.count > 0
 			a_position_not_void: a_position /= Void
 		do
-			!! parameters.make (1, 3)
+			create parameters.make (1, 3)
 			parameters.put (a_containing_element.name, 1)
 			parameters.put (an_attribute_name, 2)
 			parameters.put (a_position.out, 3)

@@ -10,7 +10,7 @@ feature
 		local
 			d: DD [like Current]
 		do
-			!! d
+			create d
 			item := d
 		end
 

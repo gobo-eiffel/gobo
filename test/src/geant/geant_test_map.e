@@ -27,7 +27,7 @@ feature -- Test
 	test_set_type is
 			-- Test feature `set_type'.
 		do
-			!! map.make (project)
+			create map.make (project)
 			map.set_type (map.Type_attribute_value_identity)
 			assert_equal ("set_type1", "identity", map.type)
 
@@ -38,7 +38,7 @@ feature -- Test
 	test_set_source_pattern is
 			-- Test feature `set_source_pattern'.
 		do
-			!! map.make (project)
+			create map.make (project)
 			map.set_source_pattern ("*.ge")
 			assert_equal ("set_source_pattern1", "*.ge", map.source_pattern)
 
@@ -49,7 +49,7 @@ feature -- Test
 	test_set_target_pattern is
 			-- Test feature `set_target_pattern'.
 		do
-			!! map.make (project)
+			create map.make (project)
 			map.set_target_pattern ("*.e")
 			assert_equal ("set_target_pattern1", "*.e", map.target_pattern)
 
@@ -60,7 +60,7 @@ feature -- Test
 	test_is_executable_identity is
 			-- Test feature `is_executable' in mode 'identity'.
 		do
-			!! map.make (project)
+			create map.make (project)
 			assert ("is_executable_identity_1", map.is_executable)	-- default type is identity
 
 			map.set_source_pattern ("*.e")
@@ -74,7 +74,7 @@ feature -- Test
 	test_is_executable_glob is
 			-- Test feature `is_executable' in mode 'glob'.
 		do
-			!! map.make (project)
+			create map.make (project)
 			map.set_type (map.Type_attribute_value_glob)
 
 			assert ("is_executable_glob1", not map.is_executable)
@@ -84,7 +84,7 @@ feature -- Test
 			map.set_target_pattern ("*.e")
 			assert ("is_executable_glob3", map.is_executable)
 
-			!! map.make (project)
+			create map.make (project)
 			map.set_type (map.Type_attribute_value_glob)
 			map.set_source_pattern ("")
 			map.set_target_pattern ("*.e")
@@ -106,7 +106,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			!! map.make (project)
+			create map.make (project)
 --			map.project.set_debug_mode (True)
 			map.set_type ("glob")
 			map.set_source_pattern ("*.ge")
@@ -136,9 +136,9 @@ feature -- Execution
 			a_variables: GEANT_VARIABLES
 			an_options: GEANT_PROJECT_OPTIONS
 		do
-			!! a_variables.make
-			!! an_options.make
-			!! project.make (a_variables, an_options)
+			create a_variables.make
+			create an_options.make
+			create project.make (a_variables, an_options)
 			project.set_output_file (null_output_stream)
 		end
 

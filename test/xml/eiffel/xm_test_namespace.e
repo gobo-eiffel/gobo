@@ -94,8 +94,8 @@ feature {NONE} -- Implementation
 			a_parser: XM_EIFFEL_PARSER
 			a_checker: XM_NAMESPACE_CHECKER
 		do
-			!! a_parser.make
-			!! a_checker.make_null
+			create a_parser.make
+			create a_checker.make_null
 			a_checker.set (a_ns)
 			a_parser.set_callbacks (standard_callbacks_pipe (<<a_checker>>))
 			a_parser.parse_from_string (a_in)

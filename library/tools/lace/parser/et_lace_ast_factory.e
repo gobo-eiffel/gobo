@@ -30,7 +30,7 @@ feature -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_name, a_pathname)
+			create Result.make (a_name, a_pathname)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -40,7 +40,7 @@ feature -- AST factory
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			!! Result.make (a_cluster)
+			create Result.make (a_cluster)
 		ensure
 			clusters_not_void: Result /= Void
 		end
@@ -52,7 +52,7 @@ feature -- AST factory
 			an_error_handler_not_void: an_error_handler /= Void
 			a_factory_not_void: a_factory /= Void
 		do
-			!! Result.make_with_factory (a_clusters, a_factory, an_error_handler)
+			create Result.make_with_factory (a_clusters, a_factory, an_error_handler)
 		ensure
 			universe_not_void: Result /= Void
 		end
@@ -65,7 +65,7 @@ feature -- Eiffel AST factory
 			if ast_factory /= Void then
 				Result := ast_factory
 			else
-				!! Result.make
+				create Result.make
 			end
 		ensure
 			ast_factory_not_void: Result /= Void
@@ -74,7 +74,7 @@ feature -- Eiffel AST factory
 	new_error_handler: ET_ERROR_HANDLER is
 			-- New error handler for Eiffel parser
 		do
-			!! Result.make_standard
+			create Result.make_standard
 		ensure
 			error_handler_not_void: Result /= Void
 		end

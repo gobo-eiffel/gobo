@@ -33,17 +33,17 @@ feature {NONE} -- Initialization
 			in_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
-			!! error_handler.make_standard
+			create error_handler.make_standard
 				-- Set non-verbose mode.
 			error_handler.set_info_null
 			read_arguments
-			!! in_file.make (input_filename)
+			create in_file.make (input_filename)
 			in_file.open_read
 			if in_file.is_open_read then
 				split (in_file)
 				in_file.close
 			else
-				!! cannot_read.make (input_filename)
+				create cannot_read.make (input_filename)
 				error_handler.report_error (cannot_read)
 				Exceptions.die (1)
 			end
@@ -83,12 +83,12 @@ feature -- Processing
 		do
 			error_handler.report_info_message ("parsing data...")
 
-			!XM_EIFFEL_PARSER! a_xml_parser.make
+			create {XM_EIFFEL_PARSER} a_xml_parser.make
 			a_xml_parser.set_string_mode_mixed
-			!! a_gexmlsplit_dispatcher.make (error_handler)
-			!! a_gexmlsplit_parser.make (a_gexmlsplit_dispatcher)
+			create a_gexmlsplit_dispatcher.make (error_handler)
+			create a_gexmlsplit_parser.make (a_gexmlsplit_dispatcher)
 
-			!! filters.make (1, 2)
+			create filters.make (1, 2)
 			filters.put (a_gexmlsplit_parser, 1)
 			filters.put (a_gexmlsplit_dispatcher, 2)
 			a_xml_parser.set_callbacks (standard_callbacks_pipe (filters))
@@ -121,7 +121,7 @@ feature -- Usage message
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexmlsplit usage message
 		once
-			!! Result.make ("<input_filename>")
+			create Result.make ("<input_filename>")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

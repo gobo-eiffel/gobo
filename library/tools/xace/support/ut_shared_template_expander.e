@@ -17,7 +17,7 @@ feature -- Access
 	template_expander: UT_TEMPLATE_EXPANDER is
 			-- Shared template expander
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			template_expander_not_void: Result /= Void
 		end

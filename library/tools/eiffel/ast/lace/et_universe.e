@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			a_factory: ET_AST_FACTORY
 		do
-			!! a_factory.make
+			create a_factory.make
 			make_with_factory (a_clusters, a_factory, an_error_handler)
 		ensure
 			clusters_set: clusters = a_clusters
@@ -46,9 +46,9 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 		do
 			clusters := a_clusters
-			!! classes.make_map (3000)
+			create classes.make_map (3000)
 			classes.set_key_equality_tester (class_name_tester)
-			!! features.make (100000)
+			create features.make (100000)
 			error_handler := an_error_handler
 			ast_factory := a_factory
 			make_basic_classes
@@ -64,15 +64,15 @@ feature {NONE} -- Initialization
 			a_name: ET_IDENTIFIER
 			any_parent: ET_PARENT
 		do
-			!! a_name.make ("ANY")
+			create a_name.make ("ANY")
 			any_class := eiffel_class (a_name)
-			!! a_name.make ("GENERAL")
+			create a_name.make ("GENERAL")
 			general_class := eiffel_class (a_name)
-			!! a_name.make ("NONE")
+			create a_name.make ("NONE")
 			none_class := eiffel_class (a_name)
-			!! any_type.make (Void, any_class.name, any_class)
-			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
-			!! any_parents.make_with_capacity (1)
+			create any_type.make (Void, any_class.name, any_class)
+			create any_parent.make (any_type, Void, Void, Void, Void, Void)
+			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
 		ensure
 			any_class_not_void: any_class /= Void
@@ -140,9 +140,9 @@ feature -- Access
 			other_class: ET_CLASS
 		do
 			if a_class = any_class or a_class = general_class then
-				!! Result.make (classes.count)
+				create Result.make (classes.count)
 			else
-				!! Result.make (10)
+				create Result.make (10)
 			end
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -162,7 +162,7 @@ feature -- Access
 	eiffel_parser: ET_EIFFEL_PARSER is
 			-- Eiffel parser
 		once
-			!! Result.make_with_factory (Current, ast_factory, error_handler)
+			create Result.make_with_factory (Current, ast_factory, error_handler)
 		ensure
 			eiffel_parser_not_void: Result /= Void
 		end
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 	eiffel_preparser: ET_EIFFEL_PREPARSER is
 			-- Eiffel preparser
 		once
-			!! Result.make_with_factory (Current, ast_factory, error_handler)
+			create Result.make_with_factory (Current, ast_factory, error_handler)
 			Result.set_use_create_keyword (True)
 		ensure
 			eiffel_preparser_not_void: Result /= Void
@@ -431,7 +431,7 @@ feature {ET_CLASS} -- Implementation
 	class_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS] is
 			-- Class sorter
 		once
-			!DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]! Result.make_default
+			create {DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]} Result.make_default
 		ensure
 			class_sorter_not_void: class_sorter /= Void
 		end
@@ -439,7 +439,7 @@ feature {ET_CLASS} -- Implementation
 	feature_flattener: ET_FEATURE_FLATTENER is
 			-- Feature flattener
 		once
-			!! Result.make (any_class)
+			create Result.make (any_class)
 		ensure
 			feature_flattener_not_void: Result /= Void
 		end
@@ -449,7 +449,7 @@ feature {ET_FORMAL_PARAMETER_LIST, ET_FORMAL_PARAMETER_TYPE} -- Implementation
 	formal_parameter_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER] is
 			-- Formal generic parameter sorter
 		once
-			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]! Result.make_default
+			create {DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]} Result.make_default
 		ensure
 			formal_parameter_sorter_not_void: Result /= Void
 		end

@@ -23,7 +23,7 @@ feature -- Test
 		local
 			a_set: DS_MULTIARRAYED_HASH_SET [INTEGER]
 		do
-			!! a_set.make_with_chunk_size (10, 2)
+			create a_set.make_with_chunk_size (10, 2)
 			assert ("empty1", a_set.is_empty)
 			assert_equal ("capacity", 10, a_set.capacity)
 			a_set.put (1)

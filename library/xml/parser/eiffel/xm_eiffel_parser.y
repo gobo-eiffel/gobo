@@ -566,9 +566,9 @@ element_decl: DOCTYPE_ELEMENT req_space doctype_name req_space content_spec DOCT
 	;
 
 content_spec: DOCTYPE_ELEMENT_EMPTY maybe_space
-		{ !! $$.make_empty }
+		{ create $$.make_empty }
 	| DOCTYPE_ELEMENT_ANY maybe_space
-		{ !! $$.make_any }
+		{ create $$.make_any }
 	| mixed maybe_space
 		{ $$ := $1 }
 	| children
@@ -612,7 +612,7 @@ choice: group_start cp group_or choice_trail group_end
 	;-- ensure choice.is_choice (that's why $4 is used)
 
 choice_trail: cp
-		{ !! $$.make_choice; $$.items.force_last ($1) }
+		{ create $$.make_choice; $$.items.force_last ($1) }
 	| choice_trail group_or cp
 		{ $$ := $1; $$.items.force_last ($3) }
 	; -- ensure choice_trail.is_choice
@@ -623,21 +623,21 @@ seq: group_start seq_trail group_end
 	;
 
 seq_trail: cp
-		{ !! $$.make_sequence; $$.items.force_last ($1) }
+		{ create $$.make_sequence; $$.items.force_last ($1) }
 	| seq_trail group_seq cp
 		{ $$ := $1; $$.items.force_last ($3) }
 	; -- ensure seq_trail.is_sequence
 
 mixed: group_start pc_data group_end
-		{ !! $$.make_mixed }
+		{ create $$.make_mixed }
 	| group_start pc_data group_end DOCTYPE_GROUP_ANY
-		{ !! $$.make_mixed; $$.set_zero_or_more } 
+		{ create $$.make_mixed; $$.set_zero_or_more } 
 	| group_start pc_data group_or mixed_trail group_end DOCTYPE_GROUP_ANY
 		{ $$ := $4; $$.set_zero_or_more }
 	; -- ensure mixed.is_content_mixed
 
 mixed_trail: doctype_name_space
-		{ !! $$.make_mixed; $$.items.force_last (element_name ($1)) }
+		{ create $$.make_mixed; $$.items.force_last (element_name ($1)) }
 	| mixed_trail group_or doctype_name_space
 		{ $$ := $1; $$.items.force_last (element_name ($3)) }
 	; -- ensure mixed_trail.is_content_mixed

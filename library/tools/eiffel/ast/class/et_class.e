@@ -306,7 +306,7 @@ feature -- Genealogy
 			if has_descendants then
 				Result := universe.descendants (Current)
 			else
-				!! Result.make (0)
+				create Result.make (0)
 			end
 		ensure
 			descendants_not_void: Result /= Void
@@ -429,7 +429,7 @@ feature -- Compilation: parsing
 		local
 			a_file: KL_TEXT_INPUT_FILE
 		do
-			!! a_file.make (filename)
+			create a_file.make (filename)
 			a_file.open_read
 			if a_file.is_open_read then
 				universe.parse_file (a_file, filename, cluster)
@@ -730,11 +730,11 @@ feature {ET_PARENT_LIST, ET_CLASS} -- Compilation: genealogy
 						set_ancestors_error
 					elseif parents = Void or else parents.is_empty then
 						if Current = universe.general_class then
-							!! ancestors.make_map (0)
+							create ancestors.make_map (0)
 						elseif Current = universe.any_class then
 								-- ISE Eiffel has no GENERAL class anymore.
 								-- Use ANY has class root now.
-							!! ancestors.make_map (0)
+							create ancestors.make_map (0)
 						elseif not a_sorter.has (Current) then
 							any_class := universe.any_class
 							if not any_class.is_preparsed then

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! FIXED_ARRAY_
+			create FIXED_ARRAY_
 			storage := FIXED_ARRAY_.make (n + 1)
 			capacity := n
 		ensure
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			make (n)
-			!! equality_tester
+			create equality_tester
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n

@@ -122,7 +122,7 @@ feature -- Access
 	new_cursor: DS_MULTIARRAYED_SPARSE_SET_CURSOR [G] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -171,8 +171,8 @@ feature {NONE} -- Implementation
 	make_items (n: INTEGER) is
 			-- Create `items'.
 		do
-			!! FIXED_ITEM_ARRAY_
-			!! items.make (0, ((n - 1) // chunk_size))
+			create FIXED_ITEM_ARRAY_
+			create items.make (0, ((n - 1) // chunk_size))
 		end
 
 	items_put (v: G; i: INTEGER) is
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 	make_clashes (n: INTEGER) is
 			-- Create `clashes'.
 		do
-			!! clashes.make (0, ((n - 1) // chunk_size))
+			create clashes.make (0, ((n - 1) // chunk_size))
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER) is
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER) is
 			-- Create `slots'.
 		do
-			!! slots.make (0, ((n - 1) // chunk_size))
+			create slots.make (0, ((n - 1) // chunk_size))
 		end
 
 	slots_item (i: INTEGER): INTEGER is

@@ -61,7 +61,7 @@ feature {NONE} -- Test
 		local
 			a_command: DP_SHELL_COMMAND
 		do
-			!! a_command.make (a_shell_command)
+			create a_command.make (a_shell_command)
 			a_command.execute
 		end
 
@@ -78,10 +78,10 @@ feature {NONE} -- Test
 			a_file1, a_file2: KL_TEXT_INPUT_FILE
 			done: BOOLEAN
 		do
-			!! a_file1.make (Execution_environment.interpreted_string (a_filename1))
+			create a_file1.make (Execution_environment.interpreted_string (a_filename1))
 			a_file1.open_read
 			if a_file1.is_open_read then
-				!! a_file2.make (Execution_environment.interpreted_string (a_filename2))
+				create a_file2.make (Execution_environment.interpreted_string (a_filename2))
 				a_file2.open_read
 				if a_file2.is_open_read then
 					Result := True
@@ -184,17 +184,17 @@ feature {NONE} -- Test SmartEiffel
 		do
 				-- Compile regexps.
 			a_pattern1 := "\((.*[^a-zA-Z0-9_])?([a-zA-Z0-9_]+\.e)\)"
-			!! a_regexp1.make
+			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
 			a_pattern2 := "File %"[^%"\n]+%" not found. Error\(s\) during `compile_to_c'\."
-			!! a_regexp2.make
+			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
 				-- Copy files.
-			!! out_file.make (output_log_filename)
+			create out_file.make (output_log_filename)
 			out_file.open_write
 			if out_file.is_open_write then
 				from
@@ -202,7 +202,7 @@ feature {NONE} -- Test SmartEiffel
 				until
 					in_filename = Void
 				loop
-					!! in_file.make (in_filename)
+					create in_file.make (in_filename)
 					in_file.open_read
 					if in_file.is_open_read then
 						from
@@ -321,22 +321,22 @@ feature {NONE} -- Test ISE Eiffel
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
-			!! a_regexp1.make
+			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
 			a_pattern2 := "\(version .*\)"
-			!! a_regexp2.make
+			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
 			a_pattern3 := "\[ *[0-9]+%% - *[0-9]+\] Degree [0-9]+"
-			!! a_regexp3.make
+			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
 				-- Copy files.
-			!! out_file.make (output_log_filename)
+			create out_file.make (output_log_filename)
 			out_file.open_write
 			if out_file.is_open_write then
 				from
@@ -344,7 +344,7 @@ feature {NONE} -- Test ISE Eiffel
 				until
 					in_filename = Void
 				loop
-					!! in_file.make (in_filename)
+					create in_file.make (in_filename)
 					in_file.open_read
 					if in_file.is_open_read then
 						from
@@ -484,37 +484,37 @@ feature {NONE} -- Test Halstenbach
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
-			!! a_regexp1.make
+			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
 			a_pattern2 := "==== iss-comp "
-			!! a_regexp2.make
+			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
 			a_pattern3 := "\[ *[0-9]+\] Degree [0-9]+"
-			!! a_regexp3.make
+			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
 			a_pattern4 := "Degree 5 cluster "
-			!! a_regexp4.make
+			create a_regexp4.make
 			a_regexp4.compile (a_pattern4)
 			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
 			a_regexp4.optimize
 			a_pattern5 := "Degree [0-9]+ done"
-			!! a_regexp5.make
+			create a_regexp5.make
 			a_regexp5.compile (a_pattern5)
 			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
 			a_regexp5.optimize
 			a_pattern6 := " *"
-			!! a_regexp6.make
+			create a_regexp6.make
 			a_regexp6.compile (a_pattern6)
 			assert ("cannot compile regexp '" + a_pattern6 + "'", a_regexp6.is_compiled)
 			a_regexp6.optimize
 				-- Copy files.
-			!! out_file.make (output_log_filename)
+			create out_file.make (output_log_filename)
 			out_file.open_write
 			if out_file.is_open_write then
 				from
@@ -522,7 +522,7 @@ feature {NONE} -- Test Halstenbach
 				until
 					in_filename = Void
 				loop
-					!! in_file.make (in_filename)
+					create in_file.make (in_filename)
 					in_file.open_read
 					if in_file.is_open_read then
 						from

@@ -33,7 +33,7 @@ feature -- Access
 	new_eiffel_parser: XM_PARSER is
 			-- New Eiffel XML parser
 		do
-			!XM_EIFFEL_PARSER! Result.make
+			create {XM_EIFFEL_PARSER} Result.make
 		end
 
 end

@@ -35,10 +35,10 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			Arguments.set_program_name ("getest")
-			!! variables.make
-			!! error_handler.make_standard
+			create variables.make
+			create error_handler.make_standard
 			read_command_line
-			!! a_file.make (config_filename)
+			create a_file.make (config_filename)
 			a_file.open_read
 			if a_file.is_open_read then
 				if must_generate then
@@ -49,7 +49,7 @@ feature -- Processing
 					std.output.put_line ("Running Test Cases")
 					std.output.put_new_line
 				end
-				!! config_parser.make (variables, error_handler)
+				create config_parser.make (variables, error_handler)
 				config_parser.set_fail_on_rescue (fail_on_rescue)
 				config_parser.set_compiler_ise (compiler_ise)
 				config_parser.set_compiler_hact (compiler_hact)
@@ -72,7 +72,7 @@ feature -- Processing
 					Exceptions.die (1)
 				end
 			else
-				!! cannot_read.make (config_filename)
+				create cannot_read.make (config_filename)
 				error_handler.report_error (cannot_read)
 				Exceptions.die (1)
 			end
@@ -105,7 +105,7 @@ feature -- Processing
 				if need_header then
 					std.output.put_line ("Preparing Test Cases")
 				end
-				!! testcases.make (a_config.testgen, error_handler)
+				create testcases.make (a_config.testgen, error_handler)
 				a_config.process (testcases, error_handler)
 				testcases.generate_test_classes
 				testcases.generate_root_class (a_config.root_class)
@@ -127,7 +127,7 @@ feature -- Processing
 				a_command_name := a_config.compile
 				if a_command_name.count > 0 then
 					std.output.flush
-					!! a_command.make (a_command_name)
+					create a_command.make (a_command_name)
 					a_command.execute
 					if a_command.exit_code /= 0 then
 						report_eiffel_compilation_error
@@ -152,7 +152,7 @@ feature -- Processing
 				a_command_name := a_config.execute
 				if a_command_name.count > 0 then
 					std.output.flush
-					!! a_command.make (a_command_name)
+					create a_command.make (a_command_name)
 					a_command.execute
 					if a_command.exit_code /= 0 then
 						Exceptions.die (1)
@@ -281,7 +281,7 @@ feature {NONE} -- Command line
 				elseif arg.count >= 8 and then arg.substring (1, 8).is_equal ("--class=") then
 					if arg.count > 8 then
 						arg := arg.substring (9, arg.count)
-						!LX_DFA_REGULAR_EXPRESSION! class_regexp.compile_case_insensitive (arg)
+						create {LX_DFA_REGULAR_EXPRESSION} class_regexp.compile_case_insensitive (arg)
 						if not class_regexp.is_compiled then
 							class_regexp := Void
 							error_handler.report_option_regexp_syntax_error ("--class=", arg)
@@ -292,7 +292,7 @@ feature {NONE} -- Command line
 				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--feature=") then
 					if arg.count > 10 then
 						arg := arg.substring (11, arg.count)
-						!LX_DFA_REGULAR_EXPRESSION! feature_regexp.compile_case_insensitive (arg)
+						create {LX_DFA_REGULAR_EXPRESSION} feature_regexp.compile_case_insensitive (arg)
 						if not feature_regexp.is_compiled then
 							feature_regexp := Void
 							error_handler.report_option_regexp_syntax_error ("--feature=", arg)
@@ -321,29 +321,29 @@ feature {NONE} -- Command line
 			end
 			if config_filename = Void then
 				if compiler_ise then
-					!! a_file.make (ISE_config_filename)
+					create a_file.make (ISE_config_filename)
 					if a_file.exists then
 						config_filename := ISE_config_filename
 					end
 				elseif compiler_hact then
-					!! a_file.make (HACT_config_filename)
+					create a_file.make (HACT_config_filename)
 					if a_file.exists then
 						config_filename := HACT_config_filename
 					end
 				elseif compiler_se then
-					!! a_file.make (SE_config_filename)
+					create a_file.make (SE_config_filename)
 					if a_file.exists then
 						config_filename := SE_config_filename
 					end
 				elseif compiler_ve then
-					!! a_file.make (VE_config_filename)
+					create a_file.make (VE_config_filename)
 					if a_file.exists then
 						config_filename := VE_config_filename
 					end
 				end
 			end
 			if config_filename = Void then
-				!! a_file.make (cfg_config_filename)
+				create a_file.make (cfg_config_filename)
 				if a_file.exists then
 					config_filename := cfg_config_filename
 				end
@@ -410,7 +410,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: UT_UNDEFINED_ENVIRONMENT_VARIABLE_ERROR
 		do
-			!! an_error.make (a_variable)
+			create an_error.make (a_variable)
 			error_handler.report_error (an_error)
 			Exceptions.die (1)
 		end
@@ -435,7 +435,7 @@ feature {NONE} -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make (Version_number)
+			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 			Exceptions.die (0)
 		end
@@ -443,7 +443,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Getest usage message
 		once
-			!! Result.make ("[-aceghV?][--help][--version]%N%
+			create Result.make ("[-aceghV?][--help][--version]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[--class=<regexp>][--feature=<regexp>]%N%
 				%%T[--compile=<command>]%N%

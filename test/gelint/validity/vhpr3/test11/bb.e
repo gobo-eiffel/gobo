@@ -12,7 +12,7 @@ feature
 		local
 			d: DD [like name]
 		do
-			!! d
+			create d
 			item := d
 		end
 

@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	counter: KL_CELL [INTEGER] is
 			-- Filename counter
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		ensure
 			counter_not_void: Result /= Void
 		end

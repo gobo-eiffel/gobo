@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new context.
 		do
-			!! context.make
+			create context.make
 		end
 
 feature -- Element change
@@ -150,7 +150,7 @@ feature {NONE} -- Constants
 	Default_pseudo_prefix: STRING is
 			-- Default pseudo prefix
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		ensure
 			prefix_not_void: Result /= Void
 		end
@@ -158,7 +158,7 @@ feature {NONE} -- Constants
 	Default_namespace: STRING is
 			-- Default namespace (empty)
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		ensure
 			namespace_not_void: Result /= Void
 		end

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		require
 			msg_not_void: msg /= Void
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (msg, 1)
 		end
 

@@ -23,7 +23,7 @@ feature
 		local
 			b: BB
 		do
-			!! b
+			create b
 		end
 
 end -- class AA

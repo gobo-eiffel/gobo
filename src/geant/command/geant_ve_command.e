@@ -243,7 +243,7 @@ feature -- Execution
 				end
 			end
 			if recursive_clean then
-				!! a_dir.make (old_cwd)
+				create a_dir.make (old_cwd)
 				a_dir.open_read
 				if a_dir.is_open_read then
 					from a_dir.read_entry until a_dir.end_of_input loop

@@ -99,10 +99,10 @@ feature -- Processing
 			a_universe: ET_LACE_UNIVERSE
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
-			!! a_cluster.make (name, pathname)
-			!! a_clusters.make (a_cluster)
-			!! an_ast_factory.make
-			!! a_universe.make_with_factory (a_clusters, an_ast_factory, an_error_handler)
+			create a_cluster.make (name, pathname)
+			create a_clusters.make (a_cluster)
+			create an_ast_factory.make
+			create a_universe.make_with_factory (a_clusters, an_ast_factory, an_error_handler)
 			a_universe.parse_all
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -125,7 +125,7 @@ feature -- Processing
 			an_identifier: ET_IDENTIFIER
 			a_name: STRING
 		do
-			!! feature_names.make
+			create feature_names.make
 			named_features := a_class.named_features
 			if named_features /= Void then
 				a_cursor := named_features.new_cursor

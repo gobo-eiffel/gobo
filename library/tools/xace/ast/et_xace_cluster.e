@@ -158,7 +158,7 @@ feature -- Element change
 			an_option_not_void: an_option /= Void
 		do
 			if class_options = Void then
-				!! class_options.make
+				create class_options.make
 			end
 			class_options.put_last (an_option)
 		end
@@ -241,7 +241,7 @@ feature -- Basic operations
 							a_feature_options := a_feature_cursor.item
 							an_options := a_feature_options.options
 							if an_options.is_export_option_declared then
-								!! an_exported_feature.make (a_class_options.class_name, a_feature_options.feature_name, an_options.export_option)
+								create an_exported_feature.make (a_class_options.class_name, a_feature_options.feature_name, an_options.export_option)
 								an_export.force_last (an_exported_feature)
 							end
 							a_feature_cursor.forth
@@ -268,7 +268,7 @@ feature -- Basic operations
 		do
 			if options /= Void then
 				if options.is_component_declared then
-					!! a_component.make (name, options.component)
+					create a_component.make (name, options.component)
 					a_components.force_last (a_component)
 				end
 			end
@@ -290,7 +290,7 @@ feature -- Basic operations
 		do
 			if options /= Void then
 				if options.is_assembly_declared then
-					!! an_assembly.make (name, options.assembly, options.version,
+					create an_assembly.make (name, options.assembly, options.version,
 						options.culture, options.public_key_token, options.prefix_option)
 					an_assemblies.force_last (an_assembly)
 				end
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 	new_recursive_cluster (a_name: STRING): like Current is
 			-- New recursive cluster
 		do
-			!! Result.make (a_name, Void)
+			create Result.make (a_name, Void)
 			Result.set_parent (Current)
 			Result.set_recursive (True)
 		end

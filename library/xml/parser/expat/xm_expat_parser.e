@@ -57,11 +57,11 @@ feature {NONE} -- Initialization
 			is_correct := True
 			last_error := Xml_err_none
 
-			!XM_STRING_SOURCE! source
+			create {XM_STRING_SOURCE} source
 
-			!XM_CALLBACKS_NULL! callbacks.make
+			create {XM_CALLBACKS_NULL} callbacks.make
 
-			!XM_NULL_EXTERNAL_RESOLVER! dtd_resolver
+			create {XM_NULL_EXTERNAL_RESOLVER} dtd_resolver
 			entity_resolver := dtd_resolver
 		end
 
@@ -90,7 +90,7 @@ feature -- Access
 	position: XM_POSITION is
 			-- Current position in the source of the XML document
 		do
-			!XM_DEFAULT_POSITION! Result.make (source, last_byte_index, last_column_number, last_line_number)
+			create {XM_DEFAULT_POSITION} Result.make (source, last_byte_index, last_column_number, last_line_number)
 		end
 
 	relative_uri_base: STRING is
@@ -164,7 +164,7 @@ feature -- Incremental parsing
 			-- After the last part of the data has been fed into the parser,
 			-- call `finish_incremental' to get any pending error messages.
 		do
-			!XM_DEFAULT_URI_SOURCE! source.make (a_stream.name)
+			create {XM_DEFAULT_URI_SOURCE} source.make (a_stream.name)
 			if not is_parser_created then
 				create_new_parser
 				on_start
@@ -186,7 +186,7 @@ feature -- Incremental parsing
 			-- You have to call `finish_incremental' after the last call to
 			-- 'parse_incremental_from_string' in every case.
 		do
-			!XM_STRING_SOURCE! source
+			create {XM_STRING_SOURCE} source
 			if not is_parser_created then
 				create_new_parser
 				on_start
@@ -562,7 +562,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			attname := new_uc_string_from_c_utf8_zero_terminated_string (attname_ptr)
 			att_type := new_uc_string_from_c_utf8_zero_terminated_string (att_type_ptr).to_utf8
 			dflt := new_uc_string_from_c_utf8_zero_terminated_string_safe (dflt_ptr)
-			!! a_model.make
+			create a_model.make
 				-- Value:
 			if dflt /= Void then
 				if is_required then
@@ -618,7 +618,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		do
 				-- Does `value_length' mean that value can contain zero, or is it to
 				-- prevent seeking to zero?
-			!! an_id.make
+			create an_id.make
 			an_id.set_base (new_uc_string_from_c_utf8_zero_terminated_string_safe (base_ptr))
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr))
 			an_id.set_public (new_uc_string_from_c_utf8_zero_terminated_string_safe (public_id_ptr))
@@ -729,7 +729,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		local
 			an_id: XM_DTD_EXTERNAL_ID
 		do
-			!! an_id.make
+			create an_id.make
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (sysid_ptr))
 			an_id.set_public (new_uc_string_from_c_utf8_zero_terminated_string_safe (pubid_ptr))
 			on_doctype (new_uc_string_from_c_utf8_zero_terminated_string (doctype_name_ptr),
@@ -745,7 +745,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		local
 			an_id: XM_DTD_EXTERNAL_ID
 		do
-			!! an_id.make
+			create an_id.make
 			an_id.set_base (new_uc_string_from_c_utf8_zero_terminated_string_safe (base_ptr))
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr))
 			an_id.set_public (new_uc_string_from_c_utf8_zero_terminated_string_safe (public_id_ptr))
@@ -798,8 +798,8 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 				if system_id_ptr /= default_pointer then
 					parent_source := source
 					system_id := new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr)
-					!XM_DEFAULT_URI_SOURCE! source.make (system_id)
-					!! in_file.make (system_id.to_utf8)
+					create {XM_DEFAULT_URI_SOURCE} source.make (system_id)
+					create in_file.make (system_id.to_utf8)
 					in_file.open_read
 					if in_file.is_open_read then
 						parse_incremental_from_stream (in_file)

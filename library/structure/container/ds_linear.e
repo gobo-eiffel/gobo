@@ -138,7 +138,7 @@ feature -- Duplication
 			a_cursor: like new_cursor
 			i: INTEGER
 		do
-			!! Result.make (1, count)
+			create Result.make (1, count)
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				i := i + 1

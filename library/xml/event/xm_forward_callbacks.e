@@ -41,7 +41,7 @@ feature {NONE} -- Document
 			-- Forward start.
 		do
 			if callbacks = Void then
-				!XM_CALLBACKS_NULL! callbacks.make
+				create {XM_CALLBACKS_NULL} callbacks.make
 			end
 			callbacks.on_start
 		end

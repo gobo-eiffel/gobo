@@ -18,7 +18,7 @@ feature -- Access
 			-- Formatting routines that ought
 			-- to be in class INTEGER
 		once
-			!! Result
+			create Result
 		ensure
 			integer_formatter_not_void: Result /= Void
 		end
@@ -27,7 +27,7 @@ feature -- Access
 			-- Formatting routines that ought
 			-- to be in class CHARACTER
 		once
-			!! Result
+			create Result
 		ensure
 			character_formatter_not_void: Result /= Void
 		end
@@ -36,7 +36,7 @@ feature -- Access
 			-- Formatting routines that ought
 			-- to be in class BOOLEAN
 		once
-			!! Result
+			create Result
 		ensure
 			boolean_formatter_not_void: Result /= Void
 		end
@@ -45,7 +45,7 @@ feature -- Access
 			-- Formatting routines that ought
 			-- to be in class STRING
 		once
-			!! Result
+			create Result
 		ensure
 			string_formatter_not_void: Result /= Void
 		end
@@ -54,7 +54,7 @@ feature -- Access
 			-- Formatting routines that ought
 			-- to be in class ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			array_formatter_not_void: Result /= Void
 		end

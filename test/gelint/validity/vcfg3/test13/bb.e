@@ -10,7 +10,7 @@ feature
 		local
 			e: EE
 		do
-			!! e
+			create e
 			item1 := e
 			item2 := e
 		end

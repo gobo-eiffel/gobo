@@ -375,7 +375,7 @@ feature -- Conversion
 	to_date_time_duration: DT_DATE_TIME_DURATION is
 			-- Date time duration equivalent to current date duration
 		do
-			!! Result.make (year, month, day, 0, 0, 0)
+			create Result.make (year, month, day, 0, 0, 0)
 		ensure
 			date_time_duration_not_void: Result /= Void
 			year_set: Result.year = year
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 	tmp_date: DT_DATE is
 			-- Temporary date
 		once
-			!! Result.make (1, 1, 1)
+			create Result.make (1, 1, 1)
 		ensure
 			tmp_date_not_void: Result /= Void
 		end

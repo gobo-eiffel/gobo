@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 			a_tester: UC_EQUALITY_TESTER
 		do
 			project := a_project
-			!DS_HASH_SET [GEANT_FILESET_ENTRY]! filenames.make_equal (20)
-			!DS_HASH_SET [STRING]! single_includes.make (20)
-			!! a_tester
+			create {DS_HASH_SET [GEANT_FILESET_ENTRY]} filenames.make_equal (20)
+			create {DS_HASH_SET [STRING]} single_includes.make (20)
+			create a_tester
 			single_includes.set_equality_tester (a_tester)
-			!DS_HASH_SET [STRING]! single_excludes.make (20)
+			create {DS_HASH_SET [STRING]} single_excludes.make (20)
 			single_excludes.set_equality_tester (a_tester)
 			set_filename_variable_name ("fs.filename")
 			set_mapped_filename_variable_name ("fs.mapped_filename")
@@ -228,7 +228,7 @@ feature -- Setting
 		do
 			include_wc_string := a_include_wc_string
 				-- Setup wildcard for include patterns:
-			!LX_DFA_WILDCARD! include_wildcard.compile (include_wc_string, True)
+			create {LX_DFA_WILDCARD} include_wildcard.compile (include_wc_string, True)
 			if not include_wildcard.is_compiled then
 				project.log (<<"  [fileset] error: invalid include wildcard: '", include_wc_string, "%'">>)
 			end
@@ -245,7 +245,7 @@ feature -- Setting
 		do
 			exclude_wc_string := a_exclude_wc_string
 				-- Setup wildcard for exclude patterns:
-			!LX_DFA_WILDCARD! exclude_wildcard.compile (exclude_wc_string, True)
+			create {LX_DFA_WILDCARD} exclude_wildcard.compile (exclude_wc_string, True)
 			if not exclude_wildcard.is_compiled then
 				project.log (<<"  [fileset] error: invalid exclude wildcard: '", exclude_wc_string, "%'">>)
 			end
@@ -339,7 +339,7 @@ feature -- Element change
 				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
 			end
 			if force or else map = Void or else is_file_outofdate (an_filename, an_mapped_filename) then
-				!! a_entry.make (an_filename, an_mapped_filename)
+				create a_entry.make (an_filename, an_mapped_filename)
 				filenames.force_last (a_entry)
 			end
 		end
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation/Processing
 			s: STRING
 			smatch: STRING
 		do
-			!! a_dir.make (a_directory_name)
+			create a_dir.make (a_directory_name)
 			a_dir.open_read
 			if a_dir.is_open_read then
 				from a_dir.read_entry until a_dir.end_of_input loop

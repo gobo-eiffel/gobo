@@ -189,7 +189,7 @@ feature {NONE} -- Precompilation
 			end
 			assert_execute ("gexace " + define_option + "--library=se " + xace_filename + output_log)
 				-- Eiffel precompilation.
-			!! a_file.make ("loadpath.se")
+			create a_file.make ("loadpath.se")
 			a_file.open_read
 			if a_file.is_open_read then
 				from
@@ -199,7 +199,7 @@ feature {NONE} -- Precompilation
 				loop
 					a_dirname := file_system.pathname_from_file_system (a_file.last_string, unix_file_system)
 					a_dirname := Execution_environment.interpreted_string (a_dirname)
-					!! a_dir.make (a_dirname)
+					create a_dir.make (a_dirname)
 					a_dir.open_read
 					if a_dir.is_open_read then
 						from

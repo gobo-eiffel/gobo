@@ -1746,7 +1746,7 @@ feature -- Conversion
 			i: INTEGER
 #endif
 		do
-			!! Result.make
+			create Result.make
 			from
 #ifdef SE
 				a_storage := a_storage.from_pointer (attr_spec_ptr)
@@ -1754,7 +1754,7 @@ feature -- Conversion
 #endif
 #ifdef ISE
 				ptr_size := Platform.Pointer_bytes
-				!! to_special.make_area (1)
+				create to_special.make_area (1)
 				a_storage := to_special.area
 				ptr2 := attr_spec_ptr
 				ptr1 := c_rtid ($a_storage)
@@ -1763,14 +1763,14 @@ feature -- Conversion
 #endif
 #ifdef HACT
 				ptr_size := Platform.Pointer_bytes
-				!! a_storage.make (1)
+				create a_storage.make (1)
 				ptr2 := attr_spec_ptr
 				c_bcopy (ptr2, $a_storage, ptr_size)
 				ptr := a_storage.item (0)
 #endif
 #ifdef VE
 				i := 1
-				!! a_storage.make (attr_spec_ptr, i)
+				create a_storage.make (attr_spec_ptr, i)
 				ptr := a_storage.item (i)
 #endif
 			until
@@ -1805,8 +1805,8 @@ feature -- Conversion
 				ptr := a_storage.item (i)
 #endif
 				a_value := new_unicode_string_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
-				!! pair1.make (a_name, a_prefix)
-				!! pair2.make (pair1, a_value)
+				create pair1.make (a_name, a_prefix)
+				create pair2.make (pair1, a_value)
 				Result.force_last (pair2)
 #ifdef SE
 				i := i + 1
@@ -1844,12 +1844,12 @@ feature -- Conversion: C Strings to STRING
 			psz_valid: psz /= default_pointer
 		do
 #ifdef SE
-			!! Result.from_external_copy (psz)
+			create Result.from_external_copy (psz)
 #else
 #ifdef VE
-			!! Result.make_empty
+			create Result.make_empty
 #else
-			!! Result.make (0)
+			create Result.make (0)
 #endif
 			Result.from_c (psz)
 #endif
@@ -1880,23 +1880,23 @@ feature -- Conversion: C Strings to STRING
 			else
 #ifdef SE
 				storage := storage.from_pointer (ps)
-				!! Result.make (length)
+				create Result.make (length)
 				from i := 0 until i = length loop
 					Result.append_character (storage.item (i))
 					i := i + 1
 				end
 #endif
 #ifdef HACT
-				!! Result.make (0)
+				create Result.make (0)
 				Result.from_c_substring (ps, 1, length)
 #endif
 #ifdef ISE
-				!! Result.make (length)
+				create Result.make (length)
 				Result.from_c_substring (ps, 1, length)
 #endif
 #ifdef VE
-				!! Result.make_filled ('%U', length)
-				!! a_storage.make (ps, length)
+				create Result.make_filled ('%U', length)
+				create a_storage.make (ps, length)
 				from i := 1 until i > length loop
 					Result.put (a_storage.item (i), i)
 					i := i + 1

@@ -152,7 +152,7 @@ feature {NONE} -- Parser
 			-- New parser
 			-- (Can be redefined to test another parser.)
 		do
-			!XM_EIFFEL_PARSER! Result.make
+			create {XM_EIFFEL_PARSER} Result.make
 		end
 
 	reset_parser is
@@ -169,7 +169,7 @@ feature {NONE} -- Parser
 			error := new_stop_on_error
 			a_printer := new_canonical_pretty_print
 			a_printer.set_output_string (output)
-			!! an_attribute.make_null
+			create an_attribute.make_null
 			parser.set_dtd_callbacks (an_attribute)
 			parser.set_callbacks (callbacks_pipe (<<  
 				new_end_tag_checker,

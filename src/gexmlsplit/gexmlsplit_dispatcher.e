@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			error_handler := an_error_handler
-			!! output_files.make
+			create output_files.make
 			make_null
 		ensure
 			error_handler_set: error_handler = an_error_handler
@@ -52,10 +52,10 @@ feature -- Element change
 			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if not a_file.is_open_write then
-				!! cannot_write.make (a_filename)
+				create cannot_write.make (a_filename)
 				error_handler.report_error (cannot_write)
 			end
 			output_files.put (a_file)

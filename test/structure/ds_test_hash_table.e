@@ -23,7 +23,7 @@ feature -- Test
 		local
 			a_table: DS_HASH_TABLE [INTEGER, INTEGER]
 		do
-			!! a_table.make (10)
+			create a_table.make (10)
 			assert ("empty1", a_table.is_empty)
 			assert_equal ("capacity", 10, a_table.capacity)
 			a_table.put (1, 1)

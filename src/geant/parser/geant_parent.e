@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_tester: UC_EQUALITY_TESTER
 		do
 			project := a_project
-			!! a_tester
+			create a_tester
 			create renames.make_map_equal (10)
 			renames.set_key_equality_tester (a_tester)
 			create redefines.make_map_equal (10)

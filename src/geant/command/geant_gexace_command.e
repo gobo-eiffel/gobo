@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 			a_tester: UC_EQUALITY_TESTER
 		do
 			precursor (a_project)
-			!! defines.make_map (10)
-			!! a_tester
+			create defines.make_map (10)
+			create a_tester
 			defines.set_key_equality_tester (a_tester)
 		end
 

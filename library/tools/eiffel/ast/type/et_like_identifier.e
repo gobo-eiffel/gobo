@@ -124,13 +124,13 @@ feature -- Type processing
 		do
 			other_feature := a_class.named_feature (name)
 			if other_feature /= Void then
-				!! a_like_feature.make (name, other_feature.first_seed)
+				create a_like_feature.make (name, other_feature.first_seed)
 				a_like_feature.set_like_keyword (like_keyword)
 				Result := a_like_feature
 			elseif args /= Void then
 				an_index := args.index_of (name)
 				if an_index /= 0 then
-					!! a_like_argument.make (name, an_index)
+					create a_like_argument.make (name, an_index)
 					a_like_argument.set_like_keyword (like_keyword)
 					Result := a_like_argument
 				end

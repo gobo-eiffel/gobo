@@ -46,7 +46,7 @@ feature -- Output
 			else
 				a_filename := ace_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_ace_file (a_system, a_file)
@@ -67,7 +67,7 @@ feature -- Output
 			else
 				a_filename := ace_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_precompile_ace_file (a_library, a_file)
@@ -125,7 +125,7 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				print_assemblies (a_clusters, a_file)
 			end
-			!! an_external.make
+			create an_external.make
 			a_system.merge_externals (an_external)
 			if an_external.has_include_directories or an_external.has_link_libraries then
 				a_file.put_line ("external")
@@ -176,7 +176,7 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				print_assemblies (a_clusters, a_file)
 			end
-			!! an_external.make
+			create an_external.make
 			a_library.merge_externals (an_external)
 			if an_external.has_include_directories or an_external.has_link_libraries then
 				a_file.put_line ("external")
@@ -200,7 +200,7 @@ feature {NONE} -- Output
 			an_assembly: ET_XACE_ASSEMBLY
 			a_prefix: STRING
 		do
-			!! an_assemblies.make
+			create an_assemblies.make
 			a_clusters.merge_assemblies (an_assemblies)
 			if not an_assemblies.is_empty then
 				a_file.put_line ("assembly")

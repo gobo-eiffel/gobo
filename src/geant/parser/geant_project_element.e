@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 				-- Create GEANT_TARGETs from the GEANT_ELEMENTs:
 			target_elements := elements_by_name (Target_element_name)
 			create a_targets.make_map (target_elements.count)
-			!! a_tester
+			create a_tester
 			a_targets.set_key_equality_tester (a_tester)
 				-- Find targets of current project:
 			project.trace_debug (<<"Project '", project.name, "': loading ",

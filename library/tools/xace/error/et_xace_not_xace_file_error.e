@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			a_filename_not_void: a_filename /= Void
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (a_filename, 1)
 		end
 

@@ -869,7 +869,7 @@ feature {NONE} -- Initialization
 	make_scanner is
 			-- Create a new scanner.
 		do
-			!! character_entity.make
+			create character_entity.make
 			make_with_buffer (Empty_buffer)
 			reset
 		end
@@ -881,9 +881,9 @@ feature -- Reset
 		do
 			Precursor
 			filename := "-"
-			!XM_FILE_SOURCE! source.make (filename)
+			create {XM_FILE_SOURCE} source.make (filename)
 			last_error := Void
-			!! start_conditions.make
+			create start_conditions.make
 		end
 
 	push_start_condition_dtd_ignore is
@@ -899,7 +899,7 @@ feature -- Input
 		do
 			Precursor (a_buffer)
 			filename := a_buffer.name
-			!XM_FILE_SOURCE! source.make (filename)
+			create {XM_FILE_SOURCE} source.make (filename)
 		ensure then
 			filename_set: filename = a_buffer.name
 		end
@@ -915,7 +915,7 @@ feature -- Input
 		do
 			input_stream := a_stream
 
-			!! a_utf16.make_from_stream (a_stream)
+			create a_utf16.make_from_stream (a_stream)
 			set_input_buffer (new_file_buffer (a_utf16))			
 		end
 

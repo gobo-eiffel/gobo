@@ -23,19 +23,19 @@ feature -- Test
 		local
 			a_list: DS_LIST [INTEGER]
 		do
-			!DS_LINKED_LIST [INTEGER]! a_list.make
+			create {DS_LINKED_LIST [INTEGER]} a_list.make
 			assert ("a_list_not_void1", a_list /= Void)
 			assert ("a_list_empty1", a_list.is_empty)
 			assert ("a_list_before1", a_list.before)
 			assert ("a_list_extendible1", a_list.extendible (10))
 			check_integer_list1 (a_list)
-			!DS_BILINKED_LIST [INTEGER]! a_list.make_equal
+			create {DS_BILINKED_LIST [INTEGER]} a_list.make_equal
 			assert ("a_list_not_void2", a_list /= Void)
 			assert ("a_list_empty2", a_list.is_empty)
 			assert ("a_list_before2", a_list.before)
 			assert ("a_list_extendible2", a_list.extendible (10))
 			check_integer_list1 (a_list)
-			!DS_ARRAYED_LIST [INTEGER]! a_list.make (10)
+			create {DS_ARRAYED_LIST [INTEGER]} a_list.make (10)
 			assert ("a_list_not_void3", a_list /= Void)
 			assert ("a_list_empty3", a_list.is_empty)
 			assert ("a_list_before3", a_list.before)
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			assert_equal ("index5", 6, a_list.index)
 			assert_equal ("item4", 55, a_list.item_for_iteration)
 
-			!! other.make
+			create other.make
 			other.put_last (66)
 			other.put_last (77)
 			a_list.append_right (other)
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			assert_equal ("index7", 9, a_list.index)
 			assert_equal ("item6", 6, a_list.item_for_iteration)
 
-			!! other.make
+			create other.make
 			other.put_last (88)
 			other.put_last (99)
 			a_list.append_left (other)

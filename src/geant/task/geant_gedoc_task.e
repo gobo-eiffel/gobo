@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			i, nb: INTEGER
 			a_pair: DS_PAIR [STRING, STRING]
 		do
-			!! command.make (a_project)
+			create command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Input_filename_attribute_name) then
 				a_value := attribute_value (Input_filename_attribute_name)
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			parameter_elements := xml_element.children_by_name (Parameter_element_name)
 			nb := parameter_elements.count
 			from i := 1 until i > nb loop
-				!! parameter_element.make (project, parameter_elements.item (i))
+				create parameter_element.make (project, parameter_elements.item (i))
 				if
 					parameter_element.is_enabled and then
 					paramter_element.has_name and then
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 				then
 					a_name := parameter_element.name
 					a_value := parameter_element.value
-					!! a_pair.make (a_name, a_value)
+					create a_pair.make (a_name, a_value)
 					command.parameters.force_last (a_pair)
 				end
 				i := i + 1

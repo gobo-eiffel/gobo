@@ -112,7 +112,7 @@ feature -- Duplication
 			-- Cloned formal argument;
 			-- Do not recursively clone the type
 		do
-			!! Result.make (name_item, declared_type)
+			create Result.make (name_item, declared_type)
 		end
 
 feature -- Processing

@@ -28,7 +28,7 @@ feature {NONE} -- Creation
 	make is
 			-- Make.
 		do
-			!! strings.make_default
+			create strings.make_default
 			last_error := "no stream"
 		ensure
 			empty: strings.is_empty
@@ -46,7 +46,7 @@ feature -- Action(s)
 		do
 			if strings.has (a_system_name) then
 				last_error := Void
-				!KL_STRING_INPUT_STREAM! last_stream.make (strings.item (a_system_name))
+				create {KL_STRING_INPUT_STREAM} last_stream.make (strings.item (a_system_name))
 			else
 				last_error := STRING_.concat ("cannot find stream named: ", a_system_name)
 				last_stream := Void

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			an_option_not_void: an_option /= Void
 			a_regexp_not_void: a_regexp /= Void
 		do
-			!! parameters.make (1, 2)
+			create parameters.make (1, 2)
 			parameters.put (an_option, 1)
 			parameters.put (a_regexp, 2)
 		end

@@ -189,7 +189,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: UT_SEPARATED_FLAG_ERROR
 		do
-			!! an_error.make (a_flag)
+			create an_error.make (a_flag)
 			error_handler.report_error (an_error)
 			Exceptions.die (1)
 		end
@@ -202,7 +202,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: UT_UNKNOWN_FLAG_ERROR
 		do
-			!! an_error.make (a_flag)
+			create an_error.make (a_flag)
 			error_handler.report_error (an_error)
 			Exceptions.die (1)
 		end
@@ -227,7 +227,7 @@ feature {NONE} -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make (Version_number)
+			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 			Exceptions.die (0)
 		end
@@ -235,7 +235,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gelex usage message
 		once
-			!! Result.make
+			create Result.make
 				("[--version] [--help] [-bcefhimsVwxz?]%N%
 				%%T[-a size] [-o filename] [--] filename")
 		ensure

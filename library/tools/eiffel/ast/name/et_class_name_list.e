@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_CLASS_NAME_ITEM] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 end

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			a_element: GEANT_DEFINE_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
-			!! directoryset.make (project)
+			create directoryset.make (project)
 			if has_attribute (Directory_attribute_name) then
 				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then

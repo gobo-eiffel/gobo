@@ -12,7 +12,7 @@ feature
 		local
 			d: DD [BIT 32]
 		do
-			!! d
+			create d
 			item := d
 		end
 

@@ -84,12 +84,12 @@ Default: T_CLASS '(' Identifier ')'
 
 Clusters_opt: -- Empty
 		{
-			!DS_ARRAYED_LIST [TS_CLUSTER]! $$.make (1)
+			create {DS_ARRAYED_LIST [TS_CLUSTER]} $$.make (1)
 			$$.put_last (default_cluster)
 		}
 	| T_CLUSTER
 		{
-			!DS_ARRAYED_LIST [TS_CLUSTER]! $$.make (1)
+			create {DS_ARRAYED_LIST [TS_CLUSTER]} $$.make (1)
 			$$.put_last (default_cluster)
 		}
 	| T_CLUSTER Cluster_list
@@ -98,7 +98,7 @@ Clusters_opt: -- Empty
 
 Cluster_list: Cluster
 		{
-			!DS_ARRAYED_LIST [TS_CLUSTER]! $$.make (5)
+			create {DS_ARRAYED_LIST [TS_CLUSTER]} $$.make (5)
 			$$.put_last ($1)
 		}
 	| Cluster_list Cluster

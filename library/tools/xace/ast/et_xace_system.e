@@ -104,7 +104,7 @@ feature -- Basic operations
 		do
 			if libraries /= Void then
 				if clusters = Void then
-					!! clusters.make_empty
+					create clusters.make_empty
 				end
 				libraries.mount_libraries (clusters)
 			end

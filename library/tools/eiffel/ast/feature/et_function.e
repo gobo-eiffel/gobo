@@ -35,7 +35,7 @@ feature -- Access
 			-- Signature of current function
 			-- (Create a new object at each call.)
 		do
-			!! Result.make (arguments, type)
+			create Result.make (arguments, type)
 		end
 
 feature -- Status report
@@ -59,7 +59,7 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			!! Result.make (a_name, arguments, declared_type, obsolete_message,
+			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, postconditions, clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)

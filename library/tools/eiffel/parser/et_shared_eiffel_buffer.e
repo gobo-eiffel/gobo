@@ -21,7 +21,7 @@ feature -- Access
 	Eiffel_buffer: YY_FILE_BUFFER is
 			-- Eiffel file input buffer
 		once
-			!! Result.make (std.input)
+			create Result.make (std.input)
 		ensure
 			eiffel_buffer_not_void: Result /= Void
 		end

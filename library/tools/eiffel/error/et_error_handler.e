@@ -51,7 +51,7 @@ feature -- Syntax errors
 		local
 			an_error: ET_SYNTAX_ERROR
 		do
-			!! an_error.make (p)
+			create an_error.make (p)
 			report_error (an_error)
 		end
 
@@ -181,7 +181,7 @@ feature -- Syntax errors
 		local
 			an_error: ET_SSEL_ERROR
 		do
-			!! an_error.make (p)
+			create an_error.make (p)
 			report_error (an_error)
 		end
 
@@ -2257,8 +2257,8 @@ feature {NONE}
 --		local
 --			a_file: PLAIN_TEXT_FILE
 		once
-			!! Result.make (6000)
---			!! a_file.make ("system.txt")
+			create Result.make (6000)
+--			create a_file.make ("system.txt")
 --			if a_file.exists then
 --				from
 --					a_file.open_read

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! FIXED_ARRAY_
+			create FIXED_ARRAY_
 			storage := FIXED_ARRAY_.make (n + 1)
 			capacity := n
 			internal_cursor := new_cursor
@@ -57,11 +57,11 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! FIXED_ARRAY_
+			create FIXED_ARRAY_
 			storage := FIXED_ARRAY_.make (n + 1)
 			capacity := n
 			internal_cursor := new_cursor
-			!! equality_tester
+			create equality_tester
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -160,7 +160,7 @@ feature -- Access
 	new_cursor: DS_ARRAYED_LIST_CURSOR [G] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -463,7 +463,7 @@ feature -- Element change
 				n := other.count
 				if other = Current then
 					if n > 0 then
-						!! tmp.make (n)
+						create tmp.make (n)
 						tmp.extend_last (other)
 						extend (tmp, i)
 					end

@@ -10,7 +10,7 @@ feature
 		local
 			b: BB
 		do
-			!! b
+			create b
 			print (b.f)
 		end
 

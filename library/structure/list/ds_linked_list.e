@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- Use `equal' as comparison criterion.
 		do
 			internal_cursor := new_cursor
-			!! equality_tester
+			create equality_tester
 		ensure
 			empty: is_empty
 			before: before
@@ -62,13 +62,13 @@ feature {NONE} -- Initialization
 				from
 					other_cursor := other.new_cursor
 					other_cursor.start
-					!! first_cell.make (other_cursor.item)
+					create first_cell.make (other_cursor.item)
 					new_last := first_cell
 					other_cursor.forth
 				until
 					other_cursor.after
 				loop
-					!! new_cell.make (other_cursor.item)
+					create new_cell.make (other_cursor.item)
 					new_last.put_right (new_cell)
 					new_last := new_cell
 					other_cursor.forth
@@ -96,13 +96,13 @@ feature {NONE} -- Initialization
 				from
 					i := other.lower
 					nb := other.upper
-					!! first_cell.make (other.item (i))
+					create first_cell.make (other.item (i))
 					new_last := first_cell
 					i := i + 1
 				until
 					i > nb
 				loop
-					!! new_cell.make (other.item (i))
+					create new_cell.make (other.item (i))
 					new_last.put_right (new_cell)
 					new_last := new_cell
 					i := i + 1
@@ -157,7 +157,7 @@ feature -- Access
 	new_cursor: DS_LINKED_LIST_CURSOR [G] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -263,13 +263,13 @@ feature -- Duplication
 				if not other.is_empty then
 					from
 						a_cell := other.first_cell
-						!! first_cell.make (a_cell.item)
+						create first_cell.make (a_cell.item)
 						new_last := first_cell
 						a_cell := a_cell.right
 					until
 						a_cell = Void
 					loop
-						!! new_cell.make (a_cell.item)
+						create new_cell.make (a_cell.item)
 						new_last.put_right (new_cell)
 						new_last := new_cell
 						a_cell := a_cell.right
@@ -320,12 +320,12 @@ feature -- Element change
 			old_cell: like first_cell
 		do
 			if is_empty then
-				!! first_cell.make (v)
+				create first_cell.make (v)
 				last_cell := first_cell
 				count := 1
 			else
 				old_cell := first_cell
-				!! first_cell.make (v)
+				create first_cell.make (v)
 				first_cell.put_right (old_cell)
 				count := count + 1
 			end
@@ -339,12 +339,12 @@ feature -- Element change
 			old_cell: like first_cell
 		do
 			if is_empty then
-				!! first_cell.make (v)
+				create first_cell.make (v)
 				last_cell := first_cell
 				count := 1
 			else
 				old_cell := last_cell
-				!! last_cell.make (v)
+				create last_cell.make (v)
 				old_cell.put_right (last_cell)
 				count := count + 1
 			end
@@ -388,7 +388,7 @@ feature -- Element change
 					-- The cell at index `i-1' exists (because i /= 1)
 					-- and has a right neighbor (because i /= count + 1).
 					-- Insert a new cell in-between.
-				!! new_cell.make (v)
+				create new_cell.make (v)
 				new_cell.put_right (a_cell.right)
 				a_cell.put_right (new_cell)
 				count := count + 1
@@ -412,7 +412,7 @@ feature -- Element change
 					-- and swap the two items. Do not forget to update
 					-- the cursor positions due the swap of items.
 				a_cell := a_cursor.current_cell
-				!! new_cell.make (a_cell.item)
+				create new_cell.make (a_cell.item)
 				a_cell.put (v)
 				new_right := a_cell.right
 				a_cell.put_right (new_cell)
@@ -443,7 +443,7 @@ feature -- Element change
 				put_last (v)
 			else
 				old_cell := a_cursor.current_cell
-				!! new_cell.make (v)
+				create new_cell.make (v)
 				new_cell.put_right (old_cell.right)
 				old_cell.put_right (new_cell)
 				count := count + 1
@@ -493,7 +493,7 @@ feature -- Element change
 			fcell, lcell: like first_cell
 		do
 			if not other.is_empty then
-				!! linked_other.make_from_linear (other)
+				create linked_other.make_from_linear (other)
 				fcell := linked_other.first_cell
 				lcell := linked_other.last_cell
 				if is_empty then
@@ -517,7 +517,7 @@ feature -- Element change
 			fcell, lcell: like first_cell
 		do
 			if not other.is_empty then
-				!! linked_other.make_from_linear (other)
+				create linked_other.make_from_linear (other)
 				fcell := linked_other.first_cell
 				lcell := linked_other.last_cell
 				if is_empty then
@@ -547,7 +547,7 @@ feature -- Element change
 			elseif i = count + 1 then
 				extend_last (other)
 			elseif not other.is_empty then
-				!! linked_other.make_from_linear (other)
+				create linked_other.make_from_linear (other)
 				fcell := linked_other.first_cell
 				lcell := linked_other.last_cell
 					-- Go to cell at index `i-1'.
@@ -588,7 +588,7 @@ feature -- Element change
 					-- Do not forget to update the cursor positions due the
 					-- swap of items at current cell.
 				a_cell := a_cursor.current_cell
-				!! new_cell.make (a_cell.item)
+				create new_cell.make (a_cell.item)
 				if other.count = 1 then
 					a_cell.put (other.first)
 					new_right := a_cell.right
@@ -601,7 +601,7 @@ feature -- Element change
 						new_cell.put_right (new_right)
 					end
 				else
-					!! linked_other.make_from_linear (other)
+					create linked_other.make_from_linear (other)
 					fcell := linked_other.first_cell
 					lcell := linked_other.last_cell
 					a_cell.put (fcell.item)
@@ -633,7 +633,7 @@ feature -- Element change
 			old_cell, fcell, lcell: like first_cell
 		do
 			if not other.is_empty then
-				!! linked_other.make_from_linear (other)
+				create linked_other.make_from_linear (other)
 				fcell := linked_other.first_cell
 				lcell := linked_other.last_cell
 				if is_empty then

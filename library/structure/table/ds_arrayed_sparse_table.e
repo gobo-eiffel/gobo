@@ -44,7 +44,7 @@ feature -- Access
 	new_cursor: DS_ARRAYED_SPARSE_TABLE_CURSOR [G, K] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature {DS_ARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	make_items (n: INTEGER) is
 			-- Create `items'.
 		do
-			!! FIXED_ITEM_ARRAY_
+			create FIXED_ITEM_ARRAY_
 			items := FIXED_ITEM_ARRAY_.make (n)
 		end
 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 	make_keys (n: INTEGER) is
 			-- Create `keys'.
 		do
-			!! FIXED_KEY_ARRAY_
+			create FIXED_KEY_ARRAY_
 			keys := FIXED_KEY_ARRAY_.make (n)
 		end
 

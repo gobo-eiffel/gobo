@@ -10,7 +10,7 @@ feature
 		local
 			d: DD [BB]
 		do
-			!! d
+			create d
 			item := d
 		end
 

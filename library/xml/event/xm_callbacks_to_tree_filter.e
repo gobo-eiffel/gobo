@@ -55,7 +55,7 @@ feature -- Position table
 			--my_source: a_source is the parser that issues Current's events
 		do
 			source_parser := a_source
-			!! last_position_table.make
+			create last_position_table.make
 		end
 
 	disable_position_table is
@@ -69,10 +69,10 @@ feature -- Document
 	on_start is
 			-- Reset.
 		do
-			!! document.make
+			create document.make
 			current_open_composite := document
 			
-			!! namespace_cache.make_equal (0)
+			create namespace_cache.make_equal (0)
 		end
 
 feature -- Element
@@ -86,12 +86,12 @@ feature -- Element
 			end
 			if document.root_element = Void then
 					-- This is the first element in the document.
-				!! current_element.make_root (a_name, new_namespace (namespace, ns_prefix))
+				create current_element.make_root (a_name, new_namespace (namespace, ns_prefix))
 					-- Add root element.
 				document.set_root_element (current_element)
 			else
 					-- This is not the first element in the document
-				!! current_element.make_child (current_open_composite, a_name, new_namespace (namespace, ns_prefix))
+				create current_element.make_child (current_open_composite, a_name, new_namespace (namespace, ns_prefix))
 				current_open_composite.force_last (current_element)
 			end
 			handle_position (current_element)
@@ -109,7 +109,7 @@ feature -- Element
 			check
 				element_not_void: current_element /= Void
 			end
-			!! xml.make (a_name, new_namespace (namespace, a_prefix), a_value, current_element)
+			create xml.make (a_name, new_namespace (namespace, a_prefix), a_value, current_element)
 			handle_position (xml)
 			current_open_composite.force_last (xml)
 		end
@@ -122,7 +122,7 @@ feature -- Element
 			check
 				not_finished: current_open_composite /= Void
 			end
-			!! xml.make (current_open_composite, a_data)
+			create xml.make (current_open_composite, a_data)
 			current_open_composite.force_last (xml)
 			handle_position (xml)
 		end
@@ -141,7 +141,7 @@ feature -- Element
 		local
 			xml: XM_PROCESSING_INSTRUCTION
 		do
-			!! xml.make (target, data)
+			create xml.make (target, data)
 			if current_open_composite = Void then
 				document.force_last (xml)
 			else
@@ -155,7 +155,7 @@ feature -- Element
 		local
 			xml: XM_COMMENT
 		do
-			!! xml.make (current_open_composite, com)
+			create xml.make (current_open_composite, com)
 			current_open_composite.force_last (xml)
 			handle_position (xml)
 		end
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 	new_namespace (a_uri, a_prefix: STRING): XM_NAMESPACE is
 			-- Create namespace object.
 		do
-			!! Result.make (a_prefix, a_uri)
+			create Result.make (a_prefix, a_uri)
 			
 			-- share namespace nodes
 			check cache_initialised: namespace_cache /= Void end

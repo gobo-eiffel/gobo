@@ -18,7 +18,7 @@ feature -- Access
 	Assertions: TS_ASSERTIONS is
 			-- Assertions
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			assertions_not_void: Result /= Void
 		end

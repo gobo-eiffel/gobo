@@ -31,7 +31,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("a_file_not_void", a_file /= Void)
 			assert_same ("name_set", a_name, a_file.name)
 			assert ("is_closed", a_file.is_closed)
@@ -49,49 +49,49 @@ feature -- Test
 				-- dirname, exist.
 			a_name := gobo_filename
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("exists1", a_file.exists)
 			a_name := empty_filename
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("exists2", a_file.exists)
 				-- The following file, whose pathname has a non-empty
 				-- dirname, does not exist.
 			a_name := file_system.pathname (data_dirname, "gobo.txtoops")
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_exists1", not a_file.exists)
 				-- The following file, whose pathname has a non-empty
 				-- dirname and a basename containing a space, does not exist.
 			a_name := file_system.pathname (data_dirname, "gobo.txt oops")
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_exists2", not a_file.exists)
 				-- A file with an empty name does not exist.
-			!! a_file.make ("")
+			create a_file.make ("")
 			assert ("not_exists3", not a_file.exists)
 				-- The following pathname exists, but it is a
 				-- directory and hence is not an existing file.
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("directory_exists", a_directory.exists)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_exists4", not a_file.exists)
 				-- Create a file in the current directory and then
 				-- check that this file, whose pathname has an empty
 				-- dirname, does exist. Then delete this newly created
 				-- file and check than it does not exist anymore.
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_exists5", not a_file.exists)
-			!! out_file.make (a_name)
+			create out_file.make (a_name)
 			out_file.open_write
 			if out_file.is_open_write then
 				out_file.put_string ("Hello gobo")
 				out_file.close
 				assert ("is_closed", out_file.is_closed)
-				!! a_file.make (a_name)
+				create a_file.make (a_name)
 				assert ("exists3", a_file.exists)
 				a_file.delete
 				assert ("not_exists6", not a_file.exists)
@@ -112,49 +112,49 @@ feature -- Test
 				-- dirname, are readable.
 			a_name := gobo_filename
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("readable1", a_file.is_readable)
 			a_name := empty_filename
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("readable2", a_file.is_readable)
 				-- The following file, whose pathname has a non-empty
 				-- dirname, is not readable.
 			a_name := file_system.pathname (data_dirname, "gobo.txtoops")
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_readable1", not a_file.is_readable)
 				-- The following file, whose pathname has a non-empty
 				-- dirname and a basename containing a space, is not readable.
 			a_name := file_system.pathname (data_dirname, "gobo.txt oops")
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_readable2", not a_file.is_readable)
 				-- A file with an empty name is not readable.
-			!! a_file.make ("")
+			create a_file.make ("")
 			assert ("not_readable3", not a_file.is_readable)
 				-- The following pathname exists, but it is a
 				-- directory and hence is not a readable file.
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("directory_readable", a_directory.is_readable)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_readable4", not a_file.is_readable)
 				-- Create a file in the current directory and then
 				-- check that this file, whose pathname has an empty
 				-- dirname, is readable. Then delete this newly created
 				-- file and check than it is not readable anymore.
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("not_readable5", not a_file.is_readable)
-			!! out_file.make (a_name)
+			create out_file.make (a_name)
 			out_file.open_write
 			if out_file.is_open_write then
 				out_file.put_string ("Hello gobo")
 				out_file.close
 				assert ("is_closed", out_file.is_closed)
-				!! a_file.make (a_name)
+				create a_file.make (a_name)
 				assert ("readable3", a_file.is_readable)
 				a_file.delete
 				assert ("not_readable6", not a_file.is_readable)
@@ -171,19 +171,19 @@ feature -- Test
 		do
 				-- Non-existing file.
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert_equal ("count1", -1, a_file.count)
 				-- Empty file.
 			a_name := Execution_environment.interpreted_string (empty_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert_equal ("count2", 0, a_file.count)
 				-- Non-empty file.
 			a_name := Execution_environment.interpreted_string (hello_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert_equal ("count3", 10, a_file.count)
 				-- Non-empty file with 2 new-lines.
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
 		end
 
@@ -197,15 +197,15 @@ feature -- Test
 		do
 				-- Non-existing file.
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert_equal ("time_stamp1", -1, a_file.time_stamp)
 				-- Existing file.
 			a_name := Execution_environment.interpreted_string (hello_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("time_stamp2", a_file.time_stamp > 0)
 				-- Create a file a check its time stamp.
 			a_name := new_filename ("gobo", ".tmp")
-			!! out_file.make (a_name)
+			create out_file.make (a_name)
 			out_file.open_write
 			assert ("is_opened", out_file.is_open_write)
 			out_file.put_string ("Hello gobo")
@@ -215,8 +215,8 @@ feature -- Test
 			dt3 := clone (dt1)
 			dt1.add_seconds (-5)
 			dt3.add_seconds (5)
-			!! a_file.make (a_name)
-			!! dt2.make_from_epoch (a_file.time_stamp)
+			create a_file.make (a_name)
+			create dt2.make_from_epoch (a_file.time_stamp)
 			assert ("time_stamp3", dt1 < dt2)
 			assert ("time_stamp4", dt2 < dt3)
 			out_file.delete
@@ -230,7 +230,7 @@ feature -- Test
 		do
 				-- Existing filename:
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("is_closed", a_file.is_closed)
 			a_file.open_read
 			assert ("is_opened", a_file.is_open_read)
@@ -238,7 +238,7 @@ feature -- Test
 			assert ("is_closed2", a_file.is_closed)
 				-- Dummy filename:
 			a_name := new_filename ("gobo", ".tmp")
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("is_closed3", a_file.is_closed)
 			a_file.open_read
 			assert ("not_opened", not a_file.is_open_read)
@@ -251,7 +251,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -278,7 +278,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -309,7 +309,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -345,7 +345,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof1", not a_file.end_of_file)
@@ -380,7 +380,7 @@ feature -- Test
 			last_string, last_string2: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -413,7 +413,7 @@ feature -- Test
 		do
 			a_string := "#######"
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -440,9 +440,9 @@ feature -- Test
 			a_buffer: KL_CHARACTER_BUFFER
 			nb: INTEGER
 		do
-			!! a_buffer.make (8)
+			create a_buffer.make (8)
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -468,7 +468,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -498,7 +498,7 @@ feature -- Test
 			last_string: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -526,7 +526,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -546,7 +546,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -569,7 +569,7 @@ feature -- Test
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
-			!! old_file.make (old_name)
+			create old_file.make (old_name)
 			old_file.open_write
 			if old_file.is_open_write then
 				old_file.put_string ("Hello gobo")
@@ -577,7 +577,7 @@ feature -- Test
 				assert ("is_closed", old_file.is_closed)
 				assert ("readable1", file_system.is_file_readable (old_name))
 				assert ("not_readable1", not file_system.is_file_readable (new_name))
-				!! a_file.make (old_name)
+				create a_file.make (old_name)
 				a_file.change_name (new_name)
 				assert_same ("renamed", new_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
@@ -601,7 +601,7 @@ feature -- Test
 			new_name := new_filename ("gobo", ".tmp")
 			assert ("not_readable1", not file_system.is_file_readable (old_name))
 			assert ("not_readable2", not file_system.is_file_readable (new_name))
-			!! a_file.make (old_name)
+			create a_file.make (old_name)
 			a_file.change_name (old_name)
 			assert_same ("not_renamed", old_name, a_file.name)
 			assert ("not_readable3", not file_system.is_file_readable (old_name))
@@ -618,7 +618,7 @@ feature -- Test
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
-			!! new_file.make (new_name)
+			create new_file.make (new_name)
 			new_file.open_write
 			if new_file.is_open_write then
 				new_file.put_string ("Hello gobo")
@@ -626,7 +626,7 @@ feature -- Test
 				assert ("is_closed", new_file.is_closed)
 				assert ("not_readable1", not file_system.is_file_readable (old_name))
 				assert ("readable1", file_system.is_file_readable (new_name))
-				!! a_file.make (old_name)
+				create a_file.make (old_name)
 				a_file.change_name (new_name)
 				assert_same ("not_renamed", old_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
@@ -649,13 +649,13 @@ feature -- Test
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
-			!! out_file.make (new_name)
+			create out_file.make (new_name)
 			out_file.open_write
 			if out_file.is_open_write then
 				out_file.put_string ("Hello gobo")
 				out_file.close
 				assert ("is_closed1", out_file.is_closed)
-				!! out_file.make (old_name)
+				create out_file.make (old_name)
 				out_file.open_write
 				if out_file.is_open_write then
 					out_file.put_string ("This is the first line,")
@@ -667,7 +667,7 @@ feature -- Test
 					assert ("is_closed2", out_file.is_closed)
 					assert ("readable1", file_system.is_file_readable (old_name))
 					assert ("readable2", file_system.is_file_readable (new_name))
-					!! a_file.make (old_name)
+					create a_file.make (old_name)
 					a_file.change_name (new_name)
 					assert_same ("renamed", new_name, a_file.name)
 					assert ("not_readable2", not file_system.is_file_readable (old_name))
@@ -691,7 +691,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
-			!! out_file.make (a_name)
+			create out_file.make (a_name)
 			out_file.open_write
 			if out_file.is_open_write then
 				out_file.put_string ("Hello gobo")
@@ -699,7 +699,7 @@ feature -- Test
 				assert ("is_closed", out_file.is_closed)
 				assert ("readable", file_system.is_file_readable (a_name))
 				assert_files_equal ("diff", hello_filename, a_name)
-				!! a_file.make (a_name)
+				create a_file.make (a_name)
 				a_file.delete
 				assert ("not_readable", not file_system.is_file_readable (a_name))
 			else
@@ -715,14 +715,14 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
-			!! out_file.make (a_name)
+			create out_file.make (a_name)
 			out_file.open_write
 			if out_file.is_open_write then
 				out_file.put_character ('%N')
 				out_file.close
 				assert ("is_closed1", out_file.is_closed)
 				assert ("readable1", file_system.is_file_readable (a_name))
-				!! a_file.make (a_name)
+				create a_file.make (a_name)
 				a_file.open_read
 				if a_file.is_open_read then
 					a_file.read_character

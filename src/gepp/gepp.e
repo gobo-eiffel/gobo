@@ -31,8 +31,8 @@ feature -- Processing
 			if False then resurrect_code end
 
 			Arguments.set_program_name ("gepp")
-			!! error_handler.make_standard
-			!! parser.make (error_handler)
+			create error_handler.make_standard
+			create parser.make (error_handler)
 			in_filename := "-"
 			out_filename := "-"
 			read_arguments
@@ -47,7 +47,7 @@ feature -- Processing
 			out_file: KL_TEXT_OUTPUT_FILE
 		do
 			if not out_filename.is_equal ("-") then
-				!! out_file.make (out_filename)
+				create out_file.make (out_filename)
 				out_file.recursive_open_write
 				if out_file.is_open_write then
 					parser.set_output_file (out_file)
@@ -61,7 +61,7 @@ feature -- Processing
 			if in_filename.is_equal ("-") then
 				parser.parse_file (std.input)
 			else
-				!! in_file.make (in_filename)
+				create in_file.make (in_filename)
 				in_file.open_read
 				if in_file.is_open_read then
 					parser.parse_file (in_file)
@@ -175,7 +175,7 @@ feature -- Error handling
 		local
 			an_error: UT_CANNOT_READ_FILE_ERROR
 		do
-			!! an_error.make (a_filename)
+			create an_error.make (a_filename)
 			error_handler.report_error (an_error)
 		end
 
@@ -187,7 +187,7 @@ feature -- Error handling
 		local
 			an_error: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			!! an_error.make (a_filename)
+			create an_error.make (a_filename)
 			error_handler.report_error (an_error)
 		end
 
@@ -208,14 +208,14 @@ feature -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make (Version_number)
+			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 		end
 
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gepp usage message.
 		once
-			!! Result.make
+			create Result.make
 				("[--version][--help][-hV?lM]%N%
 					%%T[--lines][-Dname ...][filename | -][filename | -]")
 		ensure
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 		local
 			et1: KL_EQUALITY_TESTER [STRING]
 		do
-			!! et1
+			create et1
 		end
 
 invariant

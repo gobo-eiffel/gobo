@@ -45,8 +45,8 @@ feature -- Execution
 			a_parser: ET_XACE_PARSER
 			a_file: KL_TEXT_INPUT_FILE
 		do
-			!! a_parser.make_with_variables (variables, error_handler)
-			!! a_file.make (xace_filename)
+			create a_parser.make_with_variables (variables, error_handler)
+			create a_file.make (xace_filename)
 			a_file.open_read
 			if a_file.is_open_read then
 				a_parser.parse_file (a_file)

@@ -110,7 +110,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name, feature_id)
+			create Result.make (name, feature_id)
 			Result.set_like_keyword (like_keyword)
 		end
 

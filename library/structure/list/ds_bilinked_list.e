@@ -34,7 +34,7 @@ feature -- Access
 	new_cursor: DS_BILINKED_LIST_CURSOR [G] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature -- Element change
@@ -53,7 +53,7 @@ feature -- Element change
 				put_first (v)
 			else
 				old_cell := a_cursor.current_cell
-				!! new_cell.make (v)
+				create new_cell.make (v)
 				old_cell.left.put_right (new_cell)
 				new_cell.put_right (old_cell)
 				count := count + 1
@@ -72,7 +72,7 @@ feature -- Element change
 			fcell, lcell: like first_cell
 		do
 			if not other.is_empty then
-				!! linked_other.make_from_linear (other)
+				create linked_other.make_from_linear (other)
 				fcell := linked_other.first_cell
 				lcell := linked_other.last_cell
 				if is_empty then

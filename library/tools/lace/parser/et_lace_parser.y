@@ -183,7 +183,7 @@ Excludes: L_EXCLUDE
 	;
 
 Exclude_list: Identifier
-		{ !! $$.make $$.put_last ($1) }
+		{ create $$.make $$.put_last ($1) }
 	| Exclude_list ';' Identifier
 		{ $$ := $1; $$.put_last ($3) }
 	;

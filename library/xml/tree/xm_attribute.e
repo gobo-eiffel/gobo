@@ -79,7 +79,7 @@ feature -- Access
 			if value.count > 0 then
 				a_uri := value
 			end
-			!! Result.make (a_prefix, a_uri)
+			create Result.make (a_prefix, a_uri)
 		ensure
 			namespace_not_void: Result /= Void
 		end

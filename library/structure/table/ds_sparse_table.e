@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! key_equality_tester
+			create key_equality_tester
 			make_with_equality_testers (n, Void, key_equality_tester)
 		ensure
 			empty: is_empty
@@ -60,8 +60,8 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! equality_tester
-			!! key_equality_tester
+			create equality_tester
+			create key_equality_tester
 			make_with_equality_testers (n, equality_tester, key_equality_tester)
 		ensure
 			empty: is_empty
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! equality_tester
+			create equality_tester
 			make_with_equality_testers (n, equality_tester, Void)
 		ensure
 			empty: is_empty
@@ -230,7 +230,7 @@ feature -- Access
 	new_cursor: DS_SPARSE_TABLE_CURSOR [G, K] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 	key_equality_tester: KL_EQUALITY_TESTER [K]

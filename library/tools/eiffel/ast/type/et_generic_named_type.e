@@ -85,7 +85,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (type_mark, name, generic_parameters.deep_cloned_actuals)
+			create Result.make (type_mark, name, generic_parameters.deep_cloned_actuals)
 		end
 
 feature -- Output

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			name := a_feature.name
 			current_feature := a_feature
 			current_class := a_class
-			!! inherited_features.make
+			create inherited_features.make
 			first_seed := current_feature.first_seed
 			seeds := current_feature.seeds
 		ensure
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_feature.name
 			current_class := a_class
-			!! inherited_features.make
+			create inherited_features.make
 			put_inherited_feature (a_feature)
 		ensure
 			current_class_set: current_class = a_class
@@ -208,7 +208,7 @@ feature -- Status setting
 			has_seed: has_seed (a_seed)
 		do
 			if replicated_seeds = Void then
-				!! replicated_seeds.make (a_seed)
+				create replicated_seeds.make (a_seed)
 			elseif not replicated_seeds.has (a_seed) then
 				replicated_seeds.put (a_seed)
 			end
@@ -247,7 +247,7 @@ feature -- Element change
 					a_seed := a_feature.first_seed
 					if not has_seed (a_seed) then
 						if seeds = Void then
-							!! seeds.make_with_capacity (first_seed, 2)
+							create seeds.make_with_capacity (first_seed, 2)
 						else
 							if need_twin then
 								seeds := clone (seeds)
@@ -262,7 +262,7 @@ feature -- Element change
 						a_seed := other_seeds.item (i)
 						if not has_seed (a_seed) then
 							if seeds = Void then
-								!! seeds.make_with_capacity (first_seed, 2)
+								create seeds.make_with_capacity (first_seed, 2)
 							else
 								if need_twin then
 									seeds := clone (seeds)
@@ -393,7 +393,7 @@ feature {NONE} -- Compilation
 					-- Do nothing.
 				elseif a_precursors = Void or else not a_precursors.has (a_precursor) then
 					if a_precursors = Void then
-						!! a_precursors.make_with_capacity (a_first_precursor, inherited_features.count)
+						create a_precursors.make_with_capacity (a_first_precursor, inherited_features.count)
 					end
 					a_precursors.put (a_precursor)
 				end
@@ -498,7 +498,7 @@ feature {NONE} -- Compilation
 					-- Do nothing.
 				elseif a_precursors = Void or else not a_precursors.has (a_precursor) then
 					if a_precursors = Void then
-						!! a_precursors.make_with_capacity (a_first_precursor, inherited_features.count)
+						create a_precursors.make_with_capacity (a_first_precursor, inherited_features.count)
 					end
 					a_precursors.put (a_precursor)
 				end
@@ -602,7 +602,7 @@ feature {NONE} -- Compilation
 			elseif a_clients_list.count = 1 then
 				a_clients1 := a_clients_list.first
 			else
-				!! a_clients1.make_with_capacity (nb_clients)
+				create a_clients1.make_with_capacity (nb_clients)
 				nb := a_clients_list.count
 				from i := 1 until i > nb loop
 					a_clients2 := a_clients_list.item (i)

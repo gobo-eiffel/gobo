@@ -31,7 +31,7 @@ feature -- Access
 			-- Signature of current procedure
 			-- (Create a new object at each call.)
 		do
-			!! Result.make (arguments, Void)
+			create Result.make (arguments, Void)
 		end
 
 feature -- Conversion
@@ -39,7 +39,7 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_PROCEDURE is
 			-- Undefined version of current feature
 		do
-			!! Result.make (a_name, arguments, obsolete_message, preconditions,
+			create Result.make (a_name, arguments, obsolete_message, preconditions,
 				postconditions, clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)

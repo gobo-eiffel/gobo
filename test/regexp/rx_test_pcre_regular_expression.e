@@ -23,7 +23,7 @@ feature -- Test Input 1
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
-			!! a_regexp.make
+			create a_regexp.make
 				-- Compile pattern.
 			a_regexp.compile ("the quick brown fox")
 			assert ("is_compiled1", a_regexp.is_compiled)

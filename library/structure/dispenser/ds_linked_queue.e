@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Create an empty queue.
 			-- Use `equal' as comparison criterion.
 		do
-			!! equality_tester
+			create equality_tester
 		ensure
 			empty: is_empty
 		end
@@ -141,13 +141,13 @@ feature -- Duplication
 				if not other.is_empty then
 					from
 						old_cell := other.first_cell
-						!! first_cell.make (old_cell.item)
+						create first_cell.make (old_cell.item)
 						a_cell := first_cell
 						old_cell := old_cell.right
 					until
 						old_cell = Void
 					loop
-						!! new_cell.make (old_cell.item)
+						create new_cell.make (old_cell.item)
 						a_cell.put_right (new_cell)
 						a_cell := new_cell
 						old_cell := old_cell.right
@@ -192,7 +192,7 @@ feature -- Element change
 		local
 			a_cell: like first_cell
 		do
-			!! a_cell.make (v)
+			create a_cell.make (v)
 			if is_empty then
 				first_cell := a_cell
 				last_cell := a_cell
@@ -215,14 +215,14 @@ feature -- Element change
 				other_cursor := other.new_cursor
 				from
 					other_cursor.start
-					!! a_cell.make (other_cursor.item)
+					create a_cell.make (other_cursor.item)
 					new_first := a_cell
 					new_last := a_cell
 					other_cursor.forth
 				until
 					other_cursor.after
 				loop
-					!! a_cell.make (other_cursor.item)
+					create a_cell.make (other_cursor.item)
 					new_last.put_right (a_cell)
 					new_last := a_cell
 					other_cursor.forth

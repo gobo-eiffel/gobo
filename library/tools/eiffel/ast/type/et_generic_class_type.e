@@ -331,7 +331,7 @@ feature -- Conversion
 				an_actual := a_parameter.base_type (a_feature, a_type)
 				if a_parameter /= an_actual then
 					if not duplication_needed then
-						!! a_parameters.make_with_capacity (nb)
+						create a_parameters.make_with_capacity (nb)
 						a_parameters.set_left_bracket (generic_parameters.left_bracket)
 						a_parameters.set_right_bracket (generic_parameters.right_bracket)
 						from j := i - 1 until j < 1 loop
@@ -347,7 +347,7 @@ feature -- Conversion
 				i := i + 1
 			end
 			if duplication_needed then
-				!ET_GENERIC_CLASS_TYPE! Result.make (type_mark, class_name, a_parameters, base_class)
+				create {ET_GENERIC_CLASS_TYPE} Result.make (type_mark, class_name, a_parameters, base_class)
 			else
 				Result := Current
 			end
@@ -362,7 +362,7 @@ feature -- Duplication
 		do
 			a_generics := generic_parameters.deep_cloned_actuals
 			if a_generics /= generic_parameters then
-				!! Result.make (type_mark, class_name, a_generics, base_class)
+				create Result.make (type_mark, class_name, a_generics, base_class)
 			else
 				Result := Current
 			end

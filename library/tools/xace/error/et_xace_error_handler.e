@@ -79,7 +79,7 @@ feature -- Reporting errors
 		local
 			an_error: UT_CANNOT_READ_FILE_ERROR
 		do
-			!! an_error.make (a_filename)
+			create an_error.make (a_filename)
 			report_error (an_error)
 		end
 
@@ -91,7 +91,7 @@ feature -- Reporting errors
 		local
 			an_error: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			!! an_error.make (a_filename)
+			create an_error.make (a_filename)
 			report_error (an_error)
 		end
 
@@ -102,7 +102,7 @@ feature -- Reporting errors
 		local
 			an_error: UT_MESSAGE
 		do
-			!! an_error.make (a_message)
+			create an_error.make (a_message)
 			report_error (an_error)
 		end
 
@@ -114,7 +114,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_NOT_XACE_FILE_ERROR
 		do
-			!! an_error.make (a_filename)
+			create an_error.make (a_filename)
 			report_error (an_error)
 		end
 
@@ -128,7 +128,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_WRONG_ROOT_ELEMENT_ERROR
 		do
-			!! an_error.make (an_element_name, a_position)
+			create an_error.make (an_element_name, a_position)
 			report_error (an_error)
 		end
 
@@ -143,7 +143,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_MISSING_ATTRIBUTE_ERROR
 		do
-			!! an_error.make (a_containing_element, an_attribute_name, a_position)
+			create an_error.make (a_containing_element, an_attribute_name, a_position)
 			report_error (an_error)
 		end
 
@@ -158,7 +158,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_MISSING_ELEMENT_ERROR
 		do
-			!! an_error.make (a_containing_element, an_element_name, a_position)
+			create an_error.make (a_containing_element, an_element_name, a_position)
 			report_error (an_error)
 		end
 
@@ -172,7 +172,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_UNKNOWN_ELEMENT_ERROR
 		do
-			!! an_error.make (a_containing_element, an_element, a_position)
+			create an_error.make (a_containing_element, an_element, a_position)
 			report_error (an_error)
 		end
 
@@ -185,7 +185,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_INVALID_EXPRESSION_ERROR
 		do
-			!! an_error.make (an_invalid_expression, a_position)
+			create an_error.make (an_invalid_expression, a_position)
 			report_error (an_error)
 		end
 
@@ -202,7 +202,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_BOOLEAN_EXPECTED_ERROR
 		do
-			!! an_error.make (an_element, an_attribute_name, an_actual_value, a_position)
+			create an_error.make (an_element, an_attribute_name, an_actual_value, a_position)
 			report_error (an_error)
 		end
 
@@ -219,7 +219,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_POSITIVE_INTEGER_EXPECTED_ERROR
 		do
-			!! an_error.make (an_element, an_attribute_name, an_actual_value, a_position)
+			create an_error.make (an_element, an_attribute_name, an_actual_value, a_position)
 			report_error (an_error)
 		end
 
@@ -235,7 +235,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_NON_EMPTY_ATTRIBUTE_EXPECTED_ERROR
 		do
-			!! an_error.make (an_element, an_attribute_name, a_position)
+			create an_error.make (an_element, an_attribute_name, a_position)
 			report_error (an_error)
 		end
 
@@ -255,7 +255,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_WRONG_ATTRIBUTE_VALUE_ERROR
 		do
-			!! an_error.make (an_element, an_attribute_name, an_actual_value, an_expected_values, a_position)
+			create an_error.make (an_element, an_attribute_name, an_actual_value, an_expected_values, a_position)
 			report_error (an_error)
 		end
 
@@ -268,7 +268,7 @@ feature -- Reporting errors
 		local
 			an_error: ET_XACE_MULTIPLE_LIBRARY_PREFIX_ERROR
 		do
-			!! an_error.make (a_mount1, a_mount2)
+			create an_error.make (a_mount1, a_mount2)
 			report_error (an_error)
 		end
 

@@ -38,7 +38,7 @@ feature -- Output
 			else
 				a_filename := xml_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_xml_system_file (a_system, a_file)
@@ -59,7 +59,7 @@ feature -- Output
 			else
 				a_filename := xml_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_xml_library_file (a_library, a_file)

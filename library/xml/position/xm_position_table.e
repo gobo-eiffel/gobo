@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new position table.
 		do
-			!! table.make
+			create table.make
 		end
 
 feature -- Status report
@@ -78,7 +78,7 @@ feature -- Element change
 		local
 			a_pair: DS_PAIR [XM_POSITION, XM_NODE]
 		do
-			!! a_pair.make (a_position, a_node)
+			create a_pair.make (a_position, a_node)
 			table.put_last (a_pair)
 		ensure
 			has_node: has (a_node)

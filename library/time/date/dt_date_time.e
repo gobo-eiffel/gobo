@@ -197,7 +197,7 @@ feature -- Access
 	date: DT_DATE is
 			-- Date part
 		do
-			!! Result.make_from_storage (date_storage)
+			create Result.make_from_storage (date_storage)
 		ensure then
 			year_set: Result.year = year
 			month_set: Result.month = month
@@ -207,7 +207,7 @@ feature -- Access
 	time: DT_TIME is
 			-- Time part
 		do
-			!! Result.make_from_storage (time_storage)
+			create Result.make_from_storage (time_storage)
 		ensure then
 			hour_set: Result.hour = hour
 			minute_set: Result.minute = minute
@@ -218,7 +218,7 @@ feature -- Access
 	duration (other: like Current): DT_DATE_TIME_DURATION is
 			-- Duration between `other' and current date time
 		do
-			!! Result.make_precise (0, 0, day_count - other.day_count,
+			create Result.make_precise (0, 0, day_count - other.day_count,
 				hour - other.hour, minute - other.minute,
 				second - other.second, millisecond - other.millisecond)
 		end

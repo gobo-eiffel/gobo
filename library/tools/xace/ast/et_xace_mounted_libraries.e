@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			a_library_not_void: a_library /= Void
 		do
-			!! libraries.make (Initial_libraries_capacity)
+			create libraries.make (Initial_libraries_capacity)
 			libraries.put_last (a_library)
 		ensure
 			one_library: libraries.count = 1
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Create a new empty mounted library list.
 		do
-			!! libraries.make (Initial_libraries_capacity)
+			create libraries.make (Initial_libraries_capacity)
 		ensure
 			is_empty: libraries.is_empty
 		end

@@ -181,7 +181,7 @@ feature -- Genealogy
 			a_parent: ET_PARENT
 			i, nb: INTEGER
 		do
-			!! anc.make_map (10)
+			create anc.make_map (10)
 			an_heir.set_ancestors (anc)
 			nb := count
 			from i := 1 until i > nb loop
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_PARENT_ITEM] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 invariant

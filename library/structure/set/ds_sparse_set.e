@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			make (n)
-			!! equality_tester
+			create equality_tester
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -134,7 +134,7 @@ feature -- Access
 	new_cursor: DS_SPARSE_SET_CURSOR [G] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature -- Measurement

@@ -10,7 +10,7 @@ feature
 		local
 			d: DD [STRING]
 		do
-			!! d
+			create d
 			item := d
 		end
 

@@ -1340,7 +1340,7 @@ feature -- Status setting
 			-- Set `abstract' to `b'.
 		do
 			if declared_abstract = Void then
-				!! declared_abstract.make_undefined
+				create declared_abstract.make_undefined
 			end
 			if b then
 				declared_abstract.set_true
@@ -1356,7 +1356,7 @@ feature -- Status setting
 			-- Set `address_expression' to `b'.
 		do
 			if declared_address_expression = Void then
-				!! declared_address_expression.make_undefined
+				create declared_address_expression.make_undefined
 			end
 			if b then
 				declared_address_expression.set_true
@@ -1374,7 +1374,7 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_arguments = Void then
-				!! declared_arguments.make (10)
+				create declared_arguments.make (10)
 				declared_arguments.set_equality_tester (string_equality_tester)
 			end
 			declared_arguments.force_last (a_value)
@@ -1387,7 +1387,7 @@ feature -- Status setting
 			-- Set `array_optimization' to `b'.
 		do
 			if declared_array_optimization = Void then
-				!! declared_array_optimization.make_undefined
+				create declared_array_optimization.make_undefined
 			end
 			if b then
 				declared_array_optimization.set_true
@@ -1416,7 +1416,7 @@ feature -- Status setting
 			a_value_valid: valid_assertion.has (a_value)
 		do
 			if declared_assertion = Void then
-				!! declared_assertion.make (valid_assertion.count)
+				create declared_assertion.make (valid_assertion.count)
 				declared_assertion.set_equality_tester (string_equality_tester)
 			end
 			declared_assertion.force_last (a_value)
@@ -1429,7 +1429,7 @@ feature -- Status setting
 			-- Set `case_insensitive' to `b'.
 		do
 			if declared_case_insensitive = Void then
-				!! declared_case_insensitive.make_undefined
+				create declared_case_insensitive.make_undefined
 			end
 			if b then
 				declared_case_insensitive.set_true
@@ -1445,7 +1445,7 @@ feature -- Status setting
 			-- Set `check_vape' to `b'.
 		do
 			if declared_check_vape = Void then
-				!! declared_check_vape.make_undefined
+				create declared_check_vape.make_undefined
 			end
 			if b then
 				declared_check_vape.set_true
@@ -1461,7 +1461,7 @@ feature -- Status setting
 			-- Set `clean' to `b'.
 		do
 			if declared_clean = Void then
-				!! declared_clean.make_undefined
+				create declared_clean.make_undefined
 			end
 			if b then
 				declared_clean.set_true
@@ -1477,7 +1477,7 @@ feature -- Status setting
 			-- Set `cls_compliant' to `b'.
 		do
 			if declared_cls_compliant = Void then
-				!! declared_cls_compliant.make_undefined
+				create declared_cls_compliant.make_undefined
 			end
 			if b then
 				declared_cls_compliant.set_true
@@ -1504,7 +1504,7 @@ feature -- Status setting
 			-- Set `console_application' to `b'.
 		do
 			if declared_console_application = Void then
-				!! declared_console_application.make_undefined
+				create declared_console_application.make_undefined
 			end
 			if b then
 				declared_console_application.set_true
@@ -1520,7 +1520,7 @@ feature -- Status setting
 			-- Set `create_keyword_extension' to `b'.
 		do
 			if declared_create_keyword_extension = Void then
-				!! declared_create_keyword_extension.make_undefined
+				create declared_create_keyword_extension.make_undefined
 			end
 			if b then
 				declared_create_keyword_extension.set_true
@@ -1550,7 +1550,7 @@ feature -- Status setting
 			a_value_valid: valid_dead_code_removal.has (a_value)
 		do
 			if declared_dead_code_removal = Void then
-				!! declared_dead_code_removal.make (valid_dead_code_removal.count)
+				create declared_dead_code_removal.make (valid_dead_code_removal.count)
 				declared_dead_code_removal.set_equality_tester (string_equality_tester)
 			end
 			declared_dead_code_removal.force_last (a_value)
@@ -1563,7 +1563,7 @@ feature -- Status setting
 			-- Set `debug_option' to `b'.
 		do
 			if declared_debug_option = Void then
-				!! declared_debug_option.make_undefined
+				create declared_debug_option.make_undefined
 			end
 			if b then
 				declared_debug_option.set_true
@@ -1581,7 +1581,7 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_debug_tag = Void then
-				!! declared_debug_tag.make (10)
+				create declared_debug_tag.make (10)
 				declared_debug_tag.set_equality_tester (string_equality_tester)
 			end
 			declared_debug_tag.force_last (a_value)
@@ -1594,7 +1594,7 @@ feature -- Status setting
 			-- Set `debugger' to `b'.
 		do
 			if declared_debugger = Void then
-				!! declared_debugger.make_undefined
+				create declared_debugger.make_undefined
 			end
 			if b then
 				declared_debugger.set_true
@@ -1621,7 +1621,7 @@ feature -- Status setting
 			-- Set `dotnet_naming_convention' to `b'.
 		do
 			if declared_dotnet_naming_convention = Void then
-				!! declared_dotnet_naming_convention.make_undefined
+				create declared_dotnet_naming_convention.make_undefined
 			end
 			if b then
 				declared_dotnet_naming_convention.set_true
@@ -1637,7 +1637,7 @@ feature -- Status setting
 			-- Set `dynamic_runtime' to `b'.
 		do
 			if declared_dynamic_runtime = Void then
-				!! declared_dynamic_runtime.make_undefined
+				create declared_dynamic_runtime.make_undefined
 			end
 			if b then
 				declared_dynamic_runtime.set_true
@@ -1653,7 +1653,7 @@ feature -- Status setting
 			-- Set `exception_trace' to `b'.
 		do
 			if declared_exception_trace = Void then
-				!! declared_exception_trace.make_undefined
+				create declared_exception_trace.make_undefined
 			end
 			if b then
 				declared_exception_trace.set_true
@@ -1671,7 +1671,7 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_exclude = Void then
-				!! declared_exclude.make (10)
+				create declared_exclude.make (10)
 				declared_exclude.set_equality_tester (string_equality_tester)
 			end
 			declared_exclude.force_last (a_value)
@@ -1695,7 +1695,7 @@ feature -- Status setting
 			-- Set `finalize_option' to `b'.
 		do
 			if declared_finalize_option = Void then
-				!! declared_finalize_option.make_undefined
+				create declared_finalize_option.make_undefined
 			end
 			if b then
 				declared_finalize_option.set_true
@@ -1711,7 +1711,7 @@ feature -- Status setting
 			-- Set `flat_fst_optimization' to `b'.
 		do
 			if declared_flat_fst_optimization = Void then
-				!! declared_flat_fst_optimization.make_undefined
+				create declared_flat_fst_optimization.make_undefined
 			end
 			if b then
 				declared_flat_fst_optimization.set_true
@@ -1738,7 +1738,7 @@ feature -- Status setting
 			-- Set `fst_optimization' to `b'.
 		do
 			if declared_fst_optimization = Void then
-				!! declared_fst_optimization.make_undefined
+				create declared_fst_optimization.make_undefined
 			end
 			if b then
 				declared_fst_optimization.set_true
@@ -1765,7 +1765,7 @@ feature -- Status setting
 			-- Set `gc_info' to `b'.
 		do
 			if declared_gc_info = Void then
-				!! declared_gc_info.make_undefined
+				create declared_gc_info.make_undefined
 			end
 			if b then
 				declared_gc_info.set_true
@@ -1794,7 +1794,7 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_header = Void then
-				!! declared_header.make (10)
+				create declared_header.make (10)
 				declared_header.set_equality_tester (string_equality_tester)
 			end
 			declared_header.force_last (a_value)
@@ -1807,7 +1807,7 @@ feature -- Status setting
 			-- Set `high_memory_compiler' to `b'.
 		do
 			if declared_high_memory_compiler = Void then
-				!! declared_high_memory_compiler.make_undefined
+				create declared_high_memory_compiler.make_undefined
 			end
 			if b then
 				declared_high_memory_compiler.set_true
@@ -1823,7 +1823,7 @@ feature -- Status setting
 			-- Set `il_verifiable' to `b'.
 		do
 			if declared_il_verifiable = Void then
-				!! declared_il_verifiable.make_undefined
+				create declared_il_verifiable.make_undefined
 			end
 			if b then
 				declared_il_verifiable.set_true
@@ -1841,7 +1841,7 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_include = Void then
-				!! declared_include.make (10)
+				create declared_include.make (10)
 				declared_include.set_equality_tester (string_equality_tester)
 			end
 			declared_include.force_last (a_value)
@@ -1856,7 +1856,7 @@ feature -- Status setting
 			a_value_valid: valid_inlining.has (a_value)
 		do
 			if declared_inlining = Void then
-				!! declared_inlining.make (valid_inlining.count)
+				create declared_inlining.make (valid_inlining.count)
 				declared_inlining.set_equality_tester (string_equality_tester)
 			end
 			declared_inlining.force_last (a_value)
@@ -1880,7 +1880,7 @@ feature -- Status setting
 			-- Set `jumps_optimization' to `b'.
 		do
 			if declared_jumps_optimization = Void then
-				!! declared_jumps_optimization.make_undefined
+				create declared_jumps_optimization.make_undefined
 			end
 			if b then
 				declared_jumps_optimization.set_true
@@ -1896,7 +1896,7 @@ feature -- Status setting
 			-- Set `layout_optimization' to `b'.
 		do
 			if declared_layout_optimization = Void then
-				!! declared_layout_optimization.make_undefined
+				create declared_layout_optimization.make_undefined
 			end
 			if b then
 				declared_layout_optimization.set_true
@@ -1912,7 +1912,7 @@ feature -- Status setting
 			-- Set `leaves_optimization' to `b'.
 		do
 			if declared_leaves_optimization = Void then
-				!! declared_leaves_optimization.make_undefined
+				create declared_leaves_optimization.make_undefined
 			end
 			if b then
 				declared_leaves_optimization.set_true
@@ -1928,7 +1928,7 @@ feature -- Status setting
 			-- Set `line_generation' to `b'.
 		do
 			if declared_line_generation = Void then
-				!! declared_line_generation.make_undefined
+				create declared_line_generation.make_undefined
 			end
 			if b then
 				declared_line_generation.set_true
@@ -1946,7 +1946,7 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_link = Void then
-				!! declared_link.make (10)
+				create declared_link.make (10)
 				declared_link.set_equality_tester (string_equality_tester)
 			end
 			declared_link.force_last (a_value)
@@ -1970,7 +1970,7 @@ feature -- Status setting
 			-- Set `linux_fpu_double_precision' to `b'.
 		do
 			if declared_linux_fpu_double_precision = Void then
-				!! declared_linux_fpu_double_precision.make_undefined
+				create declared_linux_fpu_double_precision.make_undefined
 			end
 			if b then
 				declared_linux_fpu_double_precision.set_true
@@ -1986,7 +1986,7 @@ feature -- Status setting
 			-- Set `manifest_string_trace' to `b'.
 		do
 			if declared_manifest_string_trace = Void then
-				!! declared_manifest_string_trace.make_undefined
+				create declared_manifest_string_trace.make_undefined
 			end
 			if b then
 				declared_manifest_string_trace.set_true
@@ -2002,7 +2002,7 @@ feature -- Status setting
 			-- Set `map' to `b'.
 		do
 			if declared_map = Void then
-				!! declared_map.make_undefined
+				create declared_map.make_undefined
 			end
 			if b then
 				declared_map.set_true
@@ -2018,7 +2018,7 @@ feature -- Status setting
 			-- Set `msil_generation' to `b'.
 		do
 			if declared_msil_generation = Void then
-				!! declared_msil_generation.make_undefined
+				create declared_msil_generation.make_undefined
 			end
 			if b then
 				declared_msil_generation.set_true
@@ -2034,7 +2034,7 @@ feature -- Status setting
 			-- Set `multithreaded' to `b'.
 		do
 			if declared_multithreaded = Void then
-				!! declared_multithreaded.make_undefined
+				create declared_multithreaded.make_undefined
 			end
 			if b then
 				declared_multithreaded.set_true
@@ -2050,7 +2050,7 @@ feature -- Status setting
 			-- Set `no_default_lib' to `b'.
 		do
 			if declared_no_default_lib = Void then
-				!! declared_no_default_lib.make_undefined
+				create declared_no_default_lib.make_undefined
 			end
 			if b then
 				declared_no_default_lib.set_true
@@ -2077,7 +2077,7 @@ feature -- Status setting
 			-- Set `portable_code_generation' to `b'.
 		do
 			if declared_portable_code_generation = Void then
-				!! declared_portable_code_generation.make_undefined
+				create declared_portable_code_generation.make_undefined
 			end
 			if b then
 				declared_portable_code_generation.set_true
@@ -2115,7 +2115,7 @@ feature -- Status setting
 			-- Set `profile' to `b'.
 		do
 			if declared_profile = Void then
-				!! declared_profile.make_undefined
+				create declared_profile.make_undefined
 			end
 			if b then
 				declared_profile.set_true
@@ -2142,7 +2142,7 @@ feature -- Status setting
 			-- Set `recursive' to `b'.
 		do
 			if declared_recursive = Void then
-				!! declared_recursive.make_undefined
+				create declared_recursive.make_undefined
 			end
 			if b then
 				declared_recursive.set_true
@@ -2158,7 +2158,7 @@ feature -- Status setting
 			-- Set `reloads_optimization' to `b'.
 		do
 			if declared_reloads_optimization = Void then
-				!! declared_reloads_optimization.make_undefined
+				create declared_reloads_optimization.make_undefined
 			end
 			if b then
 				declared_reloads_optimization.set_true
@@ -2185,7 +2185,7 @@ feature -- Status setting
 			-- Set `split' to `b'.
 		do
 			if declared_split = Void then
-				!! declared_split.make_undefined
+				create declared_split.make_undefined
 			end
 			if b then
 				declared_split.set_true
@@ -2212,7 +2212,7 @@ feature -- Status setting
 			-- Set `storable' to `b'.
 		do
 			if declared_storable = Void then
-				!! declared_storable.make_undefined
+				create declared_storable.make_undefined
 			end
 			if b then
 				declared_storable.set_true
@@ -2239,7 +2239,7 @@ feature -- Status setting
 			-- Set `strip_option' to `b'.
 		do
 			if declared_strip_option = Void then
-				!! declared_strip_option.make_undefined
+				create declared_strip_option.make_undefined
 			end
 			if b then
 				declared_strip_option.set_true
@@ -2266,7 +2266,7 @@ feature -- Status setting
 			-- Set `trace' to `b'.
 		do
 			if declared_trace = Void then
-				!! declared_trace.make_undefined
+				create declared_trace.make_undefined
 			end
 			if b then
 				declared_trace.set_true
@@ -2282,7 +2282,7 @@ feature -- Status setting
 			-- Set `verbose' to `b'.
 		do
 			if declared_verbose = Void then
-				!! declared_verbose.make_undefined
+				create declared_verbose.make_undefined
 			end
 			if b then
 				declared_verbose.set_true
@@ -2331,7 +2331,7 @@ feature -- Status setting
 			-- Set `wedit' to `b'.
 		do
 			if declared_wedit = Void then
-				!! declared_wedit.make_undefined
+				create declared_wedit.make_undefined
 			end
 			if b then
 				declared_wedit.set_true
@@ -2348,7 +2348,7 @@ feature -- Valid values
 	valid_assertion: DS_HASH_SET [STRING] is
 			-- Valid values for 'assertion' option
 		once
-			!! Result.make (8)
+			create Result.make (8)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.require_value)
@@ -2368,7 +2368,7 @@ feature -- Valid values
 	valid_dead_code_removal: DS_HASH_SET [STRING] is
 			-- Valid values for 'dead_code_removal' option
 		once
-			!! Result.make (5)
+			create Result.make (5)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.low_level_value)
@@ -2385,7 +2385,7 @@ feature -- Valid values
 	valid_garbage_collector: DS_HASH_SET [STRING] is
 			-- Valid values for 'garbage_collector' option
 		once
-			!! Result.make (3)
+			create Result.make (3)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.internal_value)
@@ -2400,7 +2400,7 @@ feature -- Valid values
 	valid_inlining: DS_HASH_SET [STRING] is
 			-- Valid values for 'inlining' option
 		once
-			!! Result.make (5)
+			create Result.make (5)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.array_value)
@@ -2417,7 +2417,7 @@ feature -- Valid values
 	valid_linker: DS_HASH_SET [STRING] is
 			-- Valid values for 'linker' option
 		once
-			!! Result.make (2)
+			create Result.make (2)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.default_value)
 			Result.put_last (options.microsoft_value)
@@ -2431,7 +2431,7 @@ feature -- Valid values
 	valid_target: DS_HASH_SET [STRING] is
 			-- Valid values for 'target' option
 		once
-			!! Result.make (4)
+			create Result.make (4)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.exe_value)
 			Result.put_last (options.dll_value)
@@ -2447,7 +2447,7 @@ feature -- Valid values
 	valid_warning: DS_HASH_SET [STRING] is
 			-- Valid values for 'warning' option
 		once
-			!! Result.make (4)
+			create Result.make (4)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.style_value)
@@ -2683,7 +2683,7 @@ feature -- Default values
 	default_arguments: DS_HASH_SET [STRING] is
 			-- Default value for 'arguments' option
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_arguments_not_void: Result /= Void
@@ -2702,7 +2702,7 @@ feature -- Default values
 	default_assertion: DS_HASH_SET [STRING] is
 			-- Default value for 'assertion' option
 		once
-			!! Result.make (1)
+			create Result.make (1)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_new (options.require_value)
 		ensure
@@ -2743,7 +2743,7 @@ feature -- Default values
 	default_dead_code_removal: DS_HASH_SET [STRING] is
 			-- Default value for 'dead_code_removal' option
 		once
-			!! Result.make (1)
+			create Result.make (1)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_new (options.all_value)
 		ensure
@@ -2757,7 +2757,7 @@ feature -- Default values
 	default_debug_tag: DS_HASH_SET [STRING] is
 			-- Default value for 'debug_tag' option
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_debug_tag_not_void: Result /= Void
@@ -2785,7 +2785,7 @@ feature -- Default values
 	default_exclude: DS_HASH_SET [STRING] is
 			-- Default value for 'exclude' option
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_exclude_not_void: Result /= Void
@@ -2827,7 +2827,7 @@ feature -- Default values
 	default_header: DS_HASH_SET [STRING] is
 			-- Default value for 'header' option
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_header_not_void: Result /= Void
@@ -2843,7 +2843,7 @@ feature -- Default values
 	default_include: DS_HASH_SET [STRING] is
 			-- Default value for 'include' option
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_include_not_void: Result /= Void
@@ -2853,7 +2853,7 @@ feature -- Default values
 	default_inlining: DS_HASH_SET [STRING] is
 			-- Default value for 'inlining' option
 		once
-			!! Result.make (1)
+			create Result.make (1)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_new (options.none_value)
 		ensure
@@ -2879,7 +2879,7 @@ feature -- Default values
 	default_link: DS_HASH_SET [STRING] is
 			-- Default value for 'link' option
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_link_not_void: Result /= Void
@@ -3014,7 +3014,7 @@ feature {NONE} -- Implementation
 	string_equality_tester: UC_EQUALITY_TESTER is
 			-- String equality tester (works with UC_STRING as well)
 		once
-			!! Result
+			create Result
 		ensure
 			tester_not_void: Result /= Void
 		end

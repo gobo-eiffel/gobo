@@ -30,7 +30,7 @@ feature -- Test
 		local
 			a_file: KL_STDOUT_FILE
 		do
-			!! a_file.make
+			create a_file.make
 			assert ("a_file_not_void", a_file /= Void)
 			assert_equal ("name_set", "stdout", a_file.name)
 			assert ("is_open", a_file.is_open_write)
@@ -41,7 +41,7 @@ feature -- Test
 		local
 			a_file: KL_STDOUT_FILE
 		do
-			!! a_file.make
+			create a_file.make
 			assert_equal ("eol", "%N", a_file.eol)
 		end
 
@@ -57,7 +57,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.put_character ('H')
 				a_file.put_character ('e')
 				a_file.put_character ('l')
@@ -85,7 +85,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.put_string ("Hello")
 				a_file.put_character (' ')
 				std.output.put_string ("foo ")
@@ -111,7 +111,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.put_integer (0)
 				a_file.put_new_line
 				a_file.put_integer (-123)
@@ -136,7 +136,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.put_boolean (True)
 				a_file.put_new_line
 				a_file.put_boolean (False)
@@ -161,7 +161,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.put_line ("This is the first line,")
 				a_file.put_line ("this is the second line.")
 				a_file.put_character ('#')
@@ -186,7 +186,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.put_string ("This is the first line,")
 				a_file.put_new_line
 				a_file.put_string ("this is the second line.")
@@ -209,7 +209,7 @@ feature -- Test
 				std.output.put_new_line
 				std.output.put_string ("Got:")
 				std.output.put_new_line
-				!! a_file.make
+				create a_file.make
 				a_file.flush
 				a_file.put_string ("Hello")
 				a_file.flush

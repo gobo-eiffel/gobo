@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			a_variables: GEANT_VARIABLES
 		do
 			Arguments.set_program_name ("geant")
-			!! error_handler.make_standard
+			create error_handler.make_standard
 			read_command_line
 
 			create a_variables.make
@@ -190,7 +190,7 @@ feature {NONE} -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make (Version_number)
+			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 			exit_application (0, Void)
 		end
@@ -212,7 +212,7 @@ feature {NONE} -- Error handling
 			s.append_string ("  -d --debug : Show internal messages%N")
 			s.append_string ("  -? -h help : Print this help message")
 
-			!! Result.make (s)
+			create Result.make (s)
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -23,12 +23,12 @@ feature -- Test
 		local
 			a_table: DS_SPARSE_TABLE [INTEGER, INTEGER]
 		do
-			!DS_HASH_TABLE [INTEGER, INTEGER]! a_table.make (10)
+			create {DS_HASH_TABLE [INTEGER, INTEGER]} a_table.make (10)
 			assert ("not_void1", a_table /= Void)
 			assert ("empty1", a_table.is_empty)
 			assert_equal ("capacity", 10, a_table.capacity)
 			check_integer_table1 (a_table)
-			!DS_MULTIARRAYED_HASH_TABLE [INTEGER, INTEGER]! a_table.make_with_chunk_size (10, 2)
+			create {DS_MULTIARRAYED_HASH_TABLE [INTEGER, INTEGER]} a_table.make_with_chunk_size (10, 2)
 			assert ("not_void1", a_table /= Void)
 			assert ("empty1", a_table.is_empty)
 			assert_equal ("capacity", 10, a_table.capacity)

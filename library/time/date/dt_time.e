@@ -184,7 +184,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			!! Result.make_precise_canonical (millisecond_count - other.millisecond_count)
+			create Result.make_precise_canonical (millisecond_count - other.millisecond_count)
 		ensure
 			duration_not_void: Result /= Void
 				-- TODO: The following assertion has been commented out
@@ -199,7 +199,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			!! Result.make_precise (hour - other.hour, minute - other.minute,
+			create Result.make_precise (hour - other.hour, minute - other.minute,
 				second - other.second, millisecond - other.millisecond)
 		ensure
 			time_duration_not_void: Result /= Void

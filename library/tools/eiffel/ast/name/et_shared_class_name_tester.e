@@ -17,7 +17,7 @@ feature -- Access
 	class_name_tester: ET_CLASS_NAME_TESTER is
 			-- Class name equality tester
 		once
-			!! Result
+			create Result
 		ensure
 			class_name_tester_not_void: Result /= Void
 		end

@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_EXPRESSION_ITEM] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 invariant

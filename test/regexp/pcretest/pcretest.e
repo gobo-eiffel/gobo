@@ -35,9 +35,9 @@ feature {NONE} -- Initialization
 			-- Create a new PCRE tester and execute it.
 		do
 			Arguments.set_program_name ("pcretest")
-			!! error_handler.make_standard
-			!! copy_string_mask.make (1, 32)
-			!! get_string_mask.make (1, 32)
+			create error_handler.make_standard
+			create copy_string_mask.make (1, 32)
+			create get_string_mask.make (1, 32)
 			if Arguments.argument_count = 0 then
 				execute_test (testinput1_filename, "out1", False) -- 100% fits
 				execute_test (testinput2_filename, "out2", True)  -- 100% fits
@@ -78,7 +78,7 @@ feature -- Execution
 				create infile.make (an_input_filename)
 				infile.open_read
 				if not infile.is_open_read then
-					!! cannot_read.make (an_input_filename)
+					create cannot_read.make (an_input_filename)
 					error_handler.report_error (cannot_read)
 					infile := Void
 				end
@@ -91,7 +91,7 @@ feature -- Execution
 					create outfile.make (an_output_filename)
 					outfile.open_write
 					if not outfile.is_open_write then
-						!! cannot_write.make (an_output_filename)
+						create cannot_write.make (an_output_filename)
 						error_handler.report_error (cannot_write)
 						outfile := Void
 					end

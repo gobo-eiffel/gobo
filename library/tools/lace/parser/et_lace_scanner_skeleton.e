@@ -79,7 +79,7 @@ feature -- Access
 			-- Current position
 			-- (Create a new object at each call.)
 		do
-			!ET_FILE_POSITION! Result.make (filename, eif_lineno, 1)
+			create {ET_FILE_POSITION} Result.make (filename, eif_lineno, 1)
 		ensure
 			current_position_not_void: Result /= Void
 		end
@@ -95,7 +95,7 @@ feature -- AST factory
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
 		do
-			!! Result.make (a_text)
+			create Result.make (a_text)
 			Result.set_position (eif_lineno, 1)
 		ensure
 			identifier_not_void: Result /= Void

@@ -46,7 +46,7 @@ feature -- Output
 			else
 				a_filename := ace_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_ace_file (a_system, a_file)
@@ -67,7 +67,7 @@ feature -- Output
 			else
 				a_filename := ace_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_precompile_ace_file (a_library, a_file)
@@ -125,7 +125,7 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				print_components (a_clusters, a_file)
 			end
-			!! an_external.make
+			create an_external.make
 			a_system.merge_externals (an_external)
 			if an_external.has_include_directories or an_external.has_link_libraries then
 				a_file.put_line ("external")
@@ -176,7 +176,7 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				print_components (a_clusters, a_file)
 			end
-			!! an_external.make
+			create an_external.make
 			a_library.merge_externals (an_external)
 			if an_external.has_include_directories or an_external.has_link_libraries then
 				a_file.put_line ("external")
@@ -199,7 +199,7 @@ feature {NONE} -- Output
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_COMPONENT]
 			a_component: ET_XACE_COMPONENT
 		do
-			!! a_components.make
+			create a_components.make
 			a_clusters.merge_components (a_components)
 			if not a_components.is_empty then
 				a_file.put_line ("component")

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_regexp_not_void: a_regexp /= Void
 			filename_not_void: filename /= Void
 		do
-			!! parameters.make (1, 3)
+			create parameters.make (1, 3)
 			parameters.put (a_regexp, 1)
 			parameters.put (filename, 2)
 			parameters.put (line.out, 3)

@@ -33,7 +33,7 @@ feature -- Access
 	new_cursor: DS_MULTIARRAYED_HASH_TABLE_CURSOR [G, K] is
 			-- New external cursor for traversal
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 feature {NONE} -- Implementation

@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 			a_tester: UC_EQUALITY_TESTER
 		do
 			project := a_project
-			!DS_HASH_SET [GEANT_FILESET_ENTRY]! directory_names.make_equal (20)
-			!DS_HASH_SET [STRING]! single_includes.make (20)
-			!! a_tester
+			create {DS_HASH_SET [GEANT_FILESET_ENTRY]} directory_names.make_equal (20)
+			create {DS_HASH_SET [STRING]} single_includes.make (20)
+			create a_tester
 			single_includes.set_equality_tester (a_tester)
-			!DS_HASH_SET [STRING]! single_excludes.make (20)
+			create {DS_HASH_SET [STRING]} single_excludes.make (20)
 			single_excludes.set_equality_tester (a_tester)
 			set_directory_name_variable_name ("fs.directoryname")
 		ensure
@@ -168,7 +168,7 @@ feature -- Setting
 		do
 			include_wc_string := a_include_wc_string
 				-- Setup wildcard for include patterns:
-			!LX_DFA_WILDCARD! include_wildcard.compile (include_wc_string, True)
+			create {LX_DFA_WILDCARD} include_wildcard.compile (include_wc_string, True)
 			if not include_wildcard.is_compiled then
 				project.log (<<"  [directoryset] error: invalid include wildcard: '", include_wc_string, "%'">>)
 			end
@@ -185,7 +185,7 @@ feature -- Setting
 		do
 			exclude_wc_string := a_exclude_wc_string
 				-- Setup wildcard for exclude patterns:
-			!LX_DFA_WILDCARD! exclude_wildcard.compile (exclude_wc_string, True)
+			create {LX_DFA_WILDCARD} exclude_wildcard.compile (exclude_wc_string, True)
 			if not exclude_wildcard.is_compiled then
 				project.log (<<"  [directoryset] error: invalid exclude wildcard: '", exclude_wc_string, "%'">>)
 			end
@@ -240,7 +240,7 @@ feature -- Element change
 				an_directory_name := a_directory_name
 			end
 			project.trace_debug (<<"  [*directoryset] adding: '", an_directory_name, "%'">>)
-			!! a_entry.make (an_directory_name, an_directory_name)
+			create a_entry.make (an_directory_name, an_directory_name)
 			directory_names.force_last (a_entry)
 		end
 
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation/Processing
 			s: STRING
 			smatch: STRING
 		do
-			!! a_dir.make (a_directory_name)
+			create a_dir.make (a_directory_name)
 			a_dir.open_read
 			if a_dir.is_open_read then
 				from a_dir.read_entry until a_dir.end_of_input loop

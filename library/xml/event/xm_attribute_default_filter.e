@@ -68,7 +68,7 @@ feature -- DTD
 					defaults := new_dtd_attribute_content_list_table
 				end
 				if not defaults.has (an_element_name) then
-					!! a_sub.make_default
+					create a_sub.make_default
 					defaults.force_new (a_sub, an_element_name)
 				end
 					-- First declaration is binding.

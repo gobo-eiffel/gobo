@@ -139,7 +139,7 @@ feature {NONE} -- Validation
 						validate_named_cluster (a_child, a_position_table)
 					else
 							-- Old syntax.
-						!! a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N", a_position_table.item (a_child).out))
+						create a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						validate_cluster (a_child, a_position_table)
 					end
@@ -149,7 +149,7 @@ feature {NONE} -- Validation
 					validate_option (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					!! a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
+					create a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
@@ -191,7 +191,7 @@ feature {NONE} -- Validation
 					validate_option (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					!! a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
+					create a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
@@ -268,7 +268,7 @@ feature {NONE} -- Validation
 					validate_class (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					!! a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
+					create a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
@@ -363,7 +363,7 @@ feature {NONE} -- Validation
 				if a_child = Void then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_exclude) then
-					!! a_warning.make (STRING_.concat ("Warning: <exclude> is obsolete, use if/unless attributes instead%N", a_position_table.item (a_child).out))
+					create a_warning.make (STRING_.concat ("Warning: <exclude> is obsolete, use if/unless attributes instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_exclude (a_child, a_position_table)
 				else

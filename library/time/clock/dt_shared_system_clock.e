@@ -18,7 +18,7 @@ feature -- Access
 	system_clock: DT_SYSTEM_CLOCK is
 			-- Local system clock
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			system_clock_not_void: Result /= Void
 		end
@@ -26,7 +26,7 @@ feature -- Access
 	utc_system_clock: DT_UTC_SYSTEM_CLOCK is
 			-- UTC system clock
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			utc_system_clock_not_void: Result /= Void
 		end

@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new result summary.
 		do
-			!! results.make
+			create results.make
 		end
 
 feature -- Status report
@@ -80,7 +80,7 @@ feature -- Element change
 		local
 			a_result: TS_SUCCESSFUL_RESULT
 		do
-			!! a_result.make (a_test)
+			create a_result.make (a_test)
 			results.put_last (a_result)
 			success_count := success_count + 1
 		end
@@ -93,7 +93,7 @@ feature -- Element change
 		local
 			a_result: TS_FAILED_RESULT
 		do
-			!! a_result.make (a_test, a_reason)
+			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			failure_count := failure_count + 1
 		end
@@ -106,7 +106,7 @@ feature -- Element change
 		local
 			a_result: TS_ABORTED_RESULT
 		do
-			!! a_result.make (a_test, a_reason)
+			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			abort_count := abort_count + 1
 		end

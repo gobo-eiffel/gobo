@@ -163,8 +163,8 @@ feature -- Option codes
 		local
 			a_tester: UC_EQUALITY_TESTER
 		once
-			!! Result.make (70)
-			!! a_tester
+			create Result.make (70)
+			create a_tester
 			Result.set_key_equality_tester (a_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)

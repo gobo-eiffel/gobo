@@ -37,18 +37,18 @@ feature -- Fixture
 	set_up is 
 			-- Create fixture objects.
 		do
-			!! empty_alist.make (10)
-			!! empty_llist.make
-			!! empty_blist.make
-			!! singleton_alist.make_from_array (<<1>>)
-			!! singleton_llist.make_from_array (<<1>>)
-			!! singleton_blist.make_from_array (<<1>>)
-			!! doubleton_alist.make_from_array (<<1, 2>>)
-			!! doubleton_llist.make_from_array (<<1, 2>>)
-			!! doubleton_blist.make_from_array (<<1, 2>>)
-			!! triplet_alist.make_from_array (<<1, 2, 3>>)
-			!! triplet_llist.make_from_array (<<1, 2, 3>>)
-			!! triplet_blist.make_from_array (<<1, 2, 3>>)
+			create empty_alist.make (10)
+			create empty_llist.make
+			create empty_blist.make
+			create singleton_alist.make_from_array (<<1>>)
+			create singleton_llist.make_from_array (<<1>>)
+			create singleton_blist.make_from_array (<<1>>)
+			create doubleton_alist.make_from_array (<<1, 2>>)
+			create doubleton_llist.make_from_array (<<1, 2>>)
+			create doubleton_blist.make_from_array (<<1, 2>>)
+			create triplet_alist.make_from_array (<<1, 2, 3>>)
+			create triplet_llist.make_from_array (<<1, 2, 3>>)
+			create triplet_blist.make_from_array (<<1, 2, 3>>)
 		end
 
 	tear_down is
@@ -131,7 +131,7 @@ feature -- Test
 			a_list: DS_LIST [INTEGER]
 			a_cursor: DS_LIST_CURSOR [INTEGER]
 		do
-			!DS_LINKED_LIST [INTEGER]! a_list.make_from_array (<<1, 2>>)
+			create {DS_LINKED_LIST [INTEGER]} a_list.make_from_array (<<1, 2>>)
 			a_cursor := a_list.new_cursor
 			a_list.start
 			a_cursor.start
@@ -146,7 +146,7 @@ feature -- Test
 			a_list: DS_LIST [INTEGER]
 			a_cursor: DS_LIST_CURSOR [INTEGER]
 		do
-			!DS_BILINKED_LIST [INTEGER]! a_list.make_from_array (<<1, 2>>)
+			create {DS_BILINKED_LIST [INTEGER]} a_list.make_from_array (<<1, 2>>)
 			a_cursor := a_list.new_cursor
 			a_list.start
 			a_cursor.start
@@ -161,7 +161,7 @@ feature -- Test
 			a_list: DS_LIST [INTEGER]
 			a_cursor: DS_LIST_CURSOR [INTEGER]
 		do
-			!DS_ARRAYED_LIST [INTEGER]! a_list.make_from_array (<<1, 2>>)
+			create {DS_ARRAYED_LIST [INTEGER]} a_list.make_from_array (<<1, 2>>)
 			a_cursor := a_list.new_cursor
 			a_list.start
 			a_cursor.start

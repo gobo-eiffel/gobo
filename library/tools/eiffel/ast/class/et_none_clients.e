@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			make_with_capacity (1)
 			left_brace := a_left
 			right_brace := a_right
-			!! a_name.make (tokens.none_class_name.name)
+			create a_name.make (tokens.none_class_name.name)
 			a_name.set_position (a_left.line, a_left.column)
 			put_first (a_name)
 		ensure

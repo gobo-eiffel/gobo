@@ -41,7 +41,7 @@ feature -- Access
 	new_expat_parser: XM_PARSER is
 			-- New Expat XML parser
 		do
-			!XM_EXPAT_PARSER! Result.make
+			create {XM_EXPAT_PARSER} Result.make
 		end
 
 end

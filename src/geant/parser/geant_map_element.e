@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_map_element: GEANT_MAP_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
-			!! map.make (project)
+			create map.make (project)
 
 			if has_attribute (Type_attribute_name) then
 				a_value := attribute_value (Type_attribute_name)
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			end
 			a_xml_subelement := xml_element.element_by_name (Map_element_name)
 			if a_xml_subelement /= Void then
-				!! a_map_element.make (project, a_xml_subelement)
+				create a_map_element.make (project, a_xml_subelement)
 				map.set_map (a_map_element.map)
 			end
 		end

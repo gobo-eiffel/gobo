@@ -27,18 +27,18 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			!! named_features.make (200)
+			create named_features.make (200)
 			named_features.set_key_equality_tester (feature_name_tester)
-			!! rename_table.make (10)
+			create rename_table.make (10)
 			rename_table.set_key_equality_tester (feature_name_tester)
-			!! undefine_table.make (10)
+			create undefine_table.make (10)
 			undefine_table.set_equality_tester (feature_name_tester)
-			!! redefine_table.make (10)
+			create redefine_table.make (10)
 			redefine_table.set_equality_tester (feature_name_tester)
-			!! select_table.make (10)
+			create select_table.make (10)
 			select_table.set_equality_tester (feature_name_tester)
-			!! replicable_features.make_map (400)
-			!! clients_list.make (20)
+			create replicable_features.make_map (400)
+			create clients_list.make (20)
 			set_current_class (a_class)
 		ensure
 			current_class_set: current_class = a_class
@@ -88,7 +88,7 @@ feature -- Setting
 				end
 				a_cursor := class_named_features.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					!! a_feature.make (a_cursor.item, current_class)
+					create a_feature.make (a_cursor.item, current_class)
 					named_features.put_last (a_feature, a_feature.name)
 					a_cursor.forth
 				end
@@ -144,7 +144,7 @@ feature -- Element change
 				end
 				a_cursor := class_named_features.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					!! a_feature.make (a_cursor.item, a_parent)
+					create a_feature.make (a_cursor.item, a_parent)
 					a_name := a_cursor.key
 					if has_rename then
 						rename_table.search (a_name)
@@ -181,7 +181,7 @@ feature -- Element change
 						a_flattened_feature := named_features.found_item
 						a_flattened_feature.put_inherited_feature (a_feature)
 					else
-						!! a_flattened_feature.make_inherited (a_feature, current_class)
+						create a_flattened_feature.make_inherited (a_feature, current_class)
 						named_features.put_last (a_flattened_feature, a_name)
 					end
 					a_cursor.forth
@@ -246,7 +246,7 @@ feature -- Compilation
 		do
 			process_replication
 			if not has_flatten_error then
-				!! class_seeded_features.make_map (nb_seeded_features)
+				create class_seeded_features.make_map (nb_seeded_features)
 				nb := named_features.count
 				class_named_features := current_class.named_features
 				if class_named_features /= Void then
@@ -255,7 +255,7 @@ feature -- Compilation
 						class_named_features.resize (nb)
 					end
 				else
-					!! class_named_features.make_map (nb)
+					create class_named_features.make_map (nb)
 					class_named_features.set_key_equality_tester (feature_name_tester)
 					current_class.set_named_features (class_named_features)
 				end
@@ -331,7 +331,7 @@ feature {NONE} -- Processing
 						a_replicable_feature := replicable_features.item (a_seed)
 						a_replicable_feature.put_feature (a_feature)
 					else
-						!! a_replicable_feature.make (a_seed, a_feature)
+						create a_replicable_feature.make (a_seed, a_feature)
 						replicable_features.force_new (a_replicable_feature, a_seed)
 					end
 				else
@@ -344,7 +344,7 @@ feature {NONE} -- Processing
 							a_replicable_feature := replicable_features.item (a_seed)
 							a_replicable_feature.put_feature (a_feature)
 						else
-							!! a_replicable_feature.make (a_seed, a_feature)
+							create a_replicable_feature.make (a_seed, a_feature)
 							replicable_features.force_new (a_replicable_feature, a_seed)
 						end
 						i := i + 1

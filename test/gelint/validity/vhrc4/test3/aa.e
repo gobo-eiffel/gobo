@@ -11,7 +11,7 @@ feature
 			b: BB
 			c: CC
 		do
-			!! b
+			create b
 			c := b
 			c.f
 		end

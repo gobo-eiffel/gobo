@@ -100,10 +100,10 @@ feature -- Files
 			i: INTEGER
 		do
 			Assertions.add_assertion
-			!! a_file1.make (Execution_environment.interpreted_string (a_filename1))
+			create a_file1.make (Execution_environment.interpreted_string (a_filename1))
 			a_file1.open_read
 			if a_file1.is_open_read then
-				!! a_file2.make (Execution_environment.interpreted_string (a_filename2))
+				create a_file2.make (Execution_environment.interpreted_string (a_filename2))
 				a_file2.open_read
 				if a_file2.is_open_read then
 					from until done loop
@@ -413,7 +413,7 @@ feature -- Execution
 		local
 			a_command: DP_SHELL_COMMAND
 		do
-			!! a_command.make (a_shell_command)
+			create a_command.make (a_shell_command)
 			a_command.execute
 			assert_equal (a_shell_command, an_exit_code, a_command.exit_code)
 		end
@@ -427,7 +427,7 @@ feature -- Execution
 		local
 			a_command: DP_SHELL_COMMAND
 		do
-			!! a_command.make (a_shell_command)
+			create a_command.make (a_shell_command)
 			a_command.execute
 			assert_not_equal (a_shell_command, an_exit_code, a_command.exit_code)
 		end

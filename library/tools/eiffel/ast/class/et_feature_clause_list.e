@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FEATURE_CLAUSE] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 end

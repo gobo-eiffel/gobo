@@ -47,7 +47,7 @@ feature -- Syntax errors
 		local
 			an_error: UT_SYNTAX_ERROR
 		do
-			!! an_error.make (a_filename, p.line)
+			create an_error.make (a_filename, p.line)
 			report_error (an_error)
 		end
 
@@ -61,7 +61,7 @@ feature -- Syntax errors
 			p: ET_POSITION
 		do
 			p := a_regexp.position
-			!! an_error.make (a_regexp.name, a_filename, p.line)
+			create an_error.make (a_regexp.name, a_filename, p.line)
 			report_error (an_error)
 		end
 
@@ -73,7 +73,7 @@ feature -- Syntax errors
 		local
 			an_error: TS_OPTION_REGEXP_SYNTAX_ERROR
 		do
-			!! an_error.make (an_option, a_regexp)
+			create an_error.make (an_option, a_regexp)
 			report_error (an_error)
 		end
 
@@ -82,7 +82,7 @@ feature -- Syntax errors
 		local
 			an_error: TS_EIFFEL_COMPILATION_ERROR
 		do
-			!! an_error.make
+			create an_error.make
 			report_error (an_error)
 		end
 

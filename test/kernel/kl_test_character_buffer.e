@@ -24,7 +24,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make (5)
+			create a_buffer.make (5)
 			assert ("a_buffer_not_void", a_buffer /= Void)
 			assert_equal ("count_set", 5, a_buffer.count)
 		end
@@ -34,7 +34,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("my buffer")
+			create a_buffer.make_from_string ("my buffer")
 			assert ("a_buffer_not_void", a_buffer /= Void)
 			assert_equal ("count_set", 9, a_buffer.count)
 			assert_equal ("characters_set", "my buffer", a_buffer.to_text)
@@ -45,7 +45,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo")
+			create a_buffer.make_from_string ("gobo")
 			a_buffer.put ('y', 4)
 			assert_equal ("put1", "goby", a_buffer.to_text)
 			a_buffer.put ('f', 1)
@@ -59,7 +59,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo")
+			create a_buffer.make_from_string ("gobo")
 			assert_equal ("item1", 'g', a_buffer.item (1))
 			assert_equal ("item2", 'o', a_buffer.item (2))
 			assert_equal ("item3", 'b', a_buffer.item (3))
@@ -71,7 +71,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo")
+			create a_buffer.make_from_string ("gobo")
 			assert_equal ("sub1", "gobo", a_buffer.substring (1, 4))
 			assert_equal ("sub2", "gob", a_buffer.substring (1, 3))
 			assert_equal ("sub3", "obo", a_buffer.substring (2, 4))
@@ -84,7 +84,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo")
+			create a_buffer.make_from_string ("gobo")
 			assert_equal ("to_text", "gobo", a_buffer.to_text)
 		end
 
@@ -94,7 +94,7 @@ feature -- Test
 			a_buffer: KL_CHARACTER_BUFFER
 			a_string: STRING
 		do
-			!! a_buffer.make_from_string ("one two three")
+			create a_buffer.make_from_string ("one two three")
 			a_string := "gobo "
 			a_buffer.append_substring_to_string (4, 3, a_string)
 			assert_equal ("appended1", "gobo ", a_string)
@@ -117,7 +117,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make (8)
+			create a_buffer.make (8)
 			a_buffer.fill_from_string ("gobogobo", 1)
 			assert_equal ("filled", "gobogobo", a_buffer.to_text)
 			a_buffer.fill_from_string ("bar", 6)
@@ -134,9 +134,9 @@ feature -- Test
 			a_buffer: KL_CHARACTER_BUFFER
 			nb: INTEGER
 		do
-			!! a_buffer.make (11)
+			create a_buffer.make (11)
 			a_name := Execution_environment.interpreted_string (gobo_filename)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then
 				assert ("not_eof", not a_file.end_of_file)
@@ -160,7 +160,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo eiffel")
+			create a_buffer.make_from_string ("gobo eiffel")
 			a_buffer.move_left (6, 1, 6)
 			assert_equal ("moved", "eiffeliffel", a_buffer.to_text)
 		end
@@ -170,7 +170,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo eiffel")
+			create a_buffer.make_from_string ("gobo eiffel")
 			a_buffer.move_right (2, 6, 3)
 			assert_equal ("moved", "gobo obofel", a_buffer.to_text)
 		end
@@ -180,7 +180,7 @@ feature -- Test
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
-			!! a_buffer.make_from_string ("gobo")
+			create a_buffer.make_from_string ("gobo")
 			assert_equal ("count_set", 4, a_buffer.count)
 			a_buffer.resize (6)
 			assert_equal ("new_count", 6, a_buffer.count)

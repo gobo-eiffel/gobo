@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			a_element: GEANT_DEFINE_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
-			!! fileset.make (project)
+			create fileset.make (project)
 			if has_attribute (Directory_attribute_name) then
 				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			end
 			a_xml_subelement := xml_element.element_by_name (Map_element_name)
 			if a_xml_subelement /= Void then
-				!! a_map_element.make (project, a_xml_subelement)
+				create a_map_element.make (project, a_xml_subelement)
 				fileset.set_map (a_map_element.map)
 			end
 		end

@@ -387,7 +387,7 @@ feature -- Access
 	date_duration: DT_DATE_DURATION is
 			-- Date duration part
 		do
-			!! Result.make (year, month, day)
+			create Result.make (year, month, day)
 		ensure then
 			year_set: Result.year = year
 			month_set: Result.month = month
@@ -397,7 +397,7 @@ feature -- Access
 	time_duration: DT_TIME_DURATION is
 			-- Time duration part
 		do
-			!! Result.make_precise (hour, minute, second, millisecond)
+			create Result.make_precise (hour, minute, second, millisecond)
 		ensure then
 			hour_set: Result.hour = hour
 			minute_set: Result.minute = minute
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 	tmp_date_time: DT_DATE_TIME is
 			-- Temporary date time
 		once
-			!! Result.make (1, 1, 1, 0, 0, 0)
+			create Result.make (1, 1, 1, 0, 0, 0)
 		ensure
 			tmp_date_time_not_void: Result /= Void
 		end

@@ -24,9 +24,9 @@ feature -- Test
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_ARRAY_SHELL_SORTER [INTEGER]
 		do
-			!! a_comparator.make
+			create a_comparator.make
 			assert ("a_comparator_not_void", a_comparator /= Void)
-			!! a_sorter.make (a_comparator)
+			create a_sorter.make (a_comparator)
 			assert ("a_sorter_not_void", a_sorter /= Void)
 			assert_same ("comparator_set", a_comparator, a_sorter.comparator)
 		end
@@ -38,9 +38,9 @@ feature -- Test
 			a_sorter: DS_ARRAY_SHELL_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 		do
-			!! empty.make (1, 0)
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
+			create empty.make (1, 0)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
 			assert ("sorted1", a_sorter.sorted (empty))
 			assert ("sorted2", a_sorter.sorted (<<1, 2, 3, 4, 5>>))
 			assert ("not_sorted1", not a_sorter.sorted (<<1, 3, 5, 4, 2>>))
@@ -54,9 +54,9 @@ feature -- Test
 			a_sorter: DS_ARRAY_SHELL_SORTER [INTEGER]
 			empty: ARRAY [INTEGER]
 		do
-			!! empty.make (1, 0)
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
+			create empty.make (1, 0)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
 			assert ("reverse_sorted1", a_sorter.reverse_sorted (empty))
 			assert ("not_reverse_sorted1", not a_sorter.reverse_sorted (<<1, 2, 3, 4, 5>>))
 			assert ("not_reverse_sorted2", not a_sorter.reverse_sorted (<<1, 3, 5, 4, 2>>))
@@ -71,9 +71,9 @@ feature -- Test
 			empty: ARRAY [INTEGER]
 			an_array: ARRAY [INTEGER]
 		do
-			!! empty.make (1, 0)
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
+			create empty.make (1, 0)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
 				-- Sort empty array:
 			assert ("sorted1", a_sorter.sorted (empty))
 			a_sorter.sort (empty)
@@ -106,9 +106,9 @@ feature -- Test
 			empty: ARRAY [INTEGER]
 			an_array: ARRAY [INTEGER]
 		do
-			!! empty.make (1, 0)
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
+			create empty.make (1, 0)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
 				-- Reverse sort empty array:
 			assert ("reverse_sorted1", a_sorter.reverse_sorted (empty))
 			a_sorter.reverse_sort (empty)

@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 		local
 			a_tester: UC_EQUALITY_TESTER
 		do
-			!! variables.make_map (10)
-			!! a_tester
+			create variables.make_map (10)
+			create a_tester
 			variables.set_equality_tester (a_tester)
 			variables.set_key_equality_tester (a_tester)
 

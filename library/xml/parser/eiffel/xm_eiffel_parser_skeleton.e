@@ -64,12 +64,12 @@ feature {NONE} -- Initialization
 			stand_alone := False
 			in_external_dtd := False
 				-- Callbacks forwarding
-			!XM_CALLBACKS_NULL! callbacks.make
+			create {XM_CALLBACKS_NULL} callbacks.make
 				-- Entities:
 			entities := new_entities_table
 			pe_entities := new_entities_table
 				-- Resolvers
-			!XM_NULL_EXTERNAL_RESOLVER! dtd_resolver
+			create {XM_NULL_EXTERNAL_RESOLVER} dtd_resolver
 			entity_resolver := dtd_resolver
 		end
 
@@ -109,7 +109,7 @@ feature -- Parsing
 		local
 			a_stream: KL_STRING_INPUT_STREAM
 		do
-			!! a_stream.make (utf8.to_utf8 (a_string))
+			create a_stream.make (utf8.to_utf8 (a_string))
 			parse_from_stream (a_stream)
 		end
 
@@ -171,7 +171,7 @@ feature -- Error diagnostic
 	position: XM_POSITION is
 			-- Current position in the source of the XML document
 		do
-			!XM_DEFAULT_POSITION! Result.make (source, byte_position, column, line)
+			create {XM_DEFAULT_POSITION} Result.make (source, byte_position, column, line)
 		end
 
 	filename: STRING is
@@ -243,7 +243,7 @@ feature {NONE} -- Factory
 	new_namespace_name: XM_EIFFEL_PARSER_NAME is
 			-- New namespace name
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			namespace_name_not_void: Result /= Void
 			namespace_name_empty: Result.is_empty
@@ -252,7 +252,7 @@ feature {NONE} -- Factory
 	new_name_set: DS_HASH_SET [XM_EIFFEL_PARSER_NAME] is
 			-- New name set for checking
 		do
-			!! Result.make_equal (0)
+			create Result.make_equal (0)
 		ensure
 			name_set_not_void: Result /= Void
 		end
@@ -260,7 +260,7 @@ feature {NONE} -- Factory
 	new_dtd_attribute_content: XM_DTD_ATTRIBUTE_CONTENT is
 			-- New dtd attribute content
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			content_not_void: Result /= Void
 		end
@@ -268,7 +268,7 @@ feature {NONE} -- Factory
 	new_dtd_attribute_content_list: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT] is
 			-- New dtd attribute content list
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			content_list_not_void: Result /= Void
 		end
@@ -276,7 +276,7 @@ feature {NONE} -- Factory
 	new_dtd_external_id: XM_DTD_EXTERNAL_ID is
 			-- New dtd external id
 		do
-			!! Result.make
+			create Result.make
 		ensure
 			external_id: Result /= Void
 		end
@@ -304,7 +304,7 @@ feature {NONE} -- DTD
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make_name (a_name)
+			create Result.make_name (a_name)
 		ensure
 			element_name_not_void: Result /= Void
 		end
@@ -333,7 +333,7 @@ feature {NONE} -- Entities
 		require
 			a_value_not_void: a_value /= Void
 		do
-			!! Result.make_literal (a_value)
+			create Result.make_literal (a_value)
 		ensure
 			entity_not_void: Result /= Void
 		end
@@ -343,7 +343,7 @@ feature {NONE} -- Entities
 		require
 			a_value_not_void: a_value /= Void
 		do
-			!! Result.make_external (entity_resolver, a_value.system_id)
+			create Result.make_external (entity_resolver, a_value.system_id)
 		ensure
 			entity_not_void: Result /= Void
 		end
@@ -388,7 +388,7 @@ feature {NONE} -- Entities
 				-- 4.2: when multiple declaration take first one.
 			if in_def /= Void then
 					-- Convert to PE.
-				!! a_def.make_def (in_def)
+				create a_def.make_def (in_def)
 				if not pe_entities.has (a_name) then
 					pe_entities.force (a_def, a_name)
 				end
@@ -436,7 +436,7 @@ feature {NONE} -- Entities
 		do
 			entity_resolver.resolve (a_sys)
 			if not entity_resolver.has_error then
-				!! a_stream.make_from_stream (entity_resolver.last_stream)
+				create a_stream.make_from_stream (entity_resolver.last_stream)
 				a_stream.read_string (INTEGER_.Platform.Maximum_integer)
 				Result := a_stream.last_string
 				if entity_resolver.last_stream.is_closable then
@@ -486,7 +486,7 @@ feature {NONE} -- DTD
 			if not dtd_resolver.has_error then
 				-- Push old scanner.
 				scanners.force (scanner)
-				!XM_EIFFEL_SCANNER_DTD! scanner.make_scanner
+				create {XM_EIFFEL_SCANNER_DTD} scanner.make_scanner
 				scanner.set_input_stream (dtd_resolver.last_stream)
 			else
 				on_error (dtd_resolver.last_error)
@@ -499,8 +499,8 @@ feature {NONE} -- Scanner implementation
 			-- Initialize main scanner and saved
 			-- scannners stack.
 		do
-			!! scanner.make_scanner
-			!! scanners.make
+			create scanner.make_scanner
+			create scanners.make
 		end
 
 	scanner: XM_EIFFEL_SCANNER
@@ -672,7 +672,7 @@ feature {NONE} -- String mode: shared empty string implementation
 	shared_empty_string_string: STRING is
 			-- Empty string of type STRING
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		ensure
 			string_type: Result.same_type ("")
 		end
@@ -680,7 +680,7 @@ feature {NONE} -- String mode: shared empty string implementation
 	shared_empty_string_uc: UC_STRING is
 			-- Empty string of type UC_STRING
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end
 
 invariant

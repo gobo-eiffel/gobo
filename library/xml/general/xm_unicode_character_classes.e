@@ -43,7 +43,7 @@ class XM_UNICODE_CHARACTER_CLASSES
 --			when '|' then io.put_string ("or%N%T%T%T%T")
 --			when '#' then -- ignore
 --			when 'x' then
---				!! last_number.make (0) 
+--				create last_number.make (0) 
 --				if not in_group then io.put_string ("a = ") end
 --			when '0'..'9','A'..'F' then -- ignore
 --			else io.put_character (c)

@@ -64,7 +64,7 @@ feature -- Initialization
 				create a_rename_element.make (project, cs.item)
 				s := a_rename_element.rename_clause.original_name
 				if parent.renames.has (s) then
-					!! msg.make (1, 9)
+					create msg.make (1, 9)
 					msg.put ("%NLOAD ERROR:%N", 1)
 					msg.put ("  Project '", 2)
 					msg.put (project.name, 3)

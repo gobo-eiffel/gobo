@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Initialise with DTD callbacks if no handler.
 		do
 			if dtd_callbacks = Void then
-				!XM_DTD_CALLBACKS_NULL! dtd_callbacks.make
+				create {XM_DTD_CALLBACKS_NULL} dtd_callbacks.make
 			end
 		ensure
 			dtd_callbacks_not_void: dtd_callbacks /= Void

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			a_variable_not_void: a_variable /= Void
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (a_variable, 1)
 		end
 

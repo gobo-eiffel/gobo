@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		local
 			a_file: KL_TEXT_INPUT_FILE
 		do
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			a_file.open_read
 			make_from_stream (a_file)
 		end
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			--at_start: stream empty or at start
 		do
 			impl := a_stream
-			!! utf_queue.make
+			create utf_queue.make
 			last_string := clone ("")
 		ensure
 			impl_set: impl = a_stream

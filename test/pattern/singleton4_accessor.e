@@ -18,7 +18,7 @@ feature {NONE} -- Private
 	the_singleton4: SINGLETON4 is
 			-- Access to a unique instance.
 		once
-			!! Result
+			create Result
 		end
 
 	is_singleton4_real_singleton: BOOLEAN is

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			is_inherited: a_feature.is_inherited_seed (a_seed)
 		do
 			seed := a_seed
-			!! features.make
+			create features.make
 			put_feature (a_feature)
 		ensure
 			seed_set: seed = a_seed
@@ -87,7 +87,7 @@ feature -- Compilation
 			if is_replicated then
 				inspect selected_count
 				when 0 then
-					!! replicated_features.make (features.count)
+					create replicated_features.make (features.count)
 					from features.start until features.after loop
 						a_feature := features.item_for_iteration
 						inherited_feature := a_feature.inherited_feature_with_seed (seed)
@@ -110,7 +110,7 @@ feature -- Compilation
 						features.forth
 					end
 				else
-					!! replicated_features.make (features.count)
+					create replicated_features.make (features.count)
 					from features.start until features.after loop
 						a_feature := features.item_for_iteration
 						if a_feature.has_selected then

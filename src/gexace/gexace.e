@@ -42,9 +42,9 @@ feature
 			a_cursor: DS_LINKED_LIST_CURSOR [GEXACE_COMMAND]
 		do
 			Arguments.set_program_name ("gexace")
-			!! variables.make
-			!! commands.make
-			!! error_handler.make
+			create variables.make
+			create commands.make
+			create error_handler.make
 			make_command_line_parser
 			process_arguments
 			a_cursor := commands.new_cursor
@@ -129,7 +129,7 @@ feature {NONE} -- Command-line processing
 			a_command: GEXACE_SYSTEM_COMMAND
 			a_compiler: STRING
 		do
-			!! a_command.make (variables, error_handler)
+			create a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
@@ -152,7 +152,7 @@ feature {NONE} -- Command-line processing
 			a_command: GEXACE_LIBRARY_COMMAND
 			a_compiler: STRING
 		do
-			!! a_command.make (variables, error_handler)
+			create a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
@@ -175,7 +175,7 @@ feature {NONE} -- Command-line processing
 			a_command: GEXACE_LIBRARY_COMMAND
 			a_compiler: STRING
 		do
-			!! a_command.make (variables, error_handler)
+			create a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
@@ -197,7 +197,7 @@ feature {NONE} -- Command-line processing
 		local
 			a_command: GEXACE_VALIDATE_COMMAND
 		do
-			!! a_command.make (variables, error_handler)
+			create a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			consume_option
 			process_xace_file (a_command)
@@ -216,22 +216,22 @@ feature {NONE} -- Command-line processing
 		do
 			if a_compiler.is_equal ("se") then
 				variables.define_value ("GOBO_EIFFEL", "se")
-				!ET_XACE_SE_GENERATOR! g.make (variables, error_handler)
+				create {ET_XACE_SE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("ise") then
 				variables.define_value ("GOBO_EIFFEL", "ise")
-				!ET_XACE_ISE_GENERATOR! g.make (variables, error_handler)
+				create {ET_XACE_ISE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("ve") then
 				variables.define_value ("GOBO_EIFFEL", "ve")
-				!ET_XACE_VE_GENERATOR! g.make (variables, error_handler)
+				create {ET_XACE_VE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("hact") then
 				variables.define_value ("GOBO_EIFFEL", "hact")
-				!ET_XACE_HACT_GENERATOR! g.make (variables, error_handler)
+				create {ET_XACE_HACT_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("xml") then
-				!ET_XACE_XML_GENERATOR! g.make (variables, error_handler)
+				create {ET_XACE_XML_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			end
 			if a_command.generators.is_empty then
@@ -312,7 +312,7 @@ feature {NONE} -- Usage message
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexace usage message
 		once
-			!! Result.make ("[defines][options] command [xace-file]%N%
+			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose%N%
 				%%Tcommand:  --system=(se|ise|ve|hact|xml) [--output=<filename>]%N%

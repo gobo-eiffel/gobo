@@ -30,9 +30,9 @@ feature {NONE} -- Initialization
 		require
 			nb_positive: nb >= 0
 		do
-			!! items.make (nb)
-			!! counts.make (nb)
-			!! successors.make (nb)
+			create items.make (nb)
+			create counts.make (nb)
+			create successors.make (nb)
 		ensure
 			capacity_set: capacity = nb
 		end
@@ -188,7 +188,7 @@ feature -- Element change
 			reset
 			counts.replace (counts.item (j) + 1, j)
 			succ2 := successors.item (i)
-			!! succ.make (j)
+			create succ.make (j)
 			successors.replace (succ, i)
 			if succ2 /= Void then
 				succ.put_right (succ2)
@@ -238,7 +238,7 @@ feature -- Sort
 
 			reset
 			nb := items.count
-			!! sorted_items.make (nb)
+			create sorted_items.make (nb)
 				-- T4. Scan for zeros.
 				-- `qlinks' is a queue containing items not processed
 				-- yet but which don't have predecessors or whose
@@ -284,7 +284,7 @@ feature -- Sort
 			nb := items.count - sorted_items.count
 			if nb /= 0 then
 					-- A cycle has been detected.
-				!! cycle.make (nb + 1)
+				create cycle.make (nb + 1)
 					-- T8.
 				nb := items.count
 				from i := 1 until i > nb loop
@@ -292,7 +292,7 @@ feature -- Sort
 					i := i + 1
 				end
 					-- T9.
-				!! marks.make (1, nb)
+				create marks.make (1, nb)
 				from i := 1 until i > nb loop
 					marks.put (True, i)
 					succ := successors.item (i)

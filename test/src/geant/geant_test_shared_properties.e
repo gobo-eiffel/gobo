@@ -49,7 +49,7 @@ feature -- Execution
 	set_up is
 			-- Setup for a test.
 		do
-			!! sp
+			create sp
 		end
 
 	tear_down is

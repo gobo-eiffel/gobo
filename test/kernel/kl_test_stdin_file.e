@@ -30,7 +30,7 @@ feature -- Test
 		local
 			a_file: KL_STDIN_FILE
 		do
-			!! a_file.make
+			create a_file.make
 			assert ("a_file_not_void", a_file /= Void)
 			assert_equal ("name_set", "stdin", a_file.name)
 			assert ("is_open", a_file.is_open_read)
@@ -42,7 +42,7 @@ feature -- Test
 		local
 			a_file: KL_STDIN_FILE
 		do
-			!! a_file.make
+			create a_file.make
 			assert_equal ("eol", "%N", a_file.eol)
 		end
 
@@ -52,7 +52,7 @@ feature -- Test
 			a_file: KL_STDIN_FILE
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'Th': ")
@@ -77,7 +77,7 @@ feature -- Test
 			a_file: KL_STDIN_FILE
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'Th': ")
@@ -106,7 +106,7 @@ feature -- Test
 			a_file: KL_STDIN_FILE
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'This': ")
@@ -139,7 +139,7 @@ feature -- Test
 			last_string, last_string2: STRING
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'This is the': ")
@@ -168,7 +168,7 @@ feature -- Test
 			last_string, last_string2: STRING
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'gobo': ")
@@ -197,7 +197,7 @@ feature -- Test
 			last_string: STRING
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'gobo': ")
@@ -233,7 +233,7 @@ feature -- Test
 		do
 			if read_from_console then
 				a_string := "#######"
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'This is t': ")
@@ -259,8 +259,8 @@ feature -- Test
 			nb: INTEGER
 		do
 			if read_from_console then
-				!! a_buffer.make (8)
-				!! a_file.make
+				create a_buffer.make (8)
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'This is th': ")
@@ -284,7 +284,7 @@ feature -- Test
 			a_file: KL_STDIN_FILE
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type '#': ")
@@ -303,7 +303,7 @@ feature -- Test
 			a_file: KL_STDIN_FILE
 		do
 			if read_from_console then
-				!! a_file.make
+				create a_file.make
 				assert ("is_open", a_file.is_open_read)
 				assert ("not_eof", not a_file.end_of_file)
 				std.output.put_string ("Type 'gobo': ")

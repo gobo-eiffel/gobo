@@ -44,7 +44,7 @@ feature -- Output
 			else
 				a_filename := ace_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_ace_file (a_system, a_file)
@@ -66,7 +66,7 @@ feature -- Output
 			else
 				a_filename := loadpath_filename
 			end
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_clusters := a_library.clusters
@@ -129,9 +129,9 @@ feature {NONE} -- Output
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
-			!! an_external.make
+			create an_external.make
 			a_system.merge_externals (an_external)
-			!! an_exported_features.make
+			create an_exported_features.make
 			a_system.merge_exported_features (an_exported_features)
 			if not an_external.is_empty or not an_exported_features.is_empty then
 				a_file.put_line ("external")
@@ -694,7 +694,7 @@ feature {NONE} -- Output
 			a_cursor: DS_LIST_CURSOR [ET_XACE_EXPORTED_FEATURE]
 			a_feature: ET_XACE_EXPORTED_FEATURE
 		do
-			!! a_file.make (cecil_filename)
+			create a_file.make (cecil_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("-- The name of our include C file:")

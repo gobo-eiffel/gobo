@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		local
 			a_factory: ET_AST_FACTORY
 		do
-			!! a_factory.make
+			create a_factory.make
 			make_with_factory (a_universe, a_factory, an_error_handler)
 		ensure
 			universe_set: universe = a_universe

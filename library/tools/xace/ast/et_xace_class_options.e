@@ -51,7 +51,7 @@ feature -- Element change
 			an_option_not_void: an_option /= Void
 		do
 			if feature_options = Void then
-				!! feature_options.make
+				create feature_options.make
 			end
 			feature_options.put_last (an_option)
 		end

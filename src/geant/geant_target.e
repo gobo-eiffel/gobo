@@ -242,7 +242,7 @@ feature -- Processing
 		do
 			from
 				a_precursor_target := Current
-				!! a_message.make (1, 1)
+				create a_message.make (1, 1)
 				a_message.put ("    precursor list: ", 1)
 			until
 				a_precursor_target = Void
@@ -311,82 +311,82 @@ feature -- Processing
 		do
 			if STRING_.same_string (a_xml_element.name, Se_task_name) then
 					-- se: SmallEiffel compilation
-				!GEANT_SE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_SE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Ise_task_name) then
 					-- ise: ISE Eiffel compilation
-				!GEANT_ISE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_ISE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Hact_task_name) then
 					-- hact: Halstenbach Eiffel compilation
-				!GEANT_HACT_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_HACT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Ve_task_name) then
 					-- ve: Visual Eiffel compilation
-				!GEANT_VE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_VE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Exec_task_name) then
 					-- exec
-				!GEANT_EXEC_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_EXEC_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Lcc_task_name) then
 					-- lcc
-				!GEANT_LCC_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_LCC_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Set_task_name) then
 					-- set
-				!GEANT_SET_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_SET_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Unset_task_name) then
 					-- unset
-				!GEANT_UNSET_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_UNSET_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Gexace_task_name) then
 					-- gexace
-				!GEANT_GEXACE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GEXACE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Gelex_task_name) then
 					-- gelex
-				!GEANT_GELEX_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GELEX_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Geyacc_task_name) then
 					-- geyacc
-				!GEANT_GEYACC_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GEYACC_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Gepp_task_name) then
 					-- gepp
-				!GEANT_GEPP_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GEPP_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Getest_task_name) then
 					-- getest
-				!GEANT_GETEST_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GETEST_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Geant_task_name) then
 					-- geant
-				!GEANT_GEANT_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GEANT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Gexmlsplit_task_name) then
 					-- gexmlsplit
-				!GEANT_GEXMLSPLIT_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_GEXMLSPLIT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Echo_task_name) then
 					-- echo
-				!GEANT_ECHO_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_ECHO_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Mkdir_task_name) then
 					-- mkdir
-				!GEANT_MKDIR_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_MKDIR_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Delete_task_name) then
 					-- delete
-				!GEANT_DELETE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_DELETE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Copy_task_name) then
 					-- copy
-				!GEANT_COPY_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_COPY_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Move_task_name) then
 					-- move
-				!GEANT_MOVE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_MOVE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Setenv_task_name) then
 					-- setenv
-				!GEANT_SETENV_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_SETENV_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Xslt_task_name) then
 					-- xslt
-				!GEANT_XSLT_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_XSLT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Outofdate_task_name) then
 					-- outofdate
-				!GEANT_OUTOFDATE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_OUTOFDATE_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Exit_task_name) then
 					-- exit
-				!GEANT_EXIT_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_EXIT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Precursor_task_name) then
 					-- precursor
-				!GEANT_PRECURSOR_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_PRECURSOR_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Available_task_name) then
 					-- available
-				!GEANT_AVAILABLE_TASK! a_task.make (project, a_xml_element)
+				create {GEANT_AVAILABLE_TASK} a_task.make (project, a_xml_element)
 			else
 					-- Default:
 				a_task := Void
@@ -417,7 +417,7 @@ feature -- Processing
 			a_dependent_targets: DS_ARRAYED_LIST [STRING]
 			i: INTEGER
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			if has_dependencies then
 					-- Check for targets separated by commas:
 				a_dependent_targets := string_tokens (dependencies, ',')

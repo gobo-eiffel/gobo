@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			a_prefix: STRING
 		do
-			!! parameters.make (1, 5)
+			create parameters.make (1, 5)
 			parameters.put (a_mount1.pathname, 1)
 			a_prefix := a_mount1.library_prefix
 			if a_prefix = Void then

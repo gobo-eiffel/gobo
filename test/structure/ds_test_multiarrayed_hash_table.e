@@ -23,7 +23,7 @@ feature -- Test
 		local
 			a_table: DS_MULTIARRAYED_HASH_TABLE [INTEGER, INTEGER]
 		do
-			!! a_table.make_with_chunk_size (10, 2)
+			create a_table.make_with_chunk_size (10, 2)
 			assert ("empty1", a_table.is_empty)
 			assert_equal ("capacity", 10, a_table.capacity)
 			a_table.put (1, 1)

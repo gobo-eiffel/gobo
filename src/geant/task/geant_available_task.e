@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		local
 			a_value: STRING
 		do
-			!! command.make (a_project)
+			create command.make (a_project)
 			task_make (command, a_xml_element)
 			if has_attribute (Resource_attribute_name) then
 				a_value := attribute_value (Resource_attribute_name)

@@ -35,7 +35,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_agent
+			create Result.make_agent
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -45,7 +45,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_alias
+			create Result.make_alias
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -55,7 +55,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_all
+			create Result.make_all
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -65,7 +65,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_and
+			create Result.make_and
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -75,7 +75,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_as
+			create Result.make_as
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -85,7 +85,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_check
+			create Result.make_check
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -95,7 +95,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_class
+			create Result.make_class
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -105,7 +105,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_create
+			create Result.make_create
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -115,7 +115,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_creation
+			create Result.make_creation
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -125,7 +125,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -135,7 +135,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_debug
+			create Result.make_debug
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -145,7 +145,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_deferred
+			create Result.make_deferred
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -155,7 +155,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_do
+			create Result.make_do
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -165,7 +165,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_else
+			create Result.make_else
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -175,7 +175,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_elseif
+			create Result.make_elseif
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -185,7 +185,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_end
+			create Result.make_end
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -195,7 +195,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_ensure
+			create Result.make_ensure
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -205,7 +205,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_expanded
+			create Result.make_expanded
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -215,7 +215,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_export
+			create Result.make_export
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -225,7 +225,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_external
+			create Result.make_external
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -235,7 +235,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -245,7 +245,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_feature
+			create Result.make_feature
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -255,7 +255,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_from
+			create Result.make_from
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -265,7 +265,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_frozen
+			create Result.make_frozen
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -275,7 +275,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_if
+			create Result.make_if
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -285,7 +285,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_implies
+			create Result.make_implies
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -295,7 +295,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_indexing
+			create Result.make_indexing
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -305,7 +305,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_infix
+			create Result.make_infix
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -315,7 +315,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_inherit
+			create Result.make_inherit
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -325,7 +325,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_inspect
+			create Result.make_inspect
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -335,7 +335,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_invariant
+			create Result.make_invariant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -345,7 +345,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_is
+			create Result.make_is
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -355,7 +355,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_like
+			create Result.make_like
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -365,7 +365,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_local
+			create Result.make_local
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -375,7 +375,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_loop
+			create Result.make_loop
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -385,7 +385,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_not
+			create Result.make_not
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -395,7 +395,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_obsolete
+			create Result.make_obsolete
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -405,7 +405,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_old
+			create Result.make_old
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -415,7 +415,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_once
+			create Result.make_once
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -425,7 +425,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_or
+			create Result.make_or
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -435,7 +435,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_precursor
+			create Result.make_precursor
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -445,7 +445,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_prefix
+			create Result.make_prefix
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -455,7 +455,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_redefine
+			create Result.make_redefine
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -465,7 +465,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_reference
+			create Result.make_reference
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -475,7 +475,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_rename
+			create Result.make_rename
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -485,7 +485,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_require
+			create Result.make_require
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -495,7 +495,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_rescue
+			create Result.make_rescue
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -505,7 +505,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -515,7 +515,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -525,7 +525,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_select
+			create Result.make_select
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -535,7 +535,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_separate
+			create Result.make_separate
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -545,7 +545,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_strip
+			create Result.make_strip
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -555,7 +555,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_then
+			create Result.make_then
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -565,7 +565,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -575,7 +575,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_undefine
+			create Result.make_undefine
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -585,7 +585,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_unique
+			create Result.make_unique
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -595,7 +595,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_until
+			create Result.make_until
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -605,7 +605,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_variant
+			create Result.make_variant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -615,7 +615,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_when
+			create Result.make_when
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -625,7 +625,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_xor
+			create Result.make_xor
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -636,7 +636,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_arrow
+			create Result.make_arrow
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -645,7 +645,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_assign_attempt
+			create Result.make_assign_attempt
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -654,7 +654,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_assign
+			create Result.make_assign
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -663,7 +663,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_bang
+			create Result.make_bang
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -672,7 +672,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_colon
+			create Result.make_colon
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -681,7 +681,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_comma
+			create Result.make_comma
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -690,7 +690,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_div
+			create Result.make_div
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -699,7 +699,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_divide
+			create Result.make_divide
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -708,7 +708,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_dollar
+			create Result.make_dollar
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -717,7 +717,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_dot
+			create Result.make_dot
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -726,7 +726,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_dotdot
+			create Result.make_dotdot
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -735,7 +735,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_equal
+			create Result.make_equal
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -744,7 +744,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_ge
+			create Result.make_ge
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -753,7 +753,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_gt
+			create Result.make_gt
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -762,7 +762,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_le
+			create Result.make_le
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -771,7 +771,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_left_array
+			create Result.make_left_array
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -780,7 +780,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_left_brace
+			create Result.make_left_brace
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -789,7 +789,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_left_bracket
+			create Result.make_left_bracket
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -798,7 +798,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_left_parenthesis
+			create Result.make_left_parenthesis
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -807,7 +807,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_lt
+			create Result.make_lt
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -816,7 +816,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_minus
+			create Result.make_minus
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -825,7 +825,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_mod
+			create Result.make_mod
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -834,7 +834,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_not_equal
+			create Result.make_not_equal
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -843,7 +843,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_plus
+			create Result.make_plus
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -852,7 +852,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_power
+			create Result.make_power
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -861,7 +861,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -870,7 +870,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_right_array
+			create Result.make_right_array
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -879,7 +879,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_right_brace
+			create Result.make_right_brace
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -888,7 +888,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_right_bracket
+			create Result.make_right_bracket
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -897,7 +897,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_right_parenthesis
+			create Result.make_right_parenthesis
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -906,7 +906,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -915,7 +915,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_tilde
+			create Result.make_tilde
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -924,7 +924,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_times
+			create Result.make_times
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -936,7 +936,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: ([0-1]+[bB]).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -954,7 +954,7 @@ feature -- AST leaves
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make (a_value)
+			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -963,7 +963,7 @@ feature -- AST leaves
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make (a_value)
+			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -973,7 +973,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -992,7 +992,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make_prefix (a_scanner.last_literal)
+			create Result.make_prefix (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1002,7 +1002,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: (0x[0-9a-fA-F]+).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1012,7 +1012,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1022,7 +1022,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1032,7 +1032,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: ([^"%\n]*).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1042,7 +1042,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: (([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1052,7 +1052,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1062,7 +1062,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: ((_*[0-9]+_*)+).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1072,7 +1072,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			-- valid_literal: (((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?).recognizes (a_scanner.last_literal)
 		do
-			!! Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1084,7 +1084,7 @@ feature -- AST leaves
 			a_close_not_void: a_close /= Void
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make (a_scanner.last_literal, a_marker, an_open, a_close)
+			create Result.make (a_scanner.last_literal, a_marker, an_open, a_close)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1096,7 +1096,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -1106,7 +1106,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 				if a_left /= Void and then not a_left.position.is_null then
 					Result.set_left_bracket (a_left)
 				end
@@ -1125,7 +1125,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -1139,7 +1139,7 @@ feature -- AST nodes
 			-- New 'all' export clause
 		do
 			if a_clients /= Void then
-				!! Result.make (a_clients)
+				create Result.make (a_clients)
 			end
 		end
 
@@ -1150,8 +1150,8 @@ feature -- AST nodes
 			a_name: ET_IDENTIFIER
 			a_position: ET_POSITION
 		do
-			!! Result.make_with_capacity (1)
-			!! a_name.make (tokens.any_class_name.name)
+			create Result.make_with_capacity (1)
+			create a_name.make (tokens.any_class_name.name)
 			if a_keyword /= Void then
 				a_position := a_keyword.position
 				a_name.set_position (a_position.line, a_position.column)
@@ -1175,7 +1175,7 @@ feature -- AST nodes
 			-- New assignment instruction
 		do
 			if a_target /= Void and a_source /= Void then
-				!! Result.make (a_target, a_source)
+				create Result.make (a_target, a_source)
 			end
 		end
 
@@ -1183,7 +1183,7 @@ feature -- AST nodes
 			-- New assignment-attempt instruction
 		do
 			if a_target /= Void and a_source /= Void then
-				!! Result.make (a_target, a_source)
+				create Result.make (a_target, a_source)
 			end
 		end
 
@@ -1193,7 +1193,7 @@ feature -- AST nodes
 			-- New attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, a_type, a_clients, a_class)
+				create Result.make (a_name, a_type, a_clients, a_class)
 			end
 		end
 
@@ -1201,7 +1201,7 @@ feature -- AST nodes
 			-- New bang creation instruction
 		do
 			if a_target /= Void then
-				!! Result.make (a_type, a_target, a_call)
+				create Result.make (a_type, a_target, a_call)
 				if l /= Void and then not l.position.is_null then
 					Result.set_left_bang (l)
 				end
@@ -1212,7 +1212,7 @@ feature -- AST nodes
 			-- New 'BIT Identifier' type
 		do
 			if an_id /= Void then
-				!! Result.make (an_id)
+				create Result.make (an_id)
 				if a_bit /= Void and then not a_bit.position.is_null then
 					Result.set_bit_keyword (a_bit)
 				end
@@ -1223,7 +1223,7 @@ feature -- AST nodes
 			-- New 'BIT N' type
 		do
 			if an_int /= Void then
-				!! Result.make (an_int)
+				create Result.make (an_int)
 				if a_bit /= Void and then not a_bit.position.is_null then
 					Result.set_bit_keyword (a_bit)
 				end
@@ -1235,7 +1235,7 @@ feature -- AST nodes
 			-- New call agent
 		do
 			if a_name /= Void then
-				!! Result.make (a_target, a_name, args)
+				create Result.make (a_target, a_name, args)
 				if an_agent /= Void then
 					Result.set_agent_keyword (an_agent)
 				end
@@ -1246,7 +1246,7 @@ feature -- AST nodes
 			-- New call expression
 		do
 			if a_name /= Void then
-				!! Result.make (a_target, a_name, args)
+				create Result.make (a_target, a_name, args)
 			end
 		end
 
@@ -1254,7 +1254,7 @@ feature -- AST nodes
 			-- New call instruction
 		do
 			if a_name /= Void then
-				!! Result.make (a_target, a_name, args)
+				create Result.make (a_target, a_name, args)
 			end
 		end
 
@@ -1263,7 +1263,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_check /= Void and then not a_check.position.is_null then
 				Result.set_check_keyword (a_check)
 			end
@@ -1280,7 +1280,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_when /= Void and nb = 0 then
 				Result.set_when_keyword (a_when)
 			end
@@ -1290,7 +1290,7 @@ feature -- AST nodes
 			-- New choice range
 		do
 			if a_lower /= Void and an_upper /= Void then
-				!! Result.make (a_lower, an_upper)
+				create Result.make (a_lower, an_upper)
 			end
 		end
 
@@ -1304,7 +1304,7 @@ feature -- AST nodes
 			-- New Eiffel class type
 		do
 			if a_name /= Void and a_class /= Void then
-				!! Result.make (a_type_mark, a_name, a_class)
+				create Result.make (a_type_mark, a_name, a_class)
 			end
 		end
 
@@ -1313,7 +1313,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void and then not a_left.is_null then
 				Result.set_left_brace (a_left)
 			end
@@ -1331,7 +1331,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -1339,7 +1339,7 @@ feature -- AST nodes
 			-- New conditional
 		do
 			if a_keyword /= Void and then ((a_keyword.is_if or a_keyword.is_inspect) and not a_keyword.position.is_null) then
-				!ET_KEYWORD_EXPRESSION! Result.make (a_keyword, an_expression)
+				create {ET_KEYWORD_EXPRESSION} Result.make (a_keyword, an_expression)
 			else
 				Result := an_expression
 			end
@@ -1352,7 +1352,7 @@ feature -- AST nodes
 			-- New constant attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_constant /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, a_type, a_constant, a_clients, a_class)
+				create Result.make (a_name, a_type, a_constant, a_clients, a_class)
 			end
 		end
 
@@ -1361,7 +1361,7 @@ feature -- AST nodes
 			-- New constrained formal generic parameter
 		do
 			if a_name /= Void and a_constraint /= Void then
-				!! Result.make (a_name, a_constraint, a_creation)
+				create Result.make (a_name, a_constraint, a_creation)
 			end
 		end
 
@@ -1370,14 +1370,14 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_create_expression (a_create: ET_KEYWORD; a_type: ET_CREATION_TYPE; a_call: ET_QUALIFIED_CALL): ET_CREATE_EXPRESSION is
 			-- New create expression
 		do
 			if a_type /= Void then
-				!! Result.make (a_type, a_call)
+				create Result.make (a_type, a_call)
 				if a_create /= Void and then not a_create.position.is_null then
 					Result.set_create_keyword (a_create)
 				end
@@ -1388,7 +1388,7 @@ feature -- AST nodes
 			-- New create instruction
 		do
 			if a_target /= Void then
-				!! Result.make (a_type, a_target, a_call)
+				create Result.make (a_type, a_target, a_call)
 				if a_create /= Void and then not a_create.position.is_null then
 					Result.set_create_keyword (a_create)
 				end
@@ -1407,7 +1407,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if a_clients /= Void then
-				!! Result.make_with_capacity (a_clients, nb)
+				create Result.make_with_capacity (a_clients, nb)
 			end
 		end
 
@@ -1416,13 +1416,13 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_current_address (d: ET_SYMBOL; c: ET_CURRENT): ET_CURRENT_ADDRESS is
 			-- New address of Current
 		do
-			!! Result.make
+			create Result.make
 			if d /= Void and then not d.position.is_null then
 				Result.set_dollar (d)
 			end
@@ -1435,7 +1435,7 @@ feature -- AST nodes
 				if a_compound /= Void then
 					Result := a_compound
 				else
-					!! Result.make
+					create Result.make
 				end
 				Result.set_keyword (a_debug)
 			elseif a_compound /= Void then
@@ -1447,7 +1447,7 @@ feature -- AST nodes
 	new_debug_instruction (a_keys: ET_MANIFEST_STRING_LIST; a_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_DEBUG_INSTRUCTION is
 			-- New debug instruction
 		do
-			!! Result.make (a_keys, a_compound)
+			create Result.make (a_keys, a_compound)
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
@@ -1459,7 +1459,7 @@ feature -- AST nodes
 			-- New deferred function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
 			end
 		end
@@ -1472,7 +1472,7 @@ feature -- AST nodes
 			-- New deferred procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
 			end
 		end
@@ -1495,7 +1495,7 @@ feature -- AST nodes
 			-- New do function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 			end
 		end
@@ -1509,7 +1509,7 @@ feature -- AST nodes
 			-- New do procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 			end
 		end
@@ -1533,7 +1533,7 @@ feature -- AST nodes
 			-- New elseif part
 		do
 			if a_conditional /= Void then
-				!! Result.make (a_conditional, a_then_compound)
+				create Result.make (a_conditional, a_then_compound)
 			end
 		end
 
@@ -1543,7 +1543,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -1551,7 +1551,7 @@ feature -- AST nodes
 			-- New equality expression
 		do
 			if l /= Void and an_op /= Void and r /= Void then
-				!! Result.make (l, an_op, r)
+				create Result.make (l, an_op, r)
 			end
 		end
 
@@ -1560,14 +1560,14 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_expression_address (d: ET_SYMBOL; e: ET_PARENTHESIZED_EXPRESSION): ET_EXPRESSION_ADDRESS is
 			-- New expression address
 		do
 			if e /= Void then
-				!! Result.make (e)
+				create Result.make (e)
 				if d /= Void and then not d.position.is_null then
 					Result.set_dollar (d)
 				end
@@ -1595,7 +1595,7 @@ feature -- AST nodes
 			-- New external function
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
 			end
 		end
@@ -1615,7 +1615,7 @@ feature -- AST nodes
 			-- New external procedure
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
 			end
 		end
@@ -1624,7 +1624,7 @@ feature -- AST nodes
 			-- New feature address
 		do
 			if a_name /= Void then
-				!! Result.make (a_name)
+				create Result.make (a_name)
 				if d /= Void and then not d.position.is_null then
 					Result.set_dollar (d)
 				end
@@ -1635,7 +1635,7 @@ feature -- AST nodes
 			-- New fetaure clause
 		do
 			if a_clients /= Void then
-				!! Result.make (a_clients)
+				create Result.make (a_clients)
 			end
 		end
 
@@ -1644,7 +1644,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_feature_export (a_clients: ET_CLIENTS; nb: INTEGER): ET_FEATURE_EXPORT is
@@ -1653,7 +1653,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if a_clients /= Void then
-				!! Result.make_with_capacity (a_clients, nb)
+				create Result.make_with_capacity (a_clients, nb)
 			end
 		end
 
@@ -1667,7 +1667,7 @@ feature -- AST nodes
 			-- New formal argument
 		do
 			if a_name /= Void and a_type /= Void then
-				!! Result.make (a_name, a_type)
+				create Result.make (a_name, a_type)
 			end
 		end
 
@@ -1682,14 +1682,14 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_formal_comma_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_DECLARED_TYPE): ET_FORMAL_ARGUMENT is
 			-- New formal agument whose name is followed by a comma
 		do
 			if a_name /= Void and a_type /= Void then
-				!ET_FORMAL_COMMA_ARGUMENT! Result.make (a_name, a_type)
+				create {ET_FORMAL_COMMA_ARGUMENT} Result.make (a_name, a_type)
 			end
 		end
 
@@ -1697,7 +1697,7 @@ feature -- AST nodes
 			-- New formal generic parameter
 		do
 			if a_name /= Void then
-				!! Result.make (a_name)
+				create Result.make (a_name)
 			end
 		end
 
@@ -1711,7 +1711,7 @@ feature -- AST nodes
 			-- New formal generic parameter type
 		do
 			if a_name /= Void and then an_index >= 1 then
-				!! Result.make (a_name, an_index)
+				create Result.make (a_name, an_index)
 			end
 		end
 
@@ -1720,7 +1720,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void and then not a_left.position.is_null then
 				Result.set_left_bracket (a_left)
 			end
@@ -1733,7 +1733,7 @@ feature -- AST nodes
 				if a_compound /= Void then
 					Result := a_compound
 				else
-					!! Result.make
+					create Result.make
 				end
 				Result.set_keyword (a_from)
 			elseif a_compound /= Void then
@@ -1747,7 +1747,7 @@ feature -- AST nodes
 			-- New Eiffel generic class type
 		do
 			if a_name /= Void and a_generics /= Void and a_class /= Void then
-				!! Result.make (a_type_mark, a_name, a_generics, a_class)
+				create Result.make (a_type_mark, a_name, a_generics, a_class)
 			end
 		end
 
@@ -1756,7 +1756,7 @@ feature -- AST nodes
 			-- New Eiffel generic named type
 		do
 			if a_name /= Void and a_generics /= Void then
-				!! Result.make (a_type_mark, a_name, a_generics)
+				create Result.make (a_type_mark, a_name, a_generics)
 			end
 		end
 
@@ -1766,7 +1766,7 @@ feature -- AST nodes
 			-- New if instruction
 		do
 			if a_conditional /= Void then
-				!! Result.make (a_conditional, a_then_compound)
+				create Result.make (a_conditional, a_then_compound)
 				Result.set_elseif_parts (an_elseif_parts)
 				Result.set_else_compound (an_else_compound)
 			end
@@ -1810,7 +1810,7 @@ feature -- AST nodes
 			-- New infix "and" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_and (an_operator)
+				create Result.make_and (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1821,7 +1821,7 @@ feature -- AST nodes
 			-- New infix "and then" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_and_then (an_operator)
+				create Result.make_and_then (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1831,7 +1831,7 @@ feature -- AST nodes
 	new_infix_and_then_operator (an_and: ET_KEYWORD; a_then: ET_KEYWORD): ET_INFIX_AND_THEN_OPERATOR is
 			-- New binary "and then" operator
 		do
-			!! Result.make
+			create Result.make
 			if an_and /= Void and then not an_and.position.is_null then
 				Result.set_and_keyword (an_and)
 			end
@@ -1841,7 +1841,7 @@ feature -- AST nodes
 			-- New infix "//" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_div (an_operator)
+				create Result.make_div (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1852,7 +1852,7 @@ feature -- AST nodes
 			-- New infix "//" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_divide (an_operator)
+				create Result.make_divide (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1863,7 +1863,7 @@ feature -- AST nodes
 			-- New infix expression
 		do
 			if l /= Void and r /= Void and a_name /= Void then
-				!! Result.make (l, a_name, r)
+				create Result.make (l, a_name, r)
 			end
 		end
 
@@ -1873,7 +1873,7 @@ feature -- AST nodes
 			an_operator_computed: an_operator /= Void implies (an_operator.computed and then an_operator.value.count > 0)
 		do
 			if an_operator /= Void then
-				!! Result.make (an_operator)
+				create Result.make (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1893,7 +1893,7 @@ feature -- AST nodes
 			-- New infix ">=" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_ge (an_operator)
+				create Result.make_ge (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1904,7 +1904,7 @@ feature -- AST nodes
 			-- New infix ">" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_gt (an_operator)
+				create Result.make_gt (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1915,7 +1915,7 @@ feature -- AST nodes
 			-- New infix "implies" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_implies (an_operator)
+				create Result.make_implies (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1926,7 +1926,7 @@ feature -- AST nodes
 			-- New infix "<=" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_le (an_operator)
+				create Result.make_le (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1937,7 +1937,7 @@ feature -- AST nodes
 			-- New infix "<" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_lt (an_operator)
+				create Result.make_lt (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1948,7 +1948,7 @@ feature -- AST nodes
 			-- New infix "-" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_minus (an_operator)
+				create Result.make_minus (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1968,7 +1968,7 @@ feature -- AST nodes
 			-- New infix "\\" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_mod (an_operator)
+				create Result.make_mod (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1979,7 +1979,7 @@ feature -- AST nodes
 			-- New infix "or" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_or (an_operator)
+				create Result.make_or (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -1990,7 +1990,7 @@ feature -- AST nodes
 			-- New infix "or else" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_or_else (an_operator)
+				create Result.make_or_else (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2000,7 +2000,7 @@ feature -- AST nodes
 	new_infix_or_else_operator (an_or: ET_KEYWORD; an_else: ET_KEYWORD): ET_INFIX_OR_ELSE_OPERATOR is
 			-- New binary "or else" operator
 		do
-			!! Result.make
+			create Result.make
 			if an_or /= Void and then not an_or.position.is_null then
 				Result.set_or_keyword (an_or)
 			end
@@ -2010,7 +2010,7 @@ feature -- AST nodes
 			-- New infix "+" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_plus (an_operator)
+				create Result.make_plus (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2030,7 +2030,7 @@ feature -- AST nodes
 			-- New infix "^" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_power (an_operator)
+				create Result.make_power (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2041,7 +2041,7 @@ feature -- AST nodes
 			-- New infix "*" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_times (an_operator)
+				create Result.make_times (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2052,7 +2052,7 @@ feature -- AST nodes
 			-- New infix "xor" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_xor (an_operator)
+				create Result.make_xor (an_operator)
 				if an_infix /= Void and then not an_infix.position.is_null then
 					Result.set_infix_keyword (an_infix)
 				end
@@ -2064,7 +2064,7 @@ feature -- AST nodes
 			-- New inspect instruction
 		do
 			if a_conditional /= Void then
-				!! Result.make (a_conditional, a_when_parts)
+				create Result.make (a_conditional, a_when_parts)
 				Result.set_else_compound (an_else_compound)
 			end
 		end
@@ -2074,7 +2074,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_invariant /= Void and then not an_invariant.position.is_null then
 				Result.set_invariant_keyword (an_invariant)
 			end
@@ -2085,13 +2085,13 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
 			-- New 'like Current' type
 		do
-			!! Result.make
+			create Result.make
 			if a_like /= Void and then not a_like.position.is_null then
 				Result.set_like_keyword (a_like)
 			end
@@ -2101,7 +2101,7 @@ feature -- AST nodes
 			-- New 'like Identifier' type
 		do
 			if a_name /= Void then
-				!! Result.make (a_name)
+				create Result.make (a_name)
 				if a_like /= Void and then not a_like.position.is_null then
 					Result.set_like_keyword (a_like)
 				end
@@ -2112,7 +2112,7 @@ feature -- AST nodes
 			-- New local variable whose name is followed by a comma
 		do
 			if a_name /= Void and a_type /= Void then
-				!ET_LOCAL_COMMA_VARIABLE! Result.make (a_name, a_type)
+				create {ET_LOCAL_COMMA_VARIABLE} Result.make (a_name, a_type)
 			end
 		end
 
@@ -2126,7 +2126,7 @@ feature -- AST nodes
 			-- New local variable
 		do
 			if a_name /= Void and a_type /= Void then
-				!! Result.make (a_name, a_type)
+				create Result.make (a_name, a_type)
 			end
 		end
 
@@ -2141,7 +2141,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_local /= Void and nb = 0 then
 				Result.set_local_keyword (a_local)
 			end
@@ -2162,7 +2162,7 @@ feature -- AST nodes
 			-- New loop instruction
 		do
 			if an_until_conditional /= Void then
-				!! Result.make (a_from_compound, an_until_conditional, a_loop_compound)
+				create Result.make (a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
 			end
@@ -2173,7 +2173,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void and then not a_left.position.is_null then
 				Result.set_left_symbol (a_left)
 			end
@@ -2191,7 +2191,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -2200,7 +2200,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_left /= Void and then not a_left.position.is_null then
 				Result.set_left_symbol (a_left)
 			end
@@ -2210,7 +2210,7 @@ feature -- AST nodes
 			-- New Eiffel named type
 		do
 			if a_name /= Void then
-				!! Result.make (a_type_mark, a_name)
+				create Result.make (a_type_mark, a_name)
 			end
 		end
 
@@ -2218,7 +2218,7 @@ feature -- AST nodes
 			-- Client list of the form {}
 		do
 			if a_left /= Void and a_right /= Void then
-				!! Result.make (a_left, a_right)
+				create Result.make (a_left, a_right)
 			end
 		end
 
@@ -2244,7 +2244,7 @@ feature -- AST nodes
 			-- New old expression
 		do
 			if e /= Void then
-				!! Result.make (e)
+				create Result.make (e)
 				if an_old /= Void and then not an_old.position.is_null then
 					Result.set_old_keyword (an_old)
 				end
@@ -2269,7 +2269,7 @@ feature -- AST nodes
 			-- New once function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 			end
 		end
@@ -2278,7 +2278,7 @@ feature -- AST nodes
 			-- New once manifest string
 		do
 			if a_string /= Void then
-				!! Result.make (a_string)
+				create Result.make (a_string)
 				if a_once /= Void and then not a_once.position.is_null then
 					Result.set_once_keyword (a_once)
 				end
@@ -2294,7 +2294,7 @@ feature -- AST nodes
 			-- New once procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 			end
 		end
@@ -2304,7 +2304,7 @@ feature -- AST nodes
 			-- New parent
 		do
 			if a_type /= Void then
-				!! Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects)
+				create Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects)
 			end
 		end
 
@@ -2319,7 +2319,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		ensure
 			parents_not_void: nb > 0 implies Result /= Void
 		end
@@ -2328,7 +2328,7 @@ feature -- AST nodes
 			-- New parenthesized expression
 		do
 			if e /= Void then
-				!! Result.make (e)
+				create Result.make (e)
 				if l /= Void and then not l.position.is_null then
 					Result.set_left_parenthesis (l)
 				end
@@ -2340,7 +2340,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if an_ensure /= Void and then not an_ensure.position.is_null then
 				Result.set_ensure_keyword (an_ensure)
 			end
@@ -2354,7 +2354,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_require /= Void and then not a_require.position.is_null then
 				Result.set_require_keyword (a_require)
 			end
@@ -2372,7 +2372,7 @@ feature -- AST nodes
 	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION is
 			-- New precursor expression
 		do
-			!! Result.make (a_parent, args)
+			create Result.make (a_parent, args)
 			Result.set_parent_prefixed (is_parent_prefixed)
 			if not is_parent_prefixed and a_precursor /= Void and then not a_precursor.position.is_null then
 				Result.set_precursor_keyword (a_precursor)
@@ -2382,7 +2382,7 @@ feature -- AST nodes
 	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION is
 			-- New precursor instruction
 		do
-			!! Result.make (a_parent, args)
+			create Result.make (a_parent, args)
 			Result.set_parent_prefixed (is_parent_prefixed)
 			if not is_parent_prefixed and a_precursor /= Void and then not a_precursor.position.is_null then
 				Result.set_precursor_keyword (a_precursor)
@@ -2393,7 +2393,7 @@ feature -- AST nodes
 			-- New prefix expression
 		do
 			if a_name /= Void and e /= Void then
-				!! Result.make (a_name, e)
+				create Result.make (a_name, e)
 			end
 		end
 
@@ -2403,7 +2403,7 @@ feature -- AST nodes
 			an_operator_computed: an_operator /= Void implies (an_operator.computed and then an_operator.value.count > 0)
 		do
 			if an_operator /= Void then
-				!! Result.make (an_operator)
+				create Result.make (an_operator)
 				if a_prefix /= Void and then not a_prefix.position.is_null then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2423,7 +2423,7 @@ feature -- AST nodes
 			-- New prefix "-" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_minus (an_operator)
+				create Result.make_minus (an_operator)
 				if a_prefix /= Void and then not a_prefix.position.is_null then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2443,7 +2443,7 @@ feature -- AST nodes
 			-- New prefix "not" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_not (an_operator)
+				create Result.make_not (an_operator)
 				if a_prefix /= Void and then not a_prefix.position.is_null then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2454,7 +2454,7 @@ feature -- AST nodes
 			-- New prefix "+" feature name
 		do
 			if an_operator /= Void then
-				!! Result.make_plus (an_operator)
+				create Result.make_plus (an_operator)
 				if a_prefix /= Void and then not a_prefix.position.is_null then
 					Result.set_prefix_keyword (a_prefix)
 				end
@@ -2474,7 +2474,7 @@ feature -- AST nodes
 			-- New qualified call
 		do
 			if a_name /= Void then
-				!! Result.make (a_name, args)
+				create Result.make (a_name, args)
 			end
 		end
 
@@ -2482,7 +2482,7 @@ feature -- AST nodes
 			-- New rename pair
 		do
 			if old_name /= Void and new_name /= Void then
-				!! Result.make (old_name, new_name)
+				create Result.make (old_name, new_name)
 			end
 		end
 
@@ -2491,7 +2491,7 @@ feature -- AST nodes
 			-- New rename pair followed by a comma
 		do
 			if old_name /= Void and new_name /= Void then
-				!ET_RENAME! Result.make (old_name, new_name)
+				create {ET_RENAME} Result.make (old_name, new_name)
 			end
 		end
 
@@ -2500,7 +2500,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 		end
 
 	new_rescue_compound (a_rescue: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND is
@@ -2515,7 +2515,7 @@ feature -- AST nodes
 	new_result_address (d: ET_SYMBOL; r: ET_RESULT): ET_RESULT_ADDRESS is
 			-- New address of Result
 		do
-			!! Result.make
+			create Result.make
 			if d /= Void and then not d.position.is_null then
 				Result.set_dollar (d)
 			end
@@ -2526,7 +2526,7 @@ feature -- AST nodes
 			-- New static call expression
 		do
 			if a_type /= Void and a_name /= Void then
-				!! Result.make (a_type, a_name, args)
+				create Result.make (a_type, a_name, args)
 				if a_feature /= Void and then not a_feature.position.is_null then
 					Result.set_feature_keyword (a_feature)
 				end
@@ -2538,7 +2538,7 @@ feature -- AST nodes
 			-- New static call instruction
 		do
 			if a_type /= Void and a_name /= Void then
-				!! Result.make (a_type, a_name, args)
+				create Result.make (a_type, a_name, args)
 				if a_feature /= Void and then not a_feature.position.is_null then
 					Result.set_feature_keyword (a_feature)
 				end
@@ -2556,7 +2556,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			!! Result.make_with_capacity (nb)
+			create Result.make_with_capacity (nb)
 			if a_strip /= Void and then not a_strip.position.is_null then
 				Result.set_strip_keyword (a_strip)
 			end
@@ -2572,7 +2572,7 @@ feature -- AST nodes
 			-- New tagged assertion
 		do
 			if a_tag /= Void then
-				!! Result.make (a_tag)
+				create Result.make (a_tag)
 			end
 		end
 
@@ -2604,14 +2604,14 @@ feature -- AST nodes
 			-- New unique attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				!! Result.make (a_name, a_type, a_clients, a_class)
+				create Result.make (a_name, a_type, a_clients, a_class)
 			end
 		end
 
 	new_variant (a_variant: ET_KEYWORD; a_tag: ET_TAG; an_expression: ET_EXPRESSION): ET_VARIANT is
 			-- New loop variant
 		do
-			!! Result.make (a_tag, an_expression)
+			create Result.make (a_tag, an_expression)
 			if a_variant /= Void and then not a_variant.position.is_null then
 				Result.set_variant_keyword (a_variant)
 			end
@@ -2621,7 +2621,7 @@ feature -- AST nodes
 			-- New when part
 		do
 			if a_choices /= Void then
-				!! Result.make (a_choices, a_then_compound)
+				create Result.make (a_choices, a_then_compound)
 			end
 		end
 
@@ -2631,7 +2631,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				!! Result.make_with_capacity (nb)
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -2644,7 +2644,7 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			an_id_positive: an_id > 0
 		do
-			!! Result.make (a_name, an_id, a_universe)
+			create Result.make (a_name, an_id, a_universe)
 		ensure
 			class_not_void: Result /= Void
 		end

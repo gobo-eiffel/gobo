@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new external clause.
 		do
-			!! include_directories.make
-			!! link_libraries.make
+			create include_directories.make
+			create link_libraries.make
 		end
 
 feature -- Status report

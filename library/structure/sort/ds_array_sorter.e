@@ -49,7 +49,7 @@ feature -- Status report
 			if a_container.count = 0 then
 				Result := True
 			else
-				!! a_comparator.make (comparator)
+				create a_comparator.make (comparator)
 				Result := sorted_with_comparator (a_container, a_comparator)
 			end
 		end
@@ -88,7 +88,7 @@ feature -- Status report
 		local
 			a_comparator: KL_REVERSE_PART_COMPARATOR [G]
 		do
-			!! a_comparator.make (comparator)
+			create a_comparator.make (comparator)
 			Result := subsorted_with_comparator (a_container, a_comparator, lower, upper)
 		end
 
@@ -143,7 +143,7 @@ feature -- Sort
 			a_comparator: KL_REVERSE_PART_COMPARATOR [G]
 		do
 			if a_container.count /= 0 then
-				!! a_comparator.make (comparator)
+				create a_comparator.make (comparator)
 				sort_with_comparator (a_container, a_comparator)
 			end
 		ensure
@@ -189,7 +189,7 @@ feature -- Sort
 		local
 			a_comparator: KL_REVERSE_PART_COMPARATOR [G]
 		do
-			!! a_comparator.make (comparator)
+			create a_comparator.make (comparator)
 			subsort_with_comparator (a_container, a_comparator, lower, upper)
 		ensure
 			subsorted: reverse_subsorted (a_container, lower, upper)

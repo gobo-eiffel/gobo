@@ -399,7 +399,7 @@ feature -- Duplication
 		do
 			i := count
 			if i /= 0 then
-				!! Result.make_with_capacity (i)
+				create Result.make_with_capacity (i)
 				Result.set_left_bracket (left_bracket)
 				Result.set_right_bracket (right_bracket)
 				from until i < 1 loop
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_TYPE_ITEM] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 invariant

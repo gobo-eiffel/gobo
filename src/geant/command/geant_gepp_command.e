@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			precursor (a_project)
 			input_filename := ""
 			output_filename := ""
-			!! defines.make (10)
+			create defines.make (10)
 		end
 
 feature -- Status report

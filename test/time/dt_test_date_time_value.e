@@ -24,19 +24,19 @@ feature -- Test
 		local
 			dtv: DT_DATE_TIME_VALUE
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			assert_equal ("year1", 1967, dtv.year)
 			assert_equal ("month1", 5, dtv.month)
 			assert_equal ("day1", 17, dtv.day)
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			assert_equal ("year2", -156, dtv.year)
 			assert_equal ("month2", 8, dtv.month)
 			assert_equal ("day2", 16, dtv.day)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("year3", 3, dtv.year)
 			assert_equal ("month3", -12, dtv.month)
 			assert_equal ("day3", 123, dtv.day)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			assert_equal ("year4", 0, dtv.year)
 			assert_equal ("month4", 3, dtv.month)
 			assert_equal ("day4", 2, dtv.day)
@@ -48,22 +48,22 @@ feature -- Test
 		local
 			dtv: DT_DATE_TIME_VALUE
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			assert_equal ("hour1", 6, dtv.hour)
 			assert_equal ("minute1", 30, dtv.minute)
 			assert_equal ("second1", 15, dtv.second)
 			assert_equal ("millisecond1", 123, dtv.millisecond)
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			assert_equal ("hour2", 23, dtv.hour)
 			assert_equal ("minute2", 12, dtv.minute)
 			assert_equal ("second2", 3, dtv.second)
 			assert_equal ("millisecond2", 2, dtv.millisecond)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("hour3", 23, dtv.hour)
 			assert_equal ("minute3", -3, dtv.minute)
 			assert_equal ("second3", 12, dtv.second)
 			assert_equal ("millisecond3", -45, dtv.millisecond)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			assert_equal ("hour4", 0, dtv.hour)
 			assert_equal ("minute4", 4, dtv.minute)
 			assert_equal ("second4", 3, dtv.second)
@@ -77,24 +77,24 @@ feature -- Test
 			dv: DT_DATE_VALUE
 			tv: DT_TIME_VALUE
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
-			!DT_DATE! dv.make (1967, 5, 17)
-			!DT_TIME! tv.make_precise (6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE} dv.make (1967, 5, 17)
+			create {DT_TIME} tv.make_precise (6, 30, 15, 123)
 			assert_equal ("date1", dv, dtv.date)
 			assert_equal ("time1", tv, dtv.time)
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
-			!DT_DATE! dv.make (-156, 8, 16)
-			!DT_TIME! tv.make_precise (23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE} dv.make (-156, 8, 16)
+			create {DT_TIME} tv.make_precise (23, 12, 3, 2)
 			assert_equal ("date2", dv, dtv.date)
 			assert_equal ("time2", tv, dtv.time)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
-			!DT_DATE_DURATION! dv.make (3, -12, 123)
-			!DT_TIME_DURATION! tv.make_precise (23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_DURATION} dv.make (3, -12, 123)
+			create {DT_TIME_DURATION} tv.make_precise (23, -3, 12, -45)
 			assert_equal ("date3", dv, dtv.date)
 			assert_equal ("time3", tv, dtv.time)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
-			!DT_DATE_DURATION! dv.make (0, 3, 2)
-			!DT_TIME_DURATION! tv.make_precise (0, 4, 3, 456)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_DURATION} dv.make (0, 3, 2)
+			create {DT_TIME_DURATION} tv.make_precise (0, 4, 3, 456)
 			assert_equal ("date4", dv, dtv.date)
 			assert_equal ("time4", tv, dtv.time)
 		end
@@ -104,16 +104,16 @@ feature -- Test
 		local
 			dtv: DT_DATE_TIME_VALUE
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			assert_equal ("out1", "1967/05/17 06:30:15.123", dtv.out)
 			assert_equal ("precise_out1", "1967/05/17 06:30:15.123", dtv.precise_out)
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			assert_equal ("out2", "-156/08/16 23:12:03.002", dtv.out)
 			assert_equal ("precise_out2", "-156/08/16 23:12:03.002", dtv.precise_out)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("out3", "3/-12/123 23:-3:12.-45", dtv.out)
 			assert_equal ("precise_out3", "3/-12/123 23:-3:12.-45", dtv.precise_out)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			assert_equal ("out4", "0/3/2 0:4:3.456", dtv.out)
 			assert_equal ("precise_out4", "0/3/2 0:4:3.456", dtv.precise_out)
 		end
@@ -123,13 +123,13 @@ feature -- Test
 		local
 			dtv: DT_DATE_TIME_VALUE
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			assert_equal ("date_out1", "1967/05/17", dtv.date_out)
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			assert_equal ("date_out2", "-156/08/16", dtv.date_out)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("date_out3", "3/-12/123", dtv.date_out)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			assert_equal ("date_out4", "0/3/2", dtv.date_out)
 		end
 
@@ -138,16 +138,16 @@ feature -- Test
 		local
 			dtv: DT_DATE_TIME_VALUE
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			assert_equal ("time_out1", "06:30:15.123", dtv.time_out)
 			assert_equal ("precise_time_out1", "06:30:15.123", dtv.precise_time_out)
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			assert_equal ("time_out2", "23:12:03.002", dtv.time_out)
 			assert_equal ("precise_time_out2", "23:12:03.002", dtv.precise_time_out)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			assert_equal ("time_out3", "23:-3:12.-45", dtv.time_out)
 			assert_equal ("precise_time_out3", "23:-3:12.-45", dtv.precise_time_out)
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			assert_equal ("time_out4", "0:4:3.456", dtv.time_out)
 			assert_equal ("precise_time_out4", "0:4:3.456", dtv.precise_time_out)
 		end
@@ -159,7 +159,7 @@ feature -- Test
 			dtv: DT_DATE_TIME_VALUE
 			a_string: STRING
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_to_string (a_string)
@@ -169,7 +169,7 @@ feature -- Test
 			dtv.append_precise_to_string (a_string)
 			assert_equal ("append_precise_to_string1", "G#1967/05/17 06:30:15.123", a_string)
 
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_to_string (a_string)
@@ -179,7 +179,7 @@ feature -- Test
 			dtv.append_precise_to_string (a_string)
 			assert_equal ("append_precise_to_string2", "G#-156/08/16 23:12:03.002", a_string)
 
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_to_string (a_string)
@@ -189,7 +189,7 @@ feature -- Test
 			dtv.append_precise_to_string (a_string)
 			assert_equal ("append_precise_to_string3", "G#3/-12/123 23:-3:12.-45", a_string)
 
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_to_string (a_string)
@@ -206,25 +206,25 @@ feature -- Test
 			dtv: DT_DATE_TIME_VALUE
 			a_string: STRING
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string1", "G#1967/05/17", a_string)
 
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string2", "G#-156/08/16", a_string)
 
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string3", "G#3/-12/123", a_string)
 
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_date_to_string (a_string)
@@ -238,7 +238,7 @@ feature -- Test
 			dtv: DT_DATE_TIME_VALUE
 			a_string: STRING
 		do
-			!DT_DATE_TIME! dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
+			create {DT_DATE_TIME} dtv.make_precise (1967, 5, 17, 6, 30, 15, 123)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_time_to_string (a_string)
@@ -248,7 +248,7 @@ feature -- Test
 			dtv.append_precise_time_to_string (a_string)
 			assert_equal ("append_precise_time_to_string1", "G#06:30:15.123", a_string)
 
-			!DT_DATE_TIME! dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
+			create {DT_DATE_TIME} dtv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_time_to_string (a_string)
@@ -258,7 +258,7 @@ feature -- Test
 			dtv.append_precise_time_to_string (a_string)
 			assert_equal ("append_precise_time_to_string2", "G#23:12:03.002", a_string)
 
-			!DT_DATE_TIME_DURATION! dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_time_to_string (a_string)
@@ -268,7 +268,7 @@ feature -- Test
 			dtv.append_precise_time_to_string (a_string)
 			assert_equal ("append_precise_time_to_string3", "G#23:-3:12.-45", a_string)
 
-			!DT_DATE_TIME_DURATION! dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
+			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456) 
 			a_string := STRING_.make (50)
 			a_string.append_string ("G#")
 			dtv.append_time_to_string (a_string)

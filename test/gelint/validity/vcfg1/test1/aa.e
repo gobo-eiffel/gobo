@@ -11,8 +11,8 @@ feature
 			b: BB
 			d: DD
 		do
-			!! d
-			!! b
+			create d
+			create b
 			print (b.item)
 		end
 

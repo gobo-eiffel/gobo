@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		local
 			a_factory: ET_AST_FACTORY
 		do
-			!! a_factory.make
+			create a_factory.make
 			make_with_factory (a_filename, a_factory, an_error_handler)
 		ensure
 			filename_set: filename = a_filename
@@ -97,7 +97,7 @@ feature -- Access
 			-- Current position
 			-- (Create a new object at each call.)
 		do
-			!ET_FILE_POSITION! Result.make (filename, line, column)
+			create {ET_FILE_POSITION} Result.make (filename, line, column)
 		ensure
 			current_position_not_void: Result /= Void
 		end
@@ -245,7 +245,7 @@ feature {NONE} -- String handler
 	strings: DS_HASH_SET [STRING] is
 			-- Strings known by the current scanner
 		once
-			!! Result.make_equal (1000)
+			create Result.make_equal (1000)
 		ensure
 			strings_not_void: Result /= Void
 			no_void_string: not Result.has (Void)

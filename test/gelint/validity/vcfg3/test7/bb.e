@@ -8,7 +8,7 @@ feature
 
 	g is
 		do
-			!! item1
+			create item1
 			item2 := "gobo2"
 		end
 

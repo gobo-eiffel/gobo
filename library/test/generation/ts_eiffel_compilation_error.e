@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new error reporting that an Eiffel
 			-- compilation error occurred.
 		do
-			!! parameters.make (1, 0)
+			create parameters.make (1, 0)
 		end
 
 feature -- Access

@@ -197,7 +197,7 @@ feature -- Validity
 						-- The sorter is used to detect VCFG-3g, which is only useful
 						-- for SmallEiffel. Create a new sorter to avoid sharing between
 						-- recursive calls to `check_validity'.
-					!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]! a_sorter.make (nb)
+					create {DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]} a_sorter.make (nb)
 				end
 				from i := 1 until i > nb loop
 					a_formal := formal_parameter (i)
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FORMAL_PARAMETER_ITEM] is
 			-- Fixed array routines
 		once
-			!! Result
+			create Result
 		end
 
 invariant

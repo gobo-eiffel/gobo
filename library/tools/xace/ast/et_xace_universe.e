@@ -46,7 +46,7 @@ feature -- Setting
 		do
 			root_class_name := a_name
 			if a_name /= Void and then a_name.count > 0 then
-				!! an_identifier.make (a_name)
+				create an_identifier.make (a_name)
 				set_root_class (an_identifier)
 			else
 				root_class := Void

@@ -69,7 +69,7 @@ feature -- Type processing
 		do
 			a_type := type.resolved_formal_parameters (actual_parameters)
 			if a_type /= type then
-				!! Result.make (colon, a_type)
+				create Result.make (colon, a_type)
 			else
 				Result := Current
 			end
@@ -87,7 +87,7 @@ feature -- Type processing
 		do
 			a_type := type.resolved_identifier_types (a_feature, args, a_class)
 			if a_type /= type then
-				!! Result.make (colon, a_type)
+				create Result.make (colon, a_type)
 			else
 				Result := Current
 			end
@@ -102,7 +102,7 @@ feature -- Duplication
 		do
 			a_type := type.deep_cloned_type
 			if a_type /= type then
-				!! Result.make (colon, a_type)
+				create Result.make (colon, a_type)
 			else
 				Result := Current
 			end

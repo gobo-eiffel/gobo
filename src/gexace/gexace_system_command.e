@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			variables := a_variables
 			error_handler := an_error_handler
 			xace_filename := default_system_filename
-			!! generators.make
+			create generators.make
 		ensure
 			variables_set: variables = a_variables
 			error_handler_set: error_handler = an_error_handler
@@ -47,8 +47,8 @@ feature -- Execution
 			a_system: ET_XACE_SYSTEM
 			a_file: KL_TEXT_INPUT_FILE
 		do
-			!! a_parser.make_with_variables (variables, error_handler)
-			!! a_file.make (xace_filename)
+			create a_parser.make_with_variables (variables, error_handler)
+			create a_file.make (xace_filename)
 			a_file.open_read
 			if a_file.is_open_read then
 				a_parser.parse_file (a_file)

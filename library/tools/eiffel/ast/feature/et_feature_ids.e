@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		require
 			an_id_positive: an_id > 0
 		do
-			!! feature_ids.make (1, 1)
+			create feature_ids.make (1, 1)
 			put (an_id)
 		ensure
 			count_set: count = 1
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			an_id_positive: an_id > 0
 			nb_large_enough: nb > 1
 		do
-			!! feature_ids.make (1, nb)
+			create feature_ids.make (1, nb)
 			put (an_id)
 		ensure
 			count_set: count = 1

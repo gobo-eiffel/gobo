@@ -22,7 +22,7 @@ feature -- Output
 	set_output_to_string is
 			-- Set output to new string.
 		do
-			!! last_output.make (0)
+			create last_output.make (0)
 		ensure
 			last_output_not_void: last_output /= Void
 			last_output_empty: last_output.count = 0

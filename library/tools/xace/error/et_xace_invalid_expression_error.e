@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			an_invalid_expression_not_void: an_invalid_expression /= Void
 			a_position_not_void: a_position /= Void
 		do
-			!! parameters.make (1, 2)
+			create parameters.make (1, 2)
 			parameters.put (an_invalid_expression, 1)
 			parameters.put (a_position.out, 2)
 		end

@@ -44,7 +44,7 @@ feature -- Events
 	on_start is
 			-- Initialize.
 		do
-			!! actual.make
+			create actual.make
 		end
 		
 	on_start_tag (a_ns, a_pre, a_local: STRING) is

@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 	make_list is
 			-- Create a new list node.
 		do
-			!DS_BILINKED_LIST [XM_DTD_ELEMENT_CONTENT]! items.make
+			create {DS_BILINKED_LIST [XM_DTD_ELEMENT_CONTENT]} items.make
 			set_default
 		ensure
 			not_name: not is_name

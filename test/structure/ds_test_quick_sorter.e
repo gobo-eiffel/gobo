@@ -24,9 +24,9 @@ feature -- Test
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 		do
-			!! a_comparator.make
+			create a_comparator.make
 			assert ("a_comparator_not_void", a_comparator /= Void)
-			!! a_sorter.make (a_comparator)
+			create a_sorter.make (a_comparator)
 			assert ("a_sorter_not_void", a_sorter /= Void)
 			assert_same ("comparator_set", a_comparator, a_sorter.comparator)
 		end
@@ -38,15 +38,15 @@ feature -- Test
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 			a_list: DS_ARRAYED_LIST [INTEGER]
 		do
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
-			!! a_list.make (0)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
+			create a_list.make (0)
 			assert ("sorted1", a_sorter.sorted (a_list))
-			!! a_list.make_from_array (<<1, 2, 3, 4, 5>>)
+			create a_list.make_from_array (<<1, 2, 3, 4, 5>>)
 			assert ("sorted2", a_sorter.sorted (a_list))
-			!! a_list.make_from_array (<<1, 3, 5, 4, 2>>)
+			create a_list.make_from_array (<<1, 3, 5, 4, 2>>)
 			assert ("not_sorted1", not a_sorter.sorted (a_list))
-			!! a_list.make_from_array (<<4, 3, 2, 1>>)
+			create a_list.make_from_array (<<4, 3, 2, 1>>)
 			assert ("not_sorted2", not a_sorter.sorted (a_list))
 		end
 
@@ -57,15 +57,15 @@ feature -- Test
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 			a_list: DS_ARRAYED_LIST [INTEGER]
 		do
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
-			!! a_list.make (0)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
+			create a_list.make (0)
 			assert ("reverse_sorted1", a_sorter.reverse_sorted (a_list))
-			!! a_list.make_from_array (<<1, 2, 3, 4, 5>>)
+			create a_list.make_from_array (<<1, 2, 3, 4, 5>>)
 			assert ("not_reverse_sorted1", not a_sorter.reverse_sorted (a_list))
-			!! a_list.make_from_array (<<1, 3, 5, 4, 2>>)
+			create a_list.make_from_array (<<1, 3, 5, 4, 2>>)
 			assert ("not_reverse_sorted2", not a_sorter.reverse_sorted (a_list))
-			!! a_list.make_from_array (<<4, 3, 2, 1>>)
+			create a_list.make_from_array (<<4, 3, 2, 1>>)
 			assert ("reverse_sorted2", a_sorter.reverse_sorted (a_list))
 		end
 
@@ -76,27 +76,27 @@ feature -- Test
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 			a_list: DS_ARRAYED_LIST [INTEGER]
 		do
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
 				-- Sort empty list:
-			!! a_list.make (0)
+			create a_list.make (0)
 			assert ("sorted1", a_sorter.sorted (a_list))
 			a_sorter.sort (a_list)
 			assert ("sorted2", a_sorter.sorted (a_list))
 				-- Sort already sorted list:
-			!! a_list.make_from_array (<<1, 2, 3, 4, 5, 6>>)
+			create a_list.make_from_array (<<1, 2, 3, 4, 5, 6>>)
 			assert ("sorted3", a_sorter.sorted (a_list))
 			a_sorter.sort (a_list)
 			assert ("sorted4", a_sorter.sorted (a_list))
 			assert_iarrays_same ("items1", <<1, 2, 3, 4, 5, 6>>, a_list.to_array)
 				-- Sort unsorted list:
-			!! a_list.make_from_array (<<1, 3, 5, 4, 2>>)
+			create a_list.make_from_array (<<1, 3, 5, 4, 2>>)
 			assert ("not_sorted1", not a_sorter.sorted (a_list))
 			a_sorter.sort (a_list)
 			assert ("sorted5", a_sorter.sorted (a_list))
 			assert_iarrays_same ("items2", <<1, 2, 3, 4, 5>>, a_list.to_array)
 				-- Sort reverse sorted list:
-			!! a_list.make_from_array (<<4, 3, 2, 1>>)
+			create a_list.make_from_array (<<4, 3, 2, 1>>)
 			assert ("not_sorted2", not a_sorter.sorted (a_list))
 			a_sorter.sort (a_list)
 			assert ("sorted6", a_sorter.sorted (a_list))
@@ -110,27 +110,27 @@ feature -- Test
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 			a_list: DS_ARRAYED_LIST [INTEGER]
 		do
-			!! a_comparator.make
-			!! a_sorter.make (a_comparator)
+			create a_comparator.make
+			create a_sorter.make (a_comparator)
 				-- Reverse sort empty list:
-			!! a_list.make (0)
+			create a_list.make (0)
 			assert ("reverse_sorted1", a_sorter.reverse_sorted (a_list))
 			a_sorter.reverse_sort (a_list)
 			assert ("reverse_sorted2", a_sorter.reverse_sorted (a_list))
 				-- Reverse sort sorted list:
-			!! a_list.make_from_array (<<1, 2, 3, 4, 5, 6>>)
+			create a_list.make_from_array (<<1, 2, 3, 4, 5, 6>>)
 			assert ("not_reverse_sorted1", not a_sorter.reverse_sorted (a_list))
 			a_sorter.reverse_sort (a_list)
 			assert ("reverse_sorted3", a_sorter.reverse_sorted (a_list))
 			assert_iarrays_same ("items1", <<6, 5, 4, 3, 2, 1>>, a_list.to_array)
 				-- Reverse sort unsorted list:
-			!! a_list.make_from_array (<<1, 3, 5, 4, 2>>)
+			create a_list.make_from_array (<<1, 3, 5, 4, 2>>)
 			assert ("not_reverse_sorted2", not a_sorter.reverse_sorted (a_list))
 			a_sorter.reverse_sort (a_list)
 			assert ("reverse_sorted4", a_sorter.reverse_sorted (a_list))
 			assert_iarrays_same ("items2", <<5, 4, 3, 2, 1>>, a_list.to_array)
 				-- Reverse sort already reverse sorted list:
-			!! a_list.make_from_array (<<4, 3, 2, 1>>)
+			create a_list.make_from_array (<<4, 3, 2, 1>>)
 			assert ("reverse_sorted5", a_sorter.reverse_sorted (a_list))
 			a_sorter.reverse_sort (a_list)
 			assert ("reverse_sorted6", a_sorter.reverse_sorted (a_list))

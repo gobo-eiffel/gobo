@@ -33,7 +33,7 @@ feature -- Access
 			-- Signature of current feature
 			-- (Create a new object at each call.)
 		do
-			!! Result.make (Void, type)
+			create Result.make (Void, type)
 		end
 
 feature -- Conversion
@@ -41,7 +41,7 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			!! Result.make (a_name, Void, declared_type, Void, Void, Void, clients, current_class)
+			create Result.make (a_name, Void, declared_type, Void, Void, Void, clients, current_class)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
 			Result.set_implementation_class (implementation_class)

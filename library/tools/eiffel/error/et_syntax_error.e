@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		require
 			a_position_not_void: a_position /= Void
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (a_position.to_text, 1)
 		end
 

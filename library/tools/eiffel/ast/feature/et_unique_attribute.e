@@ -100,7 +100,7 @@ feature -- Duplication
 	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
-			!! Result.make (a_name, declared_type, clients, current_class)
+			create Result.make (a_name, declared_type, clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_unique_keyword (unique_keyword)
 			Result.set_semicolon (semicolon)
@@ -113,7 +113,7 @@ feature -- Conversion
 	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			!! Result.make (a_name, declared_type, clients, current_class)
+			create Result.make (a_name, declared_type, clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_unique_keyword (unique_keyword)
 			Result.set_implementation_class (implementation_class)

@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 	make_default is
 			-- Create a new tester.
 		do
-			!! error_handler.make_standard
-			!! variables.make
+			create error_handler.make_standard
+			create variables.make
 		end
 
 	make is
@@ -36,13 +36,13 @@ feature {NONE} -- Initialization
 			make_default
 			read_command_line
 			if output_filename /= Void then
-				!! a_file.make (output_filename)
+				create a_file.make (output_filename)
 				a_file.open_write
 				if a_file.is_open_write then
 					execute (a_file)
 					a_file.close
 				else
-					!! cannot_write.make (output_filename)
+					create cannot_write.make (output_filename)
 					error_handler.report_error (cannot_write)
 				end
 			else
@@ -86,7 +86,7 @@ feature -- Execution
 			a_summary: TS_SUMMARY
 		do
 			a_suite := suite
-			!! a_summary.make
+			create a_summary.make
 			a_summary.set_fail_on_rescue (fail_on_rescue)
 			a_suite.execute (a_summary)
 			a_summary.print_summary (a_suite, a_file)
@@ -182,7 +182,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Tester usage message
 		once
-			!! Result.make ("[-a][-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
+			create Result.make ("[-a][-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -24,7 +24,7 @@ feature
 			b: BB
 			i: INTEGER
 		do
-			!! b
+			create b
 			b.put_string ("toto")
 			b.put_character ('A')
 				-- Should crash here at run-time if the Eiffel

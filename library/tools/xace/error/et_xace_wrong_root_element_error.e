@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			an_element_name_not_empty: an_element_name.count > 0
 			a_position_not_void: a_position /= Void
 		do
-			!! parameters.make (1, 2)
+			create parameters.make (1, 2)
 			parameters.put (an_element_name, 1)
 			parameters.put (a_position.out, 2)
 		end

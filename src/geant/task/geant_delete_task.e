@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			a_fs_element: GEANT_FILESET_ELEMENT
 			a_directoryset_element: GEANT_DIRECTORYSET_ELEMENT
 		do
-			!! command.make (a_project)
+			create command.make (a_project)
 			task_make (command, a_xml_element)
 			if has_attribute (Directory_attribute_name) then
 				a_value := attribute_value (Directory_attribute_name)
@@ -51,12 +51,12 @@ feature {NONE} -- Initialization
 			end
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
-				!! a_fs_element.make (project, a_xml_subelement)
+				create a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
 			end
 			a_xml_subelement := xml_element.element_by_name (Directoryset_element_name)
 			if a_xml_subelement /= Void then
-				!! a_directoryset_element.make (project, a_xml_subelement)
+				create a_directoryset_element.make (project, a_xml_subelement)
 				command.set_directoryset (a_directoryset_element.directoryset)
 			end
 		end

@@ -46,7 +46,7 @@ feature -- Document
 	on_start is
 			-- Initialize document variables.
 		do
-			!! context.make
+			create context.make
 			attributes_make
 			next.on_start
 		end

@@ -105,7 +105,7 @@ feature -- Output
 			if nb = no_line then
 				-- TODO.
 			else
-				!! a_file.make (a_filename)
+				create a_file.make (a_filename)
 				a_file.open_read
 				if a_file.is_open_read then
 					if nb > 1 then

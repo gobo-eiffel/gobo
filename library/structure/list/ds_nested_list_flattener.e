@@ -46,7 +46,7 @@ feature -- Basic operations
 				a_cursor.item.set_index (0)
 				a_cursor.forth
 			end
-			!! pending.make (nested_lists.count)
+			create pending.make (nested_lists.count)
 			from a_cursor.start until a_cursor.after loop
 				a_list := a_cursor.item
 				if a_list.index = 0 then

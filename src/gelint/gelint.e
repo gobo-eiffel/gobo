@@ -60,25 +60,25 @@ feature -- Processing
 				Exceptions.die (1)
 			end
 			if a_filename /= Void then
-				!! a_file.make (a_filename)
+				create a_file.make (a_filename)
 				a_file.open_read
 				if a_file.is_open_read then
 					nb := a_filename.count
 					if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
-						!! an_xace_error_handler.make_standard
-						!! an_xace_variables.make
+						create an_xace_error_handler.make_standard
+						create an_xace_variables.make
 						gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
 						if gobo_eiffel /= Void then
 							an_xace_variables.define_value ("GOBO_EIFFEL", gobo_eiffel)
 						end
 						if all_breaks then
-							!! an_xace_ast_factory.make
-							!! an_eiffel_ast_factory.make
+							create an_xace_ast_factory.make
+							create an_eiffel_ast_factory.make
 							an_eiffel_ast_factory.set_keep_all_breaks (True)
 							an_xace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
-							!! an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
+							create an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
 						else
-							!! an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
+							create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
 						end
 						an_xace_parser.parse_file (a_file)
 						a_file.close
@@ -86,15 +86,15 @@ feature -- Processing
 							a_universe := an_xace_parser.last_universe
 						end
 					else
-						!! a_lace_error_handler.make_standard
+						create a_lace_error_handler.make_standard
 						if all_breaks then
-							!! a_lace_ast_factory.make
-							!! an_eiffel_ast_factory.make
+							create a_lace_ast_factory.make
+							create an_eiffel_ast_factory.make
 							an_eiffel_ast_factory.set_keep_all_breaks (True)
 							a_lace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
-							!! a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
+							create a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
 						else
-							!! a_lace_parser.make (a_lace_error_handler)
+							create a_lace_parser.make (a_lace_error_handler)
 						end
 						a_lace_parser.parse (a_file)
 						a_file.close

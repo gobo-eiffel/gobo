@@ -163,7 +163,7 @@ feature -- AST factory
 			a_clusters_not_void: a_clusters /= Void
 			no_void_cluster: not a_clusters.has (Void)
 		do
-			!! Result.make (a_root_class, a_testgen, a_compile, an_execute, a_clusters)
+			create Result.make (a_root_class, a_testgen, a_compile, an_execute, a_clusters)
 		ensure
 			config_not_void: Result /= Void
 		end
@@ -177,7 +177,7 @@ feature -- AST factory
 			feature_regexp_not_void: feature_regexp /= Void
 			class_prefix_not_void: class_prefix /= Void
 		do
-			!! Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
+			create Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -188,7 +188,7 @@ feature -- AST factory
 		require
 			a_regexp_not_void: a_regexp /= Void
 		do
-			!LX_DFA_REGULAR_EXPRESSION! Result.compile_case_insensitive (a_regexp.name)
+			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive (a_regexp.name)
 			if not Result.is_compiled then
 				Result := Void
 				error_handler.report_regexp_syntax_error (a_regexp, filename)
@@ -230,7 +230,7 @@ feature -- Defaults
 	Default_class_regexp: LX_REGULAR_EXPRESSION is
 			-- Default class regexp
 		once
-			!LX_DFA_REGULAR_EXPRESSION! Result.compile_case_insensitive ("TEST_.*")
+			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive ("TEST_.*")
 		ensure
 			regexp_not_void: Result /= Void
 			regexp_compiled: Result.is_compiled
@@ -239,7 +239,7 @@ feature -- Defaults
 	Default_feature_regexp: LX_REGULAR_EXPRESSION is
 			-- Default feature regexp
 		once
-			!LX_DFA_REGULAR_EXPRESSION! Result.compile_case_insensitive ("test_.*")
+			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive ("test_.*")
 		ensure
 			regexp_not_void: Result /= Void
 			regexp_compiled: Result.is_compiled
@@ -303,9 +303,9 @@ feature -- Defaults
 		local
 			a_name, a_pathname: ET_IDENTIFIER
 		do
-			!! a_name.make ("root")
-			!! a_pathname.make (".")
-			!! Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
+			create a_name.make ("root")
+			create a_pathname.make (".")
+			create Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
 		ensure
 			cluster_not_void: Result /= Void
 		end

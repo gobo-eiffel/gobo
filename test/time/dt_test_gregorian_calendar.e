@@ -23,7 +23,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert ("1852 leap year", gc.leap_year (1852))
 			assert ("1853 not leap year", not gc.leap_year (1853))
 			assert ("1854 not leap year", not gc.leap_year (1854))
@@ -101,7 +101,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("Max_days_in_month", 31, gc.Max_days_in_month)
 		end
 
@@ -110,7 +110,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 				-- Number of days in month (non-leap year 1999):
 			assert_equal ("January 1999", 31, gc.days_in_month (gc.January, 1999))
 			assert_equal ("February 1999", 28, gc.days_in_month (gc.February, 1999))
@@ -144,7 +144,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 				-- Number of days from beginning of year until
 				-- beginning of month (non-leap year 1999):
 			assert_equal ("January 1999", 0, gc.days_at_month (gc.January, 1999))
@@ -180,7 +180,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("Sunday", gc.Monday, gc.next_day (gc.Sunday))
 			assert_equal ("Monday", gc.Tuesday, gc.next_day (gc.Monday))
 			assert_equal ("Tuesday", gc.Wednesday, gc.next_day (gc.Tuesday))
@@ -195,7 +195,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("Sunday", gc.Saturday, gc.previous_day (gc.Sunday))
 			assert_equal ("Monday", gc.Sunday, gc.previous_day (gc.Monday))
 			assert_equal ("Tuesday", gc.Monday, gc.previous_day (gc.Tuesday))
@@ -210,7 +210,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 				-- Number of days since 1 Jan 1970:
 			assert_equal ("1 Jan 2000", 10957, gc.epoch_days (2000, 1, 1))
 			assert_equal ("1 Jan 1970", 0, gc.epoch_days (1970, 1, 1))
@@ -225,7 +225,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("months_in_year", 12, gc.Months_in_year)
 			assert_equal ("days_in_year", 365, gc.Days_in_year)
 			assert_equal ("days_in_leap_year", 366, gc.Days_in_leap_year)
@@ -236,7 +236,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("January", 1, gc.January)
 			assert_equal ("February", 2, gc.February)
 			assert_equal ("March", 3, gc.March)
@@ -256,7 +256,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("days_in_week", 7, gc.Days_in_week)
 		end
 
@@ -265,7 +265,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("Sunday", 1, gc.Sunday)
 			assert_equal ("Monday", 2, gc.Monday)
 			assert_equal ("Tuesday", 3, gc.Tuesday)
@@ -280,7 +280,7 @@ feature -- Test
 		local
 			gc: DT_GREGORIAN_CALENDAR
 		do
-			!!gc
+			create gc
 			assert_equal ("seconds_in_minute", 60, gc.Seconds_in_minute)
 			assert_equal ("seconds_in_hour", 3600, gc.Seconds_in_hour)
 			assert_equal ("seconds_in_day", 86400, gc.Seconds_in_day)

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			an_actual_value_not_void: an_actual_value /= Void
 			a_position_not_void: a_position /= Void
 		do
-			!! parameters.make (1, 4)
+			create parameters.make (1, 4)
 			parameters.put (an_element.name, 1)
 			parameters.put (an_attribute_name, 2)
 			parameters.put (an_actual_value, 3)

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			!! clusters.make (Initial_clusters_capacity)
+			create clusters.make (Initial_clusters_capacity)
 			clusters.put_last (a_cluster)
 		ensure
 			one_cluster: clusters.count = 1
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Create a new empty cluster list.
 		do
-			!! clusters.make (Initial_clusters_capacity)
+			create clusters.make (Initial_clusters_capacity)
 		ensure
 			is_empty: clusters.is_empty
 		end

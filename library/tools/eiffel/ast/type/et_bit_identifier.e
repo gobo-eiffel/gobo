@@ -130,7 +130,7 @@ feature -- Type processing
 					a_constant ?= a_constant_attribute.constant
 				end
 				if a_constant /= Void then
-					!! a_bit_feature.make (a_constant, name, other_feature.first_seed)
+					create a_bit_feature.make (a_constant, name, other_feature.first_seed)
 					a_bit_feature.set_bit_keyword (bit_keyword)
 					Result := a_bit_feature
 				else

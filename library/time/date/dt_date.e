@@ -151,7 +151,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			!! Result.make_canonical_from_dates (other, Current)
+			create Result.make_canonical_from_dates (other, Current)
 		ensure
 			duration_not_void: Result /= Void
 			canonical_duration: Result.is_canonical (other)
@@ -163,7 +163,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			!! Result.make_definite (day_count - other.day_count)
+			create Result.make_definite (day_count - other.day_count)
 		ensure
 			date_duration_not_void: Result /= Void
 			definite_duration: Result.is_definite

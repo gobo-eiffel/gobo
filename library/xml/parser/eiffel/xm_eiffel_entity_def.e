@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		do
 			value := a_value
 			make_scanner
-			!XM_NULL_EXTERNAL_RESOLVER! resolver
+			create {XM_NULL_EXTERNAL_RESOLVER} resolver
 		ensure
 			is_literal: is_literal
 			value_set: value = a_value

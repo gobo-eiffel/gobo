@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (max: INTEGER) is
 			-- Create a new error.
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (max.out, 1)
 		end
 

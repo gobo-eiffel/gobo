@@ -72,7 +72,7 @@ feature -- Duplication
 	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
-			!! Result.make (a_name, arguments, declared_type, obsolete_message,
+			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, language, alias_clause, postconditions, clients,
 				current_class)
 			Result.set_is_keyword (is_keyword)
@@ -87,7 +87,7 @@ feature -- Conversion
 	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			!! Result.make (a_name, arguments, declared_type, obsolete_message,
+			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, language, alias_clause, postconditions, clients,
 				current_class)
 			Result.set_is_keyword (is_keyword)

@@ -80,7 +80,7 @@ feature {NONE} -- Test
 				-- report version
 			assert ("Expat version", version /= Void)
 
-			!! a_file.make ("test.xml")
+			create a_file.make ("test.xml")
 			a_file.open_read
 			assert ("a_file_is_open_read", a_file.is_open_read)
 			parse_from_stream (a_file)

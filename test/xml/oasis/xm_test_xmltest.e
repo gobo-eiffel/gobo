@@ -497,7 +497,7 @@ feature {NONE} -- External entities
 	valid_not_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
 			-- valid not stand alone entities.
 		once
-			!! Result.make
+			create Result.make
 			Result.strings.force (xmltest_valid_not_sa_001_ent, "001.ent")
 			Result.strings.force (xmltest_valid_not_sa_002_ent, "002.ent")
 			Result.strings.force (xmltest_valid_not_sa_003_1_ent, "003-1.ent")
@@ -538,7 +538,7 @@ feature {NONE} -- External entities
 	valid_ext_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
 			-- valid ext sa stand alone entities.
 		once
-			!! Result.make
+			create Result.make
 			Result.strings.force (xmltest_valid_ext_sa_001_ent, "001.ent")
 			Result.strings.force (xmltest_valid_ext_sa_002_ent, "002.ent")
 			Result.strings.force (xmltest_valid_ext_sa_003_ent, "003.ent")
@@ -557,7 +557,7 @@ feature {NONE} -- External entities
 
 	not_wf_ext_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
 		once
-			!! Result.make
+			create Result.make
 			Result.strings.force (xmltest_not_wf_ext_sa_001_ent, "001.ent")
 			Result.strings.force (xmltest_not_wf_ext_sa_002_ent, "002.ent")
 			Result.strings.force (xmltest_not_wf_ext_sa_003_ent, "003.ent")
@@ -565,7 +565,7 @@ feature {NONE} -- External entities
 		
 	not_wf_not_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
 		once
-			!! Result.make
+			create Result.make
 			Result.strings.force (xmltest_not_wf_not_sa_001_ent, "001.ent")
 			Result.strings.force (xmltest_not_wf_not_sa_003_ent, "003.ent")
 			Result.strings.force (xmltest_not_wf_not_sa_004_ent, "004.ent")
@@ -577,7 +577,7 @@ feature {NONE} -- External entities
 		
 	invalid_externals: XM_STRING_EXTERNAL_RESOLVER is
 		once
-			!! Result.make
+			create Result.make
 			Result.strings.force (xmltest_invalid_001_ent, "001.ent")
 			Result.strings.force (xmltest_invalid_002_ent, "002.ent")
 			Result.strings.force (xmltest_invalid_003_ent, "003.ent")
@@ -588,7 +588,7 @@ feature {NONE} -- External entities
 
 	sa_externals: XM_STRING_EXTERNAL_RESOLVER is
 		once
-			!! Result.make
+			create Result.make
 			Result.strings.force (xmltest_valid_sa_097_ent, "097.ent")
 		end
 		

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			define_element: GEANT_DEFINE_ELEMENT
 		do
-			!! command.make (a_project)
+			create command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Config_filename_attribute_name) then
 				a_value := attribute_value (Config_filename_attribute_name)

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		local
 			a_factory: ET_AST_FACTORY
 		do
-			!! a_factory.make
+			create a_factory.make
 			make_with_factory (a_universe, a_factory, an_error_handler)
 		ensure
 			universe_set: universe = a_universe
@@ -61,11 +61,11 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			universe := a_universe
-			!! counters.make (Initial_counters_capacity)
-			!! last_keywords.make (Initial_last_keywords_capacity)
-			!! last_symbols.make (Initial_last_symbols_capacity)
-			!! assertions.make (Initial_assertions_capacity)
-			!! features.make (Initial_features_capacity)
+			create counters.make (Initial_counters_capacity)
+			create last_keywords.make (Initial_last_keywords_capacity)
+			create last_symbols.make (Initial_last_symbols_capacity)
+			create assertions.make (Initial_assertions_capacity)
+			create features.make (Initial_features_capacity)
 			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
 			make_parser_skeleton
 		ensure
@@ -209,7 +209,7 @@ feature {NONE} -- Basic operations
 			a_class := last_class
 			if a_class /= Void then
 				nb := features.count
-				!! named_features.make_map (nb)
+				create named_features.make_map (nb)
 				named_features.set_key_equality_tester (feature_name_tester)
 				from i := 1 until i > nb loop
 					a_feature := features.item (i)
@@ -239,7 +239,7 @@ feature {NONE} -- Basic operations
 		do
 			if a_class /= Void then
 				if a_class.named_features = Void then
-					!! named_features.make_map (0)
+					create named_features.make_map (0)
 					named_features.set_key_equality_tester (feature_name_tester)
 					a_class.set_named_features (named_features)
 				end

@@ -17,7 +17,7 @@ feature -- Access
 	options: ET_XACE_OPTION_NAMES is
 			-- Option names
 		once
-			!! Result
+			create Result
 		ensure
 			options_not_void: Result /= Void
 		end

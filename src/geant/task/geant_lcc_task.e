@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		local
 			a_value: STRING
 		do
-			!! command.make (a_project)
+			create command.make (a_project)
 			task_make (command, an_xml_element)
 				-- -Fo:
 			if has_attribute (Executable_attribute_name) then

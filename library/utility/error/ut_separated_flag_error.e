@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			a_flag_not_void: a_flag /= Void
 		do
-			!! parameters.make (1, 1)
+			create parameters.make (1, 1)
 			parameters.put (a_flag, 1)
 		end
 

@@ -26,7 +26,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Boolean_bits >= 1)
 			assert ("small_enough", a_platform.Boolean_bits <= a_platform.Boolean_bytes * a_platform.Byte_bits)
 		end
@@ -36,7 +36,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", 8, a_platform.Byte_bits)
 		end
 
@@ -45,7 +45,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", a_platform.Character_bytes * a_platform.Byte_bits, a_platform.Character_bits)
 				-- Needed in the implementation of some of the Gobo classes:
 			assert ("more_than_byte", a_platform.Character_bits >= a_platform.Byte_bits)
@@ -56,7 +56,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", a_platform.Double_bytes * a_platform.Byte_bits, a_platform.Double_bits)
 			assert ("more_than_real", a_platform.Double_bits >= a_platform.Real_bits)
 		end
@@ -66,7 +66,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", a_platform.Integer_bytes * a_platform.Byte_bits, a_platform.Integer_bits)
 				-- The code of characters should fit into an integer:
 			assert ("more_than_character", a_platform.Integer_bits >= a_platform.Character_bits)
@@ -79,7 +79,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", a_platform.Pointer_bytes * a_platform.Byte_bits, a_platform.Pointer_bits)
 		end
 
@@ -88,7 +88,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", a_platform.Real_bytes * a_platform.Byte_bits, a_platform.Real_bits)
 		end
 
@@ -97,7 +97,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Boolean_bytes >= 1)
 		end
 
@@ -106,7 +106,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", 1, a_platform.Byte_bytes)
 		end
 
@@ -115,7 +115,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Character_bytes >= 1)
 				-- Needed in the implementation of some of the Gobo classes:
 			assert ("more_than_byte", a_platform.Character_bytes >= a_platform.Byte_bytes)
@@ -126,7 +126,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Double_bytes >= 1)
 			assert ("more_than_real", a_platform.Double_bytes >= a_platform.Real_bytes)
 		end
@@ -136,7 +136,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Integer_bytes >= 1)
 				-- The code of characters should fit into an integer:
 			assert ("more_than_character", a_platform.Integer_bytes >= a_platform.Character_bytes)
@@ -149,7 +149,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Pointer_bytes >= 1)
 		end
 
@@ -158,7 +158,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enough", a_platform.Real_bytes >= 1)
 		end
 
@@ -167,7 +167,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", 0, a_platform.Minimum_byte_code)
 		end
 
@@ -176,7 +176,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", 255, a_platform.Maximum_byte_code)
 		end
 
@@ -185,7 +185,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert_equal ("definition", 0, a_platform.Minimum_character_code)
 		end
 
@@ -194,7 +194,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("large_enoung", a_platform.Maximum_character_code >= a_platform.Maximum_byte_code)
 			assert ("definition", a_platform.Maximum_character_code = (2 ^ a_platform.Character_bits) - 1)
 		end
@@ -204,7 +204,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("meaningfull", a_platform.Minimum_integer <= 0)
 			assert ("definition", a_platform.Minimum_integer = (2 ^ (a_platform.Integer_bits - 2)) * -2)
 			if a_platform.Integer_bits = 32 then
@@ -221,7 +221,7 @@ feature -- Test
 		local
 			a_platform: KL_PLATFORM
 		do
-			!! a_platform
+			create a_platform
 			assert ("meaningfull", a_platform.Maximum_integer >= 0)
 			assert_equal ("definition", - (a_platform.Minimum_integer + 1), a_platform.Maximum_integer)
 			if a_platform.Integer_bits = 32 then

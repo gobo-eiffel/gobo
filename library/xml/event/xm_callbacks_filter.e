@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	make_null is
 			-- Next is null processor.
 		do
-			!XM_CALLBACKS_NULL! next.make
+			create {XM_CALLBACKS_NULL} next.make
 		end
 
 invariant

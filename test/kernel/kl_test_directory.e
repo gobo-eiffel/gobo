@@ -29,13 +29,13 @@ feature -- Test
 				-- Existing directory name:
 			a_name := kernel_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("a_directory_not_void", a_directory /= Void)
 			assert_same ("name_set", a_name, a_directory.name)
 			assert ("is_closed", a_directory.is_closed)
 				-- Dummy directory name:
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("a_directory_not_void", a_directory /= Void)
 			assert_same ("name_set", a_name, a_directory.name)
 			assert ("is_closed", a_directory.is_closed)
@@ -48,7 +48,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_exists1", not a_directory.exists)
 			a_directory.create_directory
 			assert ("exists1", a_directory.exists)
@@ -67,41 +67,41 @@ feature -- Test
 				-- dirname, does exist.
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("exists1", a_directory.exists)
 				-- The current directory exists.
 			a_name := file_system.relative_current_directory
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("exists2", a_directory.exists)
 				-- The following directory, whose pathname has a non-empty
 				-- dirname, does not exist.
 			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "dataoops">>)
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_exists1", not a_directory.exists)
 				-- The following directory, whose pathname has a non-empty
 				-- dirname and a basename containing a space, does not exist.
 			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "data oops">>)
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_exists2", not a_directory.exists)
 				-- A directory with an empty name does not exist.
-			!! a_directory.make ("")
+			create a_directory.make ("")
 			assert ("not_exists3", not a_directory.exists)
 				-- The following pathname exists, but it is a
 				-- file and hence is not an existing directory.
 			a_name := gobo_filename
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("file_exists", a_file.exists)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_exists4", not a_directory.exists)
 				-- Create an empty directory in the current directory and then
 				-- check that this directory, whose pathname has an empty
 				-- dirname, does exist. Then delete this newly created
 				-- directory and check than it does not exist anymore.
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_exists5", not a_directory.exists)
 			a_directory.create_directory
 			assert ("exists3", a_directory.exists)
@@ -116,7 +116,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not a_directory.is_readable)
 			a_directory.create_directory
 			assert ("readable1", a_directory.is_readable)
@@ -135,41 +135,41 @@ feature -- Test
 				-- dirname, is readable.
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("readable1", a_directory.is_readable)
 				-- The current directory is readable.
 			a_name := file_system.relative_current_directory
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("readable2", a_directory.is_readable)
 				-- The following directory, whose pathname has a non-empty
 				-- dirname, is not readable.
 			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "dataoops">>)
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not a_directory.is_readable)
 				-- The following directory, whose pathname has a non-empty
 				-- dirname and a basename containing a space, is not readable.
 			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "data oops">>)
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable2", not a_directory.is_readable)
 				-- A directory with an empty name is not readable.
-			!! a_directory.make ("")
+			create a_directory.make ("")
 			assert ("not_readable3", not a_directory.is_readable)
 				-- The following pathname exists, but it is a
 				-- file and hence is not a readable directory.
 			a_name := gobo_filename
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_file.make (a_name)
+			create a_file.make (a_name)
 			assert ("file_readable", a_file.is_readable)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable4", not a_directory.is_readable)
 				-- Create an empty directory in the current directory and then
 				-- check that this directory, whose pathname has an empty
 				-- dirname, is readable. Then delete this newly created
 				-- directory and check than it is not readable anymore.
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable5", not a_directory.is_readable)
 			a_directory.create_directory
 			assert ("readable3", a_directory.is_readable)
@@ -186,7 +186,7 @@ feature -- Test
 				-- Existing directory name:
 			a_name := kernel_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("is_closed", a_directory.is_closed)
 			a_directory.open_read
 			assert ("is_opened", a_directory.is_open_read)
@@ -194,7 +194,7 @@ feature -- Test
 			assert ("is_closed2", a_directory.is_closed)
 				-- Dummy directory name:
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("is_closed3", a_directory.is_closed)
 			a_directory.open_read
 			assert ("not_opened", not a_directory.is_open_read)
@@ -214,13 +214,13 @@ feature -- Test
 		do
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
 				cvs_dir := "CVS"
 				from
-					!! filenames.make (10)
+					create filenames.make (10)
 				until
 					a_directory.end_of_input
 				loop
@@ -236,8 +236,8 @@ feature -- Test
 						end
 					end
 				end
-				!! name_comparator.make
-				!! name_sorter.make (name_comparator)
+				create name_comparator.make
+				create name_sorter.make (name_comparator)
 				filenames.sort (name_sorter)
 				expected_entries := <<"booleans.txt", "empty.txt", "gobo.txt", "hello.txt", "integers.txt">>
 				assert_arrays_equal ("entries", expected_entries, filenames.to_array)
@@ -263,13 +263,13 @@ feature -- Test
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			file_system.create_directory (a_name)
 			assert ("readable1", file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
 				cvs_dir := "CVS"
 				from
-					!! filenames.make (10)
+					create filenames.make (10)
 				until
 					a_directory.end_of_input
 				loop
@@ -285,8 +285,8 @@ feature -- Test
 						end
 					end
 				end
-				!! name_comparator.make
-				!! name_sorter.make (name_comparator)
+				create name_comparator.make
+				create name_sorter.make (name_comparator)
 				filenames.sort (name_sorter)
 				assert_arrays_equal ("entries", << >>, filenames.to_array)
 				a_directory.close
@@ -306,7 +306,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_name))
@@ -323,12 +323,12 @@ feature -- Test
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_name))
 			a_filename := file_system.pathname (a_name, new_filename ("gobo", ".tmp"))
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -360,11 +360,11 @@ feature -- Test
 			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.create_directory
 			assert ("not_readable3", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable4", not file_system.is_directory_readable (a_name))
-			!! a_parent_directory.make (a_parent)
+			create a_parent_directory.make (a_parent)
 			a_parent_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_parent))
 			assert ("not_readable5", not file_system.is_directory_readable (a_name))
@@ -389,11 +389,11 @@ feature -- Test
 			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.recursive_create_directory
 			assert ("readable1", file_system.is_directory_readable (a_parent))
 			assert ("readable2", file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_parent)
+			create a_directory.make (a_parent)
 			a_directory.recursive_delete
 			assert ("not_readable3", not file_system.is_directory_readable (a_name))
 			assert ("not_readable4", not file_system.is_directory_readable (a_parent))
@@ -407,7 +407,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_name))
@@ -423,7 +423,7 @@ feature -- Test
 			a_name: STRING
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.delete
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
@@ -438,12 +438,12 @@ feature -- Test
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			a_name := new_dirname ("gobo")
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_name))
 			a_filename := file_system.pathname (a_name, new_filename ("gobo", ".tmp"))
-			!! a_file.make (a_filename)
+			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				a_file.put_string ("Hello gobo")
@@ -473,11 +473,11 @@ feature -- Test
 			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
-			!! a_parent_directory.make (a_parent)
+			create a_parent_directory.make (a_parent)
 			a_parent_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_parent))
 			assert ("not_readable3", not file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.create_directory
 			assert ("readable2", file_system.is_directory_readable (a_parent))
 			assert ("readable3", file_system.is_directory_readable (a_name))
@@ -500,11 +500,11 @@ feature -- Test
 			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
-			!! a_parent_directory.make (a_parent)
+			create a_parent_directory.make (a_parent)
 			a_parent_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_parent))
 			assert ("not_readable3", not file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.create_directory
 			assert ("readable2", file_system.is_directory_readable (a_parent))
 			assert ("readable3", file_system.is_directory_readable (a_name))
@@ -532,17 +532,17 @@ feature -- Test
 		do
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			filenames := a_directory.filenames
-			!! filenames_list.make (filenames.count)
+			create filenames_list.make (filenames.count)
 			i := filenames.lower
 			nb := filenames.upper
 			from until i > nb loop
 				filenames_list.put_last (filenames.item (i))
 				i := i + 1
 			end
-			!! name_comparator.make
-			!! name_sorter.make (name_comparator)
+			create name_comparator.make
+			create name_sorter.make (name_comparator)
 			filenames_list.sort (name_sorter)
 			filenames := filenames_list.to_array
 			expected_entries := <<"booleans.txt", "empty.txt", "gobo.txt", "hello.txt", "integers.txt">>
@@ -567,11 +567,11 @@ feature -- Test
 			a_name := file_system.pathname (a_parent, a_child)
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
-			!! a_parent_directory.make (a_parent)
+			create a_parent_directory.make (a_parent)
 			a_parent_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_parent))
 			assert ("not_readable3", not file_system.is_directory_readable (a_name))
-			!! a_directory.make (a_name)
+			create a_directory.make (a_name)
 			a_directory.create_directory
 			assert ("readable2", file_system.is_directory_readable (a_parent))
 			assert ("readable3", file_system.is_directory_readable (a_name))
@@ -583,15 +583,15 @@ feature -- Test
 				--          a_child/
 				--          a_filename
 			directory_names := a_parent_directory.directory_names
-			!! directory_names_list.make (directory_names.count)
+			create directory_names_list.make (directory_names.count)
 			i := directory_names.lower
 			nb := directory_names.upper
 			from until i > nb loop
 				directory_names_list.put_last (directory_names.item (i))
 				i := i + 1
 			end
-			!! name_comparator.make
-			!! name_sorter.make (name_comparator)
+			create name_comparator.make
+			create name_sorter.make (name_comparator)
 			directory_names_list.sort (name_sorter)
 			directory_names := directory_names_list.to_array
 			expected_entries := << a_child >>

@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			a_string: STRING
 		do
-			!! parameters.make (1, 5)
+			create parameters.make (1, 5)
 			parameters.put (an_element.name, 1)
 			parameters.put (an_attribute_name, 2)
 			parameters.put (an_actual_value, 3)

@@ -33,9 +33,9 @@ feature -- Processing
 			if False then resurrect_code end
 
 			Arguments.set_program_name ("gelex")
-			!! error_handler.make_standard
-			!! description.make
-			!! command_line.make (error_handler)
+			create error_handler.make_standard
+			create description.make
+			create command_line.make (error_handler)
 			command_line.read_options (description)
 			parse_input_file
 			build_dfa
@@ -51,17 +51,17 @@ feature -- Processing
 			a_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
-			!! parser.make_from_description (description, error_handler)
+			create parser.make_from_description (description, error_handler)
 			parser.set_options_overrider (Current)
 			filename := description.input_filename
 			if filename /= Void then
-				!! a_file.make (filename)
+				create a_file.make (filename)
 				a_file.open_read
 				if a_file.is_open_read then
 					parser.parse_file (a_file)
 					a_file.close
 				else
-					!! cannot_read.make (filename)
+					create cannot_read.make (filename)
 					error_handler.report_error (cannot_read)
 					Exceptions.die (1)
 				end
@@ -79,7 +79,7 @@ feature -- Processing
 		local
 			command_line: GELEX_COMMAND_LINE
 		do
-			!! command_line.make (error_handler)
+			create command_line.make (error_handler)
 			command_line.read_options (a_description)
 		end
 
@@ -100,16 +100,16 @@ feature -- Processing
 				a_filename := "standard input"
 			end
 			if description.full_table then
-				!LX_FULL_DFA! dfa.make (description)
+				create {LX_FULL_DFA} dfa.make (description)
 			else
-				!! compressed_dfa.make (description)
+				create compressed_dfa.make (description)
 				if not description.no_warning then
 						-- Emit a warning message if rules contain
 						-- "dangerous" variable trailing context.
 					rules := compressed_dfa.dangerous_variable_trail_rules
 					nb := rules.count
 					from i := 1 until i > nb loop
-						!! dangerous_trailing.make (a_filename, rules.item (i).line_nb)
+						create dangerous_trailing.make (a_filename, rules.item (i).line_nb)
 						error_handler.report_warning (dangerous_trailing)
 						i := i + 1
 					end
@@ -125,7 +125,7 @@ feature -- Processing
 				from i := 1 until i > nb loop
 					a_rule := rules.item (i)
 					if not a_rule.is_useful then
-						!! rule_not_used.make (a_filename, a_rule.line_nb)
+						create rule_not_used.make (a_filename, a_rule.line_nb)
 						error_handler.report_warning (rule_not_used)
 					end
 					i := i + 1
@@ -134,7 +134,7 @@ feature -- Processing
 					-- has been sepcified and the default rule can
 					-- be matched.
 				if description.no_default_rule and rules.item (i).is_useful then
-					!! default_used.make (a_filename)
+					create default_used.make (a_filename)
 					error_handler.report_warning (default_used)
 				end
 			end
@@ -153,13 +153,13 @@ feature -- Processing
 		do
 			filename := description.output_filename
 			if filename /= Void then
-				!! a_file.make (filename)
+				create a_file.make (filename)
 				a_file.open_write
 				if a_file.is_open_write then
 					dfa.print_scanner (a_file)
 					a_file.close
 				else
-					!! cannot_write.make (filename)
+					create cannot_write.make (filename)
 					error_handler.report_error (cannot_write)
 					Exceptions.die (1)
 				end
@@ -180,13 +180,13 @@ feature -- Processing
 			if description.backing_up_report then
 				filename := description.backing_up_filename
 				if filename /= Void then
-					!! a_file.make (filename)
+					create a_file.make (filename)
 					a_file.open_write
 					if a_file.is_open_write then
 						dfa.print_backing_up_report (a_file)
 						a_file.close
 					else
-						!! cannot_write.make (filename)
+						create cannot_write.make (filename)
 						error_handler.report_error (cannot_write)
 						Exceptions.die (1)
 					end
@@ -226,18 +226,18 @@ feature {NONE} -- Implementation
 			et11: KL_EQUALITY_TESTER [LX_SINGLETON]
 			et12: KL_EQUALITY_TESTER [LX_SYMBOL_CLASS]
 		do
-			!! et1
-			!! et2
-			!! et3
-			!! et4
-			!! et5
-			!! et6
-			!! et7
-			!! et8
-			!! et9
-			!! et10
-			!! et11
-			!! et12
+			create et1
+			create et2
+			create et3
+			create et4
+			create et5
+			create et6
+			create et7
+			create et8
+			create et9
+			create et10
+			create et11
+			create et12
 		end
 
 invariant

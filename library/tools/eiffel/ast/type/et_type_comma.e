@@ -69,7 +69,7 @@ feature -- Type processing
 		do
 			a_type := type.resolved_formal_parameters (actual_parameters)
 			if a_type /= type then
-				!! Result.make (a_type, comma)
+				create Result.make (a_type, comma)
 			else
 				Result := Current
 			end
@@ -87,7 +87,7 @@ feature -- Type processing
 		do
 			a_type := type.resolved_identifier_types (a_feature, args, a_class)
 			if a_type /= type then
-				!! Result.make (a_type, comma)
+				create Result.make (a_type, comma)
 			else
 				Result := Current
 			end
@@ -104,7 +104,7 @@ feature -- Type processing
 		do
 			a_type := type.resolved_named_types (a_class, ast_factory)
 			if a_type /= type then
-				!! Result.make (a_type, comma)
+				create Result.make (a_type, comma)
 			else
 				Result := Current
 			end
@@ -122,7 +122,7 @@ feature -- Conversion
 		do
 			a_base_type := type.base_type (a_feature, a_type)
 			if a_base_type /= type then
-				!! Result.make (a_base_type, comma)
+				create Result.make (a_base_type, comma)
 			else
 				Result := Current
 			end
@@ -137,7 +137,7 @@ feature -- Duplication
 		do
 			a_type := type.deep_cloned_type
 			if a_type /= type then
-				!! Result.make (a_type, comma)
+				create Result.make (a_type, comma)
 			else
 				Result := Current
 			end

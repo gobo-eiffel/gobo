@@ -47,23 +47,23 @@ feature -- Test
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_count, new_count: INTEGER
 		do
-			!! an_xace_file.make (xace_filename)
+			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
 			assert ("xace_file_opened", an_xace_file.is_open_read)
-			!! an_xace_error_handler.make_standard
-			!! an_xace_variables.make
+			create an_xace_error_handler.make_standard
+			create an_xace_variables.make
 			an_xace_variables.define_value ("GOBO_EIFFEL", eiffel_compiler.vendor)
-			!! an_xace_ast_factory.make
-			!! an_eiffel_ast_factory.make
+			create an_xace_ast_factory.make
+			create an_eiffel_ast_factory.make
 			an_eiffel_ast_factory.set_keep_all_breaks (True)
 			an_xace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
-			!! an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
+			create an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
 			an_xace_parser.parse_file (an_xace_file)
 			an_xace_file.close
 			assert ("xace_parsed", not an_xace_error_handler.has_error)
 			a_universe := an_xace_parser.last_universe
 			assert ("universe_not_void", a_universe /= Void)
-			!! a_printer.make_null
+			create a_printer.make_null
 			a_universe.preparse_multiple
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -87,7 +87,7 @@ feature -- Test
 							if new_count = old_count + 1 then
 									-- Do not handle files containing more
 									-- than one class text (allowed by VE).
-								!! a_file.make ("gobo.txt")
+								create a_file.make ("gobo.txt")
 								a_file.open_write
 								assert ("is_open_write", a_file.is_open_write)
 								a_printer.set_file (a_file)
