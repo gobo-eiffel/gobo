@@ -48,10 +48,12 @@
 		<element name="system">
 			<attribute name="name"/>
 			<ref name="description"/>
-			<element name="root">
-				<attribute name="class"/>
-				<attribute name="creation"/>
-			</element>
+      <oneOrMore> <!-- use if/unless flags to enable/disable just one -->
+        <element name="root">
+          <attribute name="class"/>
+          <attribute name="creation"/>
+        </element>
+      </oneOrMore>
 			<oneOrMore>
 				<choice>
 					<ref name="option"/>
