@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<cluster name="ve_kernel" location="${VE_Lib}">
+	<cluster name="Kernel" />
+
+	<cluster name="Misc" >
+		<cluster name="Pool" />
+	</cluster>
+
+	<cluster name="Tools" >
+		<cluster name="gArgs" />
+	</cluster>
+
+</cluster>
