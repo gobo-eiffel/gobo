@@ -402,7 +402,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $6
+			-- dollar8: $8 = name of corresponding feature in class $5
 			-- dollar9: $9 = name of feature containing precondition
 			-- dollar10: $10 = name of client of feature `$9'
 		end
@@ -614,7 +614,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $6
+			-- dollar8: $8 = name of corresponding feature in class $5
 			-- dollar9: $9 = name of feature containing precondition
 			-- dollar10: $10 = name of client of feature `$9'
 		end
@@ -9735,14 +9735,14 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 	vaol1a_default_template: STRING is "[$1] class $5 ($3,$4): old expression does not appear in a postcondition."
-	vape0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $5 appearing in the precondition of `$8' is not exported to class $9 to which feature `$8' is exported."
-	vape0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $8 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0d_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
-	vape0e_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $5 appearing in the precondition of `$8' is not exported to class $9 to which feature `$8' is exported."
-	vape0f_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0g_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $8 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0h_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
+	vape0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $5 appearing in the precondition of `$8' is not exported to class $9 to which feature `$8' is exported."
+	vape0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0d_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
+	vape0e_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $5 appearing in the precondition of `$8' is not exported to class $9 to which feature `$8' is exported."
+	vape0f_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0g_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0h_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
 	vave0a_default_template: STRING is "[$1] class $5 ($3,$4): loop variant expression of non-INTEGER type '$6'."
 	vave0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): loop variant expression of non-INTEGER type '$7'."
 	vcch1a_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
