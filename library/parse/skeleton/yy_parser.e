@@ -39,9 +39,12 @@ feature -- Access
 
 	error_count: INTEGER is
 			-- Number of errors detected during last parsing
+			-- (`error_count' can be positive even though
+			-- `syntax_error' is false. This can happen when
+			-- error recovery occurred.)
 		deferred
 		ensure
-			error_count_positive: Result >= 0
+			error_count_non_negative: Result >= 0
 		end
 
 feature {YY_PARSER_ACTION} -- Status report
