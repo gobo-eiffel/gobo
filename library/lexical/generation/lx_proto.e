@@ -7,12 +7,11 @@ indexing
 		%will have an identical transition table) or nearly redundant (a %
 		%state processed later will have many of the same out-transitions)"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_PROTO
 

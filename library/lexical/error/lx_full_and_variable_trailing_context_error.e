@@ -5,12 +5,11 @@ indexing
 		"Error: The use of variable trailing context is %
 		%incompatible with full tables"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR
 

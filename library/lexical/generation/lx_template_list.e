@@ -18,12 +18,11 @@ indexing
 		%on the other hand, go to the common state on every %
 		%transition symbol, and therefore cost only one difference"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_TEMPLATE_LIST
 
@@ -79,9 +78,10 @@ feature -- Access
 			if meta_equiv_classes = Void then
 				Result := template
 			else
-					--| Bug in ISE 3.3.9 in final mode code generation.
-					--| Create `transitions' (not declared as "like anchor")
-					--| first and assign it to `Result'.
+					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
+					-- Create `transitions' (not declared as "like anchor")
+					-- first and assign it to `Result'.
+				-- !! Result.make (1, meta_equiv_classes.capacity)
 				!! transitions.make (1, meta_equiv_classes.capacity)
 				Result := transitions
 				nb := template.upper

@@ -4,12 +4,11 @@ indexing
 
 		"Deterministic finite automota"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_DFA
 
@@ -326,7 +325,7 @@ invariant
 	positive_start_states_count: start_states_count > 0
 	start_states_count_small_enough: start_states_count <= states.count
 	positive_backing_up_count: backing_up_count >= 0
---	min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
---	max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
+	-- min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
+	-- max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
 
 end -- class LX_DFA

@@ -4,12 +4,11 @@ indexing
 
 		"Error: Unrecognized rule"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
+	library: "Gobo Eiffel Lexical Library"
 	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_UNRECOGNIZED_RULE_ERROR
 

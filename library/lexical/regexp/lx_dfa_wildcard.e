@@ -36,11 +36,10 @@ indexing
 		%                  where pattern-list is a list of one or more         %
 		%                  patterns separated by a '|'.                        "
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
 	revision:   "$Revision$"
 
 class LX_DFA_WILDCARD

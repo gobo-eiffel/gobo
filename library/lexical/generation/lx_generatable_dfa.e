@@ -4,12 +4,11 @@ indexing
 
 		"DFA equipped with lexical analyzer generator"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class LX_GENERATABLE_DFA
 
@@ -28,7 +27,7 @@ inherit
 
 	UT_CHARACTER_CODES
 		export
-			-- Bug in SE -0.81: Unable to load class NONE!
+			-- TODO: Bug in SE -0.81: Unable to load class NONE!
 			-- {NONE} all
 		end
 
@@ -282,7 +281,7 @@ feature {NONE} -- Generation
 							a_file.put_integer (next_rule.id)
 							i := i + 1
 						elseif next_rule.has_trail_context then
-			-- Warning: ("action duplicated due to trailing context")
+								-- Warning: ("action duplicated due to trailing context")
 							not_shared := True
 						else
 							not_shared := True
@@ -294,7 +293,7 @@ feature {NONE} -- Generation
 					if i <= nb then
 						next_rule := yy_rules.item (i)
 						if next_rule.action = rule.action then
-			-- Warning: ("action duplicated due to trailing context")
+							-- Warning: ("action duplicated due to trailing context")
 						end
 					end
 				end
@@ -406,7 +405,7 @@ feature {NONE} -- Generation
 						-- the head and trail have variable size.
 						-- The work is done using another mechanism
 						-- (variable_trail_context).
-					-- (report performance degradation)
+					-- TODO: Report performance degradation.
 				end
 			end
 			if yyLine_used then
@@ -456,7 +455,7 @@ feature {NONE} -- Generation
 					a_file.put_integer (head_count)
 					a_file.put_character ('%N')
 				elseif head_count /= 0 then
-						-- yy_position := yy_position + text_count
+						-- The next line means: "yy_position := yy_position + text_count"
 					a_file.put_string ("%Tyy_position := yy_position + yy_end - yy_start - yy_more_len%N")
 				end
 			end

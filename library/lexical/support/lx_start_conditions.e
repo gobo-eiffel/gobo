@@ -4,12 +4,11 @@ indexing
 
 		"Lexical analyzer start condition lists"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_START_CONDITIONS
 
@@ -114,8 +113,8 @@ feature -- Access
 			names_not_void: Result /= Void
 			lower_set: Result.lower = 0
 			same_count: Result.count = count
---			definition: forall i in 1..count,
---				Result.item (i - 1) = item (i).name
+			-- definition: forall i in 1..count,
+			-- 	Result.item (i - 1) = item (i).name
 		end
 
 feature -- Element change

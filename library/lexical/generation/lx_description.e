@@ -4,12 +4,11 @@ indexing
 
 		"Lexical analyzer descriptions"
 
-	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_DESCRIPTION
 
@@ -466,44 +465,6 @@ feature {NONE} -- Constants
 
 	Initial_max_rules: INTEGER is 250
 			-- Maximum number of rules
-
-feature -- Not supported yet
-
---	fast_table: BOOLEAN
---			-- Should the Jacobson method of table representation be used?
---			-- ("-F" option)
-
---	trace_mode: BOOLEAN
---			-- Should the program run in trace mode?
---			-- ("-T" option)
-
---	print_stats: BOOLEAN
---			-- Should statistics be dumped?
---			-- ("-v" option)
-
---	set_fast_table (b: like fast_table) is
---			-- Set `fast_table' to `b'.
---		do
---			fast_table := b
---		ensure
---			fast_table_set: fast_table = b
---		end
-
---	set_trace_mode (b: like trace_mode) is
---			-- Set `trace_mode' to `b'.
---		do
---			trace_mode := b
---		ensure
---			trace_mode_set: trace_mode = b
---		end
-
---	set_print_stats (b: like print_stats) is
---			-- Set `print_stats' to `b'.
---		do
---			print_stats := b
---		ensure
---			print_stats_set: print_stats = b
---		end
 
 invariant
 
