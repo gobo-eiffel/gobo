@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Shared Eiffel compiler used to compiled this program"
+		"Shared Eiffel compiler used to compile this program"
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
