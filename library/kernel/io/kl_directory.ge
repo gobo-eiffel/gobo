@@ -336,26 +336,11 @@ feature -- Basic operations
 #ifdef SE || VE
 			a_name: STRING
 			a_dir: KL_DIRECTORY
+			a_pathname: STRING
 #endif
 		do
 			if not rescued then
-#ifdef SE
-				basic_directory.remove_files_of (name)
-				open_read
-				if is_open_read then
-					from read_entry until end_of_input loop
-						a_name := last_entry
-						if not (a_name.is_equal (".") or a_name.is_equal ("..")) then
-							!! a_dir.make (name + "/" + a_name)
-							a_dir.recursive_delete
-						end
-						read_entry
-					end
-					close
-				end
-				delete
-#endif
-#ifdef VE
+#ifdef VE || SE
 				open_read
 				if is_open_read then
 					from read_entry until end_of_input loop
