@@ -8,7 +8,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1996, Eric Bezault"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
