@@ -22,6 +22,13 @@ inherit
 
 feature -- Access
 
+	name: STRING is
+			-- Name of feature
+		deferred
+		ensure
+			name_not_void: Result /= Void
+		end
+
 	position: ET_POSITION
 			-- Position in source code
 
@@ -36,7 +43,6 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
--- TODO
 				Result := same_type (other)
 			end
 		end
