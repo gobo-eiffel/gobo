@@ -27,7 +27,6 @@ inherit
 
 	DT_DATE
 		rename
-			add_duration as add,
 			duration as relative_duration,
 			date_duration as relative_date_duration,
 			infix "-" as dt_infix_minus,
@@ -101,6 +100,15 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	add (a_duration: like relative_duration) is
+			-- Add `a_duration' to current date.
+			-- (Add `a_duration.year' and `a_duration.month' first, then
+			-- set `day' to `day.min (days_in_month (new_month, new_year))'
+			-- and finally add `a_duration.day'.)
+		do
+			add_date_duration (a_duration)
+		end
 
 	day_add (d: INTEGER) is
 			-- Add `d' days to the current date.

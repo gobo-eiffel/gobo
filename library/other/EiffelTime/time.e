@@ -29,7 +29,6 @@ inherit
 		rename
 			duration as relative_duration,
 			time_duration as relative_time_duration,
-			add_duration as add,
 			infix "-" as dt_infix_minus,
 			Days_in_year as Days_in_non_leap_year,
 			leap_year as i_th_leap_year,
@@ -134,6 +133,12 @@ feature -- Setting
 		end
 
 feature -- Element change
+
+	add (a_duration: like relative_duration) is
+			-- Add `a_duration' to current time.
+		do
+			add_time_duration (a_duration)
+		end
 
 	fine_second_add (s: DOUBLE) is
 			-- Add `f' seconds to current time.

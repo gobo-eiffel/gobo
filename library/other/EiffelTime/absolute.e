@@ -18,7 +18,6 @@ inherit
 	DT_ABSOLUTE_TIME
 		rename
 			duration as relative_duration,
-			add_duration as add,
 			infix "-" as dt_infix_minus
 		redefine
 			relative_duration
@@ -46,6 +45,15 @@ feature -- Measurement
 			Result := relative_duration (origin)
 		ensure
 			definition: Result = relative_duration (origin)
+		end
+
+feature -- Element change
+
+	add (a_duration: like relative_duration) is
+			-- Add `a_duration' to `Current'.
+		require
+			a_duration_not_void: a_duration /= Void
+		deferred
 		end
 
 end -- class ABSOLUTE

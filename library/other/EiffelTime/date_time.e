@@ -36,7 +36,7 @@ inherit
 			set_storage as set_date_storage,
 			make as make_date
 		undefine
-			hash_code, add,
+			hash_code, add_duration,
 			relative_duration,
 			append_to_string,
 			infix "<", out,
@@ -44,7 +44,7 @@ inherit
 			relative_date_duration,
 			copy, is_equal
 		redefine
-			origin
+			origin, add
 		end
 
 	TIME
@@ -59,10 +59,10 @@ inherit
 			set_storage as set_time_storage
 		undefine
 			origin, hash_code,
-			infix "<",
+			add, infix "<",
 			add_milliseconds,
 			add_minutes, add_hours,
-			add, add_seconds,
+			add_duration, add_seconds,
 			relative_duration,
 			append_to_string,
 			append_precise_to_string,
@@ -74,7 +74,6 @@ inherit
 
 	DT_DATE_TIME
 		rename
-			add_duration as add,
 			duration as relative_duration,
 			date_duration as relative_date_duration,
 			time_duration as relative_time_duration,
@@ -222,6 +221,19 @@ feature -- Access
 			-- Duration between `other' and current time
 		do
 			!! Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
+		end
+
+feature -- Element change
+
+	add (a_duration: like relative_duration) is
+			-- Add `a_duration' to current date time.
+			-- (Add `a_duration.year' and `a_duration.month' first, then
+			-- set `day' to `day.min (day_in_month (new_month, new_year))'
+			-- and finally add `a_duration.day', `a_duration.hour',
+			-- `a_duration.minute', `a_duration.second' and 
+			-- `a_duration.millisecond'.)
+		do
+			add_duration (a_duration)
 		end
 
 feature -- Comparison
