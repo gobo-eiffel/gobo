@@ -336,7 +336,7 @@ feature -- Initialization
 			!! storage.make_filled ('%U', suggested_capacity)
 			ve_make_byte_storage ('%U', 0)
 #else
-#ifdef HACT
+#ifdef HACT || ISE
 			count := 0
 #endif
 			old_make (suggested_capacity)
@@ -2938,6 +2938,7 @@ feature {NONE} -- Inapplicable
 			-- (ELKS 2001 STRING)
 		do
 				-- Preserve postcondition inherited from STRING.
+			count := 0
 			precursor
 			wipe_out
 		end
