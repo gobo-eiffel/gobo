@@ -24,7 +24,7 @@ To compile this example:
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
    ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat (after possible modifications).
+   the script se.bat or se.sh (after possible modifications).
 2. Run the program using:
 
        gegrep [-i] regexp [filename...]
@@ -34,7 +34,7 @@ To compile this example:
      -i    Produce a case-insensitive scanner.
      regexp
            Regular expression used to search the files.
-     filename....
+     filename...
            Names of the files to be searched. Use standard
            input if no filename is specified.
 
