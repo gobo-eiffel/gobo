@@ -45,12 +45,20 @@ Version ?
 	* XM_PARSER.positions contains full info to locate errors
 	  in external entities.
 	* Eiffel parser accepts UTF8 files that start with a BOM.
-  * Expat parser accepts genuine UC_STRINGs as input.
+	* Expat parser accepts genuine UC_STRINGs as input.
 
 	Gobo Eiffel Kernel Library
 
 	* KL_DOUBLE_ROUTINES.log2: new feature.
 	* KL_INTEGER_ROUTINES.power: new feature.
+
+	Gobo Eiffel Math/Decimal Library
+	
+	* New library, incorporated from the SAFE project (http://safe.sf.net)
+	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic, 
+	  with unrounded and integer arithmetic as a subset 
+	  (IEEE 754R + IEEE 854 + ANSI X3.274 + ECMA 334). 
+	
 
 	Gobo Eiffel String Library
 
