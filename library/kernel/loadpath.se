@@ -2,5 +2,6 @@ ${GOBO}/library/kernel/
 ${GOBO}/library/kernel/io/
 ${GOBO}/library/kernel/misc/
 ${GOBO}/library/kernel/unicode/
+${GOBO}/library/kernel/support/
 ${GOBO}/library/kernel/spec/se/
 ${GOBO}/library/kernel/spec/${GOBO_OS}/
