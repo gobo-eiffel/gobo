@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			nb := str.count + 2
 			buff := STRING_BUFFER_.make (nb)
-			STRING_BUFFER_.copy_from_string (buff, 0, str)
+			STRING_BUFFER_.copy_from_string (buff, lower, str)
 			nb := nb + (lower - 1)
 			buff.put (End_of_buffer_character, nb - 1)
 			buff.put (End_of_buffer_character, nb)
