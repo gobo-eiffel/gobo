@@ -1,0 +1,34 @@
+<chapter id="hello_world">
+	<title>Hello World</title>
+
+	<sect1 id="hello_world">
+		<para>
+			To find out whether a tool or library is appropriate for my needs
+			I always found it useful to have an easy start which does
+			save my time and thus makes my decision easier. This is why I start
+			with the ubiqituous 'Hello world'. Here is our 'hello_world' build script:
+		</para>
+
+		<programlisting><![CDATA[
+  <?xml version="1.0" ?>
+  <project name="hello" default="hello">	
+    <target name="hello">
+      <echo message="Hello world"/>
+    </target>
+  </project>
+]]>
+		</programlisting>
+
+		<para>
+			On the first line you can find the usual XML declaration. The second line
+			contains the <featurename>project</featurename> element which is the root element
+			of an eant XML document. Then there is a <featurename>target</featurename> element
+			containing one <featurename>task</featurename> element, <featurename>echo</featurename>
+			in this case. Save the above code in a file called <emphasis>build.eant</emphasis>
+			and invoke in that directory the command <emphasis>geant</emphasis>.
+			The message <emphasis>Hello world</emphasis> will be output.
+		</para>
+
+	</sect1>
+
+</chapter>
