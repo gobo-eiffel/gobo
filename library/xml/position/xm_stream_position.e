@@ -12,57 +12,10 @@ indexing
 
 deferred class XM_STREAM_POSITION
 
+obsolete "Use XM_POSITION directly"
+
 inherit
 
 	XM_POSITION
-		redefine
-			out
-		end
-
-	KL_IMPORTED_STRING_ROUTINES
-		export
-			{NONE} all
-		undefine
-			out
-		end
-
-feature -- Access
-
-	byte_index: INTEGER is
-			-- Byte index of token in stream
-		deferred
-		end
-
-	column: INTEGER is
-			-- Column of token in stream
-		deferred
-		end
-
-	row: INTEGER is
-			-- Row of token in stream
-		deferred
-		end
-
-feature -- Output
-
-	out: STRING is
-			-- Textual representation
-		do
-			Result := STRING_.make (40)
-			Result.append_string (" ln: ")
-			Result.append_string (STRING_.as_string (row.out))
-			Result.append_string (" cl: ")
-			Result.append_string (STRING_.as_string (column.out))
-			Result.append_string (" byte: ")
-			Result.append_string (STRING_.as_string (byte_index.out))
-			Result.append_string (" -> ")
-			Result.append_string (STRING_.as_string (source.out))
-		end
-
-invariant
-
-	byte_index_positive: byte_index >= 0
-	column_positive: column >= 0
-	row_positive: row >= 0
 
 end
