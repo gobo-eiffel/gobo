@@ -1699,20 +1699,24 @@ feature -- XML_cp members
 
 feature -- XML_Content freeing
 
-	exml_XML_cp_free (cp: POINTER) is
-			-- Free the Expat allocated XML_Content struct by assuming it
-			-- has been allocated by malloc so free likes it.
+	exml_XML_FreeContentModel (a_parser, a_model: POINTER) is
+			-- Frees the content model passed to the element declaration
+			-- handler.
 		require
-			cp_points_to_something: cp /= default_pointer
+			a_parser_not_null: a_parser /= default_pointer
+			a_model_not_null: a_model /= default_pointer
 		external
-#ifdef SE || ISE
-			"C use <stdlib.h>"
+#ifdef SE
+			"C use <expat.h>"
+#endif
+#ifdef ISE
+			"C (XML_Parser, XML_Content *) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
 #endif
 		alias
-			"free"
+			"XML_FreeContentModel"
 		end
 
 feature -- Conversion
