@@ -477,14 +477,14 @@ feature -- Element change
 			end
 		end
 
-	register_document (a_document: XM_XPATH_DOCUMENT; a_uri: STRING) is
+	register_document (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
 			-- Register a document.
 		require
 			document_not_void: a_document /= Void
 			uri_not_void: a_uri /= Void
 			document_not_registered: not document_pool.is_mapped (a_uri)
 		do
-			document_pool.add (a_document, a_uri)
+			document_pool.add (a_document, a_media_type, a_uri)
 			if not shared_name_pool.is_document_allocated (a_document) then
 				shared_name_pool.allocate_document_number (a_document)
 			end
@@ -606,11 +606,40 @@ feature -- Transformation
 			a_parser: XM_PARSER
 			a_document: XM_XPATH_DOCUMENT
 			an_error: XM_XPATH_ERROR_VALUE
+			a_media_type: UT_MEDIA_TYPE
+			a_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
+			a_fragment_id: STRING
 		do
 			utc_system_clock.set_date_time_to_now (current_date_time)
 			if a_source /= Void then
 				if	document_pool.is_mapped (a_source.system_id) then
-					a_start_node := document_pool.document (a_source.system_id)
+					a_document := document_pool.document (a_source.system_id)
+					if a_source.fragment_identifier /= Void then
+						a_media_type := document_pool.media_type (a_source.system_id)
+						if a_media_type = Void then a_media_type := configuration.default_media_type (a_source.system_id) end
+						a_media_type_map := configuration.media_type_map
+						a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.use_xpointer, configuration.assume_html_is_xhtml)
+						if a_media_type_map.may_use_xpointer then
+							a_start_node := fragment_node (a_document, a_source.fragment_identifier)
+						elseif a_media_type_map.may_use_id then
+							a_start_node := a_document.selected_id (a_fragment_id)
+							if a_start_node = Void then
+								create an_error.make_from_string ("Fragment identifier did not select a node", "", "XT1160", Dynamic_error)
+								report_recoverable_error (an_error, Void)
+								if not is_error then
+									a_start_node := a_document
+								end
+							end
+						else
+							create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XT1160", Dynamic_error)
+							report_recoverable_error (an_error, Void)
+							if not is_error then
+								a_start_node := a_document
+							end
+						end
+					else
+						a_start_node := a_document
+					end
 				else
 					a_parser := new_parser
 					a_builder := new_builder (a_parser)
@@ -620,8 +649,35 @@ feature -- Transformation
 						report_fatal_error (an_error, Void)
 					else
 						a_document := a_builder.document
-						register_document (a_document, a_source.system_id)
-						a_start_node := a_document
+						a_media_type := Void -- TODO
+						register_document (a_document, a_media_type, a_source.system_id)
+						a_fragment_id := a_source.fragment_identifier
+						if a_fragment_id = Void then
+							a_start_node := a_document
+						else
+							a_media_type := document_pool.media_type (a_source.system_id)
+							if a_media_type = Void then a_media_type := configuration.default_media_type (a_source.system_id) end
+							a_media_type_map := configuration.media_type_map
+							a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.use_xpointer, configuration.assume_html_is_xhtml)
+							if a_media_type_map.may_use_xpointer then
+								a_start_node := fragment_node (a_document, a_fragment_id)
+							elseif a_media_type_map.may_use_id then
+								a_start_node := a_document.selected_id (a_fragment_id)
+								if a_start_node = Void then
+									create an_error.make_from_string ("Fragment identifier did not select a node", "", "XT1160", Dynamic_error)
+									report_recoverable_error (an_error, Void)
+									if not is_error then
+										a_start_node := a_document
+									end
+								end
+							else
+								create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XT1160", Dynamic_error)
+								report_recoverable_error (an_error, Void)
+								if not is_error then
+									a_start_node := a_document
+								end
+							end
+						end
 					end
 				end
 			end
@@ -1029,6 +1085,71 @@ feature -- Implementation
 			end
 		end
 
+	fragment_node (a_document: XM_XPATH_DOCUMENT; a_fragment_identifier: STRING): XM_XPATH_NODE is
+			-- Node identified by `a_fragment_identifier' via xpointer
+		require
+			fragment_identifier_not_void: a_fragment_identifier /= Void
+			-- Also, it has had all encodings removed (i.e. it is fit to pass direct to XPointer)
+		local
+			an_xpointer_processor: XM_XPOINTER_XPATH
+			an_element_scheme: XM_XPOINTER_XPATH_ELEMENT_SCHEME
+			an_xpath_scheme: XM_XPOINTER_XPATH_XPATH_SCHEME
+			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME
+			a_value: XM_XPATH_VALUE
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			a_node_value: XM_XPATH_SINGLETON_NODE
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			create an_xpointer_processor.make (False)
+			create an_element_scheme.make
+			create an_xpath_scheme.make
+			create an_xmlns_scheme.make
+			an_xpointer_processor.register_scheme (an_element_scheme)
+			an_xpointer_processor.register_scheme (an_xmlns_scheme)
+			an_xpointer_processor.register_scheme (an_xpath_scheme)
+			an_xpointer_processor.evaluate (a_fragment_identifier, a_document)
+			a_value := an_xpointer_processor.value
+			an_empty_sequence ?= a_value
+			if a_value.is_error or else an_empty_sequence /= Void then
+				if a_value.is_error then
+					create an_error.make_from_string (STRING_.concat("XPointer reported an error: ", a_value.error_value.description) , "", "XT1160", Dynamic_error)
+				else
+					create an_error.make_from_string ("XPointer failed to select a node." , "", "XT1160", Dynamic_error)
+				end
+				report_recoverable_error (an_error, Void)
+				if not is_error then
+					Result := a_document
+				end
+			else
+				a_node_value ?= a_value
+				if a_node_value = Void then
+					a_sequence_extent ?= a_value
+					check
+						sequence_extent: a_sequence_extent /= Void
+						-- Only remaining possibility
+					end
+					if a_sequence_extent.is_node_sequence and then a_sequence_extent.count = 1 then
+						Result ?= a_sequence_extent.item_at (1)
+						check
+							result_is_a_node: Result /= Void
+							-- from the condition of the if clause
+						end
+					else
+						create an_error.make_from_string ("XPointer returned something other than a single node", "", "XT1160", Dynamic_error)
+						report_recoverable_error (an_error, Void)
+						if not is_error then
+							Result := a_document
+						end
+					end
+				else
+					Result := a_node_value.node
+				end
+			end
+		ensure
+			error_or_not_void: not is_error implies Result /= Void
+		end
+		
 invariant
 
 	parser_factory_not_void: parser_factory /= Void

@@ -25,9 +25,10 @@ feature -- Evaluation
 			information: True -- /= Void implies must be immutable and read-only for the duration of the iteration
 		deferred
 
-			-- If an error is detected, then this function should return call create Result.make_item
-			--  passing it an item in error.
+			-- If an error is detected, then this function should return an invalid iterator
 
+		ensure
+			result_not_void: Result /= Void
 		end
 
 end

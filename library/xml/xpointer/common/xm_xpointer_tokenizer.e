@@ -4,18 +4,17 @@ indexing
 
 		"Objects that split XPointer pointers into tokens"
 
-	library: "Gobo Eiffel XPath Library"
+	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_XPOINTER_TOKENIZER
+class XM_XPOINTER_TOKENIZER
 
 inherit
 
-	XM_XPATH_XPOINTER_TOKENS
+	XM_XPOINTER_TOKENS
 
 	KL_IMPORTED_STRING_ROUTINES
 

@@ -25,6 +25,13 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
+	fragment_identifier: STRING is
+			-- Possible decoded fragment identifier
+		deferred
+		ensure
+			may_be_void: True
+		end
+
 feature -- Events
 
 	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is

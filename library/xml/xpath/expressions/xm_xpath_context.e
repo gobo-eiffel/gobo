@@ -163,6 +163,15 @@ feature -- Access
 			last_parsed_document_not_void: Result /= Void
 		end
 	
+	last_parsed_media_type: UT_MEDIA_TYPE is
+			-- Auxiliary result from last call to `build_document'
+		require
+			no_build_error: not is_build_document_error
+		deferred
+		ensure
+			last_parsed_media_type_may_be_void: True
+		end
+	
 feature -- Status report
 
 	is_restricted: BOOLEAN

@@ -30,7 +30,7 @@
 <section id="xpointer_framework">
   <title>Invoking the &framework;</title>
   <para>
-    To invoke the &framework;, you must first create an instance of <classname>XM_XPATH_XPOINTER</classname>. This creates the &framework;, but
+    To invoke the &framework;, you must first create an instance of <classname>XM_XPOINTER_XPATH</classname>. This creates the &framework;, but
     no schemes are available - only <xpath>shorthand</xpath> pointers.
   </para>
   <para>
@@ -61,15 +61,15 @@
 <section id="xpointer_schemes">
   <title>&xpointer; schemes</title>
   <para>
-    If your pointer may contain anything other than a <xpath>shorthand</xpath> pointer, then you must configure the <classname>XM_XPATH_XPOINTER</classname>
-    object with any schemes that you may wish to use. This is done by creating instances of descendants of <classname>XM_XPATH_XPOINTER_SCHEME</classname>,
-    and passing them as the argument of <classname>XM_XPATH_XPOINTER</classname>'s <featurename>register_scheme</featurename> routine.
+    If your pointer may contain anything other than a <xpath>shorthand</xpath> pointer, then you must configure the <classname>XM_XPOINTER_XPATH</classname>
+    object with any schemes that you may wish to use. This is done by creating instances of descendants of <classname>XM_XPOINTER_XPATH_SCHEME</classname>,
+    and passing them as the argument of <classname>XM_XPOINTER_XPATH</classname>'s <featurename>register_scheme</featurename> routine.
   </para>
   <para>
     Schemes provided in the library:
     <variablelist>
       <varlistentry>
-	<term><classname>XM_XPATH_XPOINTER_XMLNS_SCHEME</classname></term>
+	<term><classname>XM_XPOINTER_XPATH_XMLNS_SCHEME</classname></term>
 	<listitem>
 	  <para>
 	    The W3C <xpath>xmlns</xpath> scheme for defining namespace bindings.
@@ -77,7 +77,7 @@
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term><classname>XM_XPATH_XPOINTER_ELEMENT_SCHEME</classname></term>
+	<term><classname>XM_XPOINTER_XPATH_ELEMENT_SCHEME</classname></term>
 	<listitem>
 	  <para>
 	    The W3C <xpath>element</xpath> scheme for finding a single element via a <xpath>shorthand</xpath> pointer and/or by stepwise navigation.
@@ -85,7 +85,7 @@
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term><classname>XM_XPATH_XPOINTER_XPATH_SCHEME</classname></term>
+	<term><classname>XM_XPOINTER_XPATH_XPATH_SCHEME</classname></term>
 	<listitem>
 	<para>
 	  The  <xpath>&program_name;:xpath</xpath> scheme.
@@ -148,7 +148,7 @@
 <section id="xpointer_error_api">
   <title>The extended error API</title>
   <para>
-    When you create the <classname>XM_XPATH_XPOINTER</classname>, the <featurename>make</featurename> procedure takes a single <classname>BOOLEAN</classname>
+    When you create the <classname>XM_XPOINTER_XPATH</classname>, the <featurename>make</featurename> procedure takes a single <classname>BOOLEAN</classname>
     argument. If you pass this as False, then you get the standard &framework; error reporting, as described above. If you instead set it to True, and if no
     resources were found, then <featurename>value</featurename> will be set to a value in error, as reported by the <emphasis>last</emphasis> scheme processor
     which detected a syntax or semantic error in it's scheme data.

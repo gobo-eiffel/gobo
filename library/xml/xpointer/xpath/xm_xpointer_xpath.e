@@ -2,24 +2,23 @@ indexing
 
 	description:
 
-		"Objects that process XPointers"
+		"Objects that process XPointers against XPath Data Model instances"
 
-	library: "Gobo Eiffel XPath Library"
+	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_XPOINTER
+class XM_XPOINTER_XPATH
 
 inherit
-
-	XM_UNICODE_CHARACTERS_1_0
 
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_UNICODE_CHARACTERS_1_0
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
@@ -103,22 +102,22 @@ feature -- Evaluation
 			xpointer_not_empty: an_xpointer /= Void and then an_xpointer.count > 0
 			xml_resource_not_void: a_resource /= Void -- N.B. this may be an external parsed entity, or a well-formed document
 		local
-			a_parser: XM_XPATH_XPOINTER_PARSER
+			a_parser: XM_XPOINTER_PARSER
 			an_element: XM_XPATH_ELEMENT
 			a_cursor:  DS_ARRAYED_LIST_CURSOR [STRING]
 			a_scheme_name: STRING
-			a_processor: XM_XPATH_XPOINTER_SCHEME
+			a_processor: XM_XPOINTER_XPATH_SCHEME
 		do
 			value := Void
 			create a_parser.make
 			a_parser.parse (an_xpointer)
 			if a_parser.is_error then
-				create {XM_XPATH_INVALID_VALUE} value.make (a_parser.error_value)
+				create {XM_XPATH_INVALID_VALUE} value.make_from_string (a_parser.error_message, Gexslt_eiffel_type_uri, a_parser.error_code, Static_error)
 			elseif a_parser.is_shorthand then
 				an_element := a_resource.selected_id (a_parser.shorthand)
 				if an_element = Void then
 					create {XM_XPATH_EMPTY_SEQUENCE} value.make
-					value.set_last_error_from_string ("Could not find shorthand element", Gexslt_eiffel_type_uri, "XPOINTER_EVALUATION", Dynamic_error)
+					value.set_last_error_from_string ("Could not find shorthand element", Gexslt_eiffel_type_uri, "XPOINTER_EVALUATION", Static_error)
 				else
 					create {XM_XPATH_SINGLETON_NODE} value.make (an_element)
 				end
@@ -161,7 +160,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	register_scheme (a_scheme: XM_XPATH_XPOINTER_SCHEME) is
+	register_scheme (a_scheme: XM_XPOINTER_XPATH_SCHEME) is
 			-- Register `a_scheme' as an XPointer scheme.
 		require
 			scheme_not_empty: a_scheme /= Void
@@ -174,10 +173,10 @@ feature -- Element change
 	
 feature {NONE} -- Implementation
 
-	registered_schemes: DS_HASH_TABLE [XM_XPATH_XPOINTER_SCHEME, STRING]
+	registered_schemes: DS_HASH_TABLE [XM_XPOINTER_XPATH_SCHEME, STRING]
 			-- Registered scheme processors, indexed by expanded-name
 
-	namespace_bindings: XM_XPATH_XPOINTER_NAMESPACE_CONTEXT
+	namespace_bindings: XM_XPOINTER_NAMESPACE_CONTEXT
 	
 invariant
 

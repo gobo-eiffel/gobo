@@ -6,16 +6,15 @@ indexing
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_XPOINTER_XMLNS_SCHEME
+class XM_XPOINTER_XPATH_XMLNS_SCHEME
 
 inherit
 
-	XM_XPATH_XPOINTER_SCHEME
+	XM_XPOINTER_XPATH_SCHEME
 
 	XM_XPATH_ERROR_TYPES
 
@@ -51,7 +50,7 @@ feature -- Status report
 		
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPATH_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			a_splitter: ST_SPLITTER
@@ -64,26 +63,26 @@ feature -- Element change
 			components := a_splitter.split (some_data)
 			if components.count /= 2 then
 				is_error := True
-				create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Scheme data must have exactly one '=' sign", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Dynamic_error)
+				create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Scheme data must have exactly one '=' sign", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 			else
 				an_xml_prefix := components.item (1)
 				STRING_.right_adjust (an_xml_prefix)
 				if not is_ncname (an_xml_prefix) then
 					is_error := True
-					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Prefix is not an NCName", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Dynamic_error)
+					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Prefix is not an NCName", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 				elseif a_namespace_context.is_prefix_proscribed (an_xml_prefix) then
 					is_error := True
-					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("'xml' or 'xmlns' may not be defined", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Dynamic_error)
+					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("'xml' or 'xmlns' may not be defined", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 				elseif a_namespace_context.is_prefix_declared (an_xml_prefix) then
 					is_error := True
-					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Prefix is already declared", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Dynamic_error)
+					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Prefix is already declared", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 				else
 					a_namespace_uri := components.item (2)
 					STRING_.left_adjust (a_namespace_uri)
 					if a_namespace_context.is_namespace_proscribed (a_namespace_uri) then
 						is_error := True
 						create {XM_XPATH_INVALID_VALUE} value.make_from_string ("The namespaces 'http:/www.w3.org/XML/1998/namespace' and 'http://www.w3.org/2000/xmlns/' may not be declared",
-																								  Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Dynamic_error)
+																								  Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 					else
 						a_namespace_context.bind (an_xml_prefix, a_namespace_uri)
 						create {XM_XPATH_EMPTY_SEQUENCE} value.make

@@ -4,18 +4,17 @@ indexing
 
 		"Objects that implement the gexslt:xpath scheme"
 
-	library: "Gobo Eiffel XPath Library"
+	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_XPOINTER_XPATH_SCHEME
+class XM_XPOINTER_XPATH_XPATH_SCHEME
 
 inherit
 
-	XM_XPATH_XPOINTER_SCHEME
+	XM_XPOINTER_XPATH_SCHEME
 
 	XM_XPATH_STANDARD_NAMESPACES
 
@@ -66,7 +65,7 @@ feature -- Status report
 			
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPATH_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			a_base_uri: UT_URI
@@ -126,12 +125,13 @@ feature {NONE} -- Implementation
 			a_document_pool: XM_XPATH_DOCUMENT_POOL
 			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_item: XM_XPATH_ITEM
 		do
 			create a_document_pool.make
-			a_document_pool.add (a_document, a_document.base_uri)
+			a_document_pool.add (a_document, Void, a_document.base_uri) -- N.B. We can safely ignore the media type
 			create a_context.make (a_document, a_document_pool, function_library)
 			a_context.set_string_mode_mixed
-			a_sequence_iterator := an_expression.iterator (a_context)
+			a_sequence_iterator := an_expression.iterator (a_context)			
 			if a_sequence_iterator.is_error then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make (a_sequence_iterator.error_value)

@@ -65,6 +65,9 @@ feature -- Access
 	last_parsed_document: XM_XPATH_DOCUMENT
 		-- Result from last call to `build_document'
 
+	last_parsed_media_type: UT_MEDIA_TYPE
+			-- Auxiliary result from last call to `build_document'
+	
 	security_manager: XM_XPATH_SECURITY_MANAGER
 			-- Security manager
 
@@ -84,6 +87,7 @@ feature 	-- Element change
 		do
 			is_build_document_error := False
 			last_parsed_document := Void
+			last_parsed_media_type := Void
 			uri_resolver.resolve_uri (a_uri_reference)
 			if uri_resolver.has_uri_reference_error then
 				set_build_error (uri_resolver.last_uri_reference_error)

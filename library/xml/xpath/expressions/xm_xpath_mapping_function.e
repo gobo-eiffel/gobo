@@ -27,6 +27,7 @@ feature -- Evaluation
 
 			-- If an error is detected, then this function should return call create Result.make_item
 			--  passing it an item in error.
+			-- Note that XM_XPATH_CARDINALITY_CHECKER can return Void
 
 		end
 

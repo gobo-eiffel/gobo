@@ -48,21 +48,22 @@ feature -- Evaluation
 				if a_context.is_restricted then
 					last_evaluated_document := Void
 				elseif not a_context.security_manager.is_uri_permitted (a_uri) then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat ("Security manager refused permission to read from ", a_uri.full_reference),
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat ("Security manager refused permission to read from ", a_uri.full_uri),
 																													 Gexslt_eiffel_type_uri, "SECURITY", Dynamic_error)
-				elseif a_context.available_documents.is_mapped (a_uri.full_reference) then
-					last_evaluated_document := a_context.available_documents.document (a_uri.full_reference)
+				elseif a_context.available_documents.is_mapped (a_uri.full_uri) then
+					last_evaluated_document := a_context.available_documents.document (a_uri.full_uri)
 				else
-					a_context.build_document (a_uri.full_reference)
+					a_context.build_document (a_uri.full_uri)
 					if a_context.is_build_document_error then
-						a_message := STRING_.concat ("Failed to parse ", a_uri.full_reference)
+						a_message := STRING_.concat ("Failed to parse ", a_uri.full_uri)
 						a_message := STRING_.appended_string (a_message, ". ")
 						a_message := STRING_.appended_string (a_message, a_context.last_build_error)
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0002", Dynamic_error)
 					else
 						a_document := a_context.last_parsed_document
+						last_evaluated_media_type := a_context.last_parsed_media_type
 						last_evaluated_document := a_document
-						a_context.available_documents.add (a_document, a_uri.full_reference)
+						a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
 					end
 				end
 			end

@@ -220,6 +220,9 @@ feature {NONE} -- Implementation
 	is_space_stripped: BOOLEAN
 			-- Do we strip white space?
 
+	media_type: UT_MEDIA_TYPE
+			-- Media type of `source_uri'
+
 	make_parser (use_tiny_tree_model: BOOLEAN) is
 		local
 			entity_resolver: XM_URI_EXTERNAL_RESOLVER
@@ -265,7 +268,8 @@ feature {NONE} -- Implementation
 				an_item: XM_XPATH_ITEM
 		do
 			create a_document_pool.make
-			a_document_pool.add (document, source_uri)
+			-- TODO media_type needs to be retrieved (earlier) from the tree pipe
+			a_document_pool.add (document, media_type, source_uri)
 			create a_context.make (context_item, a_document_pool, function_library)
 			a_context.copy_string_mode (Current)
 			a_sequence_iterator := an_expression.iterator (a_context)

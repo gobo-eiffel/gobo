@@ -151,12 +151,15 @@ feature {NONE} -- Implementation
 						-- Call the supplied mapping function
 
 						results := mapping_function.map (next_source, context, information_object)
-						if results.before then
+						if results.is_error then
+							set_last_error (results.error_value)
+							finished := True
+						elseif results.before then
 							results.start
 						elseif not results.after then
 							results.forth
 						end
-						if not results.after then
+						if not results.is_error and then not results.after then
 							item ?= results.item
 							check
 								item_is_node: item /= Void

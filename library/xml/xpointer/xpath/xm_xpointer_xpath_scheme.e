@@ -6,12 +6,11 @@ indexing
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_XPOINTER_SCHEME
+deferred class XM_XPOINTER_XPATH_SCHEME
 
 feature -- Access
 
@@ -57,7 +56,7 @@ feature -- Status report
 		
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPATH_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		require
 			xml_resource_not_void: a_resource /= Void

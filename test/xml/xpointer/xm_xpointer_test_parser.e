@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class XM_XPATH_XPOINTER_TEST_PARSER
+deferred class XM_XPOINTER_TEST_PARSER
 
 inherit
 
@@ -24,7 +24,7 @@ feature -- Test
 	test_two_schemes is
 			-- Test parsing two schemes.
 		local
-			a_parser: XM_XPATH_XPOINTER_PARSER
+			a_parser: XM_XPOINTER_PARSER
 		do
 			create a_parser.make
 			a_parser.parse ("xpointer(id('boy-blue')/horn[1])element(boy-blue/3)")
@@ -40,7 +40,7 @@ feature -- Test
 	test_two_schemes_with_white_space is
 			-- Test parsing two schemes separated by white space.
 		local
-			a_parser: XM_XPATH_XPOINTER_PARSER
+			a_parser: XM_XPOINTER_PARSER
 		do
 			create a_parser.make
 			a_parser.parse ("xpointer(id('boy-blue')/horn[1]) %T %R %N element(boy-blue/3)")
@@ -50,7 +50,7 @@ feature -- Test
 	test_escaped_data is
 			-- Test parsing with escaped data.
 		local
-			a_parser: XM_XPATH_XPOINTER_PARSER
+			a_parser: XM_XPOINTER_PARSER
 		do
 			create a_parser.make
 			a_parser.parse ("xpointer(string-range(//P,%"my ^(favorite smiley :-^)%"))")
@@ -63,7 +63,7 @@ feature -- Test
 	test_shorthand is
 			-- Test parsing shorthand pointer
 		local
-			a_parser: XM_XPATH_XPOINTER_PARSER
+			a_parser: XM_XPOINTER_PARSER
 		do
 			create a_parser.make
 			a_parser.parse ("fred")
@@ -75,7 +75,7 @@ feature -- Test
 	test_invalid_shorthand is
 			-- Test parsing shorthand pointer
 		local
-			a_parser: XM_XPATH_XPOINTER_PARSER
+			a_parser: XM_XPOINTER_PARSER
 		do
 			create a_parser.make
 			a_parser.parse ("fred:jim")

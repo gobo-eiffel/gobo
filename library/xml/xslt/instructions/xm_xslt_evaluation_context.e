@@ -69,6 +69,9 @@ feature -- Access
 	last_parsed_document: XM_XPATH_DOCUMENT
 			-- Result from last call to `build_document'
 
+	last_parsed_media_type: UT_MEDIA_TYPE
+			-- Auxiliary result from last call to `build_document'
+	
 	available_functions: XM_XPATH_FUNCTION_LIBRARY is
 			-- Available functions
 		do
@@ -138,6 +141,7 @@ feature -- Element change
 		do
 			is_build_document_error := False
 			last_parsed_document := Void
+			last_parsed_media_type := Void
 			a_uri_resolver := transformer.configuration.uri_resolver
 			a_uri_resolver.resolve_uri (a_uri_reference)
 			if a_uri_resolver.has_uri_reference_error then
@@ -145,7 +149,7 @@ feature -- Element change
 			else
 				a_parser := transformer.new_parser
 				a_builder := transformer.new_builder (a_parser)
-				create a_source.make (a_uri_resolver.last_system_id.full_reference)
+				create a_source.make (a_uri_resolver.last_system_id.full_uri)
 				a_source.send_from_stream (a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id, a_parser, a_builder, False)
 				if a_builder.has_error then
 					set_build_error (a_builder.last_error)

@@ -54,6 +54,39 @@
       If you want to ensure that &program_name; treats a name as a URI (necessary if it starts with -- or includes =), then you can write
       it as --uri=my:strange=uri.
     </para>
+    <section>
+      <title>Fragment identifiers</title>
+      <para>
+	If the URI for a source document includes a fragment identifier, then &program_name; will parse the document
+	as normal, but will attempt to set the initial context node to be that specified by the fragment (according to the
+	semantics for the particular media type). Note, that in this case, the initial context node will not necessarily match the pattern <xpath>/</xpath>,
+	so the initial template may vary according to the fragment identifier. Note also, that the document root and document element are exactly the same nodes
+	as they would be if no fragment identifier is supplied.
+      </para>
+      <para>
+	&program_name_cased; recognizes the following media types:
+	<itemizedlist>
+	  <listitem><para>application/xhtml+xml</para></listitem>
+	  <listitem><para>application/xslt+xml</para></listitem>
+	  <listitem><para>application/xml</para></listitem>
+	  <listitem><para>application/xml-external-parsed-entity</para></listitem>
+	  <listitem>
+	    <para>
+	      application/*+xml
+	      </para>
+	      <para>
+		This is treated according to the rules for application/xml, if no
+		more specific rule is present.
+	      </para>
+	  </listitem>
+	  <listitem><para>text/xml</para></listitem>
+	  <listitem><para>text/xml-external-parsed-entity</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	If the resolver is unable to supply the media type, then application/xml is assumed.
+      </para>
+    </section>
   </section>
   <section>
     <title>Parameters</title>
@@ -419,7 +452,6 @@
       </variablelist>
       </para>
     </section>
-  </section>
     <section>
       <title>Media types and URI fragment identifiers</title>
       <para>The following options affect the mapping of URIs onto media-types, for interpretation of fragment identifies:

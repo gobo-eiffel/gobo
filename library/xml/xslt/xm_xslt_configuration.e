@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			shared_decimal_context.set_digits (18)
 			saved_base_uri := entity_resolver.uri
 			create extension_functions.make_default
+			create media_type_map.make
 			assume_html_is_xhtml := True
 			use_xpointer := True
 		ensure
@@ -119,6 +120,9 @@ feature -- Access
 
 	extension_functions: DS_ARRAYED_LIST [XM_XPATH_FUNCTION_LIBRARY]
 			-- Libraries of extension functions
+
+	media_type_map: XM_XSLT_MEDIA_TYPE_MAP
+			-- URI to media-type mapping rules
 
 	assume_html_is_xhtml: BOOLEAN
 			-- Do we treat text/html as application/xhtml+xml (on the assumption that the HTTP server is lying for MSIE)?
@@ -329,5 +333,6 @@ invariant
 	encoder_factory_not_void: encoder_factory /= Void
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 	extension_functions_not_void: extension_functions /= Void
+	media_type_map_not_void: media_type_map /= Void
 
 end

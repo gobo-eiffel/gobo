@@ -4,18 +4,17 @@ indexing
 
 		"Objects that implement the XPointer element scheme"
 
-	library: "Gobo Eiffel XPath Library"
+	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_XPOINTER_ELEMENT_SCHEME
+class XM_XPOINTER_XPATH_ELEMENT_SCHEME
 
 inherit
 
-	XM_XPATH_XPOINTER_SCHEME
+	XM_XPOINTER_XPATH_SCHEME
 
 	XM_XPATH_ERROR_TYPES
 
@@ -53,7 +52,7 @@ feature -- Status report
 
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPATH_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			an_index, a_counter, a_child_number: INTEGER

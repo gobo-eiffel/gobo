@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			from
 				an_iterator.start
 			until
-				an_iterator.after
+				an_iterator.is_error or else an_iterator.after
 			loop
 				sequence.force_last (an_iterator.item)
 				an_iterator.forth

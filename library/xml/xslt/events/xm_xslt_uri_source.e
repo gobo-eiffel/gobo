@@ -27,19 +27,28 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_system_id: STRING) is
-			-- Set `system_id'.
+			-- Establish invariant.
 		require
-			system_id_not_void: a_system_id /= Void
+			system_id_not_void: a_system_id /= Void -- TODO: and must be absolute
+		local
+			a_uri: UT_URI
 		do
-			system_id := a_system_id
+			create a_uri.make (a_system_id)
+			system_id := a_uri.full_uri
+			if a_uri.has_fragment then
+				fragment_identifier := a_uri.fragment_item.decoded_utf8
+			end
 		ensure
-			system_id_set: STRING_.same_string (system_id, a_system_id)
+			system_id_set: fragment_identifier = Void implies STRING_.same_string (system_id, a_system_id)
 		end
 
 feature -- Access
 
 	system_id: STRING
 			-- System-id of source
+
+	fragment_identifier: STRING
+			-- Possible decoded fragment identifier
 
 feature -- Events
 
@@ -129,6 +138,10 @@ feature {NONE} -- Implementation
 		
 	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
+
+invariant
+
+	system_id_not_void: system_id /= Void
 
 end
 	

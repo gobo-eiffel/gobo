@@ -4,18 +4,18 @@ indexing
 
 		"Objects that provide XML namespace bindings for XPointer"
 
-	library: "Gobo Eiffel XPath Library"
+	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	derivation: "See notice at bottom of file"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_XPOINTER_NAMESPACE_CONTEXT
+class XM_XPOINTER_NAMESPACE_CONTEXT
 
 inherit
 
-	XM_XPATH_STANDARD_NAMESPACES
+	XM_MARKUP_CONSTANTS
 
 	XM_UNICODE_CHARACTERS_1_0
 
@@ -41,9 +41,9 @@ feature -- Access
 		require
 			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		do
-			if STRING_.same_string (an_xml_prefix, "xml") then
+			if STRING_.same_string (an_xml_prefix, Xml_prefix) then
 				Result := True
-			elseif STRING_.same_string (an_xml_prefix, "xmlns") then
+			elseif STRING_.same_string (an_xml_prefix, Xmlns) then
 				Result := False
 			else
 				Result := bindings.has (an_xml_prefix)
@@ -55,7 +55,7 @@ feature -- Access
 		require
 			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		do
-			Result := STRING_.same_string (an_xml_prefix, "xmlns") or else STRING_.same_string (an_xml_prefix, "xml")
+			Result := STRING_.same_string (an_xml_prefix, Xmlns) or else STRING_.same_string (an_xml_prefix, Xml_prefix)
 		end
 
 	is_namespace_proscribed (a_namespace_uri: STRING): BOOLEAN is
@@ -63,7 +63,7 @@ feature -- Access
 		require
 			namespace_uri_not_empty: a_namespace_uri /= Void and then a_namespace_uri.count > 0
 		do
-			Result := STRING_.same_string (a_namespace_uri, Xml_uri) or else STRING_.same_string (a_namespace_uri, Xmlns_uri)
+			Result := STRING_.same_string (a_namespace_uri, Xml_prefix_namespace) or else STRING_.same_string (a_namespace_uri, Xmlns_namespace)
 		end
 
 	namespace_uri (an_xml_prefix: STRING): STRING is
@@ -72,8 +72,8 @@ feature -- Access
 			ncname: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 			prefix_declared: is_prefix_declared (an_xml_prefix)
 		do
-			if STRING_.same_string (an_xml_prefix, "xml") then
-				Result := Xml_uri
+			if STRING_.same_string (an_xml_prefix, Xml_prefix) then
+				Result := Xml_prefix_namespace
 			else
 				Result := bindings.item (an_xml_prefix)
 			end

@@ -145,9 +145,10 @@ feature -- Evaluation
 			if uri_encoding.has_excluded_characters (a_uri_reference) then
 				create an_error.make_from_string ("Argument to fn:document is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
 				transformer.report_recoverable_error (an_error, Void)
-				if not transformer.is_error then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
-				end		
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+ 				if transformer.is_error then
+					Result.set_last_error (an_error)
+				end
 			else
 				create a_uri.make_resolve (a_base_uri, a_uri_reference)
 				parse_document (an_item.string_value, a_base_uri, a_context)
@@ -164,6 +165,10 @@ feature -- Evaluation
 					end
 					if a_uri.has_fragment then
 						Result := fragment (a_uri, a_document)
+						if Result = Void then
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+							Result.set_last_error (fragment_error_value)
+						end
 					else
 						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document)
 					end
@@ -217,6 +222,9 @@ feature {NONE} -- Implementation
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer, for error reovery
 
+	fragment_error_value: XM_XPATH_ERROR_VALUE
+			-- Set by `fragment'
+
 	fragment (a_uri: UT_URI; a_document: XM_XPATH_DOCUMENT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Node sequence from fragment of `a_uri'
 		require
@@ -226,80 +234,38 @@ feature {NONE} -- Implementation
 		local
 			a_media_type: UT_MEDIA_TYPE
 			a_fragment_id: STRING
-			media_type_ok, use_xpointer: BOOLEAN
-			an_error: XM_XPATH_ERROR_VALUE
+			a_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
 			a_node: XM_XPATH_NODE
-			two_booleans: INTEGER
+			in_error: BOOLEAN
 		do
 			a_fragment_id := a_uri.fragment_item.decoded_utf8
 			if configuration = Void then configuration := transformer.configuration end
 			a_media_type ?= last_evaluated_media_type
 			if a_media_type = Void then a_media_type := configuration.default_media_type (a_uri.full_uri) end
-			two_booleans := media_type_correctness (a_media_type)
-			if two_booleans > 0 then
-				media_type_ok := True
-				if two_booleans = 2 then
-					use_xpointer := True
-				end
-			end
-			if not media_type_ok then
-				create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XT1160", Dynamic_error)
-				transformer.report_recoverable_error (an_error, Void)
-				if not transformer.is_error then
-					a_node := a_document
+			a_media_type_map := configuration.media_type_map
+			a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.use_xpointer, configuration.assume_html_is_xhtml)
+			if a_media_type_map.may_use_xpointer then
+				Result := xpointer_fragment (a_fragment_id, a_document)
+				in_error := Result = Void
+			elseif a_media_type_map.may_use_id then
+				a_node := a_document.selected_id (a_fragment_id)
+				if a_node = Void then
+					in_error := True
+				else
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_node)
 				end
 			else
-				a_node := Void
-				if use_xpointer then
-					Result := xpointer_fragment (a_fragment_id, a_document)
-				else
-					a_node := a_document.selected_id (a_fragment_id)
+				in_error := True
+			end
+			if in_error then
+				create fragment_error_value.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XT1160", Dynamic_error)
+				transformer.report_recoverable_error (fragment_error_value, Void)
+				if not transformer.is_error then
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document)
 				end
 			end
-			if Result = Void and then a_node = Void then create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_node) end
 		ensure
 			error_or_not_void: not transformer.is_error implies Result /= Void
-		end
-
-	media_type_correctness (a_media_type: UT_MEDIA_TYPE): INTEGER is
-			-- Correctnes and Xpointer-uasge for `a_media_type'
-		require
-			media_type_not_void:  a_media_type /= Void
-		local
-			a_type, a_subtype: STRING
-			media_type_ok, use_xpointer: BOOLEAN
-		do
-			a_type := a_media_type.type
-			a_subtype := a_media_type.subtype
-			if a_type.is_equal ("text") then
-				if a_subtype.is_equal ("html") then
-					if configuration.assume_html_is_xhtml then
-						a_type := "application"; a_subtype := "xhtml+xml"
-					end
-				end
-				if a_subtype.is_equal ("xml") or else a_subtype.is_equal ("xml-external-parsed-entity") then
-					if configuration.use_xpointer then
-						use_xpointer := True; media_type_ok := True
-					end
-				end
-			end
-			if a_type.is_equal ("application") then
-				if a_subtype.is_equal ("xml") or else a_subtype.is_equal ("xml-external-parsed-entity") or else a_subtype.is_equal ("xslt+xml") then
-					if configuration.use_xpointer then
-						use_xpointer := True; media_type_ok := True
-					end
-				elseif a_subtype.is_equal ("xhtml+xml") then
-					media_type_ok := True; use_xpointer := configuration.use_xpointer
-				elseif a_subtype.count > 4 and then a_subtype.substring (a_subtype.count - 4, a_subtype.count).is_equal ("+xml") then
-					if configuration.use_xpointer then
-						use_xpointer := True; media_type_ok := True
-					end
-				end
-			end
-			if media_type_ok then
-				Result := 1
-				if use_xpointer then Result := 2 end
-			end
 		end
 
 	xpointer_fragment (a_fragment_id: STRING; a_document: XM_XPATH_DOCUMENT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
@@ -310,10 +276,10 @@ feature {NONE} -- Implementation
 			transformer_not_void: transformer /= Void
 			configuration_not_void: configuration /= Void
 		local
-			an_xpointer_processor: XM_XPATH_XPOINTER
-			an_element_scheme: XM_XPATH_XPOINTER_ELEMENT_SCHEME
-			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
-			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
+			an_xpointer_processor: XM_XPOINTER_XPATH
+			an_element_scheme: XM_XPOINTER_XPATH_ELEMENT_SCHEME
+			an_xpath_scheme: XM_XPOINTER_XPATH_XPATH_SCHEME
+			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME
 			a_value: XM_XPATH_VALUE
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
@@ -331,9 +297,7 @@ feature {NONE} -- Implementation
 			an_xpointer_processor.evaluate (a_fragment_id, a_document)
 			a_value := an_xpointer_processor.value
 			an_empty_sequence ?= a_value
-			if an_empty_sequence /= Void then
-				a_node := a_document
-			elseif a_value.is_error then
+			if a_value.is_error or else an_empty_sequence /= Void then
 				create an_error.make_from_string ("XPointer reported an error", "", "XT1160", Dynamic_error)
 				transformer.report_recoverable_error (an_error, Void)
 				if not transformer.is_error then
