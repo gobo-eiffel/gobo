@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 
-<project name="ls" default="ls" >
-	<target name="ls" >
+<project name="ls" default="ls">
+	<target name="ls">
 		<description>executes a ls -l command under unix</description>
-		<set name="directory" value="." />
-		<exec executable="ls -l ${directory}" />
+		<set name="directory" value="."/>
+		<exec executable="ls -l ${directory}"/>
 	</target>
 </project>

@@ -1,9 +1,11 @@
 <?xml version="1.0" ?>
 
-<project name="dir" default="dir" >
-	<target name="dir" >
+<project name="dir" default="dir">
+
+	<target name="dir">
 		<description>executes a dir command under dos/windows</description>
-		<set name="directory" value="." />
-		<exec executable="dir ${directory}" />
+		<set name="directory" value="."/>
+		<exec executable="dir ${directory}"/>
 	</target>
+
 </project>

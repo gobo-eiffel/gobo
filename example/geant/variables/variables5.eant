@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 
 <project name="variables1">
+
 	<target name="var">
 		<description>query a variable</description>
 		<echo message="Hello ${who}"/>

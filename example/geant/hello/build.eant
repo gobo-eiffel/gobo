@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 
-<project name="hello" >
+<project name="hello">
+
 	<target name="hi">
-		<echo message="Hello world" />
+		<echo message="Hello world"/>
 	</target>
+
 </project>

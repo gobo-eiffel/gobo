@@ -1,30 +1,31 @@
 <?xml version="1.0" ?>
 
-<project name="multiple commands" default="ls" basedir="." >
-	<target name="windows" if="WINDIR" >
-		<set name="copy" value="copy" />
-		<set name="del" value="del" />
-		<set name="dir" value="dir" />
-		<set name="cmdsep" value="&&" />
-		<set name="pathsep" value="\" />
+<project name="multiple commands" default="ls" basedir=".">
+
+	<target name="windows" if="$WINDIR">
+		<set name="copy" value="copy"/>
+		<set name="del" value="del"/>
+		<set name="dir" value="dir"/>
+		<set name="cmdsep" value="&&"/>
+		<set name="pathsep" value="\"/>
 	</target>
 
-	<target name="unix" unless="WINDIR" >
-		<set name="cp" value="cp" />
-		<set name="del" value="rm" />
-		<set name="dir" value="ls -l" />
-		<set name="cmdsep" value=";" />
-		<set name="pathsep" value="/" />
+	<target name="unix" unless="$WINDIR">
+		<set name="cp" value="cp"/>
+		<set name="del" value="rm"/>
+		<set name="dir" value="ls -l"/>
+		<set name="cmdsep" value=";"/>
+		<set name="pathsep" value="/"/>
 	</target>
 
-	<target name="init" depend="windows,unix" >
+	<target name="init" depend="windows,unix">
 	</target>
 
 	<target name="ls" depend="init">
 		<description>print content of current directory</description>
-		<set name="from_dir" value="exec" />
-		<set name="to_dir" value=".." />
-		<exec executable="cd ${to_dir} ${cmdsep} ${dir} ${cmdsep} cd ${from_dir} ${cmdsep} ${dir}" />
+		<set name="from_dir" value="exec"/>
+		<set name="to_dir" value=".."/>
+		<exec executable="cd ${to_dir} ${cmdsep} ${dir} ${cmdsep} cd ${from_dir} ${cmdsep} ${dir}"/>
 	</target>
 	
 </project>

@@ -1,17 +1,19 @@
-<project name="geant" >
-	<target name="one" >
+<project name="geant">
+
+	<target name="one">
 		<description>calls other ant files</description>
-		<set name="who" value="Bart" />
+		<set name="who" value="Bart"/>
 
-		<set name="buildfile" value="../variables/variables5.eant" />
+		<set name="buildfile" value="../variables/variables5.eant"/>
 
-		<echo message="------------------------" />
-		<echo message="before call of ${buildfile}" />
-		<geant file="${buildfile}" />
-		<echo message="after call of ${buildfile}" />
+		<echo message="------------------------"/>
+		<echo message="before call of ${buildfile}"/>
+		<geant file="${buildfile}"/>
+		<echo message="after call of ${buildfile}"/>
 		<echo message="-------" />
-		<echo message="before call of ${buildfile}" />
+		<echo message="before call of ${buildfile}"/>
 		<geant file="${buildfile}" reuse_variables="true"/> 
-		<echo message="after call of ${buildfile}" />
+		<echo message="after call of ${buildfile}"/>
 	</target>
+
 </project>

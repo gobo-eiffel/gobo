@@ -1,16 +1,18 @@
 <?xml version="1.0" ?>
 
-<project name="variables1" >
-	<target name="var" >
-		<description>set and query a variable</description>
-		<set name="who" value="world" />
-		<echo message="Hello ${who}" />
+<project name="variables1">
 
-		<set name="who" value="you" />
-		<echo message="Hello ${who}" />
+	<target name="var">
+		<description>set and query a variable</description>
+		<set name="who" value="world"/>
+		<echo message="Hello ${who}"/>
+
+		<set name="who" value="you"/>
+		<echo message="Hello ${who}"/>
 
 		<unset name="who"/>
-		<echo message="Hello ${who}" />
+		<echo message="Hello ${who}"/>
 
 	</target>
+
 </project>

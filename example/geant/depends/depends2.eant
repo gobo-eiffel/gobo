@@ -1,20 +1,19 @@
-<project name="geant" default="D" >
+<project name="geant" default="D">
 
-	<target name="A" >
-		<echo message="A" />
+	<target name="A">
+		<echo message="A"/>
 	</target>
 
-	<target name="B" >
-		<echo message="B" />
+	<target name="B">
+		<echo message="B"/>
 	</target>
 
 	<target name="C">
-		<echo message="C" />
+		<echo message="C"/>
 	</target>
 
-	<target name="D" depend="A,B,C" >
-		<echo message="D" />
+	<target name="D" depend="A,B,C">
+		<echo message="D"/>
 	</target>
-
 
 </project>

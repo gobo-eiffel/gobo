@@ -1,7 +1,7 @@
 <project name="geant" default="compile">
 
 	<target name="init">
-		<set name="system" value="hello" />
+		<set name="system" value="hello"/>
 	</target>
 
 	<target name="compile" depend="init">
@@ -16,13 +16,13 @@
 
 	<target name="run" depend="init">
 		<description>executes example</description>
-		<exec executable="${system}" />
+		<exec executable="${system}"/>
 	</target>
 
 	<target name="clean" depend="init">
 		<description>deletes generated files</description>
-		<exec executable="clean ${system}" />
-		<exec executable="del ${system}.exe se.ace cecil.se *.bak" />
+		<exec executable="clean ${system}"/>
+		<exec executable="del ${system}.exe se.ace cecil.se *.bak"/>
 	</target>
 
 </project>
