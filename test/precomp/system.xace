@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<system name="precomp">
+	<description>
+		system:     "Gobo Eiffel Libraries precompilation"
+		author:     "Eric Bezault [ericb@gobosoft.com]"
+		copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+		license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:       "$Date$"
+		revision:   "$Revision$"
+	</description>
+
+	<root class="PRECOMP" creation="make"/>
+
+	<cluster>
+		<cluster name="precomp" location="${GOBO}/test/precomp"/>
+		<mount location="${GOBO}/library/kernel/cluster.xace"/>
+		<mount location="${GOBO}/library/lexical/cluster.xace"/>
+		<mount location="${GOBO}/library/parse/cluster.xace"/>
+		<mount location="${GOBO}/library/pattern/cluster.xace"/>
+		<mount location="${GOBO}/library/structure/cluster.xace"/>
+		<mount location="${GOBO}/library/test/cluster.xace"/>
+		<mount location="${GOBO}/library/time/cluster.xace"/>
+		<mount location="${GOBO}/library/tools/cluster.xace"/>
+		<mount location="${GOBO}/library/utility/cluster.xace"/>
+		<mount location="${GOBO}/library/xml/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel.xace"/>
+	</cluster>
+</system>
