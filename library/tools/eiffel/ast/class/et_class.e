@@ -27,6 +27,8 @@ inherit
 			is_named_type, is_valid_context
 		end
 
+	DEBUG_OUTPUT
+
 	HASHABLE
 
 creation
@@ -833,6 +835,12 @@ feature -- Output
 				a_string.append_character (' ')
 				a_parameters.append_to_string (a_string)
 			end
+		end
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'
+		do
+			Result := name.name
 		end
 
 feature -- Processing

@@ -140,6 +140,8 @@
 	<target name="install_misc">
 		<set name="gepp_dir" value="misc"/>
 		<set name="spec_dir" value="spec"/>
+		<set name="gepp_file" value="debug_output"/>
+		<geant target="ge2e"/>
 		<set name="gepp_file" value="ki_platform"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_eiffel_compiler"/>
