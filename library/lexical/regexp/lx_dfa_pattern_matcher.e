@@ -15,10 +15,13 @@ deferred class LX_DFA_PATTERN_MATCHER
 inherit
 
 	LX_PATTERN_MATCHER
+		redefine
+			matches, recognizes
+		end
 
 feature -- Status report
 
-	compiled: BOOLEAN is
+	is_compiled: BOOLEAN is
 			-- Has pattern been sucessfully compiled?
 		do
 			Result := yy_nxt /= Void
@@ -29,11 +32,20 @@ feature -- Status report
 			-- described by current pattern?
 		local
 			i, nb: INTEGER
+			e: INTEGER
 		do
 			nb := a_string.count
+			subject := a_string
+			subject_start := 1
+			subject_end := nb
+			match_count := 0
 			from i := 1 until i > nb loop
-				if smallest_end_position (a_string, i) /= -1 then
+				e := smallest_end_position (a_string, i)
+				if e /= -1 then
 					Result := True
+					match_count := 1
+					matched_start := i
+					matched_end := e
 					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1
@@ -44,32 +56,86 @@ feature -- Status report
 	recognizes (a_string: STRING): BOOLEAN is
 			-- Is `a_string' a token of the language
 			-- described by current pattern?
+		local
+			nb: INTEGER
 		do
-			Result := (longest_end_position (a_string, 1) = a_string.count)
+			nb := a_string.count
+			subject := a_string
+			subject_start := 1
+			subject_end := nb
+			if longest_end_position (a_string, 1) = nb then
+				Result := True
+				match_count := 1
+				matched_start := 1
+				matched_end := nb
+			else
+				match_count := 0
+			end
 		end
 
 feature -- Access
 
-	matched_position (a_string: STRING): DS_PAIR [INTEGER, INTEGER] is
-			-- Position of the longest-leftmost token matched
-			-- by current pattern in `a_string'
-		local
-			i, nb: INTEGER
-			e: INTEGER
+	captured_start_position (n: INTEGER): INTEGER is
+			-- Start position of the `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+			-- Return 0 if undefined captured substring.
 		do
-			nb := a_string.count
-			from i := 1 until i > nb loop
-				e := longest_end_position (a_string, i)
+			Result := matched_start
+		end
+
+	captured_end_position (n: INTEGER): INTEGER is
+			-- End position of the `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+			-- Return -1 if undefined captured substring.
+		do
+			Result := matched_end
+		end
+
+feature -- Matching
+
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+			-- Try to match the substring of `a_subject' between
+			-- positions `a_from' and `a_to' with the current pattern.
+			-- Make result available in `has_matched' and the various
+			-- `*_captured_*' features.
+		local
+			i, e: INTEGER
+		do
+			match_count := 0
+			subject := a_subject
+			subject_start := a_from
+			subject_end := a_to
+			from i := a_from until i > a_to loop
+				e := longest_end_position (a_subject, i)
 				if e /= -1 then
-					!! Result.make (i, e)
-					i := nb + 1 -- Jump out of the loop.
+					match_count := 1
+					matched_start := i
+					matched_end := e
+					i := a_to + 1 -- Jump out of the loop.
 				else
 					i := i + 1
 				end
 			end
 		end
 
+feature -- Resetting
+
+	reset is
+			-- Reset the pattern.
+		do
+			wipe_out
+			yy_nxt := Void
+			yy_accept := Void
+			yyNb_rows := 0
+		end
+
 feature {NONE} -- Matching
+
+	matched_start: INTEGER
+			-- Start position of the last match
+
+	matched_end: INTEGER
+			-- End position of the last match
 
 	smallest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
 			-- Position of the last character of the smallest
@@ -77,7 +143,7 @@ feature {NONE} -- Matching
 			-- and matched by current pattern;
 			-- -1 if no such token exists
 		require
-			compiled: compiled
+			compiled: is_compiled
 			a_string_not_void: a_string /= Void
 			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
 		local
@@ -120,7 +186,7 @@ feature {NONE} -- Matching
 			-- and matched by current pattern;
 			-- -1 if no such token exists
 		require
-			compiled: compiled
+			compiled: is_compiled
 			a_string_not_void: a_string /= Void
 			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
 		local

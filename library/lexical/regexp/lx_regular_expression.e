@@ -62,7 +62,7 @@ indexing
 		% details, see $GOBO/doc/gelex/patterns.html.                          "
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,6 +70,11 @@ indexing
 deferred class LX_REGULAR_EXPRESSION
 
 inherit
+
+	RX_REGULAR_EXPRESSION
+		rename
+			compile as compile_case_sensitive
+		end
 
 	LX_PATTERN_MATCHER
 

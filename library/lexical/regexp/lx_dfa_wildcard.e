@@ -37,7 +37,7 @@ indexing
 		%                  patterns separated by a '|'.                        "
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision:   "$Revision$"
@@ -47,11 +47,15 @@ class LX_DFA_WILDCARD
 inherit
 
 	LX_WILDCARD
+	 	undefine
+			matches, recognizes
+		end
+
 	LX_DFA_PATTERN_MATCHER
 
 creation
 
-	make, compile
+	make, compile, compile_case_insensitive, compile_case_sensitive
 
 feature -- Element change
 
@@ -66,6 +70,7 @@ feature -- Element change
 			a_dfa: LX_FULL_DFA
 			a_full_tables: LX_FULL_TABLES
 		do
+			wipe_out
 			!! an_error_handler.make_null
 			!! a_description.make
 			a_description.set_equiv_classes_used (False)

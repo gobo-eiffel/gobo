@@ -62,7 +62,7 @@ indexing
 		% details, see $GOBO/doc/gelex/patterns.html.                          "
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,15 +72,18 @@ class LX_DFA_REGULAR_EXPRESSION
 inherit
 
 	LX_REGULAR_EXPRESSION
+		undefine
+			matches, recognizes
+		end
 
 	LX_DFA_PATTERN_MATCHER
 		redefine
-			matches, matched_position
+			matches, match_substring
 		end
 
 creation
 
-	make, compile
+	make, compile, compile_case_insensitive, compile_case_sensitive
 
 feature -- Element change
 
@@ -97,6 +100,7 @@ feature -- Element change
 			a_string: STRING
 			nb: INTEGER
 		do
+			wipe_out
 			!! an_error_handler.make_null
 			!! a_description.make
 			a_description.set_equiv_classes_used (False)
@@ -156,19 +160,38 @@ feature -- Status report
 			-- described by current regular expression?
 		local
 			i, nb: INTEGER
+			e: INTEGER
 		do
 			nb := a_string.count
+			subject := a_string
+			subject_start := 1
+			subject_end := nb
+			match_count := 0
 			if has_caret then
 				if has_dollar then
-					Result := longest_end_position (a_string, 1) = nb
+					if longest_end_position (a_string, 1) = nb then
+						Result := True
+						match_count := 1
+						matched_start := 1
+						matched_end := nb
+					end
 				else
-					Result := smallest_end_position (a_string, 1) /= -1
+					e := smallest_end_position (a_string, 1)
+					if e /= -1 then
+						Result := True
+						match_count := 1
+						matched_start := 1
+						matched_end := e
+					end
 				end
 			else
 				if has_dollar then
 					from i := 1 until i > nb loop
 						if longest_end_position (a_string, i) = nb then
 							Result := True
+							match_count := 1
+							matched_start := i
+							matched_end := nb
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
@@ -176,8 +199,12 @@ feature -- Status report
 					end
 				else
 					from i := 1 until i > nb loop
-						if smallest_end_position (a_string, i) /= -1 then
+						e := smallest_end_position (a_string, i)
+						if e /= -1 then
 							Result := True
+							match_count := 1
+							matched_start := i
+							matched_end := e
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
@@ -187,44 +214,56 @@ feature -- Status report
 			end
 		end
 
-feature -- Access
+feature -- Matching
 
-	matched_position (a_string: STRING): DS_PAIR [INTEGER, INTEGER] is
-			-- Position of the longest-leftmost token matched
-			-- by current regular expression in `a_string'
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+			-- Try to match the substring of `a_subject' between
+			-- positions `a_from' and `a_to' with the current pattern.
+			-- Make result available in `has_matched' and the various
+			-- `*_captured_*' features.
 		local
-			i, nb: INTEGER
-			e: INTEGER
+			i, e: INTEGER
 		do
-			nb := a_string.count
+			match_count := 0
+			subject := a_subject
+			subject_start := a_from
+			subject_end := a_to
 			if has_caret then
-				e := longest_end_position (a_string, 1)
+				e := longest_end_position (a_subject, a_from)
 				if has_dollar then
-					if e = nb then
-						!! Result.make (1, e)
+					if e = a_to then
+						match_count := 1
+						matched_start := 1
+						matched_end := e
 					end
 				else
 					if e /= -1 then
-						!! Result.make (1, e)
+						match_count := 1
+						matched_start := 1
+						matched_end := e
 					end
 				end
 			else
 				if has_dollar then
-					from i := 1 until i > nb loop
-						e := longest_end_position (a_string, i)
-						if e = nb then
-							!! Result.make (i, e)
-							i := nb + 1 -- Jump out of the loop.
+					from i := a_from until i > a_to loop
+						e := longest_end_position (a_subject, i)
+						if e = a_to then
+							match_count := 1
+							matched_start := i
+							matched_end := e
+							i := a_to + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
 					end
 				else
-					from i := 1 until i > nb loop
-						e := longest_end_position (a_string, i)
+					from i := a_from until i > a_to loop
+						e := longest_end_position (a_subject, i)
 						if e /= -1 then
-							!! Result.make (i, e)
-							i := nb + 1 -- Jump out of the loop.
+							match_count := 1
+							matched_start := i
+							matched_end := e
+							i := a_to + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
