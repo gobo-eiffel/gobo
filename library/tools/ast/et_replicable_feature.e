@@ -83,6 +83,15 @@ feature -- Compilation
 print ("GOBO 1 -- ")
 print (features.count)
 print ("%N")
+from features.start until features.after loop
+	a_feature := features.item_for_iteration
+	print ("%T")
+	print (a_feature.current_class.name.name)
+	print (".")
+	print (a_feature.name.name)
+	print ("%N")
+	features.forth
+end
 				when 1 then
 					-- OK.
 				else
