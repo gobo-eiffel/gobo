@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel String Library"
-		library: "Gobo Eiffel Structure Library"
+		library: "Gobo Eiffel String Library"
 		copyright: "Copyright (c) 2004, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"

@@ -1,15 +1,15 @@
 indexing
 
 	description:
-	
-		"Collations keys for Unicode code-point collation."
-	
+
+		"Collation keys for Unicode code-point collation"
+
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class ST_UNICODE_CODEPOINT_COLLATION_KEY
 
 inherit
@@ -25,11 +25,12 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_string: STRING) is
-			-- Establish invariant.
+			-- Create a new collation key.
 		require
-			source_string_not_void: a_string /= Void
+			a_string_not_void: a_string /= Void
 		do
-			create source.make_from_string (a_string) -- in case the STRING is altered later
+				-- Clone `a_string' in case it is altered later.
+			source := clone (a_string)
 		ensure
 			source_set: STRING_.same_string (source, a_string)
 		end
@@ -37,20 +38,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	source: STRING
+			-- Associated string
 
 feature -- Comparison
 
 	three_way_comparison (other: like Current): INTEGER is
 			-- Comparison of `Current' with `other'
 		do
-
-			-- This implementation directly compares the source values,
-			--  so it is not any more efficient to use this class than
-			--  to compare the strings directly
-
+				-- This implementation directly compares the source values,
+				-- so it is not any more efficient to use this class than
+				-- to compare the strings directly
 			Result := source.three_way_comparison (other.source)
 		end
 
 end
-
-	

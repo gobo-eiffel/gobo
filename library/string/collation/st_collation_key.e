@@ -1,15 +1,19 @@
 indexing
 
 	description:
-	
-		"Objects that represent STRINGs for comparison."
-	
+
+		"Objects that represent STRINGs for comparison"
+
+	remark:
+
+		"If two STRINGs are equal, then their collation keys are equal, and vice versa."
+
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class ST_COLLATION_KEY
 
 inherit
@@ -18,13 +22,12 @@ inherit
 
 	HASHABLE
 
-		-- If two STRINGs are equal, then their
-		--  collation keys are equal, and vice versa.
+	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
 
 	source: STRING is
-			-- String which `Current' represents
+			-- Associated string
 		deferred
 		ensure
 			source_string_not_void: Result /= Void
@@ -42,12 +45,10 @@ feature -- Comparison
 			-- Comparison of `Current' with `other'
 		require
 			other_key_not_void: other /= Void
-			same_implementation: generating_type.is_equal (other.generating_type)
+			same_type: ANY_.same_types (Current, other)
 		deferred
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
 end
-
-	

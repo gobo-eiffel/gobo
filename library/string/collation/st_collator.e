@@ -1,18 +1,20 @@
 indexing
 
 	description:
-	
+
 		"Objects that collate strings"
-	
+
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class ST_COLLATOR
 
 inherit
+
+	ANY
 
 	KL_COMPARATOR  [STRING]
 
@@ -24,7 +26,7 @@ feature -- Access
 	collation_key (a_string: STRING): ST_COLLATION_KEY is
 			-- Collation key for `a_string';
 			-- Collation keys provide better performance for multiple
-			--  comparisons involving the same source strings.
+			-- comparisons involving the same source strings.
 		require
 			string_not_void: a_string /= Void
 		do
@@ -38,12 +40,10 @@ feature -- Comparison
 	three_way_comparison (a_string, another_string: STRING): INTEGER is
 			-- Compare `a_string' with `another_string'
 		require
-			first_string_not_void: a_string /= Void
-			second_string_not_void: another_string /= Void
+			a_string_not_void: a_string /= Void
+			another_string_not_void: another_string /= Void
 		do
-
-			-- Default implementation is to compare using Unicode code points
-
+				-- Default implementation is to compare using Unicode code points.
 			Result := STRING_.three_way_comparison (a_string, another_string)
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
@@ -56,5 +56,3 @@ feature -- Comparison
 		end
 
 end
-
-	
