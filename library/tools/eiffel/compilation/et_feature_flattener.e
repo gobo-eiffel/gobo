@@ -112,7 +112,7 @@ feature {NONE} -- Processing
 			if not current_class.features_flattened then
 					-- Build ancestors of `current_class' if not already done.
 				current_class.process (universe.ancestor_builder)
-				if not current_class.has_ancestors_error then
+				if current_class.ancestors_built and then not current_class.has_ancestors_error then
 					current_class.set_features_flattened
 						-- Process parents first.
 					a_parents := current_class.parents

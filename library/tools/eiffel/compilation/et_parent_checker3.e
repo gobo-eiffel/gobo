@@ -74,7 +74,7 @@ feature -- Validity checking
 					other_class := classes_to_be_processed.last
 					classes_to_be_processed.remove_last
 					other_class.process (universe.interface_checker)
-					if other_class.has_interface_error then
+					if not other_class.interface_checked or else other_class.has_interface_error then
 						set_fatal_error
 					end
 				end
@@ -153,7 +153,7 @@ feature {NONE} -- Parent validity
 							nb2 := a_creator.count
 							if nb2 > 0 then
 								an_actual_class.process (universe.feature_flattener)
-								if an_actual_class.has_flattening_error then
+								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
 									set_fatal_error
 								else
 									from j := 1 until j > nb2 loop
@@ -174,7 +174,7 @@ feature {NONE} -- Parent validity
 												end
 											end
 										elseif
-											not a_creation_feature.is_creation_exported_to (a_class, an_actual_class, universe.ancestor_builder) and then
+											not a_creation_feature.is_creation_exported_to (a_class, an_actual_class, universe) and then
 											(an_actual_class.creators /= Void or else not a_creation_feature.has_seed (universe.default_create_seed))
 										then
 											set_fatal_error

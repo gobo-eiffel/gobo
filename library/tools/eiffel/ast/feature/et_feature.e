@@ -333,15 +333,15 @@ feature -- Implementation checking status
 
 feature -- Export status
 
-	is_exported_to (a_client: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+	is_exported_to (a_client: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current feature exported to `a_client'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
-			Result := clients.has_descendant (a_client, a_processor)
+			Result := clients.has_descendant (a_client, a_universe)
 		end
 
 	is_directly_exported_to (a_client: ET_CLASS): BOOLEAN is
@@ -356,17 +356,17 @@ feature -- Export status
 			Result := clients.has_class (a_client)
 		end
 
-	is_creation_exported_to (a_client, a_class: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+	is_creation_exported_to (a_client, a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current feature listed in the creation clauses
 			-- of `a_class' and exported to `a_client'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
 			a_class_not_void: a_class /= Void
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
-			Result := a_class.is_creation_exported_to (name, a_client, a_processor)
+			Result := a_class.is_creation_exported_to (name, a_client, a_universe)
 		end
 
 	is_creation_directly_exported_to (a_client, a_class: ET_CLASS): BOOLEAN is

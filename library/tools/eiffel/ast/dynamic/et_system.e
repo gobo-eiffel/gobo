@@ -310,7 +310,7 @@ feature -- Types
 					-- Add the new dynamic type and keep track
 					-- of its associated index.
 				l_base_class.process (universe.interface_checker)
-				if l_base_class.has_interface_error then
+				if not l_base_class.interface_checked or else l_base_class.has_interface_error then
 					set_fatal_error
 				end
 				l_base_type := a_type.base_type (a_context, universe)
@@ -496,7 +496,7 @@ feature -- Compilation
 				error_handler.report_gvsrc4a_error (l_class)
 			else
 				l_class.process (universe.eiffel_parser)
-				if l_class.has_syntax_error then
+				if not l_class.is_parsed or else l_class.has_syntax_error then
 						-- Error already reported.
 					set_fatal_error
 				elseif l_class.is_generic then
@@ -689,7 +689,7 @@ feature {NONE} -- Compilation
 			l_class := universe.array_class
 			if l_class.is_preparsed then
 				l_class.process (universe.interface_checker)
-				if l_class.has_interface_error then
+				if not l_class.interface_checked or else l_class.has_interface_error then
 					set_fatal_error
 				else
 						-- Check features `area', and `lower' and `upper' of class ARRAY.

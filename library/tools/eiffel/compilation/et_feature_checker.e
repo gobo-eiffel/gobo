@@ -196,7 +196,7 @@ feature -- Validity checking
 				-- First, make sure that the interface of `a_current_type' is valid.
 			a_current_class := a_current_type.direct_base_class (universe)
 			a_current_class.process (universe.interface_checker)
-			if a_current_class.has_interface_error then
+			if not a_current_class.interface_checked or else a_current_class.has_interface_error then
 				set_fatal_error
 			else
 					-- Check that this feature has already been checked in the
@@ -512,7 +512,7 @@ feature -- Validity checking
 							end
 							if a_convert_class /= Void then
 								a_convert_class.process (universe.feature_flattener)
-								if a_convert_class.has_flattening_error then
+								if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
 										-- Error already reported by the feature flattener.
 									had_error := True
 									set_fatal_error
@@ -627,7 +627,7 @@ feature -- Validity checking
 				-- First, make sure that the interface of `a_current_type' is valid.
 			a_current_class := a_current_type.direct_base_class (universe)
 			a_current_class.process (universe.interface_checker)
-			if a_current_class.has_interface_error then
+			if not a_current_class.interface_checked or else a_current_class.has_interface_error then
 				set_fatal_error
 			else
 				a_class_impl := a_feature_impl.implementation_class
@@ -717,7 +717,7 @@ feature -- Validity checking
 				-- First, make sure that the interface of `a_current_type' is valid.
 			a_current_class := a_current_type.direct_base_class (universe)
 			a_current_class.process (universe.interface_checker)
-			if a_current_class.has_interface_error then
+			if not a_current_class.interface_checked or else a_current_class.has_interface_error then
 				set_fatal_error
 			else
 				a_class_impl := a_feature_impl.implementation_class
@@ -803,7 +803,7 @@ feature -- Validity checking
 				-- First, make sure that the interface of `a_current_type' is valid.
 			a_current_class := a_current_type.direct_base_class (universe)
 			a_current_class.process (universe.interface_checker)
-			if a_current_class.has_interface_error then
+			if not a_current_class.interface_checked or else a_current_class.has_interface_error then
 				set_fatal_error
 			else
 				a_class_impl := an_invariants.implementation_class
@@ -1567,7 +1567,7 @@ feature {NONE} -- Instruction validity
 						end
 						if a_convert_class /= Void then
 							a_convert_class.process (universe.feature_flattener)
-							if a_convert_class.has_flattening_error then
+							if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
 									-- Error already reported by the feature flattener.
 								set_fatal_error
 								a_convert_feature := Void
@@ -1814,7 +1814,7 @@ feature {NONE} -- Instruction validity
 								end
 								a_class := a_context.base_class (universe)
 								a_class.process (universe.interface_checker)
-								if a_class.has_interface_error then
+								if not a_class.interface_checked or else a_class.has_interface_error then
 									set_fatal_error
 								else
 									a_feature := a_class.named_feature (a_name)
@@ -1854,7 +1854,7 @@ feature {NONE} -- Instruction validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						elseif a_seed /= 0 then
 							a_feature := a_class.seeded_feature (a_seed)
@@ -1950,7 +1950,7 @@ feature {NONE} -- Instruction validity
 								end
 							end
 						end
-					elseif not a_feature.is_creation_exported_to (current_class, a_class, universe.ancestor_builder) then
+					elseif not a_feature.is_creation_exported_to (current_class, a_class, universe) then
 						if a_class.creators /= Void or else not a_feature.has_seed (universe.default_create_seed) then
 								-- The procedure is not a creation procedure exported to `current_class'.
 							set_fatal_error
@@ -2600,7 +2600,7 @@ feature {NONE} -- Instruction validity
 							end
 							if a_seed = 0 then
 								current_class.process (universe.interface_checker)
-								if current_class.has_interface_error then
+								if not current_class.interface_checked or else current_class.has_interface_error then
 									set_fatal_error
 								else
 									an_attribute := current_class.named_feature (an_identifier)
@@ -2830,7 +2830,7 @@ feature {NONE} -- Expression validity
 							a_context.force_last (l_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
-							if a_class.has_interface_error then
+							if not a_class.interface_checked or else a_class.has_interface_error then
 								set_fatal_error
 							else
 								a_feature := a_class.named_feature (l_name)
@@ -2858,7 +2858,7 @@ feature {NONE} -- Expression validity
 						a_context.force_last (l_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						elseif a_seed /= 0 then
 							a_feature := a_class.seeded_feature (a_seed)
@@ -2935,7 +2935,7 @@ feature {NONE} -- Expression validity
 								end
 							end
 						end
-					elseif not a_feature.is_creation_exported_to (current_class, a_class, universe.ancestor_builder) then
+					elseif not a_feature.is_creation_exported_to (current_class, a_class, universe) then
 						if a_class.creators /= Void or else not a_feature.has_seed (universe.default_create_seed) then
 								-- The procedure is not a creation procedure exported to `current_class'.
 							set_fatal_error
@@ -3238,7 +3238,7 @@ feature {NONE} -- Expression validity
 					end
 					if a_seed = 0 then
 						current_class.process (universe.interface_checker)
-						if current_class.has_interface_error then
+						if not current_class.interface_checked or else current_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := current_class.named_feature (a_name)
@@ -3395,7 +3395,7 @@ feature {NONE} -- Expression validity
 					end
 				else
 					current_class.process (universe.interface_checker)
-					if current_class.has_interface_error then
+					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
 						a_feature := current_class.seeded_feature (a_seed)
@@ -3615,7 +3615,7 @@ feature {NONE} -- Expression validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.named_feature (a_name)
@@ -3638,7 +3638,7 @@ feature {NONE} -- Expression validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.seeded_feature (a_seed)
@@ -3655,7 +3655,7 @@ feature {NONE} -- Expression validity
 					check
 						a_class_not_void: a_class /= Void
 					end
-					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
+					if not a_feature.is_exported_to (current_class, universe) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
 						a_class_impl := feature_impl.implementation_class
@@ -3724,7 +3724,7 @@ feature {NONE} -- Expression validity
 									end
 									if a_convert_class /= Void then
 										a_convert_class.process (universe.feature_flattener)
-										if a_convert_class.has_flattening_error then
+										if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
 												-- Error already reported by the feature flattener.
 											had_error := True
 											set_fatal_error
@@ -3776,12 +3776,12 @@ feature {NONE} -- Expression validity
 											not l_actual_context.same_named_type (l_formal_type, l_formal_context, universe)
 										then
 											other_class.process (universe.interface_checker)
-											if not other_class.has_interface_error then
+											if other_class.interface_checked and then not other_class.has_interface_error then
 												other_feature := other_class.named_feature (a_name)
 											end
 										end
 										if other_feature /= Void then
-											if other_feature.is_exported_to (current_class, universe.ancestor_builder) then
+											if other_feature.is_exported_to (current_class, universe) then
 												a_convert_feature := type_checker.convert_feature (l_formal_context, l_actual_context)
 												if a_convert_feature /= Void then
 													if a_convert_feature.is_convert_from then
@@ -3793,7 +3793,7 @@ feature {NONE} -- Expression validity
 													end
 													if a_convert_class /= Void then
 														a_convert_class.process (universe.feature_flattener)
-														if a_convert_class.has_flattening_error then
+														if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
 																-- Error already reported by the feature flattener.
 															had_error := True
 															set_fatal_error
@@ -4241,7 +4241,7 @@ feature {NONE} -- Expression validity
 			else
 					-- Make sure that `a_precursor' has been resolved.
 				a_class_impl.process (universe.feature_flattener)
-				if a_class_impl.has_flattening_error then
+				if not a_class_impl.features_flattened or else a_class_impl.has_flattening_error then
 					set_fatal_error
 				else
 					a_parent_type := a_precursor.parent_type
@@ -4270,7 +4270,7 @@ feature {NONE} -- Expression validity
 									-- context of `current_type'.
 								if a_parent_type.is_generic then
 									current_class.process (universe.ancestor_builder)
-									if current_class.has_ancestors_error then
+									if not current_class.ancestors_built or else current_class.has_ancestors_error then
 										set_fatal_error
 									else
 										an_ancestor := current_class.ancestor (a_parent_type, universe)
@@ -4362,7 +4362,7 @@ feature {NONE} -- Expression validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.named_feature (a_name)
@@ -4385,7 +4385,7 @@ feature {NONE} -- Expression validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.seeded_feature (a_seed)
@@ -4402,7 +4402,7 @@ feature {NONE} -- Expression validity
 					check
 						a_class_not_void: a_class /= Void
 					end
-					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
+					if not a_feature.is_exported_to (current_class, universe) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
 						a_class_impl := feature_impl.implementation_class
@@ -4793,7 +4793,7 @@ feature {NONE} -- Expression validity
 						a_context.force_last (a_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.named_feature (a_name)
@@ -4816,7 +4816,7 @@ feature {NONE} -- Expression validity
 							a_context.force_last (a_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
-							if a_class.has_interface_error then
+							if not a_class.interface_checked or else a_class.has_interface_error then
 								set_fatal_error
 							else
 								a_feature := a_class.seeded_feature (a_seed)
@@ -4834,7 +4834,7 @@ feature {NONE} -- Expression validity
 						check
 							a_class_not_void: a_class /= Void
 						end
-						if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
+						if not a_feature.is_exported_to (current_class, universe) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
 							a_class_impl := feature_impl.implementation_class
@@ -4934,7 +4934,7 @@ feature {NONE} -- Expression validity
 						end
 					else
 						current_class.process (universe.interface_checker)
-						if current_class.has_interface_error then
+						if not current_class.interface_checked or else current_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := current_class.named_feature (a_name)
@@ -4966,7 +4966,7 @@ feature {NONE} -- Expression validity
 				end
 				if not had_error and not already_checked then
 					current_class.process (universe.interface_checker)
-					if current_class.has_interface_error then
+					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
 						a_feature := current_class.seeded_feature (a_seed)
@@ -5101,7 +5101,7 @@ feature {NONE} -- Expression validity
 					end
 				else
 					current_class.process (universe.interface_checker)
-					if current_class.has_interface_error then
+					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
 						a_feature := current_class.named_feature (a_name)
@@ -5200,7 +5200,7 @@ feature {NONE} -- Expression validity
 			if not has_fatal_error then
 				if a_feature = Void then
 					current_class.process (universe.interface_checker)
-					if current_class.has_interface_error then
+					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
 						a_feature := current_class.seeded_feature (a_seed)
@@ -5340,7 +5340,7 @@ feature {NONE} -- Expression validity
 							-- NONE is a descendant of all classes.
 						elseif universe.has_class (l_client_name) then
 							l_client := universe.eiffel_class (l_client_name)
-							if not a_feature.is_exported_to (l_client, universe.ancestor_builder) then
+							if not a_feature.is_exported_to (l_client, universe) then
 									-- The feature is not exported to `l_client'.
 								set_fatal_error
 								a_class_impl := feature_impl.implementation_class
@@ -5519,7 +5519,7 @@ feature {NONE} -- Agent validity
 					end
 				else
 					current_class.process (universe.interface_checker)
-					if current_class.has_interface_error then
+					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
 						a_feature := current_class.named_feature (a_name)
@@ -5552,7 +5552,7 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				if a_feature = Void then
 					current_class.process (universe.interface_checker)
-					if current_class.has_interface_error then
+					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
 						a_feature := current_class.seeded_feature (a_seed)
@@ -5668,7 +5668,7 @@ feature {NONE} -- Agent validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.named_feature (a_name)
@@ -5707,7 +5707,7 @@ feature {NONE} -- Agent validity
 					if not has_fatal_error then
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.seeded_feature (a_seed)
@@ -5724,7 +5724,7 @@ feature {NONE} -- Agent validity
 					check
 						a_class_not_void: a_class /= Void
 					end
-					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
+					if not a_feature.is_exported_to (current_class, universe) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
 						a_class_impl := feature_impl.implementation_class
@@ -5837,7 +5837,7 @@ feature {NONE} -- Agent validity
 						a_context.force_last (a_target_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
-						if a_class.has_interface_error then
+						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
 							a_feature := a_class.named_feature (a_name)
@@ -5874,7 +5874,7 @@ feature {NONE} -- Agent validity
 							a_context.force_last (a_target_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
-							if a_class.has_interface_error then
+							if not a_class.interface_checked or else a_class.has_interface_error then
 								set_fatal_error
 							else
 								a_feature := a_class.seeded_feature (a_seed)
@@ -5891,7 +5891,7 @@ feature {NONE} -- Agent validity
 						check
 							a_class_not_void: a_class /= Void
 						end
-						if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
+						if not a_feature.is_exported_to (current_class, universe) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
 							a_class_impl := feature_impl.implementation_class
@@ -6079,7 +6079,7 @@ feature {NONE} -- Agent validity
 									end
 									if a_convert_class /= Void then
 										a_convert_class.process (universe.feature_flattener)
-										if a_convert_class.has_flattening_error then
+										if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
 												-- Error already reported by the feature flattener.
 											had_error := True
 											set_fatal_error

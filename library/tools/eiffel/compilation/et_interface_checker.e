@@ -86,7 +86,7 @@ feature {NONE} -- Processing
 			if not current_class.interface_checked then
 					-- Flatten features of `current_class' if not already done.
 				current_class.process (universe.feature_flattener)
-				if not current_class.has_flattening_error then
+				if current_class.features_flattened and then not current_class.has_flattening_error then
 					current_class.set_interface_checked
 						-- Process parents first.
 					a_parents := current_class.parents
@@ -176,37 +176,41 @@ feature {NONE} -- Constraint creation validity
 				end
 					-- Build the feature table.
 				a_class.process (universe.feature_flattener)
-				nb := a_creator.count
-				from i := 1 until i > nb loop
-					a_name := a_creator.feature_name (i)
-					from j := 1 until j >= i loop
-						other_name := a_creator.feature_name (j)
-						if other_name.same_feature_name (a_name) then
-								-- Feature name appears twice in Creation clause.
-								-- This is not considered as a fatal error.
-							error_handler.report_vgcp3c_error (current_class, other_name, a_name)
+				if not a_class.features_flattened or else a_class.has_flattening_error then
+					set_fatal_error (current_class)
+				else
+					nb := a_creator.count
+					from i := 1 until i > nb loop
+						a_name := a_creator.feature_name (i)
+						from j := 1 until j >= i loop
+							other_name := a_creator.feature_name (j)
+							if other_name.same_feature_name (a_name) then
+									-- Feature name appears twice in Creation clause.
+									-- This is not considered as a fatal error.
+								error_handler.report_vgcp3c_error (current_class, other_name, a_name)
+							end
+							j := j + 1
 						end
-						j := j + 1
-					end
-					a_feature := a_class.named_feature (a_name)
-					if a_feature /= Void then
-						a_flattened_feature := a_feature.flattened_feature
-						if a_flattened_feature.is_procedure then
-								-- We finally got a valid creation
-								-- procedure. Record its seed.
-							a_name.set_seed (a_flattened_feature.first_seed)
+						a_feature := a_class.named_feature (a_name)
+						if a_feature /= Void then
+							a_flattened_feature := a_feature.flattened_feature
+							if a_flattened_feature.is_procedure then
+									-- We finally got a valid creation
+									-- procedure. Record its seed.
+								a_name.set_seed (a_flattened_feature.first_seed)
+							else
+									-- This feature is not a procedure.
+								set_fatal_error (current_class)
+								error_handler.report_vtgc0b_error (current_class, a_name, a_flattened_feature, a_class)
+							end
 						else
-								-- This feature is not a procedure.
+								-- This name is not the final name of
+								-- a feature on `current_class'.
 							set_fatal_error (current_class)
-							error_handler.report_vtgc0b_error (current_class, a_name, a_flattened_feature, a_class)
+							error_handler.report_vtgc0a_error (current_class, a_name, a_class)
 						end
-					else
-							-- This name is not the final name of
-							-- a feature on `current_class'.
-						set_fatal_error (current_class)
-						error_handler.report_vtgc0a_error (current_class, a_name, a_class)
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		end

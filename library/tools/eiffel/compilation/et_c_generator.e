@@ -2249,7 +2249,7 @@ feature {NONE} -- Expression generation
 								-- Resolve generic parameters in the
 								-- context of `current_type'.
 							l_current_class.process (universe.ancestor_builder)
-							if l_current_class.has_ancestors_error then
+							if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
 								set_fatal_error
 							else
 								an_ancestor := l_current_class.ancestor (a_parent_type, universe)

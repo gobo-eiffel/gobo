@@ -810,18 +810,18 @@ feature -- Ancestor building status
 
 feature -- Creation
 
-	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is feature name listed in current creation clauses
 			-- and is it exported to `a_client'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			if creators /= Void then
-				Result := creators.is_exported_to (a_name, a_client, a_processor)
+				Result := creators.is_exported_to (a_name, a_client, a_universe)
 			end
 		end
 

@@ -84,20 +84,18 @@ feature -- Status report
 			Result := has_class_name (a_class.name)
 		end
 
-	has_descendant (a_class: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+	has_descendant (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is `a_class' a descendant of any of classes in list?
 			-- True if `a_class' is NONE, even if current list is empty.
-			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_class_not_void: a_class /= Void
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 			a_name: ET_CLASS_NAME
-			a_universe: ET_UNIVERSE
 		do
-			a_universe := a_processor.universe
 			if a_class = a_universe.none_class then
 					-- NONE is a descendant of all classes.
 				Result := True
@@ -112,7 +110,7 @@ feature -- Status report
 				if not a_class.is_preparsed then
 					Result := has_class (a_class)
 				else
-					a_class.process (a_processor)
+					a_class.process (a_universe.ancestor_builder)
 					if a_class.ancestors_built and then not a_class.has_ancestors_error then
 						nb := count - 1
 						from i := 0 until i > nb loop

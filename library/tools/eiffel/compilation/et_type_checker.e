@@ -118,7 +118,7 @@ feature -- Validity checking
 			an_actuals := a_type.actual_parameters
 			a_type_class := a_type.direct_base_class (universe)
 			a_type_class.process (universe.interface_checker)
-			if a_type_class.has_interface_error then
+			if not a_type_class.interface_checked or else a_type_class.has_interface_error then
 				set_fatal_error
 			elseif an_actuals /= Void and then not an_actuals.is_empty then
 				a_formals := a_type_class.formal_parameters
@@ -154,7 +154,7 @@ feature -- Validity checking
 							nb2 := a_creator.count
 							if nb2 > 0 then
 								a_base_class.process (universe.interface_checker)
-								if a_base_class.has_interface_error then
+								if not a_base_class.interface_checked or else a_base_class.has_interface_error then
 									set_fatal_error
 								else
 									from j := 1 until j > nb2 loop
@@ -178,7 +178,7 @@ feature -- Validity checking
 												end
 											end
 										elseif
-											not a_creation_feature.is_creation_exported_to (a_type_class, a_base_class, universe.ancestor_builder) and then
+											not a_creation_feature.is_creation_exported_to (a_type_class, a_base_class, universe) and then
 											(a_base_class.creators /= Void or else not a_creation_feature.has_seed (universe.default_create_seed))
 										then
 											set_fatal_error
@@ -265,7 +265,7 @@ feature -- Validity checking
 						-- parent clauses between `a_current_class' and
 						-- `a_class_impl' where `a_type' was actually written.
 					a_current_class.process (universe.ancestor_builder)
-					if a_current_class.has_ancestors_error then
+					if not a_current_class.ancestors_built or else a_current_class.has_ancestors_error then
 						set_fatal_error
 					else
 						an_ancestor := a_current_class.ancestor (a_class_impl, universe)
@@ -330,7 +330,7 @@ feature -- Type conversion
 			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type, universe)
 			if Result = Void then
 				a_target_base_class := a_target_type.base_class (universe)
-						-- Make sure that the class has been parsed before
+					-- Make sure that the class has been parsed before
 					-- asking for its conversion features.
 				a_target_base_class.process (universe.eiffel_parser)
 				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type, universe)
@@ -408,7 +408,7 @@ feature {NONE} -- Validity checking
 					-- Not resolved yet.
 				a_class_impl := current_feature.implementation_class
 				a_class_impl.process (universe.interface_checker)
-				if a_class_impl.has_interface_error then
+				if not a_class_impl.interface_checked or else a_class_impl.has_interface_error then
 					set_fatal_error
 				else
 					a_feature := a_class_impl.named_feature (a_type.name)
@@ -514,7 +514,9 @@ feature {NONE} -- Validity checking
 				end
 			else
 				a_class.process (universe.interface_checker)
-				if not a_class.is_preparsed then
+				if not a_class.interface_checked then
+					set_fatal_error
+				elseif not a_class.is_preparsed then
 					set_fatal_error
 					if current_class = a_class_impl then
 						error_handler.report_vtct0a_error (current_class, a_type)
@@ -635,7 +637,7 @@ feature {NONE} -- Validity checking
 					-- Not resolved yet.
 				a_class_impl := current_feature.implementation_class
 				a_class_impl.process (universe.interface_checker)
-				if a_class_impl.has_interface_error then
+				if not a_class_impl.interface_checked or else a_class_impl.has_interface_error then
 					set_fatal_error
 				else
 					a_feature := a_class_impl.named_feature (a_name)

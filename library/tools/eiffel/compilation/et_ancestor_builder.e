@@ -100,7 +100,7 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.ancestors_built then
 				current_class.process (universe.eiffel_parser)
-				if current_class.has_syntax_error then
+				if not current_class.is_parsed or else current_class.has_syntax_error then
 					set_fatal_error (current_class)
 				else
 					add_class_to_sorter (current_class)
@@ -176,7 +176,7 @@ feature {NONE} -- Topological sort
 						-- Error: class not in universe (VTCT, ETL2 p.199).
 						-- The validity error will be reported in `set_ancestors'.
 					set_fatal_error (a_class)
-				elseif a_class.has_syntax_error then
+				elseif not a_class.is_parsed or else a_class.has_syntax_error then
 						-- This error has already been reported
 						-- somewhere else (during the parsing).
 					set_fatal_error (a_class)
@@ -197,7 +197,7 @@ feature {NONE} -- Topological sort
 								-- class sorter despite the error).
 							set_fatal_error (any_class)
 							class_sorter.force (a_class)
-						elseif any_class.has_syntax_error then
+						elseif not any_class.is_parsed or else any_class.has_syntax_error then
 								-- This error has already been reported
 								-- somewhere else (during the parsing).
 							set_fatal_error (any_class)

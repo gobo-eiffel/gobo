@@ -192,7 +192,7 @@ feature {NONE} -- Constraint validity
 			if not a_class.is_preparsed then
 				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
-			elseif a_class.has_syntax_error then
+			elseif not a_class.is_parsed or else a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
 				set_fatal_error

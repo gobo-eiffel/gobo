@@ -138,7 +138,7 @@ feature {NONE} -- Processing
 			if not current_class.implementation_checked then
 					-- Check interface of `current_class' if not already done.
 				current_class.process (universe.interface_checker)
-				if not current_class.has_interface_error then
+				if current_class.interface_checked and then not current_class.has_interface_error then
 					current_class.set_implementation_checked
 						-- Process parents first.
 					a_parents := current_class.parents
