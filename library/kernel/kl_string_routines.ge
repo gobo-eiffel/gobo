@@ -42,10 +42,14 @@ feature -- Initialization
 			!! Result.blank (n)
 #else
 			!! Result.make (n)
-#ifndef ISE || HACT
-			Result.fill ('#')
+#ifdef TOWER
+			Result.set_count (n)
 #else
+#ifdef ISE || HACT
 			Result.fill_blank
+#else
+			Result.fill ('#')
+#endif
 #endif
 #endif
 #endif
@@ -122,7 +126,7 @@ feature -- Resizing
 		require
 			a_string_not_void: a_string /= Void
 			n_large_enough: n >= a_string.count
-#ifndef VE
+#ifndef VE || TOWER
 		local
 			i: INTEGER
 #endif
@@ -136,9 +140,13 @@ feature -- Resizing
 			until
 				i = 0
 			loop
-				a_string.extend ('#')
+				a_string.append_character ('#')
 				i := i - 1
 			end
+#else
+#ifdef TOWER
+			a_string.resize (n)
+			a_string.set_count (n)
 #else
 			from
 				i := n - a_string.count
@@ -149,6 +157,7 @@ feature -- Resizing
 				a_string.append_character ('#')
 				i := i - 1
 			end
+#endif
 #endif
 #endif
 		ensure
