@@ -5,7 +5,7 @@ indexing
 		"Scanner skeletons for Eiffel parsers"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -87,6 +87,16 @@ feature -- Status report
 	create_keyword: BOOLEAN
 			-- Should `create' be considered as
 			-- a keyword (otherwise identifier)?
+
+feature -- Statut setting
+
+	set_create_keyword (b: BOOLEAN) is
+			-- Set `create_keyword' to `b'.
+		do
+			create_keyword := b
+		ensure
+			create_keyword_set: create_keyword = b
+		end
 
 feature -- AST factory
 
