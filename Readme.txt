@@ -51,12 +51,12 @@ in your PATH.
 
 The supported Eiffel compilers, in alphabetical order, are:
 Halstenbach 3.0Beta 3, ISE Eiffel 4.3-020, SmallEiffel -0.78beta#2,
-Visual Eiffel 3.0 Beta (Build 5298). For more details about the supported
-Eiffel compilers, please see the file "Release_notes.txt". This software
-might work with other Eiffel compilers and/or other compiler versions,
-however no test has been made. To have a better understanding of the way
-this software has been designed and implemented, you can also have a look
-at "$GOBO\doc\portability".
+Visual Eiffel 2.5. For more details about the supported Eiffel compilers,
+please see the file "Release_notes.txt". This software might work with
+other Eiffel compilers and/or other compiler versions, however no test
+has been made. To have a better understanding of the way this software
+has been designed and implemented, you can also have a look at
+"$GOBO\doc\portability".
 
 In this distribution:
 

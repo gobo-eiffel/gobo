@@ -21,7 +21,16 @@ SE -0.78 (SmallEiffel)
     . `geyacc' does not compile with SmallEiffel -0.79. You should either
       use SmallEiffel -0.80 or SmallEiffel -0.78.
 
-VE 3.0 (Visual Eiffel)
+VE 2.5 (Visual Eiffel)
+
+    . `geyacc', `gelex' and some other examples don't compile with Visual
+      Eiffel 2.6, 3.0 beta (Build 5298 and 1299). Visual Eiffel aborts
+      the compilation with the following error message:
+
+      Error VESYS416 : System execution terminated due to exception. Exception
+       code '10055'. Exception name 'Read access violation'. Routine failed
+       'process_class_implementation'. Explanation 'Attempt to read from
+       inaccessible address'.
 
     . Redirection of standard input doesn't work properly: characters are
       echoed on the screen instead of consuming them silently and the end-
