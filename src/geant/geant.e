@@ -50,12 +50,8 @@ feature {NONE} -- Initialization
 				!! a_project.make
 			end
 
-			if start_target_name /= void and then start_target_name.count > 0 then
-				!! ucs.make_from_string(start_target_name)
-				a_project.set_start_target_name(ucs)
-			end
+			a_project.load (start_target_name)
 
-			a_project.load
 			if a_project.targets /= Void then
 				a_project.build
 				if not a_project.build_successful then

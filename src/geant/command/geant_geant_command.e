@@ -111,14 +111,8 @@ feature -- Execution
 					!! a_project.make
 				end
 
-					-- Set start target if provided:
-				if start_target_name /= Void and then start_target_name.count > 0 then
-					!! ucs.make_from_string (start_target_name)
-					a_project.set_start_target_name (ucs)
-				end
-
 					-- Load build configuration:
-				a_project.load
+				a_project.load (start_target_name)
 
 					-- Start build process:
 				if a_project.targets /= Void then

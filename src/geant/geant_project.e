@@ -53,12 +53,6 @@ feature -- Access
 	targets: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			-- Target elements found in current project
 
-	start_target_name: UC_STRING
-			-- Name of the target the build process starts with
-
-	current_target_name: UC_STRING
-			-- Name of current target
-
 	build_successful: BOOLEAN
 			-- Was last build successful?
 
@@ -88,37 +82,16 @@ feature -- Access
 
 feature -- Setting
 
-	set_start_target_name (a_start_target_name: like start_target_name) is
-			-- Set `start_target_name' to `a_start_target_name'.
-		require
-			a_start_target_name_not_void: a_start_target_name /= Void
-			a_start_target_name_not_empty: a_start_target_name.count > 0
-		do
-			start_target_name := a_start_target_name
-		ensure
-			start_target_name_set: start_target_name = a_start_target_name
-		end
-
-	set_current_target_name (a_current_target_name: like current_target_name) is
-			-- Set `current_target_name' to `a_current_target_name'.
-		require
-			a_current_target_name_not_void: a_current_target_name /= Void
-			a_current_target_name_not_empty: a_current_target_name.count > 0
-		do
-			current_target_name := a_current_target_name
-		ensure
-			current_target_name_set: current_target_name = a_current_target_name
-		end
-
-
 feature -- Processing
 
-	load is
+	load (a_start_target_name : STRING) is
 			-- Read current project's configuration from `build_filename'
 			-- and convert it into a 'GEANT_DOM'.
+			-- When set use `a_start_target_name' for first target to execute
 		local
 			xml_parser: GEANT_PROJECT_PARSER
 			ucs: UC_STRING
+			start_target_name: UC_STRING
 	    do
 				-- Reset current project's state:
 			reset
@@ -130,16 +103,29 @@ feature -- Processing
 			if root_element /= Void then
 					-- Find all the targets of current project:
 				targets := root_element.children_by_name (Target_element_name)
+
+					-- Use passed start target if provided and exists
+				if a_start_target_name /= Void and then a_start_target_name.count > 0 then
+					!! ucs.make_from_string (a_start_target_name)
+					if target_with_name (ucs) /= Void then
+						start_target_name := ucs
+					end
+				end
+
 					-- Find start target:
 				if start_target_name = Void or else start_target_name.count = 0 then
 					if root_element.has_attribute (Default_attribute_name) then
 						ucs := root_element.attribute_value_by_name (Default_attribute_name)
-						set_start_target_name(ucs)
+						if target_with_name (ucs) /= Void then
+							start_target_name := ucs
+						end
 					else
 							-- Use first target in project file for start_target_name:
 						if targets /= void and then targets.count > 0 then
 							ucs := targets.item(1).attribute_value_by_name (Name_attribute_name)
-							set_start_target_name(ucs)
+							if target_with_name (ucs) /= Void then
+								start_target_name := ucs
+							end
 						end
 					end
 				end
@@ -150,7 +136,8 @@ feature -- Processing
 					reset
 					print ("geant error: unknown target%N")
 				else
-					current_target_name := start_target_name
+							-- put start target on the stack:
+					Build_targets.force (target_with_name (start_target_name))
 				end
 			else
 				reset
@@ -163,78 +150,81 @@ feature -- Processing
 		require
 			loaded: targets /= Void
 		local
-			i, nb: INTEGER
 			a_target: GEANT_ELEMENT
-			an_element: GEANT_ELEMENT
+		do
+			a_target := Build_targets.item
+			execute_tasks_of_target (a_target)
+			Build_targets.remove
+		end
+
+	execute_tasks_of_target(a_target: GEANT_ELEMENT) is
+			-- Execute all tasks of `a_target' in sequential order
+		local
 			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			i, nb: INTEGER
+			an_element: GEANT_ELEMENT
 			a_task: GEANT_TASK
 		do
-			a_target := target_with_name(current_target_name)
-			if a_target = Void then
-				print ("Unknown target : " + current_target_name.out + "%N")
-				build_successful := false
-			else
-				children := a_target.children
-				nb := children.count
-				from i := 1 until i > nb loop
-					an_element := children.item (i)
-						-- Dispatch tasks:
-					if an_element.name.is_equal (Compile_se_task_name) then
-							-- compile_se: SmallEiffel compilation
-						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Exec_task_name) then
-							-- exec
-						!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Lcc_task_name) then
-							-- lcc
-						!GEANT_LCC_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Var_task_name) then
-							-- var
-						!GEANT_VAR_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Gexace_task_name) then
-							-- gexace
-						!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Gelex_task_name) then
-							-- gelex
-						!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Geyacc_task_name) then
-							-- geyacc
-						!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Gepp_task_name) then
-							-- gepp
-						!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Getest_task_name) then
-							-- getest
-						!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Geant_task_name) then
-							-- geant
-						!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
-					elseif an_element.name.is_equal (Echo_task_name) then
-							-- echo
-						!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
-					else
-							-- Default:
-						a_task := Void
-					end
-						-- Execute task:
-					if a_task = Void then
-						print ("WARNING: unknown task : " + an_element.name.out + "%N")
-					elseif not a_task.is_executable then
-						print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
-					else
-						a_task.execute
-					end
-					i := i + 1
+			children := a_target.children
+			nb := children.count
+			from i := 1 until i > nb loop
+				an_element := children.item (i)
+					-- Dispatch tasks:
+				if an_element.name.is_equal (Compile_se_task_name) then
+						-- compile_se: SmallEiffel compilation
+					!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Exec_task_name) then
+						-- exec
+					!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Lcc_task_name) then
+						-- lcc
+					!GEANT_LCC_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Var_task_name) then
+						-- var
+					!GEANT_VAR_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Gexace_task_name) then
+						-- gexace
+					!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Gelex_task_name) then
+						-- gelex
+					!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Geyacc_task_name) then
+						-- geyacc
+					!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Gepp_task_name) then
+						-- gepp
+					!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Getest_task_name) then
+						-- getest
+					!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Geant_task_name) then
+						-- geant
+					!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
+				elseif an_element.name.is_equal (Echo_task_name) then
+						-- echo
+					!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
+				else
+						-- Default:
+					a_task := Void
 				end
+					-- Execute task:
+				if a_task = Void then
+					print ("WARNING: unknown task : " + an_element.name.out + "%N")
+				elseif not a_task.is_executable then
+					print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
+				else
+					a_task.execute
+				end
+				i := i + 1
 			end
 		end
+
 
 	reset is
 			-- Reset current state of project.
 		do
 			root_element := Void
 			targets := Void
-			current_target_name := Void
 			build_successful := True
 		end
 
@@ -249,6 +239,14 @@ feature {NONE} -- Implementation
 			!! Result.make
 		ensure
 			parser_factory_not_void: Result /= Void
+		end
+
+	Build_targets: DS_ARRAYED_STACK [GEANT_ELEMENT] is
+			-- Targets to be executed
+		once
+			!! Result.make (10)
+		ensure
+			build_targets_not_void: Result /= Void
 		end
 
 invariant
