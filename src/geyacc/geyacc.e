@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -37,7 +37,6 @@ feature -- Processing
 			parser_generator: PR_PARSER_GENERATOR
 			out_file, token_file: like OUTPUT_STREAM_TYPE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
-			token_filename: STRING
 			tokens_needed: BOOLEAN
 			verbose_file: like OUTPUT_STREAM_TYPE
 		do
@@ -72,8 +71,6 @@ feature -- Processing
 				!! parser_generator.make (fsm)
 				if token_classname /= Void then
 						-- Print class text with token code constants.
-					token_filename := STRING_.to_lower (token_classname)
-					token_filename.append_string (Eiffel_extension)
 					token_file := OUTPUT_STREAM_.make_file_open_write (token_filename)
 					if OUTPUT_STREAM_.is_open_write (token_file) then
 						parser_generator.print_token_class (token_classname, Version_number, token_file)
@@ -149,11 +146,32 @@ feature -- Processing
 						report_usage_error
 					else
 						token_classname := STRING_.to_upper (Arguments.argument (i))
+						if token_filename = Void then
+							token_filename := STRING_.to_lower (token_classname)
+							token_filename.append_string (Eiffel_extension)
+						end
 					end
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--tokens=") then
 					token_classname := STRING_.to_upper (arg.substring (10, arg.count))
+					if token_filename = Void then
+						token_filename := STRING_.to_lower (token_classname)
+						token_filename.append_string (Eiffel_extension)
+					end
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--defines=") then
 					token_classname := STRING_.to_upper (arg.substring (11, arg.count))
+					if token_filename = Void then
+						token_filename := STRING_.to_lower (token_classname)
+						token_filename.append_string (Eiffel_extension)
+					end
+				elseif arg.is_equal ("-k") then
+					i := i + 1
+					if i > nb then
+						report_usage_error
+					else
+						token_filename := Arguments.argument (i)
+					end
+				elseif arg.count > 14 and then arg.substring (1, 14).is_equal ("--tokens-file=") then
+					token_filename := arg.substring (15, arg.count)
 				elseif arg.is_equal ("-o") then
 					i := i + 1
 					if i > nb then
@@ -191,6 +209,7 @@ feature -- Access
 	input_filename: STRING
 	output_filename: STRING
 	token_classname: STRING
+	token_filename: STRING
 	verbose_filename: STRING
 	actions_separated: BOOLEAN
 			-- Command line arguments
@@ -235,7 +254,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geyacc usage message
 		once
-			!! Result.make ("[-hxV?][-t classname][-v filename][-o filename] filename")
+			!! Result.make ("[-hxV?][-t classname][-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -278,5 +297,6 @@ feature {NONE} -- Implementation
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	token_filename: token_classname /= Void implies token_filename /= Void
 
 end -- class GEYACC
