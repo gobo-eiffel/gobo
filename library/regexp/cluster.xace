@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE cluster SYSTEM "../../doc/gexace/xace.dtd">
+
+<cluster name="regexp" location="${GOBO}/library/regexp">
+
+	<description>
+		description: "Xace file for the Gobo Eiffel Regexp Library"
+		library:     "Gobo Eiffel Time Library"
+		author:      "Harald Erdbrügger [he@he-me.de]"
+		copyright:   "Copyright (c) 2002, Harald Erdbrügger and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<mount location="${GOBO}/library/kernel/cluster.xace"/>
+	<mount location="${GOBO}/library/structure/cluster.xace"/>
+
+</cluster>
