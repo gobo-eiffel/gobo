@@ -40,6 +40,19 @@
 			</varlistentry>
 
 			<varlistentry>
+				<term>xace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of Xace file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
 				<term>recursive</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>recursive</para>
@@ -111,6 +124,8 @@
 			Note: In mode 'clean' the directory 'eCluster' and the files Result.out', 'vec.xcp' are
 			deleted as well if they exist. If 'recursive' is set to 'true' 'clean' is applied to each
 			subdirectory recursively. In mode tune the Eiffel System is tuned with Visual Eiffel's tuner.
+			Visual Eiffel 5.0 uses Xace files. When both 'esd' and 'xace' attributes are specified,
+			only 'esd' is taken into account.
 		</para>
 
 	</section>
@@ -124,6 +139,7 @@
       <ref name="dir_if_unless"/>
       <choice>
         <attribute name="esd"/>
+        <attribute name="xace"/>
         <group>
           <attribute name="clean"/>
           <optional>
@@ -155,6 +171,8 @@
 
 		<programlisting><![CDATA[
   <ve esd="compile_ve.esd"/>
+
+  <ve xace="compile_ve.xace"/>
 
   <ve clean="kernel" recursive="true"/>
 

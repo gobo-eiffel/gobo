@@ -10,10 +10,18 @@ Version ?
 	* Task 'available' supports checking for availablity of directories.
 	* If you use xsltproc and pass string parameters to it, you have to
 	  surround those parameters with single quotes now.
+	* Task 've' supports VE 5.0 with the attribute 'xace' to specify
+	  Xace files. Attribute 'esd' is still supported when using VE 4.1.
+
+	gexace:
+
+	* Removed support for 'hact'.
+	* Add support VE 5.0: 've' now generates Xace files for VE 5.0.
+	  In order to generate ESD for VE 4.1 use 've41' instead.
 
 	gelex:
 
-	* Added command-line option  --pragma=[no]line  in order for
+	* Added command-line option '--pragma=[no]line' in order for
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
 	  appeared in the input description file.
@@ -21,7 +29,7 @@ Version ?
 
 	geyacc:
 
-	* Added command-line option  --pragma=[no]line  in order for
+	* Added command-line option '--pragma=[no]line' in order for
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
 	  appeared in the input description file.
@@ -37,8 +45,8 @@ Version ?
 	  added to allow pretty indented output.
 	* XM_NAMESPACE_RESOLVER has new option to forward
 	  xmlns attribute events (forward_xmlns).
-	* XM_DTD_CALLBACKS: on_doctype called first; on_dtd_end,
-	  on_dtd_comment, on_dtd_processing_instruction added.
+	* XM_DTD_CALLBACKS: `on_doctype' called first; `on_dtd_end',
+	  `on_dtd_comment', `on_dtd_processing_instruction' added.
 	* Parser defaults to new STRING-only latin-1 mode.
 	* Parser correctly outputs PUBLIC identifier in DOCTYPE.
 	* Parser leaves XML resolver in correct state.
@@ -51,14 +59,14 @@ Version ?
 
 	* KL_DOUBLE_ROUTINES.log2: new feature.
 	* KL_INTEGER_ROUTINES.power: new feature.
+	* Added bit operation features to KL_INTEGER_ROUTINES.
 
 	Gobo Eiffel Math/Decimal Library
 	
-	* New library, incorporated from the SAFE project (http://safe.sf.net)
+	* New library, incorporated from the SAFE project (http://safe.sf.net).
 	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic, 
 	  with unrounded and integer arithmetic as a subset 
 	  (IEEE 754R + IEEE 854 + ANSI X3.274 + ECMA 334). 
-	
 
 	Gobo Eiffel String Library
 
@@ -76,7 +84,7 @@ Version ?
 
 	Gobo Eiffel Utility Library
 
-	* UT_URI path is parsed into components: path_items.
+	* UT_URI path is parsed into components: `path_items'.
 	* UT_HOST_PORT: new class for TCP hostname and port number.
 
 Version 3.3 - 2 November 2003

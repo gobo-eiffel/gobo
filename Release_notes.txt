@@ -32,7 +32,8 @@ SE 1.0 (SmartEiffel)
 	  warning messages because of that please use the options -no_warning
 	  AND complain to the SmartEiffel team (otherwise one day these
 	  warnings will become fatal errors and Gobo will not be able to
-	  support SmartEiffel anymore).
+	  support SmartEiffel anymore; this is what already happened
+	  with ANY.same_type).
 
 VE 5.0a (Visual Eiffel)
 
@@ -55,6 +56,12 @@ VE 5.0a (Visual Eiffel)
 
 	  where <app_name> stands for the name of your application.
 
+	* Running 'geant test_debug_ve' in $GOBO/test/kernel make the test
+	  crash. It seems to be a bug in the compiler or its runtime/GC.
+
+	* There is a linking error when trying to compile the test in
+	  $GOBO/test/xml/expat.
+
 VE 4.1 (Visual Eiffel)
 
 	* The Gobo Eiffel package has been configured to work with VE 5.0.
@@ -62,6 +69,7 @@ VE 4.1 (Visual Eiffel)
 	  variable $VE_4_1, and then run the following commands to reconfigure
 	  the package with VE 4.1:
 
-	    cd $GOBO
+	    set VE_4_1=true
+	    cd %GOBO%
 	    geant clobber
 	    geant install
