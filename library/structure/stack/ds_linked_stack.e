@@ -15,6 +15,9 @@ class DS_LINKED_STACK [G]
 inherit
 
 	DS_STACK [G]
+		redefine
+			searcher
+		end
 
 	DS_LINKED_LIST [G]
 		rename
@@ -36,6 +39,8 @@ inherit
 			prune as prune_i_th
 		export
 			{NONE} all
+		redefine
+			searcher
 		select
 			keep
 		end
@@ -51,5 +56,10 @@ feature -- Element change
 		do
 			first_cell.put (v)
 		end
+
+feature -- Access
+
+	searcher: DS_LINKED_LIST_SEARCHER [G]
+			-- Stack searcher
 
 end -- class DS_LINKED_STACK
