@@ -446,12 +446,57 @@ feature {NONE} -- Locals/Arguments validity
 		require
 			a_locals_not_void: a_locals /= Void
 		local
-			i, nb: INTEGER
+			a_class_impl: ET_CLASS
+			i, j, k, nb: INTEGER
+			a_local: ET_LOCAL_VARIABLE
+			other_local: ET_LOCAL_VARIABLE
+			a_name: ET_IDENTIFIER
+			args: ET_FORMAL_ARGUMENT_LIST
+			a_feature: ET_FEATURE
 		do
-			nb := a_locals.count
-			from i := 1 until i > nb loop
-				check_local_type_validity (a_locals.local_variable (i).type)
-				i := i + 1
+			a_class_impl := current_feature.implementation_class
+			if current_class = a_class_impl then
+				nb := a_locals.count
+				from i := 1 until i > nb loop
+					a_local := a_locals.local_variable (i)
+					a_name := a_local.name
+					a_name.set_local (True)
+					a_name.set_seed (i)
+					from j := 1 until j >= i loop
+						other_local := a_locals.local_variable (j)
+						if other_local.name.same_identifier (a_name) then
+								-- Two local variables with the same name.
+							set_fatal_error
+							error_handler.report_vreg0b_error (current_class, other_local, a_local, current_feature)
+						end
+						j := j + 1
+					end
+					args := current_feature.arguments
+					if args /= Void then
+						k := args.index_of (a_name)
+						if k /= 0 then
+								-- This local variable has the same name as a formal
+								-- argument of `current_feature' in `current_class'.
+							set_fatal_error
+							error_handler.report_vrle2a_error (current_class, a_local, current_feature, args.formal_argument (k))
+						end
+					end
+					a_feature := current_class.named_feature (a_name)
+					if a_feature /= Void then
+							-- This local variable has the same name as the
+							-- final name of a feature in `current_class'.
+						set_fatal_error
+						error_handler.report_vrle1a_error (current_class, a_local, current_feature, a_feature)
+					end
+					check_local_type_validity (a_local.type)
+					i := i + 1
+				end
+			else
+				nb := a_locals.count
+				from i := 1 until i > nb loop
+					check_local_type_validity (a_locals.local_variable (i).type)
+					i := i + 1
+				end
 			end
 		end
 
@@ -485,6 +530,11 @@ feature {NONE} -- Locals/Arguments validity
 		local
 			a_class_type: ET_CLASS_TYPE
 		do
+				-- We check the validity of the types of the local variables
+				-- in their implementation class because, as opposed to the
+				-- signature types, they have not been resolved (i.e. if they
+				-- contain formal generic parameter, these parameters may
+				-- need to be resolved in the `current_class').
 			type_checker.check_type_validity (a_type, current_feature.implementation_feature, current_feature.implementation_class)
 			if type_checker.has_fatal_error then
 				set_fatal_error

@@ -1538,11 +1538,8 @@ feature {NONE} -- Signature resolving
 						previous_type := a_type
 					end
 					a_name := an_arg.name
-						-- A negative seed upto -arguments.count means
-						-- that it is an argument, below that it is a
-						-- local variable. Positive seeds are for feature
-						-- names.
-					a_name.set_seed (-i)
+					a_name.set_argument (True)
+					a_name.set_seed (i)
 					from j := 1 until j >= i loop
 						other_arg := args.formal_argument (j)
 						if other_arg.name.same_identifier (a_name) then

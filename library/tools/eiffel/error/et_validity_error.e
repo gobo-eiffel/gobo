@@ -178,7 +178,10 @@ creation
 	make_vqui0a,
 	make_vqui0b,
 	make_vreg0a,
+	make_vreg0b,
 	make_vrfa0a,
+	make_vrle1a,
+	make_vrle2a,
 	make_vscn0a,
 	make_vtat1a,
 	make_vtat1b,
@@ -7257,7 +7260,49 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = argument name
-			-- dollar7: $7 = feature name
+			-- dollar7: $7 = feature name (where the arguments appear)
+		end
+
+	make_vreg0b (a_class: like current_class; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE) is
+			-- Create a new VREG error: `local1' and `local2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ETL2: p.110
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			local1_not_void: local1 /= Void
+			local2_not_void: local2 /= Void
+			f_not_void: f /= Void
+		do
+			code := vreg0b_template_code
+			etl_code := vreg_etl_code
+			default_template := vreg0b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := local2.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (local2.name.name, 6)
+			parameters.put (f.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local name
+			-- dollar7: $7 = feature name (where the local variables appear)
 		end
 
 	make_vrfa0a (a_class: like current_class; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FEATURE) is
@@ -7300,6 +7345,91 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = argument name
 			-- dollar7: $7 = feature name (where argument appears)
+		end
+
+	make_vrle1a (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
+			-- Create a new VRLE-1 error: `a_local' in feature `f1' has
+			-- the same name as feature `f2' in `a_class'.
+			--
+			-- ETL2: p.115
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vrle1a_template_code
+			etl_code := vrle1_etl_code
+			default_template := vrle1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_local.name.name, 6)
+			parameters.put (f1.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name (where local variable appears)
+		end
+
+	make_vrle2a (a_class: like current_class; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT) is
+			-- Create a new VRLE-2 error: `a_local' in feature `f' has
+			-- the same name as formal argument `arg' of this feature
+			-- in `a_class'.
+			--
+			-- ETL2: p.115
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f_not_void: f /= Void
+			arg_not_void: arg /= Void
+		do
+			code := vrle2a_template_code
+			etl_code := vrle2_etl_code
+			default_template := vrle2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_local.name.name, 6)
+			parameters.put (f.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name (where local variable and argument appears)
 		end
 
 	make_vscn0a (a_class: like current_class; other_cluster: ET_CLUSTER; other_filename: STRING) is
@@ -9638,7 +9768,10 @@ feature {NONE} -- Implementation
 	vqui0a_default_template: STRING is "[$1] class $5 ($3,$4): unique attribute `$6' is not declared of type INTEGER."
 	vqui0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): unique attribute `$7' is not declared of type INTEGER."
 	vreg0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
+	vreg0b_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' appear twice in feature `$7'."
 	vrfa0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
+	vrle1a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the final name of feature."
+	vrle2a_default_template: STRING is "[$1] class $5 ($3,$4): local variable name '$6' in feature `$7' is also the name of a formal argument of this feature."
 	vscn0a_default_template: STRING is "[$1] class $5: class appears in files '$7' and '$9'."
 	vtat1a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
 	vtat1b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
@@ -9765,6 +9898,8 @@ feature {NONE} -- Implementation
 	vqui_etl_code: STRING is "VQUI"
 	vreg_etl_code: STRING is "VREG"
 	vrfa_etl_code: STRING is "VRFA"
+	vrle1_etl_code: STRING is "VRLE-1"
+	vrle2_etl_code: STRING is "VRLE-2"
 	vscn_etl_code: STRING is "VSCN"
 	vtat1_etl_code: STRING is "VTAT-1"
 	vtat2_etl_code: STRING is "VTAT-2"
@@ -9951,7 +10086,10 @@ feature {NONE} -- Implementation
 	vqui0a_template_code: STRING is "vqui0a"
 	vqui0b_template_code: STRING is "vqui0b"
 	vreg0a_template_code: STRING is "vreg0a"
+	vreg0b_template_code: STRING is "vreg0b"
 	vrfa0a_template_code: STRING is "vrfa0a"
+	vrle1a_template_code: STRING is "vrle1a"
+	vrle2a_template_code: STRING is "vrle2a"
 	vscn0a_template_code: STRING is "vscn0a"
 	vtat1a_template_code: STRING is "vtat1a"
 	vtat1b_template_code: STRING is "vtat1b"

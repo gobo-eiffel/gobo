@@ -3852,6 +3852,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_vreg0b_error (a_class: ET_CLASS; local1, local2: ET_LOCAL_VARIABLE; f: ET_FEATURE) is
+			-- Report VREG error: `local1' and `local2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ETL2: p.110
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			local1_not_void: local1 /= Void
+			local2_not_void: local2 /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vreg_error (a_class) then
+				create an_error.make_vreg0b (a_class, local1, local2, f)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vrfa0a_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FEATURE) is
 			-- Report VRFA error: `arg' in feature `f1' has
 			-- the same name as feature `f2' in `a_class'.
@@ -3868,6 +3888,47 @@ feature -- Validity errors
 		do
 			if reportable_vrfa_error (a_class) then
 				create an_error.make_vrfa0a (a_class, arg, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrle1a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f1, f2: ET_FEATURE) is
+			-- Report VRLE-1 error: `a_local' in feature `f1' has
+			-- the same name as feature `f2' in `a_class'.
+			--
+			-- ETL2: p.115
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrle1_error (a_class) then
+				create an_error.make_vrle1a (a_class, a_local, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrle2a_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; f: ET_FEATURE; arg: ET_FORMAL_ARGUMENT) is
+			-- Report VRLE-2 error: `a_local' in feature `f' has
+			-- the same name as formal argument `arg' of this feature
+			-- in `a_class'.
+			--
+			-- ETL2: p.115
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			f_not_void: f /= Void
+			arg_not_void: arg /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrle2_error (a_class) then
+				create an_error.make_vrle2a (a_class, a_local, f, arg)
 				report_validity_error (an_error)
 			end
 		end
@@ -5583,6 +5644,26 @@ feature -- Validity error status
 
 	reportable_vrfa_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VRFA error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vrle1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VRLE-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VRLE-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
