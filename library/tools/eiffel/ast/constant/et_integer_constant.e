@@ -14,8 +14,18 @@ deferred class ET_INTEGER_CONSTANT
 
 inherit
 
+	ET_AST_LEAF
+		rename
+			make as make_leaf,
+			make_with_position as make_leaf_with_position
+		redefine
+			position
+		end
+
 	ET_CONSTANT
+
 	ET_CHOICE_CONSTANT
+
 	ET_INDEXING_TERM
 
 feature -- Access
@@ -45,16 +55,9 @@ feature -- Access
 			if sign /= Void then
 				Result := sign.position
 			else
-				Result := literal_position
+				Result := Current
 			end
 		end
-
-	literal_position: ET_POSITION
-			-- Position of first character of
-			-- `literal' in source code
-
-	break: ET_BREAK
-			-- Break which appears just after current node
 
 feature -- Status report
 
@@ -72,14 +75,6 @@ feature -- Setting
 			sign_set: sign = a_sign
 		end
 
-	set_break (a_break: like break) is
-			-- Set `break' to `a_break'.
-		do
-			break := a_break
-		ensure
-			break_set: break = a_break
-		end
-
 feature -- Basic operations
 
 	compute_value is
@@ -93,6 +88,5 @@ feature -- Basic operations
 invariant
 
 	literal_not_void: literal /= Void
-	literal_position_not_void: literal_position /= Void
 
 end

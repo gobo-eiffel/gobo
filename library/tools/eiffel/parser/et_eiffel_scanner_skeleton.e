@@ -59,9 +59,14 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			make_with_buffer (Empty_buffer)
+			last_literal_start := 1
+			last_break_start := 1
+			last_comment_start := 1
 			filename := a_filename
 			ast_factory := a_factory
 			error_handler := an_error_handler
+			set_use_create_keyword (True)
+			set_use_reference_keyword (True)
 		ensure
 			filename_set: filename = a_filename
 			ast_factory_set: ast_factory = a_factory
@@ -150,17 +155,6 @@ feature -- Statut setting
 
 feature {NONE} -- AST factory
 
-	new_bit_constant (a_literal: STRING): ET_BIT_CONSTANT is
-			-- New bit constant
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-1]+[bB]
-		do
-			Result := ast_factory.new_bit_constant (a_literal, line, column)
-		ensure
-			bit_constant_not_void: Result /= Void
-		end
-
 	new_break (a_text: STRING): ET_BREAK is
 			-- New break
 		require
@@ -169,33 +163,6 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_break (a_text, line, column)
 		ensure
 			break_not_void: Result /= Void
-		end
-
-	new_c2_character_constant (a_value: CHARACTER): ET_CHARACTER_CONSTANT is
-			-- New character constant of the form '%A'
-		do
-			Result := ast_factory.new_c2_character_constant (a_value, line, column)
-		ensure
-			character_constant_not_void: Result /= Void
-		end
-
-	new_c3_character_constant (a_literal: STRING): ET_CHARACTER_CONSTANT is
-			-- New character constant of the form '%/code/`'
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-9]+
-		do
-			Result := ast_factory.new_c3_character_constant (a_literal, line, column)
-		ensure
-			character_constant_not_void: Result /= Void
-		end
-
-	new_character_constant (a_value: CHARACTER): ET_CHARACTER_CONSTANT is
-			-- New character constant of the form 'A'
-		do
-			Result := ast_factory.new_c1_character_constant (a_value, line, column)
-		ensure
-			character_constant_not_void: Result /= Void
 		end
 
 	new_comment (a_text: STRING): ET_COMMENT is
@@ -208,405 +175,48 @@ feature {NONE} -- AST factory
 			comment_not_void: Result /= Void
 		end
 
-	new_current (a_text: STRING): ET_CURRENT is
-			-- New current entity
+feature --
+
+	last_literal: STRING is
+		do
+			if last_literal_start = 0 then
+				Result := last_literal_impl
+			else
+				Result := text_substring (last_literal_start, last_literal_end)
+			end
+		end
+
+	last_break: STRING is
 		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
+			has_break: has_break
 		do
-			Result := ast_factory.new_current (a_text, line, column)
-		ensure
-			current_not_void: Result /= Void
+			Result := text_substring (last_break_start, last_break_end)
 		end
 
-	new_deferred_keyword (a_text: STRING): ET_DEFERRED_KEYWORD is
-			-- New 'deferred' keyword
+	last_comment: STRING is
 		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
+			has_comment: has_comment
 		do
-			Result := ast_factory.new_deferred_keyword (a_text, line, column)
-		ensure
-			deferred_keyword_not_void: Result /= Void
+			Result := text_substring (last_comment_start, last_comment_end)
 		end
 
-	new_equal_symbol: ET_EQUAL_SYMBOL is
-			-- New '=' symbol
+	has_break: BOOLEAN is
 		do
-			Result := ast_factory.new_equal_symbol (line, column)
-		ensure
-			equal_symbol_not_void: Result /= Void
+			Result := last_break_end >= last_break_start
 		end
 
-	new_expanded_keyword (a_text: STRING): ET_EXPANDED_KEYWORD is
-			-- New 'expanded' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
+	has_comment: BOOLEAN is
 		do
-			Result := ast_factory.new_expanded_keyword (a_text, line, column)
-		ensure
-			expanded_keyword_not_void: Result /= Void
+			Result := last_comment_end >= last_comment_start
 		end
 
-	new_false_constant (a_text: STRING): ET_FALSE_CONSTANT is
-			-- New False constant
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_false_constant (a_text, line, column)
-		ensure
-			false_constant_not_void: Result /= Void
-		end
-
-	new_free_operator (a_string: STRING): ET_FREE_OPERATOR is
-			-- New free operator
-		require
-			a_string_not_void: a_string /= Void
-			a_string_not_empty: a_string.count > 0
-		do
-			Result := ast_factory.new_free_operator (a_string, line, column)
-		ensure
-			free_operator_not_void: Result /= Void
-			is_prefix: Result.is_prefix
-		end
-
-	new_hexadecimal_integer_constant (a_literal: STRING): ET_INTEGER_CONSTANT is
-			-- New integer constant in hexadecimal format
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: 0x[0-9a-fA-F]+
-		do
-			Result := ast_factory.new_hexadecimal_integer_constant (a_literal, current_position)
-		ensure
-			integer_constant_not_void: Result /= Void
-		end
-
-	new_identifier (a_text: STRING): ET_IDENTIFIER is
-			-- New identifier
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_identifier (a_text, line, column)
-		ensure
-			identifier_not_void: Result /= Void
-		end
-
-	new_infix_and_operator (a_text: STRING): ET_INFIX_AND_OPERATOR is
-			-- New binary "and" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_infix_and_operator (a_text, line, column)
-		ensure
-			infix_and_operator_not_void: Result /= Void
-		end
-
-	new_infix_div_operator: ET_INFIX_DIV_OPERATOR is
-			-- New binary "//" operator
-		do
-			Result := ast_factory.new_infix_div_operator (line, column)
-		ensure
-			infix_div_operator_not_void: Result /= Void
-		end
-
-	new_infix_divide_operator: ET_INFIX_DIVIDE_OPERATOR is
-			-- New binary "//" operator
-		do
-			Result := ast_factory.new_infix_divide_operator (line, column)
-		ensure
-			infix_divide_operator_not_void: Result /= Void
-		end
-
-	new_infix_ge_operator: ET_INFIX_GE_OPERATOR is
-			-- New binary ">=" operator
-		do
-			Result := ast_factory.new_infix_ge_operator (line, column)
-		ensure
-			infix_ge_operator_not_void: Result /= Void
-		end
-
-	new_infix_gt_operator: ET_INFIX_GT_OPERATOR is
-			-- New binary ">" operator
-		do
-			Result := ast_factory.new_infix_gt_operator (line, column)
-		ensure
-			infix_gt_operator_not_void: Result /= Void
-		end
-
-	new_infix_implies_operator (a_text: STRING): ET_INFIX_IMPLIES_OPERATOR is
-			-- New binary "implies" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_infix_implies_operator (a_text, line, column)
-		ensure
-			infix_implies_operator_not_void: Result /= Void
-		end
-
-	new_infix_le_operator: ET_INFIX_LE_OPERATOR is
-			-- New binary "<=" operator
-		do
-			Result := ast_factory.new_infix_le_operator (line, column)
-		ensure
-			infix_le_operator_not_void: Result /= Void
-		end
-
-	new_infix_lt_operator: ET_INFIX_LT_OPERATOR is
-			-- New binary "<" operator
-		do
-			Result := ast_factory.new_infix_lt_operator (line, column)
-		ensure
-			infix_lt_operator_not_void: Result /= Void
-		end
-
-	new_infix_mod_operator: ET_INFIX_MOD_OPERATOR is
-			-- New binary "\\" operator
-		do
-			Result := ast_factory.new_infix_mod_operator (line, column)
-		ensure
-			infix_mod_operator_not_void: Result /= Void
-		end
-
-	new_infix_or_operator (a_text: STRING): ET_INFIX_OR_OPERATOR is
-			-- New binary "or" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_infix_or_operator (a_text, line, column)
-		ensure
-			infix_or_operator_not_void: Result /= Void
-		end
-
-	new_infix_power_operator: ET_INFIX_POWER_OPERATOR is
-			-- New binary "^" operator
-		do
-			Result := ast_factory.new_infix_power_operator (line, column)
-		ensure
-			infix_power_operator_not_void: Result /= Void
-		end
-
-	new_infix_times_operator: ET_INFIX_TIMES_OPERATOR is
-			-- New binary "*" operator
-		do
-			Result := ast_factory.new_infix_times_operator (line, column)
-		ensure
-			infix_times_operator_not_void: Result /= Void
-		end
-
-	new_infix_xor_operator (a_text: STRING): ET_INFIX_XOR_OPERATOR is
-			-- New binary "xor" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_infix_xor_operator (a_text, line, column)
-		ensure
-			infix_xor_operator_not_void: Result /= Void
-		end
-
-	new_integer_constant (a_literal: STRING): ET_INTEGER_CONSTANT is
-			-- New integer constant with no underscore
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-9]+
-		do
-			Result := ast_factory.new_regular_integer_constant (a_literal, current_position)
-		ensure
-			integer_constant_not_void: Result /= Void
-		end
-
-	new_manifest_string (a_literal: STRING): ET_MANIFEST_STRING is
-			-- New manifest string with no special character
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: \"[^"%\n]*\"
-		do
-			Result := ast_factory.new_regular_manifest_string (a_literal, line, column)
-		ensure
-			manifest_string_not_void: Result /= Void
-		end
-
-	new_minus_symbol: ET_MINUS_SYMBOL is
-			-- New '-' symbol
-		do
-			Result := ast_factory.new_minus_symbol (line, column)
-		ensure
-			minus_symbol_not_void: Result /= Void
-			is_prefix: Result.is_prefix
-		end
-
-	new_not_equal_symbol: ET_NOT_EQUAL_SYMBOL is
-			-- New '/=' symbol
-		do
-			Result := ast_factory.new_not_equal_symbol (line, column)
-		ensure
-			not_equal_symbol_not_void: Result /= Void
-		end
-
-	new_plus_symbol: ET_PLUS_SYMBOL is
-			-- New '+' symbol
-		do
-			Result := ast_factory.new_plus_symbol (line, column)
-		ensure
-			plus_symbol_not_void: Result /= Void
-			is_prefix: Result.is_prefix
-		end
-
-	new_prefix_not_operator (a_text: STRING): ET_PREFIX_NOT_OPERATOR is
-			-- New unary "not" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_prefix_not_operator (a_text, line, column)
-		ensure
-			prefix_not_operator_not_void: Result /= Void
-		end
-
-	new_real_constant (a_literal: STRING): ET_REAL_CONSTANT is
-			-- New real constant with no underscore
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: ([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?
-		do
-			Result := ast_factory.new_regular_real_constant (a_literal, current_position)
-		ensure
-			real_constant_not_void: Result /= Void
-		end
-
-	new_reference_keyword (a_text: STRING): ET_REFERENCE_KEYWORD is
-			-- New 'reference' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_reference_keyword (a_text, line, column)
-		ensure
-			reference_keyword_not_void: Result /= Void
-		end
-
-	new_result (a_text: STRING): ET_RESULT is
-			-- New result entity
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_result (a_text, line, column)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	new_retry_instruction (a_text: STRING): ET_RETRY_INSTRUCTION is
-			-- New retry instruction
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_retry_instruction (a_text, line, column)
-		ensure
-			retry_instruction_not_void: Result /= Void
-		end
-
-	new_semicolon_symbol: ET_SEMICOLON_SYMBOL is
-			-- New ';' symbol
-		do
-			Result := ast_factory.new_semicolon_symbol (line, column)
-		ensure
-			semicolon_symbol_not_void: Result /= Void
-		end
-
-	new_separate_keyword (a_text: STRING): ET_SEPARATE_KEYWORD is
-			-- New 'separate' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_separate_keyword (a_text, line, column)
-		ensure
-			separate_keyword_not_void: Result /= Void
-		end
-
-	new_special_manifest_string (a_literal: STRING): ET_MANIFEST_STRING is
-			-- New manifest string with special characters
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: \"([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*\"
-		do
-			Result := ast_factory.new_special_manifest_string (a_literal, line, column)
-		ensure
-			manifest_string_not_void: Result /= Void
-		end
-
-	new_symbol: ET_SYMBOL is
-			-- New lexical symbol
-		do
-			Result := ast_factory.new_symbol (line, column)
-		ensure
-			symbol_not_void: Result /= Void
-		end
-
-	new_token (a_text: STRING): ET_TOKEN is
-			-- New token
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_token (a_text, line, column)
-		ensure
-			token_not_void: Result /= Void
-		end
-
-	new_true_constant (a_text: STRING): ET_TRUE_CONSTANT is
-			-- New True constant
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-		do
-			Result := ast_factory.new_true_constant (a_text, line, column)
-		ensure
-			true_constant_not_void: Result /= Void
-		end
-
-	new_underscored_integer_constant (a_literal: STRING): ET_INTEGER_CONSTANT is
-			-- New integer constant with underscores
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: (_*[0-9]+_*)+
-		do
-			Result := ast_factory.new_underscored_integer_constant (a_literal, current_position)
-		ensure
-			integer_constant_not_void: Result /= Void
-		end
-
-	new_underscored_real_constant (a_literal: STRING): ET_REAL_CONSTANT is
-			-- New real constant with underscores
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: ((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?
-		do
-			Result := ast_factory.new_underscored_real_constant (a_literal, current_position)
-		ensure
-			real_constant_not_void: Result /= Void
-		end
-
-	new_verbatim_string (a_literal, a_marker, an_open, a_close: STRING): ET_VERBATIM_STRING is
-			-- New verbatim string
-		require
-			a_literal_not_void: a_literal /= Void
-			a_marker_not_void: a_marker /= Void
-			an_open_not_void: an_open /= Void
-			a_close_not_void: a_close /= Void
-		do
-			Result := ast_factory.new_verbatim_string (a_literal, a_marker, an_open, a_close, line, column)
-		ensure
-			verbatim_string_not_void: Result /= Void
-		end
+	last_literal_start: INTEGER
+	last_literal_end: INTEGER
+	last_break_start: INTEGER
+	last_break_end: INTEGER
+	last_comment_start: INTEGER
+	last_comment_end: INTEGER
+	last_literal_impl: STRING
 
 feature {NONE} -- String handler
 
@@ -656,6 +266,14 @@ feature {NONE} -- String handler
 
 feature {NONE} -- Implementation
 
+	last_string_kind: INTEGER
+			-- Kind of manifest string being parsed when reading the
+			-- following break or comment
+
+	str_regular, str_special, str_freeop, str_verbatim: INTEGER is unique
+			-- Various kinds of manifest string being parsed when
+			-- reading the following break or comment
+
 	ms_line, ms_column: INTEGER
 			-- Line and column numbers of currently
 			-- scanned special manifest string
@@ -668,6 +286,9 @@ feature {NONE} -- Implementation
 
 	verbatim_open_white_characters: STRING
 			-- White characters after "xyz[
+
+	verbatim_close_white_characters: STRING
+			-- White characters before ]xyz"
 
 	is_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN is
 			-- Is string between indexes `a_start' and `an_end' the
@@ -703,25 +324,35 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Processing
 
-	process_one_character_symbol (a_token: INTEGER) is
-			-- Process Eiffel symbol made up of one character.
-		do
-			last_token := a_token
-			last_value := new_symbol
-		end
-
-	process_two_character_symbol (a_token: INTEGER) is
-			-- Process Eiffel symbol made up of two characters.
-		do
-			last_token := a_token
-			last_value := new_symbol
-		end
-
 	process_c2_character_constant (a_value: CHARACTER) is
 			-- Process character constant of the form '%A'.
 		do
 			last_token := E_CHARACTER
-			last_value := new_c2_character_constant (a_value)
+			last_break_end := 0
+			last_comment_end := 0
+			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+		end
+
+	process_c2_character_constant_break (a_value: CHARACTER) is
+			-- Process character constant of the form '%A',
+			-- followed by a break.
+		do
+			last_token := E_CHARACTER
+			last_break_start := 5
+			last_break_end := text_count
+			last_comment_end := 0
+			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+		end
+
+	process_c2_character_constant_comment (a_value: CHARACTER) is
+			-- Process character constant of the form '%A',
+			-- followed by a comment.
+		do
+			last_token := E_CHARACTER
+			last_break_end := 0
+			last_comment_start := 5
+			last_comment_end := text_count
+			last_value := ast_factory.new_c2_character_constant (a_value, Current)
 		end
 
 	process_lower_case_c2_character_constant (a_value: CHARACTER) is
@@ -735,7 +366,45 @@ feature {NONE} -- Processing
 			column := column - 2
 
 			last_token := E_CHARACTER
-			last_value := new_c2_character_constant (a_value)
+			last_break_end := 0
+			last_comment_end := 0
+			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+		end
+
+	process_lower_case_c2_character_constant_break (a_value: CHARACTER) is
+			-- Process character constant of the form '%a',
+			-- followed by a break.
+		do
+				-- Syntax error: special character specification
+				-- %l where l is a letter code should be in
+				-- upper-case in character constant.
+			column := column + 2
+			error_handler.report_SCCU_error (current_position)
+			column := column - 2
+
+			last_token := E_CHARACTER
+			last_break_start := 5
+			last_break_end := text_count
+			last_comment_end := 0
+			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+		end
+
+	process_lower_case_c2_character_constant_comment (a_value: CHARACTER) is
+			-- Process character constant of the form '%a',
+			-- followed by a comment.
+		do
+				-- Syntax error: special character specification
+				-- %l where l is a letter code should be in
+				-- upper-case in character constant.
+			column := column + 2
+			error_handler.report_SCCU_error (current_position)
+			column := column - 2
+
+			last_token := E_CHARACTER
+			last_break_end := 0
+			last_comment_start := 5
+			last_comment_end := text_count
+			last_value := ast_factory.new_c2_character_constant (a_value, Current)
 		end
 
 feature {NONE} -- Constants
@@ -745,6 +414,7 @@ feature {NONE} -- Constants
 	capitalized_precursor_keyword: STRING is "Precursor"
 	capitalized_result_keyword: STRING is "Result"
 	capitalized_true_keyword: STRING is "True"
+	capitalized_unique_keyword: STRING is "Unique"
 			-- Eiffel keywords with first letter in upper-case
 
 	agent_keyword: STRING is "agent"
@@ -808,6 +478,41 @@ feature {NONE} -- Constants
 	when_keyword: STRING is "when"
 	xor_keyword: STRING is "xor"
 			-- Eiffel keywords
+
+	arrow_symbol: STRING is "->"
+	assign_symbol: STRING is ":="
+	assign_attempt_symbol: STRING is "?="
+	bang_symbol: STRING is "!"
+	bangbang_symbol: STRING is "!!"
+	colon_symbol: STRING is ":"
+	comma_symbol: STRING is ","
+	div_symbol: STRING is "//"
+	divide_symbol: STRING is "/"
+	dollar_symbol: STRING is "$"
+	dot_symbol: STRING is "."
+	dotdot_symbol: STRING is ".."
+	equal_symbol: STRING is "="
+	ge_symbol: STRING is ">="
+	gt_symbol: STRING is ">"
+	le_symbol: STRING is "<="
+	left_array_symbol: STRING is "<<"
+	left_brace_symbol: STRING is "{"
+	left_bracket_symbol: STRING is "["
+	left_parenthesis_symbol: STRING is "("
+	lt_symbol: STRING is "<"
+	minus_symbol: STRING is "-"
+	mod_symbol: STRING is "\\"
+	not_equal_symbol: STRING is "/="
+	plus_symbol: STRING is "+"
+	power_symbol: STRING is "^"
+	question_mark_symbol: STRING is "?"
+	right_array_symbol: STRING is ">>"
+	right_brace_symbol: STRING is "}"
+	right_bracket_symbol: STRING is "]"
+	right_parenthesis_symbol: STRING is ")"
+	semicolon_symbol: STRING is ";"
+	times_symbol: STRING is "*"
+			-- Eiffel symbols
 
 invariant
 

@@ -163,7 +163,6 @@ feature -- Access
 			-- Eiffel parser
 		once
 			!! Result.make_with_factory (Current, ast_factory, error_handler)
-			Result.set_use_create_keyword (True)
 		ensure
 			eiffel_parser_not_void: Result /= Void
 		end

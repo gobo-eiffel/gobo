@@ -143,7 +143,10 @@ create		{
 					-- Do nothing.
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
-					last_classname := new_identifier (text)
+					last_literal_start := 1
+					last_literal_end := 6
+					last_break_end := 6
+					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
 [cC][rR][eE][aA][tT][eE]	{
@@ -151,7 +154,10 @@ create		{
 					-- Do nothing.
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
-					last_classname := new_identifier (text)
+					last_literal_start := 1
+					last_literal_end := 6
+					last_break_end := 6
+					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
 creation	{
@@ -305,7 +311,10 @@ reference	{
 					-- Do nothing.
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
-					last_classname := new_identifier (text)
+					last_literal_start := 1
+					last_literal_end := 9
+					last_break_end := 9
+					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
 [rR][eE][fF][eE][rR][eE][nN][cC][eE] {
@@ -313,7 +322,10 @@ reference	{
 					-- Do nothing.
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
-					last_classname := new_identifier (text)
+					last_literal_start := 1
+					last_literal_end := 9
+					last_break_end := 9
+					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
 rename		{
@@ -393,7 +405,10 @@ xor			{
 [a-zA-Z][a-zA-Z0-9_]*	{
 				if class_keyword_found then
 					last_token := E_IDENTIFIER
-					last_classname := new_identifier (text)
+					last_literal_start := 1
+					last_literal_end := text_count
+					last_break_end := last_literal_end
+					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
 

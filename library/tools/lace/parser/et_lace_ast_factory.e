@@ -62,7 +62,11 @@ feature -- Eiffel AST factory
 	new_ast_factory: ET_AST_FACTORY is
 			-- New Eiffel AST factory
 		do
-			!! Result.make
+			if ast_factory /= Void then
+				Result := ast_factory
+			else
+				!! Result.make
+			end
 		ensure
 			ast_factory_not_void: Result /= Void
 		end
@@ -73,6 +77,22 @@ feature -- Eiffel AST factory
 			!! Result.make_standard
 		ensure
 			error_handler_not_void: Result /= Void
+		end
+
+feature -- Configuration
+
+	ast_factory: ET_AST_FACTORY
+			-- Return this AST factory in `new_ast_factory'
+			-- if not void
+
+feature -- Configuration setting
+
+	set_ast_factory (a_factory: like ast_factory) is
+			-- Set `ast_factory' to `a_factory'.
+		do
+			ast_factory := a_factory
+		ensure
+			ast_factory_set: ast_factory = a_factory
 		end
 
 end

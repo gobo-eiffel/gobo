@@ -23,6 +23,1116 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Eiffel keywords
+
+	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'agent' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'alias' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'all' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_and_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_AND_OPERATOR is
+			-- New 'and' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_as_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'as' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'check' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'class' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'create' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'creation' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_current_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_CURRENT is
+			-- New 'current' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_debug_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'debug' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_deferred_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_DEFERRED_KEYWORD is
+			-- New 'deferred' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'do' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'else' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'elseif' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'end' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'ensure' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_expanded_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_EXPANDED_KEYWORD is
+			-- New 'expanded' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_export_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'export' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'external' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_false_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FALSE_CONSTANT is
+			-- New 'false' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_feature_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'feature' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'from' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'frozen' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_if_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'if' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_implies_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_IMPLIES_OPERATOR is
+			-- New 'implies' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_indexing_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'indexing' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'infix' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'inherit' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'inspect' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'invariant' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'is' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New Eiffel keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'like' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_local_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'local' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'loop' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_not_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_PREFIX_NOT_OPERATOR is
+			-- New 'not' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'obsolete' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'old' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_once_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'once' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_or_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_OR_OPERATOR is
+			-- New 'or' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'precursor' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'prefix' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'redefine' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_reference_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REFERENCE_KEYWORD is
+			-- New 'reference' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_rename_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'rename' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'require' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_rescue_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'rescue' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_result_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RESULT is
+			-- New 'result' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_retry_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RETRY_INSTRUCTION is
+			-- New 'retry' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_select_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'select' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_separate_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SEPARATE_KEYWORD is
+			-- New 'separate' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'strip' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_then_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'then' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_true_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TRUE_CONSTANT is
+			-- New 'true' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_undefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'undefine' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'unique' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_until_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'until' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'variant' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+			-- New 'when' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_keyword (a_scanner)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	new_xor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_XOR_OPERATOR is
+			-- New 'xor' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+feature -- Eiffel symbols
+
+	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '->' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_assign_attempt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '?=' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_assign_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New ':=' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_bang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '!' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_bangbang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '!!' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New ':' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_comma_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New ',' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_div_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_DIV_OPERATOR is
+			-- New '//' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_divide_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_DIVIDE_OPERATOR is
+			-- New '/' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_dollar_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '$' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_dot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '.' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_dotdot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '..' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_EQUAL_SYMBOL is
+			-- New '=' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_ge_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_GE_OPERATOR is
+			-- New '>=' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_gt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_GT_OPERATOR is
+			-- New '>' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_LE_OPERATOR is
+			-- New '<=' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_left_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '<<' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_left_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '{' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '[' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_left_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '(' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_lt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_LT_OPERATOR is
+			-- New '<' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_minus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_MINUS_SYMBOL is
+			-- New '-' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+			is_prefix: Result.is_prefix
+		end
+
+	new_mod_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_MOD_OPERATOR is
+			-- New '\\' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_NOT_EQUAL_SYMBOL is
+			-- New '/=' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_PLUS_SYMBOL is
+			-- New '+' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+			is_prefix: Result.is_prefix
+		end
+
+	new_power_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_POWER_OPERATOR is
+			-- New '^' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '?' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_right_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '>>' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_right_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '}' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_right_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New ']' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_right_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New ')' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := new_symbol (a_scanner)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_semicolon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SEMICOLON_SYMBOL is
+			-- New ';' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New Eiffel symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_INFIX_TIMES_OPERATOR is
+			-- New '*' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.line, a_scanner.column)
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+feature -- AST leaves
+
+	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BIT_CONSTANT is
+			-- New bit constant
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			bit_constant_not_void: Result /= Void
+		end
+
+	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C1_CHARACTER_CONSTANT is
+			-- New character constant of the form 'A'
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_value, a_scanner.line, a_scanner.column)
+		ensure
+			character_constant_not_void: Result /= Void
+		end
+
+	new_c2_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C2_CHARACTER_CONSTANT is
+			-- New character constant of the form '%A'
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_value, a_scanner.line, a_scanner.column)
+		ensure
+			character_constant_not_void: Result /= Void
+		end
+
+	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C3_CHARACTER_CONSTANT is
+			-- New character constant of the form '%/code/`'
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: [0-9]+
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			character_constant_not_void: Result /= Void
+		end
+
+	new_free_operator (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FREE_OPERATOR is
+			-- New free operator
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			free_operator_not_void: Result /= Void
+			is_prefix: Result.is_prefix
+		end
+
+	new_hexadecimal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_HEXADECIMAL_INTEGER_CONSTANT is
+			-- New integer constant in hexadecimal format
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: 0x[0-9a-fA-F]+
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			integer_constant_not_void: Result /= Void
+		end
+
+	new_identifier (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_IDENTIFIER is
+			-- New identifier
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			identifier_not_void: Result /= Void
+		end
+
+	new_regular_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_INTEGER_CONSTANT is
+			-- New integer constant with no underscore
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: [0-9]+
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			integer_constant_not_void: Result /= Void
+		end
+
+	new_regular_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_MANIFEST_STRING is
+			-- New manifest string with no special character
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: [^"%\n]*
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			manifest_string_not_void: Result /= Void
+		end
+
+	new_regular_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_REAL_CONSTANT is
+			-- New real constant with no underscore
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: ([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			real_constant_not_void: Result /= Void
+		end
+
+	new_special_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SPECIAL_MANIFEST_STRING is
+			-- New manifest string with special characters
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: ([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			manifest_string_not_void: Result /= Void
+		end
+
+	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_INTEGER_CONSTANT is
+			-- New integer constant with underscores
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: (_*[0-9]+_*)+
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			integer_constant_not_void: Result /= Void
+		end
+
+	new_underscored_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_REAL_CONSTANT is
+			-- New real constant with underscores
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: regexp: ((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
+		ensure
+			real_constant_not_void: Result /= Void
+		end
+
+	new_verbatim_string (a_marker, an_open, a_close: STRING; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING is
+			-- New verbatim string
+		require
+			a_marker_not_void: a_marker /= Void
+			an_open_not_void: an_open /= Void
+			a_close_not_void: a_close /= Void
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_with_position (a_scanner.last_literal, a_marker, an_open, a_close, a_scanner.line, a_scanner.column)
+		ensure
+			verbatim_string_not_void: Result /= Void
+		end
+
 feature -- AST factory
 
 	new_actual_arguments (l: ET_SYMBOL; r: ET_SYMBOL): ET_ACTUAL_ARGUMENTS is
@@ -144,19 +1254,6 @@ feature -- AST factory
 			bang_instruction_not_void: Result /= Void
 		end
 
-	new_bit_constant (a_literal: STRING; a_line, a_column: INTEGER): ET_BIT_CONSTANT is
-			-- New bit constant
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-1]+[bB]
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_literal, a_line, a_column)
-		ensure
-			bit_constant_not_void: Result /= Void
-		end
-
 	new_bit_identifier (a_bit: ET_TOKEN; an_id: ET_IDENTIFIER): ET_BIT_IDENTIFIER is
 			-- New 'BIT Identifier' type
 		require
@@ -189,41 +1286,6 @@ feature -- AST factory
 			!! Result.make_with_position (a_text, a_line, a_column)
 		ensure
 			break_not_void: Result /= Void
-		end
-
-	new_c1_character_constant (a_value: CHARACTER; a_line, a_column: INTEGER): ET_C1_CHARACTER_CONSTANT is
-			-- New character constant of the form 'A'
-		require
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_value, a_line, a_column)
-		ensure
-			character_constant_not_void: Result /= Void
-		end
-
-	new_c2_character_constant (a_value: CHARACTER; a_line, a_column: INTEGER): ET_C2_CHARACTER_CONSTANT is
-			-- New character constant of the form '%A'
-		require
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_value, a_line, a_column)
-		ensure
-			character_constant_not_void: Result /= Void
-		end
-
-	new_c3_character_constant (a_literal: STRING; a_line, a_column: INTEGER): ET_C3_CHARACTER_CONSTANT is
-			-- New character constant of the form '%/code/`'
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-9]+
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_literal, a_line, a_column)
-		ensure
-			character_constant_not_void: Result /= Void
 		end
 
 	new_call_agent (an_agent: ET_TOKEN): ET_CALL_AGENT is
@@ -610,19 +1672,6 @@ feature -- AST factory
 			creators_not_void: Result /= Void
 		end
 
-	new_current (a_text: STRING; a_line, a_column: INTEGER): ET_CURRENT is
-			-- New current entity
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			current_not_void: Result /= Void
-		end
-
 	new_current_address (d: ET_SYMBOL; c: ET_CURRENT): ET_CURRENT_ADDRESS is
 			-- New address of Current
 		require
@@ -697,19 +1746,6 @@ feature -- AST factory
 				a_preconditions, a_postconditions, a_clients, a_class, an_id)
 		ensure
 			deferred_function_not_void: Result /= Void
-		end
-
-	new_deferred_keyword (a_text: STRING; a_line, a_column: INTEGER): ET_DEFERRED_KEYWORD is
-			-- New 'deferred' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			deferred_keyword_not_void: Result /= Void
 		end
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
@@ -814,30 +1850,6 @@ feature -- AST factory
 			equality_expression_not_void: Result /= Void
 		end
 
-	new_equal_symbol (a_line, a_column: INTEGER): ET_EQUAL_SYMBOL is
-			-- New '=' symbol
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			equal_symbol_not_void: Result /= Void
-		end
-
-	new_expanded_keyword (a_text: STRING; a_line, a_column: INTEGER): ET_EXPANDED_KEYWORD is
-			-- New 'expanded' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			expanded_keyword_not_void: Result /= Void
-		end
-
 	new_exports (an_export: ET_TOKEN): ET_EXPORTS is
 			-- New export clause
 		require
@@ -931,19 +1943,6 @@ feature -- AST factory
 				a_class, an_id)
 		ensure
 			external_procedure_not_void: Result /= Void
-		end
-
-	new_false_constant (a_text: STRING; a_line, a_column: INTEGER): ET_FALSE_CONSTANT is
-			-- New False constant
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			false_constant_not_void: Result /= Void
 		end
 
 	new_feature_address (d: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_FEATURE_ADDRESS is
@@ -1132,20 +2131,6 @@ feature -- AST factory
 			formal_generics_not_void: Result /= Void
 		end
 
-	new_free_operator (a_string: STRING; a_line, a_column: INTEGER): ET_FREE_OPERATOR is
-			-- New free operator
-		require
-			a_string_not_void: a_string /= Void
-			a_string_not_empty: a_string.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_string, a_line, a_column)
-		ensure
-			free_operator_not_void: Result /= Void
-			is_prefix: Result.is_prefix
-		end
-
 	new_generic_class_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
 		a_generics: like new_actual_generics; a_class: ET_CLASS): ET_GENERIC_CLASS_TYPE is
 			-- New Eiffel generic class type
@@ -1169,31 +2154,6 @@ feature -- AST factory
 			!! Result.make (a_type_mark, a_name, a_generics)
 		ensure
 			generic_named_type_not_void: Result /= Void
-		end
-
-	new_hexadecimal_integer_constant (a_literal: STRING; a_position: ET_POSITION): ET_HEXADECIMAL_INTEGER_CONSTANT is
-			-- New integer constant in hexadecimal format
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: 0x[0-9a-fA-F]+
-			a_position_not_void: a_position /= Void
-		do
-			!! Result.make (a_literal, a_position)
-		ensure
-			integer_constant_not_void: Result /= Void
-		end
-
-	new_identifier (a_text: STRING; a_line, a_column: INTEGER): ET_IDENTIFIER is
-			-- New identifier
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			identifier_not_void: Result /= Void
 		end
 
 	new_identifier_colon (a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL): ET_IDENTIFIER_COLON is
@@ -1317,19 +2277,6 @@ feature -- AST factory
 			infix_and_name_not_void: Result /= Void
 		end
 
-	new_infix_and_operator (a_text: STRING; a_line, a_column: INTEGER): ET_INFIX_AND_OPERATOR is
-			-- New binary "and" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			infix_and_operator_not_void: Result /= Void
-		end
-
 	new_infix_and_then_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_AND_THEN_NAME is
 			-- New infix "and then" feature name
 		require
@@ -1363,17 +2310,6 @@ feature -- AST factory
 			infix_div_name_not_void: Result /= Void
 		end
 
-	new_infix_div_operator (a_line, a_column: INTEGER): ET_INFIX_DIV_OPERATOR is
-			-- New binary "//" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_div_operator_not_void: Result /= Void
-		end
-
 	new_infix_divide_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_DIVIDE_NAME is
 			-- New infix "//" feature name
 		require
@@ -1383,17 +2319,6 @@ feature -- AST factory
 			!! Result.make (an_infix, an_operator)
 		ensure
 			infix_divide_name_not_void: Result /= Void
-		end
-
-	new_infix_divide_operator (a_line, a_column: INTEGER): ET_INFIX_DIVIDE_OPERATOR is
-			-- New binary "//" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_divide_operator_not_void: Result /= Void
 		end
 
 	new_infix_expression (l: ET_EXPRESSION; a_name: ET_INFIX_OPERATOR;
@@ -1433,17 +2358,6 @@ feature -- AST factory
 			infix_ge_name_not_void: Result /= Void
 		end
 
-	new_infix_ge_operator (a_line, a_column: INTEGER): ET_INFIX_GE_OPERATOR is
-			-- New binary ">=" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_ge_operator_not_void: Result /= Void
-		end
-
 	new_infix_gt_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_GT_NAME is
 			-- New infix ">" feature name
 		require
@@ -1453,17 +2367,6 @@ feature -- AST factory
 			!! Result.make (an_infix, an_operator)
 		ensure
 			infix_gt_name_not_void: Result /= Void
-		end
-
-	new_infix_gt_operator (a_line, a_column: INTEGER): ET_INFIX_GT_OPERATOR is
-			-- New binary ">" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_gt_operator_not_void: Result /= Void
 		end
 
 	new_infix_implies_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_IMPLIES_NAME is
@@ -1477,19 +2380,6 @@ feature -- AST factory
 			infix_implies_name_not_void: Result /= Void
 		end
 
-	new_infix_implies_operator (a_text: STRING; a_line, a_column: INTEGER): ET_INFIX_IMPLIES_OPERATOR is
-			-- New binary "implies" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			infix_implies_operator_not_void: Result /= Void
-		end
-
 	new_infix_le_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_LE_NAME is
 			-- New infix "<=" feature name
 		require
@@ -1501,17 +2391,6 @@ feature -- AST factory
 			infix_le_name_not_void: Result /= Void
 		end
 
-	new_infix_le_operator (a_line, a_column: INTEGER): ET_INFIX_LE_OPERATOR is
-			-- New binary "<=" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_le_operator_not_void: Result /= Void
-		end
-
 	new_infix_lt_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_LT_NAME is
 			-- New infix "<" feature name
 		require
@@ -1521,17 +2400,6 @@ feature -- AST factory
 			!! Result.make (an_infix, an_operator)
 		ensure
 			infix_lt_name_not_void: Result /= Void
-		end
-
-	new_infix_lt_operator (a_line, a_column: INTEGER): ET_INFIX_LT_OPERATOR is
-			-- New binary "<" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_lt_operator_not_void: Result /= Void
 		end
 
 	new_infix_minus_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_MINUS_NAME is
@@ -1556,17 +2424,6 @@ feature -- AST factory
 			infix_mod_name_not_void: Result /= Void
 		end
 
-	new_infix_mod_operator (a_line, a_column: INTEGER): ET_INFIX_MOD_OPERATOR is
-			-- New binary "\\" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_mod_operator_not_void: Result /= Void
-		end
-
 	new_infix_or_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_OR_NAME is
 			-- New infix "or" feature name
 		require
@@ -1576,19 +2433,6 @@ feature -- AST factory
 			!! Result.make (an_infix, an_operator)
 		ensure
 			infix_or_name_not_void: Result /= Void
-		end
-
-	new_infix_or_operator (a_text: STRING; a_line, a_column: INTEGER): ET_INFIX_OR_OPERATOR is
-			-- New binary "or" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			infix_or_operator_not_void: Result /= Void
 		end
 
 	new_infix_or_else_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_OR_ELSE_NAME is
@@ -1635,17 +2479,6 @@ feature -- AST factory
 			infix_power_name_not_void: Result /= Void
 		end
 
-	new_infix_power_operator (a_line, a_column: INTEGER): ET_INFIX_POWER_OPERATOR is
-			-- New binary "^" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_power_operator_not_void: Result /= Void
-		end
-
 	new_infix_times_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_TIMES_NAME is
 			-- New infix "*" feature name
 		require
@@ -1657,17 +2490,6 @@ feature -- AST factory
 			infix_times_name_not_void: Result /= Void
 		end
 
-	new_infix_times_operator (a_line, a_column: INTEGER): ET_INFIX_TIMES_OPERATOR is
-			-- New binary "*" operator
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			infix_times_operator_not_void: Result /= Void
-		end
-
 	new_infix_xor_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_XOR_NAME is
 			-- New infix "xor" feature name
 		require
@@ -1677,19 +2499,6 @@ feature -- AST factory
 			!! Result.make (an_infix, an_operator)
 		ensure
 			infix_xor_name_not_void: Result /= Void
-		end
-
-	new_infix_xor_operator (a_text: STRING; a_line, a_column: INTEGER): ET_INFIX_XOR_OPERATOR is
-			-- New binary "xor" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			infix_xor_operator_not_void: Result /= Void
 		end
 
 	new_inspect_instruction (an_inspect: ET_TOKEN; an_expression: ET_EXPRESSION;
@@ -1888,18 +2697,6 @@ feature -- AST factory
 			manifest_tuple_not_void: Result /= Void
 		end
 
-	new_minus_symbol (a_line, a_column: INTEGER): ET_MINUS_SYMBOL is
-			-- New '-' symbol
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			minus_symbol_not_void: Result /= Void
-			is_prefix: Result.is_prefix
-		end
-
 	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER): ET_NAMED_TYPE is
 			-- New Eiffel named type
 		require
@@ -1919,17 +2716,6 @@ feature -- AST factory
 			!! Result.make (a_left, a_right)
 		ensure
 			none_clients_not_void: Result /= Void
-		end
-
-	new_not_equal_symbol (a_line, a_column: INTEGER): ET_NOT_EQUAL_SYMBOL is
-			-- New '/=' symbol
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			not_equal_symbol_not_void: Result /= Void
 		end
 
 	new_obsolete (an_obsolete: ET_TOKEN; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
@@ -2064,18 +2850,6 @@ feature -- AST factory
 			parents_not_void: Result /= Void
 		end
 
-	new_plus_symbol (a_line, a_column: INTEGER): ET_PLUS_SYMBOL is
-			-- New '+' symbol
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			plus_symbol_not_void: Result /= Void
-			is_prefix: Result.is_prefix
-		end
-
 	new_postconditions (an_ensure: ET_TOKEN): ET_POSTCONDITIONS is
 			-- New postconditions
 		require
@@ -2182,19 +2956,6 @@ feature -- AST factory
 			!! Result.make (a_prefix, an_operator)
 		ensure
 			prefix_not_name_not_void: Result /= Void
-		end
-
-	new_prefix_not_operator (a_text: STRING; a_line, a_column: INTEGER): ET_PREFIX_NOT_OPERATOR is
-			-- New unary "not" operator
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			prefix_not_operator_not_void: Result /= Void
 		end
 
 	new_prefix_plus_name (a_prefix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_PREFIX_PLUS_NAME is
@@ -2340,56 +3101,6 @@ feature -- AST factory
 			qualified_typed_create_instruction_not_void: Result /= Void
 		end
 
-	new_reference_keyword (a_text: STRING; a_line, a_column: INTEGER): ET_REFERENCE_KEYWORD is
-			-- New 'reference' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			reference_keyword_not_void: Result /= Void
-		end
-
-	new_regular_integer_constant (a_literal: STRING; a_position: ET_POSITION): ET_REGULAR_INTEGER_CONSTANT is
-			-- New integer constant with no underscore
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-9]+
-			a_position_not_void: a_position /= Void
-		do
-			!! Result.make (a_literal, a_position)
-		ensure
-			integer_constant_not_void: Result /= Void
-		end
-
-	new_regular_manifest_string (a_literal: STRING; a_line, a_column: INTEGER): ET_REGULAR_MANIFEST_STRING is
-			-- New manifest string with no special character
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: \"[^"%\n]*\"
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_literal, a_line, a_column)
-		ensure
-			manifest_string_not_void: Result /= Void
-		end
-
-	new_regular_real_constant (a_literal: STRING; a_position: ET_POSITION): ET_REGULAR_REAL_CONSTANT is
-			-- New real constant with no underscore
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: ([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?
-			a_position_not_void: a_position /= Void
-		do
-			!! Result.make (a_literal, a_position)
-		ensure
-			real_constant_not_void: Result /= Void
-		end
-
 	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_TOKEN; new_name: ET_FEATURE_NAME): ET_RENAME is
 			-- New rename pair
 		require
@@ -2437,19 +3148,6 @@ feature -- AST factory
 			renames_not_void: Result /= Void
 		end
 
-	new_result (a_text: STRING; a_line, a_column: INTEGER): ET_RESULT is
-			-- New result entity
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	new_result_address (d: ET_SYMBOL; r: ET_RESULT): ET_RESULT_ADDRESS is
 			-- New address of Result
 		require
@@ -2459,56 +3157,6 @@ feature -- AST factory
 			!! Result.make (d, r)
 		ensure
 			result_address_not_void: Result /= Void
-		end
-
-	new_retry_instruction (a_text: STRING; a_line, a_column: INTEGER): ET_RETRY_INSTRUCTION is
-			-- New retry instruction
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			retry_instruction_not_void: Result /= Void
-		end
-
-	new_semicolon_symbol (a_line, a_column: INTEGER): ET_SEMICOLON_SYMBOL is
-			-- New ';' symbol
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			semicolon_symbol_not_void: Result /= Void
-		end
-
-	new_separate_keyword (a_text: STRING; a_line, a_column: INTEGER): ET_SEPARATE_KEYWORD is
-			-- New 'separate' keyword
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			separate_keyword_not_void: Result /= Void
-		end
-
-	new_special_manifest_string (a_literal: STRING; a_line, a_column: INTEGER): ET_SPECIAL_MANIFEST_STRING is
-			-- New manifest string with special characters
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: \"([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*\"
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_literal, a_line, a_column)
-		ensure
-			manifest_string_not_void: Result /= Void
 		end
 
 	new_static_call_expression (a_feature: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
@@ -2571,17 +3219,6 @@ feature -- AST factory
 			strip_expression_not_void: Result /= Void
 		end
 
-	new_symbol (a_line, a_column: INTEGER): ET_SYMBOL is
-			-- New lexical symbol
-		require
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_line, a_column)
-		ensure
-			symbol_not_void: Result /= Void
-		end
-
 	new_tagged_assertion (a_tag: ET_TAG): ET_TAGGED_ASSERTION is
 			-- New tagged assertion
 		require
@@ -2629,19 +3266,6 @@ feature -- AST factory
 			token_not_void: Result /= Void
 		end
 
-	new_true_constant (a_text: STRING; a_line, a_column: INTEGER): ET_TRUE_CONSTANT is
-			-- New True constant
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			!! Result.make_with_position (a_text, a_line, a_column)
-		ensure
-			true_constant_not_void: Result /= Void
-		end
-
 	new_type_comma (a_type: ET_TYPE; a_comma: ET_SYMBOL): ET_TYPE_COMMA is
 			-- New type-comma
 		require
@@ -2682,30 +3306,6 @@ feature -- AST factory
 			typed_create_instruction_not_void: Result /= Void
 		end
 
-	new_underscored_integer_constant (a_literal: STRING; a_position: ET_POSITION): ET_UNDERSCORED_INTEGER_CONSTANT is
-			-- New integer constant with underscores
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: (_*[0-9]+_*)+
-			a_position_not_void: a_position /= Void
-		do
-			!! Result.make (a_literal, a_position)
-		ensure
-			integer_constant_not_void: Result /= Void
-		end
-
-	new_underscored_real_constant (a_literal: STRING; a_position: ET_POSITION): ET_UNDERSCORED_REAL_CONSTANT is
-			-- New real constant with underscores
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: ((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?
-			a_position_not_void: a_position /= Void
-		do
-			!! Result.make (a_literal, a_position)
-		ensure
-			real_constant_not_void: Result /= Void
-		end
-
 	new_unique_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS; an_id: INTEGER): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration
@@ -2729,22 +3329,6 @@ feature -- AST factory
 			!! Result.make (a_variant)
 		ensure
 			variant_not_void: Result /= Void
-		end
-
-	new_verbatim_string (a_literal, a_marker, an_open, a_close: STRING;
-		a_line, a_column: INTEGER): ET_VERBATIM_STRING is
-			-- New verbatim string
-		require
-			a_literal_not_void: a_literal /= Void
-			a_marker_not_void: a_marker /= Void
-			an_open_not_void: an_open /= Void
-			a_close_not_void: a_close /= Void
-			a_line_not_void: a_line /= Void
-			a_column_not_void: a_column /= Void
-		do
-			!! Result.make_with_position (a_literal, a_marker, an_open, a_close, a_line, a_column)
-		ensure
-			verbatim_string_not_void: Result /= Void
 		end
 
 	new_when_part (a_when: ET_TOKEN; a_choices: ET_CHOICE_LIST;

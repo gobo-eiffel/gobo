@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: \"[^"%\n]*\"
+			-- valid_literal: regexp: [^"%\n]*
 		do
 			value := a_literal
 			make_leaf
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- Create a new manifest string at given position.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: \"[^"%\n]*\"
+			-- valid_literal: regexp: [^"%\n]*
 			a_line_positive: a_line >= 0
 			a_column_positive: a_column >= 0
 		do
@@ -89,7 +89,7 @@ feature -- Processing
 
 invariant
 
-	-- valid_literal: regexp: \"[^"%\n]*\"
+	-- valid_literal: regexp: [^"%\n]*
 	value_not_void: value /= Void
 
 end

@@ -2313,7 +2313,7 @@ feature -- Processing
 		do
 			process_rename (a_rename)
 			file.put_character (',')
-			process_break (a_rename.comma. break)
+			process_break (a_rename.comma.break)
 		end
 
 	process_renames (a_list: ET_RENAMES) is
