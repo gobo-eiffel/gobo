@@ -17,9 +17,10 @@ inherit
 	YY_COMPRESSED_SCANNER_SKELETON
 		rename
 			make as make_compressed_scanner_skeleton,
-			reset as reset_compressed_scanner_skeleton,
 			text as skeleton_text,
 			text_substring as skeleton_text_substring
+		redefine
+			reset
 		end
 
 	ET_EIFFEL_TOKENS
@@ -72,7 +73,7 @@ feature -- Initialization
 	reset is
 			-- Reset scanner before scanning next input.
 		do
-			reset_compressed_scanner_skeleton
+			precursor
 			verbatim_marker := Void
 			verbatim_open_white_characters := Void
 			last_class := Void
@@ -631,7 +632,7 @@ feature {NONE} -- Implementation
 			an_end_small_enough: an_end <= text_count
 			-- valid_string: regexp of text_substring (a_start, an_end): '[ \t\r]*\][^%\n"]*'
 		local
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 		do
 				-- Skip white characters:
 			from i := a_start until text_item (i) = ']' loop
@@ -640,7 +641,17 @@ feature {NONE} -- Implementation
 				-- Compare end marker with start marker.
 			nb := an_end - i
 			if nb = verbatim_marker.count then
-				Result := verbatim_marker.is_equal (text_substring (i + 1, an_end))
+				i := i + 1
+				Result := True
+				from j := 1 until j > nb loop
+					if verbatim_marker.item (j) = text_item (i) then
+						i := i + 1
+						j := j + 1
+					else
+						Result := False
+						j := nb + 1 -- Jump out of the loop.
+					end
+				end
 			end
 		end
 
