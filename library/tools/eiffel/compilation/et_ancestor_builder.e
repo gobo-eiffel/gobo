@@ -289,9 +289,9 @@ feature {NONE} -- Ancestors
 			end
 			create anc.make_with_capacity (ancestors.count)
 			a_cursor := ancestors.new_cursor
-			from a_cursor.finish until a_cursor.before loop
-				anc.put_first (a_cursor.item)
-				a_cursor.back
+			from a_cursor.start until a_cursor.after loop
+				anc.put_last (a_cursor.item)
+				a_cursor.forth
 			end
 			ancestors.wipe_out
 			current_class.set_ancestors (anc)

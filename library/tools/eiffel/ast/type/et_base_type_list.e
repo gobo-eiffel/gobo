@@ -14,7 +14,7 @@ class ET_BASE_TYPE_LIST
 
 inherit
 
-	ET_HEAD_LIST [ET_BASE_TYPE]
+	ET_TAIL_LIST [ET_BASE_TYPE]
 
 creation
 
@@ -31,8 +31,8 @@ feature -- Access
 		local
 			i, nb: INTEGER
 		do
-			nb := count - 1
-			from i := 0 until i > nb loop
+			nb := count
+			from i := 1 until i > nb loop
 				if storage.item (i).direct_base_class (a_universe) = a_class then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
@@ -52,8 +52,8 @@ feature -- Access
 			i, nb: INTEGER
 			a_type: ET_BASE_TYPE
 		do
-			nb := count - 1
-			from i := 0 until i > nb loop
+			nb := count
+			from i := 1 until i > nb loop
 				a_type := storage.item (i)
 				if a_type.direct_base_class (a_universe) = a_class then
 					Result := a_type
