@@ -1,5 +1,26 @@
 Version ?
 
+	geant:
+
+	* Task 'exit' supports capturing the return code of the called process.
+	* Task 'available' supports checking for availablity of directories.
+	* If you use xsltproc and pass string parameters to it, you have to
+	  surround those parameters with single quotes now.
+
+	gelex:
+
+	* Added command-line option  --pragma=[no]line  in order for
+	  the code generated for the semantic actions to contain or
+	  not indication about the line number where it originally
+	  appeared in the input description file. 
+
+	geyacc:
+
+	* Added command-line option  --pragma=[no]line  in order for
+	  the code generated for the semantic actions to contain or
+	  not indication about the line number where it originally
+	  appeared in the input description file. 
+
 	Gobo Eiffel XML Library:
 
 	* XM_DOCUMENT.process_to_events makes the tree an event source.
@@ -22,18 +43,8 @@ Version ?
 	Gobo Eiffel String Library
 
 	* New library.
+	* Contains the Formatter Library.
 	* ST_SPLITTER: parse a string to and from lists of tokens.
-
-  Gobo Eiffel String Formatter Library
-
-  * New library, previously called the Formatter library.
-
-	geant:
-
-	* Task 'exit' supports capturing the return code of the called process.
-	* Task 'available' supports checking for availablity of directories.
-	* If you use xsltproc and pass string parameters to it, you have to
-	  surround those parameters with single quotes now.
 
 Version 3.3 - 2 November 2003
 
