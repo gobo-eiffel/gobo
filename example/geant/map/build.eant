@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<project name="t">
+
+	<target name="cp">
+		<copy file="build.eant" to_directory="out"/>
+		<copy file="in/ttt/ttt.xml" to_directory="out"/>
+	</target>
+
+	<target name="cp1">
+		<copy file="in/ttt/ttt.xml" to_directory="out/out"/>
+	</target>
+
+	<target name="cp2">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(*.xml)"/>
+		</copy>
+	</target>
+
+	<target name="cp3">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(**/*.xml)"/>
+		</copy>
+	</target>
+
+	<target name="cpm0">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(**/*.xml)"/>
+			<map/>
+		</copy>
+	</target>
+
+	<target name="cpm1">
+		<copy file="build.eant" to_directory="out">
+			<map/>
+		</copy>
+	</target>
+
+	<target name="cpm2">
+		<copy file="in/ttt/ttt.xml" to_directory="out">
+			<map/>
+		</copy>
+	</target>
+
+	<target name="cpm3">
+		<copy file="in/ttt/ttt.xml" to_directory="out">
+			<map type="flatten"/>
+		</copy>
+	</target>
+
+	<target name="cpm4">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(**/*.xml)"/>
+			<map/>
+		</copy>
+	</target>
+
+	<target name="cpm5">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(**/*.xml)"/>
+			<map type="flatten"/>
+		</copy>
+	</target>
+
+	<target name="cpm6">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(**/*.xml)">
+				<map type="glob" from="*.xml" to="*.xml2"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="cpm7">
+		<copy to_directory="out">
+			<fileset directory="in" include="@(**/*.xml)"/>
+			<mapper type="glob" from="b*.xml" to="xml2_*"/>
+		</copy>
+	</target>
+
+	<target name="cpm8">
+		<copy to_directory="out">
+			<fileset directory="${GOBO}" include="@(**/*.ge)" exclude="@(**/sven/**/*)"/>
+			<mapper type="glob" from="*.ge" to="*.e"/>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete directory="out"/>
+	</target>
+</project>

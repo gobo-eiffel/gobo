@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<project name="t">
+
+	<target name="cp">
+		<copy file="build.eant" to_directory="out"/>
+		<copy file="in/ttt/ttt.xml" to_directory="out"/>
+	</target>
+
+</project>

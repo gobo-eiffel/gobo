@@ -96,11 +96,13 @@
 		<geant file="if5.eant" reuse_variables="true"/>
 	
 		<geant file="if5.eant" target="testbreak"/>
-		
+
 		<!-- <set name="DEBUG" value="dummy"/>  -->
 		<!-- <geant file="if5.eant" target="gexace" reuse_variables="true"/> -->
+		<echo message="**2**"/>
 
 		<geant file="if5.eant" target="gepp"/>
+		<echo message="**3**"/>
 	</target>
 
 	<target name="geant" dir="geant">

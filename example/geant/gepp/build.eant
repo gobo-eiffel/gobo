@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<project name="gepp">
+
+	<target name="prepare">
+		<set name="gendir" value="spec"/>
+	</target>
+
+	<target name="init" depend="prepare">
+	</target>
+
+	<target name="gepp1" depend="init">
+		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir}/kl_array_routines.e" lines="false">
+			<define name="HACT" if="$HACT"/>
+		</gepp>
+	</target>
+
+	<target name="gepp1a" depend="init">
+		<gepp
+			input="${GOBO}/library/kernel/kl_array_routines.ge"
+			output="${gendir}/kl_array_routines.e"
+			lines="false"
+			to_directory="ttt"
+		>
+			<define name="HACT" if="$HACT"/>
+		</gepp>
+	</target>
+
+	<target name="gepp2" depend="init">
+		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir}/ttt/kl_array_routines.e" lines="false">
+			<define name="HACT" if="$HACT"/>
+		</gepp>
+	</target>
+
+	<target name="gepp3" depend="init">
+		<set name="eiffelcomp" value="ise"/>
+		<geant target="gepp_int"/>
+	</target>
+
+	<target name="gepp4" depend="init">
+		<set name="eiffelcomp" value="ise"/>
+		<geant target="gepp_int"/>
+		<set name="eiffelcomp" value="hact"/>
+		<geant target="gepp_int"/>
+		<set name="eiffelcomp" value="se"/>
+		<geant target="gepp_int"/>
+		<set name="eiffelcomp" value="ve"/>
+		<geant target="gepp_int"/>
+	</target>
+
+	<target name="gepp_int" depend="init">
+		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
+			<define name="$HACT" if="$HACT"/>
+			<fileset directory="${GOBO}" include="@(**/*.ge)">
+				<map type="glob" from="*.ge" to="*.e"/>
+			</fileset>
+		</gepp>
+	</target>
+
+	<target name="clean" depend="prepare">
+		<delete directory="${gendir}"/>
+		<delete directory="ttt"/>
+	</target>
+
+</project>
+

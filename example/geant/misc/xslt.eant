@@ -6,7 +6,8 @@
 		<xslt
 			input="${GOBO}/doc/structure/index.xml"
 			output="${GOBO}/doc/structure/index2.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html.xsl">
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+		>
 			<parameter name="previous" value="../license.html"/>
 			<parameter name="next" value="../time/index.html"/>
 			<parameter name="toc" value="../index.html"/>
