@@ -134,6 +134,16 @@ feature -- Basic operations
 		deferred
 		end
 
+	recursive_delete is
+			-- Delete current directory, its files
+			-- and its subdirectories recursively.
+			-- Do nothing if the directory could not
+			-- be deleted, if it did not exist.
+		require
+			is_closed: is_closed
+		deferred
+		end
+
 feature -- Cursor movement
 
 	read_entry is

@@ -28,7 +28,8 @@ inherit
 			open_read as ise_open_read,
 			is_readable as se_is_readable,
 			close as do_close,
-			delete as do_delete
+			delete as do_delete,
+			recursive_delete as do_recursive_delete
 		export
 			{NONE} all
 		end
@@ -315,6 +316,68 @@ feature -- Basic operations
 				if exists and then empty then
 #endif
 					do_delete
+				end
+#endif
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	recursive_delete is
+			-- Delete current directory, its files
+			-- and its subdirectories recursively.
+			-- Do nothing if the directory could not
+			-- be deleted, if it did not exist.
+		local
+			rescued: BOOLEAN
+#ifdef SE || VE
+			a_name: STRING
+			a_dir: KL_DIRECTORY
+#endif
+		do
+			if not rescued then
+#ifdef SE
+				basic_directory.remove_files_of (name)
+				open_read
+				if is_open_read then
+					from read_entry until end_of_input loop
+						a_name := last_entry
+						if not (a_name.is_equal (".") or a_name.is_equal ("..")) then
+							!! a_dir.make (name + "/" + a_name)
+							a_dir.recursive_delete
+						end
+						read_entry
+					end
+					close
+				end
+				delete
+#endif
+#ifdef VE
+				open_read
+				if is_open_read then
+					from read_entry until end_of_input loop
+						a_name := last_entry
+						if not (a_name.is_equal (".") or a_name.is_equal ("..")) then
+							a_pathname := name + "/" + a_name
+							if file_system.is_file_readable (a_pathname) then
+								file_system.delete_file (a_pathname)
+							else
+								!! a_dir.make (a_pathname)
+								a_dir.recursive_delete
+							end
+						end
+						read_entry
+					end
+					close
+				end
+				delete
+#endif
+#ifdef ISE || HACT
+				if exists then
+					do_recursive_delete
 				end
 #endif
 			end
