@@ -1,8 +1,0 @@
-${GOBO}/library/lexical/automaton/
-${GOBO}/library/lexical/error/
-${GOBO}/library/lexical/lex/
-${GOBO}/library/lexical/generation/
-${GOBO}/library/lexical/regexp/
-${GOBO}/library/lexical/scanner/
-${GOBO}/library/lexical/skeleton/
-${GOBO}/library/lexical/support/
