@@ -1,0 +1,153 @@
+<!--
+	description:
+	
+		"XPointer"
+
+	library: "Gobo Eiffel XPointer Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapterinfo>
+  <copyright>
+    <year>2005</year>
+    <holder>Colin Adams and others</holder>
+  </copyright>
+  <author>
+    <firstname>Colin</firstname>
+    <surname>Adams</surname>
+  </author>
+  <email>colin@colina.demon.co.uk</email>
+  <date>Friday, February 25th, 2005</date>
+</chapterinfo>
+<title>&title;</title>
+<para>
+  The XPath library includes an implementation of the &framework; and implementations for the W3C &xpointer; schemes
+  <xpath>element</xpath> and <xpath>xmlns</xpath>. In addition, There is a &program_name_cased;-specific scheme: <xpath>&program_name;:xpath</xpath>.
+</para> 
+<section id="xpointer_framework">
+  <title>Invoking the &framework;</title>
+  <para>
+    To invoke the &framework;, you must first create an instance of <classname>XM_XPATH_XPOINTER</classname>. This creates the &framework;, but
+    no schemes are available - only <xpath>shorthand</xpath> pointers.
+  </para>
+  <para>
+    The next step is to call <featurename>evaluate</featurename>. This takes two arguments. The second argument is the XML resource (well-formed document or external parsed entity, 
+    represented as an <classname>XM_XPATH_DOCUMENT)</classname>. The first argument is the pointer represented as a <classname>STRING</classname>.
+  </para>
+  <para>
+    The pointer should have no escaping, other than &xpointer; carat escaping, within it. So if you are starting with an <classname>UT_URI</classname>, simply calling 
+    it's <featurename>fragment</featurename> routine is not sufficent. Instead, you should call the <featurename>fragment_item</featurename> routine, to
+    get an <classname>UT_URI_STRING</classname>, and call that object's <featurename>decoded_utf8</featurename> (??? Is this right, Franck?).
+  </para>
+  <para>
+    Calling <featurename>evaluate</featurename> will set <featurename>value</featurename> to a non-Void <classname>XM_XPATH_VALUE</classname>. If an &xpointer; error
+    occured, then this object will have <featurename>value</featurename> set to an
+    <classname>XM_XPATH_INVALID_VALUE</classname> in the case of an &framework; syntax error, or an <classname>XM_XPATH_EMPTY_SEQUENCE</classname> (marked in error) if 
+    a <xpath>shorthand</xpath> pointer failed to locate any resources.
+  </para>
+  <para>
+    &xpointer; schemes don't signal  &xpointer; errors - instead <featurename>value</featurename> will be set to an
+    <classname>XM_XPATH_EMPTY_SEQUENCE</classname>.
+  </para>
+  <para>
+    If a <xpath>shorthand</xpath> pointer, or an <xpath>element</xpath> scheme find a resource, then they set <featurename>value</featurename> to an
+    <classname>XM_XPATH_SINGLETON_NODE</classname>. The <xpath>&program_name;:xpath</xpath> scheme sets <featurename>value</featurename> to an
+    <classname>XM_XPATH_SEQUENCE_EXTENT</classname>, as it is possible for it to return any XPath sequence. 
+  </para>
+</section>
+<section id="xpointer_schemes">
+  <title>&xpointer; schemes</title>
+  <para>
+    If your pointer may contain anything other than a <xpath>shorthand</xpath> pointer, then you must configure the <classname>XM_XPATH_XPOINTER</classname>
+    object with any schemes that you may wish to use. This is done by creating instances of descendants of <classname>XM_XPATH_XPOINTER_SCHEME</classname>,
+    and passing them as the argument of <classname>XM_XPATH_XPOINTER</classname>'s <featurename>register_scheme</featurename> routine.
+  </para>
+  <para>
+    Schemes provided in the library:
+    <variablelist>
+      <varlistentry>
+	<term><classname>XM_XPATH_XPOINTER_XMLNS_SCHEME</classname></term>
+	<listitem>
+	  <para>
+	    The W3C <xpath>xmlns</xpath> scheme for defining namespace bindings.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><classname>XM_XPATH_XPOINTER_ELEMENT_SCHEME</classname></term>
+	<listitem>
+	  <para>
+	    The W3C <xpath>element</xpath> scheme for finding a single element via a <xpath>shorthand</xpath> pointer and/or by stepwise navigation.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><classname>XM_XPATH_XPOINTER_XPATH_SCHEME</classname></term>
+	<listitem>
+	<para>
+	  The  <xpath>&program_name;:xpath</xpath> scheme.
+	</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </para>
+</section>
+<section id="xpointer_xpath_scheme">
+  <title>The <xpath>&program_name;:xpath</xpath> scheme</title>
+  <para>
+    The &xpointer; scheme, which is an unapproved W3C working draft, is not implemented by this library.
+    This is because:
+    <orderedlist>
+      <listitem>
+	<para>
+	  It uses XPath 1.0, whereas this library uses XPath 2.0. This means we could not make a compliant
+	  implementation.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  A lot of work is needed to extend XPath for this scheme.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  The benefits compared with an XPath 2.0 scheme seem slim (only text-editing
+	  applications are likely to see a clear benefit, and the implementations of the
+	  XPath data model in this library are read-only).
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  It doesn't look likely that it will ever be approved.
+	</para>
+      </listitem>
+    </orderedlist>
+  </para>
+  <para>
+    Instead, I have implemented a scheme which takes an XPath 2.0 expression as it's pointer. This has a local name of "xpath", and a namespace URI 
+    of "http://www.gobosoft.com/eiffel/gobo/gexslt/extension". Therefore, you have to declare a prefix, using the <xpath>xmlns</xpath> scheme, before
+    you can use this scheme.
+  </para>
+  <para>
+    So, in order to find the third child of the document element, conditional upon it having an attribute named "test", then you will want a pointer that 
+    looks something like: "xmlns(&program_name; = http://www.gobosoft.com/eiffel/gobo/gexslt/extension)&program_name;:xpath(/*[1]/*[3][@test]".
+  </para>
+  <para>
+    Of course, if you want to use any namespace prefixes (other than "xml", which is always declared) within your XPath expression, then you will
+    need to declare them also using further <xpath>xmlns</xpath> statements.
+  </para>
+</section>
+<section id="xpointer_error_api">
+  <title>The extended error API</title>
+  <para>
+    When you create the <classname>XM_XPATH_XPOINTER</classname>, the <featurename>make</featurename> procedure takes a single <classname>BOOLEAN</classname>
+    argument. If you pass this as False, then you get the standard &framework; error reporting, as described above. If you instead set it to True, and if no
+    resources were found, then <featurename>value</featurename> will be set to a value in error, as reported by the <emphasis>last</emphasis> scheme processor
+    which detected a syntax or semantic error in it's scheme data.
+  </para>
+</section>
+    
+

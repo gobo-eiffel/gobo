@@ -99,7 +99,9 @@
 	      to handle the file and data protocols. If you need to handle other protocols, such as http or ftp,
 	      then you may be able to find them in other libraries (such as ePOSIX for http and ftp), or
 	      you can write one yourself. After creating such a resolver, you need to register it
-	      by calling <featurename>register_scheme</featurename> on the <classname>XM_URI_EXTERNAL_RESOLVER</classname>.
+	      by calling <featurename>register_scheme</featurename> on the <classname>XM_URI_EXTERNAL_RESOLVER</classname>. 
+	      You can inherit from <classname>XM_RESOLVER_FACTORY</classname>, and use the <featurename>new_resolver*</featurename>
+	      routines to create these resolvers.
 	    </para>
 	    <para>
 	      There is also <classname>XM_STRING_URI_RESOLVER</classname>, which resolves URIs in the <uri>string</uri> scheme
