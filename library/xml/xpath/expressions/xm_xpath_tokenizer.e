@@ -123,7 +123,7 @@ feature -- Status setting
 			-- Prepare a string for tokenization.
 		require
 			input_string_not_void: an_input /= Void
-			strictly_positive_start: a_start > 0 and then a_start < an_input.count
+			strictly_positive_start: a_start > 0 and then a_start <= an_input.count
 			valid_end_point: an_end = -1 or else an_end >0 and then an_end > a_start and then an_end <= an_input.count
 		do
 			next_token := Eof_token
@@ -572,7 +572,7 @@ feature {NONE} -- Status setting
 								input_index := input_index + 1
 								next_token := Dot_dot_token
 								finished := True
-							elseif input_index = input_length
+							elseif input_index >= input_length
 								or else input.item (input_index) < '0'
 								or else input.item (input_index) > '9' then
 								next_token := Dot_token

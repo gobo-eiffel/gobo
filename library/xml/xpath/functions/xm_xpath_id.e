@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath last() function"
+		"Objects that implement the XPath id() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,14 +10,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_LAST
+class XM_XPATH_ID
+
+	-- TODO: all this needs checking
 
 inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
+			simplified_expression, pre_evaluate
 		end
+
+	XM_XPATH_MAPPING_FUNCTION
 
 creation
 
@@ -28,10 +32,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "last"
-			minimum_argument_count := 0
-			maximum_argument_count := 0
-			create arguments.make (0)
+			name := "id"
+			minimum_argument_count := 1
+			maximum_argument_count := 1
+			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
 		end
@@ -39,9 +43,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
-			-- Determine the data type of the expression, if possible
+			-- Data type of the expression, where known
 		do
-			Result := type_factory.integer_type
+--			Result := any_node_test
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -53,44 +57,41 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			-- This cannot be called for `Current', as it has no arguments.
-			-- Therefore the pre-condition cannot be met, so we will not
-			--  attempt to meet the post-condition.
-
-			do_nothing
+			todo ("required_type ", False)
 		end
 
-feature -- Status setting
+feature -- Optimization
 
-	compute_intrinsic_dependencies is
-			-- Determine the intrinsic dependencies of an expression.
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
+		local
+			result_expression: XM_XPATH_ID
 		do
-			create intrinsic_dependencies.make (1, 6)
-			-- Now all are `False'
-			intrinsic_dependencies.put (True, 4) -- Depends_upon_last
-			are_intrinsic_dependencies_computed := True
+			result_expression ?= Precursor
+			result_expression.add_context_document_argument (1, "id+")
+			Result := result_expression
 		end
 
 feature -- Evaluation
-
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
-		do
-			create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context.last)
-		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
 			set_replacement (Current)
 		end
-	
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			todo ("map", False)
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_exactly_one
+			set_cardinality_zero_or_more
 		end
 
 end

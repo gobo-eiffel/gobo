@@ -24,6 +24,9 @@
     <option name="finalize" value="false"/>
     <!--<option name="debug_tag" value="XSLT stylesheet compilation"/>-->
     <!--<option name="debug_tag" value="XPath content emitter"/>-->
+   <!-- <option name="debug_tag" value="XPath Expression Parser - tokens"/> -->
+    <!-- <option name="debug_tag" value="XPath tokens"/> -->
+    <!-- <option name="debug_tag" value="XPath name pool"/> -->
   </option>
   <option if="${GOBO_DOTNET}">
     <option name="msil_generation" value="true"/>

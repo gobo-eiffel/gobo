@@ -24,6 +24,10 @@ inherit
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
+creation
+
+	make
+
 feature -- Status report
 
 	last_parsed_pattern: XM_XSLT_PATTERN is

@@ -125,7 +125,7 @@ feature
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Twenty evaluated items", evaluated_items /= Void and then evaluated_items.count = 20)
 			an_integer_value ?= evaluated_items.item (19)
-			assert ("Ninteenth number is 95", an_integer_value /= Void and then an_integer_value.value = 95)
+			assert ("Ninteenth number is 95", an_integer_value /= Void and then an_integer_value.as_integer = 95)
 		end
 
 	test_fifth_integer_in_sequence is
@@ -144,7 +144,7 @@ feature
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			an_integer_value ?= evaluated_items.item (1)
-			assert ("Fifth number is 25", an_integer_value /= Void and then an_integer_value.value = 25)
+			assert ("Fifth number is 25", an_integer_value /= Void and then an_integer_value.as_integer = 25)
 		end
 
 	test_value_comparison is
@@ -530,7 +530,7 @@ feature
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			create an_integer_value.make (7)
+			create an_integer_value.make_from_integer (7)
 			an_evaluator.static_context.declare_variable ("fred", an_integer_value)
 			an_evaluator.evaluate ("(8, ($fred - 1), 9) < (8, ($fred - 2), 4)")
 			assert ("No evaluation error", not an_evaluator.is_error)

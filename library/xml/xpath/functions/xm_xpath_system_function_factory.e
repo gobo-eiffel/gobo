@@ -38,7 +38,9 @@ feature -- Creation
 			elseif STRING_.same_string (a_function_name, "exists") then
 				create {XM_XPATH_EXISTS} Result.make				
 			elseif STRING_.same_string (a_function_name, "false") then
-				create {XM_XPATH_FALSE} Result.make				
+				create {XM_XPATH_FALSE} Result.make
+			elseif STRING_.same_string (a_function_name, "id") then
+				create {XM_XPATH_ID} Result.make				
 			elseif STRING_.same_string (a_function_name, "normalize-space") then
 				create {XM_XPATH_NORMALIZE_SPACE} Result.make
 			elseif STRING_.same_string (a_function_name, "name") then
@@ -51,6 +53,8 @@ feature -- Creation
 				create {XM_XPATH_NORMALIZE_SPACE} Result.make				
 			elseif STRING_.same_string (a_function_name, "string-length") then
 				create {XM_XPATH_STRING_LENGTH} Result.make
+			elseif STRING_.same_string (a_function_name, "sum") then
+				create {XM_XPATH_SUM} Result.make
 			elseif STRING_.same_string (a_function_name, "true") then
 				create {XM_XPATH_TRUE} Result.make				
 			end

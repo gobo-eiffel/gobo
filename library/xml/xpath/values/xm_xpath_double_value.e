@@ -129,6 +129,18 @@ feature -- Status report
 			Result := value = value.truncated_to_integer
 		end
 
+	is_platform_integer: BOOLEAN is
+			-- Can value be represented by an `INTEGER'?
+		do
+			Result := is_whole_number			
+		end
+
+	is_double: BOOLEAN is
+			-- Can value be converted to a `DOUBLE'?
+		do
+			Result := True
+		end
+
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
@@ -163,7 +175,7 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make (value.truncated_to_integer)
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (value.truncated_to_integer)
 			elseif  a_required_type = type_factory.double_type then
 				Result := Current
 			elseif  a_required_type = type_factory.decimal_type then
@@ -196,7 +208,7 @@ feature -- Basic operations
 				if is_whole_number and then other.is_whole_number then
 					an_integer := as_integer
 					another_integer := other.as_integer
-					create {XM_XPATH_INTEGER_VALUE} Result.make (an_integer \\ another_integer)
+					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (an_integer \\ another_integer)
 				else
 					if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
 						create {XM_XPATH_DOUBLE_VALUE} Result.make_nan

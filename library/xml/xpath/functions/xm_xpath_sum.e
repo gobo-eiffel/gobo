@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath count() function"
+		"Objects that implement the XPath sum() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_COUNT
+class XM_XPATH_SUM
 
 inherit
 
@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "count"
+			name := "sum"
 			minimum_argument_count := 1
-			maximum_argument_count := 1
-			create arguments.make (1)
+			maximum_argument_count := 2
+			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
 		end
@@ -41,7 +41,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := type_factory.integer_type
+			Result := type_factory.any_atomic_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.

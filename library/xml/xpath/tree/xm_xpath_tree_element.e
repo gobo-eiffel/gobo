@@ -227,6 +227,17 @@ feature -- Access
 			end
 		end
 								
+
+feature -- Measurement
+
+	number_of_attributes: INTEGER is
+			-- Number of attributes in `Current'
+		do
+			Result := attribute_collection.number_of_attributes
+		ensure
+			positive_result: Result >= 0
+		end
+
 feature -- Status setting
 
 	set_name_code (a_name_code: INTEGER) is

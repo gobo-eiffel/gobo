@@ -20,14 +20,17 @@ inherit
 
 feature -- Access
 
-	-- TODO need pre-conditions for these as_* routines
-
-	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
+	as_integer: INTEGER is
+		-- Value converted to an `INTEGER'
+		require
+			convertible_to_integer: is_platform_integer
 		deferred
 		end
 
 	as_double: DOUBLE is
-			-- Value converted to a double
+			-- Value converted to a `DOUBLE'
+		require
+			convertible_to_double: is_double
 		deferred
 		end
 
@@ -37,15 +40,26 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		local
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
+			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			a_numeric_value ?= other
 			if a_numeric_value = Void then
 				Result := False
 			else
-				Result := as_double.is_equal (a_numeric_value.as_double)
-				-- TODO is this comparison good enough - i.e. is 1.5 / 2 = 4.5 / 6 ?
-				-- TODO check to see if both are integers or bothe decimals
-				--todo ("same-expression", True)
+				an_integer_value ?= Current
+				another_integer_value ?= other
+				if an_integer_value /= Void and then another_integer_value /= Void then
+					Result := an_integer_value.value.is_equal (another_integer_value.value)
+				else
+					a_decimal_value ?= Current
+					another_decimal_value ?= other
+					if a_decimal_value /= Void and then another_decimal_value /= Void then
+						Result := a_decimal_value.value.is_equal (another_decimal_value.value)
+					else
+						Result := as_double.is_equal (a_numeric_value.as_double)
+					end
+				end
 			end
 		end
 
@@ -104,6 +118,16 @@ feature -- Status_report
 
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
+		deferred
+		end
+
+	is_platform_integer: BOOLEAN is
+			-- Can value be represented by an `INTEGER'?
+		deferred
+		end
+
+	is_double: BOOLEAN is
+			-- Can value be converted to a `DOUBLE'?
 		deferred
 		end
 

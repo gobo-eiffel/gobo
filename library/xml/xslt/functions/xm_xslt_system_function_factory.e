@@ -26,6 +26,10 @@ feature -- Creation
 		do
 			if STRING_.same_string (a_function_name, "key") then
 				create {XM_XSLT_KEY_FUNCTION} Result.make
+			elseif STRING_.same_string (a_function_name, "current-group") then
+				create {XM_XSLT_CURRENT_GROUP} Result.make
+			elseif STRING_.same_string (a_function_name, "format-number") then
+				create {XM_XSLT_FORMAT_NUMBER} Result.make
 			else
 				Result := Precursor (a_function_name)
 			end

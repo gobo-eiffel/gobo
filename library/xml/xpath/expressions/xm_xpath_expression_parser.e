@@ -1124,7 +1124,7 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
-					create {XM_XPATH_INTEGER_VALUE} an_expression.make (0)
+					create {XM_XPATH_INTEGER_VALUE} an_expression.make_from_integer (0)
 					parse_unary_expression
 					if not is_parse_error then
 						create another_expression.make (an_expression, Unary_minus_token, internal_last_parsed_expression)
@@ -1136,7 +1136,7 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
-					create {XM_XPATH_INTEGER_VALUE} an_expression.make (0)
+					create {XM_XPATH_INTEGER_VALUE} an_expression.make_from_integer (0)
 					parse_unary_expression
 					if not is_parse_error then
 

@@ -321,8 +321,9 @@ feature -- Evaluation
 			a_sequence_value ?= base_expression
 			an_integer_value ?= filter
 
-			if a_sequence_value /= Void and then an_integer_value /= Void then
-				a_position := an_integer_value.value
+			if a_sequence_value /= Void and then an_integer_value /= Void 
+				and then an_integer_value.is_platform_integer then
+				a_position := an_integer_value.as_integer
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (a_sequence_value.item (a_position))
 			else
 				
@@ -495,7 +496,7 @@ feature {NONE} -- Implementation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			if a_number /= Void then
-				if a_number.is_whole_number then
+				if a_number.is_platform_integer then
 					a_position := a_number.as_integer
 					if a_position >= 1 then
 						Result := expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
@@ -541,8 +542,9 @@ feature {NONE} -- Implementation
 			
 			-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 			-- and treat them specially.
-			
-			an_integer ?= filter; if an_integer /= Void and then an_integer.value = 1 then
+
+			an_integer ?= filter; if an_integer /= Void and then an_integer.is_platform_integer
+			and then an_integer.as_integer = 1 then
 				create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
 				set_replacement (an_expression)
 			else

@@ -582,13 +582,13 @@
 	 </row>	
 	 <row>
 	   <entry>fn:sum</entry>
-	   <entry>No</entry>
+	   <entry>Partially</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:id</entry>
-	   <entry>No</entry>
+	   <entry>Partially</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -649,12 +649,6 @@
 	 <row>
 	   <entry>fn:implicit-timezone</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	 </row>
-	 <row>
-	   <entry>fn:key</entry>
-	   <entry>Partially</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>

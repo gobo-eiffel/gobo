@@ -123,8 +123,10 @@ feature -- Evaluation
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 						elseif an_integer_value.value > another_integer_value.value then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+						elseif an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
+							create {XM_XPATH_RANGE_ITERATOR} Result.make (an_integer_value.as_integer, another_integer_value.as_integer)
 						else
-							create {XM_XPATH_RANGE_ITERATOR} Result.make (an_integer_value.value, another_integer_value.value)
+							todo ("iterator - large integers", True)
 						end
 					end
 				end

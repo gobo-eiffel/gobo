@@ -175,12 +175,12 @@ feature {NONE} -- Implementation
 								if a_boolean_value.value then	Result := True	else an_iterator.forth; Result := not an_iterator.after end
 							else
 								an_integer_value ?= an_item
-								if an_integer_value /= Void then
-									if an_integer_value.value = base_iterator.index then	Result := True	else an_iterator.forth; Result := not an_iterator.after end
+								if an_integer_value /= Void and then an_integer_value.is_platform_integer then
+									if an_integer_value.as_integer = base_iterator.index then Result := True	else an_iterator.forth; Result := not an_iterator.after end
 								else
 									a_numeric_value ?= an_item
 									if a_numeric_value /= Void then
-										create an_integer_value.make (base_iterator.index)
+										create an_integer_value.make_from_integer (base_iterator.index)
 										Result := a_numeric_value.same_expression (an_integer_value)
 										if not Result then an_iterator.forth; Result := not an_iterator.after end
 									else

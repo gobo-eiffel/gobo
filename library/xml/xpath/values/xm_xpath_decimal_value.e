@@ -19,6 +19,10 @@ inherit
 			three_way_comparison, effective_boolean_value
 		end
 
+	MA_SHARED_DECIMAL_CONTEXT
+
+	MA_DECIMAL_CONSTANTS
+
 creation
 
 	make, make_from_string, make_from_integer
@@ -53,7 +57,7 @@ feature -- Access
 
 	value: MA_DECIMAL
 
-	as_integer: INTEGER is -- TODO should be MA_INTEGER or something
+	as_integer: INTEGER is
 		do
 			Result := value.to_integer
 		end
@@ -171,6 +175,20 @@ feature -- Status report
 			Result := value.is_integer
 		end
 
+	is_platform_integer: BOOLEAN is
+			-- Can value be represented by an `INTEGER'?
+		do
+			Result := value.is_integer and then
+			value <= Maximum_integer_as_decimal and then
+			value >= Minimum_integer_as_decimal
+		end
+
+	is_double: BOOLEAN is
+			-- Can value be converted to a `DOUBLE'?
+		do
+			Result := value.is_double
+		end
+
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
@@ -212,7 +230,7 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make (value.to_integer)
+				create {XM_XPATH_INTEGER_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.double_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value.to_double)
 			elseif  a_required_type = type_factory.decimal_type then

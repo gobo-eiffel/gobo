@@ -41,7 +41,7 @@ feature -- Access
 	item: XM_XPATH_ITEM is
 			-- Value or node at the current position
 		do
-			create {XM_XPATH_INTEGER_VALUE} Result.make (index + minimum - 1)
+			create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (index + minimum - 1)
 		end
 
 feature -- Status report

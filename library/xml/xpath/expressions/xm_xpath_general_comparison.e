@@ -393,8 +393,9 @@ feature {NONE} -- Implementation
 			an_integer_value ?= a_range_expression.lower_bound
 			another_integer_value ?= a_range_expression.upper_bound
 			a_position ?= second_operand
-			if an_integer_value /= Void and then another_integer_value /= Void and then a_position /= Void then
-				create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer_value.value, another_integer_value.value)
+			if an_integer_value /= Void and then another_integer_value /= Void and then a_position /= Void
+				and then an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
+				create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer_value.as_integer, another_integer_value.as_integer)
 			else
 				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
 			end

@@ -38,9 +38,37 @@ feature -- Element change
 
 	prepare_attributes is
 			-- Set the attribute list for the element.
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_name_code: INTEGER
+			an_expanded_name, a_select_attribute: STRING
 		do
+			from
+				a_cursor := attribute_collection.name_code_cursor
+				a_cursor.start
+			variant
+				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+			until
+				a_cursor.after
+			loop
+				a_name_code := a_cursor.item
+				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
+				if STRING_.same_string (an_expanded_name, Select_attribute) then
+					a_select_attribute := attribute_value_by_index (a_cursor.index)
+					a_select_attribute.left_adjust
+					a_select_attribute.right_adjust
+				else
+					check_unknown_attribute (a_name_code)
+				end
+				a_cursor.forth
+			end
+			if a_select_attribute /= Void then
+				generate_expression (a_select_attribute)
+				select_expression := last_generated_expression
+			else
+				report_absence ("select")
+			end
 			attributes_prepared := True
-			todo ("prepare_attributes", False)
 		end
 
 	validate is
@@ -58,6 +86,11 @@ feature -- Element change
 		do
 			todo ("compile", False)
 		end
+
+feature {NONE} -- Implementation
+
+	select_expression: XM_XPATH_EXPRESSION
+			-- Select expression
 
 invariant
 

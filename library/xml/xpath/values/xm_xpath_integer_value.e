@@ -19,46 +19,55 @@ inherit
 			three_way_comparison, effective_boolean_value
 		end
 
+	MA_SHARED_DECIMAL_CONTEXT
+
+	MA_DECIMAL_CONSTANTS
+
 creation
 
-	make, make_from_string
+	make, make_from_integer, make_from_string
 
-		-- TODO: This whole class needs a different basis - at least INTEGER_64, but
-		--  prefereably a type representing unbounded integers.
 
 feature {NONE} -- Initialization
 
-	make (a_value: INTEGER) is
+	make (a_value: MA_DECIMAL) is
 		do
 			make_atomic_value
-			value := a_value
-		ensure
-			value_set: value = a_value
+			create value.make_copy (a_value)
+			value := value.rescale (0, shared_integer_context)
 		end
 
+	make_from_integer (a_value: INTEGER) is
+		do
+			make_atomic_value
+			create value.make_from_integer (a_value)
+		ensure
+			value_set: value.to_integer = a_value
+		end
+	
 	make_from_string (a_value: STRING) is
 		require
 			is_integer: a_value.is_integer -- TODO
 		do
 			make_atomic_value
-			value := a_value.to_integer -- TODO
-		ensure
-			value_set: value = a_value.to_double
+			create value.make_from_string_ctx (a_value, shared_integer_context)
 		end
 
 feature -- Access
 
-	value: INTEGER --  TODO should be INTEGER_64, or EDA_INTEGER or something
+	value: MA_DECIMAL
 	
-	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
+	as_integer: INTEGER is
+		local
+			a_decimal: MA_DECIMAL
 		do
-			Result := value
+			Result := value.to_integer
 		end
 
 	as_double: DOUBLE is
 			-- Value converted to a double
 		do
-			Result := value
+			Result := value.to_double
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -74,13 +83,13 @@ feature -- Access
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
-			create Result.make (value /= 0)
+			create Result.make (not value.is_zero)
 		end
 
 	string_value: STRING is
 			--Value of the item as a string
 		do
-			Result := value.out
+			Result := value.to_scientific_string
 		end
 
 feature -- Comparison
@@ -95,7 +104,7 @@ feature -- Comparison
 			if an_integer_value = Void then
 				Result := Precursor (other)
 			else
-				if value = an_integer_value.value then
+				if value.is_equal (an_integer_value.value) then
 					Result := 0
 				elseif value > an_integer_value.value then
 					Result := 1
@@ -147,23 +156,36 @@ feature -- Status report
 			Result := True
 		end
 
+	is_platform_integer: BOOLEAN is
+			-- Can value be represented by an `INTEGER'?
+		do
+			Result := value <= Maximum_integer_as_decimal
+				and then value >= Minimum_integer_as_decimal
+		end
+
+	is_double: BOOLEAN is
+			-- Can value be converted to a `DOUBLE'?
+		do
+			Result := value.is_double
+		end
+
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
-			do_nothing
+			Result := value.is_nan
 		end
 
 	is_zero: BOOLEAN is
 			-- Is value zero?
 		do
-			Result := value = 0
+			Result := value.is_zero
 		end
 
 	
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			do_nothing
+			Result := value.is_infinity
 		end
 	
 feature -- Conversions
@@ -175,7 +197,7 @@ feature -- Conversions
 		local
 		do
 			if a_required_type = type_factory.boolean_type  then
-				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
+				create {XM_XPATH_BOOLEAN_VALUE} Result.make (not value.is_zero)
 			elseif a_required_type = type_factory.any_atomic_type  then
 				Result := Current
 			elseif a_required_type = any_item  then
@@ -183,9 +205,9 @@ feature -- Conversions
 			elseif  a_required_type = type_factory.integer_type then
 				Result := Current
 			elseif  a_required_type = type_factory.double_type then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (as_double)
 			elseif  a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_integer (value)
+				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end
@@ -198,51 +220,65 @@ feature -- Basic operations
 		local
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_quotient: INTEGER
+			an_integer: MA_DECIMAL
 			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
-
-			-- TODO handle overflow
-
-			todo ("arithmetic (overflow not handled)", True)
-
 			an_integer_value ?= other
 			if other /= void then
 				inspect
 					an_operator
 				when Plus_token then
-					create {XM_XPATH_INTEGER_VALUE} Result.make (value + an_integer_value.value)
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value.add(an_integer_value.value, shared_integer_context))
 				when Minus_token then
-					create {XM_XPATH_INTEGER_VALUE} Result.make (value - an_integer_value.value)
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value.subtract (an_integer_value.value, shared_integer_context))
 				when Multiply_token then
-					create {XM_XPATH_INTEGER_VALUE} Result.make (value * an_integer_value.value)
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value.multiply (an_integer_value.value, shared_integer_context))
 				when Integer_division_token then
-					if an_integer_value.value = 0 then
-						create {XM_XPATH_INTEGER_VALUE} Result.make (0)
+					if an_integer_value.is_zero then
+						create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (0)
 						Result.set_last_error_from_string ("Division by zero", 0, Dynamic_error)
 					else
-						create {XM_XPATH_INTEGER_VALUE} Result.make (value // an_integer_value.value)
+						an_integer := value.divide_integer (an_integer_value.value, shared_integer_context)
+						an_integer := an_integer.rescale (0, shared_integer_context)
+						create {XM_XPATH_INTEGER_VALUE} Result.make (an_integer)
 					end
 				when Division_token then
 
-					-- The result of dividing two integers is a decimal; but if
-					-- one divides exactly by the other, we implement it as an integer
+					-- The result of dividing two integers is a decimal
 
-					a_quotient := an_integer_value.value
-					if a_quotient /= 0 and then value \\ a_quotient = 0 then
-						create {XM_XPATH_INTEGER_VALUE} Result.make (value // a_quotient)
-					else
-						create a_decimal_value.make_from_integer (value)
-						create another_decimal_value.make_from_integer (an_integer_value.value)
-						Result := a_decimal_value.arithmetic ( Division_token, another_decimal_value)
-					end
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value / an_integer_value.value)
 				when Modulus_token then
-					create {XM_XPATH_INTEGER_VALUE} Result.make (value \\ an_integer_value.value)
+					debug ("XPath Integer values")
+						std.error.put_string ("Dividend is ")
+						std.error.put_string (string_value)
+						std.error.put_new_line
+						std.error.put_string ("Divisor is ")
+						std.error.put_string (an_integer_value.string_value)
+						std.error.put_new_line
+					end
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value.remainder (an_integer_value.value, shared_integer_context))
+					debug ("XPath Integer values")
+						std.error.put_string ("Result is ")
+						std.error.put_string (Result.string_value)
+						std.error.put_new_line
+					end
 				end
 			else
 				a_numeric_value ?= convert_to_type (other.item_type)
 				Result := a_numeric_value.arithmetic (an_operator, other)
 			end
 		end
-	
+
+feature {NONE} -- Implementation
+
+	shared_integer_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by all instances of `Current'
+		once
+			create Result.make (shared_decimal_context.digits, Round_down)
+		end
+
+invariant
+
+	is_integer: value.is_integer
+
 end

@@ -27,7 +27,7 @@ inherit
 creation
 
 	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic, make_optional_integer,
-	make_single_string, make_single_integer, make_single_node, make_optional_node, make_node_sequence,
+	make_single_string, make_single_integer, make_single_double, make_single_node, make_optional_node, make_node_sequence,
 	make_numeric_sequence, make_atomic_sequence
 
 feature {NONE} -- Initialization
@@ -88,6 +88,13 @@ feature {NONE} -- Initialization
 		do
 			primary_type := type_factory.integer_type
 			set_cardinality_optional
+		end
+
+	make_single_double is
+			-- Create a sequence that allows exactly one double
+		do
+			primary_type := type_factory.double_type
+			set_cardinality_exactly_one
 		end
 
 	make_single_node is

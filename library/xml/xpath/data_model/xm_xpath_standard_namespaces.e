@@ -250,7 +250,6 @@ feature -- Access
 	Id_attribute: STRING is "id"
 	Default_validation_attribute: STRING is "default-validation"
 	Decimal_separator_attribute: STRING is "decimal-separator"
-	Grouping_separator_attribute: STRING is "grouping-separator"
 	Pattern_separator_attribute: STRING is "pattern-separator"
 	Infinity_attribute: STRING is "infinity"
 	Minus_sign_attribute: STRING is "minus-sign"
@@ -263,7 +262,29 @@ feature -- Access
 	As_attribute: STRING is "as"
 	Required_attribute: STRING is "required"
 	Tunnel_attribute: STRING is "tunnel"
-	
+	Mode_attribute: STRING is "mode"
+	Priority_attribute: STRING is "priority"
+	Disable_output_escaping_attribute: STRING is	"disable-output-escaping"
+	Separator_attribute: STRING is "separator"
+	Test_attribute: STRING is "test"
+	Order_attribute: STRING is "order"
+	Case_order_attribute: STRING is "case-order"
+	Lang_attribute: STRING is "lang"
+	Data_type_attribute: STRING is "data-type"
+	Group_by_attribute: STRING is "group-by"
+	Group_adjacent_attribute: STRING is "group-adjacent"
+	Group_starting_with_attribute: STRING is "group-starting-with"
+	Group_ending_with_attribute: STRING is "group-ending-with"
+	Value_attribute: STRING is "value"
+	Count_attribute: STRING is "count"
+	From_attribute: STRING is "from"
+	Level_attribute: STRING is "level"
+	Letter_value_attribute: STRING is "letter-value"
+	Grouping_size_attribute: STRING is "grouping-size"
+	Grouping_separator_attribute: STRING is "grouping-separator"
+	Ordinal_attribute: STRING is "ordinal"
+	Format_attribute: STRING is "format"
+
 	Xslt_extension_element_prefixes_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Extension_element_prefixes_attribute

@@ -1090,8 +1090,6 @@ feature -- Conversion
 
 	fingerprint_from_name_code (a_name_code: INTEGER): INTEGER is
 			-- Fingerprint of a name, given its name code
-		require
-			valid_name_code: is_valid_name_code (a_name_code)
 		local
 		do
 			Result := a_name_code - ((a_name_code // bits_20) * bits_20)
@@ -1313,8 +1311,8 @@ feature {NONE} -- Implementation
 					found := True
 				else
 					an_entry := an_entry.next
-					a_counter := a_counter + 1
 				end
+				a_counter := a_counter + 1
 			end
 			debug ("XPath name pool")
 				std.error.put_string ("Name_entry: name code is ")

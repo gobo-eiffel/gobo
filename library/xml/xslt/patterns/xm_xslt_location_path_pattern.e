@@ -27,6 +27,8 @@ inherit
 
 	XM_XSLT_SHARED_ANY_NODE_TEST
 
+	MA_DECIMAL_MATH
+
 creation
 
 	make
@@ -194,7 +196,7 @@ feature -- Optimization
 				a_filter_expression := a_result_pattern.filters.item (1)
 				an_integer ?= a_filter_expression
 				a_position_range ?= a_filter_expression
-				if (an_integer /= Void and then an_integer.value = 1)
+				if (an_integer /= Void and then an_integer.value.is_equal (one))
 					or else (a_position_range /= Void and then
 								a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
 					a_result_pattern.set_first_element_pattern (True)

@@ -27,6 +27,10 @@ inherit
 
 	XM_XPATH_ROLE
 
+	MA_DECIMAL_MATH
+
+	MA_DECIMAL_CONSTANTS
+
 	KL_SHARED_PLATFORM
 
 creation
@@ -192,7 +196,7 @@ feature {NONE} -- Implementation
 			if an_atomic_value /= Void then
 				an_integer_value ?= an_atomic_value
 				if an_integer_value /= Void then
-					Result := an_integer_value.value = 0
+					Result := an_integer_value.is_zero
 				else
 					if an_atomic_value.is_convertible (type_factory.integer_type) then
 						an_integer_value ?= an_atomic_value.convert_to_type (type_factory.integer_type)
@@ -200,7 +204,7 @@ feature {NONE} -- Implementation
 								integer: an_integer_value /= Void
 								-- because of is_convertible
 							end
-						Result := an_integer_value.value = 0
+						Result := an_integer_value.is_zero
 					end
 				end
 			end
@@ -264,7 +268,7 @@ feature {NONE} -- Implementation
 			an_exists_function: XM_XPATH_EXISTS
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			an_integer: INTEGER
+			an_integer: MA_DECIMAL
 			a_filter_expression: XM_XPATH_FILTER_EXPRESSION
 			an_expression: XM_XPATH_EXPRESSION
 		do
@@ -307,7 +311,7 @@ feature {NONE} -- Implementation
 					--  and count(x) ge n as exists(x[n])
 					
 					an_integer := an_integer_value.value
-					if operator = Fortran_greater_than_token then an_integer := an_integer + 1	end
+					if operator = Fortran_greater_than_token then an_integer := an_integer + one	end
 					an_exists_function ?= function_factory.make_system_function ("exists")
 					create new_arguments.make (1)
 					create an_integer_value.make (an_integer)
@@ -340,31 +344,31 @@ feature {NONE} -- Implementation
 			-- Optimise position() < n etc.
 		local
 			an_integer_value: XM_XPATH_INTEGER_VALUE
-			an_integer: INTEGER
+			an_integer: MA_DECIMAL
 			a_position_function: XM_XPATH_POSITION
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_position_function ?= first_operand; an_integer_value ?= second_operand
 			if a_position_function /= Void and then an_integer_value /= Void then
 				an_integer := an_integer_value.value
-				if an_integer < 0 then an_integer := 0 end
-				if an_integer < Platform.Maximum_integer then
+				if an_integer.is_negative then an_integer := zero end
+				if an_integer <= Maximum_integer_as_decimal then
 					inspect
 						operator
 					when Fortran_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, an_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, an_integer.to_integer)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, Platform.Maximum_integer)
 					when Fortran_not_equal_token then
-						if an_integer = 1 then
+						if an_integer.to_integer = 1 then
 							create {XM_XPATH_POSITION_RANGE} an_expression.make (2, Platform.Maximum_integer)
 						end
 					when Fortran_less_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer - 1)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer - 1)
 					when Fortran_greater_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer + 1, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer + 1, Platform.Maximum_integer)
 					when Fortran_less_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer)													
+						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)													
 					end
 					set_replacement (an_expression)
 				end
@@ -373,24 +377,24 @@ feature {NONE} -- Implementation
 				an_integer_value ?= first_operand
 				if a_position_function /= Void and then an_integer_value /= Void then
 					an_integer := an_integer_value.value
-					if an_integer < 0 then an_integer := 0 end
-					if an_integer < Platform.Maximum_integer then
+					if an_integer.is_negative then an_integer := zero end
+					if an_integer <= Maximum_integer_as_decimal then
 						inspect
 							operator
 						when Fortran_equal_token then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, an_integer)
+							create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, an_integer.to_integer)
 						when Fortran_less_equal_token then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, Platform.Maximum_integer)
+							create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer, Platform.Maximum_integer)
 						when Fortran_not_equal_token then
-							if an_integer = 1 then
+							if an_integer.to_integer = 1 then
 								create {XM_XPATH_POSITION_RANGE} an_expression.make (2, Platform.Maximum_integer)
 							end
 						when Fortran_greater_than_token then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer - 1)
+							create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer - 1)
 						when Fortran_less_than_token then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer + 1, Platform.Maximum_integer)
+							create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer.to_integer + 1, Platform.Maximum_integer)
 						when Fortran_greater_equal_token then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer)													
+							create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer.to_integer)													
 						end
 						set_replacement (an_expression)
 					end

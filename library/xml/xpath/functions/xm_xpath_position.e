@@ -87,7 +87,7 @@ feature -- Evaluation
 				if a_context_position = 0 then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position cannot be zero", Dynamic_error, 2)
 				else
-					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make (a_context_position)
+					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context_position)
 				end
 			end
 		ensure then

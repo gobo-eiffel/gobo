@@ -158,17 +158,16 @@ feature -- Conversions
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif a_required_type = type_factory.numeric_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make (a_value)
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (a_value)
 			elseif a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make (a_value)
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (a_value)
 			elseif a_required_type = type_factory.decimal_type then
-				create an_integer.make (a_value)
-				Result := an_integer.convert_to_type (a_required_type)
+				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_integer (a_value)
 			elseif a_required_type = type_factory.double_type then
-				create an_integer.make (a_value)
+				create an_integer.make_from_integer (a_value)
 				Result := an_integer.convert_to_type (a_required_type)
 			elseif a_required_type = type_factory.float_type then
-				create an_integer.make (a_value)
+				create an_integer.make_from_integer (a_value)
 				Result := an_integer.convert_to_type (a_required_type)
 			elseif a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)

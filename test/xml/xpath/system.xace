@@ -45,6 +45,7 @@
     <!-- <option name="debug_tag" value="XPath name pool allocation"/> -->
     <!--<option name="debug_tag" value="XPath mapping iterator"/>-->
     <!--<option name="debug_tag" value="Xpath sequence extent"/>-->
+    <!-- <option name="debug_tag" value="XPath Integer values"/> -->
   </option>
   <option if="${GOBO_DOTNET}">
     <option name="msil_generation" value="true"/>

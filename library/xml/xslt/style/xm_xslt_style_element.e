@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_EXPRESSION_TESTER
+
 	XM_XPATH_TOKENS
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -183,6 +185,9 @@ feature -- Access
 		end
 
 feature -- Status_report
+
+	any_compile_errors: BOOLEAN
+			-- Have any compile errors been reported?
 
 	attributes_prepared: BOOLEAN
 			-- Have attributes been prepared?
@@ -373,6 +378,9 @@ feature -- Status setting
 			validation_message_not_void: a_message /= Void
 		do
 			error_listener.error (a_message)
+			any_compile_errors := True
+		ensure
+			compile_errors: any_compile_errors
 		end
 
 	report_compile_warning (a_message: STRING) is
@@ -383,20 +391,83 @@ feature -- Status setting
 			error_listener.warning (a_message)
 		end
 
-feature -- Element change
+feature -- Creation
 
-	bind_variable (a_fingerprint: INTEGER) is
-			-- Bind variable to it's declaration.
+	generate_attribute_value_template (an_avt_expression: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+			-- Generate an attribute-valued-template.
+			-- The static context may be altered as a result of parsing.
 		require
-			variable_declared: is_variable_declared (a_fingerprint)
+			avt_not_void: an_avt_expression /= Void
+			static_context_not_void: a_static_context /= Void
+		local
+			components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			a_leading_character, a_left_curly_brace, a_right_curly_brace, a_behaviour: INTEGER
+			a_left_double_curly_brace, a_right_double_curly_brace: BOOLEAN
+			a_parser: XM_XSLT_PATTERN_PARSER
 		do
-			if is_local_variable_declared (a_fingerprint) then
-				bind_local_variable (a_fingerprint)
+			create components.make (5)
+			components.set_equality_tester (expression_tester)
+			from
+				a_leading_character := 1
+			variant
+				an_avt_expression.count + 1 - a_leading_character
+			until
+				a_leading_character > an_avt_expression.count
+			loop
+				a_left_curly_brace := an_avt_expression.index_of ('{', a_leading_character)
+				a_left_double_curly_brace := a_left_curly_brace > 0 and then an_avt_expression.index_of ('{', a_leading_character + a_left_curly_brace) = 1
+				a_right_curly_brace := an_avt_expression.index_of ('}', a_leading_character)
+				a_right_double_curly_brace := a_right_curly_brace > 0 and then an_avt_expression.index_of ('}', a_leading_character + a_right_curly_brace) = 1
+
+				if a_left_curly_brace = 0 and then a_right_curly_brace = 0 then
+					a_behaviour := Fixed_component
+				elseif a_left_double_curly_brace then
+					a_behaviour := Left_double_curly_brace_component
+				elseif a_right_double_curly_brace then
+					a_behaviour := Right_double_curly_brace_component					
+				elseif a_left_curly_brace > 0 and then a_right_curly_brace > a_left_curly_brace then
+					a_behaviour := Avt_component
+				else
+					a_behaviour := Avt_component + 1 -- logic error
+				end
+
+				inspect
+					a_behaviour
+				when Fixed_component then
+					append_fixed_component (components, an_avt_expression.substring (a_leading_character, an_avt_expression.count))
+					a_leading_character := an_avt_expression.count + 1
+				when Right_double_curly_brace_component then
+					append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_right_curly_brace))
+					a_leading_character := a_right_curly_brace + 2
+				when Left_double_curly_brace_component then
+					append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_left_curly_brace))
+					a_leading_character := a_left_curly_brace + 2
+				when Avt_component then
+					if a_leading_character < a_left_curly_brace then
+						append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_left_curly_brace - 1))
+					end
+					create a_parser.make
+					a_parser.parse (an_avt_expression, a_static_context, a_left_curly_brace + 1, Right_curly_token)
+					if not a_parser.is_parse_error then
+						append_parsed_expression (components, a_parser.last_parsed_expression.simplified_expression)
+					else
+						todo ("generate_attribute_value_template - error expression", True)
+					end
+					a_leading_character := a_right_curly_brace + 1
+				end
+			end
+
+			if components.count = 0 then
+				create {XM_XPATH_STRING_VALUE} last_generated_expression.make ("")
+			elseif components.count = 1 then
+				last_generated_expression := components.item (1)
+			elseif a_static_context.is_backwards_compatible_mode then
+				last_generated_expression := components.item (1)
 			else
-				principal_stylesheet.bind_global_variable (a_fingerprint, static_context)
+				todo ("generate_attribute_value_template - concatenated components", True)
 			end
 		ensure
-			variable_bound: static_context.last_bound_variable /= Void
+			attribute_value_template_not_void: last_generated_expression /= Void
 		end
 
 	generate_name_code (a_qname: STRING) is
@@ -488,7 +559,7 @@ feature -- Element change
 		local
 			a_pattern_parser: XM_XSLT_PATTERN_PARSER
 		do
-			create a_pattern_parser
+			create a_pattern_parser.make
 			a_pattern_parser.parse_pattern (a_pattern, static_context)
 			if not a_pattern_parser.is_parse_error then
 				last_generated_pattern := a_pattern_parser.last_parsed_pattern.simplified_pattern
@@ -510,7 +581,7 @@ feature -- Element change
 			if static_context = Void then
 				create static_context.make (Current)
 			end
-			create a_pattern_parser
+			create a_pattern_parser.make
 			a_pattern_parser.parse_sequence_type (a_sequence_type, static_context)
 			if a_pattern_parser.is_parse_error then
 				report_compile_error (a_pattern_parser.first_parse_error)
@@ -520,6 +591,22 @@ feature -- Element change
 			end
 		ensure
 			generated_sequence_type: last_generated_sequence_type /= Void
+		end
+
+feature -- Element change
+
+	bind_variable (a_fingerprint: INTEGER) is
+			-- Bind variable to it's declaration.
+		require
+			variable_declared: is_variable_declared (a_fingerprint)
+		do
+			if is_local_variable_declared (a_fingerprint) then
+				bind_local_variable (a_fingerprint)
+			else
+				principal_stylesheet.bind_global_variable (a_fingerprint, static_context)
+			end
+		ensure
+			variable_bound: static_context.last_bound_variable /= Void
 		end
 
 	fixup_references is
@@ -849,53 +936,52 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			positive_fingerprint: a_fingerprint >= 0
 		local
 			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_style_element, a_previous_style_element: XM_XSLT_STYLE_ELEMENT
+			a_node, a_previous_node: XM_XPATH_NODE
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			finished, finished_inner: BOOLEAN
 		do
 			if not is_top_level then
 				from
-					a_style_element := Current
-					a_previous_style_element := Current
+					a_previous_node := Current
 					a_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
 					a_preceding_iterator.start
 				until
 					finished
 				loop
 					if a_preceding_iterator.after then
-						finished := True
-					else
-						a_style_element ?= a_preceding_iterator.item
 						from
 							finished_inner := False
+							a_node := Void
 						until
-							finished_inner or else a_style_element /= Void
+							finished_inner or else a_node /= Void
 						loop
-							a_style_element ?= a_previous_style_element.parent
-							a_previous_style_element := a_style_element
-							a_stylesheet ?= a_style_element.parent
+							a_node := a_previous_node.parent
+							a_previous_node := a_node
+							a_stylesheet ?= a_node.parent
 							if a_stylesheet /= Void then
 								finished_inner := True
 							else
-								a_preceding_iterator := a_style_element.new_axis_iterator (Preceding_sibling_axis)
+								a_preceding_iterator := a_node.new_axis_iterator (Preceding_sibling_axis)
 								a_preceding_iterator.start
 								if not a_preceding_iterator.after then
-									a_style_element ?= a_preceding_iterator.item
+									a_node := a_preceding_iterator.item
 								else
-									a_style_element := Void
+									a_node := Void
 								end
 							end
 						end
-						a_stylesheet ?= a_style_element.parent
-						if a_stylesheet /= Void then
-							finished := True
-						else
-							a_variable_declaration ?= a_style_element
-							if a_variable_declaration /= Void then
-								Result := a_variable_declaration.variable_fingerprint = a_fingerprint
-								if Result then finished := True end
-							end
+					else
+						a_node := a_preceding_iterator.item
+					end
+					a_stylesheet ?= a_node.parent
+					if a_stylesheet /= Void then
+						finished := True
+					else
+						a_variable_declaration ?= a_node
+						if a_variable_declaration /= Void then
+							Result := a_variable_declaration.variable_fingerprint = a_fingerprint
+							if Result then finished := True end
 						end
 					end
 					if not finished and then not a_preceding_iterator.after then a_preceding_iterator.forth end
@@ -913,6 +999,45 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
 feature {NONE} -- Implementation
 
+	Fixed_component, Left_double_curly_brace_component, Right_double_curly_brace_component, Avt_component: INTEGER is unique
+			-- Constants used by `generate_attribute_value_template'
+
+	append_fixed_component (components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_string_component: STRING) is
+			--	Append `a_string_component' onto `components'.
+		require
+			components_not_void: components /= Void
+			string_component_not_void: a_string_component /= Void
+		local
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			create a_string_value.make (a_string_component)
+			if not components.extendible (1) then
+				components.resize (2 * components.count)
+			end
+			components.put_last (a_string_value)
+		ensure
+			one_more: components.count = old components.count + 1
+		end
+
+	append_parsed_expression (components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; an_expression: XM_XPATH_EXPRESSION) is
+			-- Append `an_expression' onto `components'.
+		require
+			components_not_void: components /= Void
+			expression_not_void: an_expression /= Void
+		local
+			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
+			-- an_atomic_sequence_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
+		do
+			create an_atomizer.make (an_expression)
+			todo ("append_parsed_expression - need an atomic-sequence-converter and fn:string-join - BUG!", True)
+			if not components.extendible (1) then
+				components.resize (2 * components.count)
+			end
+			components.put_last (an_atomizer)
+		ensure
+			at_least_one_more: components.count > old components.count
+		end
+
 	decimal_two: MA_DECIMAL is
 			-- 2.0
 		once
@@ -927,54 +1052,56 @@ feature {NONE} -- Implementation
 			variable_declared: is_local_variable_declared (a_fingerprint)
 		local
 			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_style_element, a_previous_style_element: XM_XSLT_STYLE_ELEMENT
+			a_node, a_previous_node: XM_XPATH_NODE
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			finished, finished_inner: BOOLEAN
-		do
+		do			
 			from
-				a_style_element := Current
-				a_previous_style_element := Current
+				a_previous_node := Current
 				a_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
 				a_preceding_iterator.start
 			until
 				finished
 			loop
 				if a_preceding_iterator.after then
-					finished := True
-				else
-					a_style_element ?= a_preceding_iterator.item
 					from
 						finished_inner := False
+						a_node := Void
 					until
-						finished_inner or else a_style_element /= Void
+						finished_inner or else a_node /= Void
 					loop
-						a_style_element ?= a_previous_style_element.parent
-						a_previous_style_element := a_style_element
-						a_stylesheet ?= a_style_element.parent
+						a_node := a_previous_node.parent
+						a_previous_node := a_node
+						a_stylesheet ?= a_node.parent
 						if a_stylesheet /= Void then
 							finished_inner := True
 						else
-							a_preceding_iterator := a_style_element.new_axis_iterator (Preceding_sibling_axis)
+							a_preceding_iterator := a_node.new_axis_iterator (Preceding_sibling_axis)
 							a_preceding_iterator.start
 							if not a_preceding_iterator.after then
-								a_style_element ?= a_preceding_iterator.item
+								a_node := a_preceding_iterator.item
 							else
-								a_style_element := Void
+								a_node := Void
 							end
 						end
 					end
-					a_stylesheet ?= a_style_element.parent
-					if a_stylesheet /= Void then
-						finished := True
-					else
-						a_variable_declaration ?= a_style_element
-						if a_variable_declaration /= Void and then  a_variable_declaration.variable_fingerprint = a_fingerprint then
+				else
+					a_node := a_preceding_iterator.item
+				end
+				a_stylesheet ?= a_node.parent
+				if a_stylesheet /= Void then
+					finished := True
+				else
+					a_variable_declaration ?= a_node
+					if a_variable_declaration /= Void then
+						if a_variable_declaration.variable_fingerprint = a_fingerprint then
 							static_context.set_last_bound_variable (a_variable_declaration)
+							finished := True
 						end
 					end
-					if not finished and then not a_preceding_iterator.after then a_preceding_iterator.forth end
 				end
+				if not finished and then not a_preceding_iterator.after then a_preceding_iterator.forth end
 			end
 		ensure
 			variable_bound: static_context.last_bound_variable /= Void
