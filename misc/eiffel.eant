@@ -218,11 +218,10 @@
 			necessary.
 		</description>
 
-		<gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace" if="${gexace_output}">
+		<set name="gexace_output" value="" unless="${gexace_output}"/>
+		<gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
-		</gexace>
-		<gexace system="${eiffel}" xace="${system_dir}/system.xace" unless="${gexace_output}">
-			<define name="DEBUG" value="${debug}" if="${debug}"/>
+			<define name="GOBO_OS" value="${GOBO_OS}"/>
 		</gexace>
 	</target>
 
