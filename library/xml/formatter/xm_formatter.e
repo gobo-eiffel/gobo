@@ -26,6 +26,7 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
@@ -81,19 +82,27 @@ feature -- Debugging options
 			Result := position_table /= Void
 		end
 
+feature {NONE} -- Namespaces
+
+	namespaces: XM_UNIQUE_NAMESPACE_PREFIXES
+			-- Prefixes collection.
+			
+	root_namespace: XM_NAMESPACE
+			-- Namespace of root element.
+		
 feature -- Standard processor routines
 
 	process_element (el: XM_ELEMENT) is
 			-- Process element `el'.
 		do
 			try_process_position (el)
-			if el.is_empty then
-				process_empty_element (el)
+			if el.parent.is_root_node then
+				process_root_start_tag (el)
 			else
 				process_start_tag (el)
-				process_composite (el)
-				process_end_tag (el)
 			end
+			el.process_children (Current)
+			process_end_tag (el)
 		end
 
 	process_character_data (c: XM_CHARACTER_DATA) is
@@ -117,8 +126,11 @@ feature -- Standard processor routines
 	process_document (doc: XM_DOCUMENT) is
 			-- Process document `doc'.
 		do
+			!! namespaces
+			doc.process (namespaces)
+			
 			try_process_position (doc)
-			process_composite (doc)
+			doc.process_children (Current)
 		end
 
 	process_comment (com: XM_COMMENT) is
@@ -148,7 +160,7 @@ feature -- Standard processor routines
 		require
 			att_not_void: att /= Void
 		do
-			process_named (att)
+			process_named_attribute (att)
 			append (Eq_s)
 			append (Quot_s)
 			append (att.value)
@@ -160,29 +172,47 @@ feature -- Standard processor routines
 		do
 		end
 
-feature -- Non standard processor routines
+feature {NONE} -- Non standard processor routines
 
-	process_composite (c: XM_COMPOSITE) is
-			-- Process composite `c'.
+	process_root_start_tag (an_element: XM_ELEMENT) is
+			-- Process start tag of `el'.
 		require
-			c_not_void: c /= Void
+			an_element_not_void: an_element /= Void
+			root_element: an_element.parent.is_root_node
 		local
-			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_cursor: DS_HASH_TABLE_CURSOR [XM_NAMESPACE, STRING]
 		do
-			a_cursor := c.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.process (Current)
+			-- set root namespace (ignoring original prefix)
+			!! root_namespace.make (Void, an_element.namespace.uri)
+			
+			append (Stag_start)
+			process_named_element (an_element)
+
+			-- xmlns: root
+			append (Space_s)
+			append (namespaces.namespace_declaration (root_namespace))
+			from
+				a_cursor := namespaces.namespaces.new_cursor
+				a_cursor.start
+			until	
+				a_cursor.after
+			loop
+				append (Space_s)
+				append (namespaces.namespace_declaration (a_cursor.item))
 				a_cursor.forth
 			end
-		end
 
+			process_attributes (an_element)
+			append (Stag_end)
+		end
+		
 	process_start_tag (el: XM_ELEMENT) is
 			-- Process start tag of `el'.
 		require
 			el_not_void: el /= Void
 		do
 			append (Stag_start)
-			process_named (el)
+			process_named_element (el)
 			process_attributes (el)
 			append (Stag_end)
 		end
@@ -217,40 +247,56 @@ feature -- Non standard processor routines
 			append (Comment_end)
 		end
 
-	process_empty_element (el: XM_ELEMENT) is
-			-- Process empty element `el'.
-		require
-			el_not_void: el /= Void
-		do
-			append (Etag_start)
-			process_named (el)
-			append (Space_s)
-			process_attributes (el)
-			append (Etag_end)
-		end
-
 	process_end_tag (el: XM_ELEMENT) is
 			-- Process end tag of `el'.
 		require
 			el_not_void: el /= Void
 		do
 			append (Etag_start)
-			process_named (el)
+			process_named_element (el)
 			append (Etag_end)
 		end
 
-	process_named (a_node: XM_NAMED_NODE) is
+	process_named_element (a_node: XM_ELEMENT) is
 			-- Process named node `a_node'.
 		require
 			a_node_not_void: a_node /= Void
 		do
-			if not a_node.namespace.is_default then
-				append (a_node.namespace.uri)
-				append (Eq_s)
+			check 
+				root_namespace_not_void: root_namespace /= Void 
+				namespaces_not_void: namespaces /= Void
+			end
+
+			if not a_node.namespace.uri.is_equal (root_namespace.uri) then
+				append (namespaces.ns_prefix (a_node.namespace))
+				append (Prefix_separator)
 			end
 			append (a_node.name)
 		end
+		
+	process_named_attribute (a_node: XM_ATTRIBUTE) is
+			-- Process named node `a_node'.
+		require
+			a_node_not_void: a_node /= Void
+		local
+			a_typer: XM_NODE_TYPER
+		do
+			check 
+				root_namespace_not_void: root_namespace /= Void 
+				namespaces_not_void: namespaces /= Void
+			end
 
+			!! a_typer
+			a_node.parent.process (a_typer)
+			check a_typer.is_element end
+			
+			if not a_node.namespace.is_equal (a_typer.element.namespace) then
+				append (namespaces.ns_prefix (a_node.namespace))
+				append (Prefix_separator)
+			end
+			append (a_node.name)
+		end
+		
 feature {NONE} -- Implementation
 
 	append (a_string: STRING) is
