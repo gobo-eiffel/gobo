@@ -36,7 +36,7 @@ feature -- Test
 	test_is_equal2 is
 			-- Test feature `is_equal'.
 		local
-			a_comparable: COMPARABLE
+			a_comparable: INTEGER
 		do
 			a_comparable := 10
 			assert ("is_equal1", a_comparable.is_equal (10)) 
@@ -72,7 +72,7 @@ feature -- Test
 	test_infix_less2 is
 			-- Test feature `infix "<"'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 10
 			a_comparable2 := 5
@@ -120,7 +120,7 @@ feature -- Test
 	test_infix_less_equal2 is
 			-- Test feature `infix "<="'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 10
 			a_comparable2 := 5
@@ -168,7 +168,7 @@ feature -- Test
 	test_infix_greater2 is
 			-- Test feature `infix ">"'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 5
 			a_comparable2 := 10
@@ -216,7 +216,7 @@ feature -- Test
 	test_infix_greater_equal2 is
 			-- Test feature `infix ">="'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 5
 			a_comparable2 := 10
@@ -244,37 +244,37 @@ feature -- Test
 		do
 			a_comparable := clone ("bar")
 			a_comparable2 := clone ("foo")
-			assert_same ("min1", a_comparable, a_comparable.min (a_comparable2))
-			assert_same ("min2", a_comparable, a_comparable.min (a_comparable))
-			assert_same ("min3", a_comparable, a_comparable2.min (a_comparable))
+			assert_comparables_same ("min1", a_comparable, a_comparable.min (a_comparable2))
+			assert_comparables_same ("min2", a_comparable, a_comparable.min (a_comparable))
+			assert_comparables_same ("min3", a_comparable, a_comparable2.min (a_comparable))
 			a_comparable := clone ("foo")
 			a_comparable2 := clone ("")
-			assert_same ("min4", a_comparable2, a_comparable.min (a_comparable2))
-			assert_same ("min5", a_comparable2, a_comparable2.min (a_comparable))
+			assert_comparables_same ("min4", a_comparable2, a_comparable.min (a_comparable2))
+			assert_comparables_same ("min5", a_comparable2, a_comparable2.min (a_comparable))
 			a_comparable := clone ("foo")
 			a_comparable2 := clone ("foo")
-			assert_same ("min6", a_comparable, a_comparable.min (a_comparable2))
-			assert_same ("min7", a_comparable2, a_comparable2.min (a_comparable))
+			assert_comparables_same ("min6", a_comparable, a_comparable.min (a_comparable2))
+			assert_comparables_same ("min7", a_comparable2, a_comparable2.min (a_comparable))
 		end
 
 	test_min2 is
 			-- Test feature `min'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER 
 		do
 			a_comparable := 5
 			a_comparable2 := 10
-			assert_same ("min1", a_comparable, a_comparable.min (a_comparable2))
-			assert_same ("min2", a_comparable, a_comparable.min (a_comparable))
-			assert_same ("min3", a_comparable, a_comparable2.min (a_comparable))
+			assert_integers_equal ("min1", a_comparable, a_comparable.min (a_comparable2))
+			assert_integers_equal ("min2", a_comparable, a_comparable.min (a_comparable))
+			assert_integers_equal ("min3", a_comparable, a_comparable2.min (a_comparable))
 			a_comparable := 8
 			a_comparable2 := 0
-			assert_same ("min4", a_comparable2, a_comparable.min (a_comparable2))
-			assert_same ("min5", a_comparable2, a_comparable2.min (a_comparable))
+			assert_integers_equal ("min4", a_comparable2, a_comparable.min (a_comparable2))
+			assert_integers_equal ("min5", a_comparable2, a_comparable2.min (a_comparable))
 			a_comparable := 3
 			a_comparable2 := 3
-			assert_same ("min6", a_comparable, a_comparable.min (a_comparable2))
-			assert_same ("min7", a_comparable2, a_comparable2.min (a_comparable))
+			assert_integers_equal ("min6", a_comparable, a_comparable.min (a_comparable2))
+			assert_integers_equal ("min7", a_comparable2, a_comparable2.min (a_comparable))
 		end
 
 	test_max1 is
@@ -284,37 +284,37 @@ feature -- Test
 		do
 			a_comparable := clone ("foo")
 			a_comparable2 := clone ("bar")
-			assert_same ("max1", a_comparable, a_comparable.max (a_comparable2))
-			assert_same ("max2", a_comparable, a_comparable.max (a_comparable))
-			assert_same ("max3", a_comparable, a_comparable2.max (a_comparable))
+			assert_comparables_same ("max1", a_comparable, a_comparable.max (a_comparable2))
+			assert_comparables_same ("max2", a_comparable, a_comparable.max (a_comparable))
+			assert_comparables_same ("max3", a_comparable, a_comparable2.max (a_comparable))
 			a_comparable := clone ("")
 			a_comparable2 := clone ("foo")
-			assert_same ("max4", a_comparable2, a_comparable.max (a_comparable2))
-			assert_same ("max5", a_comparable2, a_comparable2.max (a_comparable))
+			assert_comparables_same ("max4", a_comparable2, a_comparable.max (a_comparable2))
+			assert_comparables_same ("max5", a_comparable2, a_comparable2.max (a_comparable))
 			a_comparable := clone ("foo")
 			a_comparable2 := clone ("foo")
-			assert_same ("max6", a_comparable, a_comparable.max (a_comparable2))
-			assert_same ("max7", a_comparable2, a_comparable2.max (a_comparable))
+			assert_comparables_same ("max6", a_comparable, a_comparable.max (a_comparable2))
+			assert_comparables_same ("max7", a_comparable2, a_comparable2.max (a_comparable))
 		end
 
 	test_max2 is
 			-- Test feature `max'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 10
 			a_comparable2 := 5
-			assert_same ("max1", a_comparable, a_comparable.max (a_comparable2))
-			assert_same ("max2", a_comparable, a_comparable.max (a_comparable))
-			assert_same ("max3", a_comparable, a_comparable2.max (a_comparable))
+			assert_integers_equal ("max1", a_comparable, a_comparable.max (a_comparable2))
+			assert_integers_equal ("max2", a_comparable, a_comparable.max (a_comparable))
+			assert_integers_equal ("max3", a_comparable, a_comparable2.max (a_comparable))
 			a_comparable := 0
 			a_comparable2 := 12
-			assert_same ("max4", a_comparable2, a_comparable.max (a_comparable2))
-			assert_same ("max5", a_comparable2, a_comparable2.max (a_comparable))
+			assert_integers_equal ("max4", a_comparable2, a_comparable.max (a_comparable2))
+			assert_integers_equal ("max5", a_comparable2, a_comparable2.max (a_comparable))
 			a_comparable := 4
 			a_comparable2 := 4
-			assert_same ("max6", a_comparable, a_comparable.max (a_comparable2))
-			assert_same ("max7", a_comparable2, a_comparable2.max (a_comparable))
+			assert_integers_equal ("max6", a_comparable, a_comparable.max (a_comparable2))
+			assert_integers_equal ("max7", a_comparable2, a_comparable2.max (a_comparable))
 		end
 
 	test_three_way_comparison1 is
@@ -324,37 +324,47 @@ feature -- Test
 		do
 			a_comparable := clone ("foo")
 			a_comparable2 := clone ("bar")
-			assert_equal ("compare1", 1, a_comparable.three_way_comparison (a_comparable2))
-			assert_equal ("compare2", 0, a_comparable.three_way_comparison (a_comparable))
-			assert_equal ("compare3", -1, a_comparable2.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare1", 1, a_comparable.three_way_comparison (a_comparable2))
+			assert_integers_equal ("compare2", 0, a_comparable.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare3", -1, a_comparable2.three_way_comparison (a_comparable))
 			a_comparable := clone ("")
 			a_comparable2 := clone ("foo")
-			assert_equal ("compare4", -1, a_comparable.three_way_comparison (a_comparable2))
-			assert_equal ("compare5", 1, a_comparable2.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare4", -1, a_comparable.three_way_comparison (a_comparable2))
+			assert_integers_equal ("compare5", 1, a_comparable2.three_way_comparison (a_comparable))
 			a_comparable := clone ("foo")
 			a_comparable2 := clone ("foo")
-			assert_equal ("compare6", 0, a_comparable.three_way_comparison (a_comparable2))
-			assert_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare6", 0, a_comparable.three_way_comparison (a_comparable2))
+			assert_integers_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
 		end
 
 	test_three_way_comparison2 is
 			-- Test feature `three_way_comparison'.
 		local
-			a_comparable, a_comparable2: COMPARABLE
+			a_comparable, a_comparable2: INTEGER
 		do
 			a_comparable := 10
 			a_comparable2 := 5
-			assert_equal ("compare1", 1, a_comparable.three_way_comparison (a_comparable2))
-			assert_equal ("compare2", 0, a_comparable.three_way_comparison (a_comparable))
-			assert_equal ("compare3", -1, a_comparable2.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare1", 1, a_comparable.three_way_comparison (a_comparable2))
+			assert_integers_equal ("compare2", 0, a_comparable.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare3", -1, a_comparable2.three_way_comparison (a_comparable))
 			a_comparable := 0
 			a_comparable2 := 4
-			assert_equal ("compare4", -1, a_comparable.three_way_comparison (a_comparable2))
-			assert_equal ("compare5", 1, a_comparable2.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare4", -1, a_comparable.three_way_comparison (a_comparable2))
+			assert_integers_equal ("compare5", 1, a_comparable2.three_way_comparison (a_comparable))
 			a_comparable := 7
 			a_comparable2 := 7
-			assert_equal ("compare6", 0, a_comparable.three_way_comparison (a_comparable2))
-			assert_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
+			assert_integers_equal ("compare6", 0, a_comparable.three_way_comparison (a_comparable2))
+			assert_integers_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
+		end
+
+feature {NONE} -- Implementation
+
+	assert_comparables_same (a_tag: STRING; expected, value: COMPARABLE) is
+			-- Assert `expected = value'
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			assert (a_tag, expected = value)
 		end
 
 end

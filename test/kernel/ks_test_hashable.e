@@ -32,7 +32,7 @@ feature -- Test
 	test_hash_code2 is
 			-- Test feature `hash_code'.
 		local
-			a_hashable, a_hashable2: HASHABLE
+			a_hashable, a_hashable2: INTEGER
 		do
 			a_hashable := 5
 			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code) 
