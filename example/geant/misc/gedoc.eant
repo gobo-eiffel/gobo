@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<project name="gedoc">
+
+	<target name="gedoc">
+		<gedoc
+			input="${GOBO}/doc/structure/index.xml"
+			output="${GOBO}/doc/structure/index.html"
+			stylesheet="${GOBO}/misc/gobo2html.xsl">
+			<parameter name="previous" value="../license.html"/>
+			<parameter name="next" value="../time/index.html"/>
+			<parameter name="toc" value="../index.html"/>
+		</gedoc>
+		<gedoc
+			input="${GOBO}/doc/structure/index.xml"
+			output="${GOBO}/doc/structure/index.xml"
+			stylesheet="${GOBO}/misc/gobo2db.xsl">
+		</gedoc>
+		
+	</target>
+
+</project>
