@@ -15,9 +15,9 @@
 <!-- Implementation -->
 
 	<target name="init_system">
-		<set name="system" value="oasis"/>
+		<set name="system" value="xmloasis"/>
 		<set name="library" value="xml"/>
-		<set name="system_dir" value="${GOBO}/test/${library}/${system}"/>
+		<set name="system_dir" value="${GOBO}/test/${library}/oasis/"/>
 	</target>
 
 </project>
