@@ -29,10 +29,10 @@
 			<varlistentry>
 				<term>resource</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Name of a resource. Currently filenames are supported</para>
+					<para><emphasis>Description: </emphasis>Name of a resource. Currently files and directories are supported</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid filename</para>
+					<para><emphasis>Domain: </emphasis>Valid filename/directoryname</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
