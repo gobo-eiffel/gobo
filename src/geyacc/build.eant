@@ -3,7 +3,7 @@
 <project name="geyacc" default="help">
 
 	<description>
-		description: "Gobo Eiffel Yacc: syntactical analyzer generator"
+		description: "Eiffel Ant file for 'geyacc'"
 		system:      "Gobo Eiffel Yacc"
 		author:      "Eric Bezault [ericb@gobosoft.com]"
 		copyright:   "Copyright (c) 2001, Eric Bezault and others"
@@ -24,16 +24,16 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" dir="${GOBO}/src/geyacc">
+	<target name="install" depend="init" dir="${GOBO}/src/${system}">
 		<description>
-			Install Gobo Eiffel Yacc.
+			Install ${system} directory.
 		</description>
 		<!-- do nothing -->
 	</target>
 
 	<target name="compile" depend="init">
 		<description>
-			Compile 'geyacc'.
+			Compile '${system}'.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'se' if this variable is not defined.
 		</description>
@@ -41,76 +41,77 @@
 		<geant target="compile_${eiffel}"/>
 	</target>
 
-	<target name="compile_ise" dir="${GOBO}/src/geyacc">
+	<target name="compile_ise" depend="init" dir="${GOBO}/src/${system}">
 		<description>
-			Compile 'geyacc' with ISE Eiffel.
+			Compile '${system}' with ISE Eiffel.
 		</description>
 
 		<gexace command="build" command_options="ise"/>
-		<ise ace="ise.ace" system="geyacc" finalize="true" finish_freezing="true"/>
+		<ise ace="ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
 	</target>
 
-	<target name="compile_hact" dir="${GOBO}/src/geyacc">
+	<target name="compile_hact" depend="init" dir="${GOBO}/src/${system}">
 		<description>
-			Compile 'geyacc' with Halstenbach Eiffel.
+			Compile '${system}' with Halstenbach Eiffel.
 		</description>
 
 		<gexace command="build" command_options="hact"/>
-		<hact ace="hact.ace" system="geyacc" finalize="true" fish="true"/>
+		<hact ace="hact.ace" system="${system}" finalize="true" fish="true"/>
 	</target>
 
-	<target name="compile_ve" dir="${GOBO}/src/geyacc">
+	<target name="compile_ve" depend="init" dir="${GOBO}/src/${system}">
 		<description>
-			Compile 'geyacc' with Visual Eiffel.
+			Compile '${system}' with Visual Eiffel.
 		</description>
 
 		<gexace command="build" command_options="ve"/>
 		<ve esd="ve.esd"/>
 	</target>
 
-	<target name="compile_se" dir="${GOBO}/src/geyacc">
+	<target name="compile_se" depend="init" dir="${GOBO}/src/${system}">
 		<description>
-			Compile 'geyacc' with SmallEiffel.
+			Compile '${system}' with SmallEiffel.
 		</description>
 
 		<gexace command="build" command_options="se"/>
 		<se ace="se.ace"/>
 	</target>
 
-	<target name="clean" dir="${GOBO}/src/geyacc">
+	<target name="clean" depend="init" dir="${GOBO}/src/${system}">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
-		<ise clean="geyacc"/>
+		<ise clean="${system}"/>
 		<delete file="ise.ace"/>
-		<hact clean="geyacc"/>
+		<hact clean="${system}"/>
 		<delete file="hact.ace"/>
-		<se clean="geyacc"/>
+		<se clean="${system}"/>
 		<delete file="se.ace"/>
-		<ve clean="geyacc"/>
+		<ve clean="${system}"/>
 		<delete file="ve.esd"/>
 	</target>
 
-	<target name="clobber" depend="init" dir="${GOBO}/src/geyacc">
+	<target name="clobber" depend="init" dir="${GOBO}/src/${system}">
 		<description>
 			Remove all generated files.
 		</description>
 
 		<geant target="clean"/>
-		<delete file="geyacc${exe}"/>
+		<delete file="${system}${exe}"/>
 	</target>
 
 
 <!-- Implementation -->
 
 	<target name="init">
+		<set name="system" value="geyacc"/>
 		<set name="eiffel" value="se"/>
 		<geant target="init_eiffel"/>
 		<geant target="init_os"/>
 	</target>
 
-	<target name="init_eiffel" if="GOBO_EIFFEL">
+	<target name="init_eiffel" if="${GOBO_EIFFEL}">
 		<set name="eiffel" value="${GOBO_EIFFEL}"/>
 	</target>
 
@@ -124,7 +125,7 @@
 	</target>
 
 	<target name="init_unix" unless="${GOBO_OS}=windows">
-		<set name="exe" value=" "/>
+		<set name="exe" value=""/>
 	</target>
 
 </project>
