@@ -749,6 +749,10 @@ feature {NONE} -- Constants
 	yyInitial_yyvs_size: INTEGER is 10
 			-- Initial size of parser's stacks
 
+	yyDummy: INTEGER is 2147483647
+			-- To be inserted in manifest arrays
+			-- in order to make SE 2.1b1 happy.
+
 invariant
 
 	yyss_not_void: yyss /= Void

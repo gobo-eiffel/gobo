@@ -193,7 +193,7 @@ feature -- Element change
 			elseif left /= Void then
 				left.forget_right
 				cell.forget_left
-			end	
+			end
 		end
 
 	add (symbol_class: LX_SYMBOL_CLASS) is

@@ -5,7 +5,7 @@ indexing
 		"Scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,19 +19,16 @@ inherit
 			yy_ec as yy_ec_template,
 			yy_accept as yy_accept_template
 		undefine
-			reset, yy_set_content
-		redefine
-			yy_initialize
-		select
-			yy_initialize
+			reset, yy_set_content, yy_initialize
 		end
 
 	YY_COMPRESSED_SCANNER_SKELETON
 		rename
 			make as make_scanner_skeleton,
 			make_with_file as make_scanner_with_file_skeleton,
-			make_with_buffer as make_scanner_with_buffer_skeleton,
-			yy_initialize as yy_initialize_skeleton
+			make_with_buffer as make_scanner_with_buffer_skeleton
+		redefine
+			yy_initialize
 		end
 
 	LX_COMPRESSED_TABLES
@@ -59,7 +56,9 @@ feature {NONE} -- Initialization
 			-- Initialize lexical analyzer.
 		do
 			yyReject_or_variable_trail_context := yyReject_used or yyVariable_trail_context
-			yy_initialize_skeleton
+				-- The parent part is there only to work around
+				-- a bug in ISE 5.5.
+			precursor {YY_COMPRESSED_SCANNER_SKELETON}
 		end
 
 feature {NONE} -- Implementation

@@ -86,7 +86,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     212,213,214,-1,
 		     216,217,218,219,
 		     220,221,222,376
-		     >>
+		     , udummy>>
 	end
 
 	uppercase_01: ARRAY [INTEGER] is
@@ -156,7 +156,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,500,-1,-1,
 		     -1,504,-1,506,
 		     -1,508,-1,510
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_02: ARRAY [INTEGER] is
@@ -226,7 +226,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_03: ARRAY [INTEGER] is
@@ -296,7 +296,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_04: ARRAY [INTEGER] is
@@ -366,7 +366,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,1268,-1,-1,
 		     -1,1272,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_05: ARRAY [INTEGER] is
@@ -436,7 +436,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_06: ARRAY [INTEGER] is
@@ -506,7 +506,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_1e: ARRAY [INTEGER] is
@@ -576,7 +576,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,7924,-1,7926,
 		     -1,7928,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_1f: ARRAY [INTEGER] is
@@ -646,7 +646,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_21: ARRAY [INTEGER] is
@@ -716,10 +716,10 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
-	uppercase_24: ARRAY[INTEGER] is
+	uppercase_24: ARRAY [INTEGER] is
 		once
 			Result := <<
 		     -1,-1,-1,-1,
@@ -786,7 +786,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase_ff: ARRAY [INTEGER] is
@@ -856,7 +856,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1
-		     >>
+		     , udummy>>
 		end
 
 	uppercase: ARRAY [ARRAY [INTEGER]] is
@@ -930,5 +930,11 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		end
 
 --integer used: 3328
+
+feature {NONE} -- Constants
+
+	udummy: INTEGER is 2147483647
+			-- To be inserted in manifest arrays
+			-- in order to make SE 2.1b1 happy.
 
 end

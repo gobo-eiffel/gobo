@@ -18,12 +18,10 @@ inherit
 
 	GEANT_NAME_VALUE_ELEMENT
 		rename
-			make as name_value_make
+			make as element_make
 		undefine
 			attribute_value,
 			attribute_value_or_default
-		select
-			name_value_make
 		end
 
 creation

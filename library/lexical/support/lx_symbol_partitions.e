@@ -6,7 +6,7 @@ indexing
 		%possibly belonging to none of the equivalence classes"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,19 +18,6 @@ inherit
 	LX_EQUIVALENCE_CLASSES
 		redefine
 			make, initialize, put, add
-		select
-			initialize, put, add
-		end
-
-	LX_EQUIVALENCE_CLASSES
-		rename
-			initialize as equiv_initialize,
-			put as equiv_put,
-			add as equiv_add
-		export
-			{NONE} all
-		redefine
-			make
 		end
 
 creation
@@ -42,18 +29,9 @@ feature {NONE} -- Initialization
 	make (min, max: INTEGER) is
 			-- Make structure to allow creation of a set of partitions
 			-- for symbols within bounds `min'..`max'.
-		local
-			cell: DS_BILINKABLE [INTEGER]
-			i: INTEGER
 		do
-			create storage.make (min, max)
 			create symbols.make (min, max)
-			from i := min until i > max loop
-				create cell.make (i)
-				storage.put (cell, i)
-				i := i + 1
-			end
-			equiv_initialize
+			precursor (min, max)
 		end
 
 feature -- Initialization
@@ -65,7 +43,7 @@ feature -- Initialization
 			-- [This feature can be called to reset structure
 			-- as it was after `make' creation procedure call.]
 		do
-			equiv_initialize
+			precursor
 			symbols.clear_all
 		end
 
@@ -92,8 +70,8 @@ feature -- Element change
 			-- Create equivalence class for single `symbol'
 			-- and record `symbol' as member of a partition.
 		do
-			equiv_put (symbol)
 			symbols.put (True, symbol)
+			precursor (symbol)
 		ensure then
 			has_symbol: has (symbol)
 		end
@@ -106,7 +84,7 @@ feature -- Element change
 			i, j, nb, max, symbol: INTEGER
 			symbol_table: ARRAY [BOOLEAN]
 		do
-			equiv_add (symbol_class)
+			precursor (symbol_class)
 			nb := symbol_class.count
 			symbol_table := symbols
 			if symbol_class.negated then

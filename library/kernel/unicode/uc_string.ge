@@ -33,11 +33,13 @@ inherit
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory
 #endif
+#ifdef ISE || VE
 		select
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from ANY instead.
 			is_equal
+#endif
 		end
 
 	STRING
@@ -52,7 +54,6 @@ inherit
 			prepend as old_prepend,
 			remove_prefix as old_remove_prefix,
 #endif
-			is_empty as old_is_empty,
 #ifdef ISE
 			clear_all as old_clear_all,
 			left_adjust as old_left_adjust,
@@ -67,24 +68,29 @@ inherit
 #endif
 #ifdef ISE || VE
 			empty as old_empty,
-#endif
+				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from COMPARABLE instead.
+			infix "<" as old_infix_less,
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
-				-- is too constraining and does not allow a redefinition here.
-				-- Redefine version from COMPARABLE instead.
-			infix "<" as old_infix_less
+#endif
+			is_empty as old_is_empty
 		export
 #ifdef SE
 			{UC_STRING_HANDLER} storage, compare;
-			{STRING} old_infix_less;
 #endif
 #ifdef ISE
 			{STRING} share, area, old_is_empty, mirror;
 #endif
+#ifdef SE
+			-- Bug in SE 2.1b1:
+			-- {NONE} all
+#else
 			{NONE} all
+#endif
 		undefine
 #ifdef VE || SE
 			compare,
@@ -108,6 +114,7 @@ inherit
 			as_lower, as_upper,
 			out, fill_with,
 #ifdef SE
+			is_equal, infix "<",
 			old_prepend, old_remove_prefix,
 #endif
 #ifdef ISE
@@ -183,7 +190,12 @@ inherit
 #endif
 	COMPARABLE
 		export
+#ifdef SE
+			-- Bug in SE 2.1b1:
+			-- {NONE} all
+#else
 			{NONE} all
+#endif
 		undefine
 #ifdef SE
 			out_in_tagged_out_memory,
@@ -191,11 +203,13 @@ inherit
 #endif
 			three_way_comparison,
 			is_equal, copy, out
+#ifdef ISE || VE
 		select
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			infix "<"
+#endif
 		end
 
 	UC_STRING_HANDLER
@@ -235,8 +249,6 @@ inherit
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
-		export
-			{NONE} all
 		undefine
 #ifdef SE
 			out_in_tagged_out_memory,

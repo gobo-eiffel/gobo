@@ -12,7 +12,7 @@ indexing
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,10 @@ class KL_ARGUMENTS
 inherit
 
 	ARGUMENTS
+		export
+				-- Needed for SE 2.1b1:
+			{ANY} argument, argument_count
+		end
 
 creation {KL_SHARED_ARGUMENTS}
 

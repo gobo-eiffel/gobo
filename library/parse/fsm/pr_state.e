@@ -14,6 +14,8 @@ class PR_STATE
 
 inherit
 
+	ANY -- Needed for SE 2.1b1.
+
 	HASHABLE
 
 creation

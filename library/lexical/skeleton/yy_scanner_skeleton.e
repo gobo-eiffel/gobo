@@ -649,6 +649,10 @@ feature {NONE} -- Constants
 	yyNull_equiv_class: INTEGER is deferred end
 			-- Equivalence code for NULL character
 
+	yy_Dummy: INTEGER is 2147483647
+			-- To be inserted in manifest arrays
+			-- in order to make SE 2.1b1 happy.
+
 invariant
 
 	yy_content_not_void: yy_content /= Void

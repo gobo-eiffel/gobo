@@ -593,7 +593,7 @@ feature {NONE} -- Generation
 				a_file.put_string
 					("%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
 				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
-				a_file.put_string (">>)%N%T%Tend%N")
+				a_file.put_string (", yyDummy>>)%N%T%Tend%N")
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
 					%%T%Tonce%N%T%T%Tcreate an_array.make (")
@@ -625,7 +625,7 @@ feature {NONE} -- Generation
 						%%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
 					k := a_table_upper.min (i + array_size - 1)
 					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
-					a_file.put_string (">>,%N%T%T%T")
+					a_file.put_string (", yyDummy>>,%N%T%T%T")
 					a_file.put_integer (1)
 					a_file.put_string (", ")
 					a_file.put_integer (k - i + 1)

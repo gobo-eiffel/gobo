@@ -12,6 +12,10 @@ indexing
 
 class KL_EQUALITY_TESTER [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Status report
 
 	test (v, u: G): BOOLEAN is
