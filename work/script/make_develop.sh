@@ -16,6 +16,7 @@ export GOBO
 echo ''; echo "#### \$GOBO = $GOBO"
 
 # Get binaries to allow bootstraping.
+cd $rootdir
 cd $2
 cp * $GOBO/bin
 cd $rootdir
