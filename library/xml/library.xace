@@ -3,18 +3,6 @@
 <library name="xml" prefix="xm_">
 	<description>
 		description: "Xace file for the Gobo Eiffel XML Library"
-
-		note:
-
-			Please note that you cannot include the root ("xml") cluster
-			and all it's sub-clusters, because there are class name clashes
-			due to the factory in use.
-			You have to select "xml.impl.interface" recursively and then
-			from the "xml.impl" cluster the parsers you wish to compile in.
-			You can choose all, but if you decide to leave out a certain parser
-			you must select its counterpart from "xml.impl.no_*" to keep the
-			factory happy.
-
 		library: "Gobo Eiffel XML Library"
 		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
@@ -33,19 +21,12 @@
 		<cluster name="formatter"/>
 		<cluster name="parser">
 			<option name="abstract" value="true"/>
+			<cluster name="interface"/>
 			<cluster name="eiffel"/>
-			<cluster name="expat" if="${GOBO_XML_EXPAT}"/>
-			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
-		</cluster>
-		<cluster name="impl">
-			<option name="abstract" value="true"/>
-			<cluster name="expat" prefix="impl_expat_" if="${GOBO_XML_EXPAT}">
-				<option name="abstract" value="true"/>
-				<cluster name="api"/>
-				<cluster name="general"/>
+			<cluster name="expat" if="${GOBO_XML_EXPAT}">
 				<cluster name="spec">
 					<option name="abstract" value="true"/>
-					<cluster name="${GOBO_EIFFEL}" prefix="impl_expat_spec_"/>
+					<cluster name="${GOBO_EIFFEL}" prefix="parser_expat_spec_"/>
 				</cluster>
 				<option unless="${GOBO_OS}=windows">
 					<option name="header" value="${EXPAT}/include"/>
@@ -57,6 +38,7 @@
 					<option name="link" value="${EXPAT}/Libs/expat.lib"/>
 				</option>
 			</cluster>
+			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
 	</cluster>
 </library>
