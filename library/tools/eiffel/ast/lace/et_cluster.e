@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,6 +23,30 @@ feature -- Status report
 	is_abstract: BOOLEAN
 			-- Is there no classes in current cluster?
 			-- (i.e. 'abstract' keyword in HACT's LACE.)
+
+	is_fully_abstract: BOOLEAN is
+			-- Are current cluster and recursively all its
+			-- subclusters abstract?
+		local
+			i, nb: INTEGER
+			a_cluster_list: DS_ARRAYED_LIST [ET_CLUSTER]
+		do
+			if is_abstract then
+				Result := True
+				if subclusters /= Void then
+					a_cluster_list := subclusters.clusters
+					nb := a_cluster_list.count
+					from i := 1 until i > nb loop
+						if not a_cluster_list.item (i).is_fully_abstract then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
 
 	is_recursive: BOOLEAN
 			-- Is current cluster recursive, in other words
