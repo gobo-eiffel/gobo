@@ -15,9 +15,8 @@ class UT_ERROR_HANDLER
 
 inherit
 
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-
 	KL_SHARED_STANDARD_FILES
+	KL_SHARED_STREAMS
 
 creation
 
@@ -43,14 +42,13 @@ feature {NONE} -- Initialization
 			-- Create a new error handler ignoring
 			-- all errors, warnings and messages.
 		do
-				-- Default values.
-			-- error_file := Void
-			-- warning_file := Void
-			-- message_file := Void
+			error_file := null_output_stream
+			warning_file := null_output_stream
+			message_file := null_output_stream
 		ensure
-			error_file_set: error_file = Void
-			warning_file_set: warning_file = Void
-			message_file_set: message_file = Void
+			error_file_set: error_file = null_output_stream
+			warning_file_set: warning_file = null_output_stream
+			message_file_set: message_file = null_output_stream
 		end
 
 feature -- Reporting
@@ -60,10 +58,7 @@ feature -- Reporting
 		require
 			an_error_not_void: an_error /= Void
 		do
-			if error_file /= Void then
-				error_file.put_string (message (an_error))
-				error_file.put_character ('%N')
-			end
+			error_file.put_line (message (an_error))
 		end
 
 	report_warning (a_warning: UT_ERROR) is
@@ -71,10 +66,7 @@ feature -- Reporting
 		require
 			a_warning_not_void: a_warning /= Void
 		do
-			if warning_file /= Void then
-				warning_file.put_string (message (a_warning))
-				warning_file.put_character ('%N')
-			end
+			warning_file.put_line (message (a_warning))
 		end
 
 	report_message (a_message: UT_ERROR) is
@@ -82,35 +74,38 @@ feature -- Reporting
 		require
 			a_message_not_void: a_message /= Void
 		do
-			if message_file /= Void then
-				message_file.put_string (message (a_message))
-				message_file.put_character ('%N')
-			end
+			message_file.put_line (message (a_message))
 		end
 
 feature -- Access
 
-	error_file: like OUTPUT_STREAM_TYPE
+	error_file: KI_TEXT_OUTPUT_STREAM
 			-- File where errors are logged
 
-	warning_file: like OUTPUT_STREAM_TYPE
+	warning_file: KI_TEXT_OUTPUT_STREAM
 			-- File where warnings are logged
 
-	message_file: like OUTPUT_STREAM_TYPE
+	message_file: KI_TEXT_OUTPUT_STREAM
 			-- File where messages are logged
 
 feature -- Setting
 
 	set_error_file (a_file: like error_file) is
 			-- Set `error_file' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
 		do
 			error_file := a_file
 		ensure
 			error_file_set: error_file = a_file
 		end
 
-	set_warning_file (a_file: like error_file) is
+	set_warning_file (a_file: like warning_file) is
 			-- Set `warning_file' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
 		do
 			warning_file := a_file
 		ensure
@@ -119,6 +114,9 @@ feature -- Setting
 
 	set_message_file (a_file: like message_file) is
 			-- Set `message_file' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
 		do
 			message_file := a_file
 		ensure
@@ -136,5 +134,14 @@ feature {NONE} -- Implementation
 		ensure
 			message_not_void: Result /= Void
 		end
+
+invariant
+
+	error_file_not_void: error_file /= Void
+	error_file_open_write: error_file.is_open_write
+	warning_file_not_void: warning_file /= Void
+	warning_file_open_write: warning_file.is_open_write
+	message_file_not_void: message_file /= Void
+	message_file_open_write: message_file.is_open_write
 
 end -- class UT_ERROR_HANDLER

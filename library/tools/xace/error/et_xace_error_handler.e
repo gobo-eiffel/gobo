@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 		do
 			error_file := std.error
 			warning_file := std.error
-			message_file := Void
+			message_file := null_output_stream
 		ensure
 			error_file_set: error_file = std.error
 			warning_file_set: warning_file = std.error
-			message_file_set: message_file = Void
+			message_file_set: message_file = null_output_stream
 		end
 
 feature -- Status report
@@ -45,7 +45,7 @@ feature -- Status report
 	is_verbose: BOOLEAN is
 			-- Is error handler in verbose mode?
 		do
-			Result := (message_file /= Void)
+			Result := (message_file /= null_output_stream)
 		end
 
 	has_error: BOOLEAN is
@@ -67,7 +67,7 @@ feature -- Status setting
 	disable_verbose is
 			-- Set `is_verbose' to False.
 		do
-			message_file := Void
+			message_file := null_output_stream
 		ensure
 			not_verbose: not is_verbose
 		end
