@@ -12,6 +12,40 @@ indexing
 
 class KL_CHARACTER_ROUTINES
 
+inherit
+
+	KL_SHARED_PLATFORM
+
+feature -- Access
+
+	next (c: CHARACTER): CHARACTER is
+			--  Next character
+		require
+			c_small_enough: c.code < Platform.Maximum_character_code
+		do
+#ifdef VE
+			Result.from_integer (c.code + 1)
+#else
+			Result := c.next
+#endif
+		ensure
+			definition: Result.count = c.code + 1
+		end
+
+	previous (c: CHARACTER): CHARACTER is
+			--  Previous character
+		require
+			c_small_enough: c.code > Platform.Minimum_character_code
+		do
+#ifdef VE
+			Result.from_integer (c.code - 1)
+#else
+			Result := c.previous
+#endif
+		ensure
+			definition: Result.count = c.code - 1
+		end
+
 feature -- Conversion
 
 	to_bit_8 (a_c: CHARACTER): BIT 8 is
