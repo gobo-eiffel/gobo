@@ -140,7 +140,7 @@ feature {NONE} -- Processing
 							-- Report the validity error VHPR-1.
 						current_class := a_cycle.first
 						error_handler.report_compilation_status (Current)
-						error_handler.report_vhpr1_error (current_class, a_cycle)
+						error_handler.report_vhpr1a_error (current_class, a_cycle)
 					else
 						class_sorter.wipe_out
 					end
@@ -261,10 +261,10 @@ feature {NONE} -- Ancestors
 					if not a_class.is_preparsed then
 						if a_parents = universe.any_parents then
 								-- Error: class ANY not in universe (VTCT, ETL2 p.199).
-							error_handler.report_vtct_any_error (current_class)
+							error_handler.report_vtct0c_error (current_class)
 						else
 								-- Error: class not in universe (VTCT, ETL2 p.199).
-							error_handler.report_vtct_error (current_class, a_type)
+							error_handler.report_vtct0a_error (current_class, a_type)
 						end
 					end
 					has_error := True
@@ -312,7 +312,7 @@ feature {NONE} -- Ancestors
 					-- twice in the call to `same_syntactical_type' below.
 				if not anc_type.same_syntactical_type (a_parent_type, current_class, current_class, universe) then
 					set_fatal_error (current_class)
-					error_handler.report_gagp_error (current_class, anc_type, a_parent_type)
+					error_handler.report_gvagp0a_error (current_class, anc_type, a_parent_type)
 				end
 			else
 				a_parameters := a_parent.actual_parameters
@@ -335,7 +335,7 @@ feature {NONE} -- Ancestors
 								a_type := a_type.resolved_formal_parameters (a_parameters)
 							end
 							set_fatal_error (current_class)
-							error_handler.report_gagp_error (current_class, anc_type, a_type)
+							error_handler.report_gvagp0a_error (current_class, anc_type, a_type)
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1

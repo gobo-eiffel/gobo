@@ -2247,7 +2247,7 @@ feature {NONE} -- Processing
 					-- Syntax error: character quote should be declared
 					-- as '%'' and not as ''' in character constant.
 				column := column + 1
-				error_handler.report_SCTQ_error (current_position)
+				error_handler.report_SCTQ_error (filename, current_position)
 				column := column - 1
 			end
 			last_literal_start := 2
@@ -2313,7 +2313,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%A'
 			when 'b' then
@@ -2321,7 +2321,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%B'
 			when 'c' then
@@ -2329,7 +2329,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%C'
 			when 'd' then
@@ -2337,7 +2337,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%D'
 			when 'f' then
@@ -2345,7 +2345,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%F'
 			when 'h' then
@@ -2353,7 +2353,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%H'
 			when 'l' then
@@ -2361,7 +2361,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%L'
 			when 'n' then
@@ -2369,7 +2369,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%N'
 			when 'q' then
@@ -2377,7 +2377,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%Q'
 			when 'r' then
@@ -2385,7 +2385,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%R'
 			when 's' then
@@ -2393,7 +2393,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%S'
 			when 't' then
@@ -2401,7 +2401,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%T'
 			when 'u' then
@@ -2409,7 +2409,7 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%U'
 			when 'v' then
@@ -2417,14 +2417,14 @@ feature {NONE} -- Processing
 					-- %l where l is a letter code should be in
 					-- upper-case in character constant.
 				column := column + 2
-				error_handler.report_SCCU_error (current_position)
+				error_handler.report_SCCU_error (filename, current_position)
 				column := column - 2
 				a_value := '%V'
 			else
 					-- Syntax error: invalid special character
 					-- %l in character constant.
 				column := column + 2
-				error_handler.report_SCSC_error (current_position)
+				error_handler.report_SCSC_error (filename, current_position)
 				column := column - 2
 				a_value := c
 			end

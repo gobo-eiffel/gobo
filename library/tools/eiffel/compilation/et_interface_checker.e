@@ -239,7 +239,7 @@ feature {NONE} -- Signature validity
 			if a_type /= Void and other_type /= Void then
 				if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 				end
 			else
 				-- This case has already been handled in the feature flattener.
@@ -254,7 +254,7 @@ feature {NONE} -- Signature validity
 						other_type := other_arguments.formal_argument (i).type
 						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 							set_fatal_error (current_class)
-							error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+							error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 						end
 						i := i + 1
 					end
@@ -298,7 +298,7 @@ feature {NONE} -- Signature validity
 				if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 					set_fatal_error (current_class)
 					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 				end
 			else
 				-- This case has already been handled in the feature flattener.
@@ -314,7 +314,7 @@ feature {NONE} -- Signature validity
 						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 							set_fatal_error (current_class)
 							an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-							error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+							error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 						end
 						i := i + 1
 					end

@@ -213,7 +213,7 @@ feature -- Error handling
 	report_error (a_message: STRING) is
 			-- Print error message.
 		do
-			error_handler.report_syntax_error (current_position)
+			error_handler.report_syntax_error (filename, current_position)
 		end
 
 end

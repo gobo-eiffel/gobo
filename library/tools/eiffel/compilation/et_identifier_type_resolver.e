@@ -194,10 +194,10 @@ feature {NONE} -- Validity
 			a_type.compute_size
 			if a_type.has_size_error then
 				set_fatal_error (current_class)
-				error_handler.report_vtbt_error (current_class, a_type)
+				error_handler.report_vtbt0c_error (current_class, a_type)
 			elseif a_type.size = 0 and a_type.constant.is_negative then
 					-- Not considered as a fatal error by gelint.
-				error_handler.report_vtbt_minus_zero_error (current_class, a_type)
+				error_handler.report_vtbt0d_error (current_class, a_type)
 			end
 		end
 

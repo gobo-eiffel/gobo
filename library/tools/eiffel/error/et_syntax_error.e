@@ -5,7 +5,7 @@ indexing
 		"Eiffel syntax errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,32 +22,59 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_position: ET_POSITION) is
-			-- Create a new Eiffel syntax error at position `a_position'.
+	make (a_filename: STRING; a_position: ET_POSITION) is
+			-- Create a new Eiffel syntax error at `a_position' in `a_filename'.
 		require
+			a_filename_not_void: a_filename /= Void
 			a_position_not_void: a_position /= Void
 		do
+			code := default_code
+			etl_code := default_code
+			default_template := default_validity_template
+			filename := a_filename
+			position := a_position
 			create parameters.make (1, 1)
 			parameters.put (a_position.to_text, 1)
+			set_compilers (True)
+		ensure
+			filename_set: filename = a_filename
+			position_set: position = a_position
+			all_reported: all_reported
+			all_fatal: all_fatal
 		end
 
 feature -- Access
 
-	default_template: STRING is
-			-- Default template used to built the error message
-		once
-			Result := "Syntax error.%N$1%N"
+	filename: STRING
+			-- Name of file where current error occurred
+
+feature -- Setting
+
+	set_filename (a_filename: like filename) is
+			-- Set `filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			filename := a_filename
+		ensure
+			filename_set: filename = a_filename
 		end
 
-	code: STRING is
-			-- Error code
-		once
-			Result := "SERR"
+	set_current_class (a_class: like current_class) is
+			-- Set `current_class' to `a_class'.
+		do
+			current_class := a_class
+		ensure
+			current_class_set: current_class = a_class
 		end
 
-invariant
+feature {NONE} -- Implementation
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = position
+	default_validity_template: STRING is "Syntax error:%N$1"
+	default_code: STRING is "gssss"
+			-- Default values
+
+	ssel_default_template: STRING is "SSEL: empty lines not allowed in middle of multi-line manifest strings.%N$1"
+			-- "SSEL: Syntax String Empty Line"
 
 end

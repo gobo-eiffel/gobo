@@ -205,7 +205,7 @@ feature {NONE} -- Feature recording
 				if named_features.found then
 					other_feature := named_features.found_item
 					set_fatal_error (current_class)
-					error_handler.report_vmfna_error (current_class, other_feature, a_feature)
+					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature.flattened_feature)
 				else
 					named_features.put_last (a_feature, a_name)
 				end
@@ -347,7 +347,7 @@ feature {NONE} -- Feature recording
 				from rename_table.start until rename_table.after loop
 					a_rename := rename_table.item_for_iteration
 					set_fatal_error (current_class)
-					error_handler.report_vhrc1_error (current_class, a_parent, a_rename)
+					error_handler.report_vhrc1a_error (current_class, a_parent, a_rename)
 					rename_table.forth
 				end
 				rename_table.wipe_out
@@ -356,7 +356,7 @@ feature {NONE} -- Feature recording
 				from undefine_table.start until undefine_table.after loop
 					a_name := undefine_table.item_for_iteration
 					set_fatal_error (current_class)
-					error_handler.report_vdus1_error (current_class, a_parent, a_name)
+					error_handler.report_vdus1a_error (current_class, a_parent, a_name)
 					undefine_table.forth
 				end
 				undefine_table.wipe_out
@@ -365,7 +365,7 @@ feature {NONE} -- Feature recording
 				from redefine_table.start until redefine_table.after loop
 					a_name := redefine_table.item_for_iteration
 					set_fatal_error (current_class)
-					error_handler.report_vdrs1_error (current_class, a_parent, a_name)
+					error_handler.report_vdrs1a_error (current_class, a_parent, a_name)
 					redefine_table.forth
 				end
 				redefine_table.wipe_out
@@ -374,7 +374,7 @@ feature {NONE} -- Feature recording
 				from select_table.start until select_table.after loop
 					a_name := select_table.item_for_iteration
 					set_fatal_error (current_class)
-					error_handler.report_vmss1_error (current_class, a_parent, a_name)
+					error_handler.report_vmss1a_error (current_class, a_parent, a_name)
 					select_table.forth
 				end
 				select_table.wipe_out
@@ -449,7 +449,7 @@ feature {NONE} -- Feature adaptation
 							-- The flatten process will have to fail.
 						set_fatal_error (current_class)
 					end
-					error_handler.report_vhrc2_error (current_class, a_parent, rename_table.found_item, a_rename)
+					error_handler.report_vhrc2a_error (current_class, a_parent, rename_table.found_item, a_rename)
 				end
 				i := i + 1
 			end
@@ -479,7 +479,7 @@ feature {NONE} -- Feature adaptation
 						-- Feature name `a_name' appears twice in the
 						-- Undefine clause. This is not considered as
 						-- a fatal error by gelint.
-					error_handler.report_vdus4_error (current_class, a_parent, undefine_table.found_item, a_name)
+					error_handler.report_vdus4a_error (current_class, a_parent, undefine_table.found_item, a_name)
 				end
 				i := i + 1
 			end
@@ -509,7 +509,7 @@ feature {NONE} -- Feature adaptation
 						-- Feature name `a_name' appears twice in the
 						-- Redefine clause. This is not considered as
 						-- a fatal error by gelint.
-					error_handler.report_vdrs3_error (current_class, a_parent, redefine_table.found_item, a_name)
+					error_handler.report_vdrs3a_error (current_class, a_parent, redefine_table.found_item, a_name)
 				end
 				i := i + 1
 			end
@@ -539,7 +539,7 @@ feature {NONE} -- Feature adaptation
 						-- Feature name `a_name' appears twice in the
 						-- Select clause. This is not considered as
 						-- a fatal error by gelint.
-					error_handler.report_vmss2_error (current_class, a_parent, select_table.found_item, a_name)
+					error_handler.report_vmss2a_error (current_class, a_parent, select_table.found_item, a_name)
 				end
 				i := i + 1
 			end
@@ -628,7 +628,7 @@ feature {NONE} -- Feature processing
 			else
 				if a_feature.has_selected_feature and not a_feature.is_selected then
 						-- This is not a fatal error for gelint.
-					error_handler.report_vmss3_error (current_class, a_feature.selected_feature.inherited_feature)
+					error_handler.report_vmss3a_error (current_class, a_feature.selected_feature.inherited_feature)
 				end
 				if a_feature.is_redeclared then
 					Result := redeclared_flattened_feature (a_feature.redeclared_feature)
@@ -741,7 +741,7 @@ feature {NONE} -- Feature processing
 					if l_effective /= Void and then not l_inherited_feature.same_version (l_effective) then
 							-- Error: two effective features which are not shared.
 						set_fatal_error (current_class)
-						error_handler.report_vmfnc_error (current_class, l_effective.inherited_feature, l_inherited_feature.inherited_feature)
+						error_handler.report_vmfn0c_error (current_class, l_effective.inherited_feature, l_inherited_feature.inherited_feature)
 					end
 					if not l_feature_found then
 						l_effective := l_inherited_feature
@@ -1214,7 +1214,7 @@ feature {NONE} -- Feature adaptation validity
 							-- Need to use 'undefine' to redeclare an
 							-- effective feature to a deferred feature.
 							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrd5_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+						error_handler.report_vdrd5a_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
 					else
 							-- Error: No need to 'redefine' to redeclare
 							-- a deferred feature to an effective feature.
@@ -1235,14 +1235,14 @@ feature {NONE} -- Feature adaptation validity
 						-- redeclare an effective feature to a deferred
 						-- feature.
 					set_fatal_error (current_class)
-					error_handler.report_vmfnb_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+					error_handler.report_vmfn0b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
 					error_handler.report_vdrd4c_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
 				end
 			elseif not an_inherited_feature.is_deferred then
 					-- Error: need 'redefine' to redeclare an effective
 					-- feature to an effective feature.
 				set_fatal_error (current_class)
-				error_handler.report_vmfnb_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+				error_handler.report_vmfn0b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
 				error_handler.report_vdrd4b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
 			end
 		end
@@ -1272,7 +1272,7 @@ feature {NONE} -- Feature adaptation validity
 			a_feature_inherited: a_feature.is_inherited
 			a_feature_not_redeclared: not a_feature.is_redeclared
 		local
-			l_inherited_feature: ET_FEATURE
+			l_inherited_feature: ET_FLATTENED_FEATURE
 			l_name: ET_FEATURE_NAME
 		do
 			if a_feature.has_rename then
@@ -1281,12 +1281,12 @@ feature {NONE} -- Feature adaptation validity
 				if l_name.is_infix then
 					if not l_inherited_feature.is_infixable then
 						set_fatal_error (current_class)
-						error_handler.report_vhrc5_error (current_class, a_feature.parent, a_feature.new_name, l_inherited_feature)
+						error_handler.report_vhrc5a_error (current_class, a_feature.parent, a_feature.new_name, l_inherited_feature)
 					end
 				elseif l_name.is_prefix then
 					if not l_inherited_feature.is_prefixable then
 						set_fatal_error (current_class)
-						error_handler.report_vhrc4_error (current_class, a_feature.parent, a_feature.new_name, l_inherited_feature)
+						error_handler.report_vhrc4a_error (current_class, a_feature.parent, a_feature.new_name, l_inherited_feature)
 					end
 				end
 			end
@@ -1305,7 +1305,7 @@ feature {NONE} -- Feature adaptation validity
 				l_inherited_feature := a_feature.precursor_feature
 				if l_inherited_feature.is_deferred then
 						-- This is not a fatal error for gelint.
-					error_handler.report_vdus3_error (current_class, a_feature.parent, a_feature.undefine_name)
+					error_handler.report_vdus3a_error (current_class, a_feature.parent, a_feature.undefine_name)
 				end
 				if l_inherited_feature.is_frozen then
 					set_fatal_error (current_class)
@@ -1489,11 +1489,11 @@ feature {NONE} -- Signature validity
 			if a_type = Void then
 				if other_type /= Void then
 					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 				end
 			elseif other_type = Void then
 				set_fatal_error (current_class)
-				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
 					a_type.has_qualified_type (current_class, universe) or
@@ -1504,7 +1504,7 @@ feature {NONE} -- Signature validity
 					has_qualified_type := True
 				else
 					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 				end
 			end
 			an_arguments := a_feature.arguments
@@ -1512,16 +1512,16 @@ feature {NONE} -- Signature validity
 			if an_arguments = Void then
 				if other_arguments /= Void then
 					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 				end
 			elseif other_arguments = Void then
 				set_fatal_error (current_class)
-				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 			else
 				nb := an_arguments.count
 				if other_arguments.count /= nb then
 					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 				else
 					from i := 1 until i > nb loop
 						a_type := an_arguments.formal_argument (i).type
@@ -1536,7 +1536,7 @@ feature {NONE} -- Signature validity
 								has_qualified_type := True
 							else
 								set_fatal_error (current_class)
-								error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+								error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 							end
 						end
 						i := i + 1
@@ -1582,12 +1582,12 @@ feature {NONE} -- Signature validity
 				if other_type /= Void then
 					set_fatal_error (current_class)
 					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 				end
 			elseif other_type = Void then
 				set_fatal_error (current_class)
 				an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
 					a_type.has_qualified_type (current_class, universe) or
@@ -1599,7 +1599,7 @@ feature {NONE} -- Signature validity
 				else
 					set_fatal_error (current_class)
 					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 				end
 			end
 			an_arguments := a_flattened_feature.arguments
@@ -1608,18 +1608,18 @@ feature {NONE} -- Signature validity
 				if other_arguments /= Void then
 					set_fatal_error (current_class)
 					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 				end
 			elseif other_arguments = Void then
 				set_fatal_error (current_class)
 				an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 			else
 				nb := an_arguments.count
 				if other_arguments.count /= nb then
 					set_fatal_error (current_class)
 					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 				else
 					from i := 1 until i > nb loop
 						a_type := an_arguments.formal_argument (i).type
@@ -1635,7 +1635,7 @@ feature {NONE} -- Signature validity
 							else
 								set_fatal_error (current_class)
 								an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-								error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+								error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 							end
 						end
 						i := i + 1

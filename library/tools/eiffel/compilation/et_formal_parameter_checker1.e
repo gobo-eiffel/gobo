@@ -74,14 +74,14 @@ feature -- Validity checking
 							-- name of a class in the universe.
 						set_fatal_error (current_class)
 						other_class := universe.eiffel_class (a_name)
-						error_handler.report_vcfg1_error (current_class, a_formal, other_class)
+						error_handler.report_vcfg1a_error (current_class, a_formal, other_class)
 					else
 						from j := 1 until j >= i loop
 							other_formal := a_parameters.formal_parameter (j)
 							if other_formal.name.same_identifier (a_name) then
 									-- There are two formal parameters with the same name.
 								set_fatal_error (current_class)
-								error_handler.report_vcfg2_error (current_class, other_formal, a_formal)
+								error_handler.report_vcfg2a_error (current_class, other_formal, a_formal)
 							end
 							j := j + 1
 						end
@@ -132,7 +132,7 @@ feature {NONE} -- Constraint validity
 		do
 				-- It is not valid to have "BIT name" in constraints.
 			set_fatal_error (current_class)
-			error_handler.report_vcfg3_bit_name_error (current_class, a_type)
+			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
 	check_bit_n_constraint (a_type: ET_BIT_N; a_formal: ET_FORMAL_PARAMETER) is
@@ -148,7 +148,7 @@ feature {NONE} -- Constraint validity
 			a_formal_not_void: a_formal /= Void
 		do
 				-- Not considered as a fatal error by gelint.
-			error_handler.report_vcfg3_bit_n_error (current_class, a_type)
+			error_handler.report_vcfg3b_error (current_class, a_type)
 			if a_formal.constraint = a_type then
 					-- `a_type' is the constraint of `a_formal'.
 					-- Set its base type if valid.
@@ -178,7 +178,7 @@ feature {NONE} -- Constraint validity
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error (current_class)
-				error_handler.report_vtct_error (current_class, a_type)
+				error_handler.report_vtct0a_error (current_class, a_type)
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
@@ -186,11 +186,11 @@ feature {NONE} -- Constraint validity
 			elseif not a_class.is_generic then
 				if a_type.is_generic then
 					set_fatal_error (current_class)
-					error_handler.report_vtug1_error (current_class, a_type)
+					error_handler.report_vtug1a_error (current_class, a_type)
 				end
 			elseif not a_type.is_generic then
 				set_fatal_error (current_class)
-				error_handler.report_vtug2_error (current_class, a_type)
+				error_handler.report_vtug2a_error (current_class, a_type)
 			else
 				a_formals := a_class.formal_parameters
 				an_actuals := a_type.actual_parameters
@@ -200,7 +200,7 @@ feature {NONE} -- Constraint validity
 				end
 				if an_actuals.count /= a_formals.count then
 					set_fatal_error (current_class)
-					error_handler.report_vtug2_error (current_class, a_type)
+					error_handler.report_vtug2a_error (current_class, a_type)
 				else
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
@@ -255,7 +255,7 @@ feature {NONE} -- Constraint validity
 						-- considered as a fatal error by gelint. The
 						-- base class of this formal parameter will be
 						-- considered to be ANY.
-					error_handler.report_vcfg3a_error (current_class, a_formal, a_type)
+					error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
 				elseif index1 < index2 then
 						-- This formal is constrained by another formal
 						-- parameter appearing before (e.g. "A [G, H -> G]").
@@ -266,7 +266,7 @@ feature {NONE} -- Constraint validity
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
-					error_handler.report_vcfg3b_error (current_class, a_formal, a_type)
+					error_handler.report_vcfg3e_error (current_class, a_formal, a_type)
 				else
 					check last_case: index1 > index2 end
 						-- This formal is constrained by another formal
@@ -278,7 +278,7 @@ feature {NONE} -- Constraint validity
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
-					error_handler.report_vcfg3c_error (current_class, a_formal, a_type)
+					error_handler.report_vcfg3f_error (current_class, a_formal, a_type)
 				end
 			else
 				if a_parameters = Void or else index1 > a_parameters.count then
@@ -289,14 +289,14 @@ feature {NONE} -- Constraint validity
 						-- as a fatal error by gelint. The base class of this
 						-- formal parameter will be the base class of its 
 						-- constraint ("ARRAY" in the example above).
-					error_handler.report_vcfg3e_error (current_class, a_formal, a_type)
+					error_handler.report_vcfg3h_error (current_class, a_formal, a_type)
 				elseif index1 > index2 then
 						-- `a_formal' is constrained by another formal parameter
 						-- appearing after (e.g. "A [G -> ARRAY [H], H]"). This is not
 						-- considered as a fatal error by gelint. The base class of this
 						-- formal parameter will be the base class of its constraint
 						-- ("ARRAY" in the example above).
-					error_handler.report_vcfg3f_error (current_class, a_formal, a_type)
+					error_handler.report_vcfg3i_error (current_class, a_formal, a_type)
 						-- Check for cycles (e.g. "A [G -> ARRAY [H], H -> LIST [G]").
 					other_formal := a_parameters.formal_parameter (index1)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
@@ -325,7 +325,7 @@ feature {NONE} -- Constraint validity
 		do
 				-- It is not valid to have anchored types in constraints.
 			set_fatal_error (current_class)
-			error_handler.report_vcfg3_like_error (current_class, a_type)
+			error_handler.report_vcfg3c_error (current_class, a_type)
 		end
 
 	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER) is
@@ -396,7 +396,7 @@ feature {NONE} -- Constraint cycles
 						-- base class of the formal parameters involved in
 						-- this cycle will be considered to be ANY.
 					has_cycle := True
-					error_handler.report_vcfg3d_error (current_class, direct_formal_parameter_sorter.cycle)
+					error_handler.report_vcfg3g_error (current_class, direct_formal_parameter_sorter.cycle)
 				end
 				a_parameters := current_class.formal_parameters
 				if a_parameters = Void then
@@ -444,7 +444,7 @@ feature {NONE} -- Constraint cycles
 						-- took care of the case were the cycle only involves formal
 						-- parameters) the base class of its constraint if the
 						-- constraint is itself a formal parameter.
-					error_handler.report_vcfg3g_error (current_class, formal_parameter_sorter.cycle)
+					error_handler.report_vcfg3j_error (current_class, formal_parameter_sorter.cycle)
 				end
 				formal_parameter_sorter.wipe_out
 			end

@@ -363,16 +363,16 @@ feature {NONE} -- AST factory
 				if Result.has_size_error then
 					if last_class /= Void then
 						last_class.set_syntax_error
-						error_handler.report_vtbt_error (last_class, Result)
+						error_handler.report_vtbt0c_error (last_class, Result)
 					else
-						error_handler.report_syntax_error (Result.constant.position)
+						error_handler.report_syntax_error (filename, Result.constant.position)
 					end
 				elseif Result.size = 0 and Result.constant.is_negative then
 						-- Not considered as a fatal error by gelint.
 					if last_class /= Void then
-						error_handler.report_vtbt_minus_zero_error (last_class, Result)
+						error_handler.report_vtbt0d_error (last_class, Result)
 					else
-						error_handler.report_syntax_error (Result.constant.position)
+						error_handler.report_syntax_error (filename, Result.constant.position)
 					end
 				end
 			end
@@ -673,7 +673,7 @@ feature -- Error handling
 		require
 			a_position_not_void: a_position /= Void
 		do
-			error_handler.report_syntax_error (a_position)
+			error_handler.report_syntax_error (filename, a_position)
 			if last_class /= Void then
 				last_class.set_syntax_error
 			end

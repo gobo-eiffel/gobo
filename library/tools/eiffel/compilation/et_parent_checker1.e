@@ -74,7 +74,7 @@ feature {NONE} -- Parent validity
 		do
 				-- It is not valid to have "BIT name" in parent clauses.
 			set_fatal_error (current_class)
-			error_handler.report_vhpr3_bit_name_error (current_class, a_type)
+			error_handler.report_vhpr3a_error (current_class, a_type)
 		end
 
 	check_bit_n_validity (a_type: ET_BIT_N; a_parent: ET_PARENT) is
@@ -91,7 +91,7 @@ feature {NONE} -- Parent validity
 				-- TODO: cannot inherit from 'BIT N'.
 			else
 					-- Not considered as a fatal error by gelint.
-				error_handler.report_vhpr3_bit_n_error (current_class, a_type)
+				error_handler.report_vhpr3b_error (current_class, a_type)
 			end
 		end
 
@@ -114,7 +114,7 @@ feature {NONE} -- Parent validity
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error (current_class)
-				error_handler.report_vtct_error (current_class, a_type)
+				error_handler.report_vtct0a_error (current_class, a_type)
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
@@ -122,11 +122,11 @@ feature {NONE} -- Parent validity
 			elseif not a_class.is_generic then
 				if a_type.is_generic then
 					set_fatal_error (current_class)
-					error_handler.report_vtug1_error (current_class, a_type)
+					error_handler.report_vtug1a_error (current_class, a_type)
 				end
 			elseif not a_type.is_generic then
 				set_fatal_error (current_class)
-				error_handler.report_vtug2_error (current_class, a_type)
+				error_handler.report_vtug2a_error (current_class, a_type)
 			else
 				a_formals := a_class.formal_parameters
 				an_actuals := a_type.actual_parameters
@@ -136,7 +136,7 @@ feature {NONE} -- Parent validity
 				end
 				if an_actuals.count /= a_formals.count then
 					set_fatal_error (current_class)
-					error_handler.report_vtug2_error (current_class, a_type)
+					error_handler.report_vtug2a_error (current_class, a_type)
 				else
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
@@ -161,7 +161,7 @@ feature {NONE} -- Parent validity
 		do
 				-- It is not valid to have anchored types in parent clauses.
 			set_fatal_error (current_class)
-			error_handler.report_vhpr3_like_error (current_class, a_type)
+			error_handler.report_vhpr3c_error (current_class, a_type)
 		end
 
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE; a_parent: ET_PARENT) is

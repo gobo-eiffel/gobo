@@ -209,7 +209,7 @@ creation
 					-- Syntax error: missing character / at end
 					-- of special character specification %/code/.
 				column := column + text_count
-				error_handler.report_SCAS_error (current_position)
+				error_handler.report_SCAS_error (filename, current_position)
 				last_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
@@ -218,7 +218,7 @@ creation
 					-- Syntax error: missing ASCII code in
 					-- special character specification %/code/.
 				column := column + 3
-				error_handler.report_SCAC_error (current_position)
+				error_handler.report_SCAC_error (filename, current_position)
 				last_et_position_value := current_position
 				column := column - 3
 				last_token := E_CHARERR
@@ -226,7 +226,7 @@ creation
 \'\'		{
 					-- Syntax error: missing character between quotes.
 				column := column + 1
-				error_handler.report_SCQQ_error (current_position)
+				error_handler.report_SCQQ_error (filename, current_position)
 				last_et_position_value := current_position
 				column := column - 1
 				last_token := E_CHARERR
@@ -235,7 +235,7 @@ creation
 					-- Syntax error: missing quote at
 					-- end of character constant.
 				column := column + text_count
-				error_handler.report_SCEQ_error (current_position)
+				error_handler.report_SCEQ_error (filename, current_position)
 				last_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
@@ -425,7 +425,7 @@ creation
 					-- % at end of line in multi-line manifest strings.
 				column := yy_column - 1
 				line := yy_line
-				error_handler.report_SSNS_error (current_position)
+				error_handler.report_SSNS_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				more
@@ -439,7 +439,7 @@ creation
 					-- character specification %/code/ in manifest string.
 				column := yy_column
 				line := yy_line
-				error_handler.report_SSAS_error (current_position)
+				error_handler.report_SSAS_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				more
@@ -449,7 +449,7 @@ creation
 					-- specification %/code/ in manifest string.
 				column := yy_column
 				line := yy_line
-				error_handler.report_SSAC_error (current_position)
+				error_handler.report_SSAC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				more
@@ -460,7 +460,7 @@ creation
 					-- upper-case in manifest strings.
 				column := yy_column - 1
 				line := yy_line
-				error_handler.report_SSCU_error (current_position)
+				error_handler.report_SSCU_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				more
@@ -490,7 +490,7 @@ creation
 					-- in manifest strings.
 				column := yy_column - 1
 				line := yy_line
-				error_handler.report_SSSC_error (current_position)
+				error_handler.report_SSSC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				more
@@ -500,7 +500,7 @@ creation
 					-- %l in manifest strings.
 				column := yy_column
 				line := yy_line
-				error_handler.report_SSSC_error (current_position)
+				error_handler.report_SSSC_error (filename, current_position)
 				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
@@ -511,7 +511,7 @@ creation
 					-- Syntax error: Invalid new-line in manifest string.
 				column := 1
 				line := yy_line
-				error_handler.report_SSNL_error (current_position)
+				error_handler.report_SSNL_error (filename, current_position)
 				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
@@ -523,7 +523,7 @@ creation
 					-- end of manifest string.
 				column := yy_column
 				line := yy_line
-				error_handler.report_SSEQ_error (current_position)
+				error_handler.report_SSEQ_error (filename, current_position)
 				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
@@ -561,7 +561,7 @@ creation
 					-- multi-line manifest string.
 				column := 1
 				line := yy_line - 1
-				error_handler.report_SSEL_error (current_position)
+				error_handler.report_SSEL_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				more
@@ -571,7 +571,7 @@ creation
 					-- of line in multi-line manifest string.
 				column := yy_column - 1
 				line := yy_line
-				error_handler.report_SSNP_error (current_position)
+				error_handler.report_SSNP_error (filename, current_position)
 				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
@@ -583,7 +583,7 @@ creation
 					-- of line in multi-line manifest string.
 				column := yy_column
 				line := yy_line
-				error_handler.report_SSNP_error (current_position)
+				error_handler.report_SSNP_error (filename, current_position)
 				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
@@ -642,7 +642,7 @@ creation
 _(_*[0-9_]+_*)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
-				error_handler.report_SIFU_error (current_position)
+				error_handler.report_SIFU_error (filename, current_position)
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -654,7 +654,7 @@ _(_*[0-9_]+_*)+	{
 					-- Syntax error: an underscore must be followed
 					-- by three digits and there must not be any
 					-- consecutive group of four digits.
-				error_handler.report_SITD_error (current_position)
+				error_handler.report_SITD_error (filename, current_position)
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
