@@ -82,13 +82,13 @@ feature -- Access
 	Xml_schema_instance_uri: STRING is "http://www.w3.org/2001/XMLSchema-instance"
 			-- The XML Schema instance document namespace (xsi)
 
-	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2004/10/xpath-datatypes"
+	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2005/02/xpath-datatypes"
 			-- Namespace for additional XPath-defined data types (xdt)
 
-	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2004/10/xpath-functions"
+	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2005/02/xpath-functions"
 			-- XPath standard functions and operators (fn)
 
-	Xpath_errors_uri: STRING is "http://www.w3.org/2004/10/xqt-errors"
+	Xpath_errors_uri: STRING is "http://www.w3.org/2005/02/xqt-errors"
 			-- XPath errors
 
 	Microsoft_uri: STRING is "http://www.w3.org/TR/WD-xsl"

@@ -16,6 +16,7 @@
 		<cluster name="formatter"/>
 		<cluster name="command"/>
 		<cluster name="support"/>
+		<cluster name="transcoder"/>
 		<cluster name="uri"/>
 	</cluster>
 </library>

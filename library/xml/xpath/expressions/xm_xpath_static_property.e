@@ -392,6 +392,16 @@ feature -- Cardinality
 			Result := cardinalities.item (1)
 		end
 
+	cardinality_is_empty: BOOLEAN is
+			-- `True' if only an empty sequence is allowed
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			Result := cardinality_allows_zero and then
+			not cardinality_allows_one and then
+			not cardinality_allows_many
+		end
+
 	cardinality_allows_one: BOOLEAN is
 			-- `True' if a single value is allowed
 		require

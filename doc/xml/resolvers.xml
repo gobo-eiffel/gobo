@@ -95,11 +95,11 @@
 	      whose purpose is to open URIs for that particular scheme.
 	    </para>	    
 	    <para>
-	      The library provides (and registers for you), <classname>XM_FILE_URI_RESOLVER</classname>
-	      to handle the file protocol. If you need to handle other protocols, such as http or ftp,
-	      then you may be able to find them in other libraries (such as ePOSIX for http), or
+	      The library provides <classname>XM_FILE_URI_RESOLVER</classname> and <classname>XM_DATA_URI_RESOLVER</classname>
+	      to handle the file and data protocols. If you need to handle other protocols, such as http or ftp,
+	      then you may be able to find them in other libraries (such as ePOSIX for http and ftp), or
 	      you can write one yourself. After creating such a resolver, you need to register it
-	      by calling <featurename>register_scheme</featurename> on the <classname>XM_FILE_URI_RESOLVER</classname>.
+	      by calling <featurename>register_scheme</featurename> on the <classname>XM_URI_EXTERNAL_RESOLVER</classname>.
 	    </para>
 	    <para>
 	      There is also <classname>XM_STRING_URI_RESOLVER</classname>, which resolves URIs in the <uri>string</uri> scheme

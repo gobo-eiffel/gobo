@@ -93,8 +93,12 @@ feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
+		local
+			a_message: STRING
 		do
-			create Result.make (True)
+			create Result.make (False)
+			a_message := STRING_.concat ("Effective boolean value is not defined for an atomic value of type ", item_type.conventional_name)
+			Result.set_last_error_from_string (a_message, "", "XP0004", Type_error)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

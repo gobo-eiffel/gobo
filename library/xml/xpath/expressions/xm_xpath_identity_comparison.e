@@ -29,7 +29,10 @@ creation
 
 feature -- Access
 
-		item_type: XM_XPATH_ITEM_TYPE is
+	generate_id_emulation_mode: BOOLEAN
+			-- Emulation mode for generate-id() comparisons
+
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -68,13 +71,13 @@ feature -- Optimization
 					create a_single_node.make_optional_node
 					a_type_checker.static_type_check (a_context, first_operand, a_single_node, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0006", Type_error)
 					else
 						set_first_operand (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, token_name (operator), 2)
 						a_type_checker.static_type_check (a_context, second_operand, a_single_node, False, another_role)
 						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0006", Type_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
 						end
@@ -97,10 +100,13 @@ feature -- Evaluation
 			else
 				a_node ?= first_operand.last_evaluated_item
 				if a_node = Void then
-					
-					-- TODO: generate-id emulation for XSLT
-				
-					create Result.make (False)
+					if generate_id_emulation_mode then
+						second_operand.evaluate_item (a_context)
+						a_node ?= second_operand.last_evaluated_item
+						create Result.make (a_node = Void)
+					else
+						create Result.make (False)
+					end
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item.is_error then
@@ -129,10 +135,13 @@ feature -- Evaluation
 			else
 				a_node ?= first_operand.last_evaluated_item
 				if a_node = Void then
-					
-					-- TODO: generate-id emulation for XSLT
-					
-					last_evaluated_item := Void
+					if	generate_id_emulation_mode	then
+						second_operand.evaluate_item (a_context)
+						another_node ?= second_operand.last_evaluated_item
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (another_node = Void)
+					else
+						last_evaluated_item := Void
+					end
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item.is_error then
@@ -140,16 +149,27 @@ feature -- Evaluation
 					else
 						another_node ?= second_operand.last_evaluated_item
 						if another_node = Void then
-					
-							-- TODO: generate-id emulation for XSLT
-							
-							last_evaluated_item := Void
+							if	generate_id_emulation_mode	then
+								create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+							else
+								last_evaluated_item := Void
+							end
 						else
 							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (identity_comparison (a_node, another_node))
 						end
 					end
 				end
 			end
+		end
+
+feature -- Element change
+
+	set_generate_id_emulation is
+			-- Turn on generate-id() emulation mode
+		do
+			generate_id_emulation_mode := True
+		ensure
+			generate_id_emulation_mode_set: generate_id_emulation_mode			
 		end
 
 feature {NONE} -- Implementation
@@ -170,6 +190,10 @@ feature {NONE} -- Implementation
 				Result := global_order_comparer.three_way_comparison (a_node, another_node) > 0
 			end
 		end
+
+invariant
+
+	document_order_operator: operator = Is_token or else operator = Precedes_token or else operator = Follows_token
 
 end
 	

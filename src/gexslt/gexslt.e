@@ -819,8 +819,11 @@ feature {NONE} -- Implementation
 
 	register_non_network_protocols is
 			-- Register additional URI schemes which do not access the network.
+		local
+			a_data_resolver: XM_DATA_URI_RESOLVER
 		do
-			-- Descendants are encouraged to redefine this routine.
+			create a_data_resolver
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (a_data_resolver)
 		end
 			
 	register_network_protocols is

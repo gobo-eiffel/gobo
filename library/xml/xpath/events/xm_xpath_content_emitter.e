@@ -84,20 +84,7 @@ feature -- Document type definition callbacks
 
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
-		local
-			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			a_message: STRING
 		do
-			if attribute_types.has (a_name) then
-				a_message := "Attribute table already present for element "
-				a_message.append_string (a_name)
-				on_error (a_message)
-			end	
-			create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
-			if attribute_types.is_full then
-				attribute_types.resize (attribute_types.count * 2)
-			end
-			attribute_types.put (an_attribute_table, a_name)
 			-- In the future add support for element typing?
 		end
 
@@ -108,26 +95,23 @@ feature -- Document type definition callbacks
 			a_message: STRING
 		do
 			if not attribute_types.has (an_element_name) then
-				a_message := "Attribute table not present for element "
-				a_message.append_string (an_element_name)
-				on_error (a_message)
+				create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
+				attribute_types.force (an_attribute_table, an_element_name)
 			end
 			an_attribute_table := attribute_types.item (an_element_name)
-				check
-					attribute_table_not_void: an_attribute_table /= Void
-					-- because has() returned `True'
-				end
+			check
+				attribute_table_not_void: an_attribute_table /= Void
+				-- because has() returned `True'
+			end
 			if an_attribute_table.has (a_name) then
 				a_message := "Attribute "
 				a_message.append_string (a_name)
 				a_message.append_string (" already present for element ")
 				a_message.append_string (an_element_name)
 				on_error (a_message)
+			else
+				an_attribute_table.force (a_model, a_name)
 			end
-			if an_attribute_table.is_full then
-				an_attribute_table.resize (an_attribute_table.count * 2)
-			end
-			an_attribute_table.put (a_model, a_name)
 		end
 
 	on_entity_declaration (an_entity_name: STRING; is_parameter: BOOLEAN; a_value: STRING;

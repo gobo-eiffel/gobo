@@ -247,22 +247,54 @@ feature {NONE} -- Implementation
 					optimize_position (a_context)
 					if not was_expression_replaced then
 						optimize_last (a_context)
+						if not was_expression_replaced then
 
-						-- TODO not needed until XSLT: if Result = Void then
-												
-						-- We haven't managed to optimize anything yet, so:
+							-- We haven't managed to optimize anything yet, so:
 
-						-- Optimize generate-id(X) = generate-id(Y) as "X is Y"
-						-- This construct is often used in XSLT 1.0 stylesheets.
-						-- Only do this if we know the arguments are singletons, because "is" doesn't
-						-- do first-value extraction.
-
-												
-						-- end
+							optimize_generate_id (a_context)
+						end
 					end
 				end
 			end
 		end
+
+	optimize_generate_id (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Optimize generate-id(X) eq generate-id(Y) as "X is Y".
+			-- This construct is often used in XSLT 1.0 stylesheets.
+			-- Only do this if we know the arguments are singletons, because "is" doesn't
+			-- do first-value extraction.
+		local
+			a_function, another_function: XM_XPATH_SYSTEM_FUNCTION
+			an_identity_comparison: XM_XPATH_IDENTITY_COMPARISON
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			-- TODO - need to check if both functions are in the XPath functions namespace
+			if operator = Fortran_equal_token then
+				a_function ?= first_operand
+				if a_function /= Void and then STRING_.same_string (a_function.name, "generate-id") then
+					another_function ?= second_operand
+					if another_function /= Void and then STRING_.same_string (another_function.name, "generate-id") then
+						if a_function.supplied_argument_count = 1 and then another_function.supplied_argument_count = 1
+							and then not a_function.arguments.item (1).cardinality_allows_many
+							and then another_function.arguments.item (1).cardinality_allows_many then
+							create an_identity_comparison.make (a_function.arguments.item (1), Is_token, another_function.arguments.item (1))
+							an_identity_comparison.set_generate_id_emulation
+							an_identity_comparison.simplify
+							if an_identity_comparison.was_expression_replaced then
+								an_expression := an_identity_comparison.replacement_expression
+							else
+								an_expression := an_identity_comparison
+							end
+							an_expression.analyze (a_context)
+							if an_expression.was_expression_replaced then
+								an_expression := an_expression.replacement_expression
+							end
+							set_replacement (an_expression)
+						end
+					end
+				end
+			end
+		end									
 
 	optimize_count (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Optimise count(x) eq 0 (or gt 0, ne 0, eq 0, etc).

@@ -201,32 +201,32 @@ feature -- Evaluation
 					else
 						a_boolean ?= an_item
 						if a_boolean /= Void then
-							if a_boolean.value then
-								create Result.make (True)
+							an_iterator.forth
+							if an_iterator.after then
+								create Result.make (a_boolean.value)
 							else
-								an_iterator.forth
-								create Result.make (not an_iterator.after)
+								Result := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 							end
 						else
 							a_string ?= an_item
 							if a_string /= Void then
-								if a_string.string_value.count /= 0 then
-									create Result.make (True)
+								an_iterator.forth
+								if an_iterator.after then
+									create Result.make (a_string.string_value.count /= 0)
 								else
-									an_iterator.forth
-									create Result.make (not an_iterator.after)								
+									Result := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 								end
 							else
 								a_number ?= an_item
 								if a_number /= Void then
 									an_iterator.forth
-									if not an_iterator.after then
-										create Result.make (True)
-									else
+									if an_iterator.after then
 										Result := a_number.effective_boolean_value (a_context)
+									else
+										Result := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 									end
 								else
-									create Result.make (True)
+									Result := effective_boolean_value_in_error ("sequence starting with an atomic value other than a boolean, number, or string")
 								end
 							end
 						end
@@ -368,6 +368,15 @@ feature {NONE} -- Implementation
 	
 	parent: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
+
+	effective_boolean_value_in_error (a_reason: STRING): XM_XPATH_BOOLEAN_VALUE is
+			-- Type error for `effective_boolean_value'
+		require
+			reason_not_empty: a_reason /= Void and then a_reason.count > 0
+		do
+			create Result.make (False)
+			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Gexslt_eiffel_type_uri, "EFFECTIVE_BOOLEAN_VALUE", Type_error)
+		end
 
 end
 	
