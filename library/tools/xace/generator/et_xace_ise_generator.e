@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_SYSTEM) is
 			-- Generate a new Ace file from `a_system'.
 		local
 			a_filename: STRING
@@ -81,7 +81,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_ace_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ace_file (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Ace `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -303,22 +303,27 @@ feature {NONE} -- Output
 			end
 			if needed then
 				print_indentation (1, a_file)
+				a_file.put_string (a_cluster.full_name ('_'))
 				a_parent := a_cluster.parent
-				if a_parent /= Void and a_cluster.pathname = Void then
-					a_file.put_string (a_cluster.full_name ('_'))
+				if a_parent /= Void then
 					a_file.put_string (" (")
 					a_file.put_string (a_parent.full_name ('_'))
-					a_file.put_string ("): %"$/")
-					a_file.put_string (a_cluster.name)
-					a_file.put_character ('%"')
-					a_file.put_new_line
+						-- TODO: Note: there is a bug in ISE 5.1 with the
+						-- $ notation. Use full pathname instead.
+					-- if a_cluster.pathname = Void then
+					if False then
+						a_file.put_string ("): %"$/")
+						a_file.put_string (a_cluster.name)
+					else
+						a_file.put_string ("): %"")
+						a_file.put_string (a_cluster.full_pathname)
+					end
 				else
-					a_file.put_string (a_cluster.full_name ('_'))
 					a_file.put_string (": %"")
 					a_file.put_string (a_cluster.full_pathname)
-					a_file.put_character ('%"')
-					a_file.put_new_line
 				end
+				a_file.put_character ('%"')
+				a_file.put_new_line
 				an_option := a_cluster.options
 				if an_option /= Void then
 					print_indentation (2, a_file)
