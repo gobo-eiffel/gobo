@@ -36,6 +36,11 @@ inherit
 			{NONE} all
 		end
 
+	GEANT_SHARED_PROPERTIES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_with_filename
@@ -57,9 +62,7 @@ feature {NONE} -- Initialization
 		do
 			build_filename := a_filename
 			if not file_system.is_file_readable (build_filename.out) then
-				print ("cannot read build file '" + build_filename.out + "'")
-				print ("%NBUILD FAILED !%N")
-				Exceptions.die (1)
+				exit_application (1, "cannot read build file '" + build_filename.out + "'")
 			end
 
 			if a_variables = Void then
@@ -203,9 +206,7 @@ feature -- Processing
 					if target_with_name (ucs) /= Void then
 						tmp_start_target_name := ucs
 					else
-						print ("geant error: unknown target: " + a_start_target_name.out + "%N")
-						print ("%NBUILD FAILED !%N")
-						Exceptions.die (1)
+						exit_application (1, "geant error: unknown target: " + a_start_target_name.out + "%N")
 					end
 				end
 
@@ -235,15 +236,11 @@ feature -- Processing
 				end
 			else
 				reset
-				print ("Parsing error in file %"" + build_filename.out + "%"%N")
-				print ("%NBUILD FAILED !%N")
-				Exceptions.die (1)
+				exit_application (1, "Parsing error in file %"" + build_filename.out + "%"%N")
 			end
 
 			if start_target_name = Void or else start_target_name.count = 0 then
-				print ("Invalid start target%N")
-				print ("%NBUILD FAILED !%N")
-				Exceptions.die (1)
+				exit_application (1, "Invalid start target%N")
 			end
 
 		ensure
@@ -262,7 +259,7 @@ feature -- Processing
 		do
 				-- Get dependent targets:
 			a_target := a_depend_targets.item
-			if verbose then
+			debug ("geant")
 				print("**pushing target : " + a_target.name + "%N")
 			end
 			a_tmp_dependent_targets := a_target.dependent_targets
@@ -318,8 +315,10 @@ feature -- Processing
 		do
 			if a_force or else not a_target.is_executed then
 				current_target := a_target
-				print("%N" + a_target.name)
-				print(":%N%N")
+				if verbose then
+					print ("%N" + a_target.name)
+					print (":%N%N")
+				end
 				a_target.execute
 				current_target := Void
 			end
