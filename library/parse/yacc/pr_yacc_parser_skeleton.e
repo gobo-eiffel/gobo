@@ -376,11 +376,13 @@ feature {NONE} -- Implementation
 		do
 				-- Error token. The token id value 256
 				-- is specified by POSIX.
-			a_token :=  new_token_with_id ("error", 256)
+			a_token := new_token_with_id ("error", 256)
+			a_token.set_useful (True)
 				-- Token that represents all undefined
 				-- literal tokens. It is always the 
 				-- second token on the grammar.
-			a_token :=  new_token ("$undefined.")
+			a_token := new_token ("$undefined.")
+			a_token.set_useful (True)
 		end
 
 	put_rule (a_rule: PR_RULE) is
@@ -510,6 +512,7 @@ feature {NONE} -- Implementation
 		do
 			if precedence_token /= Void then
 				a_token := precedence_token
+				a_token.set_useful (True)
 			else
 				from
 					rhs := a_rule.rhs
