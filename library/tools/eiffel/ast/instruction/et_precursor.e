@@ -29,6 +29,17 @@ feature {NONE} -- Initialization
 			arguments_set: arguments = args
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset precursor as it was when it was first parsed.
+		do
+			parent_type := Void
+			if arguments /= Void then
+				arguments.reset
+			end
+		end
+
 feature -- Access
 
 	precursor_keyword: ET_PRECURSOR_KEYWORD

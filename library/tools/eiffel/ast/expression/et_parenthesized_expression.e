@@ -15,8 +15,14 @@ class ET_PARENTHESIZED_EXPRESSION
 inherit
 
 	ET_EXPRESSION
+		redefine
+			reset
+		end
 
 	ET_AGENT_TARGET
+		undefine
+			reset
+		end
 
 creation
 
@@ -34,6 +40,14 @@ feature {NONE} -- Initialization
 			right_parenthesis := tokens.right_parenthesis_symbol
 		ensure
 			expression_set: expression = e
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			expression.reset
 		end
 
 feature -- Access

@@ -33,6 +33,16 @@ feature {NONE} -- Initialization
 			expression_set: expression = an_expression
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset variant as it was when it was first parsed.
+		do
+			if expression /= Void then
+				expression.reset
+			end
+		end
+
 feature -- Access
 
 	variant_keyword: ET_KEYWORD

@@ -195,6 +195,29 @@ feature {NONE} -- Initialization
 			double_convert_feature_not_void: double_convert_feature /= Void
 		end
 
+feature -- Initialization
+
+	reset_classes is
+			-- Reset classes as they were when they were first parsed.
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			l_class: ET_CLASS
+		do
+			reset_feature_seeds
+			l_cursor := classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				from
+					l_class := l_cursor.item
+				until
+					l_class = Void
+				loop
+					l_class.reset
+					l_class := l_class.overridden_class
+				end
+				l_cursor.forth
+			end
+		end
+
 feature -- Status report
 
 	has_class (a_name: ET_CLASS_NAME): BOOLEAN is
@@ -498,6 +521,13 @@ feature -- Feature setting
 -- TODO
 				end
 			end
+		end
+
+	reset_feature_seeds is
+			-- Reset kernel feature seeds.
+		do
+			set_default_create_seed (0)
+			set_void_seed (0)
 		end
 
 feature -- Feature registration
@@ -910,7 +940,7 @@ feature -- Parsing
 					a_cursor.forth
 				end
 				if a_modified then
--- TODO.
+					reset_classes
 				end
 				eiffel_preparser.repreparse_clusters_shallow (clusters)
 			end
@@ -993,7 +1023,7 @@ feature -- Parsing
 					a_cursor.forth
 				end
 				if a_modified then
--- TODO.
+					reset_classes
 				end
 				eiffel_preparser.repreparse_clusters_single (clusters)
 			end
@@ -1079,7 +1109,7 @@ feature -- Parsing
 					a_cursor.forth
 				end
 				if a_modified then
--- TODO.
+					reset_classes
 				end
 				eiffel_preparser.repreparse_clusters_multiple (clusters)
 			end
@@ -1181,7 +1211,7 @@ feature -- Parsing
 					a_cursor.forth
 				end
 				if a_modified then
--- TODO.
+					reset_classes
 				end
 				eiffel_parser.reparse_clusters (clusters)
 			end

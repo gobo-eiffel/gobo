@@ -27,6 +27,8 @@ inherit
 	ET_ASSERTION
 		rename
 			expression as expression_item
+		undefine
+			reset
 		end
 
 	ET_ACTUAL_ARGUMENTS
@@ -40,6 +42,9 @@ inherit
 	ET_AGENT_ACTUAL_ARGUMENT
 
 	ET_AGENT_TARGET
+		undefine
+			reset
+		end
 
 feature -- Access
 

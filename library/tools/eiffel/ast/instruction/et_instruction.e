@@ -16,6 +16,13 @@ inherit
 
 	ET_AST_NODE
 
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		do
+		end
+
 feature -- Status report
 
 	is_semicolon: BOOLEAN is

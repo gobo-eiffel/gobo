@@ -22,6 +22,20 @@ creation
 
 	make, make_with_capacity
 
+feature -- Initialization
+
+	reset is
+			-- Reset when parts as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	position: ET_POSITION is

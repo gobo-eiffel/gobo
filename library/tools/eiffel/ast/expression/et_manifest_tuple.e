@@ -15,6 +15,9 @@ class ET_MANIFEST_TUPLE
 inherit
 
 	ET_EXPRESSION
+		undefine
+			reset
+		end
 
 	ET_EXPRESSION_LIST
 		redefine

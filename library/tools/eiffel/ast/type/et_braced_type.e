@@ -15,6 +15,9 @@ class ET_BRACED_TYPE
 inherit
 
 	ET_TARGET_TYPE
+		redefine
+			reset
+		end
 
 creation
 
@@ -32,6 +35,14 @@ feature {NONE} -- Initialization
 			right_brace := tokens.right_brace_symbol
 		ensure
 			type_set: type = a_type
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset braced type as it was when it was first parsed.
+		do
+			type.reset
 		end
 
 feature -- Access

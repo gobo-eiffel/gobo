@@ -15,6 +15,9 @@ class ET_STRIP_EXPRESSION
 inherit
 
 	ET_EXPRESSION
+		undefine
+			reset
+		end
 
 	ET_FEATURE_NAME_LIST
 		redefine

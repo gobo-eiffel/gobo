@@ -15,6 +15,9 @@ class ET_ASSIGNMENT_ATTEMPT
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -34,6 +37,15 @@ feature {NONE} -- Initialization
 		ensure
 			target_set: target = a_target
 			source_set: source = a_source
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		do
+			target.reset
+			source.reset
 		end
 
 feature -- Access

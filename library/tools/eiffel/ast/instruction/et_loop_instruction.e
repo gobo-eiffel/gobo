@@ -15,6 +15,9 @@ class ET_LOOP_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -37,6 +40,26 @@ feature {NONE} -- Initialization
 			from_compound_set: from_compound = a_from_compound
 			until_conditional_set: until_conditional = an_until_conditional
 			loop_compound_set: loop_compound = a_loop_compound
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		do
+			if from_compound /= Void then
+				from_compound.reset
+			end
+			if invariant_part /= Void then
+				invariant_part.reset
+			end
+			if variant_part /= Void then
+				variant_part.reset
+			end
+			until_expression.reset
+			if loop_compound /= Void then
+				loop_compound.reset
+			end
 		end
 
 feature -- Access

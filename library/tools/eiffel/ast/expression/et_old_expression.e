@@ -15,6 +15,9 @@ class ET_OLD_EXPRESSION
 inherit
 
 	ET_UNARY_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -31,6 +34,14 @@ feature {NONE} -- Initialization
 			expression := e
 		ensure
 			expression_set: expression = e
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			expression.reset
 		end
 
 feature -- Access

@@ -23,7 +23,7 @@ inherit
 
 	ET_NULL_EXPORT
 		undefine
-			is_semicolon
+			reset, is_semicolon
 		end
 
 	ET_NULL_INSTRUCTION

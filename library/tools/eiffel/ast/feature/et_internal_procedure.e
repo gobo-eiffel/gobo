@@ -16,7 +16,7 @@ inherit
 
 	ET_PROCEDURE
 		undefine
-			locals
+			reset, locals
 		end
 
 	ET_INTERNAL_ROUTINE

@@ -15,6 +15,9 @@ class ET_IF_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -33,6 +36,23 @@ feature {NONE} -- Initialization
 		ensure
 			conditional_set: conditional = a_conditional
 			then_compound_set: then_compound = a_compound
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		do
+			expression.reset
+			if then_compound /= Void then
+				then_compound.reset
+			end
+			if elseif_parts /= Void then
+				elseif_parts.reset
+			end
+			if else_compound /= Void then
+				else_compound.reset
+			end
 		end
 
 feature -- Access

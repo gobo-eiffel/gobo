@@ -22,6 +22,20 @@ creation
 
 	make, make_with_capacity
 
+feature -- Initialization
+
+	reset is
+			-- Reset creators as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).reset
+				i := i + 1
+			end
+		end
+
 feature -- Status report
 
 	is_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is

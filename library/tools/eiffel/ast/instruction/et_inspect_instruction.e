@@ -15,6 +15,9 @@ class ET_INSPECT_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -33,6 +36,20 @@ feature {NONE} -- Initialization
 		ensure
 			conditional_set: conditional = a_conditional
 			when_parts_set: when_parts = a_when_parts
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		do
+			expression.reset
+			if when_parts /= Void then
+				when_parts.reset
+			end
+			if else_compound /= Void then
+				else_compound.reset
+			end
 		end
 
 feature -- Access

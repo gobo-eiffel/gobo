@@ -17,10 +17,15 @@ inherit
 	ET_FEATURE_CALL
 
 	ET_EXPRESSION
+		undefine
+			reset
+		end
 
 	ET_CHOICE_CONSTANT
 		rename
 			expression as expression_item
+		undefine
+			reset
 		end
 
 creation

@@ -15,6 +15,9 @@ class ET_PREFIX_EXPRESSION
 inherit
 
 	ET_UNARY_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -33,6 +36,14 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name = a_name
 			expression_set: expression = e
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			name.reset
 		end
 
 feature -- Access

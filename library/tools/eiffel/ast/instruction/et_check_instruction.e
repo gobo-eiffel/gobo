@@ -15,6 +15,10 @@ class ET_CHECK_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		undefine
+			reset
+		end
+
 	ET_ASSERTIONS
 		redefine
 			make, make_with_capacity

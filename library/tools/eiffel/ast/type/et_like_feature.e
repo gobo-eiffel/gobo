@@ -16,6 +16,7 @@ inherit
 
 	ET_LIKE_IDENTIFIER
 		redefine
+			reset,
 			named_type,
 			named_type_has_class,
 			is_formal_type,
@@ -68,6 +69,15 @@ feature {NONE} -- Initialization
 			seed_set: seed = a_seed
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset type as it was when it was first parsed.
+		do
+			name.reset
+			seed := 0
+		end
+		
 feature -- Access
 
 	like_keyword: ET_KEYWORD

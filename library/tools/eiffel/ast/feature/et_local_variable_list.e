@@ -41,6 +41,20 @@ feature {NONE} -- Initialization
 			precursor (nb)
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset local variables as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).local_variable.reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	local_variable (i: INTEGER): ET_LOCAL_VARIABLE is

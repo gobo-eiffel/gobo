@@ -54,6 +54,32 @@ feature {NONE} -- Initialization
 			selects_set: selects = a_selects
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset parents as it was when it was first parsed.
+		do
+			type.reset
+			if actual_parameters /= Void then
+				actual_parameters.reset
+			end
+			if renames /= Void then
+				renames.reset
+			end
+			if exports /= Void then
+				exports.reset
+			end
+			if undefines /= Void then
+				undefines.reset
+			end
+			if redefines /= Void then
+				redefines.reset
+			end
+			if selects /= Void then
+				selects.reset
+			end
+		end
+
 feature -- Access
 
 	type: ET_BASE_TYPE

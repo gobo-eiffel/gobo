@@ -15,6 +15,9 @@ class ET_BIT_FEATURE
 inherit
 
 	ET_BIT_TYPE
+		redefine
+			reset
+		end
 
 creation
 
@@ -32,6 +35,14 @@ feature {NONE} -- Initialization
 			size := No_size
 		ensure
 			name_set: name = a_name
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset type as it was when it was first parsed.
+		do
+			name.reset
 		end
 
 feature -- Access

@@ -41,6 +41,20 @@ feature {NONE} -- Initialization
 			precursor (nb)
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset convert parents as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).parent.reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	parent (i: INTEGER): ET_PARENT is

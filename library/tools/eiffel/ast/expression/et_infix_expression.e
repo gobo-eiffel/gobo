@@ -15,6 +15,9 @@ class ET_INFIX_EXPRESSION
 inherit
 
 	ET_BINARY_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -36,6 +39,27 @@ feature {NONE} -- Initialization
 			left_set: left = a_left
 			name_set: name = a_name
 			right_set: right = a_right
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		local
+			l_cast: ET_INFIX_CAST_EXPRESSION
+			l_convert: ET_CONVERT_EXPRESSION
+		do
+			name.reset
+			l_cast ?= left
+			if l_cast /= Void then
+				left := l_cast.expression
+			end
+			left.reset
+			l_convert ?= right
+			if l_convert /= Void then
+				right := l_convert.expression
+			end
+			right.reset
 		end
 
 feature -- Access

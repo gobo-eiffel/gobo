@@ -18,6 +18,20 @@ inherit
 
 	ET_AST_LIST [ET_FEATURE_NAME_ITEM]
 
+feature -- Initialization
+
+	reset is
+			-- Reset feature names as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).feature_name.reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	feature_name (i: INTEGER): ET_FEATURE_NAME is

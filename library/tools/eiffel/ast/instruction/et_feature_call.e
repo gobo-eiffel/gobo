@@ -20,7 +20,7 @@ inherit
 		undefine
 			process
 		redefine
-			position
+			reset, position
 		end
 
 feature {NONE} -- Initialization
@@ -36,6 +36,17 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			name_set: qualified_name = a_name
 			arguments_set: arguments = args
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset call as it was when it was first parsed.
+		do
+			Precursor
+			if target /= Void then
+				target.reset
+			end
 		end
 
 feature -- Access

@@ -16,4 +16,11 @@ inherit
 
 	ET_AST_NODE
 
+feature -- Initialization
+
+	reset is
+			-- Reset writable as it was when it was first parsed.
+		do
+		end
+
 end

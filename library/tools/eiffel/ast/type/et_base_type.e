@@ -16,6 +16,7 @@ inherit
 
 	ET_NAMED_TYPE
 		redefine
+			reset,
 			is_named_type,
 			is_base_type,
 			has_anchored_type,
@@ -68,6 +69,19 @@ inherit
 			named_type_has_class as context_named_type_has_class
 		redefine
 			is_root_context
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset type as it was when it was first parsed.
+		local
+			l_parameters: like actual_parameters
+		do
+			l_parameters := actual_parameters
+			if l_parameters /= Void then
+				l_parameters.reset
+			end
 		end
 
 feature -- Access

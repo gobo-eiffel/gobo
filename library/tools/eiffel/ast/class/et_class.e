@@ -17,6 +17,7 @@ inherit
 	ET_CLASS_TYPE
 		rename
 			make as make_type,
+			reset as reset_type,
 			type_mark as class_mark,
 			actual_parameters as formal_parameters
 		export
@@ -83,8 +84,44 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
+	reset is
+			-- Reset current class as it was when it was first parsed.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		local
+			i, nb: INTEGER
+		do
+			reset_interface_checked
+			reset_implementation_checked
+			reset_qualified_signatures_resolved
+			reset_features_flattened
+			reset_ancestors_built
+			nb := declared_feature_count
+			from i := 1 until i > nb loop
+				features.item (i).reset
+				i := i + 1
+			end
+			if parents /= Void then
+				parents.reset
+			end
+			if invariants /= Void then
+				invariants.reset
+			end
+			if creators /= Void then
+				creators.reset
+			end
+			if convert_features /= Void then
+				convert_features.reset
+			end
+			in_system := False
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+		end
+
 	reset_all is
-			-- Reset current class.
+			-- Reset current class as it was when it was created
+			-- i.e. before it was preparsed or parsed).
+			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_interface_checked
 			reset_implementation_checked
@@ -98,7 +135,7 @@ feature -- Initialization
 			same_name: name = old name
 			same_id: id = old id
 		end
-		
+
 feature -- Status report
 
 	is_named_type: BOOLEAN is True

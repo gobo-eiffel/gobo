@@ -15,6 +15,9 @@ class ET_DEBUG_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -31,6 +34,16 @@ feature {NONE} -- Initialization
 		ensure
 			keys_set: keys = a_keys
 			compound_set: compound = a_compound
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		do
+			if compound /= Void then
+				compound.reset
+			end
 		end
 
 feature -- Access

@@ -22,7 +22,7 @@ inherit
 
 	ET_FEATURE
 		undefine
-			position
+			reset, position
 		end
 
 creation

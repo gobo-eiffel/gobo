@@ -34,6 +34,17 @@ feature {NONE} -- Initialization
 			arguments_set: arguments = args
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset call as it was when it was first parsed.
+		do
+			name.reset
+			if arguments /= Void then
+				arguments.reset
+			end
+		end
+
 feature -- Access
 
 	qualified_name: ET_QUALIFIED_FEATURE_NAME

@@ -18,6 +18,20 @@ inherit
 
 	ET_AST_LIST [ET_ASSERTION_ITEM]
 
+feature -- Initialization
+
+	reset is
+			-- Reset assertions as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).assertion.reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	assertion (i: INTEGER): ET_ASSERTION is

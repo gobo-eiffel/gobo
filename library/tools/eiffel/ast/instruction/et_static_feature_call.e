@@ -20,7 +20,7 @@ inherit
 		undefine
 			process
 		redefine
-			position
+			reset, position
 		end
 
 feature {NONE} -- Initialization
@@ -38,6 +38,17 @@ feature {NONE} -- Initialization
 			static_type_set: static_type = a_type
 			name_set: qualified_name = a_name
 			arguments_set: arguments = args
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset call as it was when it was first parsed.
+		do
+			Precursor
+			if type /= Void then
+				type.reset
+			end
 		end
 
 feature -- Access

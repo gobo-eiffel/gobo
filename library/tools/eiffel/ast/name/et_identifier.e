@@ -16,6 +16,7 @@ inherit
 
 	ET_FEATURE_NAME
 		redefine
+			reset,
 			is_local, is_argument,
 			is_identifier, is_equal
 		end
@@ -27,12 +28,12 @@ inherit
 
 	ET_LOCAL_NAME
 		undefine
-			is_equal
+			reset, is_equal
 		end
 
 	ET_ARGUMENT_NAME
 		undefine
-			is_equal
+			reset, is_equal
 		end
 
 	ET_TAG
@@ -42,7 +43,7 @@ inherit
 
 	ET_WRITABLE
 		undefine
-			is_equal
+			reset, is_equal
 		end
 
 	ET_INDEXING_TERM
@@ -100,6 +101,16 @@ feature {NONE} -- Initialization
 			line_set: line = no_line
 			column_set: column = no_column
 			hash_code_set: hash_code = a_code
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset identifier as it was when it was first parsed.
+		do
+			if not is_local and not is_argument then
+				seed := 0
+			end
 		end
 
 feature -- Access

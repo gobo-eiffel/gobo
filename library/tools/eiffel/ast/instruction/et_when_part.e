@@ -34,6 +34,17 @@ feature {NONE} -- Initialization
 			then_compound_set: then_compound = a_then_compound
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset when part as it was when it was first parsed.
+		do
+			choices.reset
+			if then_compound /= Void then
+				then_compound.reset
+			end
+		end
+
 feature -- Access
 
 	choices: ET_CHOICE_LIST

@@ -15,6 +15,9 @@ class ET_TAGGED_ASSERTION
 inherit
 
 	ET_ASSERTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -30,6 +33,16 @@ feature {NONE} -- Initialization
 			tag := a_tag
 		ensure
 			tag_set: tag = a_tag
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset assertion as it was when it was first parsed.
+		do
+			if expression /= Void then
+				expression.reset
+			end
 		end
 
 feature -- Access

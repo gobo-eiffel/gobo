@@ -15,6 +15,9 @@ class ET_MANIFEST_ARRAY
 inherit
 
 	ET_EXPRESSION
+		undefine
+			reset
+		end
 
 	ET_EXPRESSION_LIST
 		redefine

@@ -35,6 +35,15 @@ feature {NONE} -- Initialization
 			declared_type_set: declared_type = a_type
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset local variable as it was when it was first parsed.
+		do
+			name.reset
+			type.reset
+		end
+
 feature -- Access
 
 	name: ET_IDENTIFIER is

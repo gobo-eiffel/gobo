@@ -18,6 +18,20 @@ inherit
 
 	ET_AST_LIST [ET_EXPRESSION_ITEM]
 
+feature -- Initialization
+
+	reset is
+			-- Reset expressions as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).expression.reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	expression (i: INTEGER): ET_EXPRESSION is

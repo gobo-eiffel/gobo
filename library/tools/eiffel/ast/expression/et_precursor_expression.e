@@ -15,7 +15,11 @@ class ET_PRECURSOR_EXPRESSION
 inherit
 
 	ET_PRECURSOR
+
 	ET_EXPRESSION
+		undefine
+			reset
+		end
 
 creation
 

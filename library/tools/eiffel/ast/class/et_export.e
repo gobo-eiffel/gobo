@@ -16,6 +16,13 @@ inherit
 
 	ET_AST_NODE
 
+feature -- Initialization
+
+	reset is
+			-- Reset export clause as it was when it was first parsed.
+		do
+		end
+
 feature -- Access
 
 	clients (a_name: ET_FEATURE_NAME): ET_CLIENTS is

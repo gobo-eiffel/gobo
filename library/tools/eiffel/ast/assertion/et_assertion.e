@@ -16,6 +16,13 @@ inherit
 
 	ET_ASSERTION_ITEM
 
+feature -- Initialization
+
+	reset is
+			-- Reset assertion as it was when it was first parsed.
+		do
+		end
+
 feature -- Access
 
 	expression: ET_EXPRESSION is

@@ -16,6 +16,7 @@ inherit
 
 	ET_LIKE_IDENTIFIER
 		redefine
+			reset,
 			named_type,
 			named_type_has_class,
 			is_formal_type,
@@ -35,6 +36,15 @@ inherit
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset type as it was when it was first parsed.
+		do
+			name.reset
+			target_type.reset
 		end
 
 feature -- Access

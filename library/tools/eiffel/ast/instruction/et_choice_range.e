@@ -16,7 +16,7 @@ inherit
 
 	ET_CHOICE
 		redefine
-			is_range
+			reset, is_range
 		end
 
 creation
@@ -37,6 +37,15 @@ feature {NONE} -- Initialization
 		ensure
 			lower_set: lower = a_lower
 			upper_set: upper = an_upper
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset choice range as it was when it was first parsed.
+		do
+			lower.reset
+			upper.reset
 		end
 
 feature -- Status report

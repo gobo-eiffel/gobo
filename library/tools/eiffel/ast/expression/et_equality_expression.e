@@ -15,6 +15,9 @@ class ET_EQUALITY_EXPRESSION
 inherit
 
 	ET_BINARY_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -36,6 +39,15 @@ feature {NONE} -- Initialization
 			left_set: left = a_left
 			operator_set: operator = an_operator
 			right_set: right = a_right
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			left.reset
+			right.reset
 		end
 
 feature -- Access

@@ -15,7 +15,11 @@ class ET_CALL_INSTRUCTION
 inherit
 
 	ET_FEATURE_CALL
+
 	ET_INSTRUCTION
+		undefine
+			reset
+		end
 
 creation
 

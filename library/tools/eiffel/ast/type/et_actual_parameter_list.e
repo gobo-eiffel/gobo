@@ -45,6 +45,20 @@ feature {NONE} -- Initialization
 			precursor (nb)
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset actual parameters as they were when they were first parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).type.reset
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	actual_parameter (i: INTEGER): ET_ACTUAL_PARAMETER is

@@ -15,6 +15,9 @@ class ET_CALL_AGENT
 inherit
 
 	ET_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -35,6 +38,20 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			name_set: qualified_name = a_name
 			arguments_set: arguments = args
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			name.reset
+			if target /= Void then
+				target.reset
+			end
+			if arguments /= Void then
+				arguments.reset
+			end
 		end
 
 feature -- Access

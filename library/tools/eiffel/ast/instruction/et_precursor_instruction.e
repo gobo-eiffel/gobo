@@ -15,7 +15,11 @@ class ET_PRECURSOR_INSTRUCTION
 inherit
 
 	ET_PRECURSOR
+
 	ET_INSTRUCTION
+		undefine
+			reset
+		end
 
 creation
 

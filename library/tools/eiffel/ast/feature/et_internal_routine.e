@@ -16,7 +16,23 @@ inherit
 
 	ET_ROUTINE
 		redefine
-			locals
+			reset, locals
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset feature as it was when it was first parsed.
+		do
+			if locals /= Void then
+				locals.reset
+			end
+			if compound /= Void then
+				compound.reset
+			end
+			if rescue_clause /= Void then
+				rescue_clause.reset
+			end
 		end
 
 feature -- Access

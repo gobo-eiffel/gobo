@@ -16,6 +16,13 @@ inherit
 
 	ET_CHOICE_ITEM
 
+feature -- Initialization
+
+	reset is
+			-- Reset choice as it was when it was first parsed.
+		do
+		end
+
 feature -- Status report
 
 	is_range: BOOLEAN is

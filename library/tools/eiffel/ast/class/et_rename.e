@@ -36,6 +36,15 @@ feature {NONE} -- Initialization
 			new_name_set: new_name = n
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset rename pair as it was when it was first parsed.
+		do
+			old_name.reset
+			new_name.reset
+		end
+
 feature -- Access
 
 	old_name: ET_FEATURE_NAME

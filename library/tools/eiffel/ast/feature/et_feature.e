@@ -26,6 +26,45 @@ inherit
 
 	DEBUG_OUTPUT
 
+feature -- Initialization
+
+	reset is
+			-- Reset feature as it was when it was first parsed.
+		local
+			l_type: like type
+			l_arguments: like arguments
+			l_preconditions: like preconditions
+			l_postconditions: like postconditions
+		do
+			name.reset
+			first_seed := id
+			other_seeds := Void
+			version := id
+			first_precursor := Void
+			other_precursors := Void
+			l_type := type
+			if l_type /= Void then
+				l_type.reset
+			end
+			l_arguments := arguments
+			if l_arguments /= Void then
+				l_arguments.reset
+			end
+			l_preconditions := preconditions
+			if l_preconditions /= Void then
+				l_preconditions.reset
+			end
+			l_postconditions := postconditions
+			if l_postconditions /= Void then
+				l_postconditions.reset
+			end
+			implementation_checked := False
+			has_implementation_error := False
+			assertions_checked := False
+			has_assertions_error := False
+			cat_keyword := Void
+		end
+
 feature -- Access
 
 	name: ET_FEATURE_NAME is

@@ -15,6 +15,9 @@ class ET_ASSIGNMENT
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
 
 creation
 
@@ -34,6 +37,21 @@ feature {NONE} -- Initialization
 		ensure
 			target_set: target = a_target
 			source_set: source = a_source
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		local
+			l_convert: ET_CONVERT_EXPRESSION
+		do
+			target.reset
+			l_convert ?= source
+			if l_convert /= Void then
+				source := l_convert.expression
+			end
+			source.reset
 		end
 
 feature -- Access

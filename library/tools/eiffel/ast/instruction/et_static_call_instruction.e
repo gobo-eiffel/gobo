@@ -15,7 +15,11 @@ class ET_STATIC_CALL_INSTRUCTION
 inherit
 
 	ET_STATIC_FEATURE_CALL
+
 	ET_INSTRUCTION
+		undefine
+			reset
+		end
 
 creation
 

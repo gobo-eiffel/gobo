@@ -21,13 +21,29 @@ inherit
 	ET_CHOICE_CONSTANT
 		rename
 			expression as expression_item
+		undefine
+			reset
 		end
 
 	ET_EXPRESSION
+		redefine
+			reset
+		end
 	
 	ET_INSTRUCTION
+		undefine
+			reset
+		end
 
 	HASHABLE
+
+feature -- Initialization
+
+	reset is
+			-- Reset feature name as it was when it was first parsed.
+		do
+			seed := 0
+		end
 
 feature -- Access
 

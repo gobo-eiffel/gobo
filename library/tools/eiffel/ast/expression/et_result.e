@@ -17,6 +17,9 @@ inherit
 	ET_EXPRESSION
 
 	ET_WRITABLE
+		undefine
+			reset
+		end
 
 	ET_KEYWORD
 		rename

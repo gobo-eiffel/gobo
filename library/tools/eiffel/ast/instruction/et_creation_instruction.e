@@ -15,6 +15,26 @@ deferred class ET_CREATION_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		redefine
+			reset
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset instruction as it was when it was first parsed.
+		local
+			l_type: ET_TYPE
+		do
+			target.reset
+			l_type := type
+			if l_type /= Void then
+				l_type.reset
+			end
+			if creation_call /= Void then
+				creation_call.reset
+			end
+		end
 
 feature -- Access
 

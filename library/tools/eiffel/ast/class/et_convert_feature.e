@@ -16,6 +16,15 @@ inherit
 
 	ET_CONVERT_FEATURE_ITEM
 
+feature -- Initialization
+
+	reset is
+			-- Reset convert feature as it was when it was first parsed.
+		do
+			name.reset
+			types.reset
+		end
+
 feature -- Status report
 
 	is_convert_from: BOOLEAN is

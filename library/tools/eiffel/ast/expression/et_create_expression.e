@@ -15,6 +15,9 @@ class ET_CREATE_EXPRESSION
 inherit
 
 	ET_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -33,6 +36,17 @@ feature {NONE} -- Initialization
 		ensure
 			creation_type_set: creation_type = a_type
 			creation_call_set: creation_call = a_call
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			type.reset
+			if creation_call /= Void then
+				creation_call.reset
+			end
 		end
 
 feature -- Access

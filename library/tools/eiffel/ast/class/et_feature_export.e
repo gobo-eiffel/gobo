@@ -15,6 +15,9 @@ class ET_FEATURE_EXPORT
 inherit
 
 	ET_EXPORT
+		undefine
+			reset
+		end
 
 	ET_FEATURE_NAME_LIST
 		rename

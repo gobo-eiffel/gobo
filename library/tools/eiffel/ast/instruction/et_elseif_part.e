@@ -34,6 +34,17 @@ feature {NONE} -- Initialization
 			then_compound_set: then_compound = a_then_compound
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset elseif part as it was when it was first parsed.
+		do
+			expression.reset
+			if then_compound /= Void then
+				then_compound.reset
+			end
+		end
+
 feature -- Access
 
 	conditional: ET_CONDITIONAL

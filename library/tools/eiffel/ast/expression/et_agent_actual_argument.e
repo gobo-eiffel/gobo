@@ -16,6 +16,13 @@ inherit
 
 	ET_AGENT_ACTUAL_ARGUMENT_ITEM
 
+feature -- Initialization
+
+	reset is
+			-- Reset actual argument as it was when it was first parsed.
+		do
+		end
+
 feature -- Access
 
 	agent_actual_argument: ET_AGENT_ACTUAL_ARGUMENT is

@@ -15,6 +15,9 @@ class ET_FEATURE_ADDRESS
 inherit
 
 	ET_ADDRESS_EXPRESSION
+		redefine
+			reset
+		end
 
 creation
 
@@ -31,6 +34,14 @@ feature {NONE} -- Initialization
 			name := a_name
 		ensure
 			name_set: name = a_name
+		end
+
+feature -- Initialization
+
+	reset is
+			-- Reset expression as it was when it was first parsed.
+		do
+			name.reset
 		end
 
 feature -- Access
