@@ -1,0 +1,17 @@
+-- library:    "Gobo Eiffel Structure Library"
+-- compiler:   "SmallEiffel -0.77b2"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+
+--${GOBO}/library/structure/base/
+${GOBO}/library/structure/container/
+${GOBO}/library/structure/cursor/
+${GOBO}/library/structure/dispenser/
+${GOBO}/library/structure/list/
+${GOBO}/library/structure/sort/
+${GOBO}/library/structure/support/
+${GOBO}/library/structure/table/
