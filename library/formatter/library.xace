@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<library name="formatter" prefix="gf_">
+	<description>
+		description: "Xace file for the Gobo Eiffel Formatter Library"
+		library: "Gobo Eiffel Formatter Library"
+		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="formatter" location="${GOBO}/library/formatter">
+		<option name="abstract" value="true"/>
+		<cluster name="abstract"/>
+		<cluster name="error"/>
+		<cluster name="formatters"/>
+		<cluster name="support"/>
+		<cluster name="types"/>
+	</cluster>
+</library>
