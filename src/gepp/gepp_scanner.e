@@ -33,7 +33,7 @@ feature -- Status report
 	valid_start_condition (sc: INTEGER): BOOLEAN is
 			-- Is `sc' a valid start condition?
 		do
-			Result := (INITIAL <= sc and sc <= S_PREPROC)
+			Result := (INITIAL <= sc and sc <= S_READLINE)
 		end
 
 feature {NONE} -- Implementation
@@ -53,111 +53,161 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-if yy_act <= 11 then
+if yy_act <= 12 then
 if yy_act <= 6 then
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
 --|#line 44
-set_start_condition (S_PREPROC)
-else
---|#line 45
 
-						if not ignored then
-							echo
-						end
-						line_nb := line_nb + 1
+						-- Comment.
+						set_start_condition (S_PREPROC)
+					
+else
+--|#line 48
+
+						last_token := P_IFDEF
+						set_start_condition (S_PREPROC)
 					
 end
 else
---|#line 46
+--|#line 52
 
-						if not ignored then
-							echo
-						end
-						line_nb := line_nb + 1
+						last_token := P_IFNDEF
+						set_start_condition (S_PREPROC)
 					
 end
 else
 if yy_act <= 5 then
 if yy_act = 4 then
---|#line 52
+--|#line 56
 
-						if not ignored then
-							echo
-						end
+						last_token := P_ELSE
+						set_start_condition (S_PREPROC)
 					
 else
 --|#line 60
--- Separator.
+
+						last_token := P_ENDIF
+						set_start_condition (S_PREPROC)
+					
 end
 else
---|#line 61
--- Comment.
+--|#line 64
+
+						last_token := P_INCLUDE
+						set_start_condition (S_PREPROC)
+					
 end
 end
 else
 if yy_act <= 9 then
 if yy_act <= 8 then
 if yy_act = 7 then
---|#line 62
-last_token := P_IFDEF
-else
---|#line 63
-last_token := P_IFNDEF
-end
-else
---|#line 64
-last_token := P_ELSE
-end
-else
-if yy_act = 10 then
---|#line 65
-last_token := P_ENDIF
-else
---|#line 66
-last_token := P_INCLUDE
-end
-end
-end
-else
-if yy_act <= 16 then
-if yy_act <= 14 then
-if yy_act <= 13 then
-if yy_act = 12 then
---|#line 67
-last_token := P_DEFINE
-else
 --|#line 68
-last_token := P_UNDEF
+
+						last_token := P_DEFINE
+						set_start_condition (S_PREPROC)
+					
+else
+--|#line 72
+
+						last_token := P_UNDEF
+						set_start_condition (S_PREPROC)
+					
 end
 else
---|#line 69
+--|#line 76
+
+						if not ignored then
+							echo
+						end
+						set_start_condition (S_READLINE)
+					
+end
+else
+if yy_act <= 11 then
+if yy_act = 10 then
+--|#line 82
+
+						if not ignored then
+							echo
+						end
+						line_nb := line_nb + 1
+					
+else
+--|#line 83
+
+						if not ignored then
+							echo
+						end
+						line_nb := line_nb + 1
+					
+end
+else
+--|#line 89
+
+						if not ignored then
+							echo
+						end
+					
+end
+end
+end
+else
+if yy_act <= 18 then
+if yy_act <= 15 then
+if yy_act <= 14 then
+if yy_act = 13 then
+--|#line 97
+
+						if not ignored then
+							echo
+						end
+						line_nb := line_nb + 1
+						set_start_condition (INITIAL)
+					
+else
+--|#line 104
+
+						if not ignored then
+							echo
+						end
+						set_start_condition (INITIAL)
+					
+end
+else
+--|#line 113
+-- Separator.
+end
+else
+if yy_act <= 17 then
+if yy_act = 16 then
+--|#line 114
 
 						last_token := P_STRING
 						last_value := text_substring (2, text_count - 1)
 					
-end
 else
-if yy_act = 15 then
---|#line 73
+--|#line 118
 
 						last_token := P_NAME
 						last_value := text
 					
+end
 else
---|#line 77
+--|#line 122
 last_token := P_AND
 end
 end
 else
-if yy_act <= 19 then
-if yy_act <= 18 then
-if yy_act = 17 then
---|#line 78
+if yy_act <= 21 then
+if yy_act <= 20 then
+if yy_act = 19 then
+--|#line 123
 last_token := P_OR
 else
---|#line 79
+--|#line 124
 
 						last_token := P_EOL
 						line_nb := line_nb + 1
@@ -165,12 +215,12 @@ else
 					
 end
 else
---|#line 84
+--|#line 129
 last_token := text_item (1).code
 end
 else
-if yy_act = 20 then
---|#line 87
+if yy_act = 22 then
+--|#line 132
 last_token := text_item (1).code
 else
 --|#line 0
@@ -199,16 +249,20 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   25,   61,    8,   25,    9,   10,   11,   12,   13,
-			   14,   15,   16,   16,   17,   18,   16,   19,   16,   16,
-			   16,   20,   21,   30,   31,   32,   40,   28,   33,   60,
-			   59,   41,    6,    6,    6,    6,    7,    7,    7,    7,
-			   22,   22,   22,   22,   26,   58,   26,   26,   57,   56,
-			   55,   54,   53,   52,   51,   50,   49,   48,   47,   46,
-			   45,   44,   43,   42,   39,   38,   37,   36,   24,   23,
-			   35,   34,   29,   27,   24,   23,   61,    5,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61>>)
+			    0,   66,   66,   10,   66,   11,   12,   13,   14,   15,
+			   12,   16,   17,   17,   17,   17,   17,   17,   17,   17,
+			   17,   17,   18,   23,   36,   37,   38,   24,   25,   39,
+			   26,   45,   31,   31,   27,   65,   46,    8,    8,    8,
+			    8,    8,    9,    9,    9,    9,    9,   19,   19,   19,
+			   19,   19,   21,   21,   21,   21,   21,   29,   64,   63,
+			   29,   29,   33,   33,   33,   33,   33,   23,   62,   23,
+			   23,   23,   61,   60,   59,   58,   57,   56,   55,   54,
+			   53,   52,   51,   50,   49,   48,   47,   44,   43,   42,
+			   34,   41,   28,   40,   35,   22,   34,   32,   30,   28,
+
+			   22,   66,   20,   20,    7,   66,   66,   66,   66,   66,
+			   66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+			   66,   66>>)
 		end
 
 	yy_chk_template: ANY is
@@ -216,16 +270,20 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   65,    0,    2,   65,    2,    3,    3,    3,    3,
+			    0,    0,    0,    2,    0,    2,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-			    3,    3,    3,   18,   18,   19,   32,   67,   19,   59,
-			   55,   32,   62,   62,   62,   62,   63,   63,   63,   63,
-			   64,   64,   64,   64,   66,   54,   66,   66,   51,   50,
-			   49,   48,   47,   46,   44,   43,   42,   41,   40,   39,
-			   38,   37,   34,   33,   31,   30,   29,   25,   24,   22,
-			   21,   20,   17,   15,   11,    7,    5,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61>>)
+			    3,    3,    3,   11,   25,   25,   26,   11,   11,   26,
+			   11,   38,   72,   72,   11,   64,   38,   67,   67,   67,
+			   67,   67,   68,   68,   68,   68,   68,   69,   69,   69,
+			   69,   69,   70,   70,   70,   70,   70,   71,   60,   59,
+			   71,   71,   73,   73,   73,   73,   73,   74,   56,   74,
+			   74,   74,   55,   54,   53,   52,   51,   49,   48,   47,
+			   46,   45,   44,   43,   42,   40,   39,   37,   36,   35,
+			   33,   29,   28,   27,   24,   21,   19,   18,   16,   13,
+
+			    9,    7,    6,    5,   66,   66,   66,   66,   66,   66,
+			   66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+			   66,   66>>)
 		end
 
 	yy_base_template: ANY is
@@ -233,13 +291,14 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,    5,    0,   76,   77,   72,   77,   77,
-			   77,   72,   77,    0,    0,   67,    0,   62,   10,   14,
-			   57,   53,   66,   77,   66,   63,    0,   77,    0,   55,
-			   50,   55,   17,   55,   53,   77,   77,   49,   50,   47,
-			   48,   48,   43,   45,   40,    0,   42,   41,   41,   34,
-			   38,   38,    0,    0,   34,   21,    0,    0,    0,   19,
-			    0,   77,   31,   35,   39,    0,   43,   23>>)
+			    0,    0,    0,    5,    0,  100,   99,  101,  104,   97,
+			  104,   18,  104,   97,  104,    0,   92,    0,   80,   93,
+			  104,   92,  104,    0,   84,   11,   15,   79,   90,   87,
+			  104,    0,  104,   87,  104,   78,   73,   78,   22,   78,
+			   76,  104,   72,   73,   70,   71,   71,   66,   68,   63,
+			  104,   65,   64,   64,   57,   61,   58,  104,  104,   48,
+			   49,  104,  104,  104,   25,  104,  104,   36,   41,   46,
+			   51,   56,   28,   61,   66>>)
 		end
 
 	yy_def_template: ANY is
@@ -247,13 +306,14 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   62,   63,   61,    3,   61,   61,   64,   61,   61,
-			   61,   61,   61,   65,   66,   61,   67,   67,   67,   67,
-			   67,   61,   64,   61,   61,   65,   66,   61,   67,   67,
-			   67,   67,   67,   67,   67,   61,   61,   67,   67,   67,
-			   67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-			   67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-			   67,    0,   61,   61,   61,   61,   61,   61>>)
+			    0,   67,   68,   66,    3,   69,   69,   66,   66,   70,
+			   66,   66,   66,   66,   66,   71,   66,   72,   66,   73,
+			   66,   70,   66,   74,   66,   66,   66,   66,   66,   71,
+			   66,   72,   66,   73,   66,   66,   66,   66,   66,   66,
+			   66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+			   66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+			   66,   66,   66,   66,   66,   66,    0,   66,   66,   66,
+			   66,   66,   66,   66,   66>>)
 		end
 
 	yy_ec_template: ANY is
@@ -297,7 +357,7 @@ feature {NONE} -- Table templates
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    3,    1,    1,    4,    4,    4,
-			    4,    4,    4,    4,    4,    4,    4,    1>>)
+			    4,    4,    4,    4,    4,    4,    5,    1>>)
 		end
 
 	yy_accept_template: ANY is
@@ -305,25 +365,25 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,    0,    0,   22,   20,    4,    3,    1,
-			   19,    5,   18,   19,    6,   19,   15,   15,   15,   15,
-			   15,   19,    4,    2,    5,    0,    6,   16,   15,   15,
-			   15,   15,   15,   15,   15,   17,   14,   15,   15,   15,
-			   15,   15,   15,   15,   15,    9,   15,   15,   15,   15,
-			   15,   15,   10,    7,   15,   15,   13,   12,    8,   15,
-			   11,    0>>)
+			    0,    0,    0,    0,    0,   14,   14,   24,   22,   12,
+			   11,    9,   21,   15,   20,   21,   21,   17,   21,   14,
+			   13,   12,   10,    1,    0,    0,    0,    0,   15,    0,
+			   18,   17,   19,   14,   13,    0,    0,    0,    0,    0,
+			    0,   16,    0,    0,    0,    0,    0,    0,    0,    0,
+			    4,    0,    0,    0,    0,    0,    0,    5,    2,    0,
+			    0,    8,    7,    3,    0,    6,    0>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 77
+	yyJam_base: INTEGER is 104
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 61
+	yyJam_state: INTEGER is 66
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 62
+	yyTemplate_mark: INTEGER is 67
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -342,10 +402,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 21
+	yyNb_rules: INTEGER is 23
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 22
+	yyEnd_of_buffer: INTEGER is 24
 			-- End of buffer rule code
 
 	yyLine_used: BOOLEAN is false
@@ -356,6 +416,7 @@ feature {NONE} -- Constants
 
 	INITIAL: INTEGER is 0
 	S_PREPROC: INTEGER is 1
+	S_READLINE: INTEGER is 2
 			-- Start condition codes
 
 feature -- User-defined features

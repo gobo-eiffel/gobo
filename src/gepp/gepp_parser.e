@@ -27,6 +27,8 @@ inherit
 			reset as reset_gepp_scanner
 		end
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+
 creation
 
 	make
@@ -59,7 +61,7 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 7 then
---|#line 64
+--|#line 66
 			yyval := yyval_default;
 			if not ignored then
 				define_value ("", yytype1 (yyvs.item (yyvsp - 1)))
@@ -67,7 +69,7 @@ when 7 then
 		
 
 when 8 then
---|#line 70
+--|#line 72
 			yyval := yyval_default;
 			if not ignored then
 				undefine_value (yytype1 (yyvs.item (yyvsp - 1)))
@@ -75,7 +77,7 @@ when 8 then
 		
 
 when 9 then
---|#line 76
+--|#line 78
 			yyval := yyval_default;
 			if not ignored then
 				process_include (yytype1 (yyvs.item (yyvsp - 1)))
@@ -83,7 +85,7 @@ when 9 then
 		
 
 when 10 then
---|#line 84
+--|#line 86
 			yyval := yyval_default;
 			if_level := if_level + 1
 			if not ignored and not yytype2 (yyvs.item (yyvsp - 1)) then
@@ -92,7 +94,7 @@ when 10 then
 		
 
 when 11 then
---|#line 91
+--|#line 93
 			yyval := yyval_default;
 			if_level := if_level + 1
 			if not ignored and yytype2 (yyvs.item (yyvsp - 1)) then
@@ -101,37 +103,37 @@ when 11 then
 		
 
 when 12 then
---|#line 100
+--|#line 102
 
 			yyval2 := is_defined (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval2
 when 13 then
---|#line 104
+--|#line 106
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval2
 when 14 then
---|#line 108
+--|#line 110
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) and yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 15 then
---|#line 112
+--|#line 114
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) or yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 16 then
---|#line 116
+--|#line 118
 
 			yyval2 := not yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 17 then
---|#line 122
+--|#line 124
 			yyval := yyval_default;
 			if ignored_level = if_level then
 				ignored_level := 0
@@ -140,7 +142,7 @@ when 17 then
 		
 
 when 18 then
---|#line 131
+--|#line 133
 			yyval := yyval_default;
 			if not ignored then
 				ignored_level := if_level
@@ -405,7 +407,7 @@ feature -- Processing
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if not include_stack.is_full then
-				a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+				a_file := INPUT_STREAM_.make_file_open_read (Execution_environment.interpreted_string (a_filename))
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
