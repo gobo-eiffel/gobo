@@ -16,6 +16,9 @@ inherit
 
 	ET_XACE_GENERATOR
 
+	XM_MARKUP_CONSTANTS
+		export {NONE} all end
+
 creation
 
 	make
@@ -24,6 +27,21 @@ feature -- Access
 
 	xml_filename: STRING is "xace.xml"
 			-- Name of generated XML file
+
+feature -- Status report
+
+	is_flat: BOOLEAN
+			-- Does current generator generate flat Xace files?
+
+feature -- Status setting
+
+	set_flat (b: BOOLEAN) is
+			-- set `is_flat' to `b'.
+		do
+			is_flat := b
+		ensure
+			flat_set: is_flat = b
+		end
 
 feature -- Output
 
@@ -91,13 +109,13 @@ feature {NONE} -- Output
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
 			a_file.put_string ("<system name=%"")
-			a_file.put_string (a_system.system_name)
+			print_quote_escaped_string (a_system.system_name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (1, a_file)
 			a_file.put_string ("<root class=%"")
-			a_file.put_string (a_system.root_class_name)
+			print_quote_escaped_string (a_system.root_class_name, a_file)
 			a_file.put_string ("%" creation=%"")
-			a_file.put_string (a_system.creation_procedure_name)
+			print_quote_escaped_string (a_system.creation_procedure_name, a_file)
 			a_file.put_line ("%"/>")
 			an_option := a_system.options
 			if an_option /= Void then
@@ -107,9 +125,11 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 			end
-			a_mounted_libraries := a_system.libraries
-			if a_mounted_libraries /= Void then
-				print_mounted_libraries (a_mounted_libraries, 1, a_file)
+			if not is_flat then
+				a_mounted_libraries := a_system.libraries
+				if a_mounted_libraries /= Void then
+					print_mounted_libraries (a_mounted_libraries, 1, a_file)
+				end
 			end
 			a_file.put_line ("</system>")
 		end
@@ -131,11 +151,13 @@ feature {NONE} -- Output
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
 			a_file.put_string ("<library name=%"")
-			a_file.put_string (a_library.name)
-			a_prefix := a_library.library_prefix
-			if a_prefix.count > 0 then
-				a_file.put_string ("%" prefix=%"")
-				a_file.put_string (a_prefix)
+			print_quote_escaped_string (a_library.name, a_file)
+			if not is_flat then
+				a_prefix := a_library.library_prefix
+				if a_prefix.count > 0 then
+					a_file.put_string ("%" prefix=%"")
+					print_quote_escaped_string (a_prefix, a_file)
+				end
 			end
 			a_file.put_line ("%">")
 			an_option := a_library.options
@@ -146,9 +168,11 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 			end
-			a_mounted_libraries := a_library.libraries
-			if a_mounted_libraries /= Void then
-				print_mounted_libraries (a_mounted_libraries, 1, a_file)
+			if not is_flat then
+				a_mounted_libraries := a_library.libraries
+				if a_mounted_libraries /= Void then
+					print_mounted_libraries (a_mounted_libraries, 1, a_file)
+				end
 			end
 			a_file.put_line ("</library>")
 		end
@@ -185,7 +209,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"arguments%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -201,7 +225,7 @@ feature {NONE} -- Output
 			if an_option.is_assembly_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"assembly%" value=%"")
-				a_file.put_string (an_option.assembly)
+				print_quote_escaped_string (an_option.assembly, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_assertion_declared then
@@ -209,7 +233,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"assertion%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -217,7 +241,7 @@ feature {NONE} -- Output
 			if an_option.is_callback_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"callback%" value=%"")
-				a_file.put_string (an_option.callback)
+				print_quote_escaped_string (an_option.callback, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_case_insensitive_declared then
@@ -255,7 +279,7 @@ feature {NONE} -- Output
 			if an_option.is_component_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"component%" value=%"")
-				a_file.put_string (an_option.component)
+				print_quote_escaped_string (an_option.component, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_console_application_declared then
@@ -277,7 +301,7 @@ feature {NONE} -- Output
 			if an_option.is_culture_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"culture%" value=%"")
-				a_file.put_string (an_option.culture)
+				print_quote_escaped_string (an_option.culture, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_c_compiler_options_declared then
@@ -285,7 +309,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"c_compiler_options%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -295,7 +319,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"dead_code_removal%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -313,7 +337,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"debug_tag%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -329,7 +353,7 @@ feature {NONE} -- Output
 			if an_option.is_document_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"document%" value=%"")
-				a_file.put_string (an_option.document)
+				print_quote_escaped_string (an_option.document, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_dotnet_naming_convention_declared then
@@ -361,7 +385,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"exclude%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -369,7 +393,7 @@ feature {NONE} -- Output
 			if an_option.is_export_option_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"export%" value=%"")
-				a_file.put_string (an_option.export_option)
+				print_quote_escaped_string (an_option.export_option, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_finalize_option_declared then
@@ -405,7 +429,7 @@ feature {NONE} -- Output
 			if an_option.is_garbage_collector_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"garbage_collector%" value=%"")
-				a_file.put_string (an_option.garbage_collector)
+				print_quote_escaped_string (an_option.garbage_collector, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_gc_info_declared then
@@ -421,7 +445,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"header%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -453,7 +477,7 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"inlining%" value=%"")
-					a_file.put_string (a_cursor.item)
+					print_quote_escaped_string (a_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_cursor.forth
 				end
@@ -475,7 +499,7 @@ feature {NONE} -- Output
 			if an_option.is_layout_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"layout%" value=%"")
-				a_file.put_string (an_option.layout)
+				print_quote_escaped_string (an_option.layout, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_layout_optimization_declared then
@@ -507,7 +531,7 @@ feature {NONE} -- Output
 				from a_link_cursor.start until a_link_cursor.after loop
 					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"link%" value=%"")
-					a_file.put_string (a_link_cursor.item)
+					print_quote_escaped_string (a_link_cursor.item, a_file)
 					a_file.put_line ("%"/>")
 					a_link_cursor.forth
 				end
@@ -515,7 +539,7 @@ feature {NONE} -- Output
 			if an_option.is_linker_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"linker%" value=%"")
-				a_file.put_string (an_option.linker)
+				print_quote_escaped_string (an_option.linker, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_linux_fpu_double_precision_declared then
@@ -569,7 +593,7 @@ feature {NONE} -- Output
 			if an_option.is_override_cluster_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"override_cluster%" value=%"")
-				a_file.put_string (an_option.override_cluster)
+				print_quote_escaped_string (an_option.override_cluster, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_portable_code_generation_declared then
@@ -583,13 +607,13 @@ feature {NONE} -- Output
 			if an_option.is_precompiled_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"precompiled%" value=%"")
-				a_file.put_string (an_option.precompiled)
+				print_quote_escaped_string (an_option.precompiled, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_prefix_option_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"prefix%" value=%"")
-				a_file.put_string (an_option.prefix_option)
+				print_quote_escaped_string (an_option.prefix_option, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_profile_declared then
@@ -603,7 +627,7 @@ feature {NONE} -- Output
 			if an_option.is_public_key_token_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"public_key_token%" value=%"")
-				a_file.put_string (an_option.public_key_token)
+				print_quote_escaped_string (an_option.public_key_token, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_read_only_declared then
@@ -633,7 +657,7 @@ feature {NONE} -- Output
 			if an_option.is_shared_library_definition_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"shared_library_definition%" value=%"")
-				a_file.put_string (an_option.shared_library_definition)
+				print_quote_escaped_string (an_option.shared_library_definition, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_split_declared then
@@ -653,7 +677,7 @@ feature {NONE} -- Output
 			if an_option.is_storable_filename_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"storable_filename%" value=%"")
-				a_file.put_string (an_option.storable_filename)
+				print_quote_escaped_string (an_option.storable_filename, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_strip_option_declared then
@@ -667,7 +691,7 @@ feature {NONE} -- Output
 			if an_option.is_target_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"target%" value=%"")
-				a_file.put_string (an_option.target)
+				print_quote_escaped_string (an_option.target, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_trace_declared then
@@ -689,19 +713,19 @@ feature {NONE} -- Output
 			if an_option.is_version_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"version%" value=%"")
-				a_file.put_string (an_option.version)
+				print_quote_escaped_string (an_option.version, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_visible_filename_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"visible_filename%" value=%"")
-				a_file.put_string (an_option.visible_filename)
+				print_quote_escaped_string (an_option.visible_filename, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_warning_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"warning%" value=%"")
-				a_file.put_string (an_option.warning)
+				print_quote_escaped_string (an_option.warning, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_wedit_declared then
@@ -750,38 +774,61 @@ feature {NONE} -- Output
 			subclusters: ET_XACE_CLUSTERS
 			a_class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 			a_location: STRING
+			a_parent: ET_XACE_CLUSTER
+			a_cluster_prefix: STRING
+			a_library_prefix: STRING
 		do
-			print_indentation (indent, a_file)
-			a_file.put_string ("<cluster name=%"")
-			a_file.put_string (a_cluster.prefixed_name)
-			a_location := a_cluster.pathname
-			if a_location /= Void then
-				a_file.put_string ("%" location=%"")
-				a_file.put_string (a_location)
-			end
-			if a_cluster.is_relative then
-				a_file.put_string ("%" relative=%"true")
-			elseif a_location = Void then
-				a_file.put_string ("%" relative=%"false")
-			end
-			an_option := a_cluster.options
-			a_class_options := a_cluster.class_options
-			subclusters := a_cluster.subclusters
-			if an_option = Void and a_class_options = Void and subclusters = Void then
-				a_file.put_line ("%"/>")
-			else
-				a_file.put_line ("%">")
-				if an_option /= Void then
-					print_options (an_option, indent + 1, a_file)
-				end
-				if a_class_options /= Void then
-					print_class_options (a_class_options, indent + 1, a_file)
-				end
-				if subclusters /= Void then
-					print_clusters (subclusters, indent + 1, a_file)
-				end
+			if is_flat or else not a_cluster.is_mounted then
 				print_indentation (indent, a_file)
-				a_file.put_line ("</cluster>")
+				a_file.put_string ("<cluster name=%"")
+				print_quote_escaped_string (a_cluster.name, a_file)
+				a_location := a_cluster.pathname
+				if a_location /= Void then
+					a_file.put_string ("%" location=%"")
+					print_quote_escaped_string (a_location, a_file)
+					if a_cluster.is_relative then
+						a_file.put_string ("%" relative=%"true")
+					end
+				elseif not a_cluster.is_relative then
+					a_file.put_string ("%" relative=%"false")
+				end
+				a_cluster_prefix := a_cluster.cluster_prefix
+				a_parent := a_cluster.parent
+				if a_parent = Void then
+					a_library_prefix := a_cluster.library_prefix
+					if not a_library_prefix.is_empty and (a_cluster.is_mounted or is_flat) then
+						a_file.put_string ("%" prefix=%"")
+						print_quote_escaped_string (a_library_prefix, a_file)
+						if not a_cluster_prefix.is_empty then
+							print_quote_escaped_string (a_cluster_prefix, a_file)
+						end
+					elseif not a_cluster_prefix.is_empty then
+						a_file.put_string ("%" prefix=%"")
+						print_quote_escaped_string (a_cluster_prefix, a_file)
+					end
+				elseif not STRING_.same_string (a_parent.cluster_prefix, a_cluster_prefix) then
+					a_file.put_string ("%" prefix=%"")
+					print_quote_escaped_string (a_cluster_prefix, a_file)
+				end
+				an_option := a_cluster.options
+				a_class_options := a_cluster.class_options
+				subclusters := a_cluster.subclusters
+				if an_option = Void and a_class_options = Void and subclusters = Void then
+					a_file.put_line ("%"/>")
+				else
+					a_file.put_line ("%">")
+					if an_option /= Void then
+						print_options (an_option, indent + 1, a_file)
+					end
+					if a_class_options /= Void then
+						print_class_options (a_class_options, indent + 1, a_file)
+					end
+					if subclusters /= Void then
+						print_clusters (subclusters, indent + 1, a_file)
+					end
+					print_indentation (indent, a_file)
+					a_file.put_line ("</cluster>")
+				end
 			end
 		end
 
@@ -803,7 +850,7 @@ feature {NONE} -- Output
 				a_class_options := a_class_cursor.item
 				print_indentation (indent, a_file)
 				a_file.put_string ("<class name=%"")
-				a_file.put_string (a_class_options.class_name)
+				print_quote_escaped_string (a_class_options.class_name, a_file)
 				a_file.put_line ("%">")
 				print_options (a_class_options.options, indent + 1, a_file)
 				a_feature_options := a_class_options.feature_options
@@ -833,7 +880,7 @@ feature {NONE} -- Output
 				a_feature_options := a_feature_cursor.item
 				print_indentation (indent, a_file)
 				a_file.put_string ("<feature name=%"")
-				a_file.put_string (a_feature_options.feature_name)
+				print_quote_escaped_string (a_feature_options.feature_name, a_file)
 				a_file.put_line ("%">")
 				print_options (a_feature_options.options, indent + 1, a_file)
 				a_feature_cursor.forth
@@ -860,10 +907,119 @@ feature {NONE} -- Output
 				a_library := library_list.item (i)
 				print_indentation (indent, a_file)
 				a_file.put_string ("<mount location=%"")
-				a_file.put_string (a_library.pathname)
+				print_quote_escaped_string (a_library.pathname, a_file)
 				a_file.put_line ("%"/>")
 				i := i + 1
 			end
+		end
+
+	print_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print escaped version of `a_string' to `a_file'.
+		require
+			a_string_not_void: a_string /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			last_escaped: INTEGER
+			i: INTEGER
+			cnt: INTEGER
+			a_char: INTEGER
+		do
+			from
+				last_escaped := 0
+				i := 1
+				cnt := a_string.count
+			invariant
+				last_escaped <= i
+			until
+				i > cnt
+			loop
+				a_char := a_string.item_code (i)
+				if is_escaped (a_char) then
+					if last_escaped < i - 1 then
+						a_file.put_string (a_string.substring (last_escaped + 1, i - 1))
+					end
+					print_escaped_character (a_char, a_file)
+					last_escaped := i
+				end
+				i := i + 1
+			end
+				-- At exit.
+			if last_escaped = 0 then
+				a_file.put_string (a_string)
+			elseif last_escaped < i - 1 then
+				a_file.put_string (a_string.substring (last_escaped + 1, i - 1))
+			end
+		end
+
+	print_quote_escaped_string (a_string: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print escaped version of `a_string' (with quotes also
+			-- escaped for attribute values) to `a_file'.
+		require
+			a_string_not_void: a_string /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			last_escaped: INTEGER
+			i: INTEGER
+			cnt: INTEGER
+		do
+			from
+				last_escaped := 0
+				i := 1
+				cnt := a_string.count
+			invariant
+				last_escaped <= i
+			until
+				i > cnt
+			loop
+				if a_string.item_code (i) = Quot_char.code then
+					if last_escaped < i - 1 then
+						print_escaped_string (a_string.substring (last_escaped + 1, i - 1), a_file)
+					end
+					a_file.put_string (Quot_entity)
+					last_escaped := i
+				end
+				i := i + 1
+			end
+				-- At exit.
+			if last_escaped = 0 then
+				print_escaped_string (a_string, a_file)
+			elseif last_escaped < i - 1 then
+				print_escaped_string (a_string.substring (last_escaped + 1, i - 1), a_file)
+			end
+		end
+
+	print_escaped_character (a_char: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print escaped version of `a_char' to `a_file'.
+		require
+			is_escaped: is_escaped (a_char)
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if a_char = Lt_char.code then
+				a_file.put_string (Lt_entity)
+			elseif a_char = Gt_char.code then
+				a_file.put_string (Gt_entity)
+			elseif a_char = Amp_char.code then
+				a_file.put_string (Amp_entity)
+			elseif a_char = Quot_char.code then
+				a_file.put_string (Quot_entity)
+			else
+				a_file.put_string ("&#")
+				a_file.put_integer (a_char)
+				a_file.put_character (';')
+			end
+		end
+
+feature {NONE} -- Escaped
+
+	is_escaped (a_char: INTEGER): BOOLEAN is
+			-- Is this an escapable character?
+		do
+			Result := a_char = Lt_char.code
+				or a_char = Gt_char.code
+				or a_char = Amp_char.code
 		end
 
 end
