@@ -248,7 +248,7 @@ feature {NONE} -- Output
 					print_options (an_option, 3, a_file)
 					a_file.put_new_line
 					print_indentation (2, a_file)
-					a_file.put_string ("end;")
+					a_file.put_string ("end")
 				else
 					a_file.put_character (';')
 				end
