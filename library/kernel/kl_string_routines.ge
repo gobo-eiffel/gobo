@@ -22,7 +22,7 @@ feature -- Initialization
 			non_negative_n: n >= 0
 		do
 #ifdef VE
-			!! Result.make (0)
+			!! Result.make_empty
 #else
 			!! Result.make (n)
 #endif
@@ -37,7 +37,7 @@ feature -- Initialization
 			non_negative_n: n >= 0
 		do
 #ifdef VE
-			!! Result.make (n)
+			!! Result.make_filled ('%U', n)
 #else
 #ifdef SE
 			!! Result.blank (n)
@@ -101,8 +101,12 @@ feature -- Access
 			if nb > 5 then
 #ifdef ISE || HACT
 				Result := nb * a_string.item (nb).lower.code
-#else
+#endif
+#ifdef SE
 				Result := nb * a_string.item (nb).to_lower.code
+#endif
+#ifdef VE
+				Result := nb * a_string.item (nb).as_lower.code
 #endif
 				i := 5
 			else
@@ -111,8 +115,12 @@ feature -- Access
 			from until i <= 0 loop
 #ifdef ISE || HACT
 				Result := Result + a_string.item (i).lower.code
-#else
+#endif
+#ifdef SE
 				Result := Result + a_string.item (i).to_lower.code
+#endif
+#ifdef VE
+				Result := Result + a_string.item (i).as_lower.code
 #endif
 				i := i - 1
 			end
@@ -144,8 +152,12 @@ feature -- Comparison
 						i := i - 1
 #ifdef ISE || HACT
 					elseif c1.lower = c2.lower then
-#else
+#endif
+#ifdef SE
 					elseif c1.to_lower = c2.to_lower then
+#endif
+#ifdef VE
+					elseif c1.as_lower = c2.as_lower then
 #endif
 						i := i - 1
 					else
