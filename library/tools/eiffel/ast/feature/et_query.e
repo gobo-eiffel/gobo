@@ -38,6 +38,7 @@ feature -- Conversion
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, Void, declared_type, Void, Void, Void, clients, implementation_class)
+			Result.set_implementation_feature (implementation_feature)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_seed (first_seed)

@@ -51,6 +51,7 @@ feature -- Conversion
 			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, locals, compound, postconditions, rescue_clause,
 				clients, implementation_class)
+			Result.set_implementation_feature (implementation_feature)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_version (version)

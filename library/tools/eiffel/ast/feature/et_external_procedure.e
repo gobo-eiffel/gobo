@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			end_keyword := tokens.end_keyword
 			clients := a_clients
 			implementation_class := a_class
+			implementation_feature := Current
 		ensure
 			name_item_set: name_item = a_name
 			arguments_set: arguments = args
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 			postconditions_set: postconditions = a_postconditions
 			clients_set: clients = a_clients
 			implementation_class_set: implementation_class = a_class
+			implementation_feature_set: implementation_feature = Current
 		end
 
 feature -- Duplication
@@ -79,6 +81,7 @@ feature -- Conversion
 		do
 			create Result.make (a_name, arguments, obsolete_message, preconditions,
 				language, alias_clause, postconditions, clients, implementation_class)
+			Result.set_implementation_feature (implementation_feature)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_version (version)

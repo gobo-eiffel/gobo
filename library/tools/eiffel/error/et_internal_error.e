@@ -74,7 +74,44 @@ creation
 	make_giacb,
 	make_giacc,
 	make_giacd,
-	make_giace
+	make_giace,
+	make_giacf,
+	make_giacg,
+	make_giach,
+	make_giaci,
+	make_giacj,
+	make_giack,
+	make_giacl,
+	make_giacm,
+	make_giacn,
+	make_giaco,
+	make_giacp,
+	make_giacq,
+	make_giacr,
+	make_giacs,
+	make_giact,
+	make_giacu,
+	make_giacv,
+	make_giacw,
+	make_giacx,
+	make_giacy,
+	make_giacz,
+	make_giada,
+	make_giadb,
+	make_giadc,
+	make_giadd,
+	make_giade,
+	make_giadf,
+	make_giadg,
+	make_giadh,
+	make_giadi,
+	make_giadj,
+	make_giadk,
+	make_giadl,
+	make_giadm,
+	make_giadn,
+	make_giado,
+	make_giadp
 
 feature {NONE} -- Initialization
 
@@ -819,6 +856,487 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_giacf is
+			-- Create a new GIACF error.
+		do
+			code := giacf_template_code
+			etl_code := giacf_etl_code
+			default_template := giacf_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacg is
+			-- Create a new GIACG error.
+		do
+			code := giacg_template_code
+			etl_code := giacg_etl_code
+			default_template := giacg_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giach is
+			-- Create a new GIACH error.
+		do
+			code := giach_template_code
+			etl_code := giach_etl_code
+			default_template := giach_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaci is
+			-- Create a new GIACI error.
+		do
+			code := giaci_template_code
+			etl_code := giaci_etl_code
+			default_template := giaci_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacj is
+			-- Create a new GIACJ error.
+		do
+			code := giacj_template_code
+			etl_code := giacj_etl_code
+			default_template := giacj_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giack is
+			-- Create a new GIACK error.
+		do
+			code := giack_template_code
+			etl_code := giack_etl_code
+			default_template := giack_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacl is
+			-- Create a new GIACL error.
+		do
+			code := giacl_template_code
+			etl_code := giacl_etl_code
+			default_template := giacl_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacm is
+			-- Create a new GIACM error.
+		do
+			code := giacm_template_code
+			etl_code := giacm_etl_code
+			default_template := giacm_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacn is
+			-- Create a new GIACN error.
+		do
+			code := giacn_template_code
+			etl_code := giacn_etl_code
+			default_template := giacn_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaco is
+			-- Create a new GIACO error.
+		do
+			code := giaco_template_code
+			etl_code := giaco_etl_code
+			default_template := giaco_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacp is
+			-- Create a new GIACP error.
+		do
+			code := giacp_template_code
+			etl_code := giacp_etl_code
+			default_template := giacp_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacq is
+			-- Create a new GIACQ error.
+		do
+			code := giacq_template_code
+			etl_code := giacq_etl_code
+			default_template := giacq_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacr is
+			-- Create a new GIACR error.
+		do
+			code := giacr_template_code
+			etl_code := giacr_etl_code
+			default_template := giacr_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacs is
+			-- Create a new GIACS error.
+		do
+			code := giacs_template_code
+			etl_code := giacs_etl_code
+			default_template := giacs_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giact is
+			-- Create a new GIACT error.
+		do
+			code := giact_template_code
+			etl_code := giact_etl_code
+			default_template := giact_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacu is
+			-- Create a new GIACU error.
+		do
+			code := giacu_template_code
+			etl_code := giacu_etl_code
+			default_template := giacu_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacv is
+			-- Create a new GIACV error.
+		do
+			code := giacv_template_code
+			etl_code := giacv_etl_code
+			default_template := giacv_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacw is
+			-- Create a new GIACW error.
+		do
+			code := giacw_template_code
+			etl_code := giacw_etl_code
+			default_template := giacw_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacx is
+			-- Create a new GIACX error.
+		do
+			code := giacx_template_code
+			etl_code := giacx_etl_code
+			default_template := giacx_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacy is
+			-- Create a new GIACY error.
+		do
+			code := giacy_template_code
+			etl_code := giacy_etl_code
+			default_template := giacy_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacz is
+			-- Create a new GIACZ error.
+		do
+			code := giacz_template_code
+			etl_code := giacz_etl_code
+			default_template := giacz_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giada is
+			-- Create a new GIADA error.
+		do
+			code := giada_template_code
+			etl_code := giada_etl_code
+			default_template := giada_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadb is
+			-- Create a new GIADB error.
+		do
+			code := giadb_template_code
+			etl_code := giadb_etl_code
+			default_template := giadb_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadc is
+			-- Create a new GIADC error.
+		do
+			code := giadc_template_code
+			etl_code := giadc_etl_code
+			default_template := giadc_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadd is
+			-- Create a new GIADD error.
+		do
+			code := giadd_template_code
+			etl_code := giadd_etl_code
+			default_template := giadd_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giade is
+			-- Create a new GIADE error.
+		do
+			code := giade_template_code
+			etl_code := giade_etl_code
+			default_template := giade_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadf is
+			-- Create a new GIADF error.
+		do
+			code := giadf_template_code
+			etl_code := giadf_etl_code
+			default_template := giadf_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadg is
+			-- Create a new GIADG error.
+		do
+			code := giadg_template_code
+			etl_code := giadg_etl_code
+			default_template := giadg_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadh is
+			-- Create a new GIADH error.
+		do
+			code := giadh_template_code
+			etl_code := giadh_etl_code
+			default_template := giadh_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadi is
+			-- Create a new GIADI error.
+		do
+			code := giadi_template_code
+			etl_code := giadi_etl_code
+			default_template := giadi_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadj is
+			-- Create a new GIADJ error.
+		do
+			code := giadj_template_code
+			etl_code := giadj_etl_code
+			default_template := giadj_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadk is
+			-- Create a new GIADK error.
+		do
+			code := giadk_template_code
+			etl_code := giadk_etl_code
+			default_template := giadk_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadl is
+			-- Create a new GIADL error.
+		do
+			code := giadl_template_code
+			etl_code := giadl_etl_code
+			default_template := giadl_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadm is
+			-- Create a new GIADM error.
+		do
+			code := giadm_template_code
+			etl_code := giadm_etl_code
+			default_template := giadm_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadn is
+			-- Create a new GIADN error.
+		do
+			code := giadn_template_code
+			etl_code := giadn_etl_code
+			default_template := giadn_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giado is
+			-- Create a new GIADO error.
+		do
+			code := giado_template_code
+			etl_code := giado_etl_code
+			default_template := giado_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadp is
+			-- Create a new GIADP error.
+		do
+			code := giadp_template_code
+			etl_code := giadp_etl_code
+			default_template := giadp_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -878,6 +1396,43 @@ feature {NONE} -- Implementation
 	giacc_default_template: STRING is "[$1] internal error."
 	giacd_default_template: STRING is "[$1] internal error."
 	giace_default_template: STRING is "[$1] internal error."
+	giacf_default_template: STRING is "[$1] internal error."
+	giacg_default_template: STRING is "[$1] internal error."
+	giach_default_template: STRING is "[$1] internal error."
+	giaci_default_template: STRING is "[$1] internal error."
+	giacj_default_template: STRING is "[$1] internal error."
+	giack_default_template: STRING is "[$1] internal error."
+	giacl_default_template: STRING is "[$1] internal error."
+	giacm_default_template: STRING is "[$1] internal error."
+	giacn_default_template: STRING is "[$1] internal error."
+	giaco_default_template: STRING is "[$1] internal error."
+	giacp_default_template: STRING is "[$1] internal error."
+	giacq_default_template: STRING is "[$1] internal error."
+	giacr_default_template: STRING is "[$1] internal error."
+	giacs_default_template: STRING is "[$1] internal error."
+	giact_default_template: STRING is "[$1] internal error."
+	giacu_default_template: STRING is "[$1] internal error."
+	giacv_default_template: STRING is "[$1] internal error."
+	giacw_default_template: STRING is "[$1] internal error."
+	giacx_default_template: STRING is "[$1] internal error."
+	giacy_default_template: STRING is "[$1] internal error."
+	giacz_default_template: STRING is "[$1] internal error."
+	giada_default_template: STRING is "[$1] internal error."
+	giadb_default_template: STRING is "[$1] internal error."
+	giadc_default_template: STRING is "[$1] internal error."
+	giadd_default_template: STRING is "[$1] internal error."
+	giade_default_template: STRING is "[$1] internal error."
+	giadf_default_template: STRING is "[$1] internal error."
+	giadg_default_template: STRING is "[$1] internal error."
+	giadh_default_template: STRING is "[$1] internal error."
+	giadi_default_template: STRING is "[$1] internal error."
+	giadj_default_template: STRING is "[$1] internal error."
+	giadk_default_template: STRING is "[$1] internal error."
+	giadl_default_template: STRING is "[$1] internal error."
+	giadm_default_template: STRING is "[$1] internal error."
+	giadn_default_template: STRING is "[$1] internal error."
+	giado_default_template: STRING is "[$1] internal error."
+	giadp_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -937,6 +1492,43 @@ feature {NONE} -- Implementation
 	giacc_etl_code: STRING is "GIACC"
 	giacd_etl_code: STRING is "GIACD"
 	giace_etl_code: STRING is "GIACE"
+	giacf_etl_code: STRING is "GIACF"
+	giacg_etl_code: STRING is "GIACG"
+	giach_etl_code: STRING is "GIACH"
+	giaci_etl_code: STRING is "GIACI"
+	giacj_etl_code: STRING is "GIACJ"
+	giack_etl_code: STRING is "GIACK"
+	giacl_etl_code: STRING is "GIACL"
+	giacm_etl_code: STRING is "GIACM"
+	giacn_etl_code: STRING is "GIACN"
+	giaco_etl_code: STRING is "GIACO"
+	giacp_etl_code: STRING is "GIACP"
+	giacq_etl_code: STRING is "GIACQ"
+	giacr_etl_code: STRING is "GIACR"
+	giacs_etl_code: STRING is "GIACS"
+	giact_etl_code: STRING is "GIACT"
+	giacu_etl_code: STRING is "GIACU"
+	giacv_etl_code: STRING is "GIACV"
+	giacw_etl_code: STRING is "GIACW"
+	giacx_etl_code: STRING is "GIACX"
+	giacy_etl_code: STRING is "GIACY"
+	giacz_etl_code: STRING is "GIACZ"
+	giada_etl_code: STRING is "GIADA"
+	giadb_etl_code: STRING is "GIADB"
+	giadc_etl_code: STRING is "GIADC"
+	giadd_etl_code: STRING is "GIADD"
+	giade_etl_code: STRING is "GIADE"
+	giadf_etl_code: STRING is "GIADF"
+	giadg_etl_code: STRING is "GIADG"
+	giadh_etl_code: STRING is "GIADH"
+	giadi_etl_code: STRING is "GIADI"
+	giadj_etl_code: STRING is "GIADJ"
+	giadk_etl_code: STRING is "GIADK"
+	giadl_etl_code: STRING is "GIADL"
+	giadm_etl_code: STRING is "GIADM"
+	giadn_etl_code: STRING is "GIADN"
+	giado_etl_code: STRING is "GIADO"
+	giadp_etl_code: STRING is "GIADP"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -996,6 +1588,43 @@ feature {NONE} -- Implementation
 	giacc_template_code: STRING is "giacc"
 	giacd_template_code: STRING is "giacd"
 	giace_template_code: STRING is "giace"
+	giacf_template_code: STRING is "giacf"
+	giacg_template_code: STRING is "giacg"
+	giach_template_code: STRING is "giach"
+	giaci_template_code: STRING is "giaci"
+	giacj_template_code: STRING is "giacj"
+	giack_template_code: STRING is "giack"
+	giacl_template_code: STRING is "giacl"
+	giacm_template_code: STRING is "giacm"
+	giacn_template_code: STRING is "giacn"
+	giaco_template_code: STRING is "giaco"
+	giacp_template_code: STRING is "giacp"
+	giacq_template_code: STRING is "giacq"
+	giacr_template_code: STRING is "giacr"
+	giacs_template_code: STRING is "giacs"
+	giact_template_code: STRING is "giact"
+	giacu_template_code: STRING is "giacu"
+	giacv_template_code: STRING is "giacv"
+	giacw_template_code: STRING is "giacw"
+	giacx_template_code: STRING is "giacx"
+	giacy_template_code: STRING is "giacy"
+	giacz_template_code: STRING is "giacz"
+	giada_template_code: STRING is "giada"
+	giadb_template_code: STRING is "giadb"
+	giadc_template_code: STRING is "giadc"
+	giadd_template_code: STRING is "giadd"
+	giade_template_code: STRING is "giade"
+	giadf_template_code: STRING is "giadf"
+	giadg_template_code: STRING is "giadg"
+	giadh_template_code: STRING is "giadh"
+	giadi_template_code: STRING is "giadi"
+	giadj_template_code: STRING is "giadj"
+	giadk_template_code: STRING is "giadk"
+	giadl_template_code: STRING is "giadl"
+	giadm_template_code: STRING is "giadm"
+	giadn_template_code: STRING is "giadn"
+	giado_template_code: STRING is "giado"
+	giadp_template_code: STRING is "giadp"
 			-- Template error codes
 
 end

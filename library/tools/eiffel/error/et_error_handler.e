@@ -1007,30 +1007,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdpr4b_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
-			-- Report VDPR-4A error: the number of actual arguments in
-			-- the precursor call `a_precursor' appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' is not the
-			-- same as the number of formal arguments of `a_feature' in
-			-- class `a_parent'.
-			--
-			-- ETL3-4.82-00-00: p.215
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_precursor_not_void: a_precursor /= Void
-			a_feature_not_void: a_feature /= Void
-			a_parent_not_void: a_parent /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vdpr4_error (a_class) then
-				create an_error.make_vdpr4b (a_class, a_class_impl, a_precursor, a_feature, a_parent)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vdpr4c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE;
 		a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VDPR-4B error: the `arg'-th actual argument in the precursor
@@ -1817,28 +1793,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VGCC-6 error: the feature name `a_name', appearing
-			-- in a creation expression in `a_class_impl' and viewed from
-			-- one of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc6_error (a_class) then
-				create an_error.make_vgcc6c (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vgcc6d_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
 			-- a creation expression with creation procedure name `a_name' in `a_class',
@@ -1898,28 +1852,6 @@ feature -- Validity errors
 		do
 			if reportable_vgcc6_error (a_class) then
 				create an_error.make_vgcc6f (a_class, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc6g_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VGCC-6 error: the feature name `a_name', appearing
-			-- in a creation instruction in `a_class_impl' and viewed from
-			-- one of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc6_error (a_class) then
-				create an_error.make_vgcc6g (a_class, a_class_impl, a_name, a_feature, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -2472,28 +2404,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn1b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VKCN-1 error: `a_feature' of class `a_target', appearing
-			-- in the qualified instruction call `a_name' in `a_class_impl' and
-			-- viewed from one of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vkcn1_error (a_class) then
-				create an_error.make_vkcn1b (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vkcn1c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Report VKCN-1 error: `a_feature' of `a_class', appearing
 			-- in the unqualified instruction call `a_name' in `a_class',
@@ -2510,27 +2420,6 @@ feature -- Validity errors
 		do
 			if reportable_vkcn1_error (a_class) then
 				create an_error.make_vkcn1c (a_class, a_name, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vkcn1d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Report VKCN-1 error: `a_feature' of `a_class_impl', appearing in the
-			-- unqualified instruction call `a_name' in `a_class_impl' and viewed from
-			-- one of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vkcn1_error (a_class) then
-				create an_error.make_vkcn1d (a_class, a_class_impl, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -2556,29 +2445,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VKCN-2 error: `a_feature' of class `a_target', appearing
-			-- in the qualified expression call `a_name' in `a_class_impl' and
-			-- viewed from one of its descendants `a_class', is not an attribute
-			-- or a function.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vkcn2_error (a_class) then
-				create an_error.make_vkcn2b (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vkcn2c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Report VKCN-2 error: `a_feature' of `a_class', appearing
 			-- in the unqualified expression call `a_name' in `a_class', is not
@@ -2595,27 +2461,6 @@ feature -- Validity errors
 		do
 			if reportable_vkcn2_error (a_class) then
 				create an_error.make_vkcn2c (a_class, a_name, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vkcn2d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Report VKCN-2 error: `a_feature' of `a_class_impl', appearing
-			-- in the unqualified expression call `a_name' in `a_class_impl' and viewed
-			-- from one of its descendants `a_class', is not an attribute or a function.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vkcn2_error (a_class) then
-				create an_error.make_vkcn2d (a_class, a_class_impl, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -2995,29 +2840,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpca3b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VPCA-3 error: the number of actual arguments in
-			-- the qualified call agent `a_name' appearing in `a_class_impl' and viewed
-			-- from one of its descendants `a_class' is not the same as the number
-			-- of formal arguments of `a_feature' in class `a_target'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca3_error (a_class) then
-				create an_error.make_vpca3b (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vpca3c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Report VPCA-3 error: the number of actual arguments in
 			-- the unqualified call agent `a_name' appearing in `a_class' is not the
@@ -3034,28 +2856,6 @@ feature -- Validity errors
 		do
 			if reportable_vpca3_error (a_class) then
 				create an_error.make_vpca3c (a_class, a_name, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vpca3d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Report VPCA-3 error: the number of actual arguments in
-			-- the unqualified call agent `a_name' appearing in `a_class_impl' and
-			-- viewed from one of its descendants `a_class' is not the same as
-			-- the number of formal arguments of `a_feature' in `a_class_impl'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vpca3_error (a_class) then
-				create an_error.make_vpca3d (a_class, a_class_impl, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -4044,29 +3844,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Report VUAR-1 error: the number of actual arguments in
-			-- the qualified call `a_name' appearing in `a_class_impl' and viewed
-			-- from one of its descendants `a_class' is not the same as the number
-			-- of formal arguments of `a_feature' in class `a_target'.
-			--
-			-- ETL2: p.369
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuar1_error (a_class) then
-				create an_error.make_vuar1b (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vuar1c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Report VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
@@ -4083,28 +3860,6 @@ feature -- Validity errors
 		do
 			if reportable_vuar1_error (a_class) then
 				create an_error.make_vuar1c (a_class, a_name, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vuar1d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Report VUAR-1 error: the number of actual arguments in
-			-- the unqualified call `a_name' appearing in `a_class_impl' and
-			-- viewed from one of its descendants `a_class' is not the same as
-			-- the number of formal arguments of `a_feature' in `a_class_impl'.
-			--
-			-- ETL2: p.369
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuar1_error (a_class) then
-				create an_error.make_vuar1d (a_class, a_class_impl, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -6048,6 +5803,339 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giace
+			report_internal_error (an_error)
+		end
+
+	report_giacf_error is
+			-- Report GIACF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacf
+			report_internal_error (an_error)
+		end
+
+	report_giacg_error is
+			-- Report GIACG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacg
+			report_internal_error (an_error)
+		end
+
+	report_giach_error is
+			-- Report GIACH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giach
+			report_internal_error (an_error)
+		end
+
+	report_giaci_error is
+			-- Report GIACI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaci
+			report_internal_error (an_error)
+		end
+
+	report_giacj_error is
+			-- Report GIACJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacj
+			report_internal_error (an_error)
+		end
+
+	report_giack_error is
+			-- Report GIACK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giack
+			report_internal_error (an_error)
+		end
+
+	report_giacl_error is
+			-- Report GIACL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacl
+			report_internal_error (an_error)
+		end
+
+	report_giacm_error is
+			-- Report GIACM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacm
+			report_internal_error (an_error)
+		end
+
+	report_giacn_error is
+			-- Report GIACN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacn
+			report_internal_error (an_error)
+		end
+
+	report_giaco_error is
+			-- Report GIACO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaco
+			report_internal_error (an_error)
+		end
+
+	report_giacp_error is
+			-- Report GIACP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacp
+			report_internal_error (an_error)
+		end
+
+	report_giacq_error is
+			-- Report GIACQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacq
+			report_internal_error (an_error)
+		end
+
+	report_giacr_error is
+			-- Report GIACR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacr
+			report_internal_error (an_error)
+		end
+
+	report_giacs_error is
+			-- Report GIACS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacs
+			report_internal_error (an_error)
+		end
+
+	report_giact_error is
+			-- Report GIACT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giact
+			report_internal_error (an_error)
+		end
+
+	report_giacu_error is
+			-- Report GIACU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacu
+			report_internal_error (an_error)
+		end
+
+	report_giacv_error is
+			-- Report GIACV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacv
+			report_internal_error (an_error)
+		end
+
+	report_giacw_error is
+			-- Report GIACW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacw
+			report_internal_error (an_error)
+		end
+
+	report_giacx_error is
+			-- Report GIACX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacx
+			report_internal_error (an_error)
+		end
+
+	report_giacy_error is
+			-- Report GIACY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacy
+			report_internal_error (an_error)
+		end
+
+	report_giacz_error is
+			-- Report GIACZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacz
+			report_internal_error (an_error)
+		end
+
+	report_giada_error is
+			-- Report GIADA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giada
+			report_internal_error (an_error)
+		end
+
+	report_giadb_error is
+			-- Report GIADB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadb
+			report_internal_error (an_error)
+		end
+
+	report_giadc_error is
+			-- Report GIADC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadc
+			report_internal_error (an_error)
+		end
+
+	report_giadd_error is
+			-- Report GIADD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadd
+			report_internal_error (an_error)
+		end
+
+	report_giade_error is
+			-- Report GIADE internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giade
+			report_internal_error (an_error)
+		end
+
+	report_giadf_error is
+			-- Report GIADF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadf
+			report_internal_error (an_error)
+		end
+
+	report_giadg_error is
+			-- Report GIADG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadg
+			report_internal_error (an_error)
+		end
+
+	report_giadh_error is
+			-- Report GIADH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadh
+			report_internal_error (an_error)
+		end
+
+	report_giadi_error is
+			-- Report GIADI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadi
+			report_internal_error (an_error)
+		end
+
+	report_giadj_error is
+			-- Report GIADJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadj
+			report_internal_error (an_error)
+		end
+
+	report_giadk_error is
+			-- Report GIADK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadk
+			report_internal_error (an_error)
+		end
+
+	report_giadl_error is
+			-- Report GIADL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadl
+			report_internal_error (an_error)
+		end
+
+	report_giadm_error is
+			-- Report GIADM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadm
+			report_internal_error (an_error)
+		end
+
+	report_giadn_error is
+			-- Report GIADN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadn
+			report_internal_error (an_error)
+		end
+
+	report_giado_error is
+			-- Report GIADO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giado
+			report_internal_error (an_error)
+		end
+
+	report_giadp_error is
+			-- Report GIADP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadp
 			report_internal_error (an_error)
 		end
 

@@ -90,6 +90,12 @@ feature -- Access
 			-- be renamed in descendant classes) when feature
 			-- is inherited as-is.)
 
+	implementation_feature: ET_FEATURE
+			-- Current feature in `implementation_class'
+			-- (Useful for interpreting feature calls and type
+			-- anchors (that might be renamed in descendant
+			-- classes) when feature is inherited as-is.)
+
 	name_item: ET_FEATURE_NAME_ITEM
 			-- Feature name (possibly followed by comma for synomyms)
 
@@ -205,6 +211,30 @@ feature -- Status report
 
 	is_immediate: BOOLEAN is True
 			-- Is current feature immediate?
+
+feature -- Implementation checking status
+
+	implementation_checked: BOOLEAN
+			-- Has the implementation of current feature been checked?
+
+	has_implementation_error: BOOLEAN
+			-- Has a fatal error occurred during implementation checking?
+
+	set_implementation_checked is
+			-- Set `implementation_checked' to True.
+		do
+			implementation_checked := True
+		ensure
+			implementation_checked: implementation_checked
+		end
+
+	set_implementation_error is
+			-- Set `has_implementation_error' to True.
+		do
+			has_implementation_error := True
+		ensure
+			has_implementation_error: has_implementation_error
+		end
 
 feature -- Export status
 
@@ -329,6 +359,16 @@ feature -- Setting
 			implementation_class_set: implementation_class = a_class
 		end
 
+	set_implementation_feature (a_feature: like implementation_feature) is
+			-- Set `implementation_feature' to `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			implementation_feature := a_feature
+		ensure
+			implementation_feature_set: implementation_feature = a_feature
+		end
+
 	set_first_seed (a_seed: INTEGER) is
 			-- Set `first_seed' to `a_seed'.
 		require
@@ -449,6 +489,7 @@ invariant
 	clients_not_void: clients /= Void
 	first_seed_positive: is_registered implies first_seed > 0
 	implementation_class_not_void: implementation_class /= Void
+	implementation_feature_not_void: implementation_feature /= Void
 	is_immediate: is_immediate
 
 end

@@ -48,7 +48,6 @@ creation
 	make_vdpr3b,
 	make_vdpr3c,
 	make_vdpr4a,
-	make_vdpr4b,
 	make_vdpr4c,
 	make_vdpr4d,
 	make_vdrd2a,
@@ -84,11 +83,9 @@ creation
 	make_vgcc5d,
 	make_vgcc6a,
 	make_vgcc6b,
-	make_vgcc6c,
 	make_vgcc6d,
 	make_vgcc6e,
 	make_vgcc6f,
-	make_vgcc6g,
 	make_vgcc6h,
 	make_vgcc6i,
 	make_vgcc8a,
@@ -115,13 +112,9 @@ creation
 	make_vjaw0b,
 	make_vjaw0c,
 	make_vkcn1a,
-	make_vkcn1b,
 	make_vkcn1c,
-	make_vkcn1d,
 	make_vkcn2a,
-	make_vkcn2b,
 	make_vkcn2c,
-	make_vkcn2d,
 	make_vmfn0a,
 	make_vmfn0b,
 	make_vmfn0c,
@@ -139,9 +132,7 @@ creation
 	make_vpca2a,
 	make_vpca2b,
 	make_vpca3a,
-	make_vpca3b,
 	make_vpca3c,
-	make_vpca3d,
 	make_vpca4a,
 	make_vpca4b,
 	make_vpca4c,
@@ -189,9 +180,7 @@ creation
 	make_vtug1a,
 	make_vtug2a,
 	make_vuar1a,
-	make_vuar1b,
 	make_vuar1c,
-	make_vuar1d,
 	make_vuar2a,
 	make_vuar2b,
 	make_vuar2c,
@@ -1358,54 +1347,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = name of corresponding feature in class $7
 			-- dollar7: $7 = parent base class
-		end
-
-	make_vdpr4b (a_class, a_class_impl: like current_class; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
-			-- Create a new VDPR-4A error: the number of actual arguments in
-			-- the precursor call `a_precursor' appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' is not the
-			-- same as the number of formal arguments of `a_feature' in
-			-- class `a_parent'.
-			--
-			-- ETL3-4.82-00-00: p.215
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_precursor_not_void: a_precursor /= Void
-			a_feature_not_void: a_feature /= Void
-			a_parent_not_void: a_parent /= Void
-		do
-			code := vdpr4b_template_code
-			etl_code := vdpr4a_etl_code
-			default_template := vdpr4b_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_precursor.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_feature.name.name, 7)
-			parameters.put (a_parent.name.name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = name of corresponding feature in class $8
-			-- dollar8: $8 = parent base class
 		end
 
 	make_vdpr4c (a_class: like current_class; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE;
@@ -2968,54 +2909,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of creation type
 		end
 
-	make_vgcc6c (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new VGCC-6 error: the feature name `a_name', appearing
-			-- in a creation expression in `a_class_impl' and viewed from one
-			-- of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			code := vgcc6c_template_code
-			etl_code := vgcc6_etl_code
-			default_template := vgcc6c_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the creation call
-			-- dollar8: $8 = name of corresponding feature in class $8
-			-- dollar9: $9 = base class of creation type
-		end
-
 	make_vgcc6d (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
 			-- a creation expression with creation procedure name `a_name' in `a_class',
@@ -3151,54 +3044,6 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name of the creation call
 			-- dollar7: $7 = name of corresponding feature in class $8
 			-- dollar8: $8 = base class of creation type
-		end
-
-	make_vgcc6g (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new VGCC-6 error: the feature name `a_name', appearing
-			-- in a creation instruction in `a_class_impl' and viewed from one
-			-- of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			code := vgcc6g_template_code
-			etl_code := vgcc6_etl_code
-			default_template := vgcc6g_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the creation call
-			-- dollar8: $8 = name of corresponding feature in class $8
-			-- dollar9: $9 = base class of creation type
 		end
 
 	make_vgcc6h (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
@@ -4342,54 +4187,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vkcn1b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new VKCN-1 error: `a_feature' of class `a_target', appearing
-			-- in the qualified instruction call `a_name' in `a_class_impl' and viewed
-			-- from one of its descendants `a_class', is a procedure.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			code := vkcn1b_template_code
-			etl_code := vkcn1_etl_code
-			default_template := vkcn1b_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call
-		end
-
 	make_vkcn1c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Create a new VKCN-1 error: `a_feature' of `a_class', appearing
 			-- in the unqualified instruction call `a_name' in `a_class', is not
@@ -4430,51 +4227,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name of the call
 			-- dollar7: $7 = name of corresponding feature in class $5
-		end
-
-	make_vkcn1d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Create a new VKCN-1 error: `a_feature' of `a_class_impl', appearing
-			-- in the unqualified instruction call `a_name' in `a_class_impl' and
-			-- viewed from one of its descendants `a_class', is not a procedure.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		do
-			code := vkcn1d_template_code
-			etl_code := vkcn1_etl_code
-			default_template := vkcn1d_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $6
 		end
 
 	make_vkcn2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
@@ -4522,54 +4274,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vkcn2b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new VKCN-2 error: `a_feature' of class `a_target', appearing
-			-- in the qualified expression call `a_name' in `a_class_impl' and viewed from
-			-- one of its descendants `a_class', is not an attribute or a function.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			code := vkcn2b_template_code
-			etl_code := vkcn2_etl_code
-			default_template := vkcn2b_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call
-		end
-
 	make_vkcn2c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Create a new VKCN-2 error: `a_feature' of `a_class', appearing
 			-- in the unqualified expression call `a_name' in `a_class', is not
@@ -4610,51 +4314,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name of the call
 			-- dollar7: $7 = name of corresponding feature in class $5
-		end
-
-	make_vkcn2d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Create a new VKCN-2 error: `a_feature' of `a_class_impl', appearing
-			-- in the unqualified expression call `a_name' in `a_class_impl' and viewed
-			-- from one of its descendants `a_class', is not an attribute or a function.
-			--
-			-- ETL2: p.341
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		do
-			code := vkcn2d_template_code
-			etl_code := vkcn2_etl_code
-			default_template := vkcn2d_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $6
 		end
 
 	make_vmfn0a (a_class: like current_class; f1, f2: ET_FEATURE) is
@@ -5454,55 +5113,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call agent
 		end
 
-	make_vpca3b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new VPCA-3 error: the number of actual arguments in
-			-- the qualified call agent `a_name' appearing in `a_class_impl' and viewed
-			-- from one of its descendants `a_class' is not the same as the number
-			-- of formal arguments of `a_feature' in class `a_target'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			code := vpca3b_template_code
-			etl_code := vpca3_etl_code
-			default_template := vpca3b_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call agent
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call agent
-		end
-
 	make_vpca3c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Create a new VPCA-3 error: the number of actual arguments in
 			-- the unqualified call agent `a_name' appearing in `a_class' is not the
@@ -5543,52 +5153,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name of the call agent
 			-- dollar7: $7 = name of corresponding feature in class $5
-		end
-
-	make_vpca3d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Create a new VPCA-3 error: the number of actual arguments in
-			-- the unqualified call agent `a_name' appearing in `a_class_impl' and
-			-- viewed from one of its descendants `a_class' is not the same as
-			-- the number of formal arguments of `a_feature' in `a_class_impl'.
-			--
-			-- ETL3 (4.82-00-00): p.581
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		do
-			code := vpca3d_template_code
-			etl_code := vpca3_etl_code
-			default_template := vpca3d_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call agent
-			-- dollar8: $8 = name of corresponding feature in class $6
 		end
 
 	make_vpca4a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
@@ -7804,55 +7368,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vuar1b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
-			-- Create a new  VUAR-1 error: the number of actual arguments in
-			-- the qualified call `a_name' appearing in `a_class_impl' and viewed
-			-- from one of its descendants `a_class' is not the same as the number
-			-- of formal arguments of `a_feature' in class `a_target'.
-			--
-			-- ETL2: p.369
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			code := vuar1b_template_code
-			etl_code := vuar1_etl_code
-			default_template := vuar1b_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call
-		end
-
 	make_vuar1c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Create a new  VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
@@ -7893,52 +7408,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name of the call
 			-- dollar7: $7 = name of corresponding feature in class $5
-		end
-
-	make_vuar1d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Create a new  VUAR-1 error: the number of actual arguments in
-			-- the unqualified call `a_name' appearing in `a_class_impl' and
-			-- viewed from one of its descendants `a_class' is not the same as
-			-- the number of formal arguments of `a_feature' in `a_class_imple'.
-			--
-			-- ETL2: p.369
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		do
-			code := vuar1d_template_code
-			etl_code := vuar1_etl_code
-			default_template := vuar1d_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_name.name, 7)
-			parameters.put (a_feature.name.name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $6
 		end
 
 	make_vuar2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
@@ -9065,7 +8534,6 @@ feature {NONE} -- Implementation
 	vdpr3b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of an effective feature."
 	vdpr3c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of a feature from parent '$7'."
 	vdpr4a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments in Precursor call is not the same as the number of formal arguments of feature `$6' in class $7."
-	vdpr4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments in Precursor call is not the same as the number of formal arguments of feature `$7' in class $8."
 	vdpr4c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$6' in class $7."
 	vdpr4d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
 	vdrd2a_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
@@ -9101,11 +8569,9 @@ feature {NONE} -- Implementation
 	vgcc5d_default_template: STRING is "[$1] class $5 ($6,$3,$4): creation instruction with no Creation_call part, but $7 has a Creators part."
 	vgcc6a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the final name of a once-procedure."
 	vgcc6b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
-	vgcc6c_default_template: STRING is "[$1] class $5 ($6,$3,$4): `$8' is not the final name of a procedure in class $9."
 	vgcc6d_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
 	vgcc6e_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not exported for creation to class $5."
 	vgcc6f_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
-	vgcc6g_default_template: STRING is "[$1] class $5 ($6,$3,$4): `$8' is not the final name of a procedure in class $9."
 	vgcc6h_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
 	vgcc6i_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not exported for creation to class $5."
 	vgcc8a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not listed as creation procedure of the $9-th formal generic parameter of class $5."
@@ -9132,13 +8598,9 @@ feature {NONE} -- Implementation
 	vjaw0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' is not an attribute in class $5. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of feature `$7'. A Writable is either a local variable (including Result) or an attribute."
 	vkcn1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
-	vkcn1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): query `$8' of class $9 appears in a call instruction."
 	vkcn1c_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' appears in a call instruction."
-	vkcn1d_default_template: STRING is "[$1] class $5 ($6,$3,$4): query `$8' appears in a call instruction."
 	vkcn2a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
-	vkcn2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 appears in a call expression."
 	vkcn2c_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' appears in a call expression."
-	vkcn2d_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' appears in a call expression."
 	vmfn0a_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6'."
 	vmfn0b_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
 	vmfn0c_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
@@ -9156,9 +8618,7 @@ feature {NONE} -- Implementation
 	vpca2a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 is not exported to class $5."
 	vpca2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 is not exported to class $5."
 	vpca3a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7' in class $8."
-	vpca3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
 	vpca3c_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
-	vpca3d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8'."
 	vpca4a_default_template: STRING is "[$1] class $5 ($3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
 	vpca4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vpca4c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
@@ -9206,9 +8666,7 @@ feature {NONE} -- Implementation
 	vtug1a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
 	vtug2a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has wrong number of actual generic parameters."
 	vuar1a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7' in class $8."
-	vuar1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
 	vuar1c_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
-	vuar1d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8'."
 	vuar2a_default_template: STRING is "[$1] class $5 ($3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
 	vuar2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vuar2c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
@@ -9357,7 +8815,6 @@ feature {NONE} -- Implementation
 	vdpr3b_template_code: STRING is "vdpr3b"
 	vdpr3c_template_code: STRING is "vdpr3c"
 	vdpr4a_template_code: STRING is "vdpr4a"
-	vdpr4b_template_code: STRING is "vdpr4b"
 	vdpr4c_template_code: STRING is "vdpr4c"
 	vdpr4d_template_code: STRING is "vdpr4d"
 	vdrd2a_template_code: STRING is "vdrd2a"
@@ -9393,11 +8850,9 @@ feature {NONE} -- Implementation
 	vgcc5d_template_code: STRING is "vgcc5d"
 	vgcc6a_template_code: STRING is "vgcc6a"
 	vgcc6b_template_code: STRING is "vgcc6b"
-	vgcc6c_template_code: STRING is "vgcc6c"
 	vgcc6d_template_code: STRING is "vgcc6d"
 	vgcc6e_template_code: STRING is "vgcc6e"
 	vgcc6f_template_code: STRING is "vgcc6f"
-	vgcc6g_template_code: STRING is "vgcc6g"
 	vgcc6h_template_code: STRING is "vgcc6h"
 	vgcc6i_template_code: STRING is "vgcc6i"
 	vgcc8a_template_code: STRING is "vgcc8a"
@@ -9424,13 +8879,9 @@ feature {NONE} -- Implementation
 	vjaw0b_template_code: STRING is "vjaw0b"
 	vjaw0c_template_code: STRING is "vjaw0c"
 	vkcn1a_template_code: STRING is "vkcn1a"
-	vkcn1b_template_code: STRING is "vkcn1b"
 	vkcn1c_template_code: STRING is "vkcn1c"
-	vkcn1d_template_code: STRING is "vkcn1d"
 	vkcn2a_template_code: STRING is "vkcn2a"
-	vkcn2b_template_code: STRING is "vkcn2b"
 	vkcn2c_template_code: STRING is "vkcn2c"
-	vkcn2d_template_code: STRING is "vkcn2d"
 	vmfn0a_template_code: STRING is "vmfn0a"
 	vmfn0b_template_code: STRING is "vmfn0b"
 	vmfn0c_template_code: STRING is "vmfn0c"
@@ -9448,9 +8899,7 @@ feature {NONE} -- Implementation
 	vpca2a_template_code: STRING is "vpca2a"
 	vpca2b_template_code: STRING is "vpca2b"
 	vpca3a_template_code: STRING is "vpca3a"
-	vpca3b_template_code: STRING is "vpca3b"
 	vpca3c_template_code: STRING is "vpca3c"
-	vpca3d_template_code: STRING is "vpca3d"
 	vpca4a_template_code: STRING is "vpca4a"
 	vpca4b_template_code: STRING is "vpca4b"
 	vpca4c_template_code: STRING is "vpca4c"
@@ -9498,9 +8947,7 @@ feature {NONE} -- Implementation
 	vtug1a_template_code: STRING is "vtug1a"
 	vtug2a_template_code: STRING is "vtug2a"
 	vuar1a_template_code: STRING is "vuar1a"
-	vuar1b_template_code: STRING is "vuar1b"
 	vuar1c_template_code: STRING is "vuar1c"
-	vuar1d_template_code: STRING is "vuar1d"
 	vuar2a_template_code: STRING is "vuar2a"
 	vuar2b_template_code: STRING is "vuar2b"
 	vuar2c_template_code: STRING is "vuar2c"

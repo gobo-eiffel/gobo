@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			end_keyword := tokens.end_keyword
 			clients := a_clients
 			implementation_class := a_class
+			implementation_feature := Current
 		ensure
 			name_item_set: name_item = a_name
 			arguments_set: arguments = args
@@ -57,6 +58,7 @@ feature {NONE} -- Initialization
 			rescue_clause_set: rescue_clause = a_rescue
 			clients_set: clients = a_clients
 			implementation_class_set: implementation_class = a_class
+			implementation_feature_set: implementation_feature = Current
 		end
 
 end

@@ -56,6 +56,18 @@ feature -- Access
 			Result := comma.break
 		end
 
+feature -- Setting
+
+	set_agent_actual_argument (an_actual: like agent_actual_argument) is
+			-- Set `agent_actual_argument' to `an_actual'.
+		require
+			an_actual_not_void: an_actual /= Void
+		do
+			agent_actual_argument := an_actual
+		ensure
+			agent_actual_argument_set: agent_actual_argument = an_actual
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

@@ -69,6 +69,8 @@ feature -- Validity checking
 		local
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
+			a_feature_impl: ET_FEATURE
+			a_class_impl: ET_CLASS
 		do
 			has_fatal_error := False
 			old_feature := current_feature
@@ -81,13 +83,29 @@ feature -- Validity checking
 			if current_class.has_interface_error then
 				set_fatal_error
 			else
-				internal_call := True
-				a_feature.process (Current)
-				if internal_call then
-						-- Internal error.
-					internal_call := False
-					set_fatal_error
-					error_handler.report_giabr_error
+				a_class_impl := a_feature.implementation_class
+				a_feature_impl := a_feature.implementation_feature
+				if a_class_impl /= current_class then
+					if a_feature_impl.implementation_checked then
+						if a_feature_impl.has_implementation_error then
+							set_fatal_error
+						end
+					else
+						check_feature_validity (a_feature_impl, a_class_impl)
+						if has_fatal_error then
+							a_feature_impl.set_implementation_error
+						end
+					end
+				end
+				if not has_fatal_error then
+					internal_call := True
+					a_feature.process (Current)
+					if internal_call then
+							-- Internal error.
+						internal_call := False
+						set_fatal_error
+						error_handler.report_giabr_error
+					end
 				end
 			end
 			current_class := old_class

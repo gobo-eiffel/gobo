@@ -57,6 +57,22 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = nb
 		end
 
+feature -- Initialization
+
+	reset (a_context: like root_context) is
+			-- Reset current nested type context.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+			wipe_out
+			root_context := a_context
+		ensure
+			root_context_set: root_context = a_context
+			is_empty: is_empty
+			same_capacity: capacity = old capacity
+		end
+
 feature -- Access
 
 	root_context: ET_BASE_TYPE
