@@ -24,12 +24,12 @@ inherit
 #ifdef ISE || HACT
 	DIRECTORY
 		rename
-			make as ise_make,
-			open_read as ise_open_read,
-			is_readable as se_is_readable,
-			close as do_close,
-			delete as do_delete,
-			recursive_delete as do_recursive_delete
+			make as old_make,
+			open_read as old_open_read,
+			is_readable as old_is_readable,
+			close as old_close,
+			delete as old_delete,
+			recursive_delete as old_recursive_delete
 		export
 			{NONE} all
 		end
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			-- Create a new directory object.
 		do
 #ifdef ISE || HACT
-			ise_make (a_name)
+			old_make (a_name)
 #endif
 #ifdef SE
 			name := a_name
@@ -63,21 +63,10 @@ feature -- Access
 			-- Directory name
 
 #endif
-	last_entry: STRING is
+	last_entry: STRING
 			-- Last entry (file or subdirectory name) read
 			-- (Note: this query returns the new object after
 			-- each call to `read_entry'.)
-		do
-#ifdef ISE || HACT
-			Result := lastentry
-#endif
-#ifdef SE
-			Result := clone (basic_directory.last_entry)
-#endif
-#ifdef VE
-			Result := directory_stream.last_string
-#endif
-		end
 
 	filenames: ARRAY [STRING] is
 			-- Names of readable files in current directory;
@@ -161,19 +150,8 @@ feature -- Status report
 		end
 
 #endif
-	end_of_input: BOOLEAN is
+	end_of_input: BOOLEAN
 			-- Have all entries been read?
-		do
-#ifdef ISE || HACT
-			Result := (lastentry = Void)
-#endif
-#ifdef SE
-			Result := basic_directory.end_of_input
-#endif
-#ifdef VE
-			Result := directory_stream.is_exhausted
-#endif
-		end
 
 	is_readable: BOOLEAN is
 			-- Can directory be opened in read mode?
@@ -192,9 +170,11 @@ feature -- Basic operations
 		do
 			if not rescued then
 				if name.count > 0 then
+					entry_buffer := Void
+					end_of_input := False
 #ifdef ISE || HACT
-					if exists and then is_readable then
-						ise_open_read
+					if exists and then old_is_readable then
+						old_open_read
 						if directory_pointer = default_pointer then
 							mode := Close_directory
 						else
@@ -230,13 +210,15 @@ feature -- Basic operations
 				basic_directory.disconnect
 #endif
 #ifdef ISE || HACT 
-				do_close
+				old_close
 				lastentry := Void
 #endif
 #ifdef VE
 				directory_stream.close
 				directory_stream := Void
 #endif
+				entry_buffer := Void
+				last_entry := Void
 			end
 		rescue
 			if not rescued then
@@ -326,7 +308,7 @@ feature -- Basic operations
 #else
 					if exists and then empty then
 #endif
-						do_delete
+						old_delete
 					end
 #endif
 				end
@@ -378,7 +360,7 @@ feature -- Basic operations
 #endif
 #ifdef ISE || HACT
 					if exists then
-						do_recursive_delete
+						old_recursive_delete
 					end
 #endif
 				end
@@ -390,42 +372,90 @@ feature -- Basic operations
 			end
 		end
 
-feature -- Cursor movement
+feature -- Input
 
 	read_entry is
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
 		do
+			if entry_buffer /= Void then
+				last_entry := entry_buffer.item
+				entry_buffer := entry_buffer.right
+			elseif old_end_of_input then
+				end_of_input := True
+			else
 #ifdef ISE || HACT
-			readentry
+				readentry
+				last_entry := lastentry
 #endif
 #ifdef SE
-			basic_directory.read_entry
+				basic_directory.read_entry
+				last_entry := clone (basic_directory.last_entry)
 #endif
 #ifdef VE
-			directory_stream.read_line
+				directory_stream.read_line
+				last_entry := directory_stream.last_string
 #endif
+				end_of_input := old_end_of_input
+			end
+		end
+
+	unread_entry (an_entry: STRING) is
+			-- Put `an_entry' back in input stream.
+			-- This entry will be read first by the next
+			-- call to a read routine.
+		local
+			a_cell: like entry_buffer
+		do
+			!! a_cell.make (an_entry)
+			if entry_buffer /= Void then
+				a_cell.put_right (entry_buffer)
+			end
+			entry_buffer := a_cell
+			last_entry := an_entry
+			end_of_input := False
 		end
 
 feature {NONE} -- Implementation
 
+	entry_buffer: KL_LINKABLE [STRING]
+			-- Unread entries
+
+	old_end_of_input: BOOLEAN is
+			-- Have all entries been read
+			-- (do not take `unread_entry' into account)?
+		do
+#ifdef ISE || HACT
+			Result := (lastentry = Void)
+#endif
+#ifdef SE
+			Result := basic_directory.end_of_input
+#endif
+#ifdef VE
+			Result := directory_stream.is_exhausted
+#endif
+		end
+
 #ifdef VE
 	directory: DIRECTORY
 	directory_stream: DIRECTORY_INPUT_STREAM
+
 #endif
 #ifdef SE
 	basic_directory: BASIC_DIRECTORY
 			-- Internal data
+
 #endif
 #ifdef ISE || HACT
 	Dummy_entry: STRING is ""
-			-- Dummy entry name
-#endif
+			-- Dummy entry
 
-#ifdef VE
+#endif
 invariant
 
+	no_void_bufferred_entry: entry_buffer /= Void implies entry_buffer.item /= Void
+#ifdef VE
 	directory_not_void: directory /= Void
-
 #endif
+
 end -- class KL_DIRECTORY
