@@ -2,9 +2,9 @@ indexing
 
 	description: 
 
-		"Filter that validates unicode character classes"
+		"Filters that validate unicode character classes"
 		
-	library: "Gobo XML library"
+	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
@@ -23,23 +23,19 @@ inherit
 			on_attribute,
 			on_content
 		end
-		
+
 	XM_UNICODE_CHARACTER_CLASSES
-		export
-			{NONE} all
-		end
-	
-	XF_UTF8_PRIVATE_ROUTINES
-		
+		export {NONE} all end
+
 creation
 
 	make_null,
 	set_next
-	
+
 feature -- Actions (redirected)
 
 	on_comment (a_content: STRING) is
-			-- Comment
+			-- Comment.
 		do
 			validate (a_content)
 			Precursor (a_content)
@@ -52,7 +48,6 @@ feature -- Actions (redirected)
 			validate (a_content)
 			Precursor (a_name, a_content)
 		end
-	
 
 	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- Start tag.
@@ -63,7 +58,7 @@ feature -- Actions (redirected)
 			validate_name (a_local_part)
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
-		
+
 	on_attribute (a_namespace, a_prefix, a_local_part: STRING; a_value: STRING) is
 			-- Start of attribute.
 		do
@@ -74,7 +69,7 @@ feature -- Actions (redirected)
 			validate (a_value)
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
-		
+
 	on_content (a_content: STRING) is
 			-- Text content.
 		do
@@ -82,68 +77,77 @@ feature -- Actions (redirected)
 			Precursor (a_content)
 		end
 
+feature {NONE} -- Validation
 
-feature {NONE}
-
-	validate (a:STRING) is
-			-- Validate a string.
-		do	
-			if not valid_string (a) then	
-				on_error (Error_unicode_invalid_character)
-			end
-		end
-		
-	validate_name (a:STRING) is
-			-- Validate name in astring
-		do
-			if not valid_name (a) then	
-				on_error (Error_unicode_invalid_character)
-			end
-		end
-
-	Error_unicode_invalid_character: STRING is "Invalid unicode character"
-		
-feature {NONE} -- String
-
-	valid_string (a: STRING): BOOLEAN is
-			-- Is this a UTF8 string with no invalid character?
+	validate (a_string: STRING) is
+			-- Validate `a_string'.
 		require
-			not_void: a /= Void
-		local
-			i: INTEGER
+			a_string_not_void: a_string /= Void
 		do
-			from
-				Result := True
-				i := 1
-			until
-				(i > a.count) or (not Result)
-			loop
-				Result := is_char (a.item_code (i))
-				i := i + 1
+			if not valid_string (a_string) then
+				on_error (Error_unicode_invalid_character)
+			end
+		end
+
+	validate_name (a_name: STRING) is
+			-- Validate `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if not valid_name (a_name) then
+				on_error (Error_unicode_invalid_character)
+			end
+		end
+
+feature {NONE} -- Status report
+
+	valid_string (a_string: STRING): BOOLEAN is
+			-- Is `a_string' a UTF8 string with no invalid character?
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := a_string.count
+			from i := 1 until i > nb loop
+				if not is_char (a_string.item_code (i)) then
+					Result := False
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
 			end
 		ensure
-			empty: (a.count = 0) implies Result
+			empty: (a_string.count = 0) implies Result
 		end
-		
-	valid_name (a: STRING): BOOLEAN is
-			-- Is this a UTF8 string with a valid name?
-		require
-			not_void: a /= Void
-		local
-			i: INTEGER
-		do
-			-- first
-			Result := a.count = 0 or else is_name_first (a.item_code (1))
 
-			-- tail
-			from
-				i := 2
-			until
-				(i > a.count) or (not Result)
-			loop
-				Result := is_name_char (a.item_code (i))
-				i := i + 1
+	valid_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a UTF8 string with a valid name?
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_name.count
+				-- First.
+			if nb = 0 or else is_name_first (a_name.item_code (1)) then
+				Result := True
+					-- Tail.
+				from i := 2 until i > nb loop
+					if not is_name_char (a_name.item_code (i)) then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
 			end
 		end
-		
+
+feature {NONE} -- Constants
+
+	Error_unicode_invalid_character: STRING is "Invalid unicode character"
+			-- Error message
+
 end

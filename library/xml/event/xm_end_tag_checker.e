@@ -23,7 +23,7 @@ inherit
 
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
-		
+
 creation
 
 	make_null,
@@ -62,7 +62,6 @@ feature -- Tag
 				then
 					on_error (End_tag_mismatch_error)
 				end
-				
 				prefixes.remove
 				local_parts.remove
 			else
@@ -71,7 +70,7 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-feature {NONE} -- Mean version of STACK[PREFIX+NAME]
+feature {NONE} -- Mean version of STACK [PREFIX+NAME]
 
 	prefixes: DS_LINKED_STACK [STRING]
 	local_parts: DS_LINKED_STACK [STRING]
@@ -80,5 +79,6 @@ feature {NONE} -- Errors
 
 	End_tag_mismatch_error: STRING is "End tag does not match start tag"
 	Extra_end_tag_error: STRING is "End tag without start tag"
+			-- Error messages
 
 end

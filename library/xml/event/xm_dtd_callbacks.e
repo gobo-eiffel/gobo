@@ -14,32 +14,32 @@ deferred class XM_DTD_CALLBACKS
 
 feature -- Document type definuition callbacks
 
-	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
 		require
-			name_not_void: name /= Void
+			a_name_not_void: a_name /= Void
 		deferred
 		end
 
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		require
-			name_not_void: a_name /= Void
-			model_not_void: a_model /= Void
+			a_name_not_void: a_name /= Void
+			a_model_not_void: a_model /= Void
 		deferred
 		end
 
 	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		require
-			element_name_not_void: an_element_name /= Void
-			name_not_void: a_name /= Void
-			model_not_void: a_model /= Void
+			an_element_name_not_void: an_element_name /= Void
+			a_name_not_void: a_name /= Void
+			a_model_not_void: a_model /= Void
 		deferred
 		end
 
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-			an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
+		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			 -- Entity declaration.
 		require
 			entity_name_not_void: entity_name /= Void

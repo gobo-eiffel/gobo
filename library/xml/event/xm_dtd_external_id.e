@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"External identifier in DTD"
+		"External identifiers in DTD"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -16,7 +16,7 @@ creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make is
 			-- Do nothing.
@@ -34,30 +34,30 @@ feature -- Access
 	public_id: STRING
 			-- PUBLIC
 
-feature -- Set
+feature -- Setting
 
-	set_base (a: like base) is
+	set_base (a_base: like base) is
 			-- Set base URI.
 		do
-			base := a
+			base := a_base
 		ensure
-			set: base = a
+			base_set: base = a_base
 		end
 
-	set_system (a: like system_id) is
-			-- Set SYSTEM
+	set_system (a_system_id: like system_id) is
+			-- Set SYSTEM.
 		do
-			system_id := a
+			system_id := a_system_id
 		ensure
-			set: system_id = a
+			system_id_set: system_id = a_system_id
 		end
 
-	set_public (a: like public_id) is
-			-- Set PUBLIC
+	set_public (a_public_id: like public_id) is
+			-- Set PUBLIC.
 		do
-			public_id := a
+			public_id := a_public_id
 		ensure
-			set: public_id = a
+			public_id_set: public_id = a_public_id
 		end
 
 end

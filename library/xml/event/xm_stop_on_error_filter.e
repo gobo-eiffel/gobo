@@ -39,7 +39,7 @@ feature -- Status
 			-- Has an error occurred?
 
 	last_error: STRING
-			-- Error message.
+			-- Error message
 
 feature -- Document
 
@@ -48,7 +48,6 @@ feature -- Document
 		do
 			has_error := False
 			last_error := Void
-			
 			Precursor
 		end
 
@@ -83,7 +82,7 @@ feature -- Meta
 		end
 
 	on_comment (a_content: STRING) is
-			-- Comment
+			-- Processing comment.
 			-- Atomic: single comment produces single event
 			-- Default: forward event to 'next'.
 		do
@@ -140,5 +139,9 @@ feature -- Content
 				Precursor (a_content)
 			end
 		end
+
+invariant
+
+	last_error_not_void: has_error implies last_error /= Void
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pretty printer as XML document (as in James Clark's canonical XML)"
+		"Pretty printers as XML document (as in James Clark's canonical XML)"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -25,9 +25,10 @@ inherit
 			on_content
 		end
 
-	XM_MARKUP_CONSTANTS
-
 	XM_OUTPUT
+
+	XM_MARKUP_CONSTANTS
+		export {NONE} all end
 
 creation
 
@@ -44,7 +45,6 @@ feature -- Meta
 			output_constant (Space_s)
 			output (a_content)
 			output_constant (Pi_end)
-
 			Precursor (a_name, a_content)
 		end
 
@@ -54,7 +54,6 @@ feature -- Meta
 			output_constant (Comment_start)
 			output (a_content)
 			output_constant (Comment_end)
-
 			Precursor (a_content)
 		end
 
@@ -65,7 +64,6 @@ feature -- Tag
 		do
 			output_constant (Stag_start)
 			output_name (a_prefix, a_local_part)
-
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
@@ -78,7 +76,6 @@ feature -- Tag
 			output_constant (Quot_s)
 			output_quote_escaped (a_value)
 			output_constant (Quot_s)
-
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
@@ -86,7 +83,6 @@ feature -- Tag
 			-- Print end of start tag.
 		do
 			output_constant (Stag_end)
-
 			Precursor
 		end
 
@@ -96,7 +92,6 @@ feature -- Tag
 			output_constant (Etag_start)
 			output_name (a_prefix, a_local_part)
 			output_constant (Etag_end)
-
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
@@ -108,7 +103,6 @@ feature -- Content
 			-- Default: forward event to 'next'.
 		do
 			output_escaped (a_content)
-
 			Precursor (a_content)
 		end
 
@@ -118,8 +112,8 @@ feature {NONE} -- Escaped
 			-- Is this an escapable character?
 		do
 			Result := a_char = Lt_char.code
-					or a_char = Gt_char.code
-					or a_char = Amp_char.code
+				or a_char = Gt_char.code
+				or a_char = Amp_char.code
 		end
 
 	escaped_char (a_char: INTEGER): STRING is
@@ -142,17 +136,19 @@ feature {NONE} -- Escaped
 
 feature {NONE} -- Output
 
-	output_constant (s: STRING) is
+	output_constant (a_string: STRING) is
 			-- Output constant string.
 		require
-			s_not_void: s /= Void
+			a_string_not_void: a_string /= Void
 		do
-			output (s)
+			output (a_string)
 		end
 
-	output_quote_escaped (s: STRING) is
+	output_quote_escaped (a_string: STRING) is
 			-- Like output escaped with quote also escaped for
 			-- attribute values.
+		require
+			a_string_not_void: a_string /= Void
 		local
 			last_escaped: INTEGER
 			i: INTEGER
@@ -161,34 +157,33 @@ feature {NONE} -- Output
 			from
 				last_escaped := 0
 				i := 1
-				cnt := s.count
+				cnt := a_string.count
 			invariant
 				last_escaped <= i
 			until
 				i > cnt
 			loop
-				if s.item_code (i) = Quot_char.code then
+				if a_string.item_code (i) = Quot_char.code then
 					if last_escaped < i - 1 then
-						output_escaped (s.substring (last_escaped + 1, i - 1))
+						output_escaped (a_string.substring (last_escaped + 1, i - 1))
 					end
 					output_constant (Quot_entity)
 					last_escaped := i
 				end
 				i := i + 1
 			end
-
-			-- at exit
+				-- At exit.
 			if last_escaped = 0 then
-				output_escaped (s)
+				output_escaped (a_string)
 			elseif last_escaped < i - 1 then
-				output_escaped (s.substring (last_escaped + 1, i - 1))
+				output_escaped (a_string.substring (last_escaped + 1, i - 1))
 			end
 		end
 
-	output_escaped (s: STRING) is
+	output_escaped (a_string: STRING) is
 			-- Escape and output content string.
 		require
-			s_not_void: s /= Void
+			a_string_not_void: a_string /= Void
 		local
 			last_escaped: INTEGER
 			i: INTEGER
@@ -198,35 +193,34 @@ feature {NONE} -- Output
 			from
 				last_escaped := 0
 				i := 1
-				cnt := s.count
+				cnt := a_string.count
 			invariant
 				last_escaped <= i
 			until
 				i > cnt
 			loop
-				a_char := s.item_code (i)
+				a_char := a_string.item_code (i)
 				if is_escaped (a_char) then
 					if last_escaped < i - 1 then
-						output (s.substring (last_escaped + 1, i - 1))
+						output (a_string.substring (last_escaped + 1, i - 1))
 					end
 					output_constant (escaped_char (a_char))
 					last_escaped := i
 				end
 				i := i + 1
 			end
-
-			-- at exit
+				-- At exit.
 			if last_escaped = 0 then
-				output (s)
+				output (a_string)
 			elseif last_escaped < i - 1 then
-				output (s.substring (last_escaped + 1, i - 1))
+				output (a_string.substring (last_escaped + 1, i - 1))
 			end
 		end
 
 	output_name (a_prefix: STRING; a_local_part: STRING) is
 			-- Output prefix:name.
 		require
-			s_not_void: a_local_part /= Void
+			a_local_part_not_void: a_local_part /= Void
 		do
 			if has_prefix (a_prefix) then
 				output (a_prefix)

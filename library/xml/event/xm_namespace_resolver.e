@@ -24,14 +24,15 @@ inherit
 		end
 
 	XM_MARKUP_CONSTANTS
-	
+		export {NONE} all end
+
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
-		
+
 feature -- Document
 
 	on_start is
-			-- Initialise document variables.
+			-- Initialize document variables.
 		do
 			!! context.make
 			attributes_make
@@ -40,44 +41,43 @@ feature -- Document
 feature -- Element
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
-			-- Print start of start tag.
+			-- Process start of start tag.
 		do
 			context.push
 			check empty_attributes: attributes_is_empty end
-			
-			-- save for when we can resolve it, event deferred
+				-- Save for when we can resolve it, event deferred.
 			element_prefix := a_prefix
 			element_local_part := a_local_part
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
-			-- Print attribute.
+			-- Process attribute.
 		do
 			if not has_prefix (a_prefix) and is_xmlns (a_local_part) then
-				-- Default declaration
+					-- Default declaration.
 				context.add_default (a_value)
 			elseif is_xmlns (a_prefix) then
-				-- prefix declaration
+					-- Prefix declaration.
 				if context.shallow_has (a_prefix) then
 					on_error (Duplicate_namespace_declaration_error)
 				else
 					context.add (a_value, a_prefix)
 				end
 			else
-				-- queue ordinary attribute for when all namespace 
-				-- declarations have been seen as they can be used 
-				-- to declare attributes prefixes.
+					-- Queue ordinary attribute for when all namespace 
+					-- declarations have been seen as they can be used 
+					-- to declare attributes prefixes.
 				attributes_force (a_prefix, a_local_part, a_value)
 			end
 		end
 
 	on_start_tag_finish is
-			-- Print end of start tag.
+			-- Process end of start tag.
 		local
 			an_element_namespace: STRING
 			a_namespace: STRING
 		do
-			-- resolve element
+				-- Resolve element.
 			if has_prefix (element_prefix) then
 				if context.has (element_prefix) then
 					an_element_namespace := context.resolve (element_prefix)
@@ -87,10 +87,8 @@ feature -- Element
 			else
 				an_element_namespace := context.resolve_default
 			end
-			next.on_start_tag (an_element_namespace,
-					element_prefix, element_local_part) 
-			
-			-- resolve attributes
+			next.on_start_tag (an_element_namespace, element_prefix, element_local_part) 
+				-- Resolve attributes.
 			from
 			until
 				attributes_is_empty
@@ -107,16 +105,14 @@ feature -- Element
 				next.on_attribute (a_namespace,
 					attributes_prefix.item, attributes_local_part.item,
 					attributes_value.item)
-				
-				-- forth
+					-- Forth:
 				attributes_remove
 			end
-			
 			Precursor
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
-			-- Print end tag.
+			-- Process end tag.
 		do
 			if has_prefix (a_prefix) then
 				Precursor (context.resolve (a_prefix), a_prefix, a_local_part)
@@ -126,14 +122,10 @@ feature -- Element
 			context.pop
 		end
 
-feature {NONE} -- Error
-
-	Undeclared_namespace_error: STRING is "Undeclare namespace error"
-	Duplicate_namespace_declaration_error: STRING is "Namespace declared twice"
-
 feature {NONE} -- Context
 
 	context: XM_NAMESPACE_RESOLVER_CONTEXT
+			-- Context
 
 feature {NONE} -- Context
 
@@ -151,10 +143,10 @@ feature {NONE} -- Element
 feature {NONE} -- Attributes
 
 	-- mean version of:
-	-- attributes: DS_QUEUE[PREFIX_LOCALPART_VALUE]
+	-- attributes: DS_QUEUE [PREFIX_LOCALPART_VALUE]
 
 	attributes_make is
-			-- Intialise queue.
+			-- Intialize queue.
 		do
 			attributes_prefix := new_string_queue
 			attributes_local_part := new_string_queue
@@ -162,7 +154,7 @@ feature {NONE} -- Attributes
 		end
 
 	attributes_force (a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
-			-- Like attributes.force
+			-- Like attributes.force.
 		do
 			attributes_prefix.force (a_prefix)
 			attributes_local_part.force (a_local_part)
@@ -170,7 +162,7 @@ feature {NONE} -- Attributes
 		end
 
 	attributes_remove is
-			-- Like attributes.remove
+			-- Like attributes.remove.
 		require
 			not_empty: not attributes_is_empty
 		do
@@ -180,13 +172,19 @@ feature {NONE} -- Attributes
 		end
 
 	attributes_is_empty: BOOLEAN is
-			-- Like attributes.is_empty
+			-- Like attributes.is_empty.
 		do
 			Result := attributes_prefix.is_empty
 		end
 
-	attributes_prefix: DS_QUEUE[STRING]
-	attributes_local_part: DS_QUEUE[STRING]
-	attributes_value: DS_QUEUE[STRING]
+	attributes_prefix: DS_QUEUE [STRING]
+	attributes_local_part: DS_QUEUE [STRING]
+	attributes_value: DS_QUEUE [STRING]
+
+feature {NONE} -- Error
+
+	Undeclared_namespace_error: STRING is "Undeclare namespace error"
+	Duplicate_namespace_declaration_error: STRING is "Namespace declared twice"
+			-- Error messages
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pretty printer with resolved namespaces"
+		"Pretty printers with resolved namespaces"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -42,7 +42,7 @@ feature -- Tag
 feature {NONE} -- Name output
 
 	namespace: STRING
-			-- Namespace stored for output.
+			-- Namespace stored for output
 
 	output_name (a_prefix: STRING; a_local_part: STRING) is
 			-- Output prefix:name, with namespace annotation.

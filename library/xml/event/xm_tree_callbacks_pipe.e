@@ -17,18 +17,16 @@ inherit
 	ANY
 
 	XM_CALLBACKS_FILTER_FACTORY
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 creation
 
 	make
 
-feature {NONE} -- Make
+feature {NONE} -- Initialization
 
 	make is
-			-- Create pipe.
+			-- Create a new pipe.
 		local
 			a_dummy: XM_CALLBACKS
 		do
@@ -36,18 +34,17 @@ feature {NONE} -- Make
 			error := new_stop_on_error
 			tree := new_tree_builder
 			last := tree
-			
-			-- dummy because we already store 'start' in 
-			-- a variable of a descendant type
+				-- Dummy because we already store 'start' in 
+				-- a variable of a descendant type
 			a_dummy := callbacks_pipe (<<
-					start,
-					-- new_namespace_resolver,
-					-- -- should be used once tree does not 
-					-- -- resolve namespaces itself
-					-- new_shared_strings,
-					-- -- check this is valuable?
-					error,
-					tree >>)
+				start,
+				-- new_namespace_resolver,
+				-- -- should be used once tree does not 
+				-- -- resolve namespaces itself
+				-- new_shared_strings,
+				-- -- check this is valuable?
+				error,
+				tree >>)
 		end
 		
 feature -- Filters (part of the pipe)
@@ -56,19 +53,18 @@ feature -- Filters (part of the pipe)
 			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
 
 	error: XM_STOP_ON_ERROR_FILTER
-			-- Error collector.
+			-- Error collector
 
 	tree: XM_CALLBACKS_TO_TREE_FILTER
-			-- Tree construction. 
+			-- Tree construction 
 
 	last: XM_CALLBACKS_FILTER
-			-- Last element in the pipe, to which further filters 
-			-- can be added.
+			-- Last element in the pipe, to which further filters can be added
 
 feature -- Shortcuts
 
 	document: XM_DOCUMENT is
-			-- Document (from tree building filter).
+			-- Document (from tree building filter)
 		require
 			not_error: not error.has_error
 		do
@@ -76,17 +72,18 @@ feature -- Shortcuts
 		end
 
 	last_error: STRING is
-			-- Error (from error filter).
+			-- Error (from error filter)
 		require
 			error: error.has_error
 		do
 			Result := error.last_error
 		ensure
-			not_void: Result /= Void
+			last_error_not_void: Result /= Void
 		end
 
 invariant
 
 	tree_not_void: tree /= Void
+	error_not_void: error /= Void
 
 end

@@ -20,7 +20,7 @@ creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make is
 			-- Do nothing.
@@ -54,7 +54,7 @@ feature -- Meta
 		end
 
 	on_comment (a_content: STRING) is
-			-- Comment
+			-- Processing comment.
 			-- Atomic: single comment produces single event
 		do
 		end
@@ -67,7 +67,7 @@ feature -- Tag
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
-			-- Start of start tag.
+			-- Start of attribute.
 		do
 		end
 

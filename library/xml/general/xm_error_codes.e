@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XML Error code contstants"
+		"XML Error code constants"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -12,12 +12,12 @@ indexing
 
 class XM_ERROR_CODES
 
-feature {ANY} -- Constants
+feature -- Constants
 
 	Xml_err_none: INTEGER is 0
-			-- no error occurred
+			-- No error occurred
 
 	Xml_err_unknown: INTEGER is 1
-			-- an unknown error occurred
+			-- An unknown error occurred
 
 end

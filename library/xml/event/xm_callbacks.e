@@ -44,8 +44,10 @@ feature -- Meta
 		end
 
 	on_comment (a_content: STRING) is
-			-- Comment
+			-- Processing a comment.
 			-- Atomic: single comment produces single event
+		require
+			a_content_not_void: a_content /= Void
 		deferred
 		end
 
@@ -64,6 +66,7 @@ feature -- Tag
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part)
+			a_value_not_void: a_value /= Void
 		deferred
 		end
 

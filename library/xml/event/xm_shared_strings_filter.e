@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Event filter to share identical strings (clients should not later change strings)"
+		"Event filters to share identical strings (clients should not later change strings)"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -24,7 +24,7 @@ inherit
 			on_end_tag,
 			on_content
 		end
-	
+
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
@@ -32,24 +32,6 @@ creation
 
 	make_null,
 	set_next
-
-feature {NONE} -- Share
-
-	strings: DS_HASH_SET [STRING]
-			-- Strings to be shared.
-
-	shared_string (a: STRING): STRING is
-			-- If string known return the previous occurence.
-		require
-			not_void: a /= Void
-		do
-			if strings.has (a) then
-				Result := strings.item (a)
-			else
-				strings.force (a)
-				Result := a
-			end
-		end
 
 feature -- Document events
 
@@ -69,7 +51,7 @@ feature -- Meta information
 		end
 
 	on_comment (a_content: STRING) is
-			-- Comment
+			-- Process comment.
 			-- Atomic: single comment produces single event
 		do
 			next.on_comment (shared_string (a_content))
@@ -81,25 +63,25 @@ feature -- Tag
 			-- Start of start tag.
 		do
 			next.on_start_tag (shared_string (a_namespace), 
-					shared_string (a_prefix),
-					shared_string (a_local_part))
+				shared_string (a_prefix),
+				shared_string (a_local_part))
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of start tag.
 		do
 			next.on_attribute (shared_string (a_namespace), 
-					shared_string (a_prefix),
-					shared_string (a_local_part),
-					shared_string (a_value))
+				shared_string (a_prefix),
+				shared_string (a_local_part),
+				shared_string (a_value))
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
 			next.on_end_tag (shared_string (a_namespace), 
-					shared_string (a_prefix),
-					shared_string (a_local_part))
+				shared_string (a_prefix),
+				shared_string (a_local_part))
 		end
 
 feature -- Content
@@ -110,6 +92,29 @@ feature -- Content
 			-- Default: forward event to 'next'.
 		do
 			next.on_content (shared_string (a_content))
+		end
+
+feature {NONE} -- Share
+
+	strings: DS_HASH_SET [STRING]
+			-- Strings to be shared
+
+	shared_string (a_string: STRING): STRING is
+			-- If string known return the previous occurrence
+		do
+			if a_string /= Void then
+				if strings /= Void then
+					strings.search (a_string)
+					if strings.found then
+						Result := strings.found_item
+					else
+						strings.force_new (a_string)
+						Result := a_string
+					end
+				else
+					Result := a_string
+				end
+			end
 		end
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pretty printer as in James Clark's canonical XML"
+		"Pretty printers as in James Clark's canonical XML"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -39,10 +39,10 @@ feature {NONE} -- Escaped
 			-- Is this escaped, including line separators and tab?
 		do
 			Result := Precursor (a_char)
-					or a_char = 9
-					or a_char = 10
-					or a_char = 13
-					or a_char = Quot_char.code -- always escape quote
+				or a_char = 9
+				or a_char = 10
+				or a_char = 13
+				or a_char = Quot_char.code -- always escape quote
 		end
 
 end

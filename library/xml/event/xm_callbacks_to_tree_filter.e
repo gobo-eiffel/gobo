@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"A callbacks filter producing a tree"
+		"Callbacks filters producing trees"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -33,22 +33,25 @@ creation
 feature -- Result
 
 	document: XM_DOCUMENT
+			-- Resulting document
 
 feature -- Position table
 
 	is_position_table_enabled: BOOLEAN is
+			-- Is position table enabled?
 		do
 			Result := last_position_table /= Void
 		end
 
 	last_position_table: XM_POSITION_TABLE
+			-- Position table
 
 	enable_position_table (a_source: XM_PARSER) is
 			-- Enable position table, store the position 
 			-- for each node into 'last_position_table', using the 
 			-- positions from the source of the callbacks.
 		require
-			not_void: a_source /= Void
+			a_source_not_void: a_source /= Void
 			--my_source: a_source is the parser that issues Current's events
 		do
 			source_parser := a_source
@@ -73,27 +76,24 @@ feature -- Document
 
 feature -- Element
 
-	on_start_tag (namespace, ns_prefix, name: STRING) is
-			-- called whenever the parser findes a start element
-		do			
+	on_start_tag (namespace, ns_prefix, a_name: STRING) is
+			-- called whenever the parser findes a start element.
+		do
 			check
-				document: document /= Void
+				document_not_void: document /= Void
 				document_not_finished: document.root_element /= Void implies current_open_composite /= Void
 			end
-
 			if document.root_element = Void then
-					-- this is the first element in the document
-				!! current_element.make_root (name, ns_prefix)
-					-- add root element
+					-- This is the first element in the document.
+				!! current_element.make_root (a_name, ns_prefix)
+					-- Add root element.
 				document.set_root_element (current_element)
 			else
-					-- this is not the first element in the document
-				!! current_element.make_child (current_open_composite, name, ns_prefix)
+					-- This is not the first element in the document
+				!! current_element.make_child (current_open_composite, a_name, ns_prefix)
 				current_open_composite.force_last (current_element)
 			end
-
 			handle_position (current_element)
-			
 			check
 				element_not_void: current_element /= Void
 			end
@@ -111,7 +111,6 @@ feature -- Element
 			end
 			!! xml.make (a_name, a_prefix, a_value, current_element)
 			handle_position (xml)
-			
 			current_open_composite.force_last (xml)
 		end
 
@@ -125,9 +124,7 @@ feature -- Element
 			end
 			!! xml.make (current_open_composite, a_data)
 			current_open_composite.force_last (xml)
-
 			handle_position (xml)
-
 			current_node := xml
 		end
 
@@ -152,14 +149,12 @@ feature -- Element
 			else
 				current_open_composite.force_last (xml)
 			end
-
 			handle_position (xml)
-
 			current_node := xml
 		end
 
 	on_comment (com: STRING) is
-			-- Comment.
+			-- Processing comment.
 		local
 			xml: XM_COMMENT
 		do
@@ -169,44 +164,44 @@ feature -- Element
 			else
 				current_open_composite.force_last (xml)
 			end
-
 			handle_position (xml)
-
 			current_node := xml
 		end
 
 feature {NONE} -- Implementation
 
 	current_node: XM_NODE
-			-- Current node.
+			-- Current node
 
 	current_open_composite: XM_COMPOSITE
-			-- Current composite node.
+			-- Current composite node
 
 	current_element: XM_ELEMENT
-			-- Current element.
+			-- Current element
 
-	next_open_composite (composite: XM_COMPOSITE): XM_COMPOSITE is
+	next_open_composite (a_composite: XM_COMPOSITE): XM_COMPOSITE is
+			-- Parent composite of `a_composite'
 		require
-			composite /= Void
+			a_composite_not_void: a_composite /= Void
 		do
-			Result := composite.parent
+			Result := a_composite.parent
 		end
 
 feature {NONE} -- Implementation (position)
 
-	handle_position (node: XM_NODE) is
+	handle_position (a_node: XM_NODE) is
 			-- If desired, store position information of
-			-- node `node' in position table
+			-- node `a_node' in position table.
 		require
-			node_not_void: node /= Void
+			a_node_not_void: a_node /= Void
 		do
 			if is_position_table_enabled then
-				last_position_table.put (source_parser.position, node)
+				last_position_table.put (source_parser.position, a_node)
 			end
 		end
 
 	source_parser: XM_PARSER
+			-- Source parser
 
 invariant
 

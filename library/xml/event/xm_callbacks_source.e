@@ -14,10 +14,10 @@ deferred class XM_CALLBACKS_SOURCE
 
 feature
 
-	set_callbacks (a: XM_CALLBACKS) is
+	set_callbacks (a_callback: XM_CALLBACKS) is
 			-- Client will receive callbacks to.
 		require
-			not_void: a /= Void
+			a_callback_not_void: a_callback /= Void
 		deferred
 		end
 

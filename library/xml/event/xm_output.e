@@ -24,7 +24,7 @@ feature -- Output
 		do
 			!! last_output.make (0)
 		ensure
-			last_output: last_output /= Void
+			last_output_not_void: last_output /= Void
 			last_output_empty: last_output.count = 0
 		end
 
@@ -34,33 +34,33 @@ feature -- Output
 			last_output := Void
 		end
 
-	set_output_string (a: like last_output) is
+	set_output_string (a_string: like last_output) is
 			-- Set output to given string.
 		require
-			a_not_void: a /= Void
+			a_string_not_void: a_string /= Void
 		do
-			last_output := a
+			last_output := a_string
 		ensure
-			definition: last_output = a
+			definition: last_output = a_string
 		end
 
 	last_output: STRING
-			-- Last output.
+			-- Last output;
 			-- May be void if standard output used.
 
 feature -- Output, interface to descendants
 
-	output (s: STRING) is
+	output (a_string: STRING) is
 			-- Output string.
 			-- All output from descendants should go through this for
 			-- convenient redefinition.
 		require
-			s_not_void: s /= Void
+			a_string_not_void: a_string /= Void
 		do
 			if last_output /= Void then
-				last_output := STRING_.appended_string (last_output, s)
+				last_output := STRING_.appended_string (last_output, a_string)
 			else
-				std.output.put_string (s)
+				std.output.put_string (a_string)
 			end
 		end
 

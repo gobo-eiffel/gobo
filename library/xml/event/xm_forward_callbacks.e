@@ -17,23 +17,23 @@ inherit
 	XM_CALLBACKS_SOURCE
 
 	XM_CALLBACKS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
+
+feature -- Access
+
+	callbacks: XM_CALLBACKS
+			-- Callbacks event interface to which events are forwarded;
+			-- If void, a null callback is created on startup.
 
 feature -- Setting
 
-	set_callbacks (a: XM_CALLBACKS) is
-			-- Set callbacks.
+	set_callbacks (a_callbacks: XM_CALLBACKS) is
+			-- Set `callbacks' to `a_callbacks'.
 		do
-			callbacks := a
+			callbacks := a_callbacks
 		ensure then
-			set: callbacks = a
+			callbackes_set: callbacks = a_callbacks
 		end
-
-	callbacks: XM_CALLBACKS
-			-- Callbacks event interface to which events are forwarded.
-			-- If void, a null callback is created on startup.
 
 feature {NONE} -- Document
 
@@ -83,7 +83,7 @@ feature {NONE} -- Tag
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
-			-- Start of start tag.
+			-- Process attribute.
 		do
 			callbacks.on_attribute (a_namespace, a_prefix, a_local_part, a_value)
 		end

@@ -17,23 +17,23 @@ inherit
 	XM_DTD_CALLBACKS_SOURCE
 
 	XM_DTD_CALLBACKS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
-feature -- Set
-
-	set_dtd_callbacks (a: XM_DTD_CALLBACKS) is
-			-- Set
-		do
-			dtd_callbacks := a
-		ensure then
-			set: dtd_callbacks = a
-		end
+feature -- Access
 
 	dtd_callbacks: XM_DTD_CALLBACKS
-			-- Callbacks event interface to which events are forwarded.
+			-- Callbacks event interface to which events are forwarded;
 			-- If void, a null callback is created on startup.
+
+feature -- Setting
+
+	set_dtd_callbacks (a_callbacks: XM_DTD_CALLBACKS) is
+			-- Set `dtd_callbacks' to `a_callbacks'.
+		do
+			dtd_callbacks := a_callbacks
+		ensure then
+			dtd_callbacks_set: dtd_callbacks = a_callbacks
+		end
 
 feature {NONE} -- Document type definition callbacks
 
@@ -59,7 +59,7 @@ feature {NONE} -- Document type definition callbacks
 		end
 
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-			an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
+		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			-- Entity declaration.
 		do
 			check_void
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 				!XM_DTD_CALLBACKS_NULL! dtd_callbacks.make
 			end
 		ensure
-			not_void: dtd_callbacks /= Void
+			dtd_callbacks_not_void: dtd_callbacks /= Void
 		end
 
 end

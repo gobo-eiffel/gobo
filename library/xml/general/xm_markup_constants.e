@@ -12,7 +12,7 @@ indexing
 
 class XM_MARKUP_CONSTANTS
 
-feature {NONE} -- Constants
+feature -- Constants
 
 	Stag_start: STRING is once Result := "<" end
 	Stag_end: STRING is once Result := ">" end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Generates an XML document from a XML tree"
+		"Generators of XML documents from XML trees"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -28,29 +28,37 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 
 	XM_MARKUP_CONSTANTS
-	
+		export {NONE} all end
+
 creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make is
+			-- Create a new XML formatter.
 		do
 			!! last_string.make (0)
 		end
 
-	last_string: STRING
+feature -- Initialization
 
 	wipe_out is
-			-- clear `last_string'
+			-- Clear `last_string'.
 		do
 			last_string.wipe_out
 		end
 
-feature {ANY} -- Debugging options
+feature -- Access
+
+	last_string: STRING
+			-- Output string
+
+feature -- Debugging options
 
 	include_position (a_pos_table: XM_POSITION_TABLE) is
+			-- Specify that node positions will be kept in `a_pos_table'.
 		require
 			a_pos_table_not_void: a_pos_table /= Void
 		do
@@ -60,6 +68,7 @@ feature {ANY} -- Debugging options
 		end
 
 	exclude_position is
+			-- Specify that node positions will not be kept.
 		do
 			position_table := Void
 		ensure
@@ -67,13 +76,15 @@ feature {ANY} -- Debugging options
 		end
 
 	is_position_included: BOOLEAN is
+			-- Are node positions kept?
 		do
 			Result := position_table /= Void
 		end
 
-feature {ANY} -- Standard processor routines
+feature -- Standard processor routines
 
 	process_element (el: XM_ELEMENT) is
+			-- Process element `el'.
 		do
 			try_process_position (el)
 			if el.is_empty then
@@ -86,12 +97,14 @@ feature {ANY} -- Standard processor routines
 		end
 
 	process_character_data (c: XM_CHARACTER_DATA) is
+			-- Process character data `c'.
 		do
 			try_process_position (c)
 			append (c.content)
 		end
 
 	process_processing_instruction (a_pi: XM_PROCESSING_INSTRUCTION) is
+			-- Process processing instruction `a_pi'.
 		do
 			try_process_position (a_pi)
 			append (Pi_start)
@@ -102,12 +115,14 @@ feature {ANY} -- Standard processor routines
 		end
 
 	process_document (doc: XM_DOCUMENT) is
+			-- Process document `doc'.
 		do
 			try_process_position (doc)
 			process_composite (doc)
 		end
 
 	process_comment (com: XM_COMMENT) is
+			-- Process comment `com'.
 		do
 			try_process_position (com)
 			append (Comment_start)
@@ -116,24 +131,24 @@ feature {ANY} -- Standard processor routines
 		end
 
 	process_attributes (e: XM_ELEMENT) is
+			-- Process attributes of element `e'.
 		local
-			cs: DS_BILINEAR_CURSOR [XM_ATTRIBUTE]
+			a_cursor: DS_BILINEAR_CURSOR [XM_ATTRIBUTE]
 		do
-			from
-				cs := e.attributes.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				process_attribute_in_start_tag (cs.item)
-				if not cs.is_last then
+			a_cursor := e.attributes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				process_attribute_in_start_tag (a_cursor.item)
+				if not a_cursor.is_last then
 					append (Space_s)
 				end
-				cs.forth
+				a_cursor.forth
 			end
 		end
 
 	process_attribute_in_start_tag (att: XM_ATTRIBUTE) is
+			-- Process attribute `att'.
+		require
+			att_not_void: att /= Void
 		do
 			process_named (att)
 			append (Eq_s)
@@ -143,29 +158,28 @@ feature {ANY} -- Standard processor routines
 		end
 
 	process_attribute (att: XM_ATTRIBUTE) is
+			-- Process attribute `att'.
 		do
 		end
 
-feature {ANY} -- Non standard processor routines
+feature -- Non standard processor routines
 
 	process_composite (c: XM_COMPOSITE) is
+			-- Process composite `c'.
 		require
 			c_not_void: c /= Void
 		local
-			cs: DS_BILINEAR_CURSOR [XM_NODE]
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
-			from
-				cs := c.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				cs.item.process (Current)
-				cs.forth
+			a_cursor := c.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (Current)
+				a_cursor.forth
 			end
 		end
 
 	process_start_tag (el: XM_ELEMENT) is
+			-- Process start tag of `el'.
 		require
 			el_not_void: el /= Void
 		do
@@ -176,26 +190,27 @@ feature {ANY} -- Non standard processor routines
 			append (Stag_end)
 		end
 
-	try_process_position (node: XM_NODE) is
+	try_process_position (a_node: XM_NODE) is
+			-- Try to process position of `a_node'.
 		require
-			node_not_void: node /= Void
+			a_node_not_void: a_node /= Void
 		do
 			if is_position_included then
-				process_position (node)
+				process_position (a_node)
 			end
 		end
 
-	process_position (node: XM_NODE) is
+	process_position (a_node: XM_NODE) is
+			-- Process position of `a_node'.
 		require
-			node_not_void: node /= Void
+			a_node_not_void: a_node /= Void
 			position_included: is_position_included
 		local
 			pos: XM_POSITION
 		do
-			if position_table.has (node) then
-				pos := position_table.item (node)
+			if position_table.has (a_node) then
+				pos := position_table.item (a_node)
 			end
-
 			append (Comment_start)
 			if pos /= Void then
 				append (pos.out)
@@ -206,6 +221,7 @@ feature {ANY} -- Non standard processor routines
 		end
 
 	process_empty_element (el: XM_ELEMENT) is
+			-- Process empty element `el'.
 		require
 			el_not_void: el /= Void
 		do
@@ -217,35 +233,42 @@ feature {ANY} -- Non standard processor routines
 		end
 
 	process_end_tag (el: XM_ELEMENT) is
+			-- Process end tag of `el'.
 		require
 			el_not_void: el /= Void
 		do
-			append ("</")
+			append (Etag_start)
 			process_named (el)
-			append (">")
+			append (Etag_end)
 		end
 
-	process_named (n: XM_NAMED_NODE) is
+	process_named (a_node: XM_NAMED_NODE) is
+			-- Process named node `a_node'.
 		require
-			n_not_void: n /= Void
+			a_node_not_void: a_node /= Void
 		do
-			if n.has_namespace then
-				append (n.namespace)
+			if a_node.has_namespace then
+				append (a_node.namespace)
 				append (Eq_s)
 			end
-			append (n.name)
+			append (a_node.name)
 		end
 
 feature {NONE} -- Implementation
 
-	append (str: STRING) is
+	append (a_string: STRING) is
+			-- Append `a_string' to `last_string'.
 		require
-			str_not_void: str /= Void
-			last_string_not_void: last_string /= Void
+			a_string_not_void: a_string /= Void
 		do
-			last_string := STRING_.appended_string (last_string, str)
+			last_string := STRING_.appended_string (last_string, a_string)
 		end
 
 	position_table: XM_POSITION_TABLE
+			-- Position table
+
+invariant
+
+	last_string_not_void: last_string /= Void
 
 end

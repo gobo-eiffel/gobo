@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Declaration of attribute content in DTD"
+		"Declarations of attribute content in DTD"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -37,10 +37,10 @@ creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make is
-			-- Initialise
+			-- Create a new DTD attribute content.
 		do
 			set_data
 			set_value_implied
@@ -99,16 +99,16 @@ feature -- Output
 feature -- Name content type
 
 	name: STRING
-			-- Attribute name.
+			-- Attribute name
 
-	set_name (a: like name) is
+	set_name (a_name: like name) is
 			-- Set name.
 		require
-			not_void: a /= Void
+			a_name_not_void: a_name /= Void
 		do
-			name := a
+			name := a_name
 		ensure
-			set: name = a
+			name_set: name = a_name
 		end
 
 	has_name: BOOLEAN is
@@ -120,10 +120,10 @@ feature -- Name content type
 feature {NONE} -- Implementation
 
 	type: CHARACTER
-			-- Enumeration for type.
+			-- Enumeration for type
 
 	value: CHARACTER
-			-- Enumeration for default value.
+			-- Enumeration for default value
 
 feature -- Default value
 
@@ -131,15 +131,15 @@ feature -- Default value
 			-- require has_default_value
 			-- ensure Result /= Void
 
-	set_default_value (a: like default_value) is
+	set_default_value (a_value: like default_value) is
 			-- Set default value.
 		require
-			not_void: a /= Void
+			a_value_not_void: a_value /= Void
 		do
 			value := 'D'
-			default_value := a
+			default_value := a_value
 		ensure
-			set: default_value = a
+			default_value_set: default_value = a_value
 		end
 
 	has_default_value: BOOLEAN is
@@ -149,9 +149,9 @@ feature -- Default value
 		end
 
 	copy_default (other: XM_DTD_ATTRIBUTE_CONTENT) is
-			-- Copy default value settings from 'other'
+			-- Copy default value settings from 'other'.
 		require
-			not_void: other /= Void
+			other_not_void: other /= Void
 		do
 			if other.is_value_fixed then
 				set_value_fixed (other.default_value)
@@ -201,12 +201,12 @@ feature -- Defaults
 			Result := value = 'F'
 		end
 
-	set_value_fixed (a: like default_value) is
+	set_value_fixed (a_value: like default_value) is
 			-- Set fixed value.
 		require
-			not_void: a /= Void
+			a_value_not_void: a_value /= Void
 		do
-			set_default_value (a)
+			set_default_value (a_value)
 			value := 'F'
 		ensure
 			set: is_value_fixed

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Event filter that can forward event to 'next' filter"
+		"Event filters that can forward event to 'next' filter"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -26,7 +26,7 @@ creation
 	make_null, 
 	set_next
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make_null is
 			-- Next is null processor.
@@ -36,16 +36,16 @@ feature {NONE} -- Creation
 
 feature -- Chain
 
-	set_next (a: XM_CALLBACKS) is
+	set_next (a_callback: XM_CALLBACKS) is
 			-- Set next callback processor in chain/stream.
 		do
-			next := a
+			next := a_callback
 		ensure then
-			definition: next = a
+			definition: next = a_callback
 		end
 
 	next: XM_CALLBACKS
-			-- Next callbacks event consumer.
+			-- Next callbacks event consumer
 
 feature -- Document
 
@@ -81,7 +81,7 @@ feature -- Meta
 		end
 
 	on_comment (a_content: STRING) is
-			-- Comment
+			-- Processing comment.
 			-- Atomic: single comment produces single event
 			-- Default: forward event to 'next'.
 		do

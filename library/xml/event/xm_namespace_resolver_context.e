@@ -21,31 +21,26 @@ inherit
 
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
-	
+
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make is
-			-- Make context.
+			-- Create a new context.
 		do
 			!! context.make
 		end
 
-feature {NONE} -- Implementation
-
-	context: DS_BILINKED_LIST [DS_HASH_TABLE [STRING, STRING]]
-			-- Really a DS_STACK but we need to see 
-			-- the content.
-
-feature -- Add
+feature -- Element change
 
 	add_default (a_namespace: STRING) is
 			-- Add default namespace to context.
 		require
-			not_void: a_namespace /= Void
+			a_namespace_not_void: a_namespace /= Void
+			context_not_empty: not is_context_empty
 		do
 			add (a_namespace, Default_pseudo_prefix)
 		end
@@ -53,37 +48,42 @@ feature -- Add
 	add (a_namespace: STRING; a_prefix: STRING) is
 			-- Add namespace to context.
 		require
-			not_void: a_namespace /= Void
-			prefix_not_void: a_prefix /= Void
+			a_namespace_not_void: a_namespace /= Void
+			a_prefix_not_void: a_prefix /= Void
 			not_has: not shallow_has (a_prefix)
+			context_not_empty: not is_context_empty
 		do
 			context.last.force_new (a_namespace, a_prefix)
 		end
 
-feature -- Query
+feature -- Status report
+
+	is_context_empty: BOOLEAN is
+			-- Is context stack empty?
+		do
+			Result := context.is_empty
+		ensure
+			definition: Result = context.is_empty
+		end
 
 	shallow_has (a_prefix: STRING): BOOLEAN is
 			-- Is this prefix known at the current level?
 			-- (for duplicate declaration checks)
 		require
-			not_void: a_prefix /= Void
+			a_prefix_not_void: a_prefix /= Void
 		do
 			Result := context.count > 0 and then context.last.has (a_prefix)
 		end
 
 	has (a_prefix: STRING): BOOLEAN is
-			-- Is this prefix known
+			-- Is this prefix known?
 		require
-			not_void: a_prefix /= Void
+			a_prefix_not_void: a_prefix /= Void
 		local
-			a_cursor: DS_BILINEAR_CURSOR[DS_HASH_TABLE[STRING, STRING]]
+			a_cursor: DS_BILINEAR_CURSOR [DS_HASH_TABLE [STRING, STRING]]
 		do
-			from
-				a_cursor := context.new_cursor
-				a_cursor.finish
-			until	
-				a_cursor.before
-			loop
+			a_cursor := context.new_cursor
+			from a_cursor.finish until a_cursor.before loop
 				Result := a_cursor.item.has (a_prefix)
 				if Result then
 					a_cursor.go_before
@@ -93,26 +93,26 @@ feature -- Query
 			end
 		end
 
+feature -- Access
+
 	resolve_default: STRING is
 			-- Resolve default namespace.
 		do
 			Result := resolve (Default_pseudo_prefix)
+		ensure
+			resoled_not_void: Result /= Void
 		end
 
 	resolve (a_prefix: STRING): STRING is
 			-- Resolve a prefix.
 		require
-			not_void: a_prefix /= Void
+			a_prefix_not_void: a_prefix /= Void
 		local
-			a_cursor: DS_BILINEAR_CURSOR[DS_HASH_TABLE[STRING, STRING]]
+			a_cursor: DS_BILINEAR_CURSOR [DS_HASH_TABLE [STRING, STRING]]
 		do
 			Result := Default_namespace
-			from
-				a_cursor := context.new_cursor
-				a_cursor.finish
-			until	
-				a_cursor.before
-			loop
+			a_cursor := context.new_cursor
+			from a_cursor.finish until a_cursor.before loop
 				if a_cursor.item.has (a_prefix) then
 					Result := a_cursor.item.item (a_prefix)
 					a_cursor.go_before
@@ -121,7 +121,7 @@ feature -- Query
 				end
 			end
 		ensure
-			not_void: Result /= Void
+			resoled_not_void: Result /= Void
 		end
 
 feature -- Stack
@@ -140,18 +140,31 @@ feature -- Stack
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	context: DS_BILINKED_LIST [DS_HASH_TABLE [STRING, STRING]]
+			-- Really a DS_STACK but we need to see the content
+
 feature {NONE} -- Constants
 
 	Default_pseudo_prefix: STRING is
 			-- Default pseudo prefix
 		once
 			!! Result.make (0)
+		ensure
+			prefix_not_void: Result /= Void
 		end
 
 	Default_namespace: STRING is
 			-- Default namespace (empty)
 		once
 			!! Result.make (0)
+		ensure
+			namespace_not_void: Result /= Void
 		end
+
+invariant
+
+	context_not_void: context /= Void
 
 end

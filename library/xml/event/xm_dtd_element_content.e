@@ -53,22 +53,24 @@ creation
 	make_choice, make_sequence, make_mixed,
 	make_any, make_empty
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
-	make_name (a: like name) is
-			-- Make name node.
+	make_name (a_name: like name) is
+			-- Create a new name node.
+		require
+			a_name_not_void: a_name /= Void
 		do
-			name := a
+			name := a_name
 			set_default
 		ensure
 			is_name: is_name
-			set: same_string (name, a)
+			name_set: name = a_name
 		end
 
 	make_list is
-			-- Make list node.
+			-- Create a new list node.
 		do
-			!DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]! items.make
+			!DS_BILINKED_LIST [XM_DTD_ELEMENT_CONTENT]! items.make
 			set_default
 		ensure
 			not_name: not is_name
@@ -81,10 +83,10 @@ feature {NONE} -- Creation
 			set_one
 		end
 
-feature {NONE} -- Creation (derived)
+feature {NONE} -- Initialization (derived)
 
 	make_empty is
-			-- Empty content model.
+			-- Create a new empty content model.
 		do
 			make_list
 			set_content_empty
@@ -94,7 +96,7 @@ feature {NONE} -- Creation (derived)
 		end
 
 	make_any is
-			-- Any content model.
+			-- Create a new any content model.
 		do
 			make_list
 			set_content_any
@@ -104,7 +106,7 @@ feature {NONE} -- Creation (derived)
 		end
 
 	make_choice is
-			-- Choice list.
+			-- Create a new choice list.
 		do
 			make_list
 			set_choice
@@ -114,7 +116,7 @@ feature {NONE} -- Creation (derived)
 		end
 
 	make_sequence is
-			-- Sequence list.
+			-- Create a new sequence list.
 		do
 			make_list
 			set_sequence
@@ -124,7 +126,7 @@ feature {NONE} -- Creation (derived)
 		end
 
 	make_mixed is
-			-- Mixed content.
+			-- Create a new mixed content.
 		do
 			make_list
 			set_content_mixed
@@ -136,12 +138,12 @@ feature {NONE} -- Creation (derived)
 feature -- Data
 
 	name: STRING
-			-- Name, IF leaf item.
+			-- Name, IF leaf item
 		--require is_name
 		--ensure Result /= Void
 
-	items: DS_LIST[XM_DTD_ELEMENT_CONTENT]
-			-- List of subitems.
+	items: DS_LIST [XM_DTD_ELEMENT_CONTENT]
+			-- List of subitems
 		--require not is_name
 		--ensure Result /= Void
 
@@ -149,18 +151,18 @@ feature {NONE} -- Data (implementation)
 
 	type: CHARACTER
 			-- Sequence enumeration, see invariant.
-			-- Internal type not exposed to client, character for convenience
+			-- Internal type not exposed to client, character for convenience.
 
 	repetition: CHARACTER
 			-- Repetition enumeration, see invariant..
-			-- Internal type not exposed to client, character for convenience
+			-- Internal type not exposed to client, character for convenience.
 
-feature -- General
+feature -- Output
 
 	out: STRING is
 			-- Output as in DTD.
 		local
-			a_cursor: DS_LINEAR_CURSOR[XM_DTD_ELEMENT_CONTENT]
+			a_cursor: DS_LINEAR_CURSOR [XM_DTD_ELEMENT_CONTENT]
 		do
 			if is_name then
 				Result := name
@@ -170,12 +172,8 @@ feature -- General
 				Result := "EMPTY"
 			else
 				Result := clone ("(")
-				from
-					a_cursor := items.new_cursor
-					a_cursor.start
-				until
-					a_cursor.after
-				loop
+				a_cursor := items.new_cursor
+				from a_cursor.start until a_cursor.after loop
 					Result := STRING_.appended_string (Result, a_cursor.item.out)
 					a_cursor.forth
 					if not a_cursor.after then
@@ -263,14 +261,14 @@ feature -- Repetition
 feature -- Repetition (derived)
 
 	minimum_occurrences: INTEGER is
-			-- Minimum occurrences.
+			-- Minimum occurrences
 		do
 			if is_one or is_one_or_more then
 				Result := 1
 			end
 		ensure
 			postive: Result >= 0
-			ordered: Result <=  maximum_occurrences
+			ordered: Result <= maximum_occurrences
 			one: is_one implies (Result = 1)
 			zero_or_one: is_zero_or_one implies (Result = 0)
 			one_or_more: is_one_or_more implies (Result = 1)
@@ -278,16 +276,15 @@ feature -- Repetition (derived)
 		end
 
 	maximum_occurrences: INTEGER is
-			-- Maximum occurrences.
+			-- Maximum occurrences
 		do
 			Result := 1
-
 			if is_one_or_more or is_zero_or_more then
 				Result := Platform.Maximum_integer
 			end
 		ensure
 			positive: Result >= 0
-			ordered: Result >=  minimum_occurrences
+			ordered: Result >= minimum_occurrences
 			one: is_one implies (Result = 1)
 			zero_or_one: is_zero_or_one implies (Result = 1)
 			one_or_more: is_one_or_more implies (Result > 1)
@@ -367,7 +364,7 @@ feature -- Content (final)
 feature -- Content (mixed)
 
 	is_content_mixed: BOOLEAN is
-			-- Is this mixed content.
+			-- Is this mixed content?
 		do
 			Result := is_choice and is_character_data_allowed
 		ensure
@@ -375,7 +372,7 @@ feature -- Content (mixed)
 		end
 
 	set_content_mixed is
-			-- Mixed #PCDATA content.
+			-- Set mixed #PCDATA content.
 		require
 			list: not is_name
 		do
