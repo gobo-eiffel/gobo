@@ -206,6 +206,28 @@ feature -- Error reporting
 			description_not_void: Result /= Void
 		end
 
+	new_stop_on_error_filter: XM_PARSER_STOP_ON_ERROR_FILTER is
+			-- Create a stop on error filter that not only 
+			-- stops forwarding events but also stops the 
+			-- parser if the error comes from the preceding 
+			-- event filters.
+			-- The result must be used only for processing events 
+			-- coming from the current parser.
+		do
+			create Result.make (Current)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
+
+	force_unreported_error (an_error: STRING) is
+			-- Force error but do not report it to event listeners.
+		require
+			an_error_not_void: an_error /= Void
+		deferred
+		end
+
 invariant
 
 	entity_resolver_not_void: entity_resolver /= Void
