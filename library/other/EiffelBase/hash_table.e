@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -205,17 +205,22 @@ feature -- Element change
 					h := slots_position
 				end
 				i := free_slot
-				free_slot := Free_offset - clashes.item (i)
-				clashes.put (slots.item (h), i)
-				slots.put (i, h)
-				items.put (new, i)
-				keys.put (a_key, i)
+				if i = No_position then
+					last_position := last_position + 1
+					i := last_position
+				else
+					free_slot := Free_offset - clashes_item (i)
+				end
+				clashes_put (slots_item (h), i)
+				slots_put (i, h)
+				items_put (new, i)
+				keys_put (a_key, i)
 				count := count + 1
 				control := Inserted_constant
 				set_found_item (new, i)
 			else
 				control := Conflict_constant
-				set_found_item (items.item (position), position)
+				set_found_item (items_item (position), position)
 			end
 		ensure
 			insertion_done: (not old has (a_key)) implies item (a_key) = new
@@ -242,16 +247,21 @@ feature -- Element change
 					h := slots_position
 				end
 				i := free_slot
-				free_slot := Free_offset - clashes.item (i)
-				clashes.put (slots.item (h), i)
-				slots.put (i, h)
-				items.put (new, i)
-				keys.put (a_key, i)
+				if i = No_position then
+					last_position := last_position + 1
+					i := last_position
+				else
+					free_slot := Free_offset - clashes_item (i)
+				end
+				clashes_put (slots_item (h), i)
+				slots_put (i, h)
+				items_put (new, i)
+				keys_put (a_key, i)
 				count := count + 1
 				unset_found_item
 			else
-				set_found_item (items.item (position), position)
-				items.put (new, position)
+				set_found_item (items_item (position), position)
+				items_put (new, position)
 			end
 			control := Inserted_constant
 		ensure
@@ -273,12 +283,17 @@ feature -- Element change
 				resize (new_capacity (count + 1))
 			end
 			i := free_slot
-			free_slot := Free_offset - clashes.item (i)
+			if i = No_position then
+				last_position := last_position + 1
+				i := last_position
+			else
+				free_slot := Free_offset - clashes_item (i)
+			end
 			h := hash_position (a_key)
-			clashes.put (slots.item (h), i)
-			slots.put (i, h)
-			items.put (new, i)
-			keys.put (a_key, i)
+			clashes_put (slots_item (h), i)
+			slots_put (i, h)
+			items_put (new, i)
+			keys_put (a_key, i)
 			count := count + 1
 			unset_found_item
 			control := Inserted_constant
@@ -300,8 +315,8 @@ feature -- Element change
 				control := Unknown_constant
 				unset_found_item
 			else
-				set_found_item (items.item (position), position)
-				items.put (new, position)
+				set_found_item (items_item (position), position)
+				items_put (new, position)
 				control := Replaced_constant
 			end
 		ensure
@@ -328,19 +343,20 @@ feature -- Element change
 				old_position := position
 				old_slots_position := slots_position
 				old_clashes_previous_position := clashes_previous_position
-				set_found_item (items.item (old_position), old_position)
+				set_found_item (items_item (old_position), old_position)
 				search_position (new_key)
 				if position = No_position then
 						-- Remove old key:
 					if old_clashes_previous_position = No_position then
-						slots.put (clashes.item (old_position), old_slots_position)
+						slots_put (clashes_item (old_position), old_slots_position)
 					else
-						clashes.put (clashes.item (old_position), old_clashes_previous_position)
+						clashes_put (clashes_item (old_position), old_clashes_previous_position)
 					end
 						-- Add new key:
 					h := slots_position
-					clashes.put (slots.item (h), old_position)
-					slots.put (old_position, h)
+					clashes_put (slots_item (h), old_position)
+					slots_put (old_position, h)
+					keys_put (new_key, old_position)
 					control := Replaced_constant
 				else
 					control := Conflict_constant
@@ -360,7 +376,7 @@ feature -- Element change
 			-- Replace `found_item' by `v'.
 		do
 			found_item := v
-			items.put (v, found_position)
+			items_put (v, found_position)
 		end
 
 feature -- Removal
@@ -378,14 +394,19 @@ feature -- Removal
 			if position /= No_position then
 				move_cursors_forth (position)
 				if clashes_previous_position = No_position then
-					slots.put (clashes.item (position), slots_position)
+					slots_put (clashes_item (position), slots_position)
 				else
-					clashes.put (clashes.item (position), clashes_previous_position)
+					clashes_put (clashes_item (position), clashes_previous_position)
 				end
-				clashes.put (Free_offset - free_slot, position)
-				items.put (dead_item, position)
-				keys.put (dead_key, position)
-				free_slot := position
+				items_put (dead_item, position)
+				keys_put (dead_key, position)
+				if free_slot = No_position and position = last_position then
+					last_position := last_position - 1
+					clashes_put (No_position, position)
+				else
+					clashes_put (Free_offset - free_slot, position)
+					free_slot := position
+				end
 				count := count - 1
 				control := Removed_constant
 			else
@@ -428,11 +449,11 @@ feature -- Conversion
 			from i := 1 until i > nb loop
 				from
 				until
-					clashes.item (j) > Free_watermark
+					clashes_item (j) > Free_watermark
 				loop
 					j := j + 1
 				end
-				Result.put_last (items.item (j))
+				Result.put_last (items_item (j))
 				i := i + 1
 				j := j + 1
 			end
@@ -442,6 +463,8 @@ feature {NONE} -- Implementation
 
 	set_found_item (v: G; pos: INTEGER) is
 			-- Set `found_item' to `v'.
+		require
+			valid_pos: pos /= No_position
 		do
 			found_item := v
 			found_position := pos
