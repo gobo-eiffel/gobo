@@ -130,7 +130,8 @@ feature -- Generation
 			a_file_open_write: a_file.is_open_write
 		local
 			old_file: KI_TEXT_OUTPUT_STREAM
-			l_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [ET_DYNAMIC_TYPE], ET_CLASS]
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			j, nb2: INTEGER
@@ -149,45 +150,29 @@ feature -- Generation
 			print_types
 			a_file.put_new_line
 			a_file.put_line ("#define EIF_VOID ((T0*)0)")
+			a_file.put_string ("#define EIF_TRUE (")
+			print_type_cast (current_system.boolean_type)
+			a_file.put_line ("1)")
+			a_file.put_string ("#define EIF_FALSE (")
+			print_type_cast (current_system.boolean_type)
+			a_file.put_line ("0)")
 			a_file.put_new_line
-			l_types := current_system.dynamic_types
-			nb := l_types.count
-			from i := 1 until i > nb loop
-				l_type := l_types.item (i)
-				if l_type.is_alive then
-					l_features := l_type.features
-					if l_features /= Void then
-						nb2 := l_features.count
-						from j := 1 until j > nb2 loop
-							l_feature := l_features.item (j)
-							if l_feature.is_function then
-								a_file.put_string ("extern ")
-								print_type_declaration (l_feature.result_type.static_type)
-								a_file.put_character (' ')
-								print_routine_name (l_feature, l_type)
-								a_file.put_character ('(')
-								print_type_declaration (l_type)
-								a_file.put_character (' ')
-								a_file.put_character ('C')
-								l_arguments := l_feature.argument_types
-								if l_arguments /= Void then
-									nb3 := l_arguments.count
-									from k := 1 until k > nb3 loop
-										a_file.put_character (',')
-										a_file.put_character (' ')
-										print_type_declaration (l_arguments.item (k).static_type)
-										a_file.put_character (' ')
-										a_file.put_character ('a')
-										a_file.put_integer (k)
-										k := k + 1
-									end
-								end
-								a_file.put_character (')')
-								a_file.put_character (';')
-								a_file.put_new_line
-							elseif l_feature.is_procedure then
-								if l_feature.is_regular then
-									a_file.put_string ("extern void ")
+			l_cursor := current_system.dynamic_types.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_dynamic_types := l_cursor.item
+				nb := l_dynamic_types.count
+				from i := 1 until i > nb loop
+					l_type := l_dynamic_types.item (i)
+					if l_type.is_alive then
+						l_features := l_type.features
+						if l_features /= Void then
+							nb2 := l_features.count
+							from j := 1 until j > nb2 loop
+								l_feature := l_features.item (j)
+								if l_feature.is_function then
+									a_file.put_string ("extern ")
+									print_type_declaration (l_feature.result_type.static_type)
+									a_file.put_character (' ')
 									print_routine_name (l_feature, l_type)
 									a_file.put_character ('(')
 									print_type_declaration (l_type)
@@ -209,46 +194,77 @@ feature -- Generation
 									a_file.put_character (')')
 									a_file.put_character (';')
 									a_file.put_new_line
-								end
-								if l_feature.is_creation then
-									a_file.put_string ("extern ")
-									print_type_declaration (l_type)
-									a_file.put_character (' ')
-									print_creation_procedure_name (l_feature, l_type)
-									a_file.put_character ('(')
-									l_arguments := l_feature.argument_types
-									if l_arguments /= Void then
-										nb3 := l_arguments.count
-										from k := 1 until k > nb3 loop
-											if k /= 1 then
+								elseif l_feature.is_procedure then
+									if l_feature.is_regular then
+										a_file.put_string ("extern void ")
+										print_routine_name (l_feature, l_type)
+										a_file.put_character ('(')
+										print_type_declaration (l_type)
+										a_file.put_character (' ')
+										a_file.put_character ('C')
+										l_arguments := l_feature.argument_types
+										if l_arguments /= Void then
+											nb3 := l_arguments.count
+											from k := 1 until k > nb3 loop
 												a_file.put_character (',')
 												a_file.put_character (' ')
+												print_type_declaration (l_arguments.item (k).static_type)
+												a_file.put_character (' ')
+												a_file.put_character ('a')
+												a_file.put_integer (k)
+												k := k + 1
 											end
-											print_type_declaration (l_arguments.item (k).static_type)
-											a_file.put_character (' ')
-											a_file.put_character ('a')
-											a_file.put_integer (k)
-											k := k + 1
 										end
+										a_file.put_character (')')
+										a_file.put_character (';')
+										a_file.put_new_line
 									end
-									a_file.put_character (')')
-									a_file.put_character (';')
-									a_file.put_new_line
+									if l_feature.is_creation then
+										a_file.put_string ("extern ")
+										print_type_declaration (l_type)
+										a_file.put_character (' ')
+										print_creation_procedure_name (l_feature, l_type)
+										a_file.put_character ('(')
+										l_arguments := l_feature.argument_types
+										if l_arguments /= Void then
+											nb3 := l_arguments.count
+											from k := 1 until k > nb3 loop
+												if k /= 1 then
+													a_file.put_character (',')
+													a_file.put_character (' ')
+												end
+												print_type_declaration (l_arguments.item (k).static_type)
+												a_file.put_character (' ')
+												a_file.put_character ('a')
+												a_file.put_integer (k)
+												k := k + 1
+											end
+										end
+										a_file.put_character (')')
+										a_file.put_character (';')
+										a_file.put_new_line
+									end
 								end
+								j := j + 1
 							end
-							j := j + 1
 						end
 					end
+					i := i + 1
 				end
-				i := i + 1
+				l_cursor.forth
 			end
 			a_file.put_new_line
-			from i := 1 until i > nb loop
-				l_type := l_types.item (i)
-				if l_type.is_alive then
-					print_features (l_type)
+			from l_cursor.start until l_cursor.after loop
+				l_dynamic_types := l_cursor.item
+				nb := l_dynamic_types.count
+				from i := 1 until i > nb loop
+					l_type := l_dynamic_types.item (i)
+					if l_type.is_alive then
+						print_features (l_type)
+					end
+					i := i + 1
 				end
-				i := i + 1
+				l_cursor.forth
 			end
 			l_root_type := current_system.root_type
 			l_root_creation := current_system.root_creation_procedure
@@ -1031,8 +1047,77 @@ feature {NONE} -- Instruction generation
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			a_compound: ET_COMPOUND
+			an_elseif_parts: ET_ELSEIF_PART_LIST
+			an_elseif: ET_ELSEIF_PART
+			i, nb: INTEGER
 		do
--- TODO.
+			current_file.put_character ('i')
+			current_file.put_character ('f')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_expression (an_instruction.conditional.expression)
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			a_compound := an_instruction.then_compound
+			if a_compound /= Void then
+				indent
+				print_compound (a_compound)
+				dedent
+			end
+			print_indentation
+			current_file.put_character ('}')
+			an_elseif_parts := an_instruction.elseif_parts
+			if an_elseif_parts /= Void then
+				nb := an_elseif_parts.count
+				from i := 1 until i > nb loop
+					an_elseif := an_elseif_parts.item (i)
+					current_file.put_character (' ')
+					current_file.put_character ('e')
+					current_file.put_character ('l')
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					current_file.put_character (' ')
+					current_file.put_character ('i')
+					current_file.put_character ('f')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (an_elseif.conditional.expression)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					a_compound := an_elseif.then_compound
+					if a_compound /= Void then
+						indent
+						print_compound (a_compound)
+						dedent
+					end
+					print_indentation
+					current_file.put_character ('}')
+					i := i + 1
+				end
+			end
+			a_compound := an_instruction.else_compound
+			if a_compound /= Void then
+				current_file.put_character (' ')
+				current_file.put_character ('e')
+				current_file.put_character ('l')
+				current_file.put_character ('s')
+				current_file.put_character ('e')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_compound (a_compound)
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+			end
+			current_file.put_character (';')
 		end
 
 	print_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
@@ -1055,8 +1140,36 @@ feature {NONE} -- Instruction generation
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			a_compound: ET_COMPOUND
 		do
--- TODO.
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				current_file.put_line ("/* Loop from */")
+				print_compound (a_compound)
+				print_indentation
+			end
+			current_file.put_character ('w')
+			current_file.put_character ('h')
+			current_file.put_character ('i')
+			current_file.put_character ('l')
+			current_file.put_character ('e')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_expression (an_instruction.until_conditional.expression)
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				indent
+				print_compound (a_compound)
+				dedent
+			end
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_character (';')
 		end
 
 	print_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
@@ -1064,7 +1177,8 @@ feature {NONE} -- Instruction generation
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
--- TODO.
+			print_precursor_call (an_instruction)
+			current_file.put_character (';')
 		end
 
 	print_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
@@ -1080,7 +1194,7 @@ feature {NONE} -- Instruction generation
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
--- TODO.
+			print_static_call (an_instruction)
 		end
 
 feature {NONE} -- Expression generation
@@ -1098,9 +1212,12 @@ feature {NONE} -- Expression generation
 		require
 			a_constant_not_void: a_constant /= Void
 		do
+			print_type_cast (current_system.character_type)
+			current_file.put_character ('(')
 			current_file.put_character ('%'')
 			current_file.put_character (a_constant.value)
 			current_file.put_character ('%'')
+			current_file.put_character (')')
 		end
 
 	print_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
@@ -1172,7 +1289,6 @@ feature {NONE} -- Expression generation
 						-- error should have already been reported.
 					set_fatal_error
 -- TODO:
---				error_handler.report_giabe_error
 				elseif not l_feature.is_procedure then
 -- TODO: error
 				else
@@ -1220,7 +1336,12 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		do
--- TODO.
+			if current_type.is_expanded then
+				current_file.put_character ('&')
+				current_file.put_character ('C')
+			else
+				current_file.put_character ('C')
+			end
 		end
 
 	print_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
@@ -1228,7 +1349,19 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		do
--- TODO.
+-- TODO: expandedness
+			current_file.put_character ('(')
+			print_expression (an_expression.left)
+			current_file.put_character (')')
+			if an_expression.operator.is_not_equal then
+				current_file.put_character ('!')
+			else
+				current_file.put_character ('=')
+			end
+			current_file.put_character ('=')
+			current_file.put_character ('(')
+			print_expression (an_expression.right)
+			current_file.put_character (')')
 		end
 
 	print_expression (an_expression: ET_EXPRESSION) is
@@ -1252,7 +1385,7 @@ feature {NONE} -- Expression generation
 		require
 			a_constant_not_void: a_constant /= Void
 		do
--- TODO.
+			current_file.put_string ("EIF_FALSE")
 		end
 
 	print_feature_address (an_expression: ET_FEATURE_ADDRESS) is
@@ -1277,8 +1410,41 @@ feature {NONE} -- Expression generation
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
+		local
+			a_literal: STRING
 		do
--- TODO.
+			a_literal := a_constant.literal
+			inspect a_literal.count
+			when 4 then
+					-- 0[xX][a-fA-F0-9]{2}
+				print_type_cast (current_system.integer_8_type)
+				current_file.put_character ('(')
+				current_file.put_string (a_literal)
+				current_file.put_character (')')
+			when 6 then
+					-- 0[xX][a-fA-F0-9]{4}
+				print_type_cast (current_system.integer_16_type)
+				current_file.put_character ('(')
+				current_file.put_string (a_literal)
+				current_file.put_character (')')
+			when 10 then
+					-- 0[xX][a-fA-F0-9]{8}
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				current_file.put_string (a_literal)
+				current_file.put_character (')')
+			when 18 then
+					-- 0[xX][a-fA-F0-9]{16}
+				print_type_cast (current_system.integer_64_type)
+				current_file.put_character ('(')
+				current_file.put_string (a_literal)
+				current_file.put_character (')')
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				current_file.put_string (a_literal)
+				current_file.put_character (')')
+			end
 		end
 
 	print_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
@@ -1349,12 +1515,92 @@ feature {NONE} -- Expression generation
 			current_file.put_character (')')
 		end
 
+	print_precursor_call (a_precursor: ET_PRECURSOR) is
+			-- Print `a_precursor'.
+		require
+			a_precursor_not_void: a_precursor /= Void
+		local
+			a_precursor_keyword: ET_PRECURSOR_KEYWORD
+			a_feature: ET_FEATURE
+			a_parent_type, an_ancestor: ET_BASE_TYPE
+			a_class: ET_CLASS
+			an_actuals: ET_ACTUAL_ARGUMENT_LIST
+			l_current_class: ET_CLASS
+			l_class_impl: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			a_parent_type := a_precursor.parent_type
+			if a_parent_type = Void then
+					-- Internal error: the Precursor construct should already
+					-- have been resolved when flattening the features of the
+					-- implementation class of current feature.
+				set_fatal_error
+-- TODO: error
+			else
+				a_precursor_keyword := a_precursor.precursor_keyword
+				a_class := a_parent_type.direct_base_class (universe)
+				a_feature := a_class.seeded_feature (a_precursor_keyword.seed)
+				if a_feature = Void then
+						-- Internal error: the Precursor construct should
+						-- already have been resolved when flattening the
+						-- features of `a_class_impl'.
+					set_fatal_error
+-- TODO: error
+				else
+					if a_parent_type.is_generic then
+						l_current_class := current_type.base_class
+						l_class_impl := current_feature.static_feature.implementation_class
+						if l_current_class /= l_class_impl then
+								-- Resolve generic parameters in the
+								-- context of `current_type'.
+							l_current_class.process (universe.ancestor_builder)
+							if l_current_class.has_ancestors_error then
+								set_fatal_error
+							else
+								an_ancestor := l_current_class.ancestor (a_parent_type, universe)
+								if an_ancestor = Void then
+										-- Internal error: `a_parent_type' is an ancestor
+										-- of `l_class_impl', and hence of `l_current_class'.
+									set_fatal_error
+-- TODO.
+								else
+									a_parent_type := an_ancestor
+								end
+							end
+						end
+					end
+					if not has_fatal_error then
+						l_dynamic_type := current_system.dynamic_type (a_parent_type, current_type.base_type)
+						l_dynamic_feature := l_dynamic_type.dynamic_feature (a_feature, current_system)
+-- TODO: generate special rotuines for precursors.
+						print_routine_name (l_dynamic_feature, l_dynamic_type)
+						current_file.put_character ('(')
+						an_actuals := a_precursor.arguments
+						if an_actuals /= Void then
+							nb := an_actuals.count
+							from i := 1 until i > nb loop
+								if i /= 1 then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								print_expression (an_actuals.expression (i))
+								i := i + 1
+							end
+						end
+						current_file.put_character (')')
+					end
+				end
+			end
+		end
+
 	print_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
 		do
--- TODO.
+			print_precursor_call (an_expression)
 		end
 
 	print_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
@@ -1489,12 +1735,20 @@ feature {NONE} -- Expression generation
 -- TODO.
 		end
 
+	print_static_call (a_call: ET_STATIC_FEATURE_CALL) is
+			-- Check validity of `a_call'.
+		require
+			a_call_not_void: a_call /= Void
+		do
+-- TODO.
+		end
+
 	print_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
 		do
--- TODO.
+			print_static_call (an_expression)
 		end
 
 	print_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
@@ -1510,7 +1764,7 @@ feature {NONE} -- Expression generation
 		require
 			a_constant_not_void: a_constant /= Void
 		do
--- TODO.
+			current_file.put_string ("EIF_TRUE")
 		end
 
 	print_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
@@ -1685,7 +1939,8 @@ feature {NONE} -- Type generation
 	print_types is
 			-- Print declarations of types of `current_system'.
 		local
-			l_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [ET_DYNAMIC_TYPE], ET_CLASS]
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
@@ -1693,42 +1948,51 @@ feature {NONE} -- Type generation
 			j, nb2: INTEGER
 		do
 			current_file.put_line ("typedef struct {int id;} T0;")
-			l_types := current_system.dynamic_types
-			nb := l_types.count
-			from i := 1 until i > nb loop
-				l_type := l_types.item (i)
-				if l_type.is_alive then
-					if l_type = current_system.character_type then
-						current_file.put_string ("typedef unsigned char ")
-						print_type_name (l_type)
-						current_file.put_character (';')
-						current_file.put_new_line
-					else
-						current_file.put_string ("typedef struct {int id;")
-						l_features := l_type.features
-						if l_features /= Void then
-							nb2 := l_features.count
-							from j := 1 until j > nb2 loop
-								l_feature := l_features.item (j)
-								if l_feature.is_attribute then
-									current_file.put_character (' ')
-									print_type_declaration (l_feature.result_type.static_type)
-									current_file.put_character (' ')
-									current_file.put_character ('a')
-									current_file.put_integer (l_feature.id)
-									current_file.put_character (';')
+			l_cursor := current_system.dynamic_types.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_dynamic_types := l_cursor.item
+				nb := l_dynamic_types.count
+				from i := 1 until i > nb loop
+					l_type := l_dynamic_types.item (i)
+					if l_type.is_alive then
+						if l_type = current_system.character_type then
+							current_file.put_string ("typedef unsigned char ")
+							print_type_name (l_type)
+							current_file.put_character (';')
+							current_file.put_new_line
+						elseif l_type = current_system.boolean_type then
+							current_file.put_string ("typedef int ")
+							print_type_name (l_type)
+							current_file.put_character (';')
+							current_file.put_new_line
+						else
+							current_file.put_string ("typedef struct {int id;")
+							l_features := l_type.features
+							if l_features /= Void then
+								nb2 := l_features.count
+								from j := 1 until j > nb2 loop
+									l_feature := l_features.item (j)
+									if l_feature.is_attribute then
+										current_file.put_character (' ')
+										print_type_declaration (l_feature.result_type.static_type)
+										current_file.put_character (' ')
+										current_file.put_character ('a')
+										current_file.put_integer (l_feature.id)
+										current_file.put_character (';')
+									end
+									j := j + 1
 								end
-								j := j + 1
 							end
+							current_file.put_character ('}')
+							current_file.put_character (' ')
+							print_type_name (l_type)
+							current_file.put_character (';')
+							current_file.put_new_line
 						end
-						current_file.put_character ('}')
-						current_file.put_character (' ')
-						print_type_name (l_type)
-						current_file.put_character (';')
-						current_file.put_new_line
 					end
+					i := i + 1
 				end
-				i := i + 1
+				l_cursor.forth
 			end
 		end
 
@@ -1768,7 +2032,9 @@ feature {NONE} -- Type generation
 		do
 			current_file.put_character ('(')
 			print_type_name (a_type)
-			current_file.put_character ('*')
+			if not a_type.is_expanded then
+				current_file.put_character ('*')
+			end
 			current_file.put_character (')')
 		end
 
