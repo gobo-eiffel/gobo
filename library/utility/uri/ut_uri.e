@@ -143,7 +143,7 @@ feature -- Status
 			path_not_void: path /= Void
 		do
 			Result :=
-				not path.has_substring ("/../") and then
+				not STRING_.has_substring (path, "/../") and then
 				(path.count < 2 or else path.item (1) /= '.' or else path.item (2) /= '/') and then
 				(path.count < 2 or else path.item (path.count) /= '/' or else path.item (path.count - 1) /= '.')
 		end
@@ -335,9 +335,9 @@ feature -- If authority is <userinfo>@<host>:<port>
 				end
 			end
 		ensure
-			user_info_occurs_in_authority: user_info /= Void implies authority.substring_index (user_info, 1) /= 0
+			user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0
 			host_not_void: host /= Void
-			host_occurs_in_authority: host /= Void implies authority.substring_index (host, 1) /= 0
+			host_occurs_in_authority: host /= Void implies STRING_.substring_index (authority, host, 1) /= 0
 		end
 
 
@@ -354,11 +354,11 @@ feature -- Set url components
 				create query.make_from_string (key)
 			else
 				query.append_character ('&')
-				query.append_string (key)
+				query := STRING_.appended_string (query, key)
 			end
 			query.append_character ('=')
 			if value /= Void and then not value.is_empty then
-				query.append_string (uri_encoding.escape_string (value))
+				query := STRING_.appended_string (query, uri_encoding.escape_string (value))
 			end
 			set_full_reference
 		end
@@ -372,7 +372,7 @@ feature -- Set url components
 			path := a_path
 			set_full_reference
 		ensure
-			path_set: path = a_path or else path.is_equal (a_path)
+			path_set: path = a_path or else STRING_.same_string (path, a_path)
 		end
 
 	set_query (a_query: STRING) is
@@ -385,7 +385,7 @@ feature -- Set url components
 			query := a_query
 			set_full_reference
 		ensure
-			query_set: query = a_query or else query.is_equal (a_query)
+			query_set: query = a_query or else STRING_.same_string (query, a_query)
 		end
 
 	unescape_components is
@@ -412,24 +412,24 @@ feature {NONE} -- Update cached attributes
 			create full_reference.make (32)
 			create scheme_specific_part.make (32)
 			if scheme /= Void then
-				full_reference.append_string (scheme)
+				full_reference := STRING_.appended_string (full_reference, scheme)
 				full_reference.append_character (':')
 			end
 			if authority /= Void then
-				scheme_specific_part.append_string (authority)
+				scheme_specific_part := STRING_.appended_string (scheme_specific_part, authority)
 			end
 			if path /= Void then
-				scheme_specific_part.append_string (path)
+				scheme_specific_part := STRING_.appended_string (scheme_specific_part, path)
 			end
 			if query /= Void then
 				scheme_specific_part.append_character ('?')
-				scheme_specific_part.append_string (query)
+				scheme_specific_part := STRING_.appended_string (scheme_specific_part, query)
 			end
 			if fragment /= Void then
 				scheme_specific_part.append_character ('#')
-				scheme_specific_part.append_string (fragment)
+				scheme_specific_part := STRING_.appended_string (scheme_specific_part, fragment)
 			end
-			full_reference.append_string (scheme_specific_part)
+			full_reference := STRING_.appended_string (full_reference, scheme_specific_part)
 		end
 
 
@@ -732,7 +732,7 @@ feature {NONE} -- Resolve a relative-path reference
 				segment := a_cursor.item
 				if not segment.is_empty then
 					path.append_character ('/')
-					path.append_string (segment)
+					path := STRING_.appended_string (path, segment)
 				end
 				a_cursor.forth
 			end
@@ -757,7 +757,7 @@ feature {NONE} -- Resolve a relative-path reference
 			Result := a_string.count = 1 
 				and then a_string.item (1) = '.'
 		ensure
-			definition: Result = a_string.is_equal (".")
+			definition: Result = STRING_.same_string (a_string, ".")
 		end
 		
 	is_dot_dot (a_string: STRING): BOOLEAN is
@@ -769,7 +769,7 @@ feature {NONE} -- Resolve a relative-path reference
 				and then a_string.item (1) = '.'
 				and then a_string.item (2) = '.'
 		ensure
-			definition: Result = a_string.is_equal ("..")
+			definition: Result = STRING_.same_string (a_string, "..")
 		end
 
 invariant
@@ -791,8 +791,8 @@ invariant
 	vaid_fragment: fragment = Void or else not fragment.has ('#')
 
 	-- Contraints on parsed `authority'
-	user_info_occurs_in_authority: user_info /= Void implies authority.substring_index (user_info, 1) /= 0
-	host_occurs_in_authority: host /= Void implies authority.substring_index (host, 1) /= 0
+	user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0
+	host_occurs_in_authority: host /= Void implies STRING_.substring_index (authority, host, 1) /= 0
 	valid_port: port >= 0 and port <= 65535
 
 end
