@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable : BOOLEAN is
+	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
 			Result := filename /= Void and then filename.count > 0
@@ -66,12 +66,12 @@ feature -- Setting
 			filename_set: filename = a_filename
 		end
 
-	set_fork(a_fork : BOOLEAN) is
+	set_fork(a_fork: BOOLEAN) is
 			-- Set `fork' to a_fork
 		do
 			fork := a_fork
 		ensure
-			fork_set : fork = a_fork
+			fork_set: fork = a_fork
 		end
 
 	set_start_target_name (a_start_target_name: like start_target_name) is
@@ -92,8 +92,8 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
-			a_project	: GEANT_PROJECT
-			ucs			: UC_STRING
+			a_project: GEANT_PROJECT
+			ucs: UC_STRING
 		do
 			if fork then
 					-- Launch a new geant process:
@@ -105,16 +105,16 @@ feature -- Execution
 			else
 					-- Create a new project and run it's build process:
 				if filename /= Void and then filename.count > 0 then
-					!! ucs.make_from_string(filename)
-					!! a_project.make_with_filename(ucs)
+					!! ucs.make_from_string (filename)
+					!! a_project.make_with_filename (ucs)
 				else
 					!! a_project.make
 				end
 
 					-- Set start target if provided:
 				if start_target_name /= Void and then start_target_name.count > 0 then
-					!! ucs.make_from_string(start_target_name)
-					a_project.set_start_target_name(ucs)
+					!! ucs.make_from_string (start_target_name)
+					a_project.set_start_target_name (ucs)
 				end
 
 					-- Load build configuration:
@@ -125,7 +125,7 @@ feature -- Execution
 					a_project.build
 					if not a_project.build_successful then
 							--!! TODO: Report this to parent project
-						print("Build FAILED!%N")
+						print ("Build FAILED!%N")
 						Exceptions.die (1)
 					end
 				end

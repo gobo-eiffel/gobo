@@ -34,15 +34,15 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable : BOOLEAN is
+	is_executable: BOOLEAN is
 			-- Can commandbe executed?
 		do
 			Result := (input_filename /= Void and then input_filename.count > 0) and
 				(output_filename /= Void and then output_filename.count > 0)
 		ensure then
-			input_filename_not_void : Result implies input_filename /= Void
+			input_filename_not_void: Result implies input_filename /= Void
 			input_filename_not_empty: Result implies input_filename.count > 0
-			output_filename_not_void : Result implies output_filename /= Void
+			output_filename_not_void: Result implies output_filename /= Void
 			output_filename_not_empty: Result implies output_filename.count > 0
 		end
 

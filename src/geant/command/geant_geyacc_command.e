@@ -56,7 +56,7 @@ feature -- Access
 	output_filename: STRING
 			-- -o option
 
-	input_filename : STRING
+	input_filename: STRING
 			-- Input filename
 
 feature -- Setting

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable : BOOLEAN is
+	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
 			Result := command_line /= Void and then command_line.count > 0

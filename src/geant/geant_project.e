@@ -62,7 +62,7 @@ feature -- Access
 	build_successful: BOOLEAN
 			-- Was last build successful?
 
-	target_with_name(a_name : UC_STRING) : GEANT_ELEMENT is
+	target_with_name (a_name: UC_STRING): GEANT_ELEMENT is
 			-- Target with `name' `a_name'
 		require
 			loaded: targets /= Void
@@ -118,7 +118,7 @@ feature -- Processing
 			-- and convert it into a 'GEANT_DOM'.
 		local
 			xml_parser: GEANT_PROJECT_PARSER
-			ucs			: UC_STRING
+			ucs: UC_STRING
 	    do
 				-- Reset current project's state:
 			reset
