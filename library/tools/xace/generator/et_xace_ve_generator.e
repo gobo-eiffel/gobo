@@ -164,6 +164,9 @@ feature {NONE} -- Output
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
+			a_file.put_line ("end")
+			a_file.put_new_line
+			a_file.put_new_line
 			!! an_external.make
 			a_library.merge_externals (an_external)
 			if an_external.has_link_libraries then
