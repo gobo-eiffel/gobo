@@ -67,6 +67,9 @@ feature -- Processing
 					fsm.resolve_conflicts (error_handler)
 				end
 				!! parser_generator.make (fsm)
+				if input_filename /= Void then
+					parser_generator.set_input_filename (input_filename)
+				end
 				if token_classname /= Void then
 						-- Print class text with token code constants.
 					!! token_file.make (token_filename)

@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			build_yyr
 			build_action_tables
 			array_size := 3000
+			input_filename := Default_input_filename
 		ensure
 			machine_set: machine = a_machine
 		end
@@ -46,6 +47,21 @@ feature -- Access
 
 	machine: PR_FSM
 			-- Associated finite state machine
+
+	input_filename: STRING
+			-- Input filename
+
+feature -- Setting
+
+	set_input_filename (a_filename: like input_filename) is
+			-- Set `input_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			input_filename := a_filename
+		ensure
+			input_filename_set: input_filename = a_filename
+		end
 
 feature -- Generation
 
@@ -373,7 +389,17 @@ feature {NONE} -- Generation
 					a_file.put_integer (a_rule.id)
 					a_file.put_string (" then%N--|#line ")
 					a_file.put_integer (a_rule.line_nb)
-					a_file.put_character ('%N')
+					a_file.put_string (" %"")
+					a_file.put_string (input_filename)
+					a_file.put_character ('%"')
+					a_file.put_new_line
+					a_file.put_line ("debug (%"GEYACC%")")
+					a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+					a_file.put_string (input_filename)
+					a_file.put_string ("' at line ")
+					a_file.put_integer (a_rule.line_nb)
+					a_file.put_line ("%")")
+					a_file.put_line ("end")
 					a_type := a_rule.lhs.type
 					a_type.print_dollar_dollar_initialization (a_file)
 					a_file.put_character ('%N')
@@ -427,7 +453,9 @@ feature {NONE} -- Generation
 						a_file.put_integer (a_rule.id)
 						a_file.put_string (" then%N--|#line ")
 						a_file.put_integer (a_rule.line_nb)
-						a_file.put_string ("%N%T")
+						a_file.put_string (" %"")
+						a_file.put_string (input_filename)
+						a_file.put_string ("%"%N%T")
 						a_file.put_string ("yy_do_action_")
 						a_file.put_integer (i)
 						a_file.put_character ('%N')
@@ -473,7 +501,9 @@ feature {NONE} -- Generation
 							a_file.put_integer (a_rule.id)
 							a_file.put_string (" then%N--|#line ")
 							a_file.put_integer (a_rule.line_nb)
-							a_file.put_string ("%N%T")
+							a_file.put_string (" %"")
+							a_file.put_string (input_filename)
+							a_file.put_string ("%"%N%T")
 							a_file.put_string ("yy_do_action_")
 							a_file.put_integer (j)
 							a_file.put_character ('%N')
@@ -494,10 +524,20 @@ feature {NONE} -- Generation
 					a_file.put_integer (i)
 					a_file.put_string (" is%N%T%T%T--|#line ")
 					a_file.put_integer (a_rule.line_nb)
+					a_file.put_string (" %"")
+					a_file.put_string (input_filename)
+					a_file.put_character ('%"')
 					a_type := a_rule.lhs.type
 					a_file.put_string ("%N%T%Tlocal%N")
 					a_type.print_dollar_dollar_declaration (a_file)
 					a_file.put_string ("%N%T%Tdo%N")
+					a_file.put_line ("debug (%"GEYACC%")")
+					a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+					a_file.put_string (input_filename)
+					a_file.put_string ("' at line ")
+					a_file.put_integer (a_rule.line_nb)
+					a_file.put_line ("%")")
+					a_file.put_line ("end")
 					a_type.print_dollar_dollar_initialization (a_file)
 					a_file.put_character ('%N')
 					a_file.put_string (an_action)
@@ -1027,8 +1067,12 @@ feature {NONE} -- Constants
 			table_portion_sorter_not_void: Result /= Void
 		end
 
+	Default_input_filename: STRING is "standard input"
+			-- Default input filename
+
 invariant
 
 	machine_not_void: machine /= Void
+	input_filename_not_void: input_filename /= Void
 
 end

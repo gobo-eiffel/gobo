@@ -45,6 +45,10 @@ feature {NONE} -- Initialization
 			max: INTEGER
 			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
+			input_filename := a_description.input_filename
+			if input_filename = Void then
+				input_filename := Default_input_filename
+			end
 			characters_count := a_description.characters_count
 			array_size := a_description.array_size
 			inspect_used := a_description.inspect_used
@@ -354,7 +358,9 @@ feature {NONE} -- Generation
 			if actions_separated then
 				a_file.put_string ("%T%T--|#line ")
 				a_file.put_integer (a_rule.line_nb)
-				a_file.put_string ("%N%Tyy_execute_action_")
+				a_file.put_string (" %"")
+				a_file.put_string (input_filename)
+				a_file.put_string ("%"%N%Tyy_execute_action_")
 				a_file.put_integer (a_rule.id)
 				a_file.put_character ('%N')
 			else
@@ -373,7 +379,9 @@ feature {NONE} -- Generation
 			a_file.put_integer (a_rule.id)
 			a_file.put_string (" is%N%T%T%T--|#line ")
 			a_file.put_integer (a_rule.line_nb)
-			a_file.put_string ("%N%T%Tdo%N")
+			a_file.put_string (" %"")
+			a_file.put_string (input_filename)
+			a_file.put_string ("%"%N%T%Tdo%N")
 			print_action_body (a_file, a_rule)
 			a_file.put_string ("%N%T%Tend%N")
 		end
@@ -464,9 +472,19 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("--|#line ")
 			a_file.put_integer (a_rule.line_nb)
-			a_file.put_character ('%N')
+			a_file.put_string (" %"")
+			a_file.put_string (input_filename)
+			a_file.put_character ('%"')
+			a_file.put_new_line
+			a_file.put_line ("debug (%"GELEX%")")
+			a_file.put_string ("%Tstd.error.put_line (%"Executing scanner user-code from file '")
+			a_file.put_string (input_filename)
+			a_file.put_string ("' at line ")
+			a_file.put_integer (a_rule.line_nb)
+			a_file.put_line ("%")")
+			a_file.put_line ("end")
 			a_file.put_string (a_rule.action.out)
-			a_file.put_character ('%N')
+			a_file.put_new_line
 		end
 
 	print_eof_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -540,9 +558,19 @@ feature {NONE} -- Generation
 					a_file.put_string (" then%N")
 					a_file.put_string ("--|#line ")
 					a_file.put_integer (rule.line_nb)
-					a_file.put_character ('%N')
+					a_file.put_string (" %"")
+					a_file.put_string (input_filename)
+					a_file.put_character ('%"')
+					a_file.put_new_line
+					a_file.put_line ("debug (%"GELEX%")")
+					a_file.put_string ("%Tstd.error.put_line (%"Executing scanner user-code from file '")
+					a_file.put_string (input_filename)
+					a_file.put_string ("' at line ")
+					a_file.put_integer (rule.line_nb)
+					a_file.put_line ("%")")
+					a_file.put_line ("end")
 					a_file.put_string (rule.action.out)
-					a_file.put_character ('%N')
+					a_file.put_new_line
 					j := j + 1
 				end
 				a_file.put_string ("%T%T%Telse%N%
@@ -923,6 +951,9 @@ feature {NONE} -- Building
 
 feature {NONE} -- Access
 
+	input_filename: STRING
+			-- Input filename
+
 	eiffel_code: STRING
 			-- User-defined Eiffel code
 
@@ -980,12 +1011,15 @@ feature {NONE} -- Constants
 			sorter_not_void: Result /= Void
 		end
 
+	Default_input_filename: STRING is "standard input"
+			-- Default input filename
+
 invariant
 
 	minimum_symbol: minimum_symbol = 1
-	no_void_eiffel_header: eiffel_header /= Void implies
-		not eiffel_header.has (Void)
+	no_void_eiffel_header: eiffel_header /= Void implies not eiffel_header.has (Void)
 	characters_count_positive: characters_count > 0
 	array_size_positive: array_size >= 0
+	input_filename_not_void: input_filename /= Void
 
 end
