@@ -31,8 +31,14 @@ feature {NONE} -- Initialization
 	make (a_project: GEANT_PROJECT) is
 			-- Create a new fileset.
 		do
+			project := a_project
 			!DS_HASH_SET [STRING]! filenames.make_equal (20)
 		end
+
+feature -- Access
+
+	project: GEANT_PROJECT
+			-- Project to which Current belongs to
 
 feature -- Status report
 
@@ -42,7 +48,7 @@ feature -- Status report
 			Result := (directory_name /= Void and then directory_name.count > 0) and then
 				include_wildcard.compiled and then exclude_wildcard.compiled
 
-		ensure then
+		ensure
 			directory_name_not_void: Result implies directory_name /= Void
 			directory_name_not_empty: Result implies directory_name.count > 0
 			include_wildcard_compiled: Result implies include_wildcard.compiled
