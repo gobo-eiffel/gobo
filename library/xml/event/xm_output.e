@@ -35,14 +35,14 @@ feature -- Output
 		end
 
 	set_output_string (a_string: like last_output) is
-			-- Set output to given string.
+			-- Initialize output to given string, 
+			-- the result must still be collected from
+			-- last_output, which may be another string.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			last_output := a_string
+			last_output := clone (a_string)
 			output_stream := Void
-		ensure
-			definition: last_output = a_string
 		end
 
 	set_output_stream (a_stream: like output_stream) is
