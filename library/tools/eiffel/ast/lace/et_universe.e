@@ -59,7 +59,12 @@ feature {NONE} -- Initialization
 			set_use_reference_keyword (True)
 			make_basic_classes
 			create null_processor.make (Current)
+			ancestor_builder := null_processor
+			feature_flattener := null_processor
 			qualified_signature_resolver := null_processor
+			interface_checker := null_processor
+			implementation_checker := null_processor
+			flat_checker := null_processor
 		ensure
 			clusters_set: clusters = a_clusters
 			ast_factory_set: ast_factory = a_factory
@@ -810,48 +815,23 @@ feature -- Processors
 			eiffel_parser_not_void: Result /= Void
 		end
 
-	ancestor_builder: ET_ANCESTOR_BUILDER is
+	ancestor_builder: ET_AST_PROCESSOR
 			-- Ancestor builder
-		once
-			create Result.make (Current)
-		ensure
-			ancestor_builder_not_void: Result /= Void
-		end
 
-	feature_flattener: ET_FEATURE_FLATTENER is
+	feature_flattener: ET_AST_PROCESSOR
 			-- Feature flattener
-		once
-			create Result.make (Current)
-		ensure
-			feature_flattener_not_void: Result /= Void
-		end
 
 	qualified_signature_resolver: ET_AST_PROCESSOR
 			-- Qualified signature resolver
 
-	interface_checker: ET_INTERFACE_CHECKER is
+	interface_checker: ET_AST_PROCESSOR
 			-- Interface checker
-		once
-			create Result.make (Current)
-		ensure
-			interface_checker_not_void: Result /= Void
-		end
 
-	implementation_checker: ET_IMPLEMENTATION_CHECKER is
+	implementation_checker: ET_AST_PROCESSOR
 			-- Implementation checker
-		once
-			create Result.make (Current)
-		ensure
-			implementation_checker_not_void: Result /= Void
-		end
 
-	flat_checker: ET_FLAT_CHECKER is
+	flat_checker: ET_AST_PROCESSOR
 			-- Flat implementation checker
-		once
-			create Result.make (Current)
-		ensure
-			flat_checker_not_void: Result /= Void
-		end
 
 	null_processor: ET_AST_NULL_PROCESSOR
 			-- Null processor
@@ -859,7 +839,24 @@ feature -- Processors
 	activate_processors is
 			-- Activate processors.
 		do
-			create {ET_QUALIFIED_SIGNATURE_RESOLVER} qualified_signature_resolver.make (Current)
+			if ancestor_builder = null_processor then
+				create {ET_ANCESTOR_BUILDER} ancestor_builder.make (Current)
+			end
+			if feature_flattener = null_processor then
+				create {ET_FEATURE_FLATTENER} feature_flattener.make (Current)
+			end
+			if qualified_signature_resolver = null_processor then
+				create {ET_QUALIFIED_SIGNATURE_RESOLVER} qualified_signature_resolver.make (Current)
+			end
+			if interface_checker = null_processor then
+				create {ET_INTERFACE_CHECKER} interface_checker.make (Current)
+			end
+			if implementation_checker = null_processor then
+				create {ET_IMPLEMENTATION_CHECKER} implementation_checker.make (Current)
+			end
+			if flat_checker = null_processor then
+				create {ET_FLAT_CHECKER} flat_checker.make (Current)
+			end
 		end
 
 	set_qualified_signature_resolver (a_resolver: like qualified_signature_resolver) is
@@ -913,7 +910,12 @@ invariant
 	array_any_type_not_void: array_any_type /= Void
 	array_none_type_not_void: array_none_type /= Void
 	any_parents_not_void: any_parents /= Void
+	ancestor_builder_not_void: ancestor_builder /= Void
+	feature_flattener_not_void: feature_flattener /= Void
 	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void
+	interface_checker_not_void: interface_checker /= Void
+	implementation_checker_not_void: implementation_checker /= Void
+	flat_checker_not_void: flat_checker /= Void
 	null_processor_not_void: null_processor /= Void
 
 end
