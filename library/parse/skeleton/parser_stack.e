@@ -10,7 +10,7 @@ feature {ANY}
 	require
 		good_size: n > 0
 	do
-		!!array.make(1,n)
+		!!an_array.make(1,n)
 	end -- make
 
 	count: INTEGER	-- number of items in stack
@@ -22,14 +22,17 @@ feature {ANY}
 			not_empty: not empty
 			valid_index: i <= 0 and i > -count
         do
-            Result := array.item (count + i)
+            Result := an_array.item (count + i)
         end -- item
 
 	put (v: G) is
 			-- push `v' into stack.
 	do
 		count := count + 1;
-		array.force(v, count)
+		if an_array.upper < count then
+			an_array.resize (1, an_array.upper * 3 // 2)
+		end
+		an_array.put(v, count)
 
 		debug
 			if count > max_count then
@@ -51,7 +54,7 @@ feature {ANY}
 		until
 			i = n
 		loop
-			array.put(void_value, count)
+			an_array.put(void_value, count)
 			count := count - 1
 			i := i + 1
 		end
@@ -68,6 +71,6 @@ feature {ANY}
 
 feature {NONE}
 
-	array: ARRAY[G]		-- array to store items
+	an_array: ARRAY[G]		-- array to store items
 
 end -- class PARSER_STACK
