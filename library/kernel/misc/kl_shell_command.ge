@@ -116,6 +116,12 @@ feature -- Execution
 #endif
 #ifdef SE
 				exit_code := execute_command (command)
+					-- Under Linux `execute_command' seems to
+					-- always return 256*exit_code instead of
+					-- just exit_code.
+				if (exit_code \\ 256) = 0 then
+					exit_code := exit_code // 256
+				end
 #endif
 			else
 				exit_code := -1
