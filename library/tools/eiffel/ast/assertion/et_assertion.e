@@ -18,6 +18,11 @@ inherit
 
 feature -- Access
 
+	expression: ET_EXPRESSION is
+			-- Expression (may be Void)
+		deferred
+		end
+
 	assertion: ET_ASSERTION is
 			-- Assertion in list of assertions
 		do

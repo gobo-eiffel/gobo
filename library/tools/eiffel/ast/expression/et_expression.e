@@ -25,6 +25,9 @@ inherit
 		end
 
 	ET_ASSERTION
+		rename
+			expression as expression_item
+		end
 
 	ET_AGENT_ACTUAL_ARGUMENT
 
