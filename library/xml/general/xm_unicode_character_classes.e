@@ -98,208 +98,216 @@ feature -- Character classes (appendix B)
 	is_base_char (a: INTEGER): BOOLEAN is
 			-- Base char class.
 		do
-			Result := (a >= 65 and a <= 90) or
-				(a >= 97 and a <= 122) or
-				(a >= 192 and a <= 214) or
-				(a >= 216 and a <= 246) or
-				(a >= 248 and a <= 255) or
-				(a >= 256 and a <= 305) or
-				(a >= 308 and a <= 318) or
-				(a >= 321 and a <= 328) or
-				(a >= 330 and a <= 382) or
-				(a >= 384 and a <= 451) or
-				(a >= 461 and a <= 496) or
-				(a >= 500 and a <= 501) or
-				(a >= 506 and a <= 535) or
-				(a >= 592 and a <= 680) or
-				(a >= 699 and a <= 705) or
-				a = 902 or
-				(a >= 904 and a <= 906) or
-				a = 908 or
-				(a >= 910 and a <= 929) or
-				(a >= 931 and a <= 974) or
-				(a >= 976 and a <= 982) or
-				a = 986 or
-				a = 988 or
-				a = 990 or
-				a = 992 or
-				(a >= 994 and a <= 1011) or
-				(a >= 1025 and a <= 1036) or
-				(a >= 1038 and a <= 1103) or
-				(a >= 1105 and a <= 1116) or
-				(a >= 1118 and a <= 1153) or
-				(a >= 1168 and a <= 1220) or
-				(a >= 1223 and a <= 1224) or
-				(a >= 1227 and a <= 1228) or
-				(a >= 1232 and a <= 1259) or
-				(a >= 1262 and a <= 1269) or
-				(a >= 1272 and a <= 1273) or
-				(a >= 1329 and a <= 1366) or
-				a = 1369 or
-				(a >= 1377 and a <= 1414) or
-				(a >= 1488 and a <= 1514) or
-				(a >= 1520 and a <= 1522) or
-				(a >= 1569 and a <= 1594) or
-				(a >= 1601 and a <= 1610) or
-				(a >= 1649 and a <= 1719) or
-				(a >= 1722 and a <= 1726) or
-				(a >= 1728 and a <= 1742) or
-				(a >= 1744 and a <= 1747) or
-				a = 1749 or
-				(a >= 1765 and a <= 1766) or
-				(a >= 2309 and a <= 2361) or
-				a = 2365 or
-				(a >= 2392 and a <= 2401) or
-				(a >= 2437 and a <= 2444) or
-				(a >= 2447 and a <= 2448) or
-				(a >= 2451 and a <= 2472) or
-				(a >= 2474 and a <= 2480) or
-				a = 2482 or
-				(a >= 2486 and a <= 2489) or
-				(a >= 2524 and a <= 2525) or
-				(a >= 2527 and a <= 2529) or
-				(a >= 2544 and a <= 2545) or
-				(a >= 2565 and a <= 2570) or
-				(a >= 2575 and a <= 2576) or
-				(a >= 2579 and a <= 2600) or
-				(a >= 2602 and a <= 2608) or
-				(a >= 2610 and a <= 2611) or
-				(a >= 2613 and a <= 2614) or
-				(a >= 2616 and a <= 2617) or
-				(a >= 2649 and a <= 2652) or
-				a = 2654 or
-				(a >= 2674 and a <= 2676) or
-				(a >= 2693 and a <= 2699) or
-				a = 2701 or
-				(a >= 2703 and a <= 2705) or
-				(a >= 2707 and a <= 2728) or
-				(a >= 2730 and a <= 2736) or
-				(a >= 2738 and a <= 2739) or
-				(a >= 2741 and a <= 2745) or
-				a = 2749 or
-				a = 2784 or
-				(a >= 2821 and a <= 2828) or
-				(a >= 2831 and a <= 2832) or
-				(a >= 2835 and a <= 2856) or
-				(a >= 2858 and a <= 2864) or
-				(a >= 2866 and a <= 2867) or
-				(a >= 2870 and a <= 2873) or
-				a = 2877 or
-				(a >= 2908 and a <= 2909) or
-				(a >= 2911 and a <= 2913) or
-				(a >= 2949 and a <= 2954) or
-				(a >= 2958 and a <= 2960) or
-				(a >= 2962 and a <= 2965) or
-				(a >= 2969 and a <= 2970) or
-				a = 2972 or
-				(a >= 2974 and a <= 2975) or
-				(a >= 2979 and a <= 2980) or
-				(a >= 2984 and a <= 2986) or
-				(a >= 2990 and a <= 2997) or
-				(a >= 2999 and a <= 3001) or
-				(a >= 3077 and a <= 3084) or
-				(a >= 3086 and a <= 3088) or
-				(a >= 3090 and a <= 3112) or
-				(a >= 3114 and a <= 3123) or
-				(a >= 3125 and a <= 3129) or
-				(a >= 3168 and a <= 3169) or
-				(a >= 3205 and a <= 3212) or
-				(a >= 3214 and a <= 3216) or
-				(a >= 3218 and a <= 3240) or
-				(a >= 3242 and a <= 3251) or
-				(a >= 3253 and a <= 3257) or
-				a = 3294 or
-				(a >= 3296 and a <= 3297) or
-				(a >= 3333 and a <= 3340) or
-				(a >= 3342 and a <= 3344) or
-				(a >= 3346 and a <= 3368) or
-				(a >= 3370 and a <= 3385) or
-				(a >= 3424 and a <= 3425) or
-				(a >= 3585 and a <= 3630) or
-				a = 3632 or
-				(a >= 3634 and a <= 3635) or
-				(a >= 3648 and a <= 3653) or
-				(a >= 3713 and a <= 3714) or
-				a = 3716 or
-				(a >= 3719 and a <= 3720) or
-				a = 3722 or
-				a = 3725 or
-				(a >= 3732 and a <= 3735) or
-				(a >= 3737 and a <= 3743) or
-				(a >= 3745 and a <= 3747) or
-				a = 3749 or
-				a = 3751 or
-				(a >= 3754 and a <= 3755) or
-				(a >= 3757 and a <= 3758) or
-				a = 3760 or
-				(a >= 3762 and a <= 3763) or
-				a = 3773 or
-				(a >= 3776 and a <= 3780) or
-				(a >= 3904 and a <= 3911) or
-				(a >= 3913 and a <= 3945) or
-				(a >= 4256 and a <= 4293) or
-				(a >= 4304 and a <= 4342) or
-				a = 4352 or
-				(a >= 4354 and a <= 4355) or
-				(a >= 4357 and a <= 4359) or
-				a = 4361 or
-				(a >= 4363 and a <= 4364) or
-				(a >= 4366 and a <= 4370) or
-				a = 4412 or
-				a = 4414 or
-				a = 4416 or
-				a = 4428 or
-				a = 4430 or
-				a = 4432 or
-				(a >= 4436 and a <= 4437) or
-				a = 4441 or
-				(a >= 4447 and a <= 4449) or
-				a = 4451 or
-				a = 4453 or
-				a = 4455 or
-				a = 4457 or
-				(a >= 4461 and a <= 4462) or
-				(a >= 4466 and a <= 4467) or
-				a = 4469 or
-				a = 4510 or
-				a = 4520 or
-				a = 4523 or
-				(a >= 4526 and a <= 4527) or
-				(a >= 4535 and a <= 4536) or
-				a = 4538 or
-				(a >= 4540 and a <= 4546) or
-				a = 4587 or
-				a = 4592 or
-				a = 4601 or
-				(a >= 7680 and a <= 7835) or
-				(a >= 7840 and a <= 7929) or
-				(a >= 7936 and a <= 7957) or
-				(a >= 7960 and a <= 7965) or
-				(a >= 7968 and a <= 8005) or
-				(a >= 8008 and a <= 8013) or
-				(a >= 8016 and a <= 8023) or
-				a = 8025 or
-				a = 8027 or
-				a = 8029 or
-				(a >= 8031 and a <= 8061) or
-				(a >= 8064 and a <= 8116) or
-				(a >= 8118 and a <= 8124) or
-				a = 8126 or
-				(a >= 8130 and a <= 8132) or
-				(a >= 8134 and a <= 8140) or
-				(a >= 8144 and a <= 8147) or
-				(a >= 8150 and a <= 8155) or
-				(a >= 8160 and a <= 8172) or
-				(a >= 8178 and a <= 8180) or
-				(a >= 8182 and a <= 8188) or
-				a = 8486 or
-				(a >= 8490 and a <= 8491) or
-				a = 8494 or
-				(a >= 8576 and a <= 8578) or
-				(a >= 12353 and a <= 12436) or
-				(a >= 12449 and a <= 12538) or
-				(a >= 12549 and a <= 12588) or
-				(a >= 44032 and a <= 55203)
+				-- Use 'inspect' as a workaround for SE 1.0b6
+				-- because otherwise the generated C code
+				-- contains too many parentheses for MSVC 6.0.
+			Result := True
+			inspect a
+			when 65 .. 90 then
+			when 97 .. 122 then
+			when 192 .. 214 then
+			when 216 .. 246 then
+			when 248 .. 255 then
+			when 256 .. 305 then
+			when 308 .. 318 then
+			when 321 .. 328 then
+			when 330 .. 382 then
+			when 384 .. 451 then
+			when 461 .. 496 then
+			when 500 .. 501 then
+			when 506 .. 535 then
+			when 592 .. 680 then
+			when 699 .. 705 then
+			when 902 then
+			when 904 .. 906 then
+			when 908 then
+			when 910 .. 929 then
+			when 931 .. 974 then
+			when 976 .. 982 then
+			when 986 then
+			when 988 then
+			when 990 then
+			when 992 then
+			when 994 .. 1011 then
+			when 1025 .. 1036 then
+			when 1038 .. 1103 then
+			when 1105 .. 1116 then
+			when 1118 .. 1153 then
+			when 1168 .. 1220 then
+			when 1223 .. 1224 then
+			when 1227 .. 1228 then
+			when 1232 .. 1259 then
+			when 1262 .. 1269 then
+			when 1272 .. 1273 then
+			when 1329 .. 1366 then
+			when 1369 then
+			when 1377 .. 1414 then
+			when 1488 .. 1514 then
+			when 1520 .. 1522 then
+			when 1569 .. 1594 then
+			when 1601 .. 1610 then
+			when 1649 .. 1719 then
+			when 1722 .. 1726 then
+			when 1728 .. 1742 then
+			when 1744 .. 1747 then
+			when 1749 then
+			when 1765 .. 1766 then
+			when 2309 .. 2361 then
+			when 2365 then
+			when 2392 .. 2401 then
+			when 2437 .. 2444 then
+			when 2447 .. 2448 then
+			when 2451 .. 2472 then
+			when 2474 .. 2480 then
+			when 2482 then
+			when 2486 .. 2489 then
+			when 2524 .. 2525 then
+			when 2527 .. 2529 then
+			when 2544 .. 2545 then
+			when 2565 .. 2570 then
+			when 2575 .. 2576 then
+			when 2579 .. 2600 then
+			when 2602 .. 2608 then
+			when 2610 .. 2611 then
+			when 2613 .. 2614 then
+			when 2616 .. 2617 then
+			when 2649 .. 2652 then
+			when 2654 then
+			when 2674 .. 2676 then
+			when 2693 .. 2699 then
+			when 2701 then
+			when 2703 .. 2705 then
+			when 2707 .. 2728 then
+			when 2730 .. 2736 then
+			when 2738 .. 2739 then
+			when 2741 .. 2745 then
+			when 2749 then
+			when 2784 then
+			when 2821 .. 2828 then
+			when 2831 .. 2832 then
+			when 2835 .. 2856 then
+			when 2858 .. 2864 then
+			when 2866 .. 2867 then
+			when 2870 .. 2873 then
+			when 2877 then
+			when 2908 .. 2909 then
+			when 2911 .. 2913 then
+			when 2949 .. 2954 then
+			when 2958 .. 2960 then
+			when 2962 .. 2965 then
+			when 2969 .. 2970 then
+			when 2972 then
+			when 2974 .. 2975 then
+			when 2979 .. 2980 then
+			when 2984 .. 2986 then
+			when 2990 .. 2997 then
+			when 2999 .. 3001 then
+			when 3077 .. 3084 then
+			when 3086 .. 3088 then
+			when 3090 .. 3112 then
+			when 3114 .. 3123 then
+			when 3125 .. 3129 then
+			when 3168 .. 3169 then
+			when 3205 .. 3212 then
+			when 3214 .. 3216 then
+			when 3218 .. 3240 then
+			when 3242 .. 3251 then
+			when 3253 .. 3257 then
+			when 3294 then
+			when 3296 .. 3297 then
+			when 3333 .. 3340 then
+			when 3342 .. 3344 then
+			when 3346 .. 3368 then
+			when 3370 .. 3385 then
+			when 3424 .. 3425 then
+			when 3585 .. 3630 then
+			when 3632 then
+			when 3634 .. 3635 then
+			when 3648 .. 3653 then
+			when 3713 .. 3714 then
+			when 3716 then
+			when 3719 .. 3720 then
+			when 3722 then
+			when 3725 then
+			when 3732 .. 3735 then
+			when 3737 .. 3743 then
+			when 3745 .. 3747 then
+			when 3749 then
+			when 3751 then
+			when 3754 .. 3755 then
+			when 3757 .. 3758 then
+			when 3760 then
+			when 3762 .. 3763 then
+			when 3773 then
+			when 3776 .. 3780 then
+			when 3904 .. 3911 then
+			when 3913 .. 3945 then
+			when 4256 .. 4293 then
+			when 4304 .. 4342 then
+			when 4352 then
+			when 4354 .. 4355 then
+			when 4357 .. 4359 then
+			when 4361 then
+			when 4363 .. 4364 then
+			when 4366 .. 4370 then
+			when 4412 then
+			when 4414 then
+			when 4416 then
+			when 4428 then
+			when 4430 then
+			when 4432 then
+			when 4436 .. 4437 then
+			when 4441 then
+			when 4447 .. 4449 then
+			when 4451 then
+			when 4453 then
+			when 4455 then
+			when 4457 then
+			when 4461 .. 4462 then
+			when 4466 .. 4467 then
+			when 4469 then
+			when 4510 then
+			when 4520 then
+			when 4523 then
+			when 4526 .. 4527 then
+			when 4535 .. 4536 then
+			when 4538 then
+			when 4540 .. 4546 then
+			when 4587 then
+			when 4592 then
+			when 4601 then
+			when 7680 .. 7835 then
+			when 7840 .. 7929 then
+			when 7936 .. 7957 then
+			when 7960 .. 7965 then
+			when 7968 .. 8005 then
+			when 8008 .. 8013 then
+			when 8016 .. 8023 then
+			when 8025 then
+			when 8027 then
+			when 8029 then
+			when 8031 .. 8061 then
+			when 8064 .. 8116 then
+			when 8118 .. 8124 then
+			when 8126 then
+			when 8130 .. 8132 then
+			when 8134 .. 8140 then
+			when 8144 .. 8147 then
+			when 8150 .. 8155 then
+			when 8160 .. 8172 then
+			when 8178 .. 8180 then
+			when 8182 .. 8188 then
+			when 8486 then
+			when 8490 .. 8491 then
+			when 8494 then
+			when 8576 .. 8578 then
+			when 12353 .. 12436 then
+			when 12449 .. 12538 then
+			when 12549 .. 12588 then
+			when 44032 .. 55203 then
+			else
+				Result := False
+			end
 		end
 
 	is_ideographic(a: INTEGER): BOOLEAN is
