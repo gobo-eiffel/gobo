@@ -35,7 +35,7 @@ feature -- Execution
 			a_lace_error_handler: ET_LACE_ERROR_HANDLER
 			a_lace_ast_factory: ET_LACE_AST_FACTORY
 			an_xace_parser: ET_XACE_UNIVERSE_PARSER
-			an_xace_error_handler: ET_XACE_ERROR_HANDLER
+			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			an_xace_ast_factory: ET_XACE_AST_FACTORY
 			an_eiffel_ast_factory: ET_DECORATED_AST_FACTORY
 			an_xace_variables: ET_XACE_VARIABLES
