@@ -648,11 +648,13 @@ feature {NONE} -- Scanner implementation
 				std.error.put_new_line
 			end
 				-- Unwind scanner stack if end of current one.
-			if scanner.end_of_file and not scanners.is_empty then
+			if scanner.end_of_file then
 				scanner.close_input
-				scanner := scanners.item
-				scanners.remove
-				read_token
+				if not scanners.is_empty then
+					scanner := scanners.item
+					scanners.remove
+					read_token
+				end
 			end
 				-- If this is a PE entity reference, temporarily
 				-- switch scanner. Token is left for validation.
