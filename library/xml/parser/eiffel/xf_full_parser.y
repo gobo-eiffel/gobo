@@ -854,7 +854,24 @@ feature {NONE} -- creation
 			!! pe_entities.make_default
 		end
 
-	-- reset?
+feature -- Initialization
+
+	reset is
+			-- Reset parser before parsing next input.
+		do
+			from
+			until
+				scanners.is_empty
+			loop
+				scanner := scanners.item
+				scanners.remove
+			end
+			scanner.reset
+			stand_alone := False
+			in_external_dtd := False
+			entities.wipe_out
+			pe_entities.wipe_out
+		end
 
 feature {NONE} -- State
 
@@ -1083,8 +1100,9 @@ feature -- Parser
 		require
 			a_stream_not_void: a_stream /= Void
 		do
-			on_start
+			reset
 			scanner.set_input_buffer (scanner.new_file_buffer (a_stream))
+			on_start
 			parse
 			on_finish
 		end
