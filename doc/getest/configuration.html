@@ -88,26 +88,34 @@ parses the files with a suffix <font color="#800000"><tt>.e</tt></font>
 in the directories specified in the <font color="#000080"><em><strong><tt>cluster</tt></strong></em></font>
 section. The default behavior is to parse the current directory.
 When it finds an Eiffel class, <em>getest</em> checks whether its
-name matches the regular expression specified in the <font
-color="#000080"><em><strong><tt>class</tt></strong></em></font>
+name matches the regular expression specified in the <a
+name="class"><font color="#000080"><em><strong><tt>class</tt></strong></em></font></a>
 clause of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
 section. If it does then <em>getest</em> interprets this class as
 a test case class. The default regular expression for test case
 class names is <font color="#800000"><tt>&quot;TEST_.*&quot;</tt></font>,
 in other words class names with the prefix <font color="#008080"><em><tt>TEST_</tt></em></font>.
-For each test case class found <em>getest</em> will generate a
-new class inheriting from this former class and equipped with
-testing facilities. Furthermore each test case class defines a
-series of individual test procedures identified by feature names
-matching the regular expression specified in the <font
-color="#000080"><em><strong><tt>feature </tt></strong></em></font>clause
+This clause can be overriden by <em>getest</em>'s command-line
+option <font color="#800000"><tt>--</tt></font><a
+href="options.html#class"><font color="#800000"><tt>class</tt></font></a><font
+color="#800000"><tt>=&lt;regexp&gt;</tt></font>. For each test
+case class found <em>getest</em> will generate a new class
+inheriting from this former class and equipped with testing
+facilities. Furthermore each test case class defines a series of
+individual test procedures identified by feature names matching
+the regular expression specified in the <a name="feature"><font
+color="#000080"><em><strong><tt>feature</tt></strong></em></font></a><font
+color="#000080"><em><strong><tt> </tt></strong></em></font>clause
 of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
 section. The default regular expression for the feature names is <font
 color="#800000"><tt>&quot;test_.*&quot;</tt></font>, in other
 words feature names with the prefix <font color="#008080"><em><tt>test_</tt></em></font>.
-Note that since Eiffel is a case-insensitive language, regular
-expressions specified in the configuration file are also
-case-insensitive.</p>
+This clause can be overriden by <em>getest</em>'s command-line
+option <font color="#800000"><tt>--</tt></font><a
+href="options.html#feature"><font color="#800000"><tt>feature</tt></font></a><font
+color="#800000"><tt>=&lt;regexp&gt;</tt></font>. Note that since
+Eiffel is a case-insensitive language, regular expressions
+specified in the configuration file are also case-insensitive.</p>
 
 <p>We already saw that <em>getest</em> generates the root class
 of the test suite program with the name specified in the <font

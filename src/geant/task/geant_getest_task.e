@@ -47,6 +47,14 @@ feature {NONE} -- Initialization
 				a_value := attribute_value (Compile_attribute_name)
 				command.set_compile (a_value)
 			end
+			if has_attribute (Class_attribute_name) then
+				a_value := attribute_value (Class_attribute_name)
+				command.set_class_regexp (a_value)
+			end
+			if has_attribute (Feature_attribute_name) then
+				a_value := attribute_value (Feature_attribute_name)
+				command.set_feature_regexp (a_value)
+			end
 				-- define:
 			define_elements := elements_by_name (Define_element_name)
 			cs := define_elements.new_cursor
@@ -74,7 +82,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Config_filename_attribute_name : STRING is
+	Config_filename_attribute_name: STRING is
 			-- Name of xml attribute for getest config_filename
 		once
 			Result := "config"
@@ -83,10 +91,28 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Compile_attribute_name : STRING is
+	Compile_attribute_name: STRING is
 			-- Name of xml attribute for getest 'compile'
 		once
 			Result := "compile"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Class_attribute_name: STRING is
+			-- Name of xml attribute for getest 'class'
+		once
+			Result := "class"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Feature_attribute_name: STRING is
+			-- Name of xml attribute for getest 'feature'
+		once
+			Result := "feature"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -59,9 +59,19 @@ Default_list: Default
 	;
 
 Default: T_CLASS '(' Identifier ')'
-		{ class_regexp := new_regexp ($3) }
+		{
+			class_regexp := new_regexp ($3)
+			if class_regexp = Void then
+				class_regexp := Default_class_regexp
+			end
+		}
 	| T_FEATURE '(' Identifier ')'
-		{ feature_regexp := new_regexp ($3) }
+		{
+			feature_regexp := new_regexp ($3)
+			if feature_regexp = Void then
+				feature_regexp := Default_feature_regexp
+			end
+		}
 	| T_PREFIX '(' Identifier ')'
 		{ class_prefix := $3.name }
 	| T_COMPILE '(' Identifier ')'

@@ -65,6 +65,18 @@ feature -- Syntax errors
 			report_error (an_error)
 		end
 
+	report_option_regexp_syntax_error (an_option: STRING; a_regexp: STRING) is
+			-- Report a syntax error in `a_regexp' given as command-line option.
+		require
+			an_option_not_void: an_option /= Void
+			a_regexp_not_void: a_regexp /= Void
+		local
+			an_error: TS_OPTION_REGEXP_SYNTAX_ERROR
+		do
+			!! an_error.make (an_option, a_regexp)
+			report_error (an_error)
+		end
+
 	report_eiffel_compilation_error is
 			-- Report that an Eiffel compilation error occurred.
 		local

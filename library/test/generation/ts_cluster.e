@@ -61,6 +61,30 @@ feature -- Access
 	class_prefix: STRING
 			-- Prefix of generated testcase class names
 
+feature -- Setting
+
+	set_class_regexp (a_regexp: like class_regexp) is
+			-- Set `class_regexp' to `a_regexp'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+			a_regexp_compiled: a_regexp.is_compiled
+		do
+			class_regexp := a_regexp
+		ensure
+			class_regexp_set: class_regexp = a_regexp
+		end
+
+	set_feature_regexp (a_regexp: like feature_regexp) is
+			-- Set `feature_regexp' to `a_regexp'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+			a_regexp_compiled: a_regexp.is_compiled
+		do
+			feature_regexp := a_regexp
+		ensure
+			feature_regexp_set: feature_regexp = a_regexp
+		end
+
 feature -- Processing
 
 	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is

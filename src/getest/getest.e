@@ -61,6 +61,12 @@ feature -- Processing
 				if compile_command /= Void then
 					a_config.set_compile (compile_command)
 				end
+				if class_regexp /= Void then
+					a_config.set_class_regexp (class_regexp)
+				end
+				if feature_regexp /= Void then
+					a_config.set_feature_regexp (feature_regexp)
+				end
 				process (a_config)
 				if error_handler.error_reported then
 					Exceptions.die (1)
@@ -164,6 +170,14 @@ feature -- Access
 			-- Compilation command-line given with
 			-- the option --compile=...
 
+	class_regexp: LX_REGULAR_EXPRESSION
+			-- Class regular expression given with
+			-- the option --class=...
+
+	feature_regexp: LX_REGULAR_EXPRESSION
+			-- Feature regular expression given with
+			-- the option --feature=...
+
 	variables: TS_VARIABLES
 			-- Defined variables
 
@@ -261,6 +275,28 @@ feature {NONE} -- Command line
 				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--compile=") then
 					if arg.count > 10 then
 						compile_command := arg.substring (11, arg.count)
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 8 and then arg.substring (1, 8).is_equal ("--class=") then
+					if arg.count > 8 then
+						arg := arg.substring (9, arg.count)
+						!LX_DFA_REGULAR_EXPRESSION! class_regexp.compile_case_insensitive (arg)
+						if not class_regexp.is_compiled then
+							class_regexp := Void
+							error_handler.report_option_regexp_syntax_error ("--class=", arg)
+						end
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--feature=") then
+					if arg.count > 10 then
+						arg := arg.substring (11, arg.count)
+						!LX_DFA_REGULAR_EXPRESSION! feature_regexp.compile_case_insensitive (arg)
+						if not feature_regexp.is_compiled then
+							feature_regexp := Void
+							error_handler.report_option_regexp_syntax_error ("--feature=", arg)
+						end
 					else
 						report_usage_error
 					end
@@ -409,7 +445,8 @@ feature {NONE} -- Error handling
 		once
 			!! Result.make ("[-aceghV?][--help][--version]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
-				%%T[-C <command>|--compile=<command>]%N%
+				%%T[--class=<regexp>][--feature=<regexp>]%N%
+				%%T[--compile=<command>]%N%
 				%%T[--se|--ise|--hact|--ve|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
@@ -431,5 +468,7 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
+	compiled_class_regexp: class_regexp /= Void implies class_regexp.is_compiled
+	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.is_compiled
 
 end

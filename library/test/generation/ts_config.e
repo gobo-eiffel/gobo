@@ -71,6 +71,36 @@ feature -- Setting
 			compile_set: compile = a_compile
 		end
 
+	set_class_regexp (a_regexp: LX_REGULAR_EXPRESSION) is
+			-- Set class regular expression to `a_regexp'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+			a_regexp_compiled: a_regexp.is_compiled
+		local
+			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
+		do
+			a_cursor := clusters.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.set_class_regexp (a_regexp)
+				a_cursor.forth
+			end
+		end
+
+	set_feature_regexp (a_regexp: LX_REGULAR_EXPRESSION) is
+			-- Set feature regular expression to `a_regexp'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+			a_regexp_compiled: a_regexp.is_compiled
+		local
+			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
+		do
+			a_cursor := clusters.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.set_feature_regexp (a_regexp)
+				a_cursor.forth
+			end
+		end
+
 feature -- Processing
 
 	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is

@@ -55,6 +55,12 @@ feature -- Access
 	compile: STRING
 			-- Compilation command-line
 
+	class_regexp: STRING
+			-- Class regular expression
+
+	feature_regexp: STRING
+			-- Feature regular expression
+
 	defines: DS_HASH_TABLE [STRING, STRING]
 			-- Defined values from the command-line (--define option)
 
@@ -79,6 +85,26 @@ feature -- Setting
 			compile := a_compile
 		ensure
 			compile_set: compile = a_compile
+		end
+
+	set_class_regexp (a_regexp: like class_regexp) is
+			-- Set `class_regexp' to `a_regexp'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+		do
+			class_regexp := a_regexp
+		ensure
+			class_regexp_set: class_regexp = a_regexp
+		end
+
+	set_feature_regexp (a_regexp: like feature_regexp) is
+			-- Set `feature_regexp' to `a_regexp'.
+		require
+			a_regexp_not_void: a_regexp /= Void
+		do
+			feature_regexp := a_regexp
+		ensure
+			feature_regexp_set: feature_regexp = a_regexp
 		end
 
 feature -- Execution
@@ -107,6 +133,17 @@ feature -- Execution
 				cmd := STRING_.appended_string (cmd, compile)
 				cmd.append_string ("%" ")
 			end
+			if class_regexp /= Void then
+				cmd.append_string ("--class=%"")
+				cmd := STRING_.appended_string (cmd, class_regexp)
+				cmd.append_string ("%" ")
+			end
+			if feature_regexp /= Void then
+				cmd.append_string ("--feature=%"")
+				cmd := STRING_.appended_string (cmd, feature_regexp)
+				cmd.append_string ("%" ")
+			end
+			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
 			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
 			cmd := STRING_.appended_string (cmd, a_filename)
 			project.trace (<<"  [getest] ", cmd>>)

@@ -186,6 +186,7 @@ feature -- Generation
 			a_dir: KL_DIRECTORY
 			test_name: STRING
 			upper_class_name: STRING
+			has_test: BOOLEAN
 			i, nb: INTEGER
 		do
 			if testgen /= Void and then testgen.count > 0 then
@@ -221,13 +222,23 @@ feature -- Generation
 				a_file.put_new_line
 				a_file.put_line ("%Tsuite: TS_TEST_SUITE is")
 				a_file.put_line ("%T%T%T-- Suite of tests to be run")
-				a_file.put_line ("%T%Tlocal")
-				a_file.put_line ("%T%T%Ta_test: TS_TEST")
+				a_cursor := testcases.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					if a_cursor.item.first.count > 0 then
+						has_test := True
+						a_cursor.go_after -- Jump out of the loop.
+					else
+						a_cursor.forth
+					end
+				end
+				if has_test then
+					a_file.put_line ("%T%Tlocal")
+					a_file.put_line ("%T%T%Ta_test: TS_TEST")
+				end
 				a_file.put_line ("%T%Tdo")
 				a_file.put_string ("%T%T%T!! Result.make (%"")
 				a_file.put_string (class_name)
 				a_file.put_line ("%", variables)")
-				a_cursor := testcases.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					test_name := a_cursor.key
 					a_pair := a_cursor.item
