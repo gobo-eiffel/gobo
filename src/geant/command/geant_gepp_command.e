@@ -16,7 +16,7 @@ class GEANT_GEPP_COMMAND
 
 inherit
 
-	GEANT_COMMAND
+	GEANT_FILESYSTEM_COMMAND
 		redefine
 			make
 		end
@@ -38,16 +38,33 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
-			-- Can command be executed?
+	is_file_executable: BOOLEAN is
+			-- Can command be executed on sourcefile `input_filename' to targetfile `output_filename'?
 		do
 			Result := (input_filename /= Void and then input_filename.count > 0) and
 				(output_filename /= Void and then output_filename.count > 0)
-		ensure then
+		ensure
 			input_filename_not_void: Result implies input_filename /= Void
 			input_filename_not_empty: Result implies input_filename.count > 0
 			output_filename_not_void: Result implies output_filename /= Void
 			output_filename_not_empty: Result implies output_filename.count > 0
+		end
+
+	is_fileset_executable: BOOLEAN is
+			-- Can command be executed on `fileset' as input to target defined by `fileset.map'?
+		do
+			Result := fileset /= Void and then fileset.map /= Void
+		ensure
+			fileset_not_void: Result implies fileset /= Void
+			fileset_has_map: Result implies fileset.has_map
+		end
+
+	is_executable: BOOLEAN is
+			-- Can command be executed?
+		do
+			Result := is_file_executable xor is_fileset_executable
+		ensure then
+			file_xor_fileset: Result implies is_file_executable xor is_fileset_executable
 		end
 
 feature -- Access
@@ -64,6 +81,12 @@ feature -- Access
 
 	defines: DS_ARRAYED_LIST [STRING]
 			-- Defined values from the command-line (-D options)
+
+	to_directory: STRING
+			-- Name of destination directory
+
+	fileset: GEANT_FILESET
+		-- Fileset for current command
 
 feature -- Setting
 
@@ -97,35 +120,117 @@ feature -- Setting
 			empty_lines_set: empty_lines = b
 		end
 
+	set_to_directory (a_to_directory: like to_directory) is
+			-- Set `to_directory' to `a_to_directory'.
+		require
+			a_to_directory_not_void: a_to_directory /= Void
+			a_to_directory_not_empty: a_to_directory.count > 0
+		do
+			to_directory := a_to_directory
+		ensure
+			to_directory_set: to_directory = a_to_directory
+		end
+
+	set_fileset (a_fileset: like fileset) is
+			-- Set `fileset' to `a_fileset'.
+		require
+			a_fileset_not_void: a_fileset /= Void
+		do
+			fileset := a_fileset
+		ensure
+			fileset_set: fileset = a_fileset
+		end
+
 feature -- Execution
 
 	execute is
 			-- Execute command.
 		local
+			a_from_file: STRING
+			a_to_file: STRING
+			a_filename: STRING
+			cmd_template: STRING
 			cmd: STRING
 			i, nb: INTEGER
-			a_filename: STRING
 		do
-			cmd := clone ("gepp")
+			cmd_template := clone ("gepp")
 				-- Add defines:
 			nb := defines.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" -D")
-				cmd.append_string (defines.item (i))
+				cmd_template.append_string (" -D")
+				cmd_template.append_string (defines.item (i))
 				i := i + 1
 			end
 			if empty_lines then
-				cmd.append_string (" --lines")
+				cmd_template.append_string (" --lines")
 			end
-			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd.append_string (a_filename)
-			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd.append_string (a_filename)
-			
-			project.trace ("  [gepp] " + cmd + "%N")
-			execute_shell (cmd)
+				-- Make sure directory named `to_directory' exists if provided:
+			if to_directory /= Void and then to_directory.count > 0 then
+				create_directory (to_directory)
+			end
+			if is_file_executable then
+				cmd := clone (cmd_template)
+				cmd.append_string (" ")
+				a_from_file := file_system.pathname_from_file_system (input_filename, unix_file_system)
+				cmd.append_string (a_from_file)
+				cmd.append_string (" ")
+				if to_directory /= Void and then to_directory.count > 0 then
+					a_to_file := unix_file_system.pathname (to_directory, output_filename)
+				else
+					a_to_file := output_filename
+				end
+				a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+				if is_file_outofdate (a_from_file, a_to_file) then
+					cmd.append_string (a_to_file)
+					
+					project.trace ("  [gepp] " + cmd + "%N")
+					execute_shell (cmd)
+				end
+			else
+				check is_fileset_executable: is_fileset_executable end
+
+				fileset.execute
+				from
+					fileset.filenames.start
+				until
+					fileset.filenames.after or else exit_code /= 0
+				loop
+					a_filename := fileset.filenames.item_for_iteration
+					a_from_file := unix_file_system.pathname (fileset.directory_name, a_filename)
+					if fileset.map /= Void then
+						if fileset.map.is_executable then
+							a_to_file := fileset.map.mapped_filename (a_filename)
+							if to_directory /= Void and then to_directory.count > 0 then
+								a_to_file := unix_file_system.pathname (to_directory, a_to_file)
+							end
+						else
+							project.log ("  [gepp] error: map definition wrong'%N")
+							exit_code := 1
+						end
+					else
+						project.trace_debug ("  map is Void%N")
+					end
+					if exit_code = 0 then
+						a_from_file := file_system.pathname_from_file_system (a_from_file, unix_file_system)
+						a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+						if is_file_outofdate (a_from_file, a_to_file) then
+							cmd := clone (cmd_template)
+							cmd.append_string (" ")
+							cmd.append_string (a_from_file)
+							cmd.append_string (" ")
+							cmd.append_string (a_to_file)
+							
+							project.trace ("  [gepp] " + cmd + "%N")
+							execute_shell (cmd)
+						end
+					end
+					if exit_code /= 0 then
+						project.log ("  [gepp] error: cannot gepp%N")
+					end
+
+					fileset.filenames.forth
+				end
+			end
 		end
 
 invariant

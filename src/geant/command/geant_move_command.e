@@ -16,7 +16,7 @@ class GEANT_MOVE_COMMAND
 
 inherit
 
-	GEANT_COMMAND
+	GEANT_FILESYSTEM_COMMAND
 
 creation
 
@@ -24,20 +24,36 @@ creation
 
 feature -- Status report
 
-	is_to_file_executable: BOOLEAN is
-			-- Can command be executed on a file?
+	is_file_to_file_executable: BOOLEAN is
+			-- Can command be executed on sourcefile `file' to targetfile `to_file'?
 		do
-			Result := to_file /= Void and then to_file.count > 0
+			Result := file /= Void and then file.count > 0 and then
+				to_file /= Void and then to_file.count > 0
 		ensure
+			file_not_void: Result implies file /= Void
+			file_not_empty: Result implies file.count > 0
 			to_file_not_void: Result implies to_file /= Void
 			to_file_not_empty: Result implies to_file.count > 0
 		end
 
-	is_to_directory_executable: BOOLEAN is
+	is_file_to_directory_executable: BOOLEAN is
+			-- Can command be executed on sourcefile `file' to targetdirectory `to_directory'?
+		do
+			Result := file /= Void and then file.count > 0 and then
+				to_directory /= Void and then to_directory.count > 0
+		ensure
+			to_directory_not_void: Result implies to_directory /= Void
+			to_directory_not_empty: Result implies to_directory.count > 0
+		end
+
+	is_fileset_to_directory_executable: BOOLEAN is
+			-- Can command be executed on source fileset `fileset' to targetdirectory `to_directory'?
 			-- Can command be executed on a to_directory?
 		do
-			Result := to_directory /= Void and then to_directory.count > 0
+			Result := fileset /= Void and then
+				to_directory /= Void and then to_directory.count > 0
 		ensure
+			fileset_not_void: Result implies fileset /= Void
 			to_directory_not_void: Result implies to_directory /= Void
 			to_directory_not_empty: Result implies to_directory.count > 0
 		end
@@ -45,9 +61,15 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := is_to_file_executable xor is_to_directory_executable
+			Result :=
+				(is_file_to_file_executable and not is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and not is_file_to_directory_executable and is_fileset_to_directory_executable)
 		ensure then
-			file_xor_directory: Result implies (is_to_file_executable xor is_to_directory_executable)
+			file_xor_directory_xor_fileset: Result implies
+				((is_file_to_file_executable and not is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and not is_file_to_directory_executable and is_fileset_to_directory_executable))
 		end
 
 feature -- Access
@@ -60,6 +82,9 @@ feature -- Access
 
 	to_directory: STRING
 			-- Name of destination directory for copy
+
+	fileset: GEANT_FILESET
+		-- Fileset for current command
 
 feature -- Setting
 
@@ -96,26 +121,87 @@ feature -- Setting
 			to_directory_set: to_directory = a_to_directory
 		end
 
+	set_fileset (a_fileset: like fileset) is
+			-- Set `fileset' to `a_fileset'.
+		require
+			a_fileset_not_void: a_fileset /= Void
+		do
+			fileset := a_fileset
+		ensure
+			fileset_set: fileset = a_fileset
+		end
+
 feature -- Execution
 
 	execute is
 			-- Execute command.
 		local
+			a_from_file: STRING
 			a_to_file: STRING
+			a_filename: STRING
 			a_basename: STRING
-			old_name, new_name: STRING
 		do
 			exit_code := 0
-			if is_to_directory_executable then
-				a_basename := unix_file_system.basename (file)
-				a_to_file := unix_file_system.pathname (to_directory, a_basename)
+			if is_file_to_directory_executable then
+					-- Make sure directory named `to_directory' exists:
+				create_directory (to_directory)
 
-			else
-				check is_to_file_executable: is_to_file_executable end
+				if exit_code = 0 then
+					a_basename := unix_file_system.basename (file)
+					a_to_file := unix_file_system.pathname (to_directory, a_basename)
+					move_file (file, a_to_file)
+				end
+			elseif is_file_to_file_executable then
 				a_to_file := to_file
+				move_file (file, a_to_file)
+			else
+				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
+				fileset.execute
+				from
+					fileset.filenames.start
+				until
+					fileset.filenames.after or else exit_code /= 0
+				loop
+					a_filename := fileset.filenames.item_for_iteration
+					a_from_file := unix_file_system.pathname(fileset.directory_name, a_filename)
+					if fileset.map /= Void then
+						if fileset.map.is_executable then
+							a_filename := fileset.map.mapped_filename (a_filename)
+						else
+							project.log ("  [move] error: map definition wrong'%N")
+							exit_code := 1
+						end
+					else
+						project.trace_debug ("  map is Void%N")
+					end
+					if exit_code = 0 then
+						a_to_file := unix_file_system.pathname(to_directory, a_filename)
+							-- Create target directory if necessary:
+						create_directory_for_pathname (a_to_file)
+						move_file (a_from_file, a_to_file)
+					else
+						project.log ("  [move] error: cannot move%N")
+					end
+
+					fileset.filenames.forth
+				end
 			end
-			old_name := file_system.pathname_from_file_system (file, unix_file_system)
-			new_name := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+		end
+
+	move_file (a_source_file, a_target_file: STRING) is
+			-- Move `a_source_file' to `a_target_file;
+			-- Set `exit_code' in case `a_source_file' does
+			-- not exist or could not be moved.
+		require
+			a_source_file_not_void: a_source_file /= Void
+			a_source_file_not_empty: a_source_file.count > 0
+			a_target_file_not_void: a_target_file /= Void
+			a_target_file_not_empty: a_target_file.count > 0
+		local
+			new_name, old_name: STRING
+		do
+			old_name := file_system.pathname_from_file_system (a_source_file, unix_file_system)
+			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
 			project.trace ("  [move] " + old_name + " to " + new_name + "%N")
 				-- Check that source file exists:
 			if not file_system.file_exists (old_name) then
@@ -138,3 +224,4 @@ feature -- Execution
 		end
 
 end -- class GEANT_MOVE_COMMAND
+

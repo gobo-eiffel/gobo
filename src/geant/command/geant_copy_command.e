@@ -16,7 +16,7 @@ class GEANT_COPY_COMMAND
 
 inherit
 
-	GEANT_COMMAND
+	GEANT_FILESYSTEM_COMMAND
 
 creation
 
@@ -80,10 +80,10 @@ feature -- Access
 			-- Name of source file to copy
 
 	to_file: STRING
-			-- Name of destination file for copy
+			-- Name of destination file
 
 	to_directory: STRING
-			-- Name of destination directory for copy
+			-- Name of destination directory
 
 	fileset: GEANT_FILESET
 		-- Fileset for current command
@@ -138,19 +138,17 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		local
+			a_from_file: STRING
 			a_to_file: STRING
+			a_filename: STRING
 			a_basename: STRING
-			a_pathname: STRING
 		do
 			exit_code := 0
 
 			if is_file_to_directory_executable then
-					-- Check that directory named `to_directory' exists:
-				a_pathname := file_system.pathname_from_file_system (to_directory, unix_file_system)
-				if not file_system.directory_exists (a_pathname) then
-					project.log ("  [copy] error: directory '" + a_pathname + "' does not exist.%N")
-					exit_code := 1
-				end
+					-- Make sure directory named `to_directory' exists:
+				create_directory (to_directory)
+
 				if exit_code = 0 then
 					a_basename := unix_file_system.basename (file)
 					a_to_file := unix_file_system.pathname (to_directory, a_basename)
@@ -161,33 +159,32 @@ feature -- Execution
 			else
 				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
 
-				a_pathname := file_system.pathname_from_file_system (to_directory, unix_file_system)
-				if not file_system.directory_exists (a_pathname) then
-					project.log ("  [copy] error: directory '" + a_pathname + "' does not exist.%N")
-					exit_code := 1
-				end
 				if exit_code = 0 then
 					fileset.execute
-	
 					from
 						fileset.filenames.start
 					until
 						fileset.filenames.after or else exit_code /= 0
 					loop
-							-- Create target directory if necessary:
-						a_pathname := unix_file_system.dirname (fileset.filenames.item_for_iteration)
-						a_pathname := unix_file_system.pathname(to_directory, a_pathname)
-						a_pathname := file_system.pathname_from_file_system (a_pathname, unix_file_system)
-						if not file_system.directory_exists (a_pathname) then
-							file_system.recursive_create_directory (a_pathname)
-						end
-						if not file_system.directory_exists (a_pathname) then
-							project.log ("  [copy] error: could not create directory '" + a_pathname + "'%N")
-							exit_code := 1
+						a_filename := fileset.filenames.item_for_iteration
+						a_from_file := unix_file_system.pathname(fileset.directory_name, a_filename)
+						if fileset.map /= Void then
+							if fileset.map.is_executable then
+								a_filename := fileset.map.mapped_filename (a_filename)
+							else
+								project.log ("  [copy] error: map definition wrong'%N")
+								exit_code := 1
+							end
+						else
+							project.trace_debug ("  map is Void%N")
 						end
 						if exit_code = 0 then
-							a_to_file := unix_file_system.pathname(to_directory, fileset.filenames.item_for_iteration)
-							copy_file (fileset.filenames.item_for_iteration, a_to_file)
+							a_to_file := unix_file_system.pathname(to_directory, a_filename)
+								-- Create target directory if necessary:
+							create_directory_for_pathname (a_to_file)
+							copy_file (a_from_file, a_to_file)
+						else
+							project.log ("  [copy] error: cannot copy%N")
 						end
 	
 						fileset.filenames.forth
@@ -209,8 +206,6 @@ feature {NONE} -- Implementation
 			a_target_file_not_empty: a_target_file.count > 0
 		local
 			new_name, old_name: STRING
-			a_source_time: INTEGER
-			a_target_time: INTEGER
 		do
 			old_name := file_system.pathname_from_file_system (a_source_file, unix_file_system)
 			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
@@ -221,9 +216,7 @@ feature {NONE} -- Implementation
 				exit_code := 1
 			else
 					-- Copy file if target is out of date:
-				a_source_time := file_system.file_time_stamp (old_name)
-				a_target_time := file_system.file_time_stamp (new_name)
-				if a_target_time < a_source_time then
+				if is_file_outofdate (old_name, new_name) then
 					project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 					if not file_system.file_exists (new_name) then
