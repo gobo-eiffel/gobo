@@ -427,6 +427,30 @@ feature -- Status report
 			definition: Result = (declared_map /= Void and then not declared_map.is_undefined)
 		end
 
+	is_metadata_cache_path_declared: BOOLEAN is
+			-- Has 'metadata_cache_path' option been declared?
+		do
+			Result := declared_metadata_cache_path /= Void
+		ensure
+			definition: Result = (declared_metadata_cache_path /= Void)
+		end
+
+	is_msil_assembly_compatibility_declared: BOOLEAN is
+			-- Has 'msil_assembly_compatibility' option been declared?
+		do
+			Result := declared_msil_assembly_compatibility /= Void
+		ensure
+			definition: Result = (declared_msil_assembly_compatibility /= Void)
+		end
+
+	is_msil_clr_version_declared: BOOLEAN is
+			-- Has 'msil_clr_version' option been declared?
+		do
+			Result := declared_msil_clr_version /= Void
+		ensure
+			definition: Result = (declared_msil_clr_version /= Void)
+		end
+
 	is_msil_generation_declared: BOOLEAN is
 			-- Has 'msil_generation' option been declared?
 		do
@@ -435,12 +459,28 @@ feature -- Status report
 			definition: Result = (declared_msil_generation /= Void and then not declared_msil_generation.is_undefined)
 		end
 
+	is_msil_generation_version_declared: BOOLEAN is
+			-- Has 'msil_generation_version' option been declared?
+		do
+			Result := declared_msil_generation_version /= Void
+		ensure
+			definition: Result = (declared_msil_generation_version /= Void)
+		end
+
 	is_multithreaded_declared: BOOLEAN is
 			-- Has 'multithreaded' option been declared?
 		do
 			Result := declared_multithreaded /= Void and then not declared_multithreaded.is_undefined
 		ensure
 			definition: Result = (declared_multithreaded /= Void and then not declared_multithreaded.is_undefined)
+		end
+
+	is_namespace_declared: BOOLEAN is
+			-- Has 'namespace' option been declared?
+		do
+			Result := declared_namespace /= Void
+		ensure
+			definition: Result = (declared_namespace /= Void)
 		end
 
 	is_no_default_lib_declared: BOOLEAN is
@@ -585,6 +625,22 @@ feature -- Status report
 			Result := declared_trace /= Void and then not declared_trace.is_undefined
 		ensure
 			definition: Result = (declared_trace /= Void and then not declared_trace.is_undefined)
+		end
+
+	is_use_cluster_name_as_namespace_declared: BOOLEAN is
+			-- Has 'use_cluster_name_as_namespace' option been declared?
+		do
+			Result := declared_use_cluster_name_as_namespace /= Void and then not declared_use_cluster_name_as_namespace.is_undefined
+		ensure
+			definition: Result = (declared_use_cluster_name_as_namespace /= Void and then not declared_use_cluster_name_as_namespace.is_undefined)
+		end
+
+	is_use_full_cluster_name_as_namespace_declared: BOOLEAN is
+			-- Has 'use_full_cluster_name_as_namespace' option been declared?
+		do
+			Result := declared_use_full_cluster_name_as_namespace /= Void and then not declared_use_full_cluster_name_as_namespace.is_undefined
+		ensure
+			definition: Result = (declared_use_full_cluster_name_as_namespace /= Void and then not declared_use_full_cluster_name_as_namespace.is_undefined)
 		end
 
 	is_verbose_declared: BOOLEAN is
@@ -1162,6 +1218,36 @@ feature -- Option values
 			end
 		end
 
+	metadata_cache_path: STRING is
+			-- 'metadata_cache_path' option
+		do
+			if is_metadata_cache_path_declared then
+				Result := declared_metadata_cache_path
+			else
+				Result := default_metadata_cache_path
+			end
+		end
+
+	msil_assembly_compatibility: STRING is
+			-- 'msil_assembly_compatibility' option
+		do
+			if is_msil_assembly_compatibility_declared then
+				Result := declared_msil_assembly_compatibility
+			else
+				Result := default_msil_assembly_compatibility
+			end
+		end
+
+	msil_clr_version: STRING is
+			-- 'msil_clr_version' option
+		do
+			if is_msil_clr_version_declared then
+				Result := declared_msil_clr_version
+			else
+				Result := default_msil_clr_version
+			end
+		end
+
 	msil_generation: BOOLEAN is
 			-- 'msil_generation' option
 		do
@@ -1172,6 +1258,16 @@ feature -- Option values
 			end
 		end
 
+	msil_generation_version: STRING is
+			-- 'msil_generation_version' option
+		do
+			if is_msil_generation_version_declared then
+				Result := declared_msil_generation_version
+			else
+				Result := default_msil_generation_version
+			end
+		end
+
 	multithreaded: BOOLEAN is
 			-- 'multithreaded' option
 		do
@@ -1179,6 +1275,16 @@ feature -- Option values
 				Result := declared_multithreaded.is_true
 			else
 				Result := default_multithreaded
+			end
+		end
+
+	namespace: STRING is
+			-- 'namespace' option
+		do
+			if is_namespace_declared then
+				Result := declared_namespace
+			else
+				Result := default_namespace
 			end
 		end
 
@@ -1361,6 +1467,26 @@ feature -- Option values
 				Result := declared_trace.is_true
 			else
 				Result := default_trace
+			end
+		end
+
+	use_cluster_name_as_namespace: BOOLEAN is
+			-- 'use_cluster_name_as_namespace' option
+		do
+			if is_use_cluster_name_as_namespace_declared then
+				Result := declared_use_cluster_name_as_namespace.is_true
+			else
+				Result := default_use_cluster_name_as_namespace
+			end
+		end
+
+	use_full_cluster_name_as_namespace: BOOLEAN is
+			-- 'use_full_cluster_name_as_namespace' option
+		do
+			if is_use_full_cluster_name_as_namespace_declared then
+				Result := declared_use_full_cluster_name_as_namespace.is_true
+			else
+				Result := default_use_full_cluster_name_as_namespace
 			end
 		end
 
@@ -2134,6 +2260,39 @@ feature -- Modification
 			map_set: map = b
 		end
 
+	set_metadata_cache_path (a_value: STRING) is
+			-- Set `metadata_cache_path' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_metadata_cache_path := a_value
+		ensure
+			metadata_cache_path_declared: is_metadata_cache_path_declared
+			metadata_cache_path_set: metadata_cache_path = a_value
+		end
+
+	set_msil_assembly_compatibility (a_value: STRING) is
+			-- Set `msil_assembly_compatibility' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_msil_assembly_compatibility := a_value
+		ensure
+			msil_assembly_compatibility_declared: is_msil_assembly_compatibility_declared
+			msil_assembly_compatibility_set: msil_assembly_compatibility = a_value
+		end
+
+	set_msil_clr_version (a_value: STRING) is
+			-- Set `msil_clr_version' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_msil_clr_version := a_value
+		ensure
+			msil_clr_version_declared: is_msil_clr_version_declared
+			msil_clr_version_set: msil_clr_version = a_value
+		end
+
 	set_msil_generation (b: BOOLEAN) is
 			-- Set `msil_generation' to `b'.
 		do
@@ -2150,6 +2309,17 @@ feature -- Modification
 			msil_generation_set: msil_generation = b
 		end
 
+	set_msil_generation_version (a_value: STRING) is
+			-- Set `msil_generation_version' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_msil_generation_version := a_value
+		ensure
+			msil_generation_version_declared: is_msil_generation_version_declared
+			msil_generation_version_set: msil_generation_version = a_value
+		end
+
 	set_multithreaded (b: BOOLEAN) is
 			-- Set `multithreaded' to `b'.
 		do
@@ -2164,6 +2334,17 @@ feature -- Modification
 		ensure
 			multithreaded_declared: is_multithreaded_declared
 			multithreaded_set: multithreaded = b
+		end
+
+	set_namespace (a_value: STRING) is
+			-- Set `namespace' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_namespace := a_value
+		ensure
+			namespace_declared: is_namespace_declared
+			namespace_set: namespace = a_value
 		end
 
 	set_no_default_lib (b: BOOLEAN) is
@@ -2412,6 +2593,38 @@ feature -- Modification
 		ensure
 			trace_declared: is_trace_declared
 			trace_set: trace = b
+		end
+
+	set_use_cluster_name_as_namespace (b: BOOLEAN) is
+			-- Set `use_cluster_name_as_namespace' to `b'.
+		do
+			if declared_use_cluster_name_as_namespace = Void then
+				create declared_use_cluster_name_as_namespace.make_undefined
+			end
+			if b then
+				declared_use_cluster_name_as_namespace.set_true
+			else
+				declared_use_cluster_name_as_namespace.set_false
+			end
+		ensure
+			use_cluster_name_as_namespace_declared: is_use_cluster_name_as_namespace_declared
+			use_cluster_name_as_namespace_set: use_cluster_name_as_namespace = b
+		end
+
+	set_use_full_cluster_name_as_namespace (b: BOOLEAN) is
+			-- Set `use_full_cluster_name_as_namespace' to `b'.
+		do
+			if declared_use_full_cluster_name_as_namespace = Void then
+				create declared_use_full_cluster_name_as_namespace.make_undefined
+			end
+			if b then
+				declared_use_full_cluster_name_as_namespace.set_true
+			else
+				declared_use_full_cluster_name_as_namespace.set_false
+			end
+		ensure
+			use_full_cluster_name_as_namespace_declared: is_use_full_cluster_name_as_namespace_declared
+			use_full_cluster_name_as_namespace_set: use_full_cluster_name_as_namespace = b
 		end
 
 	set_verbose (b: BOOLEAN) is
@@ -2873,6 +3086,30 @@ feature -- Status setting
 			map_not_declared: not is_map_declared
 		end
 
+	unset_metadata_cache_path is
+			-- Unset `metadata_cache_path'.
+		do
+			declared_metadata_cache_path := Void
+		ensure
+			metadata_cache_path_not_declared: not is_metadata_cache_path_declared
+		end
+
+	unset_msil_assembly_compatibility is
+			-- Unset `msil_assembly_compatibility'.
+		do
+			declared_msil_assembly_compatibility := Void
+		ensure
+			msil_assembly_compatibility_not_declared: not is_msil_assembly_compatibility_declared
+		end
+
+	unset_msil_clr_version is
+			-- Unset `msil_clr_version'.
+		do
+			declared_msil_clr_version := Void
+		ensure
+			msil_clr_version_not_declared: not is_msil_clr_version_declared
+		end
+
 	unset_msil_generation is
 			-- Unset `msil_generation'.
 		do
@@ -2881,12 +3118,28 @@ feature -- Status setting
 			msil_generation_not_declared: not is_msil_generation_declared
 		end
 
+	unset_msil_generation_version is
+			-- Unset `msil_generation_version'.
+		do
+			declared_msil_generation_version := Void
+		ensure
+			msil_generation_version_not_declared: not is_msil_generation_version_declared
+		end
+
 	unset_multithreaded is
 			-- Unset `multithreaded'.
 		do
 			declared_multithreaded := Void
 		ensure
 			multithreaded_not_declared: not is_multithreaded_declared
+		end
+
+	unset_namespace is
+			-- Unset `namespace'.
+		do
+			declared_namespace := Void
+		ensure
+			namespace_not_declared: not is_namespace_declared
 		end
 
 	unset_no_default_lib is
@@ -3031,6 +3284,22 @@ feature -- Status setting
 			declared_trace := Void
 		ensure
 			trace_not_declared: not is_trace_declared
+		end
+
+	unset_use_cluster_name_as_namespace is
+			-- Unset `use_cluster_name_as_namespace'.
+		do
+			declared_use_cluster_name_as_namespace := Void
+		ensure
+			use_cluster_name_as_namespace_not_declared: not is_use_cluster_name_as_namespace_declared
+		end
+
+	unset_use_full_cluster_name_as_namespace is
+			-- Unset `use_full_cluster_name_as_namespace'.
+		do
+			declared_use_full_cluster_name_as_namespace := Void
+		ensure
+			use_full_cluster_name_as_namespace_not_declared: not is_use_full_cluster_name_as_namespace_declared
 		end
 
 	unset_verbose is
@@ -3367,11 +3636,26 @@ feature -- Declared values
 	declared_map: UT_TRISTATE
 			-- Declared value for 'map' option
 
+	declared_metadata_cache_path: STRING
+			-- Declared value for 'metadata_cache_path' option
+
+	declared_msil_assembly_compatibility: STRING
+			-- Declared value for 'msil_assembly_compatibility' option
+
+	declared_msil_clr_version: STRING
+			-- Declared value for 'msil_clr_version' option
+
 	declared_msil_generation: UT_TRISTATE
 			-- Declared value for 'msil_generation' option
 
+	declared_msil_generation_version: STRING
+			-- Declared value for 'msil_generation_version' option
+
 	declared_multithreaded: UT_TRISTATE
 			-- Declared value for 'multithreaded' option
+
+	declared_namespace: STRING
+			-- Declared value for 'namespace' option
 
 	declared_no_default_lib: UT_TRISTATE
 			-- Declared value for 'no_default_lib' option
@@ -3426,6 +3710,12 @@ feature -- Declared values
 
 	declared_trace: UT_TRISTATE
 			-- Declared value for 'trace' option
+
+	declared_use_cluster_name_as_namespace: UT_TRISTATE
+			-- Declared value for 'use_cluster_name_as_namespace' option
+
+	declared_use_full_cluster_name_as_namespace: UT_TRISTATE
+			-- Declared value for 'use_full_cluster_name_as_namespace' option
 
 	declared_verbose: UT_TRISTATE
 			-- Declared value for 'verbose' option
@@ -3699,11 +3989,41 @@ feature -- Default values
 	default_map: BOOLEAN is False
 			-- Default value for 'map' option
 
+	default_metadata_cache_path: STRING is
+			-- Default value for 'metadata_cache_path' option
+		once
+			Result := Void
+		end
+
+	default_msil_assembly_compatibility: STRING is
+			-- Default value for 'msil_assembly_compatibility' option
+		once
+			Result := Void
+		end
+
+	default_msil_clr_version: STRING is
+			-- Default value for 'msil_clr_version' option
+		once
+			Result := Void
+		end
+
 	default_msil_generation: BOOLEAN is False
 			-- Default value for 'msil_generation' option
 
+	default_msil_generation_version: STRING is
+			-- Default value for 'msil_generation_version' option
+		once
+			Result := Void
+		end
+
 	default_multithreaded: BOOLEAN is False
 			-- Default value for 'multithreaded' option
+
+	default_namespace: STRING is
+			-- Default value for 'namespace' option
+		once
+			Result := Void
+		end
 
 	default_no_default_lib: BOOLEAN is False
 			-- Default value for 'no_default_lib' option
@@ -3781,6 +4101,12 @@ feature -- Default values
 
 	default_trace: BOOLEAN is False
 			-- Default value for 'trace' option
+
+	default_use_cluster_name_as_namespace: BOOLEAN is False
+			-- Default value for 'use_cluster_name_as_namespace' option
+
+	default_use_full_cluster_name_as_namespace: BOOLEAN is False
+			-- Default value for 'use_full_cluster_name_as_namespace' option
 
 	default_verbose: BOOLEAN is False
 			-- Default value for 'verbose' option

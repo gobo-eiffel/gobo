@@ -338,6 +338,9 @@ feature -- Basic operations
 				if options.is_assembly_declared then
 					create an_assembly.make (name, options.assembly, options.version,
 						options.culture, options.public_key_token, options.prefix_option)
+					if pathname /= Void then
+						an_assembly.set_assembly_pathname (full_pathname)
+					end
 					an_assemblies.force_last (an_assembly)
 				end
 			end

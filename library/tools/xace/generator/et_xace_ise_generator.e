@@ -181,6 +181,7 @@ feature {NONE} -- Output
 			an_assemblies: DS_LINKED_LIST [ET_XACE_ASSEMBLY]
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_ASSEMBLY]
 			an_assembly: ET_XACE_ASSEMBLY
+			a_pathname: STRING
 			a_prefix: STRING
 		do
 			create an_assemblies.make
@@ -194,13 +195,18 @@ feature {NONE} -- Output
 					print_indentation (1, a_file)
 					print_escaped_name (an_assembly.tag, a_file)
 					a_file.put_string (": %"")
-					a_file.put_string (an_assembly.assembly_name)
-					a_file.put_string ("%", %"")
-					a_file.put_string (an_assembly.version)
-					a_file.put_string ("%", %"")
-					a_file.put_string (an_assembly.culture)
-					a_file.put_string ("%", %"")
-					a_file.put_string (an_assembly.public_key_token)
+					a_pathname := an_assembly.assembly_pathname
+					if a_pathname /= Void and then not a_pathname.is_empty then
+						a_file.put_string (a_pathname)
+					else
+						a_file.put_string (an_assembly.assembly_name)
+						a_file.put_string ("%", %"")
+						a_file.put_string (an_assembly.version)
+						a_file.put_string ("%", %"")
+						a_file.put_string (an_assembly.culture)
+						a_file.put_string ("%", %"")
+						a_file.put_string (an_assembly.public_key_token)
+					end
 					a_file.put_line ("%"")
 					a_prefix := an_assembly.class_prefix
 					if a_prefix /= Void then
@@ -307,7 +313,6 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("cls_compliant (no)")
 			end
-			a_dead_code_removal := an_option.dead_code_removal
 			if an_option.console_application then
 				print_indentation (indent, a_file)
 				a_file.put_line ("console_application (yes)")
@@ -403,12 +408,36 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("line_generation (no)")
 			end
+			if an_option.is_metadata_cache_path_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("metadata_cache_path (%"")
+				a_file.put_string (an_option.metadata_cache_path)
+				a_file.put_line ("%")")
+			end
+			if an_option.is_msil_assembly_compatibility_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("msil_assembly_compatibility (%"")
+				a_file.put_string (an_option.msil_assembly_compatibility)
+				a_file.put_line ("%")")
+			end
+			if an_option.is_msil_clr_version_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("msil_clr_version (%"")
+				a_file.put_string (an_option.msil_clr_version)
+				a_file.put_line ("%")")
+			end
 			if an_option.msil_generation then
 				print_indentation (indent, a_file)
 				a_file.put_line ("msil_generation (yes)")
 			else
 				print_indentation (indent, a_file)
 				a_file.put_line ("msil_generation (no)")
+			end
+			if an_option.is_msil_generation_version_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("version (%"")
+				a_file.put_string (an_option.msil_generation_version)
+				a_file.put_line ("%")")
 			end
 			if an_option.multithreaded then
 				print_indentation (indent, a_file)
@@ -456,6 +485,24 @@ feature {NONE} -- Output
 			else
 				print_indentation (indent, a_file)
 				a_file.put_line ("trace (no)")
+			end
+			if an_option.is_use_cluster_name_as_namespace_declared then
+				if an_option.use_cluster_name_as_namespace then
+					print_indentation (indent, a_file)
+					a_file.put_line ("use_cluster_name_as_namespace (yes)")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("use_cluster_name_as_namespace (no)")
+				end
+			end
+			if an_option.is_use_full_cluster_name_as_namespace_declared then
+				if an_option.use_full_cluster_name_as_namespace then
+					print_indentation (indent, a_file)
+					a_file.put_line ("use_all_cluster_name_as_namespace (yes)")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("use_all_cluster_name_as_namespace (no)")
+				end
 			end
 		end
 
@@ -647,6 +694,8 @@ feature {NONE} -- Output
 				need_default := True
 			elseif an_option.is_document_declared then
 				need_default := True
+			elseif an_option.is_namespace_declared then
+				need_default := True
 			elseif an_option.is_profile_declared then
 				need_default := True
 			elseif an_option.is_trace_declared then
@@ -718,6 +767,12 @@ feature {NONE} -- Output
 					print_indentation (an_indent, a_file)
 					a_file.put_string ("document (%"")
 					a_file.put_string (an_option.document)
+					a_file.put_line ("%")")
+				end
+				if an_option.is_namespace_declared then
+					print_indentation (an_indent, a_file)
+					a_file.put_string ("namespace (%"")
+					a_file.put_string (an_option.namespace)
 					a_file.put_line ("%")")
 				end
 				if an_option.is_profile_declared then

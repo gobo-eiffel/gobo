@@ -67,8 +67,13 @@ feature -- Option names
 	linux_fpu_double_precision_name: STRING is "linux_fpu_double_precision"
 	manifest_string_trace_name: STRING is "manifest_string_trace"
 	map_name: STRING is "map"
+	metadata_cache_path_name: STRING is "metadata_cache_path"
+	msil_assembly_compatibility_name: STRING is "msil_assembly_compatibility"
+	msil_clr_version_name: STRING is "msil_clr_version"
 	msil_generation_name: STRING is "msil_generation"
+	msil_generation_version_name: STRING is "msil_generation_version"
 	multithreaded_name: STRING is "multithreaded"
+	namespace_name: STRING is "namespace"
 	no_default_lib_name: STRING is "no_default_lib"
 	override_cluster_name: STRING is "override_cluster"
 	portable_code_generation_name: STRING is "portable_code_generation"
@@ -87,6 +92,8 @@ feature -- Option names
 	strip_option_name: STRING is "strip"
 	target_name: STRING is "target"
 	trace_name: STRING is "trace"
+	use_cluster_name_as_namespace_name: STRING is "use_cluster_name_as_namespace"
+	use_full_cluster_name_as_namespace_name: STRING is "use_full_cluster_name_as_namespace"
 	verbose_name: STRING is "verbose"
 	version_name: STRING is "version"
 	visible_filename_name: STRING is "visible_filename"
@@ -144,8 +151,13 @@ feature -- Option codes
 	linux_fpu_double_precision_code: INTEGER is 47
 	manifest_string_trace_code: INTEGER is 48
 	map_code: INTEGER is 49
+	metadata_cache_path_code: INTEGER is 75
+	msil_assembly_compatibility_code: INTEGER is 79
+	msil_clr_version_code: INTEGER is 78
 	msil_generation_code: INTEGER is 50
+	msil_generation_version_code: INTEGER is 81
 	multithreaded_code: INTEGER is 51
+	namespace_code: INTEGER is 80
 	no_default_lib_code: INTEGER is 52
 	override_cluster_code: INTEGER is 53
 	portable_code_generation_code: INTEGER is 54
@@ -164,6 +176,8 @@ feature -- Option codes
 	strip_option_code: INTEGER is 67
 	target_code: INTEGER is 68
 	trace_code: INTEGER is 69
+	use_cluster_name_as_namespace_code: INTEGER is 77
+	use_full_cluster_name_as_namespace_code: INTEGER is 76
 	verbose_code: INTEGER is 70
 	version_code: INTEGER is 71
 	visible_filename_code: INTEGER is 72
@@ -173,7 +187,7 @@ feature -- Option codes
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
 		once
-			create Result.make_map (74)
+			create Result.make_map (81)
 			Result.set_key_equality_tester (string_equality_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
@@ -224,8 +238,13 @@ feature -- Option codes
 			Result.put_new (linux_fpu_double_precision_code, linux_fpu_double_precision_name)
 			Result.put_new (manifest_string_trace_code, manifest_string_trace_name)
 			Result.put_new (map_code, map_name)
+			Result.put_new (metadata_cache_path_code, metadata_cache_path_name)
+			Result.put_new (msil_assembly_compatibility_code, msil_assembly_compatibility_name)
+			Result.put_new (msil_clr_version_code, msil_clr_version_name)
 			Result.put_new (msil_generation_code, msil_generation_name)
+			Result.put_new (msil_generation_version_code, msil_generation_version_name)
 			Result.put_new (multithreaded_code, multithreaded_name)
+			Result.put_new (namespace_code, namespace_name)
 			Result.put_new (no_default_lib_code, no_default_lib_name)
 			Result.put_new (override_cluster_code, override_cluster_name)
 			Result.put_new (portable_code_generation_code, portable_code_generation_name)
@@ -244,6 +263,8 @@ feature -- Option codes
 			Result.put_new (strip_option_code, strip_option_name)
 			Result.put_new (target_code, target_name)
 			Result.put_new (trace_code, trace_name)
+			Result.put_new (use_cluster_name_as_namespace_code, use_cluster_name_as_namespace_name)
+			Result.put_new (use_full_cluster_name_as_namespace_code, use_full_cluster_name_as_namespace_name)
 			Result.put_new (verbose_code, verbose_name)
 			Result.put_new (version_code, version_name)
 			Result.put_new (visible_filename_code, visible_filename_name)

@@ -53,6 +53,10 @@ feature -- Access
 	assembly_name: STRING
 			-- Assembly name
 
+	assembly_pathname: STRING
+			-- Assembly pathname
+			-- (overrides other information when specified)
+
 	version: STRING
 			-- Version
 
@@ -65,6 +69,16 @@ feature -- Access
 	class_prefix: STRING
 			-- Class prefix
 
+feature -- Setting
+
+	set_assembly_pathname (a_pathname: STRING) is
+			-- Set `assembly_pathname' to `a_pathname'.
+		do
+			assembly_pathname := a_pathname
+		ensure
+			assembly_pathname_set: assembly_pathname = a_pathname
+		end
+		
 invariant
 
 	tag_not_void: tag /= Void

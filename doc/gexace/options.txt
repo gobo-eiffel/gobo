@@ -854,6 +854,48 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: metadata_cache_path
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: When compiling to the .NET framework. Specify pathname
+  where XML files describing DLLs assemblies will be generated.
+
+ISE:
+  <pathname> -> metadada_cache_path ("<pathname>")
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: msil_assembly_compatibility
+
+VALUES: "None"|"Same domain"|"Same machine"|"Same process"
+DEFAULT: no default
+DESCRIPTION: When compiling to the .NET framework. Assembly compatibility.
+
+ISE:
+  <value> -> msil_assembly_compatibility ("<value>")
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: msil_clr_version
+
+VALUES: <version>
+DEFAULT: no default
+EXAMPLE: v1.1.4322
+DESCRIPTION: When compiling to the .NET framework. Specify version
+  of .NET framework to be used.
+
+ISE:
+  <pathname> -> msil_clr_version ("<version>")
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: msil_generation
 
 VALUES: true | false
@@ -863,6 +905,21 @@ DESCRIPTION: Compile to the .NET framework.
 ISE:
   true -> msil_generation (yes)
   false -> msil_generation (no)
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: msil_generation_version
+
+VALUES: <version>
+DEFAULT: no default
+EXAMPLE: 1.1.0411.02
+DESCRIPTION: When compiling to the .NET framework. Specify version
+  of generated DLL or EXE assembly (info stored in the metadata).
+
+ISE:
+  <pathname> -> version ("<version>")
 VE:
   N/A
 SE:
@@ -1082,6 +1139,36 @@ VE:
 SE:
   true -> trace (yes)
   false -> trace (no)
+-------------------------------------------------------------
+NAME: use_cluster_name_as_namespace
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: When compiling to the .NET framework. Should the
+  cluster name be used as namespace (e.g. base.STRING)?
+
+ISE:
+  true -> use_cluster_name_as_namespace (yes)
+  false -> use_cluster_name_as_namespace (no)
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: use_full_cluster_name_as_namespace
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: When compiling to the .NET framework. Should the
+  full cluster name be used as namespace (e.g. base.kernel.STRING)?
+
+ISE:
+  true -> use_all_cluster_name_as_namespace (yes)
+  false -> use_all_cluster_name_as_namespace (no)
+VE:
+  N/A
+SE:
+  N/A
 -------------------------------------------------------------
 NAME: verbose
 
@@ -1426,6 +1513,20 @@ VE:
 SE:
   <pathname> -> external_lib: "<pathname>"
 -------------------------------------------------------------
+NAME: namespace
+
+VALUES: <namespace>
+DEFAULT: no default
+DESCRIPTION: When compiling to the .NET framework. Specifiy the
+  namespace to be used for the classes of this cluster.
+
+ISE:
+  <namespace> -> namespace ("<namespace>")
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: prefix
 
 VALUES: <prefix>
@@ -1551,7 +1652,7 @@ SE:
 NAME: version
 
 VALUES: <version>
-DEFAULT: 1.0.3300.0
+DEFAULT: 1.0.5000.0
 DESCRIPTION: Specify the version of the .NET assembly.
 NOTE: The option 'assembly' should be set in order for this
   option to have any effect.

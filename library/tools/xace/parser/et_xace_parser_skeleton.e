@@ -1032,6 +1032,12 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when metadata_cache_path_code then
+									an_option.set_metadata_cache_path (a_value)
+								when msil_assembly_compatibility_code then
+									an_option.set_msil_assembly_compatibility (a_value)
+								when msil_clr_version_code then
+									an_option.set_msil_clr_version (a_value)
 								when msil_generation_code then
 									if is_true (a_value) then
 										an_option.set_msil_generation (True)
@@ -1040,6 +1046,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when msil_generation_version_code then
+									an_option.set_msil_generation_version (a_value)
 								when multithreaded_code then
 									if is_true (a_value) then
 										an_option.set_multithreaded (True)
@@ -1048,6 +1056,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when namespace_code then
+									an_option.set_namespace (a_value)
 								when no_default_lib_code then
 									if is_true (a_value) then
 										an_option.set_no_default_lib (True)
@@ -1146,6 +1156,22 @@ feature {NONE} -- Element change
 										an_option.set_trace (True)
 									elseif is_false (a_value) then
 										an_option.set_trace (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when use_cluster_name_as_namespace_code then
+									if is_true (a_value) then
+										an_option.set_use_cluster_name_as_namespace (True)
+									elseif is_false (a_value) then
+										an_option.set_use_cluster_name_as_namespace (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when use_full_cluster_name_as_namespace_code then
+									if is_true (a_value) then
+										an_option.set_use_full_cluster_name_as_namespace (True)
+									elseif is_false (a_value) then
+										an_option.set_use_full_cluster_name_as_namespace (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
