@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ feature -- Processing
 			Arguments.set_program_name ("geyacc")
 			create error_handler.make_standard
 			old_typing := True
+			line_pragma := True
 			read_command_line
 			parse_input_file
 			if grammar /= Void then
@@ -62,6 +63,7 @@ feature -- Processing
 				end
 				create parser_generator.make (fsm)
 				parser_generator.set_old_typing (old_typing)
+				parser_generator.set_line_pragma (line_pragma)
 				if input_filename /= Void then
 					parser_generator.set_input_filename (input_filename)
 				end
@@ -132,6 +134,7 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			arg: STRING
+			a_pragma: STRING
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -196,6 +199,15 @@ feature -- Processing
 					old_typing := True
 				elseif arg.is_equal ("--new_typing") then
 					old_typing := False
+				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--pragma=") then
+					a_pragma := arg.substring (10, arg.count)
+					if a_pragma.is_equal ("line") then
+						line_pragma := True
+					elseif a_pragma.is_equal ("noline") then
+						line_pragma := False
+					else
+						report_usage_error
+					end
 				elseif i = nb then
 					input_filename := arg
 				else
@@ -218,6 +230,9 @@ feature -- Access
 	actions_separated: BOOLEAN
 	old_typing: BOOLEAN
 			-- Command line arguments
+
+	line_pragma: BOOLEAN
+			-- Should line pragma be generated?
 
 	grammar: PR_GRAMMAR
 			-- Grammar description
@@ -259,7 +274,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geyacc usage message
 		once
-			create Result.make ("[-hxV?][--(new|old)_typing][-t classname][-k filename][-v filename][-o filename] filename")
+			create Result.make ("[-hxV?][--(new|old)_typing][--pragma=[no]line][-t classname][-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

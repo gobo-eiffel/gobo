@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Lex command lines"
 
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,6 +49,7 @@ feature -- Parsing
 			j, arg_count: INTEGER
 			str: STRING
 			a_size: INTEGER
+			a_pragma: STRING
 		do
 				-- Read options.
 			from
@@ -70,6 +71,16 @@ feature -- Parsing
 					i := i + 1
 				elseif arg.is_equal ("--help") then
 					report_usage_message
+					i := i + 1
+				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--pragma=") then
+					a_pragma := arg.substring (10, arg.count)
+					if a_pragma.is_equal ("line") then
+						options.set_line_pragma (True)
+					elseif a_pragma.is_equal ("noline") then
+						options.set_line_pragma (False)
+					else
+						report_usage_error
+					end
 					i := i + 1
 				else
 					inspect arg.item (2)
@@ -236,8 +247,8 @@ feature {NONE} -- Error handling
 			-- Gelex usage message
 		once
 			create Result.make
-				("[--version] [--help] [-bcefhimsVwxz?]%N%
-				%%T[-a size] [-o filename] [--] filename")
+				("[--version][--help][-bcefhimsVwxz?][-a size]%N%
+				%%T[--pragma=[no]line][-o filename][--] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -5,7 +5,7 @@ indexing
 		"DFA equipped with lexical analyzer generator"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			post_action_used := a_description.post_action_used
 			pre_eof_action_used := a_description.pre_eof_action_used
 			post_eof_action_used := a_description.post_eof_action_used
+			line_pragma := a_description.line_pragma
 			yy_start_conditions := a_description.start_conditions.names
 			build_rules (a_description.rules)
 			build_eof_rules
@@ -357,7 +358,11 @@ feature {NONE} -- Generation
 		do
 			if actions_separated then
 				a_file.put_string ("%T%T--|#line ")
-				a_file.put_integer (a_rule.line_nb)
+				if line_pragma then
+					a_file.put_integer (a_rule.line_nb)
+				else
+					a_file.put_string ("<not available>")
+				end
 				a_file.put_string (" %"")
 				a_file.put_string (input_filename)
 				a_file.put_string ("%"%N%Tyy_execute_action_")
@@ -378,7 +383,11 @@ feature {NONE} -- Generation
 			a_file.put_string ("%Tyy_execute_action_")
 			a_file.put_integer (a_rule.id)
 			a_file.put_string (" is%N%T%T%T--|#line ")
-			a_file.put_integer (a_rule.line_nb)
+			if line_pragma then
+				a_file.put_integer (a_rule.line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_string (" %"")
 			a_file.put_string (input_filename)
 			a_file.put_string ("%"%N%T%Tdo%N")
@@ -471,7 +480,11 @@ feature {NONE} -- Generation
 				a_file.put_string ("pre_action%N")
 			end
 			a_file.put_string ("--|#line ")
-			a_file.put_integer (a_rule.line_nb)
+			if line_pragma then
+				a_file.put_integer (a_rule.line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_string (" %"")
 			a_file.put_string (input_filename)
 			a_file.put_character ('%"')
@@ -480,7 +493,11 @@ feature {NONE} -- Generation
 			a_file.put_string ("%Tstd.error.put_line (%"Executing scanner user-code from file '")
 			a_file.put_string (input_filename)
 			a_file.put_string ("' at line ")
-			a_file.put_integer (a_rule.line_nb)
+			if line_pragma then
+				a_file.put_integer (a_rule.line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_line ("%")")
 			a_file.put_line ("end")
 			a_file.put_string (a_rule.action.out)
@@ -557,7 +574,11 @@ feature {NONE} -- Generation
 					end
 					a_file.put_string (" then%N")
 					a_file.put_string ("--|#line ")
-					a_file.put_integer (rule.line_nb)
+					if line_pragma then
+						a_file.put_integer (rule.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_string (" %"")
 					a_file.put_string (input_filename)
 					a_file.put_character ('%"')
@@ -566,7 +587,11 @@ feature {NONE} -- Generation
 					a_file.put_string ("%Tstd.error.put_line (%"Executing scanner user-code from file '")
 					a_file.put_string (input_filename)
 					a_file.put_string ("' at line ")
-					a_file.put_integer (rule.line_nb)
+					if line_pragma then
+						a_file.put_integer (rule.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_line ("%")")
 					a_file.put_line ("end")
 					a_file.put_string (rule.action.out)
@@ -979,6 +1004,9 @@ feature {NONE} -- Access
 	post_eof_action_used: BOOLEAN
 			-- Should routine `post_eof_action' be called after
 			-- each end-of-file semantic action?
+
+	line_pragma: BOOLEAN
+			-- Should line pragma be generated?
 
 	characters_count: INTEGER
 			-- Number of characters in character set

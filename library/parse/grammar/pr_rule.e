@@ -252,7 +252,7 @@ feature -- Output
 			end
 		end
 
-	print_action (input_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print semantic action to `a_file'.
 			-- `input_filename' is the name of the file where
 			-- the action text as been specified.
@@ -267,7 +267,11 @@ feature -- Output
 			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, PR_TYPE]
 		do
 			a_file.put_string ("--|#line ")
-			a_file.put_integer (line_nb)
+			if a_line_pragma then
+				a_file.put_integer (line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_string (" %"")
 			a_file.put_string (input_filename)
 			a_file.put_line ("%"")
@@ -275,7 +279,11 @@ feature -- Output
 			a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
 			a_file.put_string (input_filename)
 			a_file.put_string ("' at line ")
-			a_file.put_integer (line_nb)
+			if a_line_pragma then
+				a_file.put_integer (line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_line ("%")")
 			a_file.put_line ("end")
 			a_type := lhs.type
@@ -315,7 +323,7 @@ feature -- Output
 			a_file.put_line ("end")
 		end
 
-	old_print_action (input_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+	old_print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print semantic action to `a_file' using the old typing mechanism.
 			-- `input_filename' is the name of the file where
 			-- the action text as been specified.
@@ -328,7 +336,11 @@ feature -- Output
 			nb: INTEGER
 		do
 			a_file.put_string ("--|#line ")
-			a_file.put_integer (line_nb)
+			if a_line_pragma then
+				a_file.put_integer (line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_string (" %"")
 			a_file.put_string (input_filename)
 			a_file.put_line ("%"")
@@ -336,7 +348,11 @@ feature -- Output
 			a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
 			a_file.put_string (input_filename)
 			a_file.put_string ("' at line ")
-			a_file.put_integer (line_nb)
+			if a_line_pragma then
+				a_file.put_integer (line_nb)
+			else
+				a_file.put_string ("<not available>")
+			end
 			a_file.put_line ("%")")
 			a_file.put_line ("end")
 			a_file.put_new_line

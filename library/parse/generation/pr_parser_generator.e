@@ -5,7 +5,7 @@ indexing
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			build_yytypes2
 			build_action_tables
 			array_size := 3000
+			line_pragma := True
 			input_filename := Default_input_filename
 		ensure
 			machine_set: machine = a_machine
@@ -49,6 +50,9 @@ feature -- Status report
 
 	old_typing: BOOLEAN
 			-- Does the generated parser use the old typing mechanism?
+
+	line_pragma: BOOLEAN
+			-- Should line pragma be generated?
 
 feature -- Access
 
@@ -70,12 +74,22 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
+feature -- Status setting
+
 	set_old_typing (b: BOOLEAN) is
 			-- Set `old_typing' to `b'.
 		do
 			old_typing := b
 		ensure
 			old_typing_set: old_typing = b
+		end
+
+	set_line_pragma (b: BOOLEAN) is
+			-- Set `line_pragma' to `b'.
+		do
+			line_pragma := b
+		ensure
+			line_pragma_set: line_pragma = b
 		end
 
 feature -- Generation
@@ -676,9 +690,9 @@ feature {NONE} -- Generation
 				a_file.put_integer (a_rule.id)
 				a_file.put_line (" then")
 				if old_typing then
-					a_rule.old_print_action (input_filename, a_file)
+					a_rule.old_print_action (input_filename, line_pragma, a_file)
 				else
-					a_rule.print_action (input_filename, a_file)
+					a_rule.print_action (input_filename, line_pragma, a_file)
 				end
 				i := i + 1
 			end
@@ -728,7 +742,11 @@ feature {NONE} -- Generation
 					a_file.put_integer (a_rule.id)
 					a_file.put_line (" then")
 					a_file.put_string ("%T%T%T%T%T--|#line ")
-					a_file.put_integer (a_rule.line_nb)
+					if line_pragma then
+						a_file.put_integer (a_rule.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_string (" %"")
 					a_file.put_string (input_filename)
 					a_file.put_line ("%"")
@@ -790,7 +808,11 @@ feature {NONE} -- Generation
 						a_file.put_integer (a_rule.id)
 						a_file.put_line (" then")
 						a_file.put_string ("%T%T%T%T%T--|#line ")
-						a_file.put_integer (a_rule.line_nb)
+						if line_pragma then
+							a_file.put_integer (a_rule.line_nb)
+						else
+							a_file.put_string ("<not available>")
+						end
 						a_file.put_string (" %"")
 						a_file.put_string (input_filename)
 						a_file.put_line ("%"")
@@ -818,7 +840,11 @@ feature {NONE} -- Generation
 				a_file.put_integer (i)
 				a_file.put_line (" is")
 				a_file.put_string ("%T%T%T--|#line ")
-				a_file.put_integer (a_rule.line_nb)
+				if line_pragma then
+					a_file.put_integer (a_rule.line_nb)
+				else
+					a_file.put_string ("<not available>")
+				end
 				a_file.put_string (" %"")
 				a_file.put_string (input_filename)
 				a_file.put_line ("%"")
@@ -830,9 +856,9 @@ feature {NONE} -- Generation
 				end
 				a_file.put_line ("%T%Tdo")
 				if old_typing then
-					a_rule.old_print_action (input_filename, a_file)
+					a_rule.old_print_action (input_filename, line_pragma, a_file)
 				else
-					a_rule.print_action (input_filename, a_file)
+					a_rule.print_action (input_filename, line_pragma, a_file)
 				end
 				a_file.put_line ("%T%Tend")
 				i := i + 1
@@ -865,7 +891,11 @@ feature {NONE} -- Generation
 					a_file.put_integer (a_state.id)
 					a_file.put_line (" then")
 					a_file.put_string ("--|#line ")
-					a_file.put_integer (an_action.line_nb)
+					if line_pragma then
+						a_file.put_integer (an_action.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_string (" %"")
 					a_file.put_string (input_filename)
 					a_file.put_line ("%"")
@@ -873,7 +903,11 @@ feature {NONE} -- Generation
 					a_file.put_string ("%Tstd.error.put_line (%"Executing parser error-code from file '")
 					a_file.put_string (input_filename)
 					a_file.put_string ("' at line ")
-					a_file.put_integer (an_action.line_nb)
+					if line_pragma then
+						a_file.put_integer (an_action.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_line ("%")")
 					a_file.put_line ("end")
 					a_file.put_line (an_action.action.out)
@@ -931,7 +965,11 @@ feature {NONE} -- Generation
 						a_file.put_integer (a_state.id)
 						a_file.put_line (" then")
 						a_file.put_string ("%T%T%T%T%T--|#line ")
-						a_file.put_integer (an_action.line_nb)
+						if line_pragma then
+							a_file.put_integer (an_action.line_nb)
+						else
+							a_file.put_string ("<not available>")
+						end
 						a_file.put_string (" %"")
 						a_file.put_string (input_filename)
 						a_file.put_line ("%"")
@@ -995,7 +1033,11 @@ feature {NONE} -- Generation
 							a_file.put_integer (a_state.id)
 							a_file.put_line (" then")
 							a_file.put_string ("%T%T%T%T%T--|#line ")
-							a_file.put_integer (an_action.line_nb)
+							if line_pragma then
+								a_file.put_integer (an_action.line_nb)
+							else
+								a_file.put_string ("<not available>")
+							end
 							a_file.put_string (" %"")
 							a_file.put_string (input_filename)
 							a_file.put_line ("%"")
@@ -1029,7 +1071,11 @@ feature {NONE} -- Generation
 					a_file.put_integer (a_state.id)
 					a_file.put_line (" is")
 					a_file.put_string ("%T%T%T--|#line ")
-					a_file.put_integer (an_action.line_nb)
+					if line_pragma then
+						a_file.put_integer (an_action.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_string (" %"")
 					a_file.put_string (input_filename)
 					a_file.put_line ("%"")
@@ -1038,7 +1084,11 @@ feature {NONE} -- Generation
 					a_file.put_string ("%T%T%T%Tstd.error.put_line (%"Executing parser error-code from file '")
 					a_file.put_string (input_filename)
 					a_file.put_string ("' at line ")
-					a_file.put_integer (an_action.line_nb)
+					if line_pragma then
+						a_file.put_integer (an_action.line_nb)
+					else
+						a_file.put_string ("<not available>")
+					end
 					a_file.put_line ("%")")
 					a_file.put_line ("%T%T%Tend")
 					a_file.put_line (an_action.action.out)

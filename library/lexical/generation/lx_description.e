@@ -5,7 +5,7 @@ indexing
 		"Lexical analyzer descriptions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			meta_equiv_classes_used := True
 			characters_count := 256
 			array_size := 3000
+			line_pragma := True
 			create rules.make (Initial_max_rules)
 			create eof_rules.make (Initial_max_start_conditions)
 			create eiffel_header.make (1)
@@ -60,6 +61,7 @@ feature -- Initialization
 			post_action_used := False
 			pre_eof_action_used := False
 			post_eof_action_used := False
+			line_pragma := True
 			input_filename := Void
 			output_filename := Void
 			equiv_classes := Void
@@ -155,6 +157,9 @@ feature -- User-defined options
 			-- Should routine `post_eof_action' be called
 			-- after each end-of-file semantic action?
 			-- (%option post-eof-action)
+
+	line_pragma: BOOLEAN
+			-- Should line pragma be generated?
 
 	input_filename: STRING
 			-- Name of input file
@@ -326,6 +331,14 @@ feature -- Option setting
 			post_eof_action_used := b
 		ensure
 			post_eof_action_used_set: post_eof_action_used = b
+		end
+
+	set_line_pragma (b: BOOLEAN) is
+			-- Set `line_pragma' to `b'.
+		do
+			line_pragma := b
+		ensure
+			line_pragma_set: line_pragma = b
 		end
 
 	set_input_filename (fn: like input_filename) is
