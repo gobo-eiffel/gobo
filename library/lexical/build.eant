@@ -19,7 +19,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" dir="${GOBO}/library/lexical">
+	<target name="install">
 		<description>
 			Generate scanner and parser files.
 		</description>
@@ -28,9 +28,11 @@
 		<geant target="lex_parser"/>
 		<geant target="regexp_scanner"/>
 		<geant target="regexp_parser"/>
+		<geant target="wildcard_scanner"/>
+		<geant target="wildcard_parser"/>
 	</target>
 
-	<target name="clean" dir="${GOBO}/library/lexical">
+	<target name="clean">
 		<description>
 			Remove intermediary generated files.
 		</description>
@@ -38,7 +40,7 @@
 		<ve clean="lexical" recursive="true"/>
 	</target>
 
-	<target name="clobber" dir="${GOBO}/library/lexical">
+	<target name="clobber">
 		<description>
 			Remove all generated files.
 		</description>
@@ -50,6 +52,9 @@
 		<delete file="regexp/lx_regexp_scanner.e"/>
 		<delete file="regexp/lx_regexp_parser.e"/>
 		<delete file="regexp/lx_regexp_tokens.e"/>
+		<delete file="regexp/lx_wildcard_scanner.e"/>
+		<delete file="regexp/lx_wildcard_parser.e"/>
+		<delete file="regexp/lx_wildcard_tokens.e"/>
 	</target>
 
 
@@ -69,6 +74,14 @@
 
 	<target name="regexp_parser" dir="regexp">
 		<geyacc input="lx_regexp_parser.y" tokens="LX_REGEXP_TOKENS" output="lx_regexp_parser.e"/>
+	</target>
+
+	<target name="wildcard_scanner" dir="regexp">
+		<gelex input="lx_wildcard_scanner.l"/>
+	</target>
+
+	<target name="wildcard_parser" dir="regexp">
+		<geyacc input="lx_wildcard_parser.y" tokens="LX_WILDCARD_TOKENS" output="lx_wildcard_parser.e"/>
 	</target>
 
 </project>
