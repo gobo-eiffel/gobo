@@ -127,10 +127,16 @@ feature {NONE} -- Output
 			end
 			create an_external.make
 			a_system.merge_externals (an_external)
-			if an_external.has_include_directories or an_external.has_link_libraries then
+			if
+				an_external.has_c_compiler_options or
+				an_external.has_link_libraries or
+				an_external.has_include_directories
+			then
 				a_file.put_line ("external")
 				a_file.put_new_line
-				print_include_directories (an_external.include_directories, a_file)
+				print_c_compiler_options_and_include_directories (an_external.c_compiler_options,
+																  an_external.include_directories,
+																  a_file)
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
@@ -178,10 +184,16 @@ feature {NONE} -- Output
 			end
 			create an_external.make
 			a_library.merge_externals (an_external)
-			if an_external.has_include_directories or an_external.has_link_libraries then
+			if
+				an_external.has_c_compiler_options or
+				an_external.has_link_libraries or
+				an_external.has_include_directories
+			then
 				a_file.put_line ("external")
 				a_file.put_new_line
-				print_include_directories (an_external.include_directories, a_file)
+				print_c_compiler_options_and_include_directories (an_external.c_compiler_options,
+																  an_external.include_directories,
+																  a_file)
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
@@ -941,9 +953,14 @@ feature {NONE} -- Output
 			Result := option_printed or visible_printed or storable_printed
 		end
 
-	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_directories' to `a_file'.
+	print_c_compiler_options_and_include_directories (a_c_compiler_options: DS_LINKED_LIST [STRING];
+													  a_directories: DS_LINKED_LIST [STRING];
+													  a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_c_compiler_options' and
+			-- `a_directories' to `a_file'.
 		require
+			a_c_compiler_options_not_void: a_c_compiler_options /= Void
+			no_void_c_compiler_options: not a_c_compiler_options.has (Void)
 			a_directories_not_void: a_directories /= Void
 			no_void_directory: not a_directories.has (Void)
 			a_file_not_void: a_file /= Void
@@ -952,10 +969,27 @@ feature {NONE} -- Output
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			a_pathname: STRING
 		do
-			if not a_directories.is_empty then
+			if not a_c_compiler_options.is_empty or
+				not a_directories.is_empty
+			then
 				print_indentation (1, a_file)
-				a_file.put_string ("include_path:")
-				a_file.put_new_line
+				a_file.put_line ("include_path:")
+				a_cursor := a_c_compiler_options.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (2, a_file)
+					a_file.put_character ('%"')
+					a_file.put_string ("some123/fake432/path567 ")
+					a_file.put_string (a_cursor.item)
+					a_file.put_character ('%"')
+					if not a_cursor.is_last then
+						a_file.put_line (",")
+					else
+						if not a_directories.is_empty then
+							a_file.put_line (",")
+						end
+					end
+					a_cursor.forth
+				end
 				a_cursor := a_directories.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
@@ -966,14 +1000,13 @@ feature {NONE} -- Output
 						a_pathname := replace_all_characters (a_pathname, '}', ')')
 					end
 					a_file.put_string (a_pathname)
-					if a_cursor.is_last then
-						a_file.put_string ("%";")
-					else
-						a_file.put_string ("%",")
+					a_file.put_character ('%"')
+					if not a_cursor.is_last then
+						a_file.put_line (",")
 					end
-					a_file.put_new_line
 					a_cursor.forth
 				end
+				a_file.put_line (";")
 				a_file.put_new_line
 			end
 		end

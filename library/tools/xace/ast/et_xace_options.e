@@ -145,6 +145,14 @@ feature -- Status report
 			definition: Result = (declared_culture /= Void)
 		end
 
+	is_c_compiler_options_declared: BOOLEAN is
+			-- Has 'c_compiler_options' option been declared?
+		do
+			Result := declared_c_compiler_options /= Void and then not declared_c_compiler_options.is_empty
+		ensure
+			definition: Result = (declared_c_compiler_options /= Void and then not declared_c_compiler_options.is_empty)
+		end
+
 	is_dead_code_removal_declared: BOOLEAN is
 			-- Has 'dead_code_removal' option been declared?
 		do
@@ -739,6 +747,19 @@ feature -- Option values
 			else
 				Result := default_culture
 			end
+		end
+
+	c_compiler_options: DS_HASH_SET [STRING] is
+			-- 'c_compiler_options' option
+		do
+			if is_c_compiler_options_declared then
+				Result := declared_c_compiler_options
+			else
+				Result := default_c_compiler_options
+			end
+		ensure
+			c_compiler_options_not_void: Result /= Void
+			no_void_c_compiler_option: not Result.has (Void)
 		end
 
 	dead_code_removal: DS_HASH_SET [STRING] is
@@ -1541,6 +1562,21 @@ feature -- Status setting
 		ensure
 			culture_declared: is_culture_declared
 			culture_set: culture = a_value
+		end
+
+	set_c_compiler_options (a_value: STRING) is
+			-- Set `c_compiler_options' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if declared_c_compiler_options = Void then
+				create declared_c_compiler_options.make (10)
+				declared_c_compiler_options.set_equality_tester (string_equality_tester)
+			end
+			declared_c_compiler_options.force_last (a_value)
+		ensure
+			c_compiler_options_declared: is_c_compiler_options_declared
+			c_compiler_options_set: c_compiler_options.has (a_value)
 		end
 
 	set_dead_code_removal (a_value: STRING) is
@@ -2504,6 +2540,9 @@ feature -- Declared values
 	declared_culture: STRING
 			-- Declared value for 'culture' option
 
+	declared_c_compiler_options: DS_HASH_SET [STRING]
+			-- Declared values for 'c_compiler_option' option
+
 	declared_dead_code_removal: DS_HASH_SET [STRING]
 			-- Declared values for 'dead_code_removal' option
 
@@ -2738,6 +2777,16 @@ feature -- Default values
 			-- Default value for 'culture' option
 		once
 			Result := "neutral"
+		end
+
+	default_c_compiler_options: DS_HASH_SET [STRING] is
+			-- Default value for 'c_compiler_options' option
+		once
+			create Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
+		ensure
+			default_c_compiler_options_not_void: Result /= Void
+			no_void_c_compiler_options: not Result.has (Void)
 		end
 
 	default_dead_code_removal: DS_HASH_SET [STRING] is

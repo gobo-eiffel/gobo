@@ -119,6 +119,11 @@ feature -- Basic operations
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
 			if options /= Void then
+				a_cursor := options.c_compiler_options.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_externals.put_c_compiler_options (a_cursor.item)
+					a_cursor.forth
+				end
 				a_cursor := options.header.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					an_externals.put_include_directory (a_cursor.item)

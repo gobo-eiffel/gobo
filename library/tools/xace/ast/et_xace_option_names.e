@@ -28,6 +28,7 @@ feature -- Option names
 	console_application_name: STRING is "console_application"
 	create_keyword_extension_name: STRING is "create_keyword_extension"
 	culture_name: STRING is "culture"
+	c_compiler_options_name: STRING is "c_compiler_options"
 	dead_code_removal_name: STRING is "dead_code_removal"
 	debug_option_name: STRING is "debug"
 	debug_tag_name: STRING is "debug_tag"
@@ -101,6 +102,7 @@ feature -- Option codes
 	console_application_code: INTEGER is unique
 	create_keyword_extension_code: INTEGER is unique
 	culture_code: INTEGER is unique
+	c_compiler_options_code: INTEGER is unique
 	dead_code_removal_code: INTEGER is unique
 	debug_option_code: INTEGER is unique
 	debug_tag_code: INTEGER is unique
@@ -163,7 +165,7 @@ feature -- Option codes
 		local
 			a_tester: UC_EQUALITY_TESTER
 		once
-			create Result.make (70)
+			create Result.make (71)
 			create a_tester
 			Result.set_key_equality_tester (a_tester)
 			Result.put_new (abstract_code, abstract_name)
@@ -180,6 +182,7 @@ feature -- Option codes
 			Result.put_new (console_application_code, console_application_name)
 			Result.put_new (create_keyword_extension_code, create_keyword_extension_name)
 			Result.put_new (culture_code, culture_name)
+			Result.put_new (c_compiler_options_code, c_compiler_options_name)
 			Result.put_new (dead_code_removal_code, dead_code_removal_name)
 			Result.put_new (debug_option_code, debug_option_name)
 			Result.put_new (debug_tag_code, debug_tag_name)

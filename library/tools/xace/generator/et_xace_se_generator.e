@@ -148,10 +148,13 @@ feature {NONE} -- Output
 				print_link_libraries (an_external.link_libraries, a_file)
 				a_file.put_new_line
 			end
-			if an_option /= Void then
+			if an_option /= Void or not an_external.c_compiler_options.is_empty then
 				a_file.put_line ("generate")
 				a_file.put_new_line
-				print_generate (an_option, 1, a_file)
+				if an_option /= Void then
+					print_generate (an_option, 1, a_file)
+				end
+				print_c_compiler_options (an_external.c_compiler_options, a_file)
 				a_file.put_new_line
 			end
 			a_file.put_line ("end")
@@ -619,6 +622,37 @@ feature {NONE} -- Output
 				a_class_cursor.forth
 			end
 			Result := option_printed
+		end
+
+	print_c_compiler_options (a_c_compiler_options: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Makes sure the C compiler has the specified options set.
+		require
+			a_c_compiler_optionsnot_void: a_c_compiler_options /= Void
+			no_void_c_compiler_options: not a_c_compiler_options.has (Void)
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
+		do
+			if not a_c_compiler_options.is_empty then
+				print_indentation (1, a_file)
+				a_file.put_string ("c_compiler_options:")
+				a_file.put_new_line
+				print_indentation (2, a_file)
+				a_file.put_character ('%"')
+				a_cursor := a_c_compiler_options.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_pathname := a_cursor.item
+					a_file.put_string (a_pathname)
+					if not a_cursor.is_last then
+						a_file.put_character (' ')
+					end
+					a_cursor.forth
+				end
+				a_file.put_character ('%"')
+				a_file.put_new_line
+			end
 		end
 
 	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is

@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new external clause.
 		do
+			create c_compiler_options.make
 			create include_directories.make
 			create link_libraries.make
 		end
@@ -30,7 +31,13 @@ feature -- Status report
 	is_empty: BOOLEAN is
 			-- Is current external clause empty?
 		do
-			Result := include_directories.is_empty and link_libraries.is_empty
+			Result := c_compiler_options.is_empty and include_directories.is_empty and link_libraries.is_empty
+		end
+
+	has_c_compiler_options: BOOLEAN is
+			-- Are there some c compiler options?
+		do
+			Result := not c_compiler_options.is_empty
 		end
 
 	has_include_directories: BOOLEAN is
@@ -47,6 +54,9 @@ feature -- Status report
 
 feature -- Access
 
+	c_compiler_options: DS_LINKED_LIST [STRING]
+			-- C compiler options
+
 	include_directories: DS_LINKED_LIST [STRING]
 			-- Include directories
 
@@ -54,6 +64,14 @@ feature -- Access
 			-- Link libraries
 
 feature -- Element change
+
+	put_c_compiler_options (a_c_compiler_options: STRING) is
+			-- Add an 'c_compiler_options' value to current external clause.
+		require
+			a_c_compiler_options_not_void: a_c_compiler_options /= Void
+		do
+			c_compiler_options.force_last (a_c_compiler_options)
+		end
 
 	put_include_directory (a_directory: STRING) is
 			-- Add an include directory to current external clause.
@@ -73,6 +91,8 @@ feature -- Element change
 
 invariant
 
+	c_compiler_options_not_void: c_compiler_options /= Void
+	no_void_c_compiler_options: not c_compiler_options.has (Void)
 	include_directories_not_void: include_directories /= Void
 	no_void_include_directory: not include_directories.has (Void)
 	link_libraries_not_void: link_libraries /= Void

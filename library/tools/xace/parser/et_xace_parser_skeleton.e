@@ -823,6 +823,8 @@ feature {NONE} -- Element change
 									end
 								when culture_code then
 									an_option.set_culture (a_value)
+								when c_compiler_options_code then
+									an_option.set_c_compiler_options (a_value)
 								when dead_code_removal_code then
 									if an_option.valid_dead_code_removal.has (a_value) then
 										an_option.set_dead_code_removal (a_value)
