@@ -42,7 +42,7 @@ feature -- Status report
 		do
 			nb := identifiers.count
 			from i := 1 until i > nb loop
-				if identifiers.item (i).name.is_equal (a_name) then
+				if STRING_.same_string (identifiers.item (i).name, a_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
