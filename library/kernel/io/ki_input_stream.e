@@ -30,6 +30,7 @@ feature -- Input
 			-- call to a read routine.
 		require
 			is_open_read: is_open_read
+			an_item_valid: valid_unread_item (an_item)
 		deferred
 		ensure
 			not_end_of_input: not end_of_input
@@ -79,6 +80,11 @@ feature -- Status report
 			-- Has the end of input stream been reached?
 		require
 			is_open_read: is_open_read
+		deferred
+		end
+
+	valid_unread_item (an_item: G): BOOLEAN is
+			-- Can `an_item' be put back in input stream?
 		deferred
 		end
 
