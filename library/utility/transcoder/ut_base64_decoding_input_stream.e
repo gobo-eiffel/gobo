@@ -21,6 +21,8 @@ inherit
 			last_string, valid_unread_character
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make

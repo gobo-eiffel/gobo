@@ -19,8 +19,6 @@ inherit
 			is_rewindable, is_closable, rewind, close, valid_unread_character
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
-
 creation
 
 	make
