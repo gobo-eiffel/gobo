@@ -8,17 +8,21 @@
 # *******************
 
 # Which Eiffel vendor?
-#VENDOR=VEC
+#VENDOR=VE
+#GOBO_EIFFEL=ve
 #VENDOR=SE
+#GOBO_EIFFEL=se
 #VENDOR=HACT
+#GOBO_EIFFEL=hact
 VENDOR=ISE
+GOBO_EIFFEL=ise
 
 # Make sure CFLAGS has the proper vendor #define
 CFLAGS=$(CFLAGS) -D$(VENDOR)
 
 
 # Where is Expat
-CFLAGS=$(CFLAGS) -I$(EXPAT)\lib
+CFLAGS=$(CFLAGS) -I$(EXPAT)\Source\lib
 
 
 #Flags for gcc while using VisualEiffel
@@ -33,16 +37,16 @@ CFLAGS=$(CFLAGS) -I$(EXPAT)\lib
 
 
 #Flags for msc while using ISE Eiffel
-CFLAGS=$(CFLAGS) -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS=$(CFLAGS) -I$(ISE_EIFFEL)\bench\spec\windows\include
 
 
 # ********************
 # END OF USER SETTINGS
 # ********************
 
-all: libexml.lib
+all: libexml-expat-$(GOBO_EIFFEL).lib
 
-libexml.lib: exml_expat.obj exml_helper.obj
+libexml-expat-$(GOBO_EIFFEL).lib: exml_expat.obj exml_helper.obj
 	if exist $@ del $@
 	lib /OUT:$@ exml_expat.obj exml_helper.obj
 
@@ -58,4 +62,4 @@ install:
 clean:
 	del exml_expat.obj
 	del exml_helper.obj
-	del libexml.lib
+	del libexml-expat-$(GOBO_EIFFEL).lib
