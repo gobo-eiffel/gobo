@@ -28,15 +28,15 @@ cluster
 
 	gegrep:				"$GOBO/example/lexical/gegrep";
 
-#include "$GOBO/library/lexical/hact.ace"
+#include "${GOBO}/library/lexical/hact.ace"
 
-#include "$GOBO/library/parse/hact-skl.ace"
+#include "${GOBO}/library/parse/hact-skl.ace"
 
-#include "$GOBO/library/utility/hact.ace"
+#include "${GOBO}/library/utility/hact.ace"
 
-#include "$GOBO/library/kernel/hact.ace"
+#include "${GOBO}/library/kernel/hact.ace"
 
-#include "$GOBO/library/structure/hact.ace"
+#include "${GOBO}/library/structure/hact.ace"
 
 component
 
