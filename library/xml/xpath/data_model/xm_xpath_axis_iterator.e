@@ -16,5 +16,18 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
 
+feature -- Access
+
+	item_for_iteration: G is
+			-- Value or node at the current position
+		do
+			Result := current_item
+		end
+
+feature {NONE} -- Implementation
+
+	current_item: G
+			-- The item that the iterator is currently pointing to
+
 end
 	

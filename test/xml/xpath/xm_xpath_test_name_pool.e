@@ -127,7 +127,6 @@ feature -- Test
 feature -- Setting
 
 	set_up is
-		local
 		do
 			default_pool := shared_pool.default_pool
 		end

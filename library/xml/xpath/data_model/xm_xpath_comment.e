@@ -15,10 +15,6 @@ deferred class XM_XPATH_COMMENT
 inherit
 
 	XM_XPATH_BASE_URI_FROM_PARENT
-
-	XM_XPATH_NAMELESS_NODE
-
-	XM_XPATH_CHILD_NODE
 	
 	XM_XPATH_TYPELESS_NODE
 
@@ -36,6 +32,12 @@ feature -- Access
 			node_kind_is_comment: STRING_.same_string ( Result, "comment")
 		end
 
+	item_type: INTEGER is
+			-- Type
+		do
+			Result := Comment_node
+		end
+	
 	string_value: STRING is
 			-- String-value
 		do

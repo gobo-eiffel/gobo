@@ -14,14 +14,12 @@ deferred class XM_XPATH_ELEMENT
 
 inherit
 
+	XM_XPATH_NODE
+
 	XM_XPATH_COMPOSITE_NODE
 
 	XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
 
-	XM_XPATH_NAMED_NODE
-
-	XM_XPATH_CHILD_NODE
-	
 	XM_XPATH_TYPED_NODE
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -36,15 +34,12 @@ feature -- Access
 			node_kind_is_element: STRING_.same_string (Result, "element")
 		end
 
-	string_value: STRING is
-			-- String-value
+	item_type: INTEGER is
+			-- Type
 		do
-			-- Return the concatentation of the string value of all it's
-			-- text-node descendants.
-			-- Actually, more complicated than the above description.
-			-- TODO
+			Result := Element_node
 		end
-
+	
 feature -- Status report
 
 	is_nilled: BOOLEAN is

@@ -16,8 +16,6 @@ inherit
 
 	XM_XPATH_TYPELESS_NODE
 
-	XM_XPATH_CHILD_NODE
-
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -40,12 +38,10 @@ feature -- Access
 			node_kind_is_namespace: STRING_.same_string (Result, "namespace")
 		end
 
-	node_name: XM_EXPANDED_QNAME is
-			-- Qualified name
+	item_type: INTEGER is
+			-- Type
 		do
-			-- TODO: create Result.make (Void, prefix_property)
-		ensure then
-			node_name_not_void: Result /= Void
+			Result := Namespace_node
 		end
 
 	string_value: STRING is

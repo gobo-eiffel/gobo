@@ -13,24 +13,29 @@ indexing
 deferred class XM_XPATH_TEST_BUILDER
 
 inherit
+
 	TS_TEST_CASE
+
+	XM_XPATH_TYPE
 	
 feature
 
 	test_simple is
 			-- Simple tree.
+		local
+			document: XM_XPATH_TINY_DOCUMENT
+			document_element: XM_XPATH_ELEMENT
 		do
 			make_parser
 			parser.parse_from_string ("<doc><a/><b/></doc>")
 			assert ("No parsing error", not tree_pipe.error.has_error)
-			
-			if not tree_pipe.error.has_error then
---				assert_has_element (tree_pipe.document, "doc")
---				a_root := tree_pipe.document.root_element
---				assert_equal ("root name", a_root.name, "doc")
+			document := tree_pipe.document
+			assert ("Document not void", document /= Void)
+			document_element := document.document_element
+			assert ("Document element not void", document_element /= Void)
+			--				assert_equal ("root name", a_root.name, "doc")
 --				assert_has_element (a_root, "a")
 --				assert_has_element (a_root, "b")
-			end
 		end
 
 	test_with_dtd is
@@ -64,5 +69,5 @@ feature {NONE} -- Implementation
 		
 	parser: XM_EIFFEL_PARSER
 	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
-	
+
 end

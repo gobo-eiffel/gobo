@@ -16,10 +16,6 @@ inherit
 
 	XM_XPATH_BASE_URI_FROM_PARENT
 
-	XM_XPATH_NAMED_NODE
-
-	XM_XPATH_CHILD_NODE
-
 	XM_XPATH_TYPED_NODE
 	
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
@@ -35,5 +31,10 @@ feature -- Access
 		ensure then
 			node_kind_is_attribute: STRING_.same_string ( Result, "attribute")
 		end
-
+	
+	item_type: INTEGER is
+			-- Type
+		do
+			Result := Attribute_node
+		end
 end

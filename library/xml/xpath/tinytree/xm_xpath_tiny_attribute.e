@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Tiny tree Element nodes"
+		"Tiny tree Attribute nodes"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_TINY_ELEMENT
+class XM_XPATH_TINY_ATTRIBUTE
 
 inherit
 
-	XM_XPATH_ELEMENT
+	XM_XPATH_ATTRIBUTE
 
-	XM_XPATH_TINY_COMPOSITE_NODE
+	XM_XPATH_TINY_NODE
 
 creation
 
@@ -24,16 +24,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; a_node_number: INTEGER) is
-		require
-			valid_document: doc /= Void
-			valid_node_number: a_node_number > 1 and a_node_number <= doc.last_node_added
+	make (doc: XM_XPATH_TINY_DOCUMENT; attribute_number: INTEGER) is
 		do
 			document := doc
-			node_number := a_node_number
+			node_number := attribute_number
 		ensure
 			document_set: document = doc
-			node_number_set: node_number = a_node_number
+			node_number_set: node_number = attribute_number
+		end
+
+feature -- Access
+
+	string_value: STRING is
+			--Value of the item as a string
+		do
+			Result := document.attribute_value (node_number)
 		end
 
 feature {XM_XPATH_NODE} -- Access
@@ -41,6 +46,7 @@ feature {XM_XPATH_NODE} -- Access
 	is_possible_child: BOOLEAN is
 			-- Can this node be a child of a document or element node?
 		do
-			Result := True
+			Result := False
 		end
+	
 end

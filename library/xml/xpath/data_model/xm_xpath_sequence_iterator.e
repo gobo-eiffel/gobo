@@ -17,7 +17,7 @@ feature -- Access
 	item_for_iteration: G is
 			-- Value or node at the current position
 		require
-			not_off: not off
+			not_before: not before
 		deferred
 		end
 

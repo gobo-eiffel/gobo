@@ -25,10 +25,9 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	type: INTEGER is
+	item_type: INTEGER is
 			-- Type;
-			-- The data model requires zero or one xs:QNames.
-			-- To convert, call type_name (Result) if Result > 0
+			-- This will be a value such as Element_node or Integer_type
 		deferred
 		ensure
 			Result > 0 implies is_valid_type (Result)

@@ -26,13 +26,15 @@ inherit
 			node_kind
 		end
 
-	XM_XPATH_TINY_NODE
+	XM_XPATH_TINY_COMPOSITE_NODE
 
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_TYPE
 
 	XM_STRING_MODE
+
+	KL_IMPORTED_STRING_ROUTINES
 
 	HASHABLE
 	
@@ -50,6 +52,7 @@ feature -- Initialization
 			namespace_count: estimated_namespace_count >= 0
 			character_count: estimated_character_count >= 0
 		do
+			root_node := 1
 			node_number := 1
 			document := Current
 			
@@ -58,14 +61,14 @@ feature -- Initialization
 			create next_sibling_indices.make (estimated_node_count)
 			create alpha.make (estimated_node_count)
 			create beta.make (estimated_node_count)
-			create name_code.make (estimated_node_count)
+			create name_codes.make (estimated_node_count)
 
-			create attribute_parent.make (estimated_attribute_count)
+			create attribute_parents.make (estimated_attribute_count)
 			create attribute_code.make (estimated_attribute_count)
-			create attribute_value.make (estimated_attribute_count)
+			create attribute_values.make (estimated_attribute_count)
 
 			create namespace_parent.make (estimated_namespace_count)
-			create namespace_code.make (estimated_namespace_count)
+			create namespace_codes.make (estimated_namespace_count)
 
 			if is_string_mode_ascii then
 				create character_buffer.make (estimated_character_count)
@@ -82,6 +85,18 @@ feature -- Initialization
 
 feature -- Access
 
+	character_buffer: STRING
+			-- The document contents
+	
+	comment_buffer: STRING
+			-- Buffer for comments, created when needed
+
+	name_pool: XM_XPATH_NAME_POOL
+			-- Namespace mappings.
+
+	root_node: INTEGER
+			-- The actual root of the tree. Normally 1.
+
 	node_kind: STRING is
 			-- Kind of node
 		do
@@ -91,12 +106,29 @@ feature -- Access
 				Result := ""
 			end
 		end
-	
+
+	namespace_code_for_node (a_node_number: INTEGER): INTEGER is
+			-- Namespace code for `a_node_number'
+		require
+			node_number_in_range: is_node_number_valid (a_node_number)
+		do
+			Result := namespace_codes.item (a_node_number)
+		end			
+
+		
 	hash_code: INTEGER is
 		do
 			Result := document_number \\ 7
 		end
 
+	name_code_for_node (a_node_number: INTEGER): INTEGER is
+			-- Fetch the name code for `a_node_number'
+		require
+			node_number_in_range: is_node_number_valid (a_node_number)
+		do
+			Result := name_codes.item (a_node_number)
+		end
+	
 	character_buffer_length: INTEGER is
 			-- Length of `character_buffer'
 		do
@@ -166,8 +198,162 @@ feature -- Access
 			end
 		end
 
+	alpha_value (a_node_number: INTEGER): INTEGER is
+			-- Alpha value for the node
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := alpha.item (a_node_number)
+		end
+
+	beta_value (a_node_number: INTEGER): INTEGER is
+			-- Beta value for the node
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := beta.item (a_node_number)
+		end
+
+	prior_node (a_node_number: INTEGER): INTEGER is
+			-- Previous-sibling for `a_node_number'
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := prior.item (a_node_number)
+		end
+
+	attribute_parent (an_index: INTEGER): INTEGER is
+			-- Index of parent element
+		require
+			index_is_valid: an_index <= number_of_attributes
+		do
+			Result := attribute_parents.item (an_index)
+		end
+
+	attribute_name_code  (an_index: INTEGER): INTEGER is
+			-- Attribute name code for `an_index'
+		require
+			index_is_valid: an_index <= number_of_attributes
+		do
+			Result := attribute_code.item (an_index)
+		end
+
+	retrieve_attribute_node (an_attribute_number: INTEGER): XM_XPATH_TINY_ATTRIBUTE is
+			-- Build a flyweight attribute node for `an_attribute_number'
+		require
+			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
+		do
+			create Result.make (Current, an_attribute_number)
+		end
+
+	retrieve_node_kind (a_node_number: INTEGER): INTEGER is
+			-- Node kind for the node
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := node_kinds.item (a_node_number)
+		end
+	
+	attribute_value (an_attribute_number: INTEGER): STRING is
+			-- Value of `an_attribute_number'
+		require
+			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
+		do
+			Result := attribute_values.item (an_attribute_number)
+		end
+
+	attribute_annotation (an_attribute_number: INTEGER): INTEGER is
+			-- Type annotation of `an_attribute_number'
+		require
+			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
+		do
+			if attribute_type_codes = Void then
+				Result := Untyped_atomic_type
+			else
+				Result := attribute_type_codes.item (an_attribute_number)
+			end
+		end
+
+	element_annotation (a_node_number: INTEGER): INTEGER is
+			-- Type annotation of `a_node_number'
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			if element_type_map = Void then
+				Result := Untyped_any_type
+			elseif element_type_map.has (a_node_number)  then
+				Result := element_type_map.item (a_node_number)
+			else
+				Result := Untyped_any_type
+			end
+		end
+
+	retrieve_next_sibling (a_node_number: INTEGER): INTEGER is
+			-- Next sibling of  `a_node_number'
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := next_sibling_indices.item (a_node_number)
+		end
+
+	retrieve_node (a_node_number: INTEGER): XM_XPATH_TINY_NODE is
+			-- Build and retrieve flyweight node for  `a_node_number'
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		local
+			type_of_node: INTEGER
+		do
+			type_of_node := node_kinds.item (a_node_number)
+			inspect
+				type_of_node
+			when Document_node then
+				Result := Current
+					check
+						This_node: a_node_number = node_number
+					end
+			when Element_node then
+				create {XM_XPATH_TINY_ELEMENT} Result.make (Current, a_node_number)
+			when Text_node then
+				create {XM_XPATH_TINY_TEXT} Result.make (Current, a_node_number)
+			when Comment_node then
+				create {XM_XPATH_TINY_COMMENT} Result.make (Current, a_node_number)
+			when Processing_instruction_node then
+				create {XM_XPATH_TINY_PROCESSING_INSTRUCTION} Result.make (Current, a_node_number)
+			end
+		ensure
+			Node_not_void: Result /= Void
+		end
+
+	depth_of (a_node_number: INTEGER): INTEGER is
+			-- Depth in tree of `a_node_number'
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := depth.item (a_node_number)
+		end
+	
 	last_node_added: INTEGER
 			-- Last node created with `add_node'
+
+feature -- Status report
+
+	is_node_number_valid (a_node_number: INTEGER): BOOLEAN is
+			-- Does `a_node_number' represent a valid node?
+		do
+			Result := a_node_number > 0 and then a_node_number <= last_node_added
+		end
+
+	is_attribute_number_valid (an_attribute_number: INTEGER): BOOLEAN is
+			-- Does `an_attribute_number' represent a valid attribute?
+		do
+			Result := an_attribute_number > 0 and then an_attribute_number <= number_of_attributes
+		end
+
+	number_of_attributes: INTEGER is
+			-- How many attribute nodes are there in `Current'?
+		do
+			Result := attribute_values.count
+		end
 	
 feature {XM_XPATH_NODE} -- Access
 
@@ -179,31 +365,31 @@ feature {XM_XPATH_NODE} -- Access
 
 feature -- Element change
 
-	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_value: INTEGER;  beta_value: INTEGER; new_name_code: INTEGER) is
+	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_val: INTEGER;  beta_val: INTEGER; new_name_codes: INTEGER) is
 			-- Add a node to the document
 		require
 			valid_node_type: new_node_type = Document_node or new_node_type = Element_node or
 				new_node_type = Text_node or new_node_type = Comment_node or new_node_type = Processing_instruction_node
 			positive_depth: depth_value > 0
-			valid_alpha: alpha_value >= -1
-			valid_beta: beta_value >= -1
-			valid_name_code: new_name_code >= -1
+			valid_alpha: alpha_val >= -1
+			valid_beta: beta_val >= -1
+			valid_name_codes: new_name_codes >= -1
 		do
 			number_of_nodes := number_of_nodes + 1
 			node_kinds.force (new_node_type, number_of_nodes)
 			depth.force (depth_value, number_of_nodes)
-			alpha.force (alpha_value, number_of_nodes)
-			beta.force (beta_value, number_of_nodes)
-			name_code.force (new_name_code, number_of_nodes) 
+			alpha.force (alpha_val, number_of_nodes)
+			beta.force (beta_val, number_of_nodes)
+			name_codes.force (new_name_codes, number_of_nodes) 
 			set_next_sibling (0, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
 		ensure
 			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
-			correct_node_kind: node_kinds.item (number_of_nodes) = new_node_type
+			correct_node_kinds: node_kinds.item (number_of_nodes) = new_node_type
 			correct_depth: depth.item (number_of_nodes) = depth_value
-			correct_alpha: alpha.item (number_of_nodes) = alpha_value
-			correct_beta: beta.item (number_of_nodes) = beta_value
-			correct_name_code: name_code.item (number_of_nodes) = new_name_code
+			correct_alpha: alpha.item (number_of_nodes) = alpha_val
+			correct_beta: beta.item (number_of_nodes) = beta_val
+			correct_name_codes: name_codes.item (number_of_nodes) = new_name_codes
 			no_next_sibling: next_sibling_indices.item (number_of_nodes) = 0
 		end
 	
@@ -232,18 +418,50 @@ feature -- Element change
 			-- Add a namespace declaration
 		do
 			namespace_parent.force_last (the_parent)
-			namespace_code.force_last (ns_code)
+			namespace_codes.force_last (ns_code)
 		end
 
-	add_attribute (the_parent: INTEGER; nm_code: INTEGER; type_cde: INTEGER; value: STRING) is
+	add_attribute (the_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; value: STRING) is
 			-- Add an attribute
+		local
+			an_index, a_type_code2: INTEGER
 		do
-			attribute_parent.force_last (the_parent)
-			attribute_value.force_last (value)
-			attribute_code.force_last (nm_code)
+			attribute_parents.force_last (the_parent)
+			attribute_values.force_last (value)
+			attribute_code.force_last (a_name_code)
 
-			if alpha.item (the_parent) = -1 then alpha.force (attribute_value.count, the_parent) end
-			-- TODO check ID values
+			if a_type_code = 0 then
+				a_type_code2 := Untyped_atomic_type
+			else
+				a_type_code2 := a_type_code
+			end
+			if a_type_code2 /= Untyped_atomic_type then
+				if attribute_type_codes = Void then
+					create attribute_type_codes.make (attribute_parents.count)
+					from
+						an_index := 1
+					variant
+						attribute_parents.count - an_index 
+					until
+						an_index = attribute_parents.count
+					loop
+						attribute_type_codes.force (Untyped_atomic_type, an_index)
+					end
+				end
+			end
+			if attribute_type_codes /= Void then
+				attribute_type_codes.force (a_type_code2, attribute_parents.count)
+			end
+			
+			if alpha.item (the_parent) = -1 then alpha.force (attribute_values.count, the_parent) end
+
+			if a_type_code2 = Id_type then
+				-- The attribute is marked as being an ID. But we don't trust it - it
+				-- might come from a non-validating parser. Before adding it to the index, we
+				-- check that it really is an ID.
+
+				--  TODO
+			end
 		end
 
 	store_comment (data: STRING) is
@@ -278,14 +496,50 @@ feature -- Status setting
 		ensure
 			pool_set: name_pool = new_pool
 		end
+
+	ensure_prior_index is
+			-- On demand, ensure existence of index for quick access to preceding-sibling nodes
+		do
+			if prior = Void then make_prior_index end
+		ensure
+			prior_index_built: prior /= Void
+		end
+	
+	make_prior_index is
+			-- On demand, make an index for quick access to preceding-sibling nodes
+		local
+			prior_index, next_node: INTEGER
+		do
+			create prior.make (last_node_added)
+			from
+				prior_index := 1
+			variant
+				last_node_added - prior_index
+			until
+				prior_index > last_node_added
+			loop
+				prior.put (-1, prior_index)
+			end
+			from
+				prior_index := 1
+			variant
+				last_node_added - prior_index
+			until
+				prior_index > last_node_added
+			loop
+				next_node := next_sibling_indices.item (prior_index)
+				if next_node > prior_index then
+					prior.put (prior_index, next_node)
+				end
+			end
+		ensure
+			prior_index_built: prior /= Void
+		end
 	
 feature {NONE} -- Implementation
 
 	id_table: DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]
 			-- Mapping of IDs to elements.
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- Namespace mappings.
 
 	document_number: INTEGER
 			-- Uniquely identifies this document.
@@ -301,15 +555,6 @@ feature {NONE} -- Implementation
 
 	element_type_map: DS_HASH_TABLE [INTEGER, INTEGER]
 			-- Maps Element types to node numbers
-
-	root_node: INTEGER
-			-- The actual root of the tree. Normally 1.
-
-	character_buffer: STRING
-			-- The document contents
-	
-	comment_buffer: STRING
-			-- Buffer for comments, created when needed
 
 	number_of_nodes: INTEGER
 			-- Number of nodes excluding attributes and namespaces
@@ -343,7 +588,7 @@ feature {NONE} -- Implementation
 			-- For elements, it is the index of the first namespace node,
 			-- or -1 if this element has no namespaces
 
-	name_code: DS_ARRAYED_LIST [INTEGER]
+	name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name of the node, as an index into the name pool;
 			-- -1 indicates there is no name
 
@@ -353,19 +598,16 @@ feature {NONE} -- Implementation
 
 			-- The following arrays contain one entry for each attribute
 
-	number_of_attributes: INTEGER
-
-	attribute_parent: DS_ARRAYED_LIST [INTEGER]
+	attribute_parents: DS_ARRAYED_LIST [INTEGER]
 			-- Index of the parent element node
 
 	attribute_code: DS_ARRAYED_LIST [INTEGER]
 			-- Name of the node, as an index into the name pool
 
-	attribute_value: DS_ARRAYED_LIST [STRING]
+	attribute_values: DS_ARRAYED_LIST [STRING]
 			-- Value of attribute
 
-			--	Not used yet, as we have no typing information	
-	--attribute_type_code: DS_ARRAYED_LIST [INTEGER]
+	attribute_type_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Type annotations
 			-- Only created if at least one attribute actually has a type
 
@@ -376,7 +618,7 @@ feature {NONE} -- Implementation
 	namespace_parent: DS_ARRAYED_LIST [INTEGER]
 			-- Index of the parent element node
 		
-	namespace_code: DS_ARRAYED_LIST [INTEGER]
+	namespace_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name of the node, as an index into the name pool
 			--  the top half is the prefix code, the bottom half the URI code
 
@@ -385,19 +627,19 @@ feature {NONE} -- Implementation
 
 invariant
 
-	node_kind_not_void: node_kind /= Void
+	node_kinds_not_void: node_kinds /= Void
 	depth_not_void: depth /= Void
 	next_sibling_not_void: next_sibling_indices /= Void
 	alpha_not_void: alpha /= Void
 	beta_not_void: beta /= Void
-	name_code_not_void: name_code /= Void
-	attribute_parent_not_void: attribute_parent /= Void
+	name_codes_not_void: name_codes /= Void
+	attribute_parents_not_void: attribute_parents /= Void
 	attribute_code_not_void: attribute_code /= Void
-	attribute_value_not_void: attribute_value /= Void
+	attribute_values_not_void: attribute_values /= Void
 	namespace_parent_not_void: namespace_parent /= Void
-	namespace_code_not_void: namespace_code /= Void
+	namespace_codes_not_void: namespace_codes /= Void
 	positive_node_count: number_of_nodes >= 0
-	positive_attribute_count: number_of_attributes >= 0
+	positive_attribute_count: number_of_attributes >= 0 and number_of_attributes = attribute_values.count
 	positive_namespace_count: number_of_namespaces >= 0
 
 end

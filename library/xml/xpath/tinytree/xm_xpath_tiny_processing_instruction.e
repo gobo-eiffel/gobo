@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Tiny tree Element nodes"
+		"Tiny tree Processing-instruction nodes"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_TINY_ELEMENT
+class XM_XPATH_TINY_PROCESSING_INSTRUCTION
 
 inherit
 
-	XM_XPATH_ELEMENT
+	XM_XPATH_PROCESSING_INSTRUCTION
 
-	XM_XPATH_TINY_COMPOSITE_NODE
+	XM_XPATH_TINY_NODE
 
 creation
 
@@ -34,6 +34,19 @@ feature {NONE} -- Initialization
 		ensure
 			document_set: document = doc
 			node_number_set: node_number = a_node_number
+		end
+
+feature -- Access
+
+		string_value: STRING is
+			-- String-value
+		local
+			start, length: INTEGER
+			buffer: STRING
+		do
+			length := document.beta_value (node_number)
+			start := document.alpha_value (node_number)
+			create {UC_UTF8_STRING} Result.make_from_substring (document.comment_buffer, start, start + length)
 		end
 
 feature {XM_XPATH_NODE} -- Access

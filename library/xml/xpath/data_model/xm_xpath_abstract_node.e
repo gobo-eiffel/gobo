@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_NODE
 
+	KL_SHARED_STANDARD_FILES
+	
 	-- This class represents a node in gexslt's object model.
 	-- It combines the features of the XPath data model, 
 	--  with some of the features from the W3C's dom::Node (for convenience).
@@ -44,13 +46,23 @@ feature -- Access
 	type_annotation: INTEGER is
 			--Type annotation of this node, if any
 		do
-			if type = Element_node then
+			if item_type = Element_node then
 				Result := Untyped_any_type
 			else
 				Result := Untyped_atomic_type
 			end
 		end
 
+	fingerprint: INTEGER is
+			-- Fingerprint of this node - used in matching names
+		deferred
+		end
+	
+	name_code: INTEGER is
+			-- Name code this node - used in displaying names
+		deferred
+		end
+	
 	document_root: XM_XPATH_DOCUMENT is
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
@@ -58,7 +70,18 @@ feature -- Access
 			the_root: XM_XPATH_DOCUMENT
 		do
 			the_root ?= root
-			if the_root /= Void and then node_kind.is_equal ("document") then
+			if the_root = Void then
+				debug ("XPath abstract node")
+					std.error.put_string ("Document node is void%N")
+				end
+			else
+				debug ("XPath abstract node")
+					std.error.put_string ("Document node kind is ")
+					std.error.put_string (the_root.node_kind)
+					std.error.put_new_line
+				end
+			end
+			if the_root /= Void and then the_root.node_kind.is_equal ("document") then
 				Result := the_root
 			end
 		end
@@ -67,7 +90,7 @@ feature -- Access
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		local
-			iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE]
+			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
 			iterator := new_axis_iterator (Child_axis)
 			if not iterator.after then
@@ -82,7 +105,7 @@ feature -- Access
 			-- The lsst child of this node;
 			-- If there are no children, return `Void'
 		local
-			iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE]
+			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
 			iterator := new_axis_iterator (Child_axis)
 			from
@@ -100,7 +123,7 @@ feature -- Access
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		local
-			iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE]
+			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
 			iterator := new_axis_iterator (Preceding_sibling_axis)
 			if not iterator.after then
@@ -115,7 +138,7 @@ feature -- Access
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		local
-			iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE]
+			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
 			iterator := new_axis_iterator (Preceding_sibling_axis)
 			if not iterator.after then
@@ -133,27 +156,33 @@ feature -- Access
 			-- return the last element child of the document root.
 		local
 			the_root: XM_XPATH_DOCUMENT
-			iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE]
+			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			element_node_test: XM_XPATH_NODE_KIND_TEST
 		do
 			the_root := document_root
 			if the_root = Void then
+				debug ("XPath abstract node")
+					std.error.put_string ("Document root is void%N")
+				end
 				Result := Void
 			else
 				create element_node_test.make (Element_node)
 				iterator := the_root.new_axis_iterator_with_node_test (Child_axis, element_node_test)
-				if not iterator.after then
+				debug ("XPath abstract node")
+					std.error.put_string ("Document element: iterator is after? ")
+					std.error.put_string (iterator.after.out)
+					std.error.put_new_line
+				end
+				if iterator.before and then not iterator.after then
 					iterator.forth
-					if not iterator.after then
-						Result ?= iterator.item_for_iteration
-							check
-								node_is_element: Result /= Void
-							end
-					end
+					Result ?= iterator.item_for_iteration
+						check
+							node_is_element: Result /= Void
+						end
 				end
 			end
 		end
-
+	
 	typed_value: XM_XPATH_VALUE is
 			-- Typed value
 		local
@@ -174,10 +203,11 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+	
 	has_child_nodes: BOOLEAN is
 			-- Does `Current' have any children?
-		do
-			-- TODO
+		deferred
 		end
 	
 --	generate_id: STRING is

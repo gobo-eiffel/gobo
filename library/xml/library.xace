@@ -40,6 +40,7 @@
 			</cluster>
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
+		<cluster name="xslt" />
 		<cluster name="xpath">
 			<cluster name="data_model"/>
 			<cluster name="tinytree"/>

@@ -39,10 +39,8 @@ feature {NONE} -- Initialization
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
-			-- TODO Temporary bypass for whitespace bug
-			--			create whitespace.set_next (content)
-			--			create start.set_next (whitespace)
-			create start.set_next (content)
+			create whitespace.set_next (content)
+			create start.set_next (whitespace)
 		end
 
 feature -- Name pool

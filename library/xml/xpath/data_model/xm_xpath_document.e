@@ -14,17 +14,15 @@ deferred class XM_XPATH_DOCUMENT
 
 inherit
 
+	XM_XPATH_NODE
+
 	XM_XPATH_COMPOSITE_NODE
 
 	XM_XPATH_BASE_URI
 
-	XM_XPATH_NAMELESS_NODE
-
 	XM_XPATH_TYPELESS_NODE
 
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
-
-	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
 
@@ -41,25 +39,15 @@ feature -- Access
 		do
 			Result := "document"
 		ensure then
-			node_kind_is_document: Result /= Void and then ( Result.count = 0 or else STRING_.same_string (Result, "document"))
+			node_kind_is_document: Result /= Void and then ( Result.count = 0 or else Result.is_equal ("document"))
 		end
 
-	parent: XM_XPATH_NODE is
-			-- Parent of current node
+	item_type: INTEGER is
+			-- Type
 		do
-			Result := Void
-		ensure then
-			parent_is_void: Result = Void
+			Result := Document_node
 		end
-
-	string_value: STRING is
-			-- String-value
-		do
-			-- Return the concatentation of the string value of all it's
-			-- text-node descendants.
-			-- TODO
-		end
-
+	
 	unparsed_entity_system_id (entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		require

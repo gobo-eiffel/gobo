@@ -19,29 +19,6 @@ inherit
 	XM_XPATH_AXIS
 
 feature -- Access
-	-- (These features are not in the data model)
-	
-	new_axis_iterator (axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
-			-- An enumeration over the nodes reachable by `axis_type' from this node
-		require
-			valid_axis: is_axis_valid (axis_type)
-		deferred
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
-			-- An enumeration over the nodes reachable by `axis_type' from this node;
-			-- Only nodes that match the pattern specified by `test' will be selected.
-		require
-			test_not_void: test /= Void
-			valid_axis: is_axis_valid (axis_type)
-		deferred
-		ensure
-			result_not_void: Result /= Void
-		end
-
-feature -- Access
 
 	base_uri: STRING is
 			-- Base URI
@@ -61,13 +38,15 @@ feature -- Access
 			node_kind_not_void: Result /= Void
 		end
 
-	node_name: XM_EXPANDED_QNAME is
+	node_name: STRING is
 			-- Qualified name
 		deferred
 		ensure
 			node_name_may_be_void: True
 		end
-	
+
+	-- TODO add type:
+
 	parent: XM_XPATH_NODE is
 			-- Parent of current node
 			-- `Void' if current node is root,
@@ -77,19 +56,20 @@ feature -- Access
 			parent_may_be_void: True
 		end
 
+	-- TODO
 	-- What to do about these?
 	-- Should they be DS_ARRAYED_LISTs?
 	-- Or should they be iterators as indicated
 	-- after all, you can always call the `another' routine.
 	-- Alternatively, they might be routines that return the iterator anew.
 	
-	children: XM_XPATH_AXIS_ITERATOR [XM_XPATH_CHILD_NODE]
+	--children: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- Children
 
-	attributes: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ATTRIBUTE]
+	--attributes: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ATTRIBUTE]
 			-- Attributes
 
-	namespaces: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NAMESPACE]
+	--namespaces: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NAMESPACE]
 			-- Namespaces
 
 feature -- Status report
@@ -110,4 +90,27 @@ feature {XM_XPATH_NODE} -- Access
 		deferred
 		end
 
+feature -- Access
+	-- (These features are not in the data model)
+	
+	new_axis_iterator (axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+			-- An enumeration over the nodes reachable by `axis_type' from this node
+		require
+			valid_axis: is_axis_valid (axis_type)
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+			-- An enumeration over the nodes reachable by `axis_type' from this node;
+			-- Only nodes that match the pattern specified by `test' will be selected.
+		require
+			test_not_void: test /= Void
+			valid_axis: is_axis_valid (axis_type)
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+	
 end

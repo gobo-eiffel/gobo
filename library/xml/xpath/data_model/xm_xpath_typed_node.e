@@ -18,11 +18,7 @@ inherit
 
 feature -- Access
 
-	type: INTEGER is
-			-- Type
-		do
-			Result := type_property
-		end
+	-- TODO add type:
 
 feature {NONE} -- Access
 

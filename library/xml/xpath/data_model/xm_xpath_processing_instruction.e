@@ -18,8 +18,6 @@ inherit
 
 	XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
 
-	XM_XPATH_CHILD_NODE
-
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -34,30 +32,10 @@ feature -- Access
 			node_kind_is_processing_instruction: STRING_.same_string (Result, "processing-instruction")
 		end
 
-	node_name: XM_EXPANDED_QNAME is
-			-- Qualified name
+	item_type: INTEGER is
+			-- Type
 		do
-			-- TODO: create Result.make (Void, target_property)
-		ensure then
-			node_name_not_void: Result /= Void
+			Result := Processing_instruction_node
 		end
-
-	string_value: STRING is
-			-- String-value
-		do
-			Result := clone (content_property)
-		end
-
-feature {NONE} -- Access
-
-	target_property: STRING
-			-- Target property from the infoset
-
-	content_property: STRING
-			-- Content property from the infoset
-
-invariant
-	target_not_void: target_property /= Void
-	content_not_void: content_property /= Void
 	
 end

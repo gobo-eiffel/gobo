@@ -646,20 +646,20 @@ feature {NONE} -- Implementation
 			valid_name: name /= Void and then (name.substring_index ("xs:", 1) > 0 or else  name.substring_index ("xdt:", 1) > 0 or else  name.substring_index ("eiffel:", 1) > 0)
 			type_in_range: type > 0 and type <= 255
 		do
-			type_names.put (name, type)
-			type_table.put (type, name)
+			type_names.force (name, type)
+			type_table.force (type, name)
 		ensure
 			type_in_table: type_table.item (name) = type
 			type_listed: type_names.item (type).is_equal (name)
 		end
 
 	define_type  (type: INTEGER; name: STRING) is
-			-- Register a type that is identified by a QName
+			-- Register a system type
 		require
 			valid_name: name /= Void and then name.substring_index ("xs:", 1) = 0 and  name.substring_index ("xdt:", 1) = 0 and  name.substring_index ("eiffel:", 1) = 0
 			type_in_range: type > 0 and type <= 255
 		do
-			type_names.put (name, type)
+			type_names.force (name, type)
 			type_table.force (type, name)
 		ensure
 			type_in_table: type_table.item (name) = type

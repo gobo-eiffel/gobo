@@ -10,11 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_COMPOSITE_NODE
-
-inherit
-
-	XM_XPATH_NODE
+class XM_XPATH_COMPOSITE_NODE
 
 		-- DS_SORTER [INTEGER]
 

@@ -18,13 +18,6 @@ inherit
 	
 feature -- Access
 
-	type: INTEGER is
-			-- Type
-		do
-			Result := 0
-		ensure then
-			no_type: Result = 0
-		end
-	
+-- TODO - add type	
 end
 

@@ -29,6 +29,7 @@ feature -- Initialization
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
+			initialize_type_tables
 			name_pool := a_name_pool
 		ensure
 			name_pool_set: name_pool.is_equal (a_name_pool)

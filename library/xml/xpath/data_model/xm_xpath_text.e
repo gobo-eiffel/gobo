@@ -16,10 +16,6 @@ inherit
 
 	XM_XPATH_BASE_URI_FROM_PARENT
 
-	XM_XPATH_NAMELESS_NODE
-	
-	XM_XPATH_CHILD_NODE
-
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
 	XM_XPATH_TYPE
@@ -36,10 +32,10 @@ feature -- Access
 			node_kind_is_text: STRING_.same_string (Result, "text")
 		end
 
-	type: INTEGER is
+	item_type: INTEGER is
 			-- Type
 		do
-			Result := Untyped_atomic_type
+			Result := Text_node
 		end
 
 	string_value: STRING is
@@ -54,7 +50,7 @@ feature {NONE} -- Access
 			-- Content property from the infoset
 
 invariant
-	type: type = Text_node
+	type: item_type = Text_node
 	content_not_void: content_property /= Void
 	
 end
