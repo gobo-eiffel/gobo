@@ -66,6 +66,11 @@ feature -- Document type definition callbacks
 			next.on_notation_declaration (notation_name, an_id)
 		end
 	
+	on_dtd_end is
+			-- End of DTD.
+		do
+			next.on_dtd_end
+		end
 
 feature -- Access
 

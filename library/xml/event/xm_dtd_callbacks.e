@@ -15,7 +15,7 @@ deferred class XM_DTD_CALLBACKS
 feature -- Document type definition callbacks
 
 	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
-			-- Document type declaration.
+			-- Document type declaration (first event).
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
 			a_name_not_void: a_name /= Void
@@ -61,5 +61,10 @@ feature -- Document type definition callbacks
 			id_not_void: an_id /= Void
 		deferred
 		end
-
+		
+	on_dtd_end is
+			-- End of DTD (last event in a document).
+		deferred
+		end
+		
 end

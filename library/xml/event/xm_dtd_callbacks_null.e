@@ -55,4 +55,8 @@ feature -- Document type definuition callbacks
 		do
 		end
 
+	on_dtd_end is
+			-- End of DTD.
+		do
+		end
 end
