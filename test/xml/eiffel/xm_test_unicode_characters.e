@@ -45,7 +45,7 @@ feature {NONE} -- Test
 			assert ("empty_string", a_characters.is_string (""))
 			assert ("empty_name", not a_characters.is_name (""))			
 			assert ("empty_ncname", not a_characters.is_ncname (""))			
-			
+			assert ("empty_qname", not a_characters.is_qname (""))			
 		end
 		
 	assert_name (a_characters: XM_UNICODE_CHARACTERS) is
@@ -57,6 +57,18 @@ feature {NONE} -- Test
 			assert ("ncname", a_characters.is_ncname ("abc-de"))
 			assert ("colon", a_characters.is_name ("abc:de"))
 			assert ("colon_ncname", not a_characters.is_ncname ("ab:c-de"))
+		end
+		
+	assert_qname (a_characters: XM_UNICODE_CHARACTERS) is
+			-- Test trivial Qname.
+		require
+			a_characters_not_void: a_characters /= Void
+		do
+			assert ("qname", a_characters.is_qname ("abc-de"))
+			assert ("qname-prefix", a_characters.is_qname ("ab:c-de"))
+			assert ("colon_first", not a_characters.is_qname (":abc"))
+			assert ("colon_last", not a_characters.is_qname ("abc:"))
+			assert ("colon_many", not a_characters.is_qname ("ab:cd:e"))
 		end
 		
 end
