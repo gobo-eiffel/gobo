@@ -2,7 +2,7 @@
 
 <!--
 	description:
-	
+
 		"Gexace Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Execute gexace.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="gexace_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>validate</term>
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>system</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>cluster</term>
 				<listitem>
@@ -64,7 +64,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>library</term>
 				<listitem>
@@ -77,7 +77,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>verbose</term>
 				<listitem>
@@ -90,7 +90,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>xace</term>
 				<listitem>
@@ -103,7 +103,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>output</term>
 				<listitem>
@@ -116,13 +116,13 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="gexace_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="gexace">
     <element name="gexace">
@@ -168,9 +168,9 @@
   </define>
 ]]>
 	</programlisting>
-	
+
 	</sect1>
-	
+
 	<sect1 id="gexace_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
