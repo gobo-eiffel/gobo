@@ -14,7 +14,7 @@
 		<mkdir directory="${GOBO}/example/geant/tmp"/>
 	</target>
 
-	<!-- ----------------------- copy ------------------------------------------- -->	
+	<!-- copy  -->	
 	<target name="copy_file1" depend="init">
 		<description>
 			Copies the Readme from $GOBO to $GOBO/example/geant/filesystem.
@@ -52,7 +52,7 @@
 		<copy file="${GOBO}/Readme.txt" to_directory="example/geant/filesystem"/>
 	</target>
 
-	<!-- ----------------------- copy filesets ------------------------------------------- -->	
+	<!-- copy filesets -->	
 	<target name="copy_fs1a">
 		<description>
 			Copy all '*.ge' and '*.?ace' files underneath
@@ -91,7 +91,7 @@
 		</copy>
 	</target>
 	
-	<!-- ----------------------- copy filesets with maps ------------------------------------------- -->	
+	<!-- copy filesets with maps -->	
 	<target name="copy_fs2a">
 		<description>
 			Simulate a 'gepp' transforming all '*.ge' files underneath '${GOBO}/library/kernel'
@@ -117,7 +117,7 @@
 		</copy>
 	</target>
 
-	<!-- ----------------------- exec with filesets ------------------------------------------- -->	
+	<!-- exec with filesets -->	
 	<target name="copy_fs3a" depend="init">
 		<description>
 			Using task 'exec' to copy a file.
@@ -150,7 +150,7 @@
 			<fileset directory="." include="@(*.ge)" force="false">
 				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
 			</fileset>
-		</copy>
+		</exec>
 	</target>
 
 	<target name="copy_fs3b" depend="init">
@@ -168,10 +168,10 @@
 					<map type="flat"/>
 				</map>
 			</fileset>
-		</copy>
+		</exec>
 	</target>
 
-	<!-- ----------------------- move ------------------------------------------- -->	
+	<!-- move -->	
 	<target name="move_file1">
 		<description>
 			Copy the Readme from $GOBO to $GOBO/example/geant/filesystem.
@@ -192,7 +192,7 @@
 		<move file="ttt.txt" to_directory="example/geant/filesystem"/>
 	</target>
 
-	<!-- ----------------------- delete ------------------------------------------- -->	
+	<!-- delete -->	
 	<target name="delete_file1">
 		<description>
 			Remove files created by targets 'copy_file1' and 'copy_file2'.
