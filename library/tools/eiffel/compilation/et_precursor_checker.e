@@ -48,6 +48,7 @@ inherit
 			process_inspect_instruction,
 			process_invariants,
 			process_loop_instruction,
+			process_loop_invariants,
 			process_manifest_array,
 			process_manifest_tuple,
 			process_old_expression,
@@ -704,7 +705,7 @@ feature {ET_AST_NODE} -- Processing
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			an_invariant_part: ET_INVARIANTS
+			an_invariant_part: ET_LOOP_INVARIANTS
 			a_variant_part: ET_VARIANT
 			a_compound: ET_COMPOUND
 		do
@@ -715,7 +716,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 				an_invariant_part := an_instruction.invariant_part
 				if an_invariant_part /= Void then
-					process_invariants (an_invariant_part)
+					process_loop_invariants (an_invariant_part)
 				end
 				a_variant_part := an_instruction.variant_part
 				if a_variant_part /= Void then
@@ -725,6 +726,20 @@ feature {ET_AST_NODE} -- Processing
 				a_compound := an_instruction.loop_compound
 				if a_compound /= Void then
 					process_compound (a_compound)
+				end
+			end
+		end
+
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			if internal_call then
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					a_list.assertion (i).process (Current)
+					i := i + 1
 				end
 			end
 		end

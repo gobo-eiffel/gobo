@@ -1616,6 +1616,24 @@ feature -- Validity errors
 			end
 		end
 
+	report_veen2d_error (a_class: ET_CLASS; a_result: ET_RESULT) is
+			-- Report VEEN-2 error: `a_result' appears in the invariant
+			-- of `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2d (a_class, a_result)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vgcc3a_error (a_class: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION;
 		a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
 			-- Report VGCC-3 error: the explicit creation type in creation instruction
@@ -6134,6 +6152,51 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giadr
+			report_internal_error (an_error)
+		end
+
+	report_giads_error is
+			-- Report GIADS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giads
+			report_internal_error (an_error)
+		end
+
+	report_giadt_error is
+			-- Report GIADT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadt
+			report_internal_error (an_error)
+		end
+
+	report_giadu_error is
+			-- Report GIADU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadu
+			report_internal_error (an_error)
+		end
+
+	report_giadv_error is
+			-- Report GIADV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadv
+			report_internal_error (an_error)
+		end
+
+	report_giadw_error is
+			-- Report GIADW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadw
 			report_internal_error (an_error)
 		end
 

@@ -204,6 +204,14 @@ feature -- Feature names
 			default_create_feature_name_not_void: Result /= Void
 		end
 
+	invariant_feature_name: ET_FEATURE_NAME is
+			-- Fictitious 'invariant' feature name
+		once
+			create {ET_IDENTIFIER} Result.make ("invariant")
+		ensure
+			invariant_feature_name_not_void: Result /= Void
+		end
+
 feature -- Types
 
 	like_current: ET_LIKE_CURRENT is

@@ -788,7 +788,7 @@ feature {NONE} -- Instruction validity
 			boolean_type: ET_CLASS_TYPE
 			a_variant: ET_VARIANT
 			integer_type: ET_CLASS_TYPE
-			an_invariant: ET_INVARIANTS
+			an_invariant: ET_LOOP_INVARIANTS
 			i, nb: INTEGER
 		do
 			a_compound := an_instruction.from_compound

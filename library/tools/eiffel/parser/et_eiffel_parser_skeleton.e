@@ -708,15 +708,15 @@ feature {NONE} -- AST factory
 		end
 
 	new_invariants (an_invariant: ET_KEYWORD): ET_INVARIANTS is
-			-- New invariants
+			-- New class invariants
 		local
 			i: INTEGER
 		do
 			i := assertions.count
 			if i = 0 then
-				Result := ast_factory.new_invariants (an_invariant, 0)
+				Result := ast_factory.new_invariants (an_invariant, last_class, 0)
 			else
-				Result := ast_factory.new_invariants (an_invariant, i)
+				Result := ast_factory.new_invariants (an_invariant, last_class, i)
 				if Result /= Void then
 					from until i < 1 loop
 						Result.put_first (assertions.item (i))
@@ -734,6 +734,26 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_local_variables (a_local, nb)
 			last_local_variables := Result
+		end
+
+	new_loop_invariants (an_invariant: ET_KEYWORD): ET_LOOP_INVARIANTS is
+			-- New loop invariants
+		local
+			i: INTEGER
+		do
+			i := assertions.count
+			if i = 0 then
+				Result := ast_factory.new_loop_invariants (an_invariant, 0)
+			else
+				Result := ast_factory.new_loop_invariants (an_invariant, i)
+				if Result /= Void then
+					from until i < 1 loop
+						Result.put_first (assertions.item (i))
+						i := i - 1
+					end
+				end
+				assertions.wipe_out
+			end
 		end
 
 	new_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is

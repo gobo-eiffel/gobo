@@ -75,6 +75,7 @@ creation
 	make_veen2a,
 	make_veen2b,
 	make_veen2c,
+	make_veen2d,
 	make_vgcc3a,
 	make_vgcc3b,
 	make_vgcc5a,
@@ -2555,6 +2556,42 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = local name
 			-- dollar7: $7 = feature name
+		end
+
+	make_veen2d (a_class: like current_class; a_result: ET_RESULT) is
+			-- Create a new VEEN-2 error: `a_result' appears in the invariant
+			-- of `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+		do
+			code := veen2d_template_code
+			etl_code := veen2_etl_code
+			default_template := veen2d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_result.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
 		end
 
 	make_vgcc3a (a_class: like current_class; a_creation: ET_CREATION_INSTRUCTION;
@@ -8516,6 +8553,7 @@ feature {NONE} -- Implementation
 	veen2a_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
 	veen2b_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of feature `$6'."
 	veen2c_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of feature `$7'."
+	veen2d_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the invariant of the class."
 	vgcc3a_default_template: STRING is "[$1] class $5 ($3,$4): explicit creation type '$6' does not conform to target entity type '$7'."
 	vgcc3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): explicit creation type '$7' does not conform to target entity type '$8'."
 	vgcc5a_default_template: STRING is "[$1] class $5 ($3,$4): creation expression with no Creation_call part, but $6 has a Creators part."
@@ -8796,6 +8834,7 @@ feature {NONE} -- Implementation
 	veen2a_template_code: STRING is "veen2a"
 	veen2b_template_code: STRING is "veen2b"
 	veen2c_template_code: STRING is "veen2c"
+	veen2d_template_code: STRING is "veen2d"
 	vgcc3a_template_code: STRING is "vgcc3a"
 	vgcc3b_template_code: STRING is "vgcc3b"
 	vgcc5a_template_code: STRING is "vgcc5a"

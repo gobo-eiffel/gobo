@@ -2151,14 +2151,16 @@ feature -- AST nodes
 			end
 		end
 
-	new_invariants (an_invariant: ET_KEYWORD; nb: INTEGER): ET_INVARIANTS is
-			-- New invariants with given capacity
+	new_invariants (an_invariant: ET_KEYWORD; a_class: ET_CLASS; nb: INTEGER): ET_INVARIANTS is
+			-- New class invariants with given capacity
 		require
 			nb_positive: nb >= 0
 		do
-			create Result.make_with_capacity (nb)
-			if an_invariant /= Void and then not an_invariant.position.is_null then
-				Result.set_invariant_keyword (an_invariant)
+			if a_class /= Void then
+				create Result.make_with_capacity (a_class, nb)
+				if an_invariant /= Void and then not an_invariant.position.is_null then
+					Result.set_invariant_keyword (an_invariant)
+				end
 			end
 		end
 
@@ -2238,7 +2240,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_instruction (a_from_compound: ET_COMPOUND; an_invariant: ET_INVARIANTS;
+	new_loop_instruction (a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
 		a_variant: ET_VARIANT; an_until_conditional: ET_CONDITIONAL;
 		a_loop_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION is
 			-- New loop instruction
@@ -2247,6 +2249,17 @@ feature -- AST nodes
 				create Result.make (a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+			end
+		end
+
+	new_loop_invariants (an_invariant: ET_KEYWORD; nb: INTEGER): ET_LOOP_INVARIANTS is
+			-- New loop invariants with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+			if an_invariant /= Void and then not an_invariant.position.is_null then
+				Result.set_invariant_keyword (an_invariant)
 			end
 		end
 

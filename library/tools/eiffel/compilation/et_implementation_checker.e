@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel implementation checkers"
+		"Eiffel implementation checkers for the immediate and redeclared features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"
@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			create feature_checker.make (a_universe)
+			create invariant_checker.make (a_universe)
 		end
 
 feature -- Processing
@@ -38,8 +39,8 @@ feature -- Processing
 	process_class (a_class: ET_CLASS) is
 			-- Check interface of `a_class' is not already done.
 			-- Then check the immediate and redeclared features
-			-- of `a_class' after having done so for its parent
-			-- classes recursively.
+			-- of `a_class' and its invariants after having done
+			-- so for its parent classes recursively.
 		local
 			a_processor: like Current
 		do
@@ -77,8 +78,8 @@ feature {NONE} -- Processing
 	internal_process_class (a_class: ET_CLASS) is
 			-- Check interface of `a_class' is not already done.
 			-- Then check the immediate and redeclared features
-			-- of `a_class' after having done so for its parent
-			-- classes recursively.
+			-- of `a_class' and its invariants after having done
+			-- so for its parent classes recursively.
 		require
 			a_class_not_void: a_class /= Void
 		local
@@ -122,6 +123,7 @@ feature {NONE} -- Processing
 					if not current_class.has_implementation_error then
 						error_handler.report_compilation_status (Current, current_class)
 						check_features_validity
+						check_invariants_validity
 					end
 				else
 					set_fatal_error (current_class)
@@ -143,23 +145,42 @@ feature {NONE} -- Feature validity
 			i, nb: INTEGER
 		do
 			a_features := current_class.features
-			nb := a_features.count
+			nb := current_class.declared_feature_count
 			from i := 1 until i > nb loop
 				a_feature := a_features.item (i)
-				if a_feature.implementation_class = current_class then
-					feature_checker.check_feature_validity (a_feature, current_class)
-					i := i + 1
-				else
-					i := nb + 1 -- Jump out of the loop.
+				feature_checker.check_feature_validity (a_feature, current_class)
+				if feature_checker.has_fatal_error then
+					set_fatal_error (current_class)
 				end
+				i := i + 1
 			end
 		end
 
 	feature_checker: ET_FEATURE_CHECKER
 			-- Feature checker
 
+feature {NONE} -- Invariant validity
+
+	check_invariants_validity is
+			-- Check validity of invariants of `current_class'.
+		local
+			an_invariants: ET_INVARIANTS
+		do
+			an_invariants := current_class.invariants
+			if an_invariants /= Void then
+				invariant_checker.check_invariants_validity (an_invariants, current_class)
+				if invariant_checker.has_fatal_error then
+					set_fatal_error (current_class)
+				end
+			end
+		end
+
+	invariant_checker: ET_INVARIANT_CHECKER
+			-- Invariant checker
+
 invariant
 
 	feature_checker_not_void: feature_checker /= Void
+	invariant_checker_not_void: invariant_checker /= Void
 
 end

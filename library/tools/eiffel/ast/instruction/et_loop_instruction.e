@@ -44,7 +44,7 @@ feature -- Access
 	from_compound: ET_COMPOUND
 			-- From compound
 
-	invariant_part: ET_INVARIANTS
+	invariant_part: ET_LOOP_INVARIANTS
 			-- Invariant part
 
 	variant_part: ET_VARIANT

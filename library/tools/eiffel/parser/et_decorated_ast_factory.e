@@ -226,6 +226,7 @@ inherit
 			new_local_variables,
 			new_loop_compound,
 			new_loop_instruction,
+			new_loop_invariants,
 			new_manifest_array,
 			new_manifest_string_comma,
 			new_manifest_string_list,
@@ -2309,12 +2310,14 @@ feature -- AST nodes
 			end
 		end
 
-	new_invariants (an_invariant: ET_KEYWORD; nb: INTEGER): ET_INVARIANTS is
-			-- New invariants with given capacity
+	new_invariants (an_invariant: ET_KEYWORD; a_class: ET_CLASS; nb: INTEGER): ET_INVARIANTS is
+			-- New class invariants with given capacity
 		do
-			create Result.make_with_capacity (nb)
-			if an_invariant /= Void then
-				Result.set_invariant_keyword (an_invariant)
+			if a_class /= Void then
+				create Result.make_with_capacity (a_class, nb)
+				if an_invariant /= Void then
+					Result.set_invariant_keyword (an_invariant)
+				end
 			end
 		end
 
@@ -2390,7 +2393,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_instruction (a_from_compound: ET_COMPOUND; an_invariant: ET_INVARIANTS;
+	new_loop_instruction (a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
 		a_variant: ET_VARIANT; an_until_conditional: ET_CONDITIONAL;
 		a_loop_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION is
 			-- New loop instruction
@@ -2402,6 +2405,15 @@ feature -- AST nodes
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
 				end
+			end
+		end
+
+	new_loop_invariants (an_invariant: ET_KEYWORD; nb: INTEGER): ET_LOOP_INVARIANTS is
+			-- New loop invariants with given capacity
+		do
+			create Result.make_with_capacity (nb)
+			if an_invariant /= Void then
+				Result.set_invariant_keyword (an_invariant)
 			end
 		end
 

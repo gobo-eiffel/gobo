@@ -159,6 +159,7 @@ creation
 %type <ET_LOCAL_VARIABLE> Local_name Local_name_comma
 %type <ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
 %type <ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
+%type <ET_LOOP_INVARIANTS> Loop_invariant_clause Loop_invariant_clause_opt
 %type <ET_MANIFEST_ARRAY> Manifest_array Manifest_array_expression_list
 %type <ET_MANIFEST_STRING> Manifest_string
 %type <ET_MANIFEST_STRING_ITEM> Manifest_string_comma
@@ -1935,6 +1936,18 @@ Invariant_clause: E_INVARIANT
 		{ $$ := new_invariants ($1) }
 	;
 
+Loop_invariant_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Loop_invariant_clause
+		{ $$ := $1 }
+	;
+
+Loop_invariant_clause: E_INVARIANT
+		{ $$ := new_loop_invariants ($1) }
+	| E_INVARIANT Assertions
+		{ $$ := new_loop_invariants ($1) }
+	;
+
 Variant_clause_opt: -- Empty
 		-- { $$ := Void }
 	| E_VARIANT -- Not standard.
@@ -2161,7 +2174,7 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	| Multi_branch
 		{ $$ := $1 }
-	| From_compound Invariant_clause_opt Variant_clause_opt E_UNTIL Expression Loop_compound E_END
+	| From_compound Loop_invariant_clause_opt Variant_clause_opt E_UNTIL Expression Loop_compound E_END
 			{ $$ := ast_factory.new_loop_instruction ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
 -- TODO: generate nice syntax error messages.
 --		%error(7)

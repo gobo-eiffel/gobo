@@ -790,6 +790,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
 			-- Process `an_expression'.
 		require

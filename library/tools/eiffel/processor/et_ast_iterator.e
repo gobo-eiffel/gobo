@@ -1527,6 +1527,19 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.invariant_keyword.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
 			-- Process `an_expression'.
 		local
