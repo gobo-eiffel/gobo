@@ -170,7 +170,7 @@ feature {NONE} -- Output
 			a_warning: STRING
 		do
 			an_assertion := an_option.assertion
-			if an_option.finalize then
+			if an_option.finalize_option then
 				print_indentation (indent, a_file)
 				a_file.put_line ("assertion (boost)")
 			elseif an_assertion.has (options.all_value) then

@@ -353,7 +353,7 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("run_time_in_dll off")
 			end
-			if an_option.finalize then
+			if an_option.finalize_option then
 				print_indentation (indent, a_file)
 				a_file.put_line ("finalize on")
 			else
