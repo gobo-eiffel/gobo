@@ -178,11 +178,13 @@ feature -- Comparison
 		local
 			i, nb: INTEGER
 		do
-			if same_type (other) and then count = other.count then
+			if other = Current then
+				Result := True
+			elseif same_type (other) and then count = other.count then
 				nb := count
 				Result := True
 				from i := 1 until i > nb loop
-					if item (i) /= other.item (i) then
+					if not other.has (item (i)) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
