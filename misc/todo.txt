@@ -1,3 +1,11 @@
+The following "TO DO" list is not exhaustive. The tasks have been
+listed by order of submission and are by no way sorted by priority
+or any other kind of criterion. This list is for internal use only
+and is given here just for information. In particular there is no
+implied commitment that these points will be implemented in future
+releases.
+
+
 8 June 1997
 
 . Review the ID counter in NFA states.
