@@ -19,6 +19,6 @@ obsolete
 
 inherit
 
-	DB_COMMAND
+	DP_COMMAND
 
 end -- class UT_COMMAND
