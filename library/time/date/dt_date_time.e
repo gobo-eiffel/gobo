@@ -254,7 +254,7 @@ feature -- Element change
 			-- Add `m' minutes to current date time.
 		do
 			if m /= 0 then
-				time_storage := time_storage + m * Month_shift
+				time_storage := time_storage + m * Minute_shift
 				if time_storage < 0 then
 					add_days (-((-time_storage) // Day_shift) - 1)
 					time_storage := Day_shift - ((-time_storage) \\ Day_shift)
