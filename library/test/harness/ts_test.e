@@ -22,7 +22,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	variables: DS_HASH_TABLE [STRING, STRING]
+	variables: TS_VARIABLES
 			-- Defined variables
 
 feature -- Measurement
@@ -46,7 +46,5 @@ feature -- Execution
 invariant
 
 	variables_not_void: variables /= Void
-	no_void_variable_name: not variables.has (Void)
-	no_void_variable_value: not variables.has_item (Void)
 
 end -- class TS_TEST

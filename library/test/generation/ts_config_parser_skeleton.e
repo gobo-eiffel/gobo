@@ -28,16 +28,22 @@ inherit
 			make as make_config_scanner
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
-	make (an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler) is
 			-- Create a new config parser.
 		require
+			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
+			variables := a_variables
 			make_config_scanner ("unknown file", an_error_handler)
 			make_parser_skeleton
 		ensure
+			variables_set: variables = a_variables
 			error_handler_set: error_handler = an_error_handler
 		end
 
@@ -84,6 +90,9 @@ feature -- Access
 	testgen: STRING
 			-- Directory where test classes are generated;
 			-- Void means current directory
+
+	variables: TS_VARIABLES
+			-- Defined variables
 
 feature -- Status report
 
@@ -249,9 +258,21 @@ feature -- Defaults
 			-- Default execute command-line
 		require
 			root_class_not_void: root_class /= Void
+		local
+			a_name: STRING
+			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
-			Result := STRING_.make (root_class.count)
-			Result.append_string (STRING_.to_lower (root_class))
+			a_name := STRING_.to_lower (root_class) + file_system.exe_extension
+			Result := file_system.pathname (file_system.relative_current_directory, a_name)
+			a_cursor := variables.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				Result.append_string (" -D %"")
+				Result.append_string (a_cursor.key)
+				Result.append_character ('=')
+				Result.append_string (a_cursor.item)
+				Result.append_character ('%"')
+				a_cursor.forth
+			end
 		ensure
 			default_execute_not_void: Result /= Void
 		end
@@ -284,6 +305,7 @@ feature -- Error handling
 
 invariant
 
+	variables_not_void: variables /= Void
 	compiled_class_regexp: class_regexp /= Void implies class_regexp.compiled
 	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.compiled
 

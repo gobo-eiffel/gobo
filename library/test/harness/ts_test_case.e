@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 			-- Create a new test case with id `an_id'.
 		require
 			a_variables_not_void: a_variables /= Void
-			no_void_variable_name: not a_variables.has (Void)
-			no_void_variable_value: not a_variables.has_item (Void)
 		do
 			id := an_id
 			variables := a_variables

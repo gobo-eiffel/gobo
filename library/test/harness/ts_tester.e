@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create a new tester.
 		do
 			!! error_handler.make_standard
-			!! variables.make (10)
+			!! variables.make
 		end
 
 	make is
@@ -60,7 +60,7 @@ feature -- Access
 			suite_not_void: Result /= Void
 		end
 
-	variables: DS_HASH_TABLE [STRING, STRING]
+	variables: TS_VARIABLES
 			-- Defined variables
 
 	output_filename: STRING
@@ -106,8 +106,51 @@ feature {NONE} -- Command line
 						output_filename := Void
 						report_usage_error
 					end
+				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--define=") then
+					if arg.count > 9 then
+						set_defined_variable (arg.substring (10, arg.count))
+					else
+						report_usage_error
+					end
+				elseif arg.is_equal ("-D") then
+					i := i + 1
+					if i <= nb then
+						arg := Arguments.argument (i)
+						set_defined_variable (arg)
+					else
+						report_usage_error
+					end
 				end
 				i := i + 1
+			end
+		end
+
+	set_defined_variable (arg: STRING) is
+			-- Set variable defined in `arg' with format <name>[=<value>].
+			-- Report usage error if invalid.
+		require
+			arg_not_void: arg /= Void
+		local
+			i: INTEGER
+			a_name, a_value: STRING
+		do
+			i := arg.index_of ('=', 1)
+			if i > 1 then
+				if i < arg.count then
+					a_name := arg.substring (1, i - 1)
+					a_value := arg.substring (i + 1, arg.count)
+					variables.set_value (a_name, a_value)
+				elseif i = arg.count then
+					a_name := arg.substring (1, i - 1)
+					variables.set_value (a_name, "")
+				else
+					report_usage_error
+				end
+			elseif i = 1 then
+				report_usage_error
+			else
+				a_name := arg
+				variables.set_value (a_name, "")
 			end
 		end
 
@@ -127,7 +170,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Tester usage message
 		once
-			!! Result.make ("[-o filename]")
+			!! Result.make ("[-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -136,7 +179,5 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
-	no_void_variable_name: not variables.has (Void)
-	no_void_variable_value: not variables.has_item (Void)
 
 end -- class TS_TESTER
