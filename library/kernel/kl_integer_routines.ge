@@ -21,8 +21,8 @@ feature -- Conversion
 	to_character (an_int: INTEGER): CHARACTER is
 			-- Character whose ASCII code is `an_int'
 		require
-			a_int_large_enough: an_int >= Platform.minimum_character_code
-			a_int_small_enough: an_int <= Platform.maximum_character_code
+			a_int_large_enough: an_int >= Platform.Minimum_character_code
+			a_int_small_enough: an_int <= Platform.Maximum_character_code
 		do
 #ifdef VE
 			Result.from_integer (an_int)
