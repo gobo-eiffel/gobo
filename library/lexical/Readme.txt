@@ -13,6 +13,8 @@ Clusters:
 automaton
     Nondeterministic finite automata (NFA) and deterministic finite
     automata (DFA).
+error
+    Error message classes used throughout this Library and Gelex.
 generation
     DFA table compression algorithm. Generation of Eiffel class texts
     describing scanners made out of DFA.
