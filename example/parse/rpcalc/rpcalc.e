@@ -32,15 +32,15 @@ feature {NONE} -- Implementation
 	yy_build_parser_tables is
 			-- Build parser tables.
 		do
-			yytranslate := yytranslate_
-			yyr1 := yyr1_
-			yyr2 := yyr2_
-			yydefact := yydefact_
-			yydefgoto := yydefgoto_
-			yypact := yypact_
-			yypgoto := yypgoto_
-			yytable := yytable_
-			yycheck := yycheck_
+			yytranslate ?= yytranslate_template
+			yyr1 ?= yyr1_template
+			yyr2 ?= yyr2_template
+			yydefact ?= yydefact_template
+			yydefgoto ?= yydefgoto_template
+			yypact ?= yypact_template
+			yypgoto ?= yypgoto_template
+			yytable ?= yytable_template
+			yycheck ?= yycheck_template
 		end
 
 feature {NONE} -- Semantic actions
@@ -51,32 +51,52 @@ feature {NONE} -- Semantic actions
 			inspect yy_act
 when 4 then
 --|#line 37
+			yyval := yyval_default;
 print (yyvs.item (yyvsp - 1)); print ('%N') 
+
+when 5 then
+--|#line 40
+			yyval := yyval_default;
+yyval := yyvs.item (yyvsp) 
+
 when 6 then
 --|#line 41
+			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp - 1) 
+
 when 7 then
 --|#line 42
+			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp - 1) 
+
 when 8 then
 --|#line 43
+			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp - 1) 
+
 when 9 then
 --|#line 44
+			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp - 1) 
+
 when 10 then
 --|#line 46
+			yyval := yyval_default;
 yyval := -yyvs.item (yyvsp - 1) 
+
 			else
-				-- No action
+					-- No action
+				yyval := yyval_default
 			end
 		end
 
-feature {NONE} -- Tables
+feature {NONE} -- Table templates
 
-	yytranslate_: ARRAY [INTEGER] is
+	yytranslate_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    4,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -104,61 +124,77 @@ feature {NONE} -- Tables
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,    2,    2,    1,    2,    3>>, 0)
+			    2,    2,    2,    2,    2,    2,    1,    2,    3>>)
 		end
 
-	yyr1_: ARRAY [INTEGER] is
+	yyr1_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,   10,   10,   11,   11,   12,   12,   12,   12,   12,
-			   12>>, 0)
+			   12>>)
 		end
 
-	yyr2_: ARRAY [INTEGER] is
+	yyr2_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    0,    2,    1,    2,    1,    3,    3,    3,    3,
-			    2>>, 0)
+			    2>>)
 		end
 
-	yydefact_: ARRAY [INTEGER] is
+	yydefact_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    1,    0,    3,    5,    2,    0,   10,    4,    0,    9,
-			    8,    7,    6,    0,    0>>, 0)
+			    8,    7,    6,    0,    0>>)
 		end
 
-	yydefgoto_: ARRAY [INTEGER] is
+	yydefgoto_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			    1,    4,    8>>, 0)
+			Result := yyfixed_array (<<
+			    1,    4,    8>>)
 		end
 
-	yypact_: ARRAY [INTEGER] is
+	yypact_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			 -32768,   11, -32768, -32768, -32768,    4, -32768, -32768,   -3, -32768,
-			 -32768, -32768, -32768,    1, -32768>>, 0)
+			 -32768, -32768, -32768,    1, -32768>>)
 		end
 
-	yypgoto_: ARRAY [INTEGER] is
+	yypgoto_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			 -32768, -32768,    8>>, 0)
+			Result := yyfixed_array (<<
+			 -32768, -32768,    8>>)
 		end
 
-	yytable_: ARRAY [INTEGER] is
+	yytable_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    3,   14,   12,   11,   10,    9,    6,    3,    7,    5,
-			    0,   13,    0,    6,    3,    2>>, 0)
+			    0,   13,    0,    6,    3,    2>>)
 		end
 
-	yycheck_: ARRAY [INTEGER] is
+	yycheck_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    3,    0,    5,    6,    7,    8,    9,    3,    4,    1,
-			    0,    0,    0,    9,    3,    4>>, 0)
+			    0,    0,    0,    9,    3,    4>>)
 		end
 
 feature {NONE} -- Constants
@@ -212,7 +248,7 @@ feature {NONE} -- Scanner
 				if has_pending_character then
 					c := pending_character
 					has_pending_character := False
-				else
+				elseif not INPUT_STREAM_.end_of_input (std.input) then
 					std.input.read_character
 					c := std.input.last_character
 				end
@@ -271,7 +307,7 @@ feature {NONE} -- Scanner
 				last_token := c.code
 			end
 		end
-	
+
 	last_token: INTEGER
 			-- Last token read
 

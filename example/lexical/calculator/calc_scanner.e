@@ -33,18 +33,26 @@ creation
 
 	make
 
+feature -- Status report
+
+	valid_start_condition (sc: INTEGER): BOOLEAN is
+			-- Is `sc' a valid start condition?
+		do
+			Result := (sc = INITIAL)
+		end
+
 feature {NONE} -- Implementation
 
 	yy_build_tables is
 			-- Build scanner tables.
 		do
-			yy_nxt := yy_nxt_
-			yy_chk := yy_chk_
-			yy_base := yy_base_
-			yy_def := yy_def_
-			yy_ec := yy_ec_
-			yy_meta := yy_meta_
-			yy_accept := yy_accept_
+			yy_nxt ?= yy_nxt_template
+			yy_chk ?= yy_chk_template
+			yy_base ?= yy_base_template
+			yy_def ?= yy_def_template
+			yy_ec ?= yy_ec_template
+			yy_meta ?= yy_meta_template
+			yy_accept ?= yy_accept_template
 		end
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -73,6 +81,7 @@ if yy_act = 4 then
 		
 else
 --|#line 0
+last_token := yyError_token
 fatal_error ("scanner jammed")
 end
 end
@@ -87,39 +96,49 @@ end
 			end
 		end
 
-feature {NONE} -- Tables
+feature {NONE} -- Table templates
 
-	yy_nxt_: ARRAY [INTEGER] is
+	yy_nxt_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    4,    5,    6,    7,    9,    8,   10,    3,   10,
-			   10,   10,   10>>, 0)
+			   10,   10,   10>>)
 		end
 
-	yy_chk_: ARRAY [INTEGER] is
+	yy_chk_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,   12,   11,    3,   10,   10,
-			   10,   10,   10>>, 0)
+			   10,   10,   10>>)
 		end
 
-	yy_base_: ARRAY [INTEGER] is
+	yy_base_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    0,    7,    8,    0,    8,    0,    0,    0,
-			    8,    4,    2>>, 0)
+			    8,    4,    2>>)
 		end
 
-	yy_def_: ARRAY [INTEGER] is
+	yy_def_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,   10,    1,   10,   10,   11,   10,   12,   11,   12,
-			    0,   10,   10>>, 0)
+			    0,   10,   10>>)
 		end
 
-	yy_ec_: ARRAY [INTEGER] is
+	yy_ec_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -147,20 +166,24 @@ feature {NONE} -- Tables
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1>>, 0)
+			    1,    1,    1,    1,    1,    1,    1>>)
 		end
 
-	yy_meta_: ARRAY [INTEGER] is
+	yy_meta_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			    0,    1,    2,    1,    3>>, 0)
+			Result := yy_fixed_array (<<
+			    0,    1,    2,    1,    3>>)
 		end
 
-	yy_accept_: ARRAY [INTEGER] is
+	yy_accept_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    0,    6,    4,    1,    2,    3,    1,    3,
-			    0>>, 0)
+			    0>>)
 		end
 
 feature {NONE} -- Constants
@@ -223,6 +246,6 @@ feature -- Initialization
 feature -- Access
 
 	last_token: INTEGER
-		-- Last token read by the scanner
+			-- Last token read by the scanner
 
 end -- class CALC_SCANNER
