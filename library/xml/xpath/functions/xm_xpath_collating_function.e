@@ -81,6 +81,22 @@ feature -- Access
 			Maybe_unsupported_collation: True
 		end
 
+	atomic_sort_comparer (an_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_SORT_COMPARER is
+			-- Atomic sort comparer to be used
+		require
+			context_not_void: a_context /= Void
+			default_collation_name_not_void: default_collation_name /= Void
+		local
+			a_collator: ST_COLLATOR
+		do
+			a_collator := collator (an_argument_number, a_context, True)
+			if a_collator /= Void then
+				create Result.make (a_collator)
+			end
+		ensure
+			Maybe_unsupported_collation: True
+		end
+
 feature -- Optimization
 	
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -16,12 +16,10 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison
+			three_way_comparison, hash_code
 		end
 
-	MA_SHARED_DECIMAL_CONTEXT
-
-	MA_DECIMAL_CONSTANTS
+	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 
 creation
 
@@ -56,7 +54,18 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	value: MA_DECIMAL
-	
+
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			if is_double then
+				Result := as_double.hash_code
+			else
+				Result := value.to_scientific_string.hash_code
+			end
+		end
+
 	as_integer: INTEGER is
 			-- Value converted to an integer
 		do
@@ -316,21 +325,6 @@ feature -- Basic operations
 				a_numeric_value ?= convert_to_type (other.item_type)
 				Result := a_numeric_value.arithmetic (an_operator, other)
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	shared_integer_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by all instances of `Current'
-		once
-			create Result.make (shared_decimal_context.digits, Round_down)
-		end
-
-	
-	shared_half_even_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by rounded-half-even
-		once
-			create Result.make (shared_decimal_context.digits, Round_half_even)
 		end
 
 invariant

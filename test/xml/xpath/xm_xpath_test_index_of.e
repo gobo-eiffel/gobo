@@ -89,6 +89,38 @@ feature -- Tests
 			assert ("Second position is 4", an_integer_value /= Void and then an_integer_value.value.is_integer and then an_integer_value.value.to_integer = 4)
 		end
 
+	test_index_of_error is
+			-- Test fn:index-of (("a", 7, "and", "a", "pastime"), "a") returns an error.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("index-of (('a', 7, 'and', 'a', 'pastime'), 'a')")
+			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("Error FOTY0012", STRING_.same_string (an_evaluator.error_value.code, "FOTY0012"))
+		end
+
+	test_index_of_error2 is
+			-- Test fn:index-of with a node is error.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("index-of (('a', (1,2)/last(), 'and', 'a', 'pastime'), 'a')")
+			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("Error XP0019", STRING_.same_string (an_evaluator.error_value.code, "XP0019"))
+		end
+
 	set_up is
 		do
 			conformance.set_basic_xslt_processor

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that support implementation of the XPath index-of() function"
+		"Objects that support implementation of the XPath distinct-values() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_INDEX_ITERATOR
+class XM_XPATH_DISTINCT_ITERATOR
 
 inherit
 
@@ -20,25 +20,26 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-creation {XM_XPATH_INDEX_OF, XM_XPATH_INDEX_ITERATOR}
+	XM_XPATH_SHARED_COMPARISON_KEY_TESTER
+
+creation {XM_XPATH_DISTINCT_VALUES, XM_XPATH_DISTINCT_ITERATOR}
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_search_value: XM_XPATH_ATOMIC_VALUE; an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER) is
+	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; an_atomic_comparer: XM_XPATH_ATOMIC_SORT_COMPARER) is
 			-- Establish invariant.
 		require
 			base_sequence_not_void: a_base_sequence /= Void
-			search_value_not_void: a_search_value /= Void
 			atomic_comparer_not_void: an_atomic_comparer /= Void
 		do
 			base_sequence := a_base_sequence
-			search_value := a_search_value
 			atomic_comparer := an_atomic_comparer
+			create values_seen.make_default
+			values_seen.set_equality_tester (comparison_key_tester)
 		ensure
 			base_sequence_set: base_sequence = a_base_sequence
-			search_value_set: search_value = a_search_value
 			comparer_set: atomic_comparer = an_atomic_comparer
 		end
 
@@ -61,6 +62,7 @@ feature -- Cursor movement
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_item: XM_XPATH_ITEM
+			a_comparison_key: XM_XPATH_COMPARISON_KEY
 		do
 			index := index + 1
 			if base_sequence.before then
@@ -73,7 +75,6 @@ feature -- Cursor movement
 			until
 				base_sequence.after or else item /= Void
 			loop
-				last_position := last_position + 1
 				an_item := base_sequence.item
 				if an_item.is_error then
 					item := an_item
@@ -81,16 +82,16 @@ feature -- Cursor movement
 					an_atomic_value ?= an_item
 					check
 						item_is_atomic: an_atomic_value /= Void
-						-- static typing in XM_XPATH_INDEX_OF
+						-- static typing in XM_XPATH_DISTINCT_VALUES
 					end
-					if not atomic_comparer.are_comparable (an_atomic_value, search_value) then
-						create {XM_XPATH_INVALID_ITEM} item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
-					elseif atomic_comparer.three_way_comparison (an_atomic_value, search_value) = 0 then
-						create {XM_XPATH_INTEGER_VALUE} item.make_from_integer (last_position)
-					else
+					a_comparison_key := atomic_comparer.comparison_key (an_atomic_value)
+					if values_seen.has (a_comparison_key) then
 						if not base_sequence.after then
 							base_sequence.forth
 						end
+					else
+						values_seen.force_new (a_comparison_key)
+						item := an_atomic_value
 					end
 				end
 			end
@@ -101,7 +102,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original;
 		do
-			create Result.make (base_sequence.another, search_value, atomic_comparer)
+			create Result.make (base_sequence.another, atomic_comparer)
 		end
 
 feature {NONE} -- Implementation
@@ -109,20 +110,17 @@ feature {NONE} -- Implementation
 	base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Sequence of atomic values to be searched
 
-	search_value: XM_XPATH_ATOMIC_VALUE
-			-- Search value
-
-	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
+	atomic_comparer: XM_XPATH_ATOMIC_SORT_COMPARER
 			-- Atomic comparer
 
-	last_position: INTEGER
-			-- Position within `base_sequence' of currently matched value
+	values_seen: DS_HASH_SET [XM_XPATH_COMPARISON_KEY]
+			-- Values already seen
 
 invariant
 
 	base_sequence_not_void: base_sequence /= Void
-	search_value_not_void: search_value /= Void
 	atomic_comparer_not_void: atomic_comparer /= Void
+	values_seen_not_void: values_seen /= Void
 
 end
 	

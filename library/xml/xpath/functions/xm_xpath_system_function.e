@@ -78,13 +78,29 @@ feature -- Element change
 			end
 		end
 
+	set_argument_error_code (an_error_code: STRING) is
+			-- Set error code to be issued by `check_argument'.
+		require
+			error_code_not_empty: an_error_code /= void and then an_error_code.count > 0
+		do
+			argument_error_code := an_error_code
+		ensure
+			error_code_set: argument_error_code = an_error_code
+		end
+
 feature {XM_XPATH_FUNCTION_CALL} -- Local
+
+	argument_error_code: STRING
+			-- Error code set by `check_argument'
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			counter: INTEGER
 		do
+			if argument_error_code = Void then
+				set_argument_error_code ("FORG0006")
+			end
 			check_argument_count (minimum_argument_count, maximum_argument_count)
 			if not is_error then
 				from
@@ -122,12 +138,12 @@ feature {NONE} -- Implementation
 			create a_role_locator.make (Function_role, name, argument_number)
 			a_type_checker.static_type_check (a_context, arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "FORG0006", Type_error)
+				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, argument_error_code, Type_error)
 			else
 				an_argument := a_type_checker.checked_expression
 				an_argument.simplify
 				if an_argument.is_error then
-					set_last_error_from_string (an_argument.error_value.error_message, Xpath_errors_uri, "FORG0006", Type_error)
+					set_last_error_from_string (an_argument.error_value.error_message, Xpath_errors_uri, argument_error_code, Type_error)
 				else
 					if an_argument.was_expression_replaced then
 						arguments.replace (an_argument.replacement_expression, argument_number)

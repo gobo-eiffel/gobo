@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test XPath round-to-half-even() function."
+		"Test XPath replace() function."
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_ROUND_HALF_EVEN
+deferred class XM_XPATH_TEST_REPLACE
 
 inherit
 
@@ -29,188 +29,180 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- Constants
-
-	two: MA_DECIMAL is
-			-- 2 as a decimal
-		once
-			create Result.make_from_integer (2)
-		ensure
-			two_not_void: Result /= Void
-		end
-
-	three_five_six_oh_oh: MA_DECIMAL is
-			-- 35600 as a decimal
-		once
-			create Result.make_from_integer (35600)
-		ensure
-			three_five_six_oh_oh_not_void: Result /= Void
-		end
-
 feature -- Tests
 
-	test_round_a_half is
-			-- Test fn:round-to-half-even(0.5)
+	test_replace_one is
+			-- Test replace("abracadabra", "bra", "*") returns "a*cada*".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(0.5)")
+			an_evaluator.evaluate ("replace('abracadabra', 'bra', '*')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_decimal_value ?= evaluated_items.item (1)
-			assert ("Decimal value", a_decimal_value /= Void)
-			assert ("Result is zero", a_decimal_value.value.is_zero)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "a*cada*"))
 		end
 
-	test_round_one_and_a_half is
-			-- Test fn:round-to-half-even(1.5)
+	test_replace_two is
+			-- Test replace("abracadabra", "a.*a", "*") returns "*".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(1.5)")
+			an_evaluator.evaluate ("replace('abracadabra', 'a.*a', '*')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_decimal_value ?= evaluated_items.item (1)
-			assert ("Decimal value", a_decimal_value /= Void)
-			assert ("Result is two", a_decimal_value.value.is_equal (two))
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Star", STRING_.same_string (a_string_value.string_value, "*"))
 		end
 
-	test_round_two_and_a_half is
-			-- Test fn:round-to-half-even(2.5)
+	test_replace_three is
+			-- Test replace("abracadabra", "a.*?a", "*") returns "*c*bra".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(2.5)")
+			an_evaluator.evaluate ("replace('abracadabra', 'a.*?a', '*')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_decimal_value ?= evaluated_items.item (1)
-			assert ("Decimal value", a_decimal_value /= Void)
-			assert ("Result is two", a_decimal_value.value.is_equal (two))
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "*c*bra"))
 		end
 
-	test_round_big_double is
-			-- Test fn:round-to-half-even(3.567812E+3, 2)
+	test_replace_four is
+			-- Test replace("abracadabra", "a", "") returns "brcdbr".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_double_value: XM_XPATH_DOUBLE_VALUE
-			a_double: DOUBLE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(3.567812E+3, 2)")
+			an_evaluator.evaluate ("replace('abracadabra', 'a', '')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_double_value ?= evaluated_items.item (1)
-			assert ("Double value", a_double_value /= Void)
-			--a_double := 3567.810000
-			--print ((a_double = 3567.81E0).out + "%N")
-			assert ("Correct result", a_double_value.value = 3567.81E0)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "brcdbr"))
 		end
 
-	test_round_small_double is
-			-- Test fn:round-to-half-even(4.7564E-3, 2)
+	test_replace_five is
+			-- Test replace("abracadabra", "a(.)", "a$1$1") returns "abbraccaddabbra".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_double_value: XM_XPATH_DOUBLE_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(4.7564E-3, 2)")
+			an_evaluator.evaluate ("replace('abracadabra', 'a(.)', 'a$1$1')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_double_value ?= evaluated_items.item (1)
-			assert ("Double value", a_double_value /= Void)
-			assert ("Correct result", a_double_value.value = 0.0E0)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "abbraccaddabbra"))
 		end
 
-	test_round_losing_precision is
-			-- Test fn:round-to-half-even(35612.25, -2)
+	test_replace_six is
+			-- Test replace("abracadabra", ".*?", "$1") raises an error, because the pattern matches the zero-length string.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(35612.25, -2)")
-			assert ("No evaluation error", not an_evaluator.is_error)
-			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_decimal_value ?= evaluated_items.item (1)
-			assert ("Decimal value", a_decimal_value /= Void)
-			assert ("Result is 35600", a_decimal_value.value.is_equal (three_five_six_oh_oh))
+			an_evaluator.evaluate ("replace('abracadabra', '.*?', '$1')")
+			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("Error FORX0003", STRING_.same_string (an_evaluator.error_value.code, "FORX0003"))
 		end
 
-	test_round_integer_losing_precision is
-			-- Test fn:round-to-half-even(35612, -2)
+	test_replace_seven is
+			-- Test replace("AAAA", "A+", "b") returns "b".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(35612, -2)")
+			an_evaluator.evaluate ("replace('AAAA', 'A+', 'b')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void)
-			assert ("Result is 35600", an_integer_value.value.is_equal (three_five_six_oh_oh))
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "b"))
 		end
 
-
-	test_round_integer_not_gaining_precision is
-			-- Test fn:round-to-half-even(35600, 2)
+	test_replace_eight is
+			-- Test replace("AAAA", "A+?", "b") returns "bbbb".
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("round-half-to-even(35600, 2)")
+			an_evaluator.evaluate ("replace('AAAA', 'A+?', 'b')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void)
-			assert ("Result is 35600", an_integer_value.value.is_equal (three_five_six_oh_oh))
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "bbbb"))
+		end
+	
+	test_replace_nine is
+			-- Test replace("darted", "^(.*?)d(.*)$", "$1c$2") returns "carted". The first "d" is replaced.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("replace('darted', '^(.*?)d(.*)$', '$1c$2')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "carted"))
 		end
 
 	set_up is

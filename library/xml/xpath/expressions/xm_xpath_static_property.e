@@ -849,7 +849,7 @@ feature -- Setting special properties
 		ensure
 			creates_nodes: creates_nodes
 		end
-
+	
 invariant
 
 	special_properties: are_special_properties_computed implies special_properties /= Void and then special_properties.count = 7

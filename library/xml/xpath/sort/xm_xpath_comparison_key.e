@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"TBA"
+		"Comparsion keys for use by XM_XPATH_ATOMIC_SORT_COMPARER"
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_COMPARISON_KEY
+class XM_XPATH_COMPARISON_KEY
 
 inherit
 
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_key (other: XM_XSLT_COMPARISON_KEY): BOOLEAN is
+	same_key (other: XM_XPATH_COMPARISON_KEY): BOOLEAN is
 			-- Are `Current' and `other' considered equal?
 		require
 			other_not_void: other /= Void
@@ -97,7 +97,7 @@ feature -- Comparison
 			end
 		end
 
-feature {XM_XSLT_COMPARISON_KEY} -- Implementation
+feature {XM_XPATH_COMPARISON_KEY} -- Implementation
 
 	category: INTEGER
 			-- Category

@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Shared XSLT comparsion key testers"
+		"Shared XPath comparsion key testers"
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_SHARED_COMPARISON_KEY_TESTER
+class XM_XPATH_SHARED_COMPARISON_KEY_TESTER
 
 feature -- Access
 
-	comparison_key_tester: XM_XSLT_COMPARISON_KEY_TESTER is
+	comparison_key_tester: XM_XPATH_COMPARISON_KEY_TESTER is
 			-- Comparison key equality tester
 		once
 			create Result

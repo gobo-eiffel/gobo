@@ -16,8 +16,10 @@ inherit
 
 	TS_TEST_CASE
 		redefine
-			tear_down
+			set_up --, tear_down
 		end
+
+	XM_XPATH_SHARED_CONFORMANCE
 
 	XM_XPATH_STANDARD_NAMESPACES
 
@@ -80,7 +82,7 @@ feature -- Test
 			xml_prefix := shared_name_pool.prefix_from_name_code (name_code)
 			assert ("Prefix", xml_prefix /= Void and then STRING_.same_string (xml_prefix, "test3"))
 			prefix_code := shared_name_pool.code_for_prefix ("test3")
-			assert ("Prefix code 2", prefix_code > 0)			
+			assert ("Prefix code 2", prefix_code > 0)
 			namespace_code := shared_name_pool.namespace_code ("test3", testing_namespace)
 			assert ("Valid namespace code", shared_name_pool.is_valid_namespace_code (namespace_code))
 			uri_code := shared_name_pool.uri_code_from_name_code (name_code)
@@ -94,7 +96,7 @@ feature -- Test
 			namespace_uri := shared_name_pool.uri_from_namespace_code (namespace_code)
 			assert ("Namespace URI 2", namespace_uri /= Void and then STRING_.same_string (namespace_uri, testing_namespace))
 			namespace_uri := shared_name_pool.uri_from_uri_code (uri_code)
-			assert ("Namespace URI 3", STRING_.same_string (namespace_uri, testing_namespace))						
+			assert ("Namespace URI 3", STRING_.same_string (namespace_uri, testing_namespace))
 			xml_prefix := shared_name_pool.prefix_from_namespace_code (namespace_code)
 			assert ("Prefix 2",  xml_prefix /= Void and then STRING_.same_string (xml_prefix, "test3"))
 		end
@@ -132,9 +134,14 @@ feature -- Test
 	
 feature -- Setting
 
-	tear_down is
+	set_up is
 		do
+			conformance.set_basic_xslt_processor
+		end
+
+--	tear_down is
+--		do
 			-- Comment this next line out when finished debugging test cases.
 			--			default_pool.diagnostic_dump
-		end
+--		end
 end

@@ -115,25 +115,25 @@
 	 <row>
 	   <entry>fn:abs</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:ceiling</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:floor</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:round</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -474,20 +474,20 @@
 	 </row>	
 	 <row>
 	   <entry>fn:zero-or-one</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:one-or-more</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:exactly-one</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -516,8 +516,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:distinct-values</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -528,14 +528,14 @@
 	 </row>	
 	 <row>
 	   <entry>fn:remove</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:reverse</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -546,13 +546,13 @@
 	 </row>	
 	 <row>
 	   <entry>fn:unordered</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:deep-equal</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -564,8 +564,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:avg</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>

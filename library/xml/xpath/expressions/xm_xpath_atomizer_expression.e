@@ -101,6 +101,7 @@ feature -- Optimization
 				if base_expression.was_expression_replaced then
 					set_base_expression (base_expression.replacement_expression)
 				end
+				reset_static_properties
 				if is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
 					set_replacement (base_expression)
 				end

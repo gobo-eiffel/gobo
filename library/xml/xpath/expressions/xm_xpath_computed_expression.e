@@ -115,7 +115,18 @@ feature -- Status setting
 			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
 			computed: are_dependencies_computed and then dependencies /= Void
 		end
-	
+
+	reset_static_properties is
+			-- Re-compute all static properties.
+		require
+			static_properties_previously_computed: are_static_properties_computed
+		do
+			are_dependencies_computed := False
+			are_intrinsic_dependencies_computed := False
+			are_cardinalities_computed := False
+			are_special_properties_computed := False
+			compute_static_properties
+		end
 
 feature -- Optimization
 

@@ -4,13 +4,13 @@ indexing
 
 		"Objects that compare two atomic values, treating NaNs as low."
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_ATOMIC_SORT_COMPARER
+class XM_XPATH_ATOMIC_SORT_COMPARER
 
 inherit
 
@@ -27,7 +27,7 @@ creation
 
 feature -- Access
 
-	comparison_key (a_key: XM_XPATH_ATOMIC_VALUE): XM_XSLT_COMPARISON_KEY is
+	comparison_key (a_key: XM_XPATH_ATOMIC_VALUE): XM_XPATH_COMPARISON_KEY is
 			-- Comparison key for `a_key'
 		require
 			key_not_void: a_key /= Void

@@ -197,6 +197,7 @@ feature -- Optimization
 					if step.was_expression_replaced then
 						set_step (step.replacement_expression)
 					end
+					reset_static_properties
 					an_empty_sequence ?= start
 					if an_empty_sequence /= Void then
 						
@@ -328,6 +329,7 @@ feature -- Optimization
 
 					step.promote (an_offer)
 					if step.was_expression_replaced then set_step (step.replacement_expression) end
+					reset_static_properties
 				end
 			end
 		end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_GROUP_ITERATOR
 
-	XM_XSLT_SHARED_COMPARISON_KEY_TESTER
+	XM_XPATH_SHARED_COMPARISON_KEY_TESTER
 
 		-- Objects of this class iterate over a sequence of groups defined by
 		--  xsl:for-each-group group-by="x". The groups are returned in
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer
 
-	comparer: XM_XSLT_ATOMIC_SORT_COMPARER
+	comparer: XM_XPATH_ATOMIC_SORT_COMPARER
 			-- Comparer
 
 	indexed_groups_built: BOOLEAN
@@ -149,14 +149,14 @@ feature {NONE} -- Implementation
 		require
 			not_already_built: not indexed_groups_built
 		local
-			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_ITEM], XM_XSLT_COMPARISON_KEY]
+			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_ITEM], XM_XPATH_COMPARISON_KEY]
 			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_context: XM_XSLT_EVALUATION_CONTEXT
 			an_item: XM_XPATH_ITEM
 			a_keys_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			first_key: BOOLEAN
 			a_key: XM_XPATH_ATOMIC_VALUE
-			a_comparison_key: XM_XSLT_COMPARISON_KEY
+			a_comparison_key: XM_XPATH_COMPARISON_KEY
 			a_group: DS_ARRAYED_LIST [XM_XPATH_ITEM]
 		do
 			create a_map.make_with_equality_testers (20, Void, comparison_key_tester)

@@ -15,10 +15,11 @@ class XM_XPATH_DOUBLE_VALUE
 inherit
 
 	XM_XPATH_NUMERIC_VALUE
+		redefine
+			hash_code
+		end
 
-	MA_SHARED_DECIMAL_CONTEXT
-
-	MA_DECIMAL_CONSTANTS
+	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 
 creation
 
@@ -35,11 +36,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_string (a_value: STRING) is
-		require
-			is_double: a_value.is_double
 		do
 			make_atomic_value
-			value := a_value.to_double
+			set_value_from_string (a_value)
 		ensure
 			value_set: value = a_value.to_double
 		end
@@ -58,6 +57,11 @@ feature -- Access
 
 	value: DOUBLE
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := value.hash_code
+		end
 	
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
 		do
@@ -82,6 +86,8 @@ feature -- Access
 
 	string_value: STRING is
 			--Value of the item as a string
+		local
+			a_decimal: MA_DECIMAL
 		do
 			if is_nan then
 				Result := "NaN"
@@ -91,8 +97,11 @@ feature -- Access
 				else
 					Result := "INF"
 				end
+			elseif value.abs >= 1e-6 or else value.abs < 1e6 then
+				create a_decimal.make_from_string (value.out)
+				Result := a_decimal.to_scientific_string
 			else
-				Result := value.out
+				Result := value.out -- TODO - No good - but how to determine the result? us MA-DECIMAL rather than double 
 			end
 		end
 
@@ -214,7 +223,11 @@ feature -- Conversion
 				create Result.make (-0.0)
 			else
 				create a_decimal.make_from_string (value.out)
-				create Result.make (a_decimal.round_to_integer (shared_round_context).to_double)
+				if a_decimal.is_negative then
+					create Result.make (a_decimal.round_to_integer (shared_negative_round_context).to_double)
+				else
+					create Result.make (a_decimal.round_to_integer (shared_round_context).to_double)
+				end
 			end
 		end
 
@@ -315,6 +328,29 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Element change
+
+	set_value_from_string (a_value: STRING) is
+			-- Set from `a_value'.
+		require
+			value_not_void: a_value /= Void
+		do
+			STRING_.left_adjust (a_value)
+			STRING_.right_adjust (a_value)
+			if STRING_.same_string ("INF", a_value) then
+				value := plus_infinity
+			elseif STRING_.same_string ("-INF", a_value) then
+				value := minus_infinity
+			elseif STRING_.same_string ("NaN", a_value) then
+				internal_is_nan := True
+				value := 0.0
+			elseif a_value.is_double then
+				value := a_value.to_double
+			else
+				set_last_error_from_string	("Invalid xs:double string value", Xpath_errors_uri, "XP0006", Type_error)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	internal_is_nan: BOOLEAN
@@ -339,30 +375,6 @@ feature {NONE} -- Implementation
 		ensure
 			negitive: Result < 0
 			infinity_reached: Result / Large_number = Result
-		end
-
-	shared_round_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by round
-		once
-			create Result.make (shared_decimal_context.digits, Round_half_up)
-		end
-	
-	shared_half_even_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by rounded-hal-even
-		once
-			create Result.make (shared_decimal_context.digits, Round_half_even)
-		end
-
-	shared_floor_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by floor
-		once
-			create Result.make (shared_decimal_context.digits, Round_floor)
-		end
-
-	shared_ceiling_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by ceiling
-		once
-			create Result.make (shared_decimal_context.digits, Round_ceiling)
 		end
 
 end

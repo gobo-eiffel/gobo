@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 						if data_type.count = 0 then
 							create a_role.make (Instruction_role, "xsl:sort/sort-key", 1)
 							create {XM_XPATH_CARDINALITY_CHECKER} sort_key.make (sort_key, Required_cardinality_zero_or_more, a_role)
-							create {XM_XSLT_ATOMIC_SORT_COMPARER} a_comparer.make (a_base_collator)
+							create {XM_XPATH_ATOMIC_SORT_COMPARER} a_comparer.make (a_base_collator)
 						else
 							if STRING_.same_string (data_type, "text") then
 								create {XM_XSLT_TEXT_COMPARER} a_comparer.make (a_comparer)

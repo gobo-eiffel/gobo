@@ -16,12 +16,10 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison
+			three_way_comparison, hash_code
 		end
 
-	MA_SHARED_DECIMAL_CONTEXT
-
-	MA_DECIMAL_CONSTANTS
+	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 
 creation
 
@@ -66,6 +64,16 @@ feature -- Access
 
 	value: MA_DECIMAL
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			if is_double then
+				Result := as_double.hash_code
+			else
+				Result := value.to_scientific_string.hash_code
+			end
+		end
+
 	as_integer: INTEGER is
 		do
 			Result := value.to_integer
@@ -92,6 +100,8 @@ feature -- Access
 			--Value of the item as a string
 		do
 			Result := value.to_scientific_string -- TODO - check the standard
+			-- should be OK, providing this NEVER goes into exponential form.
+			-- but this doesn't look to be guarenteed to me.
 		end
 
 feature -- Comparison
@@ -265,7 +275,11 @@ feature -- Conversion
 			a_decimal: MA_DECIMAL
 		do
 			create a_decimal.make_copy (value)
-			a_decimal := a_decimal.round_to_integer (shared_round_context)
+			if a_decimal.is_negative then
+				a_decimal := a_decimal.round_to_integer (shared_negative_round_context)
+			else
+				a_decimal := a_decimal.round_to_integer (shared_round_context)
+			end
 			create Result.make (a_decimal)
 		end
 
@@ -352,32 +366,6 @@ feature -- Basic operations
 					end
 				end
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	shared_round_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by round
-		once
-			create Result.make (shared_decimal_context.digits, Round_ceiling)
-		end
-
-	shared_half_even_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by rounded-half-even
-		once
-			create Result.make (shared_decimal_context.digits, Round_half_even)
-		end
-
-	shared_floor_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by floor
-		once
-			create Result.make (shared_decimal_context.digits, Round_floor)
-		end
-
-	shared_ceiling_context: MA_DECIMAL_CONTEXT is
-			-- Decimal context for use by ceiling
-		once
-			create Result.make (shared_decimal_context.digits, Round_ceiling)
 		end
 
 end
