@@ -32,10 +32,7 @@ feature -- Test
 	test_formatter is
 			-- Test 'tree/formatter' example.
 		do
-			if not eiffel_compiler.is_se then
-					-- SE -0.74 crashes when compiling this example.
-				compile_program
-			end
+			compile_program
 		end
 
 feature {NONE} -- Implementation
