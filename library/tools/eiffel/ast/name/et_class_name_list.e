@@ -48,6 +48,13 @@ feature -- Status report
 			end
 		end
 
+	has_any: BOOLEAN is
+			-- Does current client list contain at least
+			-- the class name "ANY"?
+		do
+			Result := has (tokens.any_class_name)
+		end
+
 	has (a_name: like class_name): BOOLEAN is
 			-- Does `a_name' appear in current list?
 		require
