@@ -126,7 +126,7 @@
 	<target name="install_misc">
 		<set name="gepp_dir" value="misc"/>
 		<set name="gepp_file" value="kl_operating_system"/>
-		<geant target="spec_os"/>
+		<geant target="spec_eif"/>
 	</target>
 
 	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
@@ -141,18 +141,6 @@
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ve/${gepp_file}.e">
 			<define name="VE"/>
-		</gepp>
-	</target>
-
-	<target name="spec_os" depend="spec_linux,spec_unix,spec_windows">
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/linux/${gepp_file}.e">
-			<define name="LINUX"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/unix/${gepp_file}.e">
-			<define name="UNIX"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/windows/${gepp_file}.e">
-			<define name="WINDOWS"/>
 		</gepp>
 	</target>
 
@@ -174,18 +162,6 @@
 
 	<target name="spec_ve" depend="spec">
 		<mkdir directory="spec/ve"/>
-	</target>
-
-	<target name="spec_linux" depend="spec">
-		<mkdir directory="spec/linux"/>
-	</target>
-
-	<target name="spec_unix" depend="spec">
-		<mkdir directory="spec/unix"/>
-	</target>
-
-	<target name="spec_windows" depend="spec">
-		<mkdir directory="spec/windows"/>
 	</target>
 
 </project>

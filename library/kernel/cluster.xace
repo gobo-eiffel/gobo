@@ -18,7 +18,6 @@
 	<cluster name="support"/>
 	<cluster name="spec" abstract="True">
 		<cluster name="compiler" location="${GOBO}/library/kernel/spec/${GOBO_EIFFEL}"/>
-		<cluster name="os" location="${GOBO}/library/kernel/spec/${GOBO_OS}"/>
 	</cluster>
 
 </cluster>

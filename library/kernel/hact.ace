@@ -5,4 +5,3 @@
 	kl_unicode:			"$GOBO/library/kernel/unicode";
 	kl_support:			"$GOBO/library/kernel/support";
 	kl_kernel_spec:		"$GOBO/library/kernel/spec/hact";
-	kl_kernel_os:		"$GOBO/library/kernel/spec/$GOBO_OS";
