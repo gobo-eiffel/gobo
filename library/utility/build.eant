@@ -22,10 +22,8 @@
 	<target name="install" dir="${GOBO}/library/utility">
 		<description>
 			Install the Gobo Eiffel Utility Library.
-			Generate Eiffel files from .ge files.
 		</description>
-
-		<geant target="install_command"/>
+		<!-- do nothing -->
 	</target>
 
 	<target name="clean" dir="${GOBO}/library/utility">
@@ -42,51 +40,6 @@
 		</description>
 
 		<geant target="clean"/>
-		<delete directory="spec"/>
-	</target>
-
-
-<!-- Implementation -->
-
-	<target name="install_command">
-		<set name="gepp_dir" value="command"/>
-		<set name="gepp_file" value="ut_shell_command"/>
-		<geant target="spec_eif"/>
-	</target>
-
-	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/hact/${gepp_file}.e">
-			<define name="HACT"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ise/${gepp_file}.e">
-			<define name="ISE"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/se/${gepp_file}.e">
-			<define name="SE"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ve/${gepp_file}.e">
-			<define name="VE"/>
-		</gepp>
-	</target>
-
-	<target name="spec">
-		<mkdir directory="spec"/>
-	</target>
-
-	<target name="spec_hact" depend="spec">
-		<mkdir directory="spec/hact"/>
-	</target>
-
-	<target name="spec_ise" depend="spec">
-		<mkdir directory="spec/ise"/>
-	</target>
-
-	<target name="spec_se" depend="spec">
-		<mkdir directory="spec/se"/>
-	</target>
-
-	<target name="spec_ve" depend="spec">
-		<mkdir directory="spec/ve"/>
 	</target>
 
 </project>
