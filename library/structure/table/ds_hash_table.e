@@ -2,8 +2,8 @@ indexing
 
 	description:
 
-		"Hash tables, implemented with arrays. Keys are hashed using %
-		%`hash_code' from HASHABLE and are compared using `is_equal'"
+		"Hash tables, implemented with arrays. %
+		%Keys are hashed using `hash_code' from HASHABLE."
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -23,7 +23,8 @@ inherit
 
 creation
 
-	make, make_equal, make_default
+	make, make_equal, make_default,
+	make_map, make_map_equal, make_map_default
 
 feature -- Access
 
@@ -35,45 +36,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	search_position (k: K) is
-			-- Search for position where key is equal to `k'.
-			-- Use `k.hash_code' as hashing function and
-			-- compare keys using `is_equal'.
-		local
-			i: INTEGER
-			prev: INTEGER
-		do
-			if k = Void then
-				position := slots.item (modulus)
-				slots_position := modulus
-				clashes_previous_position := No_position
-			elseif
-				position = No_position or else
-				keys.item (position) = Void or else
-				not k.is_equal (keys.item (position))
-			then
-				from
-					slots_position := hash_position (k)
-					i := slots.item (slots_position)
-					position := No_position
-					prev := No_position
-				until
-					i = No_position
-				loop
-					if k.is_equal (keys.item (i)) then
-						position := i
-						i := No_position -- Jump out of the loop.
-					else
-						prev := i
-						i := clashes.item (i)
-					end
-				end
-				clashes_previous_position := prev
-			end
-		end
-
 	hash_position (k: K): INTEGER is
 			-- Hash position of `k' in `slots'
+			-- Use `k.hash_code' as hashing function.
 		do
 			if k /= Void then
 				Result := k.hash_code \\ modulus
