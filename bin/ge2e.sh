@@ -22,7 +22,7 @@ rm -f spec/se/*.e
 for file in `ls *.ge` ; do
 	echo $file
 	for compiler in ISE HACT VE SE ; do
-		touch spec/$compiler/`basename $file .ge`.e
+#		touch spec/$compiler/`basename $file .ge`.e
 		gepp -D$compiler $file spec/$compiler/`basename $file .ge`.e
 	done
 done
