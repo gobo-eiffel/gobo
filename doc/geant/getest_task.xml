@@ -86,6 +86,58 @@
 				</listitem>
 			</varlistentry>
 		
+			<varlistentry>
+				<term>generation</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>compilation</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>execution</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>abort</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
 		</variablelist>
 	</sect1>
 	
@@ -99,6 +151,24 @@
       <attribute name="config"/>
       <optional>
         <attribute name="compile"/>
+      </optional>
+      <optional>
+        <attribute name="class"/>
+      </optional>
+      <optional>
+        <attribute name="feature"/>
+      </optional>
+      <optional>
+        <attribute name="generation"/>
+      </optional>
+      <optional>
+        <attribute name="compilation"/>
+      </optional>
+      <optional>
+        <attribute name="execution"/>
+      </optional>
+      <optional>
+        <attribute name="abort"/>
       </optional>
       <zeroOrMore>
         <ref name="define"/>
