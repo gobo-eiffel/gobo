@@ -55,9 +55,11 @@
 
 		<set name="debug_suffix" value="_debug" if="${debug}"/>
 		<set name="debug_suffix" value="" unless="${debug}"/>
+		<set name="gobo_os" value="-DGOBO_OS=unix" if="${GOBO_OS}=unix"/>
+		<set name="gobo_os" value="-DGOBO_OS=windows" if="${GOBO_OS}=windows"/>
 		<echo message=""/>
 		<echo message="Testing ${system}..."/>
-		<getest config="${system_dir}/getest.cfg" compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
+		<getest config="${system_dir}/getest.cfg" compile="geant ${gobo_os} -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
 			<define name="debug" value="true" if="${debug}"/>
 		</getest>
 	</target>
