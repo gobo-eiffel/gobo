@@ -5,7 +5,7 @@ indexing
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,6 @@ inherit
 			process_if_instruction,
 			process_infix_expression,
 			process_inspect_instruction,
-			process_invariants,
 			process_loop_instruction,
 			process_loop_invariants,
 			process_manifest_array,
@@ -586,7 +585,7 @@ feature {ET_AST_NODE} -- Processing
 			a_compound: ET_COMPOUND
 		do
 			if internal_call then
-				an_elseif_part.conditional.expression.process (Current)
+				an_elseif_part.expression.process (Current)
 				a_compound := an_elseif_part.then_compound
 				if a_compound /= Void then
 					process_compound (a_compound)
@@ -644,7 +643,7 @@ feature {ET_AST_NODE} -- Processing
 			a_compound: ET_COMPOUND
 		do
 			if internal_call then
-				an_instruction.conditional.expression.process (Current)
+				an_instruction.expression.process (Current)
 				a_compound := an_instruction.then_compound
 				if a_compound /= Void then
 					process_compound (a_compound)
@@ -676,7 +675,7 @@ feature {ET_AST_NODE} -- Processing
 			an_else_compound: ET_COMPOUND
 		do
 			if internal_call then
-				an_instruction.conditional.expression.process (Current)
+				an_instruction.expression.process (Current)
 				a_when_parts := an_instruction.when_parts
 				if a_when_parts /= Void then
 					process_when_part_list (a_when_parts)
@@ -688,25 +687,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_invariants (a_list: ET_INVARIANTS) is
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.assertion (i).process (Current)
-					i := i + 1
-				end
-			end
-		end
-
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
 			an_invariant_part: ET_LOOP_INVARIANTS
 			a_variant_part: ET_VARIANT
+			a_variant_expression: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 		do
 			if internal_call then
@@ -720,9 +706,12 @@ feature {ET_AST_NODE} -- Processing
 				end
 				a_variant_part := an_instruction.variant_part
 				if a_variant_part /= Void then
-					a_variant_part.expression.process (Current)
+					a_variant_expression := a_variant_part.expression
+					if a_variant_expression /= Void then
+						a_variant_expression.process (Current)
+					end
 				end
-				an_instruction.until_conditional.expression.process (Current)
+				an_instruction.until_expression.process (Current)
 				a_compound := an_instruction.loop_compound
 				if a_compound /= Void then
 					process_compound (a_compound)
