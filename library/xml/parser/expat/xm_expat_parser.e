@@ -156,6 +156,18 @@ feature -- Parsing
 			parse_incremental_from_string (a_string)
 			finish_incremental
 		end
+	
+	parse_from_system (a_system: STRING) is
+			-- Parse from system identifier using resolver.
+		do
+			entity_resolver.resolve (a_system)
+			if not entity_resolver.has_error then
+				parse_from_stream (entity_resolver.last_stream)
+				entity_resolver.resolve_finish
+			else
+				force_error (Error_entity_unresolved_external)
+			end
+		end
 
 feature -- Incremental parsing
 

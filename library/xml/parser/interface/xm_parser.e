@@ -46,11 +46,7 @@ feature -- Parsing
 			-- Parse from system identifier using resolver.
 		require
 			a_system_not_void: a_system /= Void
-		do
-			entity_resolver.resolve (a_system)
-			if not entity_resolver.has_error then
-				parse_from_stream (entity_resolver.last_stream)
-			end
+		deferred
 		end
 		
 feature -- Incremental parsing
@@ -204,6 +200,7 @@ feature -- Error reporting
 
 invariant
 
-	resolvers_not_void: entity_resolver /= Void and dtd_resolver /= Void
+	entity_resolver_not_void: entity_resolver /= Void
+	dtd_resolver_not_void: dtd_resolver /= Void
 
 end

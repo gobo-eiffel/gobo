@@ -111,9 +111,7 @@ feature -- Parsing
 		do
 			reset
 			scanner.set_input_stream (a_stream)
-			on_start
-			parse
-			on_finish
+			parse_with_events
 		end
 
 	parse_from_string (a_string: STRING) is
@@ -123,6 +121,29 @@ feature -- Parsing
 		do
 			create a_stream.make (utf8.to_utf8 (a_string))
 			parse_from_stream (a_stream)
+		end
+
+	parse_from_system (a_system: STRING) is
+			-- Parse from system identifier using resolver.
+		do
+			reset
+			entity_resolver.resolve (a_system)
+			if not entity_resolver.has_error then
+				scanner.set_input_from_resolver (entity_resolver)
+				parse_with_events
+			else
+				force_error (Error_entity_unresolved_external)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	parse_with_events is
+			-- Parse with start/finish events.
+		do
+			on_start
+			parse
+			on_finish
 		end
 		
 feature -- Obsolete
