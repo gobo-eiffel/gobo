@@ -122,7 +122,7 @@ feature {NONE} -- Precompilation
 			file_system.cd (file_system.pathname ("EIFGEN", "W_code"))
 			assert_execute ("finish_freezing -silent" + output_log)
 				-- Check creation of precompiled files.
-			eif_compiler := Execution_environment.variable_value ("ISE_COMPILER")
+			eif_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
 			if eif_compiler /= Void and then eif_compiler.count > 0 then
 				assert ("driver_exists", file_system.file_exists (file_system.pathname (eif_compiler, "driver" + file_system.exe_extension)))
 			else
