@@ -55,6 +55,18 @@ feature {NONE} -- Initialization
 				a_value := attribute_value (Feature_attribute_name)
 				command.set_feature_regexp (a_value)
 			end
+			if has_attribute (Generation_attribute_name) then
+				command.set_generation (boolean_value (Generation_attribute_name))
+			end
+			if has_attribute (Compilation_attribute_name) then
+				command.set_compilation (boolean_value (Compilation_attribute_name))
+			end
+			if has_attribute (Execution_attribute_name) then
+				command.set_execution (boolean_value (Execution_attribute_name))
+			end
+			if has_attribute (Abort_attribute_name) then
+				command.set_abort (boolean_value (Abort_attribute_name))
+			end
 				-- define:
 			define_elements := elements_by_name (Define_element_name)
 			cs := define_elements.new_cursor
@@ -113,6 +125,42 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for getest 'feature'
 		once
 			Result := "feature"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Generation_attribute_name: STRING is
+			-- Name of xml attribute for getest 'generation'
+		once
+			Result := "generation"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Compilation_attribute_name: STRING is
+			-- Name of xml attribute for getest 'compilation'
+		once
+			Result := "compilation"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Execution_attribute_name: STRING is
+			-- Name of xml attribute for getest 'execution'
+		once
+			Result := "execution"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Abort_attribute_name: STRING is
+			-- Name of xml attribute for getest 'abort'
+		once
+			Result := "abort"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

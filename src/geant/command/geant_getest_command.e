@@ -34,6 +34,10 @@ feature {NONE} -- Initialization
 			create defines.make_map (10)
 			create a_tester
 			defines.set_key_equality_tester (a_tester)
+				-- Default values.
+			generation := True
+			compilation := True
+			execution := True
 		end
 
 feature -- Status report
@@ -60,6 +64,18 @@ feature -- Access
 
 	feature_regexp: STRING
 			-- Feature regular expression
+
+	generation: BOOLEAN
+			-- Should the Eiffel classes for the testcases be generated?
+
+	compilation: BOOLEAN
+			-- Should the testcases be compiled?
+
+	execution: BOOLEAN
+			-- Should the testcases be executed?
+
+	abort: BOOLEAN
+			-- Should the test application crash when an error occur?
 
 	defines: DS_HASH_TABLE [STRING, STRING]
 			-- Defined values from the command-line (--define option)
@@ -107,6 +123,38 @@ feature -- Setting
 			feature_regexp_set: feature_regexp = a_regexp
 		end
 
+	set_generation (b: BOOLEAN) is
+			-- Set `generation' to `b'.
+		do
+			generation := b
+		ensure
+			generation_set: generation = b
+		end
+
+	set_compilation (b: BOOLEAN) is
+			-- Set `compilation' to `b'.
+		do
+			compilation := b
+		ensure
+			compilation_set: compilation = b
+		end
+
+	set_execution (b: BOOLEAN) is
+			-- Set `execution' to `b'.
+		do
+			execution := b
+		ensure
+			execution_set: execution = b
+		end
+
+	set_abort (b: BOOLEAN) is
+			-- Set `abort' to `b'.
+		do
+			abort := b
+		ensure
+			abort_set: abort = b
+		end
+
 feature -- Execution
 
 	execute is
@@ -116,38 +164,63 @@ feature -- Execution
 			a_filename: STRING
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
-			cmd := clone ("getest ")
-			if defines.count > 0 then
-				a_cursor := defines.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					cmd.append_string ("--define=%"")
-					cmd := STRING_.appended_string (cmd, a_cursor.key)
-					cmd.append_character ('=')
-					cmd := STRING_.appended_string (cmd, a_cursor.item)
-					cmd.append_string ("%" ")
-					a_cursor.forth
+			if not generation and not compilation and not execution then
+					-- Nothing to be done.
+				project.trace (<<"  [getest] ", "no generation, no compilation, no execution">>)
+			else
+				cmd := clone ("getest ")
+				if not generation then
+					if not compilation then
+						cmd.append_string ("-e ")
+					elseif not execution then
+						cmd.append_string ("-c ")
+					else
+						cmd.append_string ("-c -e ")
+					end
+				elseif not compilation then
+					if not execution then
+						cmd.append_string ("-g ")
+					else
+						cmd.append_string ("-g -e ")
+					end
+				elseif not execution then
+					cmd.append_string ("-g -c ")
 				end
+				if abort then
+					cmd.append_string ("-a ")
+				end
+				if defines.count > 0 then
+					a_cursor := defines.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						cmd.append_string ("--define=%"")
+						cmd := STRING_.appended_string (cmd, a_cursor.key)
+						cmd.append_character ('=')
+						cmd := STRING_.appended_string (cmd, a_cursor.item)
+						cmd.append_string ("%" ")
+						a_cursor.forth
+					end
+				end
+				if compile /= Void then
+					cmd.append_string ("--compile=%"")
+					cmd := STRING_.appended_string (cmd, compile)
+					cmd.append_string ("%" ")
+				end
+				if class_regexp /= Void then
+					cmd.append_string ("--class=%"")
+					cmd := STRING_.appended_string (cmd, class_regexp)
+					cmd.append_string ("%" ")
+				end
+				if feature_regexp /= Void then
+					cmd.append_string ("--feature=%"")
+					cmd := STRING_.appended_string (cmd, feature_regexp)
+					cmd.append_string ("%" ")
+				end
+				a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
+				a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
+				cmd := STRING_.appended_string (cmd, a_filename)
+				project.trace (<<"  [getest] ", cmd>>)
+				execute_shell (cmd)
 			end
-			if compile /= Void then
-				cmd.append_string ("--compile=%"")
-				cmd := STRING_.appended_string (cmd, compile)
-				cmd.append_string ("%" ")
-			end
-			if class_regexp /= Void then
-				cmd.append_string ("--class=%"")
-				cmd := STRING_.appended_string (cmd, class_regexp)
-				cmd.append_string ("%" ")
-			end
-			if feature_regexp /= Void then
-				cmd.append_string ("--feature=%"")
-				cmd := STRING_.appended_string (cmd, feature_regexp)
-				cmd.append_string ("%" ")
-			end
-			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
-			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
-			project.trace (<<"  [getest] ", cmd>>)
-			execute_shell (cmd)
 		end
 
 invariant
