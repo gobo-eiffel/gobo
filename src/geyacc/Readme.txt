@@ -6,10 +6,10 @@ To compile Geyacc:
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
    ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat (after possible modifications).
+   the script se.bat or se.sh (after possible modifications).
 2. Run Geyacc using:
 
-       geyacc [--version][--help][-hV?][-t classname]
+       geyacc [--version][--help][-hxV?][-t classname]
            [-v filename][-o filename] filename
 
 A "User's Manual" documentation for Geyacc, in HTML format, is provided
