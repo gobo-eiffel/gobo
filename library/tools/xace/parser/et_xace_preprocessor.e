@@ -4,12 +4,12 @@ indexing
 
 		"Xace XML preprocessor"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:	    "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:	    "$Date$"
-	revision:   "$Revision$"
+	library:   "Gobo Eiffel Tools Library"
+	author:    "Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license:   "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:      "$Date$"
+	revision:  "$Revision$"
 
 class ET_XACE_PREPROCESSOR
 
@@ -54,7 +54,7 @@ feature -- Preprocessing
 
 	preprocess_composite (a_composite: XM_COMPOSITE; a_position_table: XM_POSITION_TABLE) is
 			-- Expand variables in all attributes from `a_composite' and strip
-			-- elements if they have "if" or "unless" attributes whichdo not
+			-- elements if they have "if" or "unless" attributes which do not
 			-- evaluate to `True'.
 		require
 			a_composite_not_void: a_composite /= Void
