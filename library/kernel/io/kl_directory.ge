@@ -460,8 +460,13 @@ feature -- Input
 				last_entry := clone (basic_directory.last_entry)
 #endif
 #ifdef VE
+#ifdef VE_4_1
 				directory_stream.read_line
 				last_entry := directory_stream.last_string
+#else
+				directory_stream.read
+				last_entry := directory_stream.item
+#endif
 #endif
 				end_of_input := old_end_of_input
 			end
@@ -504,7 +509,11 @@ feature {NONE} -- Implementation
 			Result := basic_directory.end_of_input
 #endif
 #ifdef VE
+#ifdef VE_4_1
 			Result := directory_stream.is_exhausted
+#else
+			Result := directory_stream.end_of_stream
+#endif
 #endif
 		end
 

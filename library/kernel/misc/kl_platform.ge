@@ -31,7 +31,7 @@ inherit
 			Minimum_integer as old_minimum_integer,
 			Maximum_integer as old_maximum_integer,
 #endif
-#ifdef ISE
+#ifdef ISE || (VE && ! VE_4_1)
 			Boolean_bytes as old_boolean_bytes,
 			Character_bytes as old_character_bytes,
 			Double_bytes as old_double_bytes,
@@ -92,7 +92,7 @@ feature -- Bytes
 	Boolean_bytes: INTEGER is
 			-- Number of bytes in a value of type BOOLEAN
 		once
-#ifdef VE || SE
+#ifdef (VE && VE_4_1) || SE
 			Result := Boolean_bits // Byte_bits
 			if (Boolean_bits \\ Byte_bits) /= 0 then
 				Result := Result + 1
@@ -105,7 +105,7 @@ feature -- Bytes
 	Character_bytes: INTEGER is
 			-- Number of bytes in a value of type CHARACTER
 		once
-#ifdef VE || SE
+#ifdef (VE && VE_4_1) || SE
 			Result := Character_bits // Byte_bits
 #else
 			Result := old_character_bytes
@@ -115,7 +115,7 @@ feature -- Bytes
 	Double_bytes: INTEGER is
 			-- Number of bytes in a value of type DOUBLE
 		once
-#ifdef VE || SE
+#ifdef (VE && VE_4_1) || SE
 			Result := Double_bits // Byte_bits
 #else
 			Result := old_double_bytes
@@ -125,7 +125,7 @@ feature -- Bytes
 	Integer_bytes: INTEGER is
 			-- Number of bytes in a value of type INTEGER
 		once
-#ifdef VE || SE
+#ifdef (VE && VE_4_1) || SE
 			Result := Integer_bits // Byte_bits
 #else
 			Result := old_integer_bytes
@@ -135,7 +135,7 @@ feature -- Bytes
 	Pointer_bytes: INTEGER is
 			-- Number of bytes in a value of type POINTER
 		once
-#ifdef VE || SE
+#ifdef (VE && VE_4_1) || SE
 			Result := Pointer_bits // Byte_bits
 #else
 			Result := old_pointer_bytes
@@ -145,7 +145,7 @@ feature -- Bytes
 	Real_bytes: INTEGER is
 			-- Number of bytes in a value of type REAL
 		once
-#ifdef VE || SE
+#ifdef (VE && VE_4_1) || SE
 			Result := Real_bits // Byte_bits
 #else
 			Result := old_real_bytes
