@@ -17,12 +17,19 @@ indexing
 
 class UC_CTYPE_UPPERCASE
 
+inherit
+
+	ANY
+
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 feature {UC_CTYPE} -- Uppercase conversion tables
 
 	uppercase_00: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -85,14 +92,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     208,209,210,211,
 		     212,213,214,-1,
 		     216,217,218,219,
-		     220,221,222,376
-		     , udummy>>
+		     220,221,222,376>>
 	end
 
 	uppercase_01: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,256,-1,258,
+		     INTEGER_.to_integer (-1),256,-1,258,
 		     -1,260,-1,262,
 		     -1,264,-1,266,
 		     -1,268,-1,270,
@@ -155,14 +161,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,497,497,
 		     -1,500,-1,-1,
 		     -1,504,-1,506,
-		     -1,508,-1,510
-		     , udummy>>
+		     -1,508,-1,510>>
 		end
 
 	uppercase_02: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,512,-1,514,
+		     INTEGER_.to_integer (-1),512,-1,514,
 		     -1,516,-1,518,
 		     -1,520,-1,522,
 		     -1,524,-1,526,
@@ -225,14 +230,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_03: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -295,14 +299,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     922,929,931,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_04: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -365,14 +368,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,1264,-1,1266,
 		     -1,1268,-1,-1,
 		     -1,1272,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_05: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -435,13 +437,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_06: ARRAY [INTEGER] is
 		once
 			Result := <<
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -504,15 +506,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_1e: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,7680,-1,7682,
+		     INTEGER_.to_integer (-1),7680,-1,7682,
 		     -1,7684,-1,7686,
 		     -1,7688,-1,7690,
 		     -1,7692,-1,7694,
@@ -575,14 +575,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,7920,-1,7922,
 		     -1,7924,-1,7926,
 		     -1,7928,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_1f: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     7944,7945,7946,7947,
+		     INTEGER_.to_integer (7944),7945,7946,7947,
 		     7948,7949,7950,7951,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -645,14 +644,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,8188,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_21: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -715,14 +713,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_24: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -785,14 +782,13 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase_ff: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -855,8 +851,7 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , udummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	uppercase: ARRAY [ARRAY [INTEGER]] is
@@ -930,11 +925,5 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 		end
 
 --integer used: 3328
-
-feature {NONE} -- Constants
-
-	udummy: INTEGER is 2147483647
-			-- To be inserted in manifest arrays
-			-- in order to make SE 2.1b1 happy.
 
 end

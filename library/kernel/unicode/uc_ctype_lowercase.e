@@ -17,12 +17,19 @@ indexing
    
 class UC_CTYPE_LOWERCASE
 
+inherit
+
+	ANY
+
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 feature {UC_CTYPE} -- Lowercase conversion tables
 
 	lowercase_00: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -85,14 +92,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_01: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     257,-1,259,-1,
+		     INTEGER_.to_integer (257),-1,259,-1,
 		     261,-1,263,-1,
 		     265,-1,267,-1,
 		     269,-1,271,-1,
@@ -155,14 +161,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,499,499,-1,
 		     501,-1,405,447,
 		     505,-1,507,-1,
-		     509,-1,511,-1
-		     , ldummy>>
+		     509,-1,511,-1>>
 		end
 
 	lowercase_02: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     513,-1,515,-1,
+		     INTEGER_.to_integer (513),-1,515,-1,
 		     517,-1,519,-1,
 		     521,-1,523,-1,
 		     525,-1,527,-1,
@@ -225,14 +230,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_03: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -295,14 +299,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_04: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     1104,1105,1106,1107,
+		     INTEGER_.to_integer (1104),1105,1106,1107,
 		     1108,1109,1110,1111,
 		     1112,1113,1114,1115,
 		     1116,1117,1118,1119,
@@ -365,14 +368,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     1265,-1,1267,-1,
 		     1269,-1,-1,-1,
 		     1273,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_05: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -435,13 +437,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_06: ARRAY [INTEGER] is
 		once
 			Result := <<
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -504,15 +506,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_1e: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     7681,-1,7683,-1,
+		     INTEGER_.to_integer (7681),-1,7683,-1,
 		     7685,-1,7687,-1,
 		     7689,-1,7691,-1,
 		     7693,-1,7695,-1,
@@ -575,14 +575,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     7921,-1,7923,-1,
 		     7925,-1,7927,-1,
 		     7929,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_1f: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     7936,7937,7938,7939,
 		     7940,7941,7942,7943,
@@ -645,14 +644,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     8056,8057,8060,8061,
-		     8179,-1,-1,-1
-		     , ldummy>>
+		     8179,-1,-1,-1>>
 		end
 
 	lowercase_21: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -715,14 +713,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 	end
 
 	lowercase_24: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -785,14 +782,13 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase_ff: ARRAY [INTEGER] is
 		once
 			Result := <<
-		     -1,-1,-1,-1,
+		     INTEGER_.to_integer (-1),-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
@@ -855,8 +851,7 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
 		     -1,-1,-1,-1,
-		     -1,-1,-1,-1
-		     , ldummy>>
+		     -1,-1,-1,-1>>
 		end
 
 	lowercase: ARRAY [ARRAY [INTEGER]] is
@@ -930,11 +925,5 @@ feature {UC_CTYPE} -- Lowercase conversion tables
 		end
 
 --integer used: 3328
-
-feature {NONE} -- Constants
-
-	ldummy: INTEGER is 2147483647
-			-- To be inserted in manifest arrays
-			-- in order to make SE 2.1b1 happy.
 
 end
