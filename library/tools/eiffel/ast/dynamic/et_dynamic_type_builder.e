@@ -50,12 +50,19 @@ inherit
 			report_integer_constant,
 			report_integer_8_constant,
 			report_integer_16_constant,
+			report_integer_32_constant,
 			report_integer_64_constant,
+			report_natural_constant,
+			report_natural_8_constant,
+			report_natural_16_constant,
+			report_natural_32_constant,
+			report_natural_64_constant,
 			report_local_assignment_target,
 			report_local_variable,
 			report_local_variable_declaration,
 			report_manifest_array,
 			report_manifest_tuple,
+			report_manifest_type,
 			report_pointer_expression,
 			report_precursor_expression,
 			report_precursor_instruction,
@@ -115,7 +122,13 @@ feature {NONE} -- Initialization
 			create integer_index.make (0)
 			create integer_8_index.make (0)
 			create integer_16_index.make (0)
+			create integer_32_index.make (0)
 			create integer_64_index.make (0)
+			create natural_index.make (0)
+			create natural_8_index.make (0)
+			create natural_16_index.make (0)
+			create natural_32_index.make (0)
+			create natural_64_index.make (0)
 			create pointer_index.make (0)
 			create none_index.make (0)
 			create string_index.make (0)
@@ -401,7 +414,13 @@ feature {NONE} -- Generation
 			integer_index.put (0)
 			integer_8_index.put (0)
 			integer_16_index.put (0)
+			integer_32_index.put (0)
 			integer_64_index.put (0)
+			natural_index.put (0)
+			natural_8_index.put (0)
+			natural_16_index.put (0)
+			natural_32_index.put (0)
+			natural_64_index.put (0)
 			pointer_index.put (0)
 			none_index.put (0)
 			string_index.put (0)
@@ -940,6 +959,24 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that an integer_32 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.integer_32_type
+				l_type.set_alive
+				if a_constant.index = 0 and integer_32_index.item /= 0 then
+					a_constant.set_index (integer_32_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if integer_32_index.item = 0 then
+					integer_32_index.put (a_constant.index)
+				end
+			end
+		end
+
 	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT) is
 			-- Report that an integer_64 has been processed.
 		local
@@ -1039,6 +1076,109 @@ feature {NONE} -- Event handling
 				l_type := current_system.dynamic_type (a_type, current_type)
 				l_type.set_alive
 				set_dynamic_type_set (l_type, an_expression)
+			end
+		end
+
+	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a manifest type of type `a_type' in context of
+			-- in `a_context' has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.dynamic_type (a_type, a_context)
+				l_type.set_alive
+				set_dynamic_type_set (l_type, an_expression)
+			end
+		end
+
+	report_natural_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.natural_type
+				l_type.set_alive
+				if a_constant.index = 0 and natural_index.item /= 0 then
+					a_constant.set_index (natural_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if natural_index.item = 0 then
+					natural_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_8 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.natural_8_type
+				l_type.set_alive
+				if a_constant.index = 0 and natural_8_index.item /= 0 then
+					a_constant.set_index (natural_8_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if natural_8_index.item = 0 then
+					natural_8_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_16 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.natural_16_type
+				l_type.set_alive
+				if a_constant.index = 0 and natural_16_index.item /= 0 then
+					a_constant.set_index (natural_16_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if natural_16_index.item = 0 then
+					natural_16_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_32 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.natural_32_type
+				l_type.set_alive
+				if a_constant.index = 0 and natural_32_index.item /= 0 then
+					a_constant.set_index (natural_32_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if natural_32_index.item = 0 then
+					natural_32_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_64 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.natural_64_type
+				l_type.set_alive
+				if a_constant.index = 0 and natural_64_index.item /= 0 then
+					a_constant.set_index (natural_64_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if natural_64_index.item = 0 then
+					natural_64_index.put (a_constant.index)
+				end
 			end
 		end
 
@@ -1580,8 +1720,26 @@ feature {ET_FEATURE_CHECKER} -- Access
 	integer_16_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_16 expressions in `dynamic_type_sets'
 
+	integer_32_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of integer_32 expressions in `dynamic_type_sets'
+
 	integer_64_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_64 expressions in `dynamic_type_sets'
+
+	natural_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of natural expressions in `dynamic_type_sets'
+
+	natural_8_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of natural_8 expressions in `dynamic_type_sets'
+
+	natural_16_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of natural_16 expressions in `dynamic_type_sets'
+
+	natural_32_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of natural_32 expressions in `dynamic_type_sets'
+
+	natural_64_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of natural_64 expressions in `dynamic_type_sets'
 
 	pointer_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of pointer expressions in `dynamic_type_sets'
@@ -1701,7 +1859,13 @@ invariant
 	integer_index_not_void: integer_index /= Void
 	integer_8_index_not_void: integer_8_index /= Void
 	integer_16_index_not_void: integer_16_index /= Void
+	integer_32_index_not_void: integer_32_index /= Void
 	integer_64_index_not_void: integer_64_index /= Void
+	natural_index_not_void: natural_index /= Void
+	natural_8_index_not_void: natural_8_index /= Void
+	natural_16_index_not_void: natural_16_index /= Void
+	natural_32_index_not_void: natural_32_index /= Void
+	natural_64_index_not_void: natural_64_index /= Void
 	pointer_index_not_void: pointer_index /= Void
 	none_index_not_void: none_index /= Void
 	string_index_not_void: string_index /= Void

@@ -56,7 +56,13 @@ feature {NONE} -- Initialization
 			integer_type := l_unknown_type
 			integer_8_type := l_unknown_type
 			integer_16_type := l_unknown_type
+			integer_32_type := l_unknown_type
 			integer_64_type := l_unknown_type
+			natural_type := l_unknown_type
+			natural_8_type := l_unknown_type
+			natural_16_type := l_unknown_type
+			natural_32_type := l_unknown_type
+			natural_64_type := l_unknown_type
 			real_type := l_unknown_type
 			double_type := l_unknown_type
 			pointer_type := l_unknown_type
@@ -71,7 +77,13 @@ feature {NONE} -- Initialization
 			integer_type_not_void: integer_type /= Void
 			integer_8_type_not_void: integer_8_type /= Void
 			integer_16_type_not_void: integer_16_type /= Void
+			integer_32_type_not_void: integer_32_type /= Void
 			integer_64_type_not_void: integer_64_type /= Void
+			natural_type_not_void: natural_type /= Void
+			natural_8_type_not_void: natural_8_type /= Void
+			natural_16_type_not_void: natural_16_type /= Void
+			natural_32_type_not_void: natural_32_type /= Void
+			natural_64_type_not_void: natural_64_type /= Void
 			real_type_not_void: real_type /= Void
 			double_type_not_void: double_type /= Void
 			pointer_type_not_void: pointer_type /= Void
@@ -136,8 +148,26 @@ feature -- Types
 	integer_16_type: ET_DYNAMIC_TYPE
 			-- Type "INTEGER_16"
 
+	integer_32_type: ET_DYNAMIC_TYPE
+			-- Type "INTEGER_32"
+
 	integer_64_type: ET_DYNAMIC_TYPE
 			-- Type "INTEGER_64"
+
+	natural_type: ET_DYNAMIC_TYPE
+			-- Type "NATURAL"
+
+	natural_8_type: ET_DYNAMIC_TYPE
+			-- Type "NATURAL_8"
+
+	natural_16_type: ET_DYNAMIC_TYPE
+			-- Type "NATURAL_16"
+
+	natural_32_type: ET_DYNAMIC_TYPE
+			-- Type "NATURAL_32"
+
+	natural_64_type: ET_DYNAMIC_TYPE
+			-- Type "NATURAL_64"
 
 	real_type: ET_DYNAMIC_TYPE
 			-- Type "REAL"
@@ -625,7 +655,13 @@ feature {NONE} -- Compilation
 			integer_type := dynamic_type (universe.integer_class, l_any)
 			integer_8_type := dynamic_type (universe.integer_8_class, l_any)
 			integer_16_type := dynamic_type (universe.integer_16_class, l_any)
+--			integer_32_type := dynamic_type (universe.integer_32_class, l_any)
 			integer_64_type := dynamic_type (universe.integer_64_class, l_any)
+--			natural_type := dynamic_type (universe.natural_class, l_any)
+			natural_8_type := dynamic_type (universe.natural_8_class, l_any)
+			natural_16_type := dynamic_type (universe.natural_16_class, l_any)
+			natural_32_type := dynamic_type (universe.natural_32_class, l_any)
+			natural_64_type := dynamic_type (universe.natural_64_class, l_any)
 			real_type := dynamic_type (universe.real_class, l_any)
 			double_type := dynamic_type (universe.double_class, l_any)
 			pointer_type := dynamic_type (universe.pointer_class, l_any)
@@ -849,7 +885,13 @@ invariant
 	integer_type_not_void: integer_type /= Void
 	integer_8_type_not_void: integer_8_type /= Void
 	integer_16_type_not_void: integer_16_type /= Void
+	integer_32_type_not_void: integer_32_type /= Void
 	integer_64_type_not_void: integer_64_type /= Void
+	natural_type_not_void: natural_type /= Void
+	natural_8_type_not_void: natural_8_type /= Void
+	natural_16_type_not_void: natural_16_type /= Void
+	natural_32_type_not_void: natural_32_type /= Void
+	natural_64_type_not_void: natural_64_type /= Void
 	real_type_not_void: real_type /= Void
 	double_type_not_void: double_type /= Void
 	pointer_type_not_void: pointer_type /= Void
