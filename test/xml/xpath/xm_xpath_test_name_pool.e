@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Test
 
-	test_a1_allocate_uris is
+	test_allocate_uris is
 		local
 			uri_code: INTEGER
 			counter: INTEGER
@@ -47,19 +47,36 @@ feature -- Test
 				create uri.make_from_string ("a")
 				uri.append_string (counter.out)
 				uri_code := default_pool.allocate_code_for_uri (uri)
-				assert ("URI code", uri_code > 0)
+				assert ("URI code", uri_code = 3 + counter)
 				counter:= counter + 1
 			end
 		end
 	
-	test_a2_one_name is
+	test_conversions is
 		local
-			name_code, uri_code: INTEGER
+			name_code, namespace_code, uri_code: INTEGER
+			xml_prefix, namespace_uri, local_name, display_name: STRING
 		do
 			name_code := default_pool.allocate_name ("test", testing_namespace, "test")
 			assert ("Positive name code", name_code > 0)
-			uri_code := default_pool.namespace_code ("test", testing_namespace)
-			assert ("Non-negative namespace code", uri_code >= 0)
+			xml_prefix := default_pool.prefix_from_name_code (name_code)
+			assert ("Prefix", xml_prefix /= Void and then xml_prefix.is_equal ("test"))
+			namespace_code := default_pool.namespace_code ("test", testing_namespace)
+			assert ("Non-negative namespace code", namespace_code >= 0)
+			uri_code := default_pool.uri_code_from_name_code (name_code)
+			assert ("URI code", uri_code = 3)
+			namespace_uri := default_pool.namespace_uri_from_name_code (name_code)
+			assert ("Namespace URI", namespace_uri /= Void and then namespace_uri.is_equal (testing_namespace))
+			local_name := default_pool.local_name_from_name_code (name_code)
+			assert ("Local name", local_name /= Void and then local_name.is_equal ("test"))
+			display_name := default_pool.display_name_from_name_code (name_code)
+			assert ("Display name", display_name /= Void and then display_name.is_equal ("test:test"))
+			namespace_uri := default_pool.uri_from_namespace_code (namespace_code)
+			assert ("Namespace URI 2", namespace_uri /= Void and then namespace_uri.is_equal (testing_namespace))
+			namespace_uri := default_pool.uri_from_uri_code (uri_code)
+			assert ("Namespace URI 3", namespace_uri.is_equal (testing_namespace))						
+			xml_prefix := default_pool.prefix_from_namespace_code (namespace_code)
+			assert ("Prefix 2",  xml_prefix /= Void and then xml_prefix.is_equal ("test"))
 		end
 
 feature -- Setting
@@ -67,13 +84,8 @@ feature -- Setting
 	set_up is
 		local
 		do
-			create shared_pool.make
-			if shared_pool.default_pool = Void then
-				create default_pool.make
-				shared_pool.set_default_pool (default_pool)
-			else
-				default_pool := shared_pool.default_pool
-			end
+			create shared_pool.make_rebuild
+			default_pool := shared_pool.default_pool
 		end
 
 	tear_down is

@@ -57,9 +57,12 @@ creation
 
 feature -- Initialization
 
-	make is
+	make (shared_pool: XM_XPATH_SHARED_NAME_POOL) is
 			-- Establish invariant
+		require
+			shared_pool_not_void: shared_pool /= Void
 		do
+			default_pool := shared_pool
 			create document_number_map.make_map (10)
 			create hash_slots.make (0, 1023)
 			
@@ -239,34 +242,61 @@ feature -- Access
 			if index = 0 then
 				Result := ""
 			else
+				debug ("name pool")
+					io.error.put_string ("prefix_with_index: searching for index ")
+					io.error.put_string (index.out)
+					io.error.put_new_line
+				end
 				from
 					the_prefixes := prefixes_for_uri.item (uri_code + 1)
 					counter := 1
 					last_blank := 1
 					length_of_prefixes := the_prefixes.count
 				invariant
-					Result /= Void implies found = True and counter = index
+					Result /= Void implies found = True and counter = index + 1
 				variant
-					index - counter
+					index - counter + 1
 				until
 					found = True
 				loop
 					blank := the_prefixes.index_of (' ', last_blank)
 					if blank = 0 then
 						found := True -- no more prefixes
+						counter := counter - 1
 							check
 								void_result: Result = Void
 							end
 					else
-						this_prefix := the_prefixes.substring (last_blank, blank + 1)
+						this_prefix := the_prefixes.substring (last_blank, blank - 1)
+						debug ("name pool")
+							io.error.put_string ("prefix_with_index: found prefix ")
+							io.error.put_string (this_prefix)
+							io.error.put_string (" when searching on iteration ")
+							io.error.put_string (counter.out)
+							io.error.put_new_line
+							io.error.put_string ("prefix_with_index: searching from position ")
+							io.error.put_string (last_blank.out)
+							io.error.put_string (" to position ")
+							io.error.put_string ((blank - 1).out)
+							io.error.put_new_line
+						end	
 						last_blank := blank + 1 -- position AFTER the last blank
-						if last_blank >  length_of_prefixes then found := True end
+						if last_blank > length_of_prefixes then found := True end
 						if counter = index then
 							found := True
 							Result := this_prefix
+							counter := counter + 1
 						end
-						if found = False then counter := counter + 1 end
 					end
+				end
+			end
+			debug ("name pool")
+				if Result /= Void then
+					io.error.put_string ("prefix_with_index: Found prefix ")
+					io.error.put_string (Result)
+					io.error.put_new_line
+				else
+					io.error.put_string ("prefix_with_index: prefix not found%N")
 				end
 			end
 		end
@@ -330,7 +360,7 @@ feature -- Access
 				end
 			end
 		ensure
-			correct_range: Result > -2 and Result <= 0xfffff
+			correct_range: Result > -2 and Result <= 0x000fffff
 		end
 
 	fingerprint_from_expanded_name (expanded_name: STRING): INTEGER is
@@ -353,7 +383,7 @@ feature -- Access
 			end
 			Result := allocate_name ("", namespace, local_name)
 		ensure
-			valid_name_code: Result > 0 and Result <= 0xfffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
 feature -- Status report
@@ -572,7 +602,7 @@ feature -- Element change
 				end
 			Result := allocate_name_using_uri_code (xml_prefix, uri_code, local_name)
 		ensure
-			valid_name_code: Result > 0 and Result <= 0xfffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
 	allocate_name_using_uri_code (xml_prefix: STRING; uri_code: INTEGER; local_name: STRING): INTEGER is
@@ -583,6 +613,7 @@ feature -- Element change
 			local_name_not_void: local_name /= Void
 		local
 			hash_code, depth, the_prefix_index: INTEGER
+			prefix_code: INTEGER -- should be INTEGER_16
 			key: STRING
 			the_name_entry, next, new_entry: XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
@@ -602,13 +633,24 @@ feature -- Element change
 					valid_prefix_index: the_prefix_index > -2 and the_prefix_index < 255
 				end
 			if the_prefix_index < 0 then
+				debug ("name pool")
+					io.error.put_string ("allocate_name_using_name_code: Allocating an index for prefix ")
+					io.error.put_string (xml_prefix)
+					io.error.put_new_line
+				end
+				prefix_code := allocate_code_for_prefix (xml_prefix)
 				create key.make_from_string (xml_prefix)
 				key.extend (' ')
 				prefixes_for_uri.item (uri_code + 1).append (key)
-				the_prefix_index := allocate_code_for_prefix (xml_prefix)
+				the_prefix_index := prefix_index (uri_code, xml_prefix)
 					check
 						valid_prefix_index2: the_prefix_index > 0 and the_prefix_index < 255
-					end		
+					end
+				debug ("name pool")
+					io.error.put_string ("allocate_name_using_name_code: New prefix index is ")
+					io.error.put_string (the_prefix_index.out)
+					io.error.put_new_line				
+				end
 			end
 			if hash_slots.item (hash_code) = Void then
 				create the_name_entry.make (uri_code, local_name)
@@ -641,7 +683,7 @@ feature -- Element change
 			end
 			Result := (the_prefix_index |<< 20) + (depth |<< 10) + hash_code
 		ensure
-			valid_name_code: Result > 0 and Result <= 0xfffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
 feature -- Conversion
@@ -670,6 +712,7 @@ feature -- Conversion
 		local
 			entry: XM_XPATH_NAME_ENTRY
 		do
+			entry := name_entry (name_code)
 			if entry = Void then
 				unknown_name_code (name_code) -- raises an exception
 			else
@@ -703,7 +746,12 @@ feature -- Conversion
 			the_prefix_index: INTEGER
 		do
 			uri_code := uri_code_from_name_code (name_code)
-			the_prefix_index := (name_code |>> 20) & 0xff
+			the_prefix_index := (name_code |>> 20) & 0x000000ff
+			debug ("name pool")
+					io.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
+					io.error.put_string (the_prefix_index.out)
+					io.error.put_new_line
+			end
 			Result := prefix_with_index (uri_code, the_prefix_index)
 		ensure
 			result_may_be_void: True
@@ -721,7 +769,7 @@ feature -- Conversion
 			if entry = Void then
 				unknown_name_code (name_code) -- raises an exception
 			else
-				the_prefix_index := (name_code |>> 20) & 0xff
+				the_prefix_index := (name_code |>> 20) & 0x000000ff
 				if the_prefix_index = 0 then
 					Result := entry.local_name
 				else
@@ -737,7 +785,15 @@ feature -- Conversion
 	uri_from_namespace_code (a_namespace_code: INTEGER): STRING is
 			-- Namespace URI from `namespace_code'
 		do
-			Result := uris.item ((a_namespace_code & 0xffff) + 1)
+			debug ("name pool")
+					io.error.put_string ("uri_from_namespace_code: Namespace code is ")
+					io.error.put_string (a_namespace_code.out)
+					io.error.put_new_line
+					io.error.put_string ("uri_from_namespace_code: masked Namespace code is ")
+					io.error.put_string ((a_namespace_code & 0x0000ffff).out)
+					io.error.put_new_line					
+			end
+			Result := uris.item ((a_namespace_code & 0x0000ffff) + 1)
 		end
 		
 	uri_from_uri_code (uri_code: INTEGER): STRING is
@@ -766,15 +822,15 @@ feature {NONE} -- Implementation
 			found: BOOLEAN
 			entry: XM_XPATH_NAME_ENTRY
 		do
-			hash_code := name_code & 0x3ff
-			depth := (name_code |>> 10) & 0x3ff
+			hash_code := name_code & 0x000003ff
+			depth := (name_code |>> 10) & 0x000003ff
 			entry := hash_slots.item (hash_code)
 			from
 				counter := 1
 			variant
-				depth - counter
+				depth - counter + 1
 			until
-				counter = depth or found = True
+				counter + 1 > depth or found = True
 			loop
 				if entry = Void then
 					found := True
@@ -884,14 +940,9 @@ feature {NONE} -- Implementation
 			impossible: False
 		end
 	
-	default_pool: XM_XPATH_SHARED_NAME_POOL is
-			-- The default singular instance of an `XM_XPATH_NAME_POOL';
+	default_pool: XM_XPATH_SHARED_NAME_POOL
+			-- The default shared instance of an `XM_XPATH_NAME_POOL';
 			--  used unless the user deliberately wants to manage name pools himself
-		do
-			create Result.make
-		ensure
-			default_pool_not_void: Result /= Void
-		end
 
 	document_number_map: DS_HASH_TABLE [INTEGER, XM_XPATH_TINY_DOCUMENT] -- TODO - ought to be DS_WEAK_HASH_TABLE, if/when one exists
 			-- Maps documents to document numbers
@@ -915,7 +966,8 @@ feature {NONE} -- Implementation
 			-- Highest number uri in use
 	
 invariant
-	
+
+	default_pool_not_void: default_pool /= Void	
 	document_map_not_void: document_number_map /= Void
 	fixed_hash_slots: hash_slots /= Void and then hash_slots.capacity = 1024
 	prefixes_not_void: prefixes /= Void
