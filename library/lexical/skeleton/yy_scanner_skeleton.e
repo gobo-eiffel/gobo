@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			--	Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
-	yy_array_subcopy (an_array, other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
+	yy_array_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to `an_array' starting at index `index_pos'.
 		require

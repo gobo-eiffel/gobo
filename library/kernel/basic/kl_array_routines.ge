@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Element change
 
-	subcopy (an_array, other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (an_array: ARRAY [G]; other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to `an_array' starting at index `index_pos'.
 		require
