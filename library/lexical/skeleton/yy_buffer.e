@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			nb: INTEGER
 		do
 			nb := str.count + 2
-			!KL_CHARACTER_BUFFER! buff.make (nb)
+			buff := new_default_buffer (nb)
 			buff.fill_from_string (str, 1)
 			buff.put (End_of_buffer_character, nb - 1)
 			buff.put (End_of_buffer_character, nb)
@@ -251,6 +251,16 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	new_default_buffer (a_number_of_bytes: INTEGER): like content is
+			-- Create a new buffer that is like `content'.
+		require
+			number_of_bytes_has_room_for_EOB_characters: a_number_of_bytes >= 2
+		do
+			!KL_CHARACTER_BUFFER! Result.make (a_number_of_bytes)
+		ensure
+			buffer_returned: Result /= Void
+		end
 
 	resize is
 			-- Increase `capacity'.
