@@ -1263,6 +1263,31 @@ feature -- Conversion
 			Result := prefixes.item ((a_namespace_code // bits_16) + 1)
 		end
 
+	expanded_name_from_name_code (a_name_code: INTEGER): STRING is
+			-- Expanded name of `a_name_code'
+		require
+			positive_name_code: a_name_code >= 0
+		local
+			a_fingerprint: INTEGER
+			a_name_entry: XM_XPATH_NAME_ENTRY
+		do
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if a_fingerprint < 1024 then
+				Result := type_factory.display_name (a_fingerprint)
+			else
+				a_name_entry := name_entry (a_name_code)
+				if a_name_entry = Void then
+					Result := ""
+				elseif a_name_entry.uri_code = 0 then
+					Result := a_name_entry.local_name
+				else
+					Result := STRING_.appended_string ("{", uri_from_uri_code (a_name_entry.uri_code))
+					Result := STRING_.appended_string (Result, "}")
+					Result := STRING_.appended_string (Result, a_name_entry.local_name)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	name_entry (a_name_code: INTEGER): XM_XPATH_NAME_ENTRY is

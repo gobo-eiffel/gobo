@@ -11,4 +11,10 @@ indexing
 	revision: "$Revision$"
 
 class XM_XSLT_CONFIGURATION
+
+feature -- Access
+
+	are_external_functions_allowed: BOOLEAN
+			-- Are extension functions allowed?
+
 end

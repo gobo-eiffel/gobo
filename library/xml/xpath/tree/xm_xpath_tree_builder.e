@@ -97,18 +97,7 @@ feature -- Events
 			an_element: XM_XPATH_TREE_ELEMENT
 		do
 			if not has_error then
-				an_element := node_factory.new_element_node (document, current_composite_node, Void, Void, a_name_code, next_node_number)
-				if an_element.is_error then
-					has_error := True
-					last_error := an_element.error_value.error_message
-				else
-					next_node_number := next_node_number + 1
-					current_depth := current_depth + 1
-					if current_composite_node = document then
-						document.set_document_element (an_element)
-					end
-					current_composite_node := an_element
-				end
+				pending_element_name_code := a_name_code
 			end
 		end
 
@@ -155,30 +144,21 @@ feature -- Events
 			a_counter: INTEGER
 		do
 			if not has_error then
-				an_element ?= current_composite_node
-					check
-						element_for_content: an_element /= Void
-						-- Documents don't have namespaces or attributes
+				an_element := node_factory.new_element_node (document, current_composite_node, pending_attributes, pending_namespaces, pending_element_name_code, next_node_number)
+				if an_element.is_error then
+					has_error := True
+					last_error := an_element.error_value.error_message
+				else
+					next_node_number := next_node_number + 1
+					current_depth := current_depth + 1
+					if current_composite_node = document then
+						document.set_document_element (an_element)
 					end
-				if pending_namespaces /= Void then
-					from
-						a_cursor := pending_namespaces.new_cursor
-						a_cursor.start
-					variant
-						pending_namespaces.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						an_element.add_namespace (a_cursor.item)
-						a_cursor.forth
-					end
+					current_composite_node := an_element
 				end
-				if pending_attributes /= Void then
-					an_element.set_attribute_collection (pending_attributes)
-				end
-				pending_namespaces := Void
-				pending_attributes := Void
 			end
+			pending_namespaces := Void
+			pending_attributes := Void
 		end
 
 	end_element is
@@ -278,6 +258,9 @@ feature {NONE} -- Implementation
 
 	pending_attributes: XM_XPATH_ATTRIBUTE_COLLECTION
 			-- Pending attributes
+
+	pending_element_name_code: INTEGER
+			-- Name code for pending element
 
 invariant
 

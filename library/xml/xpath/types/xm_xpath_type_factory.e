@@ -94,7 +94,7 @@ feature -- Access
 		end
 
 	display_name  (a_fingerprint: INTEGER): STRING is
-			-- Conventional prefix for `a_fingerprint'
+			-- Conventional expanded name for `a_fingerprint'
 		require
 			standard_name: is_built_in_fingerprint (a_fingerprint)
 		do

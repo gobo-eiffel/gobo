@@ -82,6 +82,12 @@ feature -- Access
 			Result := attribute_type_codes.item (an_attribute_index)
 		end
 
+	name_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER] is
+			-- A cursor over the name codes
+		do
+			Result := attribute_name_codes.new_cursor
+		end
+
 feature -- Status report
 	
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is

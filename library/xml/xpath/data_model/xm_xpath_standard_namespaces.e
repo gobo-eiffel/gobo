@@ -239,10 +239,29 @@ feature -- Access
 
 			-- XSLT Attribute names
 
+	Name_attribute: STRING is "name"
 	Extension_element_prefixes_attribute: STRING is "extension-element-prefixes"
 	Exclude_result_prefixes_attribute: STRING is "exclude-result-prefixes"
 	Version_attribute: STRING is "version"
 	Xpath_default_namespace_attribute: STRING is "xpath-default-namespace"
+	Id_attribute: STRING is "id"
+	Default_validation_attribute: STRING is "default-validation"
+	Xslt_extension_element_prefixes_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Extension_element_prefixes_attribute
+		end
+	Xslt_exclude_result_prefixes_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Exclude_result_prefixes_attribute
+		end
+	Xslt_version_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Version_attribute
+		end
+	Xslt_xpath_default_namespace_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Xpath_default_namespace_attribute
+		end
 	
 feature -- Status report
 

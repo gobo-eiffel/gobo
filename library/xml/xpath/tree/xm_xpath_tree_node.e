@@ -87,6 +87,20 @@ feature -- Access
 			Result := -1 -- default implementation for nameless nodes
 		end
 
+	uri: STRING is
+			-- URI part of the name of this node;
+			-- This is the URI corresponding to the prefix,
+			--  or the URI of the default namespace if appropriate.
+		do
+			if name_code = -1 then
+				Result := ""
+			else
+				Result := document.name_pool.namespace_uri_from_name_code (name_code)
+			end
+		ensure
+			uri_not_void: Result /= Void
+		end
+
 	node_name: STRING is
 			-- Qualified name
 		do

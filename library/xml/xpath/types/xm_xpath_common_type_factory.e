@@ -73,6 +73,23 @@ feature -- Access
 			Result := local_names.item (a_fingerprint)
 		end
 
+	expanded_standard_name (a_fingerprint: INTEGER): STRING is
+			-- Expanded name of `a_fingerprint'
+		require
+			standard_fingerprint: a_fingerprint < 1024
+		local
+			a_uri: STRING
+		do
+			a_uri := standard_uri (a_fingerprint)
+			if a_uri.count = 0 then
+				Result := standard_local_name (a_fingerprint)
+			else
+			end
+		ensure
+			expanded_name_not_void: Result /= Void
+		end
+			
+
 	any_simple_type: XM_XPATH_ANY_SIMPLE_TYPE is
 			-- xs:anySimpleType
 		once

@@ -22,7 +22,8 @@
     <option name="garbage_collector" value="internal"/> 
     <option name="gc_info" value="false"/> 
     <option name="finalize" value="false"/>
-    <!-- <option name="debug_tag" value="XPath name pool"/>-->
+    <!--<option name="debug_tag" value="XSLT stylesheet compilation"/>-->
+    <!--<option name="debug_tag" value="XPath content emitter"/>-->
   </option>
   <option if="${GOBO_DOTNET}">
     <option name="msil_generation" value="true"/>

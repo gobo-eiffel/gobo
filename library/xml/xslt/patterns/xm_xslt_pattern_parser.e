@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			key_pattern: XM_XSLT_KEY_PATTERN
 			id_pattern: XM_XSLT_ID_PATTERN
 			id_value: XM_XPATH_EXPRESSION
-			connector, var_name_code: INTEGER
+			connector: INTEGER
 			root_only, finished: BOOLEAN
 			message, key_name: STRING
 		do
@@ -288,8 +288,8 @@ feature {NONE} -- Implementation
 												report_parse_error (message, 3)
 												finished := True
 											else
-												var_name_code := make_name_code (tokenizer.last_token_value, False) \\ bits_20
-												environment.bind_variable (var_name_code)
+												generate_name_code (tokenizer.last_token_value, False)
+												environment.bind_variable (last_generated_name_code  \\ bits_20)
 												create {XM_XPATH_VARIABLE_REFERENCE} id_value.make (environment.last_bound_variable)
 											end
 										end
@@ -361,8 +361,8 @@ feature {NONE} -- Implementation
 																report_parse_error (message, 3)
 																finished := True
 															else
-																var_name_code := make_name_code (tokenizer.last_token_value, False) \\ bits_20
-																environment.bind_variable (var_name_code)
+																generate_name_code (tokenizer.last_token_value, False)
+																environment.bind_variable (last_generated_name_code \\ bits_20)
 																create {XM_XPATH_VARIABLE_REFERENCE} id_value.make (environment.last_bound_variable)
 															end
 														end
@@ -370,7 +370,8 @@ feature {NONE} -- Implementation
 														report_parse_error ("id value must be either a literal or a variable reference", 3)
 														finished := True
 													end
-													create {XM_XSLT_KEY_PATTERN} key_pattern.make (make_name_code (key_name, False), id_value)
+													generate_name_code (key_name, False)
+													create {XM_XSLT_KEY_PATTERN} key_pattern.make (last_generated_name_code, id_value)
 													tokenizer.next
 													if tokenizer.is_lexical_error then
 														report_parse_error (tokenizer.last_lexical_error, 3)

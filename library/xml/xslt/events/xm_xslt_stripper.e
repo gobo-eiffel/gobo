@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
-	XM_UNICODE_CHARACTERS_1_1
+	XM_XSLT_STRING_ROUTINES
 
 creation
 
@@ -234,27 +234,6 @@ feature {NONE} -- Implementation
 
 	element: XM_XPATH_TREE_ELEMENT
 			-- Dummy element for `{XM_XSLT_MODE}.rule'
-	
-	is_all_whitespace (chars: STRING): BOOLEAN is
-			-- Does `chars' consist only of XML white-space characters?
-		local
-			a_character: CHARACTER
-			counter: INTEGER
-		do
-			from
-				counter := 1
-				Result := True
-			variant
-				chars.count + 1 - counter
-			until
-				Result = False or else counter > chars.count
-			loop
-				if not is_space (chars.item_code (counter)) then
-					Result := False
-				end
-				counter := counter + 1
-			end
-		end
 
 invariant
 	

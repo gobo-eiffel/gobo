@@ -27,7 +27,6 @@ feature
 	test_simple is
 			-- Simple tree.
 		local
-			a_node_factory: XM_XSLT_NODE_FACTORY
 			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_uri: UT_URI
@@ -54,17 +53,17 @@ feature
 			a_number: XM_XSLT_NUMBER
 		do
 			conformance.set_basic_xslt_processor
-			create a_node_factory.make (default_pool.default_pool, False)
-			create a_stylesheet
 			create a_configuration
+			create a_stylesheet.make (a_configuration)
 			create a_uri.make ("../xpath/data/books.xsl")
 			create a_uri_source.make (a_uri)
-			a_stylesheet.load_stylesheet_module (a_uri_source, a_configuration, default_pool.default_pool, a_node_factory)
+			a_stylesheet.prepare (a_uri_source, False)
 			assert ("Stylesheet compiled without errors", not a_stylesheet.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= void)
 			a_document_element ?= a_stylesheet.last_loaded_module.document_element
-			assert ("xsl:transform", a_document_element /= Void and then STRING_.same_string (a_document_element.node_name, "xsl:transform"))
+			--print (a_document_element.error_value.error_message)
 			assert ("Stylesheet compiled without errors", not a_document_element.is_stylesheet_in_error)
+			assert ("xsl:transform", a_document_element /= Void and then STRING_.same_string (a_document_element.node_name, "xsl:transform"))
 			a_key ?= a_document_element.first_child
 			assert ("xsl:key 1", a_key /= Void)
 			a_key ?= a_key.next_sibling

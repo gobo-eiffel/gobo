@@ -262,8 +262,12 @@ feature -- Tag
 			a_prefix, a_namespace_prefix, a_message: STRING
 		do
 			debug ("XPath content emitter")
-				std.error.put_string ("On_attribute: local name is ")
+				std.error.put_string ("On_attribute: namespace is ")
+				std.error.put_string (a_namespace)
+				std.error.put_string (", local name is ")
 				std.error.put_string (a_local_part)
+				std.error.put_string (", value is ")
+				std.error.put_string (a_value)
 				std.error.put_new_line
 			end
 			if a_namespace = Void then

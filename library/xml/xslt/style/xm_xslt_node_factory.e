@@ -158,9 +158,6 @@ feature {NONE} -- Implementation
 			
 			if Result /= Void then
 				if a_parent /= Void then a_parent.add_child (Result) end
-				
-				-- TODO - process XSLT attributes
-
 				if not Result.is_error then
 					Result.process_extension_element_attribute (Extension_element_prefixes_attribute)
 					if not Result.is_error then
@@ -189,6 +186,18 @@ feature {NONE} -- Implementation
 
 			create {XM_XSLT_LITERAL_RESULT_ELEMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			if a_parent /= Void then a_parent.add_child (Result) end
+			if not Result.is_error then
+				Result.process_extension_element_attribute (Xslt_extension_element_prefixes_attribute)
+				if not Result.is_error then
+					Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
+					if not Result.is_error then
+						Result.process_version_attribute (Xslt_version_attribute)
+					end
+					if not Result.is_error then
+						Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
+					end
+				end
+			end
 		end
 
 invariant
