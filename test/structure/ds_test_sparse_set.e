@@ -14,7 +14,7 @@ deferred class DS_TEST_SPARSE_SET
 
 inherit
 
-	DS_TEST_CASE
+	TS_TEST_CASE
 
 feature -- Test
 

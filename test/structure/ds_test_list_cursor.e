@@ -14,7 +14,7 @@ deferred class DS_TEST_LIST_CURSOR
 
 inherit
 
-	DS_TEST_CASE
+	TS_TEST_CASE
 		redefine
 			set_up, tear_down
 		end

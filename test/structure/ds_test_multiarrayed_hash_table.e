@@ -14,7 +14,7 @@ deferred class DS_TEST_MULTIARRAYED_HASH_TABLE
 
 inherit
 
-	DS_TEST_CASE
+	TS_TEST_CASE
 
 feature -- Test
 
