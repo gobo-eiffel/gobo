@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 
 	make (a_variables: like variables) is
 			-- Create a new Xace XML preprocessor.
-			-- Use `a_variable' for variable expansion
-			-- Use `a_variable' to decide whether "if" and "unless"
+			-- Use `a_variables' for variable expansion.
+			-- Use `a_variables' to decide whether "if" and "unless"
 			-- elements will be stripped off or not.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -47,9 +47,9 @@ feature -- Access
 feature -- Preprocessing
 
 	preprocess_composite (a_composite: XM_COMPOSITE) is
-			-- Expand variables in all attributes from `a_composite' and strip elements if they 
-			-- have "if" or "unless" attributes which
-			-- do not evaluate to `True'.
+			-- Expand variables in all attributes from `a_composite' and strip 
+			-- elements if they have "if" or "unless" attributes whichdo not
+			-- evaluate to `True'.
 		require
 			a_composite_not_void: a_composite /= Void
 		local
@@ -86,31 +86,33 @@ feature -- Preprocessing
 				end
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 	
 	should_strip_element (an_element: XM_ELEMENT): BOOLEAN is
-			-- Returns `True' if `an_element' contains a "if" of 
-			-- "unless" attribtue which evaluates to `False'.
+			-- Does `an_element' contain an "if" attribute which evaluates
+			-- to false or an "unless" attribute which evaluates to true?
 		require
 			an_element_not_void: an_element /= Void
 		do
 			if 
 				an_element.has_attribute_by_name (uc_if)
 			then
-				Result := not expression_result (an_element.attribute_by_name (uc_if).value)
+				Result := not is_expression_true (an_element.attribute_by_name (uc_if).value)
 			end
 			
 			if 
 				an_element.has_attribute_by_name (uc_unless)
 			then
-				Result := expression_result (an_element.attribute_by_name (uc_unless).value)
+				Result := is_expression_true (an_element.attribute_by_name (uc_unless).value)
 			end
 		end
-	
-	
-	expression_result (a_string: UC_STRING): BOOLEAN is
-			-- evaluates `a_string' and returns it's result.
+
+
+	is_expression_true (a_string: UC_STRING): BOOLEAN is
+			-- Does the expression `a_string' evaluate to `True'?
+			-- Use `variables' to look up the values of variables 
+			-- occurring in `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -137,9 +139,10 @@ feature {NONE} -- Implementation
 		end
 	
 	expand_attribute_variables (a_composite: XM_COMPOSITE) is
-			-- replace all variables with their values in in all 
-			-- attributes of `an_element', looking up the 
-			-- variable/value pairs in `variables'
+			-- Replace all variables with their values in all 
+			-- attributes of `a_composite'. 
+			-- Use `variables' to look up the values of all variables 
+			-- that occurre in the attributes.
 		require
 			a_composite_not_void: a_composite /= Void
 		local
@@ -151,7 +154,7 @@ feature {NONE} -- Implementation
 			from
 				a_cursor.start
 			until
-				a_cursor.off
+				a_cursor.after
 			loop
 				an_attribute ?= a_cursor.item
 				if

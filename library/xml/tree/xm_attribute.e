@@ -63,13 +63,14 @@ feature {ANY} -- Basic Routines
 			x.process_attribute (Current)
 		end
 	  
-	set_value (v: UC_STRING) is
+	set_value (a_value: UC_STRING) is
+			-- Set `foo' to `a_foo'.
 		require
-			v_not_void: v /= Void
+			a_value_not_void: a_value /= Void
 		do
-			implementation.set_value (v)
+			implementation.set_value (a_value)
 		ensure
-			value_set: value.is_equal (v)
+			value_set: value = a_value
 		end
 
 feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
@@ -85,7 +86,9 @@ feature {NONE}
 		end
    
 invariant
+	
 	value_not_void: value /= Void
+
 end -- class XM_ATTRIBUTE
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

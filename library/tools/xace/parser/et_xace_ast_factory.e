@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make (a_variables: like variables; an_error_handler: like error_handler) is	
 			-- Create a new AST factory.
 		require
-			a_variables_not_void: a_variables /= Void			
+			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			variables := a_variables
@@ -43,22 +43,22 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	variables: ET_XACE_VARIABLES
- 			-- Dollar variables defined
+			-- Dollar variables defined
 	
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
 feature -- Setting
- 
- 	set_variables (a_variables: like variables) is
- 			-- Set `variables' to `a_variables'.
- 		require
- 			a_variables_not_void: a_variables /= Void
- 		do
- 			variables := a_variables
- 		ensure
- 			variables_set: variables = a_variables
- 		end
+
+	set_variables (a_variables: like variables) is
+			-- Set `variables' to `a_variables'.
+		require
+			a_variables_not_void: a_variables /= Void
+		do
+			variables := a_variables
+		ensure
+			variables_set: variables = a_variables
+		end
 
 feature -- AST factory
 
@@ -574,6 +574,8 @@ feature {NONE} -- Constant
 
 invariant
 
+	variables_not_void: variables /= Void
+	
 	error_handler_not_void: error_handler /= Void
-
+	
 end -- class ET_XACE_AST_FACTORY

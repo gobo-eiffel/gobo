@@ -18,16 +18,19 @@ feature {ANY} -- Access
 	
 feature {ANY} -- Basic Routines
 	
-	set_value (v: UC_STRING) is
+	set_value (a_value: UC_STRING) is
+			-- Set `value' to `a_value'
 		require
-			v_not_void: v /= Void
+			a_value_not_void: a_value /= Void
 		deferred
 		ensure
-			value_set: value.is_equal (v)
+			value_set: value = a_value
 		end
 	
 invariant
+	
 	value_not_void: value /= Void
+
 end -- class XI_ATTRIBUTE
 
 --|-------------------------------------------------------------------------
