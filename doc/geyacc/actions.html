@@ -97,38 +97,28 @@ color="#808000"><tt>Void</tt></font> for reference types, etc.
 Specifying no action for a rule is equivalent to specifying an
 empty action <font color="#0000FF">{}</font>. Therefore the
 semantic value of such rules is set to its corresponding default
-value.</p>
-
-<blockquote>
-    <p><font size="2">Note that this is a departure from <em>yacc</em>
-    and <em>Bison</em> behavior: If you don't specify an action
-    for a rule, <em>yacc</em> and <em>Bison</em> would supply a
-    default: </font><font color="#0000FF" size="2"><tt>{ $$</tt></font><font
-    size="2"><tt> </tt></font><font color="#008080" size="2"><tt>:=</tt></font><font
-    size="2"><tt> </tt></font><font color="#0000FF" size="2"><tt>$1
-    }</tt></font><font size="2">. Thus, the value of the first
-    symbol in the rule would become the value of the whole rule.
-    Furthermore, there is no meaningful default action for an
-    empty rule in <em>yacc</em> and <em>Bison</em>; every empty
-    rule must have an explicit action unless the rule's value
-    does not matter</font>.</p>
-    <p><font size="2">The current behavior of <em>geyacc</em> was
-    deemed more appropriate in the Eiffel context. In Eiffel ,
-    all entities are initialized to its default value. </font><font
-    color="#0000FF" size="2"><tt>$$ </tt></font><font size="2">could
-    be considered as the </font><font color="#008080" size="2"><em><tt>Result</tt></em></font><font
-    size="2"> entity of the semantic action, therefore it is
-    initialized to its default value at the beginning of the
-    action as well. Furthermore, in a typed system such as
-    Eiffel, it is meaningless to use </font><font color="#0000FF"
-    size="2"><tt>{ $$</tt></font><font size="2"><tt> </tt></font><font
-    color="#008080" size="2"><tt>:=</tt></font><font size="2"><tt>
-    </tt></font><font color="#0000FF" size="2"><tt>$1 }</tt></font><font
-    size="2"> as a default action since there is no guarantee
-    that </font><font color="#0000FF" size="2"><tt>$$ </tt></font><font
-    size="2">and </font><font color="#0000FF" size="2"><tt>$1 </tt></font><font
-    size="2">will have conforming types.</font></p>
-</blockquote>
+value. Note that this is a departure from <em>yacc</em> and <em>Bison</em>
+behavior: If you don't specify an action for a rule, <em>yacc</em>
+and <em>Bison</em> would supply a default: <font color="#0000FF"><tt>{
+$$</tt></font><tt> </tt><font color="#008080"><tt>:=</tt></font><tt>
+</tt><font color="#0000FF"><tt>$1 }</tt></font>. Thus, the value
+of the first symbol in the rule would become the value of the
+whole rule. Furthermore, there is no meaningful default action
+for an empty rule in <em>yacc</em> and <em>Bison</em>; every
+empty rule must have an explicit action unless the rule's value
+does not matter. The current behavior of <em>geyacc</em> was
+deemed more appropriate in the Eiffel context. In Eiffel, all
+entities are initialized to its default value. <font
+color="#0000FF"><tt>$$</tt> </font>could be considered as the <font
+color="#008080"><em><tt>Result</tt></em></font> entity of the
+semantic action, therefore it is initialized to its default value
+at the beginning of the action as well. Furthermore, in a typed
+system such as Eiffel, it is meaningless to use <font
+color="#0000FF"><tt>{ $$</tt></font><tt> </tt><font
+color="#008080"><tt>:=</tt></font><tt> </tt><font color="#0000FF"><tt>$1
+}</tt></font> as a default action since there is no guarantee
+that <font color="#0000FF"><tt>$$</tt> </font>and <font
+color="#0000FF"><tt>$1</tt> </font>will have conforming types.</p>
 
 <p><font color="#0000FF"><tt>$N</tt></font> with <tt>N</tt> zero
 or negative is allowed for reference to tokens and groupings on
@@ -291,7 +281,7 @@ examples</a>. This Eiffel type is the actual generic parameter
 given to the generic skeleton class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
 However, in most programs, there will be a need for different
 Eiffel types for different kinds of tokens and groupings. For
-example, a numeric constant my need type <font color="#008080"><em><tt>INTEGER</tt></em></font>
+example, a numeric constant may need type <font color="#008080"><em><tt>INTEGER</tt></em></font>
 or <font color="#008080"><em><tt>DOUBLE</tt></em></font>, while a
 string constant needs type <font color="#008080"><em><tt>STRING</tt></em></font>,
 and a list of identifiers might need type <font color="#008080"><em><tt>LINKED_LIST
@@ -325,7 +315,7 @@ color="#0000FF"><tt>$N</tt></font> constructs always have that
 type. However, in case of multiple types for semantic values,
 each time <font color="#0000FF"><tt>$$</tt></font> or <font
 color="#0000FF"><tt>$N </tt></font>is used, its Eiffel type is
-determined by which symbol it referes to in the rule. In this
+determined by which symbol it refers to in the rule. In this
 example:</p>
 
 <blockquote>
@@ -372,10 +362,9 @@ color="#0000FF"><tt>$N</tt></font>.</p>
 <p>The mid-rule action can also have a semantic value. The action
 can set its value with an assignment to <font color="#0000FF"><tt>$$</tt></font>,
 and actions later in the rule can refer to the value using <font
-color="#0000FF"><tt>$N</tt></font>. Since there is no symbol to
-name the action, there is no way to declare the Eiffel type for
-the value. Therefore it will have by default the type used as
-actual generic parameter for <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.</p>
+color="#0000FF"><tt>$N</tt></font>. The Eiffel type for the
+semantic value of a mid-rule action is the same type as declared
+for the full grouping.</p>
 
 <p>There is no way to set the value of the entire rule with a
 mid-rule action, because assignments to <font color="#0000FF"><tt>$$</tt></font>
