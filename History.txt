@@ -51,6 +51,8 @@ Version 1.6 -
 	  of feature `force' (avoid unnecessary resizing).
 	* HASH_TABLE: optimization of features `put' and
 	  `force' (avoid unnecessary resizing).
+	* DS_SORTER: Added features `reverse_sort' and
+	  `reverse_sorted'.
 
 	Gobo Eiffel Kernel Library:
 
