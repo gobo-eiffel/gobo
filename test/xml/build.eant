@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+
+<project name="xml" default="help">
+
+	<description>
+		system: "Gobo Eiffel XML Library Tester"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant test"/>
+		<echo message="   geant test_ise"/>
+		<echo message="   geant test_hact"/>
+		<echo message="   geant test_se"/>
+		<echo message="   geant test_ve"/>
+		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant test_debug_hact"/>
+		<echo message="   geant test_debug_se"/>
+		<echo message="   geant test_debug_ve"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel XML Library testers.
+		</description>
+
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<set name="target" value="test"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_ise" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with ISE Eiffel.
+		</description>
+
+		<set name="target" value="test_ise"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_hact" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with Halstenbach Eiffel.
+		</description>
+
+		<set name="target" value="test_hact"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_ve" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with Visual Eiffel.
+		</description>
+
+		<set name="target" value="test_ve"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_se" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with SmallEiffel.
+		</description>
+
+		<set name="target" value="test_se"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<set name="target" value="test_debug"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with ISE Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_ise"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_hact" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with Halstenbach Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_hact"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_ve" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with Visual Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_ve"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_se" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with SmallEiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_se"/>
+		<set name="do_clean" value="true"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="oasis"/>
+		<geant file="build.eant" target="clean" dir="oasis" if="${do_clean}"/>
+	</target>
+
+</project>
