@@ -54,7 +54,8 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			log ("  [echo] " + message + "%N")
+			trace ("  [echo] ")
+			log (message + "%N")
 		end
 
 end -- class GEANT_ECHO_COMMAND
