@@ -100,30 +100,24 @@ feature -- Test
 			assert_equal ("add_date_duration", d2, d1)
 		end
 
---	test_date5 is -- removed as it uses obsolete feature
---			-- Test features of DT_DATE.
---		local
---			d1: DT_DATE
---		do
---			create d1.make (1932, 9, 9)
---			assert_integers_equal ("week_day0", Friday, d1.week_day)
---			assert_integers_equal ("ISO week_day0", Iso8601_friday, d1.iso8601_week_day)
---			create d1.make (1970, 1, 1)
---			assert_integers_equal ("week_day1", Thursday, d1.week_day)
---			assert_integers_equal ("ISO week_day1", Iso8601_thursday, d1.iso8601_week_day)
---			assert_integers_equal ("year_day1", 1, d1.year_day)
---			assert_integers_equal ("day_count1", 0, d1.day_count)
---			create d1.make (2000, 3, 31)
---			assert_integers_equal ("week_day2", Friday, d1.week_day)
---			assert_integers_equal ("ISO week_day2", Iso8601_friday, d1.iso8601_week_day)
---			assert_integers_equal ("year_day2", 91, d1.year_day)
---			assert_integers_equal ("day_count2", 11047, d1.day_count)
---			create d1.make (1968, 2, 24)
---			assert_integers_equal ("week_day3", Saturday, d1.week_day)
---			assert_integers_equal ("ISO week_day3", Iso8601_saturday, d1.iso8601_week_day)
---			assert_integers_equal ("year_day3", 55, d1.year_day)
---			assert_integers_equal ("day_count3", -677, d1.day_count)
---		end
+	test_date5 is
+			-- Test features of DT_DATE.
+		local
+			d1: DT_DATE
+		do
+			create d1.make (1970, 1, 1)
+			assert_integers_equal ("week_day1", Thursday, d1.week_day)
+			assert_integers_equal ("year_day1", 1, d1.year_day)
+			assert_integers_equal ("day_count1", 0, d1.day_count)
+			create d1.make (2000, 3, 31)
+			assert_integers_equal ("week_day2", Friday, d1.week_day)
+			assert_integers_equal ("year_day2", 91, d1.year_day)
+			assert_integers_equal ("day_count2", 11047, d1.day_count)
+			create d1.make (1968, 2, 24)
+			assert_integers_equal ("week_day3", Saturday, d1.week_day)
+			assert_integers_equal ("year_day3", 55, d1.year_day)
+			assert_integers_equal ("day_count3", -677, d1.day_count)
+		end
 
 	test_date6 is
 			-- Test features of DT_DATE.
@@ -347,6 +341,43 @@ feature -- Test
 			d1.add_date_duration (dd1)
 			create d2.make (1200, 1, 1)
 			assert_equal ("add_date_duration", d2, d1)
+		end
+
+	test_week is
+			-- Test feature `week' of class DT_DATE.
+		local
+			a_date: DT_DATE
+		do
+				-- Saturday 1 January 2005.
+			create a_date.make (2005, 1, 1)
+			assert_integers_equal ("week_2005_1_1", 53, a_date.week)
+				-- Sunday 2 January 2005.
+			create a_date.make (2005, 1, 2)
+			assert_integers_equal ("week_2005_1_2", 53, a_date.week)
+				-- Monday 3 January 2005.
+			create a_date.make (2005, 1, 3)
+			assert_integers_equal ("week_2005_1_3", 1, a_date.week)
+				-- Sunday 9 January 2005.
+			create a_date.make (2005, 1, 9)
+			assert_integers_equal ("week_2005_1_9", 1, a_date.week)
+				-- Monday 10 January 2005.
+			create a_date.make (2005, 1, 10)
+			assert_integers_equal ("week_2005_1_10", 2, a_date.week)
+				-- Thursday 14 July 2005.
+			create a_date.make (2005, 7, 14)
+			assert_integers_equal ("week_2005_7_14", 28, a_date.week)
+				-- Saturday 31 December 2005.
+			create a_date.make (2005, 12, 31)
+			assert_integers_equal ("week_2005_12_31", 52, a_date.week)
+				-- Sunday 1 January 2006.
+			create a_date.make (2006, 1, 1)
+			assert_integers_equal ("week_2006_1_1", 52, a_date.week)
+				-- Monday 2 January 2006.
+			create a_date.make (2006, 1, 2)
+			assert_integers_equal ("week_2006_1_2", 1, a_date.week)
+				-- Tuesday 3 January 2006.
+			create a_date.make (2006, 1, 3)
+			assert_integers_equal ("week_2006_1_3", 1, a_date.week)
 		end
 
 end

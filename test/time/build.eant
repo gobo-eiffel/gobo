@@ -16,7 +16,6 @@
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
 	<target name="init_system">
