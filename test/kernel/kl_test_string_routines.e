@@ -360,9 +360,12 @@ feature -- Test
 			create a_string2.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			a_string1 := "foobar"
-			a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
-			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			if not operating_system.is_dotnet then
+					-- Bug in ISE 5.5 for .NET.
+				a_string1 := "foobar"
+				a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
+				assert_equal ("replaced5", "foofoobar", a_string.out) 
+			end
 			a_string1 := "foobar"
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
