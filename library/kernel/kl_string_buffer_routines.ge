@@ -1,0 +1,427 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class STRING_BUFFER. %
+		%A string buffer is a sequence of characters equipped %
+		%with features `put', `item' and `count'."
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1999, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_STRING_BUFFER_ROUTINES
+
+inherit
+
+	KL_IMPORTED_STRING_BUFFER_ROUTINES
+	KL_IMPORTED_INPUT_STREAM_ROUTINES
+
+feature -- Initialization
+
+	make (n: INTEGER): like STRING_BUFFER_TYPE is
+			-- Create a new string buffer being able
+			-- to contain `n' characters.
+		require
+			non_negative_n: n >= 0
+#ifdef ISE
+		local
+			a_string: STRING
+		do
+			!! a_string.make (n)
+			Result := a_string.area
+#else
+		do
+#ifdef VE
+			!! Result.make (n)
+#else
+#ifdef SE
+			!! Result.blank (n)
+#else
+			!! Result.make (n)
+#ifdef TOWER
+			Result.set_count (n)
+#else
+#ifdef HACT
+			Result.fill_blank
+#else
+			Result.fill ('#')
+#endif
+#endif
+#endif
+#endif
+#endif
+		ensure
+			string_buffer_not_void: Result /= Void
+			count_set: Result.count = n
+		end
+
+	make_from_string (a_string: STRING): like STRING_BUFFER_TYPE is
+			-- Create a new string buffer with characters from `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := make (a_string.count)
+			copy_from_string (Result, lower, a_string)
+		ensure
+			string_buffer_not_void: Result /= Void
+			count_set: Result.count = a_string.count
+			charaters_set: equal (substring (Result, lower, a_string.count + lower - 1), a_string)
+		end
+
+feature -- Conversion
+
+	to_string_buffer (a_string: STRING): like STRING_BUFFER_TYPE is
+			-- String buffer filled with characters from `a_string'.
+			-- The string buffer and `a_string' may share internal
+			-- data. Use `make_from_string' if this is a concern.
+		require
+			a_string_not_void: a_string /= Void
+		do
+#ifdef ISE
+			Result := a_string.area
+#else
+			Result := a_string
+#endif
+		ensure
+			string_buffer_not_void: Result /= Void
+			count_set: Result.count >= a_string.count
+			charaters_set: equal (substring (Result, lower, a_string.count + lower - 1), a_string)
+		end
+
+feature -- Access
+
+	substring (a_buffer: like STRING_BUFFER_TYPE; s, e: INTEGER): STRING is
+			-- New string made up of characters held in
+			-- `a_buffer' between indexes `s' and `e'
+		require
+			a_buffer_not_void: a_buffer /= Void
+			s_large_enough: s >= lower
+			e_small_enough: e <= upper (a_buffer)
+			valid_interval: s <= e + 1
+#ifdef ISE
+		local
+			a: ANY
+			nb: INTEGER
+#endif
+		do
+			if e < s then
+					-- Empty string
+				!! Result.make (0)
+			else
+#ifdef ISE
+				nb := e - s + 1
+				!! Result.make (nb)
+				a := Result.area
+				c_bcopy (c_offset_pointer ($a_buffer, s), $a, nb)
+				c_str_set_count ($Result, nb)
+#else
+				Result := a_buffer.substring (s, e)
+#endif
+			end
+		ensure
+			substring_not_void: Result /= Void
+			count_set: Result.count = e - s + 1
+		end
+
+feature -- Measurement
+
+#ifdef ISE
+	lower: INTEGER is 0
+#else
+	lower: INTEGER is 1
+#endif
+			-- Lower index
+
+	upper (a_buffer: like STRING_BUFFER_TYPE): INTEGER is
+			-- Upper index
+		require
+			a_buffer_not_void: a_buffer /= Void
+		do
+			Result := a_buffer.count + lower - 1
+		ensure
+			definition: a_buffer.count = (Result - lower + 1)
+		end
+
+feature -- Element change
+
+	append_substring_to_string (a_buffer: like STRING_BUFFER_TYPE;
+		s, e: INTEGER; a_string: STRING) is
+			-- Append string made up of characters held in `a_buffer'
+			-- between indexes `s' and `e' to `a_string'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			a_string_not_void: a_string /= Void
+			not_same: to_string_buffer (a_string) /= a_buffer
+			s_large_enough: s >= lower
+			e_small_enough: e <= upper (a_buffer)
+			valid_interval: s <= e + 1
+#ifdef ISE
+		local
+			nb, old_count, new_count: INTEGER
+			a: ANY
+#endif
+		do
+			if s <= e then
+#ifdef ISE
+				nb := e - s + 1
+				old_count := a_string.count
+				new_count := old_count + nb
+				if new_count > a_string.capacity then
+					a_string.resize (new_count + a_string.additional_space)
+				end
+				a := a_string.area
+				c_safe_bcopy (c_offset_pointer ($a_buffer, s), c_offset_pointer ($a, old_count), nb)
+				c_str_set_count ($a_string, new_count)
+#else
+				a_string.append_string (a_buffer.substring (s, e))
+#endif
+			end
+		ensure
+			count_set: a_string.count = old (a_string.count) + (e - s + 1)
+			charaters_set: s <= e implies equal (a_string.substring (old (a_string.count), a_string.count), substring (a_buffer, s, e))
+		end
+
+	copy_from_string (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER; a_string: STRING) is
+			-- Copy characters of `a_string' to `a_buffer'
+			-- starting at position `pos'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			a_string_not_void: a_string /= Void
+			not_same: to_string_buffer (a_string) /= a_buffer
+			pos_large_enough: pos >= lower
+			enough_space: (pos + a_string.count - 1) <= upper (a_buffer)
+		local
+			nb: INTEGER
+#ifdef ISE
+			a: ANY
+#else
+			i, j: INTEGER
+#endif
+		do
+			nb := a_string.count
+			if nb > 0 then
+#ifdef ISE
+				a := a_string.area
+				c_bcopy ($a, c_offset_pointer ($a_buffer, pos), nb)
+#else
+				j := pos
+				from i := 1 until i > nb loop
+					a_buffer.put (a_string.item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+#endif
+			end
+		ensure
+			charaters_set: equal (substring (a_buffer, pos, a_string.count + pos - 1), a_string)
+		end
+
+	copy_from_stream (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER;
+		a_stream: like INPUT_STREAM_TYPE; nb_char: INTEGER): INTEGER is
+			-- Fill `a_buffer', starting at position `pos' with
+			-- at most `nb_char' characters read from `a_stream'.
+			-- Return the number of characters actually read.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			pos_large_enough: pos >= lower
+			a_stream_not_void: a_stream /= Void
+			a_stream_open_read: INPUT_STREAM_.is_open_read (a_stream)
+			nb_char_large_enough: nb_char >= 0
+			enough_space: (pos + nb_char - 1) <= upper (a_buffer)
+#ifdef ISE
+		local
+			a_file: FILE
+			a_string: STRING
+		do
+			a_file ?= a_stream
+			if a_file /= Void then
+				Result := c_file_gss (a_file.file_pointer, c_offset_pointer ($a_buffer, pos), nb_char)
+			else
+				a_stream.read_stream (nb_char)
+				a_string := a_stream.last_string
+				Result := a_string.count
+				copy_from_string (a_buffer, pos, a_string)
+			end
+#else
+		do
+			Result := INPUT_STREAM_.read_stream (a_stream, a_buffer, pos, nb_char)
+#endif
+		ensure
+			nb_char_read_large_enough: Result >= 0
+			nb_char_read_small_enough: Result <= nb_char
+		end
+
+	move_left (a_buffer: like STRING_BUFFER_TYPE; old_pos, new_pos: INTEGER; nb: INTEGER) is
+			-- Copy `nb' characters from `old_pos' to
+			-- `new_pos' in `a_buffer'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			nb_positive: nb >= 0
+			old_pos_large_enough: old_pos >= lower
+			enough_characters: (old_pos + nb - 1) <= upper (a_buffer)
+			new_pos_large_enough: new_pos >= lower
+			enough_space: (new_pos + nb - 1) <= upper (a_buffer)
+			move_left: old_pos > new_pos
+#ifndef ISE
+		local
+			i, j, nb2: INTEGER
+#endif
+		do
+			if nb > 0 then
+#ifdef ISE
+				c_safe_bcopy (c_offset_pointer ($a_buffer, old_pos), c_offset_pointer ($a_buffer, new_pos), nb)
+#else
+				j := new_pos
+				nb2 := old_pos + nb - 1
+				from i := old_pos until i > nb2 loop
+					a_buffer.put (a_buffer.item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+#endif
+			end
+		end
+
+	move_right (a_buffer: like STRING_BUFFER_TYPE; old_pos, new_pos: INTEGER; nb: INTEGER) is
+			-- Copy `nb' characters from `old_pos' to
+			-- `new_pos' in `a_buffer'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			nb_positive: nb >= 0
+			old_pos_large_enough: old_pos >= lower
+			enough_characters: (old_pos + nb - 1) <= upper (a_buffer)
+			new_pos_large_enough: new_pos >= lower
+			enough_space: (new_pos + nb - 1) <= upper (a_buffer)
+			move_right: old_pos < new_pos
+#ifndef ISE
+		local
+			i, j: INTEGER
+#endif
+		do
+			if nb > 0 then
+#ifdef ISE
+				c_safe_bcopy (c_offset_pointer ($a_buffer, old_pos), c_offset_pointer ($a_buffer, new_pos), nb)
+#else
+				j := new_pos + nb - 1
+				from i := old_pos + nb - 1 until i < old_pos loop
+					a_buffer.put (a_buffer.item (i), j)
+					j := j - 1
+					i := i - 1
+				end
+#endif
+			end
+		end
+
+feature -- Resizing
+
+	resize (a_buffer: like STRING_BUFFER_TYPE; n: INTEGER): like STRING_BUFFER_TYPE is
+			-- Resize `a_buffer' so that it contains `n' characters.
+			-- Do not lose any previously entered characters.
+			-- Note: the returned string buffer might be `a_buffer' or
+			-- a newly created string buffer where characters from
+			-- `a_buffer' have been copied to.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			n_large_enough: n >= a_buffer.count
+#ifndef VE || TOWER
+		local
+			i: INTEGER
+#endif
+		do
+#ifdef ISE
+			Result := c_str_resize ($a_buffer, n)
+#else
+#ifdef VE
+			a_buffer.resize (n)
+#else
+#ifdef SE
+			from
+				i := n - a_buffer.count
+			until
+				i = 0
+			loop
+				a_buffer.append_character ('#')
+				i := i - 1
+			end
+#else
+#ifdef TOWER
+			a_buffer.resize (n)
+			a_buffer.set_count (n)
+#else
+			from
+				i := n - a_buffer.count
+				a_buffer.resize (n)
+			until
+				i = 0
+			loop
+				a_buffer.append_character ('#')
+				i := i - 1
+			end
+#endif
+#endif
+#endif
+			Result := a_buffer
+#endif
+		ensure
+			string_buffer_not_void: Result /= Void
+			count_set: Result.count = n
+		end
+
+#ifdef ISE
+feature {NONE} -- Externals
+
+	c_str_resize (a: POINTER; newsize: INTEGER): SPECIAL [CHARACTER] is
+			-- Area which can accomodate at least `newsize' characters
+		external
+			"C | %"eif_malloc.h%""
+		alias
+			"sprealloc"
+		end
+
+	c_file_gss (a_file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
+			-- Read min (`length', remaining bytes in `a_file')
+			-- characters into `a_string'.
+		external
+			"C (FILE *, EIF_CHARACTER *, EIF_INTEGER): EIF_INTEGER"
+		alias
+			"file_gss"
+		end
+
+	c_bcopy (source, target: POINTER; size: INTEGER) is
+			-- Copy `size' characters from `source' to `target'.
+			-- `source' and `target' should not overlap.
+		external
+			"C [macro <eif_eiffel.h>]"
+		alias
+			"bcopy"
+		end
+
+	c_safe_bcopy (source, target: POINTER; size: INTEGER) is
+			-- Copy `size' characters from `source' to `target'.
+			-- `source' and `target' can overlap.
+		external
+			"C [macro <eif_eiffel.h>]"
+		alias
+			"safe_bcopy"
+		end
+
+	c_offset_pointer (p: POINTER; offset: INTEGER): POINTER is
+		external
+			"C [macro <ise_gobo.h>]"
+		alias
+			"STRING_OFFSET_POINTER"
+		end
+
+	c_str_set_count (a_string: POINTER; n: INTEGER) is
+			-- Call `set_count' from STRING
+		external
+			"C [macro <eif_project.h>]"
+		alias
+			"(egc_strset)"
+		end
+
+#endif
+end -- class KL_STRING_BUFFER_ROUTINES
