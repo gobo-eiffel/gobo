@@ -16,7 +16,6 @@ indexing
 
 class KL_EXCEPTIONS
 
-#ifndef SE
 inherit
 
 	EXCEPTIONS
@@ -24,16 +23,6 @@ inherit
 		rename
 			die as obsolete_die,
 			new_die as die
-		end
-#endif
-#else
-feature
-
-	die (a_code: INTEGER) is
-			-- Terminate execution with exit status `a_code'
-			-- without triggering an exception.
-		do
-			die_with_code (a_code)
 		end
 #endif
 
