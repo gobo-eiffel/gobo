@@ -1651,6 +1651,7 @@ feature {NONE} -- Instruction validity
 			elseif not a_target_context.is_type_reference (universe) then
 				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
+					had_error := True
 					set_fatal_error
 					a_target_named_type := a_target_context.named_type (universe)
 					error_handler.report_vjrv0a_error (current_class, a_target, a_target_named_type)
@@ -1658,6 +1659,7 @@ feature {NONE} -- Instruction validity
 						-- Note: Do not report this error if the assignment
 						-- attempt appears in class ANY because of a design
 						-- bug in ISE's class ANY.
+					had_error := True
 					set_fatal_error
 					a_target_named_type := a_target_context.named_type (universe)
 					error_handler.report_vjrv0b_error (current_class, a_class_impl, a_target, a_target_named_type)

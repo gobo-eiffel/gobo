@@ -199,7 +199,7 @@ feature {NONE} -- Feature validity
 				a_feature := a_features.item (i)
 				feature_checker.check_feature_validity (a_feature, current_class)
 				if feature_checker.has_fatal_error then
---					set_fatal_error (current_class)
+					set_fatal_error (current_class)
 				end
 				check_assertions_validity (a_feature, a_feature)
 				i := i + 1
@@ -232,7 +232,7 @@ feature {NONE} -- Assertion validity
 				feature_checker.check_preconditions_validity (a_preconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then
 					had_error := True
---					set_fatal_error (current_class)
+					set_fatal_error (current_class)
 				end
 			end
 			a_postconditions := a_feature_impl.postconditions
@@ -240,7 +240,7 @@ feature {NONE} -- Assertion validity
 				feature_checker.check_postconditions_validity (a_postconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then
 					had_error := True
---					set_fatal_error (current_class)
+					set_fatal_error (current_class)
 				end
 			end
 			a_class_impl := a_feature_impl.implementation_class
@@ -291,7 +291,7 @@ feature {NONE} -- Assertion validity
 					if an_invariants /= Void then
 						feature_checker.check_invariants_validity (an_invariants, an_ancestor)
 						if feature_checker.has_fatal_error then
---							set_fatal_error (current_class)
+							set_fatal_error (current_class)
 						end
 					end
 					i := i + 1
