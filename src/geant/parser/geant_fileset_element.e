@@ -111,6 +111,11 @@ feature {NONE} -- Initialization
 					fileset.set_mapped_filename_directory_name (a_value)
 				end
 			end
+			if has_attribute (Convert_attribute_name) then
+				a_value := attribute_value (Convert_attribute_name)
+				fileset.set_convert_to_filesystem (boolean_value (Convert_attribute_name))
+			end
+
 				-- Add 'include' elements to fileset:
 			a_elements := elements_by_name (Include_element_name)
 			cs := a_elements.new_cursor
@@ -212,6 +217,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for filename_directory
 		once
 			Result := "filename_directory"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Convert_attribute_name: STRING is
+			-- Name of xml attribute for convert
+		once
+			Result := "convert"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
