@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_STRING_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_from_description
@@ -246,12 +251,12 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"$"/[ \t\r\n]	last_token := Dollar_code
 	"{"{NAME}"}"	{
-					last_string := text
-					if not name_definitions.has (last_string) then
-						error_handler.undefined_definition
-							(last_string, filename, line_nb)
-					else
+					last_string := string__to_lower (text)
+					if name_definitions.has (last_string) then
 						put_back_string (name_definitions.item (last_string))
+					else
+						error_handler.undefined_definition
+							(text, filename, line_nb)
 					end
 				}
 	"{"			{
@@ -314,7 +319,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	{WS}			-- Separator.
 	[0-9]+		{
 					last_token := NUMBER
-					--check is_integer: text.is_integer end
+					check is_integer: string__is_integer (text) end
 					last_value := text.to_integer
 				}
 	","				last_token := Comma_code
@@ -664,14 +669,14 @@ feature {NONE} -- Implementation
 			bracketed_name: STRING
 			parenthesised_definition: STRING
 		do
-			!! bracketed_name.make (a_name.count + 2)
+			bracketed_name := string__make (a_name.count + 2)
 			bracketed_name.append_character ('{')
-			bracketed_name.append_string (a_name)
+			bracketed_name.append_string (string__to_lower (a_name))
 			bracketed_name.append_character ('}')
 			if name_definitions.has (bracketed_name) then
 				error_handler.name_defined_twice (a_name, filename, line_nb)
 			end
-			!! parenthesised_definition.make (a_definition.count + 2)
+			parenthesised_definition := string__make (a_definition.count + 2)
 			parenthesised_definition.append_character ('(')
 			parenthesised_definition.append_string (a_definition)
 				-- Skip trailing white spaces.
