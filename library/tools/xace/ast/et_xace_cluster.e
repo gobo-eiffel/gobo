@@ -279,6 +279,29 @@ feature -- Basic operations
 			no_void_component: not a_components.has (Void)
 		end
 
+	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY]) is
+			-- Merge current cluster's assemblies and those
+			-- of subclusters to `an_assemblies'.
+		require
+			an_assemblies_not_void: an_assemblies /= Void
+			no_void_assembly: not an_assemblies.has (Void)
+		local
+			an_assembly: ET_XACE_ASSEMBLY
+		do
+			if options /= Void then
+				if options.is_assembly_declared then
+					!! an_assembly.make (name, options.assembly, options.version,
+						options.culture, options.public_key_token, options.prefix_option)
+					an_assemblies.force_last (an_assembly)
+				end
+			end
+			if subclusters /= Void then
+				subclusters.merge_assemblies (an_assemblies)
+			end
+		ensure
+			no_void_assembly: not an_assemblies.has (Void)
+		end
+
 feature {NONE} -- Implementation
 
 	new_recursive_cluster (a_name: STRING): like Current is

@@ -217,9 +217,11 @@
 			Build Ace file or ESD file for Eiffel compiler ${eiffel}.
 			Generate file in ${gexace_output} if specified.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
-			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_OS value to 'gexace'.
 			Pass $GOBO_CC value to 'gexace' if defined.
+			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
+			Pass $GOBO_DOTNET option to 'gexace' if defined.
+			Pass $ISE_5_1 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
@@ -227,9 +229,10 @@
 		<set name="gexace_output" value="" unless="${gexace_output}"/>
 		<gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
-			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_OS" value="${GOBO_OS}"/>
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
+			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
+			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
 			<define name="ISE_5_1" value="true" if="${ISE_5_1}"/>
 		</gexace>
 	</target>

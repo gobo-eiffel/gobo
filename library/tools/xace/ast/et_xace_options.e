@@ -65,6 +65,14 @@ feature -- Status report
 			definition: Result = (declared_array_optimization /= Void and then not declared_array_optimization.is_undefined)
 		end
 
+	is_assembly_declared: BOOLEAN is
+			-- Has 'assembly' option been declared?
+		do
+			Result := declared_assembly /= Void
+		ensure
+			definition: Result = (declared_assembly /= Void)
+		end
+
 	is_assertion_declared: BOOLEAN is
 			-- Has 'assertion' option been declared?
 		do
@@ -97,6 +105,14 @@ feature -- Status report
 			definition: Result = (declared_clean /= Void and then not declared_clean.is_undefined)
 		end
 
+	is_cls_compliant_declared: BOOLEAN is
+			-- Has 'cls_compliant' option been declared?
+		do
+			Result := declared_cls_compliant /= Void and then not declared_cls_compliant.is_undefined
+		ensure
+			definition: Result = (declared_cls_compliant /= Void and then not declared_cls_compliant.is_undefined)
+		end
+
 	is_component_declared: BOOLEAN is
 			-- Has 'component' option been declared?
 		do
@@ -119,6 +135,14 @@ feature -- Status report
 			Result := declared_create_keyword_extension /= Void and then not declared_create_keyword_extension.is_undefined
 		ensure
 			definition: Result = (declared_create_keyword_extension /= Void and then not declared_create_keyword_extension.is_undefined)
+		end
+
+	is_culture_declared: BOOLEAN is
+			-- Has 'culture' option been declared?
+		do
+			Result := declared_culture /= Void
+		ensure
+			definition: Result = (declared_culture /= Void)
 		end
 
 	is_dead_code_removal_declared: BOOLEAN is
@@ -161,6 +185,14 @@ feature -- Status report
 			definition: Result = (declared_document /= Void)
 		end
 
+	is_dotnet_naming_convention_declared: BOOLEAN is
+			-- Has 'dotnet_naming_convention' option been declared?
+		do
+			Result := declared_dotnet_naming_convention /= Void and then not declared_dotnet_naming_convention.is_undefined
+		ensure
+			definition: Result = (declared_dotnet_naming_convention /= Void and then not declared_dotnet_naming_convention.is_undefined)
+		end
+
 	is_dynamic_runtime_declared: BOOLEAN is
 			-- Has 'dynamic_runtime' option been declared?
 		do
@@ -193,12 +225,12 @@ feature -- Status report
 			definition: Result = (declared_export_option /= Void)
 		end
 
-	is_finalize_declared: BOOLEAN is
+	is_finalize_option_declared: BOOLEAN is
 			-- Has 'finalize' option been declared?
 		do
-			Result := declared_finalize /= Void and then not declared_finalize.is_undefined
+			Result := declared_finalize_option /= Void and then not declared_finalize_option.is_undefined
 		ensure
-			definition: Result = (declared_finalize /= Void and then not declared_finalize.is_undefined)
+			definition: Result = (declared_finalize_option /= Void and then not declared_finalize_option.is_undefined)
 		end
 
 	is_flat_fst_optimization_declared: BOOLEAN is
@@ -263,6 +295,14 @@ feature -- Status report
 			Result := declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined
 		ensure
 			definition: Result = (declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined)
+		end
+
+	is_il_verifiable_declared: BOOLEAN is
+			-- Has 'il_verifiable' option been declared?
+		do
+			Result := declared_il_verifiable /= Void and then not declared_il_verifiable.is_undefined
+		ensure
+			definition: Result = (declared_il_verifiable /= Void and then not declared_il_verifiable.is_undefined)
 		end
 
 	is_include_declared: BOOLEAN is
@@ -361,6 +401,14 @@ feature -- Status report
 			definition: Result = (declared_map /= Void and then not declared_map.is_undefined)
 		end
 
+	is_msil_generation_declared: BOOLEAN is
+			-- Has 'msil_generation' option been declared?
+		do
+			Result := declared_msil_generation /= Void and then not declared_msil_generation.is_undefined
+		ensure
+			definition: Result = (declared_msil_generation /= Void and then not declared_msil_generation.is_undefined)
+		end
+
 	is_multithreaded_declared: BOOLEAN is
 			-- Has 'multithreaded' option been declared?
 		do
@@ -401,12 +449,28 @@ feature -- Status report
 			definition: Result = (declared_precompiled /= Void)
 		end
 
+	is_prefix_option_declared: BOOLEAN is
+			-- Has 'prefix' option been declared?
+		do
+			Result := declared_prefix_option /= Void
+		ensure
+			definition: Result = (declared_prefix_option /= Void)
+		end
+
 	is_profile_declared: BOOLEAN is
 			-- Has 'profile' option been declared?
 		do
 			Result := declared_profile /= Void and then not declared_profile.is_undefined
 		ensure
 			definition: Result = (declared_profile /= Void and then not declared_profile.is_undefined)
+		end
+
+	is_public_key_token_declared: BOOLEAN is
+			-- Has 'public_key_token' option been declared?
+		do
+			Result := declared_public_key_token /= Void
+		ensure
+			definition: Result = (declared_public_key_token /= Void)
 		end
 
 	is_reloads_optimization_declared: BOOLEAN is
@@ -497,6 +561,14 @@ feature -- Status report
 			definition: Result = (declared_verbose /= Void and then not declared_verbose.is_undefined)
 		end
 
+	is_version_declared: BOOLEAN is
+			-- Has 'version' option been declared?
+		do
+			Result := declared_version /= Void
+		ensure
+			definition: Result = (declared_version /= Void)
+		end
+
 	is_visible_filename_declared: BOOLEAN is
 			-- Has 'visible_filename' option been declared?
 		do
@@ -566,6 +638,16 @@ feature -- Option values
 			no_void_argument: not Result.has (Void)
 		end
 
+	assembly: STRING is
+			-- Is 'assembly' option enabled?
+		do
+			if is_assembly_declared then
+				Result := declared_assembly
+			else
+				Result := default_assembly
+			end
+		end
+
 	assertion: DS_HASH_SET [STRING] is
 			-- 'assertion' option
 		do
@@ -609,6 +691,16 @@ feature -- Option values
 			end
 		end
 
+	cls_compliant: BOOLEAN is
+			-- 'cls_compliant' option
+		do
+			if is_cls_compliant_declared then
+				Result := declared_cls_compliant.is_true
+			else
+				Result := default_cls_compliant
+			end
+		end
+
 	component: STRING is
 			-- 'component' option
 		do
@@ -636,6 +728,16 @@ feature -- Option values
 				Result := declared_create_keyword_extension.is_true
 			else
 				Result := default_create_keyword_extension
+			end
+		end
+
+	culture: STRING is
+			-- 'culture' option
+		do
+			if is_culture_declared then
+				Result := declared_culture
+			else
+				Result := default_culture
 			end
 		end
 
@@ -695,6 +797,16 @@ feature -- Option values
 			end
 		end
 
+	dotnet_naming_convention: BOOLEAN is
+			-- 'dotnet_naming_convention' option
+		do
+			if is_dotnet_naming_convention_declared then
+				Result := declared_dotnet_naming_convention.is_true
+			else
+				Result := default_dotnet_naming_convention
+			end
+		end
+
 	dynamic_runtime: BOOLEAN is
 			-- 'dynamic_runtime' option
 		do
@@ -738,13 +850,13 @@ feature -- Option values
 			end
 		end
 
-	finalize: BOOLEAN is
+	finalize_option: BOOLEAN is
 			-- 'finalize' option
 		do
-			if is_finalize_declared then
-				Result := declared_finalize.is_true
+			if is_finalize_option_declared then
+				Result := declared_finalize_option.is_true
 			else
-				Result := default_finalize
+				Result := default_finalize_option
 			end
 		end
 
@@ -832,6 +944,16 @@ feature -- Option values
 				Result := declared_high_memory_compiler.is_true
 			else
 				Result := default_high_memory_compiler
+			end
+		end
+
+	il_verifiable: BOOLEAN is
+			-- 'il_verifiable' option
+		do
+			if is_il_verifiable_declared then
+				Result := declared_il_verifiable.is_true
+			else
+				Result := default_il_verifiable
 			end
 		end
 
@@ -968,6 +1090,16 @@ feature -- Option values
 			end
 		end
 
+	msil_generation: BOOLEAN is
+			-- 'msil_generation' option
+		do
+			if is_msil_generation_declared then
+				Result := declared_msil_generation.is_true
+			else
+				Result := default_msil_generation
+			end
+		end
+
 	multithreaded: BOOLEAN is
 			-- 'multithreaded' option
 		do
@@ -1018,6 +1150,16 @@ feature -- Option values
 			end
 		end
 
+	prefix_option: STRING is
+			-- 'prefix' option
+		do
+			if is_prefix_option_declared then
+				Result := declared_prefix_option
+			else
+				Result := default_prefix_option
+			end
+		end
+
 	profile: BOOLEAN is
 			-- 'profile' option
 		do
@@ -1025,6 +1167,16 @@ feature -- Option values
 				Result := declared_profile.is_true
 			else
 				Result := default_profile
+			end
+		end
+
+	public_key_token: STRING is
+			-- 'public_key_token' option
+		do
+			if is_public_key_token_declared then
+				Result := declared_public_key_token
+			else
+				Result := default_public_key_token
 			end
 		end
 
@@ -1140,6 +1292,16 @@ feature -- Option values
 			end
 		end
 
+	version: STRING is
+			-- 'version' option
+		do
+			if is_version_declared then
+				Result := declared_version
+			else
+				Result := default_version
+			end
+		end
+
 	visible_filename: STRING is
 			-- 'visible_filename' option
 		do
@@ -1237,6 +1399,17 @@ feature -- Status setting
 			array_optimization_set: array_optimization = b
 		end
 
+	set_assembly (a_value: STRING) is
+			-- Set `assembly' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_assembly := a_value
+		ensure
+			assembly_declared: is_assembly_declared
+			assembly_set: assembly = a_value
+		end
+
 	set_assertion (a_value: STRING) is
 			-- Set `assertion' to `a_value'.
 		require
@@ -1300,6 +1473,22 @@ feature -- Status setting
 			clean_set: clean = b
 		end
 
+	set_cls_compliant (b: BOOLEAN) is
+			-- Set `cls_compliant' to `b'.
+		do
+			if declared_cls_compliant = Void then
+				!! declared_cls_compliant.make_undefined
+			end
+			if b then
+				declared_cls_compliant.set_true
+			else
+				declared_cls_compliant.set_false
+			end
+		ensure
+			cls_compliant_declared: is_cls_compliant_declared
+			cls_compliant_set: cls_compliant = b
+		end
+
 	set_component (a_value: STRING) is
 			-- Set `component' to `a_value'.
 		require
@@ -1341,6 +1530,17 @@ feature -- Status setting
 		ensure
 			create_keyword_extension_declared: is_create_keyword_extension_declared
 			create_keyword_extension_set: create_keyword_extension = b
+		end
+
+	set_culture (a_value: STRING) is
+			-- Set `culture' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_culture := a_value
+		ensure
+			culture_declared: is_culture_declared
+			culture_set: culture = a_value
 		end
 
 	set_dead_code_removal (a_value: STRING) is
@@ -1417,6 +1617,22 @@ feature -- Status setting
 			document_set: document = a_value
 		end
 
+	set_dotnet_naming_convention (b: BOOLEAN) is
+			-- Set `dotnet_naming_convention' to `b'.
+		do
+			if declared_dotnet_naming_convention = Void then
+				!! declared_dotnet_naming_convention.make_undefined
+			end
+			if b then
+				declared_dotnet_naming_convention.set_true
+			else
+				declared_dotnet_naming_convention.set_false
+			end
+		ensure
+			dotnet_naming_convention_declared: is_dotnet_naming_convention_declared
+			dotnet_naming_convention_set: dotnet_naming_convention = b
+		end
+
 	set_dynamic_runtime (b: BOOLEAN) is
 			-- Set `dynamic_runtime' to `b'.
 		do
@@ -1475,20 +1691,20 @@ feature -- Status setting
 			export_option_set: export_option = a_value
 		end
 
-	set_finalize (b: BOOLEAN) is
-			-- Set `finalize' to `b'.
+	set_finalize_option (b: BOOLEAN) is
+			-- Set `finalize_option' to `b'.
 		do
-			if declared_finalize = Void then
-				!! declared_finalize.make_undefined
+			if declared_finalize_option = Void then
+				!! declared_finalize_option.make_undefined
 			end
 			if b then
-				declared_finalize.set_true
+				declared_finalize_option.set_true
 			else
-				declared_finalize.set_false
+				declared_finalize_option.set_false
 			end
 		ensure
-			finalize_declared: is_finalize_declared
-			finalize_set: finalize = b
+			finalize_option_declared: is_finalize_option_declared
+			finalize_option_set: finalize_option = b
 		end
 
 	set_flat_fst_optimization (b: BOOLEAN) is
@@ -1601,6 +1817,22 @@ feature -- Status setting
 		ensure
 			high_memory_compiler_declared: is_high_memory_compiler_declared
 			high_memory_compiler_set: high_memory_compiler = b
+		end
+
+	set_il_verifiable (b: BOOLEAN) is
+			-- Set `il_verifiable' to `b'.
+		do
+			if declared_il_verifiable = Void then
+				!! declared_il_verifiable.make_undefined
+			end
+			if b then
+				declared_il_verifiable.set_true
+			else
+				declared_il_verifiable.set_false
+			end
+		ensure
+			il_verifiable_declared: is_il_verifiable_declared
+			il_verifiable_set: il_verifiable = b
 		end
 
 	set_include (a_value: STRING) is
@@ -1782,6 +2014,22 @@ feature -- Status setting
 			map_set: map = b
 		end
 
+	set_msil_generation (b: BOOLEAN) is
+			-- Set `msil_generation' to `b'.
+		do
+			if declared_msil_generation = Void then
+				!! declared_msil_generation.make_undefined
+			end
+			if b then
+				declared_msil_generation.set_true
+			else
+				declared_msil_generation.set_false
+			end
+		ensure
+			msil_generation_declared: is_msil_generation_declared
+			msil_generation_set: msil_generation = b
+		end
+
 	set_multithreaded (b: BOOLEAN) is
 			-- Set `multithreaded' to `b'.
 		do
@@ -1852,6 +2100,17 @@ feature -- Status setting
 			precompiled_set: precompiled = a_value
 		end
 
+	set_prefix_option (a_value: STRING) is
+			-- Set `prefix_option' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_prefix_option := a_value
+		ensure
+			prefix_option_declared: is_prefix_option_declared
+			prefix_option_set: prefix_option = a_value
+		end
+
 	set_profile (b: BOOLEAN) is
 			-- Set `profile' to `b'.
 		do
@@ -1866,6 +2125,17 @@ feature -- Status setting
 		ensure
 			profile_declared: is_profile_declared
 			profile_set: profile = b
+		end
+
+	set_public_key_token (a_value: STRING) is
+			-- Set `public_key_token' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_public_key_token := a_value
+		ensure
+			public_key_token_declared: is_public_key_token_declared
+			public_key_token_set: public_key_token = a_value
 		end
 
 	set_recursive (b: BOOLEAN) is
@@ -2022,6 +2292,17 @@ feature -- Status setting
 		ensure
 			verbose_declared: is_verbose_declared
 			verbose_set: verbose = b
+		end
+
+	set_version (a_value: STRING) is
+			-- Set `version' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_version := a_value
+		ensure
+			version_declared: is_version_declared
+			version_set: version = a_value
 		end
 
 	set_visible_filename (a_value: STRING) is
@@ -2193,6 +2474,9 @@ feature -- Declared values
 	declared_array_optimization: UT_TRISTATE
 			-- Declared value for 'array_optimization' option
 
+	declared_assembly: STRING
+			-- Declared value for 'assembly' option
+
 	declared_assertion: DS_HASH_SET [STRING]
 			-- Declared values for 'assertion' option
 
@@ -2205,6 +2489,9 @@ feature -- Declared values
 	declared_clean: UT_TRISTATE
 			-- Declared value for 'clean' option
 
+	declared_cls_compliant: UT_TRISTATE
+			-- Declared value for 'cls_compliant' option
+
 	declared_component: STRING
 			-- Declared value for 'component' option
 
@@ -2213,6 +2500,9 @@ feature -- Declared values
 
 	declared_create_keyword_extension: UT_TRISTATE
 			-- Declared value for 'create_keyword_extension' option
+
+	declared_culture: STRING
+			-- Declared value for 'culture' option
 
 	declared_dead_code_removal: DS_HASH_SET [STRING]
 			-- Declared values for 'dead_code_removal' option
@@ -2229,6 +2519,9 @@ feature -- Declared values
 	declared_document: STRING
 			-- Declared value for 'document' option
 
+	declared_dotnet_naming_convention: UT_TRISTATE
+			-- Declared value for 'dotnet_naming_convention' option
+
 	declared_dynamic_runtime: UT_TRISTATE
 			-- Declared value for 'dynamic_runtime' option
 
@@ -2241,7 +2534,7 @@ feature -- Declared values
 	declared_export_option: STRING
 			-- Declared value for 'export' option
 
-	declared_finalize: UT_TRISTATE
+	declared_finalize_option: UT_TRISTATE
 			-- Declared value for 'finalize' option
 
 	declared_flat_fst_optimization: UT_TRISTATE
@@ -2267,6 +2560,9 @@ feature -- Declared values
 
 	declared_high_memory_compiler: UT_TRISTATE
 			-- Declared value for 'high_memory_compiler' option
+
+	declared_il_verifiable: UT_TRISTATE
+			-- Declared value for 'il_verifiable' option
 
 	declared_include: DS_HASH_SET [STRING]
 			-- Declared values for 'include' option
@@ -2304,6 +2600,9 @@ feature -- Declared values
 	declared_map: UT_TRISTATE
 			-- Declared value for 'map' option
 
+	declared_msil_generation: UT_TRISTATE
+			-- Declared value for 'msil_generation' option
+
 	declared_multithreaded: UT_TRISTATE
 			-- Declared value for 'multithreaded' option
 
@@ -2319,8 +2618,14 @@ feature -- Declared values
 	declared_precompiled: STRING
 			-- Declared value for 'precompiled' option
 
+	declared_prefix_option: STRING
+			-- Declared value for 'prefix' option
+
 	declared_profile: UT_TRISTATE
 			-- Declared value for 'profile' option
+
+	declared_public_key_token: STRING
+			-- Declared value for 'public_key_token' option
 
 	declared_recursive: UT_TRISTATE
 			-- Declared value for 'recursive' option
@@ -2355,6 +2660,9 @@ feature -- Declared values
 	declared_verbose: UT_TRISTATE
 			-- Declared value for 'verbose' option
 
+	declared_version: STRING
+			-- Declared value for 'version' option
+
 	declared_visible_filename: STRING
 			-- Declared value for 'visible_filename' option
 
@@ -2385,6 +2693,12 @@ feature -- Default values
 	default_array_optimization: BOOLEAN is False
 			-- Default value for 'array_optimization' option
 
+	default_assembly: STRING is
+			-- Default value for 'assembly' option
+		once
+			Result := Void
+		end
+
 	default_assertion: DS_HASH_SET [STRING] is
 			-- Default value for 'assertion' option
 		once
@@ -2405,6 +2719,9 @@ feature -- Default values
 	default_clean: BOOLEAN is False
 			-- Default value for 'clean' option
 
+	default_cls_compliant: BOOLEAN is True
+			-- Default value for 'cls_compliant' option
+
 	default_component: STRING is
 			-- Default value for 'component' option
 		once
@@ -2416,6 +2733,12 @@ feature -- Default values
 
 	default_create_keyword_extension: BOOLEAN is True
 			-- Default value for 'create_keyword_extension' option
+
+	default_culture: STRING is
+			-- Default value for 'culture' option
+		once
+			Result := "neutral"
+		end
 
 	default_dead_code_removal: DS_HASH_SET [STRING] is
 			-- Default value for 'dead_code_removal' option
@@ -2450,6 +2773,9 @@ feature -- Default values
 			Result := Void
 		end
 
+	default_dotnet_naming_convention: BOOLEAN is False
+			-- Default value for 'dotnet_naming_convention' option
+
 	default_dynamic_runtime: BOOLEAN is False
 			-- Default value for 'dynamic_runtime' option
 
@@ -2472,7 +2798,7 @@ feature -- Default values
 			Result := Void
 		end
 
-	default_finalize: BOOLEAN is False
+	default_finalize_option: BOOLEAN is False
 			-- Default value for 'finalize' option
 
 	default_flat_fst_optimization: BOOLEAN is False
@@ -2510,6 +2836,9 @@ feature -- Default values
 
 	default_high_memory_compiler: BOOLEAN is False
 			-- Default value for 'high_memory_compiler' option
+
+	default_il_verifiable: BOOLEAN is True
+			-- Default value for 'il_verifiable' option
 
 	default_include: DS_HASH_SET [STRING] is
 			-- Default value for 'include' option
@@ -2574,6 +2903,9 @@ feature -- Default values
 	default_map: BOOLEAN is False
 			-- Default value for 'map' option
 
+	default_msil_generation: BOOLEAN is False
+			-- Default value for 'msil_generation' option
+
 	default_multithreaded: BOOLEAN is False
 			-- Default value for 'multithreaded' option
 
@@ -2595,8 +2927,20 @@ feature -- Default values
 			Result := Void
 		end
 
+	default_prefix_option: STRING is
+			-- Default value for 'prefix' option
+		once
+			Result := Void
+		end
+
 	default_profile: BOOLEAN is False
 			-- Default value for 'profile' option
+
+	default_public_key_token: STRING is
+			-- Default value for 'public_key_token' option
+		once
+			Result := "b77a5c561934e089"
+		end
 
 	default_recursive: BOOLEAN is False
 			-- Default value for 'recursive' option
@@ -2641,6 +2985,12 @@ feature -- Default values
 
 	default_verbose: BOOLEAN is False
 			-- Default value for 'verbose' option
+
+	default_version: STRING is
+			-- Default value for 'version' option
+		once
+			Result := "1.0.3300.0"
+		end
 
 	default_visible_filename: STRING is
 			-- Default value for 'visible_filename' option

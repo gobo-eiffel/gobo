@@ -157,13 +157,15 @@ feature -- Execution
 				execute_shell (cmd)
 				if not project.options.no_exec then
 					if exit_code = 0 then
-						a_filename := system_name + file_system.exe_extension
+						a_filename := STRING_.concat (system_name, file_system.exe_extension)
 						if not file_system.file_exists (a_filename) then
 							exit_code := -1
 						elseif not finalize then
 							a_filename := system_name + ".melted"
 							if not file_system.file_exists (a_filename) then
-								exit_code := -2
+									-- Eiffel for .NET 5.2.0928 does not
+									-- generate .melted files.
+								-- exit_code := -2
 							end
 						end
 					end

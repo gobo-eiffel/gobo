@@ -137,4 +137,22 @@ feature -- Basic operations
 			no_void_component: not a_components.has (Void)
 		end
 
+	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY]) is
+			-- Merge current clusters' assemblies and those
+			-- of subclusters to `an_assemblies'.
+		require
+			an_assemblies_not_void: an_assemblies /= Void
+			no_void_assembly: not an_assemblies.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).merge_assemblies (an_assemblies)
+				i := i + 1
+			end
+		ensure
+			no_void_assembly: not an_assemblies.has (Void)
+		end
+
 end

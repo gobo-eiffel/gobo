@@ -152,93 +152,93 @@ feature {NONE} -- AST factory
 						if an_element.has_attribute_by_name (uc_location) then
 							a_pathname := an_element.attribute_by_name (uc_location).value
 						end
-					end
-					Result := ast_factory.new_cluster (a_name, a_pathname)
-					if an_element.has_attribute_by_name (uc_abstract) then
-						!! a_warning.make (STRING_.concat ("Warning: attribute 'abstract' is obsolete, use <option name=%"abstract%" value=%"true/false%"/> instead%N", a_position_table.item (an_element).out))
-						error_handler.report_warning (a_warning)
-						a_bool := an_element.attribute_by_name (uc_abstract).value
-						if a_bool /= Void then
-							if is_true (a_bool) then
-								if an_option = Void then
-									an_option := ast_factory.new_options
+						Result := ast_factory.new_cluster (a_name, a_pathname)
+						if an_element.has_attribute_by_name (uc_abstract) then
+							!! a_warning.make (STRING_.concat ("Warning: attribute 'abstract' is obsolete, use <option name=%"abstract%" value=%"true/false%"/> instead%N", a_position_table.item (an_element).out))
+							error_handler.report_warning (a_warning)
+							a_bool := an_element.attribute_by_name (uc_abstract).value
+							if a_bool /= Void then
+								if is_true (a_bool) then
+									if an_option = Void then
+										an_option := ast_factory.new_options
+									end
+									an_option.set_abstract (True)
+								elseif is_false (a_bool) then
+									if an_option = Void then
+										an_option := ast_factory.new_options
+									end
+									an_option.set_abstract (False)
 								end
-								an_option.set_abstract (True)
-							elseif is_false (a_bool) then
-								if an_option = Void then
-									an_option := ast_factory.new_options
-								end
-								an_option.set_abstract (False)
 							end
 						end
-					end
-					if an_element.has_attribute_by_name (uc_relative) then
-						a_bool := an_element.attribute_by_name (uc_relative).value
-						if a_bool /= Void then
-							if is_true (a_bool) then
-								Result.set_relative (True)
-							elseif is_false (a_bool) then
-								Result.set_relative (False)
+						if an_element.has_attribute_by_name (uc_relative) then
+							a_bool := an_element.attribute_by_name (uc_relative).value
+							if a_bool /= Void then
+								if is_true (a_bool) then
+									Result.set_relative (True)
+								elseif is_false (a_bool) then
+									Result.set_relative (False)
+								end
 							end
 						end
-					end
-					a_prefix := a_parent_prefix
-					if an_element.has_attribute_by_name (uc_prefix) then
-						a_prefix := an_element.attribute_by_name (uc_prefix).value
-					end
-					Result.set_cluster_prefix (a_prefix)
-					a_cursor := an_element.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						a_child ?= a_cursor.item
-						if a_child /= Void then
-							if STRING_.same_string (a_child.name, uc_cluster) then
-								a_cluster := new_cluster (a_child, a_prefix, a_position_table)
-								if a_cluster /= Void then
-									if subclusters = Void then
-										subclusters := ast_factory.new_clusters (a_cluster)
+						a_prefix := a_parent_prefix
+						if an_element.has_attribute_by_name (uc_prefix) then
+							a_prefix := an_element.attribute_by_name (uc_prefix).value
+						end
+						Result.set_cluster_prefix (a_prefix)
+						a_cursor := an_element.new_cursor
+						from a_cursor.start until a_cursor.after loop
+							a_child ?= a_cursor.item
+							if a_child /= Void then
+								if STRING_.same_string (a_child.name, uc_cluster) then
+									a_cluster := new_cluster (a_child, a_prefix, a_position_table)
+									if a_cluster /= Void then
+										if subclusters = Void then
+											subclusters := ast_factory.new_clusters (a_cluster)
+										else
+											subclusters.put_last (a_cluster)
+										end
+									end
+								elseif STRING_.same_string (a_child.name, uc_mount) then
+									a_mount := new_mount (a_child, a_position_table)
+									if a_mount /= Void then
+										if a_mounts = Void then
+											a_mounts := ast_factory.new_mounted_libraries
+										end
+										a_mounts.put_last (a_mount)
+									end
+								elseif STRING_.same_string (a_child.name, uc_option) then
+									if an_option /= Void then
+										fill_options (an_option, a_child, a_position_table)
 									else
-										subclusters.put_last (a_cluster)
+										an_option := new_options (a_child, a_position_table)
 									end
-								end
-							elseif STRING_.same_string (a_child.name, uc_mount) then
-								a_mount := new_mount (a_child, a_position_table)
-								if a_mount /= Void then
-									if a_mounts = Void then
-										a_mounts := ast_factory.new_mounted_libraries
+								elseif STRING_.same_string (a_child.name, uc_class) then
+									a_class := new_class (a_child, a_position_table)
+									if a_class /= Void then
+										Result.put_class_option (a_class)
 									end
-									a_mounts.put_last (a_mount)
+								elseif STRING_.same_string (a_child.name, uc_external) then
+									if an_option = Void then
+										an_option := ast_factory.new_options
+									end
+									fill_externals (an_option, Result, a_child, a_position_table)
 								end
-							elseif STRING_.same_string (a_child.name, uc_option) then
-								if an_option /= Void then
-									fill_options (an_option, a_child, a_position_table)
-								else
-									an_option := new_options (a_child, a_position_table)
-								end
-							elseif STRING_.same_string (a_child.name, uc_class) then
-								a_class := new_class (a_child, a_position_table)
-								if a_class /= Void then
-									Result.put_class_option (a_class)
-								end
-							elseif STRING_.same_string (a_child.name, uc_external) then
-								if an_option = Void then
-									an_option := ast_factory.new_options
-								end
-								fill_externals (an_option, Result, a_child, a_position_table)
+							end
+							a_cursor.forth
+						end
+						if an_option /= Void then
+							if an_option.is_abstract_declared then
+								Result.set_abstract (an_option.abstract)
+							end
+							if an_option.is_recursive_declared then
+								Result.set_recursive (an_option.recursive)
 							end
 						end
-						a_cursor.forth
+						Result.set_options (an_option)
+						Result.set_subclusters (subclusters)
+						Result.set_libraries (a_mounts)
 					end
-					if an_option /= Void then
-						if an_option.is_abstract_declared then
-							Result.set_abstract (an_option.abstract)
-						end
-						if an_option.is_recursive_declared then
-							Result.set_recursive (an_option.recursive)
-						end
-					end
-					Result.set_options (an_option)
-					Result.set_subclusters (subclusters)
-					Result.set_libraries (a_mounts)
 				end
 			end
 		end
@@ -749,6 +749,12 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when assembly_code then
+									if a_value.count > 0 then
+										an_option.set_assembly (a_value)
+									else
+										error_handler.report_non_empty_attribute_expected_error (an_element, uc_value, a_position_table.item (an_element))
+									end
 								when assertion_code then
 									if an_option.valid_assertion.has (a_value) then
 										an_option.set_assertion (a_value)
@@ -779,8 +785,20 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when cls_compliant_code then
+									if is_true (a_value) then
+										an_option.set_cls_compliant (True)
+									elseif is_false (a_value) then
+										an_option.set_cls_compliant (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when component_code then
-									an_option.set_component (a_value)
+									if a_value.count > 0 then
+										an_option.set_component (a_value)
+									else
+										error_handler.report_non_empty_attribute_expected_error (an_element, uc_value, a_position_table.item (an_element))
+									end
 								when console_application_code then
 									if is_true (a_value) then
 										an_option.set_console_application (True)
@@ -797,6 +815,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when culture_code then
+									an_option.set_culture (a_value)
 								when dead_code_removal_code then
 									if an_option.valid_dead_code_removal.has (a_value) then
 										an_option.set_dead_code_removal (a_value)
@@ -823,6 +843,14 @@ feature {NONE} -- Element change
 									end
 								when document_code then
 									an_option.set_document (a_value)
+								when dotnet_naming_convention_code then
+									if is_true (a_value) then
+										an_option.set_dotnet_naming_convention (True)
+									elseif is_false (a_value) then
+										an_option.set_dotnet_naming_convention (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when dynamic_runtime_code then
 									if is_true (a_value) then
 										an_option.set_dynamic_runtime (True)
@@ -843,11 +871,11 @@ feature {NONE} -- Element change
 									an_option.set_exclude (a_value)
 								when export_option_code then
 									an_option.set_export_option (a_value)
-								when finalize_code then
+								when finalize_option_code then
 									if is_true (a_value) then
-										an_option.set_finalize (True)
+										an_option.set_finalize_option (True)
 									elseif is_false (a_value) then
-										an_option.set_finalize (False)
+										an_option.set_finalize_option (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
@@ -910,6 +938,14 @@ feature {NONE} -- Element change
 										an_option.set_high_memory_compiler (True)
 									elseif is_false (a_value) then
 										an_option.set_high_memory_compiler (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when il_verifiable_code then
+									if is_true (a_value) then
+										an_option.set_il_verifiable (True)
+									elseif is_false (a_value) then
+										an_option.set_il_verifiable (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
@@ -996,6 +1032,14 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when msil_generation_code then
+									if is_true (a_value) then
+										an_option.set_msil_generation (True)
+									elseif is_false (a_value) then
+										an_option.set_msil_generation (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when multithreaded_code then
 									if is_true (a_value) then
 										an_option.set_multithreaded (True)
@@ -1024,6 +1068,8 @@ feature {NONE} -- Element change
 									end
 								when precompiled_code then
 									an_option.set_precompiled (a_value)
+								when prefix_option_code then
+									an_option.set_prefix_option (a_value)
 								when profile_code then
 									if is_true (a_value) then
 										an_option.set_profile (True)
@@ -1032,6 +1078,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when public_key_token_code then
+									an_option.set_public_key_token (a_value)
 								when recursive_code then
 									if is_true (a_value) then
 										an_option.set_recursive (True)
@@ -1101,6 +1149,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when version_code then
+									an_option.set_version (a_value)
 								when visible_filename_code then
 									an_option.set_visible_filename (a_value)
 								when warning_code then
@@ -1209,11 +1259,11 @@ feature {NONE} -- Element change
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
 								if is_true (a_bool) then
-									an_option.set_finalize (True)
+									an_option.set_finalize_option (True)
 								end
 							end
 						else
-							an_option.set_finalize (True)
+							an_option.set_finalize_option (True)
 						end
 					elseif STRING_.same_string (a_child.name, uc_debug) then
 						if a_child.has_attribute_by_name (uc_name) then

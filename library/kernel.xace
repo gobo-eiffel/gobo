@@ -16,13 +16,11 @@
 			<option name="abstract" value="true"/>
 			<cluster name="kernel" if="${ISE_5_1}"/>
 			<cluster name="kernel" unless="${ISE_5_1}">
-				<option name="abstract" value="true"/>
-				<cluster name="kernel_classic" location="classic" relative="true"/>
+				<cluster name="kernel_classic" location="classic" relative="true" unless="${GOBO_DOTNET}"/>
 			</cluster>
 			<cluster name="support" if="${ISE_5_1}"/>
 			<cluster name="support" unless="${ISE_5_1}">
-				<option name="abstract" value="true"/>
-				<cluster name="support_classic" location="classic" relative="true"/>
+				<cluster name="support_classic" location="classic" relative="true" unless="${GOBO_DOTNET}"/>
 			</cluster>
 			<cluster name="structures" unless="${GOBO_EIFFELBASE}">
 				<option name="abstract" value="true"/>
@@ -41,6 +39,41 @@
 				<cluster name="traversing"/>
 				<cluster name="tree"/>
 			</cluster>
+		</cluster>
+		<cluster name="base_net" location="${ISE_EIFFEL}/library.net/base" if="${GOBO_DOTNET}">
+			<option name="abstract" value="true"/>
+			<cluster name="kernel_net" location="kernel" relative="true">
+				<option name="abstract" value="true"/>
+				<cluster name="kernel_net_dotnet" location="dotnet" relative="true"/>
+				<cluster name="kernel_net_exceptions" location="exceptions" relative="true"/>
+			</cluster>
+			<cluster name="support_net" location="support" relative="true">
+				<option name="abstract" value="true"/>
+				<cluster name="support_net_dotnet" location="dotnet" relative="true"/>
+			</cluster>
+		</cluster>
+		<cluster name="mscorlib" if="${GOBO_DOTNET}">
+			<option name="abstract" value="true"/>
+			<option name="assembly" value="mscorlib"/>
+			<option name="version" value="1.0.3300.0"/>
+			<option name="culture" value="neutral"/>
+			<option name="public_key_token" value="b77a5c561934e089"/>
+		</cluster>
+		<cluster name="system_" if="${GOBO_DOTNET}">
+			<option name="abstract" value="true"/>
+			<option name="assembly" value="System"/>
+			<option name="version" value="1.0.3300.0"/>
+			<option name="culture" value="neutral"/>
+			<option name="public_key_token" value="b77a5c561934e089"/>
+			<option name="prefix" value="SYSTEM_DLL_"/>
+		</cluster>
+		<cluster name="system_xml" if="${GOBO_DOTNET}">
+			<option name="abstract" value="true"/>
+			<option name="assembly" value="System.Xml"/>
+			<option name="version" value="1.0.3300.0"/>
+			<option name="culture" value="neutral"/>
+			<option name="public_key_token" value="b77a5c561934e089"/>
+			<option name="prefix" value="XML_"/>
 		</cluster>
 	</cluster>
 

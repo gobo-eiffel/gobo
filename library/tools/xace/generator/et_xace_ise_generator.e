@@ -123,6 +123,7 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
+				print_assemblies (a_clusters, a_file)
 			end
 			!! an_external.make
 			a_system.merge_externals (an_external)
@@ -173,6 +174,7 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
+				print_assemblies (a_clusters, a_file)
 			end
 			!! an_external.make
 			a_library.merge_externals (an_external)
@@ -183,6 +185,55 @@ feature {NONE} -- Output
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
+		end
+
+	print_assemblies (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the assembly clause for
+			-- `a_clusters' and recursively their subclusters.
+		require
+			a_clusters_not_void: a_clusters /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_assemblies: DS_LINKED_LIST [ET_XACE_ASSEMBLY]
+			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_ASSEMBLY]
+			an_assembly: ET_XACE_ASSEMBLY
+			a_prefix: STRING
+		do
+			!! an_assemblies.make
+			a_clusters.merge_assemblies (an_assemblies)
+			if not an_assemblies.is_empty then
+				a_file.put_line ("assembly")
+				a_file.put_new_line
+				a_cursor := an_assemblies.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_assembly := a_cursor.item
+					print_indentation (1, a_file)
+					print_escaped_name (an_assembly.tag, a_file)
+					a_file.put_string (": %"")
+					a_file.put_string (an_assembly.assembly_name)
+					a_file.put_string ("%", %"")
+					a_file.put_string (an_assembly.version)
+					a_file.put_string ("%", %"")
+					a_file.put_string (an_assembly.culture)
+					a_file.put_string ("%", %"")
+					a_file.put_string (an_assembly.public_key_token)
+					a_file.put_line ("%"")
+					a_prefix := an_assembly.class_prefix
+					if a_prefix /= Void then
+						print_indentation (2, a_file)
+						a_file.put_line ("prefix")
+						print_indentation (3, a_file)
+						a_file.put_character ('%"')
+						a_file.put_string (a_prefix)
+						a_file.put_line ("%"")
+						print_indentation (2, a_file)
+						a_file.put_line ("end")
+					end
+					a_file.put_new_line
+					a_cursor.forth
+				end
+			end
 		end
 
 	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -198,7 +249,12 @@ feature {NONE} -- Output
 			a_dead_code_removal: DS_HASH_SET [STRING]
 			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
 			an_inlining: DS_HASH_SET [STRING]
+			a_target: STRING
+			is_version_5_1: BOOLEAN
 		do
+				-- Some options have been introduced in ISE 5.2 and
+				-- are not supported in ISE 5.1.
+			is_version_5_1 := variables.is_defined ("ISE_5_1")
 			if an_option.address_expression then
 				print_indentation (indent, a_file)
 				a_file.put_line ("address_expression (yes)")
@@ -261,6 +317,18 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("check_vape (no)")
 			end
+			if not is_version_5_1 then
+					-- This option has been introduced in ISE 5.2 and
+					-- is not supported in ISE 5.1.
+				if an_option.cls_compliant then
+					print_indentation (indent, a_file)
+					a_file.put_line ("cls_compliant (yes)")
+					else
+					print_indentation (indent, a_file)
+					a_file.put_line ("cls_compliant (no)")
+				end
+			end
+			a_dead_code_removal := an_option.dead_code_removal
 			if an_option.console_application then
 				print_indentation (indent, a_file)
 				a_file.put_line ("console_application (yes)")
@@ -300,6 +368,17 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.document)
 				a_file.put_line ("%")")
 			end
+			if not is_version_5_1 then
+					-- This option has been introduced in ISE 5.2 and
+					-- is not supported in ISE 5.1.
+				if an_option.dotnet_naming_convention then
+					print_indentation (indent, a_file)
+					a_file.put_line ("dotnet_naming_convention (yes)")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("dotnet_naming_convention (no)")
+				end
+			end
 			if an_option.dynamic_runtime then
 				print_indentation (indent, a_file)
 				a_file.put_line ("dynamic_runtime (yes)")
@@ -313,6 +392,13 @@ feature {NONE} -- Output
 			else
 				print_indentation (indent, a_file)
 				a_file.put_line ("exception_trace (no)")
+			end
+			if an_option.il_verifiable then
+				print_indentation (indent, a_file)
+				a_file.put_line ("il_verifiable (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("il_verifiable (no)")
 			end
 			an_inlining := an_option.inlining
 			if an_inlining.has (options.all_value) then
@@ -341,6 +427,13 @@ feature {NONE} -- Output
 			else
 				print_indentation (indent, a_file)
 				a_file.put_line ("line_generation (no)")
+			end
+			if an_option.msil_generation then
+				print_indentation (indent, a_file)
+				a_file.put_line ("msil_generation (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("msil_generation (no)")
 			end
 			if an_option.multithreaded then
 				print_indentation (indent, a_file)
@@ -373,6 +466,14 @@ feature {NONE} -- Output
 				a_file.put_string ("shared_library_definition (%"")
 				a_file.put_string (an_option.shared_library_definition)
 				a_file.put_line ("%")")
+			end
+			a_target := an_option.target
+			if a_target.is_equal (options.dll_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("msil_generation_type (%"dll%")")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("msil_generation_type (%"exe%")")
 			end
 			if an_option.trace then
 				print_indentation (indent, a_file)
@@ -947,6 +1048,7 @@ feature {NONE} -- Implementation
 			Result := <<
 				"adapt",
 				"all",
+				"assembly",
 				"assertion",
 				"c",
 				"check",
@@ -975,6 +1077,7 @@ feature {NONE} -- Implementation
 				"optimize",
 				"option",
 				"precompiled",
+				"prefix",
 				"rename",
 				"require",
 				"root",

@@ -184,6 +184,12 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"array_optimization%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_assembly_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"assembly%" value=%"")
+				a_file.put_string (an_option.assembly)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_assertion_declared then
 				a_cursor := an_option.assertion.new_cursor
 				from a_cursor.start until a_cursor.after loop
@@ -218,6 +224,14 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"clean%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_cls_compliant_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.cls_compliant then
+					a_file.put_line ("<option name=%"cls_compliant%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"cls_compliant%" value=%"false%"/>")
+				end
+			end
 			if an_option.is_component_declared then
 				print_indentation (indent + 1, a_file)
 				a_file.put_string ("<option name=%"component%" value=%"")
@@ -239,6 +253,12 @@ feature {NONE} -- Output
 				else
 					a_file.put_line ("<option name=%"create_keyword_extension%" value=%"false%"/>")
 				end
+			end
+			if an_option.is_culture_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"culture%" value=%"")
+				a_file.put_string (an_option.culture)
+				a_file.put_line ("%"/>")
 			end
 			if an_option.is_dead_code_removal_declared then
 				a_cursor := an_option.dead_code_removal.new_cursor
@@ -282,6 +302,14 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.document)
 				a_file.put_line ("%"/>")
 			end
+			if an_option.is_dotnet_naming_convention_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.dotnet_naming_convention then
+					a_file.put_line ("<option name=%"dotnet_naming_convention%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"dotnet_naming_convention%" value=%"false%"/>")
+				end
+			end
 			if an_option.is_dynamic_runtime_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.dynamic_runtime then
@@ -308,9 +336,9 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
-			if an_option.is_finalize_declared then
+			if an_option.is_finalize_option_declared then
 				print_indentation (indent + 1, a_file)
-				if an_option.finalize then
+				if an_option.finalize_option then
 					a_file.put_line ("<option name=%"finalize%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"finalize%" value=%"false%"/>")
@@ -364,6 +392,14 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"high_memory_compiler%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"high_memory_compiler%" value=%"false%"/>")
+				end
+			end
+			if an_option.is_il_verifiable_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.il_verifiable then
+					a_file.put_line ("<option name=%"il_verifiable%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"il_verifiable%" value=%"false%"/>")
 				end
 			end
 			if an_option.is_inlining_declared then
@@ -444,6 +480,14 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"map%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_msil_generation_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.msil_generation then
+					a_file.put_line ("<option name=%"msil_generation%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"msil_generation%" value=%"false%"/>")
+				end
+			end
 			if an_option.is_multithreaded_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.multithreaded then
@@ -480,6 +524,12 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.precompiled)
 				a_file.put_line ("%"/>")
 			end
+			if an_option.is_prefix_option_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"prefix%" value=%"")
+				a_file.put_string (an_option.prefix_option)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_profile_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.profile then
@@ -487,6 +537,12 @@ feature {NONE} -- Output
 				else
 					a_file.put_line ("<option name=%"profile%" value=%"false%"/>")
 				end
+			end
+			if an_option.is_public_key_token_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"public_key_token%" value=%"")
+				a_file.put_string (an_option.public_key_token)
+				a_file.put_line ("%"/>")
 			end
 			if an_option.is_recursive_declared then
 				print_indentation (indent + 1, a_file)
@@ -559,6 +615,12 @@ feature {NONE} -- Output
 				else
 					a_file.put_line ("<option name=%"verbose%" value=%"false%"/>")
 				end
+			end
+			if an_option.is_version_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"version%" value=%"")
+				a_file.put_string (an_option.version)
+				a_file.put_line ("%"/>")
 			end
 			if an_option.is_visible_filename_declared then
 				print_indentation (indent + 1, a_file)
