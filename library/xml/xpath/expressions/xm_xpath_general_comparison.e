@@ -52,9 +52,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
-			--Determine the data type of the expression, if possible
+			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 	
 feature -- Optimization	
@@ -128,6 +132,7 @@ feature -- Evaluation
 							an_atomic_value ?= an_iterator.item
 							if an_atomic_value = Void then
 								set_last_error_from_string ("Atomization failed for first operand of general comparison", 6, Type_error)
+								finished := True
 							else
 								from
 									a_third_iterator := a_sequence_extent.iterator (Void)
@@ -138,11 +143,13 @@ feature -- Evaluation
 									another_atomic_value ?= a_third_iterator.item
 									if another_atomic_value = Void then
 										set_last_error_from_string ("Atomization failed for second operand of general comparison", 6, Type_error)
+										finished := True
 									else
 										create a_comparison_checker
 										a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
 										if a_comparison_checker.is_comparison_type_error then
 											set_last_error (a_comparison_checker.last_type_error)
+											finished := True
 										elseif a_comparison_checker.last_check_result then
 											create Result.make (True)
 											finished := True
@@ -312,7 +319,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					if not is_error then									
+					if not is_error then
 						if (a_type = another_type or else not is_backwards_compatible_mode) and then first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one then
 							analyze_two_singletons_two_point_zero (a_context, a_type, another_type)
 						else -- one or both arguments are not singletons
@@ -327,9 +334,7 @@ feature {NONE} -- Implementation
 								else
 									if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
 																																		 or else is_sub_type (another_type, type_factory.numeric_type)) then
-										if not is_sub_type (a_type, type_factory.numeric_type) then
-											analyze_inequalities (a_context, another_type)
-										end
+										analyze_inequalities (a_context, a_type, another_type)
 									end
 									if not was_expression_replaced then
 										evaluate_two_constants
@@ -396,7 +401,7 @@ feature {NONE} -- Implementation
 			set_replacement (an_expression)
 		end
 
-	analyze_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; another_type: XM_XPATH_ITEM_TYPE) is
+	analyze_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE) is
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -414,28 +419,41 @@ feature {NONE} -- Implementation
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 			create a_type_checker
-			create a_numeric_type.make_numeric_sequence
-			create a_role.make (Binary_expression_role, token_name (operator), 1)
-			a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, is_backwards_compatible_mode, a_role)
-			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
-			else
-				set_first_operand (a_type_checker.checked_expression)
-				if not is_sub_type (another_type, type_factory.numeric_type) then
-					create another_role.make (Binary_expression_role, token_name (operator), 2)
-					a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, is_backwards_compatible_mode, another_role)
+			if not is_sub_type (a_type, type_factory.numeric_type) then
+				if is_backwards_compatible_mode then
+					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
+				else
+					create a_numeric_type.make_numeric_sequence
+					create a_role.make (Binary_expression_role, token_name (operator), 1)
+					a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, False, a_role)
+					if a_type_checker.is_static_type_check_error then
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					else
+						set_first_operand (a_type_checker.checked_expression)
+					end
+				end
+			end
+			if not is_error and then not is_sub_type (another_type, type_factory.numeric_type) then
+				create a_type_checker
+				create another_role.make (Binary_expression_role, token_name (operator), 2)
+				if is_backwards_compatible_mode then
+					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
+					else
+						a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else
 						set_second_operand (a_type_checker.checked_expression)
-						create a_minimax_comparison.make (first_operand, operator, second_operand)
-						a_minimax_comparison.analyze (a_context)
-						if a_minimax_comparison.was_expression_replaced then
-							set_replacement (a_minimax_comparison.replacement_expression)
-						else
-							set_replacement (a_minimax_comparison)
-						end
 					end
+				end
+			end
+			if not is_error then
+				create a_minimax_comparison.make (first_operand, operator, second_operand)
+				a_minimax_comparison.analyze (a_context)
+				if a_minimax_comparison.was_expression_replaced then
+					set_replacement (a_minimax_comparison.replacement_expression)
+				else
+					set_replacement (a_minimax_comparison)
 				end
 			end
 		end
@@ -449,7 +467,12 @@ feature {NONE} -- Implementation
 			another_value ?= second_operand
 			if a_value /= Void and then another_value /= Void then
 				evaluate_item (Void)
-				set_replacement (last_evaluation)
+				a_value ?= last_evaluated_item
+					check
+						a_value /= Void
+						-- We are guarenteed a boolean value
+					end
+				set_replacement (a_value)
 			end
 		end
 

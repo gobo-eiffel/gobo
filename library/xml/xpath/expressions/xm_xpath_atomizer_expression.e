@@ -46,6 +46,10 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.any_atomic_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end			
 		end
 
 	base_expression: XM_XPATH_EXPRESSION
@@ -131,9 +135,6 @@ feature -- Evaluation
 		local
 			a_mapped_item: XM_XPATH_MAPPED_ITEM
 		do
-				check
-					not_a_sequence: cardinality_allows_zero_or_one
-				end
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
 				last_evaluated_item := Void

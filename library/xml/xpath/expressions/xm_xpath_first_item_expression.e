@@ -42,6 +42,10 @@ feature -- Access
 		do
 			-- TODO
 			todo ("item-type", False)
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	base_expression: XM_XPATH_EXPRESSION

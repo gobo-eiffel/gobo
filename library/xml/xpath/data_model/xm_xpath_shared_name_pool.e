@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Singleton XM_XPATH_NAME_POOL"
+		"Shared access to XM_XPATH_DEFAULT_NAME_POOL"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
@@ -11,39 +11,14 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_SHARED_NAME_POOL
-
-creation
-
-	make
-	
-feature {NONE} -- Initialization
-
-	make is
-			-- Establish invariant
-		do
-			create default_pool.make
-		end
 	
 feature -- Access
 
-	default_pool: XM_XPATH_NAME_POOL
+	default_pool: XM_XPATH_DEFAULT_NAME_POOL is
 			-- The default pool
-	
-feature -- Element change
-
-	set_default_pool (a_new_pool: XM_XPATH_NAME_POOL) is -- used when loading a compiled stylesheet
-			-- Set the globally-shared default pool to `a_new_pool'
-		require
-			new_pool_not_void: a_new_pool /= Void
-		do
-			default_pool := a_new_pool
-		ensure
-			default_pool_set: default_pool = a_new_pool
+		once
+			create Result.make
 		end
 
-invariant
-
-	default_pool: default_pool /= Void
-	
 end
 	

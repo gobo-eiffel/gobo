@@ -25,9 +25,13 @@ inherit
 feature -- Access
 	
 	item_type: XM_XPATH_ITEM_TYPE is
-			--Determine the data type of the expression, if possible
+			-- Determine the data type of the expression, if possible
 		do
 			Result := any_node_test
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is

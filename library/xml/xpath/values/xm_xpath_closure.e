@@ -63,7 +63,10 @@ feature {NONE} -- Initialization
 		local
 			new_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 		do
+			make_value
 			base_expression := an_expression
+			clone_cardinality (base_expression)
+			clone_special_properties (base_expression)
 			saved_xpath_context := a_context.new_context
 			state := Unread_state
 			if saved_xpath_context.current_iterator /= Void then
@@ -77,9 +80,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
-			--Determine the data type of the expression, if possible
+			-- Data type of the expression, where known
 		do
 			Result := base_expression.item_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 feature -- Comparison

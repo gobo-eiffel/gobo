@@ -27,10 +27,9 @@ feature {NONE} -- Initialization
 			create special_properties.make (1, 6) -- All False
 			create dependencies.make (1, 6) -- All False
 			intrinsic_dependencies := dependencies
-			create cardinalities.make (1, 3) -- All False
+			set_cardinality_zero_or_more
 			are_intrinsic_dependencies_computed := True
 			are_dependencies_computed := True
-			are_cardinalities_computed := True
 			are_special_properties_computed := True
 		end
 	

@@ -44,109 +44,77 @@ feature {NONE} -- Initialization
 			-- Create a general sequence
 		do
 			primary_type := any_item
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
-			cardinalities.put (True, 3)
+			set_cardinality_zero_or_more
 		end
 
 	make_single_item is
 			-- Create a sequence that allows exactly one item
 		do
 			primary_type := any_item
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 2)
+			set_cardinality_exactly_one
 		end
 
 	make_optional_item is
 			-- Create a sequence that allows zero or one items
 		do
 			primary_type := any_item
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
+			set_cardinality_optional
 		end
 	
 	make_optional_atomic is
 			-- Create a sequence that allows zero or one atomic items
 		do
 			primary_type := type_factory.any_atomic_type
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
+			set_cardinality_optional
 		end
 
 	make_single_string is
 			-- Create a sequence that allows exactly one string
 		do
 			primary_type := type_factory.string_type
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 2)
+			set_cardinality_exactly_one
 		end
 
 	make_single_integer is
 			-- Create a sequence that allows exactly one integer
 		do
 			primary_type := type_factory.integer_type
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 2)
+			set_cardinality_exactly_one
 		end
 
 	make_optional_integer is
 			-- Create a sequence that allows zero or one integer
 		do
 			primary_type := type_factory.integer_type
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
+			set_cardinality_optional
 		end
 
 	make_single_node is
 			-- Create a sequence that allows exactly one node
 		do
 			primary_type := any_node_test
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 2)
+			set_cardinality_exactly_one
 		end
 
 	make_optional_node is
-			-- Create a sequence that allows exactly one node
+			-- Create a sequence that allows zero or one node
 		do
 			primary_type := any_node_test
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
+			set_cardinality_optional
 		end
 
 	make_node_sequence is
 			-- Create a sequence that allows zero or more node
 		do
 			primary_type := any_node_test
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
-			cardinalities.put (True, 3)
+			set_cardinality_zero_or_more
 		end
 
 	make_numeric_sequence is
 			-- Create a sequence that allows zero or more numeric values
 		do
 			primary_type := type_factory.numeric_type
-			create cardinalities.make (1, 3)
-			are_cardinalities_computed := True
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
-			cardinalities.put (True, 3)
+			set_cardinality_zero_or_more
 		end
 
 feature -- Access

@@ -34,6 +34,10 @@ feature -- Access
 			-- Type
 		do
 			create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 end

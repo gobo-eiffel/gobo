@@ -17,8 +17,12 @@ inherit
 	ANY
 
 	XM_CALLBACKS_FILTER_FACTORY
-		export {NONE} all end
+		export {NONE}
+			all
+		end
 
+	XM_XPATH_SHARED_NAME_POOL
+		
 		-- This pipeline is suitable for use by a stand-alone XPath evaluator.
 		-- It is not particularly suitable for use by documents to be used as input to
 		-- XSLT, as XSLT has more stringent white-space stripping rules, and
@@ -36,9 +40,9 @@ feature {NONE} -- Initialization
 			a_dummy: XM_CALLBACKS
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 		do
-			default_pool := shared_pool.default_pool
-			create tree.make (default_pool, True)
-			create emitter.make (tree, default_pool)
+			shared_pool := default_pool.default_pool
+			create tree.make (shared_pool, True)
+			create emitter.make (tree, shared_pool)
 			create error.set_next (emitter)
 			create namespace_resolver.set_next (error)
 			namespace_resolver.set_forward_xmlns (True)
@@ -50,15 +54,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	shared_pool: XM_XPATH_SHARED_NAME_POOL is
-			-- The shared name pool
-		once
-			create Result.make
-		end
-
-	default_pool: XM_XPATH_NAME_POOL
+	shared_pool: XM_XPATH_NAME_POOL
 			-- The default name pool
-	
+
 	start: XM_UNICODE_VALIDATION_FILTER
 			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
 

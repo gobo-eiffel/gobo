@@ -63,6 +63,13 @@ feature {NONE} -- Initialization
 				value.put (a_value.item (another_counter), another_counter)
 				another_counter := another_counter + 1
 			end
+			if value.count = 0 then
+				set_cardinality_empty
+			elseif value.count = 1 then
+				set_cardinality_exactly_one
+			else
+				set_cardinality_one_or_more
+			end
 		end
 
 	make_as_view (an_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
@@ -74,7 +81,7 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	item_type: XM_XPATH_ITEM_TYPE is
-			--Determine the data type of the expression, if possible
+			-- Data type of the expression
 		local
 			counter: INTEGER
 		do
@@ -100,6 +107,10 @@ feature -- Access
 				end
 			end
 			Result := cached_item_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is

@@ -488,6 +488,29 @@ feature
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end	
 
+
+	test_minimax_comparison is
+			-- Test a minimax comparison.;
+			-- N.B. It is advisable to turn on the debug key "XPath evaluator" to check that this is correctly optimised.
+			-- Even then, you will need to insert debugging statements into the minimax analyze routine to check it is being called.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create an_integer_value.make (7)
+			an_evaluator.static_context.declare_variable ("fred", an_integer_value)
+			an_evaluator.evaluate ("(8, ($fred - 1), 9) < (8, ($fred - 2), 4)")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
 	
 	-- Eventually, all errors should be tested here
 

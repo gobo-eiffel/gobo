@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 	make (an_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set in error.
 		do
+			make_value
 			error_value := an_error_value
 		ensure
 			in_error: is_error = True
@@ -34,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
-			-- Type
+			-- Data type
 		do
 			Result := any_item -- Can't meet pre-condition anyway
 		end

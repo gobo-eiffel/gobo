@@ -28,15 +28,21 @@ feature {NONE} -- Initialization
 	make is
 		do
 			make_value
-			cardinalities.put (True, 1) -- Allows empty
+			set_cardinality_empty
+			set_ordered_nodeset
+			set_context_document_nodeset
 		end
 
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
-			--Determine the data type of the expression, if possible
+			-- Data type of the expression, where known
 		do
 			Result := empty_item
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is

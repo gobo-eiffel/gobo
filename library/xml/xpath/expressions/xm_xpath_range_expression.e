@@ -35,6 +35,10 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.integer_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	lower_bound: XM_XPATH_EXPRESSION is

@@ -57,6 +57,10 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 	required_type: XM_XPATH_SEQUENCE_TYPE is

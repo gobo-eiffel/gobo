@@ -95,14 +95,13 @@ feature -- Optimization
 					elseif not is_sub_type (supplied_item_type, required_item_type) then
 						-- with pessimistic type checking we could output an error now, but we
 						-- give the user another chance to get it right at run-time
-						
 						a_value ?= checked_expression; if a_value /= void or else not is_sub_type (required_item_type, supplied_item_type)  then
-							report_type_check_error (a_role_locator)
+						report_type_check_error (a_role_locator)
 						end
 					end
 					
 					if not is_static_type_check_error then
-						
+
 						-- Unless the type is guaranteed to match, add a dynamic type check
 						
 						if not item_type_ok then
@@ -184,6 +183,8 @@ feature {NONE} -- Implementation
 		do
 			if supplied_cardinality = -1 then supplied_cardinality := checked_expression.cardinality	end
 			if supplied_item_type = Void then supplied_item_type := checked_expression.item_type end
+		ensure
+			supplied_item_type_not_void: supplied_item_type /= Void
 		end
 
 	report_error (a_string :STRING) is
@@ -272,10 +273,12 @@ feature {NONE} -- Implementation
 			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, " is ")
 			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, required_item_type.conventional_name)
 			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, "; supplied value has type ")
-			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, supplied_item_type.conventional_name)
-			--			print (supplied_item_type)
-			--			print (required_item_type)
+			if supplied_item_type /= Void then
+				static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, supplied_item_type.conventional_name)
+			end
+
 			-- TODO add location info
+
 			checked_expression := Void
 		end
 

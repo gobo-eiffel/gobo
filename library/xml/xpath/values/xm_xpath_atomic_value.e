@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Establish static properties
 		do
 			make_value
-			cardinalities.put (True, 2)
+			set_cardinality_exactly_one
 		end
 
 feature -- Access

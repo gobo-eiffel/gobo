@@ -45,6 +45,8 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		deferred
+		ensure
+			item_type_not_void: Result /= Void
 		end
 		
 feature -- Status report

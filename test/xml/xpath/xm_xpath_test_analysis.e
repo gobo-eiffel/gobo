@@ -31,15 +31,11 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	XM_XPATH_SHARED_NAME_POOL
+	
 feature -- Access
 
-	shared_pool: XM_XPATH_SHARED_NAME_POOL is
-			-- The shared name pool
-		once
-			create Result.make
-		end
-
-	default_pool: XM_XPATH_NAME_POOL
+	shared_pool: XM_XPATH_NAME_POOL
 			-- The default name pool
 
 feature -- Test
@@ -62,7 +58,7 @@ feature -- Test
 			create a_system_function_factory
 			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create a_context.make (default_pool, False, False)
+			create a_context.make (shared_pool, False, False)
 			expression_factory.make_expression (a_string, a_context)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
@@ -79,7 +75,7 @@ feature -- Test
 			assert ("Analysis sucessfull", not an_expression.is_error)
 			debug ("XPath expression factory")
 				print ("After analysis: %N")
-				an_expression.display (1, default_pool)
+				an_expression.display (1, shared_pool)
 			end
 			a_path ?= an_expression
 			assert ("Path expression", a_path /= Void)
@@ -122,7 +118,7 @@ feature -- Setting
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
-			default_pool := shared_pool.default_pool
+			shared_pool := default_pool.default_pool
 		end
 
 end

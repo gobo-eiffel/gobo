@@ -47,16 +47,14 @@ feature -- Access
 			Result := value
 		end
 
---	type: INTEGER is
---			-- Type
---		do
---			Result := String_type
---		end
-	
 	item_type: XM_XPATH_ITEM_TYPE is
-			--Determine the data type, if possible;
+			-- Data type
 		do
 			Result := type_factory.string_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
 		end
 
 feature -- Comparison
