@@ -41,8 +41,7 @@ feature {ANY} -- Debug
 
 	out: STRING is
 		do
-			!! Result.make (0)
-			Result.append_string (" ln: ")
+			Result := clone (" ln: ")
 			Result.append_string (row.out)
 			Result.append_string (" cl: ")
 			Result.append_string (column.out)
