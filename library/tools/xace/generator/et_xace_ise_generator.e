@@ -5,7 +5,7 @@ indexing
 		"Ace file generators for ISE Eiffel"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -264,7 +264,7 @@ feature {NONE} -- Output
 		do
 				-- Some options have been introduced in ISE 5.2 and
 				-- are not supported in ISE 5.1.
-			is_version_5_1 := variables.is_defined ("ISE_5_1")
+			is_version_5_1 := variables.value ("ISE_5_1") /= Void
 			if an_option.address_expression then
 				print_indentation (indent, a_file)
 				a_file.put_line ("address_expression (yes)")

@@ -5,7 +5,7 @@ indexing
 		"Ace file generators for Halstenbach"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -247,7 +247,7 @@ feature {NONE} -- Output
 		do
 				-- Some options have been introduced in HACT 4.0 and
 				-- are not supported in HACT 3.
-			is_version_3 := variables.is_defined ("GOBO_HACT_3")
+			is_version_3 := variables.value ("GOBO_HACT_3") /= Void
 			if an_option.address_expression then
 				print_indentation (indent, a_file)
 				a_file.put_line ("address_expression (yes);")

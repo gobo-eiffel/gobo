@@ -5,7 +5,7 @@ indexing
 		"Ace file generators from Xace systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ feature -- Access
 	output_filename: STRING
 			-- Output filename
 
-	variables: ET_XACE_VARIABLES
+	variables: KL_VALUES [STRING, STRING]
 			-- Defined variables
 
 	error_handler: ET_XACE_ERROR_HANDLER
@@ -118,8 +118,9 @@ feature {NONE} -- Implementation
 		do
 			gobo_os_variable := "GOBO_OS"
 			gobo_os_value := "windows"
-			if variables.is_defined (gobo_os_variable) then
-				Result := STRING_.same_string (variables.value (gobo_os_variable), gobo_os_value)
+			a_value := variables.value (gobo_os_variable)
+			if a_value /= Void then
+				Result := STRING_.same_string (a_value, gobo_os_value)
 			else
 				a_value := Execution_environment.variable_value (gobo_os_variable)
 				if a_value /= Void and then a_value.count > 0 then
