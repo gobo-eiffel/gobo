@@ -19,12 +19,12 @@ inherit
 		rename
 			absolute_time as date_time
 		undefine
-			out, is_equal, date_time
+			out, is_equal, date_time, copy
 		end
 
 	DATE_TIME_VALUE
 		undefine
-			is_equal
+			is_equal, copy
 		end
 
 	DATE_DURATION
@@ -40,7 +40,7 @@ inherit
 			prefix "-", is_equal,
 			out, append_to_string,
 			make_canonical_from_dates,
-			set_canonical
+			set_canonical, copy
 		redefine
 			zero
 		end
@@ -63,7 +63,8 @@ inherit
 			append_to_string, append_precise_to_string,
 			precise_out, infix "-", infix "+", prefix "-",
 			is_equal, out, is_time_canonical,
-			time_to_canonical, set_time_canonical
+			time_to_canonical, set_time_canonical,
+			copy
 		end
 
 	DT_DATE_TIME_DURATION
@@ -80,7 +81,7 @@ inherit
 			tmp_date
 		redefine
 			date, time, date_time,
-			tmp_date_time
+			tmp_date_time, copy
 		end
 
 creation
@@ -158,6 +159,16 @@ feature -- Access
 			-- (Create a new object at each call.)
 		do
 			Result := a_date_time + Current
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to current duration.
+		do
+			standard_copy (other)
+			date_impl := Void
+			time_impl := Void
 		end
 
 feature {NONE} -- Implementation
