@@ -31,7 +31,7 @@ feature -- Syntax errors
 			an_error: ET_SYNTAX_ERROR
 		do
 			!! an_error.make (p)
-			report_error (an_error)
+--			report_error (an_error)
 		end
 
 	report_SCAC_error (p: ET_POSITION) is
@@ -202,17 +202,21 @@ feature -- Validity errors
 			-- different generic parameters.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			anc1_not_void: anc1 /= Void
 			anc2_not_void: anc2 /= Void
 			same_base: anc1.base_class = anc2.base_class
 		do
-			print ("[GAGP] Class ")
-			print (where.name.name)
-			print (": ancestors with generic parameter mismatch: ")
-			print (anc1.to_string)
-			print (" and ")
-			print (anc2.to_string)
-			print (".%N")
+			if reportable_gagp_error (where) then
+				print ("[GAGP] Class ")
+				print (where.name.name)
+				print (": ancestors with generic parameter mismatch: ")
+				print (anc1.to_string)
+				print (" and ")
+				print (anc2.to_string)
+				print (".%N")
+			end
 		end
 			
 	report_vcfg3_error (where: ET_CLASS; a_type: ET_TYPE) is
@@ -221,6 +225,8 @@ feature -- Validity errors
 			-- generic parameter of class `where'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
 			print ("[VCFG-3] Class ")
@@ -240,6 +246,8 @@ feature -- Validity errors
 			-- generic parameter of class `where'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
 			if False then
@@ -260,6 +268,8 @@ feature -- Validity errors
 			-- involved in the inheritance cycle `cycle'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			cycle_not_void: cycle /= Void
 			no_void_class: not cycle.has (Void)
 			cycle_not_empty: not cycle.is_empty
@@ -286,6 +296,8 @@ feature -- Validity errors
 			-- in parent clause of class `where'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
 			print ("[VHPR-3] Class ")
@@ -304,6 +316,8 @@ feature -- Validity errors
 			-- in parent clause of class `where'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
 			if False then
@@ -324,6 +338,8 @@ feature -- Validity errors
 			-- for Bit_type must be a positive integer constant
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
 			print ("[VTBT] Class ")
@@ -342,17 +358,21 @@ feature -- Validity errors
 			-- on unknown class in class `where'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
-			print ("[VTCT] Class ")
-			print (where.name.name)
-			print (" (")
-			print (a_type.position.line)
-			print (",")
-			print (a_type.position.column)
-			print ("): type based on unknown class ")
-			print (a_type.class_name.name)
-			print (".%N")
+			if reportable_vtct_error (where) then
+				print ("[VTCT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): type based on unknown class ")
+				print (a_type.class_name.name)
+				print (".%N")
+			end
 		end
 
 	report_vtct_any_error (where: ET_CLASS) is
@@ -360,10 +380,14 @@ feature -- Validity errors
 			-- implicitly inherit from unknown class ANY.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 		do
-			print ("[VTCT] Class ")
-			print (where.name.name)
-			print (": implicitly inherit from unknown class ANY.%N")
+			if reportable_vtct_error (where) then
+				print ("[VTCT] Class ")
+				print (where.name.name)
+				print (": implicitly inherit from unknown class ANY.%N")
+			end
 		end
 
 	report_vtcg_error (where: ET_CLASS; an_actual, a_constraint: ET_TYPE) is
@@ -372,20 +396,24 @@ feature -- Validity errors
 			-- does not conform to constraint `a_constraint'.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			an_actual_not_void: an_actual /= Void
 			a_constraint_not_void: a_constraint /= Void
 		do
-			print ("[VTCG] Class ")
-			print (where.name.name)
-			print (" (")
-			print (an_actual.position.line)
-			print (",")
-			print (an_actual.position.column)
-			print ("): actual generic parameter ")
-			print (an_actual.to_string)
-			print (" does not conform to constraint ")
-			print (a_constraint.to_string)
-			print (".%N")
+			if reportable_vtcg_error (where) then
+				print ("[VTCG] Class ")
+				print (where.name.name)
+				print (" (")
+				print (an_actual.position.line)
+				print (",")
+				print (an_actual.position.column)
+				print ("): actual generic parameter ")
+				print (an_actual.to_string)
+				print (" does not conform to constraint ")
+				print (a_constraint.to_string)
+				print (".%N")
+			end
 		end
 
 	report_vtug1_error (where: ET_CLASS; a_type: ET_CLASS_TYPE) is
@@ -395,19 +423,23 @@ feature -- Validity errors
 			-- generic.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
-			print ("[VTUG-1] Class ")
-			print (where.name.name)
-			print (" (")
-			print (a_type.position.line)
-			print (",")
-			print (a_type.position.column)
-			print ("): type ")
-			print (a_type.to_string)
-			print (" has actual generic parameters but class ")
-			print (a_type.class_name.name)
-			print (" is not generic.%N")
+			if reportable_vtug1_error (where) then
+				print ("[VTUG-1] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): type ")
+				print (a_type.to_string)
+				print (" has actual generic parameters but class ")
+				print (a_type.class_name.name)
+				print (" is not generic.%N")
+			end
 		end
 
 	report_vtug2_error (where: ET_CLASS; a_type: ET_CLASS_TYPE) is
@@ -416,17 +448,102 @@ feature -- Validity errors
 			-- the wrong number of actual generic parameters.
 		require
 			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
-			print ("[VTUG-2] Class ")
-			print (where.name.name)
-			print (" (")
-			print (a_type.position.line)
-			print (",")
-			print (a_type.position.column)
-			print ("): type ")
-			print (a_type.to_string)
-			print (" has wrong number of actual generic parameters.%N")
+			if reportable_vtug2_error (where) then
+				print ("[VTUG-2] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): type ")
+				print (a_type.to_string)
+				print (" has wrong number of actual generic parameters.%N")
+			end
+		end
+
+feature -- Status report
+
+	reportable_gagp_error (where: ET_CLASS): BOOLEAN is
+			-- Can a GAGP error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vtcg_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VTCG error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vtct_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VTCT error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vtug1_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VTUG-1 error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vtug2_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VTUG-2 error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+feature {NONE}
+
+	in_system (a_class: STRING): BOOLEAN is
+		do
+			Result := classes_in_system.has (a_class)
+		end
+
+	classes_in_system: HASH_TABLE [ANY, STRING] is
+		local
+			a_file: PLAIN_TEXT_FILE
+		once
+			!! Result.make (6000)
+			!! a_file.make ("system.txt")
+			a_file.open_read
+			from
+			until
+				a_file.end_of_file
+			loop
+				a_file.read_line
+				Result.put (Void, clone (a_file.last_string))
+			end
+			a_file.close
 		end
 
 end -- class ET_ERROR_HANDLER
