@@ -77,7 +77,7 @@ if yy_act = 1 then
 eif_lineno := eif_lineno + text_count
 else
 --|#line 61
-;
+-- Ignore separators.
 end
 else
 --|#line 67
@@ -87,7 +87,7 @@ else
 if yy_act <= 5 then
 if yy_act = 4 then
 --|#line 68
-;
+-- Ignore comments.
 else
 --|#line 74
 last_token := Plus_code
@@ -1110,7 +1110,7 @@ if yy_act = 184 then
 --|#line 383
 last_token := E_UNKNOWN
 else
---|#line 385
+--|#line 0
 fatal_error ("scanner jammed")
 end
 end
@@ -1126,10 +1126,10 @@ end
 		do
 			inspect yy_sc
 when 0 then
---|#line 382
+--|#line 0
 terminate
 when 1 then
---|#line 308
+--|#line 0
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL)
