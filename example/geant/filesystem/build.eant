@@ -5,6 +5,10 @@
 		<mkdir directory="testdirectory" />
 	</target>
 
-	<target name="all" depends="mkdir1">
+	<target name="deldir1">
+		<delete directory="testdirectory" />
+	</target>
+
+	<target name="all" depends="mkdir1,deldir1">
 	</target>
 </project>
