@@ -21,7 +21,7 @@ inherit
 			set_callbacks as set_next
 		end
 		
-	XM_FORWARD_CALLBACKS 
+	XM_FORWARD_CALLBACKS
 		-- implementation of default behaviour:
 		-- forwarding to 'next' processor in chain
 		rename

@@ -54,11 +54,11 @@ feature -- Tag
 		do
 			if prefixes.count >= 0 then
 				if not (
-					prefixes.item = a_prefix 
-					or else ((a_prefix /= Void and prefixes.item /= Void) 
+					prefixes.item = a_prefix
+					or else ((a_prefix /= Void and prefixes.item /= Void)
 						and then same_string (prefixes.item, a_prefix)))
 				or
-					not same_string (local_parts.item, a_local_part) 
+					not same_string (local_parts.item, a_local_part)
 				then
 					on_error (End_tag_mismatch_error)
 				end

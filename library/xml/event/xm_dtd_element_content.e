@@ -189,7 +189,7 @@ feature -- Output
 				end
 				Result.append_character (')')
 				if not is_one then
-					 Result.append_character (repetition)
+					Result.append_character (repetition)
 				end
 			end
 		end

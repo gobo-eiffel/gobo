@@ -26,7 +26,7 @@ inherit
 			out
 		end
 		
-creation 
+creation
 
 	make
 
@@ -44,7 +44,7 @@ feature -- ANY
 		do
 			if public_id /= Void then
 				Result := clone ("PUBLIC ")
-				Result := STRING_.appended_string (Result, public_id) 
+				Result := STRING_.appended_string (Result, public_id)
 			end
 			
 			if system_id /= Void then

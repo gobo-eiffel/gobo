@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Context for namespace resolver"
 

@@ -11,8 +11,8 @@ indexing
 	revision: "$Revision$"
 
 	-- TODO: forward namespaces (currently problem with void in list)
-	-- if namespaces are used this filter should be before the 
-	-- namespace resolver if default attribute namespaces are 
+	-- if namespaces are used this filter should be before the
+	-- namespace resolver if default attribute namespaces are
 	-- to be resolved.
 
 class XM_ATTRIBUTE_DEFAULT_FILTER
@@ -80,9 +80,9 @@ feature -- DTD
 			token_on_attribute_declaration (an_element_name, a_name, a_model)
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING; 
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
 		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
-			 -- Entity declaration.
+			-- Entity declaration.
 		do
 		end
 
@@ -127,7 +127,7 @@ feature -- Content
 			if defaults /= Void and then defaults.has (dtd_name (a_prefix, a_local_part)) then
 				it := defaults.item (dtd_name (a_prefix, a_local_part)).new_cursor
 				from it.start until it.after loop
-					push_attribute (Void, 
+					push_attribute (Void,
 						dtd_prefix (it.item.name),
 						dtd_local (it.item.name),
 						it.item.default_value)
@@ -170,14 +170,14 @@ feature {NONE} -- Attribute queue
 	is_space (a: INTEGER): BOOLEAN is
 			-- Is this a space character?
 		do
-			Result := a = Lf_char.code 
+			Result := a = Lf_char.code
 				or a = Cr_char.code
-				or a = Tab_char.code 
+				or a = Tab_char.code
 				or a = Space_char.code
 		end
 
 	push_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
-			-- Push attributes, if attribute name already 
+			-- Push attributes, if attribute name already
 			-- in list overwrite the value.
 		local
 			found: BOOLEAN
@@ -195,7 +195,7 @@ feature {NONE} -- Attribute queue
 				if same_string (dtd_name (a_prefix, a_local), names.item (i)) then
 					values.replace (a_value, i)
 					found := True
-				end 
+				end
 				i := i + 1
 			end
 			if not found then
@@ -240,7 +240,7 @@ feature {NONE} -- Content implementation
 			end
 		ensure
 			dtd_name_not_void: Result /= Void
-			no_prefix_same: not has_prefix (a_prefix) implies (Result = a_local) 
+			no_prefix_same: not has_prefix (a_prefix) implies (Result = a_local)
 		end
 	
 	dtd_prefix (a_dtd_name: STRING): STRING is
@@ -282,7 +282,7 @@ feature {NONE} -- Content implementation
 feature {NONE} -- Tokens implementation
 
 	tokens: DS_HASH_TABLE [DS_HASH_TABLE [BOOLEAN, STRING], STRING]
-			-- NMTOKENs for space normalisation, table of 
+			-- NMTOKENs for space normalisation, table of
 			-- is_token for (element, attribute).
 
 	element_tokens: DS_HASH_TABLE [BOOLEAN, STRING]
@@ -317,7 +317,7 @@ feature {NONE} -- Tokens implementation
 		end
 
 	forward_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
-			-- Push attributes, if attribute name already 
+			-- Push attributes, if attribute name already
 			-- in list overwrite the value.
 		local
 			a_string: STRING

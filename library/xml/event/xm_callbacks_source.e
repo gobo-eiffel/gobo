@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Source of XML event callbacks"
 

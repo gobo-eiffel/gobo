@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Source of XML document type definiton event callbacks"
 

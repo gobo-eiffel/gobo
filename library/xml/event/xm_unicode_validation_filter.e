@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Filters that validate unicode character classes"
 		

@@ -62,7 +62,7 @@ feature -- Tag
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		do
-			next.on_start_tag (shared_string (a_namespace), 
+			next.on_start_tag (shared_string (a_namespace),
 				shared_string (a_prefix),
 				shared_string (a_local_part))
 		end
@@ -70,7 +70,7 @@ feature -- Tag
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of start tag.
 		do
-			next.on_attribute (shared_string (a_namespace), 
+			next.on_attribute (shared_string (a_namespace),
 				shared_string (a_prefix),
 				shared_string (a_local_part),
 				shared_string (a_value))
@@ -79,7 +79,7 @@ feature -- Tag
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
-			next.on_end_tag (shared_string (a_namespace), 
+			next.on_end_tag (shared_string (a_namespace),
 				shared_string (a_prefix),
 				shared_string (a_local_part))
 		end

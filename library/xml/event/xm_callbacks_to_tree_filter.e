@@ -19,9 +19,9 @@ inherit
 			on_start,
 			on_start_tag,
 			on_attribute,
-			on_content, 
-			on_end_tag, 
-			on_processing_instruction, 
+			on_content,
+			on_end_tag,
+			on_processing_instruction,
 			on_comment
 		end
 
@@ -47,8 +47,8 @@ feature -- Position table
 			-- Position table
 
 	enable_position_table (a_source: XM_PARSER) is
-			-- Enable position table, store the position 
-			-- for each node into 'last_position_table', using the 
+			-- Enable position table, store the position
+			-- for each node into 'last_position_table', using the
 			-- positions from the source of the callbacks.
 		require
 			a_source_not_void: a_source /= Void
@@ -180,14 +180,14 @@ feature {NONE} -- Implementation
 			
 			-- share namespace nodes
 			check cache_initialised: namespace_cache /= Void end
-			-- XM_NAMESPACE is hashable/equal on uri only, 
+			-- XM_NAMESPACE is hashable/equal on uri only,
 			-- so we must explicitely check if the cached namespace
 			-- has the same prefix
-			if namespace_cache.has (Result) 
+			if namespace_cache.has (Result)
 				and then namespace_cache.item (Result).same_prefix (Result)
 			then
 				Result := namespace_cache.item (Result)
-			else 
+			else
 				namespace_cache.force_last (Result)
 			end
 		ensure

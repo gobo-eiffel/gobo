@@ -71,7 +71,7 @@ feature -- Document type definition callbacks
 		
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
 		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
-			 -- Entity declaration.
+			-- Entity declaration.
 		do
 			output ("<!ENTITY ")
 			if is_parameter then

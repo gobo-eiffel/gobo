@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Null handler for document type definition callbacks"
 
@@ -44,9 +44,9 @@ feature -- Document type definuition callbacks
 		do
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING; 
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
 		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
-			 -- Entity declaration.
+			-- Entity declaration.
 		do
 		end
 

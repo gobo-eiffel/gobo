@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			error := new_stop_on_error
 			tree := new_tree_builder
 			last := tree
-				-- Dummy because we already store 'start' in 
+				-- Dummy because we already store 'start' in
 				-- a variable of a descendant type
 			a_dummy := callbacks_pipe (<<
 				start,
@@ -53,7 +53,7 @@ feature -- Filters (part of the pipe)
 			-- Error collector
 
 	tree: XM_CALLBACKS_TO_TREE_FILTER
-			-- Tree construction 
+			-- Tree construction
 
 	last: XM_CALLBACKS_FILTER
 			-- Last element in the pipe, to which further filters can be added

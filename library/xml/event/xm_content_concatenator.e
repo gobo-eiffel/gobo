@@ -51,7 +51,7 @@ feature {NONE} -- Content
 feature -- Content
 	
 	on_content (a_content: STRING) is
-			-- Aggregate content events so that two content events 
+			-- Aggregate content events so that two content events
 			-- never follow each other.
 		do
 			if last_content = Void then
@@ -62,7 +62,7 @@ feature -- Content
 		end
 		
 	on_comment (a_comment: STRING) is
-			-- Eat comment when in content, otherwise the event would be 
+			-- Eat comment when in content, otherwise the event would be
 			-- out of order.
 		do
 			flush_content

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		 "Callbacks filter that resolves namespaces"
+		"Callbacks filter that resolves namespaces"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
