@@ -19,11 +19,37 @@ inherit
 
 creation
 
-	make
+	make, make_from_array
 
 feature {NONE} -- Initialization
 
-	make (args: like arguments; a_type: like type) is
+	make (args: ET_FORMAL_ARGUMENTS; a_type: like type) is
+			-- Create a new signature.
+		local
+			i: INTEGER
+			arg: ET_FORMAL_ARGUMENT
+		do
+			type := a_type
+			if args = Void then
+				!! arguments.make (1, 0)
+			else
+				from arg := args.arguments until arg = Void loop
+					i := i + 1
+					arg := arg.next
+				end
+				!! arguments.make (1, i)
+				i := 1
+				from arg := args.arguments until arg = Void loop
+					arguments.put (arg.type, i)
+					i := i + 1
+					arg := arg.next
+				end
+			end
+		ensure
+			type_set: type = a_type
+		end
+
+	make_from_array (args: like arguments; a_type: like type) is
 			-- Create a new signature.
 		require
 			args_not_void: args /= Void
@@ -47,13 +73,49 @@ feature -- Access
 
 feature -- Status report
 
-	same_signature (other: ET_SIGNATURE): BOOLEAN is
-			-- Is current signature the same as `other'?
+	same_syntactical_signature (other: ET_SIGNATURE): BOOLEAN is
+			-- Is current signature syntactically the
+			-- same signature as `other' (e.g. do not
+			-- try to resolve anchored types)?
 		require
 			other_not_void: other /= Void
 		do
-			Result := same_type (other) and
-				same_arguments (other)
+			Result := same_syntactical_type (other) and
+				same_syntactical_arguments (other)
+		end
+
+	same_syntactical_type (other: ET_SIGNATURE): BOOLEAN is
+			-- Are the types of current signature and
+			-- `other' syntactically the same types (e.g.
+			-- do not try to resolve anchored types)?
+		require
+			other_not_void: other /= Void
+		local
+			other_type: ET_TYPE
+		do
+			other_type := other.type
+			if type = Void then
+				Result := other_type = Void
+			elseif other_type = Void then
+				Result := False
+			else
+				Result := type.same_syntactical_type (other_type)
+			end
+		end
+
+	same_syntactical_arguments (other: ET_SIGNATURE): BOOLEAN is
+			-- Are the arguments of current signature and
+			-- `other' syntactically the same (e.g. do not
+			-- try to resolve anchored types)?
+		require
+			other_not_void: other /= Void
+		do
+			if arguments.count /= other.arguments.count then
+				Result := False
+			else
+					-- TODO
+				Result := True
+			end
 		end
 
 	signature_conforms_to (other: ET_SIGNATURE): BOOLEAN is
@@ -63,22 +125,6 @@ feature -- Status report
 		do
 			Result := type_conforms_to (other) and
 				arguments_conform_to (other)
-		end
-
-	same_type (other: ET_SIGNATURE): BOOLEAN is
-			-- Are the types of current signature and
-			-- `other' the same?
-		require
-			other_not_void: other /= Void
-		do
-			if type = Void then
-				Result := other.type = Void
-			elseif other.type = Void then
-				Result := False
-			else
-					-- TODO
-				Result := True
-			end
 		end
 
 	type_conforms_to (other: ET_SIGNATURE): BOOLEAN is
@@ -97,20 +143,6 @@ feature -- Status report
 			end
 		end
 
-	same_arguments (other: ET_SIGNATURE): BOOLEAN is
-			-- Are the arguments of current signature and
-			-- `other' the same?
-		require
-			other_not_void: other /= Void
-		do
-			if arguments.count /= other.arguments.count then
-				Result := False
-			else
-					-- TODO
-				Result := True
-			end
-		end
-
 	arguments_conform_to (other: ET_SIGNATURE): BOOLEAN is
 			-- Do the arguments of current signature
 			-- conform to the arguments of `other'?
@@ -122,6 +154,47 @@ feature -- Status report
 			else
 					-- TODO
 				Result := True
+			end
+		end
+
+feature -- Type processing
+
+	resolve_formal_parameters (actual_parameters: ARRAY [ET_TYPE]) is
+			-- Replace in current signature the formal generic parameter
+			-- types of index 'i' by 'actual_parameters.item (i)'
+			-- when these new parameters are not void.
+			-- (Warning: this is a side-effect function.)
+		require
+			actual_parameters_not_void: actual_parameters /= Void
+		local
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			if type /= Void then
+				type := type.resolved_formal_parameters (actual_parameters)
+			end
+			nb := arguments.count
+			from i := 1 until i > nb loop
+				a_type := arguments.item (i)
+				a_type := a_type.resolved_formal_parameters (actual_parameters)
+				arguments.put (a_type, i)
+				i := i + 1
+			end
+		end
+
+feature -- Duplication
+
+	duplicate_types is
+			-- Recursively duplicate all types
+			-- in `arguments' and `type'.
+		local
+			i, nb: INTEGER
+		do
+			type := clone (type)
+			nb := arguments.count
+			from i := 1 until i > nb loop
+				arguments.put (clone (arguments.item (i)), i)
+				i := i + 1
 			end
 		end
 

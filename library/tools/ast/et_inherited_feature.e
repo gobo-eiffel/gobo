@@ -24,35 +24,16 @@ feature {NONE} -- Initialization
 		require
 			f_not_void: f /= Void
 			p_not_void: p /= Void
-		local
-			generics: ET_ACTUAL_GENERIC_TYPES
-			i, nb: INTEGER
-			a_type: ET_TYPE
-			a_formal_type: ET_FORMAL_GENERIC_TYPE
-			types: ARRAY [ET_TYPE]
 		do
-			inherited_feature := f
 			parent := p
+			inherited_feature := f
+			signature := f.signature
+			signature.duplicate_types
 				-- Update the formal generic parameters
-				-- that appears in the inherited feature.
-			generics := parent.type.generic_parameters
-			if generics /= Void then
-				nb := generics.count
-				from i := 1 until i > nb loop
-					a_type := generics.item (i)
-					a_formal_type ?= a_type
-					if a_formal_type = Void or else a_formal_type.position /= i then
-						if types = Void then
-							!! types.make (1, nb)
-						end
-						types.put (a_type, i)
-					end
-					i := i + 1
-				end
-				if types /= Void then
-						-- There are formal generic parameters which
-						-- have changed when inheriting from `parent'.
-				end
+				-- that appear in inherited signature.
+			build_actual_parameters
+			if actual_parameters /= Void then
+				signature.resolve_formal_parameters (actual_parameters)
 			end
 		ensure
 			inherited_feature_set: inherited_feature = f
@@ -76,8 +57,25 @@ feature -- Access
 	inherited_feature: ET_FEATURE
 			-- Feature inherited from `parent'
 
+	signature: ET_SIGNATURE
+			-- Feature signature
+
 	parent: ET_PARENT
 			-- Parent from which feature is inherited
+
+	actual_parameters: ARRAY [ET_TYPE]
+			-- Formal generic parameters which have
+			-- been given new values while inherited 
+			-- from `parent'; Void if no such parameters
+
+	seeds: ET_FEATURE_SEEDS is
+			-- Seeds (feature IDs of first declarations
+			-- of `inherited_feature')
+		do
+			Result := inherited_feature.seeds
+		ensure
+			seeds_not_void: Result /= Void
+		end
 
 	new_name: ET_RENAME
 			-- New name when feature is renamed
@@ -113,11 +111,20 @@ feature -- Conversion
 			elseif is_renamed or new_version then
 				an_id := a_class.universe.next_feature_id
 				Result := inherited_feature.renamed_feature (name, an_id)
+			elseif actual_parameters /= Void and then inherited_feature.has_formal_parameters (actual_parameters) then
+					-- We need to update some formal generic parameters
+					-- in this inherited feature, hence a duplication
+					-- is needed.
+				an_id := a_class.universe.next_feature_id
+				Result := inherited_feature.renamed_feature (name, an_id)
 			else
 				Result := inherited_feature
 			end
 			if new_version then
 				Result.set_version (Result.id)
+			end
+			if actual_parameters /= Void then
+				Result.resolve_formal_parameters (actual_parameters)
 			end
 		ensure
 			adapted_feature_not_void: Result /= Void
@@ -137,6 +144,9 @@ feature -- Conversion
 				Result := inherited_feature.renamed_feature (name, an_id)
 			end
 			Result.set_version (an_id)
+			if actual_parameters /= Void then
+				Result.resolve_formal_parameters (actual_parameters)
+			end
 		ensure
 			replicated_feature_not_void: Result /= Void
 			id_set: Result.id = an_id
@@ -185,14 +195,6 @@ feature -- Status report
 			definition: Result = (inherited_feature.is_deferred or is_undefined)
 		end
 
-	has_seed (a_seed: INTEGER): BOOLEAN is
-			-- Is `a_seed' a seed of current feature?
-		do
-			Result := inherited_feature.has_seed (a_seed)
-		ensure
-			definition: Result = inherited_feature.has_seed (a_seed)
-		end
-
 feature -- Comparison
 
 	same_version (other: ET_INHERITED_FEATURE): BOOLEAN is
@@ -206,15 +208,16 @@ feature -- Comparison
 			definition: Result = inherited_feature.same_version (other.inherited_feature)
 		end
 
-	same_signature (other: ET_INHERITED_FEATURE): BOOLEAN is
-			-- Does current feature have the same 
-			-- signature as `other'?
+	same_syntactical_signature (other: ET_INHERITED_FEATURE): BOOLEAN is
+			-- Does current feature have syntactically the
+			-- same signature as `other' (e.g. do not try
+			-- to resolve anchored types)?
 		require
 			other_not_void: other /= Void
 		do
-			Result := inherited_feature.same_signature (other.inherited_feature)
+			Result := signature.same_syntactical_signature (other.signature)
 		ensure
-			definition: Result = inherited_feature.same_signature (other.inherited_feature)
+			definition: Result = signature.same_syntactical_signature (other.signature)
 		end
 	
 	signature_conforms_to (other: ET_INHERITED_FEATURE): BOOLEAN is
@@ -290,23 +293,37 @@ feature -- Setting
 			select_name_set: select_name = a_name
 		end
 
-feature -- Element change
+feature {NONE} -- Implementation
 
-	replace_seed (old_seed, new_seed: INTEGER) is
-			-- Replace `old_seed' by `new_seed'.
-		require
-			has_old_seed: has_seed (old_seed)
-			not_has_new_seed: not has_seed (new_seed)
+	build_actual_parameters is
+			-- Build `actual_parameters'.
+		local
+			i, nb: INTEGER
+			a_type: ET_TYPE
+			a_formal: ET_FORMAL_GENERIC_TYPE
+			generics: ET_ACTUAL_GENERIC_PARAMETERS
 		do
-			inherited_feature.replace_seed (old_seed, new_seed)
-		ensure
-			not_has_old_seed: not has_seed (old_seed)
-			has_new_seed: has_seed (new_seed)
+			generics := parent.type.generic_parameters
+			if generics /= Void then
+				nb := generics.count
+				from i := 1 until i > nb loop
+					a_type := generics.item (i)
+					a_formal ?= a_type
+					if a_formal = Void or else a_formal.index /= i then
+						if actual_parameters = Void then
+							!! actual_parameters.make (1, nb)
+						end
+						actual_parameters.put (a_type, i)
+					end
+					i := i + 1
+				end
+			end
 		end
 
 invariant
 
 	inherited_feature_not_void: inherited_feature /= Void
 	parent_not_void: parent /= Void
+	signature_not_void: signature /= Void
 
 end -- class ET_INHERITED_FEATURE
