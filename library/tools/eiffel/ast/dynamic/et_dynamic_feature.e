@@ -89,6 +89,61 @@ feature -- Access
 	result_type: ET_DYNAMIC_TYPE_SET
 			-- Type of result, if any
 
+	first_precursor: ET_DYNAMIC_PRECURSOR
+			-- First precursor called from current feature;
+			-- May be void if no precursor called
+
+	other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			-- Other precursors called from current feature;
+			-- May be void if zero or one precursor called
+
+	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_PRECURSOR is
+			-- Dynamic precursor of current feature
+		require
+			a_feature_not_void: a_feature /= Void
+			a_parent_type_not_void: a_parent_type /= Void
+			a_system_not_void: a_system /= Void
+		local
+			l_precursor: ET_DYNAMIC_PRECURSOR
+			i, nb: INTEGER
+		do
+			if first_precursor = Void then
+				create Result.make (a_feature, a_parent_type, Current, a_system)
+				Result.set_regular (is_regular or is_creation)
+				Result.set_static (is_static)
+				first_precursor := Result
+			elseif first_precursor.parent_type = a_parent_type and first_precursor.static_feature = a_feature then
+				Result := first_precursor
+			else
+				if other_precursors = Void then
+					create other_precursors.make_with_capacity (1)
+					create Result.make (a_feature, a_parent_type, Current, a_system)
+					Result.set_regular (is_regular or is_creation)
+					Result.set_static (is_static)
+					other_precursors.put_first (Result)
+				else
+					nb := other_precursors.count
+					from i := 1 until i > nb loop
+						l_precursor := other_precursors.item (i)
+						if l_precursor.parent_type = a_parent_type and l_precursor.static_feature = a_feature then
+							Result := l_precursor
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+					if Result = Void then
+						create Result.make (a_feature, a_parent_type, Current, a_system)
+						Result.set_regular (is_regular or is_creation)
+						Result.set_static (is_static)
+						other_precursors.force_first (Result)
+					end
+				end
+			end
+		ensure
+			dynamic_precursor_not_void: Result /= Void
+		end
+
 	first_feature_call: ET_DYNAMIC_CALL
 			-- Dynamic type set of first qualified feature call
 
@@ -127,6 +182,9 @@ feature -- Status report
 
 	is_regular: BOOLEAN
 			-- Is current feature used as a regular feature?
+
+	is_static: BOOLEAN
+			-- Is current feature used as a static feature?
 
 	is_function: BOOLEAN is
 			-- Is feature a function?
@@ -180,18 +238,66 @@ feature -- Status setting
 
 	set_creation (b: BOOLEAN) is
 			-- Set `is_creation' to `b'.
+		local
+			l_regular: BOOLEAN
+			i, nb: INTEGER
 		do
 			is_creation := b
+			if first_precursor /= Void then
+				l_regular := b or is_regular
+				first_precursor.set_regular (l_regular)
+				if other_precursors /= Void then
+					nb := other_precursors.count
+					from i := 1 until i > nb loop
+						other_precursors.item (i).set_regular (l_regular)
+						i := i + 1
+					end
+				end
+			end
 		ensure
 			creation_set: is_creation = b
 		end
 
 	set_regular (b: BOOLEAN) is
 			-- Set `is_regular' to `b'.
+		local
+			l_regular: BOOLEAN
+			i, nb: INTEGER
 		do
 			is_regular := b
+			if first_precursor /= Void then
+				l_regular := b or is_creation
+				first_precursor.set_regular (l_regular)
+				if other_precursors /= Void then
+					nb := other_precursors.count
+					from i := 1 until i > nb loop
+						other_precursors.item (i).set_regular (l_regular)
+						i := i + 1
+					end
+				end
+			end
 		ensure
 			regular_set: is_regular = b
+		end
+
+	set_static (b: BOOLEAN) is
+			-- Set `is_static' to `b'.
+		local
+			i, nb: INTEGER
+		do
+			is_static := b
+			if first_precursor /= Void then
+				first_precursor.set_static (b)
+				if other_precursors /= Void then
+					nb := other_precursors.count
+					from i := 1 until i > nb loop
+						other_precursors.item (i).set_static (b)
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			static_set: is_static = b
 		end
 
 feature -- Element change
@@ -224,6 +330,32 @@ feature -- Element change
 			last_feature_call := a_call
 		ensure
 			last_feature_call_set: last_feature_call = a_call
+		end
+
+	insert_feature_call (a_previous_call, a_call: ET_DYNAMIC_CALL) is
+			-- Insert `a_call' just after `a_previous_call' in the
+			-- list of feature calls, or at the first position if
+			-- it is Void.
+		require
+			a_call_not_void: a_call /= Void
+			-- has_previous_call: a_previous_call /= Void implies has (a_previous_call)
+		do
+			if a_previous_call = Void then
+				if first_feature_call = Void then
+					first_feature_call := a_call
+					last_feature_call := a_call
+				else
+					a_call.set_next_call (first_feature_call)
+					first_feature_call := a_call
+				end
+			else
+				if a_previous_call = last_feature_call then
+					last_feature_call := a_call
+				else
+					a_call.set_next_call (a_previous_call.next_call)
+				end
+				a_previous_call.set_next_call (a_call)
+			end
 		end
 
 feature -- Output
