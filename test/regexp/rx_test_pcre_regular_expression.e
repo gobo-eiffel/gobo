@@ -46,4 +46,30 @@ feature -- Test Input 1
 			assert ("not_matched4", not a_regexp.has_matched)
 		end
 
+feature -- Test replacement
+
+	test_replacement1 is
+			-- Test replacement.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+			a_replacement: STRING
+		do
+			create a_regexp.make
+				-- Any digit followed by # and followed by the same digit.
+			a_regexp.compile ("([0-9])#\1")
+			assert ("is_compiled1", a_regexp.is_compiled)
+			a_regexp.optimize
+			a_regexp.match ("abc8#8def")
+			assert ("has_matched1", a_regexp.has_matched)
+			assert_equal ("match_count1", 2, a_regexp.match_count)
+				-- Matched substring:
+			assert_equal ("captured_substring0_1", "8#8", a_regexp.captured_substring (0))
+				-- Matched part in the first parentheses:
+			assert_equal ("captured_substring1_1", "8", a_regexp.captured_substring (1))
+			a_replacement := a_regexp.replacement ("\1\#0")
+			assert_equal ("relacement1", "8#0", a_replacement)
+			a_replacement := a_regexp.replace_all ("\1\#0")
+			assert_equal ("relacement2", "abc8#0def", a_replacement)
+		end
+
 end
