@@ -45,8 +45,6 @@ feature {NONE} -- Initialization
 			l_any := universe.any_class
 			character_type := dynamic_type (universe.character_class, l_any)
 			character_type.set_alive (True)
-			string_type := dynamic_type (universe.string_class, l_any)
-			string_type.set_alive (True)
 			boolean_type := dynamic_type (universe.boolean_class, l_any)
 			boolean_type.set_alive (True)
 			wide_character_type := dynamic_type (universe.wide_character_class, l_any)
@@ -65,6 +63,8 @@ feature {NONE} -- Initialization
 			double_type.set_alive (True)
 			pointer_type := dynamic_type (universe.pointer_class, l_any)
 			pointer_type.set_alive (True)
+			string_type := dynamic_type (universe.string_class, l_any)
+			string_type.set_alive (True)
 			procedure_type := dynamic_type (universe.procedure_class, l_any)
 			procedure_type.set_alive (True)
 			predicate_type := dynamic_type (universe.predicate_class, l_any)
@@ -322,7 +322,7 @@ feature -- Compilation
 					else
 						create l_command.make ("cl " + l_class.name.name + ".c")
 					end
---					l_command.execute
+					l_command.execute
 				end
 			end
 		end
@@ -389,7 +389,6 @@ feature -- Compilation
 	build_dynamic_type_sets is
 			-- Build dynamic type sets for current system.
 		local
-			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_TYPE
 			j, nb2: INTEGER
@@ -398,15 +397,11 @@ feature -- Compilation
 			done: BOOLEAN
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [ET_DYNAMIC_TYPE], ET_CLASS]
-			l_arguments: ET_DYNAMIC_TYPE_SET_LIST
-			l_locals: ET_DYNAMIC_TYPE_SET_LIST
-			l_call: ET_DYNAMIC_CALL
-			l_target: ET_DYNAMIC_TYPE_SET
-			l_count: INTEGER
+			l_precursor: ET_DYNAMIC_PRECURSOR
+			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 		do
 			l_cursor := dynamic_types.new_cursor
-			create l_builder.make (Current)
 			from until done loop
 				done := True
 				from l_cursor.start until l_cursor.after loop
@@ -419,63 +414,24 @@ feature -- Compilation
 							nb2 := l_features.count
 							from j := 1 until j > nb2 loop
 								l_feature := l_features.item (j)
-								l_arguments := l_feature.argument_types
-								if l_arguments /= Void then
-									nb3 := l_arguments.count
-									from k := 1 until k > nb3 loop
-										l_target := l_arguments.item (k)
-										l_count := l_target.count
-										l_target.propagate_types (Current)
-										if l_target.count /= l_count then
-											done := False
-										end
-										k := k + 1
-									end
-								end
-								l_locals := l_feature.local_types
-								if l_locals /= Void then
-									nb3 := l_locals.count
-									from k := 1 until k > nb3 loop
-										l_target := l_locals.item (k)
-										l_count := l_target.count
-										l_target.propagate_types (Current)
-										if l_target.count /= l_count then
-											done := False
-										end
-										k := k + 1
-									end
-								end
-								l_target := l_feature.result_type
-								if l_target /= Void then
-									l_count := l_target.count
-									l_target.propagate_types (Current)
-									if l_target.count /= l_count then
-										done := False
-									end
-								end
-								from
-									l_call := l_feature.first_feature_call
-								until
-									l_call = Void
-								loop
-									l_count := l_call.count
-									l_call.propagate_types (Current)
-									if l_call.count /= l_count then
-										done := False
-									end
-									l_target := l_call.result_type
-									if l_target /= Void then
-										l_count := l_target.count
-										l_target.propagate_types (Current)
-										if l_target.count /= l_count then
-											done := False
-										end
-									end
-									l_call := l_call.next_call
-								end
-								if not l_feature.is_built then
-									l_builder.build_dynamic_type_sets (l_feature, l_type)
+								if build_feature_dynamic_type_sets (l_feature, l_type) then
 									done := False
+								end
+								l_precursor := l_feature.first_precursor
+								if l_precursor /= Void then
+									if build_feature_dynamic_type_sets (l_precursor, l_type) then
+										done := False
+									end
+									l_other_precursors := l_feature.other_precursors
+									if l_other_precursors /= Void then
+										nb3 := l_other_precursors.count
+										from k := 1 until k > nb3 loop
+											if build_feature_dynamic_type_sets (l_other_precursors.item (k), l_type) then
+												done := False
+											end
+											k := k + 1
+										end
+									end
 								end
 								j := j + 1
 							end
@@ -484,6 +440,82 @@ feature -- Compilation
 					end
 					l_cursor.forth
 				end
+			end
+		end
+
+	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE): BOOLEAN is
+		require
+			a_feature_not_void: a_feature /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
+			l_arguments: ET_DYNAMIC_TYPE_SET_LIST
+			l_locals: ET_DYNAMIC_TYPE_SET_LIST
+			l_call: ET_DYNAMIC_CALL
+			l_target: ET_DYNAMIC_TYPE_SET
+			l_count: INTEGER
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.argument_types
+			if l_arguments /= Void then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_target := l_arguments.item (i)
+					l_count := l_target.count
+					l_target.propagate_types (Current)
+					if l_target.count /= l_count then
+						Result := True
+					end
+					i := i + 1
+				end
+			end
+			l_locals := a_feature.local_types
+			if l_locals /= Void then
+				nb := l_locals.count
+				from i := 1 until i > nb loop
+					l_target := l_locals.item (i)
+					l_count := l_target.count
+					l_target.propagate_types (Current)
+					if l_target.count /= l_count then
+						Result := True
+					end
+					i := i + 1
+				end
+			end
+			l_target := a_feature.result_type
+			if l_target /= Void then
+				l_count := l_target.count
+				l_target.propagate_types (Current)
+				if l_target.count /= l_count then
+					Result := True
+				end
+			end
+			from
+				l_call := a_feature.first_feature_call
+			until
+				l_call = Void
+			loop
+				l_count := l_call.count
+				l_call.propagate_types (Current)
+				if l_call.count /= l_count then
+					Result := True
+				end
+				l_target := l_call.result_type
+				if l_target /= Void then
+					l_count := l_target.count
+					l_target.propagate_types (Current)
+					if l_target.count /= l_count then
+						Result := True
+					end
+				end
+				l_call := l_call.next_call
+			end
+			if not a_feature.is_built then
+				create l_builder.make (Current)
+				l_builder.set_no_debug (True)
+				l_builder.set_no_assertion (True)
+				l_builder.build_dynamic_type_sets (a_feature, a_type)
+				Result := True
 			end
 		end
 
@@ -555,7 +587,10 @@ feature -- Compilation
 			i, nb: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
+			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			l_precursor: ET_DYNAMIC_PRECURSOR
 			j, nb2: INTEGER
+			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [ET_DYNAMIC_TYPE], ET_CLASS]
 			l_count: INTEGER
@@ -568,13 +603,25 @@ feature -- Compilation
 					l_type := l_dynamic_types.item (i)
 					l_count := l_count + 1
 					l_type.set_id (l_count)
-					if l_type.is_alive then
+					if l_type.is_alive or l_type.has_static then
 						l_features := l_type.features
 						if l_features /= Void then
 							nb2 := l_features.count
 							from j := 1 until j > nb2 loop
 								l_feature := l_features.item (j)
 								l_feature.set_id (j)
+								l_precursor := l_feature.first_precursor
+								if l_precursor /= Void then
+									l_precursor.set_id (1)
+									l_other_precursors := l_feature.other_precursors
+									if l_other_precursors /= Void then
+										nb3 := l_other_precursors.count
+										from k := 2 until k > nb3 loop
+											l_other_precursors.item (k).set_id (k)
+											k := k + 1
+										end
+									end
+								end
 								j := j + 1
 							end
 						end
