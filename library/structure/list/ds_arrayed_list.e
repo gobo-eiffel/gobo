@@ -255,10 +255,12 @@ feature -- Duplication
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
-				internal_cursor := Void
 				if old_cursor /= Void then
 					internal_cursor := old_cursor
 				else
+						-- Set `internal_cursor' to Void before calling
+						-- `new_cursor' to avoid an invariant violation.
+					internal_cursor := Void
 					internal_cursor := new_cursor
 				end
 				storage := clone (storage)
