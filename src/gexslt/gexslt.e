@@ -784,7 +784,7 @@ feature {NONE} -- Implementation
 			an_emitter_factory: XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY
 		do
 			create an_emitter_factory.make
-			emitter_factory.register_extension_emitter_factory (an_emitter_factory, Gexslt_examples_uri)
+			emitter_factory.register_extension_emitter_factory (an_emitter_factory)
 		end
 
 invariant
