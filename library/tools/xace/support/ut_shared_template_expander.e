@@ -11,7 +11,7 @@ class
    UT_SHARED_TEMPLATE_EXPANDER
 
 feature {ANY} -- Access
-   
+
    template_expander: UT_TEMPLATE_EXPANDER is
       once
          !! Result.make

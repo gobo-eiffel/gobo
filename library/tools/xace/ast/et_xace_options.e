@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			!! debug_keys.make (Initial_debug_keys_capacity)
 		end
 
-feature -- Status report   
+feature -- Status report
 
 	has_optimize: UT_TRISTATE
 			-- Has 'optimize' option been set?

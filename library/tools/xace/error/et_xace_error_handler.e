@@ -163,7 +163,7 @@ feature -- Reporting
 			!! an_error.make (a_containing_element, an_attribute_name, a_position)
 			report_error (an_error)
 		end
-   
+
 	report_missing_element_error (a_containing_element: XM_ELEMENT; an_element_name: UC_STRING; a_position: XM_POSITION) is
 			-- Report that element `an_element_name' is
 			-- missing in element `a_containing_element'.
@@ -178,7 +178,7 @@ feature -- Reporting
 			!! an_error.make (a_containing_element, an_element_name, a_position)
 			report_error (an_error)
 		end
-   
+
 	report_unknown_element_error (a_containing_element: XM_ELEMENT; an_element: XM_ELEMENT; a_position: XM_POSITION) is
 			-- Report that element `an_element' is not
 			-- expected in element `a_containing_element'.
@@ -190,6 +190,19 @@ feature -- Reporting
 			an_error: ET_XACE_UNKNOWN_ELEMENT_ERROR
 		do
 			!! an_error.make (a_containing_element, an_element, a_position)
+			report_error (an_error)
+		end
+
+	report_invalid_expression_error (an_invalid_expression: UC_STRING; a_position: XM_POSITION) is
+			-- Report that expression `an_invalid_expression'
+			-- is not valid.
+		require
+			an_invalid_expression_not_void: an_invalid_expression /= Void
+			a_position_not_void: a_position /= Void
+		local
+			an_error: ET_XACE_INVALID_EXPRESSION_ERROR
+		do
+			!! an_error.make (an_invalid_expression, a_position)
 			report_error (an_error)
 		end
 

@@ -22,7 +22,7 @@ inherit
 
 creation
 
-	make, make_with_factory
+	make, make_with_variables
 
 feature {NONE} -- Initialization
 
@@ -32,34 +32,41 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_variables: ET_XACE_VARIABLES
-			a_factory: ET_XACE_AST_FACTORY
 		do
 			!! a_variables.make
-			!! a_factory.make (a_variables, an_error_handler)
-			make_with_factory (a_factory, an_error_handler)
+			make_with_variables (a_variables, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_variables (a_variables: ET_XACE_VARIABLES; an_error_handler: like error_handler) is
 			-- Create a new Xace parser.
 		require
-			a_factory_not_void: a_factory /= Void
+			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
+			a_cluster_parser: ET_XACE_CLUSTER_PARSER
 			a_parser_factory: XM_PARSER_FACTORY
 		do
-			ast_factory := a_factory
 			error_handler := an_error_handler
+			-- We must not create a new ET_XACE_CLUSTER_PARSER
+			-- object if `Current' is one already, or we will
+			-- recurse in this routine forever
+			a_cluster_parser ?= Current
+			if a_cluster_parser = Void then
+				!! a_cluster_parser.make_with_variables (a_variables, error_handler)
+			end
+			!! ast_factory.make (a_cluster_parser, error_handler)
+ 			!! xml_preprocessor.make (a_variables, error_handler)
+			!! xml_validator.make (an_error_handler)
 			!! a_parser_factory.make
 			if a_parser_factory.is_toe_eiffel_tree_available then
 				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
 				xml_parser.enable_position_table
+			else
+				error_handler.report_no_parser_available_error
 			end
-			!! xml_preprocessor.make (ast_factory.variables)
-			!! xml_validator.make (an_error_handler)
 		ensure
-			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
 
@@ -74,7 +81,17 @@ feature -- Parsing
 			a_root_name: UC_STRING
 			a_system: ET_XACE_UNIVERSE
 			a_cluster: ET_XACE_CLUSTER
+			a_parser_factory: XM_PARSER_FACTORY
 		do
+			-- temporary workaround until eiffel-xml parser
+			-- can parse multiple times with one instance
+			!! a_parser_factory.make
+			if a_parser_factory.is_toe_eiffel_tree_available then
+				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
+				xml_parser.enable_position_table
+			else
+				error_handler.report_no_parser_available_error
+			end
 			if xml_parser /= Void then
 				xml_parser.parse_from_stream (a_file)
 				if xml_parser.is_correct then
@@ -82,13 +99,13 @@ feature -- Parsing
 					if a_root_name.is_equal (uc_system) then
 						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
-							xml_preprocessor.preprocess_composite (xml_parser.document)
+							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
 							a_system := ast_factory.new_universe (xml_parser.document.root_element)
 						end
 					elseif a_root_name.is_equal (uc_cluster) then
 						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
-							xml_preprocessor.preprocess_composite (xml_parser.document)
+							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
 							a_cluster := ast_factory.new_cluster (xml_parser.document.root_element)
 						end
 					else
@@ -109,7 +126,7 @@ feature -- Access
 
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
-	
+
 feature {NONE} -- Implementation
 
 	xml_parser: XM_TREE_PARSER
@@ -117,7 +134,7 @@ feature {NONE} -- Implementation
 
 	xml_validator: ET_XACE_VALIDATOR
 			-- XML validator
-	
+
 	xml_preprocessor: ET_XACE_PREPROCESSOR
 			-- XML preprocessor
 

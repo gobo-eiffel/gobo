@@ -1,9 +1,9 @@
 class
-   
+
    UT_STRING_ROUTINES
-   
+
 feature
-   
+
    split_string (s: STRING; c: CHARACTER): DS_LINKED_LIST [STRING] is
 	 -- split `s' on `c' and return token list
       require
@@ -38,9 +38,9 @@ feature
 	 result_items_not_void: not Result.has (Void)
 	 -- result items are not empty
       end
-   
+
    split_on_first (s: STRING; c: CHARACTER): DS_PAIR [STRING, STRING] is
-	 -- similar to `split' but returns a pair consisting of the first item 
+	 -- similar to `split' but returns a pair consisting of the first item
 	 -- and the rest
 	 -- if `c' does not occure `Result.second' is `Void'
 	 -- note: implementation could use a performance rewrite (;
@@ -78,7 +78,7 @@ feature
 	 result_not_void: Result /= Void
 	 first_not_void: Result.first /= Void
       end
-   
+
    replace_all_characters (str: STRING; old_char, new_char: CHARACTER): STRING is
 	 -- replace all occurences of `old_char' in `str' with `new_char'
 	 -- returen a new string
@@ -93,7 +93,7 @@ feature
 	 until
 	    i > str.count
 	 loop
-	    if 
+	    if
 	       str.item (i) = old_char
 	     then
 	       Result.append_character (new_char)
@@ -120,7 +120,7 @@ feature
 	 until
 	    i > str.count
 	 loop
-	    if 
+	    if
 	       str.item (i) /= char
 	     then
 	       Result.append_character (str.item (i))
@@ -144,12 +144,12 @@ feature
 	 from
 	    i := a.lower
 	    Result := clone ("")
-	 until      
+	 until
 	    i > a.upper
 	 loop
 	    Result.append_string (a.item (i))
 	    i := i + 1
 	 end
       end
-   
+
 end

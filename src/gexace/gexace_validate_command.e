@@ -12,7 +12,7 @@ indexing
 	revision:   "$Revision$"
 
 class GEXACE_VALIDATE_COMMAND
- 
+
 inherit
 
 	GEXACE_COMMAND
@@ -24,16 +24,14 @@ creation
 	make
 
 feature -- Execution
- 
+
 	execute is
 			-- Execute 'validate' command.
 		local
 			a_parser: ET_XACE_PARSER
-			a_factory: ET_XACE_AST_FACTORY
 			a_file: like INPUT_STREAM_TYPE
 		do
-			!! a_factory.make (variables, error_handler)
-			!! a_parser.make_with_factory (a_factory, error_handler)
+			!! a_parser.make_with_variables (variables, error_handler)
 			a_file := INPUT_STREAM_.make_file_open_read (system_filename)
 			if INPUT_STREAM_.is_open_read (a_file) then
 				a_parser.parse_file (a_file)

@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class ET_XACE_GENERATOR 
+deferred class ET_XACE_GENERATOR
 
 feature {NONE} -- Initialization
 

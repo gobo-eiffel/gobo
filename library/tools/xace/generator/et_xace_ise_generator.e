@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_XACE_ISE_GENERATOR 
+class ET_XACE_ISE_GENERATOR
 
 inherit
 

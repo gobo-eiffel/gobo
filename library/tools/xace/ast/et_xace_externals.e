@@ -71,7 +71,7 @@ feature -- Status report
 			Result := not link_libraries.is_empty
 		end
 
-feature -- Access   
+feature -- Access
 
 	exported_classes: DS_LINKED_LIST [ET_XACE_EXPORTED_CLASS]
 			-- Exported classes

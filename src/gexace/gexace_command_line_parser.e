@@ -123,7 +123,7 @@ feature -- Matching
 				nb := an_option_name.count + 2
 				if
 					arg.count >= nb and then
-					(arg.item (1) = '-' and arg.item (2) = '-') and
+					(arg.item (1) = '-' and arg.item (2) = '-') and then
 					arg.substring (3, nb).is_equal (an_option_name)
 				then
 					Result := (arg.count = nb or else arg.item (nb + 1) = '=')

@@ -14,26 +14,26 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 
 	KL_IMPORTED_ARRAY_ROUTINES
-   
+
 creation
    make
-   
+
 feature {ANY} -- Initialisation
-   
+
    make is
       do
       end
 
 feature
-   
+
    expand_from_array (a_template: STRING; a_parameters: ARRAY [STRING]): STRING is
 	 -- expands special tokens with parameters in template string
-	 -- 
+	 --
          -- returns a new string based on `a_tmpl'
-         -- where all occurences of "$N" or "${N}" (where N 
+         -- where all occurences of "$N" or "${N}" (where N
 	 -- stands for [0-9]+) in `a_tmpl' are substituted by
-	 -- the entry `N' in `a_params' or left as "$N" or "${N}" if 
-	 -- `N' is out of bounds. The character '$' is escaped 
+	 -- the entry `N' in `a_params' or left as "$N" or "${N}" if
+	 -- `N' is out of bounds. The character '$' is escaped
          -- using "$$".
       require
 	 a_template_not_void: a_template /= Void
@@ -130,7 +130,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    expand_from_hash_table (a_template: STRING; a_variables: DS_HASH_TABLE [STRING, STRING]): STRING is
 	 -- String where the variables have been
 	 -- replaced by their values. The variables
@@ -139,8 +139,8 @@ feature
 	 -- variables are left as they were.
 	 -- The result is not defined when `a_string' does not
 	 -- conform to the conventions above.
-	 -- the variables and their values are taken from 
-	 -- `a_variables' where the key is the variable name and the 
+	 -- the variables and their values are taken from
+	 -- `a_variables' where the key is the variable name and the
 	 -- value is the value of the variable.
 	 -- Return a new string each time.
       require
@@ -212,7 +212,7 @@ feature
 			end
 		     end
 		  end
-		  if 
+		  if
 		     a_variables.has (str)
 		   then
 		     str := a_variables.item (str)
@@ -231,6 +231,6 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
-   
+
+
 end

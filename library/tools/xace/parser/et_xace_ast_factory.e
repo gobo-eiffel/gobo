@@ -27,37 +27,37 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is	
+	make (a_cluster_parser: like cluster_parser; an_error_handler: like error_handler) is
 			-- Create a new AST factory.
 		require
-			a_variables_not_void: a_variables /= Void
+			a_cluster_parser_not_void: a_cluster_parser /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			variables := a_variables
+			cluster_parser := a_cluster_parser
 			error_handler := an_error_handler
 		ensure
-			variables_set: variables = a_variables
+			cluster_parser_set: cluster_parser = a_cluster_parser
 			error_handler_set: error_handler = an_error_handler
 		end
 
 feature -- Access
-	
-	variables: ET_XACE_VARIABLES
-			-- Dollar variables defined
-	
+
+	cluster_parser: ET_XACE_CLUSTER_PARSER
+			-- Cluster Parser
+
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
 feature -- Setting
 
-	set_variables (a_variables: like variables) is
-			-- Set `variables' to `a_variables'.
+	set_cluster_parser (a_cluster_parser: like cluster_parser) is
+			-- Set `cluster_parser' to `a_cluster_parser'.
 		require
-			a_variables_not_void: a_variables /= Void
+			a_cluster_parser_not_void: a_cluster_parser /= Void
 		do
-			variables := a_variables
+			cluster_parser := a_cluster_parser
 		ensure
-			variables_set: variables = a_variables
+			cluster_parser_set: cluster_parser = a_cluster_parser
 		end
 
 feature -- AST factory
@@ -244,7 +244,6 @@ feature -- AST factory
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 			an_excluded: DS_LINKED_LIST [STRING]
-			a_parser: ET_XACE_CLUSTER_PARSER
 			a_cluster: ET_XACE_CLUSTER
 			a_filename: STRING
 			a_file: like INPUT_STREAM_TYPE
@@ -273,13 +272,12 @@ feature -- AST factory
 							end
 							a_cursor.forth
 						end
-						!! a_parser.make_with_factory (Current, error_handler)
 						a_filename := Execution_environment.interpreted_string (a_pathname)
 						a_file := INPUT_STREAM_.make_file_open_read (a_filename)
 						if INPUT_STREAM_.is_open_read (a_file) then
-							a_parser.parse_file (a_file)
+							cluster_parser.parse_file (a_file)
 							INPUT_STREAM_.close (a_file)
-							a_cluster := a_parser.last_cluster
+							a_cluster := cluster_parser.last_cluster
 							if a_cluster /= Void then
 								!! clusters.make (a_cluster)
 								!! Result.make (a_pathname ,clusters)
@@ -574,8 +572,8 @@ feature {NONE} -- Constant
 
 invariant
 
-	variables_not_void: variables /= Void
-	
+	cluster_parser_not_void: cluster_parser /= Void
+
 	error_handler_not_void: error_handler /= Void
-	
+
 end -- class ET_XACE_AST_FACTORY

@@ -104,7 +104,7 @@ feature -- Constants
 			uc_description_not_void: Result /= Void
 			uc_description_not_empty: not Result.empty
 		end
-   
+
 	uc_option: UC_STRING is
 			-- "option" element name
 		once
@@ -277,12 +277,36 @@ feature -- Constants
 		end
 
 	uc_equal: UC_CHARACTER_REF is
-			-- "=", which may occure in "if" or "unless"
+			-- '=', which may occure in "if" or "unless"
 			-- attributes
 		once
 			!! Result.make_from_character ('=')
 		ensure
 			uc_equal_not_void: Result /= Void
+		end
+
+	uc_dollar: UC_CHARACTER_REF is
+			-- '$', which occures in variable names
+		once
+			!! Result.make_from_character ('$')
+		ensure
+			uc_dollar_not_void: Result /= Void
+		end
+
+	uc_opening_curly_brace: UC_CHARACTER_REF is
+			-- '{', which may occure in variable names
+		once
+			!! Result.make_from_character ('{')
+		ensure
+			uc_opening_curly_brace_not_void: Result /= Void
+		end
+
+	uc_closing_curly_brace: UC_CHARACTER_REF is
+			-- '}', which may occure in variable names
+		once
+			!! Result.make_from_character ('}')
+		ensure
+			uc_closing_curly_brace_not_void: Result /= Void
 		end
 
 end -- class ET_XACE_ELEMENT_NAMES

@@ -43,7 +43,7 @@ feature
 			!! commands.make
 			!! error_handler.make
 			make_command_line_parser
-			process_arguments 
+			process_arguments
 			a_cursor := commands.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.execute
@@ -65,7 +65,7 @@ feature -- Access
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
-feature {NONE} -- Command-line processing   
+feature {NONE} -- Command-line processing
 
 	process_arguments is
 			-- Process command-line arguments.
