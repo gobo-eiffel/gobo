@@ -56,7 +56,7 @@ feature -- Access
 	system_name: STRING
 			-- System name
 
-	finalize: BOOLEAN
+	finalize_mode: BOOLEAN
 			-- Finalize mode
 
 	fish: BOOLEAN
@@ -83,12 +83,12 @@ feature -- Setting
 			system_name_set: system_name = a_name
 		end
 
-	set_finalize (b: BOOLEAN) is
-			-- Set  `finalize' to `b'.
+	set_finalize_mode (b: BOOLEAN) is
+			-- Set  `finalize_mode' to `b'.
 		do
-			finalize := b
+			finalize_mode := b
 		ensure
-			finalize_set: finalize = b
+			finalize_mode_set: finalize_mode = b
 		end
 
 	set_fish (b: BOOLEAN) is
@@ -132,7 +132,7 @@ feature -- Execution
 			a_filename: STRING
 		do
 			cmd := clone ("ibcomp -executable")
-			if finalize then
+			if finalize_mode then
 				cmd.append_string (" -finalize")
 			end
 			cmd.append_string (" -new -stop")
@@ -148,7 +148,7 @@ feature -- Execution
 			execute_shell (cmd)
 			if exit_code = 0 and then fish then
 				eifgen := system_name + "_gen"
-				if finalize then
+				if finalize_mode then
 					project_dir := file_system.pathname (eifgen, "F_code")
 				else
 					project_dir := file_system.pathname (eifgen, "W_code")
@@ -164,7 +164,7 @@ feature -- Execution
 						a_filename := system_name + file_system.exe_extension
 						if not file_system.file_exists (a_filename) then
 							exit_code := -1
-						elseif not finalize then
+						elseif not finalize_mode then
 							a_filename := system_name + ".h2o"
 							if not file_system.file_exists (a_filename) then
 								exit_code := -2

@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			end
 				-- finalize:
 			if has_attribute (Finalize_attribute_name) then
-				command.set_finalize (boolean_value (Finalize_attribute_name))
+				command.set_finalize_mode (boolean_value (Finalize_attribute_name))
 			end
 				-- finish_freezing:
 			if has_attribute (Finish_freezing_attribute_name) then
