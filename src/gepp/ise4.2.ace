@@ -1,41 +1,36 @@
--- system:     "Gobo Eiffel Lex: lexical analyzer generator"
--- compiler:   "ISE Eiffel 4.1"
+-- system:     "'gepp' preprocessor"
+-- compiler:   "ISE Eiffel 4.2"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
--- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
 -- revision:   "$Revision$"
 
 system
 
-	gelex
+	gepp
 
 root
 
-	GELEX: "execute"
+	GEPP: "execute"
 		
 default
 
 	--debug (yes);
-	assertion (all);
+	--assertion (all);
 	--precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
 
 cluster
 
-	gelex:				"$GOBO\src\gelex";
+	gepp:				"$GOBO\src\gepp";
 
 		-- Gobo Eiffel Lexical Library
-	lx_automaton:		"$GOBO\library\lexical\automaton";
-	lx_lex:				"$GOBO\library\lexical\lex";
-	lx_generation:		"$GOBO\library\lexical\generation";
-	lx_scanner:			"$GOBO\library\lexical\scanner";
 	lx_skeleton:		"$GOBO\library\lexical\skeleton";
-	lx_support:			"$GOBO\library\lexical\support";
 
 		-- Gobo Eiffel Parse Library
 	pr_skeleton:		"$GOBO\library\parse\skeleton";
 
 		-- Gobo Eiffel Utility Library
-	ut_command:			"$GOBO\library\utility\command";
+	ut_error:			"$GOBO\library\utility\error";
 	ut_support:			"$GOBO\library\utility\support";
 
 		-- Gobo Eiffel Kernel Library
