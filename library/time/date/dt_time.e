@@ -203,10 +203,10 @@ feature -- Access
 				second - other.second, millisecond - other.millisecond)
 		ensure
 			time_duration_not_void: Result /= Void
-			definition: (other &t Result).is_equal (Current)
+			definition: (other &t| Result).is_equal (Current)
 		end
 
-	infix "&t" (a_duration: like time_duration): like Current is
+	infix "&t|" (a_duration: like time_duration): like Current is
 			-- Addition of `a_duration' to current time
 			-- (Create a new object at each call.)
 		require
