@@ -55,6 +55,4 @@ As far as I know the redirections > and 2>&1 should work at least
 under Windows NT 4.0 and Unix/Linux Bourne shell and bash. 
 
 --
-Copyright (c) 2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 2001, Eric Bezault and others

@@ -51,6 +51,4 @@ When several filenames are given as argument, the matched lines are
 prefixed by their enclosing filename, just as 'grep' does.
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2001, Eric Bezault and others

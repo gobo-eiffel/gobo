@@ -28,6 +28,4 @@ To compile this example:
        UTC DateTime Now: 2001/04/10 12:36:54
 
 --
-Copyright (c) 2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 2001, Eric Bezault and others

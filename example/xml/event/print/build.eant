@@ -3,12 +3,11 @@
 <project name="print" inherit="${GOBO}/misc/eiffel.eant" default="help" >
 
 	<description>
-		system:      "'print' xml-printer"
-		author:      "Andreas Leitner [nozone@sbox.tugraz.at]"
-		copyright:   "Copyright (c) 2001, Andreas Leitner and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		system: "'print' xml-printer"
+		copyright: "Copyright (c) 2001, Andreas Leitner and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 
@@ -18,7 +17,6 @@
 		<set name="system" value="print"/>
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/example/${library}/event/${system}"/>
-		<set name="GOBO_XML_EXPAT" value="True"/>
 	</target>
 
 </project>

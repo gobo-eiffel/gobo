@@ -3,12 +3,11 @@
 <project name="ascii2ps" inherit="${GOBO}/misc/eiffel.eant" default="help">
 
 	<description>
-		system:      "'ascii2ps' pretty-printer"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		system: "'ascii2ps' pretty-printer"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<target name="help">

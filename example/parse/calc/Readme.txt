@@ -22,6 +22,4 @@ To compile this example:
    and enter infix notation expressions to be evaluated, one per line.
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2001, Eric Bezault and others
