@@ -21,6 +21,7 @@ inherit
 		redefine
 			check_parent_validity1,
 			check_constraint_validity,
+			deep_cloned_type,
 			append_to_string
 		end
 
@@ -81,6 +82,14 @@ feature -- Validity
 		do
 			Result := False
 			a_class.error_handler.report_vcfg3_error (a_class, Current)
+		end
+
+feature -- Duplication
+
+	deep_cloned_type: like Current is
+			-- Recursively cloned type
+		do
+			!! Result.make (constant, name, feature_id, position)
 		end
 
 feature -- Output

@@ -205,6 +205,14 @@ feature -- Conversion
 			Result := Current
 		end
 
+feature -- Duplication
+
+	deep_cloned_type: like Current is
+			-- Recursively cloned type
+		do
+			!! Result.make (constant, position)
+		end
+
 feature -- Output
 
 	append_to_string (a_string: STRING) is
