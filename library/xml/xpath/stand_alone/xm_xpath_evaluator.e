@@ -98,9 +98,11 @@ feature -- Element change
 		local
 			a_context_node: XM_XPATH_NODE
 			has_error: BOOLEAN
+			a_base_uri: UT_URI
 		do
 			make_parser (use_tiny_tree_model)
-			parser.parse_from_system (a_source_uri)
+			source_uri := a_source_uri
+			parser.parse_from_system (source_uri)
 			if use_tiny_tree_model then
 				has_error := tiny_tree_pipe.tree.has_error
 			else
@@ -125,10 +127,12 @@ feature -- Element change
 					-- because tree_pipe.document is a document node
 				end
 				document := a_context_node.document_root
-				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility)
+				create a_base_uri.make (document.base_uri)
+				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility, a_base_uri)
 			end
 		ensure
 			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
+			source_uri_set: source_uri = a_source_uri
 		end
 
 	set_static_context (a_static_context: XM_XPATH_STAND_ALONE_CONTEXT) is
@@ -205,6 +209,9 @@ feature {NONE} -- Implementation
 	document: XM_XPATH_DOCUMENT
 			-- Document node against which XPath is evaluated
 
+	source_uri: STRING
+			-- URI of source document
+
 	is_space_stripped: BOOLEAN
 			-- Do we strip white space?
 
@@ -247,11 +254,15 @@ feature {NONE} -- Implementation
 		require
 			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error
 		local
-			a_context: XM_XPATH_CONTEXT
+			a_document_pool: XM_XPATH_DOCUMENT_POOL
+			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 				an_item: XM_XPATH_ITEM
 		do
-			create a_context.make (context_item, 0)
+			create a_document_pool.make
+			a_document_pool.add (document, source_uri)
+			create a_context.make (context_item, a_document_pool)
+			a_context.copy_string_mode (Current)
 			a_sequence_iterator := an_expression.iterator (a_context)
 			
 			if a_sequence_iterator.is_error then

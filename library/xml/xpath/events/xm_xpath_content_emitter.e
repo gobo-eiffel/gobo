@@ -16,7 +16,12 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-	XM_CALLBACKS
+	XM_CALLBACKS_FILTER
+		redefine
+			on_content, on_end_tag, on_error, on_processing_instruction,
+			on_comment, on_start_tag, on_start_tag_finish, on_attribute,
+			on_xml_declaration, on_finish, on_start
+		end
 
 	XM_DTD_CALLBACKS
 
@@ -31,7 +36,8 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 		-- XM_XPATH_CONTENT_EMITTER should come at the end of the event
-		--  filter and dtd event filter chains.
+		--  filter and dtd event filter chains, except an
+		--  XM_PARSER_STOP_ON_ERROR_FILTER must follow it.
 		-- It should be preceded by the following filters in order:
 		--  XM_UNICODE_VALIDATION_FILTER
 		--  XM_WHITESPACE_NORMALIZER
@@ -53,14 +59,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: XM_XPATH_RECEIVER) is
+	make (a_receiver: XM_XPATH_RECEIVER; a_callback: XM_CALLBACKS) is
 		-- Establish invariant
 		require
-				receiver_not_void: a_receiver /= Void
+			receiver_not_void: a_receiver /= Void
+			a_callback_not_void: a_callback /= Void
 		do
 			before_dtd := True
 			create attribute_types.make_with_equality_testers (7, Void, string_equality_tester)
 			receiver := a_receiver
+			set_next (a_callback)
 		ensure
 			receiver_set: receiver = a_receiver
 		end
@@ -164,18 +172,20 @@ feature -- Document events
 			-- Called when parsing starts.
 		do
 			receiver.start_document
+			Precursor
 		end
 
 		on_finish is
 			-- Called when parsing finished
 		do
 			receiver.end_document
+			Precursor
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
 			-- XML declaration.
 		do
-			do_nothing
+			Precursor (a_version, an_encoding, a_standalone)
 		end
 
 feature -- Errors
@@ -184,6 +194,7 @@ feature -- Errors
 			-- Event producer detected an error.
 		do
 			receiver.on_error (a_message)
+			Precursor (a_message)
 		end
 
 feature -- Meta
@@ -195,12 +206,14 @@ feature -- Meta
 				-- TODO `a_content' names the stylesheet to use in the href pseudo-attribute
 			end
 			receiver.notify_processing_instruction (a_name, a_content, 0)
+			Precursor (a_name, a_content)
 		end
 
 	on_comment (a_content: STRING) is
 			-- Processing a comment.
 		do
 			receiver.notify_comment (a_content, 0)
+			Precursor (a_content)
 		end
 
 feature -- Tag
@@ -254,6 +267,7 @@ feature -- Tag
 			end
 
 			current_element_name := an_element_qname
+			Precursor (a_namespace, an_ns_prefix, a_local_part)
 		end
 
 	on_attribute (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING; a_value: STRING) is
@@ -311,13 +325,17 @@ feature -- Tag
 				receiver.notify_namespace (a_namespace_code, 0)
 			else
 				notify_attribute (a_name_code, a_prefix, a_local_part, a_value)
+				Precursor (a_namespace, an_ns_prefix, a_local_part, a_value)
 			end
+		
+
 		end
 
 	on_start_tag_finish is
 			-- End of start tag.
 		do
 			receiver.start_content
+			Precursor
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
@@ -329,6 +347,7 @@ feature -- Tag
 				std.error.put_new_line
 			end
 			receiver.end_element
+			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
 feature -- Content
@@ -340,6 +359,7 @@ feature -- Content
 			--  atomic
 		do
 			receiver.notify_characters (a_content, 0)
+			Precursor (a_content)
 		end
 
 feature {NONE} -- Implementation

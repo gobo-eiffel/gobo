@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 			create a_locator.make (a_parser)
 			tree.set_document_locator (a_locator)
 			tree.set_line_numbering (is_line_numbering)
-			create emitter.make (tree)
-			create error.set_next (emitter)
+			error := a_parser.new_stop_on_error_filter
+			create emitter.make (tree, error)
 			create namespace_resolver.set_next (emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
@@ -69,7 +69,7 @@ feature -- Access
 	attributes: XM_ATTRIBUTE_DEFAULT_FILTER
 			-- Set attribute defaults from the DTD
 
-	error: XM_STOP_ON_ERROR_FILTER
+	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
 
 	emitter: XM_XPATH_CONTENT_EMITTER

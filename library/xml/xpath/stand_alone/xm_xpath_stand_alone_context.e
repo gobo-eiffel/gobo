@@ -38,10 +38,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (warnings: BOOLEAN; backwards: BOOLEAN) is
+	make (warnings: BOOLEAN; backwards: BOOLEAN; a_base_uri: UT_URI) is
 			-- Establish invariant.
 		require
 			warnings_implies_backwards_compatibility: warnings implies backwards
+			absolute_base_uri: a_base_uri /= Void and then a_base_uri.is_absolute
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
@@ -52,9 +53,11 @@ feature {NONE} -- Initialization
 			clear_namespaces
 			warnings_to_std_error := warnings
 			is_backwards_compatible_mode := backwards
+			base_uri := a_base_uri
 		ensure
 			warnings_set: warnings_to_std_error = warnings
 			backward_compatibility: is_backwards_compatible_mode = backwards
+			base_uri_set: base_uri = a_base_uri
 		end
 
 	make_upon_node is
@@ -77,6 +80,10 @@ feature -- Access
 				Result := "Stand-alone XPath evaluator"
 			end
 		end
+
+	
+	base_uri: UT_URI
+			-- Base URI
 
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'

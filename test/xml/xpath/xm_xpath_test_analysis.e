@@ -52,11 +52,13 @@ feature -- Test
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
 			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
+			a_base_uri: UT_URI
 		do
 			create a_system_function_factory
 			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create a_context.make (False, False)
+			create a_base_uri.make ("test:/test-path")
+			create a_context.make (False, False, a_base_uri)
 			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen

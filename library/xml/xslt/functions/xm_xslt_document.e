@@ -14,7 +14,9 @@ class XM_XSLT_DOCUMENT
 
 inherit
 
---	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_DOC_ROUTINES
+
+	XM_XPATH_NODE_MAPPING_FUNCTION
 	
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
@@ -68,14 +70,80 @@ feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
+		local
+			an_href_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_base_uri: UT_URI
+			a_base_node: XM_XPATH_NODE
+			an_item: XM_XPATH_ITEM
+			a_map_object: XM_XSLT_DOCUMENT_INFORMATION
+			a_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
+			a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
 		do
-			todo ("iterator", False)
+			an_href_iterator := arguments.item (1).iterator (a_context)
+			if not an_href_iterator.is_error then
+				if supplied_argument_count = 2 then
+					arguments.item (2).evaluate_item (a_context)
+					an_item := arguments.item (2).last_evaluated_item
+					if an_item.is_error then
+						create {XM_XPATH_INVALID_ITERATOR} Result.make (an_item.error_value)
+					else
+						a_base_node ?= an_item
+						check
+							item_is_node: a_base_node /= Void
+							-- Static typing
+						end
+						create a_base_uri.make (a_base_node.base_uri)
+					end
+				end
+				if Result = Void then -- no error yet
+					create a_map_object.make (a_base_uri, stylesheet_base_uri)
+					create a_mapping_iterator.make (an_href_iterator, Current, a_context, a_map_object)
+					create a_comparer
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (a_mapping_iterator, a_comparer) -- to eliminate duplicates if two hrefs are the same
+				end
+			else
+				Result := an_href_iterator
+			end
+		end
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Map `an_item' to a sequence
+		local
+			a_map_object: XM_XSLT_DOCUMENT_INFORMATION
+			a_base_uri: UT_URI
+			a_node, another_node: XM_XPATH_NODE
+		do
+			a_map_object ?= an_information_object
+			check
+				document_information: a_map_object /= Void
+				-- as that was what was passed in `iterator'
+			end
+			a_base_uri := a_map_object.base_uri
+			if a_base_uri = Void then
+				a_node ?= an_item
+				if a_node /= Void then
+					create a_base_uri.make (a_node.base_uri)
+				else
+					a_base_uri := a_map_object.stylesheet_base_uri
+				end
+			end
+			parse_document (an_item.string_value, a_base_uri, a_context)
+			if last_evaluated_document.is_error then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+			else
+				another_node ?= last_evaluated_document
+				check
+					node: another_node /= Void
+					-- as `parse_document' only returns documents or invalid items
+				end
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (another_node)
+			end
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	set_replacement (Current)
+			--	do_nothing
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -102,8 +170,15 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
-			todo ("check_arguments", False)
+			Precursor (a_context)
+			stylesheet_base_uri := a_context.base_uri
+			arguments.item (1).set_unsorted (False)
 		end
+
+feature {NONE} -- Implementation
+
+	stylesheet_base_uri: UT_URI
+			-- Base URI from static context
 
 end
 	

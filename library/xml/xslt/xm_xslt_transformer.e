@@ -115,7 +115,7 @@ feature -- Access
 			current_item_not_void: Result /= Void
 		end
 
-	document_pool: XM_XSLT_DOCUMENT_POOL
+	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 
 	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET

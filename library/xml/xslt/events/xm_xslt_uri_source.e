@@ -49,7 +49,8 @@ feature -- Events
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			shared_catalog_manager.reset_pi_catalogs
-			create content_emitter.make (a_receiver)
+			error := a_parser.new_stop_on_error_filter
+			create content_emitter.make (a_receiver, error)
 			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
@@ -75,7 +76,8 @@ feature -- Events
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			shared_catalog_manager.reset_pi_catalogs
-			create content_emitter.make (a_receiver)
+			error := a_parser.new_stop_on_error_filter
+			create content_emitter.make (a_receiver, error)
 			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
@@ -124,6 +126,9 @@ feature {NONE} -- Implementation
 
 	content: XM_CONTENT_CONCATENATOR
 			-- Content concatenator
+		
+	error: XM_PARSER_STOP_ON_ERROR_FILTER
+			-- Error collector
 
 end
 	

@@ -34,8 +34,8 @@
     <title>Creation Procedures</title>
     <para>
       The creation procedure <featurename>make_secondary_stream</featurename> is only used for
-      creating secondary stream, that is, those created by an <xslt>xsl:result-document</xslt>. 
-      Accordingly, it is of no concern to the users of the library.
+      creating secondary streams, that is, those created by an <xslt>xsl:result-document</xslt>. 
+      Accordingly, users of the library will not use it directly.
     </para>
     <para>
       The other creation procedures are for creating the primary result. Since the Eiffel programmer
@@ -44,7 +44,7 @@
     </para>
     <variablelist>
       <varlistentry>
-	<term><featurename>(a_stream: XM_OUTPUT; a_system_id:STRING)</featurename></term>
+	<term><featurename>make (a_stream: XM_OUTPUT; a_system_id:STRING)</featurename></term>
 	<listitem>
 	  <para>
 	    This will be the one you normally want to use. You create <featurename>a_stream</featurename>
@@ -63,6 +63,40 @@
 	  </para>
 	</listitem>
       </varlistentry>
+      <varlistentry>
+	<term><featurename>make_receiver (a_receiver: XM_XPATH_RECEIVER)</featurename></term>
+	<listitem>
+	  <para>
+	    With this creation procedure, you direct the output to an XPath library event stream. This
+	    would be an appropriate choice if you wanted to immediately run another transformation
+	    against the output from the first transformation.
+	  </para>
+	  <para>
+	    I do have plans to add an extension attribute to <xslt>xsl:output/xsl:result-document</xslt> so
+	    that you will be able to specify a next transformation to run automatically. But even when this is in place,
+	    this option might be useful in some circumstances.
+	  </para>
+	</listitem>
+      </varlistentry>
+     <varlistentry>
+	<term><featurename>make_emitter (an_emitter: XM_XSLT_EMITTER)</featurename></term>
+	<listitem>
+	  <para>
+	    This creation procedure enables you to direct output directly to an emitter
+	    (which is the XSLT library's serialization class). Normally the transformer will create
+	    an emitter for you, based on the attributes specified on <xslt>xsl:output/xsl:result-document</xslt>,
+	    so I don't think this creation procedure is needed, but you might decide otherwise.
+	  </para>
+	  <para>
+	    I'm trying to think of a scenario in which this might be wanted. The only far-fetched idea I've been able to
+	    come up with, is if you have a chain of transformations, and you want to use the output attributes from the 
+	    <xslt>xsl:output</xslt> in the first stylesheet (rather than the last, which is the normal situation). In which
+	    case you could create an emitter based on the initial <xslt>xsl:output</xslt>, and then pass it to this creation
+	    procedure. You would then pass the created transformation result to the last transform in the chain (and use 
+	    <featurename>make_receiver</featurename> for the prevoius steps in the chain).
+	  </para>
+	</listitem>
+     </varlistentry>
     </variablelist>    
   </section>
 </chapter>

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent a collection of documents handled during a single transformation"
+		"Objects that available documents in the dynamic context"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_DOCUMENT_POOL
+class	XM_XPATH_DOCUMENT_POOL
 
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-	-- The document pool ensures that the document() function,
+	-- The document pool ensures that the doc() function,
 	--  when called twice with the same URI, returns the same document each time.
 	-- For this purpose we use a hash table from URI to Document object.
 
@@ -37,7 +37,7 @@ feature -- Access
 	is_mapped (a_uri: STRING): BOOLEAN is
 			-- Has `a_uri' been mapped to a document?
 		require
-			uri_not_void: a_uri /= Void
+			uri_not_void: a_uri /= Void -- and then is_absolute
 		do
 			Result := document_name_map.has (a_uri)
 		end
@@ -45,7 +45,7 @@ feature -- Access
 	document (a_uri: STRING): XM_XPATH_DOCUMENT is
 			-- Document corresponding to `a_uri'
 		require
-			uri_not_void: a_uri /= Void
+			uri_not_void: a_uri /= Void  -- and then is_absolute
 			uri_mapped: is_mapped (a_uri)
 		do
 			Result := document_name_map.item (a_uri)
@@ -58,29 +58,13 @@ feature -- Element change
 	add (a_document: XM_XPATH_DOCUMENT; a_uri: STRING) is
 			-- Add document to `Current'.
 		require
-			uri_not_void: a_uri /= Void
+			uri_not_void: a_uri /= Void  -- and then is_absolute
 			not_mapped: not is_mapped (a_uri)
 			document_not_void: a_document /= Void
 		do
 			document_name_map.put (a_document, a_uri)
 		ensure
 			uri_mapped: is_mapped (a_uri)
-		end
-
-feature -- Removal
-
-	discard  (a_document: XM_XPATH_DOCUMENT) is
-			-- Release `a_document' from the pool
-		require
-			document_not_void: a_document /= Void
-		do
-			document_name_map.start
-			if not document_name_map.off then
-				document_name_map.search_forth (a_document)
-				if not document_name_map.after then
-					document_name_map.remove (document_name_map.key_for_iteration)
-				end
-			end
 		end
 
 feature {NONE} -- Implementation

@@ -44,6 +44,8 @@ feature {NONE} -- Initialization
 		do
 			style_element := a_style_element
 			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			create base_uri.make (style_element.base_uri)
+			--			create base_uri.make (style_element.containing_stylesheet.base_uri)
 		ensure
 			style_element_set: style_element = a_style_element
 		end
@@ -66,6 +68,9 @@ feature -- Access
 		do
 			Result := "XSLT"
 		end
+
+	base_uri: UT_URI
+			-- Base URI
 	
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'

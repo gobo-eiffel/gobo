@@ -34,6 +34,13 @@ feature -- Access
 			host_language_not_void: Result /= Void and then Result.count > 0
 		end
 
+	base_uri: UT_URI is
+			-- Base URI
+		deferred
+		ensure
+			absolute_uri: Result /= Void and then Result.is_absolute
+		end
+
 	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION is
 			-- The last variable bound by `bind_variable'
 		do

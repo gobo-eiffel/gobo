@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		require
 			base_iterator_not_void: a_base_iterator /= Void
 			mapping_function_not_void: a_mapping_function /= void
-			context_item: a_context /= Void implies a_base_iterator = a_context.current_iterator
+--			context_item: a_context /= Void implies a_base_iterator = a_context.current_iterator
 		do
 			base_iterator := a_base_iterator
 			mapping_function := a_mapping_function

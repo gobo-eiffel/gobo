@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath evaluation contexts for an expression"
+		"XPath dynamic contexts for an expression"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_CONTEXT
+deferred class XM_XPATH_CONTEXT
 
 inherit
 
@@ -18,32 +18,23 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
-
-	make
 
 feature {NONE} -- Initialization
 
-	make (a_context_item: XM_XPATH_ITEM; a_reserved_slot_count: INTEGER) is
-			-- Establish invariant.
+	make_dynamic_context (a_context_item: XM_XPATH_ITEM) is
+			-- Establish invariant for stand-alone contexts.
 		require
 			context_item_not_void: a_context_item /= Void
-			positive_reserved_slots_count: a_reserved_slot_count >= 0
 		do
-			reserved_slot_count := a_reserved_slot_count
-			if reserved_slot_count = 0 then
-
-				-- Not XSLT so:
-
-				create internal_date_time.make_from_epoch (0)
-				utc_system_clock.set_date_time_to_now (internal_date_time)
-			end
+			reserved_slot_count := 0
+			create internal_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (internal_date_time)
 			cached_last := -1
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
 			current_iterator.start
 			create local_variable_frame.make (1, 50)
 		ensure
-			reserved_slot_count_set: reserved_slot_count = a_reserved_slot_count
+			reserved_slot_count_zero: reserved_slot_count = 0
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 		end
 
@@ -58,6 +49,13 @@ feature -- Access
 	reserved_slot_count: INTEGER
 			-- Slots reserved by host language
 
+	available_documents: XM_XPATH_DOCUMENT_POOL is
+			-- Available documents
+		deferred
+		ensure
+			available_documents_not_void: available_documents /= Void
+		end
+			
 	current_date_time: DT_DATE_TIME is
 			-- Current date-time
 		do
@@ -135,7 +133,15 @@ feature -- Access
 			create Result
 		end
 
-
+	last_parsed_document: XM_XPATH_DOCUMENT is
+			-- Result from last call to `build_document'
+		require
+			no_build_error: not is_build_document_error
+		deferred
+		ensure
+			last_parsed_document_not_void: Result /= Void
+		end
+	
 feature -- Status report
 
 	is_context_position_set: BOOLEAN is
@@ -158,6 +164,15 @@ feature -- Status report
 			Result := context_position = last
 		end
 
+	is_build_document_error: BOOLEAN
+			-- Was last call to `build_document' in error?
+
+	last_build_error: STRING is
+			-- Error message from last call to `build_document'
+		require
+			build_error: is_build_document_error
+		deferred
+		end
 
 feature -- Creation
 
@@ -202,6 +217,16 @@ feature 	-- Element change
 			end
 			create a_stack_entry.make (a_value)
 			local_variable_frame.put (a_stack_entry, a_slot_number + reserved_slot_count)
+		end
+
+	build_document (a_uri_reference: STRING) is
+			-- Build a document.
+		require
+			absolute_uri: a_uri_reference /= Void -- and then a_uri_reference.is_absolute
+		deferred
+		ensure
+			error_message: is_build_document_error implies last_build_error /= Void
+			document_built: not is_build_document_error implies last_parsed_document /= Void
 		end
 
 feature {NONE} -- Implementation
