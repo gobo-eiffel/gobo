@@ -27,9 +27,7 @@ feature -- Test
 				-- Use values truncated to integer to avoid possible
 				-- precision problems when comparing double values.
 			assert_equal ("nth_root (1.0, 1.0)", 1, r.nth_root (1.0, 1.0).truncated_to_integer)
-			assert_equal ("nth_root (1.0, 0.0)", 1, r.nth_root (1.0, 0.0).truncated_to_integer)
 			assert_equal ("nth_root (0.0, 1.0)", 0, r.nth_root (0.0, 1.0).truncated_to_integer)
-			assert_equal ("nth_root (0.0, 0.0)", 0, r.nth_root (0.0, 0.0).truncated_to_integer)
 		end
 
 	test_log is

@@ -85,14 +85,16 @@ feature -- Exponent
 		end
 #endif
 
-	nth_root (d, nth: DOUBLE): DOUBLE is
-			-- `nth' root of `d'.
+	nth_root (d, n: DOUBLE): DOUBLE is
+			-- `n'-th root of `d'.
+		require
+			divisible: (1.0).divisible (n)
 		do
 #ifdef ISE || VE
-			Result := d ^ (1 / nth)
+			Result := d ^ (1.0 / n)
 #endif
 #ifdef SE
-			Result := d.pow (1 / nth)
+			Result := d.pow (1.0 / n)
 #endif
 		end
 
