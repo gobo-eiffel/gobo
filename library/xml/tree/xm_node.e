@@ -25,15 +25,31 @@ feature -- Access
 			-- Parent of current node;
 			-- Void if current node is root
 
-	root_node: XM_COMPOSITE is
-			-- Root node of current node
-			-- (In most cases this will be of type XM_DOCUMENT)
+feature -- Status report
+
+	parent_element: XM_ELEMENT is
+			-- Parent element.
+		require
+			not_root_node: not is_root_node
+			not_root_element: not parent.is_root_node
+		local
+			typer: XM_NODE_TYPER
 		do
-			if not is_root_node then
-				Result := parent.root_node
-			end
+			create typer
+			parent.process (typer)
+			check precondition: typer.is_element end
+			Result := typer.element
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	root_node: XM_DOCUMENT is
+			-- Root node of current node
+		do
+			check not_root_node: not is_root_node end
 			-- is_root_node case dealt by descendant because
 			-- we cannot do Result := Current here.
+			Result := parent.root_node
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -50,8 +66,6 @@ feature -- Access
 		ensure
 			root_level: is_root_node implies (Result = 1)
 		end
-
-feature -- Status report
 
 	is_root_node: BOOLEAN is
 			-- Is current node the root node?
