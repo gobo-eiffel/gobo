@@ -19,7 +19,7 @@
 		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="false"/>
-		<option name="debug_tag" value="name pool"/>
+		<!-- <option name="debug_tag" value="name pool"/> -->
 	</option>
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>

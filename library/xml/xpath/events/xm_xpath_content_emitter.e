@@ -21,7 +21,11 @@ inherit
 	XM_XPATH_TYPE
 	
 	KL_SHARED_EXCEPTIONS
-	
+
+	KL_SHARED_STANDARD_FILES
+
+	KL_IMPORTED_STRING_ROUTINES
+
 		-- XM_XPATH_CONTENT_EMITTER should come at the end of the event
 		--  filter and dtd event filter chains.
 		-- It should be preceded by the following filters in order:
@@ -52,6 +56,7 @@ feature -- Initialization
 				receiver_not_void: a_receiver /= Void
 				name_pool_not_void: a_name_pool /= Void
 		do
+			before_dtd := True
 			create attribute_types.make (7)
 			receiver := a_receiver
 			name_pool := a_name_pool
@@ -66,7 +71,7 @@ feature -- Document type definition callbacks
 	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
 		do
-			do_nothing
+			before_dtd := False
 		end
 
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
@@ -116,15 +121,17 @@ feature -- Document type definition callbacks
 		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			-- Entity declaration.
 		local
-			uri: STRING
+			uri, public_id, utf8_name: UC_UTF8_STRING
 		do
 			if an_id /= Void and then notation_name /= Void then
 					check
 						not_a_parameter_declaration: is_parameter = False
 					end
 				-- TODO - create uri from an_id.system_id and an_id.base(?)
-				create uri.make_from_string (an_id.system_id)
-				receiver.set_unparsed_entity (entity_name, uri, an_id.public_id)
+				create uri.make_from_utf8 (an_id.system_id)
+				create public_id.make_from_utf8 (an_id.public_id)
+				create utf8_name.make_from_utf8 (entity_name)
+				receiver.set_unparsed_entity (utf8_name, uri, public_id)
 			end
 		end
 
@@ -177,21 +184,44 @@ feature -- Errors
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		do
-			-- TODO
+			std.error.put_string (a_message)
+			std.error.put_new_line
 		end
 
 feature -- Meta
 
 	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
+		local
+			utf8_name, utf8_content: UC_UTF8_STRING			
 		do
-			receiver.processing_instruction (a_name, a_content, 0)
+			if before_dtd and STRING_.same_string (a_name, "xml-stylesheet") then
+				-- TODO `a_content' names the stylesheet to use in the href pseudo-attribute
+			end
+			if a_name.same_type ("") then
+				create utf8_name.make_from_utf8 (a_name)
+			else
+				utf8_name ?= a_name
+			end
+			if a_content.same_type ("") then
+				create utf8_content.make_from_utf8 (a_content)
+			else
+				utf8_content ?= a_content
+			end
+			receiver.processing_instruction (utf8_name, utf8_content, 0)
 		end
 
 	on_comment (a_content: STRING) is
 			-- Processing a comment.
+		local
+			utf8_content: UC_UTF8_STRING			
 		do
-			receiver.comment (a_content, 0)
+			if a_content.same_type ("") then
+				create utf8_content.make_from_utf8 (a_content)
+			else
+					utf8_content ?= a_content
+			end
+			receiver.comment (utf8_content, 0)
 		end
 
 feature -- Tag
@@ -202,6 +232,7 @@ feature -- Tag
 			name_code: INTEGER
 			element_qname, a_prefix: STRING
 		do
+			before_dtd := False
 			if a_namespace = Void then
 				Exceptions.raise ("XM_XPATH_CONTENT_EMITTER requires namespace to be resolved")
 			end
@@ -332,8 +363,15 @@ feature -- Content
 			-- XM_CONTENT_CONCATENATOR is assumed to be present
 			--  earlier in the event chain, so this event is
 			--  atomic
+		local
+			utf8_content: UC_UTF8_STRING
 		do
-			receiver.characters (a_content, 0)
+			if a_content.same_type ("") then
+				create utf8_content.make_from_utf8 (a_content)
+			else
+					utf8_content ?= a_content
+			end
+			receiver.characters (utf8_content, 0)
 		end
 
 feature {NONE} -- Implementation
@@ -351,6 +389,9 @@ feature {NONE} -- Implementation
 	attribute_types: DS_HASH_TABLE [DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING], STRING]
 			-- Stored attribute-type definitions per element name
 	
+	before_dtd: BOOLEAN
+			-- Has DTD been seen yet?
+
 	is_namespace_declaration (ns_prefix, a_local_part: STRING): BOOLEAN is
 			-- xmlns= or xmlns:
 		do

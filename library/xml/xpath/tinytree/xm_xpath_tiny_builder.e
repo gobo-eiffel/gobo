@@ -68,7 +68,7 @@ feature -- Events
 			document.set_name_pool (name_pool)
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: UC_UTF8_STRING; a_system_id: UC_UTF8_STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI
 		do
 			-- TODO document.set_unparsed_entity (a_name, a_system_id, a_public_id)
@@ -134,16 +134,14 @@ feature -- Events
 			current_depth := current_depth - 1			
 		end
 
-	characters (chars: STRING; properties: INTEGER) is
+	characters (chars: UC_UTF8_STRING; properties: INTEGER) is
 			-- Notify character data
 		local
 			buffer_start, previous_sibling: INTEGER
-			new_data: UC_UTF8_STRING		
 		do
-			create new_data.make_from_utf8 (chars)
 			buffer_start := document.character_buffer_length
-			document.append_characters (new_data)
-			document.add_node (Text_node, current_depth, buffer_start, new_data.count, -1)
+			document.append_characters (chars)
+			document.add_node (Text_node, current_depth, buffer_start, chars.count, -1)
 			node_number := document.last_node_added
 
 			previous_sibling := previously_at_depth.item (current_depth)
@@ -155,21 +153,19 @@ feature -- Events
 		end
 
 	
-	processing_instruction (target: STRING; data: STRING; properties: INTEGER) is
+	processing_instruction (target: UC_UTF8_STRING; data: UC_UTF8_STRING; properties: INTEGER) is
 			-- Notify a processing instruction
 		local
-			new_data: UC_UTF8_STRING
 			name_code, previous_sibling: INTEGER
 		do
-			create new_data.make_from_utf8 (data)
 			if not name_pool.is_name_code_allocated ("", "", target) then
 				name_pool.allocate_name ("", "", target)
 				name_code := name_pool.last_name_code
 			else
 				name_code := name_pool.name_code ("", "", target) 
 			end
-			document.store_comment (new_data)
-			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, new_data.count, name_code)
+			document.store_comment (data)
+			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, data.count, name_code)
 			node_number := document.last_node_added
 			
 			previous_sibling := previously_at_depth.item (current_depth)
@@ -180,16 +176,14 @@ feature -- Events
 			previously_at_depth.put (node_number, current_depth)		
 		end
 
-	comment (content: STRING; properties: INTEGER) is
+	comment (content: UC_UTF8_STRING; properties: INTEGER) is
 			-- Notify a comment;
 			-- Comments are only notified if they are outside the DTD.
 		local
-			new_data: UC_UTF8_STRING
 			previous_sibling: INTEGER
 		do
-			create new_data.make_from_utf8 (content)
-			document.store_comment (new_data)
-			document.add_node (Comment_node, current_depth, document.comment_buffer_length, new_data.count, -1)
+			document.store_comment (content)
+			document.add_node (Comment_node, current_depth, document.comment_buffer_length, content.count, -1)
 			node_number := document.last_node_added
 			
 			previous_sibling := previously_at_depth.item (current_depth)
