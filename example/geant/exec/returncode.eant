@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+
+
+<project name="return_code" default="run1">
+	
+	<description>
+		Eiffel Ant file demonstrating exec call checking return code of invoked process.
+		The executable called by task 'exec' in this example is geant itself just because
+		it is safe to assume geant is available.
+	</description>
+
+	<target name="do_nothing">
+	</target>
+
+	<target name="run1">
+		<description>failing 'exec' call causing termination of build</description>
+		<exec executable="geant -b exec2.eant nonexistingtarget"/>
+	</target>
+
+	<target name="run2">
+		<description>working 'exec' call catching return code of call; build process does not terminate</description>
+
+		<exec executable="geant -b exec2.eant do_nothing" exit_code_variable="return_code"/>
+		<echo message="return_code: ${return_code}"/>
+		<echo message="run OK" if="${return_code}=0"/>
+		<echo message="run not OK" unless="${return_code}=0"/>
+	</target>
+
+	<target name="run3">
+		<description>failing 'exec' call catching return code of call; build process does not terminate</description>
+
+		<exec executable="geant -b exec2.eant nonexistingtarget" exit_code_variable="return_code"/>
+		<echo message="return_code: ${return_code}"/>
+		<echo message="run OK" if="${return_code}=0"/>
+		<echo message="run not OK" unless="${return_code}=0"/>
+	</target>
+
+</project>
