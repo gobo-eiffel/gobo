@@ -65,6 +65,9 @@
 			<ref name="description"/>
 			<attribute name="name"/>
 			<optional>
+				<attribute name="once"/>
+			</optional>
+			<optional>
 				<attribute name="depend"/>
 			</optional>
 			<ref name="dir_if_unless"/>
@@ -169,6 +172,9 @@
 		<element name="exec">
 			<ref name="dir_if_unless"/>
 			<attribute name="executable"/>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
 			<optional>
 				<attribute name="accept_errors">
 					<!-- runtime evaluation
@@ -413,6 +419,9 @@
 	<define name="ise">
 		<element name="ise">
 			<ref name="dir_if_unless"/>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
 			<choice>
 				<group>
 					<attribute name="system"/>
@@ -485,6 +494,9 @@
 	<define name="se">
 		<element name="se">
 			<ref name="dir_if_unless"/>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
 			<choice>
 				<attribute name="clean"/>
 				<attribute name="ace"/>
@@ -527,6 +539,9 @@
 	<define name="ve">
 		<element name="ve">
 			<ref name="dir_if_unless"/>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
 			<choice>
 				<attribute name="esd"/>
 				<group>
