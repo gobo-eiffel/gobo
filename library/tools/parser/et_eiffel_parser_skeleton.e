@@ -1264,20 +1264,8 @@ feature -- Error handling
 
 	report_error (a_message: STRING) is
 			-- Print error message.
-		local
-			f_buffer: YY_FILE_BUFFER
 		do
-			f_buffer ?= input_buffer
-			if f_buffer /= Void then
-				std.error.put_string (INPUT_STREAM_.name (f_buffer.file))
-				std.error.put_string (", line ")
-			else
-				std.error.put_string ("line ")
-			end
-			std.error.put_integer (line)
-			std.error.put_string (": ")
-			std.error.put_string (a_message)
-			std.error.put_character ('%N')
+			error_handler.report_syntax_error (current_position)
 		end
 
 feature {NONE} -- Implementation
