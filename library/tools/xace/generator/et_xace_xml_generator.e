@@ -260,6 +260,16 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.culture)
 				a_file.put_line ("%"/>")
 			end
+			if an_option.is_c_compiler_options_declared then
+				a_cursor := an_option.c_compiler_options.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"c_compiler_options%" value=%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
+				end
+			end
 			if an_option.is_dead_code_removal_declared then
 				a_cursor := an_option.dead_code_removal.new_cursor
 				from a_cursor.start until a_cursor.after loop
@@ -380,6 +390,16 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"gc_info%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_header_declared then
+				a_cursor := an_option.header.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"header%" value=%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
+				end
+			end
 			if an_option.is_heap_size_declared then
 				print_indentation (indent + 1, a_file)
 				a_file.put_string ("<option name=%"heap_size%" value=%"")
@@ -448,6 +468,16 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"line_generation%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"line_generation%" value=%"false%"/>")
+				end
+			end
+			if an_option.is_link_declared then
+				a_cursor := an_option.link.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"link%" value=%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
 				end
 			end
 			if an_option.is_linker_declared then
