@@ -98,6 +98,23 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
+	has (an_item: like item): BOOLEAN is
+			-- Does list contain `an_item'?
+			-- (Use `=' as comparison criterion.)
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i) = an_item then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Element change
 
 	put_first (an_item: like item) is
@@ -189,7 +206,7 @@ feature -- Removal
 			-- Remove all items.
 		local
 			i: INTEGER
-			dead_item: G
+			dead_item: like item
 		do
 			from i := count - 1 until i < 0 loop
 				storage.put (dead_item, i)
