@@ -180,19 +180,19 @@ feature -- Test
 				-- Non-existing file.
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			assert_equal ("count1", -1, a_file.count)
+			assert_integers_equal ("count1", -1, a_file.count)
 				-- Empty file.
 			a_name := Execution_environment.interpreted_string (empty_filename)
 			create a_file.make (a_name)
-			assert_equal ("count2", 0, a_file.count)
+			assert_integers_equal ("count2", 0, a_file.count)
 				-- Non-empty file.
 			a_name := Execution_environment.interpreted_string (hello_filename)
 			create a_file.make (a_name)
-			assert_equal ("count3", 10, a_file.count)
+			assert_integers_equal ("count3", 10, a_file.count)
 				-- Non-empty file with 2 new-lines.
 			a_name := Execution_environment.interpreted_string (gobo_filename)
 			create a_file.make (a_name)
-			assert_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
+			assert_integers_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
 		end
 
 	test_time_stamp is
@@ -205,7 +205,7 @@ feature -- Test
 				-- Non-existing file.
 			a_name := new_filename ("gobo", ".tmp")
 			create a_file.make (a_name)
-			assert_equal ("time_stamp1", -1, a_file.time_stamp)
+			assert_integers_equal ("time_stamp1", -1, a_file.time_stamp)
 				-- Existing file.
 			a_name := Execution_environment.interpreted_string (hello_filename)
 			create a_file.make (a_name)
