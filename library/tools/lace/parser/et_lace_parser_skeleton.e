@@ -115,17 +115,18 @@ feature {NONE} -- Basic operations
 					a_parent_full_pathname := a_parent_cluster.full_pathname
 					if nb = 1 then
 						a_full_pathname_string := a_parent_full_pathname
+						!! a_full_pathname.make_with_position (a_full_pathname_string, a_pathname.line, a_pathname.column)
 					else
 						inspect a_pathname_string.item (2)
 						when '/', '\' then
 							a_full_pathname_string := STRING_.make (a_parent_full_pathname.count + nb - 1)
 							a_full_pathname_string.append_string (a_parent_full_pathname)
 							a_full_pathname_string.append_string (a_pathname_string.substring (2, nb))
+							!! a_full_pathname.make_with_position (a_full_pathname_string, a_pathname.line, a_pathname.column)
 						else
 							a_full_pathname := a_pathname
 						end
 					end
-					!! a_full_pathname.make_with_position (a_full_pathname_string, a_pathname.line, a_pathname.column)
 				end
 				a_cluster := new_cluster (a_name, a_full_pathname)
 				a_cluster.set_exclude (an_exclude)
