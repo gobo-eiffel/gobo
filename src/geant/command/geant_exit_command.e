@@ -1,0 +1,60 @@
+indexing
+
+	description:
+
+		"Exit commands"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2002, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+
+class GEANT_EXIT_COMMAND
+
+inherit
+
+	GEANT_COMMAND
+
+creation
+
+	make
+
+feature -- Status report
+
+	is_executable: BOOLEAN is
+			-- Can command be executed?
+		do
+			Result := True
+		ensure then
+			always_executable: Result
+		end
+
+feature -- Access
+
+	code: INTEGER
+			-- Exit code
+
+feature -- Setting
+
+	set_code (a_code: INTEGER) is
+			-- Set `code' to `a_code'.
+		do
+			code := a_code
+		ensure
+			code_set: code = a_code
+		end
+
+feature -- Execution
+
+	execute is
+			-- Execute command.
+		do
+			project.trace ("  [exit] code: " + code.out + "%N")
+			exit_code := code
+		end
+
+end -- class GEANT_EXIT_COMMAND
+

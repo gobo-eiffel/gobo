@@ -214,6 +214,9 @@ feature -- Processing
 					elseif a_xml_element.name.is_equal (Outofdate_task_name) then
 							-- outofdate
 						!GEANT_OUTOFDATE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Exit_task_name) then
+							-- exit
+						!GEANT_EXIT_TASK! a_task.make (project, a_xml_element)
 					else
 							-- Default:
 						a_task := Void
