@@ -37,8 +37,8 @@ feature -- Test
 			assert_equal ("time_duration2", td1, t1.time_duration (t2))
 			assert ("infix_less1", not (t1 < t1))
 			assert ("infix_less2", not (t1 < t2))
-			assert_equal ("second_count", 50604, t1.second_count)
-			assert_equal ("millisecond_count", 50604432, t1.millisecond_count)
+			assert_integers_equal ("second_count", 50604, t1.second_count)
+			assert_integers_equal ("millisecond_count", 50604432, t1.millisecond_count)
 		end
 
 	test_time2 is
@@ -61,8 +61,8 @@ feature -- Test
 			assert_equal ("time_duration2", td1, t2.time_duration (t1))
 			assert ("infix_less1", t1 < t2)
 			assert ("infix_less2", not (t2 < t1))
-			assert_equal ("second_count", 63116, t2.second_count)
-			assert_equal ("millisecond_count", 63116476, t2.millisecond_count)
+			assert_integers_equal ("second_count", 63116, t2.second_count)
+			assert_integers_equal ("millisecond_count", 63116476, t2.millisecond_count)
 		end
 
 	test_time3 is

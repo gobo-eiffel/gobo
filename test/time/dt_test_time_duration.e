@@ -151,8 +151,8 @@ feature -- Test
 			assert_equal ("out", "187:37:32.89", d1.out)
 			assert ("is_canonical", d1.is_canonical)
 			assert_equal ("to_canonical2", d2, d1.to_canonical)
-			assert_equal ("second_count", 675452, d1.second_count)
-			assert_equal ("millisecond_count", 675452089, d1.millisecond_count)
+			assert_integers_equal ("second_count", 675452, d1.second_count)
+			assert_integers_equal ("millisecond_count", 675452089, d1.millisecond_count)
 		end
 
 	test_time_duration7 is
@@ -167,8 +167,8 @@ feature -- Test
 			assert_equal ("out", "-12:-40:-38", d1.out)
 			assert ("is_canonical", d1.is_canonical)
 			assert_equal ("to_canonical2", d2, d1.to_canonical)
-			assert_equal ("second_count", -45638, d1.second_count)
-			assert_equal ("millisecond_count", -45638000, d1.millisecond_count)
+			assert_integers_equal ("second_count", -45638, d1.second_count)
+			assert_integers_equal ("millisecond_count", -45638000, d1.millisecond_count)
 		end
 
 	test_time_duration8 is
@@ -180,8 +180,8 @@ feature -- Test
 			assert ("is_canonical", not d1.is_canonical)
 			create d2.make (12, 59, 58)
 			assert_equal ("to_canonical", d2, d1.to_canonical)
-			assert_equal ("second_count", 46798, d1.second_count)
-			assert_equal ("millisecond_count", 46798000, d1.millisecond_count)
+			assert_integers_equal ("second_count", 46798, d1.second_count)
+			assert_integers_equal ("millisecond_count", 46798000, d1.millisecond_count)
 		end
 
 	test_time_duration9 is

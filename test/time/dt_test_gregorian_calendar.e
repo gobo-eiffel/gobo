@@ -102,7 +102,7 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("Max_days_in_month", 31, gc.Max_days_in_month)
+			assert_integers_equal ("Max_days_in_month", 31, gc.Max_days_in_month)
 		end
 
 	test_days_in_month is
@@ -112,31 +112,31 @@ feature -- Test
 		do
 			create gc
 				-- Number of days in month (non-leap year 1999):
-			assert_equal ("January 1999", 31, gc.days_in_month (gc.January, 1999))
-			assert_equal ("February 1999", 28, gc.days_in_month (gc.February, 1999))
-			assert_equal ("March 1999", 31, gc.days_in_month (gc.March, 1999))
-			assert_equal ("April 1999", 30, gc.days_in_month (gc.April, 1999))
-			assert_equal ("May 1999", 31, gc.days_in_month (gc.May, 1999))
-			assert_equal ("June 1999", 30, gc.days_in_month (gc.June, 1999))
-			assert_equal ("July 1999", 31, gc.days_in_month (gc.July, 1999))
-			assert_equal ("August 1999", 31, gc.days_in_month (gc.August, 1999))
-			assert_equal ("September 1999", 30, gc.days_in_month (gc.September, 1999))
-			assert_equal ("October 1999", 31, gc.days_in_month (gc.October, 1999))
-			assert_equal ("November 1999", 30, gc.days_in_month (gc.November, 1999))
-			assert_equal ("December 1999", 31, gc.days_in_month (gc.December, 1999))
+			assert_integers_equal ("January 1999", 31, gc.days_in_month (gc.January, 1999))
+			assert_integers_equal ("February 1999", 28, gc.days_in_month (gc.February, 1999))
+			assert_integers_equal ("March 1999", 31, gc.days_in_month (gc.March, 1999))
+			assert_integers_equal ("April 1999", 30, gc.days_in_month (gc.April, 1999))
+			assert_integers_equal ("May 1999", 31, gc.days_in_month (gc.May, 1999))
+			assert_integers_equal ("June 1999", 30, gc.days_in_month (gc.June, 1999))
+			assert_integers_equal ("July 1999", 31, gc.days_in_month (gc.July, 1999))
+			assert_integers_equal ("August 1999", 31, gc.days_in_month (gc.August, 1999))
+			assert_integers_equal ("September 1999", 30, gc.days_in_month (gc.September, 1999))
+			assert_integers_equal ("October 1999", 31, gc.days_in_month (gc.October, 1999))
+			assert_integers_equal ("November 1999", 30, gc.days_in_month (gc.November, 1999))
+			assert_integers_equal ("December 1999", 31, gc.days_in_month (gc.December, 1999))
 				-- Number of days in month (leap year 2000):
-			assert_equal ("January 2000", 31, gc.days_in_month (gc.January, 2000))
-			assert_equal ("February 2000", 29, gc.days_in_month (gc.February, 2000))
-			assert_equal ("March 2000", 31, gc.days_in_month (gc.March, 2000))
-			assert_equal ("April 2000", 30, gc.days_in_month (gc.April, 2000))
-			assert_equal ("May 2000", 31, gc.days_in_month (gc.May, 2000))
-			assert_equal ("June 2000", 30, gc.days_in_month (gc.June, 2000))
-			assert_equal ("July 2000", 31, gc.days_in_month (gc.July, 2000))
-			assert_equal ("August 2000", 31, gc.days_in_month (gc.August, 2000))
-			assert_equal ("September 2000", 30, gc.days_in_month (gc.September, 2000))
-			assert_equal ("October 2000", 31, gc.days_in_month (gc.October, 2000))
-			assert_equal ("November 2000", 30, gc.days_in_month (gc.November, 2000))
-			assert_equal ("December 2000", 31, gc.days_in_month (gc.December, 2000))
+			assert_integers_equal ("January 2000", 31, gc.days_in_month (gc.January, 2000))
+			assert_integers_equal ("February 2000", 29, gc.days_in_month (gc.February, 2000))
+			assert_integers_equal ("March 2000", 31, gc.days_in_month (gc.March, 2000))
+			assert_integers_equal ("April 2000", 30, gc.days_in_month (gc.April, 2000))
+			assert_integers_equal ("May 2000", 31, gc.days_in_month (gc.May, 2000))
+			assert_integers_equal ("June 2000", 30, gc.days_in_month (gc.June, 2000))
+			assert_integers_equal ("July 2000", 31, gc.days_in_month (gc.July, 2000))
+			assert_integers_equal ("August 2000", 31, gc.days_in_month (gc.August, 2000))
+			assert_integers_equal ("September 2000", 30, gc.days_in_month (gc.September, 2000))
+			assert_integers_equal ("October 2000", 31, gc.days_in_month (gc.October, 2000))
+			assert_integers_equal ("November 2000", 30, gc.days_in_month (gc.November, 2000))
+			assert_integers_equal ("December 2000", 31, gc.days_in_month (gc.December, 2000))
 		end
 
 	test_days_at_month is
@@ -147,32 +147,32 @@ feature -- Test
 			create gc
 				-- Number of days from beginning of year until
 				-- beginning of month (non-leap year 1999):
-			assert_equal ("January 1999", 0, gc.days_at_month (gc.January, 1999))
-			assert_equal ("February 1999", 31, gc.days_at_month (gc.February, 1999))
-			assert_equal ("March 1999", 59, gc.days_at_month (gc.March, 1999))
-			assert_equal ("April 1999", 90, gc.days_at_month (gc.April, 1999))
-			assert_equal ("May 1999", 120, gc.days_at_month (gc.May, 1999))
-			assert_equal ("June 1999", 151, gc.days_at_month (gc.June, 1999))
-			assert_equal ("July 1999", 181, gc.days_at_month (gc.July, 1999))
-			assert_equal ("August 1999", 212, gc.days_at_month (gc.August, 1999))
-			assert_equal ("September 1999", 243, gc.days_at_month (gc.September, 1999))
-			assert_equal ("October 1999", 273, gc.days_at_month (gc.October, 1999))
-			assert_equal ("November 1999", 304, gc.days_at_month (gc.November, 1999))
-			assert_equal ("December 1999", 334, gc.days_at_month (gc.December, 1999))
+			assert_integers_equal ("January 1999", 0, gc.days_at_month (gc.January, 1999))
+			assert_integers_equal ("February 1999", 31, gc.days_at_month (gc.February, 1999))
+			assert_integers_equal ("March 1999", 59, gc.days_at_month (gc.March, 1999))
+			assert_integers_equal ("April 1999", 90, gc.days_at_month (gc.April, 1999))
+			assert_integers_equal ("May 1999", 120, gc.days_at_month (gc.May, 1999))
+			assert_integers_equal ("June 1999", 151, gc.days_at_month (gc.June, 1999))
+			assert_integers_equal ("July 1999", 181, gc.days_at_month (gc.July, 1999))
+			assert_integers_equal ("August 1999", 212, gc.days_at_month (gc.August, 1999))
+			assert_integers_equal ("September 1999", 243, gc.days_at_month (gc.September, 1999))
+			assert_integers_equal ("October 1999", 273, gc.days_at_month (gc.October, 1999))
+			assert_integers_equal ("November 1999", 304, gc.days_at_month (gc.November, 1999))
+			assert_integers_equal ("December 1999", 334, gc.days_at_month (gc.December, 1999))
 				-- Number of days from beginning of year until
 				-- beginning of month (leap year 2000):
-			assert_equal ("January 2000", 0, gc.days_at_month (gc.January, 2000))
-			assert_equal ("February 2000", 31, gc.days_at_month (gc.February, 2000))
-			assert_equal ("March 2000", 60, gc.days_at_month (gc.March, 2000))
-			assert_equal ("April 2000", 91, gc.days_at_month (gc.April, 2000))
-			assert_equal ("May 2000", 121, gc.days_at_month (gc.May, 2000))
-			assert_equal ("June 2000", 152, gc.days_at_month (gc.June, 2000))
-			assert_equal ("July 2000", 182, gc.days_at_month (gc.July, 2000))
-			assert_equal ("August 2000", 213, gc.days_at_month (gc.August, 2000))
-			assert_equal ("September 2000", 244, gc.days_at_month (gc.September, 2000))
-			assert_equal ("October 2000", 274, gc.days_at_month (gc.October, 2000))
-			assert_equal ("November 2000", 305, gc.days_at_month (gc.November, 2000))
-			assert_equal ("December 2000", 335, gc.days_at_month (gc.December, 2000))
+			assert_integers_equal ("January 2000", 0, gc.days_at_month (gc.January, 2000))
+			assert_integers_equal ("February 2000", 31, gc.days_at_month (gc.February, 2000))
+			assert_integers_equal ("March 2000", 60, gc.days_at_month (gc.March, 2000))
+			assert_integers_equal ("April 2000", 91, gc.days_at_month (gc.April, 2000))
+			assert_integers_equal ("May 2000", 121, gc.days_at_month (gc.May, 2000))
+			assert_integers_equal ("June 2000", 152, gc.days_at_month (gc.June, 2000))
+			assert_integers_equal ("July 2000", 182, gc.days_at_month (gc.July, 2000))
+			assert_integers_equal ("August 2000", 213, gc.days_at_month (gc.August, 2000))
+			assert_integers_equal ("September 2000", 244, gc.days_at_month (gc.September, 2000))
+			assert_integers_equal ("October 2000", 274, gc.days_at_month (gc.October, 2000))
+			assert_integers_equal ("November 2000", 305, gc.days_at_month (gc.November, 2000))
+			assert_integers_equal ("December 2000", 335, gc.days_at_month (gc.December, 2000))
 		end
 
 	test_next_day is
@@ -181,13 +181,13 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("Sunday", gc.Monday, gc.next_day (gc.Sunday))
-			assert_equal ("Monday", gc.Tuesday, gc.next_day (gc.Monday))
-			assert_equal ("Tuesday", gc.Wednesday, gc.next_day (gc.Tuesday))
-			assert_equal ("Wednesday", gc.Thursday, gc.next_day (gc.Wednesday))
-			assert_equal ("Thursday", gc.Friday, gc.next_day (gc.Thursday))
-			assert_equal ("Friday", gc.Saturday, gc.next_day (gc.Friday))
-			assert_equal ("Saturday", gc.Sunday, gc.next_day (gc.Saturday))
+			assert_integers_equal ("Sunday", gc.Monday, gc.next_day (gc.Sunday))
+			assert_integers_equal ("Monday", gc.Tuesday, gc.next_day (gc.Monday))
+			assert_integers_equal ("Tuesday", gc.Wednesday, gc.next_day (gc.Tuesday))
+			assert_integers_equal ("Wednesday", gc.Thursday, gc.next_day (gc.Wednesday))
+			assert_integers_equal ("Thursday", gc.Friday, gc.next_day (gc.Thursday))
+			assert_integers_equal ("Friday", gc.Saturday, gc.next_day (gc.Friday))
+			assert_integers_equal ("Saturday", gc.Sunday, gc.next_day (gc.Saturday))
 		end
 
 	test_previous_day is
@@ -196,13 +196,13 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("Sunday", gc.Saturday, gc.previous_day (gc.Sunday))
-			assert_equal ("Monday", gc.Sunday, gc.previous_day (gc.Monday))
-			assert_equal ("Tuesday", gc.Monday, gc.previous_day (gc.Tuesday))
-			assert_equal ("Wednesday", gc.Tuesday, gc.previous_day (gc.Wednesday))
-			assert_equal ("Thursday", gc.Wednesday, gc.previous_day (gc.Thursday))
-			assert_equal ("Friday", gc.Thursday, gc.previous_day (gc.Friday))
-			assert_equal ("Saturday", gc.Friday, gc.previous_day (gc.Saturday))
+			assert_integers_equal ("Sunday", gc.Saturday, gc.previous_day (gc.Sunday))
+			assert_integers_equal ("Monday", gc.Sunday, gc.previous_day (gc.Monday))
+			assert_integers_equal ("Tuesday", gc.Monday, gc.previous_day (gc.Tuesday))
+			assert_integers_equal ("Wednesday", gc.Tuesday, gc.previous_day (gc.Wednesday))
+			assert_integers_equal ("Thursday", gc.Wednesday, gc.previous_day (gc.Thursday))
+			assert_integers_equal ("Friday", gc.Thursday, gc.previous_day (gc.Friday))
+			assert_integers_equal ("Saturday", gc.Friday, gc.previous_day (gc.Saturday))
 		end
 
 	test_epoch_days is
@@ -212,11 +212,11 @@ feature -- Test
 		do
 			create gc
 				-- Number of days since 1 Jan 1970:
-			assert_equal ("1 Jan 2000", 10957, gc.epoch_days (2000, 1, 1))
-			assert_equal ("1 Jan 1970", 0, gc.epoch_days (1970, 1, 1))
-			assert_equal ("31 Dec 1970", 364, gc.epoch_days (1970, 12, 31))
-			assert_equal ("31 Dec 1969", -1, gc.epoch_days (1969, 12, 31))
-			assert_equal ("1 Jan 1969", -365, gc.epoch_days (1969, 1, 1))
+			assert_integers_equal ("1 Jan 2000", 10957, gc.epoch_days (2000, 1, 1))
+			assert_integers_equal ("1 Jan 1970", 0, gc.epoch_days (1970, 1, 1))
+			assert_integers_equal ("31 Dec 1970", 364, gc.epoch_days (1970, 12, 31))
+			assert_integers_equal ("31 Dec 1969", -1, gc.epoch_days (1969, 12, 31))
+			assert_integers_equal ("1 Jan 1969", -365, gc.epoch_days (1969, 1, 1))
 		end
 
 	test_days_and_months_in_year is
@@ -226,9 +226,9 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("months_in_year", 12, gc.Months_in_year)
-			assert_equal ("days_in_year", 365, gc.Days_in_year)
-			assert_equal ("days_in_leap_year", 366, gc.Days_in_leap_year)
+			assert_integers_equal ("months_in_year", 12, gc.Months_in_year)
+			assert_integers_equal ("days_in_year", 365, gc.Days_in_year)
+			assert_integers_equal ("days_in_leap_year", 366, gc.Days_in_leap_year)
 		end
 
 	test_month_numbers is
@@ -237,18 +237,18 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("January", 1, gc.January)
-			assert_equal ("February", 2, gc.February)
-			assert_equal ("March", 3, gc.March)
-			assert_equal ("April", 4, gc.April)
-			assert_equal ("May", 5, gc.May)
-			assert_equal ("June", 6, gc.June)
-			assert_equal ("July", 7, gc.July)
-			assert_equal ("August", 8, gc.August)
-			assert_equal ("September", 9, gc.September)
-			assert_equal ("October", 10, gc.October)
-			assert_equal ("November", 11, gc.November)
-			assert_equal ("December", 12, gc.December)
+			assert_integers_equal ("January", 1, gc.January)
+			assert_integers_equal ("February", 2, gc.February)
+			assert_integers_equal ("March", 3, gc.March)
+			assert_integers_equal ("April", 4, gc.April)
+			assert_integers_equal ("May", 5, gc.May)
+			assert_integers_equal ("June", 6, gc.June)
+			assert_integers_equal ("July", 7, gc.July)
+			assert_integers_equal ("August", 8, gc.August)
+			assert_integers_equal ("September", 9, gc.September)
+			assert_integers_equal ("October", 10, gc.October)
+			assert_integers_equal ("November", 11, gc.November)
+			assert_integers_equal ("December", 12, gc.December)
 		end
 
 	test_days_in_week is
@@ -257,7 +257,7 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("days_in_week", 7, gc.Days_in_week)
+			assert_integers_equal ("days_in_week", 7, gc.Days_in_week)
 		end
 
 	test_week_day_numbers is
@@ -266,13 +266,13 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("Sunday", 1, gc.Sunday)
-			assert_equal ("Monday", 2, gc.Monday)
-			assert_equal ("Tuesday", 3, gc.Tuesday)
-			assert_equal ("Wednesday", 4, gc.Wednesday)
-			assert_equal ("Thursday", 5, gc.Thursday)
-			assert_equal ("Friday", 6, gc.Friday)
-			assert_equal ("Saturday", 7, gc.Saturday)
+			assert_integers_equal ("Sunday", 1, gc.Sunday)
+			assert_integers_equal ("Monday", 2, gc.Monday)
+			assert_integers_equal ("Tuesday", 3, gc.Tuesday)
+			assert_integers_equal ("Wednesday", 4, gc.Wednesday)
+			assert_integers_equal ("Thursday", 5, gc.Thursday)
+			assert_integers_equal ("Friday", 6, gc.Friday)
+			assert_integers_equal ("Saturday", 7, gc.Saturday)
 		end
 
 	test_time_constants is
@@ -281,12 +281,12 @@ feature -- Test
 			gc: DT_GREGORIAN_CALENDAR
 		do
 			create gc
-			assert_equal ("seconds_in_minute", 60, gc.Seconds_in_minute)
-			assert_equal ("seconds_in_hour", 3600, gc.Seconds_in_hour)
-			assert_equal ("seconds_in_day", 86400, gc.Seconds_in_day)
-			assert_equal ("milliseconds_in_day", 86400000, gc.Milliseconds_in_day)
-			assert_equal ("minutes_in_hour", 60, gc.Minutes_in_hour)
-			assert_equal ("hours_in_day", 24, gc.Hours_in_day)
+			assert_integers_equal ("seconds_in_minute", 60, gc.Seconds_in_minute)
+			assert_integers_equal ("seconds_in_hour", 3600, gc.Seconds_in_hour)
+			assert_integers_equal ("seconds_in_day", 86400, gc.Seconds_in_day)
+			assert_integers_equal ("milliseconds_in_day", 86400000, gc.Milliseconds_in_day)
+			assert_integers_equal ("minutes_in_hour", 60, gc.Minutes_in_hour)
+			assert_integers_equal ("hours_in_day", 24, gc.Hours_in_day)
 		end
 
 end
