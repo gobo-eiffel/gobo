@@ -115,6 +115,8 @@ feature {NONE} -- Instruction validity
 			a_class_impl: ET_CLASS
 			a_source_named_type: ET_NAMED_TYPE
 			a_target_named_type: ET_NAMED_TYPE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
 		do
 			a_target := an_instruction.target
 			expression_checker.check_writable_validity (a_target, current_feature, current_class)
@@ -135,8 +137,19 @@ feature {NONE} -- Instruction validity
 				a_source_context := expression_checker.context
 			end
 			if not has_fatal_error then
-				if not a_source_type.conforms_to_type (a_target_type, a_target_context, a_source_context, universe) then
-					if not a_source_type.convertible_to_type (a_target_type, a_target_context, a_source_context, universe) then
+				a_convert_expression ?= a_source
+				if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+				elseif not a_source_type.conforms_to_type (a_target_type, a_target_context, a_source_context, universe) then
+					a_convert_feature := type_checker.convert_feature (a_source_type, a_source_context, a_target_type, a_target_context)
+					if a_convert_feature /= Void then
+						a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
+						if a_convert_expression /= Void then
+							an_instruction.set_source (a_convert_expression)
+						end
+					else
 						a_source_named_type := a_source_type.named_type (a_source_context, universe)
 						a_target_named_type := a_target_type.named_type (a_target_context, universe)
 						a_class_impl := current_feature.implementation_class
@@ -225,6 +238,9 @@ feature {NONE} -- Instruction validity
 			a_formal_named_type: ET_NAMED_TYPE
 			a_target_type: ET_TYPE
 			j, nb2: INTEGER
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -332,8 +348,24 @@ feature {NONE} -- Instruction validity
 							else
 								an_actual_type := expression_checker.type
 								an_actual_context := expression_checker.context
-								if not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
-									if not an_actual_type.convertible_to_type (a_formal.type, a_context, an_actual_context, universe) then
+								a_convert_expression ?= an_actual
+								if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+								elseif not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
+									a_convert_feature := type_checker.convert_feature (an_actual_type, an_actual_context, a_formal.type, a_context)
+									if a_convert_feature /= Void then
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_expression_comma ?= an_actuals.item (i)
+											if an_expression_comma /= Void then
+												an_expression_comma.set_expression (a_convert_expression)
+											else
+												an_actuals.put (a_convert_expression, i)
+											end
+										end
+									else
 										an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
 										a_formal_named_type := a_formal.type.named_type (a_context, universe)
 										set_fatal_error
@@ -416,6 +448,9 @@ feature {NONE} -- Instruction validity
 			an_actual_context: ET_TYPE_CONTEXT
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -527,8 +562,24 @@ feature {NONE} -- Instruction validity
 							else
 								an_actual_type := expression_checker.type
 								an_actual_context := expression_checker.context
-								if not an_actual_type.conforms_to_type (a_formal.type, current_class, an_actual_context, universe) then
-									if not an_actual_type.convertible_to_type (a_formal.type, current_class, an_actual_context, universe) then
+								a_convert_expression ?= an_actual
+								if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+								elseif not an_actual_type.conforms_to_type (a_formal.type, current_class, an_actual_context, universe) then
+									a_convert_feature := type_checker.convert_feature (an_actual_type, an_actual_context, a_formal.type, current_class)
+									if a_convert_feature /= Void then
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_expression_comma ?= an_actuals.item (i)
+											if an_expression_comma /= Void then
+												an_expression_comma.set_expression (a_convert_expression)
+											else
+												an_actuals.put (a_convert_expression, i)
+											end
+										end
+									else
 										an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
 										a_formal_named_type := a_formal.type.named_type (current_class, universe)
 										set_fatal_error
@@ -636,6 +687,9 @@ feature {NONE} -- Instruction validity
 			an_actual_context: ET_TYPE_CONTEXT
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_class_impl := current_feature.implementation_class
 			a_creation_type := an_instruction.type
@@ -851,8 +905,24 @@ feature {NONE} -- Instruction validity
 							else
 								an_actual_type := expression_checker.type
 								an_actual_context := expression_checker.context
-								if not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
-									if not an_actual_type.convertible_to_type (a_formal.type, a_context, an_actual_context, universe) then
+								a_convert_expression ?= an_actual
+								if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+								elseif not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
+									a_convert_feature := type_checker.convert_feature (an_actual_type, an_actual_context, a_formal.type, a_context)
+									if a_convert_feature /= Void then
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_expression_comma ?= an_actuals.item (i)
+											if an_expression_comma /= Void then
+												an_expression_comma.set_expression (a_convert_expression)
+											else
+												an_actuals.put (a_convert_expression, i)
+											end
+										end
+									else
 										an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
 										a_formal_named_type := a_formal.type.named_type (a_context, universe)
 										set_fatal_error
@@ -1120,6 +1190,9 @@ feature {NONE} -- Instruction validity
 			an_actual_context: ET_TYPE_CONTEXT
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_type := an_instruction.type
 			check_type_validity (a_type)
@@ -1217,8 +1290,24 @@ feature {NONE} -- Instruction validity
 								else
 									an_actual_type := expression_checker.type
 									an_actual_context := expression_checker.context
-									if not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
-										if not an_actual_type.convertible_to_type (a_formal.type, a_context, an_actual_context, universe) then
+									a_convert_expression ?= an_actual
+									if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+									elseif not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
+										a_convert_feature := type_checker.convert_feature (an_actual_type, an_actual_context, a_formal.type, a_context)
+										if a_convert_feature /= Void then
+											a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+											if a_convert_expression /= Void then
+												an_expression_comma ?= an_actuals.item (i)
+												if an_expression_comma /= Void then
+													an_expression_comma.set_expression (a_convert_expression)
+												else
+													an_actuals.put (a_convert_expression, i)
+												end
+											end
+										else
 											an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
 											a_formal_named_type := a_formal.type.named_type (a_context, universe)
 											set_fatal_error

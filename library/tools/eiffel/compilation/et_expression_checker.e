@@ -23,6 +23,7 @@ inherit
 			process_c3_character_constant,
 			process_call_agent,
 			process_call_expression,
+			process_convert_expression,
 			process_create_expression,
 			process_current,
 			process_current_address,
@@ -391,12 +392,15 @@ feature {NONE} -- Expression validity
 			a_formal: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			a_convert_context: ET_NESTED_TYPE_CONTEXT
-			a_convert_class: ET_CLASS
-			a_convert_feature: ET_FEATURE
+			an_infix_convert_context: ET_NESTED_TYPE_CONTEXT
+			an_infix_convert_class: ET_CLASS
+			an_infix_convert_feature: ET_FEATURE
 			an_actual_type, a_formal_type: ET_NAMED_TYPE
 			a_like: ET_LIKE_FEATURE
 			j, nb2: INTEGER
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -501,8 +505,24 @@ feature {NONE} -- Expression validity
 							if has_fatal_error then
 								had_error := True
 							else
-								if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
-									if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
+								a_convert_expression ?= an_actual
+								if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+								elseif not type.conforms_to_type (a_formal.type, a_context, context, universe) then
+									a_convert_feature := type_checker.convert_feature (type, context, a_formal.type, a_context)
+									if a_convert_feature /= Void then
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_expression_comma ?= an_actuals.item (i)
+											if an_expression_comma /= Void then
+												an_expression_comma.set_expression (a_convert_expression)
+											else
+												an_actuals.put (a_convert_expression, i)
+											end
+										end
+									else
 										if a_name.is_infix then
 -- TODO: infix feature convertibility
 											if nb /= 1 then
@@ -512,18 +532,18 @@ feature {NONE} -- Expression validity
 -- TODO
 											else
 -- TODO
-												create a_convert_context.make (type, context)
-												a_convert_class := a_convert_context.base_class (universe)
-												a_convert_class.process (universe.interface_checker)
-												if a_convert_class.has_interface_error then
+												create an_infix_convert_context.make (type, context)
+												an_infix_convert_class := an_infix_convert_context.base_class (universe)
+												an_infix_convert_class.process (universe.interface_checker)
+												if an_infix_convert_class.has_interface_error then
 													had_error := True
 													set_fatal_error
 												else
-													a_convert_feature := a_convert_class.named_feature (a_name)
-													if a_convert_feature /= Void then
-														a_feature := a_convert_feature
-														a_class := a_convert_class
-														a_context := a_convert_context
+													an_infix_convert_feature := an_infix_convert_class.named_feature (a_name)
+													if an_infix_convert_feature /= Void then
+														a_feature := an_infix_convert_feature
+														a_class := an_infix_convert_class
+														a_context := an_infix_convert_context
 -- TODO
 														--a_seed := a_feature.first_seed
 														--a_name.set_seed (a_seed)
@@ -644,6 +664,9 @@ feature {NONE} -- Expression validity
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			an_actual_type, a_formal_type: ET_NAMED_TYPE
 			a_like: ET_LIKE_FEATURE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -803,8 +826,24 @@ feature {NONE} -- Expression validity
 								if has_fatal_error then
 									had_error := True
 								else
-									if not type.conforms_to_type (a_formal.type, current_class, context, universe) then
-										if not type.convertible_to_type (a_formal.type, current_class, context, universe) then
+									a_convert_expression ?= an_actual
+									if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+									elseif not type.conforms_to_type (a_formal.type, current_class, context, universe) then
+										a_convert_feature := type_checker.convert_feature (type, context, a_formal.type, current_class)
+										if a_convert_feature /= Void then
+											a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+											if a_convert_expression /= Void then
+												an_expression_comma ?= an_actuals.item (i)
+												if an_expression_comma /= Void then
+													an_expression_comma.set_expression (a_convert_expression)
+												else
+													an_actuals.put (a_convert_expression, i)
+												end
+											end
+										else
 											an_actual_type := type.named_type (context, universe)
 											a_formal_type := a_formal.type.named_type (current_class, universe)
 											had_error := True
@@ -854,6 +893,14 @@ feature {NONE} -- Expression validity
 			end
 		end
 
+	check_convert_expression_validity (an_expression: ET_CONVERT_EXPRESSION) is
+			-- Check validity of `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+			check_expression_validity (an_expression.expression, current_target_type, current_target_context, current_feature, current_class)
+		end
+
 	check_create_expression_validity (an_expression: ET_CREATE_EXPRESSION) is
 			-- Check validity of `an_expression'.
 		require
@@ -881,6 +928,9 @@ feature {NONE} -- Expression validity
 			a_call: ET_QUALIFIED_CALL
 			a_name: ET_FEATURE_NAME
 			an_actual_type, a_formal_type: ET_NAMED_TYPE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_type := an_expression.type
 			check_type_validity (a_type)
@@ -1040,8 +1090,24 @@ feature {NONE} -- Expression validity
 							if has_fatal_error then
 								had_error := True
 							else
-								if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
-									if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
+								a_convert_expression ?= an_actual
+								if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+								elseif not type.conforms_to_type (a_formal.type, a_context, context, universe) then
+									a_convert_feature := type_checker.convert_feature (type, context, a_formal.type, a_context)
+									if a_convert_feature /= Void then
+										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+										if a_convert_expression /= Void then
+											an_expression_comma ?= an_actuals.item (i)
+											if an_expression_comma /= Void then
+												an_expression_comma.set_expression (a_convert_expression)
+											else
+												an_actuals.put (a_convert_expression, i)
+											end
+										end
+									else
 										an_actual_type := type.named_type (context, universe)
 										a_formal_type := a_formal.type.named_type (a_context, universe)
 										had_error := True
@@ -1083,9 +1149,24 @@ feature {NONE} -- Expression validity
 			-- Check validity of `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		local
+			a_typed_pointer_class: ET_CLASS
+			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
-			type := universe.pointer_class
-			context := current_class
+			a_typed_pointer_class := universe.typed_pointer_class
+			if a_typed_pointer_class.is_preparsed then
+					-- Class TYPED_POINTER has been found in the universe.
+					-- Use ISE's implementation.
+				create an_actuals.make_with_capacity (1)
+				an_actuals.put_first (current_class)
+				create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+				type := a_typed_pointer_type
+				context := current_class
+			else
+				type := universe.pointer_class
+				context := current_class
+			end
 		end
 
 	check_equality_expression_validity (an_expression: ET_EQUALITY_EXPRESSION) is
@@ -1150,11 +1231,28 @@ feature {NONE} -- Expression validity
 			-- Check validity of `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		local
+			a_typed_pointer_class: ET_CLASS
+			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			check_expression_validity (an_expression.expression, universe.any_type, current_class, current_feature, current_class)
 			if not has_fatal_error then
-				type := universe.pointer_class
-				context := current_class
+				a_typed_pointer_class := universe.typed_pointer_class
+				if a_typed_pointer_class.is_preparsed then
+						-- Class TYPED_POINTER has been found in the universe.
+						-- Use ISE's implementation.
+					create an_actuals.make_with_capacity (1)
+					an_actuals.put_first (type)
+					create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+					type := a_typed_pointer_type
+						-- The context is the one of `an_expression'.
+					-- context := context
+				else
+						-- Use the ETL2 implementation.
+					type := universe.pointer_class
+					context := current_class
+				end
 			end
 		end
 
@@ -1180,6 +1278,9 @@ feature {NONE} -- Expression validity
 			an_identifier: ET_IDENTIFIER
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_typed_pointer_class: ET_CLASS
+			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			a_class_impl := current_feature.implementation_class
 			a_name := an_expression.name
@@ -1198,8 +1299,19 @@ feature {NONE} -- Expression validity
 									-- context of `current_class' again.
 								already_checked := True
 								if not has_fatal_error then
-									type := universe.pointer_class
-									context := current_class
+									a_typed_pointer_class := universe.typed_pointer_class
+									if a_typed_pointer_class.is_preparsed then
+											-- Class TYPED_POINTER has been found in the universe.
+											-- Use ISE's implementation.
+										create an_actuals.make_with_capacity (1)
+										an_actuals.put_first (an_arguments.formal_argument (a_seed).type)
+										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+										type := a_typed_pointer_type
+										context := current_class
+									else
+										type := universe.pointer_class
+										context := current_class
+									end
 								end
 							end
 						end
@@ -1216,8 +1328,19 @@ feature {NONE} -- Expression validity
 										-- context of `current_class' again.
 									already_checked := True
 									if not has_fatal_error then
-										type := universe.pointer_class
-										context := current_class
+										a_typed_pointer_class := universe.typed_pointer_class
+										if a_typed_pointer_class.is_preparsed then
+												-- Class TYPED_POINTER has been found in the universe.
+												-- Use ISE's implementation.
+											create an_actuals.make_with_capacity (1)
+											an_actuals.put_first (a_locals.local_variable (a_seed).type)
+											create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+											type := a_typed_pointer_type
+											context := current_class
+										else
+											type := universe.pointer_class
+											context := current_class
+										end
 									end
 								end
 							end
@@ -1230,7 +1353,14 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 					else
 						a_feature := a_class_impl.named_feature (a_name)
-						if a_feature /= Void then
+						if a_feature = Void then
+							set_fatal_error
+								-- ISE Eiffel 5.4 reports this error as a VEEN,
+								-- but it is in fact a VUAR-4 (ETL2 p.369).
+							error_handler.report_vuar4a_error (a_class_impl, a_name)
+						elseif a_feature.type = Void then
+-- TODO.
+						else
 							a_seed := a_feature.first_seed
 							a_name.set_seed (a_seed)
 							if a_class_impl = current_class then
@@ -1238,15 +1368,21 @@ feature {NONE} -- Expression validity
 									-- context of `current_class' again.
 								already_checked := True
 								if not has_fatal_error then
-									type := universe.pointer_class
-									context := current_class
+									a_typed_pointer_class := universe.typed_pointer_class
+									if a_typed_pointer_class.is_preparsed then
+											-- Class TYPED_POINTER has been found in the universe.
+											-- Use ISE's implementation.
+										create an_actuals.make_with_capacity (1)
+										an_actuals.put_first (a_feature.type)
+										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+										type := a_typed_pointer_type
+										context := current_class
+									else
+										type := universe.pointer_class
+										context := current_class
+									end
 								end
 							end
-						else
-							set_fatal_error
-								-- ISE Eiffel 5.4 reports this error as a VEEN,
-								-- but it is in fact a VUAR-4 (ETL2 p.369).
-							error_handler.report_vuar4a_error (a_class_impl, a_name)
 						end
 					end
 				end
@@ -1263,8 +1399,19 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_giaar_error
 					else
-						type := universe.pointer_class
-						context := current_class
+						a_typed_pointer_class := universe.typed_pointer_class
+						if a_typed_pointer_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation.
+							create an_actuals.make_with_capacity (1)
+							an_actuals.put_first (an_arguments.formal_argument (a_seed).type)
+							create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+							type := a_typed_pointer_type
+							context := current_class
+						else
+							type := universe.pointer_class
+							context := current_class
+						end
 					end
 				elseif a_name.is_local then
 					a_locals := current_feature.locals
@@ -1277,8 +1424,19 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_giaat_error
 					else
-						type := universe.pointer_class
-						context := current_class
+						a_typed_pointer_class := universe.typed_pointer_class
+						if a_typed_pointer_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation.
+							create an_actuals.make_with_capacity (1)
+							an_actuals.put_first (a_locals.local_variable (a_seed).type)
+							create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+							type := a_typed_pointer_type
+							context := current_class
+						else
+							type := universe.pointer_class
+							context := current_class
+						end
 					end
 				else
 					current_class.process (universe.interface_checker)
@@ -1291,9 +1449,22 @@ feature {NONE} -- Expression validity
 								-- `a_feature' should not be void.
 							set_fatal_error
 							error_handler.report_giaau_error
+						elseif a_feature.type = Void then
+-- TODO.
 						else
-							type := universe.pointer_class
-							context := current_class
+							a_typed_pointer_class := universe.typed_pointer_class
+							if a_typed_pointer_class.is_preparsed then
+									-- Class TYPED_POINTER has been found in the universe.
+									-- Use ISE's implementation.
+								create an_actuals.make_with_capacity (1)
+								an_actuals.put_first (a_feature.type)
+								create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+								type := a_typed_pointer_type
+								context := current_class
+							else
+								type := universe.pointer_class
+								context := current_class
+							end
 						end
 					end
 				end
@@ -1596,14 +1767,28 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 		local
 			a_type: ET_TYPE
+			a_typed_pointer_class: ET_CLASS
+			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			a_type := current_feature.type
 			if a_type = Void then
 				set_fatal_error
 				error_handler.report_veen2a_error (current_feature.implementation_class, an_expression.result_keyword, current_feature)
 			else
-				type := universe.pointer_class
-				context := current_class
+				a_typed_pointer_class := universe.typed_pointer_class
+				if a_typed_pointer_class.is_preparsed then
+						-- Class TYPED_POINTER has been found in the universe.
+						-- Use ISE's implementation.
+					create an_actuals.make_with_capacity (1)
+					an_actuals.put_first (a_type)
+					create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+					type := a_typed_pointer_type
+					context := current_class
+				else
+					type := universe.pointer_class
+					context := current_class
+				end
 			end
 		end
 
@@ -1635,6 +1820,9 @@ feature {NONE} -- Expression validity
 			i, nb: INTEGER
 			had_error: BOOLEAN
 			an_actual_type, a_formal_type: ET_NAMED_TYPE
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			an_expression_comma: ET_EXPRESSION_COMMA
 		do
 			a_type := an_expression.type
 			check_type_validity (a_type)
@@ -1731,8 +1919,24 @@ feature {NONE} -- Expression validity
 								if has_fatal_error then
 									had_error := True
 								else
-									if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
-										if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
+									a_convert_expression ?= an_actual
+									if a_convert_expression /= Void then
+-- TODO
+-- Already converted in ancestor. Need to check that this conversion is still
+-- valid in current class.
+									elseif not type.conforms_to_type (a_formal.type, a_context, context, universe) then
+										a_convert_feature := type_checker.convert_feature (type, context, a_formal.type, a_context)
+										if a_convert_feature /= Void then
+											a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
+											if a_convert_expression /= Void then
+												an_expression_comma ?= an_actuals.item (i)
+												if an_expression_comma /= Void then
+													an_expression_comma.set_expression (a_convert_expression)
+												else
+													an_actuals.put (a_convert_expression, i)
+												end
+											end
+										else
 											an_actual_type := type.named_type (context, universe)
 											a_formal_type := a_formal.type.named_type (a_context, universe)
 											had_error := True
@@ -1998,6 +2202,15 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_call_expression_validity (an_expression)
+			end
+		end
+
+	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			if internal_call then
+				internal_call := False
+				check_convert_expression_validity (an_expression)
 			end
 		end
 

@@ -202,6 +202,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+		end
+
 	process_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE_COMMA) is
 			-- Process `a_convert_feature'.
 		do

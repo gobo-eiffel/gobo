@@ -575,6 +575,12 @@ feature {ET_TYPE} -- Convertibility
 					-- Needed by ISE Eiffel 5.4.
 				Result := eiffel_class = a_universe.real_class
 			end
+			if not Result then
+				Result := eiffel_class.convert_from_feature (other, other_context, Current, a_context, a_universe) /= Void
+			end
+			if not Result then
+				Result := other_base_class.convert_to_feature (Current, a_context, other, other_context, a_universe) /= Void
+			end
 		end
 
 feature -- Type processing

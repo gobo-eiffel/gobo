@@ -505,6 +505,12 @@ feature {ET_AST_NODE} -- Processing
 			a_list.end_keyword.process (Current)
 		end
 
+	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
 	process_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE_COMMA) is
 			-- Process `a_convert_feature'.
 		do

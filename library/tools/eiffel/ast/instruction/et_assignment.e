@@ -62,6 +62,16 @@ feature -- Access
 
 feature -- Setting
 
+	set_source (a_source: like source) is
+			-- Set `source' to `a_source'.
+		require
+			a_source_not_void: a_source /= Void
+		do
+			source := a_source
+		ensure
+			source_set: source = a_source
+		end
+
 	set_assign_symbol (an_assign: like assign_symbol) is
 			-- Set `assign_symbol' to `an_assign'.
 		require

@@ -31,6 +31,35 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
+feature -- Status report
+
+	has_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does one of current types appearing in `a_context' and `other'
+			-- type appearing in `other_context' have the same named type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if type (i).same_named_type (other, other_context, a_context, a_universe) then
+					Result := True
+					i := nb + 1 -- Jump out o fthe loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] is

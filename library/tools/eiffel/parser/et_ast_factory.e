@@ -1461,6 +1461,14 @@ feature -- AST nodes
 			end
 		end
 
+	new_convert_expression (an_expression: ET_EXPRESSION; a_feature: ET_CONVERT_FEATURE): ET_CONVERT_EXPRESSION is
+			-- New convert expression
+		do
+			if an_expression /= Void and a_feature /= Void then
+				create Result.make (an_expression, a_feature)
+			end
+		end
+
 	new_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE; a_comma: ET_SYMBOL): ET_CONVERT_FEATURE_ITEM is
 			-- New convert_feature-comma
 		do
