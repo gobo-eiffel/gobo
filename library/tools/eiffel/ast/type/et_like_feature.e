@@ -14,7 +14,7 @@ class ET_LIKE_FEATURE
 
 inherit
 
-	ET_LIKE_TYPE
+	ET_LIKE_IDENTIFIER
 		redefine
 			named_type, is_formal_type,
 			has_qualified_type,
@@ -451,7 +451,7 @@ feature -- Status report
 			-- Is this type a 'like argument' (rather than a 'like feature')?
 		do
 			Result := name.seed < 0
-		ensure
+		ensure then
 			definition: Result = (name.seed < 0)
 		end
 

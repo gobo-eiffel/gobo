@@ -14,7 +14,7 @@ deferred class ET_QUALIFIED_TYPE
 
 inherit
 
-	ET_LIKE_TYPE
+	ET_LIKE_IDENTIFIER
 		redefine
 			named_type, is_formal_type,
 			has_qualified_type,
@@ -47,7 +47,7 @@ feature -- Access
 			-- associated with current type
 		do
 			Result := qualified_name.feature_name
-		ensure
+		ensure then
 			definition: Result = qualified_name.feature_name
 		end
 
@@ -60,8 +60,6 @@ feature -- Access
 			-- 0 if not resolved yet
 		do
 			Result := name.seed
-		ensure
-			seed_positive: Result >= 0
 		end
 
 	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
@@ -302,6 +300,10 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_like_argument: BOOLEAN is False
+			-- Is this type a 'like argument' (rather than a
+			-- 'like feature' or a 'like *.feature')?
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type a formal parameter when viewed from
