@@ -19,7 +19,13 @@ inherit
 			named_type,
 			name, is_formal_type,
 			has_qualified_type,
+			same_syntactical_bit_type,
+			same_syntactical_class_type,
 			same_syntactical_formal_parameter_type,
+			same_syntactical_like_current,
+			same_syntactical_like_feature,
+			same_syntactical_qualified_type,
+			same_syntactical_tuple_type,
 			same_named_bit_type,
 			same_named_class_type,
 			same_named_formal_parameter_type,
@@ -390,6 +396,75 @@ feature -- Comparison
 
 feature {ET_TYPE} -- Comparison
 
+	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_bit_type (other, other_context, a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_class_type (other, other_context, a_context.root_context, a_universe)
+				end
+			end
+		end
+
 	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
 		a_universe: ET_UNIVERSE): BOOLEAN is
@@ -421,6 +496,146 @@ feature {ET_TYPE} -- Comparison
 					Result := a_formal_type.index = other.index
 				else
 					Result := an_actual.same_syntactical_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	same_syntactical_like_current (other: ET_LIKE_CURRENT;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_like_current (other, other_context, a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	same_syntactical_like_feature (other: ET_LIKE_FEATURE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_like_feature (other, other_context, a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	same_syntactical_qualified_type (other: ET_QUALIFIED_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_qualified_type (other, other_context, a_context.root_context, a_universe)
+				end
+			end
+		end
+
+	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.base_type (a_universe)
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_tuple_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
