@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_last_token (a_token: like last_token) is
+	set_last_token (a_token: INTEGER) is
 			-- Set `last_token' to `a_token'.
 		deferred
 		ensure
@@ -159,7 +159,8 @@ feature -- Element change
 	wrap: BOOLEAN is
 			-- Should current scanner terminate when end of file is reached?
 			-- This function can be redefined to switch to another input
-			-- buffer (but don't forget to update `start_condition'.
+			-- buffer (but don't forget to update `start_condition').
+			-- (default: True.)
 		do
 			Result := True
 		end
