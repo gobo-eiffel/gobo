@@ -51,6 +51,7 @@ feature -- Creation
 			context_not_void: a_context /= Void
 		local
 			a_parser: XM_XPATH_EXPRESSION_PARSER
+			an_error_type: INTEGER
 		do
 			is_parse_error := False
 			internal_parsed_expression := Void
@@ -80,7 +81,11 @@ feature -- Creation
 				end
 			else
 				is_parse_error := True
-				create parsed_error_value.make_from_string (a_parser.first_parse_error, a_parser.first_parse_error_code, Static_error)
+				an_error_type := Static_error
+				if a_parser.first_parse_error_code = 0 then
+					an_error_type := Dynamic_error
+				end
+				create parsed_error_value.make_from_string (a_parser.first_parse_error, a_parser.first_parse_error_code, an_error_type)
 			end
 		ensure
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void

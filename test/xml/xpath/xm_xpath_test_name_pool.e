@@ -90,7 +90,7 @@ feature -- Test
 			prefix_code := default_pool.code_for_prefix ("test3")
 			assert ("Prefix code 2", prefix_code > 0)			
 			namespace_code := default_pool.namespace_code ("test3", testing_namespace)
-			assert ("Non-negative namespace code", namespace_code >= 0)
+			assert ("Valid namespace code", default_pool.is_valid_namespace_code (namespace_code))
 			uri_code := default_pool.uri_code_from_name_code (name_code)
 			assert ("URI code", uri_code > 0)
 			namespace_uri := default_pool.namespace_uri_from_name_code (name_code)

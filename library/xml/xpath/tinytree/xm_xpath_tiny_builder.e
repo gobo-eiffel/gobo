@@ -178,6 +178,9 @@ feature -- Events
 			a_name_code, a_previous_sibling: INTEGER
 		do
 			if not name_pool.is_name_code_allocated ("", "", a_target) then
+
+				-- TODO need to check for resource exhaustion in name pool
+				
 				name_pool.allocate_name ("", "", a_target)
 				a_name_code := name_pool.last_name_code
 			else

@@ -153,7 +153,7 @@ feature -- Creation
 		local
 			a_string_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
-			an_xml_prefix, a_uri, a_local_name: STRING
+			an_xml_prefix, a_uri, a_local_name, a_message: STRING
 			a_uri_code: INTEGER
 			a_name_pool: XM_XPATH_NAME_POOL
 		do
@@ -168,15 +168,20 @@ feature -- Creation
 			a_name_pool := environment.name_pool
 			if qname_parts.count = 1 then
 				an_xml_prefix := ""
-				a_uri := qname_parts.item (1)
 				if use_default_namespace then
 					a_uri_code := environment.default_element_namespace
 				end
 				if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
 					Result := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_qname)
 				else
-					a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
-					Result := a_name_pool.last_name_code
+					if not a_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
+						a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
+						Result := a_name_pool.last_name_code
+					else
+						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_qname)
+						report_parse_error (a_message, 0)
+						Result := -2
+					end
 				end
 			else
 					check
@@ -188,8 +193,16 @@ feature -- Creation
 				if a_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
 					Result := a_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 				else
-					a_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-					Result := a_name_pool.last_name_code
+					if not a_name_pool.is_name_pool_full (a_uri, a_local_name) then
+						a_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+						Result := a_name_pool.last_name_code
+					else
+						a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_uri)
+						a_message := STRING_.appended_string (a_message, "}")
+						a_message := STRING_.appended_string (a_message, a_local_name)
+						report_parse_error (a_message, 0)
+						Result := -2
+					end
 				end
 			end
 		end

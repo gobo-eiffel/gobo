@@ -193,6 +193,24 @@ feature
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
 
+	test_node_precedes is
+			-- Test one node precedes another
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] << /BOOKLIST/CATEGORIES")
+			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
+
 	-- Eventually, all errors should be tested here
 
 	-- We can't test for XP0002 with the stand-alone evaluator, because it is proof against it. (NO - not if we can put the current iterator into error, or before )

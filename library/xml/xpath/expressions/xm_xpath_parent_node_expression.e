@@ -44,7 +44,6 @@ feature -- Access
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 			a_document: XM_XPATH_DOCUMENT
-			an_exception_message: STRING
 		do
 			an_item := a_context.context_item
 			--if an_item = Void then

@@ -28,7 +28,10 @@ inherit
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
-
+		undefine
+			document_number
+		end
+	
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_TYPE
@@ -757,9 +760,6 @@ feature {NONE} -- Implementation
 
 	id_table: DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]
 			-- Mapping of IDs to elements.
-
-	document_number: INTEGER
-			-- Uniquely identifies this document.
 
 	element_list: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT], INTEGER]
 			-- Lists of elements with the same name.

@@ -18,9 +18,12 @@ inherit
 
 feature -- Access
 
-	node_number: INTEGER
-			-- Uniquely identifies this node within the document
-	
+	document_number: INTEGER is
+			-- Uniquely identifies the owning document.
+		do
+			Result := document.document_number
+		end
+
 	node_name: STRING is
 			-- Qualified name
 		do
@@ -155,13 +158,8 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
+feature -- Comparison
 
-	has_child_nodes: BOOLEAN is
-			-- Does `Current' have any children?
-		do
-			Result := False -- overriden in XM_XPATH_TINY_COMPOSITE_NODE
-		end
 
 	is_same_node (other: XM_XPATH_TINY_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
@@ -177,6 +175,27 @@ feature -- Status report
 			else
 				Result := True
 			end
+		end
+
+	three_way_comparison (other: XM_XPATH_NODE): INTEGER is
+			-- If current object equal to other, 0;
+			-- if smaller, -1; if greater, 1
+		do
+			if node_number	< other.node_number then
+				Result := -1
+			elseif node_number = other.node_number then
+				Result := 0
+			else
+				Result := 1
+			end
+		end
+	
+feature -- Status report
+
+	has_child_nodes: BOOLEAN is
+			-- Does `Current' have any children?
+		do
+			Result := False -- overriden in XM_XPATH_TINY_COMPOSITE_NODE
 		end
 	
 feature -- Element change

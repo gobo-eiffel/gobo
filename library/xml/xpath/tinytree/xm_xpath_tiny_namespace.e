@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 			if document.name_pool.is_name_code_allocated ("", "", local_part) then
 				name_code := document.name_pool.name_code  ("", "", local_part)
 			else
+
+				-- TODO need to check for resource exhaustion in name pool
+				
 				document.name_pool.allocate_name  ("", "", local_part)
 				name_code := document.name_pool.last_name_code
 			end

@@ -115,7 +115,11 @@ feature -- Status report
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := qname_to_fingerprint (a_qname)
-			Result := is_variable_declared (a_fingerprint)
+			if a_fingerprint = -1 then
+				Result := False
+			else
+				Result := is_variable_declared (a_fingerprint)
+			end
 		end
 
 feature -- Element change
@@ -165,8 +169,16 @@ feature -- Element change
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := qname_to_fingerprint (a_qname)
-			create a_variable.make (a_qname, an_initial_value)
-			variables.put (a_variable, a_fingerprint)
+			if a_fingerprint = -1 then
+				do_nothing
+
+				-- TODO - how to get allocation faliure message, and raise a dynamic error?
+				--  We will get a post-condition failed exception. Not good enough
+				
+			else
+				create a_variable.make (a_qname, an_initial_value)
+				variables.put (a_variable, a_fingerprint)
+			end
 		ensure
 			variable_declared: is_qname_variable_declared (a_qname)
 		end
@@ -224,8 +236,13 @@ feature -- Element change
 					if name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
 						a_name_code := name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 					else
-						name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-						a_name_code := name_pool.last_name_code
+						if not name_pool.is_name_pool_full (a_uri, a_local_name) then
+							name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+							a_name_code := name_pool.last_name_code
+						else
+							was_last_function_bound := False
+							set_bind_function_failure_message (STRING_.appended_string ("Name pool has no room to allocate ", a_qname))
+						end
 					end
 					a_fingerprint := a_name_code // bits_20
 					if STRING_.same_string (a_uri, Xpath_functions_uri) then
@@ -297,7 +314,7 @@ feature {NONE} -- Implementation
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
 		local
-			an_xml_prefix, a_local_name, a_uri: STRING
+			an_xml_prefix, a_local_name, a_uri, a_message: STRING
 			a_splitter: ST_SPLITTER
 			parts: DS_LIST [STRING]
 			a_name_code: INTEGER
@@ -317,12 +334,16 @@ feature {NONE} -- Implementation
 			if name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
 				a_name_code := name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 			else
-				name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-				a_name_code := name_pool.last_name_code
+				if not name_pool.is_name_pool_full (a_uri, a_local_name) then
+					name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+					a_name_code := name_pool.last_name_code
+				else
+					Result := -1
+				end
 			end
 			Result := a_name_code \\ bits_20
 		ensure
-			positive_fingerprint: Result >= 0
+			nearly_positive_fingerprint: Result >= -1
 		end
 	
 invariant

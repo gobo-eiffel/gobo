@@ -25,19 +25,14 @@
     <div id="entities">
       <h2>Entity resolution, location information and SYSTEM ids.</h2>
       <p>Several problems with the architecture of the Gobo XML parser, involving the resolution of external entities,
-      the provision of base URIs, and location information for errors, will cause me problems.</p>
-      <p>In addition, I need a means to make absolute URIs given a relative URI and a base URI.
-      Berend's EPX_URI class will do just that.</p>
-      <p>These two issues are related, as the latter will be needed by the former.</p>
-      <p>Awaiting Eric to review EPX_URI for inclusion in Gobo, and Franck to find a solution to
-      the first problem (I have a solution sketched out in my mind).</p>
+      the provision of base URIs, and location information for errors, will cause me problems. Franck is working on this.</p>
     </div>
     <div>
       <h2>Numbers</h2>
       <p>A basic XSLT processor must support xs:decimal, xs:integer and xs:double. The first two
-      require at least 18 digits of precision (but could be unlimited. The latter is the IEEE double-precision type. DOUBLE should support
+      require at least 18 digits of precision (but should be unlimited. The latter is the IEEE double-precision type. DOUBLE should support
       this, though the compilers lack routines such as is_nan, for instance.</p>
-      <p>Eric has emailed Paul Crismer re. incorporating EDA into gobo.</p>
+      <p>EDA is coming into gobo.</p>
     </div>
     <div>
       <h2>Exception policy</h2>
@@ -82,22 +77,16 @@
       <h2>TODO</h2>
       <p>The following need looking at at some time:</p>
       <ul>
-	<li>XM_XPATH_DECIMAL/INTEGER_VALUEs need resolving. Awaiting EDA_DECIMAL resolution.</li>
 	<li>Investigate need for set_location. This may depend upon <a href="#entities">Entity resolution, location information and SYSTEM ids.</a></li>
 	<li>Review commenting style - this has been done to some extent.</li>
 	<li>Review unsafe string features (done?).</li>
 	<li>Change remaining data model infoset properties into implementation stuff.</li>
 	<li>Change loops to use external cursors (ongoing - done?)</li>
-	<li>XM_XPATH_CONTENT_EMOTTER raises exceptions. These should <em>never</em> occur
-	as they violate the XML events processing model, so it is OK to leave these here.</li>
-	<li>{XM_XPATH_NAME_POOL}.allocate_name_using_uri_code raises an exception to report pool full. It is also too long. Re-design. Also some of the conversion routines do this
-	and prefix_index is too long.</li>
 	<li>EXPRESSION.display should check the error status (not at all urgent, as it is debugging routine)</li>
 	<li>Promotion in path and filter expressions commented out as it causes an infinite recursion inside let-action analyze - this may now be fixed - try again after:</li>
 	<li>Quantified expressions - look at Saxon 7.9.1 code</li>
 	<li>Make use of UT_URI for base URI etc.</li>
 	<li>CAST_EXPRESSION needs fixing</li>
-	<li>Ask Eric about re-writing the tokenizer.</li>
 	<li>rationalize error feature names</li>
 	<li>I took the pre-condition off set_analyzed, so it can be used indescriminately. Really,
 	it ought to be used in a precisely discpilined manner, only within analyze, if that is possible.
@@ -107,6 +96,7 @@
 	<li>Better XML parser messages wanted (i.e. line and column positions, etc.)</li>
 	<li>Review test suite.</li>
 	<li>A whitespace-stripper is needed.</li>
+	<li>How to get dynamic error messages out of declare_variable and (?can't remember?)?</li>
       </ul>
     </div>
     <div>
@@ -114,13 +104,9 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-	Test for XP0006. This involves corrections to RANGE_EXPRESSION, ITEM_CHECKER, CARDINALITY_CHECKER et.al.
-	Documented function implementation status.
-	Further expressions tested.
-	Much work on IDENTITY_COMPARISON.
-	Documented error checking, and analysis and evaluation phases, iterators etc., for code
-	review.
-	Performed self code review. Many changes as a result.
+	Removed all exceptions from NAME_POOL and CONTENT_EMITTER. Now all remaining
+	Exceptions indicate bugs in the library, should they be raised.
+	Finished IDENTITY_COMPARISON.
       </pre>
     </div>
     <div >

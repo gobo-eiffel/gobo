@@ -25,6 +25,16 @@ inherit
 
 feature -- Access
 
+	node_number: INTEGER
+			-- Uniquely identifies this node within the document
+
+	document_number: INTEGER is
+			-- Uniquely identifies the owning document.
+		deferred
+		ensure
+			strictly_positive_result: Result > 0
+		end
+
 	base_uri: STRING is
 			-- Base URI
 		require
@@ -279,7 +289,27 @@ feature -- Access
 		ensure
 			result_not_in_error: Result /= Void and then not Result.is_error
 		end
-	
+
+feature -- Comparison
+
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+			-- Does `Current' represent the same node in the tree as `other'?
+		require
+			not_in_error: not is_item_in_error
+			other_node_not_void: other /= Void
+		deferred
+		end
+
+	three_way_comparison (other: XM_XPATH_NODE): INTEGER is
+			-- If current object equal to other, 0;
+			-- if smaller, -1; if greater, 1
+		require
+			other_exists: other /= Void
+		deferred
+		ensure
+			valid_result: -1 <= Result and then Result <= 1
+		end
+
 feature -- Status report
 
 	is_nilled: BOOLEAN is
@@ -293,14 +323,6 @@ feature -- Status report
 			-- Does `Current' have any children?
 		require
 			not_in_error: not is_item_in_error
-		deferred
-		end
-
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
-			-- Does `Current' represent the same node in the tree as `other'?
-		require
-			not_in_error: not is_item_in_error
-			other_node_not_void: other /= Void
 		deferred
 		end
 

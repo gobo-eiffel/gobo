@@ -20,8 +20,6 @@ inherit
 
 	XM_XPATH_TYPE
 	
-	KL_SHARED_EXCEPTIONS
-
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -43,9 +41,6 @@ inherit
 		--      Only an exact match with the name declared in the DTD will work.
 		--      This is a normal consequence of using DTDs with namespaces.
 		--      Roll on a RELAX-NG validator!
-
-		-- This class raises exceptions for events that should NEVER occur,
-		--  as they violate the XML events processing model.
 
 creation
 
@@ -81,12 +76,12 @@ feature -- Document type definition callbacks
 			-- Element declaration.
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			an_exception_message: STRING
+			a_message: STRING
 		do
 			if attribute_types.has (a_name) then
-				an_exception_message := "Attribute table already present for element "
-				an_exception_message.append_string (a_name)
-				Exceptions.raise (an_exception_message)
+				a_message := "Attribute table already present for element "
+				a_message.append_string (a_name)
+				on_error (a_message)
 			end	
 			create an_attribute_table.make_equal (7)
 			if attribute_types.is_full then
@@ -100,12 +95,12 @@ feature -- Document type definition callbacks
 			-- Attribute declaration, one event per attribute.
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			an_exception_message: STRING
+			a_message: STRING
 		do
 			if not attribute_types.has (an_element_name) then
-				an_exception_message := "Attribute table not present for element "
-				an_exception_message.append_string (an_element_name)
-				Exceptions.raise (an_exception_message)
+				a_message := "Attribute table not present for element "
+				a_message.append_string (an_element_name)
+				on_error (a_message)
 			end
 			an_attribute_table := attribute_types.item (an_element_name)
 				check
@@ -113,11 +108,11 @@ feature -- Document type definition callbacks
 					-- because has() returned `True'
 				end
 			if an_attribute_table.has (a_name) then
-				an_exception_message := "Attribute "
-				an_exception_message.append_string (a_name)
-				an_exception_message.append_string (" already present for element ")
-				an_exception_message.append_string (an_element_name)
-				Exceptions.raise (an_exception_message)
+				a_message := "Attribute "
+				a_message.append_string (a_name)
+				a_message.append_string (" already present for element ")
+				a_message.append_string (an_element_name)
+				on_error (a_message)
 			end
 			if an_attribute_table.is_full then
 				an_attribute_table.resize (an_attribute_table.count * 2)
@@ -214,14 +209,14 @@ feature -- Tag
 			-- Start of start tag.
 		local
 			a_name_code: INTEGER
-			an_element_qname, a_prefix: STRING
+			an_element_qname, a_prefix, a_message: STRING
 		do
 			before_dtd := False
 			if a_namespace = Void then
-				Exceptions.raise ("XM_XPATH_CONTENT_EMITTER requires namespace to be resolved")
+				on_error ("XM_XPATH_CONTENT_EMITTER requires namespace to be resolved")
 			end
 			if a_local_part = Void then
-				Exceptions.raise ("XM_XPATH_CONTENT_EMITTER requires a_local_part to be non-void")
+				on_error ("XM_XPATH_CONTENT_EMITTER requires a_local_part to be non-void")
 			end			
 			if an_ns_prefix = Void then
 				a_prefix := ""
@@ -230,8 +225,15 @@ feature -- Tag
 			end
 			
 			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
-				name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-				a_name_code := name_pool.last_name_code
+				if not name_pool.is_name_pool_full (a_namespace, a_local_part) then
+					name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
+					a_name_code := name_pool.last_name_code
+				else
+					a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_namespace)
+					a_message := STRING_.appended_string (a_message, "}")
+					a_message := STRING_.appended_string (a_message, a_local_part)
+					on_error (a_message)
+				end
 			else
 				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
@@ -254,10 +256,10 @@ feature -- Tag
 			-- Start of attribute or namespace declaration
 		local
 			a_name_code, a_namespace_code: INTEGER
-			a_prefix, a_namespace_prefix: STRING
+			a_prefix, a_namespace_prefix, a_message: STRING
 		do
 			if a_namespace = Void then
-				Exceptions.raise ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
+				on_error ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
 			end
 			if an_ns_prefix = Void then
 				a_prefix := ""
@@ -266,8 +268,15 @@ feature -- Tag
 			end
 			
 			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
-				name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-				a_name_code := name_pool.last_name_code
+				if not name_pool.is_name_pool_full (a_namespace, a_local_part) then
+					name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
+					a_name_code := name_pool.last_name_code
+				else
+					a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_namespace)
+					a_message := STRING_.appended_string (a_message, "}")
+					a_message := STRING_.appended_string (a_message, a_local_part)
+					on_error (a_message)
+				end
 			else
 				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end

@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_ROLE
 
+	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
+
 creation
 
 	make
@@ -160,8 +162,10 @@ feature {NONE} -- Implementation
 				operator
 			when Is_token then
 				Result := a_node.is_same_node (another_node)
-			else
-				todo ("identity_comparison", True)
+			when Precedes_token then
+				Result := Global_order_comparer.three_way_comparison (a_node, another_node) < 0
+			when Follows_token then
+				Result := Global_order_comparer.three_way_comparison (a_node, another_node) > 0
 			end
 		end
 

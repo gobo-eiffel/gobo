@@ -15,7 +15,7 @@ deferred class XM_XPATH_DOCUMENT
 inherit
 
 	XM_XPATH_NODE
-
+	
 	XM_XPATH_COMPOSITE_NODE
 
 	XM_XPATH_BASE_URI
@@ -25,6 +25,9 @@ inherit
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
 feature -- Access
+
+	document_number: INTEGER
+			-- Uniquely identifies this document.
 
 	base_uri: STRING is
 			-- Base URI
