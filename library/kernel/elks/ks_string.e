@@ -88,7 +88,7 @@ feature -- Initialization
 			-- of dynamic type other than STRING such as UC_STRING, because
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
-			-- run-time crashes.
+			-- run-time errors or crashes.
 			-- Note2: Incorrect implementation in ISE 5.1 and HACT 4.0.1:
 			-- sharing internal representation.
 			-- Note3: Not declared as creation procedure in HACT 4.0.1.
@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Create empty string.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.make_empty instead.
 		require
 			not_portable: False
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 	make_filled (c: CHARACTER; n: INTEGER) is
 			-- Create string of length `n' filled with `c'.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.make_filled instead.
 		require
 			not_portable: False
@@ -146,8 +146,7 @@ feature -- Access
 
 	item (i: INTEGER): CHARACTER is
 			-- Character at index `i';
-			-- '%U' if the character at index `i'
-			-- cannot fit into a CHARACTER
+			-- '%U' if the character at index `i' cannot fit into a CHARACTER
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: Use `item_code' instead of this routine when `Current'
 			-- can be of dynamic type other than STRING (e.g. UC_STRING) and
@@ -199,7 +198,7 @@ feature -- Access
 			-- where characters which do not fit in a CHARACTER are
 			-- replaced by a '%U'
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2 classic).
 			-- Use KL_STRING_ROUTINES.string instead.
 		require
 			not_portable: False
@@ -245,7 +244,7 @@ feature -- Access
 			-- `other' of dynamic type other than STRING such as UC_STRING, because
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
-			-- run-time crashes.
+			-- run-time errors or crashes.
 		require
 			other_not_void: other /= Void
 				-- Note: ISE Eiffel 5.1 is more constraining than ELKS 2001:
@@ -256,12 +255,12 @@ feature -- Access
 		deferred
 		ensure
 			valid_result: Result = 0 or else (start_index <= Result and Result <= count - other.count + 1)
-				-- Note: ISE Eiffel 5.1 does not support feature `has_substring':
+				-- Note: ISE Eiffel 5.1 and 5.2-dotnet do not support feature `has_substring':
 				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			zero_if_absent: (Result = 0) = not STRING_.has_substring (STRING_.substring (current_string, start_index, count), other)
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
 			at_this_index: Result >= start_index implies STRING_.same_string (other, STRING_.substring (current_string, Result, Result + other.count - 1))
-				-- Note: ISE Eiffel 5.1 does not support feature `has_substring':
+				-- Note: ISE Eiffel 5.1 and 5.2-dotnet do not support feature `has_substring':
 				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			none_before: Result > start_index implies not STRING_.has_substring (STRING_.substring (current_string, start_index, Result + other.count - 2), other)
 		end
@@ -275,7 +274,7 @@ feature -- Access
 			-- type other than STRING such as UC_STRING, because class STRING
 			-- provided by the Eiffel compilers is not necessarily aware of
 			-- the implementation of UC_STRING and this may lead to run-time
-			-- crashes.
+			-- errors or crashes.
 		require
 			other_not_void: other /= Void
 		deferred
@@ -332,8 +331,8 @@ feature -- Status report
 			-- `other' of dynamic type other than STRING such as UC_STRING,
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
-			-- and this may lead to run-time crashes.
-			-- Note2: Not supported in ISE 5.1.
+			-- and this may lead to run-time errors or crashes.
+			-- Note2: Not supported in ISE 5.1 (implemented in ISE 5.2 classic).
 			-- Note3: The postcondition in HACT 4.0.1 is not correct.
 		require
 			not_portable: False
@@ -488,8 +487,8 @@ feature -- Comparison
 			-- `other' of dynamic type other than STRING such as UC_STRING,
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
-			-- and this may lead to run-time crashes.
-			-- Note2: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- and this may lead to run-time errors or crashes.
+			-- Note2: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2 classic).
 		require
 			not_portable: False
 			other_not_void: other /= Void
@@ -546,12 +545,12 @@ feature -- Element change
 	append_string (s: STRING) is
 			-- Append a copy of `s' at end.
 			-- (ELKS 2001 STRING)
-			-- Note: Use KL_STRING_ROUTINES.concat instead of this routine when
-			-- `Current' can be of dynamic type STRING and `s' of dynamic
-			-- type other than STRING such as UC_STRING, because class STRING
-			-- provided by the Eiffel compilers is not necessarily aware of
-			-- the implementation of UC_STRING and this may lead to run-time
-			-- crashes.
+			-- Note: Use KL_STRING_ROUTINES.appended_string instead of
+			-- this routine when `Current' can be of dynamic type STRING and
+			-- `s' of dynamic type other than STRING such as UC_STRING, because
+			-- class STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may lead to
+			-- run-time errors or crashes.
 		require
 			s_not_void: s /= Void
 		deferred
@@ -562,7 +561,7 @@ feature -- Element change
 	fill_with (c: CHARACTER) is
 			-- Replace every character with `c'.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 and 5.2.
 			-- Use KL_STRING_ROUTINES.fill_with instead.
 		require
 			not_portable: False
@@ -576,7 +575,7 @@ feature -- Element change
 			-- Insert `c' at index `i', shifting characters between
 			-- ranks `i' and `count' rightwards.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1.
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2 classic).
 			-- Use KL_STRING_ROUTINES.insert_character instead.
 		require
 			not_portable: False
@@ -594,13 +593,14 @@ feature -- Element change
 			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 			-- (ELKS 2001 STRING)
-			-- Note: Use KL_STRING_ROUTINES.concat instead of this routine when
-			-- `Current' can be of dynamic type STRING and `s' of dynamic
-			-- type other than STRING such as UC_STRING, because class STRING
-			-- provided by the Eiffel compilers is not necessarily aware of
-			-- the implementation of UC_STRING and this may lead to run-time
-			-- crashes.
-			-- Note2: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Use KL_STRING_ROUTINES.appended_string instead of
+			-- this routine when `Current' can be of dynamic type STRING and
+			-- `s' of dynamic type other than STRING such as UC_STRING, because
+			-- class STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may lead to
+			-- run-time errors or crashes.
+			-- Note2: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in 5.2,
+			-- but wrong precondition in dotnet: it says 'i <= count').
 		require
 			not_portable: False
 			string_not_void: s /= Void
@@ -612,26 +612,26 @@ feature -- Element change
 		end
 
 	replace_substring (s: like Current; start_index, end_index: INTEGER) is
-		-- Note: VE 4.0, HACT 4.0.1 and ISE 5.1 have 'like Current' in their
-		-- signature instead of STRING as specified in ELKS 2001:
+		-- Note: VE 4.0, HACT 4.0.1 and ISE 5.1 and 5.2 have 'like Current'
+		-- in their signature instead of STRING as specified in ELKS 2001:
 	-- replace_substring (s: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `s'.
 			-- (ELKS 2001 STRING)
-			-- Note: Use KL_STRING_ROUTINES.concat instead of this routine when
-			-- `Current' can be of dynamic type STRING and `s' of dynamic
-			-- type other than STRING such as UC_STRING, because class STRING
-			-- provided by the Eiffel compilers is not necessarily aware of
-			-- the implementation of UC_STRING and this may lead to run-time
-			-- crashes.
+			-- Note: Use KL_STRING_ROUTINES.appended_string instead of
+			-- this routine when `Current' can be of dynamic type STRING and
+			-- `s' of dynamic type other than STRING such as UC_STRING, because
+			-- class STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may lead to
+			-- run-time errors or crashes.
 		require
 			string_not_void: s /= Void
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
-				-- Note: HACT 4.0.1 and ISE 5.1 do not support empty interval yet:
+				-- Note: HACT 4.0.1 and ISE 5.1 and 5.2 do not support empty interval yet:
 			-- meaningful_interval: start_index <= end_index + 1
 			meaningful_interval: start_index <= end_index
-				-- Note: ISE 5.1 and HACT 4.0.1 do not support replacing
+				-- Note: ISE 5.1 and 5.2 and HACT 4.0.1 do not support replacing
 				-- a substring by itself:
 			not_current: s /= Current
 		deferred
@@ -646,7 +646,7 @@ feature -- Removal
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
-			-- Note: This routine is marked as obsolete in SmallEiffel -0.74b20.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.keep_head instead.
 			-- Note2: Named `head' in HACT 4.0.1 and ISE 5.1.
 		require
@@ -662,9 +662,9 @@ feature -- Removal
 			-- Remove all the characters except for the last `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
-			-- Note: This routine is marked as obsolete in SmallEiffel -0.74b20.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.keep_tail instead.
-			-- Note2: Named `tail' in HACT 4.0.1 and ISE 5.1:
+			-- Note2: Named `tail' in HACT 4.0.1 and ISE 5.1.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
@@ -678,7 +678,7 @@ feature -- Removal
 			-- Remove the first `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.remove_head instead.
 		require
 			not_portable: False
@@ -693,7 +693,7 @@ feature -- Removal
 			-- Remove the last `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.remove_tail instead.
 		require
 			not_portable: False
@@ -720,7 +720,8 @@ feature -- Removal
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2 classic,
+			-- but 'meaningful_interval' says 'start_index <= end_index').
 			-- Use KL_STRING_ROUTINES.remove_substring instead.
 		require
 			not_portable: False
@@ -746,7 +747,7 @@ feature -- Conversion
 	as_lower: like Current is
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ise 5.2).
 			-- Use KL_STRING_ROUTINES.as_lower instead.
 		require
 			not_portable: False
@@ -761,7 +762,7 @@ feature -- Conversion
 	as_upper: like Current is
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
+			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ise 5.2).
 			-- Use KL_STRING_ROUTINES.as_upper instead.
 		require
 			not_portable: False
@@ -778,7 +779,7 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 and ISE 5.1 does not support `as_lower':
+				-- Note: HACT 4.0.1 and ISE 5.1 does not support `as_lower' (implemented in ise 5.2):
 				-- Note2: There is an infinite loop with SE -0.74 because SE
 				-- checks assertions even when execution assertions and `as_lower'
 				-- in descendant classes is implemented by calling `to_lower'
@@ -791,7 +792,7 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 and ISE 5.1 does not support `as_upper':
+				-- Note: HACT 4.0.1 and ISE 5.1 does not support `as_upper' (implemented in ise 5.2):
 				-- Note2: There is an infinite loop with SE -0.74 because SE
 				-- checks assertions even when execution assertions and `as_upper'
 				-- in descendant classes is implemented by calling `to_upper'
