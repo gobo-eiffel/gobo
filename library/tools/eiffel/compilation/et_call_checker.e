@@ -153,7 +153,8 @@ feature {NONE} -- Validity checking
 								error_handler.report_vkcn2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						elseif not has_fatal_error and then a_context /= Void then
--- TODO: like argument
+-- TODO: like argument (the following is just a workaround
+-- which works only in a limited number of cases).
 							if an_actuals /= Void and then an_actuals.count = 1 then
 								a_like ?= a_type
 								if a_like /= Void and then a_like.is_like_argument then
@@ -163,6 +164,9 @@ feature {NONE} -- Validity checking
 										l_target_context.force_first (a_feature.arguments.formal_argument (1).type)
 										expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_target_context, current_feature, current_class)
 										l_target_context.remove_first
+										if expression_checker.has_fatal_error then
+											set_fatal_error
+										end
 									else
 										l_target_context := new_type_context (current_class)
 										l_target_context.copy_type_context (a_context)
@@ -170,6 +174,9 @@ feature {NONE} -- Validity checking
 										a_context.wipe_out
 										a_context.set_root_context (current_class)
 										expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_target_context, current_feature, current_class)
+										if expression_checker.has_fatal_error then
+											set_fatal_error
+										end
 										recycle_type_context (l_target_context)
 									end
 								else
@@ -217,89 +224,109 @@ feature {NONE} -- Validity checking
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
 			if a_seed = 0 then
-					-- We check first whether it is a formal argument or a local
-					-- variable before checking whether it is a feature of the class
-					-- because it gives better execution speed.
-				an_identifier ?= a_name
-				if an_identifier /= Void then
-					an_arguments := current_feature.arguments
-					if an_arguments /= Void then
-						a_seed := an_arguments.index_of (an_identifier)
-						if a_seed /= 0 then
-								-- `a_name' is a fomal argument.
-							if an_actuals /= Void then
-									-- Syntax error: a formal argument cannot have arguments.
-								set_fatal_error
-								error_handler.report_gvuaa0a_error (a_class_impl, an_identifier, current_feature)
-							end
-							if in_expression then
-								an_identifier.set_seed (a_seed)
-								an_identifier.set_argument (True)
-								if a_class_impl = current_class then
-										-- No need to check validity in the
-										-- context of `current_class' again.
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature' first.
+				a_class_impl.process (universe.interface_checker)
+				if a_class_impl.has_interface_error then
+					set_fatal_error
+				else
+					a_feature := a_class_impl.named_feature (a_name)
+					if a_feature /= Void then
+						a_seed := a_feature.first_seed
+						a_name.set_seed (a_seed)
+						if a_class_impl /= current_class then
+								-- We need to get the feature in the
+								-- context of `current_class'.
+							a_feature := Void
+						end
+					else
+							-- Check whether it is a formal argument or a local variable.
+						an_identifier ?= a_name
+						if an_identifier /= Void then
+							an_arguments := current_feature.arguments
+							if an_arguments /= Void then
+								a_seed := an_arguments.index_of (an_identifier)
+								if a_seed /= 0 then
+										-- `a_name' is a fomal argument.
+									if an_actuals /= Void then
+											-- Syntax error: a formal argument cannot have arguments.
+										set_fatal_error
+										error_handler.report_gvuaa0a_error (a_class_impl, an_identifier, current_feature)
+									end
+										-- Do not set the seed of `an_identifier' so that we report
+										-- this error again when checked in a descendant class.
+									an_identifier.set_argument (True)
 									already_checked := True
-									if not has_fatal_error and then a_context /= Void then
-										a_context.force_first (an_arguments.formal_argument (a_seed).type)
+									if in_expression then
+										if not has_fatal_error then
+												-- Make sure that we report the correct error when
+												-- it appears in an invariant.
+											an_identifier.set_seed (a_seed)
+											expression_checker.check_expression_validity (an_identifier, a_context, universe.any_type, current_feature, current_class)
+											an_identifier.set_seed (0)
+											if expression_checker.has_fatal_error then
+												set_fatal_error
+											end
+										end
+										if not has_fatal_error then
+												-- Internal error: the parser should not have
+												-- generated a feature call.
+											set_fatal_error
+											error_handler.report_giaby_error
+										end
+									else
+											-- Syntax error: a formal argument cannot be an instruction.
+										set_fatal_error
+											-- Note: ISE 5.4 reports a VKCN-1 here. However
+											-- `a_name' is not a function nor an attribute name.
+										error_handler.report_gvuia0a_error (a_class_impl, an_identifier, current_feature)
 									end
 								end
-							else
-									-- Syntax error: a formal argument cannot be an instruction.
-								set_fatal_error
-									-- Note: ISE 5.4 reports a VKCN-1 here. However
-									-- `a_name' is not a function nor an attribute name.
-								error_handler.report_gvuia0a_error (a_class_impl, an_identifier, current_feature)
 							end
-						end
-					end
-					if a_seed = 0 then
-						a_locals := current_feature.locals
-						if a_locals /= Void then
-							a_seed := a_locals.index_of (an_identifier)
-							if a_seed /= 0 then
-									-- `a_name' is a local variable.
-								if an_actuals /= Void then
-										-- Syntax error: a local variable cannot have arguments.
-									set_fatal_error
-									error_handler.report_gvual0a_error (a_class_impl, an_identifier, current_feature)
-								end
-								if in_expression then
-									an_identifier.set_seed (a_seed)
-									an_identifier.set_local (True)
-									if a_class_impl = current_class then
-											-- No need to check validity in the
-											-- context of `current_class' again.
+							if a_seed = 0 then
+								a_locals := current_feature.locals
+								if a_locals /= Void then
+									a_seed := a_locals.index_of (an_identifier)
+									if a_seed /= 0 then
+											-- `a_name' is a local variable.
+										if an_actuals /= Void then
+												-- Syntax error: a local variable cannot have arguments.
+											set_fatal_error
+											error_handler.report_gvual0a_error (a_class_impl, an_identifier, current_feature)
+										end
+											-- Do not set the seed of `an_identifier' so that we report
+											-- this error again when checked in a descendant class.
+										an_identifier.set_local (True)
 										already_checked := True
-										if not has_fatal_error and then a_context /= Void then
-											a_context.force_first (resolved_formal_parameters (a_locals.local_variable (a_seed).type))
+										if in_expression then
+											if not has_fatal_error then
+													-- Make sure that we report the correct error when
+													-- it appears in a precondition or invariant.
+												an_identifier.set_seed (a_seed)
+												expression_checker.check_expression_validity (an_identifier, a_context, universe.any_type, current_feature, current_class)
+												an_identifier.set_seed (0)
+												if expression_checker.has_fatal_error then
+													set_fatal_error
+												end
+											end
+											if not has_fatal_error then
+													-- Internal error: the parser should not have
+													-- generated a feature call.
+												set_fatal_error
+												error_handler.report_giabz_error
+											end
+										else
+												-- Syntax error: a local variable cannot be an instruction.
+											set_fatal_error
+												-- Note: ISE 5.4 reports a VKCN-1 here. However
+												-- `a_name' is not a function nor an attribute name.
+											error_handler.report_gvuil0a_error (a_class_impl, an_identifier, current_feature)
 										end
 									end
-								else
-										-- Syntax error: a local variable cannot be an instruction.
-									set_fatal_error
-										-- Note: ISE 5.4 reports a VKCN-1 here. However
-										-- `a_name' is not a function nor an attribute name.
-									error_handler.report_gvuil0a_error (a_class_impl, an_identifier, current_feature)
 								end
 							end
 						end
-					end
-				end
-				if a_seed = 0 then
-					a_class_impl.process (universe.interface_checker)
-					if a_class_impl.has_interface_error then
-						set_fatal_error
-					else
-						a_feature := a_class_impl.named_feature (a_name)
-						if a_feature /= Void then
-							a_seed := a_feature.first_seed
-							a_name.set_seed (a_seed)
-							if a_class_impl /= current_class then
-									-- We need to get the feature in the
-									-- context of `current_class'.
-								a_feature := Void
-							end
-						else
+						if a_seed = 0 then
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
 								-- but it is in fact a VUEX-1 (ETL2 p.368).
@@ -309,97 +336,62 @@ feature {NONE} -- Validity checking
 				end
 			end
 			if not has_fatal_error and a_seed /= 0 and not already_checked then
-				if in_expression and then a_name.is_argument then
-					an_arguments := current_feature.arguments
-					if an_arguments = Void then
-							-- Internal error.
+				if a_feature = Void then
+					current_class.process (universe.interface_checker)
+					if current_class.has_interface_error then
 						set_fatal_error
-						error_handler.report_giaal_error
-					elseif a_seed < 1 or a_seed > an_arguments.count then
-							-- Internal error.
-						set_fatal_error
-						error_handler.report_giaam_error
-					elseif an_actuals /= Void then
-							-- Syntax error: a formal argument cannot have arguments.
-						set_fatal_error
-						an_identifier := a_locals.local_variable (a_seed).name
-						error_handler.report_gvuaa0a_error (a_class_impl, an_identifier, current_feature)
-					elseif a_context /= Void then
-						a_context.force_first (an_arguments.formal_argument (a_seed).type)
-					end
-				elseif in_expression and then a_name.is_local then
-					a_locals := current_feature.locals
-					if a_locals = Void then
-							-- Internal error.
-						set_fatal_error
-						error_handler.report_giaan_error
-					elseif a_seed < 1 or a_seed > a_locals.count then
-							-- Internal error.
-						set_fatal_error
-						error_handler.report_giaao_error
-					elseif an_actuals /= Void then
-							-- Syntax error: a local variable cannot have arguments.
-						set_fatal_error
-						an_identifier := a_locals.local_variable (a_seed).name
-						error_handler.report_gvual0a_error (a_class_impl, an_identifier, current_feature)
-					elseif a_context /= Void then
-						a_context.force_first (resolved_formal_parameters (a_locals.local_variable (a_seed).type))
-					end
-				else
-					if a_feature = Void then
-						current_class.process (universe.interface_checker)
-						if current_class.has_interface_error then
+					else
+						a_feature := current_class.seeded_feature (a_seed)
+						if a_feature = Void then
+								-- Report internal error: if we got a seed, the
+								-- `a_feature' should not be void.
 							set_fatal_error
-						else
-							a_feature := current_class.seeded_feature (a_seed)
-							if a_feature = Void then
-									-- Report internal error: if we got a seed, the
-									-- `a_feature' should not be void.
-								set_fatal_error
-								error_handler.report_giabe_error
-							end
+							error_handler.report_giabe_error
 						end
 					end
-					if a_feature /= Void then
-						l_formal_context := new_type_context (current_class)
-						check_arguments_validity (an_actuals, a_name, a_feature, l_formal_context, Void)
-						recycle_type_context (l_formal_context)
-						a_type := a_feature.type
-						if in_expression then
-							if a_type = Void then
-									-- In a call expression, `a_feature' has to be a query.
-								set_fatal_error
-								if current_class = a_class_impl then
-									error_handler.report_vkcn2c_error (current_class, a_name, a_feature)
-								else
-									error_handler.report_vkcn2d_error (current_class, a_class_impl, a_name, a_feature)
-								end
-							elseif not has_fatal_error and then a_context /= Void then
--- TODO: like argument
-								if an_actuals /= Void and then an_actuals.count = 1 then
-									a_like ?= a_type
-									if a_like /= Void and then a_like.is_like_argument then
-											-- Keep the `type' and `context' found for the argument.
-										l_formal_context := new_type_context (current_class)
-										l_formal_context.force_first (a_feature.arguments.formal_argument (1).type)
-										expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_formal_context, current_feature, current_class)
-										recycle_type_context (l_formal_context)
-									else
-										a_context.force_first (a_type)
+				end
+				if a_feature /= Void then
+					l_formal_context := new_type_context (current_class)
+					check_arguments_validity (an_actuals, a_name, a_feature, l_formal_context, Void)
+					recycle_type_context (l_formal_context)
+					a_type := a_feature.type
+					if in_expression then
+						if a_type = Void then
+								-- In a call expression, `a_feature' has to be a query.
+							set_fatal_error
+							if current_class = a_class_impl then
+								error_handler.report_vkcn2c_error (current_class, a_name, a_feature)
+							else
+								error_handler.report_vkcn2d_error (current_class, a_class_impl, a_name, a_feature)
+							end
+						elseif not has_fatal_error and then a_context /= Void then
+-- TODO: like argument (the following is just a workaround
+-- which works only in a limited number of cases).
+							if an_actuals /= Void and then an_actuals.count = 1 then
+								a_like ?= a_type
+								if a_like /= Void and then a_like.is_like_argument then
+									l_formal_context := new_type_context (current_class)
+									l_formal_context.force_first (a_feature.arguments.formal_argument (1).type)
+									expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_formal_context, current_feature, current_class)
+									if expression_checker.has_fatal_error then
+										set_fatal_error
 									end
+									recycle_type_context (l_formal_context)
 								else
 									a_context.force_first (a_type)
 								end
+							else
+								a_context.force_first (a_type)
 							end
-						else
-							if a_type /= Void then
-									-- In a call instruction, `a_feature' has to be a procedure.
-								set_fatal_error
-								if current_class = a_class_impl then
-									error_handler.report_vkcn1c_error (current_class, a_name, a_feature)
-								else
-									error_handler.report_vkcn1d_error (current_class, a_class_impl, a_name, a_feature)
-								end
+						end
+					else
+						if a_type /= Void then
+								-- In a call instruction, `a_feature' has to be a procedure.
+							set_fatal_error
+							if current_class = a_class_impl then
+								error_handler.report_vkcn1c_error (current_class, a_name, a_feature)
+							else
+								error_handler.report_vkcn1d_error (current_class, a_class_impl, a_name, a_feature)
 							end
 						end
 					end
@@ -445,7 +437,8 @@ feature {NONE} -- Validity checking
 						error_handler.report_giabg_error
 					else
 						if current_class = a_class_impl then
-							l_context := new_type_context (a_parent_type)
+							l_context := new_type_context (current_class)
+							l_context.force_first (a_parent_type)
 						else
 								-- Resolve generic parameters in the
 								-- context of `current_class'.
@@ -461,17 +454,20 @@ feature {NONE} -- Validity checking
 										set_fatal_error
 										error_handler.report_giabx_error
 									else
-										l_context := new_type_context (an_ancestor)
+										l_context := new_type_context (current_class)
+										l_context.force_first (an_ancestor)
 									end
 								end
 							else
-								l_context := new_type_context (a_parent_type)
+								l_context := new_type_context (current_class)
+								l_context.force_first (a_parent_type)
 							end
 						end
 						if l_context /= Void then
 							an_actuals := a_precursor.arguments
 							check_arguments_validity (an_actuals, a_precursor_keyword, a_feature, l_context, a_class)
 							if in_expression and then not has_fatal_error and then a_context /= Void then
+-- TODO: like argument and get the type as it was in the parent.
 								a_context.force_first (current_feature.type)
 							end
 							recycle_type_context (l_context)
@@ -591,6 +587,7 @@ feature {NONE} -- Validity checking
 									error_handler.report_vkcn2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 								end
 							elseif not has_fatal_error and then a_context /= Void then
+-- TODO: like argument.
 								a_context.force_first (a_type)
 							end
 						else
@@ -704,8 +701,7 @@ feature {NONE} -- Validity checking
 					else
 						a_convert_expression ?= an_actual
 						if a_convert_expression /= Void then
--- TODO
--- Already converted in ancestor. Need to check that this conversion is still
+-- TODO: Already converted in ancestor. Need to check that this conversion is still
 -- valid in current class.
 						elseif not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
 							a_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
@@ -778,7 +774,7 @@ feature {NONE} -- Validity checking
 				if a_feature.is_cat then
 					if not a_context.is_cat_type (universe) then
 						set_fatal_error
--- TODO:
+-- TODO: better error message reporting.
 						error_handler.report_error_message ("class " + current_class.name.name + " (" +
 							a_name.position.line.out + "," + a_name.position.column.out +
 							"): cat feature `" + a_name.name + "' applied to target of non-cat type '" +
@@ -795,7 +791,7 @@ feature {NONE} -- Validity checking
 								a_formal := a_formals.formal_argument (j)
 								if a_formal.type.has_formal_type (i, a_context, universe) then
 									set_fatal_error
--- TODO:
+-- TODO: better error message reporting.
 									error_handler.report_error_message ("class " + current_class.name.name + " (" +
 										a_name.position.line.out + "," + a_name.position.column.out +
 										"): the type of the formal argument #" + j.out + " of feature `" + a_name.name +
