@@ -1141,31 +1141,27 @@ feature {ET_AST_NODE} -- Processing
 			a_feature_clauses := a_class.feature_clauses
 			if a_feature_clauses /= Void then
 				a_features := a_class.features
-				if a_features /= Void then
-					j := 1
-					nb2 := a_features.count
-					nb := a_feature_clauses.count
-					from i := 1 until i > nb loop
-						a_feature_clause := a_feature_clauses.item (i)
-						a_feature_clause.process (Current)
+				j := 1
+				nb2 := a_features.count
+				nb := a_feature_clauses.count
+				from i := 1 until i > nb loop
+					a_feature_clause := a_feature_clauses.item (i)
+					a_feature_clause.process (Current)
+					from
+					until
+						j > nb2 or else
+						a_features.item (j).feature_clause /= a_feature_clause
+					loop
+						a_features.item (j).process (Current)
 						from
 						until
-							j > nb2 or else
-							a_features.item (j).feature_clause /= a_feature_clause
+							a_features.item (j).synonym = Void
 						loop
-							a_features.item (j).process (Current)
-							from
-							until
-								a_features.item (j).synonym = Void
-							loop
-								j := j + 1
-							end
 							j := j + 1
 						end
-						i := i + 1
+						j := j + 1
 					end
-				else
-					a_feature_clauses.process (Current)
+					i := i + 1
 				end
 			end
 		end
