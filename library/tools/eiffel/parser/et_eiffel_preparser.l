@@ -97,8 +97,56 @@ creation
 [cC][lL][aA][sS][sS]	{
 				class_keyword_found := True
 			}
+[aA][sS][sS][iI][gG][nN]	{
+				if use_assign_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 6
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
+[aA][tT][tT][rR][iI][bB][uU][tT][eE]	{
+				if use_attribute_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 6
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
+[cC][oO][nN][vV][eE][rR][tT]	{
+				if use_convert_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 6
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
 [cC][rR][eE][aA][tT][eE]	{
 				if use_create_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 6
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
+[rR][eE][cC][aA][sS][tT]	{
+				if use_recast_keyword then
 					-- Do nothing.
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
