@@ -2,6 +2,12 @@ Version 3.2 - ?
 
 	geant:
 
+	* Added new task <available>.
+
+	* Added subelement <directoryset> to task <delete>.
+
+	* Added attributes 'class' and 'feature' to task task <getest>.
+
 	* The task <hact> now takes advantage of Halstenbach incremental
 	  compiler.
 
