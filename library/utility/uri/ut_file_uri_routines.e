@@ -31,7 +31,7 @@ feature -- Filename
 			a_uri_not_void: a_uri /= Void
 		do
 			Result := file_system.pathname_to_string (uri_to_pathname (a_uri))
-			Result := file_system.pathname (Result, uri_component_to_pathname (a_uri.path_items.last))
+			Result := file_system.pathname (Result, uri_component_to_pathname (a_uri.path_base_item))
 			debug ("file_uri")
 				std.output.put_string ("uri_to_filename: ")
 				std.output.put_string (a_uri.full_reference)
@@ -52,7 +52,7 @@ feature -- Filename
 			a_string_not_void: a_string /= Void
 		do
 			Result := pathname_to_uri (file_system.string_to_pathname (file_system.dirname (a_string)))
-			Result.set_path_last (pathname_to_uri_component (file_system.basename (a_string)))
+			Result.set_path_base (pathname_to_uri_component (file_system.basename (a_string)))
 			debug ("file_uri")
 				std.output.put_string ("filename_to_uri: ")
 				std.output.put_string (a_string)
@@ -92,11 +92,9 @@ feature -- Pathname
 				end
 					-- Remaining items.
 				from a_cursor.forth until a_cursor.after loop
-					if not a_cursor.is_last then
-							-- Skip last element (see filesystem.basename vs. dirname).
-						a_segment := uri_component_to_pathname (a_cursor.item)
-						Result.append_name (a_segment)
-					end
+					a_segment := uri_component_to_pathname (a_cursor.item)
+					Result.append_name (a_segment)
+					
 					a_cursor.forth
 				end
 			end

@@ -118,9 +118,7 @@ feature {NONE} -- Implementation
 			a_base_not_void: a_base /= Void
 			a_base_is_absolute: a_base.is_absolute
 		do
-				-- See steps in :
-				--  RFC 2396, section 5.2
-				--  RFC 2396bis, section 5.2.2
+				-- See RFC 3986, section 5.2.2
 			if is_absolute then
 				-- Keep scheme.
 				-- Keep authority.
@@ -136,9 +134,10 @@ feature {NONE} -- Implementation
 					-- Keep path.
 					-- Keep query.
 				else
-					if not has_absolute_path and path_items.is_empty then
+					if not has_path then
 						has_absolute_path := a_base.has_absolute_path
 						create path_items.make_from_linear (a_base.path_items)
+						path_base_item := a_base.path_base_item
 						if has_query then
 							-- Keep query.
 						else
@@ -178,8 +177,11 @@ feature -- Status report
 			a_cursor: DS_LINEAR_CURSOR [UT_URI_STRING]
 		do
 			Result := True
+			if path_has_base then
+				Result := not is_dot_dot (path_base_item) and not is_dot (path_base_item)
+			end
 			if path_items.count > 0 then
-				Result := not is_dot (path_items.first) and not is_dot (path_items.last)
+				Result := not is_dot (path_items.first)
 				if Result then
 					a_cursor := path_items.new_cursor
 					from a_cursor.start until a_cursor.after loop
@@ -192,6 +194,25 @@ feature -- Status report
 					end
 				end
 			end
+		end
+
+	has_path: BOOLEAN is
+			-- Is an explicit path defined?
+		do
+			Result := has_absolute_path or path_has_base or not path_items.is_empty
+		ensure
+			definition: Result = (has_absolute_path or path_has_base or not path_items.is_empty)
+			consistent_with_path: Result = not path.is_empty
+		end
+
+	path_has_base: BOOLEAN is
+			-- Does the path contain a base segment, that is:
+			-- False for s://host/a/b/
+			-- True for s://host/a/b
+		do
+			Result := path_base_item /= Void
+		ensure
+			no_base: has_path implies (Result = (path.item (path.count) /= '/'))
 		end
 
 	is_relative: BOOLEAN is
@@ -311,7 +332,6 @@ feature -- Components
 			-- Path reconstructed from items
 			-- (Item names are kept URL-encoded.)
 		local
-			a_first_done: BOOLEAN
 			i, nb: INTEGER
 		do
 			create Result.make_empty
@@ -320,18 +340,34 @@ feature -- Components
 			end
 			nb := path_items.count
 			from i := 1 until i > nb loop
-				if a_first_done then
-					Result.append_character ('/')
-				end
-				a_first_done := True
 				Result := STRING_.appended_string (Result, path_items.item (i).encoded)
+				Result.append_character ('/')
 				i := i + 1
+			end
+			if path_has_base then
+				Result := STRING_.appended_string (Result, path_base_item.encoded)
 			end
 		ensure
 			path_not_void: Result /= Void
-			separator_numbers: Result.occurrences ('/') >= path_items.count - 1
+			not_empty: has_path implies not Result.is_empty
+			separator_numbers: Result.occurrences ('/') >= path_items.count
+			path_base: path_has_base implies (not Result.is_empty and then Result.item (Result.count) /= '/')
 			not_next_query_separator: not Result.has ('?')
 			not_next_fragment_separator: not Result.has ('#')
+		end
+
+	path_base: STRING is
+			-- Base name of path, that is:
+			-- path_has_base = False for "s://host/a/b/"
+			-- path_base = "b" for "s://host/a/b"
+		require
+			path_has_base: path_has_base
+		do
+			Result := path_base_item.encoded
+		ensure
+			result_not_void: Result /= Void
+			not_empty: not Result.is_empty
+			no_separator: not Result.has ('/')
 		end
 
 	query: STRING is
@@ -363,6 +399,10 @@ feature -- Components
 
 	path_items: DS_ARRAYED_LIST [UT_URI_STRING]
 			-- Path in `scheme_specific_part'
+
+	path_base_item: UT_URI_STRING
+			-- Last segment, if any, of path.
+			-- (See `path_has_base'.)
 
 	query_item: UT_URI_STRING
 			-- Query string if present
@@ -574,18 +614,15 @@ feature -- Setting
 			path_items_set: path_items = some_items
 		end
 
-	set_path_last (an_item: UT_URI_STRING) is
-			-- Set last component of path.
+	set_path_base (an_item: UT_URI_STRING) is
+			-- Set path base (last segment, see `path_has_base').
 		require
 			an_item_not_void: an_item /= Void
-			path_items_has_last: path_items.count > 0
 		do
-			path_items.finish
-			path_items.replace_at (an_item)
+			path_base_item := an_item
 			full_reference := new_full_reference
 		ensure
-			same_count: path_items.count = old path_items.count
-			last_set: path_items.last = an_item
+			path_base_set: path_base_item = an_item
 		end
 
 	set_path_from_uri (a_uri: UT_URI) is
@@ -595,6 +632,7 @@ feature -- Setting
 		do
 			has_absolute_path := a_uri.has_absolute_path
 			create path_items.make_from_linear (a_uri.path_items)
+			path_base_item := a_uri.path_base_item
 			full_reference := new_full_reference
 		ensure
 			path_set: STRING_.same_string (path, a_uri.path)
@@ -748,11 +786,11 @@ feature {NONE} -- URI parsing
 				when '?' then
 					inspect state
 					when State_scheme, State_path then
-						stop_path_item (start, i)
+						stop_path_base (start, i)
 					when State_authority_prefix then
 							-- ? /?
 						has_absolute_path := start < i
-						stop_path_item (i, i)
+						stop_path_base (i, i)
 					when State_authority then
 						stop_authority (start, i)
 					when State_query, State_fragment then
@@ -762,10 +800,10 @@ feature {NONE} -- URI parsing
 				when '#' then
 					inspect state
 					when State_scheme, State_path then
-						stop_path_item (start, i)
+						stop_path_base (start, i)
 					when State_authority_prefix then
 						has_absolute_path := start < i
-						stop_path_item (i, i)
+						stop_path_base (i, i)
 					when State_authority then
 						stop_authority (start, i)
 					when State_query then
@@ -790,7 +828,7 @@ feature {NONE} -- URI parsing
 				-- Handle last part of string.
 			inspect state
 			when State_scheme, State_authority_prefix, State_path then
-				stop_path_item (start, i)
+				stop_path_base (start, i)
 			when State_authority then
 				if start < i then
 					stop_authority (start, i)
@@ -848,6 +886,18 @@ feature {NONE} -- URI parsing
 			path_item_added: path_items.count = old (path_items.count) + 1
 		end
 
+	stop_path_base (start, stop: INTEGER) is
+			-- Start is inclusive, stop is exclusive.
+		require
+			valid_start: full_reference.valid_index (start) or start = full_reference.count + 1
+			valid_stop: stop > start implies full_reference.valid_index (stop - 1)
+			full_reference_contains_path_item: start <= stop
+		do
+			if start < stop then
+				create path_base_item.make_encoded (full_reference.substring (start, stop - 1))
+			end
+		end
+
 	stop_query (start, stop: INTEGER) is
 			-- Start is inclusive, stop is exclusive.
 		require
@@ -894,47 +944,38 @@ feature {NONE} -- Resolve a relative-path reference
 			has_absolute_path := True
 				-- Path items.
 			create some_items.make_from_linear (a_base.path_items)
-			if not (path_items.count = 1 and then is_empty (path_items.first)) then
-					-- All but the last segment of the base URI's path component is
-					-- copied to the buffer. In other words, any characters after the
-					-- last (right-most) slash character, if any, are excluded.
-				if some_items.count > 0 then
-					some_items.remove_last
-				end
-				nb := path_items.count
-				from i := 1 until i > nb loop
-					segment := path_items.item (i)
-					if is_dot (segment) then
-						-- Do nothing.
-					elseif is_dot_dot (segment) then
-							-- Back one level.
-						if not some_items.is_empty then
-							some_items.remove_last
-						end
-					else
-							-- Add segment.
-						some_items.force_last (segment)
+				
+				-- Handle path base if relative
+			if path_has_base and then (is_dot (path_base_item) or is_dot_dot (path_base_item)) then
+				path_items.force_last (path_base_item)
+				path_base_item := Void
+			end
+				-- Last segment is part of path if relative
+			nb := path_items.count
+			from i := 1 until i > nb loop
+				segment := path_items.item (i)
+				if is_dot (segment) then
+					-- Do nothing.
+				elseif is_dot_dot (segment) then
+						-- Back one level.
+					if not some_items.is_empty then
+						some_items.remove_last
 					end
+				else
+						-- Add segment.
+					some_items.force_last (segment)
+				end
+				i := i + 1
+			end
+				-- Remove empty segments.
+			nb := some_items.count
+			from i := 1 until i > nb loop
+				segment := some_items.item (i)
+				if is_empty (segment) then
+					some_items.remove (i)
+					nb := nb - 1
+				else
 					i := i + 1
-				end
-					-- Make sure we have empty segment (/) at the end if needed.
-				if path_items.count > 0 then
-					segment := path_items.last
-					if is_empty (segment) or is_dot (segment) or is_dot_dot (segment) then
-						create segment.make_empty
-						some_items.force_last (segment)
-					end
-				end
-					-- Remove empty segments except the last one.
-				nb := some_items.count
-				from i := 1 until i > nb loop
-					segment := some_items.item (i)
-					if is_empty (segment) and i < nb then
-						some_items.remove (i)
-						nb := nb - 1
-					else
-						i := i + 1
-					end
 				end
 			end
 			path_items := some_items
@@ -990,6 +1031,8 @@ invariant
 	full_reference_is_valid: not Url_encoding.has_excluded_characters (full_reference)
 	path_items_not_void: path_items /= Void
 	no_void_path_item: not path_items.has (Void)
+	--no_empty_path_item: not path_items.has ("")
+
 		-- Contraints on parsed `authority'.
 	user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0
 	host_occurs_in_authority: has_parsed_authority implies STRING_.substring_index (authority, host_port.host, 1) /= 0
