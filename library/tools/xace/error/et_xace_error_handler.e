@@ -113,15 +113,6 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_no_parser_available_error is
-			-- Report that there is no XML parser available.
-		local
-			an_error: ET_XACE_NO_PARSER_AVAILABLE_ERROR
-		do
-			!! an_error.make
-			report_error (an_error)
-		end
-
 	report_not_xace_file_error (a_filename: STRING) is
 			-- Report that file `a_filename' does not contain
 			-- an Xace document.
