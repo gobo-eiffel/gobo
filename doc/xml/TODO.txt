@@ -15,9 +15,11 @@ EIFFEL:
 
 - xml declaration for entities event and parsing (rm special scanner?)
 - Check that stand alone handling makes some sense
+- enhancement: make BOM-detection/ XML declaration available as a stand alone class
 - enhancement: strings mode to default to STRING-only latin1 using Max_char_code
 - enhancement: Do CRLF normalisation before parser instead of downstream mess?
 - enhancement: review XM_EIFFEL_PARSER_NAME
+- enhancement: DTD/pe-entity error message from resolver.last_error
 
 GENERAL:
 
