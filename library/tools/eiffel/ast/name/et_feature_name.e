@@ -55,6 +55,18 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_local: BOOLEAN is
+			-- Is current feature name actually a local variable name?
+		do
+			-- Result := False
+		end
+
+	is_argument: BOOLEAN is
+			-- Is current feature name actually a formal argument name?
+		do
+			-- Result := False
+		end
+
 	is_infix: BOOLEAN is
 			-- Is current feature name of the form 'infix ...'?
 		do

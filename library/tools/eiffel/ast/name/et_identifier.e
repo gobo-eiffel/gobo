@@ -16,6 +16,7 @@ inherit
 
 	ET_FEATURE_NAME
 		redefine
+			is_local, is_argument,
 			is_identifier, is_equal
 		end
 
@@ -103,6 +104,30 @@ feature -- Status report
 
 	is_identifier: BOOLEAN is True
 			-- Is current feature name an identifier?
+
+	is_local: BOOLEAN
+			-- Is current identifier a local variable name?
+
+	is_argument: BOOLEAN
+			-- Is current identifier a formal argument name?
+
+feature -- Status setting
+
+	set_local (b: BOOLEAN) is
+			-- Set `is_local' to `b'.
+		do
+			is_local := b
+		ensure
+			local_set: is_local = b
+		end
+
+	set_argument (b: BOOLEAN) is
+			-- Set `is_argument' to `b'.
+		do
+			is_argument := b
+		ensure
+			argument_set: is_argument = b
+		end
 
 feature -- Comparison
 
