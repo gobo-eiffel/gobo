@@ -20,6 +20,8 @@ inherit
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make
@@ -36,7 +38,7 @@ feature {NONE} -- Initialization
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			body := a_body
-			a_computed_expression ?= body
+			a_computed_expression ?= ANY_.to_any (body)
 			if a_computed_expression /= Void then
 				a_computed_expression.set_parent (Current)
 			end
