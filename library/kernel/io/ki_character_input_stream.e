@@ -38,19 +38,6 @@ feature -- Input
 			character_read: not end_of_input implies last_string.count > 0
 		end
 
-	read_line is
-			-- Read characters from input stream until '%N', '%R%N'
-			-- or end of file is reached. Make the characters that
-			-- have been read available in `last_string' and discard
-			-- the characters '%N' or '%R%N' from the input stream.
-		require
-			is_readable: is_readable
-			not_end_of_input: not end_of_input
-		deferred
-		ensure
-			last_string_not_void: last_string /= Void
-		end
-
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos', with
 			-- at most `nb' characters read from input stream.
