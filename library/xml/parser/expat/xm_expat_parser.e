@@ -495,7 +495,9 @@ feature {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
 				create Result.make_any
 			elseif type = XML_CTYPE_MIXED then
 				create Result.make_mixed
-				create_children (Result, model_ptr)
+				if exml_XML_cp_numchildren (model_ptr) > 0 then
+					create_children (Result, model_ptr)
+				end
 			elseif type = XML_CTYPE_NAME then
 				create Result.make_name (new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_cp_name (model_ptr)))
 			elseif type = XML_CTYPE_CHOICE then
