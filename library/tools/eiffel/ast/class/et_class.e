@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := an_id
 			ancestors := tokens.empty_ancestors
+			declared_feature_count := 0
 			features := tokens.empty_features
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
@@ -612,6 +613,19 @@ feature -- Creation
 			creators_set: creators = a_creators
 		end
 
+feature -- Conversion
+
+	convert_features: ET_CONVERT_FEATURE_LIST
+			-- Conversion clauses
+
+	set_convert_features (a_convert_features: like convert_features) is
+			-- Set `convert_features' to `a_convert_features'.
+		do
+			convert_features := a_convert_features
+		ensure
+			convert_features_set: convert_features = a_convert_features
+		end
+
 feature -- Feature clauses
 
 	feature_clauses: ET_FEATURE_CLAUSE_LIST
@@ -650,15 +664,24 @@ feature -- Features
 	features: ET_FEATURE_LIST
 			-- Features
 
-	set_features (a_features: like features) is
-			-- Set `features' to `a_features'.
+	declared_feature_count: INTEGER
+			-- Number of features declared in current class
+			-- (i.e. appearing in one of the feature clauses)
+
+	set_features (a_features: like features; a_count: INTEGER) is
+			-- Set `features' to `a_features' and
+			-- `declared_feature_count' to `a_count'.
 		require
 			a_features_not_void: a_features /= Void
 			-- a_features_registered: forall f in a_features, f.is_registered
+			a_count_large_enough: a_count >= 0
+			a_count_small_enough: a_count <= a_features.count
 		do
 			features := a_features
+			declared_feature_count := a_count
 		ensure
 			features_set: features = a_features
+			declared_feature_count_set: declared_feature_count = a_count
 		end
 
 feature -- Feature flattening status
@@ -831,6 +854,22 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
+	rewind_to_parsing is
+			-- Rewind processing to just after parsing.
+		do
+			ancestors_built := False
+			has_ancestors_error := False
+			ancestors := tokens.empty_ancestors
+			features_flattened := False
+			has_flattening_error := False
+			qualified_signatures_resolved := False
+			has_qualified_signatures_error := False
+			interface_checked := False
+			has_interface_error := False
+			implementation_checked := False
+			has_implementation_error := False
+		end
+
 feature {NONE} -- Constants
 
 	initial_descendants_capacity: INTEGER is
@@ -847,6 +886,8 @@ invariant
 	ancestors_not_void: ancestors /= Void
 	features_not_void: features /= Void
 	-- features_registered: forall f in features, f.is_registered
+	declared_feature_count_large_enough: declared_feature_count >= 0
+	declared_feature_count_small_enough: declared_feature_count <= features.count
 	class_keyword_not_void: class_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type
