@@ -809,11 +809,6 @@ feature {NONE} -- Encoding callback
 
 feature {NONE} -- Orphan expat events
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
-			-- XML declaration.
-		do
-		end
-
 	on_not_standalone: BOOLEAN is
 			-- TODO: routine with side-effect!
 		do

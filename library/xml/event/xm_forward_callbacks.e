@@ -52,6 +52,12 @@ feature {NONE} -- Document
 			callbacks.on_finish
 		end
 
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+			-- XML declaration.
+		do
+			callbacks.on_xml_declaration (a_version, an_encoding, a_standalone)
+		end
+
 feature {NONE} -- Errors
 
 	on_error (a_message: STRING) is

@@ -23,7 +23,7 @@ inherit
 
 creation
 
-	make_null, 
+	make_null,
 	set_next
 
 feature {NONE} -- Initialization
@@ -60,6 +60,12 @@ feature -- Document
 			-- Default: forward event to 'next'.
 		do
 			next.on_finish
+		end
+
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+			-- XML declaration.
+		do
+			next.on_xml_declaration (a_version, an_encoding, a_standalone)
 		end
 
 feature -- Errors

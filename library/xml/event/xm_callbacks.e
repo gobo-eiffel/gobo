@@ -24,6 +24,13 @@ feature -- Document
 		deferred
 		end
 
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+			-- XML declaration.
+		require
+			version_not_empty: a_version /= Void and then not a_version.is_empty
+		deferred
+		end
+
 feature -- Errors
 
 	on_error (a_message: STRING) is

@@ -39,6 +39,11 @@ feature -- Document
 		do
 		end
 
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
+			-- XML declaration.
+		do
+		end
+
 feature -- Errors
 
 	on_error (a_message: STRING) is
