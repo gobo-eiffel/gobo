@@ -17,7 +17,7 @@ inherit
 
 	LINKABLE [G]
 		undefine
-			put_right
+			put_right, make
 		select
 			replace
 		end
