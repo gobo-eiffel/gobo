@@ -35,7 +35,7 @@ feature -- Parsing
 					xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 					if not xml_validator.has_error then
 						xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-						last_system := new_system (xml_parser.document.root_element)
+						last_system := new_system (xml_parser.document.root_element, xml_parser.last_position_table)
 					end
 				else
 					error_handler.report_parser_error (xml_parser.last_error_extended_description)

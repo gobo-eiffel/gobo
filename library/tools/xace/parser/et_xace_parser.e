@@ -128,13 +128,13 @@ feature -- Parsing
 						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_system := new_system (xml_parser.document.root_element)
+							a_system := new_system (xml_parser.document.root_element, xml_parser.last_position_table)
 						end
 					elseif a_root_name.is_equal (uc_cluster) then
 						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_cluster := new_cluster (xml_parser.document.root_element)
+							a_cluster := new_cluster (xml_parser.document.root_element, xml_parser.last_position_table)
 						end
 					else
 						error_handler.report_not_xace_file_error (a_file.name)
