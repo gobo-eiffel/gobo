@@ -17,7 +17,7 @@ inherit
 	ANY -- Export features of ANY.
 
 	KL_IMPORTED_FIXED_ARRAY_ROUTINES
-	KL_IMPORTED_NATIVE_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 
 creation
 
@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 		do
 			count := 0
 			capacity := nb
-			byte_code := NATIVE_INTEGER_ARRAY_.make (nb)
+			byte_code := SPECIAL_INTEGER_.make (nb)
 			character_sets_count := 0
 			character_sets_capacity := nb
-			character_sets := NATIVE_BOOLEAN_ARRAY_.make (nb)
+			character_sets := SPECIAL_BOOLEAN_.make (nb)
 		ensure
 			is_empty: count = 0
 			capacity_set: capacity = nb
@@ -321,7 +321,7 @@ feature {NONE} -- Resizing
 		do
 			if capacity < nb then
 				new_capacity := 2 * nb
-				byte_code := NATIVE_INTEGER_ARRAY_.resize (byte_code, capacity, new_capacity)
+				byte_code := SPECIAL_INTEGER_.resize (byte_code, new_capacity)
 				capacity := new_capacity
 			end
 		ensure
@@ -335,7 +335,7 @@ feature {NONE} -- Resizing
 		do
 			if character_sets_capacity < nb then
 				new_capacity := 2 * nb
-				character_sets := NATIVE_BOOLEAN_ARRAY_.resize (character_sets, character_sets_capacity, new_capacity)
+				character_sets := SPECIAL_BOOLEAN_.resize (character_sets, new_capacity)
 				character_sets_capacity := new_capacity
 			end
 		ensure
@@ -344,10 +344,10 @@ feature {NONE} -- Resizing
 
 feature {NONE} -- Implementation
 
-	byte_code: like NATIVE_INTEGER_ARRAY_TYPE
+	byte_code: SPECIAL [INTEGER]
 			-- Byte codes
 
-	character_sets: like NATIVE_BOOLEAN_ARRAY_TYPE
+	character_sets: SPECIAL [BOOLEAN]
 			-- Character sets
 
 	character_sets_count: INTEGER

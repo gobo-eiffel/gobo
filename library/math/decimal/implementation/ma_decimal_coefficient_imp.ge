@@ -18,17 +18,6 @@ inherit
 			out, three_way_comparison
 		end
 
-#ifdef ISE || SE
-	KL_IMPORTED_NATIVE_ARRAY_TYPE [INTEGER_8]
-#else
-	KL_IMPORTED_NATIVE_ARRAY_TYPE [CHARACTER]
-#endif
-		export
-			{NONE} all
-		undefine
-			out,copy,is_equal
-		end
-
 	KL_INTEGER_ROUTINES
 		export
 			{NONE} all
@@ -45,7 +34,7 @@ feature {NONE} -- Initialization
 	make (a_capacity: INTEGER) is
 			-- Make with `a_capacity'.
 		do
-			digits := NATIVE_DIGITS_ARRAY_.make (a_capacity)
+			digits := SPECIAL_DIGITS_.make (a_capacity)
 			capacity := a_capacity
 			set_count (0)
 		end
@@ -96,7 +85,7 @@ feature -- Access
 		local
 			index : INTEGER
 		do
-			create {MA_DECIMAL_COEFFICIENT_IMP}Result.make (index_end - index_start + 1)
+			create {MA_DECIMAL_COEFFICIENT_IMP} Result.make (index_end - index_start + 1)
 			from
 				index := index_start
 			until
@@ -173,7 +162,7 @@ feature -- Element change
 		do
 			new_upper := a_capacity - 1
 			if a_capacity > capacity then
-				digits := NATIVE_DIGITS_ARRAY_.resize (digits, capacity, new_upper + 1) --; old_size: INTEGER; new_size: INTEGER) digits.resize (0, new_upper)
+				digits := SPECIAL_DIGITS_.resize (digits, new_upper + 1) --; old_size: INTEGER; new_size: INTEGER) digits.resize (0, new_upper)
 				capacity := new_upper + 1
 			end
 				-- Zero msd.
@@ -693,15 +682,18 @@ feature -- Basic operations
 
 feature {MA_DECIMAL_COEFFICIENT_IMP} -- Implementation
 
-	digits: like NATIVE_ARRAY_TYPE
+#ifdef ISE || SE
+	digits: SPECIAL [INTEGER_8]
 			-- Array of digits (with the least significant first)
 
-#ifdef ISE || SE
-	NATIVE_DIGITS_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [INTEGER_8] is
+	SPECIAL_DIGITS_: KL_SPECIAL_ROUTINES [INTEGER_8] is
 #else
-	NATIVE_DIGITS_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [CHARACTER] is
+	digits: SPECIAL [CHARACTER]
+			-- Array of digits (with the least significant first)
+
+	SPECIAL_DIGITS_: KL_SPECIAL_ROUTINES [CHARACTER] is
 #endif
-			-- Routines that ought to be in class NATIVE_ARRAY
+			-- Routines that ought to be in class SPECIAL
 		once
 			create Result
 		ensure
@@ -719,5 +711,5 @@ feature {MA_DECIMAL} -- Implementation
 invariant
 
 	digits_not_void: digits /= Void
-	
+
 end

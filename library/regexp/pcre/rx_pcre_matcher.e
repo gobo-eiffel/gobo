@@ -24,7 +24,7 @@ inherit
 			make, reset, compile
 		end
 
-	KL_IMPORTED_NATIVE_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 		export {NONE} all end
 
 	KL_IMPORTED_FIXED_ARRAY_ROUTINES
@@ -43,14 +43,14 @@ feature {NONE} -- Initialization
 			-- strings.
 		do
 			precursor
-			offset_vector := FIXED_INTEGER_ARRAY_.make (64)
+			offset_vector := SPECIAL_INTEGER_.make (64)
 			offset_vector_count := 0
 			brastart_capacity := 8
-			brastart_vector := NATIVE_INTEGER_ARRAY_.make (brastart_capacity)
+			brastart_vector := SPECIAL_INTEGER_.make (brastart_capacity)
 			brastart_lower := 0
 			brastart_count := 0
 			eptr_capacity := 8
-			eptr_vector := NATIVE_INTEGER_ARRAY_.make (eptr_capacity)
+			eptr_vector := SPECIAL_INTEGER_.make (eptr_capacity)
 			eptr_lower := 0
 			eptr_upper := -1
 		end
@@ -199,12 +199,12 @@ feature {NONE} -- Access
 
 	offset_top: INTEGER
 
-	brastart_vector: like NATIVE_INTEGER_ARRAY_TYPE
+	brastart_vector: SPECIAL [INTEGER]
 	brastart_lower: INTEGER
 	brastart_count: INTEGER
 	brastart_capacity: INTEGER
 
-	eptr_vector: like NATIVE_INTEGER_ARRAY_TYPE
+	eptr_vector: SPECIAL [INTEGER]
 	eptr_lower: INTEGER
 	eptr_upper: INTEGER
 	eptr_capacity: INTEGER
@@ -424,7 +424,7 @@ feature {NONE} -- Matching
 			brastart_count := offset_vector_count
 			new_count := brastart_lower + brastart_count
 			if brastart_capacity < new_count then
-				brastart_vector := NATIVE_INTEGER_ARRAY_.resize (brastart_vector, brastart_capacity, new_count)
+				brastart_vector := SPECIAL_INTEGER_.resize (brastart_vector, new_count)
 				brastart_capacity := new_count
 			end
 			is_matching_caseless := is_caseless
@@ -487,7 +487,7 @@ feature {NONE} -- Matching
 				eptr_upper := eptr_upper + 1
 				if eptr_capacity <= eptr_upper then
 					new_capacity := 2 * (eptr_upper + 1)
-					eptr_vector := NATIVE_INTEGER_ARRAY_.resize (eptr_vector, eptr_capacity, new_capacity)
+					eptr_vector := SPECIAL_INTEGER_.resize (eptr_vector, new_capacity)
 					eptr_capacity := new_capacity
 				end
 				eptr_vector.put (eptr, eptr_upper)
@@ -622,7 +622,7 @@ feature {NONE} -- Matching
 						brastart_lower := brastart_lower + brastart_count
 						new_count := brastart_lower + brastart_count
 						if brastart_capacity < new_count then
-							brastart_vector := NATIVE_INTEGER_ARRAY_.resize (brastart_vector, brastart_capacity, new_count)
+							brastart_vector := SPECIAL_INTEGER_.resize (brastart_vector, new_count)
 							brastart_capacity := new_count
 						end
 						j := brastart_lower
