@@ -35,21 +35,21 @@ feature {NONE} -- Initialization
 			precursor (a_project, a_xml_element)
 			!! map.make (project)
 
-			if has_uc_attribute (Type_attribute_name) then
+			if has_attribute (Type_attribute_name) then
 				a_value := uc_attribute_value (Type_attribute_name).out
 				if a_value.count > 0 then
 					map.set_type (a_value)
 				end
 			end
 
-			if has_uc_attribute (From_attribute_name) then
+			if has_attribute (From_attribute_name) then
 				a_value := uc_attribute_value (From_attribute_name).out
 				if a_value.count > 0 then
 					map.set_source_pattern (a_value)
 				end
 			end
 
-			if has_uc_attribute (To_attribute_name) then
+			if has_attribute (To_attribute_name) then
 				a_value := uc_attribute_value (To_attribute_name).out
 				if a_value.count > 0 then
 					map.set_target_pattern (a_value)

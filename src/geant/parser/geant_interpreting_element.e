@@ -68,14 +68,14 @@ feature -- Status report
 			unless_condition := false
 
 				-- Look for an 'if' XML attribute
-			if has_uc_attribute (If_attribute_name) then
+			if has_attribute (If_attribute_name) then
 				a_string := xml_element.attribute_by_name (If_attribute_name).value
 				if_condition := project.variables.boolean_condition_value (a_string)
 				project.trace_debug (" if: '" + a_string + "': " + if_condition.out + "%N")
 			end
 
 				-- Look for an 'unless' XML attribute
-			if has_uc_attribute (Unless_attribute_name) then
+			if has_attribute (Unless_attribute_name) then
 				a_string := xml_element.attribute_by_name (Unless_attribute_name).value
 				unless_condition := project.variables.boolean_condition_value (a_string)
 				project.trace_debug (" unless: '" + a_string + "'=" + unless_condition.out + "%N")

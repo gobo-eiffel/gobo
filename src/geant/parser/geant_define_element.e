@@ -25,13 +25,13 @@ feature -- Access
 	has_name: BOOLEAN is
 			-- Does `xml_element' has an attribute named `Name_attribute_name'
 		do
-			Result := has_uc_attribute (Name_attribute_name)
+			Result := has_attribute (Name_attribute_name)
 		end
 
 	has_value: BOOLEAN is
 			-- Does `xml_element' has an attribute named `Value_attribute_name'
 		do
-			Result := has_uc_attribute (Value_attribute_name)
+			Result := has_attribute (Value_attribute_name)
 		end
 
 	name: STRING is
