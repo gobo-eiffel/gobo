@@ -27,7 +27,8 @@ inherit
 		undefine
 			is_closable, close
 		redefine
-			valid_unread_character
+			valid_unread_character,
+			last_character
 		end
 
 	KL_SHARED_PLATFORM
