@@ -20,7 +20,7 @@ creation
 
 	make
 
-feature {NINE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_universe: like universe) is
 			-- Create a new client/supplier relationship tester.
