@@ -63,7 +63,7 @@ their class names prefixed by <font color="#008080"><em><tt>HASH</tt></em></font
 <font color="#008080"><em><tt>DS_HASH_TABLE</tt></em></font>
 being an example of such class naming.</p>
 
-<h2>Feature names</h2>
+<h2><a name="feature_names">Feature names</a></h2>
 
 <p>The <em>Gobo Eiffel Structure Library</em> follows the
 conventions specified in Dr Meyer's book: <a
@@ -73,11 +73,11 @@ Eiffel <a href="see_also.html#style_guidelines">style guidelines</a>,
 which are enforced in all <em>Gobo Eiffel</em> libraries, this
 book also describes the <em><strong>principle of naming
 consistency</strong></em> and explains why it is so important
-when writting resuable libraries. Since I won't be able to
-explain it better than Bertrand Meyer, I'll let you read section
-3.8 of his book, <em>Naming Issues</em>, for a detailed
-description. If unfortunately you don't own a copy of this book,
-you can still read the article <a
+when writing resuable libraries. Since I won't be able to explain
+it better than Bertrand Meyer, I'll let you read section 3.8 of
+his book, <em>Naming Issues</em>, for a detailed description. If
+unfortunately you don't own a copy of this book, you can still
+read the article <a
 href="http://www.sdmagazine.com/breakrm/features/s995f1.shtml"><em>Rules
 of Component Builders</em></a> published in <em>Software
 Development</em> online magazine and from which the following
@@ -190,7 +190,7 @@ in the table below:</p>
             change this first item.</dd>
         <dt><font color="#008080"><em><tt>force</tt></em></font>,
             <font color="#008080"><em><tt>force_*</tt></em></font></dt>
-        <dd>Add an item in the container. This is the same as <font
+        <dd>Add an item to the container. This is the same as <font
             color="#008080"><em><tt>put </tt></em></font>except
             that the container is automatically resized when
             there is not enough room left.</dd>
@@ -201,7 +201,7 @@ in the table below:</p>
         <dd>Indicate whether an item is included in the
             container.</dd>
         <dt><font color="#008080"><em><tt>is_empty</tt></em></font></dt>
-        <dd>Indicate whether the data structure contains at list
+        <dd>Indicate whether the data structure contains at least
             one item.</dd>
         <dt><font color="#008080"><em><tt>is_full</tt></em></font></dt>
         <dd>Indicate whether the maximum number of items limit (<font
@@ -231,7 +231,7 @@ in the table below:</p>
         <dd>Remove several successive items from the container.</dd>
         <dt><font color="#008080"><em><tt>put</tt></em></font>, <font
             color="#008080"><em><tt>put_*</tt></em></font></dt>
-        <dd>Add an item in the container, provided that it is not
+        <dd>Add an item to the container, provided that it is not
             full (see <font color="#008080"><em><tt>is_full</tt></em></font>)</dd>
         <dt><font color="#008080"><em><tt>remove</tt></em></font>,
             <font color="#008080"><em><tt>remove_*</tt></em></font></dt>
@@ -294,7 +294,7 @@ classes are described in the table below:</p>
         <dd>Procedures which change the general properties of the
             container.</dd>
         <dt><font color="#008000"><tt>-- Cursor movement</tt></font></dt>
-        <dd>Proceddures that change the cursor position.</dd>
+        <dd>Procedures that change the cursor position.</dd>
         <dt><font color="#008000"><tt>-- Element change</tt></font></dt>
         <dd>Commands which add or change items in the container.</dd>
         <dt><font color="#008000"><tt>-- Removal</tt></font></dt>

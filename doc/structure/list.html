@@ -39,7 +39,7 @@ bot="ImageMap" i-checksum="10739" endspan --></p>
 
 <h2>Class <em><tt>DS_LIST</tt></em></h2>
 
-<p>A list is a ordered sequence of items. This doesn't
+<p>A list is an ordered sequence of items. This doesn't
 necessarily mean that the items are sorted but rather that the
 container can be traversed in a predictable way. Thanks to
 multiple inheritance, <a href="flatshort/ds_list.html"><font
@@ -134,7 +134,7 @@ one is not better that the others, it just depends on the kind of
 operations to be applied to the list and on the memory/time
 tradeoff one is ready to accept. In order to help you choose the
 most appropriate list implementation for a particular use, the
-information about the complexity of the operation has been added
+information about the complexity of the operations has been added
 to the header comment of almost all of the access, insertion and
 removal routines. For example, in the header comment of feature <a
 href="flatshort/ds_arrayed_list.html#put_first"><font
@@ -172,14 +172,14 @@ width="483" height="179"></p>
 <p>After a quick look at this picture, it is easy to understand
 that traversing the list from left to right will be quite
 efficient since each cell has a reference to its right neighbor.
-However, backward traversals will expensive the cells will have
-to be visited from the first cell to the cell on the left of the
-current position each time <a
+However, backward traversals will be expensive since the cells
+will have to be visited from the first cell to the cell on the
+left of the current position each time <a
 href="flatshort/ds_linked_list.html#back"><font color="#008080"><em><tt>back</tt></em></font></a>
 is called. Likewise, insertions and deletions to the right of a
 cursor position will be cheap whereas they will be expensive if
 they happen to the left of the cursor. And finally, thanks to the
-reference to the last cell ot the list, insertion to the end of
+reference to the last cell of the list, insertion to the end of
 the list do not require the full list to be traversed, making a
 good tradeoff between memory space and execution time.</p>
 
