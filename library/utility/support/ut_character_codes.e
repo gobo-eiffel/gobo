@@ -104,6 +104,7 @@ feature -- Access
 	Dot_code: INTEGER is 46						-- '.'
 	Dollar_code: INTEGER is 36					-- '$'
 	Exclamation_code: INTEGER is 33				-- '!'
+	Question_mark_code: INTEGER is 63			-- '?'
 	Single_quote_code: INTEGER is 39			-- '%''
 	Double_quote_code: INTEGER is 34			-- '%"'
 	Left_parenthesis_code: INTEGER is 40		-- '('
