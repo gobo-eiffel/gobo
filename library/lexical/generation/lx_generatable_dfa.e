@@ -506,7 +506,6 @@ feature {NONE} -- Generation
 			if pre_eof_action_used then
 				a_file.put_string ("%T%T%Tpre_eof_action%N")
 			end
-			a_file.put_string ("%T%T%Tinspect yy_sc%N")
 			from
 				i := yy_eof_rules.lower
 				nb := yy_eof_rules.upper
@@ -536,38 +535,39 @@ feature {NONE} -- Generation
 				end
 				i := i + 1
 			end
-			from 
-				j := 1
-				nb_actions := actions.count
-			until
-				j > nb_actions
-			loop
-				rule_list := actions.item (j).second
-				from 
-					rule_cursor := rule_list.new_cursor
-					rule_cursor.start
-					rule := rule_cursor.item
-					a_file.put_string ("when ")
-					a_file.put_integer (rule.id)
-					rule_cursor.forth
-				until
-					rule_cursor.after
-				loop
-					a_file.put_string (", ")
-					a_file.put_integer (rule_cursor.item.id)
-					rule_cursor.forth
+			nb_actions := actions.count
+			if nb_actions > 0 then
+				a_file.put_string ("%T%T%Tinspect yy_sc%N")
+				from j := 1 until j > nb_actions loop
+					rule_list := actions.item (j).second
+					from 
+						rule_cursor := rule_list.new_cursor
+						rule_cursor.start
+						rule := rule_cursor.item
+						a_file.put_string ("when ")
+						a_file.put_integer (rule.id)
+						rule_cursor.forth
+					until
+						rule_cursor.after
+					loop
+						a_file.put_string (", ")
+						a_file.put_integer (rule_cursor.item.id)
+						rule_cursor.forth
+					end
+					a_file.put_string (" then%N")
+					a_file.put_string ("--|#line ")
+					a_file.put_integer (rule.line_nb)
+					a_file.put_character ('%N')
+					a_file.put_string (rule.action.out)
+					a_file.put_character ('%N')
+					j := j + 1
 				end
-				a_file.put_string (" then%N")
-				a_file.put_string ("--|#line ")
-				a_file.put_integer (rule.line_nb)
-				a_file.put_character ('%N')
-				a_file.put_string (rule.action.out)
-				a_file.put_character ('%N')
-				j := j + 1
+				a_file.put_string ("%T%T%Telse%N%
+					%%T%T%T%Tterminate%N%
+					%%T%T%Tend%N")
+			else
+				a_file.put_string ("%T%T%Tterminate%N")
 			end
-			a_file.put_string ("%T%T%Telse%N%
-				%%T%T%T%Tterminate%N%
-				%%T%T%Tend%N")
 			if post_eof_action_used then
 				a_file.put_string ("%T%T%Tpost_eof_action%N")
 			end
