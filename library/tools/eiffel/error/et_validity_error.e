@@ -134,6 +134,9 @@ creation
 	make_vkcn1c,
 	make_vkcn2a,
 	make_vkcn2c,
+	make_vlel1a,
+	make_vlel2a,
+	make_vlel3a,
 	make_vmfn0a,
 	make_vmfn0b,
 	make_vmfn0c,
@@ -5199,6 +5202,130 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $5
 		end
 
+	make_vlel1a (a_class: like current_class; a_parent: ET_PARENT; all1, all2: ET_ALL_EXPORT) is
+			-- Create a new VLEL-1 error: the 'all' keyword appears twice in the
+			-- Export subclause of parent `a_parent' in `a_class'.
+			--
+			-- ETL2: p.102
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			all1_not_void: all1 /= Void
+			all2_not_void: all2 /= Void
+		do
+			code := vlel1a_template_code
+			etl_code := vlel1_etl_code
+			default_template := vlel1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := all2.all_keyword.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_parent.type.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = parent base class
+		end
+
+	make_vlel2a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+			-- Create a new VLEL-2 error: the Export subclause of `a_parent'
+			-- in `a_class' lists `f' which is not the final name in
+			-- `a_class' of a feature inherited from `a_parent'.
+			--
+			-- ETL2: p.102
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			f_not_void: f /= Void
+		do
+			code := vlel2a_template_code
+			etl_code := vlel2_etl_code
+			default_template := vlel2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
+		end
+
+	make_vlel3a (a_class: like current_class; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
+			-- Create a new VLEL-3 error: feature name `f2' appears twice in the
+			-- Export subclause of parent `a_parent' in `a_class'.
+			--
+			-- ETL2: p.102
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vlel3a_template_code
+			etl_code := vlel3_etl_code
+			default_template := vlel3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f2.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
+		end
+
 	make_vmfn0a (a_class: like current_class; f1, f2: ET_FEATURE) is
 			-- Create a new VMFN error: `a_class' introduced two features
 			-- `f1' and `f2' with the same name.
@@ -9467,6 +9594,9 @@ feature {NONE} -- Implementation
 	vkcn1c_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' appears in a call instruction."
 	vkcn2a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
 	vkcn2c_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' appears in a call expression."
+	vlel1a_default_template: STRING is "[$1] class $5 ($3,$4): 'all' keyword appears twice in the Export subclause of parent $6."
+	vlel2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vlel3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Export subclause of parent $7."
 	vmfn0a_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6'."
 	vmfn0b_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
 	vmfn0c_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
@@ -9611,6 +9741,9 @@ feature {NONE} -- Implementation
 	vjrv_etl_code: STRING is "VJRV"
 	vkcn1_etl_code: STRING is "VKCN-1"
 	vkcn2_etl_code: STRING is "VKCN-2"
+	vlel1_etl_code: STRING is "VLEL-1"
+	vlel2_etl_code: STRING is "VLEL-2"
+	vlel3_etl_code: STRING is "VLEL-3"
 	vmfn_etl_code: STRING is "VMFN"
 	vmrc2_etl_code: STRING is "VMRC-2"
 	vmss1_etl_code: STRING is "VMSS-1"
@@ -9774,6 +9907,9 @@ feature {NONE} -- Implementation
 	vkcn1c_template_code: STRING is "vkcn1c"
 	vkcn2a_template_code: STRING is "vkcn2a"
 	vkcn2c_template_code: STRING is "vkcn2c"
+	vlel1a_template_code: STRING is "vlel1a"
+	vlel2a_template_code: STRING is "vlel2a"
+	vlel3a_template_code: STRING is "vlel3a"
 	vmfn0a_template_code: STRING is "vmfn0a"
 	vmfn0b_template_code: STRING is "vmfn0b"
 	vmfn0c_template_code: STRING is "vmfn0c"

@@ -2884,6 +2884,66 @@ feature -- Validity errors
 			end
 		end
 
+	report_vlel1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; all1, all2: ET_ALL_EXPORT) is
+			-- Report VLEL-1 error: the 'all' keyword appears twice in the
+			-- Export subclause of parent `a_parent' in `a_class'.
+			--
+			-- ETL2: p.102
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			all1_not_void: all1 /= Void
+			all2_not_void: all2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vlel1_error (a_class) then
+				create an_error.make_vlel1a (a_class, a_parent, all1, all2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vlel2a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+			-- Report VLEL-2 error: the Export subclause of `a_parent'
+			-- in `a_class' lists `f' which is not the final name in
+			-- `a_class' of a feature inherited from `a_parent'.
+			--
+			-- ETL2: p.102
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vlel2_error (a_class) then
+				create an_error.make_vlel2a (a_class, a_parent, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vlel3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
+			-- Report VLEL-3 error: feature name `f2' appears twice in the
+			-- Export subclause of parent `a_parent' in `a_class'.
+			--
+			-- ETL2: p.102
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vlel3_error (a_class) then
+				create an_error.make_vlel3a (a_class, a_parent, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vmfn0a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE) is
 			-- Report VMFN error: `a_class' introduced two features
 			-- `f1' and `f2' with the same name.
@@ -5283,6 +5343,36 @@ feature -- Validity error status
 
 	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VKCN-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vlel1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VLEL-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vlel2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VLEL-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vlel3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VLEL-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

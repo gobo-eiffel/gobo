@@ -41,6 +41,8 @@ feature {NONE} -- Initialization
 			named_features.set_key_equality_tester (feature_name_tester)
 			create rename_table.make (10)
 			rename_table.set_key_equality_tester (feature_name_tester)
+			create export_table.make (10)
+			export_table.set_equality_tester (feature_name_tester)
 			create undefine_table.make (10)
 			undefine_table.set_equality_tester (feature_name_tester)
 			create redefine_table.make (10)
@@ -226,6 +228,7 @@ feature {NONE} -- Feature recording
 		local
 			a_class: ET_CLASS
 			has_rename: BOOLEAN
+			has_export: BOOLEAN
 			has_redefine: BOOLEAN
 			has_undefine: BOOLEAN
 			has_select: BOOLEAN
@@ -240,20 +243,24 @@ feature {NONE} -- Feature recording
 			i, nb: INTEGER
 		do
 			if a_parent.renames /= Void then
-				has_rename := True
 				fill_rename_table (a_parent)
+				has_rename := not rename_table.is_empty
 			end
-			if a_parent.redefines /= Void then
-				has_redefine := True
-				fill_redefine_table (a_parent)
+			if a_parent.exports /= Void then
+				fill_export_table (a_parent)
+				has_export := not export_table.is_empty
 			end
 			if a_parent.undefines /= Void then
-				has_undefine := True
 				fill_undefine_table (a_parent)
+				has_undefine := not undefine_table.is_empty
+			end
+			if a_parent.redefines /= Void then
+				fill_redefine_table (a_parent)
+				has_redefine := not redefine_table.is_empty
 			end
 			if a_parent.selects /= Void then
-				has_select := True
 				fill_select_table (a_parent)
+				has_select := not select_table.is_empty
 			end
 			a_class := a_parent.type.direct_base_class (universe)
 			class_features := a_class.features
@@ -271,8 +278,16 @@ feature {NONE} -- Feature recording
 					if rename_table.found then
 						a_rename := rename_table.found_item
 						rename_table.remove_found_item
+						has_rename := not rename_table.is_empty
 						a_parent_feature.set_new_name (a_rename)
 						a_name := a_rename.new_name
+					end
+				end
+				if has_export then
+					export_table.search (a_name)
+					if export_table.found then
+						export_table.remove_found_item
+						has_export := not export_table.is_empty
 					end
 				end
 				if has_undefine then
@@ -280,6 +295,7 @@ feature {NONE} -- Feature recording
 					if undefine_table.found then
 						a_parent_feature.set_undefine_name (undefine_table.found_item)
 						undefine_table.remove_found_item
+						has_undefine := not undefine_table.is_empty
 					end
 				end
 				if has_redefine then
@@ -287,6 +303,7 @@ feature {NONE} -- Feature recording
 					if redefine_table.found then
 						a_parent_feature.set_redefine_name (redefine_table.found_item)
 						redefine_table.remove_found_item
+						has_redefine := not redefine_table.is_empty
 					end
 				end
 				if has_select then
@@ -294,6 +311,7 @@ feature {NONE} -- Feature recording
 					if select_table.found then
 						a_parent_feature.set_select_name (select_table.found_item)
 						select_table.remove_found_item
+						has_select := not select_table.is_empty
 					end
 				end
 				named_features.search (a_name)
@@ -315,7 +333,7 @@ feature {NONE} -- Feature recording
 				end
 				i := i + 1
 			end
-			if not rename_table.is_empty then
+			if has_rename then
 				from rename_table.start until rename_table.after loop
 					a_rename := rename_table.item_for_iteration
 					set_fatal_error (current_class)
@@ -324,7 +342,16 @@ feature {NONE} -- Feature recording
 				end
 				rename_table.wipe_out
 			end
-			if not undefine_table.is_empty then
+			if has_export then
+				from export_table.start until export_table.after loop
+					a_name := export_table.item_for_iteration
+					set_fatal_error (current_class)
+					error_handler.report_vlel2a_error (current_class, a_parent, a_name)
+					export_table.forth
+				end
+				export_table.wipe_out
+			end
+			if has_undefine then
 				from undefine_table.start until undefine_table.after loop
 					a_name := undefine_table.item_for_iteration
 					set_fatal_error (current_class)
@@ -333,7 +360,7 @@ feature {NONE} -- Feature recording
 				end
 				undefine_table.wipe_out
 			end
-			if not redefine_table.is_empty then
+			if has_redefine then
 				from redefine_table.start until redefine_table.after loop
 					a_name := redefine_table.item_for_iteration
 					set_fatal_error (current_class)
@@ -342,7 +369,7 @@ feature {NONE} -- Feature recording
 				end
 				redefine_table.wipe_out
 			end
-			if not select_table.is_empty then
+			if has_select then
 				from select_table.start until select_table.after loop
 					a_name := select_table.item_for_iteration
 					set_fatal_error (current_class)
@@ -357,6 +384,9 @@ feature {NONE} -- Feature adaptation
 
 	rename_table: DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME]
 			-- Rename table
+
+	export_table: DS_HASH_SET [ET_FEATURE_NAME]
+			-- Export table
 
 	undefine_table: DS_HASH_SET [ET_FEATURE_NAME]
 			-- Undefine table
@@ -400,6 +430,61 @@ feature {NONE} -- Feature adaptation
 						set_fatal_error (current_class)
 					end
 					error_handler.report_vhrc2a_error (current_class, a_parent, rename_table.found_item, a_rename)
+				end
+				i := i + 1
+			end
+		end
+
+	fill_export_table (a_parent: ET_PARENT) is
+			-- Fill `export_table' with export feature names of `a_parent'.
+		require
+			a_parent_not_void: a_parent /= Void
+			exports_not_void: a_parent.exports /= Void
+		local
+			i, nb: INTEGER
+			an_exports: ET_EXPORT_LIST
+			an_export: ET_EXPORT
+			an_all_export: ET_ALL_EXPORT
+			other_all_export: ET_ALL_EXPORT
+			a_feature_export: ET_FEATURE_EXPORT
+			j, nb2: INTEGER
+			new_count: INTEGER
+			a_name: ET_FEATURE_NAME
+		do
+			an_exports := a_parent.exports
+			nb := an_exports.count
+			from i := 1 until i > nb loop
+				an_export := an_exports.item (i)
+				an_all_export ?= an_export
+				if an_all_export /= Void then
+					if other_all_export /= Void then
+							-- Two 'all' export clauses for this parent.
+							-- This is not considered as a fatal error by gelint.
+						error_handler.report_vlel1a_error (current_class, a_parent, other_all_export, an_all_export)
+					else
+						other_all_export := an_all_export
+					end
+				else
+					a_feature_export ?= an_export
+					if a_feature_export /= Void then
+						nb2 := a_feature_export.count
+						new_count := new_count + nb2
+						if export_table.capacity < new_count then
+							 export_table.resize (new_count)
+						end
+						from j := 1 until j > nb2 loop
+							a_name := a_feature_export.feature_name (j)
+							export_table.search (a_name)
+							if not export_table.found then
+								export_table.put_new (a_name)
+							else
+									-- Feature name `a_name' appears twice in the Export clause.
+									-- This is not considered as a fatal error by gelint.
+								error_handler.report_vlel3a_error (current_class, a_parent, export_table.found_item, a_name)
+							end
+							j := j + 1
+						end
+					end
 				end
 				i := i + 1
 			end
@@ -2381,6 +2466,8 @@ invariant
 	rename_table_not_void: rename_table /= Void
 	no_void_rename: not rename_table.has_item (Void)
 	no_void_rename_old_name: not rename_table.has (Void)
+	export_table_not_void: export_table /= Void
+	no_void_export: not export_table.has (Void)
 	undefine_table_not_void: undefine_table /= Void
 	no_void_undefine: not undefine_table.has (Void)
 	redefine_table_not_void: redefine_table /= Void
