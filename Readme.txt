@@ -60,9 +60,11 @@ and implemented, you can also have a look at "$GOBO\doc\portability".
 In this distribution:
 
     bin                         Windows 95/NT executables (gelex, geyacc, etc.)
+    doc                         Gobo Eiffel documentation in HTML format
     doc\gelex                   gelex documentation in HTML format
     doc\geyacc                  geyacc documentation in HTML format
     doc\portability             discussion about portability issues, in HTML
+    doc\struture                GE Structure Library documentation, in HTML
     example\lexical\ascii2ps    pretty-printer
     example\lexical\calculator  simple calculator (interface with iss-yacc)
     example\lexical\eiffel      scanner for the Eiffel language
@@ -100,6 +102,6 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997, Eric Bezault
-email: ericb@gobo.demon.co.uk
+mailto:ericb@gobo.demon.co.uk
 http://www.gobo.demon.co.uk
-29 October 1997
+17 December 1997
