@@ -41,10 +41,9 @@ feature -- Access
 	item: G is
 			-- Value or node at the current position
 		do
-				Result := Void
 		end
 	
-		last_position: INTEGER is
+	last_position: INTEGER is
 			-- Last position (= number of items in sequence)
 		do
 			Result := 0
