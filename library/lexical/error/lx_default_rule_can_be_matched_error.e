@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 	make (filename: STRING) is
 			-- Create a new error reporting that the rule
-			-- default can be matched despite the "nodefault
+			-- default can be matched despite the "nodefault"
 			-- or -s option.
 		require
 			filename_not_void: filename /= Void
