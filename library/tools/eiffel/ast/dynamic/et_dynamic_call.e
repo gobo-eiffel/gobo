@@ -377,11 +377,11 @@ feature {NONE} -- Validity checking
 							l_source = Void
 						loop
 							if i > nb then
-								-- Internal error: it has already been checked somewhere else
-								-- that there was the same number of formal arguments in
-								-- feature redeclaration.
-							a_system.set_fatal_error
-							a_system.error_handler.report_gibcc_error
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of formal arguments in
+									-- feature redeclaration.
+								a_system.set_fatal_error
+								a_system.error_handler.report_gibcc_error
 									-- Jump out of the loop.
 								l_source := Void
 							else
