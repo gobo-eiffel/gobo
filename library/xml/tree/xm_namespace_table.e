@@ -50,7 +50,7 @@ feature {ANY} -- Access
 			Result := found_item
 		end
 
-feature {ANY}					--
+feature {ANY} --
 
 	override_with_list (l: DS_BILINEAR [XM_NAMESPACE]) is
 			-- take the namespace declarations from l and
@@ -72,8 +72,6 @@ feature {ANY}					--
 				cs.forth
 			end
 		end
-
-feature {ANY} -- Removal
 
 feature {NONE} -- Implementation
 
