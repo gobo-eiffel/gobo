@@ -6,7 +6,7 @@ indexing
 		%generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +41,12 @@ feature {NONE} -- Initialization
 			create pending_rules.make (Initial_max_pending_rules)
 			create start_condition_stack.make (Initial_max_start_conditions)
 			create action_factory.make
+			create old_singleton_lines.make (Initial_old_positions)
+			create old_singleton_columns.make (Initial_old_positions)
+			create old_singleton_counts.make (Initial_old_positions)
+			create old_regexp_lines.make (Initial_old_positions)
+			create old_regexp_columns.make (Initial_old_positions)
+			create old_regexp_counts.make (Initial_old_positions)
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -58,6 +64,12 @@ feature {NONE} -- Initialization
 			create pending_rules.make (Initial_max_pending_rules)
 			create start_condition_stack.make (Initial_max_start_conditions)
 			create action_factory.make
+			create old_singleton_lines.make (Initial_old_positions)
+			create old_singleton_columns.make (Initial_old_positions)
+			create old_singleton_counts.make (Initial_old_positions)
+			create old_regexp_lines.make (Initial_old_positions)
+			create old_regexp_columns.make (Initial_old_positions)
+			create old_regexp_counts.make (Initial_old_positions)
 		ensure
 			error_handler_set: error_handler = handler
 			description_set: description = a_description
@@ -71,6 +83,12 @@ feature -- Initialization
 			reset_lex_scanner
 			pending_rules.wipe_out
 			start_condition_stack.wipe_out
+			old_singleton_lines.wipe_out
+			old_singleton_columns.wipe_out
+			old_singleton_counts.wipe_out
+			old_regexp_lines.wipe_out
+			old_regexp_columns.wipe_out
+			old_regexp_counts.wipe_out
 		end
 
 feature -- Parsing
@@ -317,40 +335,35 @@ feature {NONE} -- Measurement
 			end
 		end
 
-	process_series_singleton is
+	process_singleton_series is
 			-- Update `series_{line,column,count}'.
-			-- Series: Series Singleton
+			-- Series: Singleton Series
 		do
 			if series_count >= 0 and singleton_count >= 0 then
 				series_count := series_count + singleton_count
 			else
 				series_count := Zero_or_more
 			end
-			if singleton_line = 0 then
+			if series_line = 0 then
+				series_line := singleton_line
 				if series_column >= 0 and singleton_column >= 0 then
 					series_column := series_column + singleton_column
 				else
 					series_column := Zero_or_more
 				end
-			elseif singleton_line > 0 then
-				series_column := singleton_column
-				if series_line >= 0 then
+			elseif series_line > 0 then
+				if singleton_line >= 0 then
 					series_line := series_line + singleton_line
 				else
 					series_line := One_or_more
 				end
-			elseif singleton_line = One_or_more then
-				series_line := One_or_more
-				series_column := singleton_column
-			else
-				if series_line > 0 or series_line = One_or_more then
+			elseif series_line /= One_or_more then
+				if singleton_line > 0 or singleton_line = One_or_more then
 					series_line := One_or_more
 				else
 					series_line := Zero_or_more
 				end
-				if series_column = 0 then
-					series_column := singleton_column
-				else
+				if singleton_column /= 0 then
 					series_column := Zero_or_more
 				end
 			end
@@ -388,6 +401,15 @@ feature {NONE} -- Measurement
 	singleton_count: INTEGER
 			-- Number of characters in current Singleton
 
+	old_singleton_lines: DS_ARRAYED_STACK [INTEGER]
+			-- Number of new-line characters in previous Singleton
+
+	old_singleton_columns: DS_ARRAYED_STACK [INTEGER]
+			-- Number of characters after last new-line in previous Singleton
+
+	old_singleton_counts: DS_ARRAYED_STACK [INTEGER]
+			-- Number of characters in previous Singleton
+
 	series_line: INTEGER
 			-- Number of new-line characters in current Series
 
@@ -406,6 +428,16 @@ feature {NONE} -- Measurement
 
 	regexp_count: INTEGER
 			-- Number of characters in current Regular_expression
+
+	old_regexp_lines: DS_ARRAYED_STACK [INTEGER]
+			-- Number of new-line characters in previous Regular_expressions
+
+	old_regexp_columns: DS_ARRAYED_STACK [INTEGER]
+			-- Number of characters after last new-line
+			-- in previous Regular_expressions
+
+	old_regexp_counts: DS_ARRAYED_STACK [INTEGER]
+			-- Number of characters in previous Regular_expressions
 
 	head_line: INTEGER
 			-- Number of new-line characters in head part
@@ -1211,10 +1243,13 @@ feature {NONE} -- Error handling
 feature {NONE} -- Constants
 
 	Initial_max_pending_rules: INTEGER is 10
-			-- Maximum number of pending rules
+			-- Initial maximum number of pending rules
 
 	Initial_max_start_conditions: INTEGER is 40
-			-- Maximum number of start conditions
+			-- Initial maximum number of start conditions
+
+	Initial_old_positions: INTEGER is 10
+			-- Initial maximum number of old {lines,columns,counts}
 
 	Eof_nfa: LX_NFA is
 			-- End-of-file NFA
@@ -1230,5 +1265,11 @@ invariant
 	no_void_pending_rule: not pending_rules.has (Void)
 	start_condition_stack_not_void: start_condition_stack /= Void
 	action_factory_not_void: action_factory /= Void
+	old_singleton_lines_not_void: old_singleton_lines /= Void
+	old_singleton_columns_not_void: old_singleton_columns /= Void
+	old_singleton_counts_not_void: old_singleton_counts /= Void
+	old_regexp_lines_not_void: old_regexp_lines /= Void
+	old_regexp_columns_not_void: old_regexp_columns /= Void
+	old_regexp_counts_not_void: old_regexp_counts /= Void
 
 end

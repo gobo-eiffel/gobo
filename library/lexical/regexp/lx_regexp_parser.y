@@ -6,7 +6,7 @@ indexing
 		"Parsers for regular expressions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature
 %token <LX_SYMBOL_CLASS> CCL_OP
 %token <STRING> '['
 
-%type <LX_NFA> Rule Regular_expression Regular_expression2 Series Singleton String
+%type <LX_NFA> Rule Regular_expression Regular_expression2 Series Series_singleton Singleton String
 %type <LX_SYMBOL_CLASS> CCl Full_CCl
 
 %start Regexp
@@ -128,10 +128,22 @@ Regular_expression: Series
 			regexp_line := series_line
 			regexp_column := series_column
 		}
-	| Regular_expression '|' Series
+	| Regular_expression '|'
 		{
+			old_regexp_lines.force (regexp_line)
+			old_regexp_columns.force (regexp_column)
+			old_regexp_counts.force (regexp_count)
+		}
+	  Series
+		{
+			regexp_line := old_regexp_lines.item
+			old_regexp_lines.remove
+			regexp_column := old_regexp_columns.item
+			old_regexp_columns.remove
+			regexp_count := old_regexp_counts.item
+			old_regexp_counts.remove
 			$$ := $1
-			$$.build_union ($3)
+			$$.build_union ($4)
 			process_regexp_or_series
 		}
 	;
@@ -148,18 +160,36 @@ Regular_expression2: Regular_expression '/'
 		}
 	;
 
-Series: Singleton
+Series: Series_singleton
 		{
+			old_singleton_lines.remove
+			old_singleton_columns.remove
+			old_singleton_counts.remove
 			$$ := $1
 			series_count := singleton_count
 			series_line := singleton_line
 			series_column := singleton_column
 		}
-	| Series Singleton
+	| Series_singleton Series
 		{
+			singleton_line := old_singleton_lines.item
+			old_singleton_lines.remove
+			singleton_column := old_singleton_columns.item
+			old_singleton_columns.remove
+			singleton_count := old_singleton_counts.item
+			old_singleton_counts.remove
 			$$ := $1
 			$$.build_concatenation ($2)
-			process_series_singleton
+			process_singleton_series
+		}
+	;
+
+Series_singleton: Singleton
+		{
+			old_singleton_lines.force (singleton_line)
+			old_singleton_columns.force (singleton_column)
+			old_singleton_counts.force (singleton_count)
+			$$ := $1
 		}
 	;
 

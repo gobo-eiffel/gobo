@@ -16,6 +16,7 @@ Version ?
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
 	  appeared in the input description file. 
+	* Fixed bug in '%option line'.
 
 	geyacc:
 
