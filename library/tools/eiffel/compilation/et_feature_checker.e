@@ -388,12 +388,15 @@ feature -- Validity checking
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_function: ET_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
 			a_convert_class: ET_CLASS
+			a_convert_name: ET_FEATURE_NAME
 			an_expression_comma: ET_EXPRESSION_COMMA
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_type: ET_TYPE
 			had_error: BOOLEAN
+			l_convert_reported: BOOLEAN
 		do
 			has_fatal_error := False
 			old_feature := current_feature
@@ -454,6 +457,9 @@ feature -- Validity checking
 					an_actual := an_actuals.actual_argument (i)
 					a_formal := a_formals.formal_argument (i)
 					l_formal_context.force_first (a_formal.type)
+					has_fatal_error := False
+					report_convert (an_actual)
+					l_convert_reported := True
 					check_expression_validity (an_actual, actual_context, l_formal_context, current_feature, current_type)
 					if has_fatal_error then
 						had_error := True
@@ -489,14 +495,25 @@ feature -- Validity checking
 							end
 							if a_convert_feature /= Void then
 									-- Insert the conversion feature call in the AST.
-								a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
-								if a_convert_expression /= Void then
-									an_expression_comma ?= an_actual_list.item (i)
-									if an_expression_comma /= Void then
-										an_expression_comma.set_expression (a_convert_expression)
+								create a_convert_expression.make (an_actual, a_convert_feature)
+								if a_convert_feature.is_convert_to then
+									a_convert_name := a_convert_feature.name
+									a_convert_function := a_convert_class.seeded_feature (a_convert_name.seed)
+									if a_convert_function /= Void then
+										report_convert_function (an_actual, actual_context, a_convert_name, a_convert_function)
+										l_convert_reported := False
 									else
-										an_actual_list.put (a_convert_expression, i)
+											-- Internal error: the seed of the convert function should correspond
+											-- to a feature of `a_convert_class'.
+										set_fatal_error
+										error_handler.report_gibds_error
 									end
+								end
+								an_expression_comma ?= an_actual_list.item (i)
+								if an_expression_comma /= Void then
+									an_expression_comma.set_expression (a_convert_expression)
+								else
+									an_actual_list.put (a_convert_expression, i)
 								end
 							end
 						else
@@ -529,6 +546,10 @@ feature -- Validity checking
 					end
 					l_formal_context.remove_first
 					actual_context.wipe_out
+					if not has_fatal_error and l_convert_reported then
+						report_no_convert (an_actual)
+						l_convert_reported := False
+					end
 					i := i + 1
 				end
 				if had_error then
@@ -1450,9 +1471,12 @@ feature {NONE} -- Instruction validity
 			a_source_named_type: ET_NAMED_TYPE
 			a_target_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_function: ET_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
 			a_convert_class: ET_CLASS
+			a_convert_name: ET_FEATURE_NAME
 			had_error: BOOLEAN
+			l_convert_reported: BOOLEAN
 		do
 			has_fatal_error := False
 			actual_context.reset (current_type)
@@ -1461,12 +1485,15 @@ feature {NONE} -- Instruction validity
 			a_target_context := formal_context
 			a_target := an_instruction.target
 			check_writable_validity (a_target, a_target_context)
+			a_source := an_instruction.source
 			if has_fatal_error then
 				had_error := True
 				a_target_context.wipe_out
 				a_target_context.force_first (universe.any_type)
+			else
+				report_convert (a_source)
+				l_convert_reported := True
 			end
-			a_source := an_instruction.source
 			check_subexpression_validity (a_source, a_source_context, a_target_context)
 			if had_error then
 				set_fatal_error
@@ -1499,16 +1526,22 @@ feature {NONE} -- Instruction validity
 						end
 						if a_convert_feature /= Void then
 								-- Insert the conversion feature call in the AST.
-							a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
-							if a_convert_expression /= Void then
-								an_instruction.set_source (a_convert_expression)
--- TODO:
---								report_convert_expression
-								report_assignment (an_instruction)
-							else
-								set_fatal_error
--- TODO: error
+							create a_convert_expression.make (a_source, a_convert_feature)
+							if a_convert_feature.is_convert_to then
+								a_convert_name := a_convert_feature.name
+								a_convert_function := a_convert_class.seeded_feature (a_convert_name.seed)
+								if a_convert_function /= Void then
+									report_convert_function (a_source, a_source_context, a_convert_name, a_convert_function)
+									l_convert_reported := False
+								else
+										-- Internal error: the seed of the convert function should correspond
+										-- to a feature of `a_convert_class'.
+									set_fatal_error
+									error_handler.report_gibdt_error
+								end
 							end
+							an_instruction.set_source (a_convert_expression)
+							report_assignment (an_instruction)
 						end
 					else
 						set_fatal_error
@@ -1524,6 +1557,9 @@ feature {NONE} -- Instruction validity
 				else
 					report_assignment (an_instruction)
 				end
+			end
+			if not has_fatal_error and l_convert_reported then
+				report_no_convert (a_source)
 			end
 		end
 
@@ -2201,9 +2237,7 @@ feature {NONE} -- Instruction validity
 			a_named_type: ET_NAMED_TYPE
 			boolean_type: ET_CLASS_TYPE
 			a_variant: ET_VARIANT
-			integer_type: ET_CLASS_TYPE
 			an_invariant: ET_LOOP_INVARIANTS
-			i, nb: INTEGER
 		do
 			has_fatal_error := False
 			a_compound := an_instruction.from_compound
@@ -2213,59 +2247,22 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			boolean_type := universe.boolean_class
-			actual_context.reset (current_type)
 			an_invariant := an_instruction.invariant_part
 			if an_invariant /= Void then
-				nb := an_invariant.count
-				from i := 1 until i > nb loop
-					an_expression := an_invariant.assertion (i).expression
-					check_subexpression_validity (an_expression, actual_context, boolean_type)
-					if has_fatal_error then
-						had_error := True
-					elseif not actual_context.same_named_type (boolean_type, current_type, universe) then
-						had_error := True
-						set_fatal_error
-						a_named_type := actual_context.named_type (universe)
-						a_class_impl := current_feature.implementation_class
-						if current_class = a_class_impl then
-							error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
-						else
-							error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
-						end
-					else
-						report_expression
-					end
-					actual_context.wipe_out
-					i := i + 1
+				check_loop_invariant_validity (an_invariant)
+				if has_fatal_error then
+					had_error := True
 				end
 			end
 			a_variant := an_instruction.variant_part
 			if a_variant /= Void then
-				an_expression := a_variant.expression
-				if an_expression /= Void then
-					integer_type := universe.integer_class
-					check_subexpression_validity (an_expression, actual_context, integer_type)
-					if has_fatal_error then
-						had_error := True
-					elseif not actual_context.same_named_type (integer_type, current_type, universe) then
-						had_error := True
-						set_fatal_error
-						a_named_type := actual_context.named_type (universe)
-						a_class_impl := current_feature.implementation_class
-						if current_class = a_class_impl then
-							error_handler.report_vave0a_error (current_class, an_expression, a_named_type)
-						else
-							error_handler.report_vave0b_error (current_class, a_class_impl, an_expression, a_named_type)
-						end
-					else
-						report_expression
-					end
-					actual_context.wipe_out
-				else
--- TODO: syntax error.
+				check_loop_variant_validity (a_variant)
+				if has_fatal_error then
+					had_error := True
 				end
 			end
+			actual_context.reset (current_type)
+			boolean_type := universe.boolean_class
 			an_expression := an_instruction.until_conditional.expression
 			check_subexpression_validity (an_expression, actual_context, boolean_type)
 			if has_fatal_error then
@@ -2280,6 +2277,8 @@ feature {NONE} -- Instruction validity
 				else
 					error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
 				end
+			else
+				report_expression
 			end
 			a_compound := an_instruction.loop_compound
 			if a_compound /= Void then
@@ -2287,6 +2286,91 @@ feature {NONE} -- Instruction validity
 				if has_fatal_error then
 					had_error := True
 				end
+			end
+			if had_error then
+				set_fatal_error
+			end
+		end
+
+	check_loop_invariant_validity (an_invariant: ET_LOOP_INVARIANTS) is
+			-- Check validity of `an_invariant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_invariant_not_void: an_invariant /= Void
+		local
+			an_expression: ET_EXPRESSION
+			had_error: BOOLEAN
+			boolean_type: ET_CLASS_TYPE
+			i, nb: INTEGER
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
+		do
+			has_fatal_error := False
+			boolean_type := universe.boolean_class
+			actual_context.reset (current_type)
+			nb := an_invariant.count
+			from i := 1 until i > nb loop
+				an_expression := an_invariant.assertion (i).expression
+				check_subexpression_validity (an_expression, actual_context, boolean_type)
+				if has_fatal_error then
+					had_error := True
+				elseif not actual_context.same_named_type (boolean_type, current_type, universe) then
+					had_error := True
+					set_fatal_error
+					a_named_type := actual_context.named_type (universe)
+					a_class_impl := current_feature.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
+					else
+						error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
+					end
+				else
+					report_expression
+				end
+				actual_context.wipe_out
+				i := i + 1
+			end
+			if had_error then
+				set_fatal_error
+			end
+		end
+
+	check_loop_variant_validity (a_variant: ET_VARIANT) is
+			-- Check validity of `a_variant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_variant_not_void: a_variant /= Void
+		local
+			an_expression: ET_EXPRESSION
+			had_error: BOOLEAN
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
+			integer_type: ET_CLASS_TYPE
+		do
+			has_fatal_error := False
+			an_expression := a_variant.expression
+			if an_expression /= Void then
+				integer_type := universe.integer_class
+				actual_context.reset (current_type)
+				check_subexpression_validity (an_expression, actual_context, integer_type)
+				if has_fatal_error then
+					had_error := True
+				elseif not actual_context.same_named_type (integer_type, current_type, universe) then
+					had_error := True
+					set_fatal_error
+					a_named_type := actual_context.named_type (universe)
+					a_class_impl := current_feature.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vave0a_error (current_class, an_expression, a_named_type)
+					else
+						error_handler.report_vave0b_error (current_class, a_class_impl, an_expression, a_named_type)
+					end
+				else
+					report_expression
+				end
+				actual_context.wipe_out
+			else
+-- TODO: syntax error.
 			end
 			if had_error then
 				set_fatal_error
@@ -2563,17 +2647,17 @@ feature {NONE} -- Expression validity
 			a_literal := a_constant.literal
 			if not a_literal.is_integer then
 				report_character_constant
--- TODO
+-- TODO: error
 --				set_fatal_error
 			else
 				a_code := a_literal.to_integer
 				if a_code < Platform.Minimum_character_code then
 					report_character_constant
--- TODO
+-- TODO: error
 --					set_fatal_error
 				elseif a_code > Platform.Maximum_character_code then
 					report_character_constant
--- TODO
+-- TODO: error
 --					set_fatal_error
 				else
 					a_value := INTEGER_.to_character (a_code)
@@ -3285,21 +3369,26 @@ feature {NONE} -- Expression validity
 			when 4 then
 					-- 0[xX][a-fA-F0-9]{2}
 				a_context.force_first (universe.integer_8_class)
+				a_constant.set_integer_8
 				report_integer_8_constant
 			when 6 then
 					-- 0[xX][a-fA-F0-9]{4}
 				a_context.force_first (universe.integer_16_class)
+				a_constant.set_integer_16
 				report_integer_16_constant
 			when 10 then
 					-- 0[xX][a-fA-F0-9]{8}
 				a_context.force_first (universe.integer_class)
+				a_constant.set_integer_32
 				report_integer_constant
 			when 18 then
 					-- 0[xX][a-fA-F0-9]{16}
 				a_context.force_first (universe.integer_64_class)
+				a_constant.set_integer_64
 				report_integer_64_constant
 			else
 				a_context.force_first (universe.integer_class)
+				a_constant.set_integer_32
 				report_integer_constant
 			end
 		end
@@ -3350,12 +3439,15 @@ feature {NONE} -- Expression validity
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_class: ET_CLASS
 			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_convert_name: ET_FEATURE_NAME
+			a_convert_function: ET_FEATURE
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_actual_type: ET_TYPE
 			l_formal_type: ET_TYPE
 			any_type: ET_CLASS_TYPE
 			a_cast_expression: ET_INFIX_CAST_EXPRESSION
+			l_convert_reported: BOOLEAN
 		do
 			has_fatal_error := False
 			a_name := an_expression.name
@@ -3469,7 +3561,12 @@ feature {NONE} -- Expression validity
 						l_formal_context := a_context
 						l_formal_type := a_formal.type
 						l_formal_context.force_first (l_formal_type)
-						had_error := has_fatal_error
+						if not has_fatal_error then
+							report_convert (an_actual)
+							l_convert_reported := True
+						else
+							had_error := True
+						end
 						check_subexpression_validity (an_actual, l_actual_context, l_formal_context)
 						if had_error then
 							set_fatal_error
@@ -3505,11 +3602,22 @@ feature {NONE} -- Expression validity
 									end
 									if a_convert_feature /= Void then
 											-- Insert the conversion feature call in the AST.
-										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
-										if a_convert_expression /= Void then
-											an_expression.set_right (a_convert_expression)
-											an_actual := a_convert_expression
+										create a_convert_expression.make (an_actual, a_convert_feature)
+										if a_convert_feature.is_convert_to then
+											a_convert_name := a_convert_feature.name
+											a_convert_function := a_convert_class.seeded_feature (a_convert_name.seed)
+											if a_convert_function /= Void then
+												report_convert_function (an_actual, l_actual_context, a_convert_name, a_convert_function)
+												l_convert_reported := False
+											else
+													-- Internal error: the seed of the convert function should correspond
+													-- to a feature of `a_convert_class'.
+												set_fatal_error
+												error_handler.report_gibdu_error
+											end
 										end
+										an_expression.set_right (a_convert_expression)
+										an_actual := a_convert_expression
 									end
 								else
 									had_error := True
@@ -3590,6 +3698,9 @@ feature {NONE} -- Expression validity
 									end
 								end
 							end
+						end
+						if not has_fatal_error and l_convert_reported then
+							report_no_convert (an_actual)
 						end
 					end
 						-- Check whether `a_feature' satisfies CAT validity rules.
@@ -4234,17 +4345,22 @@ feature {NONE} -- Expression validity
 				a_class := a_class_type.direct_base_class (universe)
 				if a_class = universe.integer_8_class then
 					a_type := a_class
+					a_constant.set_integer_8
 					report_integer_8_constant
 				elseif a_class = universe.integer_16_class then
 					a_type := a_class
+					a_constant.set_integer_16
 					report_integer_16_constant
 				elseif a_class = universe.integer_64_class then
 					a_type := a_class
+					a_constant.set_integer_64
 					report_integer_64_constant
 				else
+					a_constant.set_integer_32
 					report_integer_constant
 				end
 			else
+				a_constant.set_integer_32
 				report_integer_constant
 			end
 			a_context.force_first (a_type)
@@ -4271,6 +4387,7 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			a_context.force_first (universe.double_class)
+			a_constant.set_double_64
 			report_double_constant
 		end
 
@@ -4764,17 +4881,22 @@ feature {NONE} -- Expression validity
 				a_class := a_class_type.direct_base_class (universe)
 				if a_class = universe.integer_8_class then
 					a_type := a_class
+					a_constant.set_integer_8
 					report_integer_8_constant
 				elseif a_class = universe.integer_16_class then
 					a_type := a_class
+					a_constant.set_integer_16
 					report_integer_16_constant
 				elseif a_class = universe.integer_64_class then
 					a_type := a_class
+					a_constant.set_integer_64
 					report_integer_64_constant
 				else
+					a_constant.set_integer_32
 					report_integer_constant
 				end
 			else
+				a_constant.set_integer_32
 				report_integer_constant
 			end
 			a_context.force_first (a_type)
@@ -4789,6 +4911,7 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			a_context.force_first (universe.double_class)
+			a_constant.set_double_64
 			report_double_constant
 		end
 
@@ -5767,12 +5890,15 @@ feature {NONE} -- Agent validity
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
+			a_convert_name: ET_FEATURE_NAME
+			a_convert_function: ET_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
 			a_convert_class: ET_CLASS
 			an_argument_comma: ET_AGENT_ACTUAL_ARGUMENT_COMMA
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_type: ET_TYPE
+			l_convert_reported: BOOLEAN
 		do
 			has_fatal_error := False
 			a_formals := a_feature.arguments
@@ -5838,6 +5964,9 @@ feature {NONE} -- Agent validity
 						an_agent_actual := an_actuals.actual_argument (i)
 						an_actual ?= an_agent_actual
 						if an_actual /= Void then
+							has_fatal_error := False
+							report_convert (an_actual)
+							l_convert_reported := True
 							l_formal_context.force_first (a_formal.type)
 							check_subexpression_validity (an_actual, l_actual_context, l_formal_context)
 							if has_fatal_error then
@@ -5869,14 +5998,25 @@ feature {NONE} -- Agent validity
 									end
 									if a_convert_feature /= Void then
 											-- Insert the conversion feature call in the AST.
-										a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
-										if a_convert_expression /= Void then
-											an_argument_comma ?= an_actuals.item (i)
-											if an_argument_comma /= Void then
-												an_argument_comma.set_agent_actual_argument (a_convert_expression)
+										create a_convert_expression.make (an_actual, a_convert_feature)
+										if a_convert_feature.is_convert_to then
+											a_convert_name := a_convert_feature.name
+											a_convert_function := a_convert_class.seeded_feature (a_convert_name.seed)
+											if a_convert_function /= Void then
+												report_convert_function (an_actual, l_actual_context, a_convert_name, a_convert_function)
+												l_convert_reported := False
 											else
-												an_actuals.put (a_convert_expression, i)
+													-- Internal error: the seed of the convert function should correspond
+													-- to a feature of `a_convert_class'.
+												set_fatal_error
+												error_handler.report_gibdv_error
 											end
+										end
+										an_argument_comma ?= an_actuals.item (i)
+										if an_argument_comma /= Void then
+											an_argument_comma.set_agent_actual_argument (a_convert_expression)
+										else
+											an_actuals.put (a_convert_expression, i)
 										end
 									end
 								else
@@ -5901,6 +6041,10 @@ feature {NONE} -- Agent validity
 							end
 							l_formal_context.remove_first
 							l_actual_context.wipe_out
+							if not has_fatal_error and l_convert_reported then
+								report_no_convert (an_actual)
+								l_convert_reported := False
+							end
 						else
 							an_agent_type ?= an_agent_actual
 							if an_agent_type /= Void then
@@ -6022,6 +6166,34 @@ feature {NONE} -- Event handling
 			-- Report that a character has been processed.
 		require
 			no_error: not has_fatal_error
+		do
+		end
+
+	report_convert (a_target: ET_EXPRESSION) is
+			-- Report that a conversion may occur on `a_target'.
+		require
+			no_error: not has_fatal_error
+			a_target_not_void: a_target /= Void
+		do
+		end
+
+	report_no_convert (a_target: ET_EXPRESSION) is
+			-- Report that no conversion on `a_target' was necessary after all.
+		require
+			no_error: not has_fatal_error
+			a_target_not_void: a_target /= Void
+		do
+		end
+
+	report_convert_function (a_target: ET_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report that a convert function call expression has been processed.
+		require
+			no_error: not has_fatal_error
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
@@ -6176,6 +6348,8 @@ feature {NONE} -- Event handling
 
 	report_precursor_expression (an_expression: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor expression has been processed.
+			-- `a_parent_type' is viewed in the context of `current_type'
+			-- and `a_feature' is the precursor feature.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
@@ -6187,6 +6361,8 @@ feature {NONE} -- Event handling
 
 	report_precursor_instruction (an_instruction: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor instruction has been processed.
+			-- `a_parent_type' is viewed in the context of `current_type'
+			-- and `a_feature' is the precursor feature.
 		require
 			no_error: not has_fatal_error
 			an_instruction_not_void: an_instruction /= Void
