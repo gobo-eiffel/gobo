@@ -195,6 +195,21 @@ feature -- Status report
 			Result := a_context.is_actual_cat_parameter (i, a_universe)
 		end
 
+	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type have `a_feature' in its list of forgotten
+			-- features when viewed from `a_context' in `a_universe'?
+		do
+			Result := a_context.has_forget_feature (a_feature, a_universe)
+		end
+
+	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does actual generic parameter at index `i' in the base type of current
+			-- type have `a_feature' in its list of forgotten features when viewed
+			-- from `a_context' in `a_universe'?
+		do
+			Result := a_context.has_actual_forget_feature (i, a_feature, a_universe)
+		end
+
 	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context' in `a_universe'?

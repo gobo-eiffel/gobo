@@ -331,6 +331,44 @@ feature -- Status report
 			end
 		end
 
+	has_forget_feature (a_feature: ET_FEATURE; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `base_type' have `a_feature' in its list of forgotten
+			-- features in `a_universe'?
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_has_forget_feature (a_feature, a_universe)
+			when 1 then
+				Result := first.has_forget_feature (a_feature, root_context, a_universe)
+			else
+				l_type := first
+				remove_first
+				Result := l_type.has_forget_feature (a_feature, Current, a_universe)
+				put_first (l_type)
+			end
+		end
+
+	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does actual generic parameter at index `i' in `base_type' have
+			-- `a_feature' in its list of forgotten features in `a_universe'?
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_has_actual_forget_feature (i, a_feature, a_universe)
+			when 1 then
+				Result := first.has_actual_forget_feature (i, a_feature, root_context, a_universe)
+			else
+				l_type := first
+				remove_first
+				Result := l_type.has_actual_forget_feature (i, a_feature, Current, a_universe)
+				put_first (l_type)
+			end	
+		end
+
 	has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current context in `a_universe'
 			-- contain the formal generic parameter with index `i'?

@@ -512,6 +512,81 @@ feature -- Status report
 			end
 		end
 
+	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type have `a_feature' in its list of forgotten
+			-- features when viewed from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			a_target_type: ET_TYPE
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			else
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						a_target_context := a_context.new_type_context (a_target_type)
+						Result := a_query_type.has_forget_feature (a_feature, a_target_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end	
+		end
+
+	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does actual generic parameter at index `i' in the base type of current
+			-- type have `a_feature' in its list of forgotten features when viewed
+			-- from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			a_target_type: ET_TYPE
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			else
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						a_target_context := a_context.new_type_context (a_target_type)
+						Result := a_query_type.has_actual_forget_feature (i, a_feature, a_target_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end	
+		end
+
 	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context' in `a_universe'?

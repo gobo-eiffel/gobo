@@ -129,11 +129,14 @@ feature -- Setting
 
 feature -- Status report
 
+	is_expanded: BOOLEAN is False
+			-- Is current type expanded?
+
 	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
 		do
-			Result := a_universe.tuple_class.is_expanded
+			Result := False
 		end
 
 	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -146,6 +149,13 @@ feature -- Status report
 	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current actual parameter a non-conforming parameter
 			-- when viewed from `a_context' in `a_universe'?
+		do
+			Result := False
+		end
+
+	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type have `a_feature' in its list of forgotten
+			-- features when viewed from `a_context' in `a_universe'?
 		do
 			Result := False
 		end

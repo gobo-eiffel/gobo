@@ -202,6 +202,32 @@ feature -- Status report
 			definition: Result = base_type_actual_parameter (i, a_universe).is_cat_parameter (root_context, a_universe)
 		end
 
+	has_forget_feature (a_feature: ET_FEATURE; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `base_type' have `a_feature' in its list of forgotten
+			-- features in `a_universe'?
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does actual generic parameter at index `i' in `base_type' have
+			-- `a_feature' in its list of forgotten features in `a_universe'?
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_universe)
+		deferred
+		ensure
+			definition: Result = base_type_actual (i, a_universe).has_forget_feature (a_feature, root_context, a_universe)
+		end
+
 	has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current context in `a_universe'
 			-- contain the formal generic parameter with index `i'?
