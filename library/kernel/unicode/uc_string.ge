@@ -1698,7 +1698,7 @@ feature -- Element change
 				put_substring_at_byte_index (str, s, e, nb, k)
 			end
 		ensure
-			appended: is_equal (old clone (Current) + old STRING_.substring (a_string, s, e))
+			appended: is_equal (old clone (Current) + old a_string.substring (s, e))
 		end
 
 	append_utf8 (s: STRING) is

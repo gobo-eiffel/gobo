@@ -217,14 +217,14 @@ feature -- Splitting
 				j := captured_start_position (0) - 1
 				if i <= j + 1 then
 					nb := nb + 1
-					an_array.force (STRING_.substring (subject, i, j), nb)
+					an_array.force (subject.substring (i, j), nb)
 				end
 				i := captured_end_position (0) + 1
 				match_substring (subject, i, subject_end)
 			end
 			if i <= subject_end + 1 then
 				nb := nb + 1
-				an_array.force (STRING_.substring (subject, i, subject_end), nb)
+				an_array.force (subject.substring (i, subject_end), nb)
 			end
 			subject_start := old_subject_start
 		ensure

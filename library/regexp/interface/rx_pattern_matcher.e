@@ -207,9 +207,9 @@ feature -- Access
 			i := captured_start_position (n)
 			nb := captured_end_position (n)
 			if i >= 1 and nb <= subject.count then
-				Result := STRING_.substring (subject, i, nb)
+				Result := subject.substring (i, nb)
 			else
-				Result := STRING_.substring (subject, 1, 0)
+				Result := subject.substring (1, 0)
 			end
 		ensure
 			captured_substring_not_void: Result /= Void

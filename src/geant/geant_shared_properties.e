@@ -328,7 +328,7 @@ feature -- Processing
 			end
 		ensure
 			has_star: (a_star_string.index_of ('*', 1) > 0) implies
-				Result.is_equal (STRING_.substring (a_star_string, 1, a_star_string.index_of ('*', 1) - 1))
+				Result.is_equal (a_star_string.substring (1, a_star_string.index_of ('*', 1) - 1))
 			not_has_star: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
 		end
 
@@ -353,7 +353,7 @@ feature -- Processing
 			end
 		ensure
 			has_star: (a_star_string.index_of ('*', 1) > 0) implies
-				Result.is_equal (STRING_.substring (a_star_string, a_star_string.index_of ('*', 1) + 1, a_star_string.count))
+				Result.is_equal (a_star_string.substring (a_star_string.index_of ('*', 1) + 1, a_star_string.count))
 			not_has_start: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
 		end
 
