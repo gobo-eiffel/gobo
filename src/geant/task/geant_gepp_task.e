@@ -78,6 +78,10 @@ feature {NONE} -- Initialization
 				end
 			end
 
+			if has_uc_attribute (Force_attribute_name) then
+				command.set_force (uc_boolean_value (Force_attribute_name))
+			end
+
 			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
@@ -133,6 +137,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute to_directory.
 		once
 			Result := new_unicode_string ("to_directory")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Force_attribute_name: UC_STRING is
+			-- Name of xml attribute for force
+		once
+			Result := new_unicode_string ("force")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
