@@ -15,6 +15,9 @@ class XM_BRIDGED_PARSER
 inherit
 
 	XM_PARSER
+		redefine
+			parse_from_file_name
+		end
 
 	DP_INTERFACE
 		redefine

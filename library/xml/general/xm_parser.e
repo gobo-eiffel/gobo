@@ -53,7 +53,20 @@ feature {ANY} -- Parsing
 			a_file_name_not_void: a_file_name /= Void
 			-- file must exist and be readable (how to check that on a
 			-- compiler independend way?)
-		deferred
+		local
+			in_file: KL_TEXT_INPUT_FILE
+			a_source: XM_FILE_SOURCE
+		do
+			!! a_source.make (a_file_name.to_utf8)
+			set_source (a_source)
+			
+			!! in_file.make (a_file_name.to_utf8)
+			in_file.open_read
+			check
+				file_is_open: in_file.is_open_read
+			end
+			parse_from_stream (in_file)
+			in_file.close
 		end
 
 	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is

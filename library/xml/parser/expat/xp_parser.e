@@ -157,20 +157,6 @@ feature {ANY} -- Element change
 
 feature {ANY} -- Parsing
 
-	parse_from_file_name (a_file_name: UC_STRING) is
-			-- Parse XML Document from file
-		local
-			in_file: KL_TEXT_INPUT_FILE
-		do
-			!! in_file.make (a_file_name.to_utf8)
-			in_file.open_read
-			check
-				file_is_open: in_file.is_open_read
-			end
-			parse_from_stream (in_file)
-			in_file.close
-		end
-
 	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 		do
 			on_start

@@ -52,13 +52,6 @@ feature -- Parsing
 			parse_stream (a_stream)
 		end
 
-	parse_from_file_name (a_file_name: UC_STRING) is
-			-- Parse file.
-		do
-			!XM_FILE_SOURCE! source.make (a_file_name.to_utf8)
-			parse_file (a_file_name.to_utf8)
-		end
-
 	parse_from_string (a: STRING) is
 			-- Parse from UTF8 string.
 		local

@@ -1077,21 +1077,6 @@ feature {NONE} -- DTD
 
 feature -- Parser
 
-	parse_file (a_name: STRING) is
-			-- Parse file.
-		require
-			not_void: a_name /= Void
-		do
-			on_start
-			scanner.set_input_file (a_name)
-			if scanner.last_input_file_opened then
-				parse
-			else
-				force_error (Error_cannot_read_file)
-			end
-			on_finish
-		end
-
 	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse XML Document from GOBO input stream.
 			--
