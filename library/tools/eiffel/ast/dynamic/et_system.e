@@ -16,6 +16,9 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 creation
 
 	make, make_pull, make_push
@@ -73,36 +76,27 @@ feature {NONE} -- Initialization
 	make_basic_types is
 			-- Create basic types.
 		local
-			l_any: ET_CLASS_TYPE
+			l_unknown_class: ET_CLASS
+			l_unknown_type: ET_DYNAMIC_TYPE
 		do
-			l_any := universe.any_class
-			character_type := dynamic_type (universe.character_class, l_any)
-			character_type.set_alive
-			boolean_type := dynamic_type (universe.boolean_class, l_any)
-			boolean_type.set_alive
-			wide_character_type := dynamic_type (universe.wide_character_class, l_any)
-			wide_character_type.set_alive
-			integer_type := dynamic_type (universe.integer_class, l_any)
-			integer_type.set_alive
-			integer_8_type := dynamic_type (universe.integer_8_class, l_any)
-			integer_8_type.set_alive
-			integer_16_type := dynamic_type (universe.integer_16_class, l_any)
-			integer_16_type.set_alive
-			integer_64_type := dynamic_type (universe.integer_64_class, l_any)
-			integer_64_type.set_alive
-			real_type := dynamic_type (universe.real_class, l_any)
-			real_type.set_alive
-			double_type := dynamic_type (universe.double_class, l_any)
-			double_type.set_alive
-			pointer_type := dynamic_type (universe.pointer_class, l_any)
-			pointer_type.set_alive
-			string_type := dynamic_type (universe.string_class, l_any)
-			string_type.set_alive
-			none_type := dynamic_type (universe.none_class, l_any)
+			l_unknown_class := universe.unknown_class
+			create l_unknown_type.make (l_unknown_class, l_unknown_class)
+			character_type := l_unknown_type
+			boolean_type := l_unknown_type
+			wide_character_type := l_unknown_type
+			integer_type := l_unknown_type
+			integer_8_type := l_unknown_type
+			integer_16_type := l_unknown_type
+			integer_64_type := l_unknown_type
+			real_type := l_unknown_type
+			double_type := l_unknown_type
+			pointer_type := l_unknown_type
+			string_type := l_unknown_type
+			special_character_type := l_unknown_type
+			none_type := l_unknown_type
 		ensure
 			none_type_not_void: none_type /= Void
 			character_type_not_void: character_type /= Void
-			string_type_not_void: string_type /= Void
 			boolean_type_not_void: boolean_type /= Void
 			wide_character_type_not_void: wide_character_type /= Void
 			integer_type_not_void: integer_type /= Void
@@ -112,6 +106,8 @@ feature {NONE} -- Initialization
 			real_type_not_void: real_type /= Void
 			double_type_not_void: double_type /= Void
 			pointer_type_not_void: pointer_type /= Void
+			string_type_not_void: string_type /= Void
+			special_character_type_not_void: special_character_type /= Void
 		end
 
 feature -- Access
@@ -129,9 +125,6 @@ feature -- Types
 
 	character_type: ET_DYNAMIC_TYPE
 			-- Type "CHARACTER"
-
-	string_type: ET_DYNAMIC_TYPE
-			-- Type "STRING"
 
 	boolean_type: ET_DYNAMIC_TYPE
 			-- Type "BOOLEAN"
@@ -163,6 +156,12 @@ feature -- Types
 	none_type: ET_DYNAMIC_TYPE
 			-- Type "NONE"
 
+	string_type: ET_DYNAMIC_TYPE
+			-- Type "STRING"
+
+	special_character_type: ET_DYNAMIC_TYPE
+			-- Type "SPECIAL [CHARACTER]"
+
 	dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE is
 			-- Dynamic type corresponding to `a_type' in `a_context';
 			-- Create a new one if it does not exist yet
@@ -171,14 +170,16 @@ feature -- Types
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			l_type: ET_DYNAMIC_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
-			l_any: ET_CLASS_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_any: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_base_class := a_type.base_class (a_context, universe)
 			i := l_base_class.index
@@ -203,11 +204,44 @@ feature -- Types
 								l_actual_parameters := l_base_type.actual_parameters
 								if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 										-- Class SPECIAL should have exactly one generic parameter.
-									l_item_type := dynamic_type (l_actual_parameters.type (1), universe.any_class)
+									l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
 									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
 									create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type_set)
 								else
 									create Result.make (l_base_type, l_base_class)
+								end
+							elseif l_base_class = universe.tuple_class then
+								l_any := universe.any_class
+								l_actual_parameters := l_base_type.actual_parameters
+								if l_actual_parameters /= Void then
+									nb := l_actual_parameters.count
+									if nb > 0 then
+										create l_item_type_sets.make_with_capacity (nb)
+										from i := 1 until i > nb loop
+											l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
+											l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+											l_item_type_sets.put_last (l_item_type_set)
+											i := i + 1
+										end
+									else
+										l_item_type_sets := empty_dynamic_type_sets
+									end
+								else
+									l_item_type_sets := empty_dynamic_type_sets
+								end
+								create {ET_DYNAMIC_TUPLE_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets)
+							elseif l_base_class = universe.array_class then
+								create Result.make (l_base_type, l_base_class)
+									-- Make features 'area', and 'lower' and 'upper' alive at the
+									-- first three positions in the feature list of the ARRAY type.
+								if array_area_feature /= Void then
+									l_dynamic_feature := Result.dynamic_feature (array_area_feature, Current)
+								end
+								if array_lower_feature /= Void then
+									l_dynamic_feature := Result.dynamic_feature (array_lower_feature, Current)
+								end
+								if array_upper_feature /= Void then
+									l_dynamic_feature := Result.dynamic_feature (array_upper_feature, Current)
 								end
 							else
 								create Result.make (l_base_type, l_base_class)
@@ -225,6 +259,9 @@ feature -- Types
 					-- Add the new dynamic type and keep track
 					-- of its associated index.
 				l_base_class.process (universe.interface_checker)
+				if l_base_class.has_interface_error then
+					set_fatal_error
+				end
 				l_base_type := a_type.base_type (a_context, universe)
 				if l_base_class = universe.special_class then
 					l_actual_parameters := l_base_type.actual_parameters
@@ -235,6 +272,39 @@ feature -- Types
 						create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type_set)
 					else
 						create Result.make (l_base_type, l_base_class)
+					end
+				elseif l_base_class = universe.tuple_class then
+					l_any := universe.any_class
+					l_actual_parameters := l_base_type.actual_parameters
+					if l_actual_parameters /= Void then
+						nb := l_actual_parameters.count
+						if nb > 0 then
+							create l_item_type_sets.make_with_capacity (nb)
+							from i := 1 until i > nb loop
+								l_item_type := dynamic_type (l_actual_parameters.type (i), l_any)
+								l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+								l_item_type_sets.put_last (l_item_type_set)
+								i := i + 1
+							end
+						else
+							l_item_type_sets := empty_dynamic_type_sets
+						end
+					else
+						l_item_type_sets := empty_dynamic_type_sets
+					end
+					create {ET_DYNAMIC_TUPLE_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets)
+				elseif l_base_class = universe.array_class then
+					create Result.make (l_base_type, l_base_class)
+						-- Make features 'area', and 'lower' and 'upper' alive at the
+						-- first three positions in the feature list of the ARRAY type.
+					if array_area_feature /= Void then
+						l_dynamic_feature := Result.dynamic_feature (array_area_feature, Current)
+					end
+					if array_lower_feature /= Void then
+						l_dynamic_feature := Result.dynamic_feature (array_lower_feature, Current)
+					end
+					if array_upper_feature /= Void then
+						l_dynamic_feature := Result.dynamic_feature (array_upper_feature, Current)
 					end
 				else
 					create Result.make (l_base_type, l_base_class)
@@ -253,9 +323,26 @@ feature -- Compilation
 
 	compile is
 			-- Compile current system.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_class: ET_CLASS
-			l_interface_checker: ET_AST_PROCESSOR
+		do
+			l_class := universe.root_class
+			if l_class = universe.none_class then
+				compile_all
+			elseif l_class /= Void then
+				compile_system
+			end
+		end
+
+	compile_system is
+			-- Compile all classes in the system.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_class: ET_CLASS
+			l_name: ET_IDENTIFIER
+			l_feature: ET_FEATURE
+			l_command: KL_SHELL_COMMAND
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
 		do
@@ -269,67 +356,7 @@ feature -- Compilation
 			debug ("ericb")
 				universe.print_time (dt1, "Degree 6")
 			end
-			l_interface_checker := universe.interface_checker
-			l_class := character_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := string_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := boolean_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := wide_character_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := integer_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := integer_8_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := integer_16_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := integer_64_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := real_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := double_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := pointer_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_interface_checker)
-			end
-			l_class := universe.root_class
-			if l_class = universe.none_class then
-				compile_all
-			elseif l_class /= Void then
-				compile_system
-			end
-		end
-
-	compile_system is
-			-- Compile all classes in the system.
-		local
-			l_class: ET_CLASS
-			l_name: ET_IDENTIFIER
-			l_feature: ET_FEATURE
-			l_command: KL_SHELL_COMMAND
-		do
+			compile_kernel
 			l_class := universe.root_class
 			if l_class /= Void then
 				root_type := dynamic_type (l_class, l_class)
@@ -351,7 +378,6 @@ feature -- Compilation
 					root_creation_procedure.set_creation (True)
 					root_type.set_alive
 					build_dynamic_type_sets
-					generate_ids
 					generate_c_code
 					if universe.system_name /= Void then
 						create l_command.make ("cl " + universe.system_name + ".c")
@@ -365,6 +391,7 @@ feature -- Compilation
 
 	compile_all is
 			-- Compile all classes in the universe.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
@@ -376,11 +403,13 @@ feature -- Compilation
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
 		do
+			has_fatal_error := False
+			universe.activate_processors
 			debug ("ericb")
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			universe.compile_degree_5
+			universe.parse_all
 			debug ("ericb")
 				universe.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
@@ -395,6 +424,7 @@ feature -- Compilation
 				universe.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
+			compile_kernel
 			l_cursor := universe.classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
@@ -417,6 +447,140 @@ feature -- Compilation
 			debug ("ericb")
 				universe.print_time (dt1, "Degree Dynamic Type Set")
 			end
+		end
+
+feature {NONE} -- Compilation
+
+	compile_kernel is
+			-- Compile kernel classes.
+		local
+			l_any: ET_CLASS_TYPE
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_generic_class_type: ET_GENERIC_CLASS_TYPE
+			l_class: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_area_feature: ET_FEATURE
+			l_count_feature: ET_FEATURE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			dynamic_types.wipe_out
+			l_any := universe.any_class
+			character_type := dynamic_type (universe.character_class, l_any)
+			boolean_type := dynamic_type (universe.boolean_class, l_any)
+			wide_character_type := dynamic_type (universe.wide_character_class, l_any)
+			integer_type := dynamic_type (universe.integer_class, l_any)
+			integer_8_type := dynamic_type (universe.integer_8_class, l_any)
+			integer_16_type := dynamic_type (universe.integer_16_class, l_any)
+			integer_64_type := dynamic_type (universe.integer_64_class, l_any)
+			real_type := dynamic_type (universe.real_class, l_any)
+			double_type := dynamic_type (universe.double_class, l_any)
+			pointer_type := dynamic_type (universe.pointer_class, l_any)
+				-- Type "SPECIAL[CHARACTER]"
+			l_class := universe.special_class
+			create l_actual_parameters.make_with_capacity (1)
+			l_actual_parameters.put_first (universe.character_class)
+			create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
+			special_character_type := dynamic_type (l_generic_class_type, l_any)
+				-- Type "STRING".
+			l_class := universe.string_class
+			string_type := dynamic_type (l_class, l_any)
+			if l_class.has_interface_error then
+					-- Error already reported.
+				set_fatal_error
+			else
+					-- Make features 'area' and 'count' alive at the first
+					-- two positions in the feature list of the STRING type.
+				l_area_feature := l_class.named_feature (tokens.area_feature_name)
+				if l_area_feature = Void then
+-- TODO
+					set_fatal_error
+				elseif not l_area_feature.is_attribute then
+-- TODO
+					set_fatal_error
+				else
+					l_dynamic_feature := string_type.dynamic_feature (l_area_feature, Current)
+					l_result_type_set := l_dynamic_feature.result_type_set
+					if l_result_type_set = Void then
+-- TODO
+						set_fatal_error
+					elseif l_result_type_set.static_type /= special_character_type then
+-- TODO
+						set_fatal_error
+					end
+				end
+				l_count_feature := l_class.named_feature (tokens.count_feature_name)
+				if l_count_feature = Void then
+-- TODO
+					set_fatal_error
+				elseif not l_count_feature.is_attribute then
+-- TODO
+					set_fatal_error
+				else
+					l_dynamic_feature := string_type.dynamic_feature (l_count_feature, Current)
+					l_result_type_set := l_dynamic_feature.result_type_set
+					if l_result_type_set = Void then
+-- TODO
+						set_fatal_error
+					elseif l_result_type_set.static_type /= integer_type then
+-- TODO
+						set_fatal_error
+					end
+				end
+			end
+				-- Class "ARRAY".
+			array_area_feature := Void
+			array_lower_feature := Void
+			array_upper_feature := Void
+			l_class := universe.array_class
+			if l_class.is_preparsed then
+				l_class.process (universe.interface_checker)
+				if l_class.has_interface_error then
+					set_fatal_error
+				else
+						-- Check features `area', and `lower' and `upper' of class ARRAY.
+					array_area_feature := l_class.named_feature (tokens.area_feature_name)
+					if array_area_feature = Void then
+-- TODO
+						set_fatal_error
+					elseif not array_area_feature.is_attribute then
+-- TODO
+						array_area_feature := Void
+						set_fatal_error
+					elseif not array_area_feature.type.same_named_type (universe.special_class, l_class, l_class, universe) then
+-- TODO
+						array_area_feature := Void
+						set_fatal_error
+					else
+					end
+					array_lower_feature := l_class.named_feature (tokens.lower_feature_name)
+					if array_lower_feature = Void then
+-- TODO
+						set_fatal_error
+					elseif not array_lower_feature.is_attribute then
+-- TODO
+						array_lower_feature := Void
+						set_fatal_error
+					elseif not array_lower_feature.type.same_named_type (universe.integer_class, l_class, l_class, universe) then
+-- TODO
+						array_lower_feature := Void
+						set_fatal_error
+					end
+					array_upper_feature := l_class.named_feature (tokens.upper_feature_name)
+					if array_upper_feature = Void then
+-- TODO
+						set_fatal_error
+					elseif not array_upper_feature.is_attribute then
+-- TODO
+						array_upper_feature := Void
+						set_fatal_error
+					elseif not array_upper_feature.type.same_named_type (universe.integer_class, l_class, l_class, universe) then
+-- TODO
+						array_upper_feature := Void
+						set_fatal_error
+					end
+				end
+			end
+			none_type := dynamic_type (universe.none_class, l_any)
 		end
 
 	build_dynamic_type_sets is
@@ -454,51 +618,6 @@ feature -- Compilation
 			end
 		end
 
-	generate_ids is
-			-- Generate types and feature ids.
-		local
-			l_type: ET_DYNAMIC_TYPE
-			i, nb: INTEGER
-			l_features: ET_DYNAMIC_FEATURE_LIST
-			l_feature: ET_DYNAMIC_FEATURE
-			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
-			l_precursor: ET_DYNAMIC_PRECURSOR
-			j, nb2: INTEGER
-			k, nb3: INTEGER
-			l_count: INTEGER
-		do
-			nb := dynamic_types.count
-			from i := 1 until i > nb loop
-				l_type := dynamic_types.item (i)
-				l_count := l_count + 1
-				l_type.set_id (l_count)
-				if l_type.is_alive or l_type.has_static then
-					l_features := l_type.features
-					if l_features /= Void then
-						nb2 := l_features.count
-						from j := 1 until j > nb2 loop
-							l_feature := l_features.item (j)
-							l_feature.set_id (j)
-							l_precursor := l_feature.first_precursor
-							if l_precursor /= Void then
-								l_precursor.set_id (1)
-								l_other_precursors := l_feature.other_precursors
-								if l_other_precursors /= Void then
-									nb3 := l_other_precursors.count
-									from k := 2 until k > nb3 loop
-										l_other_precursors.item (k).set_id (k)
-										k := k + 1
-									end
-								end
-							end
-							j := j + 1
-						end
-					end
-				end
-				i := i + 1
-			end
-		end
-
 feature -- Error handling
 
 	has_fatal_error: BOOLEAN
@@ -525,6 +644,24 @@ feature -- Processors
 	dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			-- Builder of dynamic type sets
 
+feature {NONE} -- Features
+
+	array_area_feature: ET_FEATURE
+	array_lower_feature: ET_FEATURE
+	array_upper_feature: ET_FEATURE
+			-- Expected attributes in class ARRAY
+
+feature {NONE} -- Implementation
+
+	empty_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST is
+			-- Empty dynamic type set list
+		once
+			create Result.make
+		ensure
+			dynamic_type_sets_not_void: Result /= Void
+			dynamic_type_sets_empty: Result.is_empty
+		end
+
 invariant
 
 	universe_not_void: universe /= Void
@@ -532,7 +669,6 @@ invariant
 	no_void_dynamic_type: not dynamic_types.has (Void)
 	none_type_not_void: none_type /= Void
 	character_type_not_void: character_type /= Void
-	string_type_not_void: string_type /= Void
 	boolean_type_not_void: boolean_type /= Void
 	wide_character_type_not_void: wide_character_type /= Void
 	integer_type_not_void: integer_type /= Void
@@ -542,6 +678,8 @@ invariant
 	real_type_not_void: real_type /= Void
 	double_type_not_void: double_type /= Void
 	pointer_type_not_void: pointer_type /= Void
+	string_type_not_void: string_type /= Void
+	special_character_type_not_void: special_character_type /= Void
 	root_creation_procedure: root_creation_procedure /= Void implies root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
 

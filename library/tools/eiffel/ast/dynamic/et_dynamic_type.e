@@ -33,13 +33,14 @@ feature {NONE} -- Initialization
 		do
 			base_type := a_type
 			base_class := a_class
+			features := empty_features
 			if is_expanded then
-				first_type := Current
+				set_alive
 			end
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
-			first_expanded_type: is_expanded implies first_type = Current
+			expanded_type_alive: is_expanded implies is_alive
 		end
 
 feature -- Status report
@@ -62,6 +63,12 @@ feature -- Status report
 
 	is_special: BOOLEAN is
 			-- Is current type a SPECIAL type?
+		do
+			-- Result := False
+		end
+
+	is_tuple: BOOLEAN is
+			-- Is current type a TUPLE type?
 		do
 			-- Result := False
 		end
@@ -188,7 +195,7 @@ feature -- Features
 			i, nb: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			if features = Void then
+			if features = empty_features then
 				create features.make_with_capacity (base_class.features.count)
 				Result := new_dynamic_feature (a_feature, a_system)
 				features.put_last (Result)
@@ -286,10 +293,20 @@ feature {NONE} -- Implementation
 			new_dynamic_feature_not_void: Result /= Void
 		end
 
+	empty_features: ET_DYNAMIC_FEATURE_LIST is
+			-- 	Empty feature list
+		once
+			create Result.make
+		ensure
+			features_not_void: Result /= Void
+			features_empty: Result.is_empty
+		end
+		
 invariant
 
 	base_type_not_void: base_type /= Void
 	base_type_base_type: base_type.is_base_type
 	base_class_not_void: base_class /= Void
+	features_not_void: features /= Void
 
 end

@@ -151,6 +151,7 @@ feature -- Generation
 			l_root_creation: ET_DYNAMIC_FEATURE
 		do
 			has_fatal_error := False
+			generate_ids
 			old_file := current_file
 			current_file := a_file
 			a_file.put_line ("#include <stdlib.h>")
@@ -165,6 +166,7 @@ feature -- Generation
 			a_file.put_new_line
 			print_types
 			a_file.put_new_line
+			a_file.put_line ("#define EIF_MALLOC malloc")
 			a_file.put_line ("#define EIF_VOID ((T0*)0)")
 			a_file.put_string ("#define EIF_TRUE (")
 			print_type_cast (current_system.boolean_type)
@@ -179,12 +181,10 @@ feature -- Generation
 				l_type := l_dynamic_types.item (i)
 				if l_type.is_alive or l_type.has_static then
 					l_features := l_type.features
-					if l_features /= Void then
-						nb2 := l_features.count
-						from j := 1 until j > nb2 loop
-							print_feature_declaration (l_features.item (j), l_type)
-							j := j + 1
-						end
+					nb2 := l_features.count
+					from j := 1 until j > nb2 loop
+						print_feature_declaration (l_features.item (j), l_type)
+						j := j + 1
 					end
 				end
 				i := i + 1
@@ -224,6 +224,53 @@ feature -- Generation
 				a_file.put_new_line
 			end
 			current_file := old_file
+		end
+
+feature {NONE} -- Generation
+
+	generate_ids is
+			-- Generate types and feature ids.
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_feature: ET_DYNAMIC_FEATURE
+			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			l_precursor: ET_DYNAMIC_PRECURSOR
+			j, nb2: INTEGER
+			k, nb3: INTEGER
+			l_count: INTEGER
+		do
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				l_count := l_count + 1
+				l_type.set_id (l_count)
+				if l_type.is_alive or l_type.has_static then
+					l_features := l_type.features
+					nb2 := l_features.count
+					from j := 1 until j > nb2 loop
+						l_feature := l_features.item (j)
+						l_feature.set_id (j)
+						l_precursor := l_feature.first_precursor
+						if l_precursor /= Void then
+							l_precursor.set_id (1)
+							l_other_precursors := l_feature.other_precursors
+							if l_other_precursors /= Void then
+								nb3 := l_other_precursors.count
+								from k := 2 until k > nb3 loop
+									l_other_precursors.item (k).set_id (k)
+									k := k + 1
+								end
+							end
+						end
+						j := j + 1
+					end
+				end
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Feature generation
@@ -461,12 +508,10 @@ feature {NONE} -- Feature generation
 			old_type := current_type
 			current_type := a_type
 			l_features := a_type.features
-			if l_features /= Void then
-				nb := l_features.count
-				from i := 1 until i > nb loop
-					print_feature (l_features.item (i))
-					i := i + 1
-				end
+			nb := l_features.count
+			from i := 1 until i > nb loop
+				print_feature (l_features.item (i))
+				i := i + 1
 			end
 			current_type := old_type
 		end
@@ -811,6 +856,7 @@ feature {NONE} -- Feature generation
 			is_static: a_static implies current_feature.is_static
 			is_creation: a_creation implies current_feature.is_creation
 		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -931,13 +977,50 @@ feature {NONE} -- Feature generation
 				current_file.put_character ('(')
 				print_type_declaration (current_type)
 				current_file.put_character (')')
-				current_file.put_string (c_malloc)
-				current_file.put_character ('(')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_name (current_type)
-				current_file.put_character (')')
-				current_file.put_character (')')
+				l_special_type ?= current_type
+				if l_special_type /= Void then
+					current_file.put_string (c_eif_malloc)
+					current_file.put_character ('(')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_name (current_type)
+					current_file.put_character (')')
+					current_file.put_character ('+')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character ('*')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_special_type.item_type_set.static_type)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('(')
+					print_type_cast (current_type)
+					current_file.put_character ('(')
+					current_file.put_character ('C')
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character ('-')
+					current_file.put_character ('>')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('a')
+					current_file.put_character ('1')
+				else
+					current_file.put_string (c_eif_malloc)
+					current_file.put_character ('(')
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_name (current_type)
+					current_file.put_character (')')
+					current_file.put_character (')')
+				end
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -2604,9 +2687,104 @@ feature {NONE} -- Expression generation
 			-- Print `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+		local
+			l_string: STRING
+			l_special_index: INTEGER
+			l_string_index: INTEGER
 		do
+			l_string := a_string.value
+			local_count := local_count + 1
+			l_special_index := local_count
+			print_reference_local_declaration (l_special_index)
+			local_count := local_count + 1
+			l_string_index := local_count
+			print_reference_local_declaration (l_string_index)
+			current_file.put_character ('(')
+			current_file.put_character ('z')
+			current_file.put_integer (l_special_index)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_eif_malloc)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_type_name (current_system.special_character_type)
+			current_file.put_character (')')
+			current_file.put_character ('+')
+			current_file.put_integer (l_string.count + 1)
+			current_file.put_character ('*')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_type_declaration (current_system.character_type)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (',')
+			current_file.put_character ('(')
+			print_type_cast (current_system.special_character_type)
+			current_file.put_character ('(')
+			current_file.put_character ('z')
+			current_file.put_integer (l_special_index)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			current_file.put_character ('a')
+			current_file.put_character ('1')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_integer (l_string.count + 1)
+
+			current_file.put_character (',')
+			current_file.put_character ('z')
+			current_file.put_integer (l_string_index)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_eif_malloc)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_type_name (current_system.string_type)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (',')
+			current_file.put_character ('(')
+			print_type_cast (current_system.string_type)
+			current_file.put_character ('(')
+			current_file.put_character ('z')
+			current_file.put_integer (l_string_index)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			current_file.put_character ('a')
+			current_file.put_character ('1')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('z')
+			current_file.put_integer (l_special_index)
+			current_file.put_character (',')
+			current_file.put_character ('(')
+			print_type_cast (current_system.string_type)
+			current_file.put_character ('(')
+			current_file.put_character ('z')
+			current_file.put_integer (l_string_index)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			current_file.put_character ('a')
+			current_file.put_character ('2')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_integer (l_string.count)
+			current_file.put_character (',')
+			current_file.put_character ('z')
+			current_file.put_integer (l_string_index)
+			current_file.put_character (')')
 -- TODO.
-			current_file.put_string (c_eif_void)
+--			current_file.put_string (c_eif_void)
 		end
 
 	print_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
@@ -3087,6 +3265,10 @@ feature {NONE} -- Type generation
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
@@ -3197,20 +3379,53 @@ feature {NONE} -- Type generation
 						current_file.put_character (' ')
 						current_file.put_string (c_id)
 						current_file.put_character (';')
-						l_features := l_type.features
-						if l_features /= Void then
-							nb2 := l_features.count
-							from j := 1 until j > nb2 loop
-								l_feature := l_features.item (j)
-								if l_feature.is_attribute then
+						l_special_type ?= l_type
+						if l_special_type /= Void then
+							current_file.put_character (' ')
+							print_type_declaration (current_system.integer_type)
+							current_file.put_character (' ')
+							current_file.put_character ('a')
+							current_file.put_integer (1)
+							current_file.put_character (';')
+							l_item_type_set := l_special_type.item_type_set
+							current_file.put_character (' ')
+							print_type_declaration (l_item_type_set.static_type)
+							current_file.put_character (' ')
+							current_file.put_character ('a')
+							current_file.put_integer (2)
+							current_file.put_character ('[')
+							current_file.put_integer (0)
+							current_file.put_character (']')
+							current_file.put_character (';')
+						else
+							l_tuple_type ?= l_type
+							if l_tuple_type /= Void then
+								l_item_type_sets := l_tuple_type.item_type_sets
+								nb2 := l_item_type_sets.count
+								from j := 1 until j > nb2 loop
 									current_file.put_character (' ')
-									print_type_declaration (l_feature.result_type_set.static_type)
+									print_type_declaration (l_item_type_sets.item (j).static_type)
 									current_file.put_character (' ')
 									current_file.put_character ('a')
-									current_file.put_integer (l_feature.id)
+									current_file.put_integer (j)
 									current_file.put_character (';')
+									j := j + 1
 								end
-								j := j + 1
+							else
+								l_features := l_type.features
+								nb2 := l_features.count
+								from j := 1 until j > nb2 loop
+									l_feature := l_features.item (j)
+									if l_feature.is_attribute then
+										current_file.put_character (' ')
+										print_type_declaration (l_feature.result_type_set.static_type)
+										current_file.put_character (' ')
+										current_file.put_character ('a')
+										current_file.put_integer (l_feature.id)
+										current_file.put_character (';')
+									end
+									j := j + 1
+								end
 							end
 						end
 						current_file.put_character ('}')
@@ -3901,6 +4116,7 @@ feature {NONE} -- Constants
 	c_default: STRING is "default"
 	c_double: STRING is "double"
 	c_eif_false: STRING is "EIF_FALSE"
+	c_eif_malloc: STRING is "EIF_MALLOC"
 	c_eif_true: STRING is "EIF_TRUE"
 	c_eif_void: STRING is "EIF_VOID"
 	c_else: STRING is "else"
@@ -3913,7 +4129,6 @@ feature {NONE} -- Constants
 	c_int16_t: STRING is "int16_t"
 	c_int32_t: STRING is "int32_t"
 	c_int64_t: STRING is "int64_t"
-	c_malloc: STRING is "malloc"
 	c_return: STRING is "return"
 	c_sizeof: STRING is "sizeof"
 	c_struct: STRING is "struct"

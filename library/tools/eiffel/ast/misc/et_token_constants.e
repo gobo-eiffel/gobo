@@ -212,36 +212,28 @@ feature -- Class names
 
 feature -- Feature names
 
+	area_feature_name: ET_FEATURE_NAME is
+			-- 'area' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (area_name)
+		ensure
+			area_feature_name_not_void: Result /= Void
+		end
+
+	count_feature_name: ET_FEATURE_NAME is
+			-- 'count' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (count_name)
+		ensure
+			count_feature_name_not_void: Result /= Void
+		end
+
 	default_create_feature_name: ET_FEATURE_NAME is
 			-- 'default_create' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
-		end
-
-	void_feature_name: ET_FEATURE_NAME is
-			-- 'Void' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
-		ensure
-			default_create_feature_name_not_void: Result /= Void
-		end
-
-	put_feature_name: ET_FEATURE_NAME is
-			-- 'put' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (put_name)
-		ensure
-			put_feature_name_not_void: Result /= Void
-		end
-
-	item_feature_name: ET_FEATURE_NAME is
-			-- 'item' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (item_name)
-		ensure
-			item_feature_name_not_void: Result /= Void
 		end
 
 	infix_at_feature_name: ET_FEATURE_NAME is
@@ -258,6 +250,62 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (invariant_keyword_name)
 		ensure
 			invariant_feature_name_not_void: Result /= Void
+		end
+
+	item_feature_name: ET_FEATURE_NAME is
+			-- 'item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (item_name)
+		ensure
+			item_feature_name_not_void: Result /= Void
+		end
+
+	lower_feature_name: ET_FEATURE_NAME is
+			-- 'lower' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (lower_name)
+		ensure
+			lower_feature_name_not_void: Result /= Void
+		end
+
+	put_feature_name: ET_FEATURE_NAME is
+			-- 'put' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_name)
+		ensure
+			put_feature_name_not_void: Result /= Void
+		end
+
+	put_reference_feature_name: ET_FEATURE_NAME is
+			-- 'put_reference' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_reference_name)
+		ensure
+			put_reference_feature_name_not_void: Result /= Void
+		end
+
+	reference_item_feature_name: ET_FEATURE_NAME is
+			-- 'reference_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (reference_item_name)
+		ensure
+			reference_item_feature_name_not_void: Result /= Void
+		end
+
+	upper_feature_name: ET_FEATURE_NAME is
+			-- 'upper' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (upper_name)
+		ensure
+			upper_feature_name_not_void: Result /= Void
+		end
+
+	void_feature_name: ET_FEATURE_NAME is
+			-- 'Void' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
+		ensure
+			default_create_feature_name_not_void: Result /= Void
 		end
 
 feature -- Types
@@ -950,9 +998,15 @@ feature -- Keyword and symbol names
 	capitalized_unknown_name: STRING is "*UNKNOWN*"
 		-- Eiffel class names
 
+	area_name: STRING is "area"
+	count_name: STRING is "count"
 	default_create_name: STRING is "default_create"
 	item_name: STRING is "item"
+	lower_name: STRING is "lower"
 	put_name: STRING is "put"
+	put_reference_name: STRING is "put_reference"
+	reference_item_name: STRING is "reference_item"
+	upper_name: STRING is "upper"
 		-- Eiffel feature names
 
 	capitalized_current_keyword_name: STRING is "Current"

@@ -18,6 +18,8 @@ inherit
 		redefine
 			new_dynamic_type_set,
 			build_dynamic_type_sets,
+			build_tuple_item,
+			build_tuple_put,
 			report_catcall_error,
 			report_agent_open_operand,
 			report_assignment,
@@ -34,6 +36,7 @@ inherit
 			report_qualified_call_instruction,
 			report_static_call_expression,
 			report_static_call_instruction,
+			report_string_constant,
 			report_unqualified_call_agent,
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction
@@ -80,53 +83,91 @@ feature -- Generation
 				from i := 1 until i > nb loop
 					l_type := l_dynamic_types.item (i)
 					l_features := l_type.features
-					if l_features /= Void then
-						nb2 := l_features.count
-						from j := 1 until j > nb2 loop
-							l_feature := l_features.item (j)
-							if not l_feature.is_built then
-								is_built := False
-								build_feature_dynamic_type_sets (l_feature, l_type)
-									-- `build_feature_dynamic_type_sets' may have
-									-- added other features to the list.
-								nb2 := l_features.count
-								l_precursor := l_feature.first_precursor
-								if l_precursor /= Void then
-									if not l_precursor.is_built then
-										is_built := False
-										build_feature_dynamic_type_sets (l_precursor, l_type)
-											-- `build_feature_dynamic_type_sets' may have
-											-- added other features to the list.
-										nb2 := l_features.count
-									end
-									l_other_precursors := l_feature.other_precursors
-									if l_other_precursors /= Void then
-										nb3 := l_other_precursors.count
-										from k := 1 until k > nb3 loop
-											l_precursor := l_other_precursors.item (k)
-											if not l_precursor.is_built then
-												is_built := False
-												build_feature_dynamic_type_sets (l_precursor, l_type)
-													-- `build_feature_dynamic_type_sets' may have
-													-- added other precursors to the list.
-												nb3 := l_other_precursors.count
-													-- `build_feature_dynamic_type_sets' may have
-													-- added other features to the list.
-												nb2 := l_features.count
-											end
-											k := k + 1
+					nb2 := l_features.count
+					from j := 1 until j > nb2 loop
+						l_feature := l_features.item (j)
+						if not l_feature.is_built then
+							is_built := False
+							build_feature_dynamic_type_sets (l_feature, l_type)
+								-- `build_feature_dynamic_type_sets' may have
+								-- added other features to the list.
+							nb2 := l_features.count
+							l_precursor := l_feature.first_precursor
+							if l_precursor /= Void then
+								if not l_precursor.is_built then
+									is_built := False
+									build_feature_dynamic_type_sets (l_precursor, l_type)
+										-- `build_feature_dynamic_type_sets' may have
+										-- added other features to the list.
+									nb2 := l_features.count
+								end
+								l_other_precursors := l_feature.other_precursors
+								if l_other_precursors /= Void then
+									nb3 := l_other_precursors.count
+									from k := 1 until k > nb3 loop
+										l_precursor := l_other_precursors.item (k)
+										if not l_precursor.is_built then
+											is_built := False
+											build_feature_dynamic_type_sets (l_precursor, l_type)
+												-- `build_feature_dynamic_type_sets' may have
+												-- added other precursors to the list.
+											nb3 := l_other_precursors.count
+												-- `build_feature_dynamic_type_sets' may have
+												-- added other features to the list.
+											nb2 := l_features.count
 										end
+										k := k + 1
 									end
 								end
 							end
-							j := j + 1
 						end
+						j := j + 1
 					end
 					i := i + 1
 				end
 			end
 			check_catcall_validity
 			dynamic_calls.wipe_out
+		end
+
+feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
+
+	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is
+			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
+		local
+			i, nb: INTEGER
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+		do
+			l_result_type_set := an_item_feature.result_type_set
+			if l_result_type_set /= Void then
+				l_item_type_sets := a_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					l_item_type_sets.item (i).put_target (l_result_type_set, current_system)
+					i := i + 1
+				end
+			end
+		end
+
+	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE) is
+			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
+		local
+			i, nb: INTEGER
+			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+		do
+			l_argument_type_sets := a_put_feature.dynamic_type_sets
+			if l_argument_type_sets.count > 1 then
+				l_argument_type_set := l_argument_type_sets.item (1)
+				l_item_type_sets := a_tuple_type.item_type_sets
+				nb := l_item_type_sets.count
+				from i := 1 until i > nb loop
+					l_argument_type_set.put_target (l_item_type_sets.item (i), current_system)
+					i := i + 1
+				end
+			end
 		end
 
 feature {NONE} -- CAT-calls
@@ -374,9 +415,8 @@ feature {NONE} -- Event handling
 		local
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
-			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_generic_class_type: ET_GENERIC_CLASS_TYPE
-			l_special_class: ET_CLASS
+			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
@@ -386,38 +426,45 @@ feature {NONE} -- Event handling
 				l_type := current_system.dynamic_type (a_type, current_type)
 				l_type.set_alive
 				set_dynamic_type_set (l_type, an_expression)
-				l_actual_parameters := l_type.base_type.actual_parameters
-				if l_actual_parameters = Void then
-						-- Internal error: an array type should have one generic parameter.
+					-- Make sure that type SPECIAL[XXX] (used in feature 'area') is marked as alive.
+					-- Feature 'area' should be the first in the list of features.
+				l_features := l_type.features
+				if l_features.is_empty then
+						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_gibeo_error
 				else
-					l_special_class := universe.special_class
-					create l_generic_class_type.make (Void, l_special_class.name, l_actual_parameters, l_special_class)
-					l_special_type ?= current_system.dynamic_type (l_generic_class_type, current_type)
-					if l_special_type = Void then
-							-- Internal error: we just built a special type.
+					l_area_type_set := l_features.item (1).result_type_set
+					if l_area_type_set = Void then
+							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 						set_fatal_error
-						error_handler.report_gibep_error
 					else
-						l_special_type.set_alive
-						l_item_type_set := l_special_type.item_type_set
-						nb := an_expression.count
-						from i := 1 until i > nb loop
-							l_expression := an_expression.expression (i)
-							l_dynamic_type_set := dynamic_type_set (l_expression)
-							if l_dynamic_type_set = Void then
-									-- Internal error: the dynamic type set of the expressions
-									-- in the manifest array should be known at this stage.
-								set_fatal_error
-								error_handler.report_gibeq_error
-							else
-								l_dynamic_type_set.put_target (l_item_type_set, current_system)
+						l_special_type ?= l_area_type_set.static_type
+						if l_special_type = Void then
+								-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+							set_fatal_error
+						else
+							l_special_type.set_alive
+							l_special_type.put_target (l_area_type_set, current_system)
+							l_item_type_set := l_special_type.item_type_set
+							nb := an_expression.count
+							from i := 1 until i > nb loop
+								l_expression := an_expression.expression (i)
+								l_dynamic_type_set := dynamic_type_set (l_expression)
+								if l_dynamic_type_set = Void then
+										-- Internal error: the dynamic type set of the expressions
+										-- in the manifest array should be known at this stage.
+									set_fatal_error
+									error_handler.report_gibeq_error
+								else
+									l_dynamic_type_set.put_target (l_item_type_set, current_system)
+								end
+								i := i + 1
 							end
-							i := i + 1
 						end
 					end
 				end
+					-- Make sure that type INTEGER (used in attributess 'lower' and 'upper') is marked as alive.
+				current_system.integer_type.set_alive
 			end
 		end
 
@@ -426,11 +473,45 @@ feature {NONE} -- Event handling
 			-- `current_type' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			i, nb: INTEGER
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_expression: ET_EXPRESSION
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.dynamic_type (a_type, current_type)
 				l_type.set_alive
 				set_dynamic_type_set (l_type, an_expression)
+				l_tuple_type ?= l_type
+				if l_tuple_type = Void then
+						-- Internal error: the type of a manifest tuple should be a tuple type.
+					set_fatal_error
+					error_handler.report_gibfw_error
+				else
+					l_item_type_sets := l_tuple_type.item_type_sets
+					nb := an_expression.count
+					if l_item_type_sets.count /= nb then
+							-- Internal error: the tuple type of a manifest tuple should
+							-- have the proper number of generic parameters.
+						set_fatal_error
+						error_handler.report_gibfx_error
+					else
+						from i := 1 until i > nb loop
+							l_expression := an_expression.expression (i)
+							l_dynamic_type_set := dynamic_type_set (l_expression)
+							if l_dynamic_type_set = Void then
+									-- Internal error: the dynamic type set of the expressions
+									-- in the manifest tuple should be known at this stage.
+								set_fatal_error
+								error_handler.report_gibfy_error
+							else
+								l_dynamic_type_set.put_target (l_item_type_sets.item (i), current_system)
+							end
+							i := i + 1
+						end
+					end
+				end
 			end
 		end
 
@@ -712,6 +793,50 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
+			end
+		end
+
+	report_string_constant (a_string: ET_MANIFEST_STRING) is
+			-- Report that a string has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.string_type
+				if a_string.index = 0 and string_index /= 0 then
+					a_string.set_index (string_index)
+				end
+				l_type.set_alive
+				set_dynamic_type_set (l_type, a_string)
+				if string_index = 0 then
+					string_index := a_string.index
+				end
+					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- feature 'area') is marked as alive.
+					-- Feature 'area' should be the first in the list of features.
+				l_special_type := current_system.special_character_type
+				l_special_type.set_alive
+				l_features := l_type.features
+				if l_features.is_empty then
+						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+					set_fatal_error
+				else
+					l_area_type_set := l_features.item (1).result_type_set
+					if l_area_type_set = Void then
+							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+						set_fatal_error
+					else
+						l_special_type.put_target (l_area_type_set, current_system)
+					end
+				end
+					-- Make sure that type CHARACTER (used as actual generic type
+					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+				current_system.character_type.set_alive
+					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+				current_system.integer_type.set_alive
 			end
 		end
 

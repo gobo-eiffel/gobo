@@ -8401,11 +8401,11 @@ feature -- Internal errors
 --					error_handler.report_gibft_error
 --					error_handler.report_gibfu_error
 --					error_handler.report_gibfv_error
---					error_handler.report_gibfw_error
---					error_handler.report_gibfx_error
---					error_handler.report_gibfy_error
---					error_handler.report_gibfz_error
---			error_handler.report_gibce_error
---									error_handler.report_gibex_error
+--					error_handler.report_gibcm_error
+--						error_handler.report_gibcn_error
+--					error_handler.report_gibeo_error
+--						error_handler.report_gibep_error
+--					error_handler.report_gibcq_error
+--						error_handler.report_gibch_error
 
 end
