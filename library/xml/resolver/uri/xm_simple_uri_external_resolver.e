@@ -116,6 +116,22 @@ feature -- Operation(s)
 			uris.put (a_uri)
 				-- Apply current URI.
 			resolve_absolute_uri (uri)
+
+				-- Don't stack uri if failed resolution.
+			if has_error then
+				uris.remove
+			end
+
+			debug ("xml_resolver")
+				io.put_string ("resolve ")
+				io.put_string (a_string_uri)
+				if has_error then 
+					io.put_string (" failed")
+				else
+					io.put_string (" ok")
+				end
+				io.put_new_line
+			end
 		end
 
 	resolve_uri (a_uri_reference: STRING) is
@@ -129,6 +145,12 @@ feature -- Operation(s)
 		do
 			check balanced: not uris.is_empty end
 			uris.remove
+
+			debug ("xml_resolver")
+				io.put_string ("resolve_finish ")
+				io.put_string (uris.item.full_reference)
+				io.put_new_line
+			end
 		end
 		
 feature -- URI
