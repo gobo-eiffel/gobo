@@ -11,7 +11,7 @@ inherit
 	 implementation
       end	
 creation
-   make_from_imp
+   make_from_implementation
    
 feature {NONE} -- Initialisation
    make_default is
@@ -37,7 +37,7 @@ feature {ANY} -- Access
    
    
 
-feature {NONE} -- Implementation
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
    implementation: XI_DOCUMENT
    
    

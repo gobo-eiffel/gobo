@@ -10,7 +10,7 @@ class
    XM_PARSER
 
 inherit
-   INTERFACE
+   DP_INTERFACE
       redefine
 	 implementation
       end

@@ -19,12 +19,12 @@ feature
    
    new_tree_parser: XM_TREE_PARSER is
       do
-	 !! Result.make_from_imp (new_tree_parser_imp)
+	 !! Result.make_from_implementation (new_tree_parser_imp)
       end
    
    new_tree_parser_imp: XI_TREE_PARSER is
       do
-	 !XT_TREE_PARSER! Result.make_from_imp (event_parser_factory.new_event_parser_imp)
+	 !XT_TREE_PARSER! Result.make_from_implementation (event_parser_factory.new_event_parser_imp)
       end
 
 feature {NONE} -- Implementation

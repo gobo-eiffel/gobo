@@ -74,7 +74,7 @@ feature {ANY} -- Element Change
 				cs.off
 			loop
 				!! toe.make (cs.item.first.first, cs.item.first.second, cs.item.second, a_parent)
-				!! xml.make_from_imp (toe)
+				!! xml.make_from_implementation (toe)
 				force_last (xml)
 				cs.forth
 			end

@@ -6,7 +6,7 @@ indexing
 deferred class
    XM_NODE
 inherit
-   INTERFACE
+   DP_INTERFACE
       redefine
 	 implementation
       end
@@ -72,9 +72,10 @@ feature {ANY} -- Element change
 	 parent_set: parent = a_parent
       end
 
-feature {NONE} -- Implementation
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
    implementation: XI_NODE
+
 end -- XM_NODE
 
 --|-------------------------------------------------------------------------

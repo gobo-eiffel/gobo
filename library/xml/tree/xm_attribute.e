@@ -13,7 +13,7 @@ inherit
       end
 
 creation
-   make_from_imp
+   make_from_implementation
 
 feature {ANY} -- Access
 
@@ -61,10 +61,14 @@ feature {ANY} -- Basic Routines
       do
 	 x.process_attribute (Current)
       end
-feature {NONE} -- Implementation
+
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
    implementation: XI_ATTRIBUTE
    
-   uc_xmlns: UC_STRING is
+   
+feature {NONE}   
+	
+	uc_xmlns: UC_STRING is
       once
 	 !! Result.make_from_string ("xmlns")
       end

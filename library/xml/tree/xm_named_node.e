@@ -86,7 +86,7 @@ feature {ANY} -- Element Change
       end
    
    
-feature {NONE} -- Implementation
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
    implementation: XI_NAMED_NODE
 

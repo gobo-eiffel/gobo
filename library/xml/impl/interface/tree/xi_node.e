@@ -6,7 +6,7 @@ indexing
 deferred class
    XI_NODE
 inherit
-   IMPLEMENTATION
+   DP_IMPLEMENTATION
 
 feature {ANY} -- Access
 

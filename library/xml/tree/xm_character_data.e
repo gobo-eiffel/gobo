@@ -11,7 +11,7 @@ inherit
 	 implementation
       end
 creation
-   make_from_imp
+   make_from_implementation
 
 feature {ANY} -- Access
 
@@ -38,7 +38,7 @@ feature {ANY} -- Element change
 	 implementation.append_content (other)
       end
 
-feature {NONE} -- Implementation
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
    implementation: XI_CHARACTER_DATA
 
 invariant

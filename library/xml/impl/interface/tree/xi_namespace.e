@@ -1,7 +1,7 @@
 deferred class
    XI_NAMESPACE
 inherit
-   IMPLEMENTATION
+   DP_IMPLEMENTATION
 feature
    ns_prefix: UC_STRING is
       deferred

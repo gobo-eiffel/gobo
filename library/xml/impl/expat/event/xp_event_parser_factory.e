@@ -8,7 +8,7 @@ feature
    
    new_event_parser: XM_EVENT_PARSER is
       do
-	 !! Result.make_from_imp (new_event_parser_imp)
+	 !! Result.make_from_implementation (new_event_parser_imp)
       end
    
    new_event_parser_imp: XI_EVENT_PARSER is

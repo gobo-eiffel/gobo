@@ -15,7 +15,7 @@ inherit
       end
    
 creation
-   make_from_imp
+   make_from_implementation
    
 feature {ANY} -- Access
    

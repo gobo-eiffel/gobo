@@ -10,20 +10,20 @@ class
 inherit
    XM_PARSER
       undefine
-         make_from_imp
+         make_from_implementation
       redefine
          implementation
       end
 
-   BIDIRECTIONAL_INTERFACE
+   DP_INTERFACE
       redefine
          implementation
       end
 
 creation
-   make_from_imp
+   make_from_implementation
 
-feature {BIDIRECTIONAL_IMPLEMENTATION} -- Redefinable Callbacks
+feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable Callbacks
 
    on_element_declaration (name: UC_STRING) is
 	 -- note: I removed `model' from the arguments list since it's type (POINTER) is totaly inapropriate
@@ -193,7 +193,7 @@ feature {BIDIRECTIONAL_IMPLEMENTATION} -- Redefinable Callbacks
       end
    
    
-feature {NONE} -- Implementation
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
    implementation: XI_EVENT_PARSER
 

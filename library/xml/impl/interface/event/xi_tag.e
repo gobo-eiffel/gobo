@@ -6,7 +6,7 @@ deferred class
    XI_TAG
 
 inherit
-   IMPLEMENTATION
+   DP_IMPLEMENTATION
 
 feature -- Access
 
