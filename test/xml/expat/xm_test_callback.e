@@ -21,7 +21,9 @@ inherit
 			make, set_up
 		end
 
-	XM_EXPAT_PARSER
+	XM_EXPAT_PARSER 
+		-- Note regular clients MUST NOT inherit from the parser
+		-- but should use callback classes instead.
 		rename
 			make as make_expat
 		export
@@ -309,6 +311,7 @@ feature -- Handlers
 
 	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 		do
+			Precursor (name, an_id, has_internal_subset)
 			on_doctype_called := True
 			on_doctype_matches :=
 				STRING_.same_string (name, Root) and
