@@ -850,6 +850,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	void_keyword: ET_Void is
+			-- 'Void' keyword
+		once
+			create Result.make
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	when_keyword: ET_KEYWORD is
 			-- 'when' keyword
 		once
@@ -867,6 +875,7 @@ feature -- Keyword and symbol names
 	capitalized_result_keyword_name: STRING is "Result"
 	capitalized_true_keyword_name: STRING is "True"
 	capitalized_tuple_keyword_name: STRING is "TUPLE"
+	capitalized_void_keyword_name: STRING is "Void"
 	capitalized_unique_keyword_name: STRING is "Unique"
 			-- Eiffel keyword names with first letter in upper-case
 
@@ -933,6 +942,7 @@ feature -- Keyword and symbol names
 	unique_keyword_name: STRING is "unique"
 	until_keyword_name: STRING is "until"
 	variant_keyword_name: STRING is "variant"
+	void_keyword_name: STRING is "void"
 	when_keyword_name: STRING is "when"
 	xor_keyword_name: STRING is "xor"
 			-- Eiffel keyword names

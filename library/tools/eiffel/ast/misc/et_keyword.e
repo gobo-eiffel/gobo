@@ -5,7 +5,7 @@ indexing
 		"Eiffel keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -771,6 +771,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_void is
+			-- Create a new 'void' keyword.
+		do
+			code := tokens.void_keyword_code
+			make_token (tokens.capitalized_void_keyword_name)
+		ensure
+			is_void: is_void
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_when is
 			-- Create a new 'when' keyword.
 		do
@@ -1171,6 +1182,12 @@ feature -- Status report
 			-- Is current keyword 'variant'?
 		do
 			Result := (code = tokens.variant_keyword_code)
+		end
+
+	is_void: BOOLEAN is
+			-- Is current keyword 'void'?
+		do
+			Result := (code = tokens.void_keyword_code)
 		end
 
 	is_when: BOOLEAN is

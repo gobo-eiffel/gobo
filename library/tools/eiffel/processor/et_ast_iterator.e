@@ -2204,6 +2204,12 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_void (an_expression: ET_VOID) is
+			-- Process `an_expression'.
+		do
+			process_token (an_expression)
+		end
+
 	process_when_part (a_when_part: ET_WHEN_PART) is
 			-- Process `a_when_part'.
 		local

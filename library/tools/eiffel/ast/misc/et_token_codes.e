@@ -36,12 +36,12 @@ feature -- Keyword and symbol codes
 	max_infix_code: CHARACTER is '%/18/'
 			-- Infix operator codes
 
-	prefix_not_code: CHARACTER is '%/61/'
-	prefix_minus_code: CHARACTER is '%/62/'
-	prefix_plus_code: CHARACTER is '%/63/'
-	prefix_freeop_code: CHARACTER is '%/64/'
-	min_prefix_code: CHARACTER is '%/61/'
-	max_prefix_code: CHARACTER is '%/64/'
+	prefix_not_code: CHARACTER is '%/62/'
+	prefix_minus_code: CHARACTER is '%/63/'
+	prefix_plus_code: CHARACTER is '%/64/'
+	prefix_freeop_code: CHARACTER is '%/65/'
+	min_prefix_code: CHARACTER is '%/62/'
+	max_prefix_code: CHARACTER is '%/65/'
 			-- Prefix operator codes
 
 	agent_keyword_code: CHARACTER is '%/101/'
@@ -103,6 +103,7 @@ feature -- Keyword and symbol codes
 	unique_keyword_code: CHARACTER is '%/55/'
 	until_keyword_code: CHARACTER is '%/56/'
 	variant_keyword_code: CHARACTER is '%/57/'
+	void_keyword_code: CHARACTER is '%/61/'
 	when_keyword_code: CHARACTER is '%/58/'
 			-- Eiffel keyword codes
 

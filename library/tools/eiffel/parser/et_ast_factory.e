@@ -609,6 +609,16 @@ feature -- Eiffel keywords
 			Result := tokens.variant_keyword
 		end
 
+	new_void_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VOID is
+			-- New 'void' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
+		do
+			create Result.make
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'when' keyword
 		require

@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 			set_use_create_keyword (True)
 			set_use_recast_keyword (True)
 			set_use_reference_keyword (True)
+			set_use_void_keyword (True)
 		ensure
 			filename_set: filename = a_filename
 			universe_set: universe = a_universe
@@ -162,6 +163,10 @@ feature -- Status report
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 
+	use_void_keyword: BOOLEAN
+			-- Should 'void' be considered as
+			-- a keyword (otherwise identifier)?
+
 feature -- Statut setting
 
 	set_use_assign_keyword (b: BOOLEAN) is
@@ -210,6 +215,14 @@ feature -- Statut setting
 			use_reference_keyword := b
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
+		end
+
+	set_use_void_keyword (b: BOOLEAN) is
+			-- Set `use_void_keyword' to `b'.
+		do
+			use_void_keyword := b
+		ensure
+			use_void_keyword_set: use_void_keyword = b
 		end
 
 feature -- Error handling
@@ -715,6 +728,26 @@ feature {NONE} -- Processing
 							when 'e', 'E' then
 								last_token := E_TRUE
 								last_et_boolean_constant_value := ast_factory.new_true_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'v', 'V' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'i', 'I' then
+							inspect text_item (4)
+							when 'd', 'D' then
+								if use_void_keyword then
+									last_token := E_VOID
+									last_et_void_value := ast_factory.new_void_keyword (Current)
+								end
 							else
 								-- Do nothing.
 							end

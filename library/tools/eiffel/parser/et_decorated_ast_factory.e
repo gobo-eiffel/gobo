@@ -78,6 +78,7 @@ inherit
 			new_unique_keyword,
 			new_until_keyword,
 			new_variant_keyword,
+			new_void_keyword,
 			new_when_keyword,
 			new_xor_keyword,
 			new_arrow_symbol,
@@ -851,6 +852,15 @@ feature -- Eiffel keywords
 			-- New 'variant' keyword
 		do
 			create Result.make_variant
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_void_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VOID is
+			-- New 'void' keyword
+		do
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))

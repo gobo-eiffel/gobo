@@ -65,6 +65,7 @@ creation
 %token <ET_RESULT> E_RESULT
 %token <ET_RETRY_INSTRUCTION> E_RETRY
 %token <ET_SYMBOL_OPERATOR> E_DIV '/' E_GE '>' E_LE '<' E_MOD '^' '*'
+%token <ET_VOID> E_VOID
 
 %token <ET_POSITION> E_CHARERR E_STRERR E_INTERR
 
@@ -2602,6 +2603,8 @@ Expression: Call_expression
 	| E_RESULT
 		{ $$ := $1 }
 	| E_CURRENT
+		{ $$ := $1 }
+	| E_VOID
 		{ $$ := $1 }
 	| Parenthesized_expression
 		{ $$ := $1 }

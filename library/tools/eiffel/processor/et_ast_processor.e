@@ -1168,6 +1168,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_void (an_expression: ET_VOID) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
 	process_when_part (a_when_part: ET_WHEN_PART) is
 			-- Process `a_when_part'.
 		require

@@ -169,6 +169,18 @@ creation
 					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
+[vV][oO][iI][dD] {
+				if use_void_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 4
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
 
 
 ----------/** Eiffel identifiers **/--------------------------------------------

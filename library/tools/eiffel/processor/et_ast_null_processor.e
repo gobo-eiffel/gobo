@@ -827,6 +827,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_void (an_expression: ET_VOID) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_when_part (a_when_part: ET_WHEN_PART) is
 			-- Process `a_when_part'.
 		do

@@ -120,10 +120,12 @@ feature -- Processing
 			create a_clusters.make (a_cluster)
 			create an_ast_factory.make
 			create a_universe.make_with_factory (a_clusters, an_ast_factory, an_error_handler)
+			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
 			a_universe.set_use_recast_keyword (True)
 			a_universe.set_use_reference_keyword (True)
+			a_universe.set_use_void_keyword (True)
 			a_universe.parse_all
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
