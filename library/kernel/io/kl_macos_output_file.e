@@ -16,7 +16,9 @@ class KL_MACOS_OUTPUT_FILE
 inherit
 
 	KI_OUTPUT_FILE
+
 	KL_BINARY_OUTPUT_FILE
+		export {NONE} all end
 
 creation
 

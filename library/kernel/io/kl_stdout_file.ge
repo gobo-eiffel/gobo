@@ -20,22 +20,9 @@ inherit
 	KI_TEXT_OUTPUT_STREAM
 		rename
 			is_writable as is_open_write
-		undefine
-#ifndef VE
-			put_new_line,
-#endif
-			put_integer
-#ifdef VE
-		redefine
-			put_boolean, put_new_line
-#endif
 		end
 
 	KL_OPERATING_SYSTEM
-#ifdef SE
-		rename
-			rename_file as se_rename_file
-#endif
 		export
 			{NONE} all
 		end
@@ -44,7 +31,13 @@ inherit
 	CONSOLE
 		rename
 			make as old_make,
-			put_boolean as old_put_boolean
+			put_boolean as old_put_boolean,
+			put_character as old_put_character,
+			put_string as old_put_string,
+			put_integer as old_put_integer,
+			put_new_line as old_put_new_line,
+			is_open_write as old_is_open_write,
+			flush as old_flush
 		export
 			{NONE} all
 		end
@@ -52,9 +45,14 @@ inherit
 #ifdef SE
 	STD_OUTPUT
 		rename
-			make as se_make,
-			is_connected as is_open_write,
-			put_boolean as se_put_boolean
+			make as old_make,
+			is_connected as old_is_open_write,
+			put_boolean as old_put_boolean,
+			put_character as old_put_character,
+			put_string as old_put_string,
+			put_integer as old_put_integer,
+			put_new_line as old_put_new_line,
+			flush as old_flush
 		export
 			{NONE} all
 		end
@@ -62,12 +60,16 @@ inherit
 #ifdef VE
 	FILE
 		rename
-			make as ve_make,
-			put_character as ve_put_character,
-			put_string as ve_put_string,
-			put_boolean as ve_put_boolean
+			make as old_make,
+			put_character as old_put_character,
+			put_string as old_put_string,
+			put_boolean as old_put_boolean,
+			put_integer as old_put_integer,
+			is_open_write as old_is_open_write
 		export
 			{NONE} all
+		redefine
+			dispose
 		end
 #endif
 
@@ -85,7 +87,7 @@ feature {NONE} -- Initialization
 #endif
 #ifdef SE
 			name := "stdout"
-			se_make
+			old_make
 #endif
 #ifdef VE
 			make_open_stdout
@@ -106,21 +108,31 @@ feature -- Access
 			-- File name
 
 #endif
-#ifdef VE
+feature -- Status report
+
+	is_open_write: BOOLEAN is
+			-- Is standard output file opened in write mode?
+		do
+			Result := old_is_open_write
+		end
+
 feature -- Output
 
 	put_character (c: CHARACTER) is
 			-- Write `c' to standard output file.
 		do
+#ifdef VE
 			if is_windows and then c = '%N' then
 					-- Windows.
-				ve_put_character ('%R')
+				old_put_character ('%R')
 			end
-			ve_put_character (c)
+#endif
+			old_put_character (c)
 		end
 
 	put_string (a_string: STRING) is
 			-- Write `a_string' to standard output file.
+#ifdef VE
 		local
 			i, nb: INTEGER
 			c: CHARACTER
@@ -131,37 +143,35 @@ feature -- Output
 				from i := 1 until i > nb loop
 					c := a_string.item (i)
 					if c = '%N' then
-						ve_put_character ('%R')
+						old_put_character ('%R')
 					end
-					ve_put_character (c)
+					old_put_character (c)
 					i := i + 1
 				end
 			else
-				ve_put_string (a_string)
+				old_put_string (a_string)
 			end
-		end
-
-	put_boolean (b: BOOLEAN) is
-			-- Write "True" to standard output file
-			-- if `b' is true, "False" otherwise.
+#else
 		do
-			if b then
-				ve_put_string (True_constant)
-			else
-				ve_put_string (False_constant)
-			end
-		end
-
-	put_new_line is
-			-- Write a new line to standard output file.
-		do
-			put_character ('%N')
+			old_put_string (a_string)
+#endif
 		end
 
 feature -- Basic operations
 
 	flush is
 			-- Flush buffered data to disk.
+		do
+#ifndef VE
+			old_flush
+#endif
+		end
+
+#ifdef VE
+feature {NONE} -- GC
+
+	dispose is
+			-- Do not close standard output file.
 		do
 		end
 

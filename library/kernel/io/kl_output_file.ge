@@ -18,18 +18,8 @@ class KL_OUTPUT_FILE
 inherit
 
 	KI_OUTPUT_FILE
-		undefine
-#ifndef VE
-			put_new_line,
-#endif
-			put_integer
-#ifdef VE
-		redefine
-			put_boolean, put_new_line
-#endif
-		end
 
-	KL_OPERATING_SYSTEM
+	KL_SHARED_FILE_SYSTEM
 #ifdef SE
 		rename
 			rename_file as se_rename_file
@@ -41,12 +31,19 @@ inherit
 #ifdef ISE
 	PLAIN_TEXT_FILE
 		rename
-			make as ise_make,
-			name as do_name,
-			open_write as ise_open_write,
-			close as do_close,
-			delete as do_delete,
-			put_boolean as ise_put_boolean
+			make as old_make,
+			name as old_name,
+			open_write as old_open_write,
+			close as old_close,
+			delete as old_delete,
+			put_boolean as old_put_boolean,
+			put_integer as old_put_integer,
+			put_string as old_put_string,
+			put_character as old_put_character,
+			put_new_line as old_put_new_line,
+			is_open_write as old_is_open_write,
+			is_closed as old_is_closed,
+			flush as old_flush
 		export
 			{NONE} all
 		end
@@ -54,24 +51,36 @@ inherit
 #ifdef HACT
 	PLAIN_TEXT_FILE
 		rename
-			make as hact_make,
-			name as do_name,
-			open_write as hact_open_write,
-			close as do_close,
-			delete as do_delete,
-			put_boolean as hact_put_boolean
+			make as old_make,
+			name as old_name,
+			open_write as old_open_write,
+			close as old_close,
+			delete as old_delete,
+			put_boolean as old_put_boolean,
+			put_integer as old_put_integer,
+			put_string as old_put_string,
+			put_character as old_put_character,
+			put_new_line as old_put_new_line,
+			is_open_write as old_is_open_write,
+			is_closed as old_is_closed,
+			flush as old_flush
 		export
 			{NONE} all
 		end
 #endif
 #ifdef SE
-	STD_FILE_WRITE
+	TEXT_FILE_WRITE
 		rename
-			make as se_make,
+			make as old_make,
 			rename_file as se_rename_file,
-			is_connected as is_open_write,
-			disconnect as do_close,
-			put_boolean as se_put_boolean
+			is_connected as old_is_open_write,
+			disconnect as old_close,
+			put_boolean as old_put_boolean,
+			put_integer as old_put_integer,
+			put_string as old_put_string,
+			put_character as old_put_character,
+			put_new_line as old_put_new_line,
+			flush as old_flush
 		export
 			{NONE} all
 		end
@@ -79,8 +88,8 @@ inherit
 	FILE_TOOLS
 		rename
 			rename_file as se_rename_file,
-			delete as se_delete,
-			tmp_string as ft_tmp_string
+			delete as old_delete,
+			tmp_string as old_tmp_string
 		export
 			{NONE} all
 		end
@@ -88,14 +97,17 @@ inherit
 #ifdef VE
 	FILE
 		rename
-			make as ve_make,
-			name as do_name,
-			open_write as ve_open_write,
-			put_character as ve_put_character,
-			put_string as ve_put_string,
-			close as do_close,
-			delete as do_delete,
-			put_boolean as ve_put_boolean
+			make as old_make,
+			name as old_name,
+			open_write as old_open_write,
+			put_character as old_put_character,
+			put_string as old_put_string,
+			close as old_close,
+			delete as old_delete,
+			put_boolean as old_put_boolean,
+			put_integer as old_put_integer,
+			is_open_write as old_is_open_write,
+			is_closed as old_is_closed
 		export
 			{NONE} all
 		end
@@ -113,20 +125,20 @@ feature {NONE} -- Initialization
 			name := a_name
 #ifdef ISE || HACT
 			if a_name.count > 0 then
-				do_name := a_name
+				old_name := a_name
 			else
-				do_name := Empty_name
+				old_name := Empty_name
 			end
 			mode := Closed_file
 #endif
 #ifdef SE
-			se_make
+			old_make
 #endif
 #ifdef VE
 			if a_name.count > 0 then
-				ve_make (a_name)
+				old_make (a_name)
 			else
-				ve_make (Empty_name)
+				old_make (Empty_name)
 			end
 #endif
 		end
@@ -139,31 +151,41 @@ feature -- Access
 	name: STRING
 			-- File name
 
-#ifdef SE
 feature -- Status report
+
+	is_open_write: BOOLEAN is
+			-- Is file opened in write mode?
+		do
+			Result := old_is_open_write
+		end
 
 	is_closed: BOOLEAN is
 			-- Is file closed?
 		do
-			Result := not is_open_write
+#ifdef SE
+			Result := not old_is_open_write
+#else
+			Result := old_is_closed
+#endif
 		end
 
-#endif
-#ifdef VE
 feature -- Output
 
 	put_character (c: CHARACTER) is
 			-- Write `c' to output file.
 		do
+#ifdef VE
 			if is_windows and then c = '%N' then
 					-- Windows.
-				ve_put_character ('%R')
+				old_put_character ('%R')
 			end
-			ve_put_character (c)
+#endif
+			old_put_character (c)
 		end
 
 	put_string (a_string: STRING) is
 			-- Write `a_string' to output file.
+#ifdef VE
 		local
 			i, nb: INTEGER
 			c: CHARACTER
@@ -174,34 +196,20 @@ feature -- Output
 				from i := 1 until i > nb loop
 					c := a_string.item (i)
 					if c = '%N' then
-						ve_put_character ('%R')
+						old_put_character ('%R')
 					end
-					ve_put_character (c)
+					old_put_character (c)
 					i := i + 1
 				end
 			else
-				ve_put_string (a_string)
+				old_put_string (a_string)
 			end
-		end
-
-	put_boolean (b: BOOLEAN) is
-			-- Write "True" to standard output file
-			-- if `b' is true, "False" otherwise.
+#else
 		do
-			if b then
-				ve_put_string (True_constant)
-			else
-				ve_put_string (False_constant)
-			end
-		end
-
-	put_new_line is
-			-- Write a new line to output file.
-		do
-			put_character ('%N')
-		end
-
+			old_put_string (a_string)
 #endif
+		end
+
 feature -- Basic operations
 
 	open_write is
@@ -212,17 +220,10 @@ feature -- Basic operations
 		do
 			if not rescued then
 				if name.count > 0 then
-#ifdef ISE
-					ise_open_write
-#endif
-#ifdef HACT
-					hact_open_write
-#endif
 #ifdef SE
 					connect_to (name)
-#endif
-#ifdef VE
-					ve_open_write
+#else
+					old_open_write
 #endif
 				end
 			elseif not is_closed then
@@ -235,13 +236,14 @@ feature -- Basic operations
 			end
 		end
 
-#ifdef VE
 	flush is
 			-- Flush buffered data to disk.
 		do
+#ifndef VE
+			old_flush
+#endif
 		end
 
-#endif
 	close is
 			-- Close current file if it is closable,
 			-- let it open otherwise.
@@ -249,7 +251,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				do_close
+				old_close
 			end
 		rescue
 			if not rescued then
@@ -260,39 +262,40 @@ feature -- Basic operations
 
 	rename_file (new_name: STRING) is
 			-- Rename current file as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed. If renaming was
-			-- successful, then `name' is set to `new_name'.
+			-- Do nothing if the file could not be renamed, if
+			-- it did not exist or if `new_name' already existed.
+			-- If renaming was successful, then `name' is set to
+			-- `new_name'.
+#ifndef SE
 		local
-			rescued: BOOLEAN
-			old_name: STRING
+			a_name: STRING
+#endif
 		do
-			if not rescued then
-				old_name := name
-				if old_name.count > 0 and new_name.count > 0 and not new_name.is_equal (old_name) then
+			if new_name.count > 0 then
 #ifdef SE
-					if file_exists (old_name) then
-						rename_to (old_name, new_name)
-						if file_exists (new_name) then
-							name := new_name
-						end
-					end
+				if not file_exists (new_name) then
+#else
+				a_name := old_name
+				old_name := new_name
+				if exists then
+					old_name := a_name
+				else
+					old_name := a_name
 #endif
-#ifdef ISE || HACT || VE
+					file_system.rename_file (name, new_name)
+#ifdef SE
+					if file_exists (new_name) then
+						name := new_name
+#else
+					a_name := old_name
+					old_name := new_name
 					if exists then
-						change_name (new_name)
-						name := do_name
-					end
+						name := new_name
+					else
+						old_name := a_name
 #endif
+					end
 				end
-			elseif old_name /= Void then
-				name := old_name
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
 			end
 		end
 
@@ -306,11 +309,11 @@ feature -- Basic operations
 			if not rescued then
 				if name.count > 0 then
 #ifdef SE
-					se_delete (name)
+					old_delete (name)
 #endif
 #ifdef ISE || HACT || VE
 					if exists then
-						do_delete
+						old_delete
 					end
 #endif
 				end

@@ -24,6 +24,7 @@ inherit
 		end
 
 	KL_BINARY_INPUT_FILE
+		export {NONE} all end
 
 creation
 
@@ -40,6 +41,7 @@ feature -- Input
 			done: BOOLEAN
 			a_target: STRING
 			c: CHARACTER
+			is_eof: BOOLEAN
 		do
 			if last_string = Void then
 #ifdef VE
@@ -61,20 +63,23 @@ feature -- Input
 				last_string.wipe_out
 #endif
 			end
+			is_eof := True
 			a_target := last_string
 			from until done loop
 				read_character
 				if end_of_file then
 					done := True
 				else
+					is_eof := False
 					c := last_character
 					if c = '%R' then
 						done := True
 					else
-						last_string.append_character (c)
+						a_target.append_character (c)
 					end
 				end
 			end
+			end_of_file := is_eof
 		end
 
 	read_new_line is
@@ -111,17 +116,10 @@ feature -- Input
 					last_string.append_character ('%R')
 				else
 						-- Put character back to input file.
-#ifdef ISE || HACT
-					back
-#endif
-#ifdef SE
-					unread_character
-#endif
-#ifdef VE
-					has_buffered_character := True
-#endif
+					unread_character (last_character)
 				end
 			end
+			end_of_file := False
 		end
 
 feature -- Access

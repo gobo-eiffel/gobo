@@ -22,6 +22,15 @@ inherit
 		end
 #endif
 
+	KL_IMPORTED_STRING_ROUTINES
+#ifdef SE
+		rename
+			rename_file as se_rename_file
+#endif
+		export
+			{NONE} all
+		end
+
 #ifdef SE
 	FILE_TOOLS
 		rename
@@ -35,12 +44,23 @@ inherit
 	FILE_SYSTEM
 		rename
 			make as ve_make,
-			rename_file as ve_rename_file
+			rename_file as ve_rename_file,
+			copy_file as ve_copy_file,
+			directory_separator as ve_directory_separator
 		export
 			{NONE} all
 		end
 
 #endif
+	KL_SHARED_FILE_SYSTEM
+#ifdef SE
+		rename
+			rename_file as se_rename_file
+#endif
+		export
+			{NONE} all
+		end
+
 #ifdef VE
 feature {NONE} -- Initialization
 
@@ -52,6 +72,15 @@ feature {NONE} -- Initialization
 
 #endif
 feature -- Status report
+
+	is_current_file_system: BOOLEAN is
+			-- Is file system the file system of the 
+			-- underlying platform?
+		do
+			Result := same_type (file_system)
+		end
+
+feature -- File handling
 
 	is_file_readable (a_filename: STRING): BOOLEAN is
 			-- Can file named `a_filename' be opened
@@ -69,7 +98,7 @@ feature -- Status report
 #endif
 #ifdef ISE || HACT
 					file_impl.make (a_filename)
-					Result := file_impl.exists and then file_impl.is_readable
+					Result := file_impl.exists and then (file_impl.is_readable and file_impl.is_plain)
 #endif
 #ifdef VE
 					!! a_file.make (a_filename)
@@ -90,76 +119,34 @@ feature -- Status report
 			end
 		end
 
-	is_directory_readable (a_dirname: STRING): BOOLEAN is
-			-- Can directory named `a_dirname' be opened
-			-- in read mode?
-		local
-			rescued: BOOLEAN
-#ifdef VE
-			a_dir: KL_DIRECTORY
-#endif
-		do
-			if not rescued then
-				if a_dirname.count > 0 then
-#ifdef SE
-					basic_directory.connect_to (a_dirname)
-					if basic_directory.is_connected then
-						Result := True
-						basic_directory.disconnect
-					end
-#endif
-#ifdef ISE || HACT
-					directory_impl.make (a_dirname)
-					Result := directory_impl.exists and then directory_impl.is_readable
-#endif
-#ifdef VE
-					!! a_dir.make (a_dirname)
-					a_dir.open_read
-					if a_dir.is_open_read then
-						Result := True
-						a_dir.close
-					end
-#endif
-				end
-			else
-				Result := False
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
-		end
-
-feature -- File operations
-
 	rename_file (old_name, new_name: STRING) is
 			-- Rename file named `old_name' as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed.
+			-- Do nothing if the file could not be renamed, if
+			-- it did not exist or if `new_name' already existed.
 		local
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if old_name.count > 0 and new_name.count > 0 and not new_name.is_equal (old_name) then
+				if old_name.count > 0 and new_name.count > 0 then
 #ifdef SE
-					if file_exists (old_name) then
+					if not file_exists (new_name) then
 						rename_to (old_name, new_name)
 					end
 #endif
 #ifdef ISE || HACT
-					file_impl.make (old_name)
-					if file_impl.exists then
-						file_impl.change_name (new_name)
+					file_impl.make (new_name)
+					if not file_impl.exists then
+						file_impl.make (old_name)
+						if file_impl.exists then
+							file_impl.change_name (new_name)
+						end
 					end
 #endif
 #ifdef VE
-					if file_exists (old_name) then
-						if file_exists (new_name) then
-							remove_file (new_name)
+					if not file_exists (new_name) then
+						if file_exists (old_name) then
+							ve_rename_file (old_name, new_name)
 						end
-						ve_rename_file (old_name, new_name)
 					end
 #endif
 				end
@@ -173,34 +160,63 @@ feature -- File operations
 
 	copy_file (old_name, new_name: STRING) is
 			-- Copy file named `old_name' to `new_name'.
-			-- Do nothing if the file could not be copied
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed.
+			-- Do nothing if the file could not be copied, if it
+			-- did not exist or if `new_name' already existed.
+#ifdef VE
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				if old_name.count > 0 and new_name.count > 0 then
+					if not file_exists (new_name) then
+						if file_exists (old_name) then
+							ve_copy_file (old_name, new_name)
+						end
+					end
+				end
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+#else
 		local
 			old_file: KL_BINARY_INPUT_FILE
 			new_file: KL_BINARY_OUTPUT_FILE
 		do
-			if old_name.count > 0 and new_name.count > 0 and not new_name.is_equal (old_name) then
-				!! old_file.make (old_name)
-				old_file.open_read
-				if old_file.is_open_read then
-					!! new_file.make (new_name)
-					new_file.open_write
-					if new_file.is_open_write then
-						from
-							old_file.read_string (512)
-						until
-							old_file.end_of_file
-						loop
+			if old_name.count > 0 and new_name.count > 0 then
+#ifdef SE
+				if not file_exists (new_name) then
+#endif
+#ifdef ISE || HACT
+				file_impl.make (new_name)
+				if not file_impl.exists then
+#endif
+					!! old_file.make (old_name)
+					old_file.open_read
+					if old_file.is_open_read then
+						!! new_file.make (new_name)
+						new_file.open_write
+						if new_file.is_open_write then
+							from
+								old_file.read_string (512)
+							until
+								old_file.end_of_file
+							loop
+								new_file.put_string (old_file.last_string)
+								old_file.read_string (512)
+							end
 							new_file.put_string (old_file.last_string)
-							old_file.read_string (512)
+							new_file.close
 						end
-						new_file.put_string (old_file.last_string)
-						new_file.close
+						old_file.close
 					end
-					old_file.close
+#ifdef SE || ISE || HACT
 				end
+#endif
 			end
+#endif
 		end
 
 	delete_file (a_filename: STRING) is
@@ -233,7 +249,53 @@ feature -- File operations
 			end
 		end
 
-feature -- Directory operations
+feature -- Directory handling
+
+	is_directory_readable (a_dirname: STRING): BOOLEAN is
+			-- Can directory named `a_dirname' be opened
+			-- in read mode?
+		local
+			rescued: BOOLEAN
+#ifdef VE
+			a_dir: KL_DIRECTORY
+#endif
+		do
+			if not rescued then
+				if a_dirname.count > 0 then
+#ifdef SE
+					basic_directory.connect_to (a_dirname)
+					if basic_directory.is_connected then
+						Result := True
+						basic_directory.disconnect
+					end
+#endif
+#ifdef ISE || HACT
+					directory_impl.make (a_dirname)
+					Result := directory_impl.exists and then directory_impl.is_readable
+#ifdef HACT
+					if Result then
+						Result := not is_file_readable (a_dirname)
+					end
+#endif
+#endif
+#ifdef VE
+					!! a_dir.make (a_dirname)
+					a_dir.open_read
+					if a_dir.is_open_read then
+						Result := True
+						a_dir.close
+					end
+#endif
+				end
+			else
+				Result := False
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
 
 	create_directory (a_dirname: STRING) is
 			-- Create a new directory named `a_dirname'.
@@ -308,87 +370,24 @@ feature -- Directory operations
 			end
 		end
 
-	parent_directory (a_dirname: STRING): STRING is
-			-- Parent directory of `a_dirname';
-			-- Return Void if directory `a_dirname'
-			-- does not exist or if it is the root
-		local
-			rescued: BOOLEAN
-#ifdef VE
-			a_dir: DIRECTORY
-#else
-			old_dir: STRING
-			full_name: STRING
-#endif
-		do
-			if not rescued then
-				if a_dirname.count > 0 then
-#ifdef VE
-					!! a_dir.make (a_dirname)
-					if a_dir.exists then
-						Result := a_dir.parent
-					end
-#else
-					if is_directory_readable (a_dirname) then
-						old_dir := pwd
-						cd (a_dirname)
-						full_name := pwd
-						cd ("..")
-						Result := pwd
-						if Result.is_equal (full_name) then
-							Result := Void
-						end
-						cd (old_dir)
-					end
-#endif
-				end
-			else
-				Result := Void
-#ifndef VE
-				if old_dir /= Void then
-					cd (old_dir)
-				end
-#endif
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
-		end
-
 feature -- Working directory
 
-	pwd, current_working_directory: STRING is
+	cwd, current_working_directory: STRING is
 			-- Name of current working directory;
-			-- Return absolute pathname or an empty
-			-- string if it could not be computed
-		local
-			rescued: BOOLEAN
+			-- Return absolute pathname with the naming 
+			-- convention of the underlying file system
 		do
-			if not rescued then
 #ifdef SE
-				basic_directory.connect_to_current_working_directory
-				Result := clone (basic_directory.last_entry)
-				basic_directory.disconnect
+			basic_directory.connect_to_current_working_directory
+			Result := clone (basic_directory.last_entry)
+			basic_directory.disconnect
 #endif
 #ifdef ISE || HACT
-				Result := execution_environment.current_working_directory
-				if Result = Void then
-					Result := ""
-				end
+			Result := execution_environment.current_working_directory
 #endif
 #ifdef VE
-				Result := current_cluster
+			Result := current_cluster
 #endif
-			else
-				Result := ""
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
 		end
 
 	cd, set_current_working_directory (a_dirname: STRING) is
@@ -421,11 +420,13 @@ feature -- Working directory
 			end
 		end
 
+#ifdef ISE || HACT || SE
 feature {NONE} -- Implementation
 
 #ifdef SE
 	basic_directory: BASIC_DIRECTORY
 			-- Implementation
+
 #endif
 #ifdef ISE || HACT
 	file_impl: PLAIN_TEXT_FILE is
@@ -451,6 +452,7 @@ feature {NONE} -- Implementation
 		ensure
 			execution_environment_not_void: Result /= Void
 		end
-#endif
 
+#endif
+#endif
 end -- class KL_FILE_SYSTEM

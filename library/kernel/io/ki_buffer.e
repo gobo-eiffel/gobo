@@ -53,14 +53,14 @@ feature -- Element change
 			a_stream_open_read: a_stream.is_readable
 			not_end_of_input: not a_stream.end_of_input
 			pos_large_enough: pos >= 1
-			nb_large_enough: nb >= 0
+			nb_large_enough: nb > 0
 			enough_space: (pos + nb - 1) <= count
 		do
 			Result := a_stream.read_to_buffer (Current, pos, nb)
 		ensure
 			nb_item_read_large_enough: Result >= 0
 			nb_item_read_small_enough: Result <= nb
-			not_end_of_input: not a_stream.end_of_input implies Result = nb
+			not_end_of_input: not a_stream.end_of_input implies Result > 0
 		end
 
 	move_left (old_pos, new_pos: INTEGER; nb: INTEGER) is

@@ -18,6 +18,7 @@ inherit
 	KI_INPUT_STREAM [CHARACTER]
 		rename
 			read as read_character,
+			unread as unread_character,
 			last_item as last_character
 		end
 
@@ -33,8 +34,8 @@ feature -- Input
 			nb_large_enough: nb > 0
 		deferred
 		ensure
-			last_string_not_void: last_string /= Void
-			last_string_count_small_enough: last_string.count <= nb
+			last_string_not_void: not end_of_input implies last_string /= Void
+			last_string_count_small_enough: not end_of_input implies last_string.count <= nb
 			character_read: not end_of_input implies last_string.count > 0
 		end
 
@@ -80,6 +81,7 @@ feature -- Access
 			-- However `last_string' is not shared between file objects.)
 		require
 			is_readable: is_readable
+			not_end_of_input: not end_of_input
 		deferred
 		end
 

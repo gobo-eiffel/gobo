@@ -3,7 +3,7 @@ indexing
 	description:
 
 		"Text input files. The line separtor of the underlying file system %
-		%is automatically converted to %N when read from the file. %
+		%is automatically converted to %%N when read from the file. %
 		%However `read_line' and `read_new_line' are able to recognize %
 		%'%%N', '%%R%%N' and '%%R' as line separators."
 
@@ -26,7 +26,7 @@ inherit
 			read_to_buffer
 		end
 
-	KL_OPERATING_SYSTEM
+	KL_SHARED_FILE_SYSTEM
 #ifdef SE
 		rename
 			rename_file as se_rename_file
@@ -35,32 +35,20 @@ inherit
 			{NONE} all
 		end
 
-#ifdef ISE
+#ifdef ISE || HACT
 	PLAIN_TEXT_FILE
 		rename
-			read_stream as ise_read_stream,
-			make as ise_make,
-			name as do_name,
-			open_read as ise_open_read,
-			read_line as ise_read_line,
-			close as do_close,
-			delete as do_delete
-		export
-			{NONE} all
-		redefine
-			file_readable
-		end
-#endif
-#ifdef HACT
-	PLAIN_TEXT_FILE
-		rename
-			read_stream as hact_read_stream,
-			make as hact_make,
-			name as do_name,
-			open_read as hact_open_read,
-			read_line as hact_read_line,
-			close as do_close,
-			delete as do_delete
+			make as old_make,
+			name as old_name,
+			open_read as old_open_read,
+			read_line as old_read_line,
+			read_stream as old_read_stream,
+			read_character as old_read_character,
+			close as old_close,
+			delete as old_delete,
+			end_of_file as old_end_of_file,
+			is_open_read as old_is_open_read,
+			is_closed as old_is_closed
 		export
 			{NONE} all
 		redefine
@@ -68,14 +56,17 @@ inherit
 		end
 #endif
 #ifdef SE
-	STD_FILE_READ
+	TEXT_FILE_READ
 		rename
-			make as se_make,
-			is_connected as is_open_read,
+			make as old_make,
+			is_connected as old_is_open_read,
 			rename_file as se_rename_file,
-			end_of_input as end_of_file,
-			read_line as se_read_line,
-			disconnect as do_close
+			end_of_input as old_end_of_file,
+			read_line as old_read_line,
+			read_character as old_read_character,
+			unread_character as old_unread_character,
+			last_character as old_last_character,
+			disconnect as old_close
 		export
 			{NONE} all
 		redefine
@@ -85,8 +76,8 @@ inherit
 	FILE_TOOLS
 		rename
 			rename_file as se_rename_file,
-			delete as se_delete,
-			tmp_string as ft_tmp_string
+			delete as old_delete,
+			tmp_string as old_tmp_string
 		export
 			{NONE} all
 		end
@@ -94,14 +85,17 @@ inherit
 #ifdef VE
 	FILE
 		rename
-			make as ve_make,
-			name as do_name,
-			read_stream as ve_read_stream,
-			read_character as ve_read_character,
-			open_read as ve_open_read,
-			read_line as ve_read_line,
-			close as do_close,
-			delete as do_delete
+			make as old_make,
+			name as old_name,
+			read_stream as old_read_stream,
+			read_character as old_read_character,
+			read_line as old_read_line,
+			open_read as old_open_read,
+			is_open_read as old_is_open_read,
+			is_closed as old_is_closed,
+			end_of_file as old_end_of_file,
+			close as old_close,
+			delete as old_delete
 		export
 			{NONE} all
 		end
@@ -119,22 +113,23 @@ feature {NONE} -- Initialization
 			name := a_name
 #ifdef ISE || HACT
 			if a_name.count > 0 then
-				do_name := a_name
+				old_name := a_name
 			else
-				do_name := Empty_name
+				old_name := Empty_name
 			end
 			mode := Closed_file
 #endif
 #ifdef SE
-			se_make
+			old_make
 #endif
 #ifdef VE
 			if a_name.count > 0 then
-				ve_make (a_name)
+				old_make (a_name)
 			else
-				ve_make (Empty_name)
+				old_make (Empty_name)
 			end
 #endif
+			end_of_file := False
 		end
 
 feature -- Access
@@ -146,6 +141,9 @@ feature -- Access
 			-- File name
 
 #ifdef SE
+	last_character: CHARACTER
+			-- Last character read
+
 	last_string: STRING
 			-- Last string read
 			-- (Note: this query always return the same object.
@@ -153,62 +151,113 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
+#endif
 feature -- Status report
+
+	is_open_read: BOOLEAN is
+			-- Is file opened in read mode?
+		do
+			Result := old_is_open_read
+		end
 
 	is_closed: BOOLEAN is
 			-- Is file closed?
 		do
-			Result := not is_open_read
+#ifdef SE
+			Result := not old_is_open_read
+#else
+			Result := old_is_closed
+#endif
 		end
 
-#endif
+	end_of_file: BOOLEAN
+			-- Has the end of file been reached?
+
 feature -- Input
 
-#ifdef VE
 	read_character is
 			-- Read the next character in input file.
 			-- Make the result available in `last_character'.
 		do
-			if is_windows then
-					-- Windows.
-				read_character_into_buffer
-				if has_buffered_character then
-					has_buffered_character := False
-					if buffered_character = '%R' then
-						read_character_into_buffer
-						if has_buffered_character and then buffered_character = '%N' then
-							last_character := '%N'
-							has_buffered_character := False
-						else
-							last_character := '%R'
+			if character_buffer /= Void then
+				last_character := character_buffer.item
+				character_buffer := character_buffer.right
+			elseif old_end_of_file then
+				end_of_file := True
+			else
+#ifdef VE
+				if is_windows then
+						-- Windows.
+					old_read_character
+					if not old_end_of_file then
+						if last_character = '%R' then
+							old_read_character
+							if old_end_of_file then
+								last_character := '%R'
+							elseif last_character /= '%N' then
+								unread_character (last_character)
+								last_character := '%R'
+							end
 						end
 					else
-						last_character := buffered_character
+						end_of_file := True
 					end
+				else
+					old_read_character
+					end_of_file := old_end_of_file
 				end
-			else
-				ve_read_character
+#else
+				old_read_character
+				end_of_file := old_end_of_file
+#ifdef SE
+				if not end_of_file then
+					last_character := old_last_character
+				end
+#endif
+#endif
 			end
 		end
 
-#endif
+	unread_character (a_character: CHARACTER) is
+			-- Put `a_character' back in input file.
+			-- This character will be read first by the next
+			-- call to a read routine.
+		local
+			a_cell: like character_buffer
+		do
+			!! a_cell.make (a_character)
+			if character_buffer /= Void then
+				a_cell.put_right (character_buffer)
+			end
+			character_buffer := a_cell
+			last_character := a_character
+			end_of_file := False
+		end
+
 	read_string (nb: INTEGER) is
 			-- Read at most `nb' characters from input file.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
 #ifdef ISE || HACT
+		local
+			i: INTEGER
 		do
 			if last_string = Void then
 				!! last_string.make (nb)
 			elseif last_string.capacity < nb then
 				last_string.resize (nb)
 			end
-#endif
-#ifdef ISE
-			ise_read_stream (nb)
-#endif
-#ifdef HACT
-			hact_read_stream (nb)
+			if character_buffer = Void then
+				if not old_end_of_file then
+					old_read_stream (nb)
+				else
+					last_string.set_count (0)
+				end
+			else
+				last_string.set_count (nb)
+				i := read_to_string (last_string, 1, nb)
+				last_string.set_count (i)
+			end
 #endif
 #ifdef SE
 		local
@@ -238,54 +287,56 @@ feature -- Input
 #ifdef VE
 		local
 			old_string: STRING
-			i: INTEGER
-			c: CHARACTER
-			has_carriage: BOOLEAN
+			i, j: INTEGER
+			a_target: STRING
 		do
 			if is_windows then
 					-- Windows.
 				if last_string = Void then
-					!! last_string.make (0)
-				else
-					last_string.wipe_out
+					!! last_string.make (nb)
+				elseif last_string.count < nb then
+					last_string.resize (nb)
 				end
+				a_target := last_string
 				from i := nb until i < 1 loop
-					ve_read_character
+					read_character
 					if not end_of_file then
-						c := last_character
-						inspect c
-						when '%R' then
-							has_carriage := True
-						when '%N' then
-							last_string.append_character ('%N')
-							has_carriage := False
-							i := i - 1
-						else
-							if has_carriage then
-								last_string.append_character ('%R')
-								has_carriage := False
-							end
-							last_string.append_character (c)
-							i := i - 1
-						end
+						j := j + 1
+						a_target.put (last_character, j)
+						i := i - 1
 					else
 						i := 0 -- Jump out of the loop.
 					end
 				end
-			else
-				old_string := last_string
-				ve_read_stream (nb)
-				if last_string = Void then
-					if old_string /= Void then
-						old_string.wipe_out
-						last_string := old_string
-					else
-						!! last_string.make (0)
+				a_target.resize (j)
+			elseif character_buffer = Void then
+				if not old_end_of_file then
+					old_string := last_string
+					old_read_stream (nb)
+					if last_string = Void then
+						if old_string /= Void then
+							old_string.wipe_out
+							last_string := old_string
+						else
+							!! last_string.make (0)
+						end
 					end
+				elseif last_string = Void then
+					!! last_string.make (0)
+				else
+					last_string.wipe_out
 				end
-				EOF := (last_string.count < nb)
+			else
+				if last_string = Void then
+					!! last_string.make (nb)
+				elseif last_string.count < nb then
+					last_string.resize (nb)
+				end
+				i := read_to_string (last_string, 1, nb)
+				last_string.resize (i)
 			end
 #endif
+			end_of_file := (last_string.count = 0)
 		end
 
 	read_line is
@@ -299,6 +350,7 @@ feature -- Input
 			done: BOOLEAN
 			a_target: STRING
 			c: CHARACTER
+			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
 			if last_string = Void then
@@ -321,12 +373,14 @@ feature -- Input
 				last_string.wipe_out
 #endif
 			end
+			is_eof := True
 			a_target := last_string
 			from until done loop
 				read_character
 				if end_of_file then
 					done := True
 				else
+					is_eof := False
 					c := last_character
 					inspect c
 					when '%N' then
@@ -336,22 +390,15 @@ feature -- Input
 					else
 						if has_carriage then
 								-- Put character back to input file.
-#ifdef ISE || HACT
-							back
-#endif
-#ifdef SE
-							unread_character
-#endif
-#ifdef VE
-							has_buffered_character := True
-#endif
+							unread_character (c)
 							done := True
 						else
-							last_string.append_character (c)
+							a_target.append_character (c)
 						end
 					end
 				end
 			end
+			end_of_file := is_eof
 		end
 
 	read_new_line is
@@ -387,6 +434,8 @@ feature -- Input
 			read_character
 			if not end_of_file then
 				inspect last_character
+				when '%N' then
+					last_string.append_character ('%N')
 				when '%R' then
 					last_string.append_character ('%R')
 					read_character
@@ -395,32 +444,15 @@ feature -- Input
 							last_string.append_character ('%N')
 						else
 								-- Put character back to input file.
-#ifdef ISE || HACT
-							back
-#endif
-#ifdef SE
-							unread_character
-#endif
-#ifdef VE
-							has_buffered_character := True
-#endif
+							unread_character (last_character)
 						end
 					end
-				when '%N' then
-					last_string.append_character ('%N')
 				else
 						-- Put character back to input file.
-#ifdef ISE || HACT
-					back
-#endif
-#ifdef SE
-					unread_character
-#endif
-#ifdef VE
-					has_buffered_character := True
-#endif
+					unread_character (last_character)
 				end
 			end
+			end_of_file := False
 		end
 
 #ifdef ISE
@@ -430,13 +462,30 @@ feature -- Input
 			-- Return the number of characters actually read.
 		local
 			str_area: ANY
+			i, j: INTEGER
 		do
-			str_area := a_string.area
-			Result := file_gss (file_pointer, c_rtid ($str_area) + (pos - 1), nb)
+			from
+				j := pos
+			until
+				i = nb or
+				character_buffer = Void
+			loop
+				i := i + 1
+				a_string.put (character_buffer.item, j)
+				character_buffer := character_buffer.right
+				j := j + 1
+			end
+			if i < nb then
+				if not old_end_of_file then
+					str_area := a_string.area
+					Result := i + file_gss (file_pointer, c_rtid ($str_area) + (j - 1), nb - i)
+				else
+					Result := i
+				end
+			end
 		end
 
 #endif
-
 	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from input file.
@@ -462,17 +511,12 @@ feature -- Basic operations
 		do
 			if not rescued then
 				if name.count > 0 then
-#ifdef ISE
-					ise_open_read
-#endif
-#ifdef HACT
-					hact_open_read
-#endif
+					character_buffer := Void
+					end_of_file := False
 #ifdef SE
 					connect_to (name)
-#endif
-#ifdef VE
-					ve_open_read
+#else
+					old_open_read
 #endif
 				end
 			elseif not is_closed then
@@ -492,7 +536,8 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				do_close
+				old_close
+				character_buffer := Void
 			end
 		rescue
 			if not rescued then
@@ -503,39 +548,40 @@ feature -- Basic operations
 
 	rename_file (new_name: STRING) is
 			-- Rename current file as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed. If renaming was
-			-- successful, then `name' is set to `new_name'.
+			-- Do nothing if the file could not be renamed, if
+			-- it did not exist or if `new_name' already existed.
+			-- If renaming was successful, then `name' is set to
+			-- `new_name'.
+#ifndef SE
 		local
-			rescued: BOOLEAN
-			old_name: STRING
+			a_name: STRING
+#endif
 		do
-			if not rescued then
-				old_name := name
-				if old_name.count > 0 and new_name.count > 0 and not new_name.is_equal (old_name) then
+			if new_name.count > 0 then
 #ifdef SE
-					if file_exists (old_name) then
-						rename_to (old_name, new_name)
-						if file_exists (new_name) then
-							name := new_name
-						end
-					end
+				if not file_exists (new_name) then
+#else
+				a_name := old_name
+				old_name := new_name
+				if exists then
+					old_name := a_name
+				else
+					old_name := a_name
 #endif
-#ifdef ISE || HACT || VE
+					file_system.rename_file (name, new_name)
+#ifdef SE
+					if file_exists (new_name) then
+						name := new_name
+#else
+					a_name := old_name
+					old_name := new_name
 					if exists then
-						change_name (new_name)
-						name := do_name
-					end
+						name := new_name
+					else
+						old_name := a_name
 #endif
+					end
 				end
-			elseif old_name /= Void then
-				name := old_name
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
 			end
 		end
 
@@ -549,11 +595,11 @@ feature -- Basic operations
 			if not rescued then
 				if name.count > 0 then
 #ifdef SE
-					se_delete (name)
+					old_delete (name)
 #endif
 #ifdef ISE || HACT || VE
 					if exists then
-						do_delete
+						old_delete
 					end
 #endif
 				end
@@ -565,14 +611,16 @@ feature -- Basic operations
 			end
 		end
 
-#ifndef SE
 feature {NONE} -- Implementation
+
+	character_buffer: KL_LINKABLE [CHARACTER]
+			-- Unread characters
 
 #ifdef ISE || HACT
 	file_readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
-			Result := is_open_read
+			Result := old_is_open_read
 		end
 
 #endif
@@ -590,6 +638,5 @@ feature {NONE} -- Implementation
 	Empty_name: STRING is "empty_name"
 			-- Empty name place-holder
 
-#endif
 #endif
 end -- class KL_INPUT_FILE

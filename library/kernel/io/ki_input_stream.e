@@ -24,6 +24,18 @@ feature -- Input
 		deferred
 		end
 
+	unread (an_item: G) is
+			-- Put `an_item' back in input stream.
+			-- This item will be read first by the next
+			-- call to a read routine.
+		require
+			is_readable: is_readable
+		deferred
+		ensure
+			not_end_of_input: not end_of_input
+			last_item_set: last_item = an_item
+		end
+
 	read_to_buffer (a_buffer: KI_BUFFER [G]; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' items read from input stream.
@@ -33,7 +45,7 @@ feature -- Input
 			not_end_of_input: not end_of_input
 			a_buffer_not_void: a_buffer /= Void
 			pos_large_enough: pos >= 1
-			nb_large_enough: nb >= 0
+			nb_large_enough: nb > 0
 			enough_space: (pos + nb - 1) <= a_buffer.count
 		local
 			i, end_pos: INTEGER
@@ -53,7 +65,7 @@ feature -- Input
 		ensure
 			nb_item_read_large_enough: Result >= 0
 			nb_item_read_small_enough: Result <= nb
-			not_end_of_input: not end_of_input implies Result = nb
+			not_end_of_input: not end_of_input implies Result > 0
 		end
 
 feature -- Status report

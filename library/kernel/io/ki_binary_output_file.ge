@@ -64,10 +64,10 @@ feature -- Basic operations
 
 	rename_file (new_name: STRING) is
 			-- Rename current file as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed. If renaming was
-			-- successful, then `name' is set to `new_name'.
+			-- Do nothing if the file could not be renamed, if
+			-- it did not exist or if `new_name' already existed.
+			-- If renaming was successful, then `name' is set to
+			-- `new_name'.
 		require
 			is_closed: is_closed
 			new_name_not_void: new_name /= Void

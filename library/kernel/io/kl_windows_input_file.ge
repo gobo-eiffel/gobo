@@ -24,15 +24,7 @@ inherit
 		end
 
 	KL_BINARY_INPUT_FILE
-#ifdef VE || SE
-		redefine
-#ifdef VE
-			ve_read_stream,
-			end_of_file,
-#endif
-			read_character
-		end
-#endif
+		export {NONE} all end
 
 creation
 
@@ -40,20 +32,6 @@ creation
 
 feature -- Input
 
-#ifdef VE || SE
-	read_character is
-			-- Read the next character in input stream.
-			-- Make the result available in `last_character'.
-		do
-			if has_carriage_return then
-				last_character := '%R'
-				has_carriage_return := False
-			else
-				precursor
-			end
-		end
-
-#endif
 	read_line is
 			-- Read characters from input file until a line separator
 			-- or end of file is reached. Make the characters that have
@@ -64,6 +42,7 @@ feature -- Input
 			a_target: STRING
 			c: CHARACTER
 			has_carriage: BOOLEAN
+			is_eof: BOOLEAN
 		do
 			if last_string = Void then
 #ifdef VE
@@ -85,6 +64,7 @@ feature -- Input
 				last_string.wipe_out
 #endif
 			end
+			is_eof := True
 			a_target := last_string
 			from until done loop
 				read_character
@@ -94,19 +74,20 @@ feature -- Input
 					end
 					done := True
 				else
+					is_eof := False
 					c := last_character
 					inspect c
-					when '%R' then
-						if has_carriage then
-							a_target.append_character ('%R')
-						else
-							has_carriage := True
-						end
 					when '%N' then
 						if has_carriage then
 							done := True
 						else
 							a_target.append_character (c)
+						end
+					when '%R' then
+						if has_carriage then
+							a_target.append_character (c)
+						else
+							has_carriage := True
 						end
 					else
 						if has_carriage then
@@ -117,6 +98,7 @@ feature -- Input
 					end
 				end
 			end
+			end_of_file := is_eof
 		end
 
 	read_new_line is
@@ -156,124 +138,24 @@ feature -- Input
 							last_string.append_string (eol)
 						else
 								-- Put characters back to input file.
-#ifdef ISE || HACT
-							back
-							back
-#endif
-#ifdef SE
-							has_carriage_return := True
-							unread_character
-#endif
-#ifdef VE
-							has_carriage_return := True
-							has_buffered_character := True
-#endif
+							unread_character (last_character)
+							unread_character ('%R')
 						end
 					else
 							-- Put character back to input file.
-#ifdef ISE || HACT
-						back
-#endif
-#ifdef SE
-						unread_character
-#endif
-#ifdef VE
-						has_buffered_character := True
-#endif
+						unread_character ('%R')
 					end
 				else
 						-- Put character back to input file.
-#ifdef ISE || HACT
-					back
-#endif
-#ifdef SE
-					unread_character
-#endif
-#ifdef VE
-					has_buffered_character := True
-#endif
+					unread_character (last_character)
 				end
 			end
+			end_of_file := False
 		end
 
-#ifdef VE
-feature -- Status report
-
-	end_of_file: BOOLEAN is
-			-- Has the end of file been reached?
-		do
-			if not has_buffered_character then
-				Result := precursor
-			end
-		end
-
-#endif
 feature -- Access
 
 	eol: STRING is "%R%N"
 			-- Line separator
 
-#ifdef VE || SE
-feature {NONE} -- Implementation
-
-	has_carriage_return: BOOLEAN
-			-- Has character '%R' been buffered
-			-- by last call to `read_new_line'?
-
-#ifdef VE
-	ve_read_stream (nb_char: INTEGER) is
-			-- Read a string of a most 'nb_char' bound characters or until end of file.
-			-- Make result available in 'last_string'.
-		local
-			i, l: INTEGER
-			amount: INTEGER
-			buffer: POINTER
-			gc_off: BOOLEAN
-		do
-			if last_string = Void then
-				!!last_string.make (nb_char)
-			else
-				last_string.remake (nb_char)
-			end 
-			amount := nb_char
-			collection_off
-			gc_off := True
-			buffer := last_string.to_c
-			if has_carriage_return then
-				buffer := buffer + 1
-				amount := amount - 1
-				last_string.put ('%R', 1)
-				has_carriage_return := False
-				i := 2
-			else
-				i := 1
-			end
-			if amount > 0 then
-				if has_buffered_character then
-					buffer := buffer + 1
-					amount := amount - 1
-					last_string.put (buffered_character, i)
-					has_buffered_character := False
-				end
-			end
-			if amount > 0 then
-				l := read_buffer (buffer, amount)
-				if l < amount then
-					if l > 0 then
-						last_string.resize (l + nb_char - amount)
-					else
-						last_string := Void
-					end
-				end
-			end
-			collection_on
-		rescue
-			if gc_off then
-				gc_off := False
-				collection_on
-			end
-		end
-
-#endif
-#endif
 end -- class KL_WINDOWS_INPUT_FILE

@@ -29,7 +29,7 @@ feature -- Input
 			not_end_of_input: not end_of_input
 		deferred
 		ensure
-			last_string_not_void: last_string /= Void
+			last_string_not_void: not end_of_input implies last_string /= Void
 		end
 
 	read_new_line is
@@ -44,6 +44,7 @@ feature -- Input
 			not_end_of_input: not end_of_input
 		deferred
 		ensure
+			not_end_of_input: not end_of_input
 			last_string_not_void: last_string /= Void
 		end
 

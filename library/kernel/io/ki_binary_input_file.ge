@@ -22,8 +22,6 @@ inherit
 #endif
 			end_of_input as end_of_file,
 			is_readable as is_open_read
-		redefine
-			read_string, read_to_string
 		end
 
 feature {NONE} -- Initialization
@@ -45,27 +43,6 @@ feature -- Status report
 		deferred
 		ensure
 			definition: Result = not is_open_read
-		end
-
-feature -- Input
-
-	read_string (nb: INTEGER) is
-			-- Read at most `nb' characters from input stream.
-			-- Make the characters that have actually been read
-			-- available in `last_string'.
-		deferred
-		ensure then
-			last_string_count_large_enough: not end_of_file implies last_string.count = nb
-		end
-
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
-			-- Fill `a_string', starting at position `pos', with
-			-- at most `nb' characters read from input stream.
-			-- Return the number of characters actually read.
-		do
-			Result := precursor (a_string, pos, nb)
-		ensure then
-			not_end_of_input: not end_of_file implies Result = nb
 		end
 
 feature -- Basic operations
@@ -90,10 +67,10 @@ feature -- Basic operations
 
 	rename_file (new_name: STRING) is
 			-- Rename current file as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed. If renaming was
-			-- successful, then `name' is set to `new_name'.
+			-- Do nothing if the file could not be renamed, if
+			-- it did not exist or if `new_name' already existed.
+			-- If renaming was successful, then `name' is set to
+			-- `new_name'.
 		require
 			is_closed: is_closed
 			new_name_not_void: new_name /= Void
