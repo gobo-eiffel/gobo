@@ -19,6 +19,10 @@ inherit
 			make as make_feature_checker
 		redefine
 			make_from_checker, set_state,
+			check_check_instruction_validity,
+			check_debug_instruction_validity,
+			check_loop_invariant_validity,
+			check_loop_variant_validity,
 			report_agent_open_operand,
 			report_assignment,
 			report_assignment_attempt,
@@ -26,6 +30,9 @@ inherit
 			report_bit_constant,
 			report_boolean_constant,
 			report_character_constant,
+			report_convert,
+			report_no_convert,
+			report_convert_function,
 			report_creation_expression,
 			report_creation_instruction,
 			report_current,
@@ -82,6 +89,7 @@ feature {NONE} -- Initialization
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_set_stack.make (10)
 			create dynamic_call_stack.make (10)
+			create dynamic_convert_stack.make (10)
 		ensure
 			current_system_set: current_system = a_system
 		end
@@ -113,6 +121,32 @@ feature -- Access
 			-- (Note: there is a frozen feature called `system' in
 			-- class GENERAL of SmartEiffel 1.0)
 
+feature -- Status report
+
+	no_debug: BOOLEAN
+			-- Should debug instructions be ignored?
+
+	no_assertion: BOOLEAN
+			-- Should assertions be ignored?
+
+feature -- Status setting
+
+	set_no_debug (b: BOOLEAN) is
+			-- Set `no_debug' to `b'.
+		do
+			no_debug := b
+		ensure
+			no_debug_set: no_debug = b
+		end
+
+	set_no_assertion (b: BOOLEAN) is
+			-- Set `no_assertion' to `b'.
+		do
+			no_assertion := b
+		ensure
+			no_assertion_set: no_assertion = b
+		end
+
 feature -- Generation
 
 	build_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE) is
@@ -135,6 +169,52 @@ feature -- Generation
 			current_dynamic_type := old_type
 			dynamic_type_set_stack.wipe_out
 			dynamic_call_stack.wipe_out
+		end
+
+feature {NONE} -- Instruction validity
+
+	check_check_instruction_validity (an_instruction: ET_CHECK_INSTRUCTION) is
+			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			if not no_debug then
+				precursor (an_instruction)
+			else
+				has_fatal_error := False
+			end
+		end
+
+	check_debug_instruction_validity (an_instruction: ET_DEBUG_INSTRUCTION) is
+			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			if not no_assertion then
+				precursor (an_instruction)
+			else
+				has_fatal_error := False
+			end
+		end
+
+	check_loop_invariant_validity (an_invariant: ET_LOOP_INVARIANTS) is
+			-- Check validity of `an_invariant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			if not no_assertion then
+				precursor (an_invariant)
+			else
+				has_fatal_error := False
+			end
+		end
+
+	check_loop_variant_validity (a_variant: ET_VARIANT) is
+			-- Check validity of `a_variant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			if not no_assertion then
+				precursor (a_variant)
+			else
+				has_fatal_error := False
+			end
 		end
 
 feature {NONE} -- Event handling
@@ -253,6 +333,69 @@ feature {NONE} -- Event handling
 				l_type := current_system.character_type
 				l_type.set_alive (True)
 				dynamic_type_set_stack.force (l_type)
+			end
+		end
+
+	report_convert (a_target: ET_EXPRESSION) is
+			-- Report that a conversion may occur on `a_target'.
+		do
+			if current_type = current_dynamic_type.base_type then
+				dynamic_convert_stack.force (current_dynamic_feature.last_feature_call)
+			end
+		end
+
+	report_no_convert (a_target: ET_EXPRESSION) is
+			-- Report that no conversion on `a_target' was necessary after all.
+		do
+			if current_type = current_dynamic_type.base_type then
+				if dynamic_convert_stack.is_empty then
+						-- Internal error: the stack of dynamic converts should 
+						-- at least contain the item for the current call.
+					set_fatal_error
+					error_handler.report_gibdo_error
+				else
+					dynamic_convert_stack.remove
+				end
+			end
+		end
+
+	report_convert_function (a_target: ET_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report that a convert function call expression has been processed.
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_call: ET_DYNAMIC_CALL
+			l_previous_call: ET_DYNAMIC_CALL
+		do
+			if current_type = current_dynamic_type.base_type then
+				if dynamic_convert_stack.is_empty then
+						-- Internal error: the stack of dynamic converts should 
+						-- at least contain the item for the current call.
+					set_fatal_error
+					error_handler.report_gibdp_error
+				else
+					if dynamic_type_set_stack.is_empty then
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the item for the target of the
+							-- call.
+						set_fatal_error
+						error_handler.report_gibdq_error
+					else
+						l_previous_call := dynamic_convert_stack.item
+						dynamic_convert_stack.remove
+						l_dynamic_type_set := dynamic_type_set_stack.item
+						dynamic_type_set_stack.remove
+						create l_call.make (a_target, l_dynamic_type_set, a_name, a_feature, current_feature, current_type, current_system)
+						current_dynamic_feature.insert_feature_call (l_previous_call, l_call)
+						l_dynamic_type_set := l_call.result_type
+						if l_dynamic_type_set = Void then
+								-- Internal error: the result type set of a query cannot be void.
+							set_fatal_error
+							error_handler.report_gibdr_error
+						else
+							dynamic_type_set_stack.force (l_dynamic_type_set)
+						end
+					end
+				end
 			end
 		end
 
@@ -608,6 +751,8 @@ feature {NONE} -- Event handling
 
 	report_precursor_expression (an_expression: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor expression has been processed.
+			-- `a_parent_type' is viewed in the context of `current_type'
+			-- and `a_feature' is the precursor feature.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
@@ -619,8 +764,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
-				l_query := l_parent_type.dynamic_feature (a_feature, current_system)
-				l_query.set_regular (True)
+				l_query := current_dynamic_feature.dynamic_precursor (a_feature, l_parent_type, current_system)
 				l_argument_types := l_query.argument_types
 				if l_argument_types /= Void then
 					l_actuals := an_expression.arguments
@@ -659,6 +803,8 @@ feature {NONE} -- Event handling
 
 	report_precursor_instruction (an_instruction: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor instruction has been processed.
+			-- `a_parent_type' is viewed in the context of `current_type'
+			-- and `a_feature' is the precursor feature.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
@@ -670,8 +816,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
-				l_procedure := l_parent_type.dynamic_feature (a_feature, current_system)
-				l_procedure.set_regular (True)
+				l_procedure := current_dynamic_feature.dynamic_precursor (a_feature, l_parent_type, current_system)
 				l_argument_types := l_procedure.argument_types
 				if l_argument_types /= Void then
 					l_actuals := an_instruction.arguments
@@ -727,8 +872,8 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_call_stack.is_empty then
-						-- Internal error: the stack of dynamic type sets should 
-						-- at least contain the item for the target of the
+						-- Internal error: the stack of dynamic calls should 
+						-- at least contain the item for the current
 						-- qualified call.
 					set_fatal_error
 					error_handler.report_gibax_error
@@ -812,8 +957,8 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_call_stack.is_empty then
-						-- Internal error: the stack of dynamic type sets should 
-						-- at least contain the item for the target of the
+						-- Internal error: the stack of dynamic calls should 
+						-- at least contain the item for the current
 						-- qualified call.
 					set_fatal_error
 					error_handler.report_gibba_error
@@ -867,8 +1012,8 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_call_stack.is_empty then
-						-- Internal error: the stack of dynamic type sets should 
-						-- at least contain the item for the target of the
+						-- Internal error: the stack of dynamic calls should 
+						-- at least contain the item for the current
 						-- qualified call.
 					set_fatal_error
 					error_handler.report_gibbd_error
@@ -952,7 +1097,8 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
 				l_query := l_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_query.set_regular (True)
+				l_query.set_static (True)
+				l_dynamic_type.set_static (True)
 				l_argument_types := l_query.argument_types
 				if l_argument_types /= Void then
 					l_actuals := an_expression.arguments
@@ -1003,7 +1149,8 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
 				l_procedure := l_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_procedure.set_regular (True)
+				l_procedure.set_static (True)
+				l_dynamic_type.set_static (True)
 				l_argument_types := l_procedure.argument_types
 				if l_argument_types /= Void then
 					l_actuals := an_instruction.arguments
@@ -1240,6 +1387,10 @@ feature {NONE} -- Implementation
 	dynamic_call_stack: DS_ARRAYED_STACK [ET_DYNAMIC_CALL]
 			-- Dynamic call stack
 
+	dynamic_convert_stack: DS_ARRAYED_STACK [ET_DYNAMIC_CALL]
+			-- Dynamic stack of calls which precede any convert function call,
+			-- or void if the convert call should appear first
+
 	dummy_dynamic_type: ET_DYNAMIC_TYPE is
 			-- Dummy_dynamic type
 		once
@@ -1262,6 +1413,7 @@ invariant
 	no_void_dynamic_type_set: not dynamic_type_set_stack.has (Void)
 	dynamic_call_stack_not_void: dynamic_call_stack /= Void
 	no_void_dynamic_call: not dynamic_call_stack.has (Void)
+	dynamic_convert_stack_not_void: dynamic_convert_stack /= Void
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_system_not_void: current_system /= Void
