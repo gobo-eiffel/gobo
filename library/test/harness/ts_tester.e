@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new tester and execute it.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			make_default

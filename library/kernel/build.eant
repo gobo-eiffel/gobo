@@ -93,9 +93,9 @@
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="ki_file_system"/>
 		<geant target="spec_eif"/>
-		<set name="gepp_file" value="ki_input_file"/>
+		<set name="gepp_file" value="ki_text_input_file"/>
 		<geant target="spec_eif"/>
-		<set name="gepp_file" value="ki_output_file"/>
+		<set name="gepp_file" value="ki_text_output_file"/>
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="kl_binary_input_file"/>
 		<geant target="spec_eif"/>
@@ -107,11 +107,11 @@
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="kl_file_system"/>
 		<geant target="spec_eif"/>
-		<set name="gepp_file" value="kl_input_file"/>
+		<set name="gepp_file" value="kl_text_input_file"/>
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="kl_macos_input_file"/>
 		<geant target="spec_eif"/>
-		<set name="gepp_file" value="kl_output_file"/>
+		<set name="gepp_file" value="kl_text_output_file"/>
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="kl_stderr_file"/>
 		<geant target="spec_eif"/>

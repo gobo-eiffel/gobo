@@ -199,7 +199,7 @@ feature -- Test
 		local
 			a_directory: KL_DIRECTORY
 			a_name, a_filename: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			a_name := new_dirname ("gobo")
 			!! a_directory.make (a_name)
@@ -314,7 +314,7 @@ feature -- Test
 		local
 			a_directory: KL_DIRECTORY
 			a_name, a_filename: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			a_name := new_dirname ("gobo")
 			!! a_directory.make (a_name)

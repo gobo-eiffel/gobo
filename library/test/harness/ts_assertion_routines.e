@@ -95,7 +95,7 @@ feature -- Files
 			a_filename2_not_void: a_filename2 /= Void
 			a_filename2_not_empty: a_filename2.count > 0
 		local
-			a_file1, a_file2: KL_INPUT_FILE
+			a_file1, a_file2: KL_TEXT_INPUT_FILE
 			a_message: STRING
 			done: BOOLEAN
 			i: INTEGER

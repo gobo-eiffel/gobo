@@ -44,7 +44,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_indentation (indent: INTEGER; a_file: KL_OUTPUT_FILE) is
+	print_indentation (indent: INTEGER; a_file: KL_TEXT_OUTPUT_FILE) is
 			-- Print `indent' tab characters to `a_file'.
 		require
 			indent_positive: indent >= 0

@@ -15,7 +15,7 @@ class KL_MACOS_INPUT_FILE
 
 inherit
 
-	KI_INPUT_FILE
+	KI_TEXT_INPUT_FILE
 		undefine
 #ifdef ISE
 			read_to_string,

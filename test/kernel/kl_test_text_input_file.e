@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test features of class KL_INPUT_FILE"
+		"Test features of class KL_TEXT_INPUT_FILE"
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class KL_TEST_INPUT_FILE
+deferred class KL_TEST_TEXT_INPUT_FILE
 
 inherit
 
@@ -23,7 +23,7 @@ feature -- Test
 	test_make is
 			-- Test feature `make'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -36,7 +36,7 @@ feature -- Test
 	test_eol is
 			-- Test feature `eol'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -47,7 +47,7 @@ feature -- Test
 	test_open_read is
 			-- Test feature `open_read'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 				-- Existing filename:
@@ -69,7 +69,7 @@ feature -- Test
 	test_read_character is
 			-- Test feature `read_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -96,7 +96,7 @@ feature -- Test
 	test_unread_character1 is
 			-- Test feature `unread_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -127,7 +127,7 @@ feature -- Test
 	test_unread_character2 is
 			-- Test feature `unread_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -163,7 +163,7 @@ feature -- Test
 	test_unread_character3 is
 			-- Test feature `unread_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -197,7 +197,7 @@ feature -- Test
 	test_read_string is
 			-- Test feature `read_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			last_string, last_string2: STRING
 		do
@@ -229,7 +229,7 @@ feature -- Test
 			-- Test feature `read_line'.
 			-- The last line has no line-separator.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			last_string, last_string2: STRING
 		do
@@ -267,7 +267,7 @@ feature -- Test
 			-- Test feature `read_line'.
 			-- The last line has a line-separator.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			last_string, last_string2: STRING
 		do
@@ -301,7 +301,7 @@ feature -- Test
 			-- Test feature `read_line'.
 			-- Empty file.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -321,7 +321,7 @@ feature -- Test
 	test_read_new_line is
 			-- Test feature `read_new_line'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			last_string: STRING
 		do
@@ -353,7 +353,7 @@ feature -- Test
 	test_read_to_string is
 			-- Test feature `read_to_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			a_string: STRING
 			nb: INTEGER
@@ -382,7 +382,7 @@ feature -- Test
 	test_read_to_buffer is
 			-- Test feature `read_to_buffer'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			a_buffer: KL_CHARACTER_BUFFER
 			nb: INTEGER
@@ -411,7 +411,7 @@ feature -- Test
 	test_end_of_file is
 			-- Test feature `end_of_file' with `read_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -440,7 +440,7 @@ feature -- Test
 	test_end_of_file2 is
 			-- Test feature `end_of_file' with `read_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			last_string: STRING
 		do
@@ -469,7 +469,7 @@ feature -- Test
 	test_empty_end_of_file is
 			-- Test feature `end_of_file' on empty file with `read_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -489,7 +489,7 @@ feature -- Test
 	test_empty_end_of_file2 is
 			-- Test feature `end_of_file' on empty file with `read_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -510,8 +510,8 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file exists and new file does not exist.
 		local
-			a_file: KL_INPUT_FILE
-			old_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
+			old_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -541,7 +541,7 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file and new file do not exist.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -559,9 +559,9 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file does not exist and new file exists.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			old_name, new_name: STRING
-			new_file: KL_OUTPUT_FILE
+			new_file: KL_TEXT_OUTPUT_FILE
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
@@ -590,9 +590,9 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file and new file exist.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			old_name, new_name: STRING
-			out_file: KL_OUTPUT_FILE
+			out_file: KL_TEXT_OUTPUT_FILE
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
@@ -637,8 +637,8 @@ feature -- Test
 	test_delete_file is
 			-- Test feature `delete_file'.
 		local
-			a_file: KL_INPUT_FILE
-			out_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
+			out_file: KL_TEXT_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -658,4 +658,4 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_INPUT_FILE
+end -- class KL_TEST_TEXT_INPUT_FILE

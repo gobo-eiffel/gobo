@@ -76,7 +76,7 @@ feature -- File handling
 		deferred
 		end
 
-	new_input_file (a_name: STRING): KI_INPUT_FILE is
+	new_input_file (a_name: STRING): KI_TEXT_INPUT_FILE is
 			-- New input text file in current file system
 		require
 			a_name_not_void: a_name /= Void
@@ -87,7 +87,7 @@ feature -- File handling
 			is_closed: Result.is_closed
 		end
 
-	new_output_file (a_name: STRING): KI_OUTPUT_FILE is
+	new_output_file (a_name: STRING): KI_TEXT_OUTPUT_FILE is
 			-- New output text file in current file system
 		require
 			a_name_not_void: a_name /= Void

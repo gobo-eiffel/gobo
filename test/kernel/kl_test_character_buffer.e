@@ -130,7 +130,7 @@ feature -- Test
 	test_fill_from_stream is
 			-- Test feature `fill_from_stream'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 			a_name: STRING
 			a_buffer: KL_CHARACTER_BUFFER
 			nb: INTEGER

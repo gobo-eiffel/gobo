@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class KI_OUTPUT_FILE
+deferred class KI_TEXT_OUTPUT_FILE
 
 inherit
 
@@ -25,4 +25,4 @@ inherit
 
 	KI_BINARY_OUTPUT_FILE
 
-end -- class KI_OUTPUT_FILE
+end -- class KI_TEXT_OUTPUT_FILE

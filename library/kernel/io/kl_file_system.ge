@@ -88,7 +88,7 @@ feature -- File handling
 		local
 			rescued: BOOLEAN
 #ifdef VE
-			a_file: KL_INPUT_FILE
+			a_file: KL_TEXT_INPUT_FILE
 #endif
 		do
 			if not rescued then

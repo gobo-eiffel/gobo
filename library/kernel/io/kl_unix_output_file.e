@@ -15,7 +15,7 @@ class KL_UNIX_OUTPUT_FILE
 
 inherit
 
-	KI_OUTPUT_FILE
+	KI_TEXT_OUTPUT_FILE
 
 	KL_BINARY_OUTPUT_FILE
 		export {NONE} all end

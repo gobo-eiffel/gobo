@@ -14,11 +14,11 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class KL_INPUT_FILE
+class KL_TEXT_INPUT_FILE
 
 inherit
 
-	KI_INPUT_FILE
+	KI_TEXT_INPUT_FILE
 		redefine
 #ifdef ISE
 			read_to_string,
@@ -639,4 +639,4 @@ feature {NONE} -- Implementation
 			-- Empty name place-holder
 
 #endif
-end -- class KL_INPUT_FILE
+end -- class KL_TEXT_INPUT_FILE

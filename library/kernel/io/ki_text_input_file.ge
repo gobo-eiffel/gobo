@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class KI_INPUT_FILE
+deferred class KI_TEXT_INPUT_FILE
 
 inherit
 
@@ -28,4 +28,4 @@ inherit
 
 	KI_BINARY_INPUT_FILE
 
-end -- class KI_INPUT_FILE
+end -- class KI_TEXT_INPUT_FILE

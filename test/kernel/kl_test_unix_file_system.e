@@ -37,7 +37,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 				-- The following two files, whose pathnames have a non-empty
@@ -91,7 +91,7 @@ feature -- File handling
 			-- Old file exists and new file does not exist.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -148,7 +148,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			old_name, new_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
@@ -184,7 +184,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			old_name, new_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
@@ -237,7 +237,7 @@ feature -- File handling
 			-- but has an empty name.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -275,7 +275,7 @@ feature -- File handling
 			-- but has a non-existing dirname in its pathname.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -313,7 +313,7 @@ feature -- File handling
 			-- Old file exists and has the same pathname as new file.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -352,7 +352,7 @@ feature -- File handling
 			-- although they don't have the same pathname.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -392,7 +392,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			old_name, new_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 			old_name := ""
@@ -427,7 +427,7 @@ feature -- File handling
 			-- Old file exists and new file does not exist.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -487,7 +487,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			old_name, new_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
@@ -523,7 +523,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			old_name, new_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
@@ -576,7 +576,7 @@ feature -- File handling
 			-- but has an empty name.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -614,7 +614,7 @@ feature -- File handling
 			-- but has a non-existing dirname in its pathname.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -652,7 +652,7 @@ feature -- File handling
 			-- Old file exists and has the same pathname as new file.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -691,7 +691,7 @@ feature -- File handling
 			-- although they don't have the same pathname.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			!! a_file_system.make
@@ -731,7 +731,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			old_name, new_name: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 			old_name := ""
@@ -765,7 +765,7 @@ feature -- File handling
 			-- Test feature `delete_file'.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 			a_name: STRING
 		do
 			!! a_file_system.make
@@ -801,7 +801,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
-			a_file: KI_INPUT_FILE
+			a_file: KI_TEXT_INPUT_FILE
 			a_unix_file: KL_UNIX_INPUT_FILE
 		do
 			!! a_file_system.make
@@ -819,7 +819,7 @@ feature -- File handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
-			a_file: KI_OUTPUT_FILE
+			a_file: KI_TEXT_OUTPUT_FILE
 			a_unix_file: KL_UNIX_OUTPUT_FILE
 		do
 			!! a_file_system.make
@@ -912,7 +912,7 @@ feature -- Directory handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name, a_filename: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 				-- Create a new directory and create a file in it.
@@ -1037,7 +1037,7 @@ feature -- Directory handling
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name, a_filename: STRING
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			!! a_file_system.make
 				-- Create a new directory and create a file in it.
