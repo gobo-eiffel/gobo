@@ -106,7 +106,7 @@ feature -- Access
 			correct_axis_name: axis_number (Result) = an_axis
 		end
 
-	axis_principal_node_type (an_axis: INTEGER): INTEGER is
+	axis_principal_node_type (an_axis: INTEGER): INTEGER_8 is
 		require
 			valid_axis: is_axis_valid (an_axis)
 		do

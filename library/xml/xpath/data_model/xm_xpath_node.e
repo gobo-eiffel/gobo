@@ -79,7 +79,7 @@ feature -- Access
 			base_uri_not_void: Result /= Void
 		end
 
-	node_type: INTEGER
+	node_type: INTEGER_8
 			-- `node_kind' expressed as an integer
 
 	node_kind: STRING is

@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 				on_error ("Unable to open output stream for encoding " + encoding)
 			else
 				is_open := True
-				write_declaration
+				if not is_declaration_written then write_declaration end
 			
 				a_character_representation := output_properties.character_representation
 				if STRING_.same_string (a_character_representation, "hex") then

@@ -309,7 +309,7 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 			some_children: children.count >0 and then other.children.count > 0
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
-			an_expression, another_expression: XM_XPATH_EXPRESSION
+			an_expression, another_expression: XM_XSLT_EXPRESSION_INSTRUCTION
 		do
 			from
 				a_cursor := children.new_cursor

@@ -31,7 +31,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_local_name, an_original_text: STRING) is
+	make (a_node_type: INTEGER_8; a_local_name, an_original_text: STRING) is
 		require
 			valid_node_type: is_node_type (a_node_type)
 			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		node_kind: INTEGER
+		node_kind: INTEGER_8
 			-- Type of nodes to which this pattern applies
 
 	node_kind_mask: INTEGER is

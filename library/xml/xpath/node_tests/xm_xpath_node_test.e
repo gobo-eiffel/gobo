@@ -47,7 +47,7 @@ feature -- Access
 			Result := any_node_test
 		end
 
-	node_kind: INTEGER is
+	node_kind: INTEGER_8 is
 			-- Type of nodes matched
 		do
 			Result := Any_node

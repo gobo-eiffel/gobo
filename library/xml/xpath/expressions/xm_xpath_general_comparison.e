@@ -474,17 +474,18 @@ feature {NONE} -- Implementation
 			-- Evaluate the expression now if both arguments are constant
 		local
 			a_value, another_value: XM_XPATH_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			a_value ?= first_operand
 			another_value ?= second_operand
 			if a_value /= Void and then another_value /= Void then
 				evaluate_item (Void)
-				a_value ?= last_evaluated_item
+				a_boolean_value ?= last_evaluated_item
 					check
-						a_value /= Void
+						a_boolean_value /= Void
 						-- We are guarenteed a boolean value
 					end
-				set_replacement (a_value)
+				set_replacement (a_boolean_value)
 			end
 		end
 

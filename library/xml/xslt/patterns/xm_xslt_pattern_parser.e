@@ -484,12 +484,12 @@ feature {NONE} -- Implementation
 		end
 
 
-	parse_pattern_step (a_principal_node_type: INTEGER) is
+	parse_pattern_step (a_principal_node_type: INTEGER_8) is
 			-- Parse a pattern step (after any axis name or @)
 		local
 			a_step: XM_XSLT_LOCATION_PATH_PATTERN
 			a_node_test: XM_XSLT_NODE_TEST
-			a_node_kind: INTEGER
+			a_node_kind: INTEGER_8
 		do
 			create a_step.make
 			parse_node_test (a_principal_node_type)

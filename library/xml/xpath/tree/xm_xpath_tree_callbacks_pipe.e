@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			tree.set_document_locator (a_locator)
 			tree.set_line_numbering (is_line_numbering)
 			create emitter.make (tree)
+--			create error.set_next (emitter)
 			create a_namespace_resolver.set_next (emitter)
 			a_namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (a_namespace_resolver)
@@ -68,6 +69,9 @@ feature -- Access
 
 	attributes: XM_ATTRIBUTE_DEFAULT_FILTER
 			-- Set attribute defaults from the DTD
+	
+--	error: XM_PARSER_STOP_ON_ERROR_FILTER
+--			-- Error collector
 
 	emitter: XM_XPATH_CONTENT_EMITTER
 			-- Couples pipeline to the tree-builder

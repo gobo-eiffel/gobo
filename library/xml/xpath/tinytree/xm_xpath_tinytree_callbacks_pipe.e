@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			tree.set_line_numbering (is_line_numbering)
 			create emitter.make (tree)
 			create error.set_next (emitter)
-			create namespace_resolver.set_next (error)
+			create namespace_resolver.set_next (emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)

@@ -46,7 +46,7 @@ feature -- Access
 			Result := "id()"
 		end
 
-	node_kind: INTEGER is
+	node_kind: INTEGER_8 is
 			-- Type of nodes matched
 		do
 			Result := Element_node

@@ -188,68 +188,173 @@ feature -- Element change
 			-- Accumulate output properties into `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
+			property_set_not_in_error: not a_property_set.is_error
 			validated: validated
-		do 
+		local
+			an_import_precedence: INTEGER
+		do
+			an_import_precedence := precedence
 			if method /= Void then
 				if STRING_.same_string (method, "xml") then
-					a_property_set.set_xml_defaults
+					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
+						a_property_set.set_xml_defaults (an_import_precedence)
+					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
+						not STRING_.same_string (method, a_property_set.method) then
+						a_property_set.set_duplication_error (Method_attribute)
+					end
 				elseif STRING_.same_string (method, "html") then
-					a_property_set.set_html_defaults
+					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
+						a_property_set.set_html_defaults (an_import_precedence)
+					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
+						not STRING_.same_string (method, a_property_set.method) then
+						a_property_set.set_duplication_error (Method_attribute)
+					end
 				elseif STRING_.same_string (method, "xhtml") then
-					a_property_set.set_xhtml_defaults
+					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
+						a_property_set.set_xhtml_defaults (an_import_precedence)
+					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
+						not STRING_.same_string (method, a_property_set.method) then
+						a_property_set.set_duplication_error (Method_attribute)
+					end
 				elseif STRING_.same_string (method, "text") then
-					a_property_set.set_text_defaults
+					if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
+						a_property_set.set_text_defaults (an_import_precedence)
+					elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
+						not STRING_.same_string (method, a_property_set.method) then
+						a_property_set.set_duplication_error (Method_attribute)
+					end
 				else
 					todo ("gather_output_properties (QName)", true)
 				end
 			end
-			if output_version /= Void then
-				a_property_set.set_version (output_version)
+			if output_version /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Version_attribute) then
+					a_property_set.set_version (output_version, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Version_attribute) and then
+					not STRING_.same_string (output_version, a_property_set.version) then
+					a_property_set.set_duplication_error (Version_attribute)
+				end
 			end
-			if indent /= Void then
-				a_property_set.set_indent (STRING_.same_string (indent, "yes"))
+			if indent /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Indent_attribute) then
+					a_property_set.set_indent (STRING_.same_string (indent, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Indent_attribute) and then
+					((STRING_.same_string (indent, "yes") and then not a_property_set.indent) or else
+					(STRING_.same_string (indent, "no") and then a_property_set.indent)) then
+					a_property_set.set_duplication_error (Indent_attribute)
+				end
 			end
-			if indent_spaces /= Void then
-				a_property_set.set_indent_spaces (indent_spaces.to_integer)
+			if indent_spaces /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) then
+					a_property_set.set_indent_spaces (indent_spaces.to_integer, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) and then
+					indent_spaces.to_integer /= a_property_set.indent_spaces then
+					a_property_set.set_duplication_error (Gexslt_indent_spaces_attribute)
+				end	
 			end
-			if encoding /= Void then
-				a_property_set.set_encoding (encoding)
+			if encoding /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Encoding_attribute) then
+					a_property_set.set_encoding (encoding, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Encoding_attribute) and then
+					not STRING_.same_string (encoding, a_property_set.encoding) then
+					a_property_set.set_duplication_error (Encoding_attribute)
+				end	
 			end
-			if media_type /= Void then
-				a_property_set.set_media_type (media_type)
+			if media_type /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Media_type_attribute) then
+					a_property_set.set_media_type (media_type, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Media_type_attribute) and then
+					not STRING_.same_string (media_type, a_property_set.media_type) then
+					a_property_set.set_duplication_error (Media_type_attribute)
+				end	
 			end
-			if doctype_system /= Void then
-				a_property_set.set_doctype_system (doctype_system)
+			if doctype_system /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Doctype_system_attribute) then
+					a_property_set.set_doctype_system (doctype_system, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Doctype_system_attribute) and then
+					not STRING_.same_string (doctype_system, a_property_set.doctype_system) then
+					a_property_set.set_duplication_error (Doctype_system_attribute)
+				end	
 			end			
-			if doctype_public /= Void then
-				a_property_set.set_doctype_public (doctype_public)
+			if doctype_public /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Doctype_public_attribute) then
+					a_property_set.set_doctype_public (doctype_public, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Doctype_public_attribute) and then
+					not STRING_.same_string (doctype_public, a_property_set.doctype_public) then
+					a_property_set.set_duplication_error (Doctype_public_attribute)
+				end					
 			end
-			if omit_xml_declaration /= Void then
-				a_property_set.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration, "yes"))
+			if omit_xml_declaration /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Omit_xml_declaration_attribute) then
+					a_property_set.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Omit_xml_declaration_attribute) then
+					if STRING_.same_string (omit_xml_declaration, "yes") and then not a_property_set.omit_xml_declaration or else
+						STRING_.same_string (omit_xml_declaration, "no") and then a_property_set.omit_xml_declaration then
+						a_property_set.set_duplication_error (Omit_xml_declaration_attribute)
+					end
+				end
 			end
-			if standalone /= Void then
-				a_property_set.set_standalone (standalone)
+			if standalone /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Standalone_attribute) then
+					a_property_set.set_standalone (standalone, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Standalone_attribute) and then
+					not STRING_.same_string (standalone, a_property_set.standalone) then
+					a_property_set.set_duplication_error (Standalone_attribute)
+				end	
 			end
-			if cdata_section_expanded_names /= Void then
+			if cdata_section_expanded_names /= Void and then not a_property_set.is_error then
 				a_property_set.set_cdata_sections (cdata_section_expanded_names)
 			end
-			if escape_uri_attributes /= Void then
-				a_property_set.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes, "yes"))
+			if escape_uri_attributes /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Escape_uri_attributes_attribute) then
+					a_property_set.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Escape_uri_attributes_attribute) then
+					if STRING_.same_string (escape_uri_attributes, "yes") and then not a_property_set.escape_uri_attributes or else
+						STRING_.same_string (escape_uri_attributes, "no") and then a_property_set.escape_uri_attributes then
+						a_property_set.set_duplication_error (Escape_uri_attributes_attribute)
+					end
+				end					
 			end
 			if use_character_maps /= Void then
 				report_compile_error ("Character maps are not supported yet")
 			end
-			if character_representation /= Void then
-				a_property_set.set_character_representation (character_representation)
+			if character_representation /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_character_representation_attribute) then
+					a_property_set.set_character_representation (character_representation, an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_character_representation_attribute) and then
+					not STRING_.same_string (character_representation, a_property_set.character_representation) then
+					a_property_set.set_duplication_error (Gexslt_character_representation_attribute)
+				end	
 			end			
-			if include_content_type /= Void then
-				a_property_set.set_include_content_type (STRING_.same_string (include_content_type, "yes"))
+			if include_content_type /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Include_content_type_attribute) then
+					a_property_set.set_include_content_type (STRING_.same_string (include_content_type, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Include_content_type_attribute) then
+					if STRING_.same_string (include_content_type, "yes") and then not a_property_set.include_content_type or else
+						STRING_.same_string (include_content_type, "no") and then a_property_set.include_content_type then
+						a_property_set.set_duplication_error (Include_content_type_attribute)
+					end
+				end
 			end
-			if undeclare_namespaces /= Void then
-				a_property_set.set_undeclare_namespaces (STRING_.same_string (undeclare_namespaces, "yes"))
+			if undeclare_namespaces /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Undeclare_namespaces_attribute) then
+					a_property_set.set_undeclare_namespaces (STRING_.same_string (undeclare_namespaces, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Undeclare_namespaces_attribute) then
+					if STRING_.same_string (undeclare_namespaces, "yes") and then not a_property_set.undeclare_namespaces or else
+						STRING_.same_string (undeclare_namespaces, "no") and then a_property_set.undeclare_namespaces then
+						a_property_set.set_duplication_error (Undeclare_namespaces_attribute)
+					end
+				end					
 			end
-			if byte_order_mark /= Void then
-				a_property_set.set_byte_order_mark_required (STRING_.same_string (byte_order_mark, "yes"))
+			if byte_order_mark /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_byte_order_mark_attribute) then
+					a_property_set.set_byte_order_mark_required (STRING_.same_string (byte_order_mark, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_byte_order_mark_attribute) then
+					if STRING_.same_string (byte_order_mark, "yes") and then not a_property_set.byte_order_mark_required or else
+						STRING_.same_string (byte_order_mark, "no") and then a_property_set.byte_order_mark_required then
+						a_property_set.set_duplication_error (Gexslt_byte_order_mark_attribute)
+					end
+				end
 			end
 		end
 
@@ -274,7 +379,7 @@ feature {NONE} -- Implementation
 			-- DOCTYPE fpi and SYSTEM ids
 
 	cdata_section_elements: STRING
-		-- cdata-section-elements value
+			-- cdata-section-elements value
 
 	cdata_section_expanded_names: DS_ARRAYED_LIST [STRING]
 			-- Expanded names of elements whose text children are to be output as CDATA sections

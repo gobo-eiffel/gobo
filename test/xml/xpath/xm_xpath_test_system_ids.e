@@ -54,6 +54,7 @@ feature
 			tiny_document: XM_XPATH_TINY_DOCUMENT
 			document_element, books_element, item_element: XM_XPATH_ELEMENT
 			a_tiny_element: XM_XPATH_TINY_ELEMENT
+			a_tree_element: XM_XPATH_TREE_ELEMENT
 			an_element: XM_XPATH_TREE_ELEMENT
 			a_pi: XM_XPATH_PROCESSING_INSTRUCTION
 			a_node: XM_XPATH_NODE
@@ -92,9 +93,11 @@ feature
 
 			-- Test document_element
 			if is_tiny then
-				document_element ?= tiny_document.document_element
+				a_tiny_element ?= tiny_document.document_element
+				document_element := a_tiny_element
 			else
-				document_element ?= document.document_element
+				a_tree_element ?= document.document_element
+				document_element := a_tree_element
 			end
 			assert ("Document element not void", document_element /= Void)
 			assert ("Document element line number is 7", document_element.line_number = 7)
@@ -126,7 +129,8 @@ feature
 					counter := counter + 1
 					tiny_descendants.forth
 				end
-				item_element ?= tiny_descendants.item				
+				a_tiny_element ?= tiny_descendants.item
+				item_element := a_tiny_element
 			else
 				an_element ?= document_element
 				create descendants.make (an_element, element_test, False)
@@ -139,7 +143,8 @@ feature
 					counter := counter + 1
 					descendants.forth
 				end
-				item_element ?= descendants.item
+				a_tree_element ?= descendants.item
+				item_element := a_tree_element
 			end
 			assert ("sixth item", item_element /= Void)
 			assert ("SYSTEM ID for ITEM", STRING_.same_string (item_element.system_id, a_base_uri))
@@ -152,11 +157,13 @@ feature
 			if is_tiny then
 				tiny_descendants.forth
 				tiny_descendants.forth
-				item_element ?= tiny_descendants.item
+				a_tiny_element ?= tiny_descendants.item
+				item_element := a_tiny_element
 			else
 				descendants.forth
 				descendants.forth
-				item_element ?= descendants.item
+				a_tree_element ?= descendants.item
+				item_element := a_tree_element
 			end
 			assert ("eighth item", item_element /= Void)
 			assert ("SYSTEM ID for ITEM 2", STRING_.same_string (item_element.system_id, a_base_uri))

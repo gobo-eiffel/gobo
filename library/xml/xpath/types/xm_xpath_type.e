@@ -32,15 +32,15 @@ feature -- Access
 	-- actually used by XPath;
 	-- All should be INTEGER_16 when this is available
 
-	Element_node: INTEGER is 1
-	Attribute_node: INTEGER is 2
-	Text_node: INTEGER is 3
-	Processing_instruction_node: INTEGER is 7
-	Comment_node: INTEGER is 8
-	Document_node: INTEGER is 9
-	Namespace_node: INTEGER is 13
+	Element_node: INTEGER_8 is 1
+	Attribute_node: INTEGER_8 is 2
+	Text_node: INTEGER_8 is 3
+	Processing_instruction_node: INTEGER_8 is 7
+	Comment_node: INTEGER_8 is 8
+	Document_node: INTEGER_8 is 9
+	Namespace_node: INTEGER_8 is 13
 
-	Any_node: INTEGER is 0
+	Any_node: INTEGER_8 is 0
 
 	Any_item_fingerprint: INTEGER is 88
 

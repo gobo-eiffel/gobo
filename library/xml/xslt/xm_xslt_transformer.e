@@ -554,7 +554,7 @@ feature -- Element change
 			else
 				if not is_final then temporary_destination_depth := temporary_destination_depth + 1 end
 				if properties = Void then
-					create some_properties.make
+					create some_properties.make (0)
 				else
 					some_properties := properties
 				end
@@ -828,6 +828,7 @@ feature -- Implementation
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
 			an_xml_emitter: XM_XSLT_XML_EMITTER
+			a_text_emitter: XM_XSLT_TEXT_EMITTER
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 			an_uncommitted_emitter: XM_XSLT_UNCOMMITTED_EMITTER
 			a_method: STRING
@@ -884,7 +885,9 @@ feature -- Implementation
 					end
 					-- TODO: character map expander stuff
 				elseif STRING_.same_string (a_method, "text") then
-					todo ("selected_receiver - text method", True)
+					create a_text_emitter.make (Current, a_result.stream, some_properties)
+					a_target := a_text_emitter
+					-- TODO: character map expander stuff
 				else
 					todo ("selected_receiver - QName method", True)
 				end

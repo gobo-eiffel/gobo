@@ -163,20 +163,25 @@ feature -- Access
 			an_output: XM_XSLT_OUTPUT
 		do
 			if a_fingerprint = -1 then found := True end
-			create Result.make
+			create Result.make (-1000000)
+
+			-- Note that we process backwards, so as to find highest
+			--  import precedence definitions first.
+			-- This makes error reporting easier.
+
 			from
-				a_cursor := top_level_elements.new_cursor; a_cursor.start
+				a_cursor := top_level_elements.new_cursor; a_cursor.finish
 			variant
-				top_level_elements.count + 1 - a_cursor.index
+				a_cursor.index
 			until
-				a_cursor.after
+				Result.is_error or else a_cursor.before
 			loop
 				an_output ?= a_cursor.item
 				if an_output /= Void and then an_output.output_fingerprint = a_fingerprint then
 					found := True
 					an_output.gather_output_properties (Result)
 				end
-				a_cursor.forth
+				a_cursor.back
 			end
 			if not found and then a_fingerprint > -1 then
 				Result := Void -- triggers an exception
@@ -628,6 +633,8 @@ feature -- Element change
 			an_instruction: XM_XSLT_INSTRUCTION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
+			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
+			a_message: STRING
 		do
 			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace, module_list)
 
@@ -648,21 +655,29 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
-			decimal_format_manager.fixup_default_default
-			last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
-			last_compiled_executable.set_default_output_properties (gathered_output_properties (-1))
-			create a_compiled_templates_index.make_map (named_templates_index.count)
-			from
-				another_cursor := named_templates_index.new_cursor; another_cursor.start
-			until
-				another_cursor.after
-			loop
-				a_compiled_templates_index.put (another_cursor.item.compiled_template, another_cursor.key)
-				another_cursor.forth
+			if not any_compile_errors then
+				decimal_format_manager.fixup_default_default
+				last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
+				a_property_set := gathered_output_properties (-1)
+				if a_property_set.is_error then
+					a_message := STRING_.concat ("XT1560: Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
+					a_message := STRING_.appended_string (a_message, "', in the unnamed output definition.")
+					report_compile_error (a_message)
+				else
+					last_compiled_executable.set_default_output_properties (a_property_set)
+					create a_compiled_templates_index.make_map (named_templates_index.count)
+					from
+						another_cursor := named_templates_index.new_cursor; another_cursor.start
+					until
+						another_cursor.after
+					loop
+						a_compiled_templates_index.put (another_cursor.item.compiled_template, another_cursor.key)
+						another_cursor.forth
+					end
+					last_compiled_executable.set_named_template_table (a_compiled_templates_index)
+				end
+				-- TODO todo ("compile_stylesheet (character maps not yet supported)", True)
 			end
-			last_compiled_executable.set_named_template_table (a_compiled_templates_index)
-
-			-- TODO todo ("compile_stylesheet (character maps not yet supported)", True)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local

@@ -98,7 +98,7 @@ feature -- Matching
 
 feature {NONE} -- Implementation
 
-	node_type: INTEGER
+	node_type: INTEGER_8
 			-- Type of nodes in this pattern
 
 invariant

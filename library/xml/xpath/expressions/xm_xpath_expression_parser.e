@@ -173,7 +173,7 @@ feature -- Creation
 			end
 		end
 
-	generate_name_test (a_node_type: INTEGER; a_qname: STRING; use_default_namespace: BOOLEAN) is
+	generate_name_test (a_node_type: INTEGER_8; a_qname: STRING; use_default_namespace: BOOLEAN) is
 			-- Create a name test
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
@@ -185,7 +185,7 @@ feature -- Creation
 			create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (a_node_type, last_generated_name_code, a_qname)
 		end
 
-	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
+	make_local_name_test (a_node_type: INTEGER_8; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
 			-- Create a name test
 		require
 			valid_name: a_local_name /= Void
@@ -200,7 +200,7 @@ feature -- Creation
 			Name_test_not_void_unless_parse_error: not is_parse_error implies Result /= Void
 		end
 
-	make_namespace_test (a_node_type: INTEGER; an_xml_prefix: STRING): XM_XPATH_NAMESPACE_TEST is
+	make_namespace_test (a_node_type: INTEGER_8; an_xml_prefix: STRING): XM_XPATH_NAMESPACE_TEST is
 			-- Make a NamespaceTest (name:*)
 		require
 			valid_node_type: is_node_type (a_node_type)
@@ -1609,7 +1609,8 @@ feature {NONE} -- Implementation
 			-- | <"ancestor-or-self" "::">
 		local
 			a_message: STRING
-			an_axis_number, a_principal_node_type: INTEGER
+			an_axis_number: INTEGER
+			a_principal_node_type: INTEGER_8
 		do
 			if not is_axis_name_valid (tokenizer.last_token_value) then
 				a_message := STRING_.appended_string ("Unexpected axis name, found ", display_current_token)
@@ -1872,7 +1873,7 @@ feature {NONE} -- Implementation
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
 		end
 
-	parse_node_test (a_node_type: INTEGER) is
+	parse_node_test (a_node_type: INTEGER_8) is
 			-- Parse a NodeTest.
 			-- NodeTest ::= KindTest | NameTest
 			--	NameTest::=	QName | Wildcard

@@ -26,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER) is
+	make (a_node_type: INTEGER_8) is
 			-- Establish invariant
 		require
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node -- Use XM_XPATH_SHARED_ANY_NODE_TEST for that
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	node_kind: INTEGER
+	node_kind: INTEGER_8
 			-- Type of nodes to which this pattern applies
 
 	node_kind_mask: INTEGER is

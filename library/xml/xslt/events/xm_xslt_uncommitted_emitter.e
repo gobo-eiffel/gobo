@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			an_xml_emitter: XM_XSLT_XML_EMITTER
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 		do
-			output_properties.set_xml_defaults
+			output_properties.set_xml_defaults (0)
 			create an_xml_emitter.make (transformer, outputter, output_properties)
 			base_receiver := an_xml_emitter
 			if output_properties.indent then
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			an_html_emitter: XM_XSLT_HTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
-			output_properties.set_html_defaults
+			output_properties.set_html_defaults (0)
 			create an_html_emitter.make (transformer, outputter, output_properties)
 			base_receiver := an_html_emitter
 			if output_properties.indent then
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
-			output_properties.set_xhtml_defaults
+			output_properties.set_xhtml_defaults (0)
 			create an_xhtml_emitter.make (transformer, outputter, output_properties)
 			base_receiver := an_xhtml_emitter
 			if output_properties.indent then
