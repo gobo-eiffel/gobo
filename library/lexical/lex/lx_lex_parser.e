@@ -182,7 +182,7 @@ feature {NONE} -- Semantic actions
 			inspect yy_act
 
 when 1 then
---#line 41 "lx_lex_parser.y"
+--#line 42 "lx_lex_parser.y"
 
 			process_default_rule
 			if equiv_classes /= Void then
@@ -192,11 +192,10 @@ when 1 then
 		
 
 when 2 then
---#line 51 "lx_lex_parser.y"
+--#line 52 "lx_lex_parser.y"
 
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
-				!! transitions.make (Initial_max_transitions)
 			end
 		
 
