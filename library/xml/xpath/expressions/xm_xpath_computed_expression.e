@@ -265,7 +265,6 @@ feature -- Evaluation
 			-- This default implementation handles iteration for expressions that
 			--  return singleton values: for non-singleton expressions, the subclass must
 			--  provide its own implementation.
-
 				check
 					singleton_expression: not cardinality_allows_many
 					-- Not a prefect check, as cardinality may not have been set!

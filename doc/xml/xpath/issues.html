@@ -83,14 +83,13 @@
 	<li>Change remaining data model infoset properties into implementation stuff.</li>
 	<li>Change loops to use external cursors (ongoing - done?)</li>
 	<li>Promotion in path and filter expressions commented out as it causes an infinite recursion inside let-action analyze - this may now be fixed - try again after:</li>
-	<li>Quantified expressions - look at Saxon 7.9.1 code</li>
 	<li>Make use of UT_URI for base URI etc.</li>
-	<li>CAST_EXPRESSION needs fixing</li>
+	<li>CAST_EXPRESSION needs fixing; CASTABLE, TREAT and constructor functions need implementing and testing.</li>
 	<li>I took the pre-condition off set_analyzed, so it can be used indescriminately. Really,
 	it ought to be used in a precisely discpilined manner, only within analyze, if that is possible.
 	This isn't actually hurting, but it will reduce the number of lines of code.
 	</li>
-	<li>Feature expression_tester is initial lower case, whereas Expression_factory is initial upper case.</li>
+	<li>Feature expression_tester is initial lower case, whereas Expression_factory is initial upper case. Make all lower case.</li>
 	<li>Better XML parser messages wanted (i.e. line and column positions, etc.)</li>
 	<li>Review test suite.</li>
 	<li>A whitespace-stripper is needed.</li>
@@ -103,7 +102,7 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-	Implemented QUANTIFIED_EXPRESSION.
+	Implemented Instance of.
       </pre>
     </div>
     <div >
