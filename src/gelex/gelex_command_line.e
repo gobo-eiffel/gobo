@@ -135,6 +135,10 @@ feature -- Parsing
 								report_version_number
 							when 'w' then
 								options.set_no_warning (True)
+							when 'x' then
+								options.set_actions_separated (True)
+							when 'z' then
+								options.set_inspect_used (True)
 --							when 'F' then
 --								options.set_equiv_classes_used (False)
 --								options.set_meta_equiv_classes_used (False)
@@ -233,7 +237,7 @@ feature {NONE} -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make ("1.3")
+			!! a_message.make ("1.4")
 			error_handler.report_message (a_message)
 			Exceptions.die (0)
 		end
@@ -242,7 +246,7 @@ feature {NONE} -- Error handling
 			-- Gelex usage message
 		once
 			!! Result.make
-				("[--version] [--help] [-bcefhimsVw?]%N%
+				("[--version] [--help] [-bcefhimsVwxz?]%N%
 				%%T[-a size] [-o filename] [--] filename")
 		ensure
 			usage_message_not_void: Result /= Void
