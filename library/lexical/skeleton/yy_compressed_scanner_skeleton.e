@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			column := 1
 			position := 1
 			if yyReject_or_variable_trail_context then
-				yy_state_stack := FIXED_INTEGER_ARRAY_.make (input_buffer.content.count)
+				yy_state_stack := FIXED_INTEGER_ARRAY_.make (input_buffer.content.count + 1)
 			end
 		end
 
@@ -345,6 +345,10 @@ feature -- Scanning
 										-- though `yy_current_state' was set
 										-- up by `yy_previous_state'.
 									yy_cp := yy_end
+										-- Remove the state which was inserted
+										-- in `yy_state_stack' by the call to
+										-- `yy_null_trans_state'.
+									yy_state_count := yy_state_count - 1
 								else
 										-- Do the guaranteed-needed backing up
 										-- then figure out the match.
@@ -462,7 +466,7 @@ feature {NONE} -- Implementation
 		do
 			yy_content := a_content
 			if yyReject_or_variable_trail_context then
-				nb := a_content.count
+				nb := a_content.count + 1
 				if yy_state_stack.count < nb then
 					yy_state_stack := FIXED_INTEGER_ARRAY_.resize (yy_state_stack, nb)
 				end
