@@ -139,7 +139,7 @@ feature -- Removal
 			valid_fixed_array: valid_fixed_array (an_array)
 #ifndef ISE || HACT || TOWER
 		local
-			nb: INTEGER
+			i, nb: INTEGER
 			v: G
 		do
 			nb := an_array.upper
