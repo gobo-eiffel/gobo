@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<project name="variables6" default="var">
+
+	<target name="var">
+		<description>deferred set and query of a variable</description>
+
+		<!-- 1 deferred level: -->
+		<set name="message" value="This is case ${case}"/>
+		<echo message="${message}"/>
+
+		<set name="case" value="A"/>
+		<echo message="${message}"/>
+
+		<set name="case" value="B"/>
+		<echo message="${message}"/>
+
+		<set name="case" value="C"/>
+		<echo message="${message}"/>
+
+
+		<!-- 2 levels, not deferred:  -->
+		<set name="programming_languague" value="Eiffel"/>
+		<set name="message1" value="programming language is ${programming_languague}"/>
+		<set name="message2" value="My favorite ${message1}"/>
+		<echo message="${message2}"/>
+
+		<set name="programming_languague" value="Java"/>
+			<!-- Note that instead of 'Java' 'Eiffel' is echo'ed since 'message2' was completely resolved earlier: -->
+		<echo message="${message2}"/>
+
+		<unset name="message1"/>
+		<unset name="message2"/>
+		<unset name="programming_languague"/>
+
+		<!-- 2 deferred levels, template (reverse) approach: -->
+		<!-- This example shows -->
+		<set name="message2" value="My favorite ${message1}"/>
+		<set name="message1" value="programming language is ${programming_languague}"/>
+		<set name="programming_languague" value="Eiffel"/>
+		<echo message="${message2}"/>
+
+		<set name="programming_languague" value="Java"/>
+			<!-- Note that 'Java' is echo'ed due to the template approach: -->
+		<echo message="${message2}"/>
+
+		<set name="programming_languague" value="C"/>
+			<!-- Note that 'C' is echo'ed due to the template approach: -->
+		<echo message="${message2}"/>
+
+	</target>
+
+</project>
