@@ -18,6 +18,7 @@ creation
 feature {ANY} -- Initialisation
    make (a_source: XM_SOURCE; a_byte_index, a_column, a_row: INTEGER;) is
       require
+			a_source_not_void: a_source /= Void
 	 a_byte_index_positive: a_byte_index >= 0
 	 a_column_positive: a_column >= 0
 	 a_row_positive: a_row >= 0
