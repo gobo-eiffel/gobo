@@ -26,7 +26,7 @@ feature -- Test
 		local
 			a_file_system: KL_FILE_SYSTEM
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			assert ("a_file_system_not_void", a_file_system /= Void)
 		end
 
@@ -36,7 +36,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data/gobo.txt")
 			assert ("readable1", a_file_system.is_file_readable (a_name))
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data/empty.txt")
@@ -52,7 +52,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data")
 			assert ("readable1", a_file_system.is_directory_readable (a_name))
 			a_name := Execution_environment.interpreted_string (".")
@@ -70,7 +70,7 @@ feature -- Test
 			a_file: KL_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_name := "gobo201.tmp"
 			new_name := "gobo202.tmp"
 			!! a_file.make (old_name)
@@ -99,7 +99,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			old_name, new_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_name := "gobo203.tmp"
 			new_name := "gobo204.tmp"
 			assert ("not_readable1", not a_file_system.is_file_readable (old_name))
@@ -117,7 +117,7 @@ feature -- Test
 			old_name, new_name: STRING
 			a_file: KL_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_name := "gobo205.tmp"
 			new_name := "gobo206.tmp"
 			!! a_file.make (new_name)
@@ -147,7 +147,7 @@ feature -- Test
 			old_name, new_name: STRING
 			a_file: KL_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_name := "gobo207.tmp"
 			new_name := "gobo208.tmp"
 			!! a_file.make (new_name)
@@ -189,7 +189,7 @@ feature -- Test
 			a_file: KL_OUTPUT_FILE
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo209.tmp"
 			!! a_file.make (a_name)
 			a_file.open_write
@@ -213,7 +213,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2001"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.create_directory (a_name)
@@ -230,7 +230,7 @@ feature -- Test
 			a_name, a_filename: STRING
 			a_file: KL_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2002"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.create_directory (a_name)
@@ -264,7 +264,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2003/gobo211"
 			a_parent := "gobo2003"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_parent))
@@ -293,7 +293,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2004"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.create_directory (a_name)
@@ -309,7 +309,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2005"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.delete_directory (a_name)
@@ -324,7 +324,7 @@ feature -- Test
 			a_name, a_filename: STRING
 			a_file: KL_OUTPUT_FILE
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2006"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 			a_file_system.create_directory (a_name)
@@ -356,7 +356,7 @@ feature -- Test
 			a_file_system: KL_FILE_SYSTEM
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			a_name := "gobo2007/gobo213"
 			a_parent := "gobo2007"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_parent))
@@ -382,7 +382,7 @@ feature -- Test
 			a_name: STRING
 			old_cwd: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_cwd := a_file_system.current_working_directory
 			assert ("readable0", a_file_system.is_directory_readable (old_cwd))
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel")
@@ -411,7 +411,7 @@ feature -- Test
 			old_cwd: STRING
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_cwd := a_file_system.current_working_directory
 			assert ("readable0", a_file_system.is_directory_readable (old_cwd))
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel")
@@ -459,7 +459,7 @@ feature -- Test
 			old_cwd: STRING
 			a_name: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			old_cwd := a_file_system.current_working_directory
 			assert ("readable1", a_file_system.is_directory_readable (old_cwd))
 			a_name := "gobo2008"
@@ -478,7 +478,7 @@ feature -- Test
 			cwd: STRING
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			cwd := a_file_system.current_working_directory
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel")
 			assert ("readable1", a_file_system.is_directory_readable (a_name))
@@ -496,7 +496,7 @@ feature -- Test
 			cwd: STRING
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			cwd := a_file_system.current_working_directory
 			a_name := Execution_environment.interpreted_string ("$GOBO/test")
 			assert ("readable1", a_file_system.is_directory_readable (a_name))
@@ -518,7 +518,7 @@ feature -- Test
 			cwd: STRING
 			a_name, a_parent: STRING
 		do
-			!! a_file_system.make
+			!KL_UNIX_FILE_SYSTEM! a_file_system.make
 			cwd := a_file_system.current_working_directory
 			a_name := "gobo2009"
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
