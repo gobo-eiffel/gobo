@@ -127,6 +127,17 @@ feature -- Measurement
 
 feature -- Status report
 
+	is_generic: BOOLEAN is
+			-- Is current class type generic?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			Result := a_parameters /= Void and then not a_parameters.is_empty
+		ensure
+			definition: Result = (actual_parameters /= Void and then not actual_parameters.is_empty)
+		end
+
 	is_named_type: BOOLEAN is
 			-- Is current type only made up of named types?
 		local

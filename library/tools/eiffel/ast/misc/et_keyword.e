@@ -59,7 +59,6 @@ creation
 	make_obsolete,
 	make_old,
 	make_once,
-	make_precursor,
 	make_prefix,
 	make_recast,
 	make_redefine,

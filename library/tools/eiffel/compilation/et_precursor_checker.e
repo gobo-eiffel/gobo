@@ -164,7 +164,7 @@ feature {NONE} -- Precursor validity
 								end
 							elseif not a_parent_feature.is_deferred then
 								an_effective := a_parent_feature
-								a_precursor.set_precursor_feature (a_precursor_feature)
+								a_precursor.precursor_keyword.set_seed (a_precursor_feature.first_seed)
 								a_precursor.set_parent_type (a_parent_type)
 							else
 								a_deferred := a_parent_feature
@@ -199,7 +199,7 @@ feature {NONE} -- Precursor validity
 										end
 									elseif not a_precursor_feature.is_deferred then
 										an_effective := a_parent_feature
-										a_precursor.set_precursor_feature (a_precursor_feature)
+										a_precursor.precursor_keyword.set_seed (a_precursor_feature.first_seed)
 										a_precursor.set_parent_type (a_parent_type)
 									end
 								end
@@ -268,7 +268,7 @@ feature {NONE} -- Precursor validity
 						end
 					elseif not a_parent_feature.is_deferred then
 						an_effective := a_parent_feature
-						a_precursor.set_precursor_feature (a_precursor_feature)
+						a_precursor.precursor_keyword.set_seed (a_precursor_feature.first_seed)
 						a_precursor.set_parent_type (a_parent_feature.parent.type)
 					else
 						a_deferred := a_parent_feature
@@ -306,7 +306,7 @@ feature {NONE} -- Precursor validity
 								end
 							elseif not a_precursor_feature.is_deferred then
 								an_effective := a_parent_feature
-								a_precursor.set_precursor_feature (a_precursor_feature)
+								a_precursor.precursor_keyword.set_seed (a_precursor_feature.first_seed)
 								a_precursor.set_parent_type (a_parent_feature.parent.type)
 							end
 							a_parent_feature := a_parent_feature.merged_feature
@@ -585,7 +585,7 @@ feature {ET_AST_NODE} -- Processing
 			a_compound: ET_COMPOUND
 		do
 			if internal_call then
-				an_elseif_part.conditional.process (Current)
+				an_elseif_part.conditional.expression.process (Current)
 				a_compound := an_elseif_part.then_compound
 				if a_compound /= Void then
 					process_compound (a_compound)
@@ -643,7 +643,7 @@ feature {ET_AST_NODE} -- Processing
 			a_compound: ET_COMPOUND
 		do
 			if internal_call then
-				an_instruction.conditional.process (Current)
+				an_instruction.conditional.expression.process (Current)
 				a_compound := an_instruction.then_compound
 				if a_compound /= Void then
 					process_compound (a_compound)
@@ -675,7 +675,7 @@ feature {ET_AST_NODE} -- Processing
 			an_else_compound: ET_COMPOUND
 		do
 			if internal_call then
-				an_instruction.conditional.process (Current)
+				an_instruction.conditional.expression.process (Current)
 				a_when_parts := an_instruction.when_parts
 				if a_when_parts /= Void then
 					process_when_part_list (a_when_parts)
@@ -721,7 +721,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_variant_part /= Void then
 					a_variant_part.expression.process (Current)
 				end
-				an_instruction.until_conditional.process (Current)
+				an_instruction.until_conditional.expression.process (Current)
 				a_compound := an_instruction.loop_compound
 				if a_compound /= Void then
 					process_compound (a_compound)

@@ -2042,7 +2042,7 @@ feature {NONE} -- Processing
 												inspect text_item (9)
 												when 'r', 'R' then
 													last_token := E_PRECURSOR
-													last_et_keyword_value := ast_factory.new_precursor_keyword (Current)
+													last_et_precursor_keyword_value := ast_factory.new_precursor_keyword (Current)
 												else
 													-- Do nothing.
 												end

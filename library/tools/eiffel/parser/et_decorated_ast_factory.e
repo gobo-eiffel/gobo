@@ -684,10 +684,10 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_PRECURSOR_KEYWORD is
 			-- New 'precursor' keyword
 		do
-			create Result.make_precursor
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -2638,22 +2638,22 @@ feature -- AST nodes
 			end
 		end
 
-	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION is
+	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_PRECURSOR_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION is
 			-- New precursor expression
 		do
-			create Result.make (a_parent, args)
-			Result.set_parent_prefixed (is_parent_prefixed)
 			if a_precursor /= Void then
+				create Result.make (a_parent, args)
+				Result.set_parent_prefixed (is_parent_prefixed)
 				Result.set_precursor_keyword (a_precursor)
 			end
 		end
 
-	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION is
+	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_PRECURSOR_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION is
 			-- New precursor instruction
 		do
-			create Result.make (a_parent, args)
-			Result.set_parent_prefixed (is_parent_prefixed)
 			if a_precursor /= Void then
+				create Result.make (a_parent, args)
+				Result.set_parent_prefixed (is_parent_prefixed)
 				Result.set_precursor_keyword (a_precursor)
 			end
 		end

@@ -618,10 +618,10 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	precursor_keyword: ET_KEYWORD is
+	precursor_keyword: ET_PRECURSOR_KEYWORD is
 			-- 'precursor' keyword
 		once
-			create Result.make_precursor
+			create Result.make
 		ensure
 			keyword_not_void: Result /= Void
 		end

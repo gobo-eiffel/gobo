@@ -37,6 +37,28 @@ feature -- Access
 			Result := right.break
 		end
 
+feature -- Setting
+
+	set_left (a_left: like left) is
+			-- Set `left' to `a_left'.
+		require
+			a_left_not_void: a_left /= Void
+		do
+			left := a_left
+		ensure
+			left_set: left = a_left
+		end
+
+	set_right (a_right: like right) is
+			-- Set `right' to `a_right'.
+		require
+			a_right_not_void: a_right /= Void
+		do
+			right := a_right
+		ensure
+			right_set: right = a_right
+		end
+
 invariant
 
 	left_not_void: left /= Void

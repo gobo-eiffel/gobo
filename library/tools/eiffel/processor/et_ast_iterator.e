@@ -1869,6 +1869,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_precursor_keyword (a_keyword: ET_PRECURSOR_KEYWORD) is
+			-- Process `a_keyword'.
+		do
+			process_keyword (a_keyword)
+		end
+
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
 			-- Process `an_expression'.
 		do

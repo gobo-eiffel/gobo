@@ -211,6 +211,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_precursor: BOOLEAN is
+			-- Is current feature name of the form 'precursor'?
+		do
+			-- Result := False
+		end
+
 feature -- Comparison
 
 	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
@@ -219,6 +225,18 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		deferred
+		end
+
+feature -- Conversion
+
+	precursor_keyword: ET_PRECURSOR_KEYWORD is
+			-- Current feature name viewed as a 'precursor' keyword
+		require
+			is_precursor: is_precursor
+		do
+			check no_precursor: not is_precursor end
+		ensure
+			definition: Result = Current
 		end
 
 end

@@ -459,13 +459,13 @@ feature -- Eiffel keywords
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
-	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_PRECURSOR_KEYWORD is
 			-- New 'precursor' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_precursor
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1384,10 +1384,12 @@ feature -- AST nodes
 	new_conditional (a_keyword: ET_KEYWORD; an_expression: ET_EXPRESSION): ET_CONDITIONAL is
 			-- New conditional
 		do
-			if a_keyword /= Void and then ((a_keyword.is_if or a_keyword.is_inspect) and not a_keyword.position.is_null) then
-				create {ET_KEYWORD_EXPRESSION} Result.make (a_keyword, an_expression)
-			else
-				Result := an_expression
+			if an_expression /= Void then
+				if a_keyword /= Void and then ((a_keyword.is_if or a_keyword.is_inspect) and not a_keyword.position.is_null) then
+					create {ET_KEYWORD_EXPRESSION} Result.make (a_keyword, an_expression)
+				else
+					Result := an_expression
+				end
 			end
 		end
 
@@ -2488,22 +2490,22 @@ feature -- AST nodes
 			Result := a_name
 		end
 
-	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION is
+	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_PRECURSOR_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION is
 			-- New precursor expression
 		do
-			create Result.make (a_parent, args)
-			Result.set_parent_prefixed (is_parent_prefixed)
-			if not is_parent_prefixed and a_precursor /= Void and then not a_precursor.position.is_null then
+			if a_precursor /= Void then
+				create Result.make (a_parent, args)
+				Result.set_parent_prefixed (is_parent_prefixed)
 				Result.set_precursor_keyword (a_precursor)
 			end
 		end
 
-	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION is
+	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_PRECURSOR_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION is
 			-- New precursor instruction
 		do
-			create Result.make (a_parent, args)
-			Result.set_parent_prefixed (is_parent_prefixed)
-			if not is_parent_prefixed and a_precursor /= Void and then not a_precursor.position.is_null then
+			if a_precursor /= Void then
+				create Result.make (a_parent, args)
+				Result.set_parent_prefixed (is_parent_prefixed)
 				Result.set_precursor_keyword (a_precursor)
 			end
 		end

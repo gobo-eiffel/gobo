@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	precursor_keyword: ET_KEYWORD
+	precursor_keyword: ET_PRECURSOR_KEYWORD
 			-- 'precursor' keyword
 
 	parent_name: ET_PRECURSOR_CLASS_NAME
@@ -42,10 +42,6 @@ feature -- Access
 
 	parent_type: ET_BASE_TYPE
 			-- Parent type;
-			-- Void if not resolved yet.
-
-	precursor_feature: ET_FEATURE
-			-- Associated feature in `parent';
 			-- Void if not resolved yet.
 
 	position: ET_POSITION is
@@ -89,14 +85,6 @@ feature -- Setting
 			parent_type := a_parent_type
 		ensure
 			parent_type_set: parent_type = a_parent_type
-		end
-
-	set_precursor_feature (a_feature: like precursor_feature) is
-			-- Set `precursor_feature' to `a_feature'.
-		do
-			precursor_feature := a_feature
-		ensure
-			precursor_feature_set: precursor_feature = a_feature
 		end
 
 feature -- Status report

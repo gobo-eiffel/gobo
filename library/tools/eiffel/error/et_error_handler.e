@@ -943,6 +943,106 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdpr4a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
+			-- Report VDPR-4A error: the number of actual arguments in
+			-- the precursor call `a_precursor' appearing in `a_class' is
+			-- not the same as the number of formal arguments of `a_feature'
+			-- in class `a_parent'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_parent_not_void: a_parent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr4_error (a_class) then
+				create an_error.make_vdpr4a (a_class, a_precursor, a_feature, a_parent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr4b_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
+			-- Report VDPR-4A error: the number of actual arguments in
+			-- the precursor call `a_precursor' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in
+			-- class `a_parent'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_parent_not_void: a_parent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr4_error (a_class) then
+				create an_error.make_vdpr4b (a_class, a_class_impl, a_precursor, a_feature, a_parent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr4c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE;
+		a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VDPR-4B error: the `arg'-th actual argument in the precursor
+			-- call `a_precursor' appearing in `a_class' does not conform to the
+			-- corresponding formal argument of `a_feature' in class `a_parent'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_parent_not_void: a_parent /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr4_error (a_class) then
+				create an_error.make_vdpr4c (a_class, a_precursor, a_feature, a_parent, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr4d_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE;
+		a_parent: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VDPR-4B error: the `arg'-th actual argument in the precursor
+			-- call `a_precursor' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' does not conform to the corresponding formal
+			-- argument of `a_feature' in class `a_parent'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_parent_not_void: a_parent /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr4_error (a_class) then
+				create an_error.make_vdpr4d (a_class, a_class_impl, a_precursor, a_feature, a_parent, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdrd2a_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
 			-- Report VDRD-2 error: the feature `f2' is redeclared
 			-- as `f1' in `a_class', but the signature of `f1' in `a_class'
@@ -4069,6 +4169,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vdpr4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDPR-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDRD-2 error be reported when it
 			-- appears in `a_class'?
@@ -5230,6 +5340,15 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giabw
+			report_internal_error (an_error)
+		end
+
+	report_giabx_error is
+			-- Report GIABX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabx
 			report_internal_error (an_error)
 		end
 
