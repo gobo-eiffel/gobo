@@ -401,17 +401,26 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 }
 
 <EIFFEL_BLOCK2>{
-	[^"'}-]*												more
+	[^"'{}-]*												more
 	\"([^"%\n]|%([^/\n]|("/"[0-9]+"/")|(\n[ \t]%)))*\"		more
 	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'					more
-	--.*													more
+	"--".*													more
 	\"|\'|-													more
+	"{"			{
+					nb_open_brackets := nb_open_brackets + 1
+					more
+				}
 	"}"			{
-					last_token := EIF_CODE
-					last_string := text_substring (1, text_count - 1)
-					line_nb := line_nb + last_string.occurrences ('%N')
-					last_value := last_string
-					set_start_condition (SECT2)
+					if nb_open_brackets = 0 then
+						last_token := EIF_CODE
+						last_string := text_substring (1, text_count - 1)
+						line_nb := line_nb + last_string.occurrences ('%N')
+						last_value := last_string
+						set_start_condition (SECT2)
+					else
+						nb_open_brackets := nb_open_brackets - 1
+						more
+					end
 				}
 }
 
