@@ -1541,6 +1541,9 @@ feature -- Error handling
 			-- Print error message.
 		do
 			error_handler.report_syntax_error (current_position)
+			if last_class /= Void then
+				last_class.set_syntax_error (True)
+			end
 		end
 
 feature {NONE} -- Implementation
