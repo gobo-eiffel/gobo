@@ -19,13 +19,24 @@ inherit
 	GEANT_VERSION
 
 	GEANT_SHARED_PROPERTIES
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 	GEANT_ELEMENT_NAMES
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 	KL_SHARED_ARGUMENTS
+		export
+			{NONE} all
+		end
+
 	KL_SHARED_EXCEPTIONS
+		export
+			{NONE} all
+		end
 
 creation
 

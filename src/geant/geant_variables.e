@@ -16,9 +16,24 @@ class GEANT_VARIABLES
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-	KL_SHARED_EXECUTION_ENVIRONMENT
-	GEANT_SHARED_PROPERTIES
+		export
+			{NONE} all
+		end
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	GEANT_SHARED_PROPERTIES
+		export
+			{NONE} all
+		end
+
+	KL_SHARED_OPERATING_SYSTEM
+		export
+			{NONE} all
+		end
 creation
 
 	make
@@ -29,6 +44,30 @@ feature {NONE} -- Initialization
 			-- Create a new variables object.
 		do
 			!! variables.make (10)
+			
+				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
+			if operating_system.is_windows then
+				if not has_variable ("GOBO_OS") then
+					set_variable_value ("GOBO_OS", "windows")
+				end
+				if not has_variable ("is_windows") then
+					set_variable_value ("is_windows", "true")
+				end
+				if not has_variable ("exe") then
+					set_variable_value ("exe", "exe")
+				end
+			elseif operating_system.is_unix then
+				if not has_variable ("GOBO_OS") then
+					set_variable_value ("GOBO_OS", "unix")
+				end
+				if not has_variable ("is_unix") then
+					set_variable_value ("is_unix", "true")
+				end
+				if not has_variable ("exe") then
+					set_variable_value ("exe", "")
+				end
+			end
+
 		end
 
 feature -- Access

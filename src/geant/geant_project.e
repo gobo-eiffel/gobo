@@ -17,11 +17,24 @@ class GEANT_PROJECT
 inherit
 
 	GEANT_ELEMENT_NAMES
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 	KL_SHARED_ARGUMENTS
+		export
+			{NONE} all
+		end
+
 	KL_SHARED_EXCEPTIONS
+		export
+			{NONE} all
+		end
+
 	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
 
 creation
 
