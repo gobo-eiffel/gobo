@@ -46,7 +46,7 @@
 		<cluster name="sorting"/>
 		<cluster name="time"/>
 
-		<!-- This las cluster is for compatibility with SmallEiffel prior to -0.74b10 -->
+		<!-- This last cluster is for compatibility with SmallEiffel prior to -0.74b10 -->
 		<cluster name="lib_std" location="${SmallEiffelDirectory}/lib_std"/>
 	</cluster>
 
