@@ -7,7 +7,7 @@ rem date: "$Date$"
 rem revision: "$Revision$"
 
 
-rem usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>
+rem "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
 
 
 if .%1. == .-v. goto verbose
