@@ -81,11 +81,15 @@ feature -- Basic operations
 
 	expanded_variables (s: STRING): STRING is
 			-- Expand variables in `s'
-			-- (Return a new string at each call.)
+			-- (Do not alter `s'.)
 		require
 			s_not_void: s /= Void
 		do
-			Result := template_expander.expand_from_hash_table (s, defined_values)
+			if not defined_values.is_empty then
+				Result := template_expander.expand_from_hash_table (s, defined_values)
+			else
+				Result := s
+			end
 		ensure
 			expanded_variables_not_void: Result /= Void
 		end
