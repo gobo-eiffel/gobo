@@ -17,28 +17,26 @@ inherit
 	XM_TEST_CASE
 
 	XMLCONF_XMLTEST_FILES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 feature -- Deviant tests
 
 	-- this section includes tests which do not behave as expected 
 	-- in the test suite with for each test a justification why.
-		
+
 	test_deviant_entity_limits is
 			-- Test that elements do not span entity boundaries, that 
 			-- is do not start outside the entity and ends in it.
 			-- (parser tolerates more than the standard allows)
 		do
-			assert_output ("xmltest, not well formed, stand alone, 104", 
+			assert_output ("xmltest, not well formed, stand alone, 104",
 				xmltest_not_wf_sa_104,
 				"<doc><foo></foo></doc>")
-			assert_output ("xmltest, not well formed, stand alone, 074",	
+			assert_output ("xmltest, not well formed, stand alone, 074",
 				xmltest_not_wf_sa_074,
 				"<doc>&#10;<foo></foo><foo></foo>&#10;</doc>")
 		end
-		
+
 	test_deviant_bad_unicode_in_unused_entity is
 			-- Incorrect unicode within declaration of unused entity.
 			-- (could check earlier than on the event flow, or 
@@ -48,28 +46,28 @@ feature -- Deviant tests
 				xmltest_not_wf_sa_175,
 				"<doc></doc>")
 		end
-		
+
 	test_deviant_colon_in_name is
 			-- ":" is a valid name (when not using namespace)
 			-- parser bug, should have a flag to deal with that.
 		do
 			--assert_valid ("xmltest, valid, stand alone, 012", xmltest_valid_sa_012)
 		end
-	
+
 	test_deviant_attribute_normalisation is
 			-- Output expect "a  b" instead of "a b"
 			-- (parser should not normalize CDATA attributes?)
 		do
-			assert_output ("xmltest, valid, stand alone, 095", 
-					xmltest_valid_sa_095, 
+			assert_output ("xmltest, valid, stand alone, 095",
+					xmltest_valid_sa_095,
 					"<doc a1=%"1 2%"></doc>")
-			assert_output ("xmltest, valid, stand alone, 110", 
+			assert_output ("xmltest, valid, stand alone, 110",
 					xmltest_valid_sa_110,
 					"<doc a=%"x y%"></doc>")
 		end
 
 feature -- Deviant tests due to limitation of test framework
-	
+
 	test_deviant_notation is
 			-- This are output tests in XMLCONF with a DTD including the 
 			-- notation declaration. Proper tests should check output 
@@ -81,26 +79,26 @@ feature -- Deviant tests due to limitation of test framework
 			assert_valid ("xmltest, valid, stand alone, 090", xmltest_valid_sa_090)--, xmltest_valid_sa_out_090)
 			assert_valid ("xmltest, valid, stand alone, 091", xmltest_valid_sa_091)--, xmltest_valid_sa_out_091)
 		end
-		
+
 	test_deviant_external_entity is
 			-- Unused external entity.
 			-- (test limitation: to do when external entities are dealt with)
 		do
 			--assert_output ("xmltest, valid, stand alone, 097", xmltest_valid_sa_097, xmltest_valid_sa_out_097)
 		end
-		
+
 feature -- Deviant tests due to incorrect or controversial tests
-		
+
 	test_deviant_whitespace_in_element_content is
 			-- Extra space to be reduced to one. Only difference is 
 			-- the extra space after the tab. Test output may 
 			-- contradict 2.11?
 		do
-			assert_output ("xmltest, valid, stand alone, 092", 
-					xmltest_valid_sa_092, 
+			assert_output ("xmltest, valid, stand alone, 092",
+					xmltest_valid_sa_092,
 					"<doc>&#10;<a></a>&#10;    <a></a>&#9; <a></a>&#10;&#10;&#10;</doc>")
 		end
-		
+
 feature -- Test
 
 	test_not_wf_sa is
@@ -298,7 +296,7 @@ feature -- Test
 			assert_output_utf16 ("xmltest, valid, stand alone, 050", xmltest_valid_sa_050, xmltest_valid_sa_out_050)
 			assert_output_utf16 ("xmltest, valid, stand alone, 051", xmltest_valid_sa_051, xmltest_valid_sa_out_051)
 		end
-		
+
 	test_valid_sa is
 			-- Test valid output.
 		do
