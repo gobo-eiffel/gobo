@@ -974,9 +974,8 @@ feature -- Removal
 			a_cell, right_cell: like first_cell
 			a_tester: like equality_tester
 		do
-			if is_empty then
-				move_all_cursors_after
-			else
+			move_all_cursors_after
+			if not is_empty then
 				a_tester := equality_tester
 				if a_tester /= Void then
 						-- Remove all occurrences of `v' at the beginning
@@ -1024,7 +1023,6 @@ feature -- Removal
 							set_last_cell (a_cell)
 						end
 						count := count - n
-						move_all_cursors_after
 					end
 				else
 						-- Use `=' as comparison criterion.
@@ -1073,7 +1071,6 @@ feature -- Removal
 							set_last_cell (a_cell)
 						end
 						count := count - n
-						move_all_cursors_after
 					end
 				end
 			end
