@@ -154,7 +154,7 @@ feature -- Factory
 		require
 			a_type_not_void: a_type /= Void
 		do
-			create {ET_NESTED_DYNAMIC_TYPE_SET} Result.make (a_type)
+			create {ET_PULL_DYNAMIC_TYPE_SET} Result.make (a_type)
 		ensure
 			dynamic_type_set_not_void: Result /= Void
 			static_type_set: Result.static_type = a_type
@@ -1223,13 +1223,13 @@ feature {NONE} -- Event handling
 		local
 			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_type_set: ET_NESTED_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_resolved_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
 				if not has_fatal_error then
 					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
-					create l_dynamic_type_set.make (l_dynamic_type)
+					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_dynamic_type_set, a_local.name)
 				end
 			end

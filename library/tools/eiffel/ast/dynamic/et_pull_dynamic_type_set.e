@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel nested dynamic type sets"
+		"Eiffel dynamic type sets pulling types from subsets"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_NESTED_DYNAMIC_TYPE_SET
+class ET_PULL_DYNAMIC_TYPE_SET
 
 inherit
 
