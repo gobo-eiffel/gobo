@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel instructions compounds"
+		"Eiffel instruction compounds"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
