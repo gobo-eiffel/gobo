@@ -30,16 +30,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_rule: like rule; in_context: like in_trail_context) is
+	make (in_context: like in_trail_context) is
 			-- Create a new NFA state.
-		require
-			a_rule_not_void: a_rule /= Void
 		do
 			id := new_id
-			rule := a_rule
 			in_trail_context := in_context
 		ensure
-			rule_set: rule = a_rule
 			in_trail_context_set: in_trail_context = in_context
 		end
 
@@ -55,9 +51,6 @@ feature -- Access
 
 	epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 			-- Epsilon out-transition
-
-	rule: LX_RULE
-			-- Rule associated with NFA state
 
 	accepting_id: INTEGER
 			-- Identification number when the state
@@ -220,9 +213,5 @@ feature {NONE} -- Implementation
 		ensure
 			counter_not_void: Result /= Void
 		end
-
-invariant
-
-	rule_not_void: rule /= Void
 
 end -- class LX_NFA_STATE
