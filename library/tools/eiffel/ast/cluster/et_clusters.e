@@ -72,7 +72,7 @@ feature -- Measurement
 		end
 
 	override_count: INTEGER is
-			-- Number (recursively) of non-abstract override clusters
+			-- Number (recursively) of non-abstract non-read-only override clusters
 		local
 			i, nb: INTEGER
 		do
@@ -83,6 +83,20 @@ feature -- Measurement
 			end
 		ensure
 			override_count_non_negavite: Result >= 0
+		end
+
+	read_write_count: INTEGER is
+			-- Number (recursively) of non-abstract non-read-only clusters
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				Result := Result + clusters.item (i).read_write_count
+				i := i + 1
+			end
+		ensure
+			read_write_count_non_negavite: Result >= 0
 		end
 
 feature {ET_CLUSTER} -- Setting

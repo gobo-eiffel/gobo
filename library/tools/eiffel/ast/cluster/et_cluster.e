@@ -202,10 +202,10 @@ feature -- Measurement
 		end
 
 	override_count: INTEGER is
-			-- Number (recursively) of non-abstract override clusters,
+			-- Number (recursively) of non-abstract non-read-only override clusters,
 			-- including current cursor
 		do
-			if not is_abstract and is_override then
+			if not is_read_only and not is_abstract and is_override then
 				Result := 1
 			end
 			if subclusters /= Void then
@@ -213,6 +213,20 @@ feature -- Measurement
 			end
 		ensure
 			override_count_non_negavite: Result >= 0
+		end
+
+	read_write_count: INTEGER is
+			-- Number (recursively) of non-abstract non-read-only clusters,
+			-- including current cursor
+		do
+			if not is_read_only and not is_abstract then
+				Result := 1
+			end
+			if subclusters /= Void then
+				Result := Result + subclusters.read_write_count
+			end
+		ensure
+			read_write_count_non_negavite: Result >= 0
 		end
 
 feature -- Status setting
