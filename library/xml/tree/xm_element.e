@@ -43,9 +43,9 @@ feature {NONE} -- Implementation
 		require
 			a_name_not_void: a_name /= Void
 		do
-			make_composite
 			name := a_name
 			ns_prefix := a_ns_prefix
+			make_composite
 		ensure
 			name_set: equal (name, a_name)
 		end
