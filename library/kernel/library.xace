@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="kernel">
+<library name="kernel" prefix="kl_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
@@ -17,7 +17,7 @@
 		<cluster name="unicode"/>
 		<cluster name="support"/>
 		<cluster name="spec" abstract="true">
-			<cluster name="${GOBO_EIFFEL}"/>
+			<cluster name="${GOBO_EIFFEL}" prefix="spec_"/>
 		</cluster>
 	</cluster>
 </library>

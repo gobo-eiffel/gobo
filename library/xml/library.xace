@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE cluster SYSTEM "../../doc/gexace/xace.dtd">
 
-<library name="xml">
+<library name="xml" prefix="xm_">
 	<description>
 		description: "Xace file for the Gobo Eiffel XML Library"
 
@@ -37,17 +37,17 @@
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
 		<cluster name="impl" abstract="true">
-			<cluster name="impl_interface" location="interface" relative="true" abstract="true">
-				<cluster name="impl_interface_general" location="general" relative="true"/>
-				<cluster name="impl_interface_event" location="event" relative="true"/>
-				<cluster name="impl_interface_tree" location="tree" relative="true"/>
+			<cluster name="interface" prefix="impl_interface_" abstract="true">
+				<cluster name="general"/>
+				<cluster name="event"/>
+				<cluster name="tree"/>
 			</cluster>
-			<cluster name="impl_expat" location="expat" relative="true" abstract="true" if="${GOBO_XML_EXPAT}">
-				<cluster name="impl_expat_api" location="api" relative="true"/>
-				<cluster name="impl_expat_general" location="general" relative="true"/>
-				<cluster name="impl_expat_event" location="event" relative="true"/>
-				<cluster name="impl_expat_spec" location="spec" relative="true" abstract="true">
-					<cluster name="impl_expat_${GOBO_EIFFEL}" location="${GOBO_EIFFEL}" relative="true"/>
+			<cluster name="expat" prefix="impl_expat_" abstract="true" if="${GOBO_XML_EXPAT}">
+				<cluster name="api"/>
+				<cluster name="general"/>
+				<cluster name="event"/>
+				<cluster name="spec" abstract="true">
+					<cluster name="${GOBO_EIFFEL}" prefix="impl_expat_spec_"/>
 				</cluster>
 				<external unless="${GOBO_OS}=windows">
 					<include_dir location="${EXPAT}/include"/>
@@ -59,14 +59,14 @@
 					<link_library location="${EXPAT}/Libs/expat.lib"/>
 				</external>
 			</cluster>
-			<cluster name="impl_eiffel" location="eiffel" relative="true" abstract="true">
-				<cluster name="impl_eiffel_event" location="event" relative="true"/>
+			<cluster name="eiffel" prefix="impl_eiffel" abstract="true">
+				<cluster name="event"/>
 			</cluster>
-			<cluster name="impl_tree_on_event" location="tree_on_event" relative="true" abstract="true">
-				<cluster name="impl_tree_on_event_tree" location="tree" relative="true"/>
+			<cluster name="tree_on_event" prefix="impl_tree_on_event_" abstract="true">
+				<cluster name="tree"/>
 			</cluster>
-			<cluster name="impl_no_expat" location="no_expat" relative="true" abstract="true" unless="${GOBO_XML_EXPAT}">
-				<cluster name="impl_no_expat_event" location="event" relative="true"/>
+			<cluster name="no_expat" prefix="impl_no_expat_" abstract="true" unless="${GOBO_XML_EXPAT}">
+				<cluster name="event"/>
 			</cluster>
 		</cluster>
 	</cluster>
