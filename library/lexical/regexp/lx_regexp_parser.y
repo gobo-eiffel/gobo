@@ -110,12 +110,14 @@ Rule: Regular_expression2 Regular_expression
 			report_trailing_context_used_twice_error
 			has_trail_context := True
 			trail_count := regexp_count
+			$$ := new_epsilon_nfa
 		}
 	| Regular_expression2 Regular_expression '$'
 		{
 			report_trailing_context_used_twice_error
 			has_trail_context := True
 			trail_count := regexp_count
+			$$ := new_epsilon_nfa
 		}
 	;
 

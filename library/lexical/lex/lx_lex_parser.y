@@ -6,7 +6,7 @@ indexing
 		"Parsers for lexical analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -180,12 +180,14 @@ Rule: Regular_expression2 Regular_expression
 			report_trailing_context_used_twice_error
 			has_trail_context := True
 			trail_count := regexp_count
+			$$ := new_epsilon_nfa
 		}
 	| Regular_expression2 Regular_expression '$'
 		{
 			report_trailing_context_used_twice_error
 			has_trail_context := True
 			trail_count := regexp_count
+			$$ := new_epsilon_nfa
 		}
 	;
 
