@@ -5,12 +5,12 @@ indexing
 		"Execution environment facilities"
 
 	usage:      "This class should not be used directly through %
-				%inheritance and client/supplier relationship. %
-				%Inherit from KL_SHARED_EXECUTION_ENVIRONMENT instead."
+	            %inheritance and client/supplier relationship. %
+	            %Inherit from KL_SHARED_EXECUTION_ENVIRONMENT instead."
 	pattern:    "Singleton"
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -34,7 +34,7 @@ feature -- Access
 		do
 			Result := environment.env_item (a_variable)
 #else
-#ifdef HACT
+#ifdef HACT || ISE
 		local
 			environment: expanded EXECUTION_ENVIRONMENT
 		do
@@ -46,22 +46,9 @@ feature -- Access
 		do
 			Result := env_vars.get (a_variable)
 #else
-#ifdef ISE
-		local
-			s: ANY
-			c_string: POINTER
-		do
-			s := a_variable.to_c
-			c_string := c_getenv ($s)
-			if c_string /= default_pointer then
-				!! Result.make (0)
-				Result.from_c (c_string)
-			end
-#else
 #ifdef SE
 		do
 			Result := get_environment_variable (a_variable)
-#endif
 #endif
 #endif
 #endif
@@ -83,7 +70,7 @@ feature -- Setting
 		do
 			environment.env_put (a_variable, a_value)
 #else
-#ifdef HACT
+#ifdef HACT || ISE
 		local
 			environment: expanded EXECUTION_ENVIRONMENT
 		do
@@ -97,22 +84,8 @@ feature -- Setting
 				env_vars.put (a_variable, a_value)
 			end
 #else
-#ifdef ISE
-		local
-			a_string: STRING
-			s: ANY
-			i: INTEGER
-		do
-			!! a_string.make (a_variable.count + a_value.count + 1)
-			a_string.append_string (a_variable)
-			a_string.append_character ('=')
-			a_string.append_string (a_value)
-			s := a_string.to_c
-			i := c_putenv ($s)
-#else
 		do
 			-- Not supported.
-#endif
 #endif
 #endif
 #endif
@@ -211,22 +184,4 @@ feature -- Conversion
 			interpreted_string_not_void: Result /= Void
 		end
 
-#ifdef ISE
-feature {NONE} -- Externals
-
-	c_getenv (s: POINTER): POINTER is
-		external
-			"C (char *): EIF_POINTER"
-		alias
-			"getenv"
-		end
-
-	c_putenv (s: POINTER): INTEGER is
-		external
-			"C (char *): EIF_INTEGER"
-		alias
-			"putenv"
-		end
-
-#endif
 end -- class KL_EXECUTION_ENVIRONMENT
