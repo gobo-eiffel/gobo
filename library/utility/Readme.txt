@@ -10,6 +10,10 @@ Clusters:
 command
     Executable commands. Useful to encapsulate actions or to build
     history (undo-redo) mechanism.
+error
+    Error messages and error handling cluster.
+formatter
+    Formatter classes for IO operations or string handling.
 support
     Miscellaneous classes.
 
@@ -17,4 +21,6 @@ A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Eric Bezault <ericb@gobo.demon.co.uk>
+Copyright (c) 1998, Eric Bezault
+mailto:ericb@gobo.demon.co.uk
+http://www.gobo.demon.co.uk
