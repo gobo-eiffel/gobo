@@ -4,8 +4,9 @@ indexing
 
 		"Scanners for Eiffel parsers"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -66,27 +67,27 @@ if yy_act <= 6 then
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 45
+--|#line 46
 -- Ignore separators
 else
---|#line 46
+--|#line 47
 eif_lineno := eif_lineno + text_count
 end
 else
---|#line 51
+--|#line 52
 -- Ignore comments
 end
 else
 if yy_act <= 5 then
 if yy_act = 4 then
---|#line 52
+--|#line 53
 eif_lineno := eif_lineno + 1
 else
---|#line 57
+--|#line 58
 last_token := Minus_code
 end
 else
---|#line 58
+--|#line 59
 last_token := Plus_code
 end
 end
@@ -94,27 +95,27 @@ else
 if yy_act <= 9 then
 if yy_act <= 8 then
 if yy_act = 7 then
---|#line 59
+--|#line 60
 last_token := Star_code
 else
---|#line 60
+--|#line 61
 last_token := Slash_code
 end
 else
---|#line 61
+--|#line 62
 last_token := Caret_code
 end
 else
 if yy_act <= 11 then
 if yy_act = 10 then
---|#line 62
+--|#line 63
 last_token := Equal_code
 else
---|#line 63
+--|#line 64
 last_token := Greater_than_code
 end
 else
---|#line 64
+--|#line 65
 last_token := Less_than_code
 end
 end
@@ -124,27 +125,27 @@ if yy_act <= 18 then
 if yy_act <= 15 then
 if yy_act <= 14 then
 if yy_act = 13 then
---|#line 65
+--|#line 66
 last_token := Dot_code
 else
---|#line 66
+--|#line 67
 last_token := Semicolon_code
 end
 else
---|#line 67
+--|#line 68
 last_token := Comma_code
 end
 else
 if yy_act <= 17 then
 if yy_act = 16 then
---|#line 68
+--|#line 69
 last_token := Colon_code
 else
---|#line 69
+--|#line 70
 last_token := Exclamation_code
 end
 else
---|#line 70
+--|#line 71
 last_token := Left_parenthesis_code
 end
 end
@@ -152,27 +153,27 @@ else
 if yy_act <= 21 then
 if yy_act <= 20 then
 if yy_act = 19 then
---|#line 71
+--|#line 72
 last_token := Right_parenthesis_code
 else
---|#line 72
+--|#line 73
 last_token := Left_brace_code
 end
 else
---|#line 73
+--|#line 74
 last_token := Right_brace_code
 end
 else
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 74
+--|#line 75
 last_token := Left_bracket_code
 else
---|#line 75
+--|#line 76
 last_token := Right_bracket_code
 end
 else
---|#line 76
+--|#line 77
 last_token := Dollar_code
 end
 end
@@ -184,27 +185,27 @@ if yy_act <= 30 then
 if yy_act <= 27 then
 if yy_act <= 26 then
 if yy_act = 25 then
---|#line 77
+--|#line 78
 last_token := E_DIV
 else
---|#line 78
+--|#line 79
 last_token := E_MOD
 end
 else
---|#line 79
+--|#line 80
 last_token := E_NE
 end
 else
 if yy_act <= 29 then
 if yy_act = 28 then
---|#line 80
+--|#line 81
 last_token := E_GE
 else
---|#line 81
+--|#line 82
 last_token := E_LE
 end
 else
---|#line 82
+--|#line 83
 last_token := E_BANGBANG
 end
 end
@@ -212,27 +213,27 @@ else
 if yy_act <= 33 then
 if yy_act <= 32 then
 if yy_act = 31 then
---|#line 83
+--|#line 84
 last_token := E_ARROW
 else
---|#line 84
+--|#line 85
 last_token := E_DOTDOT
 end
 else
---|#line 85
+--|#line 86
 last_token := E_LARRAY
 end
 else
 if yy_act <= 35 then
 if yy_act = 34 then
---|#line 86
+--|#line 87
 last_token := E_RARRAY
 else
---|#line 87
+--|#line 88
 last_token := E_ASSIGN
 end
 else
---|#line 88
+--|#line 89
 last_token := E_REVERSE
 end
 end
@@ -242,27 +243,27 @@ if yy_act <= 42 then
 if yy_act <= 39 then
 if yy_act <= 38 then
 if yy_act = 37 then
---|#line 93
+--|#line 94
 last_token := E_ALIAS
 else
---|#line 94
+--|#line 95
 last_token := E_ALL
 end
 else
---|#line 95
+--|#line 96
 last_token := E_AND
 end
 else
 if yy_act <= 41 then
 if yy_act = 40 then
---|#line 96
+--|#line 97
 last_token := E_AS
 else
---|#line 97
+--|#line 98
 last_token := E_BITTYPE
 end
 else
---|#line 98
+--|#line 99
 last_token := E_CHECK
 end
 end
@@ -270,22 +271,22 @@ else
 if yy_act <= 45 then
 if yy_act <= 44 then
 if yy_act = 43 then
---|#line 99
+--|#line 100
 last_token := E_CLASS
 else
---|#line 100
+--|#line 101
 last_token := E_CREATION
 end
 else
---|#line 101
+--|#line 102
 last_token := E_CURRENT
 end
 else
 if yy_act = 46 then
---|#line 102
+--|#line 103
 last_token := E_DEBUG
 else
---|#line 103
+--|#line 104
 last_token := E_DEFERRED
 end
 end
@@ -299,27 +300,27 @@ if yy_act <= 53 then
 if yy_act <= 50 then
 if yy_act <= 49 then
 if yy_act = 48 then
---|#line 104
+--|#line 105
 last_token := E_DO
 else
---|#line 105
+--|#line 106
 last_token := E_ELSE
 end
 else
---|#line 106
+--|#line 107
 last_token := E_ELSEIF
 end
 else
 if yy_act <= 52 then
 if yy_act = 51 then
---|#line 107
+--|#line 108
 last_token := E_END
 else
---|#line 108
+--|#line 109
 last_token := E_ENSURE
 end
 else
---|#line 109
+--|#line 110
 last_token := E_EXPANDED
 end
 end
@@ -327,27 +328,27 @@ else
 if yy_act <= 56 then
 if yy_act <= 55 then
 if yy_act = 54 then
---|#line 110
+--|#line 111
 last_token := E_EXPORT
 else
---|#line 111
+--|#line 112
 last_token := E_EXTERNAL
 end
 else
---|#line 112
+--|#line 113
 last_token := E_FALSE
 end
 else
 if yy_act <= 58 then
 if yy_act = 57 then
---|#line 113
+--|#line 114
 last_token := E_FEATURE
 else
---|#line 114
+--|#line 115
 last_token := E_FROM
 end
 else
---|#line 115
+--|#line 116
 last_token := E_FROZEN
 end
 end
@@ -357,30 +358,30 @@ if yy_act <= 65 then
 if yy_act <= 62 then
 if yy_act <= 61 then
 if yy_act = 60 then
---|#line 116
+--|#line 117
 last_token := E_IF
 else
---|#line 117
+--|#line 118
 last_token := E_IMPLIES
 end
 else
---|#line 118
+--|#line 119
 last_token := E_INDEXING
 end
 else
 if yy_act <= 64 then
 if yy_act = 63 then
---|#line 119
+--|#line 120
 
 										is_operator := True
 										last_token := E_INFIX
 									
 else
---|#line 123
+--|#line 124
 last_token := E_INHERIT
 end
 else
---|#line 124
+--|#line 125
 last_token := E_INSPECT
 end
 end
@@ -388,22 +389,22 @@ else
 if yy_act <= 68 then
 if yy_act <= 67 then
 if yy_act = 66 then
---|#line 125
+--|#line 126
 last_token := E_INVARIANT
 else
---|#line 126
+--|#line 127
 last_token := E_IS
 end
 else
---|#line 127
+--|#line 128
 last_token := E_LIKE
 end
 else
 if yy_act = 69 then
---|#line 128
+--|#line 129
 last_token := E_LOCAL
 else
---|#line 129
+--|#line 130
 last_token := E_LOOP
 end
 end
@@ -415,27 +416,27 @@ if yy_act <= 76 then
 if yy_act <= 73 then
 if yy_act <= 72 then
 if yy_act = 71 then
---|#line 130
+--|#line 131
 last_token := E_NOT
 else
---|#line 131
+--|#line 132
 last_token := E_OBSOLETE
 end
 else
---|#line 132
+--|#line 133
 last_token := E_OLD
 end
 else
 if yy_act <= 75 then
 if yy_act = 74 then
---|#line 133
+--|#line 134
 last_token := E_ONCE
 else
---|#line 134
+--|#line 135
 last_token := E_OR
 end
 else
---|#line 135
+--|#line 136
 last_token := E_PRECURSOR
 end
 end
@@ -443,30 +444,30 @@ else
 if yy_act <= 79 then
 if yy_act <= 78 then
 if yy_act = 77 then
---|#line 136
+--|#line 137
 
 										is_operator := True
 										last_token := E_PREFIX
 									
 else
---|#line 140
+--|#line 141
 last_token := E_REDEFINE
 end
 else
---|#line 141
+--|#line 142
 last_token := E_RENAME
 end
 else
 if yy_act <= 81 then
 if yy_act = 80 then
---|#line 142
+--|#line 143
 last_token := E_REQUIRE
 else
---|#line 143
+--|#line 144
 last_token := E_RESCUE
 end
 else
---|#line 144
+--|#line 145
 last_token := E_RESULT
 end
 end
@@ -476,27 +477,27 @@ if yy_act <= 88 then
 if yy_act <= 85 then
 if yy_act <= 84 then
 if yy_act = 83 then
---|#line 145
+--|#line 146
 last_token := E_RETRY
 else
---|#line 146
+--|#line 147
 last_token := E_SELECT
 end
 else
---|#line 147
+--|#line 148
 last_token := E_SEPARATE
 end
 else
 if yy_act <= 87 then
 if yy_act = 86 then
---|#line 148
+--|#line 149
 last_token := E_STRIP
 else
---|#line 149
+--|#line 150
 last_token := E_THEN
 end
 else
---|#line 150
+--|#line 151
 last_token := E_TRUE
 end
 end
@@ -504,22 +505,22 @@ else
 if yy_act <= 91 then
 if yy_act <= 90 then
 if yy_act = 89 then
---|#line 151
+--|#line 152
 last_token := E_UNDEFINE
 else
---|#line 152
+--|#line 153
 last_token := E_UNIQUE
 end
 else
---|#line 153
+--|#line 154
 last_token := E_UNTIL
 end
 else
 if yy_act = 92 then
---|#line 154
+--|#line 155
 last_token := E_VARIANT
 else
---|#line 155
+--|#line 156
 last_token := E_WHEN
 end
 end
@@ -535,17 +536,17 @@ if yy_act <= 99 then
 if yy_act <= 96 then
 if yy_act <= 95 then
 if yy_act = 94 then
---|#line 156
+--|#line 157
 last_token := E_XOR
 else
---|#line 161
+--|#line 162
 
 				last_token := E_IDENTIFIER
 				last_value := text
 			
 end
 else
---|#line 169
+--|#line 170
 
 				last_token := E_FREEOP
 				last_value := text
@@ -554,14 +555,14 @@ end
 else
 if yy_act <= 98 then
 if yy_act = 97 then
---|#line 180
+--|#line 181
 last_token := E_CHARACTER; last_value := text_item (2)
 else
---|#line 183
+--|#line 184
 last_token := E_CHARACTER; last_value := '%''
 end
 else
---|#line 184
+--|#line 185
 last_token := E_CHARACTER; last_value := '%A'
 end
 end
@@ -569,27 +570,27 @@ else
 if yy_act <= 102 then
 if yy_act <= 101 then
 if yy_act = 100 then
---|#line 185
+--|#line 186
 last_token := E_CHARACTER; last_value := '%B'
 else
---|#line 186
+--|#line 187
 last_token := E_CHARACTER; last_value := '%C'
 end
 else
---|#line 187
+--|#line 188
 last_token := E_CHARACTER; last_value := '%D'
 end
 else
 if yy_act <= 104 then
 if yy_act = 103 then
---|#line 188
+--|#line 189
 last_token := E_CHARACTER; last_value := '%F'
 else
---|#line 189
+--|#line 190
 last_token := E_CHARACTER; last_value := '%H'
 end
 else
---|#line 190
+--|#line 191
 last_token := E_CHARACTER; last_value := '%L'
 end
 end
@@ -599,27 +600,27 @@ if yy_act <= 111 then
 if yy_act <= 108 then
 if yy_act <= 107 then
 if yy_act = 106 then
---|#line 191
+--|#line 192
 last_token := E_CHARACTER; last_value := '%N'
 else
---|#line 192
+--|#line 193
 last_token := E_CHARACTER; last_value := '%Q'
 end
 else
---|#line 193
+--|#line 194
 last_token := E_CHARACTER; last_value := '%R'
 end
 else
 if yy_act <= 110 then
 if yy_act = 109 then
---|#line 194
+--|#line 195
 last_token := E_CHARACTER; last_value := '%S'
 else
---|#line 195
+--|#line 196
 last_token := E_CHARACTER; last_value := '%T'
 end
 else
---|#line 196
+--|#line 197
 last_token := E_CHARACTER; last_value := '%U'
 end
 end
@@ -627,22 +628,22 @@ else
 if yy_act <= 114 then
 if yy_act <= 113 then
 if yy_act = 112 then
---|#line 197
+--|#line 198
 last_token := E_CHARACTER; last_value := '%V'
 else
---|#line 198
+--|#line 199
 last_token := E_CHARACTER; last_value := '%%'
 end
 else
---|#line 199
+--|#line 200
 last_token := E_CHARACTER; last_value := '%''
 end
 else
 if yy_act = 115 then
---|#line 200
+--|#line 201
 last_token := E_CHARACTER; last_value := '%"'
 else
---|#line 201
+--|#line 202
 last_token := E_CHARACTER; last_value := '%('
 end
 end
@@ -654,20 +655,20 @@ if yy_act <= 122 then
 if yy_act <= 119 then
 if yy_act <= 118 then
 if yy_act = 117 then
---|#line 202
+--|#line 203
 last_token := E_CHARACTER; last_value := '%)'
 else
---|#line 203
+--|#line 204
 last_token := E_CHARACTER; last_value := '%<'
 end
 else
---|#line 204
+--|#line 205
 last_token := E_CHARACTER; last_value := '%>'
 end
 else
 if yy_act <= 121 then
 if yy_act = 120 then
---|#line 205
+--|#line 206
 
 						code_ := text_substring (4, text_count - 2).to_integer
 						if code_ > Platform.Maximum_character_code then
@@ -678,11 +679,11 @@ if yy_act = 120 then
 						end
 					
 else
---|#line 216
+--|#line 217
 last_token := E_CHARACTER; last_value := text_item (3)
 end
 else
---|#line 218
+--|#line 219
 last_token := E_CHARERR	-- Catch-all rules (no backing up)
 end
 end
@@ -690,27 +691,27 @@ else
 if yy_act <= 125 then
 if yy_act <= 124 then
 if yy_act = 123 then
---|#line 219
+--|#line 220
 last_token := E_CHARERR	-- Catch-all rules (no backing up)
 else
---|#line 224
+--|#line 225
 last_token := process_operator (E_STRPLUS)
 end
 else
---|#line 225
+--|#line 226
 last_token := process_operator (E_STRMINUS)
 end
 else
 if yy_act <= 127 then
 if yy_act = 126 then
---|#line 226
+--|#line 227
 last_token := process_operator (E_STRSTAR)
 else
---|#line 227
+--|#line 228
 last_token := process_operator (E_STRSLASH)
 end
 else
---|#line 228
+--|#line 229
 last_token := process_operator (E_STRDIV)
 end
 end
@@ -720,27 +721,27 @@ if yy_act <= 134 then
 if yy_act <= 131 then
 if yy_act <= 130 then
 if yy_act = 129 then
---|#line 229
+--|#line 230
 last_token := process_operator (E_STRMOD)
 else
---|#line 230
+--|#line 231
 last_token := process_operator (E_STRPOWER)
 end
 else
---|#line 231
+--|#line 232
 last_token := process_operator (E_STRLT)
 end
 else
 if yy_act <= 133 then
 if yy_act = 132 then
---|#line 232
+--|#line 233
 last_token := process_operator (E_STRLE)
 else
---|#line 233
+--|#line 234
 last_token := process_operator (E_STRGT)
 end
 else
---|#line 234
+--|#line 235
 last_token := process_operator (E_STRGE)
 end
 end
@@ -748,22 +749,22 @@ else
 if yy_act <= 137 then
 if yy_act <= 136 then
 if yy_act = 135 then
---|#line 235
+--|#line 236
 last_token := process_operator (E_STRNOT)
 else
---|#line 236
+--|#line 237
 last_token := process_operator (E_STRAND)
 end
 else
---|#line 237
+--|#line 238
 last_token := process_operator (E_STROR)
 end
 else
 if yy_act = 138 then
---|#line 238
+--|#line 239
 last_token := process_operator (E_STRXOR)
 else
---|#line 239
+--|#line 240
 last_token := process_operator (E_STRANDTHEN)
 end
 end
@@ -777,14 +778,14 @@ if yy_act <= 145 then
 if yy_act <= 142 then
 if yy_act <= 141 then
 if yy_act = 140 then
---|#line 240
+--|#line 241
 last_token := process_operator (E_STRORELSE)
 else
---|#line 241
+--|#line 242
 last_token := process_operator (E_STRIMPLIES)
 end
 else
---|#line 242
+--|#line 243
 
 			if is_operator then
 				is_operator := False
@@ -798,13 +799,13 @@ end
 else
 if yy_act <= 144 then
 if yy_act = 143 then
---|#line 251
+--|#line 252
 
 				last_token := E_STRING
 				last_value := text_substring (2, text_count - 1)
 			
 else
---|#line 255
+--|#line 256
 
 				if text_count > 1 then
 					eif_buffer.append_string (text_substring (2, text_count))
@@ -813,7 +814,7 @@ else
 			
 end
 else
---|#line 261
+--|#line 262
 eif_buffer.append_string (text)
 end
 end
@@ -821,27 +822,27 @@ else
 if yy_act <= 148 then
 if yy_act <= 147 then
 if yy_act = 146 then
---|#line 262
+--|#line 263
 eif_buffer.append_character ('%A')
 else
---|#line 263
+--|#line 264
 eif_buffer.append_character ('%B')
 end
 else
---|#line 264
+--|#line 265
 eif_buffer.append_character ('%C')
 end
 else
 if yy_act <= 150 then
 if yy_act = 149 then
---|#line 265
+--|#line 266
 eif_buffer.append_character ('%D')
 else
---|#line 266
+--|#line 267
 eif_buffer.append_character ('%F')
 end
 else
---|#line 267
+--|#line 268
 eif_buffer.append_character ('%H')
 end
 end
@@ -851,27 +852,27 @@ if yy_act <= 157 then
 if yy_act <= 154 then
 if yy_act <= 153 then
 if yy_act = 152 then
---|#line 268
+--|#line 269
 eif_buffer.append_character ('%L')
 else
---|#line 269
+--|#line 270
 eif_buffer.append_character ('%N')
 end
 else
---|#line 270
+--|#line 271
 eif_buffer.append_character ('%Q')
 end
 else
 if yy_act <= 156 then
 if yy_act = 155 then
---|#line 271
+--|#line 272
 eif_buffer.append_character ('%R')
 else
---|#line 272
+--|#line 273
 eif_buffer.append_character ('%S')
 end
 else
---|#line 273
+--|#line 274
 eif_buffer.append_character ('%T')
 end
 end
@@ -879,22 +880,22 @@ else
 if yy_act <= 160 then
 if yy_act <= 159 then
 if yy_act = 158 then
---|#line 274
+--|#line 275
 eif_buffer.append_character ('%U')
 else
---|#line 275
+--|#line 276
 eif_buffer.append_character ('%V')
 end
 else
---|#line 276
+--|#line 277
 eif_buffer.append_character ('%%')
 end
 else
 if yy_act = 161 then
---|#line 277
+--|#line 278
 eif_buffer.append_character ('%'')
 else
---|#line 278
+--|#line 279
 eif_buffer.append_character ('%"')
 end
 end
@@ -906,23 +907,23 @@ if yy_act <= 168 then
 if yy_act <= 165 then
 if yy_act <= 164 then
 if yy_act = 163 then
---|#line 279
+--|#line 280
 eif_buffer.append_character ('%(')
 else
---|#line 280
+--|#line 281
 eif_buffer.append_character ('%)')
 end
 else
---|#line 281
+--|#line 282
 eif_buffer.append_character ('%<')
 end
 else
 if yy_act <= 167 then
 if yy_act = 166 then
---|#line 282
+--|#line 283
 eif_buffer.append_character ('%>')
 else
---|#line 283
+--|#line 284
 
 			code_ := text_substring (3, text_count - 1).to_integer
 			if (code_ > Platform.Maximum_character_code) then
@@ -934,7 +935,7 @@ else
 		
 end
 else
---|#line 296
+--|#line 297
 eif_lineno := eif_lineno + 1
 end
 end
@@ -942,7 +943,7 @@ else
 if yy_act <= 171 then
 if yy_act <= 170 then
 if yy_act = 169 then
---|#line 297
+--|#line 298
 
 			last_token := E_STRING
 			if text_count > 1 then
@@ -955,11 +956,11 @@ if yy_act = 169 then
 			set_start_condition (INITIAL)
 		
 else
---|#line 310
+--|#line 311
 eif_buffer.append_character (text_item (2))
 end
 else
---|#line 312
+--|#line 313
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL)
@@ -968,20 +969,20 @@ end
 else
 if yy_act <= 173 then
 if yy_act = 172 then
---|#line 313
+--|#line 314
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL)
 						
 else
---|#line 314
+--|#line 315
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL)
 						
 end
 else
---|#line 323
+--|#line 324
 last_token := E_BIT; last_value := text
 end
 end
@@ -991,13 +992,13 @@ if yy_act <= 180 then
 if yy_act <= 177 then
 if yy_act <= 176 then
 if yy_act = 175 then
---|#line 328
+--|#line 329
 
 						last_token := E_INTEGER
 						last_value := text.to_integer
 					
 else
---|#line 332
+--|#line 333
 
 						last_token := E_INTEGER
 						str_ := text
@@ -1014,27 +1015,27 @@ else
 					
 end
 else
---|#line 346
+--|#line 347
 last_token := E_INTERR	-- Catch-all rule (no backing up)
 end
 else
 if yy_act <= 179 then
 if yy_act = 178 then
 	yy_position := yy_position - 1
---|#line 351
+--|#line 352
 
 						last_token := E_REAL
 						last_value := text.to_double
 					
 else
---|#line 352
+--|#line 353
 
 						last_token := E_REAL
 						last_value := text.to_double
 					
 end
 else
---|#line 353
+--|#line 354
 
 						last_token := E_REAL
 						last_value := text.to_double
@@ -1046,22 +1047,6 @@ if yy_act <= 183 then
 if yy_act <= 182 then
 if yy_act = 181 then
 	yy_position := yy_position - 1
---|#line 357
-
-						last_token := E_REAL
-						str_ := text
-						nb_ := text_count
-						from i_ := 1 until i_ > nb_ loop
-							char_ := str_.item (i_)
-							if char_ /= '_' then
-								eif_buffer.append_character (char_)
-							end
-							i_ := i_ + 1
-						end
-						last_value := eif_buffer.to_double
-						eif_buffer.wipe_out
-					
-else
 --|#line 358
 
 						last_token := E_REAL
@@ -1077,7 +1062,6 @@ else
 						last_value := eif_buffer.to_double
 						eif_buffer.wipe_out
 					
-end
 else
 --|#line 359
 
@@ -1096,8 +1080,25 @@ else
 					
 end
 else
+--|#line 360
+
+						last_token := E_REAL
+						str_ := text
+						nb_ := text_count
+						from i_ := 1 until i_ > nb_ loop
+							char_ := str_.item (i_)
+							if char_ /= '_' then
+								eif_buffer.append_character (char_)
+							end
+							i_ := i_ + 1
+						end
+						last_value := eif_buffer.to_double
+						eif_buffer.wipe_out
+					
+end
+else
 if yy_act = 184 then
---|#line 381
+--|#line 382
 last_token := text_item (1).code
 else
 --|#line 0

@@ -4,8 +4,9 @@ indexing
 
 		"Scanners for a simple calculator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -61,14 +62,14 @@ feature {NONE} -- Implementation
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 45
+--|#line 46
 -- Ignore whitespaces.
 else
---|#line 46
+--|#line 47
 last_token := Token_EOL
 end
 else
---|#line 48
+--|#line 49
 
 			last_value := text.to_integer
 			last_token := Token_NUMBER
@@ -76,7 +77,7 @@ else
 end
 else
 if yy_act = 4 then
---|#line 53
+--|#line 54
 	last_token := text_item (1).code
 		
 else

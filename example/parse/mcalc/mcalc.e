@@ -4,8 +4,9 @@ indexing
 
 		"Calculator with memory"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1999, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -59,57 +60,57 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 4 then
---|#line 49
+--|#line 50
 			yyval := yyval_default;
 print (yytype1 (yyvs.item (yyvsp - 1))); print ('%N') 
 
 when 5 then
---|#line 50
+--|#line 51
 			yyval := yyval_default;
 recover 
 
 when 6 then
---|#line 53
+--|#line 54
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 7 then
---|#line 54
+--|#line 55
 
 yyval1 := memory_value (yytype2 (yyvs.item (yyvsp))) 
 			yyval := yyval1
 when 8 then
---|#line 55
+--|#line 56
 
 yyval1 := yytype1 (yyvs.item (yyvsp)); set_memory_value (yyval1, yytype2 (yyvs.item (yyvsp - 2))) 
 			yyval := yyval1
 when 9 then
---|#line 56
+--|#line 57
 
 yyval1 := yytype1 (yyvs.item (yyvsp - 2)) + yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 10 then
---|#line 57
+--|#line 58
 
 yyval1 := yytype1 (yyvs.item (yyvsp - 2)) - yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 11 then
---|#line 58
+--|#line 59
 
 yyval1 := yytype1 (yyvs.item (yyvsp - 2)) * yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 12 then
---|#line 59
+--|#line 60
 
 yyval1 := yytype1 (yyvs.item (yyvsp - 2)) / yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 13 then
---|#line 60
+--|#line 61
 
 yyval1 := -yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 14 then
---|#line 61
+--|#line 62
 
 yyval1 := yytype1 (yyvs.item (yyvsp - 1)) 
 			yyval := yyval1
@@ -230,8 +231,8 @@ feature {NONE} -- Table templates
 			Result := yyfixed_array (<<
 			    2,    0,    4,    8,    9,    0,    1,    5,    3,    4,
 			   12,    6,   12,   15,   16,   17,   18,   12,   13,    3,
-			    4,    0,    6,    6,    7,    8,    9,    0,    0,   13,
-			    0,   14,    6,    7,    8,    9,    0,    0,   12,    6,
+			    4,   -1,    6,    6,    7,    8,    9,   -1,   -1,   13,
+			   -1,   14,    6,    7,    8,    9,   -1,   -1,   12,    6,
 			    7,    8,    9>>)
 		end
 

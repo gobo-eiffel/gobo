@@ -4,8 +4,9 @@ indexing
 
 		"Infix notation calculator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -51,47 +52,47 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 4 then
---|#line 42
+--|#line 43
 			yyval := yyval_default;
 print (yyvs.item (yyvsp - 1)); print ('%N') 
 
 when 5 then
---|#line 43
+--|#line 44
 			yyval := yyval_default;
 recover 
 
 when 6 then
---|#line 46
+--|#line 47
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp) 
 
 when 7 then
---|#line 47
+--|#line 48
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp) 
 
 when 8 then
---|#line 48
+--|#line 49
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp) 
 
 when 9 then
---|#line 49
+--|#line 50
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp) 
 
 when 10 then
---|#line 50
+--|#line 51
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp) 
 
 when 11 then
---|#line 51
+--|#line 52
 			yyval := yyval_default;
 yyval := -yyvs.item (yyvsp) 
 
 when 12 then
---|#line 52
+--|#line 53
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 1) 
 
@@ -208,10 +209,10 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    2,    0,    4,    6,    7,    0,    1,    0,    3,    4,
+			    2,    0,    4,    6,    7,    0,    1,   -1,    3,    4,
 			   10,   13,   14,   15,   16,   10,   11,    4,    5,    6,
-			    7,    3,    4,    0,    0,   12,    0,    0,    0,   11,
-			    4,    5,    6,    7,    0,    0,   10>>)
+			    7,    3,    4,   -1,   -1,   12,   -1,   -1,   -1,   11,
+			    4,    5,    6,    7,   -1,   -1,   10>>)
 		end
 
 feature {NONE} -- Constants
