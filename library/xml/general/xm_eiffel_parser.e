@@ -6,9 +6,11 @@ indexing
 		"Implementation of XM_PARSER using the native Eiffel parser"
 		
 	library: "Gobo Eiffel XML Library"
-	copyright:  "Copyright (c) 2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class XM_EIFFEL_PARSER
 
 inherit
@@ -34,8 +36,10 @@ creation
 feature -- Source
 
 	source: XM_SOURCE
+			-- Source identification.
 	
 	set_source (a: XM_SOURCE) is
+			-- Set source.
 		do
 			source := a
 		end
@@ -58,9 +62,12 @@ feature -- Parsing
 		
 	parse_from_string (a: STRING) is
 			-- Parse from UTF8 string.
+		local
+			a_stream: KL_STRING_INPUT_STREAM
 		do
 			!XM_STRING_SOURCE! source
-			parse_string (a)
+			!! a_stream.make (a)
+			parse_stream (a_stream)
 		end
 	
 feature {NONE} -- Error
