@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<project name="A">
+	
+	<target name="f2">
+		<echo message="A.dir: ${A.dir}"/>
+		<echo message="A.absdir: ${A.absdir}"/>
+		<echo message="A.filename: ${A.filename}"/>
+	</target>
+
+</project>
+

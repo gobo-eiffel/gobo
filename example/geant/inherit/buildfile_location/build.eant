@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+
+<project name="B">
+	<description>
+		Demonstration of built-in projectvariables containing the absolute location,
+		the relative location and the filename of a project's buildfile.
+		The inheritance clause contains three possible ways to inherit from another
+		project (only one is active).
+
+		The first one uses a normal relative location path. This is not recommended
+		since it is relative to the current working directory and thus works only
+		if geant is invoked in the same directory where the build file is located.
+
+		The second one is uses also a relative location but it is bound to the
+		to the directory where the project variable 'B.absdir' points to rather than
+		to the current working directory . 'B.absdir' contains the absolute directory
+		where the build file of project B is located.
+
+		The third one uses an absolute location.
+	</description>
+	
+	<inherit>
+		<!-- Using relative path (does only work from the directory where the buildfile is located): -->
+		<!--
+		<parent location="ancestor/build.eant"/>
+		-->
+
+		<!-- Using project variables to construct path: -->
+		<!--
+		-->
+		<parent location="${B.absdir}/ancestor/build.eant"/>
+
+		<!-- Using absolute path: -->
+		<!--
+		<parent location="${GOBO}/example/geant/inherit/buildfile_location/ancestor/build.eant"/>
+		-->
+	</inherit>
+
+	<target name="f1">
+		<echo message="B.dir: ${B.dir}"/>
+		<echo message="B.absdir: ${B.absdir}"/>
+		<echo message="B.filename: ${B.filename}"/>
+		<geant target="f2"/>
+	</target>
+
+</project>
+
