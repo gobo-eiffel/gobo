@@ -35,6 +35,8 @@ feature -- Operation(s)
 			a_uri_absolute: a_uri.is_absolute
 			a_uri_scheme: STRING_.same_string (scheme, a_uri.scheme)
 		deferred
+		ensure
+			stream_open_on_success: not has_error implies last_stream.is_open_read
 		end
 		
 feature -- Result

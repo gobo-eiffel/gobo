@@ -21,7 +21,7 @@ feature -- Action(s)
 			a_system_not_void: a_system /= Void
 		deferred
 		ensure
-			--has_error_set:
+			stream_open_on_success: not has_error implies last_stream.is_open_read
 			--depth: not has_error implies resolve_depth = old resolve_depth + 1
 		end
 		
@@ -34,7 +34,7 @@ feature -- Action(s)
 		do
 			resolve (a_system)
 		ensure
-			--has_error_set:
+			stream_open_on_success: not has_error implies last_stream.is_open_read
 			--depth: not has_error implies resolve_depth = old resolve_depth + 1
 		end
 		
