@@ -1,26 +1,26 @@
-<project name="if_demo" default="list" >
+<project name="if_demo" default="list">
 
-	<target name="windows" if="WINDIR" >
-		<set name="os.windows" value="true" />
+	<target name="windows" if="$WINDIR">
+		<set name="os.windows" value="true"/>
 	</target>
 
-	<target name="unix" unless="WINDIR" >
-		<set name="os.unix" value="true" />
+	<target name="unix" unless="$WINDIR">
+		<set name="os.unix" value="true"/>
 	</target>
 
-	<target name="init" depend="windows,unix" >
+	<target name="init" depend="windows,unix">
 	</target>
 
 
-	<target name="list_for_windows" depend="init" if="os.windows" >
-		<exec executable="dir" />
+	<target name="list_for_windows" depend="init" if="$os.windows">
+		<exec executable="dir"/>
 	</target>
 
-	<target name="list_for_unix" depend="init"  if="os.unix" >
-		<exec executable="ls -l" />
+	<target name="list_for_unix" depend="init"  if="$os.unix">
+		<exec executable="ls -l"/>
 	</target>
 
-	<target name="list" depend="list_for_windows,list_for_unix" >
+	<target name="list" depend="list_for_windows,list_for_unix">
 	</target>
 
 </project>

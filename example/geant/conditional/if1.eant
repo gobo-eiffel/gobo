@@ -1,15 +1,15 @@
-<project name="if_demo" default="C" >
+<project name="if_demo" default="C">
 
-	<target name="A" if="runa" >
-		<echo message="A" />
+	<target name="A" if="$runa">
+		<echo message="A"/>
 	</target>
 
-	<target name="B" if="runb" >
-		<echo message="B" />
+	<target name="B" if="$runb">
+		<echo message="B"/>
 	</target>
 
-	<target name="C" depend="A,B" >
-		<echo message="C" />
+	<target name="C" depend="A,B">
+		<echo message="C"/>
 	</target>
 
 </project>
