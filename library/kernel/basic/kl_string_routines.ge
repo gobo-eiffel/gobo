@@ -269,6 +269,32 @@ feature -- Status report
 
 feature -- Access
 
+	new_empty_string (a_string: STRING; n: INTEGER): STRING is
+			-- New empty string with same dynamic type as `a_string';
+			-- Try to allocate space for at least `n' characters.
+		require
+			a_string_not_void: a_string /= Void
+			non_negative_n: n >= 0
+		local
+			uc_string: UC_STRING
+		do
+			if a_string.same_type (dummy_string) then
+				Result := make (n)
+			else
+				uc_string ?= a_string
+				if uc_string /= Void then
+					Result := uc_string.new_empty_string (n)
+				else
+					Result := clone (a_string)
+					Result.wipe_out
+				end
+			end
+		ensure
+			new_string_not_void: Result /= Void
+			same_type: Result.same_type (a_string)
+			new_string_empty: Result.count = 0
+		end
+
 	string (a_string: STRING): STRING is
 			-- New STRING having the same character sequence as `a_string'
 			-- where characters which do not fit in a CHARACTER are
@@ -662,6 +688,33 @@ feature -- Comparison
 		end
 
 feature -- Element change
+
+	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER) is
+			-- Append substring of `other' between indexes
+			-- `s' and `e' at end of `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+			same_type: other.same_type (a_string)
+			s_large_enough: s >= 1
+			e_small_enough: e <= other.count
+			valid_interval: s <= e + 1
+		local
+			uc_string: UC_STRING
+			i: INTEGER
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				uc_string.append_substring (other, s, e)
+			else
+				from i := s until i > e loop
+					a_string.append_character (other.item (i))
+					i := i + 1
+				end
+			end
+		ensure
+			appended: a_string.is_equal (old clone (a_string) + old substring (other, s, e))
+		end
 
 	fill_with (a_string: STRING; c: CHARACTER) is
 			-- Replace every character in `a_string' with `c'.
