@@ -159,6 +159,93 @@ feature -- Operation(s)
 			recursive_definition: n > 0 implies (Result = x * power (x, n - 1))
 		end
 
+	bit_and (m, n: INTEGER): INTEGER is
+			-- Bitwise and between `m' and `n'.
+		require
+			eight_bit_shift: -128 <= n and then n <= 127
+		local
+#ifdef VE
+			i,j: BIT 32
+#endif
+		do
+#ifdef VE
+			i.from_integer (m)
+			j.from_integer (n)
+			Result := (i and j).to_integer
+#endif
+#ifdef ISE
+			Result := m.bit_and (n)
+#endif
+#ifdef SE
+			Result := m.bit_and (n.to_integer_8)
+#endif						
+		end
+
+	bit_or (m, n: INTEGER): INTEGER is
+			-- Bitwise or between `m' and `n'.
+		require
+			eight_bit_shift: 0 <= n and then n <= 32
+		local
+#ifdef VE
+			i,j: BIT 32
+#endif
+		do
+#ifdef VE
+			i.from_integer (m)
+			j.from_integer (n)
+			Result := (i or j).to_integer
+#endif
+#ifdef ISE
+			Result := m.bit_or (n)
+#endif
+#ifdef SE
+			Result := m.bit_or (n.to_integer_8)
+#endif						
+		end
+
+	bit_shift_left (m, n: INTEGER): INTEGER is
+			-- `m' shifted `n' bits to left.
+		require
+			eight_bit_shift: 0 <= n and then n <= 32
+		local
+#ifdef VE
+			i: BIT 32
+#endif
+		do
+#ifdef VE
+			i.from_integer (m)
+			Result := (i ^ -n).to_integer
+#endif
+#ifdef ISE
+			Result := m.bit_shift_left (n)
+#endif
+#ifdef SE
+			Result := m.bit_shift_left (n.to_integer_8)
+#endif						
+		end
+
+
+	bit_shift_right (m, n: INTEGER): INTEGER is
+			-- `m' shifted `n' bits to right.
+		require
+			eight_bit_shift: -128 <= n and then n <= 127
+		local
+#ifdef VE
+			i: BIT 32
+#endif
+		do
+#ifdef VE
+			i.from_integer (m)
+			Result := (i ^ n).to_integer
+#endif
+#ifdef ISE
+			Result := m.bit_shift_right (n)
+#endif
+#ifdef SE
+			Result := m.bit_shift_right (n.to_integer_8)
+#endif						
+		end
+
 feature -- Status report
 
 	is_even (an_int: INTEGER): BOOLEAN is
