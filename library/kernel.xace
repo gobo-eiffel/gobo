@@ -55,14 +55,14 @@
 		<cluster name="mscorlib" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="mscorlib"/>
-			<option name="version" value="1.0.3300.0"/>
+			<option name="version" value="1.0.5000.0"/>
 			<option name="culture" value="neutral"/>
 			<option name="public_key_token" value="b77a5c561934e089"/>
 		</cluster>
 		<cluster name="system_" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="System"/>
-			<option name="version" value="1.0.3300.0"/>
+			<option name="version" value="1.0.5000.0"/>
 			<option name="culture" value="neutral"/>
 			<option name="public_key_token" value="b77a5c561934e089"/>
 			<option name="prefix" value="SYSTEM_DLL_"/>
@@ -70,7 +70,7 @@
 		<cluster name="system_xml" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="System.Xml"/>
-			<option name="version" value="1.0.3300.0"/>
+			<option name="version" value="1.0.5000.0"/>
 			<option name="culture" value="neutral"/>
 			<option name="public_key_token" value="b77a5c561934e089"/>
 			<option name="prefix" value="XML_"/>
