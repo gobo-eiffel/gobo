@@ -18,6 +18,17 @@ inherit
 
 feature -- Test
 
+	test_nth_root is
+			-- Test feature `nth_root'.
+		local
+			r: KL_DOUBLE_ROUTINES
+		do
+			create r
+				-- Use values truncated to integer to avoid possible
+				-- precision problems when comparing double values.
+			assert_equal ("nth_root (1.0, 1.0)", 1, r.nth_root (1.0, 1.0).truncated_to_integer)
+		end
+
 	test_log is
 			-- Test feature `log'.
 		local
