@@ -16,9 +16,7 @@ inherit
 
 	ANY
 	KL_SHARED_STANDARD_FILES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 

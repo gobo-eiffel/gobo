@@ -17,9 +17,7 @@ inherit
 	ANY
 
 	GEANT_SHARED_PROPERTIES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
