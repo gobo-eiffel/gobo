@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			function_type := dynamic_type (universe.function_class, l_any)
 			function_type.set_alive (True)
 			none_type := dynamic_type (universe.none_class, l_any)
+			none_type.set_none
 		ensure
 			none_type_not_void: none_type /= Void
 			character_type_not_void: character_type /= Void

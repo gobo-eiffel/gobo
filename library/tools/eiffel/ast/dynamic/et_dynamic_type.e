@@ -33,10 +33,11 @@ feature {NONE} -- Initialization
 		do
 			base_type := a_type
 			base_class := a_class
-			count := 1
+			first_type := Current
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
+			first_type_set: first_type = Current
 		end
 
 feature -- Status report
@@ -102,6 +103,12 @@ feature -- Status setting
 			static_set: has_static = b
 		end
 
+	set_none is
+			-- Set current type as NONE type.
+		do
+			first_type := Void
+		end
+
 feature -- Access
 
 	base_type: ET_BASE_TYPE
@@ -121,14 +128,9 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	first_type: ET_DYNAMIC_TYPE is
+	first_type: ET_DYNAMIC_TYPE
 			-- First type in current set;
 			-- Void if no type in the set
-		do
-			Result := Current
-		ensure then
-			definition: Result = Current
-		end
 
 	other_types: ET_DYNAMIC_TYPE_LIST is
 			-- Other types in current set;
@@ -139,7 +141,7 @@ feature -- Access
 		end
 
 	sources: ET_DYNAMIC_ATTACHMENT is
-			-- Sub-sets of current set
+			-- Sub-sets of current type set
 		do
 		ensure then
 			no_source: Result = Void

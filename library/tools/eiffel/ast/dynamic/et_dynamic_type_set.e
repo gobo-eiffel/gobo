@@ -55,8 +55,19 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER
+	count: INTEGER is
 			-- Number of types in current type set
+		do
+			if first_type /= Void then
+				if other_types /= Void then
+					Result := other_types.count + 1
+				else
+					Result := 1
+				end
+			end
+		ensure
+			count_non_negative: Result >= 0
+		end
 
 feature -- Element change
 
@@ -93,9 +104,5 @@ feature -- Element change
 				l_source := l_source.next_attachment
 			end
 		end
-
-invariant
-
-	count_non_negative: count >= 0
 
 end

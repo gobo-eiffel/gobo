@@ -175,56 +175,54 @@ feature {NONE} -- Element change
 			i, nb: INTEGER
 			l_attachment: ET_NULL_DYNAMIC_ATTACHMENT
 		do
-			if a_type /= a_system.none_type then
-				l_seed := static_feature.first_seed
-				l_feature := a_type.base_class.seeded_feature (l_seed)
-				if l_feature = Void then
-					if a_type.conforms_to_type (target_type.static_type, a_system) then
-							-- Internal error: there should be a feature with seed
-							-- `l_seed' in all descendants of `target_type.static_type'.
-						a_system.set_fatal_error
-						a_system.error_handler.report_gibbt_error
-					else
-						-- The error has already been reported somewhere else.
-					end
+			l_seed := static_feature.first_seed
+			l_feature := a_type.base_class.seeded_feature (l_seed)
+			if l_feature = Void then
+				if a_type.conforms_to_type (target_type.static_type, a_system) then
+						-- Internal error: there should be a feature with seed
+						-- `l_seed' in all descendants of `target_type.static_type'.
+					a_system.set_fatal_error
+					a_system.error_handler.report_gibbt_error
 				else
-					l_dynamic_feature := a_type.dynamic_feature (l_feature, a_system)
-					l_dynamic_feature.set_regular (True)
-					nb := argument_sources.count
-					if nb > 0 then
-							-- Dynamic type sets for arguments are stored first
-							-- in `dynamic_type_sets'.
-						l_argument_types := l_dynamic_feature.dynamic_type_sets
-						if l_argument_types.count < nb then
-								-- Internal error: it has already been checked somewhere else
-								-- that there was the same number of formal arguments in
-								-- feature redeclaration.
-							a_system.set_fatal_error
-							a_system.error_handler.report_gibbv_error
-						else
-							from i := 1 until i > nb loop
-								l_argument_types.item (i).put_source (argument_sources.item (i).cloned_attachment, a_system)
-								i := i + 1
-							end
-						end
-					end
-					l_result_type := l_dynamic_feature.result_type
-					if result_type /= Void then
-						if l_result_type = Void then
-								-- Internal error: it has already been checked somewhere else
-								-- that the redeclaration of a query should be a query.
-							a_system.set_fatal_error
-							a_system.error_handler.report_gibbw_error
-						else
-							create l_attachment.make (l_result_type, current_feature, current_type)
-							result_type.put_source (l_attachment, a_system)
-						end
-					elseif l_result_type /= Void then
+					-- The error has already been reported somewhere else.
+				end
+			else
+				l_dynamic_feature := a_type.dynamic_feature (l_feature, a_system)
+				l_dynamic_feature.set_regular (True)
+				nb := argument_sources.count
+				if nb > 0 then
+						-- Dynamic type sets for arguments are stored first
+						-- in `dynamic_type_sets'.
+					l_argument_types := l_dynamic_feature.dynamic_type_sets
+					if l_argument_types.count < nb then
 							-- Internal error: it has already been checked somewhere else
-							-- that the redeclaration of a procedure should be a procedure.
+							-- that there was the same number of formal arguments in
+							-- feature redeclaration.
 						a_system.set_fatal_error
-						a_system.error_handler.report_gibbx_error
+						a_system.error_handler.report_gibbv_error
+					else
+						from i := 1 until i > nb loop
+							l_argument_types.item (i).put_source (argument_sources.item (i).cloned_attachment, a_system)
+							i := i + 1
+						end
 					end
+				end
+				l_result_type := l_dynamic_feature.result_type
+				if result_type /= Void then
+					if l_result_type = Void then
+							-- Internal error: it has already been checked somewhere else
+							-- that the redeclaration of a query should be a query.
+						a_system.set_fatal_error
+						a_system.error_handler.report_gibbw_error
+					else
+						create l_attachment.make (l_result_type, current_feature, current_type)
+						result_type.put_source (l_attachment, a_system)
+					end
+				elseif l_result_type /= Void then
+						-- Internal error: it has already been checked somewhere else
+						-- that the redeclaration of a procedure should be a procedure.
+					a_system.set_fatal_error
+					a_system.error_handler.report_gibbx_error
 				end
 			end
 		end
@@ -275,7 +273,7 @@ feature {NONE} -- Validity checking
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 		do
-			if a_type /= a_system.none_type and then a_type.conforms_to_type (target_type.static_type, a_system) then
+			if a_type.conforms_to_type (target_type.static_type, a_system) then
 				l_seed := static_feature.first_seed
 				l_feature := a_type.base_class.seeded_feature (l_seed)
 				if l_feature = Void then

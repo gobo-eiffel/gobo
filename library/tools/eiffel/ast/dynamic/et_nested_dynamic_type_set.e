@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			static_type := a_type
 			if a_type.is_expanded then
 				first_type := a_type
-				count := 1
 			end
 		ensure
 			static_type_set: static_type = a_type
@@ -59,21 +58,18 @@ feature -- Element change
 	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
 			-- Add `a_type' to current set.
 		do
-			if a_type /= a_system.none_type and then a_type.conforms_to_type (static_type, a_system) then
+			if a_type.conforms_to_type (static_type, a_system) then
 				if first_type = Void then
 					first_type := a_type
-					count := count + 1
 				elseif a_type = first_type then
 					-- Do nothing.
 				elseif other_types = Void then
 					create other_types.make_with_capacity (15)
 					other_types.put_first (a_type)
-					count := count + 1
 				elseif other_types.has (a_type) then
 					-- Do nothing.
 				else
 					other_types.force_first (a_type)
-					count := count + 1
 				end
 			end
 		end
