@@ -2,6 +2,14 @@ Version 3.2 - ?
 
 	geant:
 
+	* Added optional attribute 'export' which takes
+	  the name of a project or a comma separated
+	  list of project names to which this target
+	  is exported to.
+
+	* Added new commandlineoption -t (--targets)
+	  to list targets and their descriptions.
+
 	* Added new task <available>.
 
 	* Added subelement <directoryset> to task <delete>.
