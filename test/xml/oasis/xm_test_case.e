@@ -57,8 +57,9 @@ feature -- XML asserts
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
 
 			debug ("xml_parser")
-				if not parser.is_correct then 
+				if not parser.is_correct then
 					std.output.put_string (parser.last_error_description) 
+					std.output.put_new_line
 				end
 			end
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
@@ -76,6 +77,13 @@ feature -- XML asserts
 		do
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf16 (in_utf16))
+			
+			debug ("xml_parser")
+				if not parser.is_correct then
+					std.output.put_string (parser.last_error_description)
+					std.output.put_new_line
+				end
+			end
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
 		end
