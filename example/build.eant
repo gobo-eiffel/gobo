@@ -57,10 +57,13 @@
 			in all subdirectories.
 		</description>
 
+		<geant file="build.eant" target="${target}" dir="gexmlsplit"/>
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="${target}" dir="parse"/>
+		<geant file="build.eant" target="${target}" dir="regexp"/>
 		<geant file="build.eant" target="${target}" dir="test"/>
 		<geant file="build.eant" target="${target}" dir="time"/>
+		<geant file="build.eant" target="${target}" dir="xml"/>
 	</target>
 
 </project>
