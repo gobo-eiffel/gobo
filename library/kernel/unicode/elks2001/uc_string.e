@@ -270,6 +270,142 @@ feature -- Comparison
 
    
 
+   is_equal (other: like Current): BOOLEAN is
+
+         -- Do both strings have the same character sequence?
+
+	 -- (Redefined from `GENERAL')
+
+      do
+
+	 if Current = other then
+
+	    Result := true
+
+         else
+
+	    if count = other.count then
+
+	       Result := three_way_comparison(other) = 0
+
+            end
+
+         end
+
+      end
+
+   
+
+   infix "<" (other: like Current): BOOLEAN is
+
+      do
+
+	 Result := three_way_comparison(other) < 0
+
+      end
+
+
+
+   infix "<=" (other: like Current): BOOLEAN is
+
+      do
+
+	 Result := three_way_comparison(other) <= 0
+
+      end
+
+   
+
+   infix ">=" (other: like Current): BOOLEAN is
+
+      do
+
+	 Result := three_way_comparison(other) >= 0
+
+      end
+
+   
+
+   infix ">" (other: like Current): BOOLEAN is
+
+      do
+
+	 Result := three_way_comparison(other) > 0
+
+      end
+
+   
+
+   three_way_comparison (other: like Current): INTEGER is
+
+      local
+
+	 stop: BOOLEAN
+
+	 i,k: INTEGER
+
+      do
+
+	 if Current = other then
+
+	    Result := 0
+
+         else
+
+	    from
+
+	       i := 1
+
+               k := count.min(other.count)
+
+	    until
+
+	       stop or else i > k
+
+	    loop
+
+	       if item(i) < other.item(i) then
+
+		  Result := -1
+
+		  stop := true
+
+	       elseif item(i) > other.item(i) then
+
+		  Result := 1
+
+		  stop := true
+
+	       end
+
+
+
+	       i := i + 1
+
+	    end
+
+
+
+	    if Result = 0 then
+
+	       if count > other.count then
+
+		  Result := 1
+
+	       elseif count < other.count then
+
+		  Result := -1
+
+	       end
+
+	    end
+
+	 end
+
+      end
+
+
+
 feature -- Status report
 
    
@@ -279,6 +415,192 @@ feature -- Element change
    
 
 feature -- Removal
+
+   
+
+   keep_head (n: INTEGER) is
+
+         -- Remove all the characters except for the first `n'; if 
+
+         -- `n' > `count', do nothing.
+
+      require
+
+         n_non_negative: n >= 0
+
+      do
+
+         if n < count then
+
+            remove_substring(n+1, count)
+
+         end
+
+      ensure
+
+         kept: is_equal (old substring(1, n.min(count)))
+
+      end
+
+   
+
+   keep_tail (n: INTEGER) is
+
+         -- Remove all characters except for the last `n';
+
+         -- if `n' > `count', do nothing
+
+      require
+
+         n_non_negative: n >= 0
+
+      do
+
+         if n < count then
+
+            remove_substring(1, count - n)
+
+         end
+
+      ensure
+
+         kept: is_equal (old substring(count - n.min(count) + 1, count))
+
+      end
+
+         
+
+   remove (i: INTEGER) is
+
+	 -- Remove `i'-th character, shifting characters between 
+
+	 -- ranks i + 1 and `count' leftwards.
+
+      require
+
+         valid_removal_index: valid_index(i)
+
+      do
+
+	 remove_substring(i, i)
+
+      ensure
+
+         removed: is_equal (old substring(1, i-1) + old substring(i+1, count))
+
+      end
+
+   
+
+   remove_head (n: INTEGER) is
+
+         -- Remove the first `n' characters; if `n' > `count', remove all.
+
+      require
+
+         n_non_negative: n >= 0
+
+      do
+
+         if n >= count then
+
+            wipe_out
+
+         elseif n > 0 then
+
+            remove_substring(1, n)
+
+         end
+
+      ensure
+
+         removed: is_equal (old substring(n.min(count) + 1, count))
+
+      end
+
+   
+
+   remove_substring (start_index, end_index: INTEGER) is
+
+         -- Remove all characters from `start_index' to `end_index' inclusive.
+
+      require
+
+         valid_start_index: 1 <= start_index;
+
+         valid_end_index: end_index <= count;
+
+         meaningful_interval: start_index <= end_index + 1
+
+      local
+
+         c: INTEGER
+
+      do
+
+         c := end_index - start_index + 1
+
+         if c > 0 then
+
+            i_representation.remove(start_index, c)
+
+         end
+
+      ensure
+
+         removed: is_equal (old substring (1, start_index - 1) +
+
+                            old substring (end_index + 1, count))
+
+      end
+
+   
+
+   remove_tail (n: INTEGER) is
+
+         -- Remove the last `n' characters; if `n' > `count', remove all.
+
+      require
+
+         n_non_negative: n >= 0
+
+      do
+
+         if n >= count then
+
+            wipe_out
+
+         elseif n > 0 then
+
+            remove_substring(count - n + 1, count)
+
+         end
+
+      ensure
+
+         removed: is_equal (old substring(1, count - n.min(count)))
+
+      end
+
+         
+
+   wipe_out is
+
+	 -- Remove all characters.
+
+      do
+
+	 if not is_empty then
+
+	    remove_substring(1, count)
+
+	 end
+
+      ensure
+
+	 empty_string: count = 0;
+
+      end
 
    
 
