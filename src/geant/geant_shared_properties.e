@@ -21,15 +21,11 @@ inherit
 
 feature -- Access
 
-	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
+	Commandline_variables: GEANT_VARIABLES is
 			-- Variables specified on the commandline using -D
 			-- example: -Dname=value
-		local
-			a_tester: UC_STRING_EQUALITY_TESTER
 		once
-			create Result.make_map (10)
-			create a_tester
-			Result.set_key_equality_tester (a_tester)
+			create Result.make
 		ensure
 			Commandline_variables_not_void: Result /= Void
 		end
