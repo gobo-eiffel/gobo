@@ -21,6 +21,29 @@ feature -- Output
 		deferred
 		end
 
+	append (an_input_stream: KI_INPUT_STREAM [G]) is
+			-- Read items of `an_input_stream' until the end
+			-- of input is reached, and write these items to
+			-- current output stream.
+		require
+			is_open_write: is_open_write
+			an_input_stream_not_void: an_input_stream /= Void
+			an_input_stream_open_read: an_input_stream.is_open_read
+		do
+			from
+				if not an_input_stream.end_of_input then
+					an_input_stream.read
+				end
+			until
+				an_input_stream.end_of_input
+			loop
+				put (an_input_stream.last_item)
+				an_input_stream.read
+			end
+		ensure
+			end_of_input: an_input_stream.end_of_input
+		end
+
 feature -- Status report
 
 	is_open_write: BOOLEAN is

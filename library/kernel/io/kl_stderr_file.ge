@@ -42,7 +42,8 @@ inherit
 			put_integer as old_put_integer,
 			put_new_line as old_put_new_line,
 			is_open_write as old_is_open_write,
-			flush as old_flush
+			flush as old_flush,
+			append as old_append
 		export
 			{NONE} all
 		end

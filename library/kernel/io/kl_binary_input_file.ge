@@ -65,7 +65,8 @@ inherit
 			flush as old_flush,
 			close as old_close,
 			delete as old_delete,
-			reset as old_reset
+			reset as old_reset,
+			append as old_append
 		export
 			{NONE} all
 		undefine

@@ -17,6 +17,8 @@ inherit
 	KI_OUTPUT_STREAM [CHARACTER]
 		rename
 			put as put_character
+		redefine
+			append
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -98,6 +100,30 @@ feature -- Output
 				put_string (True_constant)
 			else
 				put_string (False_constant)
+			end
+		end
+
+	append (an_input_stream: KI_INPUT_STREAM [CHARACTER]) is
+			-- Read items of `an_input_stream' until the end
+			-- of input is reached, and write these items to
+			-- current output stream.
+		local
+			a_character_input: KI_CHARACTER_INPUT_STREAM
+		do
+			a_character_input ?= an_input_stream
+			if a_character_input /= Void then
+				from
+					if not a_character_input.end_of_input then
+						a_character_input.read_string (512)
+					end
+				until
+					a_character_input.end_of_input
+				loop
+					put_string (a_character_input.last_string)
+					a_character_input.read_string (512)
+				end
+			else
+				precursor (an_input_stream)
 			end
 		end
 
