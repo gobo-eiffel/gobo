@@ -52,10 +52,8 @@
 				<link_library location="/usr/local/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
 			</external>
 			<external if="${GOBO_OS}=windows">
-				<include_dir location="${EXPAT}\Source\lib" if="${GOBO_EIFFEL}=se"/>
-				<link_library location="${EXPAT}\Libs\expat.lib" if="${GOBO_EIFFEL}=se"/>
-				<include_dir location="$(EXPAT)\Source\lib" unless="${GOBO_EIFFEL}=se"/>
-				<link_library location="$(EXPAT)\Libs\expat.lib" unless="${GOBO_EIFFEL}=se"/>
+				<include_dir location="${EXPAT}\Source\lib"/>
+				<link_library location="${EXPAT}\Libs\expat.lib"/>
 			</external>
 		</cluster>
 		<cluster name="eiffel" abstract="True">
