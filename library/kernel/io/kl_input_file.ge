@@ -290,7 +290,16 @@ feature -- Basic operations
 				if name.count > 0 then
 					character_buffer := Void
 					end_of_file := False
-					old_open_read
+#ifdef ISE || HACT
+					if old_exists and then old_is_readable then
+#endif
+#ifdef VE
+					if old_exists then
+#endif
+						old_open_read
+#ifdef ISE || HACT || VE
+					end
+#endif
 				end
 			elseif not is_closed then
 				close

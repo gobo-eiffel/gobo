@@ -16,7 +16,12 @@ deferred class KL_TEST_MACOS_INPUT_FILE
 inherit
 
 	KL_TEST_CASE
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+	DT_SHARED_SYSTEM_CLOCK
+		export {NONE} all end
 
 feature -- Test
 
@@ -31,6 +36,69 @@ feature -- Test
 			assert ("a_file_not_void", a_file /= Void)
 			assert_same ("name_set", a_name, a_file.name)
 			assert ("is_closed", a_file.is_closed)
+		end
+
+	test_exists is
+			-- Test feature `exists'.
+		local
+			a_file: KL_MACOS_INPUT_FILE
+			a_name: STRING
+			a_directory: KL_DIRECTORY
+			out_file: KL_TEXT_OUTPUT_FILE
+		do
+				-- The following two files, whose pathnames have a non-empty
+				-- dirname, exist.
+			a_name := gobo_filename
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("exists1", a_file.exists)
+			a_name := empty_filename
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("exists2", a_file.exists)
+				-- The following file, whose pathname has a non-empty
+				-- dirname, does not exist.
+			a_name := file_system.pathname (data_dirname, "gobo.txtoops")
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("not_exists1", not a_file.exists)
+				-- The following file, whose pathname has a non-empty
+				-- dirname and a basename containing a space, does not exist.
+			a_name := file_system.pathname (data_dirname, "gobo.txt oops")
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("not_exists2", not a_file.exists)
+				-- A file with an empty name does not exist.
+			!! a_file.make ("")
+			assert ("not_exists3", not a_file.exists)
+				-- The following pathname exists, but it is a
+				-- directory and hence is not an existing file.
+			a_name := data_dirname
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("directory_exists", a_directory.exists)
+			!! a_file.make (a_name)
+			assert ("not_exists4", not a_file.exists)
+				-- Create a file in the current directory and then
+				-- check that this file, whose pathname has an empty
+				-- dirname, does exist. Then delete this newly created
+				-- file and check than it does not exist anymore.
+			a_name := new_filename ("gobo", ".tmp")
+			!! a_file.make (a_name)
+			assert ("not_exists5", not a_file.exists)
+			!! out_file.make (a_name)
+			out_file.open_write
+			if out_file.is_open_write then
+				out_file.put_string ("Hello gobo")
+				out_file.close
+				assert ("is_closed", out_file.is_closed)
+				!! a_file.make (a_name)
+				assert ("exists3", a_file.exists)
+				a_file.delete
+				assert ("not_exists6", not a_file.exists)
+			else
+				assert ("is_opened", False)
+			end
 		end
 
 	test_is_readable is
@@ -105,6 +173,65 @@ feature -- Test
 			a_name := new_filename ("gobo", ".tmp")
 			!! a_file.make (a_name)
 			assert_equal ("eol", "%R", a_file.eol)
+		end
+
+	test_count is
+			-- Test feature `count'.
+		local
+			a_file: KL_MACOS_INPUT_FILE
+			a_name: STRING
+		do
+				-- Non-existing file.
+			a_name := new_filename ("gobo", ".tmp")
+			!! a_file.make (a_name)
+			assert_equal ("count1", -1, a_file.count)
+				-- Empty file.
+			a_name := Execution_environment.interpreted_string (empty_filename)
+			!! a_file.make (a_name)
+			assert_equal ("count2", 0, a_file.count)
+				-- Non-empty file.
+			a_name := Execution_environment.interpreted_string (hello_filename)
+			!! a_file.make (a_name)
+			assert_equal ("count3", 10, a_file.count)
+				-- Non-empty file with 2 new-lines.
+			a_name := Execution_environment.interpreted_string (gobo_filename)
+			!! a_file.make (a_name)
+			assert_equal ("count4", 48 + 2 * file_system.eol.count, a_file.count)
+		end
+
+	test_time_stamp is
+			-- Test feature `time_stamp'.
+		local
+			a_file: KL_MACOS_INPUT_FILE
+			out_file: KL_MACOS_OUTPUT_FILE
+			a_name: STRING
+			dt1, dt2, dt3: DT_DATE_TIME
+		do
+				-- Non-existing file.
+			a_name := new_filename ("gobo", ".tmp")
+			!! a_file.make (a_name)
+			assert_equal ("time_stamp1", -1, a_file.time_stamp)
+				-- Existing file.
+			a_name := Execution_environment.interpreted_string (hello_filename)
+			!! a_file.make (a_name)
+			assert ("time_stamp2", a_file.time_stamp > 0)
+				-- Create a file a check its time stamp.
+			a_name := new_filename ("gobo", ".tmp")
+			!! out_file.make (a_name)
+			out_file.open_write
+			assert ("is_opened", out_file.is_open_write)
+			out_file.put_string ("Hello gobo")
+			out_file.close
+			dt1 := utc_system_clock.date_time_now
+			assert ("is_closed", out_file.is_closed)
+			dt3 := clone (dt1)
+			dt1.add_seconds (-5)
+			dt3.add_seconds (5)
+			!! a_file.make (a_name)
+			!! dt2.make_from_epoch (a_file.time_stamp)
+			assert ("time_stamp3", dt1 < dt2)
+			assert ("time_stamp4", dt2 < dt3)
+			out_file.delete
 		end
 
 	test_open_read is
