@@ -42,6 +42,12 @@ feature {NONE} -- Initialization
 					command.set_command_line (a_value)
 				end
 			end
+			if has_attribute (Exit_code_variable_attribute_name) then
+				a_value := attribute_value (Exit_code_variable_attribute_name)
+				if a_value.count > 0 then
+					command.set_exit_code_variable_name (a_value)
+				end
+			end
 			if has_attribute (Accept_errors_attribute_name) then
 				command.set_accept_errors (boolean_value (Accept_errors_attribute_name))
 			end
@@ -72,6 +78,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute accept_errors.
 		once
 			Result := "accept_errors"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Exit_code_variable_attribute_name: STRING is
+			-- Name of xml attribute exit_code_variable.
+		once
+			Result := "exit_code_variable"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
