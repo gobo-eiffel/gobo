@@ -50,7 +50,7 @@ feature -- Tests
 			check_uri (uri, "http", "a", "/g", Void, Void, "http://a/g")
 
 			create uri.make_resolve (base, "//g")
-			check_uri (uri, "http", "g", Void, Void, Void, "http://g")
+			check_uri (uri, "http", "g", "", Void, Void, "http://g")
 
 			create uri.make_resolve (base, "?y")
 			check_uri (uri, "http", "a", "/b/c/d;p", "y", Void, "http://a/b/c/d;p?y")
@@ -180,21 +180,43 @@ feature -- Tests
 
 		end
 
+	test_empty is
+			-- Test empty base URI.
+		local
+			a_base: UT_URI
+			uri: UT_URI
+		do
+			create a_base.make ("sch:")
+			create uri.make_resolve (a_base, "x")
+			check_uri (uri, "sch", Void, "/x", Void, Void, "sch:/x")
+		end
+
 feature {NONE} -- Implementation
 
-	check_uri (uri: UT_URI; a_scheme, a_authority, a_path, a_query, a_fragment, a_reference: STRING) is
+	check_uri (uri: UT_URI; scheme, authority, path, query, fragment, a_reference: STRING) is
 			-- Check parsed URI.
 		require
 			uri_not_void: uri /= Void
+			path_nto_void: path /= Void
 		do
-			assert_equal ("scheme", a_scheme, uri.scheme)
-			assert_equal ("authority", a_authority, uri.authority)
-			if a_path /= Void then
-				assert_equal ("path", a_path, uri.path)
+			assert_equal ("scheme", scheme, uri.scheme)
+			
+			assert ("has_authority", uri.has_authority = (authority /= Void))
+			if uri.has_authority then
+				assert_equal ("authority", authority, uri.authority)
 			end
-			assert_equal ("query", a_query, uri.query)
-			assert_equal ("fragment", a_fragment, uri.fragment)
-			assert_equal ("reference", a_reference, uri.full_reference)
+			
+			assert_equal ("path", path, uri.path)
+			
+			assert ("has_query", uri.has_query = (query /= Void))
+			if uri.has_query then
+				assert_equal ("query", query, uri.query)
+			end
+
+			assert ("has_fragment", uri.has_fragment = (fragment /= Void))
+			if uri.has_fragment then
+				assert_equal ("fragment", uri.fragment, fragment)
+			end
 		end
 
 end

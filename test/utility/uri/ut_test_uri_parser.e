@@ -151,10 +151,23 @@ feature {NONE} -- Implementation
 			path_not_void: path /= Void
 		do
 			assert_equal ("scheme", scheme, uri.scheme)
-			assert_equal ("authority", authority, uri.authority)
+			
+			assert ("has_authority", uri.has_authority = (authority /= Void))
+			if uri.has_authority then
+				assert_equal ("authority", authority, uri.authority)
+			end
+			
 			assert_equal ("path", path, uri.path)
-			assert_equal ("query", query, uri.query)
-			assert_equal ("fragment", uri.fragment, fragment)
+			
+			assert ("has_query", uri.has_query = (query /= Void))
+			if uri.has_query then
+				assert_equal ("query", query, uri.query)
+			end
+
+			assert ("has_fragment", uri.has_fragment = (fragment /= Void))
+			if uri.has_fragment then
+				assert_equal ("fragment", uri.fragment, fragment)
+			end
 		end
 
 	check_invalid_scheme (a_uri: UT_URI) is
