@@ -31,6 +31,11 @@ feature {NONE} -- Constants
 	Gt_char: CHARACTER is '>'
 	Amp_char: CHARACTER is '&'
 	Quot_char: CHARACTER is '%"'
+	
+	Lf_char: CHARACTER is '%N'
+	Cr_char: CHARACTER is '%R'
+	Tab_char: CHARACTER is '%T'
+	Space_char: CHARACTER is ' '
 
 	Lt_entity: STRING is once Result := "&lt;" end
 	Gt_entity: STRING is once Result := "&gt;" end
