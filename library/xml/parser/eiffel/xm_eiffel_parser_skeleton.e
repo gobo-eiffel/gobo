@@ -276,6 +276,20 @@ feature {NONE} -- Factory
 			external_id: Result /= Void
 		end
 
+feature {NONE} -- Encoding
+
+	apply_encoding (an_encoding: STRING) is
+			-- Set encoding on current scanner.
+		require
+			not_void: an_encoding /= Void
+		do
+			if scanner.is_valid_encoding (an_encoding) then
+				scanner.set_encoding (an_encoding)
+			else
+				force_error (Error_unsupported_encoding)
+			end
+		end
+		
 feature {NONE} -- DTD
 
 	set_element_repetition (a_node: XM_DTD_ELEMENT_CONTENT; a_value: STRING) is

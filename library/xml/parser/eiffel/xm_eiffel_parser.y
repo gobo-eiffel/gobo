@@ -344,11 +344,7 @@ cdata_body: char_data
 
 prolog: xml_decl_misc doctype_decl_misc
 		{
-			if scanner.is_valid_encoding ($1.encoding) then
-				scanner.set_encoding ($1.encoding)
-			else
-				force_error (Error_unsupported_encoding)
-			end
+			apply_encoding ($1.encoding)
 			$1.process (Current) -- event
 		}
 	;
@@ -392,13 +388,15 @@ xml_decl_opt: maybe_space
 	| req_space encoding_decl maybe_space
 		{ 
 			create $$.make 
-			$$.set_encoding ($2) 
+			$$.set_encoding ($2)
+			apply_encoding ($2)
 		}
 	| req_space encoding_decl req_space sd_decl maybe_space
 		{ 
 			create $$.make;
 			$$.set_encoding ($2)
 			$$.set_stand_alone ($4) 
+			apply_encoding ($2)
 		}
 	;
 
