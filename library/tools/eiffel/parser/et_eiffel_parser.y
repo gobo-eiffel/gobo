@@ -3208,7 +3208,7 @@ feature -- Parsing
 					yyssp := yyssp + 1
 					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyss := FIXED_INTEGER_ARRAY_.resize (yyss, yystacksize)
+						yyss := SPECIAL_INTEGER_.resize (yyss, yystacksize)
 						debug ("GEYACC")
 							std.error.put_string ("Stack (yyss) size increased to ")
 							std.error.put_integer (yystacksize)

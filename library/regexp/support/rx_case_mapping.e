@@ -16,7 +16,7 @@ inherit
 
 	ANY -- Export features of ANY.
 
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
 
 creation
@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 			-- Create new mapping between upper- and lower-case characters.
 			-- Each character is its own upper- and lower-case version by default.
 		do
-			lower_table := FIXED_INTEGER_ARRAY_.make (256)
-			flip_table := FIXED_INTEGER_ARRAY_.make (256)
+			lower_table := SPECIAL_INTEGER_.make (256)
+			flip_table := SPECIAL_INTEGER_.make (256)
 			clear
 		end
 
@@ -146,10 +146,10 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	lower_table: like FIXED_INTEGER_ARRAY_TYPE
+	lower_table: SPECIAL [INTEGER]
 			-- Lower character codes mapping table
 
-	flip_table: like FIXED_INTEGER_ARRAY_TYPE
+	flip_table: SPECIAL [INTEGER]
 			-- Flip character case mapping table
 
 invariant

@@ -21,11 +21,6 @@ inherit
 
 	DS_RESIZABLE [G]
 
-	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
-		undefine
-			is_equal, copy
-		end
-
 creation
 
 	make, make_equal, make_default,
@@ -40,8 +35,8 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			create FIXED_ARRAY_
-			storage := FIXED_ARRAY_.make (n + 1)
+			create special_routines
+			storage := special_routines.make (n + 1)
 			capacity := n
 			internal_cursor := new_cursor
 		ensure
@@ -57,8 +52,8 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			create FIXED_ARRAY_
-			storage := FIXED_ARRAY_.make (n + 1)
+			create special_routines
+			storage := special_routines.make (n + 1)
 			capacity := n
 			internal_cursor := new_cursor
 			create equality_tester
@@ -776,13 +771,13 @@ feature -- Resizing
 			-- Resize list so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
-			storage := FIXED_ARRAY_.resize (storage, n + 1)
+			storage := special_routines.resize (storage, n + 1)
 			capacity := n
 		end
 
 feature {DS_ARRAYED_LIST} -- Implementation
 
-	storage: like FIXED_ARRAY_TYPE
+	storage: SPECIAL [G]
 			-- Storage for items of the list
 
 feature {NONE} -- Implementation
@@ -850,8 +845,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
-			-- Routines that ought to be in FIXED_ARRAY
+	special_routines: KL_SPECIAL_ROUTINES [G]
+			-- Routines that ought to be in SPECIAL
 
 feature {NONE} -- Implementation
 
@@ -1216,6 +1211,6 @@ invariant
 
 	storage_not_void: storage /= Void
 	capacity_definition: capacity = storage.count - 1
-	fixed_array_routines_not_void: FIXED_ARRAY_ /= Void
+	special_routines_not_void: special_routines /= Void
 
 end

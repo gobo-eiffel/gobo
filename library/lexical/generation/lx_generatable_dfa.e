@@ -675,9 +675,7 @@ feature {NONE} -- Generation
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
-			a_file.put_string (": ANY is%N%
-				%%T%T%T-- This is supposed to be %"like FIXED_INTEGER_ARRAY_TYPE%",%N%
-				%%T%T%T-- but once functions cannot be declared with anchored types.%N")
+			a_file.put_string (": SPECIAL [INTEGER] is%N")
 			if array_size = 0 then
 				nb := 1
 			else

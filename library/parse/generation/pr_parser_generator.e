@@ -323,16 +323,16 @@ feature {NONE} -- Generation
 			a_file.put_line ("%Tyy_build_parser_tables is")
 			a_file.put_line ("%T%T%T-- Build parser tables.")
 			a_file.put_line ("%T%Tdo")
-			a_file.put_line ("%T%T%Tyytranslate ?= yytranslate_template")
-			a_file.put_line ("%T%T%Tyyr1 ?= yyr1_template")
-			a_file.put_line ("%T%T%Tyytypes1 ?= yytypes1_template")
-			a_file.put_line ("%T%T%Tyytypes2 ?= yytypes2_template")
-			a_file.put_line ("%T%T%Tyydefact ?= yydefact_template")
-			a_file.put_line ("%T%T%Tyydefgoto ?= yydefgoto_template")
-			a_file.put_line ("%T%T%Tyypact ?= yypact_template")
-			a_file.put_line ("%T%T%Tyypgoto ?= yypgoto_template")
-			a_file.put_line ("%T%T%Tyytable ?= yytable_template")
-			a_file.put_line ("%T%T%Tyycheck ?= yycheck_template")
+			a_file.put_line ("%T%T%Tyytranslate := yytranslate_template")
+			a_file.put_line ("%T%T%Tyyr1 := yyr1_template")
+			a_file.put_line ("%T%T%Tyytypes1 := yytypes1_template")
+			a_file.put_line ("%T%T%Tyytypes2 := yytypes2_template")
+			a_file.put_line ("%T%T%Tyydefact := yydefact_template")
+			a_file.put_line ("%T%T%Tyydefgoto := yydefgoto_template")
+			a_file.put_line ("%T%T%Tyypact := yypact_template")
+			a_file.put_line ("%T%T%Tyypgoto := yypgoto_template")
+			a_file.put_line ("%T%T%Tyytable := yytable_template")
+			a_file.put_line ("%T%T%Tyycheck := yycheck_template")
 			a_file.put_line ("%T%Tend")
 		end
 
@@ -581,9 +581,7 @@ feature {NONE} -- Generation
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
-			a_file.put_string (": ANY is%N%
-				%%T%T%T-- This is supposed to be %"like FIXED_INTEGER_ARRAY_TYPE%",%N%
-				%%T%T%T-- but once functions cannot be declared with anchored types.%N")
+			a_file.put_string (": SPECIAL [INTEGER] is%N")
 			if array_size = 0 then
 				nb := 1
 			else

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			column := 1
 			position := 1
 			if yyReject_or_variable_trail_context then
-				yy_state_stack := FIXED_INTEGER_ARRAY_.make (input_buffer.content.count + 1)
+				yy_state_stack := SPECIAL_INTEGER_.make (input_buffer.content.count + 1)
 			end
 		end
 
@@ -408,31 +408,31 @@ feature -- Element change
 
 feature {NONE} -- Tables
 
-	yy_nxt: like FIXED_INTEGER_ARRAY_TYPE
+	yy_nxt: SPECIAL [INTEGER]
 			-- States to enter upon reading symbol
 
-	yy_chk: like FIXED_INTEGER_ARRAY_TYPE
+	yy_chk: SPECIAL [INTEGER]
 			-- Check value to see if `yy_nxt' applies
 
-	yy_base: like FIXED_INTEGER_ARRAY_TYPE
+	yy_base: SPECIAL [INTEGER]
 			-- Offsets into `yy_nxt' for given states
 
-	yy_def: like FIXED_INTEGER_ARRAY_TYPE
+	yy_def: SPECIAL [INTEGER]
 			-- Where to go if `yy_chk' disallow `yy_nxt' entry
 
-	yy_ec: like FIXED_INTEGER_ARRAY_TYPE
+	yy_ec: SPECIAL [INTEGER]
 			-- Equivalence classes;
 			-- Void if equivalence classes are not used
 
-	yy_meta: like FIXED_INTEGER_ARRAY_TYPE
+	yy_meta: SPECIAL [INTEGER]
 			-- Meta equivalence classes which are sets of classes
 			-- with identical transitions out of templates;
 			-- Void if meta equivalence classes are not used
 
-	yy_accept: like FIXED_INTEGER_ARRAY_TYPE
+	yy_accept: SPECIAL [INTEGER]
 			-- Accepting ids indexed by state ids
 
-	yy_acclist: like FIXED_INTEGER_ARRAY_TYPE
+	yy_acclist: SPECIAL [INTEGER]
 			-- Accepting id list, used when `reject' is called
 			-- or when there is a variable length trailing context;
 			-- Void otherwise
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 			if yyReject_or_variable_trail_context then
 				nb := a_content.count + 1
 				if yy_state_stack.count < nb then
-					yy_state_stack := FIXED_INTEGER_ARRAY_.resize (yy_state_stack, nb)
+					yy_state_stack := SPECIAL_INTEGER_.resize (yy_state_stack, nb)
 				end
 			end
 		end
@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 	yy_rejected: BOOLEAN
 			-- Has current matched token been rejected?
 
-	yy_state_stack: like FIXED_INTEGER_ARRAY_TYPE
+	yy_state_stack: SPECIAL [INTEGER]
 	yy_state_count: INTEGER
 	yy_full_match: INTEGER
 	yy_lp: INTEGER

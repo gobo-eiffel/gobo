@@ -20,14 +20,7 @@ inherit
 			new_cursor
 		end
 
-	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
-		rename
-			FIXED_ARRAY_TYPE as FIXED_ITEM_ARRAY_TYPE
-		undefine
-			is_equal, copy
-		end
-
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 		undefine
 			is_equal, copy
 		end
@@ -56,14 +49,14 @@ feature {DS_ARRAYED_SPARSE_SET_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	items: like FIXED_ITEM_ARRAY_TYPE
+	items: SPECIAL [G]
 			-- Storage for items of the set indexed from 1 to `capacity'
 
 	make_items (n: INTEGER) is
 			-- Create `items'.
 		do
-			create FIXED_ITEM_ARRAY_
-			items := FIXED_ITEM_ARRAY_.make (n)
+			create special_item_routines
+			items := special_item_routines.make (n)
 		end
 
 	items_put (v: G; i: INTEGER) is
@@ -81,7 +74,7 @@ feature {NONE} -- Implementation
 	items_resize (n: INTEGER) is
 			-- Resize `items'.
 		do
-			items := FIXED_ITEM_ARRAY_.resize (items, n)
+			items := special_item_routines.resize (items, n)
 		end
 
 	items_wipe_out is
@@ -96,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clashes: like FIXED_INTEGER_ARRAY_TYPE
+	clashes: SPECIAL [INTEGER]
 			-- Indexes in `items' when there are clashes
 			-- in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
@@ -106,7 +99,7 @@ feature {NONE} -- Implementation
 	make_clashes (n: INTEGER) is
 			-- Create `clashes'.
 		do
-			clashes := FIXED_INTEGER_ARRAY_.make (n)
+			clashes := SPECIAL_INTEGER_.make (n)
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER) is
@@ -124,7 +117,7 @@ feature {NONE} -- Implementation
 	clashes_resize (n: INTEGER) is
 			-- Resize `clashes'.
 		do
-			clashes := FIXED_INTEGER_ARRAY_.resize (clashes, n)
+			clashes := SPECIAL_INTEGER_.resize (clashes, n)
 		end
 
 	clashes_wipe_out is
@@ -138,7 +131,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	slots: like FIXED_INTEGER_ARRAY_TYPE
+	slots: SPECIAL [INTEGER]
 			-- Indexes in `items', indexed by hash codes
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
@@ -146,7 +139,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER) is
 			-- Create `slots'.
 		do
-			slots := FIXED_INTEGER_ARRAY_.make (n)
+			slots := SPECIAL_INTEGER_.make (n)
 		end
 
 	slots_item (i: INTEGER): INTEGER is
@@ -170,7 +163,7 @@ feature {NONE} -- Implementation
 	slots_resize (n: INTEGER) is
 			-- Resize `slots'.
 		do
-			slots := FIXED_INTEGER_ARRAY_.resize (slots, n)
+			slots := SPECIAL_INTEGER_.resize (slots, n)
 		end
 
 	slots_wipe_out is
@@ -184,8 +177,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	FIXED_ITEM_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
-			-- Routines that ought to be in FIXED_ARRAY
+	special_item_routines: KL_SPECIAL_ROUTINES [G]
+			-- Routines that ought to be in SPECIAL
 
 invariant
 

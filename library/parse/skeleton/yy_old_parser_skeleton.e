@@ -28,8 +28,6 @@ inherit
 			yy_clear_all
 		end
 
-	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
-
 feature {YY_PARSER_ACTION} -- Scanning
 
 	last_value: G is
@@ -42,9 +40,9 @@ feature {NONE} -- Implementation
 	yy_create_value_stacks is
 			-- Create value stacks.
 		do
-			create FIXED_ARRAY_
+			create yy_special_routines
 			yyvsc := yyInitial_stack_size
-			yyvs := FIXED_ARRAY_.make (yyvsc)
+			yyvs := yy_special_routines.make (yyvsc)
 		end
 
 	yy_init_value_stacks is
@@ -57,7 +55,7 @@ feature {NONE} -- Implementation
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		do
-			FIXED_ARRAY_.clear_all (yyvs)
+			yy_special_routines.clear_all (yyvs)
 		end
 
 	yy_push_last_value (yychar1: INTEGER) is
@@ -68,7 +66,7 @@ feature {NONE} -- Implementation
 			yyvsp := yyvsp + 1
 			if yyvsp >= yyvsc then
 				yyvsc := yyvsc + yyInitial_stack_size
-				yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
+				yyvs := yy_special_routines.resize (yyvs, yyvsc)
 				debug ("GEYACC")
 					std.error.put_string ("Stack (yyvs) size increased to ")
 					std.error.put_integer (yyvsc)
@@ -87,7 +85,7 @@ feature {NONE} -- Implementation
 			yyvsp := yyvsp + 1
 			if yyvsp >= yyvsc then
 				yyvsc := yyvsc + yyInitial_stack_size
-				yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
+				yyvs := yy_special_routines.resize (yyvs, yyvsc)
 				debug ("GEYACC")
 					std.error.put_string ("Stack (yyvs) size increased to ")
 					std.error.put_integer (yyvsc)
@@ -103,8 +101,7 @@ feature {NONE} -- Implementation
 			yyvsp := yyvsp - 1
 		end
 
-	yyvs: like FIXED_ARRAY_TYPE
-			-- FIXED_ARRAY [G]
+	yyvs: SPECIAL [G]
 			-- Semantic value stack
 
 	yyvsp: INTEGER
@@ -132,12 +129,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
-			-- Routines that ought to be in FIXED_ARRAY
+	yy_special_routines: KL_SPECIAL_ROUTINES [G]
+			-- Routines that ought to be in SPECIAL
 
 invariant
 
 	yyvs_not_void: yyvs /= Void
-	fixed_array_routines_not_void: FIXED_ARRAY_ /= Void
+	yy_special_routines_not_void: yy_special_routines /= Void
 
 end

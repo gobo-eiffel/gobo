@@ -16,7 +16,7 @@ inherit
 
 	ANY -- Export features of ANY.
 
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 
 creation
 
@@ -27,7 +27,7 @@ feature {ANY} -- Initialization
 	make_empty is
 			-- Create an empty character set.
 		do
-			set := FIXED_BOOLEAN_ARRAY_.make (256)
+			set := SPECIAL_BOOLEAN_.make (256)
 		ensure
 			is_empty: is_empty
 		end
@@ -155,7 +155,7 @@ feature -- Removal
 
 feature {RX_CHARACTER_SET, RX_BYTE_CODE} -- Implementation
 
-	set: like FIXED_BOOLEAN_ARRAY_TYPE
+	set: SPECIAL [BOOLEAN]
 			-- Mapping character-code -> true/false
 
 invariant

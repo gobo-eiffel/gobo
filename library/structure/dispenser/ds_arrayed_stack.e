@@ -18,11 +18,6 @@ inherit
 
 	DS_RESIZABLE [G]
 
-	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
-		undefine
-			is_equal, copy
-		end
-
 creation
 
 	make, make_equal, make_default
@@ -36,8 +31,8 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			create FIXED_ARRAY_
-			storage := FIXED_ARRAY_.make (n + 1)
+			create SPECIAL_
+			storage := SPECIAL_.make (n + 1)
 			capacity := n
 		ensure
 			empty: is_empty
@@ -292,13 +287,13 @@ feature -- Resizing
 			-- Resize stack so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
-			storage := FIXED_ARRAY_.resize (storage, n + 1)
+			storage := SPECIAL_.resize (storage, n + 1)
 			capacity := n
 		end
 
 feature {DS_ARRAYED_STACK} -- Implementation
 
-	storage: like FIXED_ARRAY_TYPE
+	storage: SPECIAL [G]
 			-- Storage for items of the stack
 
 feature {NONE} -- Implementation
@@ -319,13 +314,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
-			-- Routines that ought to be in FIXED_ARRAY
+	SPECIAL_: KL_SPECIAL_ROUTINES [G]
+			-- Routines that ought to be in SPECIAL
 
 invariant
 
 	storage_not_void: storage /= Void
 	capacity_definition: capacity = storage.count - 1
-	fixed_array_routines_not_void: FIXED_ARRAY_ /= Void
+	special_routines_not_void: SPECIAL_ /= Void
 
 end

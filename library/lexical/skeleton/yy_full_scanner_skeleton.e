@@ -217,15 +217,15 @@ feature -- Scanning
 
 feature {NONE} -- Tables
 
-	yy_nxt: like FIXED_INTEGER_ARRAY_TYPE
+	yy_nxt: SPECIAL [INTEGER]
 			-- States to enter upon reading symbol;
 			-- indexed by (current_state_id * yyNb_rows + symbol)
 
-	yy_ec: like FIXED_INTEGER_ARRAY_TYPE
+	yy_ec: SPECIAL [INTEGER]
 			-- Equivalence classes;
 			-- Void if equivalence classes are not used
 
-	yy_accept: like FIXED_INTEGER_ARRAY_TYPE
+	yy_accept: SPECIAL [INTEGER]
 			-- Accepting ids indexed by state ids
 
 feature {NONE} -- Implementation

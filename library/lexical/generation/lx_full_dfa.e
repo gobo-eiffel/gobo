@@ -79,13 +79,13 @@ feature {NONE} -- Generation
 			a_file.put_string ("%Tyy_build_tables is%N%
 				%%T%T%T-- Build scanner tables.%N%T%Tdo%N")
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_nxt ?= yy_nxt_template%N")
+			a_file.put_string ("yy_nxt := yy_nxt_template%N")
 			if yy_ec /= Void then
 				a_file.put_string (Indentation)
-				a_file.put_string ("yy_ec ?= yy_ec_template%N")
+				a_file.put_string ("yy_ec := yy_ec_template%N")
 			end
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_accept ?= yy_accept_template%N")
+			a_file.put_string ("yy_accept := yy_accept_template%N")
 			a_file.put_string ("%T%Tend%N")
 		end
 

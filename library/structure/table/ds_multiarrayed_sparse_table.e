@@ -24,21 +24,7 @@ inherit
 			new_cursor
 		end
 
-	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
-		rename
-			FIXED_ARRAY_TYPE as FIXED_ITEM_ARRAY_TYPE
-		undefine
-			is_equal, copy
-		end
-
-	KL_IMPORTED_FIXED_ARRAY_TYPE2 [K]
-		rename
-			FIXED_ARRAY_TYPE as FIXED_KEY_ARRAY_TYPE
-		undefine
-			is_equal, copy
-		end
-
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 		undefine
 			is_equal, copy
 		end
@@ -279,7 +265,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	items_item (i: INTEGER): G is
 			-- Item at position `i' in `items'
 		local
-			subitems: like FIXED_ITEM_ARRAY_TYPE
+			subitems: SPECIAL [G]
 		do
 			subitems := items.item (i // chunk_size)
 			if subitems /= Void then
@@ -290,13 +276,13 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	items_put (v: G; i: INTEGER) is
 			-- Put `v' at position `i' in `items'.
 		local
-			subitems: like FIXED_ITEM_ARRAY_TYPE
+			subitems: SPECIAL [G]
 			j: INTEGER
 		do
 			j := i // chunk_size
 			subitems := items.item (j)
 			if subitems = Void then
-				subitems := FIXED_ITEM_ARRAY_.make (chunk_size)
+				subitems := special_item_routines.make (chunk_size)
 				items.put (subitems, j)
 			end
 			subitems.put (v, i \\ chunk_size)
@@ -305,7 +291,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	keys_item (i: INTEGER): K is
 			-- Item at position `i' in `keys'
 		local
-			subkeys: like FIXED_KEY_ARRAY_TYPE
+			subkeys: SPECIAL [K]
 		do
 			subkeys := keys.item (i // chunk_size)
 			if subkeys /= Void then
@@ -316,7 +302,7 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	clashes_item (i: INTEGER): INTEGER is
 			-- Item at position `i' in `clashes'
 		local
-			subclashes: like FIXED_INTEGER_ARRAY_TYPE
+			subclashes: SPECIAL [INTEGER]
 		do
 			subclashes := clashes.item (i // chunk_size)
 			if subclashes /= Void then
@@ -326,13 +312,13 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	items: ARRAY [like FIXED_ITEM_ARRAY_TYPE]
+	items: ARRAY [SPECIAL [G]]
 			-- Storage for items of the table indexed from 1 to `capacity'
 
 	make_items (n: INTEGER) is
 			-- Create `items'.
 		do
-			create FIXED_ITEM_ARRAY_
+			create special_item_routines
 			create items.make (0, ((n - 1) // chunk_size))
 		end
 
@@ -367,26 +353,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	keys: ARRAY [like FIXED_KEY_ARRAY_TYPE]
+	keys: ARRAY [SPECIAL [K]]
 			-- Storage for keys of the table indexed from 1 to `capacity'
 
 	make_keys (n: INTEGER) is
 			-- Create `keys'.
 		do
-			create FIXED_KEY_ARRAY_
+			create special_key_routines
 			create keys.make (0, ((n - 1) // chunk_size))
 		end
 
 	keys_put (k: K; i: INTEGER) is
 			-- Put `k' at position `i' in `keys'.
 		local
-			subkeys: like FIXED_KEY_ARRAY_TYPE
+			subkeys: SPECIAL [K]
 			j: INTEGER
 		do
 			j := i // chunk_size
 			subkeys := keys.item (j)
 			if subkeys = Void then
-				subkeys := FIXED_KEY_ARRAY_.make (chunk_size)
+				subkeys := special_key_routines.make (chunk_size)
 				keys.put (subkeys, j)
 			end
 			subkeys.put (k, i \\ chunk_size)
@@ -423,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clashes: ARRAY [like FIXED_INTEGER_ARRAY_TYPE]
+	clashes: ARRAY [SPECIAL [INTEGER]]
 			-- Indexes in `items' and `keys'  when there are clashes
 			-- in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
@@ -439,13 +425,13 @@ feature {NONE} -- Implementation
 	clashes_put (v: INTEGER; i: INTEGER) is
 			-- Put `v' at position `i' in `clashes'.
 		local
-			subclashes: like FIXED_INTEGER_ARRAY_TYPE
+			subclashes: SPECIAL [INTEGER]
 			j: INTEGER
 		do
 			j := i // chunk_size
 			subclashes := clashes.item (j)
 			if subclashes = Void then
-				subclashes := FIXED_INTEGER_ARRAY_.make (chunk_size)
+				subclashes := SPECIAL_INTEGER_.make (chunk_size)
 				clashes.put (subclashes, j)
 			end
 			subclashes.put (v, i \\ chunk_size)
@@ -482,7 +468,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	slots: ARRAY [like FIXED_INTEGER_ARRAY_TYPE]
+	slots: ARRAY [SPECIAL [INTEGER]]
 			-- Indexes in `items' and `keys', indexed by hash codes
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
@@ -496,7 +482,7 @@ feature {NONE} -- Implementation
 	slots_item (i: INTEGER): INTEGER is
 			-- Item at position `i' in `slots'
 		local
-			subslots: like FIXED_INTEGER_ARRAY_TYPE
+			subslots: SPECIAL [INTEGER]
 		do
 			subslots := slots.item (i // chunk_size)
 			if subslots /= Void then
@@ -507,13 +493,13 @@ feature {NONE} -- Implementation
 	slots_put (v: INTEGER; i: INTEGER) is
 			-- Put `v' at position `i' in `slots'.
 		local
-			subslots: like FIXED_INTEGER_ARRAY_TYPE
+			subslots: SPECIAL [INTEGER]
 			j: INTEGER
 		do
 			j := i // chunk_size
 			subslots := slots.item (j)
 			if subslots = Void then
-				subslots := FIXED_INTEGER_ARRAY_.make (chunk_size)
+				subslots := SPECIAL_INTEGER_.make (chunk_size)
 				slots.put (subslots, j)
 			end
 			subslots.put (v, i \\ chunk_size)
@@ -550,11 +536,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	FIXED_ITEM_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
-			-- Routines that ought to be in FIXED_ARRAY
+	special_item_routines: KL_SPECIAL_ROUTINES [G]
+			-- Routines that ought to be in SPECIAL
 
-	FIXED_KEY_ARRAY_: KL_FIXED_ARRAY_ROUTINES [K]
-			-- Routines that ought to be in FIXED_ARRAY
+	special_key_routines: KL_SPECIAL_ROUTINES [K]
+			-- Routines that ought to be in SPECIAL
 
 invariant
 

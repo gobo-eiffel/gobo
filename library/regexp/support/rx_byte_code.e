@@ -16,7 +16,6 @@ inherit
 
 	ANY -- Export features of ANY.
 
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
 	KL_IMPORTED_SPECIAL_ROUTINES
 
 creation
@@ -226,7 +225,7 @@ feature -- Element Change
 			a_set_not_void: a_set /= Void
 		local
 			i, j, nb: INTEGER
-			a_booleans: like FIXED_BOOLEAN_ARRAY_TYPE
+			a_booleans: SPECIAL [BOOLEAN]
 		do
 			i := character_sets_count
 			append_integer (i)

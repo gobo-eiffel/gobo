@@ -387,7 +387,7 @@ feature -- Output
 				a_file.put_new_line
 				a_file.put_line ("%Tif yyvsp >= yyvsc then")
 				a_file.put_line ("%T%Tyyvsc := yyvsc + yyInitial_stack_size")
-				a_file.put_line ("%T%Tyyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)")
+				a_file.put_line ("%T%Tyyvs := SPECIAL_.resize (yyvs, yyvsc)")
 				a_file.put_line ("%T%Tdebug (%"GEYACC%")")
 				a_file.put_line ("%T%T%Tstd.error.put_string (%"Stack (yyvs) size increased to %")")
 				a_file.put_line ("%T%T%Tstd.error.put_integer (yyvsc)")

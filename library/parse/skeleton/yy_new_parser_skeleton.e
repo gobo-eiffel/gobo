@@ -28,9 +28,6 @@ inherit
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 		
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
-		export {NONE} all end
-		
 	KL_IMPORTED_SPECIAL_ROUTINES
 		export {NONE} all end
 
@@ -39,7 +36,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new parser.
 		do
-			yyss := FIXED_INTEGER_ARRAY_.make (yyInitial_stack_size)
+			yyss := SPECIAL_INTEGER_.make (yyInitial_stack_size)
 			yy_create_value_stacks
 			yy_build_parser_tables
 		end
@@ -89,7 +86,7 @@ feature -- Parsing
 					yyssp := yyssp + 1
 					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyss := FIXED_INTEGER_ARRAY_.resize (yyss, yystacksize)
+						yyss := SPECIAL_INTEGER_.resize (yyss, yystacksize)
 						debug ("GEYACC")
 							std.error.put_string ("Stack (yyss) size increased to ")
 							std.error.put_integer (yystacksize)
@@ -538,28 +535,28 @@ feature {YY_PARSER_ACTION} -- Element change
 
 feature {NONE} -- Tables
 
-	yytranslate: like FIXED_INTEGER_ARRAY_TYPE
+	yytranslate: SPECIAL [INTEGER]
 			-- Mapping between lex token numbers and
 			-- yacc internal token numbers
 
-	yyr1: like FIXED_INTEGER_ARRAY_TYPE
+	yyr1: SPECIAL [INTEGER]
 			-- Symbol number of symbol that each rule derives
 			-- (i.e. left-hand-side of the rule), indexed by
 			-- rule id
 
-	yydefact: like FIXED_INTEGER_ARRAY_TYPE
+	yydefact: SPECIAL [INTEGER]
 			-- Default rule to reduce in each state,
 			-- when `yytable' doesn't specify something
 			-- else to do. 0 means the default is an
 			-- error. Indexed by state id
 
-	yydefgoto: like FIXED_INTEGER_ARRAY_TYPE
+	yydefgoto: SPECIAL [INTEGER]
 			-- Default state to go to after a reduction
 			-- of a rule that generates a variable,
 			-- except when `yytable' specifies something
 			-- else to do. Indexed by variable id - nb_tokens
 
-	yypact: like FIXED_INTEGER_ARRAY_TYPE
+	yypact: SPECIAL [INTEGER]
 			-- Index in `yytable' of the portion describing
 			-- a state, indexed by state id. The lookahead
 			-- token's type is used to index that portion
@@ -570,7 +567,7 @@ feature {NONE} -- Tables
 			-- zero, the default action from `yydefact' for
 			-- that state is used.
 
-	yypgoto: like FIXED_INTEGER_ARRAY_TYPE
+	yypgoto: SPECIAL [INTEGER]
 			-- Index in `yytable' of the portion describing
 			-- what to do after reducing a rule that derives
 			-- a variable, indexed by variable id - nb_tokens.
@@ -580,11 +577,11 @@ feature {NONE} -- Tables
 			-- is the state to go to if the corresponding
 			-- value in `yycheck' is `s'.
 
-	yytable: like FIXED_INTEGER_ARRAY_TYPE
+	yytable: SPECIAL [INTEGER]
 			-- Filled with portions for different uses, found
 			-- via `yypact' and `yypgoto'
 
-	yycheck: like FIXED_INTEGER_ARRAY_TYPE
+	yycheck: SPECIAL [INTEGER]
 			-- Array indexed in parallel with `yytable'. It
 			-- indicates, in a roundabout way, the bounds of
 			-- the portion you are trying to examine. Suppose
@@ -596,11 +593,11 @@ feature {NONE} -- Tables
 			-- or `yydefgoto') should be used. Otherwise,
 			-- `yytable.item (p+i)' should be used.
 
-	yytypes1: like FIXED_INTEGER_ARRAY_TYPE
+	yytypes1: SPECIAL [INTEGER]
 			-- Array indexed by state id containing the type id
 			-- of the accessing symbol associated with this state
 
-	yytypes2: like FIXED_INTEGER_ARRAY_TYPE
+	yytypes2: SPECIAL [INTEGER]
 			-- Array indexed by internal token id (from 0 to yyNtbase-1)
 			-- containing the type id of the corresponding token
 
@@ -667,12 +664,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	yyfixed_array (an_array: ARRAY [INTEGER]): like FIXED_INTEGER_ARRAY_TYPE is
+	yyfixed_array (an_array: ARRAY [INTEGER]): SPECIAL [INTEGER] is
 			-- Zero-based array containing items of `an_array'
 		require
 			an_array_not_void: an_array /= Void
 		do
-			Result := FIXED_INTEGER_ARRAY_.to_fixed_array (an_array)
+			Result := SPECIAL_INTEGER_.to_special (an_array)
 		ensure
 			array_not_void: Result /= Void
 			count_set: Result.count = an_array.count
@@ -680,8 +677,7 @@ feature {NONE} -- Implementation
 			--   Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
-	yyss: like FIXED_INTEGER_ARRAY_TYPE
-			-- FIXED_ARRAY [INTEGER]
+	yyss: SPECIAL [INTEGER]
 			-- State stack
 
 	yyssp: INTEGER

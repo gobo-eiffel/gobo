@@ -21,7 +21,7 @@ inherit
 			flush_input_buffer
 		end
 
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_SPECIAL_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
 
@@ -396,12 +396,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	yy_fixed_array (an_array: ARRAY [INTEGER]): like FIXED_INTEGER_ARRAY_TYPE is
+	yy_fixed_array (an_array: ARRAY [INTEGER]): SPECIAL [INTEGER] is
 			-- Zero-based array containing items of `an_array'
 		require
 			an_array_not_void: an_array /= Void
 		do
-			Result := FIXED_INTEGER_ARRAY_.to_fixed_array (an_array)
+			Result := SPECIAL_INTEGER_.to_special (an_array)
 		ensure
 			array_not_void: Result /= Void
 			count_set: Result.count = an_array.count

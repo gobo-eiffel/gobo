@@ -27,9 +27,6 @@ inherit
 	KL_IMPORTED_SPECIAL_ROUTINES
 		export {NONE} all end
 
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
-		export {NONE} all end
-
 creation
 
 	make
@@ -43,7 +40,7 @@ feature {NONE} -- Initialization
 			-- strings.
 		do
 			precursor
-			offset_vector := FIXED_INTEGER_ARRAY_.make (64)
+			offset_vector := SPECIAL_INTEGER_.make (64)
 			offset_vector_count := 0
 			brastart_capacity := 8
 			brastart_vector := SPECIAL_INTEGER_.make (brastart_capacity)
@@ -106,7 +103,7 @@ feature -- Compilation
 			precursor (a_pattern)
 			offset_vector_count := subexpression_count * 2 + 2
 			if offset_vector.count < offset_vector_count then
-				offset_vector := FIXED_INTEGER_ARRAY_.resize (offset_vector, offset_vector_count)
+				offset_vector := SPECIAL_INTEGER_.resize (offset_vector, offset_vector_count)
 			end
 		end
 
@@ -191,9 +188,7 @@ feature {NONE} -- Access
 	eptr: INTEGER
 			-- Position in `subject'
 
-	offset_vector: like FIXED_INTEGER_ARRAY_TYPE
-			-- FIXED_ARRAY[INTEGER]
-
+	offset_vector: SPECIAL [INTEGER]
 	offset_vector_count: INTEGER
 			-- Number of items in `offset_vector'
 
