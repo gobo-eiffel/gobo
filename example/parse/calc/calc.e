@@ -133,7 +133,7 @@ feature {NONE} -- Tables
 			Result := INTEGER_ARRAY_.make_from_array (<<
 			    1,    0,    0,    3,    0,    6,    0,    2,    0,    0,
 			   11,    5,    4,    0,    0,    0,    0,   12,   10,    9,
-			    0,    0,    0,    0>>, 0)
+			    7,    8,    0,    0>>, 0)
 		end
 
 	yydefgoto_: ARRAY [INTEGER] is
@@ -145,9 +145,9 @@ feature {NONE} -- Tables
 	yypact_: ARRAY [INTEGER] is
 		once
 			Result := INTEGER_ARRAY_.make_from_array (<<
-			 -32768,    5,   18, -32768,   18, -32768,   -7, -32768,   26,   13,
-			   33, -32768, -32768,   18,   18,   18,   18, -32768,   33,   33,
-			   33,   33,    1, -32768>>, 0)
+			 -32768,    5,   18, -32768,   18, -32768,    0, -32768,   26,   13,
+			 -32768, -32768, -32768,   18,   18,   18,   18, -32768, -32768, -32768,
+			   -3,   -3,    1, -32768>>, 0)
 		end
 
 	yypgoto_: ARRAY [INTEGER] is
@@ -159,21 +159,19 @@ feature {NONE} -- Tables
 	yytable_: ARRAY [INTEGER] is
 		once
 			Result := INTEGER_ARRAY_.make_from_array (<<
-			    9,   23,   10,   11,    0,   22,    6,    0,    5,    4,
-			    0,   18,   19,   20,   21,    3,    2,   16,   15,   14,
+			    9,   23,   10,   14,   13,   22,    6,    0,    5,    4,
+			   11,   18,   19,   20,   21,    3,    2,   16,   15,   14,
 			   13,    5,    4,    0,    0,   17,    0,    0,    0,    2,
-			   16,   15,   14,   13,    0,    0,   12,   16,   15,   14,
-			   13>>, 0)
+			   16,   15,   14,   13,    0,    0,   12>>, 0)
 		end
 
 	yycheck_: ARRAY [INTEGER] is
 		once
 			Result := INTEGER_ARRAY_.make_from_array (<<
-			    2,    0,    4,   10,    0,    0,    1,    0,    3,    4,
-			    0,   13,   14,   15,   16,   10,   11,    4,    5,    6,
+			    2,    0,    4,    6,    7,    0,    1,    0,    3,    4,
+			   10,   13,   14,   15,   16,   10,   11,    4,    5,    6,
 			    7,    3,    4,    0,    0,   12,    0,    0,    0,   11,
-			    4,    5,    6,    7,    0,    0,   10,    4,    5,    6,
-			    7>>, 0)
+			    4,    5,    6,    7,    0,    0,   10>>, 0)
 		end
 
 feature {NONE} -- Constants
@@ -187,7 +185,7 @@ feature {NONE} -- Constants
 	yyNtbase: INTEGER is 13
 			-- Number of tokens
 
-	yyLast: INTEGER is 40
+	yyLast: INTEGER is 36
 			-- Upper bound of `yytable' and `yycheck'
 
 	yyMax_token: INTEGER is 259
