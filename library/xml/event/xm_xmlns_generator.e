@@ -16,6 +16,7 @@ inherit
 	
 	XM_CALLBACKS_FILTER
 		redefine
+			has_resolved_namespaces,
 			on_start,
 			on_start_tag,
 			on_attribute,
@@ -205,5 +206,13 @@ feature -- Events
 			create context.make
 			next.on_finish
 		end
-		
+
+feature -- Events mode
+
+	has_resolved_namespaces: BOOLEAN is
+			-- Namespaces required
+		do
+			Result := True
+		end
+
 end

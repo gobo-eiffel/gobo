@@ -67,7 +67,7 @@ feature -- Tag
 			-- Start of start tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
-			--unresolved_namespace_is_void: a_namespace may be void
+			unresolved_namespace_is_void: has_resolved_namespaces implies a_namespace /= Void
 			local_part: is_local_part (a_local_part)
 		deferred
 		end
@@ -76,7 +76,7 @@ feature -- Tag
 			-- Start of attribute.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
-			--unresolved_namespace_is_void: a_namespace may be void
+			unresolved_namespace_is_void: has_resolved_namespaces implies a_namespace /= Void
 			local_part: is_local_part (a_local_part)
 			a_value_not_void: a_value /= Void
 		deferred
@@ -91,7 +91,7 @@ feature -- Tag
 			-- End tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
-			--unresolved_namespace_is_void: a_namespace may be void
+			unresolved_namespace_is_void: has_resolved_namespaces implies a_namespace /= Void
 			local_part: is_local_part (a_local_part)
 		deferred
 		end
@@ -129,6 +129,17 @@ feature -- Support
 			Result := a /= Void and then a.count > 0
 		ensure
 			definition: Result = (a /= Void and then a.count > 0)
+		end
+
+feature -- Assertion
+
+	has_resolved_namespaces: BOOLEAN is
+			-- Does this callback event consumer expect resolved
+			-- namespaces? 
+			-- If True, it must be located downstream of a filter 
+			-- or source producing resolved namespaces such 
+			-- as XM_NAMESPACE_RESOLVER.
+		do
 		end
 
 end

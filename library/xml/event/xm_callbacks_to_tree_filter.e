@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			has_resolved_namespaces,
 			on_start,
 			on_start_tag,
 			on_attribute,
@@ -211,5 +212,13 @@ feature {NONE} -- Implementation (position)
 
 	source_parser: XM_PARSER
 			-- Source parser
+
+feature -- Events mode
+
+	has_resolved_namespaces: BOOLEAN is
+			-- Namespaces required
+		do
+			Result := True
+		end
 
 end
