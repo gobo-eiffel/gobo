@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel infix free-operator feature names"
+		"Eiffel infix 'free-operator' feature names"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -41,6 +41,10 @@ feature {NONE} -- Initialization
 		do
 			operator_name := a_name
 			position := a_position
+			name := STRING_.make (operator_name.count + 8)
+			name.append_string (infix_double_quote)
+			name.append_string (operator_name)
+			name.append_character (double_quote)
 			hash_code := STRING_.case_insensitive_hash_code (a_name)
 		ensure
 			operator_name_set: operator_name = a_name
@@ -48,6 +52,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	name: STRING
+			-- Name of feature
 
 	operator_name: STRING
 			-- Name of free-operator
@@ -70,6 +77,11 @@ feature -- Comparison
 				Result := STRING_.same_case_insensitive (operator_name, op.operator_name)
 			end
 		end
+
+feature {NONE} -- Constants
+
+	infix_double_quote: STRING is "infix %""
+	double_quote: CHARACTER is '%"'
 
 invariant
 

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel infix / feature names"
+		"Eiffel infix '/' feature names"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -22,6 +22,9 @@ creation
 	make
 
 feature -- Access
+
+	name: STRING is "infix %"/%""
+			-- Name of feature
 
 	hash_code: INTEGER is 4
 			-- Hash code

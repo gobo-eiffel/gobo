@@ -16,6 +16,9 @@ deferred class ET_INFIX_NAME
 inherit
 
 	ET_FEATURE_NAME
+		redefine
+			is_infix
+		end
 
 feature {NONE} -- Initialization
 
@@ -29,9 +32,9 @@ feature {NONE} -- Initialization
 			position_set: position = a_position
 		end
 
-feature -- Access
+feature -- Status report
 
-	name: STRING is "infix"
-			-- Name of feature
+	is_infix: BOOLEAN is True
+			-- Is current feature name of the form 'infix ...'?
 
 end -- class ET_INFIX_NAME
