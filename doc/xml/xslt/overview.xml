@@ -92,7 +92,7 @@
 	</listitem>
 	<listitem>
 	  <para>
-	    <link linkend="trace_listener"><classname>XM_XSLT_TRACE_LISTENER</classname></link>
+	    <link linkend="tracing"><classname>XM_XSLT_TRACE_LISTENER</classname></link>
 	  </para>
 	</listitem>
 	<listitem>

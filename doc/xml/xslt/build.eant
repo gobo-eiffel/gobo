@@ -47,6 +47,9 @@
 		<set name="next_chapter" value="error_listener"/>
 		<geant target="xslt"/>
 
+		<set name="next_chapter" value="tracing"/>
+		<geant target="xslt"/>
+
 		<set name="next_chapter" value="transformation_result"/>
 		<geant target="xslt"/>
 
