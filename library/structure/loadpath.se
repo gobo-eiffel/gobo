@@ -12,6 +12,7 @@ ${GOBO}/library/structure/container/
 ${GOBO}/library/structure/cursor/
 ${GOBO}/library/structure/dispenser/
 ${GOBO}/library/structure/list/
+${GOBO}/library/structure/set/
 ${GOBO}/library/structure/sort/
 ${GOBO}/library/structure/support/
 ${GOBO}/library/structure/table/
