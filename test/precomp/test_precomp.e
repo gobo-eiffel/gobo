@@ -5,7 +5,7 @@ indexing
 		"Test precompilation of Gobo Library classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ inherit
 		end
 
 	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
+	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -224,7 +227,8 @@ feature {NONE} -- Precompilation
 						end
 						a_dir.close
 					else
-						assert (a_dirname + "_open_read", False)
+						-- assert (a_dirname + "_open_read", False)
+						std.error.put_line ("Cannot read %"" + a_dirname + "%"")
 					end
 					a_file.read_line
 				end

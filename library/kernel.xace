@@ -120,15 +120,43 @@
 		<option name="abstract" value="true"/>
 		<cluster name="se" location="${SmartEiffelDirectory}/lib" unless="${SE_0_74}">
 			<option name="abstract" value="true"/>
+			<cluster name="abilities"/>
 			<cluster name="base"/>
-			<cluster name="io"/>
-			<cluster name="iterator"/>
+			<cluster name="io">
+				<cluster name="filter"/>
+				<cluster name="low_level"/>
+				<cluster name="terminal"/>
+			</cluster>
+			<cluster name="iterator">
+				<cluster name="internal"/>
+			</cluster>
 			<cluster name="kernel"/>
 			<cluster name="misc"/>
 			<cluster name="number"/>
+			<cluster name="numeric">
+				<cluster name="internal"/>
+			</cluster>
 			<cluster name="random"/>
+			<cluster name="sequencer"/>
+			<cluster name="signal"/>
 			<cluster name="sorting"/>
-			<cluster name="time"/>
+			<cluster name="storage">
+				<cluster name="collection"/>
+				<cluster name="collection2"/>
+				<cluster name="collection3"/>
+				<cluster name="dictionary"/>
+				<cluster name="internal"/>
+				<cluster name="low_level"/>
+				<cluster name="set"/>
+			</cluster>
+			<cluster name="string">
+				<cluster name="internal"/>
+				<cluster name="low_level"/>
+			</cluster>
+			<cluster name="time">
+				<cluster name="formatter"/>
+			</cluster>
+			<cluster name="unicode"/>
 		</cluster>
 		<cluster name="se" location="${SmallEiffelDirectory}/lib" if="${SE_0_74}">
 			<option name="abstract" value="true"/>

@@ -31,6 +31,9 @@ inherit
 #ifdef ISE
 			{RAW_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
 #endif
+#ifdef SE
+			{ANY} close;
+#endif
 			{NONE} all
 		end
 

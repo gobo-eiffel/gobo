@@ -6,7 +6,7 @@ indexing
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,9 @@ inherit
 		export
 #ifdef ISE
 			{RAW_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
+#endif
+#ifdef SE
+			{ANY} close;
 #endif
 			{NONE} all
 		end

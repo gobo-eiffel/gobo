@@ -115,6 +115,7 @@ inherit
 		export
 #ifdef SE
 			{UC_STRING_HANDLER} storage, compare;
+			{STRING} old_infix_less;
 #endif
 #ifdef ISE
 			{STRING} share, area, old_is_empty, mirror;
