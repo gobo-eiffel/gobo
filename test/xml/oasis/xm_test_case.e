@@ -17,10 +17,13 @@ inherit
 	TS_TEST_CASE
 
 	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
 
 	UC_UNICODE_FACTORY
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 feature -- XML asserts
 
@@ -136,7 +139,7 @@ feature {NONE} -- Debug
 				std.output.put_new_line
 			end
 		end
-
+		
 feature {NONE} -- Parser
 
 	parser: XM_PARSER
