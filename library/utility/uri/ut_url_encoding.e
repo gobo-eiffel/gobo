@@ -22,6 +22,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+	
 feature -- Escape/unescape data characters
 
 	unescape_string (a_string: STRING): STRING is
@@ -33,7 +36,7 @@ feature -- Escape/unescape data characters
 			c: CHARACTER
 			d: STRING
 		do
-			create Result.make_from_string (a_string)
+			Result := clone (a_string)
 			from
 				i := 1
 			until
@@ -60,28 +63,69 @@ feature -- Escape/unescape data characters
 			decoded_string_cannot_be_larger: Result.count <= a_string.count
 		end
 
+	unescape_utf8 (a_string: STRING): STRING is
+			-- Unescape string, and convert UTF8 encoded result to string.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := unescape_string (a_string)
+			if maximum_character_code_in_string (Result) > 127 and utf8.valid_utf8 (Result) then
+				Result := new_unicode_string_from_utf8 (Result)
+			end 
+		ensure
+			decoded_string_not_void: Result /= Void
+			decoded_string_cannot_be_larger: Result.count <= a_string.count
+		end
+		
 	escape_string (a_string: STRING): STRING is
-			-- Escape reserved characters in `in' and return a new
+			-- Escape reserved characters in `a_string' and return a new
 			-- string.
 		require
 			a_string_not_void: a_string /= Void
+			no_high_characters: maximum_character_code_in_string (a_string) < 256
+		do
+			Result := escape_custom (a_string, Default_escaped, True)
+		ensure
+			encoded_string_not_void: Result /= Void
+			no_spaces: not Result.has (' ')
+			encoded_string_cannot_be_smaller: Result.count >= a_string.count
+		end
+		
+	escape_utf8 (a_string: STRING): STRING is
+			-- Escape reserved characters in `in' and return a new
+			-- string. Characters above 128 are converted to UTF8 
+			-- representation before being encoded.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := escape_custom (utf8.to_utf8 (a_string), Default_escaped, True)
+		ensure
+			encoded_string_not_void: Result /= Void
+			no_spaces: not Result.has (' ')
+			encoded_string_cannot_be_smaller: Result.count >= a_string.count
+		end
+		
+	escape_custom (a_string: STRING; unescaped_chars: DS_HASH_SET [CHARACTER]; escape_space_as_plus: BOOLEAN): STRING is
+			-- Escape all characters except those in 'unescaped_chars' `in' 
+			-- and return a new string.
+		require
+			a_string_not_void: a_string /= Void
+			unescaped_chars_not_void: unescaped_chars /= Void
+			no_high_characters: maximum_character_code_in_string (a_string) < 256
 		local
 			i: INTEGER
 			c: CHARACTER
 		do
-			create Result.make_from_string (a_string)
+			Result := clone (a_string)
 			from
 				i := 1
 			until
 				i > Result.count
 			loop
 				c := Result.item (i)
-				inspect c
-				when ' ' then
+				if escape_space_as_plus and c = ' ' then
 					Result.put ('+', i)
-				when '0'..'9','A'..'Z','a'..'z' then
-					-- ok
-				when '-','_','.','!','~','*','%'', '(' ,')' then
+				elseif unescaped_chars.has (c) then
 					-- ok
 				else
 					Result.put ('%%', i)
@@ -92,9 +136,80 @@ feature -- Escape/unescape data characters
 			end
 		ensure
 			encoded_string_not_void: Result /= Void
-			no_spaces: not Result.has (' ')
+			space_as_plus: escape_space_as_plus implies 
+					(not Result.has (' ') and (a_string.has (' ') implies Result.has ('+')))
 			encoded_string_cannot_be_smaller: Result.count >= a_string.count
 		end
+		
+feature -- Character sets
+
+	maximum_character_code_in_string (a_string: STRING): INTEGER is
+			-- Maximum character code used in string
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > a_string.count
+			loop
+				if a_string.item_code (i) > Result then
+					Result := a_string.item_code (i)
+				end
+				i := i + 1
+			end
+		ensure
+			positive_result: Result >= 0
+			empty_zero: a_string.is_empty implies Result = 0
+		end
+		
+	new_character_set (some_characters: STRING): DS_HASH_SET [CHARACTER] is
+			-- Create set of characters for use with 'escape_custom'.
+		require
+			some_characters_not_void: some_characters /= Void
+			--occurrences: for all c in some_characters: some_characters.occurrences (c) = 1
+		local
+			i: INTEGER
+		do
+			create Result.make_default
+			from
+				i := 1
+			until
+				i > some_characters.count
+			loop
+				Result.force (some_characters.item (i))
+				i := i + 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			count: some_characters.count = Result.count
+		end
+		
+	Default_escaped: DS_HASH_SET [CHARACTER] is
+			-- Default character set to escape.
+		once
+			Result := new_character_set (Rfc_lowalpha_characters 
+					+ Rfc_upalpha_characters
+					+ Rfc_digit_characters
+					+ Rfc_mark_characters)
+		end
+	
+	Rfc_lowalpha_characters: STRING is "abcdefghijklmnopqrstuvwxyz"
+			-- RFC 2396 'lowalpha' characters
+			
+	Rfc_upalpha_characters: STRING is "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			-- RFC 2396 'lowalpha' characters
+	
+	Rfc_digit_characters: STRING is "0123456789"
+			-- RFC 2396 'digit' characters
+		
+	Rfc_mark_characters: STRING is "-_.!~*%'()"
+			-- RFC 2396 'mark' characters
+			
+	Rfc_reserved_characters: STRING is ";/?:@&=+$,"
+			-- RFC 2396 'reserved' characters
 
 feature {NONE} -- Implementation
 
