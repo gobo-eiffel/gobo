@@ -35,7 +35,7 @@ feature -- AST factory
 			actual_arguments_not_void: Result /= Void
 		end
 
-	new_actual_generics (a_type: ET_TYPE): ET_ACTUAL_GENERIC_TYPES is
+	new_actual_generics (a_type: ET_TYPE): ET_ACTUAL_GENERIC_PARAMETERS is
 			-- New actual generic parameter list with initially
 			-- one actual generic parameter `a_type'
 		require
@@ -103,28 +103,24 @@ feature -- AST factory
 			attribute_not_void: Result /= Void
 		end
 
-	new_bit_identifier (an_id: ET_IDENTIFIER): ET_TYPE is
+	new_bit_identifier (an_id: ET_IDENTIFIER; p: ET_POSITION): ET_BIT_IDENTIFIER is
 			-- New 'BIT Identifier' type
 		require
 			an_id_not_void: an_id /= Void
+			p_not_void: p /= Void
 		do
-			!! Result
-print ("@@@ -- 'BIT ")
-print (an_id.name)
-print ("' not supported yet.%N")
+			!! Result.make (an_id, p)
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	new_bit_type (an_int: ET_INTEGER_CONSTANT): ET_TYPE is
-			-- New 'BIT n' type
+	new_bit_type (an_int: ET_INTEGER_CONSTANT; p: ET_POSITION): ET_BIT_TYPE is
+			-- New 'BIT N' type
 		require
 			an_int_not_void: an_int /= Void
+			p_not_void: p /= Void
 		do
-			!! Result
-print ("@@@ -- 'BIT ")
-print (an_int.literal)
-print ("' not supported yet.%N")
+			!! Result.make (an_int, p)
 		ensure
 			type_not_void: Result /= Void
 		end
@@ -461,7 +457,7 @@ print ("' not supported yet.%N")
 			formal_arguments_not_void: Result /= Void
 		end
 
-	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_TYPE is
+	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_PARAMETER is
 			-- New formal generic parameter
 		require
 			a_name_not_void: a_name /= Void
@@ -471,13 +467,23 @@ print ("' not supported yet.%N")
 			formal_generic_not_void: Result /= Void
 		end
 
-	new_formal_generics (a_type: ET_FORMAL_GENERIC_TYPE): ET_FORMAL_GENERIC_TYPES is
-			-- New formal generic parameter list with initially
-			-- one formal generic parameter `a_type'
+	new_formal_generic_type (a_name: ET_IDENTIFIER; an_index: INTEGER): ET_FORMAL_GENERIC_TYPE is
+			-- New formal generic parameter type
 		require
-			a_type_not_void: a_type /= Void
+			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_type)
+			!! Result.make (a_name, an_index)
+		ensure
+			formal_generic_type_not_void: Result /= Void
+		end
+
+	new_formal_generics (a_parameter: ET_FORMAL_GENERIC_PARAMETER): ET_FORMAL_GENERIC_PARAMETERS is
+			-- New formal generic parameter list with initially
+			-- one formal generic parameter `a_parameter'
+		require
+			a_parameter_not_void: a_parameter /= Void
+		do
+			!! Result.make (a_parameter)
 		ensure
 			formal_generics_not_void: Result /= Void
 		end
@@ -704,12 +710,13 @@ print ("' not supported yet.%N")
 			type_not_void: Result /= Void
 		end
 
-	new_like_identifier (an_id: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
+	new_like_identifier (an_id: ET_IDENTIFIER; p: ET_POSITION): ET_LIKE_IDENTIFIER is
 			-- New 'like Identifier' type
 		require
 			an_id_not_void: an_id /= Void
+			p_not_void: p /= Void
 		do
-			!! Result.make (an_id)
+			!! Result.make (an_id, p)
 		ensure
 			type_not_void: Result /= Void
 		end
