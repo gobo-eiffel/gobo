@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<cluster name="geant" location="${GOBO}/src/geant">
+
+	<description>
+		system:     "Gobo Eiffel Ant"
+		author:     "Sven Ehrke [sven.ehrke@web.de]"
+		copyright:  "Copyright (c) 2002, Sven Ehrke and others"
+		license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:       "$Date$"
+		revision:   "$Revision$"
+	</description>
+
+	<cluster name="command"/>
+	<cluster name="task"/>
+	<cluster name="parser"/>
+
+</cluster>

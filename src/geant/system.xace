@@ -29,12 +29,7 @@
 			<optimize enable="False"/>
 		</option>
 
-		<cluster name="geant" location="${GOBO}/src/geant">
-			<cluster name="command"/>
-			<cluster name="task"/>
-			<cluster name="parser"/>
-		</cluster>
-
+		<mount location="${GOBO}/src/geant/cluster.xace"/>
 		<mount location="${GOBO}/library/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel.xace"/>
 
