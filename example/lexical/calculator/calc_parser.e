@@ -215,16 +215,22 @@ feature {NONE}
 
 -- line 59
 
+feature {NONE} -- debuging
+
 	print_item (v: INTEGER) is
+			-- print item 'v'
 		do
 			io.putint(v)
 			io.putchar(' ')
 		end -- print_item
 
+feature {ANY} -- creation
+
 	make is
+			-- start calculator
 		do
 			reset
 			parse
 		end -- make
 
-end -- CALC_PARSER
+end -- class CALC_PARSER
