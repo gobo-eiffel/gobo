@@ -13,10 +13,11 @@ content="text/html; charset=iso-8859-1">
 <table border="0" width="100%">
     <tr>
         <td><font size="6"><strong>Class DS_HASH_TABLE_CURSOR</strong></font></td>
-        <td align="right"><a><img src="../../image/previous.gif"
-        alt="Previous" width="40" height="40"></a><a><img
-        src="../../image/next.gif" alt="Next" width="40"
-        height="40"></a></td>
+        <td align="right"><a href="ds_hash_table.html"><img
+        src="../../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_indexable.html"><img
+        src="../../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
     </tr>
 </table>
 
@@ -40,33 +41,34 @@ color="#800000"><em>&gt;&quot;
 <pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
 
 <blockquote>
-    <pre><em>DS_HASH_TABLE_CURSOR </em>[<em>G</em>, <em>H</em> -&gt; <a
+    <pre><em>DS_HASH_TABLE_CURSOR </em>[<em>G</em>, <em>K</em> -&gt; <a
 href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
 
 <blockquote>
-    <pre><a href="ds_bilinear_cursor.html"><em>DS_BILINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
-    <a href="ds_linear_cursor.html"><em>DS_LINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
-        <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
-<a href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>]
-    <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
+    <pre><a href="ds_sparse_table_cursor.html"><em>DS_SPARSE_TABLE_CURSOR</em></a><em> </em>[<em>G</em>,<em> K</em>]<em>
+    </em><a href="ds_bilinear_cursor.html"><em>DS_BILINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_linear_cursor.html"><em>DS_LINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
+            <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
+<em>    </em><a href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>creation</strong></em></font></pre>
 
 <blockquote>
-    <pre><a name="make"><em>make</em></a><em> </em>(<em>a_hash_table</em>:<em> </em><font
+    <pre><a name="make"><em>make</em></a><em> </em>(<em>a_table</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#container"><em>container</em></a>)<em>
-        </em><font color="#008000">-- Create a new cursor for </font><em>a_hash_table</em><font
+        </em><font color="#008000">-- Create a new cursor for </font><em>a_table</em><font
 color="#008000">.</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
-        a_hash_table_not_void</em>:<em> a_hash_table</em> /=<em> </em><font
+        a_table_not_void</em>:<em> a_table</em> /=<em> </em><font
 color="#008080"><em>Void</em></font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
-        container_set</em>:<em> </em><a href="#container"><em>container</em></a> =<em> a_hash_table
+        container_set</em>:<em> </em><a href="#container"><em>container</em></a> =<em> a_table
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
 </blockquote>
 
@@ -84,11 +86,14 @@ color="#008000">.)</font><em>
 href="#off"><em>off</em></a></pre>
     <pre><a name="key"><em>key</em></a>:<em> K
         </em><font color="#008000">-- Key at cursor position</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table_cursor.html#key"><font color="#008000"><em>DS_SPARSE_TABLE_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
 href="#off"><em>off</em></a></pre>
     <pre><a name="container"><em>container</em></a>:<em> </em><a
-href="ds_hash_table.html"><em>DS_HASH_TABLE</em></a><em> </em>[<em>G</em>]<em>
+href="ds_hash_table.html"><em>DS_HASH_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]<em>
        </em><font color="#008000"> -- Hash table traversed</font><font
 color="#000080"><em><strong>
 </strong></em></font><font color="#008000">        -- (From </font><a
@@ -432,18 +437,20 @@ color="#008000"> -- class DS_HASH_TABLE_CURSOR</font></pre>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
         href="http://www.gobosoft.com"><img
         src="../../image/home.gif" alt="Home" border="0"
-        width="40" height="40"></a><a><img
-        src="../../image/toc.gif" alt="Toc" width="40"
-        height="40"></a><a><img src="../../image/previous.gif"
-        alt="Previous" width="40" height="40"></a><a><img
-        src="../../image/next.gif" alt="Next" width="40"
-        height="40"></a></td>
+        width="40" height="40"></a><a href="index.html"><img
+        src="../../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="ds_hash_table.html"><img
+        src="../../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_indexable.html"><img
+        src="../../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
     </tr>
 </table>
 </body>
