@@ -1,12 +1,32 @@
 <?xml version="1.0"?>
 
 <system name="geant">
+	<description>
+		system:     "Gobo Eiffel Ant"
+		author:     "Eric Bezault [ericb@gobosoft.com]"
+		copyright:  "Copyright (c) 2001, Eric Bezault and others"
+		license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:       "$Date$"
+		revision:   "$Revision$"
+	</description>
+
 	<root class="GEANT" creation="make"/>
 	<cluster>
-		<option>
+		<option unless="${DEBUG}">
+			<require enable="False"/>
+			<ensure enable="False"/>
+			<invariant enable="False"/>
+			<loop enable="False"/>
+			<check enable="False"/>
+			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
 			<require enable="True"/>
 			<ensure enable="True"/>
-			<optimize enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
 		</option>
 
 		<cluster name="geant" location="${GOBO}/src/geant">

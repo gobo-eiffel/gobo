@@ -12,12 +12,21 @@
 
 	<root class="GETEST" creation="execute"/>
 	<cluster>
-		<option>
+		<option unless="${DEBUG}">
 			<require enable="False"/>
 			<ensure enable="False"/>
 			<invariant enable="False"/>
 			<loop enable="False"/>
+			<check enable="False"/>
 			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
 		</option>
 
 		<cluster name="getest" location="${GOBO}/src/getest"/>
