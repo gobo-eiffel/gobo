@@ -447,6 +447,7 @@ feature -- Basic operations
 			l_digits: like digits
 			l_b_count, l_a_count: INTEGER
 			l_b_digits, l_a_digits: like digits
+			i_plus_j : INTEGER
 		do
 				-- Initialization.
 			-- grow (a.count + b.count + 2)
@@ -487,24 +488,26 @@ feature -- Basic operations
 				carry := 0
 				from
 					j := 0
+					i_plus_j := i + j
 				until
 					j >= l_a_count -- local_a.count
 				loop
 #ifdef VE
-					carry := carry + digit * l_a_digits.item (j).code + l_digits.item (i + j).code
-					l_digits.put (to_character (carry \\ 10), i + j)
+					carry := carry + digit * l_a_digits.item (j).code + l_digits.item (i_plus_j).code
+					l_digits.put (to_character (carry \\ 10), i_plus_j)
 #else
-					carry := carry + digit * l_a_digits.item (j) + l_digits.item (i + j)
-					l_digits.put ((carry \\ 10).to_integer_8, i + j)
+					carry := carry + digit * l_a_digits.item (j) + l_digits.item (i_plus_j)
+					l_digits.put ((carry \\ 10).to_integer_8, i_plus_j)
 #endif
 					carry := carry // 10
 					j := j + 1
+					i_plus_j := i_plus_j + 1
 				end
 				if carry > 0 then
 #ifdef VE
-					l_digits.put (to_character (carry), i + j)
+					l_digits.put (to_character (carry), i_plus_j)
 #else
-					l_digits.put (carry.to_integer_8, i + j)
+					l_digits.put (carry.to_integer_8, i_plus_j)
 #endif
 				end
 				i := i + 1
@@ -520,43 +523,38 @@ feature -- Basic operations
 			carry: INTEGER
 			index: INTEGER
 			digit: INTEGER
-			to_add: INTEGER
 			l_digits: like digits
-			l_count: INTEGER
-			shifting_delta: INTEGER
+			start : INTEGER
+			l_count : INTEGER
 		do
-			l_digits := digits
-			l_count := count
 			from
-				carry := 0
-				index := count - digits_count
-				to_add := other
-				shifting_delta := count + digits_count
+				l_digits := digits
+				l_count := count
+				carry := other
+				start := count - digits_count
+				index := start
 			until
 				index >= l_count
 			loop
-				if index > l_count - digits_count then
-					to_add := 0
-				end
 #ifdef VE
-				carry := carry + l_digits.item (index).code + to_add --item (index) + to_add
+				carry := carry + l_digits.item (index).code 
 #else
-				carry := carry + l_digits.item (index) + to_add
+				carry := carry + l_digits.item (index)
 #endif
 				digit := carry \\ 10
 #ifdef VE
-				l_digits.put (to_character (digit), index - count + digits_count) 
+				l_digits.put (to_character (digit), index - start) 
 #else
-				l_digits.put (digit.to_integer_8, index - count + digits_count)
+				l_digits.put (digit.to_integer_8, index - start)
 #endif
 				carry := carry // 10
 				index := index + 1
 			end
 			if carry /= 0 then
 #ifdef VE
-				l_digits.put (to_character (carry), index - count + digits_count) --put (carry, index - count + digits_count)
+				l_digits.put (to_character (carry), index - start) --put (carry, index - count + digits_count)
 #else
-				l_digits.put (carry.to_integer_8, index - count + digits_count)
+				l_digits.put (carry.to_integer_8, index - start)
 #endif
 				set_count (digits_count + 1)
 			else
@@ -638,33 +636,29 @@ feature -- Basic operations
 			-- restricted to `digits_count' most significant digits.
 		local
 			borrow: INTEGER
-			index, l_count, l_displacement: INTEGER
+			index, l_count, start: INTEGER
 			to_subtract: INTEGER
 			l_digits: like digits
 		do
 			from
-				borrow := 0
-				index := count - digits_count
-				to_subtract := other
+				borrow := -other
 				l_count := count
 				l_digits := digits
-				l_displacement := count - digits_count
+				start := count - digits_count
+				index := start
 			until
 				index = l_count
 			loop
-				if index > l_displacement then -- count - digits_count then
-					to_subtract := 0
-				end
 #ifdef VE
-				borrow := borrow + l_digits.item (index).code - to_subtract --item (index) - to_subtract
+				borrow := borrow + l_digits.item (index).code
 #else
-				borrow := borrow + l_digits.item (index) - to_subtract
+				borrow := borrow + l_digits.item (index)
 #endif
 				if borrow < 0 then
 #ifdef VE
-					l_digits.put (to_character (10 + borrow), index - l_displacement) -- count + digits_count)
+					l_digits.put (to_character (10 + borrow), index - start) -- count + digits_count)
 #else
-					l_digits.put ((10 + borrow).to_integer_8, index - l_displacement) -- count + digits_count)
+					l_digits.put ((10 + borrow).to_integer_8, index - start) -- count + digits_count)
 #endif
 					borrow := -1
 				else
