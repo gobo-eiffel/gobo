@@ -277,10 +277,9 @@ feature -- Test
 			--assert_output ("xmltest, valid, stand alone, 046", xmltest_valid_sa_046, xmltest_valid_sa_out_046)
 			assert_output ("xmltest, valid, stand alone, 047", xmltest_valid_sa_047, xmltest_valid_sa_out_047)
 			assert_output ("xmltest, valid, stand alone, 048", xmltest_valid_sa_048, xmltest_valid_sa_out_048)
-			-- unicode, need parse string to use stream
-			--assert_output ("xmltest, valid, stand alone, 049", xmltest_valid_sa_049, xmltest_valid_sa_out_049)
-			--assert_output ("xmltest, valid, stand alone, 050", xmltest_valid_sa_050, xmltest_valid_sa_out_050)
-			--assert_output ("xmltest, valid, stand alone, 051", xmltest_valid_sa_051, xmltest_valid_sa_out_051)
+			assert_output ("xmltest, valid, stand alone, 049", xmltest_valid_sa_049, xmltest_valid_sa_out_049)
+			assert_output ("xmltest, valid, stand alone, 050", xmltest_valid_sa_050, xmltest_valid_sa_out_050)
+			assert_output ("xmltest, valid, stand alone, 051", xmltest_valid_sa_051, xmltest_valid_sa_out_051)
 			assert_output ("xmltest, valid, stand alone, 052", xmltest_valid_sa_052, xmltest_valid_sa_out_052)
 			assert_output ("xmltest, valid, stand alone, 053", xmltest_valid_sa_053, xmltest_valid_sa_out_053)
 			assert_output ("xmltest, valid, stand alone, 054", xmltest_valid_sa_054, xmltest_valid_sa_out_054)
