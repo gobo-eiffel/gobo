@@ -19,6 +19,7 @@ inherit
 	
 	XM_CALLBACKS_SOURCE
 	
+	XM_DTD_CALLBACKS_SOURCE
 
 feature {ANY} -- Access
 

@@ -30,6 +30,12 @@ feature -- Callbacks
 			check not_implemented: false end
 		end
 		
+	set_dtd_callbacks (c: XM_DTD_CALLBACKS) is
+			-- Callbacks not implemented for bridged parsers.
+		do
+			check not_implemented: false end
+		end
+		
 feature {ANY} -- Access
 
 	is_incremental: BOOLEAN is
