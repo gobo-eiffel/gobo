@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 			current_feature := dummy_feature
 			create instruction_checker.make (a_universe)
+			create rescue_checker.make (a_universe)
 			create precondition_checker.make (a_universe)
 			create postcondition_checker.make (a_universe)
 			create type_checker.make (a_universe)
@@ -171,8 +172,7 @@ feature {NONE} -- Feature validity
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
--- TODO
-					check_instructions_validity (a_compound)
+					check_rescue_validity (a_compound)
 				end
 			end
 		end
@@ -207,8 +207,7 @@ feature {NONE} -- Feature validity
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
--- TODO
-					check_instructions_validity (a_compound)
+					check_rescue_validity (a_compound)
 				end
 			end
 		end
@@ -279,8 +278,7 @@ feature {NONE} -- Feature validity
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
--- TODO
-					check_instructions_validity (a_compound)
+					check_rescue_validity (a_compound)
 				end
 			end
 		end
@@ -315,8 +313,7 @@ feature {NONE} -- Feature validity
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
--- TODO
-					check_instructions_validity (a_compound)
+					check_rescue_validity (a_compound)
 				end
 			end
 		end
@@ -371,6 +368,17 @@ feature {NONE} -- Instructions validity
 
 	instruction_checker: ET_INSTRUCTION_CHECKER
 			-- Instruction validity checker
+
+	check_rescue_validity (a_compound: ET_COMPOUND) is
+			-- Check validity of Rescue clause `a_compound'.
+		require
+			a_compound_not_void: a_compound /= Void
+		do
+			rescue_checker.check_instructions_validity (a_compound, current_feature, current_class)
+		end
+
+	rescue_checker: ET_RESCUE_CHECKER
+			-- Rescue clause validity checker
 
 feature {NONE} -- Assertions validity
 
@@ -552,6 +560,7 @@ invariant
 	current_feature_not_void: current_feature /= Void
 	current_class_not_void: current_class /= Void
 	instruction_checker_not_void: instruction_checker /= Void
+	rescue_checker_not_void: rescue_checker /= Void
 	precondition_checker_not_void: precondition_checker /= Void
 	postcondition_checker_not_void: postcondition_checker /= Void
 	type_checker_not_void: type_checker /= Void

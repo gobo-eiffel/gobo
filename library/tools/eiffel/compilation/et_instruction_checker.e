@@ -719,7 +719,8 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
--- TODO
+			set_fatal_error
+			error_handler.report_vxrt0a_error (current_feature.implementation_class, an_instruction)
 		end
 
 	check_static_call_instruction_validity (an_instruction: ET_STATIC_CALL_INSTRUCTION) is

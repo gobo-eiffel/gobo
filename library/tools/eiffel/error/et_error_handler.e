@@ -2834,6 +2834,24 @@ feature -- Validity errors
 			end
 		end
 
+	report_vxrt0a_error (a_class: ET_CLASS; a_retry: ET_RETRY_INSTRUCTION) is
+			-- Report VXRT error: instruction `a_retry' does not 
+			-- appear in a rescue clause in `a_class'.
+			--
+			-- ETL2: p.256
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_retry_not_void: a_retry /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vxrt_error (a_class) then
+				create an_error.make_vxrt0a (a_class, a_retry)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvagp0a_error (a_class: ET_CLASS; anc1, anc2: ET_BASE_TYPE) is
 			-- Report GVAGP error: `anc1' and `anc2' are two ancestors
 			-- of `a_class' with the same base class but different generic
@@ -3480,6 +3498,16 @@ feature -- Validity error status
 
 	reportable_vwst2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VWST-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vxrt_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VXRT error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

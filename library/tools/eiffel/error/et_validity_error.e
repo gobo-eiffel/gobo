@@ -134,6 +134,7 @@ creation
 	make_vwst1a,
 	make_vwst1b,
 	make_vwst2a,
+	make_vxrt0a,
 	make_gvagp0a,
 	make_gvhpr4a,
 	make_gvhpr5a,
@@ -5207,6 +5208,42 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = attribute name
 		end
 
+	make_vxrt0a (a_class: like current_class; a_retry: ET_RETRY_INSTRUCTION) is
+			-- Create a new VXRT error: instruction `a_retry' does not 
+			-- appear in a rescue clause in `a_class'.
+			--
+			-- ETL2: p.256
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_retry_not_void: a_retry /= Void
+		do
+			code := vxrt0a_template_code
+			etl_code := vxrt_etl_code
+			default_template := vxrt0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_retry.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
 	make_gvagp0a (a_class: like current_class; anc1, anc2: ET_BASE_TYPE) is
 			-- Create a new GVAGP error: `anc1' and `anc2' are two ancestors
 			-- of `a_class' with the same base class but different generic
@@ -5560,6 +5597,7 @@ feature {NONE} -- Implementation
 	vwst1a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' is not the final name of a feature in class $5."
 	vwst1b_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' is not the final name of an attribute in class $5."
 	vwst2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in strip expression."
+	vxrt0a_default_template: STRING is "[$1] class $5 ($3,$4): Retry instruction does not appear in a Rescue clause."
 	gvagp0a_default_template: STRING is "[$1] class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
 	gvhpr4a_default_template: STRING is "[$1] class $5: cannot inherit from Bit_type '$6'."
 	gvhpr5a_default_template: STRING is "[$1] class $5: cannot inherit from Tuple_type '$6'."
@@ -5624,6 +5662,7 @@ feature {NONE} -- Implementation
 	vweq_etl_code: STRING is "VWEQ"
 	vwst1_etl_code: STRING is "VWST-1"
 	vwst2_etl_code: STRING is "VWST-2"
+	vxrt_etl_code: STRING is "VXRT"
 	gvagp_etl_code: STRING is "GVAGP"
 	gvhpr4_etl_code: STRING is "GVHPR-4"
 	gvhpr5_etl_code: STRING is "GVHPR-5"
@@ -5744,6 +5783,7 @@ feature {NONE} -- Implementation
 	vwst1a_template_code: STRING is "vwst1a"
 	vwst1b_template_code: STRING is "vwst1b"
 	vwst2a_template_code: STRING is "vwst2a"
+	vxrt0a_template_code: STRING is "vxrt0a"
 	gvagp0a_template_code: STRING is "gvagp0a"
 	gvhpr4a_template_code: STRING is "gvhpr4a"
 	gvhpr5a_template_code: STRING is "gvhpr5a"
