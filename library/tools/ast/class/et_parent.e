@@ -106,9 +106,6 @@ feature -- Genealogy
 			a_class_id: INTEGER
 			a_type, anc_type: ET_CLASS_TYPE
 			a_generic_class_type: ET_GENERIC_CLASS_TYPE
-			has_error: BOOLEAN
-			an_actual: ET_TYPE
-			a_formal: ET_FORMAL_GENERIC_TYPE
 			generics: ET_ACTUAL_GENERIC_PARAMETERS
 			actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS_TYPE, INTEGER]
@@ -121,12 +118,11 @@ feature -- Genealogy
 			if anc.found then
 				anc_type := anc.found_item
 				if not anc_type.same_syntactical_type (type) then
-					has_error := True
 					an_heir.error_handler.report_gagp_error (an_heir, anc_type, type)
+					an_heir.set_ancestors_error
 				end
-			end
-			if not has_error then
-				anc.force (type, a_class_id)
+			else
+				anc.force_new (type, a_class_id)
 					-- Find out whether formal parameters have
 					-- been given actual derivations.
 				a_generic_class_type ?= type
@@ -151,18 +147,16 @@ feature -- Genealogy
 						anc_type := anc.found_item
 						if not anc_type.same_syntactical_type (a_type) then
 							an_heir.error_handler.report_gagp_error (an_heir, anc_type, a_type)
-							has_error := True
+							an_heir.set_ancestors_error
 							a_cursor.go_after -- Jump out of the loop.
+						else
+							a_cursor.forth
 						end
-					end
-					if not has_error then
-						anc.force (a_type, a_class_id)
+					else
+						anc.force_new (a_type, a_class_id)
 						a_cursor.forth
 					end
 				end
-			end
-			if has_error then
-				an_heir.set_ancestors_error
 			end
 		end
 
