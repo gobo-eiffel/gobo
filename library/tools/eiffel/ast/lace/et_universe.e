@@ -15,6 +15,7 @@ class ET_UNIVERSE
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_SHARED_STANDARD_FILES
 	ET_SHARED_CLASS_NAME_TESTER
 	ET_SHARED_TOKEN_CONSTANTS
 
@@ -546,18 +547,34 @@ feature -- Compilation
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
 			nb: INTEGER
-			a_signature_viewer: ET_SIGNATURE_VIEWER
+--			a_signature_viewer: ET_SIGNATURE_VIEWER
+			clock: DT_SHARED_SYSTEM_CLOCK
+			dt1, dt2: DT_DATE_TIME
+			dtd: DT_DATE_TIME_DURATION
 		do
 			activate_processors
+--debug ("ericb")
+--	print ("start preparsing...%N")
+--	io.read_line
+--end
 debug ("ericb")
-	print ("start preparsing...%N")
-	io.read_line
+	create clock
+	dt1 := clock.system_clock.date_time_now
 end
 			preparse_single
 debug ("ericb")
-	print ("end preparsing.%N")
+	dt2 := clock.system_clock.date_time_now
+	dtd := dt2 - dt1
+	dtd.set_canonical (dt1)
+	std.error.put_string ("Degree 6: ")
+	std.error.put_line (dtd.out)
 	io.read_line
+	dt1 := clock.system_clock.date_time_now
 end
+--debug ("ericb")
+--	print ("end preparsing.%N")
+--	io.read_line
+--end
 --			parse_all
 --debug ("ericb")
 --	print ("Parsed ")
@@ -577,18 +594,27 @@ end
 				a_cursor.forth
 			end
 debug ("ericb")
-	print ("Parsed ")
-	print (classes.count)
-	print (" classes%N")
-	print (features.count)
-	print (" features%N")
+	dt2 := clock.system_clock.date_time_now
+	dtd := dt2 - dt1
+	dtd.set_canonical (dt1)
+	std.error.put_string ("Degree 5: ")
+	std.error.put_line (dtd.out)
 	io.read_line
+	dt1 := clock.system_clock.date_time_now
+end
+debug ("ericb")
+	std.error.put_string ("Parsed ")
+	std.error.put_integer (classes.count)
+	std.error.put_string (" classes%N")
+	std.error.put_integer (features.count)
+	std.error.put_string (" features%N")
+--	io.read_line
 end
 			a_feature := any_class.named_feature (tokens.default_create_feature_name)
 			if a_feature /= Void then
 				set_default_create_seed (a_feature.first_seed)
 			else
-				-- TODO
+-- TODO
 			end
 				-- Build ancestors.
 			from a_cursor.start until a_cursor.after loop
@@ -623,6 +649,24 @@ end
 				end
 				a_cursor.forth
 			end
+debug ("ericb")
+	dt2 := clock.system_clock.date_time_now
+	dtd := dt2 - dt1
+	dtd.set_canonical (dt1)
+	std.error.put_string ("Degree 4: ")
+	std.error.put_line (dtd.out)
+	io.read_line
+	dt1 := clock.system_clock.date_time_now
+end
+debug ("ericb")
+	std.error.put_string ("Flattened ")
+	std.error.put_integer (nb)
+	std.error.put_string (" classes%N")
+	std.error.put_integer (features.count)
+	std.error.put_string (" features%N")
+--	create a_signature_viewer.make (Current)
+--	a_signature_viewer.execute
+end
 				-- Check implementation.
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
@@ -633,14 +677,12 @@ end
 				a_cursor.forth
 			end
 debug ("ericb")
-	print ("Flattened ")
-	print (nb)
-	print (" classes%N")
-	print ("Done.%N")
-	print (features.count)
-	print (" features%N")
-	create a_signature_viewer.make (Current)
-	a_signature_viewer.execute
+	dt2 := clock.system_clock.date_time_now
+	dtd := dt2 - dt1
+	dtd.set_canonical (dt1)
+	std.error.put_string ("Degree 3: ")
+	std.error.put_line (dtd.out)
+	io.read_line
 end
 		end
 
