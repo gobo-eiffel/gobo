@@ -13,3 +13,5 @@ Test Summary for xconcat1
 
 Test Results:
 FAIL:  [TEST_CONCAT1.test_concat] foo+bar (expected: foobar but got: foofoo)
+
+BUILD FAILED!
