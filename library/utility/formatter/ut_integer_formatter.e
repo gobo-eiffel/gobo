@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Utility Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,6 +16,7 @@ class UT_INTEGER_FORMATTER
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 feature -- Access
@@ -44,10 +45,25 @@ feature -- Access
 			octal_integer_out_not_void: Result /= Void
 		end
 
+	hexadecimal_integer_out (an_int: INTEGER; uppercase: BOOLEAN): STRING is
+			-- Hexadecimal representation of `an_int';
+			-- Return a new string at each call.
+			-- Regexp:
+			--    uppercase:      0|[1-9A-F][0-9A-F]*
+			--    not uppercase:  0|[1-9a-f][0-9a-f]*
+		require
+			an_int_positive: an_int >= 0
+		do
+			Result := INTEGER_.to_hexadecimal (an_int, uppercase)
+		ensure
+			hexadecimal_integer_out_not_void: Result /= Void
+		end
+
 feature -- String handling
 
 	append_decimal_integer (a_string: STRING; an_int: INTEGER) is
 			-- Append decimal representation of `an_int' to `a_string'.
+			-- Regexp: 0|(-?[1-9][0-9]*)
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -106,6 +122,7 @@ feature -- String handling
 
 	append_octal_integer (a_string: STRING; an_int: INTEGER) is
 			-- Append octal representation of `an_int' to `a_string'.
+			-- Regexp: 0|[1-7][0-7]*
 		require
 			a_string_not_void: a_string /= Void
 			an_int_positive: an_int >= 0
@@ -153,10 +170,23 @@ feature -- String handling
 			end
 		end
 
+	append_hexadecimal_integer (a_string: STRING; an_int: INTEGER; uppercase: BOOLEAN) is
+			-- Append hexadecimal representation of `an_int' to `a_string'.
+			-- Regexp:
+			--    uppercase:      0|[1-9A-F][0-9A-F]*
+			--    not uppercase:  0|[1-9a-f][0-9a-f]*
+		require
+			a_string_not_void: a_string /= Void
+			an_int_positive: an_int >= 0
+		do
+			INTEGER_.append_hexadecimal_integer (a_string, an_int, uppercase)
+		end
+
 feature -- File handling
 
 	put_decimal_integer (a_file: like OUTPUT_STREAM_TYPE; an_int: INTEGER) is
 			-- Write decimal representation of `an_int' to `a_file'.
+			-- Regexp: 0|(-?[1-9][0-9]*)
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
@@ -166,12 +196,26 @@ feature -- File handling
 
 	put_octal_integer (a_file: like OUTPUT_STREAM_TYPE; an_int: INTEGER) is
 			-- Write octal representation of `an_int' to `a_file'.
+			-- Regexp: 0|[1-7][0-7]*
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			an_int_positive: an_int >= 0
 		do
 			a_file.put_string (octal_integer_out (an_int))
+		end
+
+	put_hexadecimal_integer (a_file: like OUTPUT_STREAM_TYPE; an_int: INTEGER; uppercase: BOOLEAN) is
+			-- Write hexadecimal representation of `an_int' to `a_file'.
+			-- Regexp:
+			--    uppercase:      0|[1-9A-F][0-9A-F]*
+			--    not uppercase:  0|[1-9a-f][0-9a-f]*
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			an_int_positive: an_int >= 0
+		do
+			a_file.put_string (hexadecimal_integer_out (an_int, uppercase))
 		end
 
 end -- class UT_INTEGER_FORMATTER
