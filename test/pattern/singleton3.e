@@ -1,29 +1,38 @@
 indexing
 
-	description: "Yet another singleton."
+	description:
+
+		"Singleton3"
 
 	library: "Gobo Eiffel Pattern Library"
-	copyright: "Copyright (c) 2002, Berend de Boer and others"
+	copyright: "Copyright (c) 2003, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class
-
-	SINGLETON3
+class SINGLETON3
 
 inherit
 
-	DP_SINGLETON
+	SHARED_SINGLETON3
 
+creation
 
-feature {NONE} -- Singleton
+	make
 
-	frozen singleton: DP_SINGLETON is
-			-- Yep, it's me.
-		once
-			Result := Current
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a singleton object.
+		require
+			singleton3_not_created: not singleton3_created
+		do
+			singleton3_cell.put (Current)
 		end
+
+invariant
+
+	singleton3_created: singleton3_created
+	singleton_pattern: Current = singleton3
 
 end
