@@ -11,11 +11,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-	--xml_specific_zero: "Zero characters conflict with EOB but are not valid XML"
 	--xml_specific_lt: "Detection assuming first char is < is XML specific"
 	-- TODO:
-	-- close file OK?
-	-- efficient fill
+	-- UTF16 surrogate characters
 	-- factorise UTF8 encoding routines
 	
 class XF_UTF16_INPUT_STREAM
