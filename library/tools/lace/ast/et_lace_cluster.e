@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,6 +62,34 @@ feature -- Access
 
 	pathname_id: ET_IDENTIFIER
 			-- Directory pathname identifier (may be Void)
+
+feature -- Status report
+
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+			-- Is `a_filename' an Eiffel filename which has
+			-- not been excluded?
+		do
+			if precursor (a_filename) then
+				if operating_system.is_windows then
+					Result := (exclude = Void or else not exclude.has_case_insensitive (a_filename))
+				else
+					Result := (exclude = Void or else not exclude.has (a_filename))
+				end
+			end
+		end
+
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+			-- Is `a_dirname' a directory name other than "." and
+			-- ".." and which has not been excluded?
+		do
+			if precursor (a_dirname) then
+				if operating_system.is_windows then
+					Result := (exclude = Void or else not exclude.has_case_insensitive (a_dirname))
+				else
+					Result := (exclude = Void or else not exclude.has (a_dirname))
+				end
+			end
+		end
 
 feature -- Nested
 
@@ -135,32 +163,6 @@ feature {NONE} -- Implementation
 			Result.set_implicit (True)
 			Result.set_override (is_override)
 			Result.set_exclude (exclude)
-		end
-
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
-			-- Is `a_filename' an Eiffel filename which has
-			-- not been excluded?
-		do
-			if precursor (a_filename) then
-				if operating_system.is_windows then
-					Result := (exclude = Void or else not exclude.has_case_insensitive (a_filename))
-				else
-					Result := (exclude = Void or else not exclude.has (a_filename))
-				end
-			end
-		end
-
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
-			-- Is `a_dirname' a directory name other than "." and
-			-- ".." and which has not been excluded?
-		do
-			if precursor (a_dirname) then
-				if operating_system.is_windows then
-					Result := (exclude = Void or else not exclude.has_case_insensitive (a_dirname))
-				else
-					Result := (exclude = Void or else not exclude.has (a_dirname))
-				end
-			end
 		end
 
 invariant

@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -99,6 +99,46 @@ feature -- Status report
 
 	is_mounted: BOOLEAN
 			-- Has cluster been mounted?
+
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+			-- Is `a_filename' an Eiffel filename which has
+			-- not been excluded?
+		local
+			an_exclude: DS_HASH_SET [STRING]
+		do
+			if precursor (a_filename) then
+				if options /= Void and then options.is_exclude_declared then
+					an_exclude := options.exclude
+					if operating_system.is_windows then
+						Result := not has_case_insensitive (an_exclude, a_filename)
+					else
+						Result := not an_exclude.has (a_filename)
+					end
+				else
+					Result := True
+				end
+			end
+		end
+
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+			-- Is `a_dirname' a directory name other than "." and
+			-- ".." and which has not been excluded?
+		local
+			an_exclude: DS_HASH_SET [STRING]
+		do
+			if precursor (a_dirname) then
+				if options /= Void and then options.is_exclude_declared then
+					an_exclude := options.exclude
+					if operating_system.is_windows then
+						Result := not has_case_insensitive (an_exclude, a_dirname)
+					else
+						Result := not an_exclude.has (a_dirname)
+					end
+				else
+					Result := True
+				end
+			end
+		end
 
 feature -- Nested
 
@@ -319,46 +359,6 @@ feature {NONE} -- Implementation
 			Result.set_recursive (True)
 			Result.set_implicit (True)
 			Result.set_override (is_override)
-		end
-
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
-			-- Is `a_filename' an Eiffel filename which has
-			-- not been excluded?
-		local
-			an_exclude: DS_HASH_SET [STRING]
-		do
-			if precursor (a_filename) then
-				if options /= Void and then options.is_exclude_declared then
-					an_exclude := options.exclude
-					if operating_system.is_windows then
-						Result := not has_case_insensitive (an_exclude, a_filename)
-					else
-						Result := not an_exclude.has (a_filename)
-					end
-				else
-					Result := True
-				end
-			end
-		end
-
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
-			-- Is `a_dirname' a directory name other than "." and
-			-- ".." and which has not been excluded?
-		local
-			an_exclude: DS_HASH_SET [STRING]
-		do
-			if precursor (a_dirname) then
-				if options /= Void and then options.is_exclude_declared then
-					an_exclude := options.exclude
-					if operating_system.is_windows then
-						Result := not has_case_insensitive (an_exclude, a_dirname)
-					else
-						Result := not an_exclude.has (a_dirname)
-					end
-				else
-					Result := True
-				end
-			end
 		end
 
 	has_case_insensitive (a_set: DS_HASH_SET [STRING]; v: STRING): BOOLEAN is
