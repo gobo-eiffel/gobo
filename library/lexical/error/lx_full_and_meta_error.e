@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- of meta equivalence classes does not make
 			-- sense with full tables.
 		do
-			!! parameters.make (1, 0)
+			create parameters.make (1, 0)
 		end
 
 feature -- Access

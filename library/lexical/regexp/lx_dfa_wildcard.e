@@ -71,16 +71,16 @@ feature -- Element change
 			a_full_tables: LX_FULL_TABLES
 		do
 			wipe_out
-			!! an_error_handler.make_null
-			!! a_description.make
+			create an_error_handler.make_null
+			create a_description.make
 			a_description.set_equiv_classes_used (False)
 			a_description.set_meta_equiv_classes_used (False)
 			a_description.set_full_table (True)
 			a_description.set_case_insensitive (i)
-			!! a_parser.make_from_description (a_description, an_error_handler)
+			create a_parser.make_from_description (a_description, an_error_handler)
 			a_parser.parse_string (a_pattern)
 			if a_parser.successful then
-				!! a_dfa.make (a_description)
+				create a_dfa.make (a_description)
 				a_full_tables := a_dfa
 				yy_nxt := a_full_tables.yy_nxt
 				yy_accept := a_full_tables.yy_accept

@@ -98,7 +98,7 @@ feature -- Access
 	origin: TIME is
 			-- Origin time
 		once
-			!! Result.make (0, 0, 0)
+			create Result.make (0, 0, 0)
 		end
 
 	seconds: INTEGER is
@@ -124,7 +124,7 @@ feature -- Access
 	relative_time_duration (other: like Current): TIME_DURATION is
 			-- Duration between `other' and current time
 		do
-			!! Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
+			create Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
 		end
 
 feature -- Setting

@@ -38,9 +38,9 @@ feature {NONE} -- Initialization
 		do
 			make_lex_scanner (handler)
 			make_parser_skeleton
-			!! pending_rules.make (Initial_max_pending_rules)
-			!! start_condition_stack.make (Initial_max_start_conditions)
-			!! action_factory.make
+			create pending_rules.make (Initial_max_pending_rules)
+			create start_condition_stack.make (Initial_max_start_conditions)
+			create action_factory.make
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -55,9 +55,9 @@ feature {NONE} -- Initialization
 		do
 			make_lex_scanner_from_description (a_description, handler)
 			make_parser_skeleton
-			!! pending_rules.make (Initial_max_pending_rules)
-			!! start_condition_stack.make (Initial_max_start_conditions)
-			!! action_factory.make
+			create pending_rules.make (Initial_max_pending_rules)
+			create start_condition_stack.make (Initial_max_start_conditions)
+			create action_factory.make
 		ensure
 			error_handler_set: error_handler = handler
 			description_set: description = a_description
@@ -448,14 +448,14 @@ feature {NONE} -- Factory
 				if character_classes.has (a_name) then
 					Result := new_symbol_class_nfa (character_classes.item (a_name))
 				else
-					!! a_character_class.make (1)
+					create a_character_class.make (1)
 					a_character_class.put (symbol)
 					equiv_classes.add (a_character_class)
 					character_classes.force (a_character_class, a_name)
 					Result := new_symbol_class_nfa (a_character_class)
 				end
 			else
-				!! Result.make_symbol (symbol, in_trail_context)
+				create Result.make_symbol (symbol, in_trail_context)
 			end
 		ensure
 			nfa_not_void: Result /= Void
@@ -464,7 +464,7 @@ feature {NONE} -- Factory
 	new_epsilon_nfa: LX_NFA is
 			-- New NFA made of two states and an epsilon transition
 		do
-			!! Result.make_epsilon (in_trail_context)
+			create Result.make_epsilon (in_trail_context)
 		ensure
 			nfa_not_void: Result /= Void
 		end
@@ -475,7 +475,7 @@ feature {NONE} -- Factory
 		require
 			symbols_not_void: symbols /= Void
 		do
-			!! Result.make_symbol_class (symbols, in_trail_context)
+			create Result.make_symbol_class (symbols, in_trail_context)
 		ensure
 			nfa_not_void: Result /= Void
 		end
@@ -483,7 +483,7 @@ feature {NONE} -- Factory
 	new_character_class: LX_SYMBOL_CLASS is
 			-- New empty character class
 		do
-			!! Result.make (description.characters_count)
+			create Result.make (description.characters_count)
 		ensure
 			character_class_not_void: Result /= Void
 		end
@@ -506,7 +506,7 @@ feature {NONE} -- Factory
 					if character_classes.has (a_name) then
 						Result := new_symbol_class_nfa (character_classes.item (a_name))
 					else
-						!! a_character_class.make (2)
+						create a_character_class.make (2)
 						a_character_class.put (a_char)
 						a_character_class.put (lower_char)
 						if equiv_classes /= Void then
@@ -520,7 +520,7 @@ feature {NONE} -- Factory
 					if character_classes.has (a_name) then
 						Result := new_symbol_class_nfa (character_classes.item (a_name))
 					else
-						!! a_character_class.make (2)
+						create a_character_class.make (2)
 						a_character_class.put (a_char - Case_diff)
 						a_character_class.put (a_char)
 						if equiv_classes /= Void then
@@ -741,7 +741,7 @@ feature {NONE} -- Implementation
 					report_multiple_EOF_rules_error (a_start_condition.name)
 				else
 					a_start_condition.set_has_eof (True)
-					!! a_rule.make_default (a_start_condition.id)
+					create a_rule.make_default (a_start_condition.id)
 					a_rule.set_pattern (Eof_nfa)
 						-- Save `rule' as an end-of-file rule.
 					eof_rules.force_last (a_rule)
@@ -760,7 +760,7 @@ feature {NONE} -- Implementation
 			a_character_class: LX_SYMBOL_CLASS
 			a_nfa: LX_NFA
 		do
-			!! a_character_class.make (0)
+			create a_character_class.make (0)
 			a_character_class.set_negated (True)
 			a_nfa := new_symbol_class_nfa (a_character_class)
 			a_nfa.set_accepted_rule (rule)
@@ -802,7 +802,7 @@ feature {NONE} -- Implementation
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (character_classes.item (a_name)))
 					else
-						!! a_character_class.make (2)
+						create a_character_class.make (2)
 						a_character_class.put (a_char)
 						a_character_class.put (lower_char)
 						if equiv_classes /= Void then
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (character_classes.item (a_name)))
 					else
-						!! a_character_class.make (2)
+						create a_character_class.make (2)
 						a_character_class.put (a_char - Case_diff)
 						a_character_class.put (a_char)
 						if equiv_classes /= Void then
@@ -959,7 +959,7 @@ feature {NONE} -- Implementation
 			if character_classes.has (dot_string) then
 				Result := character_classes.item (dot_string)
 			else
-				!! Result.make (1)
+				create Result.make (1)
 				Result.put (New_line_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes
@@ -1039,7 +1039,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: UT_SYNTAX_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure then
@@ -1053,7 +1053,7 @@ feature {NONE} -- Error handling
 			an_error: LX_ALL_START_CONDITIONS_EOF_ERROR
 		do
 			if not description.no_warning then
-				!! an_error.make (filename, line_nb)
+				create an_error.make (filename, line_nb)
 				error_handler.report_warning (an_error)
 			end
 		end
@@ -1063,7 +1063,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_BAD_START_CONDITION_LIST_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1075,7 +1075,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_BAD_ITERATION_VALUES_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1088,7 +1088,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_ITERATION_NOT_POSITIVE_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1104,7 +1104,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_MULTIPLE_EOF_RULES_ERROR
 		do
-			!! an_error.make (filename, line_nb, sc)
+			create an_error.make (filename, line_nb, sc)
 			error_handler.report_error (an_error)
 		end
 
@@ -1113,7 +1113,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1128,7 +1128,7 @@ feature {NONE} -- Error handling
 			an_error: LX_START_CONDITION_SPECIFIED_TWICE_ERROR
 		do
 			if not description.no_warning then
-				!! an_error.make (filename, line_nb, sc)
+				create an_error.make (filename, line_nb, sc)
 				error_handler.report_warning (an_error)
 			end
 		end
@@ -1138,7 +1138,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_TRAILING_CONTEXT_USED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1153,7 +1153,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_UNDECLARED_START_CONDITION_ERROR
 		do
-			!! an_error.make (filename, line_nb, sc)
+			create an_error.make (filename, line_nb, sc)
 			error_handler.report_error (an_error)
 		end
 
@@ -1162,7 +1162,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_UNRECOGNIZED_RULE_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1175,7 +1175,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_FULL_AND_META_ERROR
 		do
-			!! an_error.make
+			create an_error.make
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1188,7 +1188,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_FULL_AND_REJECT_ERROR
 		do
-			!! an_error.make
+			create an_error.make
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1201,7 +1201,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR
 		do
-			!! an_error.make
+			create an_error.make
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1219,7 +1219,7 @@ feature {NONE} -- Constants
 	Eof_nfa: LX_NFA is
 			-- End-of-file NFA
 		once
-			!! Result.make_epsilon (False)
+			create Result.make_epsilon (False)
 		ensure
 			nfa_not_void: Result /= Void
 		end

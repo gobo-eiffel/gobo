@@ -23,7 +23,7 @@ feature -- Access
 	STRING_BUFFER_: KL_STRING_BUFFER_ROUTINES is
 			-- Routines that ought to be in class STRING_BUFFER
 		once
-			!! Result
+			create Result
 		ensure
 			string_buffer_routines_not_void: Result /= Void
 		end

@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 	tmp_file: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 	tmp_directory: KL_DIRECTORY is
 			-- Temporary directory object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			directory_not_void: Result /= Void
 			directory_closed: Result.is_closed
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 	file_system_impl: FILE_SYSTEM is
 			-- Implementation
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_system_impl_not_void: Result /= Void
 		end
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Execution environment implementation
 		once
-			!! Result
+			create Result
 		ensure
 			execution_environment_not_void: Result /= Void
 		end

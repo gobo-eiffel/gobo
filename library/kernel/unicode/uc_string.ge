@@ -337,7 +337,7 @@ feature -- Initialization
 		do
 			reset_byte_index_cache
 #ifdef VE
-			!! storage.make_filled ('%U', suggested_capacity)
+			create storage.make_filled ('%U', suggested_capacity)
 			ve_make_byte_storage ('%U', 0)
 #else
 #ifdef HACT || ISE
@@ -510,7 +510,7 @@ feature -- Access
 		require
 			valid_index: valid_index (i)
 		do
-			!! Result.make_from_code (item_code (i))
+			create Result.make_from_code (item_code (i))
 		ensure
 			item_not_void: Result /= Void
 			code_set: Result.code = item_code (i)
@@ -566,9 +566,9 @@ feature -- Access
 			meaningful_interval: start_index <= end_index + 1
 		do
 			if end_index < start_index then
-				!! Result.make (0)
+				create Result.make (0)
 			else
-				!! Result.make_from_substring (Current, start_index, end_index)
+				create Result.make_from_substring (Current, start_index, end_index)
 			end
 		ensure then
 			first_unicode_item: Result.count > 0 implies Result.item_code (1) = item_code (start_index)
@@ -878,7 +878,7 @@ feature -- Access
 			-- by the characters of `other'
 			-- (ELKS 2001 STRING)
 		do
-			!! Result.make (byte_count + utf8.substring_byte_count (other, 1, other.count))
+			create Result.make (byte_count + utf8.substring_byte_count (other, 1, other.count))
 			Result.append_string (Current)
 			Result.append_string (other)
 		ensure then
@@ -891,7 +891,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			!! Result.make (byte_count + utf8.substring_byte_count (other, 1, other.count))
+			create Result.make (byte_count + utf8.substring_byte_count (other, 1, other.count))
 			Result.append_string (other)
 			Result.append_string (Current)
 		ensure
@@ -1036,7 +1036,7 @@ feature -- Access
 		require
 			non_negative_suggested_capacity: suggested_capacity >= 0
 		do
-			!! Result.make (suggested_capacity)
+			create Result.make (suggested_capacity)
 		ensure
 			new_string_not_void: Result /= Void
 			same_type: Result.same_type (Current)
@@ -2718,7 +2718,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			end
 #ifdef VE
 			if nb > count then
-				!! s.make_filled ('%U', nb - count)
+				create s.make_filled ('%U', nb - count)
 				ve_append_string (s)
 			elseif nb < count then
 				ve_keep_head (nb)

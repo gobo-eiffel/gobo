@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			filename_not_void: filename /= Void
 		do
-			!! parameters.make (1, 3)
+			create parameters.make (1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (n.out, 3)

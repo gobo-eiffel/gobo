@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 #endif
 			-- Execution environment impl
 		once
-			!! Result
+			create Result
 		ensure
 			environment_impl_not_void: Result /= Void
 		end

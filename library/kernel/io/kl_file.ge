@@ -520,10 +520,10 @@ feature -- Basic operations
 			if string_name /= Empty_name and string_new_name.count > 0 then
 				if exists then
 					if not same_physical_file (string_new_name) then
-						!! old_file.make (string_name)
+						create old_file.make (string_name)
 						old_file.open_read
 						if old_file.is_open_read then
-							!! new_file.make (string_new_name)
+							create new_file.make (string_new_name)
 							new_file.open_write
 							if new_file.is_open_write then
 								from
@@ -563,11 +563,11 @@ feature -- Basic operations
 		do
 			a_string_filename := STRING_.as_string (a_filename)
 			if string_name /= Empty_name and a_string_filename.count > 0 then
-				!! a_source_file.make (a_string_filename)
+				create a_source_file.make (a_string_filename)
 				nb := a_source_file.count
 				a_source_file.open_read
 				if a_source_file.is_open_read then
-					!! a_target_file.make (string_name)
+					create a_target_file.make (string_name)
 					a_target_file.open_append
 					if a_target_file.is_open_write then
 						from
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 	tmp_file1: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 	tmp_file2: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 	file_system_impl: FILE_SYSTEM is
 			-- Implementation
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_system_impl_not_void: Result /= Void
 		end
@@ -717,7 +717,7 @@ feature {NONE} -- Implementation
 	date_impl: DATE is
 			-- Date implementation
 		once
-			!! Result.set_date (1970, 1, 1)
+			create Result.set_date (1970, 1, 1)
 		ensure
 			date_impl_not_void: Result /= Void
 		end
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 	local_timestamp: TIMESTAMP is
 			-- Local timestamp
 		once
-			!! Result.set (1970, 1, 1, 0, 0, 0.0)
+			create Result.set (1970, 1, 1, 0, 0, 0.0)
 		ensure
 			timestamp_not_void: Result /= Void
 		end
@@ -733,7 +733,7 @@ feature {NONE} -- Implementation
 	utc_timestamp: TIMESTAMP is
 			-- UTC timestamp
 		once
-			!! Result.set (1970, 1, 1, 0, 0, 0.0)
+			create Result.set (1970, 1, 1, 0, 0, 0.0)
 		ensure
 			timestamp_not_void: Result /= Void
 		end

@@ -47,9 +47,9 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make_empty
+				create last_string.make_empty
 #else
-				!! last_string.make (256)
+				create last_string.make (256)
 #endif
 			else
 #ifdef ISE
@@ -91,9 +91,9 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make_empty
+				create last_string.make_empty
 #else
-				!! last_string.make (256)
+				create last_string.make (256)
 #endif
 			else
 #ifdef ISE

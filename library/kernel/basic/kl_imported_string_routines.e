@@ -17,7 +17,7 @@ feature -- Access
 	STRING_: KL_STRING_ROUTINES is
 			-- Routines that ought to be in class STRING
 		once
-			!! Result
+			create Result
 		ensure
 			string_routines_not_void: Result /= Void
 		end

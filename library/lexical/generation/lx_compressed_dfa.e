@@ -55,7 +55,7 @@ feature -- Generation
 	new_scanner: LX_COMPRESSED_SCANNER is
 			-- New scanner corresponding to current DFA
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -85,7 +85,7 @@ feature -- Access
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 			acc_set: DS_ARRAYED_LIST [LX_RULE]
 		do
-			!! Result.make (yy_rules.count)
+			create Result.make (yy_rules.count)
 			if yyVariable_trail_context then
 				from i := states.count until i < 1 loop
 					a_state := states.item (i)
@@ -223,18 +223,18 @@ feature -- Building
 			first_free := 1
 			table_end := 0
 			templates_count := 0
-			!! protos.make
-			!! singletons.make (Singletons_capacity)
+			create protos.make
+			create singletons.make (Singletons_capacity)
 			if meta_equiv_classes_used then
-				!! meta_equiv_classes.make (minimum_symbol, maximum_symbol)
+				create meta_equiv_classes.make (minimum_symbol, maximum_symbol)
 			end
-			!! templates.make (meta_equiv_classes)
-			!! partitions.make (minimum_symbol, maximum_symbol)
+			create templates.make (meta_equiv_classes)
+			create partitions.make (minimum_symbol, maximum_symbol)
 				-- Allocate memory for compressed tables.
-			!! yy_nxt.make (0, Initial_max_xpairs)
-			!! yy_chk.make (0, Initial_max_xpairs)
-			!! yy_base.make (0, states.capacity)
-			!! yy_def.make (0, states.capacity)
+			create yy_nxt.make (0, Initial_max_xpairs)
+			create yy_chk.make (0, Initial_max_xpairs)
+			create yy_base.make (0, states.capacity)
+			create yy_def.make (0, states.capacity)
 				-- The compressed table format jams by entering the
 				-- jam state, losing information about the previous
 				-- state in the process. In order to recover the
@@ -251,7 +251,7 @@ feature -- Building
 			a_state := states.item (i)
 			build_transitions (a_state)
 				-- Make sure it jams on end of buffer.
-			!! singleton.make (a_state.id, Jam_id, 0, 0)
+			create singleton.make (a_state.id, Jam_id, 0, 0)
 			singletons.put_last (singleton)
 			from i := i + 1 until i > states.count loop
 				a_state := states.item (i)
@@ -291,8 +291,8 @@ feature {NONE} -- Building
 				-- `yy_nxt' and `yy_chk' are indexed
 				-- from 1 to `table_end'.
 			nb := table_end
-			!! yy_nxt_.make (0, nb)
-			!! yy_chk_.make (0, nb)
+			create yy_nxt_.make (0, nb)
+			create yy_chk_.make (0, nb)
 			from i := 1 until i > nb loop
 				yy_nxt_.put (yy_nxt.item (i), i)
 				yy_chk_.put (yy_chk.item (i), i)
@@ -317,8 +317,8 @@ feature {NONE} -- Building
 				-- `yy_base' and `yy_def' are indexed
 				-- from 1 to `count'+`templates_count'.
 			nb := states.count + templates_count
-			!! yy_base_.make (0, nb)
-			!! yy_def_.make (0, nb)
+			create yy_base_.make (0, nb)
+			create yy_def_.make (0, nb)
 			from i := 1 until i > nb loop
 				yy_base_.put (yy_base.item (i), i)
 				yy_def_.put (yy_def.item (i), i)
@@ -349,7 +349,7 @@ feature {NONE} -- Building
 					-- because we tell where the end of an accepting list
 					-- is by looking at where the list for the next
 					-- state starts. (Hence nb + 2)
-				!! yy_accept_.make (0, nb + 2)
+				create yy_accept_.make (0, nb + 2)
 					-- First generate the `yy_acclist' array. In the process,
 					-- we compute the indices that go into the `yy_accept'
 					-- array which will contain pointers into the
@@ -360,7 +360,7 @@ feature {NONE} -- Building
 					j := j + state.accepted_head_rules.count
 					i := i + 1
 				end
-				!! yy_acclist_.make (0, j.max (1))
+				create yy_acclist_.make (0, j.max (1))
 				j := 1
 				from i := 1 until i > nb loop
 					yy_accept_.put (j, i)
@@ -404,7 +404,7 @@ feature {NONE} -- Building
 			else
 					-- Make room for the jam state accepting id
 					-- (hence nb + 1).
-				!! yy_accept_.make (0, nb + 1)
+				create yy_accept_.make (0, nb + 1)
 				from i := 1 until i > nb loop
 					state := states.item (i)
 					if state.is_accepting then
@@ -467,8 +467,8 @@ feature {NONE} -- Compression
 			else
 					-- Search for the state which the most frequently targeted
 					-- by `transitions', and number of transitions to it.
-				!! common_states.make (trans_nb)
-				!! frequencies.make (trans_nb)
+				create common_states.make (trans_nb)
+				create frequencies.make (trans_nb)
 				st_cursor := common_states.new_cursor
 				nb := maximum_symbol
 				from i := minimum_symbol until i > nb loop
@@ -619,7 +619,7 @@ feature {NONE} -- Compression
 					-- Save it for later to fill in holes in tables.
 				min_label := transitions.minimum_label
 				target := transitions.target (min_label)
-				!! singleton.make (state_id, default_id, min_label, target.id)
+				create singleton.make (state_id, default_id, min_label, target.id)
 				if not singletons.is_full then
 					singletons.put_last (singleton)
 				else
@@ -945,8 +945,8 @@ feature {NONE} -- Compression data
 		local
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 		once
-			!! nfa_states.make (0)
-			!! Result.make (nfa_states, minimum_symbol, maximum_symbol)
+			create nfa_states.make (0)
+			create Result.make (nfa_states, minimum_symbol, maximum_symbol)
 			Result.set_id (0)
 		ensure
 			null_state_not_void: Result /= Void
@@ -1015,8 +1015,8 @@ feature {NONE} -- Constants
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [LX_RULE]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end

@@ -81,8 +81,8 @@ feature -- Access
 					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
 					-- Create `transitions' (not declared as "like anchor")
 					-- first and assign it to `Result'.
-				-- !! Result.make (1, meta_equiv_classes.capacity)
-				!! transitions.make (1, meta_equiv_classes.capacity)
+				-- create Result.make (1, meta_equiv_classes.capacity)
+				create transitions.make (1, meta_equiv_classes.capacity)
 				Result := transitions
 				nb := template.upper
 				from i := template.lower until i > nb loop
@@ -116,8 +116,8 @@ feature -- Element change
 			transitions := state.transitions
 			min_symbol := transitions.lower
 			max_symbol := transitions.upper
-			!! template.make (min_symbol, max_symbol)
-			!! symbol_class.make (transitions.capacity)
+			create template.make (min_symbol, max_symbol)
+			create symbol_class.make (transitions.capacity)
 			from i := min_symbol until i > max_symbol loop
 				if transitions.target (i) /= Void then
 					template.set_target (common_state, i)

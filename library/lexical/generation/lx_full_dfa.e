@@ -52,7 +52,7 @@ feature -- Generation
 	new_scanner: LX_FULL_SCANNER is
 			-- New scanner corresponding to current DFA
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 
 	print_backing_up_report (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -126,7 +126,7 @@ feature -- Building
 			a_state: LX_DFA_STATE
 		do
 			backing_up_count := 0
-			!! partitions.make (minimum_symbol, maximum_symbol)
+			create partitions.make (minimum_symbol, maximum_symbol)
 			from i := 1 until i > start_states_count loop
 				a_state := states.item (i)
 				build_transitions (a_state)
@@ -166,7 +166,7 @@ feature {NONE} -- Building
 				-- will be included in the transition table.
 				-- Build it from 0 to `maximum_symbol'.
 			yyNb_rows := maximum_symbol + 1
-			!! yy_nxt_.make (0, yyNb_rows * (states.count + 1) - 1)
+			create yy_nxt_.make (0, yyNb_rows * (states.count + 1) - 1)
 			eob_state_id := start_states_count + 1
 			nb := yyNb_rows - 1
 				-- `0' entries for state #0.
@@ -211,7 +211,7 @@ feature {NONE} -- Building
 			a_state: LX_DFA_STATE
 		do
 			nb := states.count
-			!! yy_accept_.make (0, nb)
+			create yy_accept_.make (0, nb)
 			from i := 1 until i > nb loop
 				a_state := states.item (i)
 				if a_state.is_accepting then

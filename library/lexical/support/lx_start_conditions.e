@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			initial: LX_START_CONDITION
 		do
 			make (a_capacity)
-			!! initial.make ("INITIAL", 0, False)
+			create initial.make ("INITIAL", 0, False)
 			put_first (initial)
 		ensure
 			capacity_set: capacity = a_capacity
@@ -104,7 +104,7 @@ feature -- Access
 			i, nb: INTEGER
 		do
 			nb := count
-			!! Result.make (0, nb - 1)
+			create Result.make (0, nb - 1)
 			from i := 1 until i > nb loop
 				Result.put (item (i).name, i - 1)
 				i := i + 1
@@ -129,7 +129,7 @@ feature -- Element change
 			a_start_condition: LX_START_CONDITION
 		do
 				-- Start conditions are indexed starting from 0.
-			!! a_start_condition.make (a_name, count, is_exclusive)
+			create a_start_condition.make (a_name, count, is_exclusive)
 			force_last (a_start_condition)
 		ensure
 			one_more: count = old count + 1

@@ -88,7 +88,7 @@ feature -- Access
 	zero: DATE_DURATION is 
 			-- Neutral element for "+" and "-"
 		once
-				!! Result.make (0, 0, 0)
+				create Result.make (0, 0, 0)
 		end
 
 	date (a_date: DATE): DATE is
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	tmp_date: DATE is
 			-- Temporary date
 		once
-			!! Result.make (1, 1, 1)
+			create Result.make (1, 1, 1)
 		end
 
 end

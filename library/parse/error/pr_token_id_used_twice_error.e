@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			token1_not_void: token1 /= Void
 			token2_not_void: token2 /= Void
 		do
-			!! parameters.make (1, 4)
+			create parameters.make (1, 4)
 			parameters.put (filename, 1)
 			parameters.put (token1, 2)
 			parameters.put (token2, 3)

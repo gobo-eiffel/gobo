@@ -18,7 +18,7 @@ feature -- Acess
 	eiffel_compiler: KL_EIFFEL_COMPILER is
 			-- Eiffel compiler used to compile this program
 		once
-			!! Result
+			create Result
 		ensure
 			eiffel_compiler_not_void: Result /= Void
 		end

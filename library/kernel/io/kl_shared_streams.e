@@ -17,7 +17,7 @@ feature -- Access
 	null_output_stream: KL_NULL_TEXT_OUTPUT_STREAM is
 			-- Null output stream
 		once
-			!! Result.make ("null")
+			create Result.make ("null")
 		ensure
 			null_output_stream_not_void: Result /= Void
 		end

@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			name := nm
 			id := i
 			is_exclusive := excl
-			!! patterns.make (50)
-			!! bol_patterns.make (50)
+			create patterns.make (50)
+			create bol_patterns.make (50)
 		ensure
 			name_set: name = nm
 			id_set: id = i

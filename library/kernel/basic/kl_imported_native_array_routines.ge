@@ -20,7 +20,7 @@ feature -- Access
 	NATIVE_ANY_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [ANY] is
 			-- Routines that ought to be in class NATIVE_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			native_any_array_routines_not_void: Result /= Void
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	NATIVE_BOOLEAN_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [BOOLEAN] is
 			-- Routines that ought to be in class NATIVE_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			native_boolean_array_routines_not_void: Result /= Void
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	NATIVE_CHARACTER_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [CHARACTER] is
 			-- Routines that ought to be in class NATIVE_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			native_character_array_routines_not_void: Result /= Void
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	NATIVE_INTEGER_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [INTEGER] is
 			-- Routines that ought to be in class NATIVE_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			native_integer_array_routines_not_void: Result /= Void
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	NATIVE_STRING_ARRAY_: KL_NATIVE_ARRAY_ROUTINES [STRING] is
 			-- Routines that ought to be in class NATIVE_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			native_string_array_routines_not_void: Result /= Void
 		end

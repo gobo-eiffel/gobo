@@ -17,7 +17,7 @@ feature -- Access
 	utf8: UC_UTF8_ROUTINES is
 			-- UTF-8 encoding routines
 		once
-			!! Result
+			create Result
 		ensure
 			utf8_not_void: Result /= Void
 		end

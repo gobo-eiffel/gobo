@@ -17,7 +17,7 @@ feature -- Access
 	input: KL_STDIN_FILE is
 			-- Standard input file
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_not_void: Result /= Void
 			file_open_read: Result.is_open_read
@@ -26,7 +26,7 @@ feature -- Access
 	output: KL_STDOUT_FILE is
 			-- Standard output file
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_not_void: Result /= Void
 			file_open_write: Result.is_open_write
@@ -35,7 +35,7 @@ feature -- Access
 	error: KL_STDERR_FILE is
 			-- Standard error file
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_not_void: Result /= Void
 			file_open_write: Result.is_open_write

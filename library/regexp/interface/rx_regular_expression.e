@@ -193,7 +193,7 @@ feature -- Splitting
 		require
 			is_matching: is_matching
 		do
-			!! Result.make (1, 0)
+			create Result.make (1, 0)
 			append_split_to_array (Result)
 		ensure
 			all_matched: not has_matched

@@ -38,9 +38,9 @@ feature -- Initialization
 			non_negative_n: n >= 0
 		do
 #ifdef VE
-			!! Result.make_empty
+			create Result.make_empty
 #else
-			!! Result.make (n)
+			create Result.make (n)
 #endif
 		ensure
 			string_not_void: Result /= Void
@@ -66,10 +66,10 @@ feature -- Initialization
 		do
 #ifdef VE
 			if s.same_type (dummy_string) then
-				!! Result.make_from_string (s)
+				create Result.make_from_string (s)
 			else
 				nb := s.count
-				!! Result.make_filled ('%U', nb)
+				create Result.make_filled ('%U', nb)
 				uc_string ?= s
 				if uc_string /= Void then
 					nb := uc_string.byte_count
@@ -88,10 +88,10 @@ feature -- Initialization
 #endif
 #ifdef SE
 			if s.same_type (dummy_string) then
-				!! Result.make_from_string (s)
+				create Result.make_from_string (s)
 			else
 				nb := s.count
-				!! Result.make (nb)
+				create Result.make (nb)
 				uc_string ?= s
 				if uc_string /= Void then
 					nb := uc_string.byte_count
@@ -109,7 +109,7 @@ feature -- Initialization
 #endif
 #ifdef ISE || HACT
 			nb := s.count
-			!! Result.make (nb)
+			create Result.make (nb)
 			uc_string ?= s
 			if uc_string /= Void then
 				nb := uc_string.byte_count
@@ -155,10 +155,10 @@ feature -- Initialization
 			valid_count: n >= 0
 		do
 #ifdef VE || SE || (ISE && ! ISE_5_1)
-			!! Result.make_filled (c, n)
+			create Result.make_filled (c, n)
 #endif
 #ifdef (ISE && ISE_5_1) || HACT
-			!! Result.make (n)
+			create Result.make (n)
 			Result.fill_character (c)
 #endif
 		ensure
@@ -174,13 +174,13 @@ feature -- Initialization
 			non_negative_n: n >= 0
 		do
 #ifdef VE || (ISE && ! ISE_5_1)
-			!! Result.make_filled ('%U', n)
+			create Result.make_filled ('%U', n)
 #endif
 #ifdef SE
-			!! Result.blank (n)
+			create Result.blank (n)
 #endif
 #ifdef (ISE && ISE_5_1) || HACT
-			!! Result.make (n)
+			create Result.make (n)
 			Result.fill_blank
 #endif
 		ensure
@@ -320,7 +320,7 @@ feature -- Access
 #endif
 #ifdef ISE || HACT
 				nb := a_string.count
-				!! Result.make (nb)
+				create Result.make (nb)
 				from i := 1 until i > nb loop
 					Result.append_character (a_string.item (i))
 					i := i + 1

@@ -18,7 +18,7 @@ feature -- Access
 	Arguments: KL_ARGUMENTS is
 			-- Command-line arguments
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			arguments_not_void: Result /= Void
 		end

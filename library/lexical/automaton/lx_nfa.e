@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			state1, state2: like start_state
 		do
 			in_trail_context := in_context
-			!! states.make (Initial_max_state_nb)
-			!! state1.make (in_context)
-			!! state2.make (in_context)
-			!! transition.make (symbol, state2)
+			create states.make (Initial_max_state_nb)
+			create state1.make (in_context)
+			create state2.make (in_context)
+			create transition.make (symbol, state2)
 			state1.set_transition (transition)
 			states.put_first (state1)
 			states.put_last (state2)
@@ -66,10 +66,10 @@ feature {NONE} -- Initialization
 			state1, state2: like start_state
 		do
 			in_trail_context := in_context
-			!! states.make (Initial_max_state_nb)
-			!! state1.make (in_context)
-			!! state2.make (in_context)
-			!! transition.make (state2)
+			create states.make (Initial_max_state_nb)
+			create state1.make (in_context)
+			create state2.make (in_context)
+			create transition.make (state2)
 			state1.set_transition (transition)
 			states.put_first (state1)
 			states.put_last (state2)
@@ -87,10 +87,10 @@ feature {NONE} -- Initialization
 			state1, state2: like start_state
 		do
 			in_trail_context := in_context
-			!! states.make (Initial_max_state_nb)
-			!! state1.make (in_context)
-			!! state2.make (in_context)
-			!! transition.make (symbols, state2)
+			create states.make (Initial_max_state_nb)
+			create state1.make (in_context)
+			create state2.make (in_context)
+			create transition.make (symbols, state2)
 			state1.set_transition (transition)
 			states.put_first (state1)
 			states.put_last (state2)
@@ -148,7 +148,7 @@ feature -- Duplication
 		do
 			standard_copy (other)
 			old_states := states
-			!! states.make (old_states.capacity)
+			create states.make (old_states.capacity)
 			nb := old_states.count
 			from i := 1 until i > nb loop
 				old_state := old_states.item (i)
@@ -224,7 +224,7 @@ feature -- Operations
 		local
 			a_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
-			!! a_transition.make (other.start_state)
+			create a_transition.make (other.start_state)
 			final_state.set_transition (a_transition)
 			states.append_last (other.states)
 		end
@@ -243,18 +243,18 @@ feature -- Operations
 			state1 := start_state
 			state2 := other.start_state
 			if state1.epsilon_transition = Void then
-				!! transition.make (state2)
+				create transition.make (state2)
 				state1.set_epsilon_transition (transition)
 			elseif state2.epsilon_transition = Void then
-				!! transition.make (state1)
+				create transition.make (state1)
 				state2.set_epsilon_transition (transition)
 				states.replace (state2, 1)
 				other.states.replace (state1, 1)
 			else
-				!! state3.make (in_trail_context)
-				!! transition.make (state1)
+				create state3.make (in_trail_context)
+				create transition.make (state1)
 				state3.set_transition (transition)
-				!! transition.make (state2)
+				create transition.make (state2)
 				state3.set_epsilon_transition (transition)
 				states.replace (state3, 1)
 				state3 := final_state
@@ -264,20 +264,20 @@ feature -- Operations
 			state1 := final_state
 			state2 := other.final_state
 			if not state2.is_accepting then
-				!! transition.make (state2)
+				create transition.make (state2)
 				state1.set_transition (transition)
 				states.append_last (other.states)
 			elseif not state1.is_accepting then
-				!! transition.make (state1)
+				create transition.make (state1)
 				state2.set_transition (transition)
 				states.replace (state2, states.count)
 				other.states.replace (state1, other.states.count)
 				states.append_last (other.states)
 			else
-				!! state3.make (in_trail_context)
-				!! transition.make (state3)
+				create state3.make (in_trail_context)
+				create transition.make (state3)
 				state1.set_transition (transition)
-				!! transition.make (state3)
+				create transition.make (state3)
 				state2.set_transition (transition)
 				states.append_last (other.states)
 				states.force_last (state3)
@@ -293,15 +293,15 @@ feature -- Operations
 			state1, state2, state3: like start_state
 		do
 			if start_state.epsilon_transition = Void then
-				!! transition.make (final_state)
+				create transition.make (final_state)
 				start_state.set_epsilon_transition (transition)
 			else
 				state1 := start_state
 				state2 := final_state
-				!! state3.make (in_trail_context)
-				!! transition.make (state1)
+				create state3.make (in_trail_context)
+				create transition.make (state1)
 				state3.set_transition (transition)
-				!! transition.make (state2)
+				create transition.make (state2)
 				state3.set_epsilon_transition (transition)
 				states.replace (state3, 1)
 				states.replace (state1, states.count)
@@ -326,14 +326,14 @@ feature -- Operations
 		do
 			state1 := start_state
 			state2 := final_state
-			!! transition.make (state1)
+			create transition.make (state1)
 			state2.set_transition (transition)
-			!! state3.make (in_trail_context)
-			!! transition.make (state1)
+			create state3.make (in_trail_context)
+			create transition.make (state1)
 			state3.set_transition (transition)
 			states.replace (state3, 1)
-			!! state3.make (in_trail_context)
-			!! transition.make (state3)
+			create state3.make (in_trail_context)
+			create transition.make (state3)
 			state2.set_epsilon_transition (transition)
 			states.force_last (state1)
 			states.force_last (state3)

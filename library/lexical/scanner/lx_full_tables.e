@@ -58,7 +58,7 @@ feature -- Conversion
 	to_tables: LX_FULL_TABLES is
 			-- New full tables made from current tables
 		do
-			!! Result.make_from_tables (Current)
+			create Result.make_from_tables (Current)
 		end
 
 invariant

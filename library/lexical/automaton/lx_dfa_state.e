@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 			epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do		
 			nb := nfa_states.count
-			!! states.make (nb)
-			!! transitions.make (min, max)
-			!! accepted_rules.make (nb)
-			!! accepted_head_rules.make (nb)
+			create states.make (nb)
+			create transitions.make (min, max)
+			create accepted_rules.make (nb)
+			create accepted_head_rules.make (nb)
 			from i := 1 until i > nb loop
 				state := nfa_states.item (i)
 				if state.transition /= Void then
@@ -206,7 +206,7 @@ feature {LX_DFA} -- DFA construction
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 		do
 			nb := states.count
-			!! nfa_states.make (nb)
+			create nfa_states.make (nb)
 			from i := 1 until i > nb loop
 				transition := states.item (i).transition
 				if transition /= Void and then transition.labeled (symbol) then
@@ -214,7 +214,7 @@ feature {LX_DFA} -- DFA construction
 				end
 				i := i + 1
 			end
-			!! Result.make (nfa_states, minimum_symbol, maximum_symbol)
+			create Result.make (nfa_states, minimum_symbol, maximum_symbol)
 		ensure
 			new_state_not_void: Result /= Void
 			minimum_symbol_set: Result.minimum_symbol = minimum_symbol
@@ -248,8 +248,8 @@ feature {NONE} -- Sort
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [LX_NFA_STATE]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end
@@ -259,8 +259,8 @@ feature {NONE} -- Sort
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [LX_RULE]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end

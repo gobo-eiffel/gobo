@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- of variable trailing context is incompatible
 			-- with full tables.
 		do
-			!! parameters.make (1, 0)
+			create parameters.make (1, 0)
 		end
 
 feature -- Access

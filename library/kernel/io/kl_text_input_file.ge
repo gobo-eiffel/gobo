@@ -189,7 +189,7 @@ feature -- Input
 			if operating_system.is_windows then
 					-- Windows.
 				if last_string = Void then
-					!! last_string.make_filled ('%U', nb)
+					create last_string.make_filled ('%U', nb)
 				elseif last_string.count < nb then
 					last_string.resize (nb)
 				end
@@ -207,7 +207,7 @@ feature -- Input
 				a_target.resize (j)
 			else
 				if last_string = Void then
-					!! last_string.make_filled ('%U', nb)
+					create last_string.make_filled ('%U', nb)
 				elseif last_string.count < nb then
 					last_string.resize (nb)
 				end
@@ -242,9 +242,9 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make_empty
+				create last_string.make_empty
 #else
-				!! last_string.make (256)
+				create last_string.make (256)
 #endif
 			else
 #ifdef ISE
@@ -297,9 +297,9 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make_empty
+				create last_string.make_empty
 #else
-				!! last_string.make (256)
+				create last_string.make (256)
 #endif
 			else
 #ifdef ISE

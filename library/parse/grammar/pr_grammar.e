@@ -26,11 +26,11 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new grammar.
 		do
-			!! tokens.make (Initial_max_nb_tokens)
-			!! variables.make (Initial_max_nb_variables)
-			!! types.make (Initial_max_nb_types)
-			!! rules.make (Initial_max_nb_rules)
-			!! eiffel_header.make (1)
+			create tokens.make (Initial_max_nb_tokens)
+			create variables.make (Initial_max_nb_variables)
+			create types.make (Initial_max_nb_types)
+			create rules.make (Initial_max_nb_rules)
+			create eiffel_header.make (1)
 		end
 
 feature -- Access
@@ -275,7 +275,7 @@ feature -- Processing
 					message.append_string (" useless rules")
 				end
 				message.append_string (".%N")
-				!! warning.make (message)
+				create warning.make (message)
 				error_handler.report_warning (warning)
 			end
 		end
@@ -378,7 +378,7 @@ feature -- Processing
 			old_todo, todo, tmp: DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]]
 		do
 			nb := rules.count
-			!! todo.make (nb)
+			create todo.make (nb)
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				lhs := a_rule.lhs
@@ -388,7 +388,7 @@ feature -- Processing
 				elseif not lhs.is_nullable then
 					from
 						j := rhs.count
-						!! a_list.make (j + 1)
+						create a_list.make (j + 1)
 						a_list.put_first (lhs)
 						token_found := False
 					until
@@ -413,7 +413,7 @@ feature -- Processing
 				i := i + 1
 			end
 			from
-				!! old_todo.make (todo.count)
+				create old_todo.make (todo.count)
 			until
 				old_todo.count = todo.count
 			loop

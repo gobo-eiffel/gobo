@@ -73,7 +73,7 @@ feature -- Access
 		do
 			match (a_string)
 			if has_matched then
-				!! Result.make (captured_start_position (0), captured_end_position (0))
+				create Result.make (captured_start_position (0), captured_end_position (0))
 			end
 		ensure
 			is_matching: is_matching

@@ -125,7 +125,7 @@ feature -- Input
 		local
 			a_cell: like character_buffer
 		do
-			!! a_cell.make (a_character)
+			create a_cell.make (a_character)
 			if character_buffer /= Void then
 				a_cell.put_right (character_buffer)
 			end
@@ -143,7 +143,7 @@ feature -- Input
 			i: INTEGER
 		do
 			if last_string = Void then
-				!! last_string.make (nb)
+				create last_string.make (nb)
 			elseif last_string.capacity < nb then
 				last_string.resize (nb)
 			end
@@ -171,7 +171,7 @@ feature -- Input
 			a_target: STRING
 		do
 			if last_string = Void then
-				!! a_target.make (nb)
+				create a_target.make (nb)
 				last_string := a_target
 			else
 				a_target := last_string
@@ -195,7 +195,7 @@ feature -- Input
 			i: INTEGER
 		do
 			if last_string = Void then
-				!! last_string.make_filled ('%U', nb)
+				create last_string.make_filled ('%U', nb)
 			elseif last_string.count < nb then
 				last_string.resize (nb)
 			end
@@ -285,7 +285,7 @@ feature -- Input
 						i := i + old_read_to_string (a_string, j, nb - i)
 					else
 						nb2 := nb - i
-						!! tmp_string.make (nb2)
+						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
 						from k := 1 until k > nb2 loop
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 	tmp_directory: KL_DIRECTORY is
 			-- Temporary directory object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			directory_not_void: Result /= Void
 			directory_closed: Result.is_closed
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			rts_server: RTS_SERVER
 			rts_class_info: RTS_CLASS_INFO
 		once
-			!! rts_server
+			create rts_server
 			rts_class_info := rts_server.class_info_by_name ("STRING")
 			if rts_class_info /= Void then
 				Result := rts_class_info.is_ensure_on

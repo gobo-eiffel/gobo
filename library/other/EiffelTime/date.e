@@ -60,7 +60,7 @@ feature -- Access
 	origin: DATE is
 			-- Origin date
 		once
-			!! Result.make (1600, 1, 1)
+			create Result.make (1600, 1, 1)
 		end
 
 	relative_duration (other: like Current): DATE_DURATION is
@@ -72,7 +72,7 @@ feature -- Access
 	relative_date_duration (other: like Current): DATE_DURATION is
 			-- Duration between `other' and current date
 		do
-			!! Result.make (0, 0, day_count - other.day_count)
+			create Result.make (0, 0, day_count - other.day_count)
 		end
 
 	days: INTEGER is

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new empty pathname.
 		do
-			!! components.make (1, Initial_components_capacity)
+			create components.make (1, Initial_components_capacity)
 		ensure
 			not_relative: not is_relative
 		end

@@ -17,7 +17,7 @@ feature -- Access
 	std: KL_STANDARD_FILES is
 			-- Standard files
 		once
-			!! Result
+			create Result
 		ensure
 			std_not_void: Result /= Void
 		end

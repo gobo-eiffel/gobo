@@ -18,7 +18,7 @@ feature -- Access
 	Execution_environment: KL_EXECUTION_ENVIRONMENT is
 			-- Execution environment
 		once
-			!! Result
+			create Result
 		ensure
 			execution_environment_not_void: Result /= Void
 		end

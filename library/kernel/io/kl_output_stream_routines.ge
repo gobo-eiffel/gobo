@@ -42,21 +42,21 @@ feature -- Initialization
 		do
 			if not rescued then
 #ifdef ISE || HACT
-				!! a_file.make (a_filename)
+				create a_file.make (a_filename)
 				Result := a_file
 				a_file.open_write
 			elseif not a_file.is_closed then
 				a_file.close
 #endif
 #ifdef SE
-				!! a_file.make
+				create a_file.make
 				Result := a_file
 				a_file.connect_to (a_filename)
 			elseif a_file.is_connected then
 				a_file.disconnect
 #endif
 #ifdef VE
-				!! Result.make (a_filename)
+				create Result.make (a_filename)
 				Result.open_write
 			elseif not Result.is_closed then
 				Result.close

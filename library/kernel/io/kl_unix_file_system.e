@@ -28,7 +28,7 @@ feature -- File handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			!! Result.make (a_name)
+			create Result.make (a_name)
 		end
 
 	new_output_file (a_name: STRING): KL_UNIX_OUTPUT_FILE is
@@ -37,7 +37,7 @@ feature -- File handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			!! Result.make (a_name)
+			create Result.make (a_name)
 		end
 
 	eol: STRING is "%N"
@@ -298,7 +298,7 @@ feature -- Pathname handling
 			j, k: INTEGER
 			str: STRING
 		do
-			!! Result.make
+			create Result.make
 			nb := a_pathname.count
 			if nb > 0 then
 				if a_pathname.item (1) /= directory_separator then

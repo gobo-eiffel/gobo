@@ -97,7 +97,7 @@ Declaration: T_EIFFEL
 			if start_symbol /= Void then
 				report_multiple_start_declarations_error
 			else
-				!! start_symbol.make ($2, line_nb)
+				create start_symbol.make ($2, line_nb)
 			end
 		}
 	| T_EXPECT T_NUMBER
@@ -166,7 +166,7 @@ Eiffel_type_list: -- Empty
 		}
 	| Eiffel_type
 		{
-			!! $$.make (5)
+			create $$.make (5)
 			$$.force_last ($1)
 		}
 	| Eiffel_type_list ',' Eiffel_type

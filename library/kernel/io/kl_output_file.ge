@@ -120,7 +120,7 @@ feature -- Basic operations
 			if not is_open_write then
 				a_pathname := file_system.canonical_pathname (name)
 				a_dirname := file_system.dirname (a_pathname)
-				!! a_dir.make (a_dirname)
+				create a_dir.make (a_dirname)
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 					if a_dir.exists then
@@ -148,7 +148,7 @@ feature -- Basic operations
 			if not is_open_write then
 				a_pathname := file_system.canonical_pathname (name)
 				a_dirname := file_system.dirname (a_pathname)
-				!! a_dir.make (a_dirname)
+				create a_dir.make (a_dirname)
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 					if a_dir.exists then

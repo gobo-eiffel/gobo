@@ -21,7 +21,7 @@ feature -- Access
 	OUTPUT_STREAM_: KL_OUTPUT_STREAM_ROUTINES is
 			-- Routines that ought to be in class OUTPUT_STREAM
 		once
-			!! Result
+			create Result
 		ensure
 			output_stream_routines_not_void: Result /= Void
 		end

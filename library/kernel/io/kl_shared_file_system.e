@@ -39,7 +39,7 @@ feature -- File systems
 	windows_file_system: KL_WINDOWS_FILE_SYSTEM is
 			-- Windows-like file system
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_system_not_void: Result /= Void
 		end
@@ -47,7 +47,7 @@ feature -- File systems
 	unix_file_system: KL_UNIX_FILE_SYSTEM is
 			-- Unix-like file system
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_system_not_void: Result /= Void
 		end

@@ -46,10 +46,10 @@ feature {NONE} -- Initialization
 			cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
 		do
-			!! storage.make (min, max)
-			!! symbols.make (min, max)
+			create storage.make (min, max)
+			create symbols.make (min, max)
 			from i := min until i > max loop
-				!! cell.make (i)
+				create cell.make (i)
 				storage.put (cell, i)
 				i := i + 1
 			end

@@ -315,7 +315,7 @@ feature -- Input
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			!! Result.make (a_file)
+			create Result.make (a_file)
 		ensure
 			new_buffer_not_void: Result /= Void
 		end
@@ -325,7 +325,7 @@ feature -- Input
 		require
 			a_string_not_void: a_string /= Void
 		do
-			!! Result.make (a_string)
+			create Result.make (a_string)
 		ensure
 			new_buffer_not_void: Result /= Void
 		end
@@ -333,7 +333,7 @@ feature -- Input
 	Empty_buffer: YY_BUFFER is
 			-- Empty input buffer
 		once
-			!! Result.make ("")
+			create Result.make ("")
 		ensure
 			empty_buffer_not_void: Result /= Void
 		end

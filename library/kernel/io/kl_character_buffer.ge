@@ -56,16 +56,16 @@ feature {NONE} -- Initialization
 			set_count (n)
 #endif
 #ifdef VE
-			!! area.make_filled ('%U', n)
+			create area.make_filled ('%U', n)
 #endif
 #ifdef SE
-			!! area_string.make_filled ('%U', n + 2)
+			create area_string.make_filled ('%U', n + 2)
 			area_string.remove_tail (1)
 			area := area.from_pointer (area_string.to_external)
 			count := n
 #endif
 #ifdef HACT
-			!! area.make (n)
+			create area.make (n)
 			area.fill_blank
 #endif
 		end
@@ -100,20 +100,20 @@ feature -- Access
 			if e < s then
 					-- Empty string
 #ifdef VE
-				!! Result.make_empty
+				create Result.make_empty
 #else
-				!! Result.make (0)
+				create Result.make (0)
 #endif
 			else
 #ifdef ISE
 				nb := e - s + 1
-				!! Result.make (nb)
+				create Result.make (nb)
 				Result.set_count (nb)
 				Result.subcopy (area, s, e, 1)
 #endif
 #ifdef SE
 				nb := e - s + 1
-				!! Result.make (nb)
+				create Result.make (nb)
 				from i := s until i > e loop
 					Result.append_character (area.item (i))
 					i := i + 1
@@ -121,7 +121,7 @@ feature -- Access
 #endif
 #ifdef VE
 				nb := e - s + 1
-				!! Result.make_filled ('%U', nb)
+				create Result.make_filled ('%U', nb)
 				from i := s until i > e loop
 					j := j + 1
 					Result.put (area.item (i), j)

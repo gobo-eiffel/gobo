@@ -18,7 +18,7 @@ feature -- Acess
 	operating_system: KL_OPERATING_SYSTEM is
 			-- Underlying operating system
 		once
-			!! Result
+			create Result
 		ensure
 			operating_system_not_void: Result /= Void
 		end

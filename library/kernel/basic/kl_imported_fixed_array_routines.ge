@@ -19,7 +19,7 @@ feature -- Access
 	FIXED_ANY_ARRAY_: KL_FIXED_ARRAY_ROUTINES [ANY] is
 			-- Routines that ought to be in class FIXED_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			fixed_any_array_routines_not_void: Result /= Void
 		end
@@ -27,7 +27,7 @@ feature -- Access
 	FIXED_BOOLEAN_ARRAY_: KL_FIXED_ARRAY_ROUTINES [BOOLEAN] is
 			-- Routines that ought to be in class FIXED_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			fixed_boolean_array_routines_not_void: Result /= Void
 		end
@@ -35,7 +35,7 @@ feature -- Access
 	FIXED_CHARACTER_ARRAY_: KL_FIXED_ARRAY_ROUTINES [CHARACTER] is
 			-- Routines that ought to be in class FIXED_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			fixed_character_array_routines_not_void: Result /= Void
 		end
@@ -43,7 +43,7 @@ feature -- Access
 	FIXED_INTEGER_ARRAY_: KL_FIXED_ARRAY_ROUTINES [INTEGER] is
 			-- Routines that ought to be in class FIXED_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			fixed_integer_array_routines_not_void: Result /= Void
 		end
@@ -51,7 +51,7 @@ feature -- Access
 	FIXED_STRING_ARRAY_: KL_FIXED_ARRAY_ROUTINES [STRING] is
 			-- Routines that ought to be in class FIXED_ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			fixed_string_array_routines_not_void: Result /= Void
 		end

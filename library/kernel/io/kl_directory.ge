@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 #ifdef VE
 			string_name := STRING_.as_string (a_name)
 			if string_name.count > 0 then
-				!! directory.make (string_name)
+				create directory.make (string_name)
 			end
 #endif
 		end
@@ -90,7 +90,7 @@ feature -- Access
 				open_read
 				if is_open_read then
 					k := 10
-					!! an_array.make (1, k)
+					create an_array.make (1, k)
 					from read_entry until end_of_input loop
 						a_name := last_entry
 						tmp_file.reset (file_system.pathname (string_name, a_name))
@@ -105,7 +105,7 @@ feature -- Access
 						read_entry
 					end
 					close
-					!! Result.make (1, nb)
+					create Result.make (1, nb)
 					from i := 1 until i > nb loop
 						Result.put (an_array.item (i), i)
 						i := i + 1
@@ -130,7 +130,7 @@ feature -- Access
 				open_read
 				if is_open_read then
 					k := 10
-					!! an_array.make (1, k)
+					create an_array.make (1, k)
 					from read_entry until end_of_input loop
 						a_name := last_entry
 						if
@@ -150,7 +150,7 @@ feature -- Access
 						read_entry
 					end
 					close
-					!! Result.make (1, nb)
+					create Result.make (1, nb)
 					from i := 1 until i > nb loop
 						Result.put (an_array.item (i), i)
 						i := i + 1
@@ -273,7 +273,7 @@ feature -- Basic operations
 					basic_directory.connect_to (string_name)
 #endif
 #ifdef VE
-					!! directory_stream.make (directory)
+					create directory_stream.make (directory)
 #endif
 				end
 			elseif not is_closed then
@@ -365,7 +365,7 @@ feature -- Basic operations
 				a_pathname := file_system.canonical_pathname (string_name)
 				a_dirname := file_system.dirname (a_pathname)
 				if not STRING_.same_string (a_dirname, a_pathname) then
-					!! a_dir.make (a_dirname)
+					create a_dir.make (a_dirname)
 					if not a_dir.exists then
 						a_dir.recursive_create_directory
 						if a_dir.exists then
@@ -441,7 +441,7 @@ feature -- Basic operations
 								if file_system.is_file_readable (a_pathname) then
 									file_system.delete_file (a_pathname)
 								else
-									!! a_dir.make (a_pathname)
+									create a_dir.make (a_pathname)
 									a_dir.recursive_delete
 								end
 							end
@@ -500,7 +500,7 @@ feature -- Input
 		local
 			a_cell: like entry_buffer
 		do
-			!! a_cell.make (an_entry)
+			create a_cell.make (an_entry)
 			if entry_buffer /= Void then
 				a_cell.put_right (entry_buffer)
 			end
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 	tmp_file: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 	tmp_directory: KL_DIRECTORY is
 			-- Temporary directory object
 		once
-			!! Result.make (dummy_name)
+			create Result.make (dummy_name)
 		ensure
 			directory_not_void: Result /= Void
 			directory_closed: Result.is_closed

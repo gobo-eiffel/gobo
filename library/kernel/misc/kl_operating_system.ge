@@ -56,7 +56,7 @@ feature -- Status report
 		local
 			p: PLATFORM
 		once
-			!! p
+			create p
 			Result := p.is_dotnet
 #else
 		once
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	environment_impl: SYSTEM is
 			-- Execution environment implementation
 		once
-			!! Result
+			create Result
 		ensure
 			environment_impl_not_void: Result /= Void
 		end
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	file_system_impl: FILE_SYSTEM is
 			-- Implementation
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			file_system_impl_not_void: Result /= Void
 		end
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Execution environment implementation
 		once
-			!! Result
+			create Result
 		ensure
 			execution_environment_not_void: Result /= Void
 		end

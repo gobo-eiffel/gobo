@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			a_rule_not_void: a_rule /= Void
 		do
 			rule := a_rule
-			!! lookaheads.make (Initial_max_nb_lookaheads)
-			!! transitions.make
+			create lookaheads.make (Initial_max_nb_lookaheads)
+			create transitions.make
 		ensure
 			rule_set: rule = a_rule
 		end

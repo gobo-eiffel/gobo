@@ -168,7 +168,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_MISSING_CHARACTERS_ERROR
 		do
-			!! an_error.make (filename, line_nb, chars)
+			create an_error.make (filename, line_nb, chars)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -181,7 +181,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_NULL_INTEGER_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -195,7 +195,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_INVALID_DOLLAR_N_ERROR
 		do
-			!! an_error.make (filename, line_nb, n)
+			create an_error.make (filename, line_nb, n)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -210,7 +210,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_INVALID_STRING_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_string)
+			create an_error.make (filename, line_nb, a_string)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -225,7 +225,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_DANGEROUS_DOLLAR_N_ERROR
 		do
-			!! an_error.make (filename, line_nb, n)
+			create an_error.make (filename, line_nb, n)
 			error_handler.report_warning (an_error)
 		end
 
@@ -237,7 +237,7 @@ feature {NONE} -- Constants
 	Unknown_type: PR_NO_TYPE is
 			-- Type used when type is not known
 		once
-			!! Result.make (0, "ANY")
+			create Result.make (0, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 	Dummy_pattern: LX_NFA is
 			-- Dummy pattern
 		once
-			!! Result.make_epsilon (False)
+			create Result.make_epsilon (False)
 		ensure
 			dummy_pattern_not_void: Result /= Void
 		end
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	Dummy_action: LX_ACTION is
 			-- Dummy action
 		once
-			!! Result.make ("")
+			create Result.make ("")
 		ensure
 			dummy_action_not_void: Result /= Void
 		end

@@ -37,25 +37,25 @@ feature -- Initialization
 		local
 			to_special: TO_SPECIAL [CHARACTER]
 		do
-			!! to_special.make_area (n)
+			create to_special.make_area (n)
 			Result := to_special.area
 #endif
 #ifdef (ISE && ! ISE_5_1)
 		do
-			!! Result.make (n)
+			create Result.make (n)
 			Result.set_count (n)
 #endif
 #ifdef VE
 		do
-			!! Result.make_filled ('%U', n)
+			create Result.make_filled ('%U', n)
 #endif
 #ifdef SE
 		do
-			!! Result.blank (n)
+			create Result.blank (n)
 #endif
 #ifdef HACT
 		do
-			!! Result.make (n)
+			create Result.make (n)
 			Result.fill_blank
 #endif
 		ensure
@@ -118,14 +118,14 @@ feature -- Access
 			if e < s then
 					-- Empty string
 #ifdef VE
-				!! Result.make_empty
+				create Result.make_empty
 #else
-				!! Result.make (0)
+				create Result.make (0)
 #endif
 			else
 #ifdef (ISE && ISE_5_1)
 				nb := e - s + 1
-				!! Result.make (nb)
+				create Result.make (nb)
 				a := Result.area
 				p := c_rtid ($a)
 				p.memory_copy (c_rtid ($a_buffer) + s, nb)

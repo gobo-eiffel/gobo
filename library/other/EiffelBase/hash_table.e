@@ -89,7 +89,7 @@ feature -- Access
 	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!HASH_TABLE_CURSOR! Result.make (internal_cursor.position)
+			create {HASH_TABLE_CURSOR} Result.make (internal_cursor.position)
 		end
 
 	current_keys: ARRAY [H] is
@@ -99,7 +99,7 @@ feature -- Access
 		do
 			j := 1
 			nb := count
-			!! Result.make (1, nb)
+			create Result.make (1, nb)
 			from i := 1 until i > nb loop
 				from
 				until
@@ -424,7 +424,7 @@ feature -- Status setting
 			-- rather than `=' for comparing references.
 		do
 			object_comparison := True
-			!! equality_tester
+			create equality_tester
 		end
 
 	compare_references is
@@ -444,7 +444,7 @@ feature -- Conversion
 		do
 			j := 1
 			nb := count
-			!! Result.make (nb)
+			create Result.make (nb)
 			from i := 1 until i > nb loop
 				from
 				until

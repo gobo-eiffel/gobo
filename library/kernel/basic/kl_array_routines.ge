@@ -69,7 +69,7 @@ feature -- Access
 			end_pos_small_enough: end_pos <= an_array.upper
 			valid_bounds: start_pos <= end_pos + 1
 		do
-			!! Result.make (min_index, min_index + end_pos - start_pos)
+			create Result.make (min_index, min_index + end_pos - start_pos)
 			subcopy (Result, an_array, start_pos, end_pos, min_index)
 		ensure
 			array_not_void: Result /= Void

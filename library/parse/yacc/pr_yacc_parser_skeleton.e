@@ -38,11 +38,11 @@ feature {NONE} -- Initialization
 		do
 			make_yacc_scanner (handler)
 			make_parser_skeleton
-			!! action_factory.make
-			!! last_grammar.make
-			!! terminal_symbols.make (Initial_max_nb_tokens)
-			!! nonterminal_symbols.make (Initial_max_nb_variables)
-			!! types.make (Initial_max_nb_types)
+			create action_factory.make
+			create last_grammar.make
+			create terminal_symbols.make (Initial_max_nb_tokens)
+			create nonterminal_symbols.make (Initial_max_nb_variables)
+			create types.make (Initial_max_nb_types)
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -53,7 +53,7 @@ feature -- Initialization
 			-- Reset parser before parsing next input.
 		do
 			reset_yacc_scanner
-			!! last_grammar.make
+			create last_grammar.make
 			terminal_symbols.wipe_out
 			nonterminal_symbols.wipe_out
 			types.wipe_out
@@ -113,7 +113,7 @@ feature {NONE} -- Factory
 			id: INTEGER
 		do
 			id := last_grammar.rules.count + 1
-			!! Result.make (id, lhs, No_action)
+			create Result.make (id, lhs, No_action)
 				-- Mark `lhs' has being derivable
 				-- by this new rule.
 			lhs.put_rule (Result)
@@ -322,7 +322,7 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				!! Result.make (an_id, a_name, Unknown_type)
+				create Result.make (an_id, a_name, Unknown_type)
 				terminal_symbols.force (Result, lower_name)
 				last_grammar.put_token (Result)
 			end
@@ -405,7 +405,7 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				!! Result.make (an_id, a_char, Unknown_type)
+				create Result.make (an_id, a_char, Unknown_type)
 				Result.set_token_id (a_code)
 				terminal_symbols.force (Result, a_key)
 				last_grammar.put_token (Result)
@@ -432,7 +432,7 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				!! Result.make (an_id, a_string, Unknown_type)
+				create Result.make (an_id, a_string, Unknown_type)
 				Result.set_literal_string (a_string)
 				terminal_symbols.force (Result, a_string)
 				last_grammar.put_token (Result)
@@ -460,7 +460,7 @@ feature {NONE} -- Factory
 			else
 					-- Variables are indexed from 0.
 				an_id := last_grammar.variables.count
-				!! Result.make (an_id, a_name, Unknown_type)
+				create Result.make (an_id, a_name, Unknown_type)
 				nonterminal_symbols.force (Result, lower_name)
 				last_grammar.put_variable (Result)
 			end
@@ -480,7 +480,7 @@ feature {NONE} -- Factory
 			INTEGER_FORMATTER_.append_decimal_integer (a_name, nonterminal_symbols.count)
 				-- Variables are indexed from 0.
 			an_id := last_grammar.variables.count
-			!! Result.make (an_id, a_name, Unknown_type)
+			create Result.make (an_id, a_name, Unknown_type)
 			nonterminal_symbols.force (Result, a_name)
 			last_grammar.put_variable (Result)
 		ensure
@@ -507,7 +507,7 @@ feature {NONE} -- Factory
 			else
 					-- Variables are indexed from 0.
 				an_id := last_grammar.variables.count
-				!! a_variable.make (an_id, a_name, Unknown_type)
+				create a_variable.make (an_id, a_name, Unknown_type)
 				nonterminal_symbols.force (a_variable, lower_name)
 				last_grammar.put_variable (a_variable)
 				Result := a_variable
@@ -533,7 +533,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 is reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				!! Result.make (an_id, a_name)
+				create Result.make (an_id, a_name)
 				types.force (Result, upper_name)
 				last_grammar.put_type (Result)
 			end
@@ -558,7 +558,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 is reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				!PR_BASIC_TYPE! Result.make (an_id, a_name)
+				create {PR_BASIC_TYPE} Result.make (an_id, a_name)
 				types.force (Result, upper_name)
 				last_grammar.put_type (Result)
 			end
@@ -581,7 +581,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 is reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				!! Result.make_generic (an_id, a_name, generics)
+				create Result.make_generic (an_id, a_name, generics)
 				upper_name := STRING_.to_upper (Result.name)
 				if types.has (upper_name) then
 					Result := types.item (upper_name)
@@ -613,7 +613,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 is reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				!! Result.make_anchored (an_id, a_name)
+				create Result.make_anchored (an_id, a_name)
 				types.force (Result, lower_name)
 				last_grammar.put_type (Result)
 			end
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			!! translate.make (0, max_token_id)
+			create translate.make (0, max_token_id)
 			from i := 1 until i > nb loop
 				a_token := tokens.item (i)
 				if translate.item (a_token.token_id) /= Void then
@@ -924,7 +924,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: UT_SYNTAX_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure then
@@ -943,7 +943,7 @@ feature {NONE} -- Error handling
 		do
 			a_name := start_symbol.first
 			a_line := start_symbol.second
-			!! an_error.make (filename, a_line, a_name)
+			create an_error.make (filename, a_line, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -961,7 +961,7 @@ feature {NONE} -- Error handling
 		do
 			a_name := start_symbol.first
 			a_line := start_symbol.second
-			!! an_error.make (filename, a_line, a_name)
+			create an_error.make (filename, a_line, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -976,7 +976,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_LHS_SYMBOL_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -988,7 +988,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_MULTIPLE_START_DECLARATIONS_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1003,7 +1003,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_PRECEDENCE_DEFINED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1016,7 +1016,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_PREC_SPECIFIED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1031,7 +1031,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_PREC_NOT_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1046,7 +1046,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_TOKEN_DECLARED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1061,7 +1061,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_VARIABLE_DECLARED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1076,7 +1076,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_SYMBOL_DECLARED_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1091,7 +1091,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_SYMBOL_DECLARED_VARIABLE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1104,7 +1104,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_NO_RULES_ERROR
 		do
-			!! an_error.make (filename)
+			create an_error.make (filename)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1119,7 +1119,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_UNDEFINED_SYMBOL_ERROR
 		do
-			!! an_error.make (filename, a_name)
+			create an_error.make (filename, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1134,7 +1134,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_UNDEFINED_STRING_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_string)
+			create an_error.make (filename, line_nb, a_string)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1151,7 +1151,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_STRING_TOKEN_DEFINED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_string, token1, token2)
+			create an_error.make (filename, line_nb, a_string, token1, token2)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1168,7 +1168,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_TWO_STRINGS_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_token, string1, string2)
+			create an_error.make (filename, line_nb, a_token, string1, string2)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1183,7 +1183,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_TWO_TOKEN_IDS_TOKEN_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_token, id1, id2)
+			create an_error.make (filename, line_nb, a_token, id1, id2)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -1198,7 +1198,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_RULE_DECLARED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_warning (an_error)
 		end
 
@@ -1211,7 +1211,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_TOKEN_ID_USED_TWICE_ERROR
 		do
-			!! an_error.make (filename, token1.name, token2.name, token1.token_id)
+			create an_error.make (filename, token1.name, token2.name, token1.token_id)
 			error_handler.report_warning (an_error)
 		end
 
@@ -1237,7 +1237,7 @@ feature {NONE} -- Constants
 			-- Type used when no type has been specified:
 			--   %token token_name
 		once
-			!! Result.make (0, "ANY")
+			create Result.make (0, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

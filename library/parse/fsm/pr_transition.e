@@ -37,8 +37,8 @@ feature {NONE} -- Initialization
 		do
 			source := a_source
 			target := a_target
-			!! following_tokens.make
-			!! included_tokens.make
+			create following_tokens.make
+			create included_tokens.make
 		ensure
 			source_set: source = a_source
 			target_set: target = a_target

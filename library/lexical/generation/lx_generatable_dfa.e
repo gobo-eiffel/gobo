@@ -92,9 +92,9 @@ feature {NONE} -- Initialization
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 			a_rule: LX_RULE
 		do
-			!! nfa_states.make (0)
-			!! eob_state.make (nfa_states, minimum_symbol, maximum_symbol)
-			!! a_rule.make_default (yyEnd_of_buffer)
+			create nfa_states.make (0)
+			create eob_state.make (nfa_states, minimum_symbol, maximum_symbol)
+			create a_rule.make_default (yyEnd_of_buffer)
 			eob_state.accepted_rules.force_first (a_rule)
 			states.put_last (eob_state)
 			eob_state.set_id (states.count)
@@ -510,7 +510,7 @@ feature {NONE} -- Generation
 			from
 				i := yy_eof_rules.lower
 				nb := yy_eof_rules.upper
-				!! actions.make (yy_eof_rules.count)
+				create actions.make (yy_eof_rules.count)
 			until
 				i > nb
 			loop
@@ -528,8 +528,8 @@ feature {NONE} -- Generation
 					if j <= nb_actions then
 						rule_list := actions.item (j).second
 					else
-						!! rule_list.make
-						!! a_pair.make (action, rule_list)
+						create rule_list.make
+						create a_pair.make (action, rule_list)
 						actions.put_last (a_pair)
 					end
 					rule_list.put_last (rule)
@@ -665,7 +665,7 @@ feature {NONE} -- Generation
 				a_file.put_string (">>)%N%T%Tend%N")
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
-					%%T%Tonce%N%T%T%T!! an_array.make (")
+					%%T%Tonce%N%T%T%Tcreate an_array.make (")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
@@ -725,7 +725,7 @@ feature {NONE} -- Generation
 		do
 			nfa_states := a_state.states
 			nb := nfa_states.count
-			!! line_numbers.make (nb)
+			create line_numbers.make (nb)
 			from i := 1 until i > nb loop
 				a_nfa_state := nfa_states.item (i)
 				from
@@ -774,7 +774,7 @@ feature {NONE} -- Generation
 		do
 			nb := characters_count
 			transitions := a_state.transitions
-			!! has_transition.make (0, nb - 1)
+			create has_transition.make (0, nb - 1)
 			if yy_ec /= Void then
 					-- Equivalence classes are used.
 				from i := 1 until i >= nb loop
@@ -918,7 +918,7 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 		do
 			nb := rules.count
-			!! yy_rules.make (1, nb)
+			create yy_rules.make (1, nb)
 			from i := 1 until i > nb loop
 				yy_rules.put (rules.item (i), i)
 				i := i + 1
@@ -938,7 +938,7 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 			rule: LX_RULE
 		do
-			!! yy_eof_rules.make (l, u)
+			create yy_eof_rules.make (l, u)
 			nb := rules.count
 			from i := 1 until i > nb loop
 				rule := rules.item (i)
@@ -1005,8 +1005,8 @@ feature {NONE} -- Constants
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			sorter_not_void: Result /= Void
 		end

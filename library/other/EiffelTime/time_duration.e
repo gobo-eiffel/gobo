@@ -76,7 +76,7 @@ feature -- Access
 	zero: TIME_DURATION is
 			-- Neutral element for "+" and "-"
 		once
-			!! Result.make (0, 0, 0)
+			create Result.make (0, 0, 0)
 		end
 
 	seconds_count: INTEGER is

@@ -17,7 +17,7 @@ feature -- Access
 	CHARACTER_: KL_CHARACTER_ROUTINES is
 			-- Routines that ought to be in class CHARACTER
 		once
-			!! Result
+			create Result
 		ensure
 			character_routines_not_void: Result /= Void
 		end

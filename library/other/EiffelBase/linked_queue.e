@@ -60,7 +60,7 @@ feature -- Element change
 			if not s.empty then
 				from
 					s.start
-					!! a_cell.make (s.item)
+					create a_cell.make (s.item)
 					new_first := a_cell
 					new_last := a_cell
 					i := 1
@@ -68,7 +68,7 @@ feature -- Element change
 				until
 					s.after
 				loop
-					!! a_cell.make (s.item)
+					create a_cell.make (s.item)
 					new_last.put_right (a_cell)
 					new_last := a_cell
 					i := i + 1
@@ -92,7 +92,7 @@ feature -- Conversion
 		local
 			a_cell: like first_cell
 		do
-			!! Result.make (count)
+			create Result.make (count)
 			from a_cell := first_cell until (a_cell = Void) loop
 				Result.put_last (a_cell.item)
 				a_cell := a_cell.right
@@ -106,7 +106,7 @@ feature -- Status setting
 			-- rather than `=' for comparing references.
 		do
 			object_comparison := True
-			!! equality_tester
+			create equality_tester
 		end
 
 	compare_references is

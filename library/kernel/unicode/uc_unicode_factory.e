@@ -25,7 +25,7 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 		do
-			!UC_UTF8_STRING! Result.make_from_string (a_string)
+			create {UC_UTF8_STRING} Result.make_from_string (a_string)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -38,7 +38,7 @@ feature -- Access
 			a_string_is_string: a_string.same_type ("")
 			valid_utf8: utf8.valid_utf8 (a_string)
 		do
-			!UC_UTF8_STRING! Result.make_from_utf8 (a_string)
+			create {UC_UTF8_STRING} Result.make_from_utf8 (a_string)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -51,7 +51,7 @@ feature -- Access
 			a_string_is_string: a_string.same_type ("")
 			valid_utf16: utf16.valid_utf16 (a_string)
 		do
-			!UC_UTF8_STRING! Result.make_from_utf16 (a_string)
+			create {UC_UTF8_STRING} Result.make_from_utf16 (a_string)
 		end
 
 	new_unicode_string_with_capacity (suggested_capacity: INTEGER): UC_STRING is
@@ -59,7 +59,7 @@ feature -- Access
 		require
 			non_negative_suggested_capacity: suggested_capacity >= 0
 		do
-			!UC_UTF8_STRING! Result.make (suggested_capacity)
+			create {UC_UTF8_STRING} Result.make (suggested_capacity)
 		ensure
 			new_string_not_void: Result /= Void
 			byte_capacity_set: Result.byte_capacity >= suggested_capacity
@@ -68,7 +68,7 @@ feature -- Access
 	new_unicode_string_empty: UC_STRING is
 			-- New empty unicode string
 		do
-			!UC_UTF8_STRING! Result.make_empty
+			create {UC_UTF8_STRING} Result.make_empty
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -82,7 +82,7 @@ feature -- Access
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		do
-			!UC_UTF8_STRING! Result.make_from_substring (a_string, start_index, end_index)
+			create {UC_UTF8_STRING} Result.make_from_substring (a_string, start_index, end_index)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -92,7 +92,7 @@ feature -- Access
 		require
 			valid_count: n >= 0
 		do
-			!UC_UTF8_STRING! Result.make_filled (c, n)
+			create {UC_UTF8_STRING} Result.make_filled (c, n)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -103,7 +103,7 @@ feature -- Access
 			c_not_void: c /= Void
 			valid_count: n >= 0
 		do
-			!UC_UTF8_STRING! Result.make_filled_unicode (c, n)
+			create {UC_UTF8_STRING} Result.make_filled_unicode (c, n)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -115,7 +115,7 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 			valid_count: n >= 0
 		do
-			!UC_UTF8_STRING! Result.make_filled_code (a_code, n)
+			create {UC_UTF8_STRING} Result.make_filled_code (a_code, n)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -123,7 +123,7 @@ feature -- Access
 	new_unicode_character (a_char: CHARACTER): UC_CHARACTER is
 			-- New unicode character from Latin-1 character `a_char'
 		do
-			!! Result.make_from_character (a_char)
+			create Result.make_from_character (a_char)
 		ensure
 			new_character_not_void: Result /= Void
 			code_set: Result.code = a_char.code

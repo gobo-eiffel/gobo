@@ -81,7 +81,7 @@ feature -- Access
 	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!ARRAYED_LIST_CURSOR! Result.make (internal_cursor.position)
+			create {ARRAYED_LIST_CURSOR} Result.make (internal_cursor.position)
 		end
 
 	index_of (v: G; i: INTEGER): INTEGER is
@@ -272,7 +272,7 @@ feature -- Duplication
 				if nb > count then
 					nb := count
 				end
-				!! Result.make (n)
+				create Result.make (n)
 			until
 				i > nb
 			loop
@@ -288,7 +288,7 @@ feature -- Status setting
 			-- rather than `=' for comparing references.
 		do
 			object_comparison := True
-			!! equality_tester
+			create equality_tester
 		end
 
 	compare_references is

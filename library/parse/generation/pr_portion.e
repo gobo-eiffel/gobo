@@ -197,8 +197,8 @@ feature -- Constants
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			integer_sorter_not_void: Result /= Void
 		end

@@ -25,10 +25,10 @@ feature {NONE} -- Initialization
 			meta_equiv_classes_used := True
 			characters_count := 256
 			array_size := 3000
-			!! rules.make (Initial_max_rules)
-			!! eof_rules.make (Initial_max_start_conditions)
-			!! eiffel_header.make (1)
-			!! start_conditions.make_with_initial (Initial_max_start_conditions)
+			create rules.make (Initial_max_rules)
+			create eof_rules.make (Initial_max_start_conditions)
+			create eiffel_header.make (1)
+			create start_conditions.make_with_initial (Initial_max_start_conditions)
 		end
 
 feature -- Initialization
@@ -43,7 +43,7 @@ feature -- Initialization
 			rules.wipe_out
 			eof_rules.wipe_out
 			eiffel_header.wipe_out
-			!! start_conditions.make_with_initial (Initial_max_start_conditions)
+			create start_conditions.make_with_initial (Initial_max_start_conditions)
 			backing_up_report := False
 			backing_up_filename := Void
 			case_insensitive := False
@@ -427,7 +427,7 @@ feature -- Setting
 		require
 			equiv_classes_used: equiv_classes_used
 		do
-			!! equiv_classes.make (1, characters_count)
+			create equiv_classes.make (1, characters_count)
 		ensure
 			equiv_classes_created: equiv_classes /= Void
 			lower_set: equiv_classes.lower = 1

@@ -17,7 +17,7 @@ feature -- Access
 	BOOLEAN_: KL_BOOLEAN_ROUTINES is
 			-- Routines that ought to be in class BOOLEAN
 		once
-			!! Result
+			create Result
 		ensure
 			boolean_routines_not_void: Result /= Void
 		end

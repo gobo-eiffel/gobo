@@ -59,7 +59,7 @@ Init_pattern: -- Empty
 			end
 				-- Initialize for a parse of one pattern.
 			in_trail_context := False
-			!! rule.make_default (1)
+			create rule.make_default (1)
 		}
 	;
 
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			if character_classes.has (question_string) then
 				Result := character_classes.item (question_string)
 			else
-				!! Result.make (1)
+				create Result.make (1)
 				Result.put (Slash_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes

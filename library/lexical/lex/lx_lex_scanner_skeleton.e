@@ -35,11 +35,11 @@ feature {NONE} -- Initialization
 		require
 			handler_not_void: handler /= Void
 		do
-			!! description.make
+			create description.make
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
-			!! name_definitions.make (Initial_max_nb_names)
-			!! character_classes.make (Initial_max_character_classes)
+			create name_definitions.make (Initial_max_nb_names)
+			create character_classes.make (Initial_max_character_classes)
 			successful := True
 			line_nb := 1
 		ensure
@@ -57,8 +57,8 @@ feature {NONE} -- Initialization
 			description := a_description
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
-			!! name_definitions.make (Initial_max_nb_names)
-			!! character_classes.make (Initial_max_character_classes)
+			create name_definitions.make (Initial_max_nb_names)
+			create character_classes.make (Initial_max_character_classes)
 			successful := True
 			line_nb := 1
 		ensure
@@ -308,7 +308,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_BAD_CHARACTER_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_char)
+			create an_error.make (filename, line_nb, a_char)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -320,7 +320,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_BAD_CHARACTER_CLASS_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -332,7 +332,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_BAD_CHARACTER_IN_BRACKETS_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -346,7 +346,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_BAD_START_CONDITION_ERROR
 		do
-			!! an_error.make (filename, line_nb, sc)
+			create an_error.make (filename, line_nb, sc)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -360,7 +360,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_CHARACTER_OUT_OF_RANGE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_char)
+			create an_error.make (filename, line_nb, a_char)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -372,7 +372,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_DIRECTIVE_EXPECTED_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -384,7 +384,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_INCOMPLETE_NAME_DEFINITION_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -396,7 +396,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_MISSING_BRACKET_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -408,7 +408,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_MISSING_QUOTE_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -422,7 +422,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_NAME_DEFINED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, a_name)
+			create an_error.make (filename, line_nb, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -438,7 +438,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_START_CONDITION_DECLARED_TWICE_ERROR
 		do
-			!! an_error.make (filename, line_nb, sc)
+			create an_error.make (filename, line_nb, sc)
 			error_handler.report_error (an_error)
 		end
 
@@ -447,7 +447,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_START_CONDITION_EXPECTED_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -461,7 +461,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_UNDEFINED_DEFINITION_ERROR
 		do
-			!! an_error.make (filename, line_nb, def)
+			create an_error.make (filename, line_nb, def)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -473,7 +473,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_UNRECOGNIZED_DIRECTIVE_ERROR
 		do
-			!! an_error.make (filename, line_nb)
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -487,7 +487,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_UNRECOGNIZED_OPTION_ERROR
 		do
-			!! an_error.make (filename, line_nb, an_option)
+			create an_error.make (filename, line_nb, an_option)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure

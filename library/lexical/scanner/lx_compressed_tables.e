@@ -94,7 +94,7 @@ feature -- Conversion
 	to_tables: LX_COMPRESSED_TABLES is
 			-- New compressed tables made from current tables
 		do
-			!! Result.make_from_tables (Current)
+			create Result.make_from_tables (Current)
 		end
 
 invariant

@@ -17,7 +17,7 @@ feature -- Access
 	HASHABLE_: KL_HASHABLE_ROUTINES is
 			-- Routines that ought to be in class HASHABLE
 		once
-			!! Result
+			create Result
 		ensure
 			hashable_routines_not_void: Result /= Void
 		end

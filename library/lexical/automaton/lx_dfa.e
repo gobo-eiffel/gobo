@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			nb := start_conditions.count
 				-- Make room for start states and
 				-- an eventual end-of-buffer state.
-			!! states.make ((2 * nb + 1).max (Initial_max_dfas))
+			create states.make ((2 * nb + 1).max (Initial_max_dfas))
 			set_nfa_state_ids (start_conditions)
 			from i := 1 until i > nb loop
 				put_start_condition (start_conditions.item (i))
@@ -83,7 +83,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			!! Result.make (start_states_count)
+			create Result.make (start_states_count)
 			from i := 1 until i > start_states_count loop
 				Result.put_last (states.item (i))
 				i := i + 1
@@ -114,7 +114,7 @@ feature -- Element change
 			i: INTEGER
 			state: LX_DFA_STATE
 		do
-			!! partitions.make (minimum_symbol, maximum_symbol)
+			create partitions.make (minimum_symbol, maximum_symbol)
 			backing_up_count := 0
 			from i := 1 until i > start_states_count loop
 				build_transitions (states.item (i))
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			key, new_id: INTEGER
 		do
 			new_id := 1
-			!! visited.make (100)
+			create visited.make (100)
 			nb := start_conditions.count
 			from i := 1 until i > nb loop
 				start_condition := start_conditions.item (i)
@@ -210,8 +210,8 @@ feature {NONE} -- Implementation
 			patterns := start_condition.patterns
 			bol_patterns := start_condition.bol_patterns
 			nb := patterns.count
-			!! nfa_states.make (nb)
-			!! nfa_bol_states.make (nb + bol_patterns.count)
+			create nfa_states.make (nb)
+			create nfa_bol_states.make (nb + bol_patterns.count)
 			from i := 1 until i > nb loop
 				nfa_state := patterns.item (i).start_state
 				nfa_states.put_last (nfa_state)
@@ -223,10 +223,10 @@ feature {NONE} -- Implementation
 				nfa_bol_states.put_last (bol_patterns.item (i).start_state)
 				i := i + 1
 			end
-			!! state.make (nfa_states, minimum_symbol, maximum_symbol)
+			create state.make (nfa_states, minimum_symbol, maximum_symbol)
 			states.put_last (state)
 			state.set_id (states.count)
-			!! state.make (nfa_bol_states, minimum_symbol, maximum_symbol)
+			create state.make (nfa_bol_states, minimum_symbol, maximum_symbol)
 			states.put_last (state)
 			state.set_id (states.count)
 		end

@@ -58,7 +58,7 @@ Init_pattern: -- Empty
 			end
 				-- Initialize for a parse of one pattern.
 			in_trail_context := False
-			!! rule.make_default (1)
+			create rule.make_default (1)
 		}
 	;
 

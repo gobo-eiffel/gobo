@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			filename_not_void: filename /= Void
 			chars_not_void: chars /= Void
 		do
-			!! parameters.make (1, 3)
+			create parameters.make (1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (chars, 3)

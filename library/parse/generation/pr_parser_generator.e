@@ -288,7 +288,7 @@ feature {NONE} -- Generation
 				a_file.put_string (">>)%N%T%Tend%N")
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
-					%%T%Tonce%N%T%T%T!! an_array.make (")
+					%%T%Tonce%N%T%T%Tcreate an_array.make (")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
@@ -350,7 +350,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
 				%%T%T%T-- Execute semantic action.%N")
 			nb_types := machine.grammar.types.count
-			!! types.make (nb_types)
+			create types.make (nb_types)
 			rules := machine.grammar.rules
 			nb := rules.count
 			if nb_types > 0 then
@@ -615,7 +615,7 @@ feature {NONE} -- Building
 				end
 				i := i + 1
 			end
-			!! yytranslate.make (0, yyMax_token)
+			create yytranslate.make (0, yyMax_token)
 				-- Initialize all entries for literal tokens
 				-- to 2, i.e. the internal token number for
 				-- "$undefined.", which represents all invalid
@@ -644,8 +644,8 @@ feature {NONE} -- Building
 		do
 			rules := machine.grammar.rules
 			nb := rules.count
-			!! yyr1.make (0, nb)
-			!! yyr2.make (0, nb)
+			create yyr1.make (0, nb)
+			create yyr2.make (0, nb)
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				yyr1.put (a_rule.lhs.id + yyNtbase, i)
@@ -678,15 +678,15 @@ feature {NONE} -- Building
 			nb_states := states.count
 			variables := machine.grammar.variables
 			nb_variables := variables.count
-			!! portions.make (nb_states + nb_variables)
+			create portions.make (nb_states + nb_variables)
 
-			!! yydefact.make (0, nb_states - 1)
+			create yydefact.make (0, nb_states - 1)
 			from i := 1 until i > nb_states loop
 				put_yydefact (states.item (i), portions)
 				i := i + 1
 			end
 
-			!! yydefgoto.make (0, nb_variables - 1)
+			create yydefgoto.make (0, nb_variables - 1)
 			from i := 1 until i > nb_variables loop
 				put_yydefgoto (variables.item (i), portions)
 				i := i + 1
@@ -695,22 +695,22 @@ feature {NONE} -- Building
 			portions.sort (Portion_sorter)
 
 			i := nb_states - 1
-			!! yypact.make (0, i)
+			create yypact.make (0, i)
 			from until i < 0 loop
 				yypact.put (yyFlag, i)
 				i := i - 1
 			end
 
 			i := nb_variables - 1
-			!! yypgoto.make (0, i)
+			create yypgoto.make (0, i)
 			from until i < 0 loop
 				yypgoto.put (yyFlag, i)
 				i := i - 1
 			end
 
 			ii := Initial_max_table_size
-			!! yytable.make (0, ii)
-			!! yycheck.make (0, ii)
+			create yytable.make (0, ii)
+			create yycheck.make (0, ii)
 			from until ii < 0 loop
 				yycheck.put (-1, ii)
 				ii := ii - 1
@@ -839,7 +839,7 @@ feature {NONE} -- Building
 			state_id: INTEGER
 		do
 			nb_tokens := machine.grammar.tokens.count
-			!! action_row.make (0, nb_tokens)
+			create action_row.make (0, nb_tokens)
 			reductions := a_state.reductions
 			nb_reductions := reductions.count
 			if a_state.lookahead_needed then
@@ -945,8 +945,8 @@ feature {NONE} -- Building
 				i := i + 1
 			end
 			if count /= 0 then
-				!! froms.make (count)
-				!! tos.make (count)
+				create froms.make (count)
+				create tos.make (count)
 				from i := 0 until i > nb_tokens loop
 					if action_row.item (i) /= 0 then
 						froms.put_last (i)
@@ -954,7 +954,7 @@ feature {NONE} -- Building
 					end
 					i := i + 1
 				end
-				!! a_portion.make_state (a_state.id, froms, tos)
+				create a_portion.make_state (a_state.id, froms, tos)
 				portions.put_last (a_portion)
 			end
 		end
@@ -987,7 +987,7 @@ feature {NONE} -- Building
 				default_state := -1
 			else
 				nb_states := machine.states.count
-				!! state_count.make (0, nb_states - 1)
+				create state_count.make (0, nb_states - 1)
 				a_cursor := transitions.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					state_id := a_cursor.item.target.id
@@ -1006,7 +1006,7 @@ feature {NONE} -- Building
 					-- Detailed info is saved for putting
 					-- into `yytable' later.
 				count := 0
-				!! not_defaults.make (0, nb_states - 1)
+				create not_defaults.make (0, nb_states - 1)
 				from a_cursor.start until a_cursor.after loop
 					a_transition := a_cursor.item
 					if a_transition.target.id /= default_state then
@@ -1016,8 +1016,8 @@ feature {NONE} -- Building
 					a_cursor.forth
 				end
 				if count /= 0 then
-					!! froms.make (count)
-					!! tos.make (count)
+					create froms.make (count)
+					create tos.make (count)
 					from i := 0 until i >= nb_states loop
 						a_transition := not_defaults.item (i)
 						if a_transition /= Void then
@@ -1026,7 +1026,7 @@ feature {NONE} -- Building
 						end
 						i := i + 1
 					end
-					!! a_portion.make_symbol (a_variable.id, froms, tos)
+					create a_portion.make_symbol (a_variable.id, froms, tos)
 					portions.put_last (a_portion)
 				end
 			end
@@ -1051,8 +1051,8 @@ feature {NONE} -- Constants
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [PR_PORTION]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			table_portion_sorter_not_void: Result /= Void
 		end

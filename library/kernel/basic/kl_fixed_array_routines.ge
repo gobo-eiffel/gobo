@@ -30,13 +30,13 @@ feature -- Initialization
 #endif
 		do
 #ifdef ISE
-			!! to_special.make_area (n)
+			create to_special.make_area (n)
 			Result := to_special.area
 #else
 #ifdef SE
-			!! Result.make (n)
+			create Result.make (n)
 #else
-			!! Result.make (0, n - 1)
+			create Result.make (0, n - 1)
 #endif
 #endif
 		ensure
@@ -51,12 +51,12 @@ feature -- Initialization
 			an_array_not_void: an_array /= Void
 #ifdef SE
 		do
-			!! Result.from_collection (an_array)
+			create Result.from_collection (an_array)
 #else
 		local
 			array_routines: KL_ARRAY_ROUTINES [G]
 		do
-			!! array_routines
+			create array_routines
 #ifdef ISE
 			Result := array_routines.make_from_array (an_array, 0).area
 #else

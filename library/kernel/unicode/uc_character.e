@@ -103,7 +103,7 @@ feature -- Conversion
 			-- Lowercase value of current character
 			-- (Create a new object at each call.)
 		do
-			!! Result.make_from_code (unicode.lower_code (code))
+			create Result.make_from_code (unicode.lower_code (code))
 		ensure
 			to_lower_not_void: Result /= Void
 		end
@@ -112,7 +112,7 @@ feature -- Conversion
 			-- Uppercase value of current character
 			-- (Create a new object at each call.)
 		do
-			!! Result.make_from_code (unicode.upper_code (code))
+			create Result.make_from_code (unicode.upper_code (code))
 		ensure
 			to_upper_not_void: Result /= Void
 		end

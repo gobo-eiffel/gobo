@@ -28,7 +28,7 @@ feature -- File handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			!! Result.make (a_name)
+			create Result.make (a_name)
 		end
 
 	new_output_file (a_name: STRING): KL_WINDOWS_OUTPUT_FILE is
@@ -37,7 +37,7 @@ feature -- File handling
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
-			!! Result.make (a_name)
+			create Result.make (a_name)
 		end
 
 	eol: STRING is "%R%N"
@@ -386,7 +386,7 @@ feature -- Pathname handling
 			has_hostname: BOOLEAN
 			has_drive: BOOLEAN
 		do
-			!! Result.make
+			create Result.make
 			Result.set_relative (True)
 			nb := a_pathname.count
 			if

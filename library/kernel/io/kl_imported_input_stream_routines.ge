@@ -21,7 +21,7 @@ feature -- Access
 	INPUT_STREAM_: KL_INPUT_STREAM_ROUTINES is
 			-- Routines that ought to be in class INPUT_STREAM
 		once
-			!! Result
+			create Result
 		ensure
 			input_stream_routines_not_void: Result /= Void
 		end

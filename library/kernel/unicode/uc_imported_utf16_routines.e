@@ -17,7 +17,7 @@ feature -- Access
 	utf16: UC_UTF16_ROUTINES is
 			-- UTF-16 encoding routines
 		once
-			!! Result
+			create Result
 		ensure
 			utf16_not_void: Result /= Void
 		end

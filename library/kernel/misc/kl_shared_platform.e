@@ -18,7 +18,7 @@ feature -- Access
 	Platform: KL_PLATFORM is
 			-- Platform-dependent properties
 		once
-			!! Result
+			create Result
 		ensure
 			platform_not_void: Result /= Void
 		end

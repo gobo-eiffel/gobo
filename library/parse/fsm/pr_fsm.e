@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			valid_grammar: a_grammar.start_symbol /= Void
 		do
 			grammar := a_grammar
-			!! states.make (Initial_max_nb_states)
-			!! cached_states.make (Initial_max_nb_states)
+			create states.make (Initial_max_nb_states)
+			create cached_states.make (Initial_max_nb_states)
 			build_nondeterministic
 			build_deterministic
 		end
@@ -93,7 +93,7 @@ feature -- Conflicts
 					message.append_string (" reduce/reduce conflicts")
 				end
 				message.append_string (".%N")
-				!! warning.make (message)
+				create warning.make (message)
 				error_handler.report_warning (warning)
 			end
 		end
@@ -173,7 +173,7 @@ feature -- Conflicts
 					message.append_string (" reduce/reduce conflicts")
 				end
 				message.append_string (".%N")
-				!! warning.make (message)
+				create warning.make (message)
 				error_handler.report_warning (warning)
 			end
 		end
@@ -222,7 +222,7 @@ feature {NONE} -- Processing (nondeterministic)
 		do
 			a_variable := grammar.start_symbol
 				-- States are indexed from 0.
-			!! a_state.make (0, a_variable)
+			create a_state.make (0, a_variable)
 			put_closure_positions (a_state, a_variable)
 			a_state.sort_positions
 			states.put_first (a_state)
@@ -259,15 +259,15 @@ feature {NONE} -- Processing (nondeterministic)
 			if start_state.has_shift (start_symbol) then
 				next_to_final_state := start_state.shift (start_symbol)
 			else
-				!! next_to_final_state.make (states.count, start_symbol)
+				create next_to_final_state.make (states.count, start_symbol)
 				states.put_last (next_to_final_state)
 				start_state.shifts.force_last (next_to_final_state)
 			end
-			!! eof_token.make (0, "$", No_type)
-			!! final_state.make (states.count, eof_token)
+			create eof_token.make (0, "$", No_type)
+			create final_state.make (states.count, eof_token)
 			states.put_last (final_state)
 			next_to_final_state.shifts.force_last (final_state)
-			!! termination_state.make (states.count, eof_token)
+			create termination_state.make (states.count, eof_token)
 			states.put_last (termination_state)
 			final_state.shifts.force_last (termination_state)
 		end
@@ -287,7 +287,7 @@ feature {NONE} -- Processing (nondeterministic)
 			a_cursor := a_variable.derives.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_rule := a_cursor.item
-				!! a_position.make (a_rule, 1)
+				create a_position.make (a_rule, 1)
 				a_state.put_position (a_position)
 				a_cursor.forth
 			end
@@ -314,7 +314,7 @@ feature {NONE} -- Processing (nondeterministic)
 		do
 			nb_tokens := grammar.tokens.count
 			nb_variables := grammar.variables.count
-			!! transitions.make (- nb_tokens, nb_variables)
+			create transitions.make (- nb_tokens, nb_variables)
 			positions := a_state.positions
 			nb_positions := positions.count
 			reductions := a_state.reductions
@@ -331,7 +331,7 @@ feature {NONE} -- Processing (nondeterministic)
 					end
 					target := transitions.item (a_symbol_id)
 					if target = Void then
-						!! target.make (0, a_symbol)
+						create target.make (0, a_symbol)
 						transitions.put (target, a_symbol_id)
 						nb_transitions := nb_transitions + 1
 					end
@@ -347,7 +347,7 @@ feature {NONE} -- Processing (nondeterministic)
 						-- Since the positions have been sorted
 						-- in `a_state', the reduction rules will
 						-- be sorted as well.
-					!! a_reduction.make (a_position.rule)
+					create a_reduction.make (a_position.rule)
 					reductions.put_last (a_reduction)
 				end
 				i := i + 1
@@ -399,7 +399,7 @@ feature {NONE} -- Processing (nondeterministic)
 				a_variable.derives.append_last (a_variable.rules)
 				i := i - 1
 			end
-			!! flattener.make
+			create flattener.make
 			flattener.flatten (variables)
 		end
 
@@ -434,7 +434,7 @@ feature {NONE} -- Processing (nondeterministic)
 					end
 				end
 			else
-				!! state_list.make (2)
+				create state_list.make (2)
 				cached_states.put (state_list, a_code)
 			end
 			if Result = Void then
@@ -476,8 +476,8 @@ feature {NONE} -- Processing (deterministic)
 			a_token: PR_TOKEN
 			a_rule: PR_RULE
 		do
-			!! reductions.make
-			!! transitions.make
+			create reductions.make
+			create transitions.make
 			i := states.count
 			from until i < 1 loop
 				state1 := states.item (i)
@@ -494,7 +494,7 @@ feature {NONE} -- Processing (deterministic)
 					state2 := shifts.item (j)
 					a_variable ?= state2.accessing_symbol
 					if a_variable /= Void then
-						!! a_transition.make (state1, state2)
+						create a_transition.make (state1, state2)
 						a_variable.put_transition (a_transition)
 						transitions.force_last (a_transition)
 					end
@@ -502,7 +502,7 @@ feature {NONE} -- Processing (deterministic)
 				end
 				i := i - 1
 			end
-			!! visited_states.make (grammar.max_rhs + 1)
+			create visited_states.make (grammar.max_rhs + 1)
 			transitions_cursor := transitions.new_cursor
 			from transitions_cursor.start until transitions_cursor.after loop
 				a_transition := transitions_cursor.item
@@ -566,7 +566,7 @@ feature {NONE} -- Processing (deterministic)
 				end
 				transitions_cursor.forth
 			end
-			!! follows_flattener.make
+			create follows_flattener.make
 			follows_flattener.flatten (transitions)
 			reductions_cursor := reductions.new_cursor
 			from reductions_cursor.start until reductions_cursor.after loop
@@ -584,7 +584,7 @@ feature {NONE} -- Constants
 	No_type: PR_NO_TYPE is
 			-- Type used when no type has been specified
 		once
-			!! Result.make (0, "ANY")
+			create Result.make (0, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

@@ -28,9 +28,9 @@ feature {NONE} -- Initialization
 			cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
 		do
-			!! storage.make (min, max)
+			create storage.make (min, max)
 			from i := min until i > max loop
-				!! cell.make (i)
+				create cell.make (i)
 				storage.put (cell, i)
 				i := i + 1
 			end
@@ -215,7 +215,7 @@ feature -- Element change
 				-- symbol class is negated. The same results will
 				-- be obtained in either case.
 			nb := symbol_class.count
-			!! flags.make (lower, upper)
+			create flags.make (lower, upper)
 			from k := 1 until k > nb loop
 				cell := storage.item (symbol_class.item (k))
 				old_cell := cell.left
@@ -285,7 +285,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			!! Result.make (lower, upper)
+			create Result.make (lower, upper)
 			nb := upper
 			from i := lower until i > nb loop
 				Result.put (storage.item (i).item, i)
@@ -308,7 +308,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			!! Result.make (l, u)
+			create Result.make (l, u)
 			nb := upper.min (u)
 			from i := lower.max (l) until i > nb loop
 				Result.put (storage.item (i).item, i)

@@ -17,7 +17,7 @@ feature -- Access
 	ANY_ARRAY_: KL_ARRAY_ROUTINES [ANY] is
 			-- Routines that ought to be in class ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			any_array_routines_not_void: Result /= Void
 		end
@@ -25,7 +25,7 @@ feature -- Access
 	INTEGER_ARRAY_: KL_ARRAY_ROUTINES [INTEGER] is
 			-- Routines that ought to be in class ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			integer_array_routines_not_void: Result /= Void
 		end
@@ -33,7 +33,7 @@ feature -- Access
 	BOOLEAN_ARRAY_: KL_ARRAY_ROUTINES [BOOLEAN] is
 			-- Routines that ought to be in class ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			boolean_array_routines_not_void: Result /= Void
 		end
@@ -41,7 +41,7 @@ feature -- Access
 	STRING_ARRAY_: KL_ARRAY_ROUTINES [STRING] is
 			-- Routines that ought to be in class ARRAY
 		once
-			!! Result
+			create Result
 		ensure
 			string_array_routines_not_void: Result /= Void
 		end

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new parser.
 		do
-			!! FIXED_ARRAY_
+			create FIXED_ARRAY_
 			yyvs := FIXED_ARRAY_.make (yyInitial_stack_size)
 			yyss := FIXED_INTEGER_ARRAY_.make (yyInitial_stack_size)
 			yy_build_parser_tables
@@ -457,7 +457,7 @@ feature {YY_PARSER_ACTION} -- Access
 			j: INTEGER
 		do
 			nb := yyMax_token
-			!! t.make (1, nb + 1)
+			create t.make (1, nb + 1)
 			from until i > nb loop
 				if is_expected_token (i) then
 					j := j + 1
@@ -465,7 +465,7 @@ feature {YY_PARSER_ACTION} -- Access
 				end
 				i := i + 1
 			end
-			!! Result.make (1, j)
+			create Result.make (1, j)
 			from i := 1 until i > j loop
 				Result.put (t.item (i), i)
 				i := i + 1

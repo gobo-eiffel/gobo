@@ -17,7 +17,7 @@ feature -- Access
 	INTEGER_: KL_INTEGER_ROUTINES is
 			-- Routines that ought to be in class INTEGER
 		once
-			!! Result
+			create Result
 		ensure
 			integer_routines_not_void: Result /= Void
 		end

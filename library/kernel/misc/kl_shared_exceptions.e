@@ -18,7 +18,7 @@ feature -- Access
 	Exceptions: KL_EXCEPTIONS is
 			-- Exception handling
 		once
-			!! Result
+			create Result
 		ensure
 			exceptions_not_void: Result /= Void
 		end

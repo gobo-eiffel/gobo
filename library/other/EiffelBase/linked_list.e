@@ -62,7 +62,7 @@ feature -- Access
 		local
 			a_cursor: like cursor_anchor
 		do
-			!! a_cursor.make (internal_cursor.current_cell, before, after)
+			create a_cursor.make (internal_cursor.current_cell, before, after)
 			Result := a_cursor
 		end
 
@@ -190,7 +190,7 @@ feature -- Element change
 		do
 			nb := s.ds_count
 			if s = Current then
-				!! al.make (nb)
+				create al.make (nb)
 				al.append (s)
 				l := al
 			else
@@ -276,7 +276,7 @@ feature -- Duplication
 		do
 			from
 				a_cell := internal_cursor.current_cell
-				!! Result.make
+				create Result.make
 			until
 				a_cell = Void or i >= n
 			loop
@@ -293,7 +293,7 @@ feature -- Status setting
 			-- rather than `=' for comparing references.
 		do
 			object_comparison := True
-			!! equality_tester
+			create equality_tester
 		end
 
 	compare_references is

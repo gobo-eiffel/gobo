@@ -82,7 +82,7 @@ feature -- Conversion
 		local
 			i: INTEGER
 		do
-			!! Result.make (count)
+			create Result.make (count)
 			from i := count until i < 1 loop
 				Result.put_last (storage.item (i))
 				i := i - 1
@@ -96,7 +96,7 @@ feature -- Status setting
 			-- rather than `=' for comparing references.
 		do
 			object_comparison := True
-			!! equality_tester
+			create equality_tester
 		end
 
 	compare_references is

@@ -31,7 +31,7 @@ feature -- Initialization
 #endif
 		do
 #ifdef ISE
-			!! to_special.make_area (n)
+			create to_special.make_area (n)
 			Result := to_special.area
 #else
 #ifdef SE
@@ -39,7 +39,7 @@ feature -- Initialization
 				Result := Result.calloc (n)
 			end
 #else
-			!! Result.make (0, n - 1)
+			create Result.make (0, n - 1)
 #endif
 #endif
 		ensure

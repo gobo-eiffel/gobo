@@ -31,7 +31,7 @@ feature -- Access
 		require
 			a_text_not_void: a_text /= Void
 		do
-			!! Result.make (a_text)
+			create Result.make (a_text)
 		ensure
 			action_not_void: Result /= Void
 			text_set: Result.text = a_text

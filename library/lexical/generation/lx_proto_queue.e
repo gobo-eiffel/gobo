@@ -50,7 +50,7 @@ feature -- Element change
 		local
 			proto: LX_PROTO
 		do
-			!! proto.make (state_id, transitions, common_state)
+			create proto.make (state_id, transitions, common_state)
 			if count >= capacity then
 				remove_last
 			end

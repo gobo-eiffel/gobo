@@ -156,7 +156,7 @@ feature -- Access
 	origin: DATE_TIME is
 			-- Origin date time
 		once
-			!! Result.make (1600, 1, 1, 0, 0, 0)
+			create Result.make (1600, 1, 1, 0, 0, 0)
 		end
 
 	date: DATE is
@@ -165,7 +165,7 @@ feature -- Access
 			if date_impl /= Void then
 				date_impl.set_storage (date_storage)
 			else
-				!! date_impl.make_from_storage (date_storage)
+				create date_impl.make_from_storage (date_storage)
 			end
 			Result := date_impl
 		end
@@ -176,7 +176,7 @@ feature -- Access
 			if time_impl /= Void then
 				time_impl.set_storage (time_storage)
 			else
-				!! time_impl.make_from_storage (time_storage)
+				create time_impl.make_from_storage (time_storage)
 			end
 			Result := time_impl
 		end
@@ -184,7 +184,7 @@ feature -- Access
 	relative_duration (other: like Current): DATE_TIME_DURATION is
 			-- Duration between `other' and current date time
 		do
-			!! Result.make_precise (0, 0, day_count - other.day_count,
+			create Result.make_precise (0, 0, day_count - other.day_count,
 				0, 0, 0, millisecond_count - other.millisecond_count)
 		end
 
@@ -213,13 +213,13 @@ feature -- Access
 	relative_date_duration (other: like Current): DATE_DURATION is
 			-- Duration between `other' and current date
 		do
-			!! Result.make (0, 0, day_count - other.day_count)
+			create Result.make (0, 0, day_count - other.day_count)
 		end
 
 	relative_time_duration (other: like Current): TIME_DURATION is
 			-- Duration between `other' and current time
 		do
-			!! Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
+			create Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
 		end
 
 feature -- Element change

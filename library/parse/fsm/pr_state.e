@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 		do
 			id := an_id
 			accessing_symbol := a_symbol
-			!! positions.make_equal (Initial_max_nb_positions)
-			!! shifts.make (Initial_max_nb_shifts)
-			!! reductions.make (Initial_max_nb_reductions)
-			!! errors.make (Initial_max_nb_errors)
+			create positions.make_equal (Initial_max_nb_positions)
+			create shifts.make (Initial_max_nb_shifts)
+			create reductions.make (Initial_max_nb_reductions)
+			create errors.make (Initial_max_nb_errors)
 		ensure
 			id_set: id = an_id
 			accessing_symbol_set: accessing_symbol = a_symbol
@@ -306,9 +306,9 @@ feature -- Conflicts
 			i, j, nb: INTEGER
 			a_rule: PR_RULE
 		do
-			!! Result.make
+			create Result.make
 			i := shifts.count
-			!! tokens.make (i)
+			create tokens.make (i)
 			from until i < 1 loop
 				a_token ?= shifts.item (i).accessing_symbol
 				if a_token /= Void then
@@ -337,23 +337,23 @@ feature -- Conflicts
 										-- Keep only the reduction.
 									tokens.remove (j)
 									remove_shift (a_token)
-									!! a_conflict.make (Current, a_rule, a_token, "reduce")
+									create a_conflict.make (Current, a_rule, a_token, "reduce")
 									Result.force_last (a_conflict)
 								elseif rule_prec < token_prec then
 										-- Keep only the shift.
 									lookaheads.delete (a_token)
-									!! a_conflict.make (Current, a_rule, a_token, "shift")
+									create a_conflict.make (Current, a_rule, a_token, "shift")
 									Result.force_last (a_conflict)
 								elseif a_token.is_left_associative then
 										-- Keep only the reduction.
 									tokens.remove (j)
 									remove_shift (a_token)
-									!! a_conflict.make (Current, a_rule, a_token, "reduce")
+									create a_conflict.make (Current, a_rule, a_token, "reduce")
 									Result.force_last (a_conflict)
 								elseif a_token.is_right_associative then
 										-- Keep only the shift.
 									lookaheads.delete (a_token)
-									!! a_conflict.make (Current, a_rule, a_token, "shift")
+									create a_conflict.make (Current, a_rule, a_token, "shift")
 									Result.force_last (a_conflict)
 								elseif a_token.is_non_associative then
 										-- Keep neither.
@@ -362,7 +362,7 @@ feature -- Conflicts
 									remove_shift (a_token)
 										-- Record an explicit error for this token.
 									errors.force_last (a_token)
-									!! a_conflict.make (Current, a_rule, a_token, "an error")
+									create a_conflict.make (Current, a_rule, a_token, "an error")
 									Result.force_last (a_conflict)
 								end
 							end
@@ -408,7 +408,7 @@ feature -- Conflicts
 			i, j: INTEGER
 		do
 			i := shifts.count
-			!! tokens.make (i)
+			create tokens.make (i)
 			from until i < 1 loop
 				a_token ?= shifts.item (i).accessing_symbol
 				if a_token /= Void then
@@ -447,8 +447,8 @@ feature -- Conflicts
 		do
 			i := reductions.count
 			if i > 1 then
-				!! tokens.make
-				!! conflicts.make
+				create tokens.make
+				create conflicts.make
 				from until i < 1 loop
 					lookaheads := reductions.item (i).lookaheads
 					j := lookaheads.count
@@ -601,7 +601,7 @@ feature -- Output
 			i, j, nb: INTEGER
 		do
 			i := shifts.count
-			!! shift_tokens.make (i)
+			create shift_tokens.make (i)
 			from until i < 1 loop
 				a_token ?= shifts.item (i).accessing_symbol
 				if a_token /= Void then
@@ -638,7 +638,7 @@ feature -- Output
 				a_file.put_string (a_rule.lhs.name)
 				a_file.put_string (")%N%N")
 			elseif reductions.count >= 1 then
-				!! tokens.make (2 * (shift_tokens.count + errors.count))
+				create tokens.make (2 * (shift_tokens.count + errors.count))
 				tokens.extend_last (shift_tokens)
 				tokens.extend_last (errors)
 				if not no_default then
@@ -746,8 +746,8 @@ feature {NONE} -- Constants
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [PR_POSITION]
 		once
-			!! a_comparator.make
-			!! Result.make (a_comparator)
+			create a_comparator.make
+			create Result.make (a_comparator)
 		ensure
 			position_sorter_not_void: Result /= Void
 		end

@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 		require
 			nb_large_enough: nb >= 2
 		do
-			!KL_CHARACTER_BUFFER! Result.make (nb)
+			create {KL_CHARACTER_BUFFER} Result.make (nb)
 		ensure
 			buffer_not_void: Result /= Void
 			buffer_count_set: Result.count = nb

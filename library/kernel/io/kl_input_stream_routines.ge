@@ -42,21 +42,21 @@ feature -- Initialization
 		do
 			if not rescued then
 #ifdef ISE || HACT
-				!! a_file.make (a_filename)
+				create a_file.make (a_filename)
 				Result := a_file
 				a_file.open_read
 			elseif not a_file.is_closed then
 				a_file.close
 #endif
 #ifdef SE
-				!! a_file.make
+				create a_file.make
 				Result := a_file
 				a_file.connect_to (a_filename)
 			elseif a_file.is_connected then
 				a_file.disconnect
 #endif
 #ifdef VE
-				!! Result.make (a_filename)
+				create Result.make (a_filename)
 				Result.open_read
 			elseif not Result.is_closed then
 				Result.close
@@ -182,7 +182,7 @@ feature -- Input operations
 			i: INTEGER
 		do
 			if not a_stream.end_of_input then
-				!! Result.make (nb_char)
+				create Result.make (nb_char)
 				from i := nb_char until i < 1 loop
 					a_stream.read_character
 					if not a_stream.end_of_input then

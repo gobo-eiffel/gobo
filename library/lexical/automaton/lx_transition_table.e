@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new transition table for labels
 			-- between `min' and `max'.
 		do
-			!! storage.make (min, max)
+			create storage.make (min, max)
 		end
 
 feature -- Status report
@@ -64,7 +64,7 @@ feature -- Access
 			i, nb: INTEGER
 			state: like target
 		do
-			!! Result.make (lower, upper)
+			create Result.make (lower, upper)
 			nb := upper
 			from i := lower until i > nb loop
 				state := target (i)

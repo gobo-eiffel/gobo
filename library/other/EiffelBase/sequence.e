@@ -63,7 +63,7 @@ feature -- Element change
 		do
 			nb := s.ds_count
 			if s = Current then
-				!! al.make (nb)
+				create al.make (nb)
 				al.append (s)
 				l := al
 			else

@@ -208,7 +208,7 @@ feature -- Input
 		local
 			a_cell: like character_buffer
 		do
-			!! a_cell.make (a_character)
+			create a_cell.make (a_character)
 			if character_buffer /= Void then
 				a_cell.put_right (character_buffer)
 			end
@@ -226,7 +226,7 @@ feature -- Input
 			i: INTEGER
 		do
 			if last_string = Void then
-				!! last_string.make (nb)
+				create last_string.make (nb)
 			elseif last_string.capacity < nb then
 				last_string.resize (nb)
 			end
@@ -254,7 +254,7 @@ feature -- Input
 			a_target: STRING
 		do
 			if last_string = Void then
-				!! a_target.make (nb)
+				create a_target.make (nb)
 				last_string := a_target
 			else
 				a_target := last_string
@@ -281,7 +281,7 @@ feature -- Input
 			if is_windows then
 					-- Windows.
 				if last_string = Void then
-					!! last_string.make_filled ('%U', nb)
+					create last_string.make_filled ('%U', nb)
 				elseif last_string.count < nb then
 					last_string.resize (nb)
 				end
@@ -299,7 +299,7 @@ feature -- Input
 				a_target.resize (j)
 			else
 				if last_string = Void then
-					!! last_string.make_filled ('%U', nb)
+					create last_string.make_filled ('%U', nb)
 				elseif last_string.count < nb then
 					last_string.resize (nb)
 				end
@@ -334,9 +334,9 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make_empty
+				create last_string.make_empty
 #else
-				!! last_string.make (256)
+				create last_string.make (256)
 #endif
 			else
 #ifdef ISE
@@ -389,9 +389,9 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make_empty
+				create last_string.make_empty
 #else
-				!! last_string.make (256)
+				create last_string.make (256)
 #endif
 			else
 #ifdef ISE
@@ -455,7 +455,7 @@ feature -- Input
 						Result := i + old_read_to_string (a_string, j, nb - i)
 					else
 						nb2 := nb - i
-						!! tmp_string.make (nb2)
+						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
 						from k := 1 until k > nb2 loop

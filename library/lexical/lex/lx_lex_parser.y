@@ -91,7 +91,7 @@ Init_rule: -- Empty
 		{
 				-- Initialize for a parse of one rule.
 			in_trail_context := False
-			!! rule.make_default (description.rules.count + 1)
+			create rule.make_default (description.rules.count + 1)
 		}
 	;
 

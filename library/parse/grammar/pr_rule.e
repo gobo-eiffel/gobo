@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			id := an_id
 			lhs := a_lhs
 			action := an_action
-			!! rhs.make (Initial_max_nb_rhs)
+			create rhs.make (Initial_max_nb_rhs)
 		ensure
 			id_set: id = an_id
 			lhs_set: lhs = a_lhs

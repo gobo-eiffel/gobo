@@ -65,7 +65,7 @@ feature -- Access
 		require
 			not_after: not after
 		do
-			!! Result.make (rule, index + 1)
+			create Result.make (rule, index + 1)
 		ensure
 			next_not_void: Result /= Void
 			same_rule: Result.rule = rule

@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 			id := an_id
 			name := a_name
 			type := a_type
-			!! rules.make (Initial_max_nb_rules)
-			!! transitions.make
-			!! derives.make
-			!! firsts.make
+			create rules.make (Initial_max_nb_rules)
+			create transitions.make
+			create derives.make
+			create firsts.make
 		end
 
 feature -- Status report

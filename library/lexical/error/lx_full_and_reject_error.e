@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new error reporting that the use
 			-- of reject is incompatible with full tables.
 		do
-			!! parameters.make (1, 0)
+			create parameters.make (1, 0)
 		end
 
 feature -- Access

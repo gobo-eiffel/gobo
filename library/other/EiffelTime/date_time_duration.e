@@ -133,7 +133,7 @@ feature -- Access
 			if date_impl /= Void then
 				date_impl.set_year_month_day (year, month, day)
 			else
-				!! date_impl.make (year, month, day)
+				create date_impl.make (year, month, day)
 			end
 			Result := date_impl
 		end
@@ -144,7 +144,7 @@ feature -- Access
 			if time_impl /= Void then
 				time_impl.set_precise_hour_minute_second (hour, minute, second, millisecond)
 			else
-				!! time_impl.make_precise (hour, minute, second, millisecond)
+				create time_impl.make_precise (hour, minute, second, millisecond)
 			end
 			Result := time_impl
 		end
@@ -152,7 +152,7 @@ feature -- Access
 	zero: DATE_TIME_DURATION is
 			-- Neutral element for "+" and "-"
 		once
-			!! Result.make (0, 0, 0, 0, 0, 0)
+			create Result.make (0, 0, 0, 0, 0, 0)
 		end
 
 	date_time (a_date_time: DATE_TIME): DATE_TIME is
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 	tmp_date_time: DATE_TIME is
 			-- Temporary date time
 		once
-			!! Result.make (1, 1, 1, 0, 0, 0)
+			create Result.make (1, 1, 1, 0, 0, 0)
 		end
 
 	date_impl: DATE_DURATION
