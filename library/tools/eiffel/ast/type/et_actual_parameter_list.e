@@ -14,9 +14,7 @@ class ET_ACTUAL_PARAMETER_LIST
 
 inherit
 
-	ET_AST_NODE
-
-	ET_AST_LIST [ET_TYPE_ITEM]
+	ET_TYPE_LIST
 		redefine
 			make, make_with_capacity
 		end
@@ -50,17 +48,6 @@ feature -- Access
 
 	right_bracket: ET_SYMBOL
 			-- Right bracket
-
-	type (i: INTEGER): ET_TYPE is
-			-- Type of `i'-th actual generic parameter
-		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= count
-		do
-			Result := item (i).type
-		ensure
-			type_not_void: Result /= Void
-		end
 
 	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER_LIST is
 			-- Base types of current types, when they appear in `a_context'
@@ -120,7 +107,49 @@ feature -- Access
 
 feature -- Status report
 
-	has_qualified_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does one current types contain an anchored type
+			-- when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if type (i).has_anchored_type (a_context, a_universe) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does one current types contain a formal generic parameter
+			-- when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if type (i).has_formal_type (a_context, a_universe) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is one of current types a qualified type (other than of
 			-- the form 'like Current.b') when viewed from `a_context',
 			-- or do their actual generic parameters (recursively)
@@ -368,14 +397,6 @@ feature -- Processing
 			-- Process current node.
 		do
 			a_processor.process_actual_parameter_list (Current)
-		end
-
-feature {NONE} -- Implementation
-
-	fixed_array: KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] is
-			-- Fixed array routines
-		once
-			create Result
 		end
 
 invariant
