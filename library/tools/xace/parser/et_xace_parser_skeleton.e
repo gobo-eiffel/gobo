@@ -423,8 +423,7 @@ feature {NONE} -- Element change
 			a_root: XM_ELEMENT
 			a_class: STRING
 			a_creation: STRING
-			a_root_cluster: XM_ELEMENT
-			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_cursor, old_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
@@ -433,7 +432,6 @@ feature {NONE} -- Element change
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
 			a_value: UC_STRING
-			nb_clusters: INTEGER
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 		do
@@ -461,38 +459,49 @@ feature {NONE} -- Element change
 				a_child ?= a_cursor.item
 				if a_child /= Void then
 					if a_child.name.is_equal (uc_cluster) then
-						nb_clusters := nb_clusters + 1
-					elseif a_child.name.is_equal (uc_option) then
-							-- New syntax.
-						nb_clusters := 2
-					elseif a_child.name.is_equal (uc_mount) then
-							-- New syntax.
-						nb_clusters := 2
-					elseif a_child.name.is_equal (uc_external) then
-							-- New syntax.
-						nb_clusters := 2
-					end
-				end
-				a_cursor.forth
-			end
-			if nb_clusters /= 1 then
-					-- New syntax.
-				a_cursor := an_element.new_cursor
-			else
-					-- Old syntax.
-				a_root_cluster := an_element.element_by_name (uc_cluster)
-				a_cursor := a_root_cluster.new_cursor
-			end
-			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child /= Void then
-					if a_child.name.is_equal (uc_cluster) then
-						a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
-						if a_cluster /= Void then
-							if a_clusters = Void then
-								a_clusters := ast_factory.new_clusters (a_cluster)
-							else
-								a_clusters.put_last (a_cluster)
+						if a_child.has_attribute_by_name (uc_name) then
+							a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
+							if a_cluster /= Void then
+								if a_clusters = Void then
+									a_clusters := ast_factory.new_clusters (a_cluster)
+								else
+									a_clusters.put_last (a_cluster)
+								end
+							end
+						else
+								-- Old syntax.
+							old_cursor := a_child.new_cursor
+							from old_cursor.start until old_cursor.after loop
+								a_child ?= old_cursor.item
+								if a_child /= Void then
+									if a_child.name.is_equal (uc_cluster) then
+										a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
+										if a_cluster /= Void then
+											if a_clusters = Void then
+												a_clusters := ast_factory.new_clusters (a_cluster)
+											else
+												a_clusters.put_last (a_cluster)
+											end
+										end
+									elseif a_child.name.is_equal (uc_mount) then
+										a_mount := new_mount (a_child, a_position_table)
+										if a_mount /= Void then
+											if a_mounts = Void then
+												a_mounts := ast_factory.new_mounted_libraries
+											end
+											a_mounts.put_last (a_mount)
+										end
+									elseif a_child.name.is_equal (uc_option) then
+										if an_option /= Void then
+											fill_options (an_option, a_child, a_position_table)
+										else
+											an_option := new_options (a_child, a_position_table)
+										end
+									elseif a_child.name.is_equal (uc_external) then
+										an_external := new_externals (a_child, a_position_table)
+									end
+								end
+								old_cursor.forth
 							end
 						end
 					elseif a_child.name.is_equal (uc_mount) then

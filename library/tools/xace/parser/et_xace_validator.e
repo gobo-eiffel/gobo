@@ -108,7 +108,6 @@ feature {NONE} -- Validation
 			a_system_is_system: a_system.name.is_equal (uc_system)
 			a_position_table_not_void: a_position_table /= Void
 		local
-			nb_clusters: INTEGER
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 			a_warning: UT_MESSAGE
@@ -126,58 +125,32 @@ feature {NONE} -- Validation
 			a_cursor := a_system.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_child ?= a_cursor.item
-				if a_child /= Void then
-					if a_child.name.is_equal (uc_cluster) then
-						nb_clusters := nb_clusters + 1
-					elseif a_child.name.is_equal (uc_option) then
-							-- New syntax.
-						nb_clusters := 2
-					elseif a_child.name.is_equal (uc_mount) then
-							-- New syntax.
-						nb_clusters := 2
-					elseif a_child.name.is_equal (uc_external) then
-							-- New syntax.
-						nb_clusters := 2
+				if a_child = Void then
+						-- Not an element. Ignore.
+				elseif a_child.name.is_equal (uc_description) then
+						-- OK.
+				elseif a_child.name.is_equal (uc_root) then
+						-- OK.
+				elseif a_child.name.is_equal (uc_cluster) then
+					if a_child.has_attribute_by_name (uc_name) then
+						validate_named_cluster (a_child, a_position_table)
+					else
+							-- Old syntax.
+						!! a_warning.make ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N" + a_position_table.item (a_child).out)
+						error_handler.report_warning (a_warning)
+						validate_cluster (a_child, a_position_table)
 					end
+				elseif a_child.name.is_equal (uc_mount) then
+					validate_mount (a_child, a_position_table)
+				elseif a_child.name.is_equal (uc_option) then
+					validate_option (a_child, a_position_table)
+				elseif a_child.name.is_equal (uc_external) then
+					validate_external (a_child, a_position_table)
+				else
+					has_error := True
+					error_handler.report_unknown_element_error (a_system, a_child, a_position_table.item (a_child))
 				end
 				a_cursor.forth
-			end
-			if nb_clusters /= 1 then
-					-- New syntax.
-				a_cursor := a_system.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_child ?= a_cursor.item
-					if a_child = Void then
-							-- Not an element. Ignore.
-					elseif a_child.name.is_equal (uc_description) then
-							-- OK.
-					elseif a_child.name.is_equal (uc_root) then
-							-- OK.
-					elseif a_child.name.is_equal (uc_cluster) then
-						validate_named_cluster (a_child, a_position_table)
-					elseif a_child.name.is_equal (uc_mount) then
-						validate_mount (a_child, a_position_table)
-					elseif a_child.name.is_equal (uc_option) then
-						validate_option (a_child, a_position_table)
-					elseif a_child.name.is_equal (uc_external) then
-						validate_external (a_child, a_position_table)
-					else
-						has_error := True
-						error_handler.report_unknown_element_error (a_system, a_child, a_position_table.item (a_child))
-					end
-					a_cursor.forth
-				end
-			else
-					-- Old syntax.
-				if not a_system.has_element_by_name (uc_cluster) then
-					has_error := True
-					error_handler.report_missing_element_error (a_system, uc_cluster, a_position_table.item (a_system))
-				else
-					a_child := a_system.element_by_name (uc_cluster)
-					!! a_warning.make ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N" + a_position_table.item (a_child).out)
-					error_handler.report_warning (a_warning)
-					validate_cluster (a_child, a_position_table)
-				end
 			end
 		end
 
