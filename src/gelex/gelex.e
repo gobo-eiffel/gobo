@@ -11,6 +11,13 @@ indexing
 
 class GELEX
 
+inherit
+
+	UT_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	execute
@@ -51,10 +58,15 @@ feature -- Processing
 			!! parser.make_from_description (description, error_handler)
 			filename := description.input_filename
 			if filename /= Void then
--- TO DO : check whether the file is readable or not!
-				!! file.make_open_read (filename)
-				parser.parse_file (file)
-				file.close
+				!! file.make (filename)
+				file_open_read (file)
+				if file.is_open_read then
+					parser.parse_file (file)
+					file.close
+				else
+					error_handler.error_message
+						(<<"cannot read %'", filename, "%'">>)
+				end
 			else
 				parser.parse_file (io.input)
 			end
@@ -87,9 +99,15 @@ feature -- Processing
 		do
 			filename := description.output_filename
 			if filename /= Void then
-				!! file.make_open_write (filename)
-				dfa.print_scanner (file)
-				file.close
+				!! file.make (filename)
+				file_open_write (file)
+				if file.is_open_write then
+					dfa.print_scanner (file)
+					file.close
+				else
+					error_handler.error_message
+						(<<"cannot write to %'", filename, "%'">>)
+				end
 			else
 				dfa.print_scanner (io.output)
 			end
@@ -110,10 +128,15 @@ feature -- Processing
 			if description.backing_up_report then
 				filename := description.backing_up_filename
 				if filename /= Void then
--- TO DO : check whether the file is writable or not!
-					!! file.make_open_write (filename)
-					dfa.print_backing_up_report (file)
-					file.close
+					!! file.make (filename)
+					file_open_write (file)
+					if file.is_open_write then
+						dfa.print_backing_up_report (file)
+						file.close
+					else
+						error_handler.error_message
+							(<<"cannot write to %'", filename, "%'">>)
+					end
 				else
 					dfa.print_backing_up_report (io.output)
 				end
