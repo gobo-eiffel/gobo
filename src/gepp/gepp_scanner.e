@@ -191,7 +191,7 @@ feature {NONE} -- Tables
 
 	yy_nxt_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,   58,   58,    8,    9,   10,   11,   12,   13,   14,
 			   15,   15,   16,   17,   15,   18,   15,   15,   15,   19,
 			   20,   28,   29,   30,   37,   24,   31,   24,   26,   38,
@@ -205,7 +205,7 @@ feature {NONE} -- Tables
 
 	yy_chk_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    0,    0,    2,    2,    3,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
 			    3,   17,   17,   18,   30,   62,   18,   62,   63,   30,
@@ -219,7 +219,7 @@ feature {NONE} -- Tables
 
 	yy_base_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    0,    0,    4,    0,   69,   70,   65,   70,   70,
 			   70,   65,   70,    0,   61,    0,   56,    9,   13,   51,
 			   47,   59,   70,   59,    0,   70,    0,   50,   45,   50,
@@ -231,7 +231,7 @@ feature {NONE} -- Tables
 
 	yy_def_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,   59,   60,   58,    3,   58,   58,   61,   58,   58,
 			   58,   58,   58,   62,   58,   63,   63,   63,   63,   63,
 			   58,   61,   58,   58,   62,   58,   63,   63,   63,   63,
@@ -243,7 +243,7 @@ feature {NONE} -- Tables
 
 	yy_ec_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -276,14 +276,14 @@ feature {NONE} -- Tables
 
 	yy_meta_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    1,    1,    2,    1,    1,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    1>>, 0)
 		end
 
 	yy_accept_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    0,    0,    0,    0,   21,   19,    4,    3,    1,
 			   18,    5,   17,    6,   18,   14,   14,   14,   14,   14,
 			   18,    4,    2,    5,    6,   15,   14,   14,   14,   14,

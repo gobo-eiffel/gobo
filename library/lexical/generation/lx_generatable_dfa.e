@@ -476,7 +476,7 @@ feature {NONE} -- Generation
 			nb := a_table.count // 3000 + 1
 			if nb = 1 then
 				a_file.put_string
-					("%T%T%T!YY_ARRAY [INTEGER]! Result.make_from_array (<<%N")
+					("%T%T%TResult := integer_array_.make_from_array (<<%N")
 				print_array (a_table, a_file)
 				a_file.put_string (">>, ")
 				a_file.put_integer (a_table.lower)

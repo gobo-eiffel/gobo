@@ -20,6 +20,8 @@ inherit
 			flush_input_buffer
 		end
 
+	KL_SHARED_ARRAY_ROUTINES
+
 feature {NONE} -- Initialization
 
 	make_with_buffer (a_buffer: like input_buffer) is
