@@ -15,7 +15,7 @@ class GEANT_TARGET
 
 inherit
 
-	GEANT_ELEMENT
+	GEANT_INTERPRETING_ELEMENT
 		redefine
 			make, valid_xml_element
 		end
@@ -68,6 +68,67 @@ feature -- Access
 	name: STRING
 			-- Name of target
 
+	origin: GEANT_PROJECT is
+			-- Origin of target (see ETL for definition)
+		do
+			Result := seed.project
+		ensure
+			origin_not_void: Result /= Void
+		end
+
+	full_name: STRING is
+			-- `Name' prepended with (`project.name' + ".")
+		do
+			Result := clone (project.name)
+			Result.append_string (".")
+			Result.append_string (name)
+		ensure
+			full_name_not_void: Result /= Void
+			definition: Result.is_equal (project.name + "." + name)
+		end
+
+	precursor_target: like Current
+			-- Precursor of current target if this target
+			-- was redefined
+
+	redefining_target: like Current
+			-- Redefining target of current target if present;
+			-- Used for polymorphic calls
+
+	seed: like Current is
+			-- The original version of this target in most remote ancestor
+		do
+			from
+				Result := Current
+			until
+				Result.precursor_target = Void
+			loop
+				Result := Result.precursor_target
+			end
+
+		ensure
+			seed_not_void: Result /= Void
+			current_if_no_precursor_target: precursor_target = Void implies Result = Current
+			seed_has_no_precursor: Result.precursor_target = Void
+		end
+
+	final_target: like Current is
+			-- Final target of this target in redefinition chain
+		do
+			from
+				Result := Current
+			until
+				Result.redefining_target = Void
+			loop
+				Result := Result.redefining_target
+			end
+
+		ensure
+			final_target_not_void: Result /= Void
+			current_if_no_redefining_target: redefining_target = Void implies Result = Current
+			final_target_has_no_redefining_target: Result.redefining_target = Void
+		end
+
 feature -- Status report
 
 	is_executed: BOOLEAN
@@ -91,6 +152,52 @@ feature -- Status report
 			has_non_empty_name_attribute: Result implies an_xml_element.attribute_value_by_name (Name_attribute_name).out.count > 0
 		end
 
+	conflicts_with (a_target: like Current): BOOLEAN is
+			-- Does current target or one of it's precursors
+			-- have a `full_name' which is equal to the `full_name'
+			-- of `a_target' or one of it's precursors?
+		require
+			a_target_not_void: a_target /= Void
+		do
+			Result := seed.full_name.is_equal (a_target.seed.full_name)
+		end
+
+	has_precursor_target (a_target: like Current): BOOLEAN is
+			-- Is current target or one of it's precursors `a_target'?
+		require
+			a_target_not_void: a_target /= Void
+		local
+			a_precursor_target: like Current
+		do
+			from
+				a_precursor_target := precursor_target
+			until
+				a_precursor_target = Void or else Result
+			loop
+				Result := a_precursor_target = a_target
+				a_precursor_target := a_precursor_target.precursor_target
+			end
+
+		end
+
+	has_redefining_target (a_target: like Current): BOOLEAN is
+			-- Is current target or one of it's `redefining_target's `a_target'?
+		require
+			a_target_not_void: a_target /= Void
+		local
+			a_redefining_target: like Current
+		do
+			from
+				a_redefining_target := redefining_target
+			until
+				a_redefining_target = Void or else Result
+			loop
+				Result := a_redefining_target = a_target
+				a_redefining_target := a_redefining_target.redefining_target
+			end
+
+		end
+
 feature -- Setting
 
 	set_name (a_name: STRING) is
@@ -112,7 +219,51 @@ feature -- Setting
 			is_executed_set: is_executed = a_is_executed
 		end
 
+	set_precursor_target (a_precursor_target: GEANT_TARGET) is
+			-- Set `precursor_target' to `a_precursor_target'.
+		require
+			a_precursor_target_not_void: a_precursor_target /= Void
+			a_precursor_target_not_current: a_precursor_target /= Current
+			no_circular_target_chain: not a_precursor_target.has_precursor_target (Current)
+		do
+			precursor_target := a_precursor_target
+		ensure
+			precursor_target_set: precursor_target = a_precursor_target
+		end
+
+	set_redefining_target (a_redefining_target: GEANT_TARGET) is
+			-- Set `redefining_target' to `a_redefining_target'.
+		require
+			a_redefining_target_not_void: a_redefining_target /= Void
+			a_redefining_target_not_current: a_redefining_target /= Current
+			no_circular_target_chain: not a_redefining_target.has_redefining_target (Current)
+		do
+			redefining_target := a_redefining_target
+		ensure
+			redefining_target_set: redefining_target = a_redefining_target
+		end
+
 feature -- Processing
+
+	show_precursors is
+			-- Show list of precursors.
+		local
+			a_precursor_target: like Current
+		do
+			from
+				a_precursor_target := Current
+				project.trace_debug ("    precursor list: ")
+			until
+				a_precursor_target = Void
+			loop
+				project.trace_debug ("'" + a_precursor_target.full_name + "'")
+				a_precursor_target := a_precursor_target.precursor_target
+				if a_precursor_target /= Void then
+					project.trace_debug (", ")
+				end
+			end
+			project.trace_debug ("%N")
+		end
 
 	execute is
 			-- Execute all tasks of `a_target' in sequential order
@@ -123,10 +274,20 @@ feature -- Processing
 			a_task: GEANT_TASK
 			a_old_target_cwd: STRING
 			a_new_target_cwd: STRING
+			a_msg: STRING
 		do
 			children := xml_element.children
 			nb := children.count
 			if is_enabled then
+				if project.options.verbose then
+					a_msg := clone ("%N")
+					a_msg.append_string (project.name)
+					a_msg.append_string (".")
+					a_msg.append_string (project.target_name (Current))
+
+					a_msg.append_string (":%N%N")
+					project.trace (a_msg)
+				end
 					-- change to the specified directory if "dir" attribue is provided:
 				if xml_element.has_attribute (Dir_attribute_name) then
 					a_new_target_cwd := project.variables.interpreted_string (
@@ -216,24 +377,27 @@ feature -- Processing
 					elseif a_xml_element.name.is_equal (Exit_task_name) then
 							-- exit
 						!GEANT_EXIT_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Precursor_task_name) then
+							-- precursor
+						!GEANT_PRECURSOR_TASK! a_task.make (project, a_xml_element)
 					else
 							-- Default:
 						a_task := Void
 					end
 						-- Execute task:
 					if a_task = Void then
-						print ("WARNING: unknown task : " + a_xml_element.name.out + "%N")
-					elseif not a_task.is_executable then
-						print ("WARNING: cannot execute task : " + a_xml_element.name.out + "%N")
-					else
-						if a_task.is_enabled then
-							a_task.execute
-							if a_task.exit_code /= 0 then
-								exit_application (a_task.exit_code, Void)
-							end
-						else
-							project.trace_debug ("task is disabled%N")
+						exit_application (1, "unknown task : " + a_xml_element.name.out + "%N")
+					end
+					if not a_task.is_executable then
+						exit_application (1, "cannot execute task : " + a_xml_element.name.out + "%N")
+					end
+					if a_task.is_enabled then
+						a_task.execute
+						if a_task.exit_code /= 0 then
+							exit_application (a_task.exit_code, Void)
 						end
+					else
+						project.trace_debug ("task is disabled%N")
 					end
 					i := i + 1
 				end
@@ -262,15 +426,15 @@ feature -- Processing
 					-- Check for targets separated by commas:
 				a_dependent_targets := string_tokens (a_value, ',')
 
-				if project.debug_mode then
+				if project.options.debug_mode then
 					show_dependent_targets (a_dependent_targets)
 				end
 
 					-- Find all targets
 				from i := 1 until i > a_dependent_targets.count loop
 					a_value := a_dependent_targets.item (i)
-					a_dependent_target := project.target_with_name (a_value)
-					if a_dependent_target /= Void then
+					if project.targets.has (a_value.out) then
+						a_dependent_target := project.targets.item (a_value.out)
 						Result.force (a_dependent_target)
 					else
 						exit_application (1, "geant error: unknown dependent target '" + a_value.out + "'%N")
@@ -286,12 +450,12 @@ feature -- Processing
 		local
 			i: INTEGER
 		do
-			print ("======= DEPENDENCIES ==========%N")
+			std.output.put_string ("======= DEPENDENCIES ==========%N")
 			from i := 1 until i > a_dependent_targets.count loop
-				print (a_dependent_targets.item (i).out + "%N")
+				std.output.put_string (a_dependent_targets.item (i).out + "%N")
 				i := i + 1
 			end
-			print ("=================%N")
+			std.output.put_string ("=================%N")
 		end
 
 
