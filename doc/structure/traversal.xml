@@ -1,0 +1,395 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Traversable Containers"
+
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1997-2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+-->
+
+<chapter id="structure.traversal.top">
+<chapterinfo>
+	<copyright>
+		<year>1999-2001</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>21 August 1999</date>
+</chapterinfo>
+
+<title>Traversable Containers</title>
+
+<para>
+<mediaobjectco>
+<imageobjectco>
+<areaspec>
+	<area coords="254 309 394 339" linkend="structure.flatshort.ds_linked_list_cursor.top"/>
+	<area coords="275 233 372 264" linkend="structure.flatshort.ds_list_cursor.top"/>
+	<area coords="174 159 295 188" linkend="structure.flatshort.ds_bilinear_cursor.top"/>
+	<area coords="442 83 569 114" linkend="structure.flatshort.ds_dynamic_cursor.top"/>
+	<area coords="311 84 434 115" linkend="structure.flatshort.ds_indexed_cursor.top"/>
+	<area coords="178 82 291 113" linkend="structure.flatshort.ds_linear_cursor.top"/>
+	<area coords="15 308 106 338" linkend="structure.flatshort.ds_linked_list.top"/>
+	<area coords="21 235 100 263" linkend="structure.flatshort.ds_list.top"/>
+	<area coords="16 157 102 189" linkend="structure.flatshort.ds_bilinear.top"/>
+	<area coords="23 85 102 114" linkend="structure.flatshort.ds_linear.top"/>
+	<area coords="322 7 416 40" linkend="structure.flatshort.ds_cursor.top"/>
+	<area coords="9 9 113 39" linkend="structure.flatshort.ds_traversable.top"/>
+</areaspec>
+<imageobject>
+<imagedata align="center" fileref="image/traversal.gif"></imagedata>
+</imageobject>
+</imageobjectco>
+</mediaobjectco>
+</para>
+
+<para>
+Data structures such as lists may want to provide their
+clients with a way to access and traverse their elements. This
+notion of traversal mechanism seems to be simple to design: one
+just has to add, using inheritance, the traversal operation
+features to the traversable container interfaces. However some
+data structures might have different traversal policies. For
+example, a tree structure might be traversed in <emphasis>preorder</emphasis>,
+<emphasis>postorder</emphasis> or <emphasis>breadth-first</emphasis> depending on its
+clients' needs. Including the operations for such different
+traversals in the data structures' class interface is hardly
+possible for two reasons: the class interface will rapidly be too
+complex, making more important features difficult to spot; and
+one cannot anticipate all possible traversal policies relevant to
+all clients of a data structure. Another important facility to
+take into account is to allow a data structure to be traversed
+more than once at the same time.
+</para>
+
+<para>
+The use of the <emphasis role="strong">iterator pattern</emphasis> as
+described in
+<link linkend="structure.see_also.design_patterns"><citetitle pubwork="book">Design
+Patterns</citetitle></link> solves the concerns expressed above. The key
+idea of this pattern is to take the responsibility for access and
+traversal out of the data structure and put it into an external
+cursor object. This way, it is very straightforward to traverse
+the same data structure at once: each cursor just has to keep
+track of its own traversal state. Moreover the traversal
+algorithm being held in cursors, it is very easy to switch from
+one traversal policy to another for a given data structure just
+by using a different kind of cursor.
+</para>
+
+<para>
+However, programmers used to
+<link linkend="structure.see_also.eiffelbase"><libraryname>EiffelBase</libraryname></link>
+traversal mechanism sometimes prefer to have the iteration features
+included in the container class interface itself rather than
+having to create an external cursor object. This technique may
+indeed be just fine in many cases provided that the container is
+not traversed more than once simultaneously since there is only
+one internal cursor position in the data structure. For this
+reason the <libraryname>Gobo Eiffel Structure Library</libraryname> supports both
+internal and external cursor mechanisms.
+</para>
+
+<sect1 id="structure.traversal.ds_traversable">
+<title>Classes <classname>DS_TRAVERSABLE</classname> and <anchor id="structure.traversal.ds_cursor"/><classname>DS_CURSOR</classname></title>
+
+<para>
+Typically, traversable structures are heirs of class
+<link linkend="structure.flatshort.ds_traversable.top"><classname>DS_TRAVERSABLE</classname></link>.
+In the <emphasis role="strong">external cursor pattern</emphasis>, this
+class is only responsible for providing its clients with new
+cursors (instances of class
+<link linkend="structure.flatshort.ds_cursor.top"><classname>DS_CURSOR</classname></link>).
+This is achieved through feature
+<link linkend="structure.flatshort.ds_traversable.new_cursor"><featurename>new_cursor</featurename></link>.
+Traversable structures are also equipped with the boolean-valued query
+<link linkend="structure.flatshort.ds_traversable.valid_cursor"><featurename>valid_cursor</featurename></link>
+providing a means to check whether a given external cursor can be
+used to traverse the current container. Cursors supplied by one
+data structure cannot be used to traverse another structure, even
+if the structures are of the same type. This is enforced by the
+fact that each cursor knows about the structure it is traversing.
+Apart from this container reference, class <classname>DS_CURSOR</classname>
+has a boolean-valued query
+<link linkend="structure.flatshort.ds_cursor.off"><featurename>off</featurename></link>
+stating whether there is an element at the current cursor position, and
+<link linkend="structure.flatshort.ds_cursor.item"><featurename>item</featurename></link>
+returning this element. Also useful are the two features
+<link linkend="structure.flatshort.ds_cursor.same_position"><featurename>same_position</featurename></link>
+and <link linkend="structure.flatshort.ds_cursor.go_to"><featurename>go_to</featurename></link>
+which respectively checks whether two cursors point to the same
+position in the container and moves the cursor to another
+cursor's position.
+</para>
+
+<para>
+In the <emphasis role="strong">internal cursor pattern</emphasis>, all
+features from class <classname>DS_CURSOR</classname> are
+also available in class <classname>DS_TRAVERSABLE</classname>,
+the only difference being that feature <featurename>item</featurename>
+has been named
+<link linkend="structure.flatshort.ds_traversable.item_for_iteration"><featurename>item_for_iteration</featurename></link>
+to avoid name clashes in descendant classes with feature
+<featurename>item</featurename> from <classname>DS_INDEXABLE</classname>.
+</para>
+
+<para>
+Cursor objects are valid at any time during their existance.
+This means that they should be kept synchronized with their data
+structure, especially when the container is modified. For example
+a cursor pointing to an item which has been removed from the
+container won't be valid any more and should be resynchronized.
+It is the responsibility of the procedure that alter the
+container to keep the cursors (both internal and external) valid
+in a deterministic way. Each such procedure in descendant classes
+of <classname>DS_TRAVERSABLE</classname> will
+take the most appropriate action as possible and document it in
+its header comment. For example in lists, adding new items will
+not move the cursors currently traversing the container, but
+removing an item from the list will move any cursor which was at
+this position to its next position. So in order to know what will
+happen to cursors when altering a container, just check the
+header comment of the corresponding procedure first.
+</para>
+
+</sect1>
+
+<sect1>
+<title>Classes <classname>DS_LINEAR</classname> and <classname>DS_LINEAR_CURSOR</classname></title>
+
+<para>
+Linear structures are containers which can be traversed in a
+linear way, that is the traversal starts from one of its item and
+then sequencially moves to the next items until all items have
+been visited. Unless the data structure is an ordered container,
+two subsequent iterations may not traverse the items in the same
+order. An example of containers where items are traversed in a
+predictable order is list. Hash table on the other hand is an
+example of linear container which is not ordered since items will
+be inserted in the container depending on hash codes and table
+size and the order can change when the hash table is resized.
+</para>
+
+<para>
+The features that are introduced in classes
+<link linkend="structure.flatshort.ds_linear.top"><classname>DS_LINEAR</classname></link>
+and <link linkend="structure.flatshort.ds_linear_cursor.top"><classname>DS_LINEAR_CURSOR</classname></link>
+are <link linkend="structure.flatshort.ds_linear_cursor.start"><featurename>start</featurename></link>
+to initiate the traversal,
+<link linkend="structure.flatshort.ds_linear_cursor.forth"><featurename>forth</featurename></link>
+to move to the next item,
+<link linkend="structure.flatshort.ds_linear_cursor.after"><featurename>after</featurename></link>
+to indicate that all items have been visited,
+<link linkend="structure.flatshort.ds_linear_cursor.is_first"><featurename>is_first</featurename></link>
+to indicate whether the cursor is on the first item of the traversal and
+<link linkend="structure.flatshort.ds_linear_cursor.go_after"><featurename>go_after</featurename></link>
+to abort the traversal and move the cursor after the last item.
+Also of interest is the feature
+<link linkend="structure.flatshort.ds_linear_cursor.search_forth"><featurename>search_forth</featurename></link>
+which move the cursor to the next occurrence of an item according to
+the <link linkend="structure.container.ds_searchable">searchable mechanism
+criteria</link>. Following is a typical example of a linear traversal:
+
+<informalexample>
+<programlisting><compound>
+		<assign>
+			<target><local>a_cursor</local></target>
+			<expression>
+				<featurecall>
+					<target><local>a_linear</local></target>
+					<featurename>new_cursor</featurename>
+				</featurecall>
+			</expression>
+		</assign>
+		<loop indent="false">
+			<compound role="from">
+				<featurecall>
+					<target><local>a_cursor</local></target>
+					<featurename>start</featurename>
+				</featurecall>
+			</compound>
+			<until>
+				<expression>
+					<featurecall>
+						<target><local>a_cursor</local></target>
+						<featurename>after</featurename>
+					</featurecall>
+				</expression>
+			</until>
+			<compound role="loop">
+				<featurecall>
+					<featurename>do_something</featurename>
+					<arguments>
+						<featurecall>
+							<target><local>a_cursor</local></target>
+							<featurename>item</featurename>
+						</featurecall>
+					</arguments>
+				</featurecall>
+				<featurecall>
+					<target><local>a_cursor</local></target>
+					<featurename>forth</featurename>
+				</featurecall>
+			</compound>
+		</loop>
+</compound></programlisting>
+</informalexample>
+</para>
+
+<para>
+Here is another straightforward example:
+
+<informalexample>
+<programlisting><compound>
+		<assign>
+			<target><local>a_cursor</local></target>
+			<expression>
+				<featurecall>
+					<target><local>a_linear</local></target>
+					<featurename>new_cursor</featurename>
+				</featurecall>
+			</expression>
+		</assign>
+		<loop indent="false">
+			<compound role="from">
+				<featurecall>
+					<target><local>a_cursor</local></target>
+					<featurename>start</featurename>
+				</featurecall>
+			</compound>
+			<until>
+				<expression>
+					<featurecall>
+						<target><local>a_cursor</local></target>
+						<featurename>after</featurename>
+					</featurecall>
+				</expression>
+			</until>
+			<compound role="loop">
+				<if>
+					<expression>
+						<equal>
+							<expression>
+								<featurecall>
+									<target><local>a_cursor</local></target>
+									<featurename>item</featurename>
+								</featurecall>
+							</expression>
+							<expression>
+								<integer>5</integer>
+							</expression>
+						</equal>
+					</expression>
+					<compound role="then">
+						<assign>
+							<target><local>found</local></target>
+							<expression>
+								<true/>
+							</expression>
+						</assign>
+						<featurecall>
+							<target><local>a_cursor</local></target>
+							<featurename>go_after</featurename>
+						</featurecall>
+					</compound>
+					<compound role="else">
+						<featurecall>
+							<target><local>a_cursor</local></target>
+							<featurename>forth</featurename>
+						</featurecall>
+					</compound>
+				</if>
+			</compound>
+		</loop>
+</compound></programlisting>
+</informalexample>
+</para>
+
+<para>
+Note that the examples above also work fine when the container
+is empty. This is because the feature <featurename>start</featurename>
+moves the cursor <featurename>after</featurename>
+when there is no items, hence exiting from the
+loop before the first iteration.
+</para>
+
+<para>
+<warning>
+We saw in the previous section that it
+was the responsibility of the container to keep uptodate the
+cursors currently traversing its items. This implies that the
+container internally keeps track of such cursors. Therefore,
+after a traversal and/or when the cursor is not needed anymore,
+it is important to give a clue to the container that it doesn't
+need to take care of this cursor anymore by calling
+<featurename>go_after</featurename>. This will allow the
+container to release its
+reference to this cursor and hence allow the garbage collector to
+reclaim its memory if necessary. Otherwise <emphasis role="strong">memory
+leaks</emphasis> as well as performance degradation may
+appear.
+</warning>
+</para>
+
+</sect1>
+<sect1 id="structure.traversal.ds_bilinear">
+<title>Classes <classname>DS_BILINEAR</classname> and <classname>DS_BILINEAR_CURSOR</classname></title>
+
+<para>
+Bilinear containers are similar to linear containers except
+that they can be traversed both forward and backward. Therefore classes
+<link linkend="structure.flatshort.ds_bilinear.top"><classname>DS_BILINEAR</classname></link>
+and <link linkend="structure.flatshort.ds_bilinear_cursor.top"><classname>DS_BILINEAR_CURSOR</classname></link>
+introduce the counterpart set of features:
+<link linkend="structure.flatshort.ds_bilinear_cursor.finish"><featurename>finish</featurename></link>
+to initiate the traversal,
+<link linkend="structure.flatshort.ds_bilinear_cursor.back"><featurename>back</featurename></link>
+to move to the previous item,
+<link linkend="structure.flatshort.ds_bilinear_cursor.before"><featurename>before</featurename></link>
+to indicate that all items have been visited,
+<link linkend="structure.flatshort.ds_bilinear_cursor.is_last"><featurename>is_last</featurename></link>
+to indicate whether the cursor is on the last item of the traversal,
+<link linkend="structure.flatshort.ds_bilinear_cursor.go_before"><featurename>go_before</featurename></link>
+to abort the traversal and move the cursor before the first item and
+<link linkend="structure.flatshort.ds_bilinear_cursor.search_back"><featurename>search_back</featurename></link>
+which move the cursor to the previous occurrence of an item according
+to the <link linkend="structure.container.ds_searchable">searchable
+mechanism criteria</link>.
+</para>
+
+</sect1>
+<sect1>
+<title>Classes <classname>DS_INDEXED_CURSOR</classname> and <classname>DS_DYNAMIC_CURSOR</classname></title>
+
+<para>
+The class <link linkend="structure.flatshort.ds_indexed_cursor.top"><classname>DS_INDEXED_CURSOR</classname></link>
+associates the cursor's position with an integer value
+<link linkend="structure.flatshort.ds_indexed_cursor.index"><featurename>index</featurename></link>.
+It comes with two other features,
+<link linkend="structure.flatshort.ds_indexed_cursor.valid_index"><featurename>valid_index</featurename></link>
+which checks whether a given integer is a valid index value, and
+<link linkend="structure.flatshort.ds_indexed_cursor.go_i_th"><featurename>go_i_th</featurename></link>
+to move the cursor to a position specified by its index.
+</para>
+
+<para>
+The class <link linkend="structure.flatshort.ds_dynamic_cursor.top"><classname>DS_DYNAMIC_CURSOR</classname></link>
+is equipped with features
+<link linkend="structure.flatshort.ds_dynamic_cursor.replace"><featurename>replace</featurename></link>
+to change the item at the cursor position, and
+<link linkend="structure.flatshort.ds_dynamic_cursor.swap"><featurename>swap</featurename></link>
+to exchange items between to cursors.
+</para>
+
+</sect1>
+
+</chapter>
