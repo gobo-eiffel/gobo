@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<cluster name="parse" location="${GOBO}/library/parse">
+	<cluster name="error" />
+	<cluster name="fsm" />
+	<cluster name="generation" />
+	<cluster name="grammar" />
+	<cluster name="parser" />
+	<cluster name="skeleton" />
+	<cluster name="support" />
+	<cluster name="yacc" />
+</cluster>
