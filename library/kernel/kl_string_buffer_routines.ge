@@ -235,10 +235,16 @@ feature -- Element change
 		local
 			a_file: FILE
 			a_string: STRING
+			a_console: CONSOLE
 		do
 			a_file ?= a_stream
 			if a_file /= Void then
-				Result := c_file_gss (a_file.file_pointer, c_offset_pointer ($a_buffer, pos), nb_char)
+				a_console ?= a_file
+				if a_console /= Void then
+					Result := c_console_readstream (a_console.file_pointer, c_offset_pointer ($a_buffer, pos), nb_char)
+				else
+					Result := c_file_gss (a_file.file_pointer, c_offset_pointer ($a_buffer, pos), nb_char)
+				end
 			else
 				a_stream.read_stream (nb_char)
 				a_string := a_stream.last_string
@@ -388,6 +394,14 @@ feature {NONE} -- Externals
 			"C (FILE *, EIF_CHARACTER *, EIF_INTEGER): EIF_INTEGER"
 		alias
 			"file_gss"
+		end
+
+	c_console_readstream (a_file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
+			-- Read a stream from the console
+		external
+			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER"
+		alias
+			"console_readstream"
 		end
 
 	c_bcopy (source, target: POINTER; size: INTEGER) is
