@@ -391,7 +391,7 @@ feature {NONE} -- Externals
 			-- Read min (`length', remaining bytes in `a_file')
 			-- characters into `a_string'.
 		external
-			"C (FILE *, EIF_CHARACTER *, EIF_INTEGER): EIF_INTEGER"
+			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER"
 		alias
 			"file_gss"
 		end
