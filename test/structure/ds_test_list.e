@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 		do
 			a_list.put_first (2)
 			assert_equal ("count1", 1, a_list.count)
-			assert_iarray ("items1", <<2>>, a_list.to_array)
+			assert_iarrays_same ("items1", <<2>>, a_list.to_array)
 			assert ("before1", a_list.before)
 
 			from i := 3 until i > 10 loop
@@ -67,12 +67,12 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			assert_equal ("count2", 9, a_list.count)
-			assert_iarray ("items2", <<2, 3, 4, 5, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items2", <<2, 3, 4, 5, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert ("before2", a_list.before)
 
 			a_list.force_first (1)
 			assert_equal ("count3", 10, a_list.count)
-			assert_iarray ("items3", <<1, 2, 3, 4, 5, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items3", <<1, 2, 3, 4, 5, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert ("before3", a_list.before)
 
 			a_list.start
@@ -83,18 +83,18 @@ feature {NONE} -- Implementation
 
 			a_list.force_left (44)
 			assert_equal ("count4", 11, a_list.count)
-			assert_iarray ("items4", <<1, 2, 3, 4, 44, 5, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items4", <<1, 2, 3, 4, 44, 5, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index3", 6, a_list.index)
 			assert_equal ("item2", 5, a_list.item_for_iteration)
 			a_list.force_right (55)
 			assert_equal ("count5", 12, a_list.count)
-			assert_iarray ("items5", <<1, 2, 3, 4, 44, 5, 55, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items5", <<1, 2, 3, 4, 44, 5, 55, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index4", 6, a_list.index)
 			assert_equal ("item3", 5, a_list.item_for_iteration)
 
 			a_list.remove_at
 			assert_equal ("count6", 11, a_list.count)
-			assert_iarray ("items6", <<1, 2, 3, 4, 44, 55, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items6", <<1, 2, 3, 4, 44, 55, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index5", 6, a_list.index)
 			assert_equal ("item4", 55, a_list.item_for_iteration)
 
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			other.put_last (77)
 			a_list.append_right (other)
 			assert_equal ("count7", 13, a_list.count)
-			assert_iarray ("items7", <<1, 2, 3, 4, 44, 55, 66, 77, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items7", <<1, 2, 3, 4, 44, 55, 66, 77, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index6", 6, a_list.index)
 			assert_equal ("item5", 55, a_list.item_for_iteration)
 
@@ -118,19 +118,19 @@ feature {NONE} -- Implementation
 			other.put_last (99)
 			a_list.append_left (other)
 			assert_equal ("count8", 15, a_list.count)
-			assert_iarray ("items8", <<1, 2, 3, 4, 44, 55, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items8", <<1, 2, 3, 4, 44, 55, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index8", 11, a_list.index)
 			assert_equal ("item7", 6, a_list.item_for_iteration)
 
 			a_list.force (3, 5)
 			assert_equal ("count9", 16, a_list.count)
-			assert_iarray ("items9", <<1, 2, 3, 4, 3, 44, 55, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items9", <<1, 2, 3, 4, 3, 44, 55, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index8", 12, a_list.index)
 			assert_equal ("item7", 6, a_list.item_for_iteration)
 
 			a_list.delete (3)
 			assert_equal ("count10", 14, a_list.count)
-			assert_iarray ("items10", <<1, 2, 4, 44, 55, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items10", <<1, 2, 4, 44, 55, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert ("after1", a_list.after)
 
 			a_list.go_i_th (5)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 
 			a_list.remove (5)
 			assert_equal ("count11", 13, a_list.count)
-			assert_iarray ("items11", <<1, 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
+			assert_iarrays_same ("items11", <<1, 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index10", 5, a_list.index)
 			assert_equal ("item9", 66, a_list.item_for_iteration)
 
