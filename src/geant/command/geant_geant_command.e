@@ -121,12 +121,26 @@ feature -- Execution
 
 					-- Load build configuration:
 				if start_target_name /= Void and then start_target_name.count > 0 then
+					if not a_project.targets.has (start_target_name) then
+						exit_application (1, <<"Project '", a_project.name,
+							"' does not contain a target named `", start_target_name + "%'">>)
+					end
+						-- Check export status of target to be called:
+					a_target := a_project.targets.item (start_target_name)
+					if not (a_target.is_exported_to_any or else
+						a_target.is_exported_to_project (project)) then
+						exit_application (1, <<"target: `", a_target.full_name,
+							"%' is not exported to project '", project.name, "'">>)
+					end
+
 					a_project.set_start_target_name (start_target_name)
 				end
 					-- Start build process:
-				a_project.build
-				if not a_project.build_successful then
-					exit_code := 1
+				if exit_code = 0 then
+					a_project.build
+					if not a_project.build_successful then
+						exit_code := 1
+					end
 				end
 			else
 				check target_executable: is_target_executable end
