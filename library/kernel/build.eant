@@ -67,6 +67,10 @@
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_imported_fixed_array_type2"/>
 		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_imported_native_array_routines"/>
+		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_imported_native_array_type"/>
+		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_imported_input_stream_routines"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_imported_output_stream_routines"/>
@@ -76,6 +80,8 @@
 		<set name="gepp_file" value="kl_input_stream_routines"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_integer_routines"/>
+		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_native_array_routines"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_output_stream_routines"/>
 		<geant target="ge2e"/>
