@@ -221,21 +221,22 @@ feature -- Status report
 		require
 			a_string_not_void: a_string /= Void
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			c: CHARACTER
 		do
-			i := a_string.count
-			if i = 0 then
+			nb := a_string.count
+			if nb = 0 then
 				Result := False
 			else
-				from
-					Result := True
-				until
-					not Result or i = 0
-				loop
+				Result := True
+				from i := 1 until i > nb loop
 					c := a_string.item (i)
-					Result := c >= '0' and c <= '9'
-					i := i - 1
+					if c < '0' or c > '9' then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
 				end
 			end
 		end
@@ -246,23 +247,22 @@ feature -- Status report
 		require
 			a_string_not_void: a_string /= Void
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			c: CHARACTER
 		do
-			i := a_string.count
-			if i = 0 then
+			nb := a_string.count
+			if nb = 0 then
 				Result := False
 			else
-				from
-					Result := True
-				until
-					not Result or i = 0
-				loop
+				Result := True
+				from i := 1 until i > nb loop
 					c := a_string.item (i)
-					Result := (c >= '0' and c <= '9')
-						or (c >= 'a' and c <= 'f')
-						or (c >= 'A' and c <= 'F')
-					i := i - 1
+					if (c < '0' or c > '9') and (c < 'a' or c > 'f') and (c < 'A' or c > 'F') then
+						Result := False
+						i := nb + 1 -- Jump out pf the loop.
+					else
+						i := i + 1
+					end
 				end
 			end
 		end
@@ -460,23 +460,24 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
+			a_string_count: INTEGER
 		do
-			nb := a_string.count
-			if nb > 5 then
+			a_string_count := a_string.count
+			if a_string_count > 5 then
 #ifdef ISE || HACT
-				Result := nb * a_string.item (nb).lower.code
+				Result := a_string_count * a_string.item (a_string_count).lower.code
 #endif
 #ifdef SE
-				Result := nb * a_string.item (nb).to_lower.code
+				Result := a_string_count * a_string.item (a_string_count).to_lower.code
 #endif
 #ifdef VE
-				Result := nb * a_string.item (nb).as_lower.code
+				Result := a_string_count * a_string.item (a_string_count).as_lower.code
 #endif
-				i := 5
+				nb := 5
 			else
-				i := nb
+				nb := a_string_count
 			end
-			from until i <= 0 loop
+			from i := 1 until i > nb loop
 #ifdef ISE || HACT
 				Result := Result + a_string.item (i).lower.code
 #endif
@@ -486,9 +487,12 @@ feature -- Access
 #ifdef VE
 				Result := Result + a_string.item (i).as_lower.code
 #endif
-				i := i - 1
+				i := i + 1
 			end
-			Result := Result * nb
+			Result := Result * a_string_count
+			if Result < 0 then
+				Result := - (Result + 1)
+			end
 		ensure
 			hash_code_positive: Result >= 0
 		end
@@ -566,31 +570,32 @@ feature -- Comparison
 		local
 			c1, c2: CHARACTER
 			a_code1, a_code2: INTEGER
-			i: INTEGER
+			i, nb: INTEGER
 		do
 			if s1 = s2 then
 				Result := True
 			elseif s1.count = s2.count then
+				nb := s1.count
 				Result := True
 				if not (s1.same_type (dummy_string) and s2.same_type (dummy_string)) then
-					from i := s1.count until i < 1 loop
+					from i := 1 until i > nb loop
 						a_code1 := s1.item_code (i)
 						a_code2 := s2.item_code (i)
 						if a_code1 = a_code2 then
-							i := i - 1
+							i := i + 1
 						elseif unicode.lower_code (a_code1) = unicode.lower_code (a_code2) then
-							i := i - 1
+							i := i + 1
 						else
 							Result := False
-							i := 0  -- Jump out of the loop
+							i := nb + 1  -- Jump out of the loop
 						end
 					end
 				else
-					from i := s1.count until i < 1 loop
+					from i := 1 until i > nb loop
 						c1 := s1.item (i)
 						c2 := s2.item (i)
 						if c1 = c2 then
-							i := i - 1
+							i := i + 1
 #ifdef ISE || HACT
 						elseif c1.lower = c2.lower then
 #endif
@@ -600,10 +605,10 @@ feature -- Comparison
 #ifdef VE
 						elseif c1.as_lower = c2.as_lower then
 #endif
-							i := i - 1
+							i := i + 1
 						else
 							Result := False
-							i := 0  -- Jump out of the loop
+							i := nb + 1  -- Jump out of the loop
 						end
 					end
 				end
@@ -652,7 +657,7 @@ feature -- Element change
 #ifdef ISE
 		local
 			uc_string: UC_STRING
-			j, nb: INTEGER
+			j: INTEGER
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -751,36 +756,48 @@ feature -- Conversion
 			not_void: a_string /= Void
 			hexadecimal: is_hexadecimal (a_string)
 		local
-			i: INTEGER
+			i, nb: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > a_string.count
-			loop
-				-- shift previous result
+			nb := a_string.count
+			from i := 1 until i > nb loop
+					-- Shift previous result.
 				Result := Result * 16
-				-- add current digit
-				-- (inspect independent of character set)
+					-- Add current digit
+					-- (inspect independent of character set)
 				inspect a_string.item (i)
-				when '0' then -- do_nothing
-				when '1' then Result := Result + 1
-				when '2' then Result := Result + 2
-				when '3' then Result := Result + 3
-				when '4' then Result := Result + 4
-				when '5' then Result := Result + 5
-				when '6' then Result := Result + 6
-				when '7' then Result := Result + 7
-				when '8' then Result := Result + 8
-				when '9' then Result := Result + 9
-				when 'a','A' then Result := Result + 10
-				when 'b','B' then Result := Result + 11
-				when 'c','C' then Result := Result + 12
-				when 'd','D' then Result := Result + 13
-				when 'e','E' then Result := Result + 14
-				when 'f','F' then Result := Result + 15
+				when '0' then
+					-- Do nothing.
+				when '1' then
+					Result := Result + 1
+				when '2' then
+					Result := Result + 2
+				when '3' then
+					Result := Result + 3
+				when '4' then
+					Result := Result + 4
+				when '5' then
+					Result := Result + 5
+				when '6' then
+					Result := Result + 6
+				when '7' then
+					Result := Result + 7
+				when '8' then
+					Result := Result + 8
+				when '9' then
+					Result := Result + 9
+				when 'a','A' then
+					Result := Result + 10
+				when 'b','B' then
+					Result := Result + 11
+				when 'c','C' then
+					Result := Result + 12
+				when 'd','D' then
+					Result := Result + 13
+				when 'e','E' then
+					Result := Result + 14
+				when 'f','F' then
+					Result := Result + 15
 				end
-				-- next
 				i := i + 1
 			end
 		end
