@@ -16,7 +16,21 @@ inherit
 
 	YY_COMPRESSED_SCANNER_SKELETON
 		redefine
+			make_with_buffer, set_input_buffer,
 			read_token
+		end
+
+feature {NONE} -- Initialization
+
+	make_with_buffer (a_buffer: like input_buffer) is
+			-- Create a new scanner with
+			-- `a_buffer' as input buffer.
+		do
+			yy_initialize
+			output_file := std.output
+			input_buffer := a_buffer
+			input_buffer.set_interactive (True)
+			yy_load_input_buffer
 		end
 
 feature -- Scanning
@@ -339,5 +353,23 @@ feature -- Scanning
 		rescue
 			fatal_error ("fatal scanner internal error")
 		end
+
+feature -- Input
+
+	set_input_buffer (a_buffer: like input_buffer) is
+			-- Set `input_buffer' to `a_buffer'.
+		do
+			if a_buffer /= input_buffer then
+					-- Flush out information for old buffer.
+				input_buffer.set_position (yy_position)
+				input_buffer := a_buffer
+				input_buffer.set_interactive (True)
+				yy_load_input_buffer
+			end
+		end
+
+invariant
+
+	interactive_buffer: input_buffer.interactive
 
 end -- class YY_INTERACTIVE_SCANNER_SKELETON
