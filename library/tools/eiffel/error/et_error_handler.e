@@ -250,9 +250,9 @@ feature -- Validity errors
 				print ("[GAGP] Class ")
 				print (where.name.name)
 				print (": ancestors with generic parameter mismatch: ")
-				print (anc1.to_string)
+				print (anc1.to_text)
 				print (" and ")
-				print (anc2.to_string)
+				print (anc2.to_text)
 				print (".%N")
 			end
 		end
@@ -334,7 +334,7 @@ feature -- Validity errors
 				print (",")
 				print (a_type.position.column)
 				print ("): invalid type '")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print ("' in constraint of formal generic parameter.%N")
 			end
 		end
@@ -359,7 +359,7 @@ feature -- Validity errors
 				print (",")
 				print (a_type.position.column)
 				print ("): invalid type '")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print ("' in constraint of formal generic parameter.%N")
 			end
 		end
@@ -383,7 +383,7 @@ feature -- Validity errors
 					print (",")
 					print (a_type.position.column)
 					print ("): invalid type '")
-					print (a_type.to_string)
+					print (a_type.to_text)
 					print ("' in constraint of formal generic parameter.%N")
 				end
 			end
@@ -462,7 +462,7 @@ feature -- Validity errors
 					print ("): constraint of formal generic parameter '")
 					print (a_formal.name.name)
 					print ("' is another formal generic parameter '")
-					print (a_constraint.to_string)
+					print (a_constraint.to_text)
 					print ("'.%N")
 				end
 			end
@@ -573,7 +573,7 @@ feature -- Validity errors
 					print ("): constraint of formal generic parameter '")
 					print (a_formal.name.name)
 					print ("' contains '")
-					print (a_type.to_string)
+					print (a_type.to_text)
 					print ("' itself.%N")
 				end
 			end
@@ -1170,7 +1170,7 @@ feature -- Validity errors
 				print (",")
 				print (a_type.position.column)
 				print ("): invalid type '")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print ("' in parent clause.%N")
 			end
 		end
@@ -1194,7 +1194,7 @@ feature -- Validity errors
 				print (",")
 				print (a_type.position.column)
 				print ("): invalid type '")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print ("' in parent clause.%N")
 			end
 		end
@@ -1217,7 +1217,7 @@ feature -- Validity errors
 					print (",")
 					print (a_type.position.column)
 					print ("): invalid type '")
-					print (a_type.to_string)
+					print (a_type.to_text)
 					print ("' in parent clause.%N")
 				end
 			end
@@ -1664,7 +1664,7 @@ feature -- Validity errors
 				print (",")
 				print (a_type.position.column)
 				print ("): invalid type '")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print ("': bit size must be a positive integer constant.%N")
 			end
 		end
@@ -1690,7 +1690,7 @@ feature -- Validity errors
 					print (",")
 					print (a_type.position.column)
 					print ("): invalid type '")
-					print (a_type.to_string)
+					print (a_type.to_text)
 					print ("': bit size must be a positive integer constant.%N")
 				end
 			end
@@ -1717,9 +1717,9 @@ feature -- Validity errors
 				print (",")
 				print (an_actual.position.column)
 				print ("): actual generic parameter ")
-				print (an_actual.to_string)
+				print (an_actual.to_text)
 				print (" does not conform to constraint ")
-				print (a_constraint.to_string)
+				print (a_constraint.to_text)
 				print (".%N")
 			end
 		end
@@ -1819,7 +1819,7 @@ feature -- Validity errors
 				print (",")
 				print (a_name.position.column)
 				print ("): type ")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print (" has actual generic parameters but class ")
 				print (a_name.name)
 				print (" is not generic.%N")
@@ -1849,7 +1849,7 @@ feature -- Validity errors
 				print (",")
 				print (a_name.position.column)
 				print ("): type ")
-				print (a_type.to_string)
+				print (a_type.to_text)
 				print (" has wrong number of actual generic parameters.%N")
 			end
 		end

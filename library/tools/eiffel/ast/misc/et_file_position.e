@@ -63,7 +63,7 @@ feature -- Access
 feature -- Output
 
 	append_to_string (a_string: STRING) is
-			-- Append `to_string' to `a_string'.
+			-- Append `to_text' to `a_string'.
 		do
 			append_to_string_with_filename (filename, a_string)
 		end

@@ -141,14 +141,14 @@ feature -- Conversion
 
 feature -- Output
 
-	to_string: STRING is
+	to_text: STRING is
 			-- Textual representation of current type
 			-- (Create a new string at each call.)
 		do
 			Result := STRING_.make (15)
 			append_to_string (Result)
 		ensure
-			to_string_not_void: Result /= Void
+			to_text_not_void: Result /= Void
 		end
 
 	append_to_string (a_string: STRING) is

@@ -45,7 +45,7 @@ feature -- Constants
 
 feature -- Output
 
-	to_string: STRING is
+	to_text: STRING is
 			-- Textual representation
 		do
 			Result := STRING_.make (50)
@@ -53,7 +53,7 @@ feature -- Output
 		end
 
 	append_to_string (a_string: STRING) is
-			-- Append `to_string' to `a_string'.
+			-- Append `to_text' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -64,7 +64,7 @@ feature -- Output
 		end
 
 	append_to_string_with_filename (a_filename: STRING; a_string: STRING) is
-			-- Append `to_string' to `a_string'.
+			-- Append `to_text' to `a_string'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_string_not_void: a_string /= Void

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			fill_from_string (a_string, 1)
 		ensure
 			count_set: count = a_string.count
-			charaters_set: to_string.is_equal (a_string)
+			charaters_set: to_text.is_equal (a_string)
 		end
 
 feature -- Access
@@ -69,12 +69,12 @@ feature -- Access
 
 feature -- Conversion
 
-	to_string: STRING is
+	to_text: STRING is
 			-- New string made up of characters held in buffer
 		do
 			Result := substring (1, count)
 		ensure
-			as_string_not_void: Result /= Void
+			to_text_not_void: Result /= Void
 			string_type: Result.same_type ("")
 			same_count: Result.count = count
 		end
