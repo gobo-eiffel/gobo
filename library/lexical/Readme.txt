@@ -3,10 +3,10 @@ Gobo Eiffel Lexical Library
 This library provides lexical functionalities such as regular expressions,
 nondeterministic finite automata (NFA) and deterministic finite automata
 (DFA), lexical analyzers (also known as scanners or tokenizers). This
-Library is mainly used by Gobo Eiffel Lex (gelex). To get information
+library is mainly used by Gobo Eiffel Lex (gelex). To get information
 about Gelex, have a look at "$GOBO\src\gelex\Redame.txt" and
-"$GOBO\doc\gelex". Examples for both Gelex and this library can be found
-in "$GOBO\example\lexical".
+"$GOBO\doc\gelex". Examples for both Gelex and this library can be
+found in "$GOBO\example\lexical".
 
 Clusters:
 
@@ -14,7 +14,7 @@ automaton
     Nondeterministic finite automata (NFA) and deterministic finite
     automata (DFA).
 error
-    Error message classes used throughout this Library and Gelex.
+    Error message classes used throughout this library and Gelex.
 generation
     DFA table compression algorithm. Generation of Eiffel class texts
     describing scanners made out of DFA.
