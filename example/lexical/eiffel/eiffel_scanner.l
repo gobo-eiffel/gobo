@@ -3,11 +3,11 @@ indexing
 
 	description:
 
-		"Scanners for Eiffel parsers";
+		"Scanners for Eiffel parsers"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class EIFFEL_SCANNER
@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	EXCEPTIONS
-		export
-			{NONE} all
-		end
-
 	ARGUMENTS
 		export
 			{NONE} all
@@ -40,20 +35,15 @@ inherit
 			{NONE} all
 		end
 
-	KL_INTEGER_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INTEGER_ROUTINES
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
 
-	KL_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_STRING_ROUTINES
+
+	KL_SHARED_PLATFORM
+
+	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -219,11 +209,11 @@ creation
 \'%>\'				last_token := E_CHARACTER; last_value := '%>'
 \'%\/[0-9]+\/\'		{
 						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > Maximum_character_code then
+						if code_ > platform_.Maximum_character_code then
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
-							last_value := integer__to_character (code_)
+							last_value := integer_.to_character (code_)
 						end
 					}
 \'.{1,2}			|
@@ -248,7 +238,7 @@ creation
 \"[aA][nN][dD]\"					last_token := process_operator (E_STRAND)
 \"[oO][rR]\"						last_token := process_operator (E_STROR)
 \"[xX][oO][rR]\"					last_token := process_operator (E_STRXOR)
-\"[aA][nN][dD]\ [tT][hH][eE][nN]\" last_token := process_operator (E_STRANDTHEN)
+\"[aA][nN][dD]\ [tT][hH][eE][nN]\"	last_token := process_operator (E_STRANDTHEN)
 \"[oO][rR]\ [eE][lL][sS][eE]\"		last_token := process_operator (E_STRORELSE)
 \"[iI][mM][pP][lL][iI][eE][sS]\"	last_token := process_operator (E_STRIMPLIES)
 \"[@#|&][^%"\0-\32\127-\255]*\"		{
@@ -293,11 +283,11 @@ creation
 <IN_STR>%>			eif_buffer.append_character ('%>')
 <IN_STR>%\/[0-9]+\/	{
 			code_ := text_substring (3, text_count - 1).to_integer
-			if (code_ > Maximum_character_code) then
+			if (code_ > platform_.Maximum_character_code) then
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			else
-				eif_buffer.append_character (integer__to_character (code_))
+				eif_buffer.append_character (integer_.to_character (code_))
 			end
 		}
 <IN_STR>%\n[ \t\r]*%	eif_lineno := eif_lineno + 1
@@ -306,7 +296,7 @@ creation
 			if text_count > 1 then
 				eif_buffer.append_string (text_substring (1, text_count - 1))
 			end
-			str_ := string__make (eif_buffer.count)
+			str_ := string_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
 			last_value := str_
@@ -407,7 +397,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_compressed_scanner_skeleton
-			eif_buffer := string__make (Init_buffer_size)
+			eif_buffer := string_.make (Init_buffer_size)
 			eif_lineno := 1
 		end
 
@@ -415,29 +405,26 @@ feature {NONE} -- Initialization
 			-- Analyze Eiffel files `arguments (1..argument_count)'.
 		local
 			j, n: INTEGER
-			filename: STRING
-			buffer: YY_FILE_BUFFER
-			a_file: like FILE_type
+			a_filename: STRING
+			a_file: like INPUT_STREAM_TYPE
 		do
 			make
 			n := argument_count
 			if n = 0 then
-				io.error.put_string ("usage: eiffel_scanner filename ...%N")
-				die (1)
+				std.error.put_string ("usage: eiffel_scanner filename ...%N")
+				exceptions_.die (1)
 			else
 				from j := 1 until j > n loop
-					filename := argument (j)
-					a_file := file__make (filename)
-					file__open_read (a_file)
-					if a_file.is_open_read then
-						!! buffer.make (a_file)
-						set_input_buffer (buffer)
+					a_filename := argument (j)
+					a_file := input_stream_.make_file_open_read (a_filename)
+					if input_stream_.is_open_read (a_file) then
+						set_input_buffer (new_file_buffer (a_file))
 						scan
-						a_file.close
+						input_stream_.close (a_file)
 					else
-						io.error.put_string ("eiffel_scanner: cannot read %'")
-						io.error.put_string (filename)
-						io.error.put_string ("%'%N")
+						std.error.put_string ("eiffel_scanner: cannot read %'")
+						std.error.put_string (a_filename)
+						std.error.put_string ("%'%N")
 					end
 					j := j + 1
 				end
@@ -448,33 +435,30 @@ feature {NONE} -- Initialization
 			-- Analyze Eiffel file `argument (2)' `argument (1)' times.
 		local
 			j, n: INTEGER
-			filename: STRING
-			buffer: YY_FILE_BUFFER
-			a_file: like FILE_type
+			a_filename: STRING
+			a_file: like INPUT_STREAM_TYPE
 		do
 			make
 			if
 				argument_count < 2 or else
-				not string__is_integer (argument (1))
+				not string_.is_integer (argument (1))
 			then
-				io.error.put_string ("usage: eiffel_scanner nb filename%N")
-				die (1)
+				std.error.put_string ("usage: eiffel_scanner nb filename%N")
+				exceptions_.die (1)
 			else
 				n := argument (1).to_integer
-				filename := argument (2)
+				a_filename := argument (2)
 				from j := 1 until j > n loop
-					a_file := file__make (filename)
-					file__open_read (a_file)
-					if a_file.is_open_read then
-						!! buffer.make (a_file)
-						set_input_buffer (buffer)
+					a_file := input_stream_.make_file_open_read (a_filename)
+					if input_stream_.is_open_read (a_file) then
+						set_input_buffer (new_file_buffer (a_file))
 						scan
-						a_file.close
+						input_stream_.close (a_file)
 					else
-						io.error.put_string ("eiffel_scanner: cannot read %'")
-						io.error.put_string (filename)
-						io.error.put_string ("%'%N")
-						die (1)
+						std.error.put_string ("eiffel_scanner: cannot read %'")
+						std.error.put_string (a_filename)
+						std.error.put_string ("%'%N")
+						exceptions_.die (1)
 					end
 					j := j + 1
 				end

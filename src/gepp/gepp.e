@@ -2,31 +2,29 @@ indexing
 
 	description:
 
-		"'ge2e' preprocessors";
+		"C-like preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
-class GE2E
+class GEPP
 
 inherit
-
-	EXCEPTIONS
-		export
-			{NONE} all
-		end
 
 	ARGUMENTS
 		export
 			{NONE} all
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
+
+	KL_SHARED_OUTPUT_STREAM_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
+
+	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -35,14 +33,15 @@ creation
 feature -- Processing
 
 	execute is
-			-- Start 'ge2e' execution.
+			-- Start 'gepp' execution.
 		local
-			a_parser: GE2E_PARSER
+			a_parser: GEPP_PARSER
 			an_arg: STRING
 			stop: BOOLEAN
 			i, nb, args_count: INTEGER
 			in_filename, out_filename: STRING
-			in_file, out_file: like FILE_type
+			in_file: like INPUT_STREAM_TYPE
+			out_file: like OUTPUT_STREAM_TYPE
 		do
 			!! a_parser.make
 			args_count:= argument_count
@@ -79,44 +78,47 @@ feature -- Processing
 				in_filename := argument (i)
 				out_filename := argument (i + 1)
 			else
-				io.error.put_string
-					("usage: ge2e [-D...] [filename | -] [filename | -]%N")
-				die (1)
+				std.error.put_string
+					("usage: gepp [-D...] [filename | -] [filename | -]%N")
+				exceptions_.die (1)
 			end
 				-- Preprocess.
 			if not out_filename.is_equal ("-") then
-				out_file := file__make (out_filename)
-				file__open_write (out_file)
-				if out_file.is_open_write then
+				out_file := output_stream_.make_file_open_write (out_filename)
+				if output_stream_.is_open_write (out_file) then
 					a_parser.set_output_file (out_file)
 				else
-					io.error.put_string ("ge2e: cannot open %'")
-					io.error.put_string (out_filename)
-					io.error.put_string ("%'%N")
-					die (1)
+					std.error.put_string ("gepp: cannot open %'")
+					std.error.put_string (out_filename)
+					std.error.put_string ("%'%N")
+					exceptions_.die (1)
 				end
+			else
+				a_parser.set_output_file (std.output)
 			end
 			if in_filename.is_equal ("-") then
-				a_parser.parse_file (io.input)
+				a_parser.parse_file (std.input)
 			else
-				in_file := file__make (in_filename)
-				file__open_read (in_file)
-				if in_file.is_open_read then
+				in_file := input_stream_.make_file_open_read (in_filename)
+				if input_stream_.is_open_read (in_file) then
 					a_parser.parse_file (in_file)
-					in_file.close
+					input_stream_.close (in_file)
 				else
-					io.error.put_string ("ge2e: cannot open %'")
-					io.error.put_string (in_filename)
-					io.error.put_string ("%'%N")
-					die (1)
+					std.error.put_string ("gepp: cannot open %'")
+					std.error.put_string (in_filename)
+					std.error.put_string ("%'%N")
+					exceptions_.die (1)
 				end
 			end
-			if out_file /= Void and then not out_file.is_closed then
-				out_file.close
+			if
+				out_file /= Void and then
+				not output_stream_.is_closed (out_file)
+			then
+				output_stream_.close (out_file)
 			end
 		rescue
-			io.error.put_string ("ge2e: internal error%N")
-			die (1)
+			std.error.put_string ("gepp: internal error%N")
+			exceptions_.die (1)
 		end
 			
-end -- class GE2E
+end -- class GEPP

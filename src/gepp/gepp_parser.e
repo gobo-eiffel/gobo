@@ -2,14 +2,14 @@ indexing
 
 	description:
 
-		"Parsers for 'ge2e' preprocessors";
+		"Parsers for 'gepp' preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
-class GE2E_PARSER
+class GEPP_PARSER
 
 inherit
 
@@ -20,17 +20,12 @@ inherit
 			last_value, last_token
 		end
 
-	GE2E_SCANNER
+	GEPP_SCANNER
 		rename
-			make as make_ge2e_scanner,
-			reset as reset_ge2e_scanner
+			make as make_gepp_scanner,
+			reset as reset_gepp_scanner
 		redefine
 			last_value, last_token
-		end
-
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
 		end
 
 creation
@@ -63,7 +58,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new parser.
 		do
-			make_ge2e_scanner
+			make_gepp_scanner
 			make_parser_skeleton
 			!! defined_values.make (10)
 		end
@@ -79,7 +74,7 @@ feature -- Initialization
 	reset is
 			-- Reset parser before parsing next input.
 		do
-			reset_ge2e_scanner
+			reset_gepp_scanner
 			reset_parser_skeleton
 			if_level := 0
 			ignored_level := 0
@@ -88,11 +83,11 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: like FILE_type) is
+	parse_file (a_file: like INPUT_STREAM_TYPE) is
 			-- Parse scanner description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
@@ -187,7 +182,7 @@ feature {NONE} -- Implementation
 --	defined_values_not_void: defined_values /= Void
 --	no_void_defined_value: not defined_values.has_item (Void)
 --
---end -- class GE2E_PARSER
+--end -- class GEPP_PARSER
 
 feature {NONE}
 
