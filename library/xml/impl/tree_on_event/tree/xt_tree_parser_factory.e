@@ -13,6 +13,8 @@ indexing
 
 class XT_TREE_PARSER_FACTORY
 
+obsolete "Use XM_EIFFEL_PARSER or XM_EXPAT_PARSER(_FACTORY)"
+
 inherit
 
 	XM_TREE_PARSER_FACTORY
