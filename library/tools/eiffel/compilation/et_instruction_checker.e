@@ -412,6 +412,8 @@ feature {NONE} -- Instruction validity
 						else
 							error_handler.report_vgcc3b_error (current_class, a_class_impl, an_instruction, a_creation_named_type, a_target_named_type)
 						end
+					else
+						universe.report_create_supplier (a_creation_type, current_class, current_feature)
 					end
 				end
 				a_creation_named_type := a_context.named_type (universe)

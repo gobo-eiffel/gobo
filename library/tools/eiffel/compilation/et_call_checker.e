@@ -566,6 +566,7 @@ feature {NONE} -- Validity checking
 						end
 					end
 					if a_feature /= Void then
+						universe.report_static_supplier (a_type, current_class, current_feature)
 						check
 							a_class_not_void: a_class /= Void
 						end

@@ -17,6 +17,7 @@ inherit
 	ET_LIKE_IDENTIFIER
 		redefine
 			named_type,
+			named_type_has_class,
 			is_formal_type,
 			has_formal_type,
 			has_formal_types,
@@ -971,6 +972,116 @@ feature -- Status report
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
 					Result := False
+				end
+			end
+		end
+
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		local
+			a_base_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := (a_class = a_universe.unknown_class)
+			elseif is_like_argument then
+				a_base_class := a_context.base_class (a_universe)
+				seeded_feature := a_base_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := (a_class = a_universe.unknown_class)
+					else
+						Result := args.item (an_index).type.base_type_has_class (a_class, a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := (a_class = a_universe.unknown_class)
+				end
+			else
+				a_base_class := a_context.base_class (a_universe)
+				seeded_feature := a_base_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.base_type_has_class (a_class, a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := (a_class = a_universe.unknown_class)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := (a_class = a_universe.unknown_class)
+				end
+			end
+		end
+
+	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		local
+			a_base_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := (a_class = a_universe.unknown_class)
+			elseif is_like_argument then
+				a_base_class := a_context.base_class (a_universe)
+				seeded_feature := a_base_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := (a_class = a_universe.unknown_class)
+					else
+						Result := args.item (an_index).type.named_type_has_class (a_class, a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := (a_class = a_universe.unknown_class)
+				end
+			else
+				a_base_class := a_context.base_class (a_universe)
+				seeded_feature := a_base_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.named_type_has_class (a_class, a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := (a_class = a_universe.unknown_class)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := (a_class = a_universe.unknown_class)
 				end
 			end
 		end

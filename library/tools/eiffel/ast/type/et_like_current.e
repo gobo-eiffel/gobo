@@ -17,6 +17,7 @@ inherit
 	ET_LIKE_TYPE
 		redefine
 			named_type,
+			named_type_has_class,
 			has_formal_type,
 			has_formal_types,
 			has_qualified_type,
@@ -215,6 +216,20 @@ feature -- Status report
 			-- types?
 		do
 			Result := a_context.has_qualified_type (a_universe)
+		end
+
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		do
+				Result := a_context.base_type_has_class (a_class, a_universe)
+		end
+
+	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		do
+				Result := a_context.named_type_has_class (a_class, a_universe)
 		end
 
 feature -- Comparison

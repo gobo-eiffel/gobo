@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -118,8 +118,14 @@ feature {NONE} -- Feature validity
 			-- Check validity of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			a_type: ET_TYPE
 		do
-			check_type_validity (a_feature.type)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
+			end
 		end
 
 	check_constant_attribute_validity (a_feature: ET_CONSTANT_ATTRIBUTE) is
@@ -135,6 +141,7 @@ feature {NONE} -- Feature validity
 			a_type := a_feature.type
 			check_type_validity (a_type)
 			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
 				a_constant := a_feature.constant
 				if a_constant.is_boolean_constant then
 					if not a_type.same_named_type (universe.boolean_class, current_class, current_class, universe) then
@@ -228,12 +235,17 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_type: ET_TYPE
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
 			end
-			check_type_validity (a_feature.type)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
+			end
 		end
 
 	check_deferred_procedure_validity (a_feature: ET_DEFERRED_PROCEDURE) is
@@ -255,6 +267,7 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_type: ET_TYPE
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
 		do
@@ -262,7 +275,11 @@ feature {NONE} -- Feature validity
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
 			end
-			check_type_validity (a_feature.type)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
+			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
@@ -314,12 +331,17 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_type: ET_TYPE
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
 			end
-			check_type_validity (a_feature.type)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
+			end
 		end
 
 	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
@@ -341,6 +363,7 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_type: ET_TYPE
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
 		do
@@ -348,7 +371,11 @@ feature {NONE} -- Feature validity
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
 			end
-			check_type_validity (a_feature.type)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
+			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
@@ -405,6 +432,7 @@ feature {NONE} -- Feature validity
 			a_type := a_feature.type
 			check_type_validity (a_type)
 			if not has_fatal_error then
+				universe.report_result_supplier (a_type, current_class, a_feature)
 				if a_type.same_named_type (universe.integer_class, current_class, current_class, universe) then
 					-- OK.
 				elseif a_type.same_named_type (universe.integer_8_class, current_class, current_class, universe) then
@@ -433,10 +461,15 @@ feature {NONE} -- Locals/Arguments validity
 			an_arguments_not_void: an_arguments /= Void
 		local
 			i, nb: INTEGER
+			a_type: ET_TYPE
 		do
 			nb := an_arguments.count
 			from i := 1 until i > nb loop
-				check_type_validity (an_arguments.formal_argument (i).type)
+				a_type := an_arguments.formal_argument (i).type
+				check_type_validity (a_type)
+				if not has_fatal_error then
+					universe.report_argument_supplier (a_type, current_class, current_feature)
+				end
 				i := i + 1
 			end
 		end
@@ -453,6 +486,7 @@ feature {NONE} -- Locals/Arguments validity
 			a_name: ET_IDENTIFIER
 			args: ET_FORMAL_ARGUMENT_LIST
 			a_feature: ET_FEATURE
+			a_type: ET_TYPE
 		do
 			a_class_impl := current_feature.implementation_class
 			if current_class = a_class_impl then
@@ -488,13 +522,21 @@ feature {NONE} -- Locals/Arguments validity
 						set_fatal_error
 						error_handler.report_vrle1a_error (current_class, a_local, current_feature, a_feature)
 					end
-					check_local_type_validity (a_local.type)
+					a_type := a_local.type
+					check_local_type_validity (a_type)
+					if not has_fatal_error then
+						universe.report_local_supplier (a_type, current_class, current_feature)
+					end
 					i := i + 1
 				end
 			else
 				nb := a_locals.count
 				from i := 1 until i > nb loop
-					check_local_type_validity (a_locals.local_variable (i).type)
+					a_type := a_locals.local_variable (i).type
+					check_local_type_validity (a_type)
+					if not has_fatal_error then
+						universe.report_local_supplier (a_type, current_class, current_feature)
+					end
 					i := i + 1
 				end
 			end
@@ -705,6 +747,9 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
+	supplier_context: ET_NESTED_TYPE_CONTEXT
+			-- Supplier context
+
 	internal_call: BOOLEAN
 			-- Have the process routines been called from here?
 
@@ -727,5 +772,6 @@ invariant
 	instruction_checker_not_void: instruction_checker /= Void
 	rescue_checker_not_void: rescue_checker /= Void
 	type_checker_not_void: type_checker /= Void
+	supplier_context_not_void: supplier_context /= Void
 
 end

@@ -74,7 +74,7 @@ feature -- Access
 			-- Right bracket
 
 	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER_LIST is
-			-- Base types of current parameters, when they appear in `a_context'
+			-- Named types of current parameters, when they appear in `a_context'
 			-- in `a_universe', only made up of class names and generic
 			-- formal parameters when the root type of `a_context' is a
 			-- generic type not fully derived (Definition of base type in
@@ -84,6 +84,7 @@ feature -- Access
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, j: INTEGER
 			a_parameter: ET_ACTUAL_PARAMETER
@@ -213,6 +214,31 @@ feature -- Status report
 			nb := count
 			from i := 1 until i > nb loop
 				if type (i).has_qualified_type (a_context, a_universe) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	named_types_have_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does one of the named types of current parameters contain
+			-- `a_class' when it appears in `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			a_class_not_void: a_class /= Void
+		local
+			i, nb: INTEGER
+			a_parameter: ET_ACTUAL_PARAMETER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				a_parameter := actual_parameter (i)
+				if a_parameter.named_parameter_has_class (a_class, a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

@@ -389,6 +389,44 @@ feature -- Status report
 			end
 		end
 
+	base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current context contain `a_class'
+			-- in `a_universe'?
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_base_type_has_class (a_class, a_universe)
+			when 1 then
+				Result := first.base_type_has_class (a_class, root_context, a_universe)
+			else
+				l_type := first
+				remove_first
+				Result := l_type.base_type_has_class (a_class, Current, a_universe)
+				put_first (l_type)
+			end
+		end
+
+	named_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current context contain `a_class'
+			-- in `a_universe'?
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_named_type_has_class (a_class, a_universe)
+			when 1 then
+				Result := first.named_type_has_class (a_class, root_context, a_universe)
+			else
+				l_type := first
+				remove_first
+				Result := l_type.named_type_has_class (a_class, Current, a_universe)
+				put_first (l_type)
+			end
+		end
+
 feature -- Comparison
 
 	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

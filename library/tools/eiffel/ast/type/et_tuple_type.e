@@ -150,6 +150,22 @@ feature -- Status report
 			Result := False
 		end
 
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		local
+			an_actual_parameters: like actual_parameters
+		do
+			if a_class = a_universe.tuple_class then
+				Result := True
+			else
+				an_actual_parameters := actual_parameters
+				if an_actual_parameters /= Void then
+					Result := an_actual_parameters.named_types_have_class (a_class, a_context, a_universe)
+				end
+			end
+		end
+
 feature -- Comparison
 
 	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;

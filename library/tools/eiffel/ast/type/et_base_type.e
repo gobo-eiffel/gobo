@@ -60,7 +60,9 @@ inherit
 			conforms_from_tuple_type as context_conforms_from_tuple_type,
 			has_formal_type as context_has_formal_type,
 			has_formal_types as context_has_formal_types,
-			has_qualified_type as context_has_qualified_type
+			has_qualified_type as context_has_qualified_type,
+			base_type_has_class as context_base_type_has_class,
+			named_type_has_class as context_named_type_has_class
 		redefine
 			is_root_context
 		end
@@ -531,6 +533,20 @@ feature -- Type context
 			-- generic parameters (recursively) contain qualified types?
 		do
 			Result := has_qualified_type (Current, a_universe)
+		end
+
+	context_base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current context contain `a_class'
+			-- in `a_universe'?
+		do
+			Result := base_type_has_class (a_class, Current, a_universe)
+		end
+
+	context_named_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current context contain `a_class'
+			-- in `a_universe'?
+		do
+			Result := named_type_has_class (a_class, Current, a_universe)
 		end
 
 	context_same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

@@ -234,6 +234,28 @@ feature -- Status report
 		deferred
 		end
 
+	base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current context contain `a_class'
+			-- in `a_universe'?
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			a_class_not_void: a_class /= Void
+		deferred
+		end
+
+	named_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current context contain `a_class'
+			-- in `a_universe'?
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			a_class_not_void: a_class /= Void
+		deferred
+		end
+
 feature -- Comparison
 
 	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

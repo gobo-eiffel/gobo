@@ -294,6 +294,38 @@ feature -- Status report
 			-- Result := False
 		end
 
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			a_class_not_void: a_class /= Void
+		deferred
+		end
+
+	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			a_class_not_void: a_class /= Void
+		do
+			Result := base_type_has_class (a_class, a_context, a_universe)
+		end
+
+	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named parameter of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		do
+			Result := named_type_has_class (a_class, a_context, a_universe)
+		end
+
 feature -- Comparison
 
 	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;

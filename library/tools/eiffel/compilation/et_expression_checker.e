@@ -124,6 +124,9 @@ feature -- Validity checking
 				set_fatal_error
 				error_handler.report_giaaj_error
 			end
+			if not has_fatal_error then
+				universe.report_expression_supplier (a_context, current_class, current_feature)
+			end
 			current_class := old_class
 			current_feature := old_feature
 			current_context := old_context
@@ -283,6 +286,9 @@ feature -- Validity checking
 					set_fatal_error
 					error_handler.report_giabo_error
 				end
+			end
+			if not has_fatal_error then
+				universe.report_expression_supplier (a_context, current_class, current_feature)
 			end
 			current_class := old_class
 			current_feature := old_feature
@@ -1111,6 +1117,7 @@ feature {NONE} -- Expression validity
 				check
 					a_class_not_void: a_class /= Void
 				end
+				universe.report_create_supplier (l_type, current_class, current_feature)
 				a_creation_type := a_context.named_type (universe)
 				a_class_type ?= a_creation_type
 				if a_class_type /= Void then

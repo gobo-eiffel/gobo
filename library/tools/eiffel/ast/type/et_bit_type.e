@@ -47,7 +47,18 @@ feature -- Status report
 		do
 			Result := False
 		end
-			
+
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the base type of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		do
+			if constant /= Void then
+				Result := (a_class = a_universe.bit_class)
+			else
+				Result := (a_class = a_universe.unknown_class)
+			end
+		end
+
 feature -- Access
 
 	bit_keyword: ET_IDENTIFIER

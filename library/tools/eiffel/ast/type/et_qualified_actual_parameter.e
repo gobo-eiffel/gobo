@@ -56,6 +56,13 @@ feature -- Status report
 			definition: Result = (cat_keyword /= Void)
 		end
 
+	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named parameter of current type contain `a_class'
+			-- when it appears in `a_context' in `a_universe'?
+		do
+			Result := type.named_type_has_class (a_class, a_context, a_universe)
+		end
+
 feature -- Access
 
 	type: ET_TYPE
