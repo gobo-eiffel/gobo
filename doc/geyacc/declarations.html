@@ -78,19 +78,25 @@ with <font size="2">ASCII</font> characters.</p>
 <p>In the event of <a href="actions.html#value_types">multiple
 types</a> for semantic values, the syntax of <font
 color="#0000FF"><tt>%token </tt></font>may be extended to include
-the Eiffel type alternative delimited by angle-brackets:</p>
+the Eiffel type alternative (possibly an anchored type) delimited
+by angle-brackets:</p>
 
 <blockquote>
     <pre><font color="#0000FF">%token</font> <font
 color="#0000FF">&lt;</font><font color="#008080"><em>INTEGER</em></font><font
-color="#0000FF">&gt;</font><font color="#FF0000"> NUM  </font><font
+color="#0000FF">&gt;</font><font color="#FF0000"> NUM       </font><font
 color="#008080">-- Define token </font><font color="#FF0000">NUM</font><font
 color="#008080"> and its type <em>INTEGER</em></font><font
 color="#FF0000">
 </font><font color="#0000FF">%token</font> <font color="#0000FF">&lt;</font><font
 color="#008080"><em>STRING</em></font><font color="#0000FF">&gt;</font><font
-color="#FF0000"> NAME  </font><font color="#008080">-- Define token </font><font
-color="#FF0000">NAME</font><font color="#008080"> of type <em>STRING</em></font></pre>
+color="#FF0000"> NAME       </font><font color="#008080">-- Define token </font><font
+color="#FF0000">NAME</font><font color="#008080"> of type <em>STRING
+</em></font><font color="#0000FF">%token</font> <font
+color="#0000FF">&lt;</font><font color="#008080"><em><strong>like</strong></em><em> token</em></font><font
+color="#0000FF">&gt;</font><font color="#FF0000"> DIGIT  </font><font
+color="#008080">-- Define token </font><font color="#FF0000">DIGIT</font><font
+color="#008080"> of type <em><strong>like</strong></em><em> token</em></font></pre>
 </blockquote>
 
 <p>All tokens specified in the same <font color="#0000FF"><tt>%token
@@ -173,10 +179,20 @@ color="#008080"><em>TYPE</em></font><font color="#0000FF">&gt;</font> NONTERMINA
 
 <p>Here <tt>NONTERMINAL</tt> is the name of a nonterminal symbol,
 and <font color="#008080"><em><tt>TYPE</tt></em></font> is the
-name of the Eiffel type associated with this symbol. Any number
-of nonterminal symbols can be specified in the same <font
-color="#0000FF"><tt>%type</tt></font> declaration, if they have
-the same value type. Use spaces to separate the symbol names.</p>
+name of the Eiffel type associated with this symbol. Anchored
+types such as:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%type &lt;</font><font
+color="#008080"><em><strong>like</strong></em><em> foo</em></font><font
+color="#0000FF">&gt;</font> NONTERMINAL ...</pre>
+</blockquote>
+
+<p>where <font color="#008080"><em><tt>foo </tt></em></font>is a
+feature name, are also accepted. Any number of nonterminal
+symbols can be specified in the same <font color="#0000FF"><tt>%type</tt></font>
+declaration, if they have the same value type. Use spaces to
+separate the symbol names.</p>
 
 <h2><a name="expect">Suppressing Conflict Warnings</a></h2>
 
@@ -261,7 +277,7 @@ declaration as follows:</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -271,7 +287,7 @@ declaration as follows:</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 27 March 1999</font><br>
+            <strong>Last Updated:</strong> 2 February 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
