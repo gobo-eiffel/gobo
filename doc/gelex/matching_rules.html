@@ -43,10 +43,12 @@ The action corresponding to the matched pattern is then executed
 follows), and then the remaining input is scanned for another
 match.</p>
 
-<p>If no match is found, then the <a name="default_rule"><em><strong>default
-rule</strong></em></a> is executed: the next character in the
-input is considered matched and copied to the standard output.
-Thus, the simplest legal <em>gelex</em> input has an empty <a
+<h2><a name="default_rule">Default Rule</a></h2>
+
+<p>If no match is found, then the <em><strong>default rule</strong></em>
+is executed: the next character in the input is considered
+matched and copied to the standard output. Thus, the simplest
+legal <em>gelex</em> input has an empty <a
 href="description.html#rules">rules section</a>:</p>
 
 <blockquote>
@@ -60,7 +62,25 @@ color="#0000FF"><tt>
 </blockquote>
 
 <p>which generates a scanner that simply copies its input (one
-character at a time) to its output.</p>
+character at a time) to its output. The semantic action of the
+default rule can be overriden just by redefining the feature <a
+href="skeleton.html#default_action"><font color="#008080"><em><tt>default_action</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>which is inherited from
+class <a href="skeleton.html"><font color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>.</p>
+
+<p>Note that if the <font color="#0000FF"><tt>%option</tt></font>
+<a href="options.html#nodefault"><font color="#800000"><tt>nodefault</tt></font></a>
+or the command-line option <font color="#800000"><tt>-s</tt></font>
+is specified, then the default rule is disabled. If the scanner
+encounters input that does not match any of its rules, it aborts
+with an error. This option is useful for finding holes in a
+scanner's rule set. The default rule can then be simulated by
+adding the following rule at the end of the rules section:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">.|\n</font>    <font
+color="#008080"><em>default_action</em></font></pre>
+</blockquote>
 
 <h2><a name="eof_rules">End-of-file Rules</a></h2>
 
@@ -191,7 +211,7 @@ size="3">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -201,7 +221,7 @@ size="3">
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 2 February 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

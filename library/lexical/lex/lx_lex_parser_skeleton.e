@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 				set_action ("last_token := yyError_token%N%
 					%fatal_error (%"scanner jammed%")")
 			else
-				set_action ("echo")
+				set_action ("default_action")
 			end
 		end
 

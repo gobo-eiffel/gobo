@@ -334,6 +334,12 @@ feature -- Output
 			output (text)
 		end
 
+	default_action is
+			-- Action executed when default rule is matched.
+		do
+			echo
+		end
+
 feature -- Error handling
 
 	fatal_error (a_message: STRING) is
