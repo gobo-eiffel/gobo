@@ -1,0 +1,305 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<xsd:annotation>
+	<xsd:documentation xml:lang="en">
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="chapter" type="chapter-type"/>
+
+
+<xsd:complexType name="anchor-type">
+	<xsd:attribute name="id" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="area-type">
+	<xsd:attribute name="coords" type="xsd:string" use="required"/>
+	<xsd:attribute name="linkend" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="areaspec-type">
+	<xsd:sequence>
+		<xsd:element name="area" type="area-type" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="arguments-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="featurecall" type="featurecall-type"/>
+		<xsd:element name="argument" type="xsd:string"/>
+		<xsd:element name="local" type="xsd:string"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="assign-type">
+	<xsd:sequence>
+		<xsd:element name="target" type="target-type"/>
+		<xsd:element name="expression" type="expression-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="author-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="firstname" type="xsd:string"/>
+		<xsd:element name="surname" type="xsd:string"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="blockquote-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="para" type="para-type"/>
+		<xsd:element name="variablelist" type="variablelist-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="chapter-type">
+	<xsd:sequence>
+		<xsd:element name="chapterinfo" type="chapterinfo-type"/>
+		<xsd:element name="title" type="title-type"/>
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element name="para" type="para-type"/>
+			<xsd:element name="sect1" type="sect1-type"/>
+		</xsd:choice>
+	</xsd:sequence>
+	<xsd:attribute name="id" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="chapterinfo-type">
+	<xsd:sequence>
+		<xsd:element name="copyright" type="copyright-type"/>
+		<xsd:element name="author" type="author-type"/>
+		<xsd:element name="email" type="xsd:string"/>
+		<xsd:element name="date" type="xsd:string"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="citetitle-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="link" type="link-type"/>
+		<xsd:element name="ulink" type="ulink-type"/>
+	</xsd:choice>
+	<xsd:attribute name="pubwork" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
+<xsd:complexType name="compound-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="assign" type="assign-type"/>
+		<xsd:element name="if" type="if-type"/>
+		<xsd:element name="loop" type="loop-type"/>
+	</xsd:choice>
+	<xsd:attribute name="role" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
+<xsd:complexType name="copyright-type">
+	<xsd:sequence>
+		<xsd:element name="year" type="xsd:string" maxOccurs="unbounded"/>
+		<xsd:element name="holder" type="xsd:string" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="equal-type">
+	<xsd:sequence>
+		<xsd:element name="expression" type="expression-type"/>
+		<xsd:element name="expression" type="expression-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="expression-type">
+	<xsd:choice>
+		<xsd:element name="argument" type="xsd:string"/>
+		<xsd:element name="equal" type="equal-type"/>
+		<xsd:element name="featurecall" type="featurecall-type"/>
+		<xsd:element name="integer" type="xsd:string"/>
+		<xsd:element name="local" type="xsd:string"/>
+		<xsd:element name="true" type="true-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="featurecall-type">
+	<xsd:sequence>
+		<xsd:element name="target" type="target-type" minOccurs="0"/>
+		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="arguments" type="arguments-type minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="filename-type" mixed="true">
+	<xsd:attribute name="class" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
+<xsd:complexType name="if-type">
+	<xsd:sequence>
+		<xsd:element name="expression" type="expression-type"/>
+		<xsd:element name="compound" type="compound-type"/>
+		<xsd:element name="compound" type="compound-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="imagedata-type">
+	<xsd:attribute name="align" type="xsd:string" use="optional"/>
+	<xsd:attribute name="fileref" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="imageobject-type">
+	<xsd:sequence>
+		<xsd:element name="imagedata" type="imagedata-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="imageobjectco-type">
+	<xsd:sequence>
+		<xsd:element name="areaspec" type="areaspec-type"/>
+		<xsd:element name="imageobject" type="imageobject-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="informalexample-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="para" type="para-type"/>
+		<xsd:element name="programlisting" type="programlisting-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="itemizedlist-type">
+	<xsd:sequence>
+		<xsd:element name="listitem" type="listitem-type" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="link-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="citetitle" type="citetitle-type"/>
+		<xsd:element name="classname" type="xsd:string"/>
+		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="infixname" type="xsd:string"/>
+		<xsd:element name="libraryname" type="xsd:string"/>
+		<xsd:element name="projectname" type="xsd:string"/>
+	</xsd:choice>
+	<xsd:attribute name="linkend" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="listitem-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="para" type="para-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="loop-type">
+	<xsd:sequence>
+		<xsd:element name="compound" type="compound-type"/>
+		<xsd:element name="until" type="expression-type"/>
+		<xsd:element name="compound" type="compound-type"/>
+	</xsd:sequence>
+	<xsd:attribute name="indent" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
+<xsd:complexType name="mediaobjectco-type">
+	<xsd:sequence>
+		<xsd:element name="imageobjectco" type="imageobjectco-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="para-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="blockquote" type="blockquote-type"/>
+		<xsd:element name="citetitle" type="citetitle-type"/>
+		<xsd:element name="classname" type="xsd:string"/>
+		<xsd:element name="constructname" type="xsd:string"/>
+		<xsd:element name="emphasis" type="xsd:string"/>
+		<xsd:element name="featurecall" type="featurecall-type"/>
+		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="filename" type="filename-type"/>
+		<xsd:element name="imageobjectco" type="imageobjectco-type"/>
+		<xsd:element name="infixname" type="xsd:string"/>
+		<xsd:element name="informalexample" type="informalexample-type"/>
+		<xsd:element name="itemizedlist" type="itemizedlist-type"/>
+		<xsd:element name="libraryname" type="xsd:string"/>
+		<xsd:element name="link" type="link-type"/>
+		<xsd:element name="projectname" type="xsd:string"/>
+		<xsd:element name="quote" type="quote-type"/>
+		<xsd:element name="ulink" type="ulink-type"/>
+		<xsd:element name="warning" type="warning-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="programlisting-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="compound" type="compound-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="quote-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="emphasis" type="xsl:string"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="sect1-type">
+	<xsd:sequence>
+		<xsd:element name="title" type="title-type"/>
+		<xsd:element name="para" type="para-type" maxOccurs="unbounded"/>
+	</xsd:sequence>
+	<xsd:attribute name="id" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
+<xsd:complexType name="target-type">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="featurecall" type="featurecall-type"/>
+		<xsd:element name="argument" type="xsd:string"/>
+		<xsd:element name="local" type="xsd:string"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="term-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="comment" type="xsd:string"/>
+		<xsd:element name="link" type="link-type"/>
+		<xsd:element name="ulink" type="ulink-type"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="title-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="anchor" type="anchor-type"/>
+		<xsd:element name="classname" type="xsd:string"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:complexType name="true-type">
+	<xsd:sequence>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="ulink-type" mixed="true">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="citetitle" type="citetitle-type"/>
+		<xsd:element name="classname" type="xsd:string"/>
+		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="infixname" type="xsd:string"/>
+		<xsd:element name="libraryname" type="xsd:string"/>
+		<xsd:element name="projectname" type="xsd:string"/>
+	</xsd:choice>
+	<xsd:attribute name="url" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="variablelist-type">
+	<xsd:sequence>
+		<xsd:element name="varlistentry" type="varlistentry-type" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="varlistentry-type">
+	<xsd:sequence>
+		<xsd:element name="term" type="term-type" maxOccurs="unbounded"/>
+		<xsd:element name="listitem" type="listitem-type"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="warning-type" mixed="true">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element name="emphasis" type="xsd:string"/>
+		<xsd:element name="featurename" type="xsd:string"/>
+	</xsd:choice>
+</xsd:complexType>
+
+</xsd:schema>
