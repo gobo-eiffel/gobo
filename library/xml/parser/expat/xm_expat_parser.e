@@ -582,13 +582,8 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		do
 			on_element_declaration (new_uc_string_from_c_utf8_zero_terminated_string (name_ptr), create_element_content (model_ptr))
 				-- It is the caller's responsibility to free model when
-				-- finished with it. So we do that. Because of that, it is
-				-- probably not a good idea to run Expat with your own memory
-				-- management unit...
-			exml_XML_cp_free (model_ptr)
-				-- BdB: does this recursively free everything??
-				-- BdB: I don't know if we have to free names as well??
-				-- BdB: will look into it.
+				-- finished with it. So we do that here.
+			exml_XML_FreeContentModel (item, model_ptr)
 		end
 
 	frozen on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN) is
