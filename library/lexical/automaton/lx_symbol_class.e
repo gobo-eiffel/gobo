@@ -57,13 +57,14 @@ feature -- Status report
 
 	has (symbol: INTEGER): BOOLEAN is
 			-- Does current class include `symbol'?
-		require
-			sorted: not sort_needed
+			-- (Does not take into account `negated'.)
 		local
 			i: INTEGER
 			stop: BOOLEAN
 		do
-			if not is_empty then
+			if sort_needed then
+				Result := arrayed_has (symbol)
+			elseif not is_empty then
 				if last = symbol then
 					Result := True
 				elseif last > symbol then
@@ -100,22 +101,15 @@ feature -- Element change
 
 	put (symbol: INTEGER) is
 			-- Add `symbol' to symbol class.
-		local
-			done: BOOLEAN
 		do
-			if not sort_needed then
-				done := has (symbol)
-			else
-				done := arrayed_has (symbol)
-			end
-			if not done then
+			if not has (symbol) then
 				if not is_empty and then last > symbol then
 					sort_needed := True
 				end
 				force_last (symbol)
 			end
 		ensure
-			inserted: arrayed_has (symbol)
+			inserted: has (symbol)
 		end
 
 feature -- Convertion
