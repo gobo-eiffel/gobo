@@ -18,58 +18,31 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" depend="init" dir="${GOBO}/library">
+	<target name="install" depend="init">
 		<description>
 			Install the Gobo Eiffel libraries.
 		</description>
 
-		<geant file="kernel/build.eant" target="install"/>
-		<geant file="lexical/build.eant" target="install"/>
-		<geant file="other/build.eant" target="install"/>
-		<geant file="parse/build.eant" target="install"/>
-		<geant file="pattern/build.eant" target="install"/>
-		<geant file="structure/build.eant" target="install"/>
-		<geant file="test/build.eant" target="install"/>
-		<geant file="time/build.eant" target="install"/>
-		<geant file="tools/build.eant" target="install"/>
-		<geant file="utility/build.eant" target="install"/>
-		<geant file="xml/build.eant" target="install"/>
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clean" depend="init" dir="${GOBO}/library">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
-		<geant file="kernel/build.eant" target="clean"/>
-		<geant file="lexical/build.eant" target="clean"/>
-		<geant file="other/build.eant" target="clean"/>
-		<geant file="parse/build.eant" target="clean"/>
-		<geant file="pattern/build.eant" target="clean"/>
-		<geant file="structure/build.eant" target="clean"/>
-		<geant file="test/build.eant" target="clean"/>
-		<geant file="time/build.eant" target="clean"/>
-		<geant file="tools/build.eant" target="clean"/>
-		<geant file="utility/build.eant" target="clean"/>
-		<geant file="xml/build.eant" target="clean"/>
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clobber" depend="init" dir="${GOBO}/library">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant file="kernel/build.eant" target="clobber"/>
-		<geant file="lexical/build.eant" target="clobber"/>
-		<geant file="other/build.eant" target="clobber"/>
-		<geant file="parse/build.eant" target="clobber"/>
-		<geant file="pattern/build.eant" target="clobber"/>
-		<geant file="structure/build.eant" target="clobber"/>
-		<geant file="test/build.eant" target="clobber"/>
-		<geant file="time/build.eant" target="clobber"/>
-		<geant file="tools/build.eant" target="clobber"/>
-		<geant file="utility/build.eant" target="clobber"/>
-		<geant file="xml/build.eant" target="clobber"/>
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
 	</target>
 
 
@@ -77,6 +50,25 @@
 
 	<target name="init">
 		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="kernel"/>
+		<geant file="build.eant" target="${target}" dir="lexical"/>
+		<geant file="build.eant" target="${target}" dir="other"/>
+		<geant file="build.eant" target="${target}" dir="parse"/>
+		<geant file="build.eant" target="${target}" dir="pattern"/>
+		<geant file="build.eant" target="${target}" dir="structure"/>
+		<geant file="build.eant" target="${target}" dir="test"/>
+		<geant file="build.eant" target="${target}" dir="time"/>
+		<geant file="build.eant" target="${target}" dir="tools"/>
+		<geant file="build.eant" target="${target}" dir="utility"/>
+		<geant file="build.eant" target="${target}" dir="xml"/>
 	</target>
 
 </project>

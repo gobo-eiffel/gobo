@@ -18,37 +18,31 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" depend="init" dir="${GOBO}/example/parse">
+	<target name="install" depend="init">
 		<description>
 			Install the Gobo Eiffel Parse Library examples.
 		</description>
 
-		<geant file="calc/build.eant" target="install"/>
-		<geant file="eiffel_parser/build.eant" target="install"/>
-		<geant file="mcalc/build.eant" target="install"/>
-		<geant file="rpcalc/build.eant" target="install"/>
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clean" depend="init" dir="${GOBO}/example/parse">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
-		<geant file="calc/build.eant" target="clean"/>
-		<geant file="eiffel_parser/build.eant" target="clean"/>
-		<geant file="mcalc/build.eant" target="clean"/>
-		<geant file="rpcalc/build.eant" target="clean"/>
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clobber" depend="init" dir="${GOBO}/example/parse">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant file="calc/build.eant" target="clobber"/>
-		<geant file="eiffel_parser/build.eant" target="clobber"/>
-		<geant file="mcalc/build.eant" target="clobber"/>
-		<geant file="rpcalc/build.eant" target="clobber"/>
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
 	</target>
 
 
@@ -56,6 +50,18 @@
 
 	<target name="init">
 		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="calc"/>
+		<geant file="build.eant" target="${target}" dir="eiffel_parser"/>
+		<geant file="build.eant" target="${target}" dir="mcalc"/>
+		<geant file="build.eant" target="${target}" dir="rpcalc"/>
 	</target>
 
 </project>

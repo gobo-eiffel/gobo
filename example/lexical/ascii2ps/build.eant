@@ -29,7 +29,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="scanner" depend="init" dir="${system_dir}">
+	<target name="scanner" depend="init">
 		<description>
 			Generate scanner classes.
 		</description>
@@ -40,7 +40,7 @@
 
 <!-- Implementation -->
 
-	<target name="other_install" depend="init" dir="${system_dir}">
+	<target name="other_install" depend="init">
 		<description>
 			Install other items in ${system} directory.
 		</description>
@@ -48,7 +48,7 @@
 		<geant target="scanner"/>
 	</target>
 
-	<target name="other_clobber" depend="init" dir="${system_dir}">
+	<target name="other_clobber" depend="init">
 		<description>
 			Remove other generated files.
 		</description>

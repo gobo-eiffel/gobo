@@ -19,7 +19,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" dir="${GOBO}/library/kernel">
+	<target name="install">
 		<description>
 			Install the Gobo Eiffel Kernel Library.
 			Generate Eiffel files from .ge files.
@@ -30,7 +30,7 @@
 		<geant target="install_misc"/>
 	</target>
 
-	<target name="clean" dir="${GOBO}/library/kernel">
+	<target name="clean">
 		<description>
 			Remove intermediary generated files.
 		</description>
@@ -38,7 +38,7 @@
 		<ve clean="kernel" recursive="true"/>
 	</target>
 
-	<target name="clobber" dir="${GOBO}/library/kernel">
+	<target name="clobber">
 		<description>
 			Remove all generated files.
 		</description>
@@ -133,6 +133,8 @@
 		<set name="gepp_file" value="kl_system_clock"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_shell_command"/>
+		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_eiffel_compiler"/>
 		<geant target="ge2e"/>
 	</target>
 

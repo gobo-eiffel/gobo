@@ -18,28 +18,31 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" depend="init" dir="${GOBO}/example/time">
+	<target name="install" depend="init">
 		<description>
 			Install the Gobo Eiffel Time Library examples.
 		</description>
 
-		<geant file="clock/build.eant" target="install"/>
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clean" depend="init" dir="${GOBO}/example/time">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
-		<geant file="clock/build.eant" target="clean"/>
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clobber" depend="init" dir="${GOBO}/example/time">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant file="clock/build.eant" target="clobber"/>
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
 	</target>
 
 
@@ -47,6 +50,15 @@
 
 	<target name="init">
 		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="clock"/>
 	</target>
 
 </project>

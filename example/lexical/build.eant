@@ -18,37 +18,31 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" depend="init" dir="${GOBO}/example/lexical">
+	<target name="install" depend="init">
 		<description>
 			Install the Gobo Eiffel Lexical Library examples.
 		</description>
 
-		<geant file="ascii2ps/build.eant" target="install"/>
-		<geant file="calculator/build.eant" target="install"/>
-		<geant file="eiffel_scanner/build.eant" target="install"/>
-		<geant file="gegrep/build.eant" target="install"/>
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clean" depend="init" dir="${GOBO}/example/lexical">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
-		<geant file="ascii2ps/build.eant" target="clean"/>
-		<geant file="calculator/build.eant" target="clean"/>
-		<geant file="eiffel_scanner/build.eant" target="clean"/>
-		<geant file="gegrep/build.eant" target="clean"/>
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
 	</target>
 
-	<target name="clobber" depend="init" dir="${GOBO}/example/lexical">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant file="ascii2ps/build.eant" target="clobber"/>
-		<geant file="calculator/build.eant" target="clobber"/>
-		<geant file="eiffel_scanner/build.eant" target="clobber"/>
-		<geant file="gegrep/build.eant" target="clobber"/>
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
 	</target>
 
 
@@ -56,6 +50,18 @@
 
 	<target name="init">
 		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="ascii2ps"/>
+		<geant file="build.eant" target="${target}" dir="calculator"/>
+		<geant file="build.eant" target="${target}" dir="eiffel_scanner"/>
+		<geant file="build.eant" target="${target}" dir="gegrep"/>
 	</target>
 
 </project>
