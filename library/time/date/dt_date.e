@@ -125,15 +125,8 @@ feature -- Access
 
 	week_day: INTEGER is
 			-- Day in current week
-		local
-			d: INTEGER
 		do
-			d := day_count + 4
-			if d < 0 then
-				Result := Saturday - (-(d + 1) \\ Days_in_week)
-			else
-				Result := Sunday + d \\ Days_in_week
-			end
+			Result := week_day_of_date (year, month, day)
 		ensure
 			valid_day: Result >= Sunday and Result <= Saturday
 		end
