@@ -14,12 +14,12 @@ class KL_SHARED_INTEGER_ROUTINES
 
 feature -- Access
 
-	integer_: KL_INTEGER_ROUTINES is
+	INTEGER_: KL_INTEGER_ROUTINES is
 			-- Routines that ought to be in class INTEGER
 		once
 			!! Result
 		ensure
-			integer__not_void: Result /= Void
+			integer_routines_not_void: Result /= Void
 		end
 
 end -- class KL_SHARED_INTEGER_ROUTINES

@@ -38,7 +38,7 @@ feature -- Access
 #endif
 		ensure
 			file_not_void: Result /= Void
-			file_open_read: input_stream_.is_open_read (Result)
+			file_open_read: INPUT_STREAM_.is_open_read (Result)
 		end
 
 #ifdef SE
@@ -59,7 +59,7 @@ feature -- Access
 #endif
 		ensure
 			file_not_void: Result /= Void
-			file_open_write: output_stream_.is_open_write (Result)
+			file_open_write: OUTPUT_STREAM_.is_open_write (Result)
 		end
 
 #ifdef SE
@@ -80,7 +80,7 @@ feature -- Access
 #endif
 		ensure
 			file_not_void: Result /= Void
-			file_open_write: output_stream_.is_open_write (Result)
+			file_open_write: OUTPUT_STREAM_.is_open_write (Result)
 		end
 
 end -- class KL_STANDARD_FILES

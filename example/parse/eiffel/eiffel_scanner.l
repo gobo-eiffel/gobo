@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	ARGUMENTS
-		export
-			{NONE} all
-		end
-
 	UT_CHARACTER_CODES
 		export
 			{NONE} all
@@ -37,13 +32,9 @@ inherit
 
 	KL_SHARED_INTEGER_ROUTINES
 
-	KL_SHARED_INPUT_STREAM_ROUTINES
-
 	KL_SHARED_STRING_ROUTINES
 
 	KL_SHARED_PLATFORM
-
-	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -215,11 +206,11 @@ creation
 \'%>\'				last_token := E_CHARACTER; last_value := '%>'
 \'%\/[0-9]+\/\'		{
 						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > platform_.Maximum_character_code then
+						if code_ > Platform.maximum_character_code then
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
-							last_value := integer_.to_character (code_)
+							last_value := INTEGER_.to_character (code_)
 						end
 					}
 \'.{1,2}			|
@@ -290,11 +281,11 @@ creation
 <IN_STR>%>			eif_buffer.append_character ('%>')
 <IN_STR>%\/[0-9]+\/	{
 			code_ := text_substring (3, text_count - 1).to_integer
-			if (code_ > platform_.Maximum_character_code) then
+			if (code_ > Platform.maximum_character_code) then
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			else
-				eif_buffer.append_character (integer_.to_character (code_))
+				eif_buffer.append_character (INTEGER_.to_character (code_))
 			end
 		}
 <IN_STR>%\n[ \t\r]*%	eif_lineno := eif_lineno + 1
@@ -303,7 +294,7 @@ creation
 			if text_count > 1 then
 				eif_buffer.append_string (text_substring (1, text_count - 1))
 			end
-			str_ := string_.make (eif_buffer.count)
+			str_ := STRING_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
 			last_value := str_
@@ -404,7 +395,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_compressed_scanner_skeleton
-			eif_buffer := string_.make (Init_buffer_size)
+			eif_buffer := STRING_.make (Init_buffer_size)
 			eif_lineno := 1
 		end
 

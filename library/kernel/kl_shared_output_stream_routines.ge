@@ -14,12 +14,12 @@ class KL_SHARED_OUTPUT_STREAM_ROUTINES
 
 feature -- Access
 
-	output_stream_: KL_OUTPUT_STREAM_ROUTINES is
+	OUTPUT_STREAM_: KL_OUTPUT_STREAM_ROUTINES is
 			-- Routines that ought to be in class OUTPUT_STREAM
 		once
 			!! Result
 		ensure
-			output_stream__not_void: Result /= Void
+			output_stream_routines_not_void: Result /= Void
 		end
 
 feature -- Anchor types

@@ -19,20 +19,11 @@ inherit
 			make as make_compressed_scanner_skeleton
 		end
 
-	ARGUMENTS
-		export
-			{NONE} all
-		end
+	KL_SHARED_STRING_ROUTINES
+
+	KL_SHARED_ARGUMENTS
 
 	KL_SHARED_EXCEPTIONS
-
-	KL_SHARED_INPUT_STREAM_ROUTINES
-
-	KL_SHARED_OUTPUT_STREAM_ROUTINES
-
-	KL_SHARED_STANDARD_FILES
-
-	KL_SHARED_STRING_ROUTINES
 
 creation
 
@@ -81,14 +72,14 @@ feature {NONE} -- Initialization
 				-- Read options.
 			from
 				i := 1
-				nb := argument_count
+				nb := Arguments.argument_count
 			until
 				i > nb or no_more_option
 			loop
-				arg := argument (i)
+				arg := Arguments.argument (i)
 				if arg.is_equal ("-h") then
 					std.output.put_string (usage_message)
-					exceptions_.die (0)
+					Exceptions.die (0)
 				elseif arg.is_equal ("-n") then
 					flag_n := True
 					i := i + 1
@@ -97,11 +88,11 @@ feature {NONE} -- Initialization
 					i := i + 1
 				elseif arg.is_equal ("-d") and i < nb then
 					i := i + 1
-					date := argument (i)
+					date := Arguments.argument (i)
 					i := i + 1
 				elseif arg.is_equal ("-t") and i < nb then
 					i := i + 1
-					time := argument (i)
+					time := Arguments.argument (i)
 					i := i + 1
 				elseif arg.is_equal ("-2") then
 					double_sided := True
@@ -120,27 +111,27 @@ feature {NONE} -- Initialization
 				out_filename := "-"
 				filename := "standard input"
 			when 1 then
-				in_filename := argument (i)
+				in_filename := Arguments.argument (i)
 				out_filename := "-"
 				filename := basename (in_filename)
 			when 2 then
-				in_filename := argument (i)
-				out_filename := argument (i + 1)
+				in_filename := Arguments.argument (i)
+				out_filename := Arguments.argument (i + 1)
 				filename := basename (in_filename)
 			else
 				std.error.put_string (usage_message)
-				exceptions_.die (1)
+				Exceptions.die (1)
 			end
 
 			if not out_filename.is_equal ("-") then
-				out_file := output_Stream_.make_file_open_write (out_filename)
-				if output_stream_.is_open_write (out_file) then
+				out_file := OUTPUT_STREAM_.make_file_open_write (out_filename)
+				if OUTPUT_STREAM_.is_open_write (out_file) then
 					set_output_file (out_file)
 				else
 					std.error.put_string ("ascii2ps: cannot open %'")
 					std.error.put_string (out_filename)
 					std.error.put_string ("%'%N")
-					exceptions_.die (1)
+					Exceptions.die (1)
 				end
 			else
 				set_output_file (std.output)
@@ -148,24 +139,24 @@ feature {NONE} -- Initialization
 			if in_filename.is_equal ("-") then
 				print_postscript
 			else
-				in_file := input_stream_.make_file_open_read (in_filename)
-				if input_stream_.is_open_read (in_file) then
+				in_file := INPUT_STREAM_.make_file_open_read (in_filename)
+				if INPUT_STREAM_.is_open_read (in_file) then
 					set_input_buffer (new_file_buffer (in_file))
 					print_postscript
-					input_stream_.close (in_file)
+					INPUT_STREAM_.close (in_file)
 				else
 					std.error.put_string ("ascii2ps: cannot open %'")
 					std.error.put_string (in_filename)
 					std.error.put_string ("%'%N")
-					exceptions_.die (1)
+					Exceptions.die (1)
 				end
 			end
-			if out_file /= Void and then not output_stream_.is_closed (out_file) then
-				output_stream_.close (out_file)
+			if out_file /= Void and then not OUTPUT_STREAM_.is_closed (out_file) then
+				OUTPUT_STREAM_.close (out_file)
 			end
 		rescue
 			std.error.put_string ("ascii2ps: internal error%N")
-			exceptions_.die (1)
+			Exceptions.die (1)
 		end
 
 feature -- Access
@@ -687,7 +678,7 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 				nb := a_string.count
-				Result := string_.make (nb)
+				Result := STRING_.make (nb)
 			until
 				i > nb
 			loop
@@ -723,7 +714,7 @@ feature {NONE} -- Implementation
 			if i < nb then
 				Result := a_filename.substring (i + 1,  nb)
 			else
-				Result := string_.make (0)
+				Result := STRING_.make (0)
 			end
 		ensure
 			basename_not_void: Result /= Void

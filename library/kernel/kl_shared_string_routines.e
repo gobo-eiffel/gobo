@@ -14,12 +14,12 @@ class KL_SHARED_STRING_ROUTINES
 
 feature -- Access
 
-	string_: KL_STRING_ROUTINES is
+	STRING_: KL_STRING_ROUTINES is
 			-- Routines that ought to be in class STRING
 		once
 			!! Result
 		ensure
-			string__not_void: Result /= Void
+			string_routines_not_void: Result /= Void
 		end
 
 end -- class KL_SHARED_STRING_ROUTINES

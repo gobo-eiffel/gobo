@@ -25,11 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	ARGUMENTS
-		export
-			{NONE} all
-		end
-
 	UT_CHARACTER_CODES
 		export
 			{NONE} all
@@ -37,13 +32,13 @@ inherit
 
 	KL_SHARED_INTEGER_ROUTINES
 
-	KL_SHARED_INPUT_STREAM_ROUTINES
-
 	KL_SHARED_STRING_ROUTINES
 
 	KL_SHARED_PLATFORM
 
 	KL_SHARED_EXCEPTIONS
+
+	KL_SHARED_ARGUMENTS
 
 creation
 
@@ -215,11 +210,11 @@ creation
 \'%>\'				last_token := E_CHARACTER; last_value := '%>'
 \'%\/[0-9]+\/\'		{
 						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > platform_.Maximum_character_code then
+						if code_ > Platform.maximum_character_code then
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
-							last_value := integer_.to_character (code_)
+							last_value := INTEGER_.to_character (code_)
 						end
 					}
 \'.{1,2}			|
@@ -290,11 +285,11 @@ creation
 <IN_STR>%>			eif_buffer.append_character ('%>')
 <IN_STR>%\/[0-9]+\/	{
 			code_ := text_substring (3, text_count - 1).to_integer
-			if (code_ > platform_.Maximum_character_code) then
+			if (code_ > Platform.maximum_character_code) then
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			else
-				eif_buffer.append_character (integer_.to_character (code_))
+				eif_buffer.append_character (INTEGER_.to_character (code_))
 			end
 		}
 <IN_STR>%\n[ \t\r]*%	eif_lineno := eif_lineno + 1
@@ -303,7 +298,7 @@ creation
 			if text_count > 1 then
 				eif_buffer.append_string (text_substring (1, text_count - 1))
 			end
-			str_ := string_.make (eif_buffer.count)
+			str_ := STRING_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
 			last_value := str_
@@ -404,7 +399,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_compressed_scanner_skeleton
-			eif_buffer := string_.make (Init_buffer_size)
+			eif_buffer := STRING_.make (Init_buffer_size)
 			eif_lineno := 1
 		end
 
@@ -416,18 +411,18 @@ feature {NONE} -- Initialization
 			a_file: like INPUT_STREAM_TYPE
 		do
 			make
-			n := argument_count
+			n := Arguments.argument_count
 			if n = 0 then
 				std.error.put_string ("usage: eiffel_scanner filename ...%N")
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
 				from j := 1 until j > n loop
-					a_filename := argument (j)
-					a_file := input_stream_.make_file_open_read (a_filename)
-					if input_stream_.is_open_read (a_file) then
+					a_filename := Arguments.argument (j)
+					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+					if INPUT_STREAM_.is_open_read (a_file) then
 						set_input_buffer (new_file_buffer (a_file))
 						scan
-						input_stream_.close (a_file)
+						INPUT_STREAM_.close (a_file)
 					else
 						std.error.put_string ("eiffel_scanner: cannot read %'")
 						std.error.put_string (a_filename)
@@ -447,25 +442,25 @@ feature {NONE} -- Initialization
 		do
 			make
 			if
-				argument_count < 2 or else
-				not string_.is_integer (argument (1))
+				Arguments.argument_count < 2 or else
+				not STRING_.is_integer (Arguments.argument (1))
 			then
 				std.error.put_string ("usage: eiffel_scanner nb filename%N")
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
-				n := argument (1).to_integer
-				a_filename := argument (2)
+				n := Arguments.argument (1).to_integer
+				a_filename := Arguments.argument (2)
 				from j := 1 until j > n loop
-					a_file := input_stream_.make_file_open_read (a_filename)
-					if input_stream_.is_open_read (a_file) then
+					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+					if INPUT_STREAM_.is_open_read (a_file) then
 						set_input_buffer (new_file_buffer (a_file))
 						scan
-						input_stream_.close (a_file)
+						INPUT_STREAM_.close (a_file)
 					else
 						std.error.put_string ("eiffel_scanner: cannot read %'")
 						std.error.put_string (a_filename)
 						std.error.put_string ("%'%N")
-						exceptions_.die (1)
+						Exceptions.die (1)
 					end
 					j := j + 1
 				end

@@ -14,12 +14,12 @@ class KL_SHARED_INPUT_STREAM_ROUTINES
 
 feature -- Access
 
-	input_stream_: KL_INPUT_STREAM_ROUTINES is
+	INPUT_STREAM_: KL_INPUT_STREAM_ROUTINES is
 			-- Routines that ought to be in class INPUT_STREAM
 		once
 			!! Result
 		ensure
-			input_stream__not_void: Result /= Void
+			input_stream_routines_not_void: Result /= Void
 		end
 
 feature -- Anchor types

@@ -111,7 +111,7 @@ feature -- Generation
 			-- Print code for corresponding scanner to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			print_eiffel_header (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
@@ -132,7 +132,7 @@ feature -- Generation
 			-- Print a backing-up report to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
 			a_state: LX_DFA_STATE
@@ -165,7 +165,7 @@ feature {NONE} -- Generation
 			-- Print user-defined eiffel header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
 		do
@@ -182,7 +182,7 @@ feature {NONE} -- Generation
 			-- Print code for `yy_build_tables' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		deferred
 		end
 
@@ -190,7 +190,7 @@ feature {NONE} -- Generation
 			-- Print code for actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			inspect_used: BOOLEAN
 		do
@@ -215,7 +215,7 @@ feature {NONE} -- Generation
 			-- to find out which action to execute.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
 			rule, next_rule: LX_RULE
@@ -274,7 +274,7 @@ feature {NONE} -- Generation
 			-- to find out which action to execute.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			l_large_enough: l >= yy_rules.lower
 			l_small_enough: l <= u
 			u_small_enough: u <= yy_rules.upper
@@ -307,7 +307,7 @@ feature {NONE} -- Generation
 			-- Print code for `a_rule's action to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			a_rule_not_void: a_rule /= Void
 		do
 			if a_rule.has_trail_context then
@@ -347,12 +347,11 @@ feature {NONE} -- Generation
 			-- Print code for end-of-file actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
 			rule: LX_RULE
-			actions: DS_ARRAYED_LIST
-				[DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]]
+			actions: DS_ARRAYED_LIST [DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]]
 			action: UT_COMMAND
 			j, nb_actions: INTEGER
 			a_pair: DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]
@@ -433,7 +432,7 @@ feature {NONE} -- Generation
 			-- Print Eiffel code for DFA tables to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		deferred
 		end
 
@@ -441,7 +440,7 @@ feature {NONE} -- Generation
 			-- Print code for constants to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
 		do
@@ -467,7 +466,7 @@ feature {NONE} -- Generation
 			-- Print user-defined eiffel code to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			if eiffel_code /= Void then
 				a_file.put_string (eiffel_code)
@@ -484,7 +483,7 @@ feature {NONE} -- Generation
 			valid_end_pos: a_table.valid_index (end_pos)
 			valid_bounds: start_pos <= end_pos + 1
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, an_item: INTEGER
 			nb_line, nb_colon: INTEGER
@@ -529,7 +528,7 @@ feature {NONE} -- Generation
 			a_name_not_void: a_name /= Void
 			a_table_not_void: a_table /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, j, k, nb: INTEGER
 			a_table_upper: INTEGER
@@ -545,7 +544,7 @@ feature {NONE} -- Generation
 			end
 			if nb = 1 then
 				a_file.put_string
-					("%T%T%TResult := integer_array_.make_from_array (<<%N")
+					("%T%T%TResult := INTEGER_ARRAY_.make_from_array (<<%N")
 				print_array (a_table, a_table.lower, a_table.upper, a_file)
 				a_file.put_string (">>, ")
 				a_file.put_integer (a_table.lower)
@@ -575,7 +574,7 @@ feature {NONE} -- Generation
 					a_file.put_string (a_name)
 					a_file.put_integer (j)
 					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
-						%%T%Tdo%N%T%T%Tinteger_array_.subcopy (an_array, <<%N")
+						%%T%Tdo%N%T%T%TINTEGER_ARRAY_.subcopy (an_array, <<%N")
 					k := a_table_upper.min (i + array_size - 1)
 					print_array (a_table, i, k, a_file)
 					a_file.put_string (">>,%N%T%T%T")
@@ -598,7 +597,7 @@ feature {NONE} -- Generation
 		require
 			a_state_not_void: a_state /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
 			j, yy_rules_upper: INTEGER
@@ -651,7 +650,7 @@ feature {NONE} -- Generation
 		require
 			a_state_not_void: a_state /= Void
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, j, nb: INTEGER
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
@@ -739,7 +738,7 @@ feature {NONE} -- Generation
 			-- if the corresponding character is not printable.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			octal, tmp: STRING
 			j: INTEGER
@@ -788,7 +787,7 @@ feature {NONE} -- Generation
 			elseif i = Space_code then
 				a_file.put_string ("' '")
 			else
-				a_file.put_character (integer_.to_character (i))
+				a_file.put_character (INTEGER_.to_character (i))
 			end
 		end
 

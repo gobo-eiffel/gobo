@@ -16,8 +16,6 @@ inherit
 
 	YY_PARSER_SKELETON [DOUBLE]
 
-	KL_SHARED_STANDARD_FILES
-
 	KL_SHARED_STRING_ROUTINES
 
 	KL_SHARED_INPUT_STREAM_ROUTINES
@@ -81,32 +79,32 @@ feature {NONE} -- Scanner
 					c := std.input.last_character
 				end
 			until
-				input_stream_.end_of_input (std.input) or else
+				INPUT_STREAM_.end_of_input (std.input) or else
 				(c /= ' ' and c /= '%T')
 			loop
 				std.input.read_character
 				c := std.input.last_character
 			end
-			if input_stream_.end_of_input (std.input) then
+			if INPUT_STREAM_.end_of_input (std.input) then
 					-- Return end-of-file
 				last_token := 0
 			elseif c = '.' or (c >= '0' and c <= '9') then
 					-- Process numbers
 				last_token := NUM
 				from
-					buffer := string_.make (10)
+					buffer := STRING_.make (10)
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
 				until
-					input_stream_.end_of_input (std.input) or else
+					INPUT_STREAM_.end_of_input (std.input) or else
 					(c /= '.' and (c < '0' or c > '9'))
 				loop
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
 				end
-				if not input_stream_.end_of_input (std.input) then
+				if not INPUT_STREAM_.end_of_input (std.input) then
 					pending_character := c
 					has_pending_character := True
 				end

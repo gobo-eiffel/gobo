@@ -42,15 +42,15 @@ feature -- Execution
 			if nb = 0 then
 				std.error.put_string (Usage_message)
 				std.error.put_character ('%N')
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
 				if argument (1).is_equal ("-i") then
 					case_insensitive := True
 					if nb = 1 then
 						std.error.put_string (Usage_message)
 						std.error.put_character ('%N')
-						exceptions_.die (1)
-					end	
+						Exceptions.die (1)
+					end
 					i := 2
 				else
 					i := 1
@@ -58,7 +58,7 @@ feature -- Execution
 				!! regexp.compile (argument (i), case_insensitive)
 				if not regexp.compiled then
 					std.error.put_string ("gegrep: invalid regular expression%N")
-					exceptions_.die (1)
+					Exceptions.die (1)
 				else
 					i := i + 1
 					inspect nb - i + 1
@@ -66,28 +66,28 @@ feature -- Execution
 						parse_file (std.input, Void)
 					when 1 then
 						a_filename := argument (i)
-						a_file := input_stream_.make_file_open_read (a_filename)
-						if input_stream_.is_open_read (a_file) then
+						a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+						if INPUT_STREAM_.is_open_read (a_file) then
 							parse_file (a_file, Void)
-							input_stream_.close (a_file)
+							INPUT_STREAM_.close (a_file)
 						else
 							std.error.put_string ("gegrep: cannot read %'")
 							std.error.put_string (a_filename)
 							std.error.put_string ("%'%N")
-							exceptions_.die (1)
+							Exceptions.die (1)
 						end
 					else
 						from until i > nb loop
 							a_filename := argument (i)
-							a_file := input_stream_.make_file_open_read (a_filename)
-							if input_stream_.is_open_read (a_file) then
+							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+							if INPUT_STREAM_.is_open_read (a_file) then
 								parse_file (a_file, a_filename)
-								input_stream_.close (a_file)
+								INPUT_STREAM_.close (a_file)
 							else
 								std.error.put_string ("gegrep: cannot read %'")
 								std.error.put_string (a_filename)
 								std.error.put_string ("%'%N")
-								exceptions_.die (1)
+								Exceptions.die (1)
 							end
 							i := i + 1
 						end
@@ -96,7 +96,7 @@ feature -- Execution
 			end
 		rescue
 			std.error.put_string ("gegrep: internal error%N")
-			exceptions_.die (1)
+			Exceptions.die (1)
 		end
 
 feature -- Parsing
@@ -105,7 +105,7 @@ feature -- Parsing
 			-- Parse `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 			regexp_not_void: regexp /= Void
 			regexp_compiled: regexp.compiled
 		local
@@ -114,7 +114,7 @@ feature -- Parsing
 			from
 				a_file.read_line
 			until
-				input_stream_.end_of_input (a_file)
+				INPUT_STREAM_.end_of_input (a_file)
 			loop
 				a_line := a_file.last_string
 				if regexp.matches (a_line) then

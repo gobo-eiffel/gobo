@@ -24,6 +24,10 @@ inherit
 			make as make_eiffel_scanner
 		end
 
+	KL_SHARED_EXCEPTIONS
+
+	KL_SHARED_ARGUMENTS
+
 creation
 
 	make, execute, benchmark
@@ -621,19 +625,19 @@ feature {NONE} -- Initialization
 			a_file: like INPUT_STREAM_TYPE
 		do
 			make
-			n := argument_count
+			n := Arguments.argument_count
 			if n = 0 then
 				std.error.put_string ("usage: eiffel_parser filename ...%N")
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
 				from j := 1 until j > n loop
-					a_filename := argument (j)
-					a_file := input_stream_.make_file_open_read (a_filename)
-					if input_stream_.is_open_read (a_file) then
+					a_filename := Arguments.argument (j)
+					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+					if INPUT_STREAM_.is_open_read (a_file) then
 						reset
 						set_input_buffer (new_file_buffer (a_file))
 						parse
-						input_stream_.close (a_file)
+						INPUT_STREAM_.close (a_file)
 					else
 						std.error.put_string ("eiffel_parser: cannot read %'")
 						std.error.put_string (a_filename)
@@ -653,26 +657,26 @@ feature {NONE} -- Initialization
 		do
 			make
 			if
-				argument_count < 2 or else
-				not string_.is_integer (argument (1))
+				Arguments.argument_count < 2 or else
+				not STRING_.is_integer (Arguments.argument (1))
 			then
 				std.error.put_string ("usage: eiffel_parser nb filename%N")
-				exceptions_.die (1)
+				Exceptions.die (1)
 			else
-				n := argument (1).to_integer
-				a_filename := argument (2)
+				n := Arguments.argument (1).to_integer
+				a_filename := Arguments.argument (2)
 				from j := 1 until j > n loop
-					a_file := input_stream_.make_file_open_read (a_filename)
-					if input_stream_.is_open_read (a_file) then
+					a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+					if INPUT_STREAM_.is_open_read (a_file) then
 						reset
 						set_input_buffer (new_file_buffer (a_file))
 						parse
-						input_stream_.close (a_file)
+						INPUT_STREAM_.close (a_file)
 					else
 						std.error.put_string ("eiffel_parser: cannot read %'")
 						std.error.put_string (a_filename)
 						std.error.put_string ("%'%N")
-						exceptions_.die (1)
+						Exceptions.die (1)
 					end
 					j := j + 1
 				end

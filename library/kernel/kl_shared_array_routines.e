@@ -14,28 +14,28 @@ class KL_SHARED_ARRAY_ROUTINES
 
 feature -- Access
 
-	any_array_: KL_ARRAY_ROUTINES [ANY] is
+	ANY_ARRAY_: KL_ARRAY_ROUTINES [ANY] is
 			-- Routines that ought to be in class ARRAY
 		once
 			!! Result
 		ensure
-			any_array__not_void: Result /= Void
+			any_array_routines_not_void: Result /= Void
 		end
 
-	integer_array_: KL_ARRAY_ROUTINES [INTEGER] is
+	INTEGER_ARRAY_: KL_ARRAY_ROUTINES [INTEGER] is
 			-- Routines that ought to be in class ARRAY
 		once
 			!! Result
 		ensure
-			integer_array__not_void: Result /= Void
+			integer_array_routines_not_void: Result /= Void
 		end
 
-	string_array_: KL_ARRAY_ROUTINES [STRING] is
+	STRING_ARRAY_: KL_ARRAY_ROUTINES [STRING] is
 			-- Routines that ought to be in class ARRAY
 		once
 			!! Result
 		ensure
-			string_array__not_void: Result /= Void
+			string_array_routines_not_void: Result /= Void
 		end
 
 end -- class KL_SHARED_ARRAY_ROUTINES
