@@ -40,7 +40,7 @@ feature -- Actions
 			attr_list: GEANT_ATTRIBUTE_LIST
 		do
 			debug ("trace_xml")
-				print (a_name.out + "%N")
+				std.output.put_string (a_name.out + "%N")
 			end
 
 			!! an_element.make (a_name)
@@ -65,7 +65,7 @@ feature -- Actions
 			-- Action executed on end tag.
 		do
 			debug ("trace_xml")
-				print ("/" + name.out + "%N")
+				std.output.put_string ("/" + name.out + "%N")
 			end
 			stack.remove
 		end
