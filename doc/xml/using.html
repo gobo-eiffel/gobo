@@ -125,6 +125,21 @@ a_parser.set_callbacks (callabacks_pipe (
 In a real program, references may be kept to individual filters, to recover the result or check their state after processing. <font color="#008080"><i><tt>XM_TREE_CALLBACKS_PIPE</tt></i></font> provides a standard pipe with attributes for the interesting component filters.
 </p>
 
+
+<h2>Resolution of external entities</h2>
+
+<p>
+By default, the parsers do not resolve external entities and produce an error if an external entity or a DTD is used. To use entities, an external resolver must be set, using the parser's <font color="#008080"><i><tt>set_resolver</tt></i></font> routine. This one sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately.
+</p>
+
+<p>
+A resolver is a class that opens a <font color="#008080"><i><tt>KI_CHARACTER_INPUT_STREAM</tt></i></font> given a system identifier (a string). An error is produced if no corresponding stream can be found. It is the responsability of the client to close the stream.
+</p>
+
+<p>
+Default concrete resolvers are provided: <font color="#008080"><i><tt>XM_FILE_EXTERNAL_RESOLVER</tt></i></font> for using system identifiers as local file names, and <font color="#008080"><i><tt>XM_STRING_EXTERNAL_RESOLVER</tt></i></font> for resolving in memory using a hash table of strings. Therse is also a null resolver, which the default resolver of a parser.
+</p>
+
 <hr size="1">
         <table border="0" width="100%">
             <tr>
