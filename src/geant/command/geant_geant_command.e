@@ -20,6 +20,20 @@ creation
 
 	make
 
+feature -- Access
+
+	filename: STRING
+			-- Geant build file to invoke
+
+	fileset: GEANT_FILESET
+			-- Fileset for current command
+
+	reuse_variables: BOOLEAN
+			-- Are variables reused in new project?
+
+	start_target_name: STRING
+			-- Name of target the build process starts with
+
 feature -- Status report
 
 	is_filename_executable: BOOLEAN is
@@ -40,6 +54,14 @@ feature -- Status report
 			target_not_empty: Result implies start_target_name.count > 0
 		end
 
+	is_fileset_executable: BOOLEAN is
+			-- Can command be executed on fileset `fileset'?
+		do
+			Result := fileset /= Void
+		ensure
+			fileset_not_void: Result implies fileset /= Void
+		end
+
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
@@ -47,17 +69,6 @@ feature -- Status report
 		ensure then
 			project_or_target: Result implies is_filename_executable or is_target_executable
 		end
-
-feature -- Access
-
-	filename: STRING
-			-- Geant build file to invoke.
-
-	reuse_variables: BOOLEAN
-			-- Are variables reused in new project?
-
-	start_target_name: STRING
-			-- Name of the target the build process starts with
 
 feature -- Setting
 
@@ -71,6 +82,16 @@ feature -- Setting
 			filename := a_filename
 		ensure
 			filename_set: filename = a_filename
+		end
+
+	set_fileset (a_fileset: like fileset) is
+			-- Set `fileset' to `a_fileset'.
+		require
+			a_fileset_not_void: a_fileset /= Void
+		do
+			fileset := a_fileset
+		ensure
+			fileset_set: fileset = a_fileset
 		end
 
 	set_reuse_variables(a_reuse_variables: BOOLEAN) is
@@ -137,9 +158,27 @@ feature -- Execution
 				end
 					-- Start build process:
 				if exit_code = 0 then
-					a_project.build
-					if not a_project.build_successful then
-						exit_code := 1
+					if is_fileset_executable then
+						if not fileset.is_executable then
+							project.log (<<"  [geant] error: fileset definition wrong">>)
+							exit_code := 1
+						end
+						if exit_code = 0 then
+							fileset.execute
+							from fileset.start until fileset.after or else exit_code /= 0 loop
+								a_project.build
+								if not a_project.build_successful then
+									exit_code := 1
+								end
+
+								fileset.forth
+							end
+						end
+					else
+						a_project.build
+						if not a_project.build_successful then
+							exit_code := 1
+						end
 					end
 				end
 			else
@@ -147,9 +186,26 @@ feature -- Execution
 
 					-- call target of current project:
 				if project.targets.has (start_target_name) then
-					a_target := project.targets.item (start_target_name)
-					a_target := a_target.final_target
-					a_target.project.build_target (a_target)
+					if is_fileset_executable then
+						if not fileset.is_executable then
+							project.log (<<"  [geant] error: fileset definition wrong">>)
+							exit_code := 1
+						end
+						if exit_code = 0 then
+							fileset.execute
+							a_target := project.targets.item (start_target_name)
+							a_target := a_target.final_target
+							from fileset.start until fileset.after or else exit_code /= 0 loop
+								a_target.project.build_target (a_target)
+
+								fileset.forth
+							end
+						end
+					else
+						a_target := project.targets.item (start_target_name)
+						a_target := a_target.final_target
+						a_target.project.build_target (a_target)
+					end
 				else
 					project.log (<<"  [geant] error: unknown target: `", start_target_name, "%'">>)
 					exit_code := 1
