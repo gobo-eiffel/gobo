@@ -21,19 +21,13 @@ inherit
 		end
 
 	EIFFEL_TOKENS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_INTEGER_ROUTINES
-
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_SHARED_PLATFORM
 
 creation
@@ -401,7 +395,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new Eiffel scanner.
 		do
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			eif_buffer := STRING_.make (Init_buffer_size)
 			eif_lineno := 1
 		end
