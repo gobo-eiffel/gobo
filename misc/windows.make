@@ -8,6 +8,10 @@
 
 # Shell Commands
 CP=cp
+ECHO=echo
+GEPP=$(GOBO)/bin/gepp
+GELEX=$(GOBO)/bin/gelex
+GEYACC=$(GOBO)/bin/geyacc
 
 # SmallEiffel
 SE_PCFLAGS=-w
