@@ -3082,18 +3082,10 @@ feature {NONE} -- Expression validity
 					elseif right_context.conforms_to_type (left_type, left_context, universe) then
 							-- OK.
 						report_equality_expression (an_expression)
-					elseif
-							-- Follow ISE 5.6 implementation.
-						left_context.same_named_type (universe.none_type, current_type, universe) and
-						not right_context.is_type_expanded (universe)
-					then
+					elseif left_context.same_named_type (universe.none_type, current_type, universe) then
 							-- OK.
 						report_equality_expression (an_expression)
-					elseif
-							-- Follow ISE 5.6 implementation.
-						right_context.same_named_type (universe.none_type, current_type, universe) and
-						not left_context.is_type_expanded (universe)
-					then
+					elseif right_context.same_named_type (universe.none_type, current_type, universe) then
 							-- OK.
 						report_equality_expression (an_expression)
 					elseif type_checker.convert_feature (left_context, right_context) /= Void then
