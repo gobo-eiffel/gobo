@@ -54,6 +54,12 @@ feature -- Access
 		do
 		end
 
+	locals: ET_LOCAL_VARIABLE_LIST is
+			-- Local variables;
+			-- Void if not an internal routine or a routine with no local variables
+		do
+		end
+
 	id: INTEGER
 			-- Feature ID
 

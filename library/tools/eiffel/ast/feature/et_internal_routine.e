@@ -15,6 +15,9 @@ deferred class ET_INTERNAL_ROUTINE
 inherit
 
 	ET_ROUTINE
+		redefine
+			locals
+		end
 
 feature -- Access
 

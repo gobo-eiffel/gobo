@@ -15,6 +15,9 @@ deferred class ET_INTERNAL_PROCEDURE
 inherit
 
 	ET_PROCEDURE
+		undefine
+			locals
+		end
 
 	ET_INTERNAL_ROUTINE
 

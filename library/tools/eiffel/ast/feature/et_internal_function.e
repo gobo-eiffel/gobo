@@ -15,6 +15,9 @@ deferred class ET_INTERNAL_FUNCTION
 inherit
 
 	ET_FUNCTION
+		undefine
+			locals
+		end
 
 	ET_INTERNAL_ROUTINE
 		undefine
