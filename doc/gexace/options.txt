@@ -621,6 +621,22 @@ SE:
   true -> gc_info (yes)
   false -> gc_info (no)
 -------------------------------------------------------------
+NAME: header
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify a directory containing C header files.
+NOTE: There can be several of these options.
+
+ISE:
+  <pathname> -> include_path: "<pathname>"
+HACT:
+  <pathname> -> include_path: "<pathname>"
+VE:
+  N/A
+SE:
+  <pathname> -> external_header_path: "<pathname>"
+-------------------------------------------------------------
 NAME: heap_size
 
 VALUES: <value>
@@ -806,6 +822,23 @@ VE:
   N/A
 SE:
   N/A
+-------------------------------------------------------------
+NAME: link
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify object files, library files or command
+  line options to be passed to the linker.
+NOTE: There can be several of these options.
+
+ISE:
+  <pathname> -> object: "<pathname>"
+HACT:
+  <pathname> -> object: "<pathname>"
+VE:
+  <pathname> -> link "<pathname>"
+SE:
+  <pathname> -> external_lib: "<pathname>"
 -------------------------------------------------------------
 NAME: linker
 
@@ -1413,6 +1446,65 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: header
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify a directory containing C header files.
+NOTE: There can be several of these options.
+
+ISE:
+  <pathname> -> include_path: "<pathname>"
+HACT:
+  <pathname> -> include_path: "<pathname>"
+VE:
+  N/A
+SE:
+  <pathname> -> external_header_path: "<pathname>"
+-------------------------------------------------------------
+NAME: include
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify a filename that should be taken into
+  account when searching the cluster for Eiffel classes,
+  even though it does not necessarily have a .e extension.
+NOTE: There can be several of these options.
+
+ISE:
+  <pathname> ->
+      cluster_name: "pathname"
+         include
+            "<pathname>"
+         end
+HACT:
+  <pathname> ->
+      cluster_name: "pathname"
+         include
+            "<pathname>"
+         end
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: link
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify object files, library files or command
+  line options to be passed to the linker.
+NOTE: There can be several of these options.
+
+ISE:
+  <pathname> -> object: "<pathname>"
+HACT:
+  <pathname> -> object: "<pathname>"
+VE:
+  <pathname> -> link "<pathname>"
+SE:
+  <pathname> -> external_lib: "<pathname>"
+-------------------------------------------------------------
 NAME: profile
 
 VALUES: true | false
@@ -1451,6 +1543,23 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: storable
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Specify that all classes in the cluster should
+  be included into the system.
+
+ISE:
+  N/A
+HACT:
+  true -> storable all
+  false -> no output
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: trace
 
 VALUES: true | false
@@ -1469,4 +1578,240 @@ VE:
 SE:
   true -> trace (yes)
   false -> trace (no)
+-------------------------------------------------------------
+
+=============================================================
+
+CLASS OPTIONS
+
+Following is the list of class-level options supported by
+'gexace' (of the form <option name="..." value="..."/>),
+and how they are translated to the vendor dependent Ace or
+ESD files. "N/A" does not necessarily mean that the corresponding
+Eiffel compiler does not support this facility, it could just
+be that the facility is not parameterizable or is activated
+from the command-line or from a separate tool (such as VETuner
+for Visual Eiffel) rather than from the Ace or ESD file. When
+an entry is marked "N/A" the option will be silently ignored
+and nothing will be generated in the Ace or ESD file for this
+option. Likewise when the name of an option specified in
+an Xace file is not known by 'gexace'.
+
+The DEFAULT section shows 'gexace' default value when this
+option is not explicitely specified in the Xace file. It
+can be different from the default value used by the various
+Eiffel vendors in their Ace or ESD files.
+
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+
+-------------------------------------------------------------
+NAME: assertion
+
+VALUES: none | require | ensure | invariant |
+        loop_invariant | loop_variant | check | all
+DEFAULT: no default
+DESCRIPTION: Set default assertion level for this class.
+  Override the assertion level specified at the cluster
+  and system levels.
+NOTE: There can be several of these options.
+
+ISE:
+  none -> assertion (no): CLASS_NAME
+  require -> assertion (require): CLASS_NAME
+  ensure -> assertion (ensure): CLASS_NAME
+  invariant -> assertion (invariant): CLASS_NAME
+  loop_invariant -> assertion (loop): CLASS_NAME
+  loop_variant -> assertion (loop): CLASS_NAME
+  check -> assertion (check): CLASS_NAME
+  all -> assertion (all): CLASS_NAME
+HACT:
+  none -> assertion (no): CLASS_NAME
+  require -> assertion (require): CLASS_NAME
+  ensure -> assertion (ensure): CLASS_NAME
+  invariant -> assertion (invariant): CLASS_NAME
+  loop_invariant -> assertion (loop): CLASS_NAME
+  loop_variant -> assertion (loop): CLASS_NAME
+  check -> assertion (check): CLASS_NAME
+  all -> assertion (all): CLASS_NAME
+  --
+  If several occurrences of Ace options would need to be generated,
+  only one occurrence would actually be generated with the value
+  which appears below all the others in the list above.
+VE:
+  N/A
+SE:
+  none -> assertion (no): CLASS_NAME
+  require -> assertion (require): CLASS_NAME
+  ensure -> assertion (ensure): CLASS_NAME
+  invariant -> assertion (invariant): CLASS_NAME
+  loop_invariant -> assertion (loop): CLASS_NAME
+  loop_variant -> assertion (loop): CLASS_NAME
+  check -> assertion (check): CLASS_NAME
+  all -> assertion (all): CLASS_NAME
+  --
+  If several occurrences of Ace options would need to be generated,
+  only one occurrence would actually be generated with the value
+  which appears below all the others in the list above.
+-------------------------------------------------------------
+NAME: debug
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Enable debug instructions for this class.
+  Override the 'debug' option specified at the cluster and
+  system levels.
+
+ISE:
+  true -> debug (yes): CLASS_NAME
+  false -> debug (no): CLASS_NAME
+HACT:
+  true -> debug (yes): CLASS_NAME
+  false -> debug (no): CLASS_NAME
+VE:
+  N/A
+SE:
+  true -> debug (yes): CLASS_NAME
+  false -> debug (no): CLASS_NAME
+-------------------------------------------------------------
+NAME: debug_tag
+
+VALUES: <tag>
+DEFAULT: no default
+DESCRIPTION: Enable debug instructions with tag '<tag>' for this
+  class. Override the 'debug_tag' option specified at the cluster
+  and system levels.
+NOTE: There can be several of these options.
+
+ISE:
+  <tag> -> debug ("<tag>"): CLASS_NAME
+HACT:
+  <tag> -> debug ("<tag>"): CLASS_NAME
+VE:
+  N/A
+SE:
+  <tag> -> debug ("<tag>"): CLASS_NAME
+-------------------------------------------------------------
+NAME: export
+
+VALUES: <external_name>
+DEFAULT: no default
+DESCRIPTION: Specify that this class and its features should
+  be visible from C when using Cecil for example.
+
+ISE:
+  <external_name> ->
+     visible
+         CLASS_NAME
+             end
+  --
+  Limitation: the external name is not taken into account.
+HACT:
+  <external_name> ->
+     visible
+         CLASS_NAME
+             end
+  --
+  Limitation: the external name is not taken into account.
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: storable
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Specify that this class should be included into
+  the system.
+
+ISE:
+  N/A
+HACT:
+  true -> storable CLASS_NAME
+  false -> no output
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: trace
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Enable trace mode for this class. Override the
+  'trace' option specified at the cluster and system levels.
+
+ISE:
+  true -> trace (yes): CLASS_NAME
+  false -> trace (no): CLASS_NAME
+HACT:
+  true -> trace (yes): CLASS_NAME
+  false -> trace (no): CLASS_NAME
+VE:
+  N/A
+SE:
+  true -> trace: CLASS_NAME
+  false -> no output
+-------------------------------------------------------------
+
+=============================================================
+
+FEATURE OPTIONS
+
+Following is the list of feature-level options supported by
+'gexace' (of the form <option name="..." value="..."/>),
+and how they are translated to the vendor dependent Ace or
+ESD files. "N/A" does not necessarily mean that the corresponding
+Eiffel compiler does not support this facility, it could just
+be that the facility is not parameterizable or is activated
+from the command-line or from a separate tool (such as VETuner
+for Visual Eiffel) rather than from the Ace or ESD file. When
+an entry is marked "N/A" the option will be silently ignored
+and nothing will be generated in the Ace or ESD file for this
+option. Likewise when the name of an option specified in
+an Xace file is not known by 'gexace'.
+
+The DEFAULT section shows 'gexace' default value when this
+option is not explicitely specified in the Xace file. It
+can be different from the default value used by the various
+Eiffel vendors in their Ace or ESD files.
+
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+
+-------------------------------------------------------------
+NAME: export
+
+VALUES: <external_name>
+DEFAULT: no default
+DESCRIPTION: Specify that this feature should be visible
+  from C when using Cecil for example.
+
+ISE:
+  <external_name> ->
+     visible
+         CLASS_NAME
+             export
+                 feature_name
+             end
+  --
+  Limitation: the external name is not taken into account.
+HACT:
+  <external_name> ->
+     visible
+         CLASS_NAME
+             export
+                 feature_name
+             end
+  --
+  Limitation: the external name is not taken into account.
+VE:
+  N/A
+SE:
+  <external_name> ->
+     In Ace file:
+        external cecil ("cecil.se")
+     In 'cecil.se' file:
+        <external_name> CLASS_NAME feature_name
 -------------------------------------------------------------
