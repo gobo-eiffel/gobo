@@ -179,11 +179,11 @@ feature -- Access
 					a_catalog := shared_catalog_manager.retrieved_catalog (a_cursor.item)
 					if a_catalog /= Void then
 						Result := a_catalog.resolved_fsi (a_system_id)
-						if Result = Void then
-							a_cursor.forth
-						else
-							a_cursor.go_after
-						end
+					end
+					if Result = Void then
+						a_cursor.forth
+					else
+						a_cursor.go_after
 					end
 				end
 			end
