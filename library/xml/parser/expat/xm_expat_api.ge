@@ -70,11 +70,11 @@ feature -- Creating and destroying parsers
 			-- When a namespace is not declared, the name and prefix will
 			-- be passed through without expansion.
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Char *, XML_Char): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -93,11 +93,11 @@ feature -- Creating and destroying parsers
 			-- All further memory operations used for the created parser
 			-- will come from the given suite.
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Char *, XML_Memory_Handling_Suite *, XML_Char *): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -148,11 +148,11 @@ feature -- Creating and destroying parsers
 			-- have called `exml_XM_SetUserData' with a Void argument,
 			-- else your callback is never available for the gc again.
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -173,11 +173,11 @@ feature -- Parsing
 			a_parser_not_null: a_parser /= default_pointer
 			len_not_negative: len >= 0
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser, int): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -225,11 +225,11 @@ feature -- Parsing
 			s_not_null: s /= default_pointer
 			len_not_negative: len >= 0
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser, char *, int, int): EIF_INTEGER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -250,11 +250,11 @@ feature -- Parsing
 			a_parser_not_null: a_parser /= default_pointer
 			len_not_negative: len >= 0
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser, int, int): EIF_INTEGER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -271,11 +271,11 @@ feature -- Error reporting
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -315,11 +315,11 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -332,11 +332,11 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -349,11 +349,11 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -377,10 +377,19 @@ feature -- Miscellaneous
 #ifdef ISE || HACT
 			ptr := exml_XML_GetUserData (a_parser)
 			if ptr /= default_pointer then
-				eif_unfreeze (ptr)
+				if memory.collecting then
+					eif_unfreeze (ptr)
+				end
 			end
 			if a_callback /= Void then
-				ptr := eif_freeze (a_callback)
+				if memory.collecting then
+					ptr := eif_freeze (a_callback)
+				else
+					ptr := $a_callback
+				end
+					check
+						ptr_not_nil: ptr /= default_pointer
+					end
 				exml_XML_SetUserData (a_parser, ptr)
 				exml_XML_SetExternalEntityRefHandlerArg (a_parser, ptr)
 			else
@@ -392,6 +401,11 @@ feature -- Miscellaneous
 				-- BdB: I think we need to freeze for VE too, look it up.
 			exml_XML_SetUserData (a_parser, a_callback)
 			exml_XML_SetExternalEntityRefHandlerArg (a_parser, a_callback)
+#endif
+#ifdef ISE || HACT
+		ensure
+			user_data_set:
+				(a_callback = Void) = (exml_XML_GetUserData (a_parser) = default_pointer)
 #endif
 		end
 
@@ -409,7 +423,7 @@ feature -- Miscellaneous
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, void *) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -970,7 +984,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, void *) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -2035,6 +2049,7 @@ feature {NONE} -- Implementation
 	eif_freeze (obj: ANY): POINTER is
 			-- Make sure that `obj' will not be moved by GC.
 		require
+			gc_on: memory.collecting
 			obj_not_void: obj /= Void
 		external
 			"C [macro <eif_eiffel.h>]"
@@ -2046,6 +2061,7 @@ feature {NONE} -- Implementation
 			-- Object at address `ptr' can be handled
 			-- and moved by the GC now.
 		require
+			gc_on: memory.collecting
 			ptr_not_null: ptr /= default_pointer
 		external
 			"C [macro <eif_eiffel.h>] (EIF_REFERENCE)"
@@ -2054,7 +2070,7 @@ feature {NONE} -- Implementation
 		end
 
 	exml_XML_GetUserData (a_parser: POINTER): POINTER is
-			-- Last value set by XM_SetUserData or null.
+			-- Last value set by XML_SetUserData or null.
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
@@ -2063,5 +2079,10 @@ feature {NONE} -- Implementation
 			"XML_GetUserData"
 		end
 
+	memory: expanded MEMORY
+			-- Check if garbage collection is enabled, else `eif_freeze'
+			-- returns default_pointer.
 #endif
+
+
 end

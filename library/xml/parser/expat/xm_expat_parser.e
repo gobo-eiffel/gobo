@@ -221,7 +221,6 @@ feature {NONE} -- Low-level parsing
 		local
 			int_result: INTEGER
 		do
-				-- Function call with side effect...
 			int_result := exml_XML_Parse_string (item, a_data, is_final)
 			set_error_from_parse_result (int_result)
 		end
@@ -316,6 +315,7 @@ feature {NONE} -- Parser handle
 				Exceptions.raise ("Failure to create parser with XML_ParserCreate.")
 			end
 			set_callback_object (item, Current)
+
 				-- We need a smarter way to set callbacks. What callbacks you
 				-- want should be determined by the client.
 				-- Perhaps override `on_xml_declaration' to give client chance
@@ -879,5 +879,6 @@ feature {NONE} -- Once strings
 
 	once_empty_string: STRING is ""
 			-- The empty string
+
 
 end
