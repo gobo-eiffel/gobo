@@ -21,5 +21,13 @@ inherit
 
 feature -- Access
 
+	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
+		-- Variables specified on the commandline using -D
+		-- example: -Dname=value
+		once
+			!! Result.make (10)
+		ensure
+			Commandline_variables_not_void: Result /= Void
+		end
 
 end -- class GEANT_SHARED_PROPERTIES

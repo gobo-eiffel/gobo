@@ -16,8 +16,8 @@ class GEANT_VARIABLES
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_SHARED_EXECUTION_ENVIRONMENT
+	GEANT_SHARED_PROPERTIES
 
 creation
 
@@ -38,69 +38,79 @@ feature -- Access
 	has_variable (a_name: STRING): BOOLEAN is
 			-- Is there a variable named `a_name'
 			-- in `variables'?
+			-- Search order: commandline variables, project variables, environment variables
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.empty
 		local
 			value: STRING
 		do
-				-- Search value from the project variables:
-			variables.search (a_name)
-			Result := variables.found 
+				-- Search commandline variables:
+			Commandline_variables.search (a_name)
+			Result := Commandline_variables.found
+		
 			if not Result then
-					-- Look if it is an environment variable.
-				if a_name.count > ("env.").count and then a_name.substring(1, 4).is_equal("env.") then
-					value := environment_variable_value (a_name)
-					Result := value.count > 0
-				end
+					-- Search project variables:
+				variables.search (a_name)
+				Result := variables.found
+			end
+			
+			if not Result then
+					-- Search environment variables:
+				value := Execution_environment.variable_value (a_name)
+				Result := value /= Void
 			end
 		end
 
 	variable_value (a_name: STRING): STRING is
-			-- Value of global variable `a_name';
+			-- Value of variable `a_name';
 			-- `${a_name}' if `a_name' has not been set
+			-- Search order: commandline variables, project variables, environment variables
 		require
 			a_name_not_void: a_name /= Void
 		do
-				-- Check for environment variables defined names beginning with 'env.':
-				-- TBD: separate routine to get environment variable:
-			if a_name.count > 4 and then a_name.substring(1, 4).is_equal("env.") then
-					-- Cut off the beginning 'env.'.
-					-- The rest of a_name is the environment variable name.
-				Result := a_name.substring (5, a_name.count)
-				Result := Execution_environment.variable_value (Result)
-				if Result = Void then
-					Result := ""
-				end
-			else
-					-- Search value from the project variables:
+				-- Search commandline variables:
+			Commandline_variables.search (a_name)
+			if Commandline_variables.found then
+				Result := Commandline_variables.found_item
+			end
+			
+			if Result = Void then
+					-- Search project variables:
 				variables.search (a_name)
 				if variables.found then
 					Result := expanded_variable_value(variables.found_item)
-				else
-					Result := clone("${")
-					Result.append_string(a_name)
-					Result.append_string("}")
 				end
 			end
+
+			if Result = Void then
+					-- Search environment variables:
+				if Execution_environment.variable_value (a_name) /= Void then
+					Result := Execution_environment.variable_value (a_name)
+				end
+			end
+
+			if Result = Void then
+				Result := clone("${")
+				Result.append_string(a_name)
+				Result.append_string("}")
+			end
+
 		ensure
 			variable_value_not_void: Result /= Void 
 		end
 
 	environment_variable_value (a_name: STRING): STRING is
 			-- Value of environment variable `a_name';
-			-- Empty if `a_name' environment variable does not exist
+			-- `${a_name}' if `a_name' environment variable does not exist
 		require
 			a_name_not_void: a_name /= Void
-			a_name_good_length: a_name.count > ("env.").count
-			a_name_good_value: a_name.substring (1, 4).is_equal ("env.")
 		do
-				-- Cut off the beginning 'env.'.
-				-- The rest of a_name is the environment variable name.
-			Result := a_name.substring (5, a_name.count)
 			Result := Execution_environment.variable_value (Result)
 			if Result = Void then
-				Result := ""
+				Result := clone("${")
+				Result.append_string(a_name)
+				Result.append_string("}")
 			end
 		end
 
@@ -223,9 +233,7 @@ feature -- Setting
 			a_name_not_empty: a_name.count > 0
 			a_value_not_void: a_value /= Void
 		do
-			if not variables.has(a_name) then
-				variables.force (a_value, a_name)
-			end
+			variables.force (a_value, a_name)
 		end
 
 end -- class GEANT_VARIABLES

@@ -41,14 +41,13 @@ feature {NONE} -- Initialization
 		do
 			Arguments.set_program_name ("geant")
 			!! error_handler.make_standard
-			!! variables.make
 			read_command_line
 
 			if build_filename /= void and then build_filename.count > 0 then
 				!! ucs.make_from_string(build_filename)
-				!! a_project.make_with_filename(ucs, variables)
+				!! a_project.make_with_filename(ucs, Void)
 			else
-				!! a_project.make (variables)
+				!! a_project.make (Void)
 			end
 			a_project.set_verbose (verbose)
 			a_project.load (start_target_name)
@@ -75,9 +74,6 @@ feature -- Access
 
 	verbose: BOOLEAN
 		-- Print additional information during build process?
-
-	variables: GEANT_VARIABLES
-		-- commandline variables
 
 	read_command_line is
 			-- Read command line arguments.
@@ -111,7 +107,7 @@ feature -- Access
 					if p > 3 and p < arg.count then
 						a_variable_name := clone(arg.substring (3, p - 1))
 						a_variable_value := clone(arg.substring (p + 1, arg.count))
-						variables.set_variable_value(a_variable_name, a_variable_value)
+						Commandline_variables.force (a_variable_value, a_variable_name)
 					end
 				elseif i = nb then
 					start_target_name := arg

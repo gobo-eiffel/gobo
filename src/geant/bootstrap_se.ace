@@ -559,26 +559,6 @@ cluster
 		option
 	;
 
-
-
-	ucstring: "${UCSTRING}/lib"
-		default
-			assertion (no)
-		option
-	;
-	ucstring_spec: "${UCSTRING}/lib/spec"
-		default
-			assertion (no)
-		option
-	;
-	ucstring_spec_se: "${UCSTRING}/lib/spec/se"
-		default
-			assertion (no)
-		option
-	;
-
-
-
 	se_kernel_se: "${SmallEiffelDirectory}/lib_std"
 		default
 			assertion (no)
