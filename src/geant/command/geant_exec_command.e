@@ -24,19 +24,44 @@ creation
 
 feature -- Status report
 
+	is_commandline_executable: BOOLEAN is
+			-- Can command be executed with `command_line'?
+		do
+			Result := command_line /= Void and then command_line.count > 0
+			Result := Result and then fileset = Void
+		ensure
+			command_line_not_void: Result implies command_line /= Void
+			command_line_not_empty: Result implies command_line.count > 0
+			fileset_void: Result implies fileset = Void
+		end
+
+	is_fileset_executable: BOOLEAN is
+			-- Can command be executed on source fileset `fileset'?
+		do
+			Result := command_line /= Void and then command_line.count > 0
+			Result := Result and then fileset /= Void
+		ensure
+			command_line_not_void: Result implies command_line /= Void
+			command_line_not_empty: Result implies command_line.count > 0
+			fileset_not_void: Result implies fileset /= Void
+		end
+
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := command_line /= Void and then command_line.count > 0
+			Result := is_commandline_executable xor is_fileset_executable
 		ensure then
-			command_line_not_void: Result implies command_line /= Void
-			command_line_not_empty: Result implies command_line.count > 0
+			commandline_executable_xor_is_fileset_executable:
+				Result implies is_commandline_executable xor is_fileset_executable
 		end
 
 feature -- Access
 
 	command_line: STRING
 			-- Command-line
+
+	fileset: GEANT_FILESET
+		-- Fileset for current command
 
 feature -- Setting
 
@@ -51,13 +76,53 @@ feature -- Setting
 			command_list_set: command_line = a_command_line
 		end
 
+	set_fileset (a_fileset: like fileset) is
+			-- Set `fileset' to `a_fileset'.
+		require
+			a_fileset_not_void: a_fileset /= Void
+		do
+			fileset := a_fileset
+			fileset.set_convert_to_filesystem (True)
+		ensure
+			fileset_set: fileset = a_fileset
+			fileset_convert_to_filesystem_set: fileset.convert_to_filesystem
+		end
+
 feature -- Execution
 
 	execute is
 			-- Execute command.
+		local
+			s: STRING
 		do
-			project.trace ("  [exec] " + command_line + "%N")
-			execute_shell (command_line)
+			if is_commandline_executable then
+				project.trace ("  [exec] " + command_line + "%N")
+				execute_shell (command_line)
+			else
+				check is_fileset_executable: is_fileset_executable end
+
+				if not fileset.is_executable then
+					project.log ("  [exec] error: fileset definition wrong%N")
+					exit_code := 1
+				end
+
+				if exit_code = 0 then
+					fileset.execute
+					from
+						fileset.start
+					until
+						fileset.after or else exit_code /= 0
+					loop
+						s := project.variables.interpreted_string (command_line)
+						project.trace ("  [exec] " + s + "%N")
+						execute_shell (s)
+	
+						fileset.forth
+					end
+				end
+
+			end
+
 		end
 
 end -- class GEANT_EXEC_COMMAND
