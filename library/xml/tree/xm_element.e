@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 feature -- Element change
 
 	force_last (v: like last) is
-			-- `force_last' with parent removal and optimisation for 
+			-- `force_last' with parent removal and optimisation for
 			-- force_last (last).
 		do
 			-- check last_efficient: O(last) < O(Precursor) end
@@ -122,7 +122,7 @@ feature -- Element change
 		end
 		
 	put_last (v: like last) is
-			-- `put_last' with parent removal and optimisation for 
+			-- `put_last' with parent removal and optimisation for
 			-- put_last (last).
 		do
 			-- check last_efficient: O(last) < O(Precursor) end
@@ -173,8 +173,8 @@ feature {XM_NODE} -- Removal
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
-			-- we do DS_LIST.delete by hand, because 
-			-- it takes a descendant type, while we don't 
+			-- we do DS_LIST.delete by hand, because
+			-- it takes a descendant type, while we don't
 			-- really need to know the subtype for object
 			-- equality.
 			from
@@ -194,7 +194,7 @@ feature {XM_NODE} -- Removal
 feature -- Status report
 
 	has_attribute_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
-			-- Does current element contain an attribute with 
+			-- Does current element contain an attribute with
 			-- this qualified name?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -207,7 +207,7 @@ feature -- Status report
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_attribute and then 
+				if typer.is_attribute and then
 					typer.xml_attribute.has_qualified_name (a_uri, a_name)
 				then
 					Result := True
@@ -231,7 +231,7 @@ feature -- Status report
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_attribute and then 
+				if typer.is_attribute and then
 					attribute_same_name (typer.xml_attribute, a_name)
 				then
 					Result := True
@@ -246,7 +246,7 @@ feature {NONE} -- Name comparison with namespace.
 
 	attribute_same_name (a_named: XM_ATTRIBUTE; a_name: STRING): BOOLEAN is
 			-- Has 'a_named' attribute the same name as `a_name',
-			-- either because of same namespace or within the 
+			-- either because of same namespace or within the
 			-- default namespace.
 		require
 			named_not_void: a_named /= Void
@@ -258,7 +258,7 @@ feature {NONE} -- Name comparison with namespace.
 		end
 		
 	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
-			-- Has 'a_named' same name as 'a_name' and 
+			-- Has 'a_named' same name as 'a_name' and
 			-- same namespace as current node?
 		require
 			a_named_not_void: a_named /= Void
@@ -282,7 +282,7 @@ feature -- Access (from XM_COMPOSITE)
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_element and then 
+				if typer.is_element and then
 					named_same_name (typer.element, a_name)
 				then
 					Result := True
@@ -304,7 +304,7 @@ feature -- Access (from XM_COMPOSITE)
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_element and then 
+				if typer.is_element and then
 					typer.element.has_qualified_name (a_uri, a_name)
 				then
 					Result := True
@@ -327,7 +327,7 @@ feature -- Access (from XM_COMPOSITE)
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_element and then 
+				if typer.is_element and then
 					named_same_name (typer.element, a_name)
 				then
 					Result := typer.element
@@ -350,7 +350,7 @@ feature -- Access (from XM_COMPOSITE)
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_element and then 
+				if typer.is_element and then
 					typer.element.has_qualified_name (a_uri, a_name)
 				then
 					Result := typer.element
@@ -376,7 +376,7 @@ feature -- Access
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_attribute and then 
+				if typer.is_attribute and then
 					attribute_same_name (typer.xml_attribute, a_name)
 				then
 					Result := typer.xml_attribute
@@ -404,7 +404,7 @@ feature -- Access
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_attribute and then 
+				if typer.is_attribute and then
 					typer.xml_attribute.has_qualified_name (a_uri, a_name)
 				then
 					Result := typer.xml_attribute
@@ -498,7 +498,7 @@ feature -- Element change
 				force_last (an_attribute)
 			else
 				create typer
-				last.process (typer) 
+				last.process (typer)
 				if typer.is_attribute then
 					force_last (an_attribute)
 				else
@@ -524,7 +524,7 @@ feature -- Removal
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_attribute and then 
+				if typer.is_attribute and then
 					attribute_same_name (typer.xml_attribute, a_name)
 				then
 					remove_at_cursor (a_cursor)
@@ -548,7 +548,7 @@ feature -- Removal
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
-				if typer.is_attribute and then 
+				if typer.is_attribute and then
 					typer.xml_attribute.has_qualified_name (a_uri, a_name)
 				then
 					remove_at_cursor (a_cursor)

@@ -66,7 +66,7 @@ feature -- Status report
 			a_uri_not_void: a_uri /= Void
 			a_name_not_void: a_name /= Void
 		do
-			Result := (STRING_.same_string (a_uri, namespace.uri) 
+			Result := (STRING_.same_string (a_uri, namespace.uri)
 					and STRING_.same_string (a_name, name))
 		ensure
 			definition: Result = (STRING_.same_string (a_uri, namespace.uri)
@@ -84,7 +84,7 @@ feature -- Access
 feature -- Access
 
 	ns_prefix: STRING is
-			-- Namespace prefix used to declare the namespace of the 
+			-- Namespace prefix used to declare the namespace of the
 			-- name of current node
 		require
 			has_ns: has_namespace

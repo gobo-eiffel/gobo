@@ -130,7 +130,7 @@ feature -- Text
 feature {XM_NODE} -- Removal
 
 	equality_delete (v: XM_NODE) is
-			-- Delete node if it is in current node, using 
+			-- Delete node if it is in current node, using
 			-- object identity.
 		deferred
 		end

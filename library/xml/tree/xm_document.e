@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_root_named (a_name: STRING; a_ns: XM_NAMESPACE) is
-			-- Create root node, with a root_element 
+			-- Create root node, with a root_element
 			-- with given name.
 		require
 			not_void: a_name /= Void
@@ -94,8 +94,8 @@ feature {XM_NODE} -- Removal
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
-			-- we do DS_LIST.delete by hand, because 
-			-- it takes a descendant type, while we don't 
+			-- we do DS_LIST.delete by hand, because
+			-- it takes a descendant type, while we don't
 			-- really need to know the subtype for object
 			-- equality.
 			from
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	remove_previous_root_element is
 			-- Remove previous root element from composite:
 		local
-			a_cursor: like new_cursor 
+			a_cursor: like new_cursor
 		do
 			from
 				a_cursor := new_cursor
@@ -188,7 +188,7 @@ feature -- Access
 	has_element_by_name (a_name: STRING): BOOLEAN is
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
-			-- (Namespace is ignored on the root node because the 
+			-- (Namespace is ignored on the root node because the
 			-- root element defines the current namespace.)
 		do
 			Result := same_string (root_element.name, a_name)

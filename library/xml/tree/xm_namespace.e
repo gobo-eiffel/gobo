@@ -24,7 +24,7 @@ inherit
 		export
 			{NONE} all
 		undefine
-			out, 
+			out,
 			is_equal
 		end
 		
@@ -69,7 +69,7 @@ feature -- Status report
 	is_equal (other: like Current): BOOLEAN is
 			-- Are the two namespaces equal?
 		do
-			Result := (uri = other.uri) or else 
+			Result := (uri = other.uri) or else
 				(uri /= Void and then STRING_.same_string (uri, other.uri))
 		ensure then
 			definition: Result = STRING_.same_string (uri, other.uri)
@@ -103,7 +103,7 @@ feature -- Status report
 					((ns_prefix /= Void and other.ns_prefix /= Void) and then STRING_.same_string (ns_prefix, other.ns_prefix)))
 		ensure
 			equal: Result implies is_equal (other)
-			same_prefix: Result implies 
+			same_prefix: Result implies
 				(ns_prefix = other.ns_prefix or else STRING_.same_string (ns_prefix, other.ns_prefix))
 		end
 		

@@ -76,7 +76,7 @@ feature -- Status report
 		end
 	
 	is_first: BOOLEAN is
-			-- Is this node the first in its parent's child list, 
+			-- Is this node the first in its parent's child list,
 			-- or the root node?
 		do
 			Result := is_root_node or else (parent.first = Current)
