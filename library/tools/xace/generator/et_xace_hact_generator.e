@@ -128,7 +128,7 @@ feature {NONE} -- Output
 			a_file.put_string ("-- ISS-Baselib")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string ("hact_base: %"$ISS_BASE/spec/$PLATFORM/component/base.cl%"")
+			a_file.put_string ("base: %"$ISS_BASE/spec/$PLATFORM/component/base.cl%"")
 			a_file.put_new_line
 			a_file.put_new_line
 		end
@@ -217,18 +217,18 @@ feature {NONE} -- Output
 				a_pathname := a_cluster.full_pathname
 				a_file.put_string (a_pathname)
 				a_file.put_character ('%"')
-				a_file.put_new_line
 				an_option := a_cluster.options
 				if an_option /= Void then
+					a_file.put_new_line
 					print_indentation (2, a_file)
 					a_file.put_string ("default")
 					a_file.put_new_line
 					print_options (an_option, 3, a_file)
-					a_file.put_new_line
 					need_end_keyword := True
 				end
 				an_externals := a_cluster.externals
 				if an_externals /= Void and then not an_externals.exported_classes.is_empty then
+					a_file.put_new_line
 					print_indentation (2, a_file)
 					a_file.put_string ("visible")
 					a_file.put_new_line
@@ -241,7 +241,10 @@ feature {NONE} -- Output
 				end
 				if need_end_keyword then
 					print_indentation (2, a_file)
-					a_file.put_string ("end")
+					a_file.put_string ("end;")
+					a_file.put_new_line
+				else
+					a_file.put_character (';')
 					a_file.put_new_line
 				end
 			end
