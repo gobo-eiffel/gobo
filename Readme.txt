@@ -86,7 +86,7 @@ In this distribution:
 
 Each of the above directories comes with a Readme file providing
 some basic information. Documentation is also available on the Web
-at "http://www.gobo.demon.co.uk". Check it out regularly for updates,
+at "http://www.gobosoft.com". Check it out regularly for updates,
 bug fixes, workarounds and new releases.
 
 Although the license allows you to do pretty much whatever you want with
@@ -98,6 +98,6 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1999, Eric Bezault
-mailto:ericb@gobo.demon.co.uk
-http://www.gobo.demon.co.uk
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com
 14 April 1999
