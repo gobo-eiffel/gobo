@@ -37,6 +37,8 @@ creation
 	make_vdjr0c,
 	make_vdrd2a,
 	make_vdrd2b,
+	make_vdrd3a,
+	make_vdrd3b,
 	make_vdrd4a,
 	make_vdrd4b,
 	make_vdrd4c,
@@ -100,7 +102,7 @@ creation
 	make_gvhpr5a
 
 feature {NONE} -- Initialization
-
+	
 	make (a_class: like current_class; a_position: like position) is
 			-- Create a new Eiffel validity error in `a_class' at `a_position'.
 		require
@@ -888,6 +890,84 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class of feature
 			-- dollar8: $8 = redeclared feature name
 			-- dollar9: $9 = parent base class of redeclared feature
+		end
+
+	make_vdrd3a (a_class: like current_class; p: ET_PRECONDITIONS; f: ET_FLATTENED_FEATURE) is
+			-- Create a new VDRD-3 error: the feature `f' is redeclared
+			-- in `a_class', but its preconditions do not begin with
+			-- 'require else'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			p_not_void: p /= Void
+			p_not_valid: not p.is_require_else
+			f_not_void: f /= Void
+		do
+			code := vdrd3a_template_code
+			etl_code := vdrd3_etl_code
+			default_template := vdrd3a_default_template
+			current_class := a_class
+			position := p.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vdrd3b (a_class: like current_class; p: ET_POSTCONDITIONS; f: ET_FLATTENED_FEATURE) is
+			-- Create a new VDRD-3 error: the feature `f' is redeclared
+			-- in `a_class', but its postconditions do not begin with
+			-- 'ensure then'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			p_not_void: p /= Void
+			p_not_valid: not p.is_ensure_then
+			f_not_void: f /= Void
+		do
+			code := vdrd3b_template_code
+			etl_code := vdrd3_etl_code
+			default_template := vdrd3b_default_template
+			current_class := a_class
+			position := p.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
 		end
 
 	make_vdrd4a (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
@@ -3529,6 +3609,8 @@ feature {NONE} -- Implementation
 	vdjr0c_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
 	vdrd2a_default_template: STRING is "[$1] Class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
 	vdrd2b_default_template: STRING is "[$1] Class $5 ($3,$4): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
+	vdrd3a_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$6' is redeclared but its preconditions do not begin with 'require else'."
+	vdrd3b_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$6' is redeclared but its postconditions do not begin with 'ensure then'."
 	vdrd4a_default_template: STRING is "[$1] Class $5 ($3,$4): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
 	vdrd4b_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
 	vdrd4c_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
@@ -3600,6 +3682,7 @@ feature {NONE} -- Implementation
 	vcfg3_etl_code: STRING is "VCFG-3"
 	vdjr_etl_code: STRING is "VDJR"
 	vdrd2_etl_code: STRING is "VDRD-2"
+	vdrd3_etl_code: STRING is "VDRD-3"
 	vdrd4_etl_code: STRING is "VDRD-4"
 	vdrd5_etl_code: STRING is "VDRD-5"
 	vdrs1_etl_code: STRING is "VDRS-1"
@@ -3660,6 +3743,8 @@ feature {NONE} -- Implementation
 	vdjr0c_template_code: STRING is "vdjr0c"
 	vdrd2a_template_code: STRING is "vdrd2a"
 	vdrd2b_template_code: STRING is "vdrd2b"
+	vdrd3a_template_code: STRING is "vdrd3a"
+	vdrd3b_template_code: STRING is "vdrd3b"
 	vdrd4a_template_code: STRING is "vdrd4a"
 	vdrd4b_template_code: STRING is "vdrd4b"
 	vdrd4c_template_code: STRING is "vdrd4c"

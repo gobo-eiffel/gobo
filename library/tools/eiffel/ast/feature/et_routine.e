@@ -16,7 +16,9 @@ inherit
 
 	ET_FLATTENED_FEATURE
 		redefine
-			arguments
+			arguments,
+			preconditions,
+			postconditions
 		end
 
 feature -- Access

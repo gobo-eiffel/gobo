@@ -16,7 +16,9 @@ inherit
 
 	ET_QUERY
 		undefine
-			arguments
+			arguments,
+			preconditions,
+			postconditions
 		redefine
 			is_prefixable, is_infixable,
 			undefined_feature,

@@ -819,6 +819,48 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdrd3a_error (a_class: ET_CLASS; p: ET_PRECONDITIONS; f: ET_FLATTENED_FEATURE) is
+			-- Report VDRD-3 error: the feature `f' is redeclared
+			-- in `a_class', but its preconditions do not begin with
+			-- 'require else'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			p_not_void: p /= Void
+			p_not_valid: not p.is_require_else
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd3_error (a_class) then
+				create an_error.make_vdrd3a (a_class, p, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdrd3b_error (a_class: ET_CLASS; p: ET_POSTCONDITIONS; f: ET_FLATTENED_FEATURE) is
+			-- Report VDRD-3 error: the feature `f' is redeclared
+			-- in `a_class', but its postconditions do not begin with
+			-- 'ensure then'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			p_not_void: p /= Void
+			p_not_valid: not p.is_ensure_then
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd3_error (a_class) then
+				create an_error.make_vdrd3b (a_class, p, f)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdrd4a_error (a_class: ET_CLASS; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
 			-- Report VDRD-4 error: the deferred feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
@@ -2156,6 +2198,16 @@ feature -- Validity error status
 
 	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDRD-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vdrd3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDRD-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

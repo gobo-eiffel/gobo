@@ -42,6 +42,18 @@ feature -- Access
 		do
 		end
 
+	preconditions: ET_PRECONDITIONS is
+			-- Preconditions;
+			-- Void if not a routine or a routine with no preconditions
+		do
+		end
+
+	postconditions: ET_POSTCONDITIONS is
+			-- Postconditions;
+			-- Void if not a routine or a routine with no postconditions
+		do
+		end
+
 	id: INTEGER
 			-- Feature ID
 

@@ -693,6 +693,8 @@ feature {NONE} -- Feature processing
 			l_flattened_feature: ET_FLATTENED_FEATURE
 			l_inherited_feature: ET_FEATURE
 			l_has_redefine: BOOLEAN
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
 		do
 			l_flattened_feature := a_feature.flattened_feature
 			if a_feature.is_replicated then
@@ -723,6 +725,16 @@ feature {NONE} -- Feature processing
 			loop
 				check_redeclaration_validity (l_inherited_feature, l_flattened_feature, l_has_redefine)
 				l_inherited_feature := l_inherited_feature.merged_feature
+			end
+			l_preconditions := l_flattened_feature.preconditions
+			if l_preconditions /= Void and then not l_preconditions.is_require_else then
+					-- This is not a fatal error.
+				error_handler.report_vdrd3a_error (current_class, l_preconditions, l_flattened_feature)
+			end
+			l_postconditions := l_flattened_feature.postconditions
+			if l_postconditions /= Void and then not l_postconditions.is_ensure_then then
+					-- This is not a fatal error.
+				error_handler.report_vdrd3b_error (current_class, l_postconditions, l_flattened_feature)
 			end
 			Result := a_feature
 		ensure
