@@ -42,7 +42,7 @@ feature -- Access
 	default_template: STRING is "attribute '$2' in element '$1' should have a non-empty value $3"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0011"
+	code: STRING is "XA0006"
 			-- Error code
 
 end

@@ -44,7 +44,7 @@ feature -- Access
 	default_template: STRING is "attribute '$2' in element '$1' should have a boolean value $4"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0008"
+	code: STRING is "XA0005"
 			-- Error code
 
 end
