@@ -71,6 +71,19 @@ feature -- Testing
 			assert_equal ("empty_join", "", split.join (a_list))
 		end
 		
+	test_split_single is
+			-- Split were single character considered separator.
+		do
+			create split.make
+			split.set_separators (",;")
+			assert_split_character ("single", "a", << "a" >>)
+			assert_split_character ("simple", "a,b", << "a", "b" >>)
+			assert_split_character ("multi", "a,;b", << "a","","b" >>)
+			assert_split_character ("start", ",a", << "", "a" >>)
+			assert_split_character ("end", "a;", << "a", "" >>)
+			assert_split_character ("single_separator", ",", << "", "" >>)
+		end
+		
 	test_join is
 			-- Test join operation.
 		do
@@ -92,6 +105,18 @@ feature -- Testing
 			assert_join ("escape", <<"a","c\\\">>, "a c\\\\\\")
 		end
 		
+	test_join_unescaped is
+			-- Test join unescaped.
+		do
+			create split.make
+			
+			assert_join_unescaped ("space", <<"a b", "c">>, "a b c")
+			assert_join_unescaped ("empty_items", <<"", "">>, " ")
+			
+			split.set_escape_character ('\')
+			assert_join_unescaped ("escape_set", <<"a  b", "c">>, "a  b c")
+		end
+		
 feature {NONE} -- Implementation
 
 	split: ST_SPLITTER
@@ -105,12 +130,35 @@ feature {NONE} -- Implementation
 			a_result_not_void: a_result /= Void
 		local
 			a_list: DS_LIST [STRING]
+		do
+			a_list := split.split (a_in)
+			assert_list_equal (a_tag, a_list, a_result)
+		end
+		
+	assert_split_character (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING]) is
+			-- Test case.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_in_not_void: a_in /= Void
+			a_result_not_void: a_result /= Void
+		local
+			a_list: DS_LIST [STRING]
+		do
+			a_list := split.split_character (a_in)
+			assert_list_equal (a_tag, a_list, a_result)
+		end
+	
+	assert_list_equal (a_tag: STRING; a_list: DS_LIST [STRING]; a_result: ARRAY[STRING]) is
+			-- Assert list equal result.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_list_not_void: a_list /= Void
+			a_result_not_void: a_result /= Void
+		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			i: INTEGER
 		do
-			a_list := split.split (a_in)
 			assert_equal (a_tag + "_size", a_result.count, a_list.count)
-			
 			from
 				a_cursor := a_list.new_cursor
 				a_cursor.start
@@ -136,6 +184,20 @@ feature {NONE} -- Implementation
 			a_list: DS_LINKED_LIST [STRING]
 		do
 			create a_list.make_from_array (an_array)
+			assert_equal (a_tag, a_result, split.join (a_list))
+		end
+		
+	assert_join_unescaped (a_tag: STRING; an_array: ARRAY [STRING]; a_result: STRING) is
+			-- To list.
+		require
+			a_tag_not_void: a_tag /= Void
+			not_void: an_array /= Void
+			a_result_not_void: a_result /= Void
+		local
+			a_list: DS_LINKED_LIST [STRING]
+		do
+			create a_list.make_from_array (an_array)
+			assert_equal (a_tag, a_result, split.join_unescaped (a_list))
 		end
 		
 end
