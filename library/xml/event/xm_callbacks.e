@@ -94,7 +94,8 @@ feature -- Content
 
 	on_content (a_content: STRING) is
 			-- Text content.
-			-- NOT atomic: successive content may be different.
+			-- NOT atomic: two on_content events may follow each other
+			-- without a markup event in between.
 		require
 			not_void: a_content /= Void
 			not_empty: a_content.count >= 0
