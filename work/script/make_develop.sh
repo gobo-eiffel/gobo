@@ -16,7 +16,7 @@ export GOBO
 
 # Generate platform-dependent Makefile template.
 cd $GOBO/misc
-sed "s/^GOBO_PLATFORM/#GOBO_PLATFORM/g" platform.make \
+sed "s/^GOBO_PLATFORM/#GOBO_PLATFORM/g" platform.make | \
 sed "s/^#GOBO_PLATFORM=$1/GOBO_PLATFORM=$1/g" > platform.tmp
 mv platform.tmp platform.make
 
