@@ -14,7 +14,7 @@ deferred class XM_NAMED_NODE
 
 inherit
 
-	XM_NODE
+	XM_ELEMENT_NODE
 
 	KL_IMPORTED_STRING_ROUTINES
 	
@@ -102,6 +102,8 @@ feature -- Element change
 
 	set_namespace (a_namespace: like namespace) is
 			-- Set `namespace' to `a_namespace'.
+		require
+			a_namespace_not_void: a_namespace /= Void
 		do
 			namespace := a_namespace
 		ensure
@@ -112,5 +114,6 @@ invariant
 
 	name_not_void: name /= Void
 	name_not_empty: name.count > 0
+	has_namespace: has_namespace
 
 end
