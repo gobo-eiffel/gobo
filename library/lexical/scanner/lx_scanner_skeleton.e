@@ -40,6 +40,29 @@ feature -- Access
 
 	last_token: INTEGER
 			-- Code of last token read
+			-- (0 means that the end-of-input has been reached,
+			-- non-positive values mean that an error occurred
+			-- (see header-comment of `scanning_error'.))
+
+feature -- Status report
+
+	end_of_file: BOOLEAN is
+			-- Has the end of input buffer been reached?
+			-- This means that `last_token' has been set
+			-- to 0 indicating "all done".
+		do
+			Result := (last_token = 0)
+		end
+
+	scanning_error: BOOLEAN is
+			-- Has an error occurred during scanning?
+			-- This can occur when too many `reject' are called (and hence
+			-- nothing can be matched anymore) or when the option "nodefault"
+			-- (or option -s) has been specified but the default rule is
+			-- matched nevertheless. 
+		do
+			Result := (last_token < 0)
+		end
 
 feature -- Setting
 
@@ -59,12 +82,12 @@ feature -- Scanning
 			from
 				read_token
 			until
-				last_token = 0
+				last_token <= 0
 			loop
 				read_token
 			end
 		ensure
-			end_of_file: last_token = 0
+			end_of_file: not scanning_error implies end_of_file
 		end
 
 	read_token is
