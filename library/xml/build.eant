@@ -28,6 +28,8 @@
 
 		<geant target="xf_scanner"/>
 		<geant target="xf_parser"/>
+		<geant target="xf_full_scanner"/>
+		<geant target="xf_full_parser"/>
 		<geant target="install_api"/>
 		<geant target="install_general"/>
 	</target>
@@ -63,6 +65,14 @@
 		<geyacc input="xf_parser.y" tokens="XF_TOKENS" output="xf_parser.e"/>
 	</target>
 
+	<target name="xf_full_scanner" dir="parser/eiffel">
+		<gelex input="xf_full_scanner.l" output="xf_full_scanner.e"/>
+	</target>
+	
+	<target name="xf_full_parser" dir="parser/eiffel">
+		<geyacc input="xf_full_parser.y" tokens="XF_PARSER_TOKENS" output="xf_full_parser.e"/>
+	</target>
+	
 	<target name="install_api">
 		<set name="gepp_dir" value="impl/expat/api"/>
 		<set name="spec_dir" value="impl/expat/spec"/>
