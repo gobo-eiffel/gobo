@@ -57,7 +57,8 @@ inherit
 			flush as old_flush,
 			close as old_close,
 			delete as old_delete,
-			reset as old_reset
+			reset as old_reset,
+			append as old_append
 		export
 			{NONE} all
 		end
@@ -534,6 +535,58 @@ feature -- Basic operations
 							old_file.close
 						end
 					end
+				end
+			end
+		end
+
+	concat (a_filename: STRING) is
+			-- Copy content of file `a_filename' to the end of current file.
+			-- Do nothing if file `a_filename' does not exist. Create
+			-- current file if it does not exist yet. If file `a_filename'
+			-- is physically the same as current file, then a copy of
+			-- the file is appended to itself. Do nothing if current
+			-- file could not be open in append mode or if file `a_filename'
+			-- could not be opened in read mode.
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		local
+			a_source_file: KL_BINARY_INPUT_FILE
+			a_target_file: KL_BINARY_OUTPUT_FILE
+			a_string: STRING
+			nb: INTEGER
+		do
+			if name.count > 0 and a_filename.count > 0 then
+				!! a_source_file.make (a_filename)
+				nb := a_source_file.count
+				a_source_file.open_read
+				if a_source_file.is_open_read then
+					!! a_target_file.make (name)
+					a_target_file.open_append
+					if a_target_file.is_open_write then
+						from
+							if nb >= 512 then
+								a_source_file.read_string (512)
+								nb := nb - 512
+							elseif nb > 0 then
+								a_source_file.read_string (nb)
+							end
+						until
+							nb <= 0 or else
+							a_source_file.end_of_file
+						loop
+							a_string := a_source_file.last_string
+							a_target_file.put_string (a_string)
+							nb := nb - a_string.count
+							if nb >= 512 then
+								a_source_file.read_string (512)
+							elseif nb > 0 then
+								a_source_file.read_string (nb)
+							end
+						end
+						a_target_file.close
+					end
+					a_source_file.close
 				end
 			end
 		end
