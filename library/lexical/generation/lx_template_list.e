@@ -74,20 +74,16 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			target: LX_DFA_STATE
-#ifdef ISE || HACT
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
-#endif
 		do
 			if meta_equiv_classes = Void then
 				Result := template
 			else
-#ifdef ISE || HACT
---| Bug in ISE 3.3.9 in final mode code generation.
+					--| Bug in ISE 3.3.9 in final mode code generation.
+					--| Create `transitions' (not declared as "like anchor")
+					--| first and assign it to `Result'.
 				!! transitions.make (1, meta_equiv_classes.capacity)
 				Result := transitions
-#else
-				!! Result.make (1, meta_equiv_classes.capacity)
-#endif
 				nb := template.upper
 				from i := template.lower until i > nb loop
 					if meta_equiv_classes.is_representative (i) then
