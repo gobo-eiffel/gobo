@@ -99,7 +99,7 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_character (a_file: KI_TEXT_OUTPUT_STREAM; c: CHARACTER) is
+	put_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER) is
 			-- Write `c' to `a_file'; if `c' is not printable,
 			-- it is replaced by its escaped character sequence
 			-- as described in ETL, section 25.15, page 422.
@@ -135,7 +135,7 @@ feature -- File handling
 			end
 		end
 
-	put_quoted_eiffel_character (a_file: KI_TEXT_OUTPUT_STREAM; c: CHARACTER) is
+	put_quoted_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER) is
 			-- Write `c' surrounded by single quotes to `a_string';
 			-- if `c' is not printable, it is replaced by its
 			-- escaped character sequence as described in ETL,

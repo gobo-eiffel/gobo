@@ -45,7 +45,7 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_boolean (a_file: KI_TEXT_OUTPUT_STREAM; b: BOOLEAN) is
+	put_eiffel_boolean (a_file: KI_CHARACTER_OUTPUT_STREAM; b: BOOLEAN) is
 			-- Write formatted version of `b' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

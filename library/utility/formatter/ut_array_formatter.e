@@ -34,11 +34,11 @@ feature -- File handling
 			from i := start_pos until i > end_pos loop
 				nb_colon := nb_colon + 1
 				if nb_colon > Max_nb_colon then
-					a_file.put_character ('%N')
+					a_file.put_new_line
 					nb_colon := 1
 					nb_line := nb_line + 1
 					if nb_line > Max_nb_line then
-						a_file.put_character ('%N')
+						a_file.put_new_line
 						nb_line := 1
 					end
 					a_file.put_string (Indentation)

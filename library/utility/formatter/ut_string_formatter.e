@@ -156,7 +156,7 @@ feature -- String handling
 
 feature -- File handling
 
-	put_eiffel_string (a_file: KI_TEXT_OUTPUT_STREAM; a_string: STRING) is
+	put_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING) is
 			-- Write `a_string' to `a_file', where all
 			-- non-printable characters are replaced by their
 			-- escaped character sequence as described in
@@ -202,7 +202,7 @@ feature -- File handling
 			end
 		end
 
-	put_quoted_eiffel_string (a_file: KI_TEXT_OUTPUT_STREAM; a_string: STRING) is
+	put_quoted_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING) is
 			-- Write `a_string', surrounded by double quotes, to
 			-- `a_file', where all non-printable characters are
 			-- replaced by their escaped character sequence as
@@ -217,7 +217,7 @@ feature -- File handling
 			a_file.put_character ('%"')
 		end
 
-	put_left_padded_string (a_file: KI_TEXT_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
+	put_left_padded_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
 			-- Write `a_string' to `a_file', padded on the
 			-- left with `c' characters if `a_string' is less
 			-- than `a_length' character long.
