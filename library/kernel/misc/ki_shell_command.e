@@ -5,7 +5,7 @@ indexing
 		"Interface for shell commands"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,20 +31,39 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
 	exit_code: INTEGER is
-			-- Exit status code of the last execution
-			-- of `command' in shell
+			-- Exit status code of the last execution of `command';
+			-- Its meaning depends on the value of `is_user_code'
+			-- and `is_system_code'.
+		deferred
+		end
+
+	is_user_code: BOOLEAN is
+			-- Has `exit_code' been set at the end of
+			-- a normal execution of `command'?
+		do
+			Result := not is_system_code
+		ensure
+			definition: Result = not is_system_code
+		end
+
+	is_system_code: BOOLEAN is
+			-- Has `exit_code' been set by the system because of
+			-- an abnormal termination of `command' or because
+			-- it could not be launched correctly?
 		deferred
 		end
 
 feature -- Execution
 
 	execute is
-			-- Ask operating system to execute `command'.
-			-- Wait until termination. Make exit status
-			-- code available in `exit_code' (Note that
-			-- under Windows 95/98 the exit status code
-			-- returned is always 0).
+			-- Ask operating system to execute `command'. Wait until
+			-- termination. Make exit status available in `exit_code',
+			-- `is_user_code' and `is_system_code'.
+			-- (Note that under Windows 95/98 the exit status code
+			-- returned is always 0 when `is_user_code' is true.).
 		deferred
 		end
 
