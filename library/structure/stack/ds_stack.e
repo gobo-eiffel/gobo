@@ -19,6 +19,8 @@ inherit
 			put, force
 		end
 
+	DS_SEARCHABLE [G]
+
 feature -- Element change
 
 	put (v: G) is
