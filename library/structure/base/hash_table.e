@@ -72,7 +72,7 @@ feature -- Initialization
 feature -- Access
 
 	infix "@", item (k: H): G is
-			-- Item associated with `key', if present
+			-- Item associated with `k', if present
 			-- otherwise default value of type `G'
 		local
 			a_cell: like dead_cell
@@ -168,27 +168,28 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put (new: G; key: H) is
-			-- Insert `new' with `key' if there is no other item
+	put (new: G; a_key: H) is
+			-- Insert `new' with `a_key' if there is no other item
 			-- associated with the same key.
 			-- Set `inserted' if and only if an insertion has
-			-- been made (i.e. `key' was not present).
+			-- been made (i.e. `a_key' was not present).
 			-- If not, set `conflict'.
 			-- In either case, set `found_item' to the item
-			-- now associated with `key' (previous item if
+			-- now associated with `a_key' (previous item if
 			-- there was one, `new' otherwise).
 		require
-			valid_key: valid_key (key)
+			valid_key: valid_key (a_key)
 		local
 			current_cell: like dead_cell
 		do
-			if count = capacity then
-				resize (new_capacity (count + 1))
-			end
-			search_position (key)
+			search_position (a_key)
 			current_cell := storage.item (position)
 			if not valid_cell (current_cell) then
-				!! current_cell.make (new, key)
+				if count = capacity then
+					resize (new_capacity (count + 1))
+					search_position (a_key)
+				end
+				!! current_cell.make (new, a_key)
 				storage.put (current_cell, position)
 				count := count + 1
 				control := Inserted_constant
@@ -198,28 +199,29 @@ feature -- Element change
 				set_found_item (current_cell.first)
 			end
 		ensure
-			insertion_done: (not old has (key)) implies item (key) = new
-			now_present: has (key)
-			one_more_if_inserted: (not old has (key)) implies (count = old count + 1)
-			unchanged_if_conflict: (old has (key)) implies (count = old count)
+			insertion_done: (not old has (a_key)) implies item (a_key) = new
+			now_present: has (a_key)
+			one_more_if_inserted: (not old has (a_key)) implies (count = old count + 1)
+			unchanged_if_conflict: (old has (a_key)) implies (count = old count)
 		end
 
-	force (new: G; key: H) is
+	force (new: G; a_key: H) is
 			-- Update table so that `new' will be the item associated
-			-- with `key'.
+			-- with `a_key'.
 			-- If there was an item for that key, set `found'
 			-- and set `found_item' to that item.
 			-- If there was none, set `found' to False.
 		local
 			current_cell: like dead_cell
 		do
-			if count = capacity then
-				resize (new_capacity (count + 1))
-			end
-			search_position (key)
+			search_position (a_key)
 			current_cell := storage.item (position)
 			if not valid_cell (current_cell) then
-				!! current_cell.make (new, key)
+				if count = capacity then
+					resize (new_capacity (count + 1))
+					search_position (a_key)
+				end
+				!! current_cell.make (new, a_key)
 				storage.put (current_cell, position)
 				count := count + 1
 				unset_found_item
@@ -229,46 +231,46 @@ feature -- Element change
 			end
 			control := Inserted_constant
 		ensure
-			insertion_done: item (key) = new
-			now_present: has (key)
-			found_item_is_old_item: found implies (found_item = old (item (key)))
+			insertion_done: item (a_key) = new
+			now_present: has (a_key)
+			found_item_is_old_item: found implies (found_item = old (item (a_key)))
 		end
 
-	extend (new: G; key: H) is
-			-- Assuming there is no item of key `key',
-			-- insert `new' with `key'.
+	extend (new: G; a_key: H) is
+			-- Assuming there is no item of key `a_key',
+			-- insert `new' with `a_key'.
 			-- Set `inserted'.
 		require
-			not_present: not has (key)
+			not_present: not has (a_key)
 		local
 			current_cell: like dead_cell
 		do
 			if count = capacity then
 				resize (new_capacity (count + 1))
 			end
-			search_position (key)
+			search_position (a_key)
 			check not_has: not valid_cell (storage.item (position)) end
-			!! current_cell.make (new, key)
+			!! current_cell.make (new, a_key)
 			storage.put (current_cell, position)
 			count := count + 1
 			unset_found_item
 			control := Inserted_constant
 		ensure
-			insertion_done: item (key) = new
+			insertion_done: item (a_key) = new
 			one_more: count = old count + 1
 		end
 
-	replace (new: G; key: H) is
-			-- Replace item at `key', if present,
+	replace (new: G; a_key: H) is
+			-- Replace item at `a_key', if present,
 			-- with `new'; do not change associated key.
 			-- Set `replaced' if and only if a replacement has been made
-			-- (i.e. `key' was present); otherwise set `found' to false.
+			-- (i.e. `a_key' was present); otherwise set `found' to false.
 			-- Set `found_item' to the item previously associated
-			-- with `key'.
+			-- with `a_key'.
 		local
 			current_cell: like dead_cell
 		do
-			search_position (key)
+			search_position (a_key)
 			current_cell := storage.item (position)
 			if not valid_cell (current_cell) then
 				control := Unknown_constant
@@ -279,7 +281,7 @@ feature -- Element change
 				control := Replaced_constant
 			end
 		ensure
-			insertion_done: (old has (key)) implies item (key) = new
+			insertion_done: (old has (a_key)) implies item (a_key) = new
 		end
 
 	replace_key (new_key: H; old_key: H) is
@@ -322,15 +324,15 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (key: H) is
-			-- Remove item associated with `key', if present.
+	remove (a_key: H) is
+			-- Remove item associated with `a_key', if present.
 			-- Set `removed' if and only if an item has been
-			-- removed (i.e. `key' was present);
+			-- removed (i.e. `a_key' was present);
 			-- If not, set `found' to false.
 		local
 			i: INTEGER
 		do
-			search_position (key)
+			search_position (a_key)
 			if valid_slot (position) then
 				move_cursors_forth (position)
 				storage.put (dead_cell, position)
@@ -341,8 +343,8 @@ feature -- Removal
 			end
 			unset_found_item
 		ensure
-			not_present: not has (key)
-			one_less: (old has (key)) implies (count = old count - 1)
+			not_present: not has (a_key)
+			one_less: (old has (a_key)) implies (count = old count - 1)
 		end
 
 feature -- Status setting
