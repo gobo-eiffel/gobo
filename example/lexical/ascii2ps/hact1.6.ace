@@ -21,7 +21,7 @@ default
 
 cluster
 
-	ascii2ps:			"$GOBO\example\ascii2ps";
+	ascii2ps:			"$GOBO\example\lexical\ascii2ps";
 
 		-- Gobo Eiffel Lexical Library
 	lx_skeleton:		"$GOBO\library\lexical\skeleton";

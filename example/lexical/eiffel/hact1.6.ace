@@ -21,7 +21,7 @@ default
 
 cluster
 
-	eiffel:				"$GOBO\example\eiffel";
+	eiffel:				"$GOBO\example\lexical\eiffel";
 
 		-- Gobo Eiffel Lexical Library
 	lx_skeleton:		"$GOBO\library\lexical\skeleton";

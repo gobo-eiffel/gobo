@@ -21,7 +21,7 @@ default
 
 cluster
 
-	gegrep:				"$GOBO\example\gegrep";
+	gegrep:				"$GOBO\example\lexical\gegrep";
 
 		-- Gobo Eiffel Lexical Library
 	lx_automaton:		"$GOBO\library\lexical\automaton";

@@ -20,7 +20,7 @@ creation
 cluster
 
 	[ascii2ps_project	"."] end
-	[ascii2ps			"$GOBO\example\ascii2ps"] end
+	[ascii2ps			"$GOBO\example\lexical\ascii2ps"] end
 
 		-- Gobo Eiffel Lexical Library
 	[lx_skeleton		"$GOBO\library\lexical\skeleton"] end

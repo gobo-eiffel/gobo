@@ -21,7 +21,7 @@ default
 
 cluster
 
-	calc:			"$GOBO\example\calculator";
+	calc:			"$GOBO\example\lexical\calculator";
 
 		-- Gobo Eiffel Lexical Library
 	lx_skeleton:	"$GOBO\library\lexical\skeleton";

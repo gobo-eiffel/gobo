@@ -20,7 +20,7 @@ creation
 cluster
 
 	[gegrep_project		"."] end
-	[gegrep				"$GOBO\example\gegrep"] end
+	[gegrep				"$GOBO\example\lexical\gegrep"] end
 
 		-- Gobo Eiffel Lexical Library
 	[lx_automaton		"$GOBO\library\lexical\automaton"] end
@@ -56,7 +56,7 @@ cluster
 	[ds_table			"$GOBO\library\structure\table"] end
 	[ds_table_spec		"$GOBO\library\structure\table\spec\ve"] end
 
-		-- Visual EIffel Kernel
+		-- Visual Eiffel Kernel
 	[Kernel				"$VE_LIB\kernel"] end
 
 option
