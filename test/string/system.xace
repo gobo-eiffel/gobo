@@ -22,6 +22,9 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
+	<option if="${GOBO_EIFFEL}=se">
+		<option name="warning" value="none"/>
+	</option>
 
 	<cluster name="st_tester" location="${GOBO}/test/string"/>
 	<cluster name="st_testgen" location="TESTGEN"/>
