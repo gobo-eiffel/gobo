@@ -23,7 +23,11 @@ feature -- Access
 #ifdef SE
 	input: STD_INPUT is
 #else
+#ifdef TOWER
+	input: TEXT_STREAM is
+#else
 	input: FILE is
+#endif
 #endif
 			-- Standard input file
 #ifdef SE
@@ -44,7 +48,11 @@ feature -- Access
 #ifdef SE
 	output: STD_OUTPUT is
 #else
+#ifdef TOWER
+	output: TEXT_STREAM is
+#else
 	output: FILE is
+#endif
 #endif
 			-- Standard output file
 #ifdef SE
@@ -65,7 +73,11 @@ feature -- Access
 #ifdef SE
 	error: STD_ERROR is
 #else
+#ifdef TOWER
+	error: TEXT_STREAM is
+#else
 	error: FILE is
+#endif
 #endif
 			-- Standard error file
 #ifdef SE

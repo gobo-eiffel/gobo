@@ -33,11 +33,15 @@ feature -- Initialization
 #else
 #ifdef SE
 			a_file: STD_FILE_WRITE
+#else
+#ifdef TOWER
+			a_file: FILE
+#endif
 #endif
 #endif
 		do
 			if not rescued then
-#ifdef ISE || HACT
+#ifdef ISE || HACT || TOWER
 				!! a_file.make (a_filename)
 				Result := a_file
 				a_file.open_write

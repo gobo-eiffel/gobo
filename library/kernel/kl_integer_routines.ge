@@ -27,10 +27,10 @@ feature -- Conversion
 #ifdef VE
 			Result.from_integer (an_int)
 #else
-#ifdef SE
-			Result := an_int.to_character
-#else
+#ifdef ISE || HACT
 			Result := '%U' + an_int
+#else
+			Result := an_int.to_character
 #endif
 #endif
 		ensure

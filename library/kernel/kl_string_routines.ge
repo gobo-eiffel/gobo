@@ -60,13 +60,13 @@ feature -- Status report
 			-- Is `a_string' only made up of digits?
 		require
 			a_string_not_void: a_string /= Void
-#ifdef VE
+#ifdef VE || TOWER
 		local
 			i: INTEGER
 			c: CHARACTER
 #endif
 		do
-#ifdef VE
+#ifdef VE || TOWER
 			from
 				i := a_string.count
 				Result := True

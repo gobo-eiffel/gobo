@@ -33,11 +33,15 @@ feature -- Initialization
 #else
 #ifdef SE
 			a_file: STD_FILE_READ
+#else
+#ifdef TOWER
+			a_file: FILE
+#endif
 #endif
 #endif
 		do
 			if not rescued then
-#ifdef ISE || HACT
+#ifdef ISE || HACT || TOWER
 				!! a_file.make (a_filename)
 				Result := a_file
 				a_file.open_read
@@ -74,7 +78,7 @@ feature -- Access
 		require
 			a_stream_void: a_stream /= Void
 		do
-#ifdef SE
+#ifdef SE || TOWER
 			Result := ""
 #else
 			Result := a_stream.name

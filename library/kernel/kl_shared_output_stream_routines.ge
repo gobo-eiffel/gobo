@@ -30,7 +30,11 @@ feature -- Anchor types
 #ifdef SE
 	OUTPUT_STREAM_TYPE: OUTPUT_STREAM is do end
 #else
+#ifdef TOWER
+	OUTPUT_STREAM_TYPE: TEXT_STREAM is do end
+#else
 	OUTPUT_STREAM_TYPE: FILE is do end
+#endif
 #endif
 #endif
 			-- Anchor type
