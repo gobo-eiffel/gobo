@@ -5,7 +5,7 @@ indexing
 		"Xace exported features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: like class_name;  a_feature_name: like feature_name; a_external_name: like external_name) is
+	make (a_class_name: like class_name; a_feature_name: like feature_name; a_external_name: like external_name) is
 				-- Create a new exported feature.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			a_feature_name_not_void: a_feature_name /= Void
 			a_feature_name_not_empty: a_feature_name.count > 0
 			a_external_name_not_void: a_external_name /= Void
-			a_external_name_not_void: a_external_name.count > 0
+			a_external_name_not_empty: a_external_name.count > 0
 		do
 			class_name := a_class_name
 			feature_name := a_feature_name
@@ -55,6 +55,6 @@ invariant
 	feature_name_not_void: feature_name /= Void
 	feature_name_not_empty: feature_name.count > 0
 	external_name_not_void: external_name /= Void
-	external_name_not_void: external_name.count > 0
+	external_name_not_empty: external_name.count > 0
 
 end
