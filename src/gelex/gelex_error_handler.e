@@ -31,7 +31,8 @@ feature -- Access
 	program_name: STRING is "gelex"
 			-- Program name
 
-	usage: STRING is "usage: gelex [-bcdefimosVw] [-o filename] filename"
+	usage: STRING is
+		"usage: gelex [-bcdefimosVw] [-a size] [-o filename] filename"
 			-- Command line Usage
 
 	version: STRING is "gelex version 1.0b"
