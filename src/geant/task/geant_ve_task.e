@@ -75,46 +75,46 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Esd_attribute_name: UC_STRING is
+	Esd_attribute_name: STRING is
 			-- Name of xml attribute for "esd"
 		once
-			Result := new_unicode_string ("esd")
+			Result := "esd"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Clean_attribute_name: UC_STRING is
+	Clean_attribute_name: STRING is
 			-- Name of xml attribute for "clean"
 		once
-			Result := new_unicode_string ("clean")
+			Result := "clean"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Recursive_attribute_name: UC_STRING is
+	Recursive_attribute_name: STRING is
 			-- Name of xml attribute for "recursive"
 		once
-			Result := new_unicode_string ("recursive")
+			Result := "recursive"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Tune_attribute_name: UC_STRING is
+	Tune_attribute_name: STRING is
 			-- Name of xml attribute for "tune"
 		once
-			Result := new_unicode_string ("tune")
+			Result := "tune"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Level_attribute_name: UC_STRING is
+	Level_attribute_name: STRING is
 			-- Name of xml attribute for "level"
 		once
-			Result := new_unicode_string ("level")
+			Result := "level"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

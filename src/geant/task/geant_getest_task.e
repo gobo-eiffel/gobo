@@ -78,37 +78,37 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Config_filename_attribute_name : UC_STRING is
+	Config_filename_attribute_name : STRING is
 			-- Name of xml attribute for getest config_filename
 		once
-			Result := new_unicode_string ("config")
+			Result := "config"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Compile_attribute_name : UC_STRING is
+	Compile_attribute_name : STRING is
 			-- Name of xml attribute for getest 'compile'
 		once
-			Result := new_unicode_string ("compile")
+			Result := "compile"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Define_element_name: UC_STRING is
+	Define_element_name: STRING is
 			-- Name of xml subelement for defines
 		once
-			Result := new_unicode_string ("define")
+			Result := "define"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: UC_STRING is
+	Value_attribute_name: STRING is
 			-- Name of xml attribute "value" of subelement <define>
 		once
-			Result := new_unicode_string ("value")
+			Result := "value"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

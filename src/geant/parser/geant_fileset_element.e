@@ -80,55 +80,55 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Directory_attribute_name: UC_STRING is
+	Directory_attribute_name: STRING is
 			-- Name of xml attribute for directory
 		once
-			Result := new_unicode_string ("directory")
+			Result := "directory"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Include_attribute_name: UC_STRING is
+	Include_attribute_name: STRING is
 			-- Name of xml attribute for include
 		once
-			Result := new_unicode_string ("include")
+			Result := "include"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Exclude_attribute_name: UC_STRING is
+	Exclude_attribute_name: STRING is
 			-- Name of xml attribute for exclude
 		once
-			Result := new_unicode_string ("exclude")
+			Result := "exclude"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Force_attribute_name: UC_STRING is
+	Force_attribute_name: STRING is
 			-- Name of xml attribute for force
 		once
-			Result := new_unicode_string ("force")
+			Result := "force"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Concat_attribute_name: UC_STRING is
+	Concat_attribute_name: STRING is
 			-- Name of xml attribute for concat
 		once
-			Result := new_unicode_string ("concat")
+			Result := "concat"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Map_element_name: UC_STRING is
+	Map_element_name: STRING is
 			-- Name of xml subelement for map
 		once
-			Result := new_unicode_string ("map")
+			Result := "map"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

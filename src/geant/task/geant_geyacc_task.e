@@ -82,55 +82,55 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Separate_actions_attribute_name: UC_STRING is
+	Separate_actions_attribute_name: STRING is
 			-- Name of xml attribute for separate_actions
 		once
-			Result := new_unicode_string ("separate_actions")
+			Result := "separate_actions"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Verbose_filename_attribute_name: UC_STRING is
+	Verbose_filename_attribute_name: STRING is
 			-- Name of xml attribute for verbose_filename
 		once
-			Result := new_unicode_string ("verbose")
+			Result := "verbose"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Tokens_classname_attribute_name: UC_STRING is
+	Tokens_classname_attribute_name: STRING is
 			-- Name of xml attribute for tokens_classname
 		once
-			Result := new_unicode_string ("tokens")
+			Result := "tokens"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Tokens_filename_attribute_name: UC_STRING is
+	Tokens_filename_attribute_name: STRING is
 			-- Name of xml attribute for tokens_filename
 		once
-			Result := new_unicode_string ("tokens_file")
+			Result := "tokens_file"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: UC_STRING is
+	Output_filename_attribute_name: STRING is
 			-- Name of xml attribute for output_filename
 		once
-			Result := new_unicode_string ("output")
+			Result := "output"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Input_filename_attribute_name: UC_STRING is
+	Input_filename_attribute_name: STRING is
 			-- Name of xml attribute for input_filename
 		once
-			Result := new_unicode_string ("input")
+			Result := "input"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -98,100 +98,100 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Size_attribute_name: UC_STRING is
+	Size_attribute_name: STRING is
 			-- Name of xml attribute for size
 		once
-			Result := new_unicode_string ("size")
+			Result := "size"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Backup_attribute_name: UC_STRING is
+	Backup_attribute_name: STRING is
 			-- Name of xml attribute for backup
 		once
-			Result := new_unicode_string ("backup")
+			Result := "backup"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Ecs_attribute_name: UC_STRING is
+	Ecs_attribute_name: STRING is
 			-- Name of xml attribute for ecs
 		once
-			Result := new_unicode_string ("ecs")
+			Result := "ecs"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Full_attribute_name: UC_STRING is
+	Full_attribute_name: STRING is
 			-- Name of xml attribute for full
 		once
-			Result := new_unicode_string ("full")
+			Result := "full"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Case_insensitive_attribute_name: UC_STRING is
+	Case_insensitive_attribute_name: STRING is
 			-- Name of xml attribute for case_insensitive
 		once
-			Result := new_unicode_string ("case_insensitive")
+			Result := "case_insensitive"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Meta_ecs_attribute_name: UC_STRING is
+	Meta_ecs_attribute_name: STRING is
 			-- Name of xml attribute for meta_ecs
 		once
-			Result := new_unicode_string ("meta_ecs")
+			Result := "meta_ecs"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	No_default_attribute_name: UC_STRING is
+	No_default_attribute_name: STRING is
 			-- Name of xml attribute for no_default
 		once
-			Result := new_unicode_string ("no_default")
+			Result := "no_default"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	No_warn_attribute_name: UC_STRING is
+	No_warn_attribute_name: STRING is
 			-- Name of xml attribute for no_warn
 		once
-			Result := new_unicode_string ("no_warn")
+			Result := "no_warn"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Separate_actions_attribute_name: UC_STRING is
+	Separate_actions_attribute_name: STRING is
 			-- Name of xml attribute for separate_actions
 		once
-			Result := new_unicode_string ("separate_actions")
+			Result := "separate_actions"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: UC_STRING is
+	Output_filename_attribute_name: STRING is
 			-- Name of xml attribute for output_filename
 		once
-			Result := new_unicode_string ("output")
+			Result := "output"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Input_filename_attribute_name: UC_STRING is
+	Input_filename_attribute_name: STRING is
 			-- Name of xml attribute for input_filename
 		once
-			Result := new_unicode_string ("input")
+			Result := "input"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -50,10 +50,10 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Target_attribute_name: UC_STRING is
+	Target_attribute_name: STRING is
 			-- "target" attribute name
 		once
-			Result := new_unicode_string ("target")
+			Result := "target"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0

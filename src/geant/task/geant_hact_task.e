@@ -72,46 +72,46 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Ace_attribute_name: UC_STRING is
+	Ace_attribute_name: STRING is
 			-- Name of xml attribute for "ace"
 		once
-			Result := new_unicode_string ("ace")
+			Result := "ace"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	System_attribute_name: UC_STRING is
+	System_attribute_name: STRING is
 			-- Name of xml attribute for "system"
 		once
-			Result := new_unicode_string ("system")
+			Result := "system"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Finalize_attribute_name: UC_STRING is
+	Finalize_attribute_name: STRING is
 			-- Name of xml attribute for "finalize"
 		once
-			Result := new_unicode_string ("finalize")
+			Result := "finalize"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Fish_attribute_name: UC_STRING is
+	Fish_attribute_name: STRING is
 			-- Name of xml attribute for "fish"
 		once
-			Result := new_unicode_string ("fish")
+			Result := "fish"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Clean_attribute_name: UC_STRING is
+	Clean_attribute_name: STRING is
 			-- Name of xml attribute for "clean"
 		once
-			Result := new_unicode_string ("clean")
+			Result := "clean"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -105,73 +105,73 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Verbose_attribute_name: UC_STRING is
+	Verbose_attribute_name: STRING is
 			-- Name of xml attribute for 'verbose'
 		once
-			Result := new_unicode_string ("verbose")
+			Result := "verbose"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Validate_attribute_name: UC_STRING is
+	Validate_attribute_name: STRING is
 			-- Name of xml attribute for 'validate'
 		once
-			Result := new_unicode_string ("validate")
+			Result := "validate"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	System_attribute_name: UC_STRING is
+	System_attribute_name: STRING is
 			-- Name of xml attribute for 'system'
 		once
-			Result := new_unicode_string ("system")
+			Result := "system"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Cluster_attribute_name: UC_STRING is
+	Cluster_attribute_name: STRING is
 			-- Name of xml attribute for 'cluster'
 		once
-			Result := new_unicode_string ("cluster")
+			Result := "cluster"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Xace_filename_attribute_name: UC_STRING is
+	Xace_filename_attribute_name: STRING is
 			-- Name of xml attribute for xace_filename
 		once
-			Result := new_unicode_string ("xace")
+			Result := "xace"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: UC_STRING is
+	Output_filename_attribute_name: STRING is
 			-- Name of xml attribute for "output"
 		once
-			Result := new_unicode_string ("output")
+			Result := "output"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Define_element_name: UC_STRING is
+	Define_element_name: STRING is
 			-- Name of xml subelement for defines
 		once
-			Result := new_unicode_string ("define")
+			Result := "define"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: UC_STRING is
+	Value_attribute_name: STRING is
 			-- Name of xml attribute "value" of subelement <define>
 		once
-			Result := new_unicode_string ("value")
+			Result := "value"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

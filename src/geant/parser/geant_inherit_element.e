@@ -102,10 +102,10 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Parent_element_name: UC_STRING is
+	Parent_element_name: STRING is
 			-- "parent" element name
 		once
-			Result := new_unicode_string ("parent")
+			Result := "parent"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

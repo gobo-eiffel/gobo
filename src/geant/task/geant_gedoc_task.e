@@ -80,46 +80,46 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Input_filename_attribute_name: UC_STRING is
+	Input_filename_attribute_name: STRING is
 			-- Name of xml attribute for input_filename
 		once
-			Result := new_unicode_string ("input")
+			Result := "input"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: UC_STRING is
+	Output_filename_attribute_name: STRING is
 			-- Name of xml attribute for output_filename
 		once
-			Result := new_unicode_string ("output")
+			Result := "output"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Stylesheet_filename_attribute_name: UC_STRING is
+	Stylesheet_filename_attribute_name: STRING is
 			-- Name of xml attribute for stylesheet_filename
 		once
-			Result := new_unicode_string ("stylesheet")
+			Result := "stylesheet"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Parameter_element_name: UC_STRING is
+	Parameter_element_name: STRING is
 			-- Name of xml subelement for parameter
 		once
-			Result := new_unicode_string ("parameter")
+			Result := "parameter"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Value_attribute_name: UC_STRING is
+	Value_attribute_name:  STRING is
 			-- Name of xml attribute for value
 		once
-			Result := new_unicode_string ("value")
+			Result := "value"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -62,28 +62,28 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Executable_attribute_name: UC_STRING is
+	Executable_attribute_name: STRING is
 			-- Name of xml attribute executable.
 		once
-			Result := new_unicode_string ("executable")
+			Result := "executable"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Accept_errors_attribute_name: UC_STRING is
+	Accept_errors_attribute_name: STRING is
 			-- Name of xml attribute accept_errors.
 		once
-			Result := new_unicode_string ("accept_errors")
+			Result := "accept_errors"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Fileset_element_name: UC_STRING is
+	Fileset_element_name: STRING is
 			-- Name of xml subelement for fileset
 		once
-			Result := new_unicode_string ("fileset")
+			Result := "fileset"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

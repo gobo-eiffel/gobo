@@ -47,10 +47,10 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Message_attribute_name: UC_STRING is
+	Message_attribute_name: STRING is
 			-- Name of xml attribute message.
 		once
-			Result := new_unicode_string ("message")
+			Result := "message"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

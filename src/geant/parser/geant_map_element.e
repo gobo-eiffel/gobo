@@ -71,37 +71,37 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Type_attribute_name: UC_STRING is
+	Type_attribute_name: STRING is
 			-- Name of xml attribute for type
 		once
-			Result := new_unicode_string ("type")
+			Result := "type"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	From_attribute_name: UC_STRING is
+	From_attribute_name: STRING is
 			-- Name of xml attribute for from
 		once
-			Result := new_unicode_string ("from")
+			Result := "from"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	To_attribute_name: UC_STRING is
+	To_attribute_name: STRING is
 			-- Name of xml attribute for to
 		once
-			Result := new_unicode_string ("to")
+			Result := "to"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Map_element_name: UC_STRING is
+	Map_element_name: STRING is
 			-- Name of xml subelement for map
 		once
-			Result := new_unicode_string ("map")
+			Result := "map"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

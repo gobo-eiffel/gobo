@@ -86,64 +86,64 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Ace_attribute_name: UC_STRING is
+	Ace_attribute_name: STRING is
 			-- Name of xml attribute for "ace"
 		once
-			Result := new_unicode_string ("ace")
+			Result := "ace"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Root_class_attribute_name: UC_STRING is
+	Root_class_attribute_name: STRING is
 			-- Name of xml attribute for root_class
 		once
-			Result := new_unicode_string ("root_class")
+			Result := "root_class"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Creation_procedure_attribute_name: UC_STRING is
+	Creation_procedure_attribute_name: STRING is
 			-- Name of xml attribute for creation_procedure
 		once
-			Result := new_unicode_string ("creation_procedure")
+			Result := "creation_procedure"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Executable_attribute_name: UC_STRING is
+	Executable_attribute_name: STRING is
 			-- Name of xml attribute for executable
 		once
-			Result := new_unicode_string ("executable")
+			Result := "executable"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Case_insensitive_attribute_name: UC_STRING is
+	Case_insensitive_attribute_name: STRING is
 			-- Name of xml attribute for case_insensitive
 		once
-			Result := new_unicode_string ("case_insensitive")
+			Result := "case_insensitive"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	No_style_warning_attribute_name: UC_STRING is
+	No_style_warning_attribute_name: STRING is
 			-- Name of xml attribute for no_style_warning
 		once
-			Result := new_unicode_string ("no_style_warning")
+			Result := "no_style_warning"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Clean_attribute_name: UC_STRING is
+	Clean_attribute_name: STRING is
 			-- Name of xml attribute for "clean"
 		once
-			Result := new_unicode_string ("clean")
+			Result := "clean"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

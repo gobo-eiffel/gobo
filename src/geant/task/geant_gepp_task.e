@@ -99,64 +99,64 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Input_filename_attribute_name: UC_STRING is
+	Input_filename_attribute_name: STRING is
 			-- Name of xml attribute for input_filename
 		once
-			Result := new_unicode_string ("input")
+			Result := "input"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Output_filename_attribute_name: UC_STRING is
+	Output_filename_attribute_name: STRING is
 			-- Name of xml attribute for output_filename
 		once
-			Result := new_unicode_string ("output")
+			Result := "output"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Lines_attribute_name: UC_STRING is
+	Lines_attribute_name: STRING is
 			-- Name of xml attribute for lines
 		once
-			Result := new_unicode_string ("lines")
+			Result := "lines"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Define_element_name: UC_STRING is
+	Define_element_name: STRING is
 			-- Name of xml subelement for defines
 		once
-			Result := new_unicode_string ("define")
+			Result := "define"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	To_directory_attribute_name: UC_STRING is
+	To_directory_attribute_name: STRING is
 			-- Name of xml attribute to_directory.
 		once
-			Result := new_unicode_string ("to_directory")
+			Result := "to_directory"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Force_attribute_name: UC_STRING is
+	Force_attribute_name: STRING is
 			-- Name of xml attribute for force
 		once
-			Result := new_unicode_string ("force")
+			Result := "force"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Fileset_element_name: UC_STRING is
+	Fileset_element_name: STRING is
 			-- Name of xml subelement for fileset
 		once
-			Result := new_unicode_string ("fileset")
+			Result := "fileset"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

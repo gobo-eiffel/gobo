@@ -16,24 +16,21 @@ inherit
 
 	ANY
 
-	UC_UNICODE_FACTORY
-		export {NONE} all end
-
 feature -- Attribute names and values
 
-	Id_attribute_name: UC_STRING is
+	Id_attribute_name: STRING is
 			-- "ID" attribute name
 		once
-			Result := new_unicode_string ("ID")
+			Result := "ID"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Idref_attribute_name: UC_STRING is
+	Idref_attribute_name: STRING is
 			-- "IDREF" attribute name
 		once
-			Result := new_unicode_string ("IDREF")
+			Result := "IDREF"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
@@ -41,226 +38,226 @@ feature -- Attribute names and values
 
 feature -- Task names
 
-	Se_task_name: UC_STRING is
+	Se_task_name: STRING is
 			-- "se" task name
 		once
-			Result := new_unicode_string ("se")
+			Result := "se"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Ise_task_name: UC_STRING is
+	Ise_task_name: STRING is
 			-- "ise" task name
 		once
-			Result := new_unicode_string ("ise")
+			Result := "ise"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Hact_task_name: UC_STRING is
+	Hact_task_name: STRING is
 			-- "hact" task name
 		once
-			Result := new_unicode_string ("hact")
+			Result := "hact"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Ve_task_name: UC_STRING is
+	Ve_task_name: STRING is
 			-- "ve" task name
 		once
-			Result := new_unicode_string ("ve")
+			Result := "ve"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Exec_task_name: UC_STRING is
+	Exec_task_name: STRING is
 			-- "exec" task name
 		once
-			Result := new_unicode_string ("exec")
+			Result := "exec"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Lcc_task_name: UC_STRING is
+	Lcc_task_name: STRING is
 			-- "lcc" task name
 		once
-			Result := new_unicode_string ("lcc")
+			Result := "lcc"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Set_task_name: UC_STRING is
+	Set_task_name: STRING is
 			-- "set" task name
 		once
-			Result := new_unicode_string ("set")
+			Result := "set"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Unset_task_name: UC_STRING is
+	Unset_task_name: STRING is
 			-- "unset" task name
 		once
-			Result := new_unicode_string ("unset")
+			Result := "unset"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gexace_task_name: UC_STRING is
+	Gexace_task_name: STRING is
 			-- "xace" task name
 		once
-			Result := new_unicode_string ("gexace")
+			Result := "gexace"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gelex_task_name: UC_STRING is
+	Gelex_task_name: STRING is
 			-- "gelex" task name
 		once
-			Result := new_unicode_string ("gelex")
+			Result := "gelex"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Geyacc_task_name: UC_STRING is
+	Geyacc_task_name: STRING is
 			-- "geyacc" task name
 		once
-			Result := new_unicode_string ("geyacc")
+			Result := "geyacc"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gepp_task_name: UC_STRING is
+	Gepp_task_name: STRING is
 			-- "gepp" task name
 		once
-			Result := new_unicode_string ("gepp")
+			Result := "gepp"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Getest_task_name: UC_STRING is
+	Getest_task_name: STRING is
 			-- "getest" task name
 		once
-			Result := new_unicode_string ("getest")
+			Result := "getest"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Geant_task_name: UC_STRING is
+	Geant_task_name: STRING is
 			-- "geant" task name
 		once
-			Result := new_unicode_string ("geant")
+			Result := "geant"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Gexmlsplit_task_name: UC_STRING is
+	Gexmlsplit_task_name: STRING is
 			-- "gexmlsplit" task name
 		once
-			Result := new_unicode_string ("gexmlsplit")
+			Result := "gexmlsplit"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Echo_task_name: UC_STRING is
+	Echo_task_name: STRING is
 			-- "echo" task name
 		once
-			Result := new_unicode_string ("echo")
+			Result := "echo"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Mkdir_task_name: UC_STRING is
+	Mkdir_task_name: STRING is
 			-- "mkdir" task name
 		once
-			Result := new_unicode_string ("mkdir")
+			Result := "mkdir"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Delete_task_name: UC_STRING is
+	Delete_task_name: STRING is
 			-- "delete" task name
 		once
-			Result := new_unicode_string ("delete")
+			Result := "delete"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Copy_task_name: UC_STRING is
+	Copy_task_name: STRING is
 			-- "copy" task name
 		once
-			Result := new_unicode_string ("copy")
+			Result := "copy"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Move_task_name: UC_STRING is
+	Move_task_name: STRING is
 			-- "move" task name
 		once
-			Result := new_unicode_string ("move")
+			Result := "move"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Setenv_task_name: UC_STRING is
+	Setenv_task_name: STRING is
 			-- "setenv" task name
 		once
-			Result := new_unicode_string ("setenv")
+			Result := "setenv"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Xslt_task_name: UC_STRING is
+	Xslt_task_name: STRING is
 			-- "xslt" task name
 		once
-			Result := new_unicode_string ("xslt")
+			Result := "xslt"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Outofdate_task_name: UC_STRING is
+	Outofdate_task_name: STRING is
 			-- "outofdate" task name
 		once
-			Result := new_unicode_string ("outofdate")
+			Result := "outofdate"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Exit_task_name: UC_STRING is
+	Exit_task_name: STRING is
 			-- "exit" task name
 		once
-			Result := new_unicode_string ("exit")
+			Result := "exit"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0
 		end
 
-	Precursor_task_name: UC_STRING is
+	Precursor_task_name: STRING is
 			-- "precursor" task name
 		once
-			Result := new_unicode_string ("precursor")
+			Result := "precursor"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0

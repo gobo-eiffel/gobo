@@ -26,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: UC_STRING) is
+	make (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: STRING) is
 			-- Initialize project parser.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -59,7 +59,7 @@ feature -- Access
 	last_project_element: GEANT_PROJECT_ELEMENT
 			-- Root element
 
-	build_filename: UC_STRING
+	build_filename: STRING
 			-- Name of the file containing the configuration
 			-- information to build a project
 

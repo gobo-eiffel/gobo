@@ -292,10 +292,10 @@ feature -- Constants
 		end
 
 -- TODO: '\1' syntax has to be supported for regexp first.
---	Type_attribute_value_regexp: UC_STRING is
+--	Type_attribute_value_regexp: STRING is
 --			-- Value 'regexp' of xml attribute for type
 --		once
---			Result := new_unicode_string ("regexp")
+--			Result := "regexp"
 --		ensure
 --			attribute_name_not_void: Result /= Void
 --			atribute_name_not_empty: Result.count > 0
