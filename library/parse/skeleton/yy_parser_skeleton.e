@@ -317,6 +317,9 @@ feature -- Parsing
 			end
 			yy_clear_all
 		rescue
+			debug ("GEYACC")
+				std.error.put_line ("Entering rescue clause of parser")
+			end
 			abort
 			yy_clear_all
 		end
