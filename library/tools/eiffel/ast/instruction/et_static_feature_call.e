@@ -14,40 +14,29 @@ deferred class ET_STATIC_FEATURE_CALL
 
 inherit
 
-	ET_FEATURE_CALL
+	ET_QUALIFIED_CALL
 		rename
-			make as make_unqualified_call
+			make as make_qualified_call
+		undefine
+			process
 		redefine
 			position
 		end
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like feature_keyword; l: like left_brace; a_type: like type;
-		r: like right_brace; a_dot: like dot; a_name: like name; args: like arguments) is
+	make (a_type: like static_type; a_name: like qualified_name; args: like arguments) is
 			-- Create a new static feature call.
 		require
-			a_feature_not_void: a_feature /= Void
-			l_not_void: l /= Void
 			a_type_not_void: a_type /= Void
-			r_not_void: r /= Void
-			a_dot_not_void: a_dot /= Void
 			a_name_not_void: a_name /= Void
 		do
-			feature_keyword := a_feature
-			left_brace := l
-			type := a_type
-			right_brace := r
-			dot := a_dot
-			name := a_name
-			arguments := args
+			static_type := a_type
+			feature_keyword := tokens.feature_keyword
+			make_qualified_call (a_name, args)
 		ensure
-			feature_keyword_set: feature_keyword = a_feature
-			left_brace_set: left_brace = l
-			type_set: type = a_type
-			right_brace_set: right_brace = r
-			dot_set: dot = a_dot
-			name_set: name = a_name
+			static_type_set: static_type = a_type
+			name_set: qualified_name = a_name
 			arguments_set: arguments = args
 		end
 
@@ -56,29 +45,43 @@ feature -- Access
 	feature_keyword: ET_KEYWORD
 			-- 'feature' keyword
 
-	type: ET_TYPE
+	static_type: ET_STATIC_TYPE
+			-- Declared static type surrounded by braces
+
+	type: ET_TYPE is
 			-- Static type
-
-	left_brace: ET_SYMBOL
-	right_brace: ET_SYMBOL
-			-- Braces surrounding type
-
-	dot: ET_SYMBOL
-			-- Dot symbol
+		do
+			Result := static_type.type
+		ensure
+			type_not_void: Result /= Void
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := feature_keyword.position
+			if not feature_keyword.position.is_null then
+				Result := feature_keyword.position
+			else
+				Result := static_type.position
+			end
+		end
+
+feature -- Setting
+
+	set_feature_keyword (a_feature: like feature_keyword) is
+			-- Set `feature_keyword' to `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			feature_keyword := a_feature
+		ensure
+			feature_keyword_set: feature_keyword = a_feature
 		end
 
 invariant
 
-	type_not_void: type /= Void
 	feature_keyword_not_void: feature_keyword /= Void
-	left_brace_not_void: left_brace /= Void
-	right_brace_not_void: right_brace /= Void
-	dot_not_void: dot /= Void
+	static_type_not_void: static_type /= Void
 
 end

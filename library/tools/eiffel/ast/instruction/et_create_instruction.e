@@ -22,17 +22,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_create: like create_keyword; a_target: like target) is
+	make (a_type: like creation_type; a_target: like target; a_call: like creation_call) is
 			-- Create a new create instruction.
 		require
-			a_create_not_void: a_create /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create_keyword := a_create
+			creation_type := a_type
 			target := a_target
+			creation_call := a_call
+			create_keyword := tokens.create_keyword
 		ensure
-			create_keyword_set: create_keyword = a_create
+			creation_type_set: creation_type = a_type
 			target_set: target = a_target
+			creation_call_set: creation_call = a_call
 		end
 
 feature -- Access
@@ -40,17 +42,50 @@ feature -- Access
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
+	creation_type: ET_CREATION_TYPE
+			-- Creation type surrounded by braces
+
+	type: ET_TYPE is
+			-- Creation type
+		do
+			if creation_type /= Void then
+				Result := creation_type.type
+			end
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := create_keyword.position
+			if not create_keyword.position.is_null then
+				Result := create_keyword.position
+			elseif creation_type /= Void then
+				Result := creation_type.position
+			else
+				Result := target.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := target.break
+			if creation_call /= Void then
+				Result := creation_call.break
+			else
+				Result := target.break
+			end
+		end
+
+feature -- Setting
+
+	set_create_keyword (a_create: like create_keyword) is
+			-- Set `create_keyword' to `a_create'.
+		require
+			a_create_not_void: a_create /= Void
+		do
+			create_keyword := a_create
+		ensure
+			create_keyword_set: create_keyword = a_create
 		end
 
 feature -- Processing
@@ -63,6 +98,6 @@ feature -- Processing
 
 invariant
 
-	create_keyword_not_void: create_keyword /= Void
+	crete_keyword_not_void: create_keyword /= Void
 
 end

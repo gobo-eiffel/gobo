@@ -14,16 +14,9 @@ class ET_STATIC_CALL_EXPRESSION
 
 inherit
 
-	ET_CALL_EXPRESSION
-		rename
-			make as make_unqualified_call
-		undefine
-			position
-		redefine
-			process
-		end
-
 	ET_STATIC_FEATURE_CALL
+	ET_EXPRESSION
+	ET_CHOICE_CONSTANT
 
 creation
 

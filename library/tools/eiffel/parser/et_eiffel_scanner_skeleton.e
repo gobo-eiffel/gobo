@@ -118,17 +118,6 @@ feature -- Status report
 			-- Should `reference' be considered as
 			-- a keyword (otherwise identifier)?
 
-	keep_all_breaks: BOOLEAN
-			-- Should the generated AST be decorated with
-			-- breaks and comments?
-
-	keep_all_comments: BOOLEAN
-			-- Should the generated AST be decorated with comments?
-
-	keep_header_comments: BOOLEAN
-			-- Should the generated AST be decorated with feature
-			-- and feature_clause header comments?
-
 feature -- Statut setting
 
 	set_use_create_keyword (b: BOOLEAN) is
@@ -145,36 +134,6 @@ feature -- Statut setting
 			use_reference_keyword := b
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
-		end
-
-	set_keep_all_breaks (b: BOOLEAN) is
-			-- Set `keep_all_breaks' to `b'.
-		do
-			keep_all_breaks := b
-		ensure
-			keep_all_breaks_set: keep_all_breaks = b
-		end
-
-feature {NONE} -- AST factory
-
-	new_break (a_text: STRING): ET_BREAK is
-			-- New break
-		require
-			a_text_not_void: a_text /= Void
-		do
-			Result := ast_factory.new_break (a_text, line, column)
-		ensure
-			break_not_void: Result /= Void
-		end
-
-	new_comment (a_text: STRING): ET_COMMENT is
-			-- New comment
-		require
-			a_text_not_void: a_text /= Void
-		do
-			Result := ast_factory.new_comment (a_text, line, column)
-		ensure
-			comment_not_void: Result /= Void
 		end
 
 feature -- Tokens
@@ -2008,10 +1967,6 @@ feature {NONE} -- Processing
 					last_token := E_UNKNOWN
 					last_value := current_position
 				end
-			when '!' then
-				check valid_symbol: c2 = '!' end
-				last_token := E_BANGBANG
-				last_value := ast_factory.new_bangbang_symbol (Current)
 			when '-' then
 				check valid_symbol: c2 = '>' end
 				last_token := E_ARROW

@@ -23,16 +23,10 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_type: like type; a_renames: like renames; an_exports: like exports;
-		an_undefines: like undefines; a_redefines: like redefines;
-		a_selects: like selects; an_end: like end_keyword) is
+		an_undefines: like undefines; a_redefines: like redefines; a_selects: like selects) is
 			-- Create a new parent clause.
 		require
 			a_type_not_void: a_type /= Void
-			a_renames_constraint: a_renames /= Void implies an_end /= Void
-			an_exports_constraint: an_exports /= Void implies an_end /= Void
-			an_undefines_constraint: an_undefines /= Void implies an_end /= Void
-			a_redefines_constraint: a_redefines /= Void implies an_end /= Void
-			a_selects_constraint: a_selects /= Void implies an_end /= Void
 		do
 			type := a_type
 			renames := a_renames
@@ -40,7 +34,9 @@ feature {NONE} -- Initialization
 			undefines := an_undefines
 			redefines := a_redefines
 			selects := a_selects
-			end_keyword := an_end
+			if has_feature_adaptation then
+				end_keyword := tokens.end_keyword
+			end
 		ensure
 			type_set: type = a_type
 			renames_set: renames = a_renames
@@ -48,7 +44,6 @@ feature {NONE} -- Initialization
 			undefines_set: undefines = an_undefines
 			redefines_set: redefines = a_redefines
 			selects_set: selects = a_selects
-			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Access
@@ -56,10 +51,10 @@ feature -- Access
 	type: ET_CLASS_TYPE
 			-- Class type
 
-	renames: ET_RENAMES
+	renames: ET_RENAME_LIST
 			-- Rename clause
 
-	exports: ET_EXPORTS
+	exports: ET_EXPORT_LIST
 			-- Export clause
 
 	undefines: ET_KEYWORD_FEATURE_NAME_LIST
@@ -97,6 +92,30 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	has_feature_adaptation: BOOLEAN is
+			-- Does current parent have a feature adaptation clause?
+		do
+			Result := renames /= Void or exports /= Void or
+				undefines /= Void or redefines /= Void or selects /= Void
+		ensure
+			definition: Result = (renames /= Void or exports /= Void or
+				undefines /= Void or redefines /= Void or selects /= Void)
+		end
+
+feature -- Setting
+
+	set_end_keyword (an_end: like end_keyword) is
+			-- Set `end_keyword' to `an_end'.
+		require
+			an_end_not_void: has_feature_adaptation implies an_end /= Void
+		do
+			end_keyword := an_end
+		ensure
+			end_keyword_set: end_keyword = an_end
+		end
+
 feature -- Genealogy status
 
 	ancestors_searched: BOOLEAN is
@@ -130,8 +149,8 @@ feature -- Genealogy
 			a_class_id: INTEGER
 			a_type, anc_type: ET_CLASS_TYPE
 			a_generic_class_type: ET_GENERIC_CLASS_TYPE
-			generics: ET_ACTUAL_GENERIC_PARAMETERS
-			actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS
+			generics: ET_ACTUAL_PARAMETER_LIST
+			actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS_TYPE, INTEGER]
 		do
 				-- Add current parent to the ancestors
@@ -247,10 +266,6 @@ feature -- Processing
 invariant
 
 	type_not_void: type /= Void
-	renames_constraint: renames /= Void implies end_keyword /= Void
-	exports_constraint: exports /= Void implies end_keyword /= Void
-	undefines_constraint: undefines /= Void implies end_keyword /= Void
-	redefines_constraint: redefines /= Void implies end_keyword /= Void
-	selects_constraint: selects /= Void implies end_keyword /= Void
+	end_keyword_not_void: has_feature_adaptation implies end_keyword /= Void
 
 end

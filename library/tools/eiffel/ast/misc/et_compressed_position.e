@@ -27,20 +27,8 @@ feature {NONE} -- Initialization
 		require
 			a_line_positive: a_line >= 0
 			a_column_positive: a_column >= 0
-		local
-			l, c: INTEGER
 		do
-			if a_line > maximum_line then
-				l := no_line
-			else
-				l := a_line
-			end
-			if a_column > maximum_column then
-				c := no_column
-			else
-				c := a_column
-			end
-			compressed_position := 256 * l + c
+			set_position (a_line, a_column)
 		ensure
 			line_set: a_line <= maximum_line implies line = a_line
 			no_line_set: a_line > maximum_line implies line = no_line
@@ -51,7 +39,7 @@ feature {NONE} -- Initialization
 	make_default is
 			-- Create a new default position.
 		do
-			make (no_line, no_column)
+			compressed_position := 0
 		ensure
 			line_set: line = no_line
 			column_set: column = no_column
@@ -71,6 +59,34 @@ feature -- Access
 			-- (between 1 and 255, 0 if unknown or overflow)
 		do
 			Result := compressed_position \\ 256
+		end
+
+feature -- Setting
+
+	set_position (a_line, a_column: INTEGER) is
+			-- Set to new position.
+		require
+			a_line_positive: a_line >= 0
+			a_column_positive: a_column >= 0
+		local
+			l, c: INTEGER
+		do
+			if a_line > maximum_line then
+				l := no_line
+			else
+				l := a_line
+			end
+			if a_column > maximum_column then
+				c := no_column
+			else
+				c := a_column
+			end
+			compressed_position := 256 * l + c
+		ensure
+			line_set: a_line <= maximum_line implies line = a_line
+			no_line_set: a_line > maximum_line implies line = no_line
+			column_set: a_column <= maximum_column implies column = a_column
+			no_column_set: a_column > maximum_column implies column = no_column
 		end
 
 feature -- Constants

@@ -69,7 +69,7 @@ feature -- Access
 	parent: ET_PARENT
 			-- Parent from which feature is inherited
 
-	actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS
+	actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Actual generic parameters of `parent';
 			-- Void if the parent class is not generic
 			-- or if the actual parameters are not
@@ -130,6 +130,7 @@ feature -- Conversion
 			else
 				Result := inherited_feature.renamed_feature (name)
 			end
+			a_class.universe.register_feature (Result)
 			Result.set_current_class (a_class)
 			Result.set_version (Result.id)
 			if actual_parameters /= Void then
@@ -137,6 +138,7 @@ feature -- Conversion
 			end
 		ensure
 			adapted_feature_not_void: Result /= Void
+			adapted_feature_registered: Result.is_registered
 			version_set: Result.version = Result.id
 		end
 

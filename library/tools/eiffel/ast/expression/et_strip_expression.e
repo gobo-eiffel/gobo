@@ -17,9 +17,8 @@ inherit
 	ET_EXPRESSION
 
 	ET_FEATURE_NAME_LIST
-		rename
-			make as make_feature_name_list,
-			make_with_capacity as make_feature_name_list_with_capacity
+		redefine
+			make, make_with_capacity
 		end
 
 creation
@@ -28,44 +27,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_strip: like strip_keyword; l: like left_parenthesis; r: like right_parenthesis) is
+	make is
 			-- Create a new strip expression.
-		require
-			a_strip_not_void: a_strip /= Void
-			l_not_void: l /= Void
-			r_not_void: r /= Void
 		do
-			strip_keyword := a_strip
-			left_parenthesis := l
-			right_parenthesis := r
-			make_feature_name_list
-		ensure
-			strip_keyword_set: strip_keyword = a_strip
-			left_parenthesis_set: left_parenthesis = l
-			right_parenthesis_set: right_parenthesis = r
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			strip_keyword := tokens.strip_keyword
+			left_parenthesis := tokens.left_parenthesis_symbol
+			right_parenthesis := tokens.right_parenthesis_symbol
+			precursor
 		end
 
-	make_with_capacity (a_strip: like strip_keyword; l: like left_parenthesis;
-		r: like right_parenthesis; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new strip expression with capacity `nb'.
-		require
-			a_strip_not_void: a_strip /= Void
-			l_not_void: l /= Void
-			r_not_void: r /= Void
-			nb_positive: nb >= 0
 		do
-			strip_keyword := a_strip
-			left_parenthesis := l
-			right_parenthesis := r
-			make_feature_name_list_with_capacity (nb)
-		ensure
-			strip_keyword_set: strip_keyword = a_strip
-			left_parenthesis_set: left_parenthesis = l
-			right_parenthesis_set: right_parenthesis = r
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			strip_keyword := tokens.strip_keyword
+			left_parenthesis := tokens.left_parenthesis_symbol
+			right_parenthesis := tokens.right_parenthesis_symbol
+			precursor (nb)
 		end
 
 feature -- Access
@@ -74,14 +51,22 @@ feature -- Access
 			-- 'strip' keyword
 
 	left_parenthesis: ET_SYMBOL
+			-- Left parenthesis
+
 	right_parenthesis: ET_SYMBOL
-			-- Parentheses
+			-- Right parenthesis
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := strip_keyword.position
+			if Result.is_null then
+				Result := left_parenthesis.position
+				if Result.is_null and not is_empty then
+					Result := item (1).position
+				end
+			end
 		end
 
 	break: ET_BREAK is

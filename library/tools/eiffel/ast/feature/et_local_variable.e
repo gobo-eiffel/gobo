@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_LOCAL_VARIABLE
+class ET_LOCAL_VARIABLE
 
 inherit
 
 	ET_LOCAL_VARIABLE_ITEM
+ 
+creation
+
+	make
 
 feature {NONE} -- Initialization
 
@@ -44,11 +48,11 @@ feature -- Access
 	type: ET_TYPE is
 			-- Type
 		do
-			Result := declared_type.declared_type
+			Result := declared_type.type
 		end
 
 	name_item: ET_LOCAL_NAME
-			-- Name follow by a comma or semicolon
+			-- Name (possibly followed by a comma)
 
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
@@ -64,6 +68,32 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := name_item.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := declared_type.break
+		end
+
+feature -- Setting
+
+	set_declared_type (a_type: like declared_type) is
+			-- Set `declared_type' to `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			declared_type := a_type
+		ensure
+			declared_type_set: declared_type = a_type
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_local_variable (Current)
 		end
 
 invariant

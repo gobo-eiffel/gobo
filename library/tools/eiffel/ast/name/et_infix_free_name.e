@@ -17,10 +17,10 @@ inherit
 	ET_INFIX_FREE
 
 	ET_INFIX_NAME
-		rename
-			make as make_infix_name
 		undefine
-			is_infix_free
+			name, hash_code, same_feature_name
+		redefine
+			process
 		end
 
 creation
@@ -29,18 +29,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_infix: like infix_keyword; an_operator: like operator_name) is
-			-- Create a new infix 'free-operator'.
+	make (an_operator: like operator_name) is
+			-- Create a new 'infix "<free-operator>"' feature name.
 		require
-			an_infix_not_void: an_infix /= Void
 			an_operator_not_void: an_operator /= Void
 			an_operator_computed: an_operator.computed
 			an_operator_not_empty: an_operator.value.count > 0
 		do
-			infix_keyword := an_infix
+			infix_keyword := tokens.infix_keyword
 			operator_name := an_operator
+			code := tokens.infix_freeop_code
 		ensure
-			infix_keyword_set: infix_keyword = an_infix
 			operator_name_set: operator_name = an_operator
 		end
 
@@ -62,6 +61,7 @@ feature -- Processing
 
 invariant
 
+	is_infix_freeop: is_infix_freeop
 	operator_name_computed: operator_name.computed
 	operator_name_not_empty: operator_name.value.count > 0
 

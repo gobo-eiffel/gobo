@@ -22,19 +22,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_reverse: like reverse_symbol; a_source: like source) is
+	make (a_target: like target; a_source: like source) is
 			-- Create a new assignment-attempt instruction.
 		require
 			a_target_not_void: a_target /= Void
-			a_reverse_not_void: a_reverse /= Void
 			a_source_not_void: a_source /= Void
 		do
 			target := a_target
-			reverse_symbol := a_reverse
 			source := a_source
+			assign_attempt_symbol := tokens.assign_attempt_symbol
 		ensure
 			target_set: target = a_target
-			reverse_symbol_set: reverse_symbol = a_reverse
 			source_set: source = a_source
 		end
 
@@ -46,7 +44,7 @@ feature -- Access
 	source: ET_EXPRESSION
 			-- Source of assignment
 
-	reverse_symbol: ET_SYMBOL
+	assign_attempt_symbol: ET_SYMBOL
 			-- '?=' symbol
 
 	position: ET_POSITION is
@@ -62,6 +60,18 @@ feature -- Access
 			Result := source.break
 		end
 
+feature -- Setting
+
+	set_assign_attempt_symbol (an_assign_attempt: like assign_attempt_symbol) is
+			-- Set `assign_attempt_symbol' to `an_assign_attempt'.
+		require
+			an_assign_attempt_not_void: an_assign_attempt /= Void
+		do
+			assign_attempt_symbol := an_assign_attempt
+		ensure
+			assign_attempt_symbol_set: assign_attempt_symbol = an_assign_attempt
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -74,6 +84,6 @@ invariant
 
 	target_not_void: target /= Void
 	source_not_void: source /= Void
-	reverse_symbol_not_void: reverse_symbol /= Void
+	assign_attempt_symbol_not_void: assign_attempt_symbol /= Void
 
 end

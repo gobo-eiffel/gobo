@@ -18,37 +18,37 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_precursor: like precursor_keyword; args: like arguments) is
+	make (a_parent: like parent; args: like arguments) is
 			-- Create a new precursor call.
-		require
-			a_precursor_not_void: a_precursor /= Void
 		do
-			precursor_keyword := a_precursor
+			parent := a_parent
 			arguments := args
+			precursor_keyword := tokens.precursor_keyword
 		ensure
-			precursor_keyword_set: precursor_keyword = a_precursor
+			parent_set: parent = a_parent
 			arguments_set: arguments = args
 		end
 
 feature -- Access
 
 	precursor_keyword: ET_KEYWORD
-			-- Precursor keyword
+			-- 'precursor' keyword
 
-	parent: ET_CLASS_NAME is
-			-- Parent
-		do
-			-- No parent specified.
-		end
+	parent: ET_PRECURSOR_CLASS_NAME
+			-- Parent class name sourrounded by braces
 
-	arguments: ET_ACTUAL_ARGUMENTS
+	arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := precursor_keyword.position
+			if is_parent_prefixed and parent /= Void then
+				Result := parent.position
+			else
+				Result := precursor_keyword.position
+			end
 		end
 
 	break: ET_BREAK is
@@ -56,9 +56,38 @@ feature -- Access
 		do
 			if arguments /= Void then
 				Result := arguments.break
+			elseif not is_parent_prefixed and parent /= Void then
+				Result := parent.break
 			else
 				Result := precursor_keyword.break
 			end
+		end
+
+feature -- Setting
+
+	set_precursor_keyword (a_precursor: like precursor_keyword) is
+			-- Set `precursor_keyword' to `a_precursor'.
+		require
+			a_precursor_not_void: a_precursor /= Void
+		do
+			precursor_keyword := a_precursor
+		ensure
+			precursor_keyword_set: precursor_keyword = a_precursor
+		end
+
+feature -- Status report
+
+	is_parent_prefixed: BOOLEAN
+			-- Does parent clause appear before 'precursor' keyword?
+
+feature -- Status setting
+
+	set_parent_prefixed (b: BOOLEAN) is
+			-- Set `is_parent_prefixed' to `b'.
+		do
+			is_parent_prefixed := b
+		ensure
+			is_parent_prefixed_set: is_parent_prefixed = b
 		end
 
 invariant

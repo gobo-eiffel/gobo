@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make, make_with_position
+	make
 
 feature {NONE} -- Initialization
 
@@ -42,33 +42,6 @@ feature {NONE} -- Initialization
 			close_white_character_set: close_white_characters = a_close
 			line_set: line = no_line
 			column_set: column = no_column
-		end
-
-	make_with_position (a_literal: like literal; a_marker: like marker;
-		an_open, a_close: STRING; a_line, a_column: INTEGER) is
-			-- Create a new verbatim string.
-		require
-			a_literal_not_void: a_literal /= Void
-			a_marker_not_void: a_marker /= Void
-			an_open_not_void: an_open /= Void
-			a_close_not_void: a_close /= Void
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			value := a_literal
-			marker := a_marker
-			open_white_characters := an_open
-			close_white_characters := a_close
-			make_leaf_with_position (a_line, a_column)
-		ensure
-			literal_set: literal = a_literal
-			marker_set: marker = a_marker
-			open_white_characters_set: open_white_characters = an_open
-			close_white_character_set: close_white_characters = a_close
-			line_set: a_line <= maximum_line implies line = a_line
-			no_line_set: a_line > maximum_line implies line = no_line
-			column_set: a_column <= maximum_column implies column = a_column
-			no_column_set: a_column > maximum_column implies column = no_column
 		end
 
 feature -- Access

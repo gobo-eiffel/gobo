@@ -16,8 +16,6 @@ inherit
 
 	ET_AST_NODE
 	HASHABLE
-	ET_SHARED_FEATURE_NAME_TESTER
-	ET_SHARED_TOKEN_CONSTANTS
 
 creation
 
@@ -37,8 +35,6 @@ feature {NONE} -- Initialization
 			universe := a_universe
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
-			!! named_features.make (100)
-			named_features.set_key_equality_tester (feature_name_tester)
 		ensure
 			name_set: name = a_name
 			id_set: id = an_id
@@ -94,10 +90,10 @@ feature -- Access
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
-	first_indexing: ET_INDEXINGS
+	first_indexing: ET_INDEXING_LIST
 			-- Indexing clause at the beginning of the class
 
-	second_indexing: ET_INDEXINGS
+	second_indexing: ET_INDEXING_LIST
 			-- Indexing clause at the end of the class
 
 	invariants: ET_INVARIANTS
@@ -109,7 +105,7 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	class_mark: ET_CLASS_MARK
+	class_mark: ET_KEYWORD
 			-- 'deferred', 'expanded', 'reference' or 'separate' keyword
 
 	id: INTEGER
@@ -168,7 +164,7 @@ feature -- Genericity
 			definition: Result = (generic_parameters /= Void)
 		end
 
-	generic_parameters: ET_FORMAL_GENERIC_PARAMETERS
+	generic_parameters: ET_FORMAL_PARAMETER_LIST
 			-- Formal generic parameters
 
 	has_generic_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
@@ -177,20 +173,20 @@ feature -- Genericity
 			a_name_not_void: a_name /= Void
 		do
 			if generic_parameters /= Void then
-				Result := generic_parameters.has_generic_parameter (a_name)
+				Result := generic_parameters.has_formal_parameter (a_name)
 			end
 		ensure
 			is_generic: Result implies is_generic
 		end
 
-	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
+	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
 			-- Generic parameter with name `a_name';
 			-- Void if no such generic parameter
 		require
 			a_name_not_void: a_name /= Void
 		do
 			if generic_parameters /= Void then
-				Result := generic_parameters.generic_parameter (a_name)
+				Result := generic_parameters.formal_parameter_by_name (a_name)
 			end
 		ensure
 			has_generic_parameter: has_generic_parameter (a_name) = (Result /= Void)
@@ -199,7 +195,7 @@ feature -- Genericity
 
 feature -- Creation
 
-	creators: ET_CREATORS
+	creators: ET_CREATOR_LIST
 			-- Creation clauses
 
 	set_creators (a_creators: like creators) is
@@ -240,7 +236,7 @@ feature -- Creation
 
 feature -- Genealogy
 
-	parents: ET_PARENTS
+	parents: ET_PARENT_LIST
 			-- Parents
 
 	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
@@ -322,7 +318,7 @@ feature -- Genealogy
 
 feature -- Feature clauses
 
-	feature_clauses: ET_FEATURE_CLAUSES
+	feature_clauses: ET_FEATURE_CLAUSE_LIST
 			-- Feature clauses
 
 	set_feature_clauses (a_feature_clauses: like feature_clauses) is
@@ -335,8 +331,38 @@ feature -- Feature clauses
 
 feature -- Features
 
+	named_feature (a_name: ET_FEATURE_NAME): ET_FEATURE is
+			-- Feature named `a_name';
+			-- Void if no such feature
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if named_features /= Void then
+				named_features.search (a_name)
+				if named_features.found then
+					Result := named_features.found_item
+				end
+			end
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
 	named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
+
+	seeded_feature (a_seed: INTEGER): ET_FEATURE is
+			-- Feature with seed `a_seed';
+			-- Void if no such feature
+		do
+			if seeded_features /= Void then
+				seeded_features.search (a_seed)
+				if seeded_features.found then
+					Result := seeded_features.found_item
+				end
+			end
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
 
 	seeded_features: DS_HASH_TABLE [ET_FEATURE, INTEGER]
 			-- Features indexed by seed ID
@@ -359,10 +385,12 @@ feature -- System
 				else
 					universe.any_class.add_to_system
 				end
-				a_cursor := named_features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_cursor.item.add_to_system
-					a_cursor.forth
+				if named_features /= Void then
+					a_cursor := named_features.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						a_cursor.item.add_to_system
+						a_cursor.forth
+					end
 				end
 			end
 		ensure
@@ -411,8 +439,6 @@ feature -- Compilation: parsing
 			end
 		end
 
-feature {ET_CLUSTER, ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
-
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
 		require
@@ -432,8 +458,6 @@ feature {ET_CLUSTER, ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 		ensure
 			cluster_set: cluster = a_cluster
 		end
-
-feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 
 	set_parsed is
 			-- Set `is_parsed' to True.
@@ -540,23 +564,16 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			leading_break_set: leading_break = a_break
 		end
 
-	put_feature (a_feature: ET_FEATURE) is
-			-- Add `a_feature' to `named_features'.
+	set_named_features (a_features: like named_features) is
+			-- Set `named_features' to `a_features'.
 		require
-			a_feature_not_void: a_feature /= Void
-		local
-			a_name: ET_FEATURE_NAME
-			other_feature: ET_FEATURE
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_item (Void)
+			-- a_features_registered: forall f in a_features, f.is_registered
 		do
-			a_name := a_feature.name
-			named_features.search (a_name)
-			if not named_features.found then
-				named_features.force_last (a_feature, a_name)
-			else
-				other_feature := named_features.found_item
-				error_handler.report_vmfna_error (Current, other_feature, a_feature)
-				set_flatten_error
-			end
+			named_features := a_features
+		ensure
+			named_features_set: named_features = a_features
 		end
 
 	set_syntax_error (b: BOOLEAN) is
@@ -669,7 +686,7 @@ feature -- Compilation: genealogy
 			end
 		end
 
-feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
+feature {ET_PARENT_LIST, ET_CLASS} -- Compilation: genealogy
 
 	add_to_sorter (a_type: ET_CLASS_TYPE; an_heir: ET_CLASS;
 		a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]) is
@@ -755,7 +772,7 @@ feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 			end
 		end
 
-feature {ET_PARENTS} -- Compilation: genealogy
+feature {ET_PARENT_LIST} -- Compilation: genealogy
 
 	set_ancestors (some_ancestors: like ancestors) is
 			-- Set `ancestors' to `some_ancestors'.
@@ -780,7 +797,7 @@ feature {ET_PARENTS} -- Compilation: genealogy
 			inserted: has_descendants
 		end
 
-feature {ET_PARENTS, ET_PARENT, ET_CLASS, ET_FORMAL_GENERIC_PARAMETERS} -- Compilation: genealogy
+feature {ET_PARENT_LIST, ET_PARENT, ET_CLASS, ET_FORMAL_PARAMETER_LIST} -- Compilation: genealogy
 
 	set_ancestors_error is
 			-- Set `has_ancestors_error' to `True'.
@@ -831,7 +848,7 @@ feature -- Compilation: feature flattening
 			no_syntax_error: not has_syntax_error
 		local
 			a_flattener: ET_FEATURE_FLATTENER
-			any_parents: ET_PARENTS
+			any_parents: ET_PARENT_LIST
 		do
 				-- Search ancestors even if `is_flattened' is True
 				-- because `has_flatten_error' could have been set
@@ -889,15 +906,13 @@ feature -- Compilation: feature flattening
 			-- are not used anymore.)
 		do
 			set_flatten_error
-			!! named_features.make (0)
-			named_features.set_key_equality_tester (feature_name_tester)
+			named_features := Void
 		ensure
 			is_flattened: is_flattened
 			has_flatten_error: has_flatten_error
-			wiped_out: named_features.is_empty
+			named_features_wiped_out: named_features = Void
+			seeded_features_wiped_out: seeded_features = Void
 		end
-
-feature {ET_FEATURE_FLATTENER, ET_TYPE} -- Compilation: feature flattening
 
 	set_flatten_error is
 			-- Set `has_flatten_error' to True.
@@ -909,17 +924,16 @@ feature {ET_FEATURE_FLATTENER, ET_TYPE} -- Compilation: feature flattening
 			has_flatten_error: has_flatten_error
 		end
 
-feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
-
-	set_seeded_features (some_features: like seeded_features) is
+	set_seeded_features (a_features: like seeded_features) is
 			-- Set `seeded_features' to `a_features'.
 		require
-			some_features_not_void: some_features /= Void
-			no_void_feature: not some_features.has_item (Void)
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_item (Void)
+			-- a_features_registered: forall f in a_features, f.is_registered
 		do
-			seeded_features := some_features
+			seeded_features := a_features
 		ensure
-			seeded_features_set: seeded_features = some_features
+			seeded_features_set: seeded_features = a_features
 		end
 
 feature -- Processing
@@ -935,9 +949,10 @@ invariant
 	name_not_void: name /= Void
 	id_positive: id > 0
 	universe_not_void: universe /= Void
-	named_features_not_void: named_features /= Void
-	no_void_feature: not named_features.has_item (Void)
+	no_void_named_feature: named_features /= Void implies not named_features.has_item (Void)
+	-- named_features_registered: named_features /= Void implies forall f in named_features, f.is_registered
 	no_void_seeded_feature: seeded_features /= Void implies not seeded_features.has_item (Void)
+	-- seeded_features_registered: seeded_features /= Void implies forall f in seeded_features, f.is_registered
 	no_void_ancestor: ancestors /= Void implies not ancestors.has_item (Void)
 	class_keyword_not_void: class_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void

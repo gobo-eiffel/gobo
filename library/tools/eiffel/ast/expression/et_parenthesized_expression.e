@@ -22,20 +22,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (l: like left_parenthesis; e: like expression; r: like right_parenthesis) is
+	make (e: like expression) is
 			-- Create a new parenthesized expression.
 		require
-			l_not_void: l /= Void
 			e_not_void: e /= Void
-			r_not_void: r /= Void
 		do
-			left_parenthesis := l
+			left_parenthesis := tokens.left_parenthesis_symbol
 			expression := e
-			right_parenthesis := r
+			right_parenthesis := tokens.right_parenthesis_symbol
 		ensure
-			left_parenthesis_set: left_parenthesis = l
 			expression_set: expression = e
-			right_parenthesis_set: right_parenthesis = r
 		end
 
 feature -- Access
@@ -44,20 +40,47 @@ feature -- Access
 			-- Expression
 
 	left_parenthesis: ET_SYMBOL
+			-- Left parenthesis
+
 	right_parenthesis: ET_SYMBOL
-			-- Parentheses
+			-- Right parenthesis
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := left_parenthesis.position
+			if Result.is_null then
+				Result := expression.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := right_parenthesis.break
+		end
+
+feature -- Setting
+
+	set_left_parenthesis (l: like left_parenthesis) is
+			-- Set `left_parenthesis' to `l'.
+		require
+			l_not_void: l /= Void
+		do
+			left_parenthesis := l
+		ensure
+			left_parenthesis_set: left_parenthesis = l
+		end
+
+	set_right_parenthesis (r: like right_parenthesis) is
+			-- Set `right_parenthesis' to `r'.
+		require
+			r_not_void: r /= Void
+		do
+			right_parenthesis := r
+		ensure
+			right_parenthesis_set: right_parenthesis = r
 		end
 
 feature -- Processing

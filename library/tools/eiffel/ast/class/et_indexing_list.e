@@ -1,0 +1,101 @@
+indexing
+
+	description:
+
+		"Eiffel lists of indexing clauses"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class ET_INDEXING_LIST
+
+inherit
+
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_INDEXING_ITEM]
+		redefine
+			make, make_with_capacity
+		end
+
+creation
+
+	make, make_with_capacity
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new indexing clause
+		do
+			indexing_keyword := tokens.indexing_keyword
+			precursor
+		end
+
+	make_with_capacity (nb: INTEGER) is
+			-- Create a new indexing clause with capacity `nb'.
+		do
+			indexing_keyword := tokens.indexing_keyword
+			precursor (nb)
+		end
+
+feature -- Access
+
+	indexing_keyword: ET_KEYWORD
+			-- 'indexing' keyword
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := indexing_keyword.position
+			if Result.is_null and not is_empty then
+				Result := first.position
+			end
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			if is_empty then
+				Result := indexing_keyword.break
+			else
+				Result := last.break
+			end
+		end
+
+feature -- Setting
+
+	set_indexing_keyword (an_indexing: like indexing_keyword) is
+			-- Set `indexing_keyword' to `an_indexing'.
+		require
+			an_indexing_not_void: an_indexing /= Void
+		do
+			indexing_keyword := an_indexing
+		ensure
+			indexing_keyword_set: indexing_keyword = an_indexing
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_indexing_list (Current)
+		end
+
+feature {NONE} -- Implementation
+
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_INDEXING_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
+		end
+
+invariant
+
+	indexing_keyword_not_void: indexing_keyword /= Void
+
+end

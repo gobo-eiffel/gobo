@@ -15,6 +15,9 @@ class ET_PRECONDITIONS
 inherit
 
 	ET_ASSERTIONS
+		redefine
+			make, make_with_capacity
+		end
 
 creation
 
@@ -22,31 +25,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_require: like require_keyword) is
+	make is
 			-- Create a new precondition clause.
-		require
-			a_require_not_void: a_require /= Void
 		do
-			require_keyword := a_require
-			make_ast_list
-		ensure
-			require_keyword_set: require_keyword = a_require
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			require_keyword := tokens.require_keyword
+			precursor
 		end
 
-	make_with_capacity (a_require: like require_keyword; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new precondition clause with capacity `nb'.
-		require
-			a_require_not_void: a_require /= Void
-			nb_positive: nb >= 0
 		do
-			require_keyword := a_require
-			make_ast_list_with_capacity (nb)
-		ensure
-			require_keyword_set: require_keyword = a_require
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			require_keyword := tokens.require_keyword
+			precursor (nb)
 		end
 
 feature -- Access
@@ -62,6 +52,9 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := require_keyword.position
+			if Result.is_null and not is_empty then
+				Result := item (1).position
+			end
 		end
 
 	break: ET_BREAK is
@@ -85,6 +78,16 @@ feature -- Status report
 		end
 
 feature -- Setting
+
+	set_require_keyword (a_require: like require_keyword) is
+			-- Set `require_keyword' to `a_require'.
+		require
+			a_require_not_void: a_require /= Void
+		do
+			require_keyword := a_require
+		ensure
+			require_keyword_set: require_keyword = a_require
+		end
 
 	set_else_keyword (an_else: like else_keyword) is
 			-- Set `else_keyword' to `an_else'.

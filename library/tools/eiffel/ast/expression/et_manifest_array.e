@@ -18,12 +18,30 @@ inherit
 
 	ET_EXPRESSION_LIST
 		redefine
-			process
+			make, make_with_capacity
 		end
 
 creation
 
 	make, make_with_capacity
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new empty manifest array.
+		do
+			left_symbol := tokens.left_array_symbol
+			right_symbol := tokens.right_array_symbol
+			precursor
+		end
+
+	make_with_capacity (nb: INTEGER) is
+			-- Create a new empty manifest array with capacity `nb'.
+		do
+			left_symbol := tokens.left_array_symbol
+			right_symbol := tokens.right_array_symbol
+			precursor (nb)
+		end
 
 feature -- Processing
 

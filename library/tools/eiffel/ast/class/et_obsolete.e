@@ -10,63 +10,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_OBSOLETE
+deferred class ET_OBSOLETE
 
 inherit
 
 	ET_AST_NODE
 
-creation
-
-	make
-
-feature {NONE} -- Initialization
-
-	make (an_obsolete: like obsolete_keyword; a_message: like message) is
-			-- Create a new obsolete clause.
-		require
-			an_obsolete_not_void: an_obsolete /= Void
-			a_message_not_void: a_message /= Void
-		do
-			obsolete_keyword := an_obsolete
-			message := a_message
-		ensure
-			obsolete_keyword_set: obsolete_keyword = an_obsolete
-			message_set: message = a_message
-		end
-
 feature -- Access
 
-	obsolete_keyword: ET_KEYWORD
-			-- 'obsolete' keyword
-
-	message: ET_MANIFEST_STRING
+	manifest_string: ET_MANIFEST_STRING is
 			-- Obsolete message
-
-	position: ET_POSITION is
-			-- Position of first character of
-			-- current node in source code
-		do
-			Result := obsolete_keyword.position
+		deferred
+		ensure
+			manifest_string_not_void: Result /= Void
 		end
-
-	break: ET_BREAK is
-			-- Break which appears just after current node
-		do
-			Result := message.break
-		end
-
-feature -- Processing
-
-	process (a_processor: ET_AST_PROCESSOR) is
-			-- Process current node.
-		do
-			a_processor.process_obsolete (Current)
-		end
-
-invariant
-
-	obsolete_keyword_not_void: obsolete_keyword /= Void
-	message_not_void: message /= Void
 
 end

@@ -16,6 +16,7 @@ inherit
 
 	ET_EXTERNAL_LANGUAGE
 	ET_EXTERNAL_ALIAS
+	ET_OBSOLETE
 
 creation
 

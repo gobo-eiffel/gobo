@@ -14,16 +14,8 @@ class ET_STATIC_CALL_INSTRUCTION
 
 inherit
 
-	ET_CALL_INSTRUCTION
-		rename
-			make as make_unqualified_call
-		undefine
-			position
-		redefine
-			process
-		end
-
 	ET_STATIC_FEATURE_CALL
+	ET_INSTRUCTION
 
 creation
 

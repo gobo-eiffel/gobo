@@ -57,6 +57,28 @@ feature -- Access
 			item_not_void: Result /= Void
 		end
 
+	first: G is
+			-- First item
+		require
+			not_empty: not is_empty
+		do
+			Result := item (1)
+		ensure
+			first_not_void: Result /= Void
+			definition: Result = item (1)
+		end
+
+	last: G is
+			-- Last item
+		require
+			not_empty: not is_empty
+		do
+			Result := item (count)
+		ensure
+			last_not_void: Result /= Void
+			definition: Result = item (count)
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -92,7 +114,7 @@ feature -- Element change
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
-			first: item (1) = an_item
+			first_set: first = an_item
 		end
 
 feature {NONE} -- Implementation

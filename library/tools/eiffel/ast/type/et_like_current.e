@@ -22,17 +22,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_like: like like_keyword; a_current: like current_keyword) is
+	make is
 			-- Create a new 'like Current' type.
-		require
-			a_like_not_void: a_like /= Void
-			a_current_not_void: a_current /= Void
 		do
-			like_keyword := a_like
-			current_keyword := a_current
-		ensure
-			like_keyword_set: like_keyword = a_like
-			current_keyword_set: current_keyword = a_current
+			like_keyword := tokens.like_keyword
+			current_keyword := tokens.current_keyword
 		end
 
 feature -- Access
@@ -48,12 +42,37 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := like_keyword.position
+			if Result.is_null then
+				Result := current_keyword.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := current_keyword.break
+		end
+
+feature -- Setting
+
+	set_like_keyword (a_like: like like_keyword) is
+			-- Set `like_keyword' to `a_like'.
+		require
+			a_like_not_void: a_like /= Void
+		do
+			like_keyword := a_like
+		ensure
+			like_keyword_set: like_keyword = a_like
+		end
+
+	set_current_keyword (a_current: like current_keyword) is
+			-- Set `current_keyword' to `a_current'.
+		require
+			a_current_not_void: a_current /= Void
+		do
+			current_keyword := a_current
+		ensure
+			current_keyword_set: current_keyword = a_current
 		end
 
 feature -- Status report
@@ -80,8 +99,8 @@ feature -- Validity
 			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.

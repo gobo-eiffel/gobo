@@ -17,9 +17,8 @@ inherit
 	ET_AST_NODE
 
 	ET_CLASS_NAME_LIST
-		rename
-			make as make_class_name_list,
-			make_with_capacity as make_class_name_list_with_capacity
+		redefine
+			make, make_with_capacity
 		end
 
 creation
@@ -28,50 +27,38 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (l: like left_brace; r: like right_brace) is
+	make is
 			-- Create a new empty client list.
-		require
-			l_not_void: l /= Void
-			r_not_void: r /= Void
 		do
-			left_brace := l
-			right_brace := r
-			make_class_name_list
-		ensure
-			left_brace_set: left_brace = l
-			right_brace_set: right_brace = r
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			left_brace := tokens.left_brace_symbol
+			right_brace := tokens.right_brace_symbol
+			precursor
 		end
 
-	make_with_capacity (l: like left_brace; r: like right_brace; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new empty client list with capacity `nb'.
-		require
-			l_not_void: l /= Void
-			r_not_void: r /= Void
-			nb_positive: nb >= 0
 		do
-			left_brace := l
-			right_brace := r
-			make_class_name_list_with_capacity (nb)
-		ensure
-			left_brace_set: left_brace = l
-			right_brace_set: right_brace = r
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			left_brace := tokens.left_brace_symbol
+			right_brace := tokens.right_brace_symbol
+			precursor (nb)
 		end
 
 feature -- Access
 
 	left_brace: ET_SYMBOL
+			-- '{' symbol
+
 	right_brace: ET_SYMBOL
-			-- '{' and '}' symbols before and after client list
+			-- '}' symbol
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := left_brace.position
+			if Result.is_null and not is_empty then
+				Result := first.position
+			end
 		end
 
 	break: ET_BREAK is

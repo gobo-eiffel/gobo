@@ -23,11 +23,4 @@ inherit
 			process
 		end
 
-feature -- Status report
-
-	is_true: BOOLEAN is
-			-- Is boolean value true?
-		deferred
-		end
-
 end

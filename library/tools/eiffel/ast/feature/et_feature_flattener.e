@@ -72,6 +72,7 @@ feature -- Setting
 			a_class_not_void: a_class /= Void
 		local
 			a_feature: ET_FLATTENED_FEATURE
+			class_named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
 			nb: INTEGER
 		do
@@ -79,15 +80,18 @@ feature -- Setting
 			named_features.wipe_out
 			nb_seeded_features := 0
 			has_flatten_error := False
-			nb := current_class.named_features.count
-			if named_features.capacity < nb then
-				named_features.resize (nb)
-			end
-			a_cursor := current_class.named_features.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				!! a_feature.make (a_cursor.item, current_class)
-				named_features.put_last (a_feature, a_feature.name)
-				a_cursor.forth
+			class_named_features := current_class.named_features
+			if class_named_features /= Void then
+				nb := class_named_features.count
+				if named_features.capacity < nb then
+					named_features.resize (nb)
+				end
+				a_cursor := class_named_features.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					!! a_feature.make (a_cursor.item, current_class)
+					named_features.put_last (a_feature, a_feature.name)
+					a_cursor.forth
+				end
 			end
 		ensure
 			current_class_set: current_class = a_class
@@ -107,6 +111,7 @@ feature -- Element change
 			has_redefine: BOOLEAN
 			has_undefine: BOOLEAN
 			has_select: BOOLEAN
+			class_named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
 			a_feature: ET_INHERITED_FEATURE
 			a_flattened_feature: ET_FLATTENED_FEATURE
@@ -131,53 +136,56 @@ feature -- Element change
 				fill_select_table (a_parent)
 			end
 			a_class := a_parent.type.base_class
-			nb := a_class.named_features.count + named_features.count
-			if named_features.capacity < nb then
-				named_features.resize (nb)
-			end
-			a_cursor := a_class.named_features.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				!! a_feature.make (a_cursor.item, a_parent)
-				a_name := a_cursor.key
-				if has_rename then
-					rename_table.search (a_name)
-					if rename_table.found then
-						a_rename := rename_table.found_item
-						rename_table.remove_found_item
-						a_feature.set_new_name (a_rename)
-						a_name := a_rename.new_name
+			class_named_features := a_class.named_features
+			if class_named_features /= Void then
+				nb := class_named_features.count + named_features.count
+				if named_features.capacity < nb then
+					named_features.resize (nb)
+				end
+				a_cursor := class_named_features.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					!! a_feature.make (a_cursor.item, a_parent)
+					a_name := a_cursor.key
+					if has_rename then
+						rename_table.search (a_name)
+						if rename_table.found then
+							a_rename := rename_table.found_item
+							rename_table.remove_found_item
+							a_feature.set_new_name (a_rename)
+							a_name := a_rename.new_name
+						end
 					end
-				end
-				if has_undefine then
-					undefine_table.search (a_name)
-					if undefine_table.found then
-						a_feature.set_undefine_name (undefine_table.found_item)
-						undefine_table.remove_found_item
+					if has_undefine then
+						undefine_table.search (a_name)
+						if undefine_table.found then
+							a_feature.set_undefine_name (undefine_table.found_item)
+							undefine_table.remove_found_item
+						end
 					end
-				end
-				if has_redefine then
-					redefine_table.search (a_name)
-					if redefine_table.found then
-						a_feature.set_redefine_name (redefine_table.found_item)
-						redefine_table.remove_found_item
+					if has_redefine then
+						redefine_table.search (a_name)
+						if redefine_table.found then
+							a_feature.set_redefine_name (redefine_table.found_item)
+							redefine_table.remove_found_item
+						end
 					end
-				end
-				if has_select then
-					select_table.search (a_name)
-					if select_table.found then
-						a_feature.set_select_name (select_table.found_item)
-						select_table.remove_found_item
+					if has_select then
+						select_table.search (a_name)
+						if select_table.found then
+							a_feature.set_select_name (select_table.found_item)
+							select_table.remove_found_item
+						end
 					end
+					named_features.search (a_name)
+					if named_features.found then
+						a_flattened_feature := named_features.found_item
+						a_flattened_feature.put_inherited_feature (a_feature)
+					else
+						!! a_flattened_feature.make_inherited (a_feature, current_class)
+						named_features.put_last (a_flattened_feature, a_name)
+					end
+					a_cursor.forth
 				end
-				named_features.search (a_name)
-				if named_features.found then
-					a_flattened_feature := named_features.found_item
-					a_flattened_feature.put_inherited_feature (a_feature)
-				else
-					!! a_flattened_feature.make_inherited (a_feature, current_class)
-					named_features.put_last (a_flattened_feature, a_name)
-				end
-				a_cursor.forth
 			end
 			if not rename_table.is_empty then
 				from rename_table.start until rename_table.after loop
@@ -239,11 +247,17 @@ feature -- Compilation
 			process_replication
 			if not has_flatten_error then
 				!! class_seeded_features.make_map (nb_seeded_features)
-				class_named_features := current_class.named_features
-				class_named_features.wipe_out
 				nb := named_features.count
-				if class_named_features.capacity < nb then
-					class_named_features.resize (nb)
+				class_named_features := current_class.named_features
+				if class_named_features /= Void then
+					class_named_features.wipe_out
+					if class_named_features.capacity < nb then
+						class_named_features.resize (nb)
+					end
+				else
+					!! class_named_features.make_map (nb)
+					class_named_features.set_key_equality_tester (feature_name_tester)
+					current_class.set_named_features (class_named_features)
 				end
 				from named_features.start until named_features.after loop
 					a_named_feature := named_features.item_for_iteration
@@ -357,7 +371,7 @@ feature {NONE} -- Element change
 			renames_not_void: a_parent.renames /= Void
 		local
 			i, nb: INTEGER
-			a_renames: ET_RENAMES
+			a_renames: ET_RENAME_LIST
 			a_rename: ET_RENAME
 			a_name: ET_FEATURE_NAME
 		do
@@ -368,7 +382,7 @@ feature {NONE} -- Element change
 				rename_table.resize (nb)
 			end
 			from i := 1 until i > nb loop
-				a_rename := a_renames.item (i)
+				a_rename := a_renames.rename_pair (i)
 				a_name := a_rename.old_name
 				rename_table.search (a_name)
 				if not rename_table.found then

@@ -65,7 +65,7 @@ inherit
 
 creation
 
-	make, make_with_position
+	make
 
 feature -- Access
 

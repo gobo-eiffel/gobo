@@ -46,18 +46,18 @@ creation
 				last_comment_end := text_count
 				process_one_char_symbol (text_item (1))
 			}
-("//"|"\\\\"|"/="|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=")	{
+("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")	{
 				last_break_end := 0
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=")[ \t\r\n]+	{
+("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")[ \t\r\n]+	{
 				last_text_count := 2
 				last_break_end := text_count
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=")([ \t\r\n]|"--".*)+	{
+("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")([ \t\r\n]|"--".*)+	{
 				last_text_count := 2
 				last_break_end := 0
 				last_comment_end := text_count
@@ -735,17 +735,23 @@ _(_*[0-9_]+_*)+	{
 ----------/** Separators **/----------------------------------------------------
 
 [ \t\r\n]+	{
-				if keep_all_breaks then
-					last_token := E_BREAK
-					last_value := new_break (text)
-				end
+				last_literal_start := 1
+				last_literal_end := 0
+				last_text_count := 0
+				last_break_end := text_count
+				last_comment_end := 0
+				last_value := ast_factory.new_break (Current)
+				last_token := E_BREAK
 			}
 
 ([ \t\r\n]|"--".*)+	{
-				if keep_all_breaks then
-					last_token := E_BREAK
-					last_value := new_comment (text)
-				end
+				last_literal_start := 1
+				last_literal_end := 0
+				last_text_count := 0
+				last_break_end := 0
+				last_comment_end := text_count
+				last_value := ast_factory.new_comment (Current)
+				last_token := E_BREAK
 			}
 
 <BREAK>{

@@ -37,7 +37,7 @@ feature -- Access
 			-- Is integer value negative?
 		do
 			if sign /= Void then
-				Result := sign.is_negative
+				Result := sign.is_minus
 			end
 		end
 
@@ -45,7 +45,7 @@ feature -- Access
 			-- Integer value set by last call
 			-- to `compute_value'
 
-	sign: ET_SIGN_SYMBOL
+	sign: ET_SYMBOL_OPERATOR
 			-- Sign; Void if none
 
 	position: ET_POSITION is

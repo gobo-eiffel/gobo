@@ -22,48 +22,69 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_create: like create_keyword; l: like left_brace; a_type: like type; r: like right_brace) is
+	make (a_type: like creation_type; a_call: like creation_call) is
 			-- Create a new create expression.
 		require
-			a_create_not_void: a_create /= Void
-			l_not_void: l /= Void
 			a_type_not_void: a_type /= Void
-			r_not_void: r /= Void
 		do
-			create_keyword := a_create
-			left_brace := l
-			type := a_type
-			right_brace := r
+			creation_type := a_type
+			creation_call := a_call
+			create_keyword := tokens.create_keyword
 		ensure
-			create_keyword_set: create_keyword = a_create
-			left_brace_set: left_brace = l
-			type_set: type = a_type
-			right_brace_set: right_brace = r
+			creation_type_set: creation_type = a_type
+			creation_call_set: creation_call = a_call
 		end
 
 feature -- Access
 
-	type: ET_TYPE
-			-- Type of object being created
-
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
-	left_brace: ET_SYMBOL
-	right_brace: ET_SYMBOL
-			-- Braces surrounding type
+	creation_type: ET_CREATION_TYPE
+			-- Creation type surrounded by braces
+
+	type: ET_TYPE is
+			-- Creation type
+		do
+			Result := creation_type.type
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	creation_call: ET_QUALIFIED_CALL
+			-- Call to creation procedure
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := create_keyword.position
+			if not create_keyword.position.is_null then
+				Result := create_keyword.position
+			else
+				Result := creation_type.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := right_brace.break
+			if creation_call /= Void then
+				Result := creation_call.break
+			else
+				Result := creation_type.break
+			end
+		end
+
+feature -- Setting
+
+	set_create_keyword (a_create: like create_keyword) is
+			-- Set `create_keyword' to `a_create'.
+		require
+			a_create_not_void: a_create /= Void
+		do
+			create_keyword := a_create
+		ensure
+			create_keyword_set: create_keyword = a_create
 		end
 
 feature -- Processing
@@ -76,9 +97,7 @@ feature -- Processing
 
 invariant
 
-	type_not_void: type /= Void
-	create_keyword_not_void: create_keyword /= Void
-	left_brace_not_void: left_brace /= Void
-	right_brace_not_void: right_brace /= Void
+	crete_keyword_not_void: create_keyword /= Void
+	creation_type_not_void: creation_type /= Void
 
 end

@@ -22,26 +22,26 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_colon: like colon; a_type: like declared_type) is
+	make (a_colon: like colon; a_type: like type) is
 			-- Create a new colon-type.
 		require
 			a_colon_not_void: a_colon /= Void
 			a_type_not_void: a_type /= Void
 		do
 			colon := a_colon
-			declared_type := a_type
+			type := a_type
 		ensure
 			colon_set: colon = a_colon
-			declared_type_set: declared_type = a_type
+			type_set: type = a_type
 		end
 
 feature -- Access
 
-	declared_type: ET_TYPE
-			-- Declared type
-
 	colon: ET_SYMBOL
-			-- Colon marker
+			-- ':' symbol
+
+	type: ET_TYPE
+			-- Type
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -53,12 +53,12 @@ feature -- Access
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := declared_type.break
+			Result := type.break
 		end
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_COLON_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_COLON_TYPE is
 			-- Replace in current type the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from
@@ -67,15 +67,15 @@ feature -- Type processing
 		local
 			a_type: ET_TYPE
 		do
-			a_type := declared_type.resolved_formal_parameters (actual_parameters)
-			if a_type /= declared_type then
+			a_type := type.resolved_formal_parameters (actual_parameters)
+			if a_type /= type then
 				!! Result.make (colon, a_type)
 			else
 				Result := Current
 			end
 		end
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_COLON_TYPE is
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_COLON_TYPE is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of `a_feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.
@@ -85,8 +85,8 @@ feature -- Type processing
 		local
 			a_type: ET_TYPE
 		do
-			a_type := declared_type.resolved_identifier_types (a_feature, args, a_class)
-			if a_type /= declared_type then
+			a_type := type.resolved_identifier_types (a_feature, args, a_class)
+			if a_type /= type then
 				!! Result.make (colon, a_type)
 			else
 				Result := Current
@@ -100,8 +100,8 @@ feature -- Duplication
 		local
 			a_type: ET_TYPE
 		do
-			a_type := declared_type.deep_cloned_type
-			if a_type /= declared_type then
+			a_type := type.deep_cloned_type
+			if a_type /= type then
 				!! Result.make (colon, a_type)
 			else
 				Result := Current

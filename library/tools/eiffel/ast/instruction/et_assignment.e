@@ -22,19 +22,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; an_assign: like assign_symbol; a_source: like source) is
+	make (a_target: like target; a_source: like source) is
 			-- Create a new assignment instruction.
 		require
 			a_target_not_void: a_target /= Void
-			an_assign_not_void: an_assign /= Void
 			a_source_not_void: a_source /= Void
 		do
 			target := a_target
-			assign_symbol := an_assign
 			source := a_source
+			assign_symbol := tokens.assign_symbol
 		ensure
 			target_set: target = a_target
-			assign_symbol_set: assign_symbol = an_assign
 			source_set: source = a_source
 		end
 
@@ -60,6 +58,18 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := source.break
+		end
+
+feature -- Setting
+
+	set_assign_symbol (an_assign: like assign_symbol) is
+			-- Set `assign_symbol' to `an_assign'.
+		require
+			an_assign_not_void: an_assign /= Void
+		do
+			assign_symbol := an_assign
+		ensure
+			assign_symbol_set: assign_symbol = an_assign
 		end
 
 feature -- Processing

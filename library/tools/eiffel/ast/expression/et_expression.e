@@ -19,12 +19,17 @@ inherit
 			expression as expression_item
 		end
 
+	ET_CONDITIONAL
+		rename
+			expression as expression_item
+		end
+
 	ET_ASSERTION
 
 feature -- Access
 
 	expression_item: ET_EXPRESSION is
-			-- Expression in comma-separated list
+			-- Current expression
 		do
 			Result := Current
 		end

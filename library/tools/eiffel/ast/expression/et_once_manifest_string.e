@@ -22,16 +22,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_once: like once_keyword; a_string: like manifest_string) is
+	make (a_string: like manifest_string) is
 			-- Create a new once manifest string.
 		require
-			a_once_not_void: a_once /= Void
 			a_string_not_void: a_string /= Void
 		do
-			once_keyword := a_once
+			once_keyword := tokens.once_keyword
 			manifest_string := a_string
 		ensure
-			once_keyword_set: once_keyword = a_once
 			manifest_string_set: manifest_string = a_string
 		end
 
@@ -48,12 +46,27 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := once_keyword.position
+			if Result.is_null then
+				Result := manifest_string.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := manifest_string.break
+		end
+
+feature -- Setting
+
+	set_once_keyword (a_once: like once_keyword) is
+			-- Set `once_keyword' to `a_once'.
+		require
+			a_once_not_void: a_once /= Void
+		do
+			once_keyword := a_once
+		ensure
+			once_keyword_set: once_keyword = a_once
 		end
 
 feature -- Processing

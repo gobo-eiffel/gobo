@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Access
 
-	deferred_keyword: ET_DEFERRED_KEYWORD
+	deferred_keyword: ET_KEYWORD
 			-- 'deferred' keyword
 
 feature -- Setting

@@ -15,6 +15,9 @@ class ET_POSTCONDITIONS
 inherit
 
 	ET_ASSERTIONS
+		redefine
+			make, make_with_capacity
+		end
 
 creation
 
@@ -22,31 +25,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_ensure: like ensure_keyword) is
+	make is
 			-- Create a new postcondition clause.
-		require
-			an_ensure_not_void: an_ensure /= Void
 		do
-			ensure_keyword := an_ensure
-			make_ast_list
-		ensure
-			ensure_keyword_set: ensure_keyword = an_ensure
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			ensure_keyword := tokens.ensure_keyword
+			precursor
 		end
 
-	make_with_capacity (an_ensure: like ensure_keyword; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new postcondition clause with capacity `nb'.
-		require
-			an_ensure_not_void: an_ensure /= Void
-			nb_positive: nb >= 0
 		do
-			ensure_keyword := an_ensure
-			make_ast_list_with_capacity (nb)
-		ensure
-			ensure_keyword_set: ensure_keyword = an_ensure
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			ensure_keyword := tokens.ensure_keyword
+			precursor (nb)
 		end
 
 feature -- Access
@@ -62,6 +52,9 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := ensure_keyword.position
+			if Result.is_null and not is_empty then
+				Result := item (1).position
+			end
 		end
 
 	break: ET_BREAK is
@@ -85,6 +78,16 @@ feature -- Status report
 		end
 
 feature -- Setting
+
+	set_ensure_keyword (an_ensure: like ensure_keyword) is
+			-- Set `ensure_keyword' to `an_ensure'.
+		require
+			an_ensure_not_void: an_ensure /= Void
+		do
+			ensure_keyword := an_ensure
+		ensure
+			ensure_keyword_set: ensure_keyword = an_ensure
+		end
 
 	set_then_keyword (a_then: like then_keyword) is
 			-- Set `else_keyword' to `an_else'.

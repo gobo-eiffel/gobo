@@ -25,11 +25,13 @@ feature -- Duplication
 	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
-			Result := universe.new_once_function (a_name, arguments, declared_type,
-				obsolete_message, preconditions, locals, compound, postconditions,
-				rescue_clause, clients, current_class)
+			!! Result.make (a_name, arguments, declared_type, obsolete_message,
+				preconditions, locals, compound, postconditions, rescue_clause,
+				clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
+			Result.set_semicolon (semicolon)
+			Result.set_feature_clause (feature_clause)
 			Result.set_synonym (Current)
 		end
 
@@ -38,14 +40,16 @@ feature -- Conversion
 	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			Result := universe.new_once_function (a_name, arguments, declared_type,
-				obsolete_message, preconditions, locals, compound, postconditions,
-				rescue_clause, clients, current_class)
+			!! Result.make (a_name, arguments, declared_type, obsolete_message,
+				preconditions, locals, compound, postconditions, rescue_clause,
+				clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)
+			Result.set_semicolon (semicolon)
+			Result.set_feature_clause (feature_clause)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
 			else

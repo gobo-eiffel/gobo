@@ -22,14 +22,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variant: like variant_keyword) is
+	make (a_tag: like tag; an_expression: like expression) is
 			-- Create a new empty loop variant clause.
-		require
-			a_variant_not_void: a_variant /= Void
 		do
-			variant_keyword := a_variant
+			variant_keyword := tokens.variant_keyword
+			tag := a_tag
+			expression := an_expression
 		ensure
-			variant_keyword_set: variant_keyword = a_variant
+			tag_set: tag = a_tag
+			expression_set: expression = an_expression
 		end
 
 feature -- Access
@@ -37,17 +38,48 @@ feature -- Access
 	variant_keyword: ET_KEYWORD
 			-- 'variant' keyword
 
+	tag: ET_TAG
+			-- Tag
+
+	expression: ET_EXPRESSION
+			-- Integer expression
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := variant_keyword.position
+			if Result.is_null then
+				if tag /= Void then
+					Result := tag.position
+				elseif expression /= Void then
+					Result := expression.position
+				end
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := variant_keyword.break
+			if expression /= Void then
+				Result := expression.break
+			elseif tag /= Void then
+				Result := tag.break
+			else
+				Result := variant_keyword.break
+			end
+		end
+
+feature -- Setting
+
+	set_variant_keyword (a_variant: like variant_keyword) is
+			-- Set `variant_keyword' to `a_variant'.
+		require
+			a_variant_not_void: a_variant /= Void
+		do
+			variant_keyword := a_variant
+		ensure
+			variant_keyword_set: variant_keyword = a_variant
 		end
 
 feature -- Processing

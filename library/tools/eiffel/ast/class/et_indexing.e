@@ -39,7 +39,7 @@ feature -- Access
 		do
 		end
 
-	terms: ET_INDEXING_TERMS
+	terms: ET_INDEXING_TERM_LIST
 			-- Indexing terms
 
 	indexing_clause: ET_INDEXING is

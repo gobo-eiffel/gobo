@@ -15,6 +15,7 @@ deferred class ET_FEATURE_NAME
 inherit
 
 	ET_FEATURE_NAME_ITEM
+	ET_QUALIFIED_FEATURE_NAME
 	HASHABLE
 
 feature -- Access
@@ -28,7 +29,7 @@ feature -- Access
 		end
 
 	feature_name: ET_FEATURE_NAME is
-			-- Feature name in comma-separated list
+			-- Feature name
 		do
 			Result := Current
 		end
@@ -71,7 +72,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_infix_free: BOOLEAN is
+	is_infix_freeop: BOOLEAN is
 			-- Is current feature name of the form 'infix "free-operator"'?
 		do
 			-- Result := False
@@ -173,7 +174,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_prefix_free: BOOLEAN is
+	is_prefix_freeop: BOOLEAN is
 			-- Is current feature name of the form 'prefix "free-operator"'?
 		do
 			-- Result := False

@@ -17,9 +17,8 @@ inherit
 	ET_AST_NODE
 
 	ET_AST_LIST [ET_CHOICE_ITEM]
-		rename
-			make as make_ast_list,
-			make_with_capacity as make_ast_list_with_capacity
+		redefine
+			make, make_with_capacity
 		end
 
 creation
@@ -28,30 +27,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_choice: like item) is
-			-- Create a new choice list with `a_choice' as first item.
-		require
-			a_choice_not_void: a_choice /= Void
+	make is
+			-- Create a new choice list.
 		do
-			make_ast_list_with_capacity (1)
-			put_first (a_choice)
-		ensure
-			choice_set: item (1) = a_choice
-			capacity_set: capacity = 1
+			when_keyword := tokens.when_keyword
+			precursor
 		end
 
-	make_with_capacity (a_choice: like item; nb: INTEGER) is
-			-- Create a new choice list with capacity `nb'
-			-- and `a_choice' as first item.
-		require
-			nb_positive: nb >= 1
-			a_choice_not_void: a_choice /= Void
+	make_with_capacity (nb: INTEGER) is
+			-- Create a new choice list with capacity `nb'.
 		do
-			make_ast_list_with_capacity (nb)
-			put_first (a_choice)
-		ensure
-			choice_set: item (1) = a_choice
-			capacity_set: capacity = nb
+			when_keyword := tokens.when_keyword
+			precursor (nb)
 		end
 
 feature -- Access
@@ -67,17 +54,39 @@ feature -- Access
 			choice_not_void: Result /= Void
 		end
 
+	when_keyword: ET_KEYWORD
+			-- 'when' keyword
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := item (1).position
+			Result := when_keyword.position
+			if Result.is_null and not is_empty then
+				Result := item (1).position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := item (count).break
+			if is_empty then
+				Result := when_keyword.break
+			else
+				Result := item (count).break
+			end
+		end
+
+feature -- Setting
+
+	set_when_keyword (a_keyword: like when_keyword) is
+			-- Set `when_keyword' to `a_keyword'.
+		require
+			a_keyword_not_void: a_keyword /= Void
+		do
+			when_keyword := a_keyword
+		ensure
+			when_keyword_set: when_keyword = a_keyword
 		end
 
 feature -- Processing
@@ -98,6 +107,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	not_empty: not is_empty
+	when_keyword_not_void: when_keyword /= Void
 
 end

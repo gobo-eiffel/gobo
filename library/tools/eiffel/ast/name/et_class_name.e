@@ -15,6 +15,7 @@ deferred class ET_CLASS_NAME
 inherit
 
 	ET_CLASS_NAME_ITEM
+	ET_PRECURSOR_CLASS_NAME
 	HASHABLE
 
 feature -- Access
@@ -28,7 +29,7 @@ feature -- Access
 		end
 
 	class_name: ET_CLASS_NAME is
-			-- Class name in comma-separated list
+			-- Class name
 		do
 			Result := Current
 		end

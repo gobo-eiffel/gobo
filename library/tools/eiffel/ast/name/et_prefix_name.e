@@ -10,25 +10,57 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_PREFIX_NAME
+class ET_PREFIX_NAME
 
 inherit
 
-	ET_PREFIX
+	ET_OPERATOR
+
+creation
+
+	make_minus,
+	make_plus,
+	make_not
 
 feature {NONE} -- Initialization
 
-	make (a_prefix: like prefix_keyword; an_operator: like operator_name) is
-			-- Create a new prefix feature name.
+	make_minus (an_operator: like operator_name) is
+			-- Create a new 'prefix "-"' feature name.
 		require
-			a_prefix_not_void: a_prefix /= Void
 			an_operator_not_void: an_operator /= Void
 		do
-			prefix_keyword := a_prefix
+			prefix_keyword := tokens.prefix_keyword
 			operator_name := an_operator
+			code := tokens.prefix_minus_code
 		ensure
-			prefix_keyword_set: prefix_keyword = a_prefix
 			operator_name_set: operator_name = an_operator
+			is_prefix_minus: is_prefix_minus
+		end
+
+	make_plus (an_operator: like operator_name) is
+			-- Create a new 'prefix "+"' feature name.
+		require
+			an_operator_not_void: an_operator /= Void
+		do
+			prefix_keyword := tokens.prefix_keyword
+			operator_name := an_operator
+			code := tokens.prefix_plus_code
+		ensure
+			operator_name_set: operator_name = an_operator
+			is_prefix_plus: is_prefix_plus
+		end
+
+	make_not (an_operator: like operator_name) is
+			-- Create a new 'prefix "not"' feature name.
+		require
+			an_operator_not_void: an_operator /= Void
+		do
+			prefix_keyword := tokens.prefix_keyword
+			operator_name := an_operator
+			code := tokens.prefix_not_code
+		ensure
+			operator_name_set: operator_name = an_operator
+			is_prefix_not: is_prefix_not
 		end
 
 feature -- Access
@@ -43,7 +75,11 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := prefix_keyword.position
+			if not prefix_keyword.position.is_null then
+				Result := prefix_keyword.position
+			else
+				Result := operator_name.position
+			end
 		end
 
 	break: ET_BREAK is
@@ -52,8 +88,34 @@ feature -- Access
 			Result := operator_name.break
 		end
 
+feature -- Setting
+
+	set_prefix_keyword (a_prefix: like prefix_keyword) is
+			-- Set `prefix_keyword' to `a_prefix'.
+		require
+			a_prefix_not_void: a_prefix /= Void
+		do
+			prefix_keyword := a_prefix
+		ensure
+			prefix_keyword_set: prefix_keyword = a_prefix
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_prefix_name (Current)
+		end
+
+feature {NONE} -- Implementation
+
+	code: CHARACTER
+			-- Operator code
+
 invariant
 
+	is_prefix: is_prefix
 	prefix_keyword_not_void: prefix_keyword /= Void
 	operator_name_not_void: operator_name /= Void
 

@@ -14,7 +14,7 @@ class ET_RENAME
 
 inherit
 
-	ET_AST_NODE
+	ET_RENAME_ITEM
 
 creation
 
@@ -22,19 +22,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (o: like old_name; an_as: like as_keyword; n: like new_name) is
+	make (o: like old_name; n: like new_name) is
 			-- Create a new rename pair.
 		require
 			o_not_void: o /= Void
-			an_as_not_void: an_as /= Void
 			n_not_void: n /= Void
 		do
 			old_name := o
-			as_keyword := an_as
+			as_keyword := tokens.as_keyword
 			new_name := n
 		ensure
 			old_name_set: old_name = o
-			as_keyword_set: as_keyword = an_as
 			new_name_set: new_name = n
 		end
 
@@ -49,6 +47,12 @@ feature -- Access
 	as_keyword: ET_KEYWORD
 			-- 'as' keyword
 
+	rename_pair: ET_RENAME is
+			-- Rename pair in comma-separated list
+		do
+			Result := Current
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
@@ -60,6 +64,18 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := new_name.break
+		end
+
+feature -- Setting
+
+	set_as_keyword (an_as: like as_keyword) is
+			-- Set `as_keyword' to `an_as'.
+		require
+			an_as_not_void: an_as /= Void
+		do
+			as_keyword := an_as
+		ensure
+			as_keyword_set: as_keyword = an_as
 		end
 
 feature -- Processing

@@ -17,13 +17,15 @@ inherit
 	ET_INSTRUCTION
 	
 	ET_KEYWORD
+		rename
+			make_retry as make
 		redefine
 			process
 		end
 
 creation
 
-	make, make_with_position
+	make
 
 feature -- Processing
 
@@ -32,5 +34,9 @@ feature -- Processing
 		do
 			a_processor.process_retry_instruction (Current)
 		end
+
+invariant
+
+	is_retry: is_retry
 
 end

@@ -22,28 +22,34 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (d: like dollar; c: like current_entity) is
-			-- Create a new address of Current.
-		require
-			d_not_void: d /= Void
-			c_not_void: c /= Void
+	make is
+			-- Create a new address of 'Current'.
 		do
-			dollar := d
-			current_entity := c
-		ensure
-			dollar_set: dollar = d
-			current_entity_set: current_entity = c
+			dollar := tokens.dollar_symbol
+			current_keyword := tokens.current_keyword
 		end
 
 feature -- Access
 
-	current_entity: ET_CURRENT
-			-- Current entity
+	current_keyword: ET_CURRENT
+			-- 'Current' keyword
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := current_entity.break
+			Result := current_keyword.break
+		end
+
+feature -- Setting
+
+	set_current_keyword (a_current: like current_keyword) is
+			-- Set `current_keyword' to `a_current'.
+		require
+			a_current_not_void: a_current /= Void
+		do
+			current_keyword := a_current
+		ensure
+			current_keyword_set: current_keyword = a_current
 		end
 
 feature -- Processing
@@ -56,6 +62,6 @@ feature -- Processing
 
 invariant
 
-	current_entity_not_void: current_entity /= Void
+	current_keyword_not_void: current_keyword /= Void
 
 end

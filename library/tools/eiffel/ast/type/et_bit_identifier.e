@@ -25,16 +25,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_bit: like bit_keyword; a_name: like name) is
+	make (a_name: like name) is
 			-- Create a new 'BIT identifier' type.
 		require
-			a_bit_not_void: a_bit /= Void
 			a_name_not_void: a_name /= Void
 		do
-			bit_keyword := a_bit
+			bit_keyword := tokens.bit_keyword
 			name := a_name
 		ensure
-			bit_keyword_set: bit_keyword = a_bit
 			name_set: name = a_name
 		end
 
@@ -53,12 +51,27 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := bit_keyword.position
+			if Result.is_null then
+				Result := name.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := name.break
+		end
+
+feature -- Setting
+
+	set_bit_keyword (a_bit: like bit_keyword) is
+			-- Set `bit_keyword' to `a_bit'.
+		require
+			a_bit_not_void: a_bit /= Void
+		do
+			bit_keyword := a_bit
+		ensure
+			bit_keyword_set: bit_keyword = a_bit
 		end
 
 feature -- Status report
@@ -82,8 +95,8 @@ feature -- Validity
 			an_heir.error_handler.report_vhpr3_bit_name_error (an_heir, Current)
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.
@@ -97,7 +110,7 @@ feature -- Validity
 
 feature -- Type processing
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_TYPE is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of `a_feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.
@@ -105,21 +118,21 @@ feature -- Type processing
 			-- `a_class.has_flatten_error' to true if an error occurs.
 			-- (Warning: this is a side-effect function.)
 		local
-			features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			other_feature: ET_FEATURE
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_constant: ET_INTEGER_CONSTANT
+			a_bit_feature: ET_BIT_FEATURE
 		do
-			features := a_class.named_features
-			features.search (name)
-			if features.found then
-				other_feature := features.found_item
+			other_feature := a_class.named_feature (name)
+			if other_feature /= Void then
 				a_constant_attribute ?= other_feature
 				if a_constant_attribute /= Void then
 					a_constant ?= a_constant_attribute.constant
 				end
 				if a_constant /= Void then
-					!ET_BIT_FEATURE! Result.make (bit_keyword, a_constant, name, other_feature.first_seed)
+					!! a_bit_feature.make (a_constant, name, other_feature.first_seed)
+					a_bit_feature.set_bit_keyword (bit_keyword)
+					Result := a_bit_feature
 				else
 -- TODO: not an integer constant.
 					Result := Current

@@ -18,12 +18,30 @@ inherit
 
 	ET_EXPRESSION_LIST
 		redefine
-			process
+			make, make_with_capacity
 		end
 
 creation
 
 	make, make_with_capacity
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new empty manifest tuple.
+		do
+			left_symbol := tokens.left_bracket_symbol
+			right_symbol := tokens.right_bracket_symbol
+			precursor
+		end
+
+	make_with_capacity (nb: INTEGER) is
+			-- Create a new empty manifest tuple with capacity `nb'.
+		do
+			left_symbol := tokens.left_bracket_symbol
+			right_symbol := tokens.right_bracket_symbol
+			precursor (nb)
+		end
 
 feature -- Processing
 

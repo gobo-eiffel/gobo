@@ -23,33 +23,20 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_from_compound: like from_compound;
-		an_invariant: like invariant_part; a_variant: like variant_part;
-		an_until: like until_keyword; an_until_expression: like until_expression;
-		a_loop_compound: like loop_compound;
-		an_end: like end_keyword) is
+		an_until_conditional: like until_conditional;
+		a_loop_compound: like loop_compound) is
 			-- Create a new loop instruction.
 		require
-			a_from_compound_not_void: a_from_compound /= Void
-			an_until_not_void: an_until /= Void
-			an_until_expression_not_void: an_until_expression /= Void
-			a_loop_compound_not_void: a_loop_compound /= Void
-			an_end_not_void: an_end /= Void
+			an_until_conditional_not_void: an_until_conditional /= Void
 		do
 			from_compound := a_from_compound
-			invariant_part := an_invariant
-			variant_part := a_variant
-			until_keyword := an_until
-			until_expression := an_until_expression
+			until_conditional := an_until_conditional
 			loop_compound := a_loop_compound
-			end_keyword := an_end
+			end_keyword := tokens.end_keyword
 		ensure
 			from_compound_set: from_compound = a_from_compound
-			invariant_part_set: invariant_part = an_invariant
-			variant_part_set: variant_part = a_variant
-			until_keyword_set: until_keyword = an_until
-			until_expression_set: until_expression = an_until_expression
+			until_conditional_set: until_conditional = an_until_conditional
 			loop_compound_set: loop_compound = a_loop_compound
-			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Access
@@ -63,11 +50,16 @@ feature -- Access
 	variant_part: ET_VARIANT
 			-- Variant part
 
-	until_keyword: ET_KEYWORD
-			-- 'until' keyword
+	until_conditional: ET_CONDITIONAL
+			-- Until conditional
 
-	until_expression: ET_EXPRESSION
+	until_expression: ET_EXPRESSION is
 			-- Until boolean expression
+		do
+			Result := until_conditional.expression
+		ensure
+			until_expression_not_void: Result /= Void
+		end
 
 	loop_compound: ET_COMPOUND
 			-- Loop compound
@@ -79,13 +71,49 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := from_compound.position
+			if from_compound /= Void then
+				Result := from_compound.position
+			elseif invariant_part /= Void then
+				Result := invariant_part.position
+			elseif variant_part /= Void then
+				Result := variant_part.position
+			else
+				Result := until_conditional.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
+		end
+
+feature -- Setting
+
+	set_invariant_part (an_invariant: like invariant_part) is
+			-- Set `invariant_part' to `an_invariant'.
+		do
+			invariant_part := an_invariant
+		ensure
+			invariant_part_set: invariant_part = an_invariant
+		end
+
+	set_variant_part (a_variant: like variant_part) is
+			-- Set `variant_part' to `a_variant'.
+		do
+			variant_part := a_variant
+		ensure
+			variant_part_set: variant_part = a_variant
+		end
+
+	set_end_keyword (an_end: like end_keyword) is
+			-- Set `end_keyword' to `an_end'.
+		require
+			an_end_not_void: an_end /= Void
+		do
+			end_keyword := an_end
+		ensure
+			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Processing
@@ -98,10 +126,7 @@ feature -- Processing
 
 invariant
 
-	from_compound_not_void: from_compound /= Void
-	until_keyword_not_void: until_keyword /= Void
-	until_expression_not_void: until_expression /= Void
-	loop_compound_not_void: loop_compound /= Void
+	until_conditional_not_void: until_conditional /= Void
 	end_keyword_not_void: end_keyword /= Void
 
 end

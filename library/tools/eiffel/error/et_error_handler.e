@@ -257,8 +257,7 @@ feature -- Validity errors
 			end
 		end
 			
-	report_vcfg1_error (where: ET_CLASS;
-		a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS) is
+	report_vcfg1_error (where: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS) is
 			-- Report VCFG-1 error (ETL2 p.52, ETR p.16): the formal
 			-- generic parameter `a_formal' in class `where' has the
 			-- same name as class `a_class' in the surrounding universe.
@@ -285,7 +284,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg2_error (where: ET_CLASS; formal1, formal2: ET_FORMAL_GENERIC_PARAMETER) is
+	report_vcfg2_error (where: ET_CLASS; formal1, formal2: ET_FORMAL_PARAMETER) is
 			-- Report VCFG-2 error (ETL2 p.52, ETR p.16): a formal
 			-- generic name is declared twice in generic class `where'.
 		require
@@ -389,9 +388,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3a_error (where: ET_CLASS;
-		a_formal: ET_FORMAL_GENERIC_PARAMETER;
-		a_constraint: ET_FORMAL_GENERIC_TYPE) is
+	report_vcfg3a_error (where: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
 			-- Report VCFG-3 error (ETR p.16): the constraint of
 			-- `a_formal' in class `where' is the formal generic
 			-- parameter itself.
@@ -433,9 +430,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3b_error (where: ET_CLASS;
-		a_formal: ET_FORMAL_GENERIC_PARAMETER;
-		a_constraint: ET_FORMAL_GENERIC_TYPE) is
+	report_vcfg3b_error (where: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
 			-- Report VCFG-3 error (ETR p.16): the constraint of
 			-- `a_formal' in class `where' is another formal generic
 			-- parameter appearing before `a_formal' in the list
@@ -468,9 +463,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3c_error (where: ET_CLASS;
-		a_formal: ET_FORMAL_GENERIC_PARAMETER;
-		a_constraint: ET_FORMAL_GENERIC_TYPE) is
+	report_vcfg3c_error (where: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
 			-- Report VCFG-3 error (ETR p.16): the constraint of
 			-- `a_formal' in class `where' is another formal generic
 			-- parameter appearing after `a_formal' in the list
@@ -496,7 +489,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3d_error (where: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_GENERIC_PARAMETER]) is
+	report_vcfg3d_error (where: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER]) is
 			-- Report VCFG-3 error (ETR p.16): the constraints of
 			-- the formal generic parameters `a_cycle' of class
 			-- `where' are involved in a cycle.
@@ -508,7 +501,7 @@ feature -- Validity errors
 			no_void_formal: not a_cycle.has (Void)
 			a_cycle_not_empty: not a_cycle.is_empty
 		local
-			a_cursor: DS_LIST_CURSOR [ET_FORMAL_GENERIC_PARAMETER]
+			a_cursor: DS_LIST_CURSOR [ET_FORMAL_PARAMETER]
 		do
 			if reportable_vcfg3_error (where) then
 				print_compiler (False, No_tag, False, No_tag,
@@ -535,9 +528,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3e_error (where: ET_CLASS;
-		a_formal: ET_FORMAL_GENERIC_PARAMETER;
-		a_type: ET_FORMAL_GENERIC_TYPE) is
+	report_vcfg3e_error (where: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Report VCFG-3 error (ETR p.16): the constraint of
 			-- `a_formal' in class `where' contains the formal
 			-- generic parameter itself.
@@ -579,9 +570,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3f_error (where: ET_CLASS;
-		a_formal: ET_FORMAL_GENERIC_PARAMETER;
-		a_type: ET_FORMAL_GENERIC_TYPE) is
+	report_vcfg3f_error (where: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Report VCFG-3 error (ETR p.16): the constraint of
 			-- `a_formal' in class `where' contains another formal
 			-- generic parameter appearing after `a_formal' in the
@@ -606,7 +595,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3g_error (where: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_GENERIC_PARAMETER]) is
+	report_vcfg3g_error (where: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER]) is
 			-- Report VCFG-3 error (ETR p.16): the constraints of
 			-- the formal generic parameters `a_cycle' of class
 			-- `where' are involved in a cycle.
@@ -618,7 +607,7 @@ feature -- Validity errors
 			no_void_formal: not a_cycle.has (Void)
 			a_cycle_not_empty: not a_cycle.is_empty
 		local
-			a_cursor: DS_LIST_CURSOR [ET_FORMAL_GENERIC_PARAMETER]
+			a_cursor: DS_LIST_CURSOR [ET_FORMAL_PARAMETER]
 		do
 			if reportable_vcfg3_error (where) then
 				print_compiler (False, No_tag, False, No_tag,

@@ -21,14 +21,10 @@ feature -- Access
 	compound: ET_COMPOUND
 			-- Routine body
 
-	locals: ET_LOCAL_VARIABLES
+	locals: ET_LOCAL_VARIABLE_LIST
 			-- Local variables
 
 	rescue_clause: ET_COMPOUND
 			-- Rescue clause
-
-invariant
-
-	compound_not_void: compound /= Void
 
 end

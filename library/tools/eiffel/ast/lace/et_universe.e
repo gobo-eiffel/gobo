@@ -71,8 +71,8 @@ feature {NONE} -- Initialization
 			!! a_name.make ("NONE")
 			none_class := eiffel_class (a_name)
 			!! any_type.make (Void, any_class.name, any_class)
-			!! any_parent.make (any_type, Void, Void, Void, Void, Void, Void)
-			!! any_parents.make_with_capacity (tokens.inherit_keyword, 1)
+			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
+			!! any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
 		ensure
 			any_class_not_void: any_class /= Void
@@ -184,7 +184,7 @@ feature -- Basic classes
 	any_type: ET_CLASS_TYPE
 			-- Class type ANY
 
-	any_parents: ET_PARENTS
+	any_parents: ET_PARENT_LIST
 			-- Default parents
 
 feature -- Measurement
@@ -203,241 +203,6 @@ feature -- Measurement
 			end
 		ensure
 			parsed_classes_count_positive: Result >= 0
-		end
-
-feature -- Factory
-
-	new_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ATTRIBUTE is
-			-- New attribute feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_attribute (a_name, a_type, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			attribute_not_void: Result /= Void
-		end
-
-	new_constant_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE; a_constant: ET_CONSTANT;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
-			-- New constant attribute feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_constant_not_void: a_constant /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_constant_attribute (a_name, a_type, a_constant, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			constant_attribute_not_void: Result /= Void
-		end
-
-	new_deferred_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
-		a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
-			-- New deferred function feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_deferred_function (a_name, args, a_type, an_obsolete,
-				a_preconditions, a_postconditions, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			deferred_function_not_void: Result /= Void
-		end
-
-	new_deferred_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
-		a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
-			-- New deferred procedure feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_deferred_procedure (a_name, args, an_obsolete, a_preconditions,
-				a_postconditions, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			deferred_procedure_not_void: Result /= Void
-		end
-
-	new_do_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_FUNCTION is
-			-- New do function feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_compound_not_void: a_compound /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_do_function (a_name, args, a_type, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			do_function_not_void: Result /= Void
-		end
-
-	new_do_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_PROCEDURE is
-			-- New do procedure feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_compound_not_void: a_compound /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_do_procedure (a_name, args, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			do_procedure_not_void: Result /= Void
-		end
-
-	new_external_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
-		a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
-			-- New external function feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_language_not_void: a_language /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_external_function (a_name, args, a_type, an_obsolete,
-				a_preconditions, a_language, an_alias, a_postconditions,
-				a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			external_function_not_void: Result /= Void
-		end
-
-	new_external_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
-		a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
-			-- New external procedure feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_language_not_void: a_language /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_external_procedure (a_name, args, an_obsolete, a_preconditions,
-				a_language, an_alias, a_postconditions, a_clients,
-				a_class, an_id)
-			features.force_last (Result)
-		ensure
-			external_procedure_not_void: Result /= Void
-		end
-
-	new_once_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_FUNCTION is
-			-- New once function feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_compound_not_void: a_compound /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_once_function (a_name, args, a_type, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			once_function_not_void: Result /= Void
-		end
-
-	new_once_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_PROCEDURE is
-			-- New once procedure feature for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_compound_not_void: a_compound /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_once_procedure (a_name, args, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			once_procedure_not_void: Result /= Void
-		end
-
-	new_unique_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
-		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
-			-- New unique attribute declaration for `a_class'
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
-		do
-			an_id := features.count + 1
-			Result := ast_factory.new_unique_attribute (a_name, a_type, a_clients, a_class, an_id)
-			features.force_last (Result)
-		ensure
-			unique_attribute_not_void: Result /= Void
 		end
 
 feature -- Setting
@@ -607,6 +372,17 @@ feature -- Parsing
 
 feature -- Compilation
 
+	register_feature (a_feature: ET_FEATURE) is
+			-- Register `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			features.force_last (a_feature)
+			a_feature.set_id (features.count)
+		ensure
+			registered: a_feature.is_registered
+		end
+
 	compute_ancestors is
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -665,14 +441,14 @@ feature {ET_CLASS} -- Implementation
 			feature_flattener_not_void: Result /= Void
 		end
 
-feature {ET_FORMAL_GENERIC_PARAMETERS, ET_FORMAL_GENERIC_TYPE} -- Implementation
+feature {ET_FORMAL_PARAMETER_LIST, ET_FORMAL_PARAMETER_TYPE} -- Implementation
 
-	formal_generic_parameter_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER] is
+	formal_parameter_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER] is
 			-- Formal generic parameter sorter
 		once
-			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! Result.make_default
+			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]! Result.make_default
 		ensure
-			formal_generic_parameter_sorter_not_void: Result /= Void
+			formal_parameter_sorter_not_void: Result /= Void
 		end
 
 invariant

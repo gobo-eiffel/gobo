@@ -25,17 +25,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_bit: like bit_keyword; a_constant: like constant) is
+	make (a_constant: like constant) is
 			-- Create a new 'BIT N' type.
 		require
-			a_bit_not_void: a_bit /= Void
 			a_constant_not_void: a_constant /= Void
 		do
-			bit_keyword := a_bit
+			bit_keyword := tokens.bit_keyword
 			constant := a_constant
 			size := No_size
 		ensure
-			bit_keyword_set: bit_keyword = a_bit
 			constant_set: constant = a_constant
 		end
 
@@ -55,12 +53,27 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := bit_keyword.position
+			if Result.is_null then
+				Result := constant.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := constant.break
+		end
+
+feature -- Setting
+
+	set_bit_keyword (a_bit: like bit_keyword) is
+			-- Set `bit_keyword' to `a_bit'.
+		require
+			a_bit_not_void: a_bit /= Void
+		do
+			bit_keyword := a_bit
+		ensure
+			bit_keyword_set: bit_keyword = a_bit
 		end
 
 feature {ET_BIT_TYPE} -- Setting
@@ -201,8 +214,8 @@ feature -- Validity
 			end
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.

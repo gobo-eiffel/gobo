@@ -19,13 +19,25 @@ inherit
 feature -- Access
 
 	dollar: ET_SYMBOL
-			-- Dollar symbol
+			-- '$' symbol
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := dollar.position
+		end
+
+feature -- Setting
+
+	set_dollar (a_dollar: like dollar) is
+			-- Set `dollar' to `a_dollar'.
+		require
+			a_dollar_not_void: a_dollar /= Void
+		do
+			dollar := a_dollar
+		ensure
+			dollar_set: dollar = a_dollar
 		end
 
 invariant

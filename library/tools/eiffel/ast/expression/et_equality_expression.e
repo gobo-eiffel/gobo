@@ -40,8 +40,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	operator: ET_EQUALITY_SYMBOL
-			-- Operator symbol
+	operator: ET_SYMBOL
+			-- Operator symbol ('=' or '/=')
 
 feature -- Processing
 

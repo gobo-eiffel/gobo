@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_TYPE_ITEM is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE_ITEM is
 			-- Replace in current type the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from
@@ -40,7 +40,7 @@ feature -- Type processing
 			resolved_type_not_void: Result /= Void
 		end
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE_ITEM is
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_TYPE_ITEM is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of `a_feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.

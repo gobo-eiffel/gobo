@@ -21,18 +21,16 @@ inherit
 
 	ET_DECLARED_TYPE
 
+	ET_CREATION_TYPE
+
+	ET_STATIC_TYPE
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
 
 	type: ET_TYPE is
-			-- Type in comma-separated list
-		do
-			Result := Current
-		end
-
-	declared_type: ET_TYPE is
-			-- Declared type
+			-- Type
 		do
 			Result := Current
 		end
@@ -70,8 +68,8 @@ feature -- Validity
 		deferred
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.
@@ -95,7 +93,7 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
 			-- Does current type contain formal generic parameter
 			-- types whose corresponding actual parameter in
 			-- `actual_parameters' is different from the formal
@@ -106,7 +104,7 @@ feature -- Type processing
 			-- Result := False
 		end
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
 			-- Replace in current type the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from
@@ -116,7 +114,7 @@ feature -- Type processing
 			Result := Current
 		end
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_TYPE is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of `a_feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.

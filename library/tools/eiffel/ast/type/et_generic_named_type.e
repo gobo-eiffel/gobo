@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generic_parameters: ET_ACTUAL_GENERIC_PARAMETERS
+	generic_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Generic parameters
 
 	break: ET_BREAK is
@@ -66,13 +66,13 @@ feature -- Type processing
 			-- current type appears in the source code.
 			-- (Warning: this is a side-effect function.)
 		local
-			a_parameter: ET_FORMAL_GENERIC_PARAMETER
+			a_parameter: ET_FORMAL_PARAMETER
 			a_base_class: ET_CLASS
 		do
 			a_parameter := a_class.generic_parameter (name)
 			if a_parameter /= Void then
 					-- TODO: Syntax Error
-				Result := ast_factory.new_formal_generic_type (name, a_parameter.index)
+				Result := ast_factory.new_formal_parameter_type (name, a_parameter.index)
 			else
 				a_base_class := a_class.universe.eiffel_class (name)
 				generic_parameters.resolve_named_types (a_class, ast_factory)

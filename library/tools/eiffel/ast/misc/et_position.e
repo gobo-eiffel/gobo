@@ -35,6 +35,16 @@ feature -- Access
 			column_positive: Result >= 0
 		end
 
+feature -- Status report
+
+	is_null: BOOLEAN is
+			-- Is current position null?
+		do
+			Result := (line = no_line)
+		ensure
+			definition: Result = (line = no_line)
+		end
+
 feature -- Constants
 
 	no_line: INTEGER is 0

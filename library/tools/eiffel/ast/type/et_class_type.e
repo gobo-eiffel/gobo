@@ -51,7 +51,7 @@ feature -- Access
 	base_class: ET_CLASS
 			-- Base class
 
-	type_mark: ET_TYPE_MARK
+	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' or 'separate' keyword
 
 	position: ET_POSITION is
@@ -151,7 +151,7 @@ feature -- Validity
 			-- it appears in parent clause of `an_heir'.
 			-- Report errors if not valid.
 		local
-			formals: ET_FORMAL_GENERIC_PARAMETERS
+			formals: ET_FORMAL_PARAMETER_LIST
 		do
 			if not base_class.is_preparsed then
 				base_class.universe.preparse
@@ -182,8 +182,8 @@ feature -- Validity
 			end
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.
@@ -191,7 +191,7 @@ feature -- Validity
 			-- formal generic parameter declaration.
 			-- Report errors if not valid.
 		local
-			formals: ET_FORMAL_GENERIC_PARAMETERS
+			formals: ET_FORMAL_PARAMETER_LIST
 		do
 			if not base_class.is_preparsed then
 				base_class.universe.preparse
@@ -233,7 +233,7 @@ feature -- System
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_CLASS_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE is
 			-- Replace in current type the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from

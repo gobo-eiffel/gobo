@@ -19,13 +19,15 @@ inherit
 	ET_WRITABLE
 
 	ET_KEYWORD
+		rename
+			make_result as make
 		redefine
 			process
 		end
 
 creation
 
-	make, make_with_position
+	make
 
 feature -- Processing
 
@@ -34,5 +36,9 @@ feature -- Processing
 		do
 			a_processor.process_result (Current)
 		end
+
+invariant
+
+	is_result: is_result
 
 end

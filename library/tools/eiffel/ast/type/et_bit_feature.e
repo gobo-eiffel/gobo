@@ -31,22 +31,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_bit: like bit_keyword; a_constant: like constant;
-		a_name: like name; a_feature_id: INTEGER) is
+	make (a_constant: like constant; a_name: like name; a_feature_id: INTEGER) is
 			-- Create a new 'BIT feature' type.
 		require
-			a_bit_not_void: a_bit /= Void
 			a_constant_not_void: a_constant /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_id_positive: a_feature_id > 0
 		do
-			bit_keyword := a_bit
+			bit_keyword := tokens.bit_keyword
 			constant := a_constant
 			name := a_name
 			feature_id := a_feature_id
 			size := No_size
 		ensure
-			bit_keyword_set: bit_keyword = a_bit
 			constant_set: constant = a_constant
 			name_set: name = a_name
 			feature_id_set: feature_id = a_feature_id
@@ -80,8 +77,8 @@ feature -- Validity
 			an_heir.error_handler.report_vhpr3_bit_name_error (an_heir, Current)
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.

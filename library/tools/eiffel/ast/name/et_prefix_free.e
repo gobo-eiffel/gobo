@@ -14,15 +14,12 @@ deferred class ET_PREFIX_FREE
 
 inherit
 
-	ET_PREFIX
+	ET_OPERATOR
 		redefine
-			is_prefix_free
+			name, hash_code, same_feature_name
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
-		undefine
-			is_equal
-		end
 
 feature -- Access
 
@@ -49,14 +46,6 @@ feature -- Access
 			Result := STRING_.case_insensitive_hash_code (free_operator_name)
 		end
 
-feature -- Status report
-
-	is_prefix_free: BOOLEAN is
-			-- Is current feature name of the form 'prefix "free-operator"'?
-		once
-			Result := True
-		end
-
 feature -- Comparison
 
 	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
@@ -67,7 +56,7 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			elseif other.is_prefix_free then
+			elseif other.is_prefix_freeop then
 				op ?= other
 				if op /= Void then
 					Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)

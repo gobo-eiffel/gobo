@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generic_parameters: ET_ACTUAL_GENERIC_PARAMETERS
+	generic_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Generic parameters
 
 	break: ET_BREAK is
@@ -150,8 +150,8 @@ feature -- Validity
 			-- it appears in parent clause of `an_heir'.
 			-- Report errors if not valid.
 		local
-			formals: ET_FORMAL_GENERIC_PARAMETERS
-			actuals: ET_ACTUAL_GENERIC_PARAMETERS
+			formals: ET_FORMAL_PARAMETER_LIST
+			actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			if not base_class.is_preparsed then
 				base_class.universe.preparse
@@ -198,8 +198,8 @@ feature -- Validity
 			end
 		end
 		
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.
@@ -207,8 +207,8 @@ feature -- Validity
 			-- formal generic parameter declaration.
 			-- Report errors if not valid.
 		local
-			formals: ET_FORMAL_GENERIC_PARAMETERS
-			actuals: ET_ACTUAL_GENERIC_PARAMETERS
+			formals: ET_FORMAL_PARAMETER_LIST
+			actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			if not base_class.is_preparsed then
 				base_class.universe.preparse
@@ -267,7 +267,7 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
 			-- Does current type contain formal generic parameter
 			-- types whose corresponding actual parameter in
 			-- `actual_parameters' is different from the formal
@@ -275,7 +275,7 @@ feature -- Type processing
 			Result := generic_parameters.has_formal_parameters (actual_parameters)
 		end
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_CLASS_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE is
 			-- Replace in current type the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from
@@ -286,7 +286,7 @@ feature -- Type processing
 			Result := Current
 		end
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_TYPE is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of `a_feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.
@@ -319,7 +319,6 @@ feature -- Conversion
 		local
 			a_parameters: like generic_parameters
 			a_parameter, an_actual: ET_TYPE_ITEM
-			a_left_bracket, a_right_bracket: ET_SYMBOL
 			duplication_needed: BOOLEAN
 			i, j, nb: INTEGER
 		do
@@ -332,9 +331,9 @@ feature -- Conversion
 				an_actual := a_parameter.base_type (a_feature, a_type)
 				if a_parameter /= an_actual then
 					if not duplication_needed then
-						a_left_bracket := generic_parameters.left_bracket
-						a_right_bracket := generic_parameters.right_bracket
-						!! a_parameters.make_with_capacity (a_left_bracket, a_right_bracket, nb)
+						!! a_parameters.make_with_capacity (nb)
+						a_parameters.set_left_bracket (generic_parameters.left_bracket)
+						a_parameters.set_right_bracket (generic_parameters.right_bracket)
 						from j := i - 1 until j < 1 loop
 							a_parameters.put_first (generic_parameters.item (j))
 							j := j - 1

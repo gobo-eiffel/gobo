@@ -14,7 +14,7 @@ deferred class ET_FEATURE
 
 inherit
 
-	ET_FEATURE_ITEM
+	ET_AST_NODE
 
 	HASHABLE
 
@@ -111,6 +111,12 @@ feature -- Access
 	frozen_keyword: ET_KEYWORD
 			-- 'frozen' keyword
 
+	feature_clause: ET_FEATURE_CLAUSE
+			-- Feature clause containing current feature
+
+	semicolon: ET_SEMICOLON_SYMBOL
+			-- Optional semicolon in semicolon-separated list of features
+
 	synonym: ET_FEATURE
 			-- Next synonym if any
 
@@ -126,13 +132,15 @@ feature -- Access
 			end
 		end
 
-	feature_item: ET_FEATURE is
-			-- Feature in semicolon-separated list
-		do
-			Result := Current
-		end
-
 feature -- Status report
+
+	is_registered: BOOLEAN is
+			-- Has feature been registered to the surrounding universe?
+		do
+			Result := (id > 0)
+		ensure
+			definition: Result = (id > 0)
+		end
 
 	is_frozen: BOOLEAN is
 			-- Has feature been declared as frozen?
@@ -235,6 +243,22 @@ feature -- Comparison
 
 feature -- Setting
 
+	set_id (an_id: INTEGER) is
+			-- Set `id' to `an_id'.
+		require
+			an_id_positive: an_id > 0
+		do
+			id := an_id
+			if first_seed = 0 then
+				set_first_seed (an_id)
+			end
+			if version = 0 then
+				set_version (an_id)
+			end
+		ensure
+			id_set: id = an_id
+		end
+
 	set_current_class (a_class: like current_class) is
 			-- Set `current_class' to `a_class'.
 		require
@@ -243,6 +267,14 @@ feature -- Setting
 			current_class := a_class
 		ensure
 			current_class_set: current_class = a_class
+		end
+
+	set_feature_clause (a_feature_clause: like feature_clause) is
+			-- Set `feature_clause' to `a_feature_clause'.
+		do
+			feature_clause := a_feature_clause
+		ensure
+			feature_clause_set: feature_clause = a_feature_clause
 		end
 
 	set_clients (a_clients: like clients) is
@@ -258,7 +290,7 @@ feature -- Setting
 	set_version (a_version: INTEGER) is
 			-- Set `version' to `a_version'.
 		require
-			a_version_not_void: a_version /= Void
+			a_version_not_void: a_version > 0
 		do
 			version := a_version
 		ensure
@@ -314,7 +346,7 @@ feature -- Setting
 			if a_precursors /= Void then
 				first_precursor := a_precursors.first
 			else
-				first_precursor := -1
+				first_precursor := 0
 			end
 			precursors := a_precursors
 		ensure
@@ -335,6 +367,14 @@ feature -- Setting
 			synonym := a_synonym
 		ensure
 			synonym_set: a_synonym = a_synonym
+		end
+
+	set_semicolon (a_semicolon: like semicolon) is
+			-- Set `semicolon' to `a_semicolon'.
+		do
+			semicolon := a_semicolon
+		ensure
+			semicolon_set: semicolon = a_semicolon
 		end
 
 feature -- Duplication
@@ -382,7 +422,7 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
 			-- Does current feature contain formal generic parameter
 			-- types whose corresponding actual parameter in
 			-- `actual_parameters' is different from the formal
@@ -392,7 +432,7 @@ feature -- Type processing
 		deferred
 		end
 
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Replace in current feature the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from
@@ -418,10 +458,9 @@ feature -- Type processing
 invariant
 
 	name_item_not_void: name_item /= Void
-	id_positive: id > 0
 	current_class_not_void: current_class /= Void
 	clients_not_void: clients /= Void
-	first_seed_positive: first_seed > 0
+	first_seed_positive: is_registered implies first_seed > 0
 	first_seed_definition: seeds /= Void implies first_seed = seeds.first
 	first_precursor_definition: precursors /= Void implies first_precursor = precursors.first
 	implementation_class_not_void: implementation_class /= Void

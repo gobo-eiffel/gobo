@@ -12,6 +12,10 @@ indexing
 
 deferred class ET_AST_NODE
 
+inherit
+
+	ET_SHARED_TOKEN_CONSTANTS
+
 feature -- Access
 
 	position: ET_POSITION is

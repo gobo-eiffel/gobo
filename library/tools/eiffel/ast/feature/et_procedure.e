@@ -39,10 +39,12 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_PROCEDURE is
 			-- Undefined version of current feature
 		do
-			Result := universe.new_deferred_procedure (a_name, arguments,
-				obsolete_message, preconditions, postconditions, clients, current_class)
+			!! Result.make (a_name, arguments, obsolete_message, preconditions,
+				postconditions, clients, current_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
+			Result.set_semicolon (semicolon)
+			Result.set_feature_clause (feature_clause)
 			Result.set_implementation_class (implementation_class)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
@@ -69,7 +71,7 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
 			-- Does current feature contain formal generic parameter
 			-- types whose corresponding actual parameter in
 			-- `actual_parameters' is different from the formal
@@ -80,7 +82,7 @@ feature -- Type processing
 			end
 		end
 
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Replace in current feature the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from

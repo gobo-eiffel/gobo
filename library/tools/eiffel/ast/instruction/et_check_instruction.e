@@ -16,6 +16,9 @@ inherit
 
 	ET_INSTRUCTION
 	ET_ASSERTIONS
+		redefine
+			make, make_with_capacity
+		end
 
 creation
 
@@ -23,37 +26,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_check: like check_keyword; an_end: like end_keyword) is
+	make is
 			-- Create a new check instruction.
-		require
-			a_check_not_void: a_check /= Void
-			an_end_not_void: an_end /= Void
 		do
-			check_keyword := a_check
-			end_keyword := an_end
-			make_ast_list
-		ensure
-			check_keyword_set: check_keyword = a_check
-			end_keyword_set: end_keyword = an_end
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			check_keyword := tokens.check_keyword
+			end_keyword := tokens.end_keyword
+			precursor
 		end
 
-	make_with_capacity (a_check: like check_keyword; an_end: like end_keyword; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new check instruction with capacity `nb'.
-		require
-			a_check_not_void: a_check /= Void
-			an_end_not_void: an_end /= Void
-			nb_positive: nb >= 0
 		do
-			check_keyword := a_check
-			end_keyword := an_end
-			make_ast_list_with_capacity (nb)
-		ensure
-			check_keyword_set: check_keyword = a_check
-			end_keyword_set: end_keyword = an_end
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			check_keyword := tokens.check_keyword
+			end_keyword := tokens.end_keyword
+			precursor (nb)
 		end
 
 feature -- Access
@@ -75,6 +61,28 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
+		end
+
+feature -- Setting
+
+	set_check_keyword (a_check: like check_keyword) is
+			-- Set `check_keyword' to `a_check'.
+		require
+			a_check_not_void: a_check /= Void
+		do
+			check_keyword := a_check
+		ensure
+			check_keyword_set: check_keyword = a_check
+		end
+
+	set_end_keyword (an_end: like end_keyword) is
+			-- Set `end_keyword' to `an_end'.
+		require
+			an_end_not_void: an_end /= Void
+		do
+			end_keyword := an_end
+		ensure
+			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Processing

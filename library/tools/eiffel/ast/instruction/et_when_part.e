@@ -22,26 +22,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_when: like when_keyword; a_choices: like choices;
-		a_then_compound: like then_compound) is
+	make (a_choices: like choices; a_then_compound: like then_compound) is
 			-- Create a new when part.
 		require
-			a_when_not_void: a_when /= Void
-			a_then_compound_not_void: a_then_compound /= Void
+			a_choices_not_void: a_choices /= Void
 		do
-			when_keyword := a_when
 			choices := a_choices
 			then_compound := a_then_compound
 		ensure
-			when_keyword_set: when_keyword = a_when
 			choices_set: choices = a_choices
 			then_compound_set: then_compound = a_then_compound
 		end
 
 feature -- Access
-
-	when_keyword: ET_KEYWORD
-			-- 'when' keyword
 
 	choices: ET_CHOICE_LIST
 			-- Choices
@@ -53,13 +46,15 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := when_keyword.position
+			Result := choices.position
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := then_compound.break
+			if then_compound /= Void then
+				Result := then_compound.break
+			end
 		end
 
 feature -- Processing
@@ -72,7 +67,6 @@ feature -- Processing
 
 invariant
 
-	when_keyword_not_void: when_keyword /= Void
-	then_compound_not_void: then_compound /= Void
+	choices_not_void: choices /= Void
 
 end

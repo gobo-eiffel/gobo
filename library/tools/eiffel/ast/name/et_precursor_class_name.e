@@ -1,0 +1,28 @@
+indexing
+
+	description:
+
+		"Eiffel class names in precursor calls"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class ET_PRECURSOR_CLASS_NAME
+
+inherit
+
+	ET_AST_NODE
+
+feature -- Access
+
+	class_name: ET_CLASS_NAME is
+			-- Class name
+		deferred
+		ensure
+			class_name_not_void: Result /= Void
+		end
+
+end

@@ -16,6 +16,7 @@ inherit
 
 	ET_AST_LIST [ET_CLASS_NAME_ITEM]
 	ET_SHARED_CLASS_NAME_TESTER
+	ET_SHARED_TOKEN_CONSTANTS
 
 creation
 
@@ -41,7 +42,7 @@ feature -- Status report
 			-- class name "NONE"?
 		do
 			if count = 1 then
-				Result := class_name (1).same_class_name (none_class_name)
+				Result := class_name (1).same_class_name (tokens.none_class_name)
 			end
 		end
 
@@ -131,16 +132,6 @@ feature {NONE} -- Implementation
 			-- Fixed array routines
 		once
 			!! Result
-		end
-
-feature {NONE} -- Implementation
-
-	none_class_name: ET_CLASS_NAME is
-			-- "NONE" class name
-		once
-			!ET_IDENTIFIER! Result.make ("NONE")
-		ensure
-			none_class_name_not_void: Result /= Void
 		end
 
 end

@@ -43,7 +43,7 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Name of type
 
-	type_mark: ET_TYPE_MARK
+	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' or 'separate' keyword
 
 	position: ET_POSITION is
@@ -84,8 +84,8 @@ feature -- Validity
 			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.
@@ -106,7 +106,7 @@ feature -- Type processing
 			-- current type appears in the source code.
 			-- (Warning: this is a side-effect function.)
 		local
-			a_parameter: ET_FORMAL_GENERIC_PARAMETER
+			a_parameter: ET_FORMAL_PARAMETER
 			a_base_class: ET_CLASS
 		do
 			a_parameter := a_class.generic_parameter (name)
@@ -115,7 +115,7 @@ feature -- Type processing
 					-- TODO:
 					-- ERROR
 				end
-				Result := ast_factory.new_formal_generic_type (name, a_parameter.index)
+				Result := ast_factory.new_formal_parameter_type (name, a_parameter.index)
 			else
 				a_base_class := a_class.universe.eiffel_class (name)
 				Result := ast_factory.new_class_type (type_mark, name, a_base_class)

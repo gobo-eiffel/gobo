@@ -22,17 +22,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_clients_clause: like clients_clause; an_all: like all_keyword) is
+	make (a_clients_clause: like clients_clause) is
 			-- Create a new 'all' export clause.
 		require
 			a_clients_clause_not_void: a_clients_clause /= Void
-			an_all_not_void: an_all /= Void
 		do
 			clients_clause := a_clients_clause
-			all_keyword := an_all
+			all_keyword := tokens.all_keyword
 		ensure
 			clients_clause_set: clients_clause = a_clients_clause
-			all_keyword_set: all_keyword = an_all
 		end
 
 feature -- Access
@@ -68,6 +66,18 @@ feature -- Status report
 			-- Is `a_name' listed in current export clause?
 		do
 			Result := True
+		end
+
+feature -- Setting
+
+	set_all_keyword (an_all: like all_keyword) is
+			-- Set `all_keyword' to `an_all'.
+		require
+			an_all_not_void: an_all /= Void
+		do
+			all_keyword := an_all
+		ensure
+			all_keyword_set: all_keyword = an_all
 		end
 
 feature -- Processing

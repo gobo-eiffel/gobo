@@ -14,55 +14,44 @@ deferred class ET_FEATURE_CALL
 
 inherit
 
-	ET_AST_NODE
+	ET_QUALIFIED_CALL
+		rename
+			make as make_qualified_call
+		undefine
+			process
+		redefine
+			position
+		end
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; args: like arguments) is
+	make (a_target: like target; a_name: like qualified_name; args: like arguments) is
 			-- Create a new feature call.
 		require
 			a_name_not_void: a_name /= Void
 		do
-			name := a_name
-			arguments := args
+			target := a_target
+			make_qualified_call (a_name, args)
 		ensure
-			name_set: name = a_name
+			target_set: target = a_target
+			name_set: qualified_name = a_name
 			arguments_set: arguments = args
 		end
 
 feature -- Access
 
-	name: ET_FEATURE_NAME
-			-- Feature name
-
-	target: ET_EXPRESSION is
+	target: ET_EXPRESSION
 			-- Target
-		do
-			-- No target.
-		end
-
-	arguments: ET_ACTUAL_ARGUMENTS
-			-- Arguments
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := name.position
-		end
-
-	break: ET_BREAK is
-			-- Break which appears just after current node
-		do
-			if arguments /= Void then
-				Result := arguments.break
+			if target /= Void then
+				Result := target.position
 			else
-				Result := name.break
+				Result := qualified_name.position
 			end
 		end
-
-invariant
-
-	name_not_void: name /= Void
 
 end

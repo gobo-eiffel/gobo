@@ -18,8 +18,11 @@ inherit
 
 feature -- Access
 
-	left, right: ET_EXPRESSION
-			-- Left- and right-hand-sides
+	left: ET_EXPRESSION
+			-- Left-hand-side
+	
+	right: ET_EXPRESSION
+			-- Right-hand-side
 
 	position: ET_POSITION is
 			-- Position of first character of

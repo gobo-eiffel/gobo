@@ -22,16 +22,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (d: like dollar; a_name: like name) is
+	make (a_name: like name) is
 			-- Create a new feature address.
 		require
-			d_not_void: d /= Void
 			a_name_not_void: a_name /= Void
 		do
-			dollar := d
+			dollar := tokens.dollar_symbol
 			name := a_name
 		ensure
-			dollar_set: dollar = d
 			name_set: name = a_name
 		end
 

@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	manifest_string: ET_MANIFEST_STRING is
-			-- Manifest string
+			-- External alias
 		deferred
 		ensure
 			manifest_string_not_void: Result /= Void

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_INFIX_OPERATOR
+	name: ET_OPERATOR
 			-- Feature name
 
 feature -- Processing

@@ -15,69 +15,58 @@ class ET_DEBUG_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
-		undefine
-			add_to_system
-		end
-
-	ET_COMPOUND
-		rename
-			make as make_compound,
-			make_with_capacity as make_compound_with_capacity,
-			keyword as debug_keyword,
-			set_keyword as set_debug_keyword
-		redefine
-			break, process
-		end
 
 creation
 
-	make, make_with_capacity
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_debug: like debug_keyword; a_keys: like keys; an_end: like end_keyword) is
+	make (a_keys: like keys; a_compound: like compound) is
 			-- Create a new debug instruction.
-		require
-			a_debug_not_void: a_debug /= Void
-			an_end_not_void: an_end /= Void
 		do
 			keys := a_keys
-			end_keyword := an_end
-			make_compound (a_debug)
+			compound := a_compound
+			end_keyword := tokens.end_keyword
 		ensure
-			debug_keyword_set: debug_keyword = a_debug
 			keys_set: keys = a_keys
-			end_keyword_set: end_keyword = an_end
-			is_empty: is_empty
-			capacity_set: capacity = 0
-		end
-
-	make_with_capacity (a_debug: like debug_keyword; a_keys: like keys;
-		an_end: like end_keyword; nb: INTEGER) is
-			-- Create a new debug instruction with capacity `nb'.
-		require
-			a_debug_not_void: a_debug /= Void
-			an_end_not_void: an_end /= Void
-			nb_positive: nb >= 0
-		do
-			keys := a_keys
-			end_keyword := an_end
-			make_compound_with_capacity (a_debug, nb)
-		ensure
-			debug_keyword_set: debug_keyword = a_debug
-			keys_set: keys = a_keys
-			end_keyword_set: end_keyword = an_end
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			compound_set: compound = a_compound
 		end
 
 feature -- Access
 
-	end_keyword: ET_KEYWORD
-			-- 'end' keywords
+	compound: ET_COMPOUND
+			-- Debug instructions
 
-	keys: ET_DEBUG_KEYS
+	keys: ET_MANIFEST_STRING_LIST
 			-- Debug keys
+
+	end_keyword: ET_KEYWORD
+			-- 'end' keyword
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		local
+			a_debug_keyword: ET_KEYWORD
+		do
+			if compound /= Void then
+				a_debug_keyword := compound.keyword
+				if not a_debug_keyword.position.is_null then
+					Result := a_debug_keyword.position
+				elseif keys /= Void then
+					Result := keys.position
+				elseif not compound.is_empty then
+					Result := compound.item (1).position
+				else
+					Result := end_keyword.position
+				end
+			elseif keys /= Void then
+				Result := keys.position
+			else
+				Result := end_keyword.position
+			end
+		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
@@ -87,6 +76,14 @@ feature -- Access
 
 feature -- Setting
 
+	set_keys (a_keys: like keys) is
+			-- Set `keys' to `a_keys'.
+		do
+			keys := a_keys
+		ensure
+			keys_set: keys = a_keys
+		end
+
 	set_end_keyword (an_end: like end_keyword) is
 			-- Set `end_keyword' to `an_end'.
 		require
@@ -95,14 +92,6 @@ feature -- Setting
 			end_keyword := an_end
 		ensure
 			end_keyword_set: end_keyword = an_end
-		end
-
-	set_keys (a_keys: like keys) is
-			-- Set `keys' to `a_keys'.
-		do
-			keys := a_keys
-		ensure
-			keys_set: keys = a_keys
 		end
 
 feature -- Processing

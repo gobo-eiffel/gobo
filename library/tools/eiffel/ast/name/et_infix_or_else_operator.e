@@ -14,12 +14,7 @@ class ET_INFIX_OR_ELSE_OPERATOR
 
 inherit
 
-	ET_INFIX_OR_ELSE
-
-	ET_INFIX_OPERATOR
-		undefine
-			is_infix_or_else
-		end
+	ET_OPERATOR
 
 creation
 
@@ -27,24 +22,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_or: like or_keyword; an_else: like else_keyword) is
+	make is
 			-- Create a new binary 'or else' operator.
-		require
-			an_or_not_void: an_or /= Void
-			an_else_not_void: an_else /= Void
 		do
-			or_keyword := an_or
-			else_keyword := an_else
-		ensure
-			or_keyword_set: or_keyword = an_or
-			else_keyword_set: else_keyword = an_else
+			or_keyword := tokens.or_keyword
+			else_keyword := tokens.else_keyword
+			code := tokens.infix_or_else_code
 		end
 
 feature -- Access
 
 	or_keyword: ET_TOKEN
+			-- 'or' keyword
+
 	else_keyword: ET_TOKEN
-			-- "or else" keywords
+			-- 'else' keyword
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -59,6 +51,28 @@ feature -- Access
 			Result := else_keyword.break
 		end
 
+feature -- Setting
+
+	set_or_keyword (an_or: like or_keyword) is
+			-- Set `or_keyword' to `an_or'.
+		require
+			an_or_not_void: an_or /= Void
+		do
+			or_keyword := an_or
+		ensure
+			or_keyword_set: or_keyword = an_or
+		end
+
+	set_else_keyword (an_else: like else_keyword) is
+			-- Set `else_keyword' to `an_else'.
+		require
+			an_else_not_void: an_else /= Void
+		do
+			else_keyword := an_else
+		ensure
+			else_keyword_set: else_keyword = an_else
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -67,9 +81,15 @@ feature -- Processing
 			a_processor.process_infix_or_else_operator (Current)
 		end
 
+feature {NONE} -- Implementation
+
+	code: CHARACTER
+			-- Operator code
+
 invariant
 
 	or_keyword_not_void: or_keyword /= Void
 	else_keyword_not_void: else_keyword /= Void
+	is_infix_or_else: is_infix_or_else
 
 end

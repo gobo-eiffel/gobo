@@ -27,17 +27,14 @@ feature {NONE} -- Initialization
 		a_preconditions: like preconditions; a_locals: like locals;
 		a_compound: like compound; a_postconditions: like postconditions;
 		a_rescue: like rescue_clause; a_clients: like clients;
-		a_class: like current_class; an_id: INTEGER) is
+		a_class: like current_class) is
 			-- Create a new internal procedure.
 		require
 			a_name_not_void: a_name /= Void
-			a_compound_not_void: a_compound /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id > 0
 		do
 			name_item := a_name
-			id := an_id
 			arguments := args
 			is_keyword := tokens.is_keyword
 			obsolete_message := an_obsolete
@@ -48,10 +45,8 @@ feature {NONE} -- Initialization
 			rescue_clause := a_rescue
 			end_keyword := tokens.end_keyword
 			clients := a_clients
-			version := an_id
 			current_class := a_class
 			implementation_class := a_class
-			first_seed := an_id
 		ensure
 			name_item_set: name_item = a_name
 			arguments_set: arguments = args
@@ -62,11 +57,8 @@ feature {NONE} -- Initialization
 			postconditions_set: postconditions = a_postconditions
 			rescue_clause_set: rescue_clause = a_rescue
 			clients_set: clients = a_clients
-			version_set: version = an_id
-			first_seed_set: first_seed = an_id
 			current_class_set: current_class = a_class
 			implementation_class_set: implementation_class = a_class
-			id_set: id = an_id
 		end
 
 feature -- System
@@ -81,7 +73,9 @@ feature -- System
 			if locals /= Void then
 				locals.add_to_system
 			end
-			compound.add_to_system
+			if compound /= Void then
+				compound.add_to_system
+			end
 		end
 
 end

@@ -15,6 +15,9 @@ class ET_INVARIANTS
 inherit
 
 	ET_ASSERTIONS
+		redefine
+			make, make_with_capacity
+		end
 
 creation
 
@@ -22,31 +25,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_invariant: like invariant_keyword) is
+	make is
 			-- Create a new invariant clause.
-		require
-			an_invariant_not_void: an_invariant /= Void
 		do
-			invariant_keyword := an_invariant
-			make_ast_list
-		ensure
-			invariant_keyword_set: invariant_keyword = an_invariant
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			invariant_keyword := tokens.invariant_keyword
+			precursor
 		end
 
-	make_with_capacity (an_invariant: like invariant_keyword; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new invariant clause with capacity `nb'.
-		require
-			an_invariant_not_void: an_invariant /= Void
-			nb_positive: nb >= 0
 		do
-			invariant_keyword := an_invariant
-			make_ast_list_with_capacity (nb)
-		ensure
-			invariant_keyword_set: invariant_keyword = an_invariant
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			invariant_keyword := tokens.invariant_keyword
+			precursor (nb)
 		end
 
 feature -- Access
@@ -59,6 +49,9 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := invariant_keyword.position
+			if Result.is_null and not is_empty then
+				Result := item (1).position
+			end
 		end
 
 	break: ET_BREAK is
@@ -69,6 +62,18 @@ feature -- Access
 			else
 				Result := invariant_keyword.break
 			end
+		end
+
+feature -- Setting
+
+	set_invariant_keyword (an_invariant: like invariant_keyword) is
+			-- Set `invariant_keyword' to `an_invariant'.
+		require
+			an_invariant_not_void: an_invariant /= Void
+		do
+			invariant_keyword := an_invariant
+		ensure
+			invariant_keyword_not_void: invariant_keyword = an_invariant
 		end
 
 feature -- Processing

@@ -14,12 +14,7 @@ class ET_INFIX_AND_THEN_OPERATOR
 
 inherit
 
-	ET_INFIX_AND_THEN
-
-	ET_INFIX_OPERATOR
-		undefine
-			is_infix_and_then
-		end
+	ET_OPERATOR
 
 creation
 
@@ -27,24 +22,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_and: like and_keyword; a_then: like then_keyword) is
+	make is
 			-- Create a new binary 'and then' operator.
-		require
-			an_and_not_void: an_and /= Void
-			a_then_not_void: a_then /= Void
 		do
-			and_keyword := an_and
-			then_keyword := a_then
-		ensure
-			and_keyword_set: and_keyword = an_and
-			then_keyword_set: then_keyword = a_then
+			and_keyword := tokens.and_keyword
+			then_keyword := tokens.then_keyword
+			code := tokens.infix_and_then_code
 		end
 
 feature -- Access
 
 	and_keyword: ET_TOKEN
+			-- 'and' keyword
+
 	then_keyword: ET_TOKEN
-			-- "and then" keywords
+			-- 'then' keyword
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -59,6 +51,28 @@ feature -- Access
 			Result := then_keyword.break
 		end
 
+feature -- Setting
+
+	set_and_keyword (an_and: like and_keyword) is
+			-- Set `and_keyword' to `an_and'.
+		require
+			an_and_not_void: an_and /= Void
+		do
+			and_keyword := an_and
+		ensure
+			and_keyword_set: and_keyword = an_and
+		end
+
+	set_then_keyword (a_then: like then_keyword) is
+			-- Set `then_keyword' to `a_then'.
+		require
+			a_then_not_void: a_then /= Void
+		do
+			then_keyword := a_then
+		ensure
+			then_keyword_set: then_keyword = a_then
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -67,9 +81,15 @@ feature -- Processing
 			a_processor.process_infix_and_then_operator (Current)
 		end
 
+feature {NONE} -- Implementation
+
+	code: CHARACTER
+			-- Operator code
+
 invariant
 
 	and_keyword_not_void: and_keyword /= Void
 	then_keyword_not_void: then_keyword /= Void
+	is_infix_and_then: is_infix_and_then
 
 end

@@ -15,12 +15,14 @@ class ET_SEMICOLON_SYMBOL
 inherit
 
 	ET_SYMBOL
+		rename
+			make_semicolon as make
 		redefine
 			process
 		end
 
 	ET_NULL_EXPORT
-		redefine
+		undefine
 			is_semicolon
 		end
 
@@ -31,12 +33,7 @@ inherit
 
 creation
 
-	make, make_with_position
-
-feature -- Status report
-
-	is_semicolon: BOOLEAN is True
-			-- Is current node a semicolon?
+	make
 
 feature -- Processing
 
@@ -45,5 +42,9 @@ feature -- Processing
 		do
 			a_processor.process_semicolon_symbol (Current)
 		end
+
+invariant
+
+	is_semicolon: is_semicolon
 
 end

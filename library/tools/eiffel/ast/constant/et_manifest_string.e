@@ -24,6 +24,8 @@ inherit
 
 	ET_EXTERNAL_ALIAS
 
+	ET_OBSOLETE
+
 	ET_AST_LEAF
 		rename
 			make as make_leaf,
@@ -43,7 +45,7 @@ feature -- Access
 		end
 
 	manifest_string: ET_MANIFEST_STRING is
-			-- Manifest string in comma-separated list
+			-- Manifest string
 		do
 			Result := Current
 		end

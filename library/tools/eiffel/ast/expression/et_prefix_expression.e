@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_PREFIX_OPERATOR
+	name: ET_OPERATOR
 			-- Feature name
 
 	position: ET_POSITION is

@@ -22,29 +22,42 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_old: like old_keyword; e: like expression) is
+	make (e: like expression) is
 			-- Create a new old expression.
 		require
-			an_old_not_void: an_old /= Void
 			e_not_void: e /= Void
 		do
-			old_keyword := an_old
+			old_keyword := tokens.old_keyword
 			expression := e
 		ensure
-			old_keyword_set: old_keyword = an_old
 			expression_set: expression = e
 		end
 
 feature -- Access
 
 	old_keyword: ET_KEYWORD
-			-- "old" keyword
+			-- 'old' keyword
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := old_keyword.position
+			if Result.is_null then
+				Result := expression.position
+			end
+		end
+
+feature -- Setting
+
+	set_old_keyword (an_old: like old_keyword) is
+			-- Set `old_keyword' to `an_old'.
+		require
+			an_old_not_void: an_old /= Void
+		do
+			old_keyword := an_old
+		ensure
+			old_keyword_set: old_keyword = an_old
 		end
 
 feature -- Processing

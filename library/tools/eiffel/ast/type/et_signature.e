@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (args: ET_FORMAL_ARGUMENTS; a_result: like result_type) is
+	make (args: ET_FORMAL_ARGUMENT_LIST; a_result: like result_type) is
 			-- Create a new signature.
 		local
 			i, nb: INTEGER
@@ -148,7 +148,7 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Replace in current signature the formal generic
 			-- parameter types by those of `actual_parameters'
 			-- when the corresponding actual parameter is different

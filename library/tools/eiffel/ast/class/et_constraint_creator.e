@@ -15,9 +15,8 @@ class ET_CONSTRAINT_CREATOR
 inherit
 
 	ET_FEATURE_NAME_LIST
-		rename
-			make as make_feature_name_list,
-			make_with_capacity as make_feature_name_list_with_capacity
+		redefine
+			make, make_with_capacity
 		end
 
 creation
@@ -26,37 +25,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_create: like create_keyword; an_end: like end_keyword) is
+	make is
 			-- Create a new constraint creation clause.
-		require
-			a_create_not_void: a_create /= Void
-			an_end_not_void: an_end /= Void
 		do
-			create_keyword := a_create
-			end_keyword := an_end
-			make_feature_name_list
-		ensure
-			create_keyword_set: create_keyword = a_create
-			end_keyword_set: end_keyword = an_end
-			is_empty: is_empty
-			capacity_set: capacity = 0
+			create_keyword := tokens.create_keyword
+			end_keyword := tokens.end_keyword
+			precursor
 		end
 
-	make_with_capacity (a_create: like create_keyword; an_end: like end_keyword; nb: INTEGER) is
+	make_with_capacity (nb: INTEGER) is
 			-- Create a new constraint creation clause with capacity `nb'.
-		require
-			a_create_not_void: a_create /= Void
-			an_end_not_void: an_end /= Void
-			nb_positive: nb >= 0
 		do
-			create_keyword := a_create
-			end_keyword := an_end
-			make_feature_name_list_with_capacity (nb)
-		ensure
-			create_keyword_set: create_keyword = a_create
-			end_keyword_set: end_keyword = an_end
-			is_empty: is_empty
-			capacity_set: capacity = nb
+			create_keyword := tokens.create_keyword
+			end_keyword := tokens.end_keyword
+			precursor (nb)
 		end
 
 feature -- Access
@@ -72,6 +54,9 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := create_keyword.position
+			if Result.is_null and not is_empty then
+				Result := first.position
+			end
 		end
 
 	break: ET_BREAK is

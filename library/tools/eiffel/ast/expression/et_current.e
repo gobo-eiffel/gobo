@@ -17,13 +17,15 @@ inherit
 	ET_EXPRESSION
 
 	ET_KEYWORD
+		rename
+			make_current as make
 		redefine
 			process
 		end
 
 creation
 
-	make, make_with_position
+	make
 
 feature -- Processing
 
@@ -32,5 +34,9 @@ feature -- Processing
 		do
 			a_processor.process_current (Current)
 		end
+
+invariant
+
+	is_current: is_current
 
 end

@@ -79,20 +79,8 @@ feature -- Access
 			if is_empty then
 				Result := clients_clause.break
 			else
-				Result := item (count).break
+				Result := last.break
 			end
-		end
-
-feature -- Setting
-
-	set_clients_clause (a_clients_clause: like clients_clause) is
-			-- Set `clients_clause' to `a_clients_clause'.
-		require
-			a_clients_clause_not_void: a_clients_clause /= Void
-		do
-			clients_clause := a_clients_clause
-		ensure
-			clients_clause_set: clients_clause = a_clients_clause
 		end
 
 feature -- Processing

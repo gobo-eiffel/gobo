@@ -16,11 +16,9 @@ inherit
 
 	ET_FEATURE
 
-	ET_SHARED_TOKEN_CONSTANTS
-
 feature -- Access
 
-	arguments: ET_FORMAL_ARGUMENTS
+	arguments: ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments
 
 	is_keyword: ET_KEYWORD

@@ -22,16 +22,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (d: like dollar; e: like expression) is
+	make (e: like expression) is
 			-- Create a new expression address.
 		require
-			d_not_void: d /= Void
 			e_not_void: e /= Void
 		do
-			dollar := d
+			dollar := tokens.dollar_symbol
 			expression := e
 		ensure
-			dollar_set: dollar = d
 			expression_set: expression = e
 		end
 

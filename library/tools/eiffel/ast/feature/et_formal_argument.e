@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_FORMAL_ARGUMENT
+class ET_FORMAL_ARGUMENT
 
 inherit
 
 	ET_FORMAL_ARGUMENT_ITEM
+
+creation
+
+	make
 
 feature {NONE} -- Initialization
 
@@ -44,11 +48,11 @@ feature -- Access
 	type: ET_TYPE is
 			-- Type
 		do
-			Result := declared_type.declared_type
+			Result := declared_type.type
 		end
 
 	name_item: ET_ARGUMENT_NAME
-			-- Name follow by a comma or semicolon
+			-- Name (possibly followed by a comma)
 
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
@@ -66,6 +70,12 @@ feature -- Access
 			Result := name_item.position
 		end
 
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := declared_type.break
+		end
+
 feature -- Setting
 
 	set_declared_type (a_type: like declared_type) is
@@ -80,7 +90,7 @@ feature -- Setting
 
 feature -- Type processing
 
-	resolve_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS) is
+	resolve_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS) is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of current feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.
@@ -94,6 +104,23 @@ feature -- Type processing
 			immediate_or_redeclared: a_feature.implementation_class = a_class
 		do
 			declared_type := declared_type.resolved_identifier_types (a_feature, args, a_class)
+		end
+
+feature -- Duplication
+
+	cloned_argument: like Current is
+			-- Cloned formal argument;
+			-- Do not recursively clone the type
+		do
+			!! Result.make (name_item, declared_type)
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_formal_argument (Current)
 		end
 
 invariant

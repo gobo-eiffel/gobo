@@ -70,36 +70,32 @@ feature -- Setting
 
 feature -- Processing
 
-	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS) is
+	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
 		do
-			file.put_character ('(')
-			process_break (a_list.left_symbol.break)
+			a_list.left_symbol.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character (')')
-			process_break (a_list.right_symbol.break)
+			a_list.right_symbol.process (Current)
 		end
 
-	process_actual_generic_parameters (a_list: ET_ACTUAL_GENERIC_PARAMETERS) is
+	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
 		do
-			file.put_character ('[')
-			process_break (a_list.left_bracket.break)
+			a_list.left_bracket.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character (']')
-			process_break (a_list.right_bracket.break)
+			a_list.right_bracket.process (Current)
 		end
 
 	process_all_export (an_export: ET_ALL_EXPORT) is
@@ -121,8 +117,7 @@ feature -- Processing
 			-- Process `an_instruction'.
 		do
 			an_instruction.target.process (Current)
-			file.put_string (":=")
-			process_break (an_instruction.assign_symbol.break)
+			an_instruction.assign_symbol.process (Current)
 			an_instruction.source.process (Current)
 		end
 
@@ -130,8 +125,7 @@ feature -- Processing
 			-- Process `an_instruction'.
 		do
 			an_instruction.target.process (Current)
-			file.put_string ("?=")
-			process_break (an_instruction.reverse_symbol.break)
+			an_instruction.assign_attempt_symbol.process (Current)
 			an_instruction.source.process (Current)
 		end
 
@@ -140,6 +134,7 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -159,14 +154,29 @@ feature -- Processing
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
 			-- Process `an_instruction'.
+		local
+			a_type: ET_TYPE
+			a_call: ET_QUALIFIED_CALL
 		do
-			file.put_string ("!!")
-			process_break (an_instruction.bangbang.break)
+			an_instruction.left_bang.process (Current)
+			a_type := an_instruction.type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			an_instruction.right_bang.process (Current)
 			an_instruction.target.process (Current)
+			a_call := an_instruction.creation_call
+			if a_call /= Void then
+				a_call.process (Current)
+			end
 		end
 
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
@@ -195,6 +205,26 @@ feature -- Processing
 		do
 			a_type.bit_keyword.process (Current)
 			a_type.constant.process (Current)
+		end
+
+	process_braced_class_name (a_name: ET_BRACED_CLASS_NAME) is
+			-- Process `a_name'.
+		do
+			file.put_character ('{')
+			process_break (a_name.left_brace.break)
+			a_name.class_name.process (Current)
+			file.put_character ('}')
+			process_break (a_name.right_brace.break)
+		end
+
+	process_braced_type (a_type: ET_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			file.put_character ('{')
+			process_break (a_type.left_brace.break)
+			a_type.type.process (Current)
+			file.put_character ('}')
+			process_break (a_type.right_brace.break)
 		end
 
 	process_break (a_break: ET_BREAK) is
@@ -288,9 +318,14 @@ feature -- Processing
 	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
 			-- Process `an_expression'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			a_target: ET_EXPRESSION
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			an_expression.name.process (Current)
+			a_target := an_expression.target
+			if a_target /= Void then
+				a_target.process (Current)
+			end
+			an_expression.qualified_name.process (Current)
 			an_arguments := an_expression.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
@@ -300,9 +335,14 @@ feature -- Processing
 	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			a_target: ET_EXPRESSION
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			an_instruction.name.process (Current)
+			a_target := an_instruction.target
+			if a_target /= Void then
+				a_target.process (Current)
+			end
+			an_instruction.qualified_name.process (Current)
 			an_arguments := an_instruction.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
@@ -336,6 +376,7 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 		do
+			a_list.when_keyword.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -347,21 +388,19 @@ feature -- Processing
 			-- Process `a_choice'.
 		do
 			a_choice.lower.process (Current)
-			file.put_string ("..")
-			process_break (a_choice.dotdot.break)
+			a_choice.dotdot.process (Current)
 			a_choice.upper.process (Current)
 		end
 
 	process_class (a_class: ET_CLASS) is
 			-- Process `a_class'.
 		local
-			an_indexing: ET_INDEXINGS
-			a_class_mark: ET_CLASS_MARK
-			a_generic_parameters: ET_FORMAL_GENERIC_PARAMETERS
+			an_indexing: ET_INDEXING_LIST
+			a_class_mark: ET_KEYWORD
+			a_generic_parameters: ET_FORMAL_PARAMETER_LIST
 			an_obsolete_message: ET_OBSOLETE
-			a_parents: ET_PARENTS
-			a_creators: ET_CREATORS
-			a_feature_clauses: ET_FEATURE_CLAUSES
+			a_parents: ET_PARENT_LIST
+			a_creators: ET_CREATOR_LIST
 			an_invariants: ET_INVARIANTS
 		do
 			process_break (a_class.leading_break)
@@ -391,10 +430,7 @@ feature -- Processing
 			if a_creators /= Void then
 				a_creators.process (Current)
 			end
-			a_feature_clauses := a_class.feature_clauses
-			if a_feature_clauses /= Void then
-				a_feature_clauses.process (Current)
-			end
+			process_features (a_class)
 			an_invariants := a_class.invariants
 			if an_invariants /= Void then
 				an_invariants.process (Current)
@@ -417,7 +453,7 @@ feature -- Processing
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		local
-			a_type_mark: ET_TYPE_MARK
+			a_type_mark: ET_KEYWORD
 		do
 			a_type_mark := a_type.type_mark
 			if a_type_mark /= Void then
@@ -431,29 +467,13 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 		do
-			file.put_character ('{')
-			process_break (a_list.left_brace.break)
+			a_list.left_brace.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character ('}')
-			process_break (a_list.right_brace.break)
-		end
-
-	process_colon_formal_argument (an_argument: ET_COLON_FORMAL_ARGUMENT) is
-			-- Process `an_argument'.
-		do
-			an_argument.name_item.process (Current)
-			an_argument.declared_type.process (Current)
-		end
-
-	process_colon_local_variable (a_local: ET_COLON_LOCAL_VARIABLE) is
-			-- Process `a_local'.
-		do
-			a_local.name_item.process (Current)
-			a_local.declared_type.process (Current)
+			a_list.right_brace.process (Current)
 		end
 
 	process_colon_type (a_type: ET_COLON_TYPE) is
@@ -461,19 +481,7 @@ feature -- Processing
 		do
 			file.put_character (':')
 			process_break (a_type.colon.break)
-			a_type.declared_type.process (Current)
-		end
-
-	process_comma_formal_argument (an_argument: ET_COMMA_FORMAL_ARGUMENT) is
-			-- Process `an_argument'.
-		do
-			an_argument.name_item.process (Current)
-		end
-
-	process_comma_local_variable (a_local: ET_COMMA_LOCAL_VARIABLE) is
-			-- Process `a_local'.
-		do
-			a_local.name_item.process (Current)
+			a_type.type.process (Current)
 		end
 
 	process_compound (a_list: ET_COMPOUND) is
@@ -494,6 +502,7 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -515,9 +524,13 @@ feature -- Processing
 			a_feature.declared_type.process (Current)
 			a_feature.is_keyword.process (Current)
 			a_feature.constant.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
-	process_constrained_formal_generic_parameter (a_parameter: ET_CONSTRAINED_FORMAL_GENERIC_PARAMETER) is
+	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER) is
 			-- Process `a_parameter'.
 		local
 			a_creation_procedures: ET_CONSTRAINT_CREATOR
@@ -548,20 +561,33 @@ feature -- Processing
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
 			-- Process `an_expression'.
+		local
+			a_call: ET_QUALIFIED_CALL
 		do
 			an_expression.create_keyword.process (Current)
-			file.put_character ('{')
-			process_break (an_expression.left_brace.break)
-			an_expression.type.process (Current)
-			file.put_character ('}')
-			process_break (an_expression.right_brace.break)
+			an_expression.creation_type.process (Current)
+			a_call := an_expression.creation_call
+			if a_call /= Void then
+				a_call.process (Current)
+			end
 		end
 
 	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
 			-- Process `an_instruction'.
+		local
+			a_type: ET_CREATION_TYPE
+			a_call: ET_QUALIFIED_CALL
 		do
 			an_instruction.create_keyword.process (Current)
+			a_type := an_instruction.creation_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 			an_instruction.target.process (Current)
+			a_call := an_instruction.creation_call
+			if a_call /= Void then
+				a_call.process (Current)
+			end
 		end
 
 	process_creator (a_list: ET_CREATOR) is
@@ -582,7 +608,7 @@ feature -- Processing
 			end
 		end
 
-	process_creators (a_list: ET_CREATORS) is
+	process_creator_list (a_list: ET_CREATOR_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -603,44 +629,33 @@ feature -- Processing
 	process_current_address (an_expression: ET_CURRENT_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			file.put_character ('$')
-			process_break (an_expression.dollar.break)
-			an_expression.current_entity.process (Current)
+			an_expression.dollar.process (Current)
+			an_expression.current_keyword.process (Current)
 		end
 
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			a_keys: ET_DEBUG_KEYS
+			a_compound: ET_COMPOUND
+			a_keys: ET_MANIFEST_STRING_LIST
 			i, nb: INTEGER
 		do
-			an_instruction.debug_keyword.process (Current)
+			a_compound := an_instruction.compound
+			if a_compound /= Void then
+				a_compound.keyword.process (Current)
+			end
 			a_keys := an_instruction.keys
 			if a_keys /= Void then
 				a_keys.process (Current)
 			end
-			nb := an_instruction.count
-			from i := 1 until i > nb loop
-				an_instruction.item (i).process (Current)
-				i := i + 1
+			if a_compound /= Void then
+				nb := a_compound.count
+				from i := 1 until i > nb loop
+					a_compound.item (i).process (Current)
+					i := i + 1
+				end
 			end
 			an_instruction.end_keyword.process (Current)
-		end
-
-	process_debug_keys (a_list: ET_DEBUG_KEYS) is
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			file.put_character ('(')
-			process_break (a_list.left_parenthesis.break)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-			file.put_character (')')
-			process_break (a_list.right_parenthesis.break)
 		end
 
 	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
@@ -648,10 +663,11 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -690,12 +706,10 @@ feature -- Processing
 				a_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-		end
-
-	process_deferred_keyword (a_keyword: ET_DEFERRED_KEYWORD) is
-			-- Process `a_keyword'.
-		do
-			process_token (a_keyword)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
@@ -703,10 +717,11 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -744,6 +759,10 @@ feature -- Processing
 				a_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_do_function (a_feature: ET_DO_FUNCTION) is
@@ -751,12 +770,13 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLES
+			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_postconditions: ET_POSTCONDITIONS
-			a_rescue_clause: ET_COMPOUND
+			a_compound: ET_COMPOUND
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -793,16 +813,23 @@ feature -- Processing
 			if a_locals /= Void then
 				a_locals.process (Current)
 			end
-			a_feature.compound.process (Current)
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
 				a_postconditions.process (Current)
 			end
-			a_rescue_clause := a_feature.rescue_clause
-			if a_rescue_clause /= Void then
-				a_rescue_clause.process (Current)
+			a_compound := a_feature.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
@@ -810,12 +837,13 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLES
+			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_postconditions: ET_POSTCONDITIONS
-			a_rescue_clause: ET_COMPOUND
+			a_compound: ET_COMPOUND
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -851,24 +879,43 @@ feature -- Processing
 			if a_locals /= Void then
 				a_locals.process (Current)
 			end
-			a_feature.compound.process (Current)
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
 				a_postconditions.process (Current)
 			end
-			a_rescue_clause := a_feature.rescue_clause
-			if a_rescue_clause /= Void then
-				a_rescue_clause.process (Current)
+			a_compound := a_feature.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
+		end
+
+	process_dot_feature_name (a_name: ET_DOT_FEATURE_NAME) is
+			-- Process `a_name'.
+		do
+			file.put_character ('.')
+			process_break (a_name.dot.break)
+			a_name.feature_name.process (Current)
 		end
 
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART) is
 			-- Process `an_elseif_part'.
+		local
+			a_compound: ET_COMPOUND
 		do
-			an_elseif_part.elseif_keyword.process (Current)
-			an_elseif_part.expression.process (Current)
-			an_elseif_part.then_compound.process (Current)
+			an_elseif_part.conditional.process (Current)
+			a_compound := an_elseif_part.then_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 		end
 
 	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST) is
@@ -883,13 +930,6 @@ feature -- Processing
 			end
 		end
 
-	process_equal_symbol (a_symbol: ET_EQUAL_SYMBOL) is
-			-- Process `a_symbol'.
-		do
-			file.put_character ('=')
-			process_break (a_symbol.break)
-		end
-
 	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -898,13 +938,7 @@ feature -- Processing
 			an_expression.right.process (Current)
 		end
 
-	process_expanded_keyword (a_keyword: ET_EXPANDED_KEYWORD) is
-			-- Process `a_keyword'.
-		do
-			process_token (a_keyword)
-		end
-
-	process_exports (a_list: ET_EXPORTS) is
+	process_export_list (a_list: ET_EXPORT_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -920,8 +954,7 @@ feature -- Processing
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			file.put_character ('$')
-			process_break (an_expression.dollar.break)
+			an_expression.dollar.process (Current)
 			an_expression.expression.process (Current)
 		end
 
@@ -929,31 +962,7 @@ feature -- Processing
 			-- Process `an_expression'.
 		do
 			an_expression.expression.process (Current)
-			file.put_character (',')
-			process_break (an_expression.comma.break)
-		end
-
-	process_expression_list (a_list: ET_EXPRESSION_LIST) is
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			file.put_character ('(')
-			process_break (a_list.left_symbol.break)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-			file.put_character (')')
-			process_break (a_list.right_symbol.break)
-		end
-
-	process_expression_variant (a_variant: ET_EXPRESSION_VARIANT) is
-			-- Process `a_variant'.
-		do
-			a_variant.variant_keyword.process (Current)
-			a_variant.expression.process (Current)
+			an_expression.comma.process (Current)
 		end
 
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
@@ -961,11 +970,12 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1008,6 +1018,10 @@ feature -- Processing
 				a_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
@@ -1015,11 +1029,12 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1061,6 +1076,10 @@ feature -- Processing
 				a_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
@@ -1072,30 +1091,23 @@ feature -- Processing
 	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			file.put_character ('$')
-			process_break (an_expression.dollar.break)
+			an_expression.dollar.process (Current)
 			an_expression.name.process (Current)
 		end
 
-	process_feature_clause (a_list: ET_FEATURE_CLAUSE) is
-			-- Process `a_list'.
+	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE) is
+			-- Process `a_feature_clause'.
 		local
 			a_clients: ET_CLIENTS
-			i, nb: INTEGER
 		do
-			a_list.feature_keyword.process (Current)
-			a_clients := a_list.clients_clause
+			a_feature_clause.feature_keyword.process (Current)
+			a_clients := a_feature_clause.clients_clause
 			if a_clients /= Void then
 				a_clients.process (Current)
 			end
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
 		end
 
-	process_feature_clauses (a_list: ET_FEATURE_CLAUSES) is
+	process_feature_clause_list (a_list: ET_FEATURE_CLAUSE_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1124,16 +1136,57 @@ feature -- Processing
 			-- Process `a_name'.
 		do
 			a_name.feature_name.process (Current)
-			file.put_character (',')
-			process_break (a_name.comma.break)
+			a_name.comma.process (Current)
 		end
 
-	process_feature_semicolon (a_feature: ET_FEATURE_SEMICOLON) is
-			-- Process `a_feature'.
+	process_features (a_class: ET_CLASS) is
+			-- Process features of `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
+			a_feature_clause: ET_FEATURE_CLAUSE
+			a_named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
+			i, nb: INTEGER
 		do
-			a_feature.feature_item.process (Current)
-			file.put_character (';')
-			process_break (a_feature.semicolon.break)
+			a_feature_clauses := a_class.feature_clauses
+			if a_feature_clauses /= Void then
+				a_named_features := a_class.named_features
+				if a_named_features /= Void then
+					a_cursor := a_named_features.new_cursor
+					a_cursor.start
+					nb := a_feature_clauses.count
+					from i := 1 until i > nb loop
+						a_feature_clause := a_feature_clauses.item (i)
+						a_feature_clause.process (Current)
+						from
+						until
+							a_cursor.after or else
+							a_cursor.item.feature_clause /= a_feature_clause
+						loop
+							a_cursor.item.process (Current)
+							from
+							until
+								a_cursor.item.synonym = Void
+							loop
+								a_cursor.forth
+							end
+							a_cursor.forth
+						end
+						i := i + 1
+					end
+				else
+					a_feature_clauses.process (Current)
+				end
+			end
+		end
+
+	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+			an_argument.name_item.process (Current)
+			an_argument.declared_type.process (Current)
 		end
 
 	process_formal_argument_semicolon (an_argument: ET_FORMAL_ARGUMENT_SEMICOLON) is
@@ -1144,7 +1197,7 @@ feature -- Processing
 			process_break (an_argument.semicolon.break)
 		end
 
-	process_formal_arguments (a_list: ET_FORMAL_ARGUMENTS) is
+	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1160,21 +1213,27 @@ feature -- Processing
 			process_break (a_list.right_parenthesis.break)
 		end
 
-	process_formal_generic_parameter (a_parameter: ET_FORMAL_GENERIC_PARAMETER) is
+	process_formal_comma_argument (an_argument: ET_FORMAL_COMMA_ARGUMENT) is
+			-- Process `an_argument'.
+		do
+			an_argument.name_item.process (Current)
+		end
+
+	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER) is
 			-- Process `a_parameter'.
 		do
 			a_parameter.name.process (Current)
 		end
 
-	process_formal_generic_parameter_comma (a_parameter: ET_FORMAL_GENERIC_PARAMETER_COMMA) is
+	process_formal_parameter_comma (a_parameter: ET_FORMAL_PARAMETER_COMMA) is
 			-- Process `a_parameter'.
 		do
-			a_parameter.formal_generic_parameter.process (Current)
+			a_parameter.formal_parameter.process (Current)
 			file.put_character (',')
 			process_break (a_parameter.comma.break)
 		end
 
-	process_formal_generic_parameters (a_list: ET_FORMAL_GENERIC_PARAMETERS) is
+	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1190,10 +1249,10 @@ feature -- Processing
 			process_break (a_list.right_bracket.break)
 		end
 
-	process_formal_generic_type (a_type: ET_FORMAL_GENERIC_TYPE) is
+	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Process `a_type'.
 		local
-			a_type_mark: ET_TYPE_MARK
+			a_type_mark: ET_KEYWORD
 		do
 			a_type_mark := a_type.type_mark
 			if a_type_mark /= Void then
@@ -1225,7 +1284,7 @@ feature -- Processing
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SIGN_SYMBOL
+			a_sign: ET_SYMBOL
 		do
 			a_sign := a_constant.sign
 			if a_sign /= Void then
@@ -1261,18 +1320,20 @@ feature -- Processing
 			-- Process `an_instruction'.
 		local
 			an_elseif_parts: ET_ELSEIF_PART_LIST
-			an_else_compound: ET_COMPOUND
+			a_compound: ET_COMPOUND
 		do
-			an_instruction.if_keyword.process (Current)
-			an_instruction.expression.process (Current)
-			an_instruction.then_compound.process (Current)
+			an_instruction.conditional.process (Current)
+			a_compound := an_instruction.then_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			an_elseif_parts := an_instruction.elseif_parts
 			if an_elseif_parts /= Void then
 				an_elseif_parts.process (Current)
 			end
-			an_else_compound := an_instruction.else_compound
-			if an_else_compound /= Void then
-				an_else_compound.process (Current)
+			a_compound := an_instruction.else_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -1299,7 +1360,7 @@ feature -- Processing
 			process_break (an_indexing_term.comma.break)
 		end
 
-	process_indexing_terms (a_list: ET_INDEXING_TERMS) is
+	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1311,7 +1372,7 @@ feature -- Processing
 			end
 		end
 
-	process_indexings (a_list: ET_INDEXINGS) is
+	process_indexing_list (a_list: ET_INDEXING_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1324,55 +1385,11 @@ feature -- Processing
 			end
 		end
 
-	process_infix_and_name (a_name: ET_INFIX_AND_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_and_operator (an_operator: ET_INFIX_AND_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
-	process_infix_and_then_name (a_name: ET_INFIX_AND_THEN_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
 	process_infix_and_then_operator (an_operator: ET_INFIX_AND_THEN_OPERATOR) is
 			-- Process `an_operator'.
 		do
 			an_operator.and_keyword.process (Current)
 			an_operator.then_keyword.process (Current)
-		end
-
-	process_infix_div_name (a_name: ET_INFIX_DIV_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_div_operator (an_operator: ET_INFIX_DIV_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_string ("//")
-			process_break (an_operator.break)
-		end
-
-	process_infix_divide_name (a_name: ET_INFIX_DIVIDE_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_divide_operator (an_operator: ET_INFIX_DIVIDE_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('/')
-			process_break (an_operator.break)
 		end
 
 	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
@@ -1389,115 +1406,11 @@ feature -- Processing
 			process_infix_name (a_name)
 		end
 
-	process_infix_free_operator (an_operator: ET_INFIX_FREE_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
-	process_infix_ge_name (a_name: ET_INFIX_GE_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_ge_operator (an_operator: ET_INFIX_GE_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_string (">=")
-			process_break (an_operator.break)
-		end
-
-	process_infix_gt_name (a_name: ET_INFIX_GT_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_gt_operator (an_operator: ET_INFIX_GT_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('>')
-			process_break (an_operator.break)
-		end
-
-	process_infix_implies_name (a_name: ET_INFIX_IMPLIES_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_implies_operator (an_operator: ET_INFIX_IMPLIES_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
-	process_infix_le_name (a_name: ET_INFIX_LE_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_le_operator (an_operator: ET_INFIX_LE_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_string ("<=")
-			process_break (an_operator.break)
-		end
-
-	process_infix_lt_name (a_name: ET_INFIX_LT_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_lt_operator (an_operator: ET_INFIX_LT_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('<')
-			process_break (an_operator.break)
-		end
-
-	process_infix_minus_name (a_name: ET_INFIX_MINUS_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_minus_operator (an_operator: ET_INFIX_MINUS_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('-')
-			process_break (an_operator.break)
-		end
-
-	process_infix_mod_name (a_name: ET_INFIX_MOD_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_mod_operator (an_operator: ET_INFIX_MOD_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_string ("\\")
-			process_break (an_operator.break)
-		end
-
 	process_infix_name (a_name: ET_INFIX_NAME) is
 			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
 		do
 			a_name.infix_keyword.process (Current)
 			a_name.operator_name.process (Current)
-		end
-
-	process_infix_or_else_name (a_name: ET_INFIX_OR_ELSE_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
 		end
 
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR) is
@@ -1507,77 +1420,13 @@ feature -- Processing
 			an_operator.else_keyword.process (Current)
 		end
 
-	process_infix_or_name (a_name: ET_INFIX_OR_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_or_operator (an_operator: ET_INFIX_OR_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
-	process_infix_plus_name (a_name: ET_INFIX_PLUS_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_plus_operator (an_operator: ET_INFIX_PLUS_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('+')
-			process_break (an_operator.break)
-		end
-
-	process_infix_power_name (a_name: ET_INFIX_POWER_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_power_operator (an_operator: ET_INFIX_POWER_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('^')
-			process_break (an_operator.break)
-		end
-
-	process_infix_times_name (a_name: ET_INFIX_TIMES_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_times_operator (an_operator: ET_INFIX_TIMES_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('*')
-			process_break (an_operator.break)
-		end
-
-	process_infix_xor_name (a_name: ET_INFIX_XOR_NAME) is
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_xor_operator (an_operator: ET_INFIX_XOR_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
 			a_when_parts: ET_WHEN_PART_LIST
 			an_else_compound: ET_COMPOUND
 		do
-			an_instruction.inspect_keyword.process (Current)
-			an_instruction.expression.process (Current)
+			an_instruction.conditional.process (Current)
 			a_when_parts := an_instruction.when_parts
 			if a_when_parts /= Void then
 				a_when_parts.process (Current)
@@ -1608,6 +1457,13 @@ feature -- Processing
 			process_token (a_keyword)
 		end
 
+	process_keyword_expression (an_expression: ET_KEYWORD_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			an_expression.keyword.process (Current)
+			an_expression.expression.process (Current)
+		end
+
 	process_keyword_feature_name_list (a_list: ET_KEYWORD_FEATURE_NAME_LIST) is
 			-- Process `a_list'.
 		local
@@ -1626,6 +1482,12 @@ feature -- Processing
 		do
 			a_string.keyword.process (Current)
 			a_string.manifest_string.process (Current)
+		end
+
+	process_keyword_operator (a_keyword: ET_KEYWORD_OPERATOR) is
+			-- Process `a_keyword'.
+		do
+			process_keyword (a_keyword)
 		end
 
 	process_like_argument (a_type: ET_LIKE_ARGUMENT) is
@@ -1664,7 +1526,20 @@ feature -- Processing
 			process_break (a_local.semicolon.break)
 		end
 
-	process_local_variables (a_list: ET_LOCAL_VARIABLES) is
+	process_local_comma_variable (a_local: ET_LOCAL_COMMA_VARIABLE) is
+			-- Process `a_local'.
+		do
+			a_local.name_item.process (Current)
+		end
+
+	process_local_variable (a_local: ET_LOCAL_VARIABLE) is
+			-- Process `a_local'.
+		do
+			a_local.name_item.process (Current)
+			a_local.declared_type.process (Current)
+		end
+
+	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1682,8 +1557,12 @@ feature -- Processing
 		local
 			an_invariant_part: ET_INVARIANTS
 			a_variant_part: ET_VARIANT
+			a_compound: ET_COMPOUND
 		do
-			an_instruction.from_compound.process (Current)
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			an_invariant_part := an_instruction.invariant_part
 			if an_invariant_part /= Void then
 				an_invariant_part.process (Current)
@@ -1692,9 +1571,11 @@ feature -- Processing
 			if a_variant_part /= Void then
 				a_variant_part.process (Current)
 			end
-			an_instruction.until_keyword.process (Current)
-			an_instruction.until_expression.process (Current)
-			an_instruction.loop_compound.process (Current)
+			an_instruction.until_conditional.process (Current)
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			an_instruction.end_keyword.process (Current)
 		end
 
@@ -1703,23 +1584,34 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 		do
-			file.put_string ("<<")
-			process_break (an_expression.left_symbol.break)
+			an_expression.left_symbol.process (Current)
 			nb := an_expression.count
 			from i := 1 until i > nb loop
 				an_expression.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_string (">>")
-			process_break (an_expression.right_symbol.break)
+			an_expression.right_symbol.process (Current)
 		end
 
 	process_manifest_string_comma (a_string: ET_MANIFEST_STRING_COMMA) is
 			-- Process `a_string'.
 		do
 			a_string.manifest_string.process (Current)
-			file.put_character (',')
-			process_break (a_string.comma.break)
+			a_string.comma.process (Current)
+		end
+
+	process_manifest_string_list (a_list: ET_MANIFEST_STRING_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_parenthesis.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_parenthesis.process (Current)
 		end
 
 	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
@@ -1727,28 +1619,19 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 		do
-			file.put_character ('[')
-			process_break (an_expression.left_symbol.break)
+			an_expression.left_symbol.process (Current)
 			nb := an_expression.count
 			from i := 1 until i > nb loop
 				an_expression.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character (']')
-			process_break (an_expression.right_symbol.break)
-		end
-
-	process_minus_symbol (a_symbol: ET_MINUS_SYMBOL) is
-			-- Process `a_symbol'.
-		do
-			file.put_character ('-')
-			process_break (a_symbol.break)
+			an_expression.right_symbol.process (Current)
 		end
 
 	process_named_type (a_type: ET_NAMED_TYPE) is
 			-- Process `a_type'.
 		local
-			a_type_mark: ET_TYPE_MARK
+			a_type_mark: ET_KEYWORD
 		do
 			a_type_mark := a_type.type_mark
 			if a_type_mark /= Void then
@@ -1760,21 +1643,8 @@ feature -- Processing
 	process_none_clients (a_list: ET_NONE_CLIENTS) is
 			-- Process `a_list'.
 		do
-			process_clients (a_list)
-		end
-
-	process_not_equal_symbol (a_symbol: ET_NOT_EQUAL_SYMBOL) is
-			-- Process `a_symbol'.
-		do
-			file.put_string ("/=")
-			process_break (a_symbol.break)
-		end
-
-	process_obsolete (an_obsolete: ET_OBSOLETE) is
-			-- Process `an_obsolete'.
-		do
-			an_obsolete.obsolete_keyword.process (Current)
-			an_obsolete.message.process (Current)
+			a_list.left_brace.process (Current)
+			a_list.right_brace.process (Current)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
@@ -1789,12 +1659,13 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLES
+			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_postconditions: ET_POSTCONDITIONS
-			a_rescue_clause: ET_COMPOUND
+			a_compound: ET_COMPOUND
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1831,16 +1702,23 @@ feature -- Processing
 			if a_locals /= Void then
 				a_locals.process (Current)
 			end
-			a_feature.compound.process (Current)
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
 				a_postconditions.process (Current)
 			end
-			a_rescue_clause := a_feature.rescue_clause
-			if a_rescue_clause /= Void then
-				a_rescue_clause.process (Current)
+			a_compound := a_feature.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
@@ -1855,12 +1733,13 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENTS
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLES
+			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_postconditions: ET_POSTCONDITIONS
-			a_rescue_clause: ET_COMPOUND
+			a_compound: ET_COMPOUND
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1896,23 +1775,30 @@ feature -- Processing
 			if a_locals /= Void then
 				a_locals.process (Current)
 			end
-			a_feature.compound.process (Current)
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
 				a_postconditions.process (Current)
 			end
-			a_rescue_clause := a_feature.rescue_clause
-			if a_rescue_clause /= Void then
-				a_rescue_clause.process (Current)
+			a_compound := a_feature.rescue_clause
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_parent (a_parent: ET_PARENT) is
 			-- Process `a_parent'.
 		local
-			a_renames: ET_RENAMES
-			an_exports: ET_EXPORTS
+			a_renames: ET_RENAME_LIST
+			an_exports: ET_EXPORT_LIST
 			an_undefines: ET_KEYWORD_FEATURE_NAME_LIST
 			a_redefines: ET_KEYWORD_FEATURE_NAME_LIST
 			a_selects: ET_KEYWORD_FEATURE_NAME_LIST
@@ -1956,14 +1842,12 @@ feature -- Processing
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			file.put_character ('(')
-			process_break (an_expression.left_parenthesis.break)
+			an_expression.left_parenthesis.process (Current)
 			an_expression.expression.process (Current)
-			file.put_character (')')
-			process_break (an_expression.right_parenthesis.break)
+			an_expression.right_parenthesis.process (Current)
 		end
 
-	process_parents (a_list: ET_PARENTS) is
+	process_parent_list (a_list: ET_PARENT_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1974,13 +1858,6 @@ feature -- Processing
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
-		end
-
-	process_plus_symbol (a_symbol: ET_PLUS_SYMBOL) is
-			-- Process `a_symbol'.
-		do
-			file.put_character ('+')
-			process_break (a_symbol.break)
 		end
 
 	process_postconditions (a_list: ET_POSTCONDITIONS) is
@@ -2022,9 +1899,19 @@ feature -- Processing
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
 			-- Process `an_expression'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			a_parent: ET_PRECURSOR_CLASS_NAME
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			an_expression.precursor_keyword.process (Current)
+			if not an_expression.is_parent_prefixed then
+				an_expression.precursor_keyword.process (Current)
+			end
+			a_parent := an_expression.parent
+			if a_parent /= Void then
+				a_parent.process (Current)
+			end
+			if an_expression.is_parent_prefixed then
+				an_expression.precursor_keyword.process (Current)
+			end
 			an_arguments := an_expression.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
@@ -2034,9 +1921,19 @@ feature -- Processing
 	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			a_parent: ET_PRECURSOR_CLASS_NAME
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			an_instruction.precursor_keyword.process (Current)
+			if not an_instruction.is_parent_prefixed then
+				an_instruction.precursor_keyword.process (Current)
+			end
+			a_parent := an_instruction.parent
+			if a_parent /= Void then
+				a_parent.process (Current)
+			end
+			if an_instruction.is_parent_prefixed then
+				an_instruction.precursor_keyword.process (Current)
+			end
 			an_arguments := an_instruction.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
@@ -2056,225 +1953,29 @@ feature -- Processing
 			process_prefix_name (a_name)
 		end
 
-	process_prefix_free_operator (an_operator: ET_PREFIX_FREE_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
-	process_prefix_minus_name (a_name: ET_PREFIX_MINUS_NAME) is
-			-- Process `a_name'.
-		do
-			process_prefix_name (a_name)
-		end
-
-	process_prefix_minus_operator (an_operator: ET_PREFIX_MINUS_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('-')
-			process_break (an_operator.break)
-		end
-
 	process_prefix_name (a_name: ET_PREFIX_NAME) is
 			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
 		do
 			a_name.prefix_keyword.process (Current)
 			a_name.operator_name.process (Current)
 		end
 
-	process_prefix_not_name (a_name: ET_PREFIX_NOT_NAME) is
-			-- Process `a_name'.
-		do
-			process_prefix_name (a_name)
-		end
-
-	process_prefix_not_operator (an_operator: ET_PREFIX_NOT_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			process_token (an_operator)
-		end
-
-	process_prefix_plus_name (a_name: ET_PREFIX_PLUS_NAME) is
-			-- Process `a_name'.
-		do
-			process_prefix_name (a_name)
-		end
-
-	process_prefix_plus_operator (an_operator: ET_PREFIX_PLUS_OPERATOR) is
-			-- Process `an_operator'.
-		do
-			file.put_character ('+')
-			process_break (an_operator.break)
-		end
-
-	process_qualified_bang_instruction (an_instruction: ET_QUALIFIED_BANG_INSTRUCTION) is
-			-- Process `an_instruction'.
+	process_qualified_call (a_call: ET_QUALIFIED_CALL) is
+			-- Process `a_call'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			file.put_string ("!!")
-			process_break (an_instruction.bangbang.break)
-			an_instruction.target.process (Current)
-			file.put_character ('.')
-			process_break (an_instruction.dot.break)
-			an_instruction.procedure_name.process (Current)
-			an_arguments := an_instruction.arguments
+			a_call.qualified_name.process (Current)
+			an_arguments := a_call.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
-		end
-
-	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION) is
-			-- Process `an_expression'.
-		do
-			an_expression.target.process (Current)
-			file.put_character ('.')
-			process_break (an_expression.dot.break)
-			process_call_expression (an_expression)
-		end
-
-	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION) is
-			-- Process `an_instruction'.
-		do
-			an_instruction.target.process (Current)
-			file.put_character ('.')
-			process_break (an_instruction.dot.break)
-			process_call_instruction (an_instruction)
-		end
-
-	process_qualified_create_expression (an_expression: ET_QUALIFIED_CREATE_EXPRESSION) is
-			-- Process `an_expression'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
-		do
-			an_expression.create_keyword.process (Current)
-			file.put_character ('{')
-			process_break (an_expression.left_brace.break)
-			an_expression.type.process (Current)
-			file.put_character ('}')
-			process_break (an_expression.right_brace.break)
-			file.put_character ('.')
-			process_break (an_expression.dot.break)
-			an_expression.procedure_name.process (Current)
-			an_arguments := an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_qualified_create_instruction (an_instruction: ET_QUALIFIED_CREATE_INSTRUCTION) is
-			-- Process `an_instruction'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
-		do
-			an_instruction.create_keyword.process (Current)
-			an_instruction.target.process (Current)
-			file.put_character ('.')
-			process_break (an_instruction.dot.break)
-			an_instruction.procedure_name.process (Current)
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_qualified_precursor_expression (an_expression: ET_QUALIFIED_PRECURSOR_EXPRESSION) is
-			-- Process `an_expression'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
-		do
-			if not an_expression.is_parent_prefixed then
-				an_expression.precursor_keyword.process (Current)
-			end
-			file.put_character ('{')
-			process_break (an_expression.left_brace.break)
-			an_expression.parent.process (Current)
-			file.put_character ('}')
-			process_break (an_expression.right_brace.break)
-			if an_expression.is_parent_prefixed then
-				an_expression.precursor_keyword.process (Current)
-			end
-			an_arguments := an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_qualified_precursor_instruction (an_instruction: ET_QUALIFIED_PRECURSOR_INSTRUCTION) is
-			-- Process `an_instruction'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
-		do
-			if not an_instruction.is_parent_prefixed then
-				an_instruction.precursor_keyword.process (Current)
-			end
-			file.put_character ('{')
-			process_break (an_instruction.left_brace.break)
-			an_instruction.parent.process (Current)
-			file.put_character ('}')
-			process_break (an_instruction.right_brace.break)
-			if an_instruction.is_parent_prefixed then
-				an_instruction.precursor_keyword.process (Current)
-			end
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_qualified_typed_bang_instruction (an_instruction: ET_QUALIFIED_TYPED_BANG_INSTRUCTION) is
-			-- Process `an_instruction'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
-		do
-			file.put_character ('!')
-			process_break (an_instruction.left_bang.break)
-			an_instruction.type.process (Current)
-			file.put_character ('!')
-			process_break (an_instruction.right_bang.break)
-			an_instruction.target.process (Current)
-			file.put_character ('.')
-			process_break (an_instruction.dot.break)
-			an_instruction.procedure_name.process (Current)
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_qualified_typed_create_instruction (an_instruction: ET_QUALIFIED_TYPED_CREATE_INSTRUCTION) is
-			-- Process `an_instruction'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
-		do
-			an_instruction.create_keyword.process (Current)
-			file.put_character ('{')
-			process_break (an_instruction.left_brace.break)
-			an_instruction.type.process (Current)
-			file.put_character ('}')
-			process_break (an_instruction.right_brace.break)
-			an_instruction.target.process (Current)
-			file.put_character ('.')
-			process_break (an_instruction.dot.break)
-			an_instruction.procedure_name.process (Current)
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_reference_keyword (a_keyword: ET_REFERENCE_KEYWORD) is
-			-- Process `a_keyword'.
-		do
-			process_token (a_keyword)
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SIGN_SYMBOL
+			a_sign: ET_SYMBOL
 		do
 			a_sign := a_constant.sign
 			if a_sign /= Void then
@@ -2296,7 +1997,7 @@ feature -- Processing
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SIGN_SYMBOL
+			a_sign: ET_SYMBOL
 		do
 			a_sign := a_constant.sign
 			if a_sign /= Void then
@@ -2318,11 +2019,10 @@ feature -- Processing
 			-- Process `a_rename'.
 		do
 			process_rename (a_rename)
-			file.put_character (',')
-			process_break (a_rename.comma.break)
+			a_rename.comma.process (Current)
 		end
 
-	process_renames (a_list: ET_RENAMES) is
+	process_rename_list (a_list: ET_RENAME_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -2344,9 +2044,8 @@ feature -- Processing
 	process_result_address (an_expression: ET_RESULT_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			file.put_character ('$')
-			process_break (an_expression.dollar.break)
-			an_expression.result_entity.process (Current)
+			an_expression.dollar.process (Current)
+			an_expression.result_keyword.process (Current)
 		end
 
 	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
@@ -2358,14 +2057,7 @@ feature -- Processing
 	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
 			-- Process `a_symbol'.
 		do
-			file.put_character (';')
-			process_break (a_symbol.break)
-		end
-
-	process_separate_keyword (a_keyword: ET_SEPARATE_KEYWORD) is
-			-- Process `a_keyword'.
-		do
-			process_token (a_keyword)
+			process_symbol (a_symbol)
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
@@ -2380,17 +2072,11 @@ feature -- Processing
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
 			-- Process `an_expression'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			an_expression.feature_keyword.process (Current)
-			file.put_character ('{')
-			process_break (an_expression.left_brace.break)
-			an_expression.type.process (Current)
-			file.put_character ('}')
-			process_break (an_expression.right_brace.break)
-			file.put_character ('.')
-			process_break (an_expression.dot.break)
-			an_expression.name.process (Current)
+			an_expression.static_type.process (Current)
+			an_expression.qualified_name.process (Current)
 			an_arguments := an_expression.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
@@ -2400,17 +2086,11 @@ feature -- Processing
 	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			an_arguments: ET_ACTUAL_ARGUMENTS
+			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			an_instruction.feature_keyword.process (Current)
-			file.put_character ('{')
-			process_break (an_instruction.left_brace.break)
-			an_instruction.type.process (Current)
-			file.put_character ('}')
-			process_break (an_instruction.right_brace.break)
-			file.put_character ('.')
-			process_break (an_instruction.dot.break)
-			an_instruction.name.process (Current)
+			an_instruction.static_type.process (Current)
+			an_instruction.qualified_name.process (Current)
 			an_arguments := an_instruction.arguments
 			if an_arguments /= Void then
 				an_arguments.process (Current)
@@ -2423,21 +2103,26 @@ feature -- Processing
 			i, nb: INTEGER
 		do
 			an_expression.strip_keyword.process (Current)
-			file.put_character ('(')
-			process_break (an_expression.left_parenthesis.break)
+			an_expression.left_parenthesis.process (Current)
 			nb := an_expression.count
 			from i := 1 until i > nb loop
 				an_expression.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character (')')
-			process_break (an_expression.right_parenthesis.break)
+			an_expression.right_parenthesis.process (Current)
 		end
 
 	process_symbol (a_symbol: ET_SYMBOL) is
 			-- Process `a_symbol'.
 		do
+			file.put_string (a_symbol.text)
 			process_break (a_symbol.break)
+		end
+
+	process_symbol_operator (a_symbol: ET_SYMBOL_OPERATOR) is
+			-- Process `a_symbol'.
+		do
+			process_symbol (a_symbol)
 		end
 
 	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION) is
@@ -2452,14 +2137,6 @@ feature -- Processing
 			end
 		end
 
-	process_tagged_expression_variant (a_variant: ET_TAGGED_EXPRESSION_VARIANT) is
-			-- Process `a_variant'.
-		do
-			a_variant.variant_keyword.process (Current)
-			a_variant.tag.process (Current)
-			a_variant.expression.process (Current)
-		end
-
 	process_tagged_indexing (an_indexing: ET_TAGGED_INDEXING) is
 			-- Process `an_indexing'.
 		do
@@ -2469,6 +2146,8 @@ feature -- Processing
 
 	process_token (a_token: ET_TOKEN) is
 			-- Process `a_token'.
+		require
+			a_token_not_void: a_token /= Void
 		do
 			file.put_string (a_token.text)
 			process_break (a_token.break)
@@ -2488,33 +2167,10 @@ feature -- Processing
 			process_break (a_type.comma.break)
 		end
 
-	process_typed_bang_instruction (an_instruction: ET_TYPED_BANG_INSTRUCTION) is
-			-- Process `an_instruction'.
-		do
-			file.put_character ('!')
-			process_break (an_instruction.left_bang.break)
-			an_instruction.type.process (Current)
-			file.put_character ('!')
-			process_break (an_instruction.right_bang.break)
-			an_instruction.target.process (Current)
-		end
-
-	process_typed_create_instruction (an_instruction: ET_TYPED_CREATE_INSTRUCTION) is
-			-- Process `an_instruction'.
-		do
-			an_instruction.create_keyword.process (Current)
-			file.put_character ('{')
-			process_break (an_instruction.left_brace.break)
-			an_instruction.type.process (Current)
-			file.put_character ('}')
-			process_break (an_instruction.right_brace.break)
-			an_instruction.target.process (Current)
-		end
-
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SIGN_SYMBOL
+			a_sign: ET_SYMBOL
 		do
 			a_sign := a_constant.sign
 			if a_sign /= Void then
@@ -2527,7 +2183,7 @@ feature -- Processing
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SIGN_SYMBOL
+			a_sign: ET_SYMBOL
 		do
 			a_sign := a_constant.sign
 			if a_sign /= Void then
@@ -2542,6 +2198,7 @@ feature -- Processing
 		local
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
+			a_semicolon: ET_SEMICOLON_SYMBOL
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -2563,12 +2220,27 @@ feature -- Processing
 			a_feature.declared_type.process (Current)
 			a_feature.is_keyword.process (Current)
 			a_feature.unique_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
 		end
 
 	process_variant (a_variant: ET_VARIANT) is
 			-- Process `a_variant'.
+		local
+			a_tag: ET_TAG
+			an_expression: ET_EXPRESSION
 		do
 			a_variant.variant_keyword.process (Current)
+			a_tag := a_variant.tag
+			if a_tag /= Void then
+				a_tag.process (Current)
+			end
+			an_expression := a_variant.expression
+			if an_expression /= Void then
+				an_expression.process (Current)
+			end
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
@@ -2589,14 +2261,13 @@ feature -- Processing
 	process_when_part (a_when_part: ET_WHEN_PART) is
 			-- Process `a_when_part'.
 		local
-			a_choices: ET_CHOICE_LIST
+			a_compound: ET_COMPOUND
 		do
-			a_when_part.when_keyword.process (Current)
-			a_choices := a_when_part.choices
-			if a_choices /= Void then
-				a_choices.process (Current)
+			a_when_part.choices.process (Current)
+			a_compound := a_when_part.then_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
 			end
-			a_when_part.then_compound.process (Current)
 		end
 
 	process_when_part_list (a_list: ET_WHEN_PART_LIST) is

@@ -27,32 +27,25 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_name: like name_item; a_type: like declared_type; a_clients: like clients;
-		a_class: like current_class; an_id: INTEGER) is
+		a_class: like current_class) is
 			-- Create a new attribute.
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id > 0
 		do
 			name_item := a_name
-			id := an_id
 			declared_type := a_type
 			clients := a_clients
-			version := an_id
 			current_class := a_class
 			implementation_class := a_class
-			first_seed := an_id
 		ensure
 			name_item_set: name_item = a_name
 			declared_type_set: declared_type = a_type
 			clients_set: clients = a_clients
-			version_set: version = an_id
-			first_seed_set: first_seed = an_id
 			current_class_set: current_class = a_class
 			implementation_class_set: implementation_class = a_class
-			id_set: id = an_id
 		end
 
 feature -- Status report
@@ -69,7 +62,7 @@ feature -- Access
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			-- TODO:
+			Result := declared_type.break
 		end
 
 feature -- Duplication
@@ -77,7 +70,9 @@ feature -- Duplication
 	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
-			Result := universe.new_attribute (a_name, declared_type, clients, current_class)
+			!! Result.make (a_name, declared_type, clients, current_class)
+			Result.set_semicolon (semicolon)
+			Result.set_feature_clause (feature_clause)
 			Result.set_synonym (Current)
 		end
 
@@ -86,10 +81,12 @@ feature -- Conversion
 	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			Result := universe.new_attribute (a_name, declared_type, clients, current_class)
+			!! Result.make (a_name, declared_type, clients, current_class)
 			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)
+			Result.set_semicolon (semicolon)
+			Result.set_feature_clause (feature_clause)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
 			else

@@ -12,12 +12,146 @@ indexing
 
 class ET_TOKEN_CONSTANTS
 
+inherit
+
+	ET_TOKEN_CODES
+
+feature -- Class names
+
+	any_class_name: ET_CLASS_NAME is
+			-- "ANY" class name
+		once
+			!ET_IDENTIFIER! Result.make ("ANY")
+		ensure
+			any_class_name_not_void: Result /= Void
+		end
+
+	none_class_name: ET_CLASS_NAME is
+			-- "NONE" class name
+		once
+			!ET_IDENTIFIER! Result.make ("NONE")
+		ensure
+			none_class_name_not_void: Result /= Void
+		end
+
 feature -- Symbols
 
 	symbol: ET_SYMBOL is
 			-- Dummy symbol
 		once
-			!! Result.make
+			!! Result.make_arrow
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	arrow_symbol: ET_SYMBOL is
+			-- '->' symbol
+		once
+			!! Result.make_arrow
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	assign_symbol: ET_SYMBOL is
+			-- ':=' symbol
+		once
+			!! Result.make_assign
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	assign_attempt_symbol: ET_SYMBOL is
+			-- '?=' symbol
+		once
+			!! Result.make_assign_attempt
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	bang_symbol: ET_SYMBOL is
+			-- '!' symbol
+		once
+			!! Result.make_bang
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	dollar_symbol: ET_SYMBOL is
+			-- '$' symbol
+		once
+			!! Result.make_dollar
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	dotdot_symbol: ET_SYMBOL is
+			-- '..' symbol
+		once
+			!! Result.make_dotdot
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	left_array_symbol: ET_SYMBOL is
+			-- '<<' symbol
+		once
+			!! Result.make_left_array
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	left_brace_symbol: ET_SYMBOL is
+			-- '{' symbol
+		once
+			!! Result.make_left_brace
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	left_bracket_symbol: ET_SYMBOL is
+			-- '[' symbol
+		once
+			!! Result.make_left_bracket
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	left_parenthesis_symbol: ET_SYMBOL is
+			-- '(' symbol
+		once
+			!! Result.make_left_parenthesis
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	right_array_symbol: ET_SYMBOL is
+			-- '>>' symbol
+		once
+			!! Result.make_right_array
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	right_brace_symbol: ET_SYMBOL is
+			-- '}' symbol
+		once
+			!! Result.make_right_brace
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	right_bracket_symbol: ET_SYMBOL is
+			-- ']' symbol
+		once
+			!! Result.make_right_bracket
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	right_parenthesis_symbol: ET_SYMBOL is
+			-- ')' symbol
+		once
+			!! Result.make_right_parenthesis
 		ensure
 			symbol_not_void: Result /= Void
 		end
@@ -32,10 +166,50 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	and_keyword: ET_KEYWORD_OPERATOR is
+			-- 'and' keyword
+		once
+			!! Result.make_and
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	all_keyword: ET_KEYWORD is
+			-- 'all' keyword
+		once
+			!! Result.make_all
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	as_keyword: ET_KEYWORD is
+			-- 'as' keyword
+		once
+			!! Result.make_as
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	bit_keyword: ET_IDENTIFIER is
+			-- 'BIT' keyword
+		once
+			!! Result.make (capitalized_bit_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	check_keyword: ET_KEYWORD is
+			-- 'check' keyword
+		once
+			!! Result.make_check
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	class_keyword: ET_KEYWORD is
 			-- 'class' keyword
 		once
-			!! Result.make (class_keyword_name)
+			!! Result.make_class
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -43,7 +217,7 @@ feature -- Keywords
 	create_keyword: ET_KEYWORD is
 			-- 'create' keyword
 		once
-			!! Result.make (create_keyword_name)
+			!! Result.make_create
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -51,7 +225,15 @@ feature -- Keywords
 	creation_keyword: ET_KEYWORD is
 			-- 'creation' keyword
 		once
-			!! Result.make (creation_keyword_name)
+			!! Result.make_creation
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	current_keyword: ET_CURRENT is
+			-- 'Current' keyword
+		once
+			!! Result.make
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -59,15 +241,31 @@ feature -- Keywords
 	debug_keyword: ET_KEYWORD is
 			-- 'debug' keyword
 		once
-			!! Result.make (debug_keyword_name)
+			!! Result.make_debug
 		ensure
 			keyword_not_void: Result /= Void
 		end
 
-	deferred_keyword: ET_DEFERRED_KEYWORD is
+	deferred_keyword: ET_KEYWORD is
 			-- 'deferred' keyword
 		once
-			!! Result.make (deferred_keyword_name)
+			!! Result.make_deferred
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	do_keyword: ET_KEYWORD is
+			-- 'do' keyword
+		once
+			!! Result.make_do
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	else_keyword: ET_KEYWORD is
+			-- 'else' keyword
+		once
+			!! Result.make_else
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -75,7 +273,15 @@ feature -- Keywords
 	end_keyword: ET_KEYWORD is
 			-- 'end' keyword
 		once
-			!! Result.make (end_keyword_name)
+			!! Result.make_end
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	ensure_keyword: ET_KEYWORD is
+			-- 'ensure' keyword
+		once
+			!! Result.make_ensure
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -83,7 +289,7 @@ feature -- Keywords
 	export_keyword: ET_KEYWORD is
 			-- 'export' keyword
 		once
-			!! Result.make (export_keyword_name)
+			!! Result.make_export
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -91,7 +297,15 @@ feature -- Keywords
 	feature_keyword: ET_KEYWORD is
 			-- 'feature' keyword
 		once
-			!! Result.make (feature_keyword_name)
+			!! Result.make_feature
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	from_keyword: ET_KEYWORD is
+			-- 'from' keyword
+		once
+			!! Result.make_from
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -99,7 +313,15 @@ feature -- Keywords
 	indexing_keyword: ET_KEYWORD is
 			-- 'indexing' keyword
 		once
-			!! Result.make (indexing_keyword_name)
+			!! Result.make_indexing
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	infix_keyword: ET_KEYWORD is
+			-- 'infix' keyword
+		once
+			!! Result.make_infix
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -107,7 +329,15 @@ feature -- Keywords
 	inherit_keyword: ET_KEYWORD is
 			-- 'inherit' keyword
 		once
-			!! Result.make (inherit_keyword_name)
+			!! Result.make_inherit
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	invariant_keyword: ET_KEYWORD is
+			-- 'invariant' keyword
+		once
+			!! Result.make_invariant
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -115,7 +345,15 @@ feature -- Keywords
 	is_keyword: ET_KEYWORD is
 			-- 'is' keyword
 		once
-			!! Result.make (is_keyword_name)
+			!! Result.make_is
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	like_keyword: ET_KEYWORD is
+			-- 'like' keyword
+		once
+			!! Result.make_like
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -123,7 +361,63 @@ feature -- Keywords
 	local_keyword: ET_KEYWORD is
 			-- 'local' keyword
 		once
-			!! Result.make (local_keyword_name)
+			!! Result.make_local
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	loop_keyword: ET_KEYWORD is
+			-- 'loop' keyword
+		once
+			!! Result.make_loop
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	old_keyword: ET_KEYWORD is
+			-- 'old' keyword
+		once
+			!! Result.make_old
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	once_keyword: ET_KEYWORD is
+			-- 'once' keyword
+		once
+			!! Result.make_once
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	or_keyword: ET_KEYWORD_OPERATOR is
+			-- 'or' keyword
+		once
+			!! Result.make_or
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	precursor_keyword: ET_KEYWORD is
+			-- 'precursor' keyword
+		once
+			!! Result.make_precursor
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	prefix_keyword: ET_KEYWORD is
+			-- 'prefix' keyword
+		once
+			!! Result.make_prefix
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	redefine_keyword: ET_KEYWORD is
+			-- 'redefine' keyword
+		once
+			!! Result.make_redefine
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -131,7 +425,31 @@ feature -- Keywords
 	rename_keyword: ET_KEYWORD is
 			-- 'rename' keyword
 		once
-			!! Result.make (rename_keyword_name)
+			!! Result.make_rename
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	require_keyword: ET_KEYWORD is
+			-- 'require' keyword
+		once
+			!! Result.make_require
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	rescue_keyword: ET_KEYWORD is
+			-- 'rescue' keyword
+		once
+			!! Result.make_rescue
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	result_keyword: ET_RESULT is
+			-- 'Result' keyword
+		once
+			!! Result.make
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -139,7 +457,15 @@ feature -- Keywords
 	strip_keyword: ET_KEYWORD is
 			-- 'strip' keyword
 		once
-			!! Result.make (strip_keyword_name)
+			!! Result.make_strip
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	then_keyword: ET_KEYWORD is
+			-- 'then' keyword
+		once
+			!! Result.make_then
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -147,13 +473,30 @@ feature -- Keywords
 	unique_keyword: ET_KEYWORD is
 			-- 'unique' keyword
 		once
-			!! Result.make (unique_keyword_name)
+			!! Result.make_unique
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	variant_keyword: ET_KEYWORD is
+			-- 'variant' keyword
+		once
+			!! Result.make_variant
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	when_keyword: ET_KEYWORD is
+			-- 'when' keyword
+		once
+			!! Result.make_when
 		ensure
 			keyword_not_void: Result /= Void
 		end
 
 feature -- Keyword and symbol names
 
+	capitalized_bit_keyword_name: STRING is "BIT"
 	capitalized_current_keyword_name: STRING is "Current"
 	capitalized_false_keyword_name: STRING is "False"
 	capitalized_precursor_keyword_name: STRING is "Precursor"
@@ -228,7 +571,6 @@ feature -- Keyword and symbol names
 	assign_symbol_name: STRING is ":="
 	assign_attempt_symbol_name: STRING is "?="
 	bang_symbol_name: STRING is "!"
-	bangbang_symbol_name: STRING is "!!"
 	colon_symbol_name: STRING is ":"
 	comma_symbol_name: STRING is ","
 	div_symbol_name: STRING is "//"
@@ -259,10 +601,44 @@ feature -- Keyword and symbol names
 	times_symbol_name: STRING is "*"
 			-- Eiffel symbol names
 
-feature -- Nodes
+	unknown_name: STRING is "***UNKNOWN_NAME***"
+			-- Unknown name
 
-	clients: ET_CLIENTS is
+feature -- Infix and prefix feature names
+
+	infix_and_name: STRING is "infix %"and%""
+	infix_implies_name: STRING is "infix %"implies%""
+	infix_or_name: STRING is "infix %"or%""
+	infix_xor_name: STRING is "infix %"xor%""
+	infix_div_name: STRING is "infix %"//%""
+	infix_divide_name: STRING is "infix %"/%""
+	infix_ge_name: STRING is "infix %">=%""
+	infix_gt_name: STRING is "infix %">%""
+	infix_le_name: STRING is "infix %"<=%""
+	infix_lt_name: STRING is "infix %"<%""
+	infix_minus_name: STRING is "infix %"-%""
+	infix_mod_name: STRING is "infix %"\\%""
+	infix_plus_name: STRING is "infix %"+%""
+	infix_power_name: STRING is "infix %"^%""
+	infix_times_name: STRING is "infix %"*%""
+	infix_and_then_name: STRING is "infix %"and then%""
+	infix_or_else_name: STRING is "infix %"or else%""
+			-- Infix feature names
+
+	prefix_not_name: STRING is "prefix %"not%""
+	prefix_minus_name: STRING is "prefix %"-%""
+	prefix_plus_name: STRING is "prefix %"+%""
+			-- Prefix feature names
+
+feature -- Position
+
+	null_position: ET_POSITION is
+			-- Null position
 		once
+			!ET_COMPRESSED_POSITION! Result.make_default
+		ensure
+			position_not_void: Result /= Void
+			position_is_null: Result.is_null
 		end
 
 end

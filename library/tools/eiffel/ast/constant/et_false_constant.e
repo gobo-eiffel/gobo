@@ -15,15 +15,13 @@ class ET_FALSE_CONSTANT
 inherit
 
 	ET_BOOLEAN_CONSTANT
+		rename
+			make_false as make
+		end
 
 creation
 
-	make, make_with_position
-
-feature -- Status report
-
-	is_true: BOOLEAN is False
-			-- Is boolean value true?
+	make
 
 feature -- Processing
 
@@ -35,6 +33,6 @@ feature -- Processing
 
 invariant
 
-	is_false: not is_true
+	is_false: is_false
 
 end

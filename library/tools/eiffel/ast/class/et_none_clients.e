@@ -28,15 +28,18 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_left: like left_brace; a_right: like right_brace) is
-			-- Create a new client list of the form.
+			-- Create a new client list of the form {}.
 		require
 			a_left_not_void: a_left /= Void
 			a_right_not_void: a_right /= Void
 		local
 			a_name: ET_IDENTIFIER
 		do
-			make_with_capacity (a_left, a_right, 1)
-			!! a_name.make_with_position (none_class_name.name, a_left.line, a_right.column)
+			make_with_capacity (1)
+			left_brace := a_left
+			right_brace := a_right
+			!! a_name.make (tokens.none_class_name.name)
+			a_name.set_position (a_left.line, a_left.column)
 			put_first (a_name)
 		ensure
 			left_brace_set: left_brace = a_left

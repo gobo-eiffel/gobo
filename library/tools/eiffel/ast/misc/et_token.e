@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_TOKEN
+deferred class ET_TOKEN
 
 inherit
 
@@ -19,10 +19,6 @@ inherit
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
 		end
-
-creation
-
-	make, make_with_position
 
 feature {NONE} -- Initialization
 
@@ -40,35 +36,22 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
-	make_with_position (a_text: like text; a_line, a_column: INTEGER) is
-			-- Create a new token at given position.
-		require
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			text := a_text
-			make_leaf_with_position (a_line, a_column)
-		ensure
-			text_set: text = a_text
-			line_set: a_line <= maximum_line implies line = a_line
-			no_line_set: a_line > maximum_line implies line = no_line
-			column_set: a_column <= maximum_column implies column = a_column
-			no_column_set: a_column > maximum_column implies column = no_column
-		end
-
 feature -- Access
 
 	text: STRING
 			-- Text of token
 
-feature -- Processing
+feature -- Setting
 
-	process (a_processor: ET_AST_PROCESSOR) is
-			-- Process current node.
+	set_text (a_text: like text) is
+			-- Set `text' to `a_text'.
+		require
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: a_text.count > 0
 		do
-			a_processor.process_token (Current)
+			text := a_text
+		ensure
+			text_set: text = a_text
 		end
 
 invariant

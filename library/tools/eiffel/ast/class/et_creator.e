@@ -26,34 +26,30 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_creation: like creation_keyword; a_clients: like clients) is
+	make (a_clients: like clients) is
 			-- Create a new creation clause.
 		require
-			a_creation_not_void: a_creation /= Void
 			a_clients_not_void: a_clients /= Void
 		do
-			creation_keyword := a_creation
+			creation_keyword := tokens.creation_keyword
 			clients := a_clients
 			make_feature_name_list
 		ensure
-			creation_keyword_set: creation_keyword = a_creation
 			clients_set: clients = a_clients
 			is_empty: is_empty
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (a_creation: like creation_keyword; a_clients: like clients; nb: INTEGER) is
+	make_with_capacity (a_clients: like clients; nb: INTEGER) is
 			-- Create a new creation clause with capacity `nb'.
 		require
-			a_creation_not_void: a_creation /= Void
 			a_clients_not_void: a_clients /= Void
 			nb_positive: nb >= 0
 		do
-			creation_keyword := a_creation
+			creation_keyword := tokens.creation_keyword
 			clients := a_clients
 			make_feature_name_list_with_capacity (nb)
 		ensure
-			creation_keyword_set: creation_keyword = a_creation
 			clients_set: clients = a_clients
 			is_empty: is_empty
 			capacity_set: capacity = nb
@@ -76,8 +72,18 @@ feature -- Access
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
+		local
+			a_clients_clause: ET_CLIENTS
 		do
 			Result := creation_keyword.position
+			if Result.is_null then
+				a_clients_clause := clients_clause
+				if a_clients_clause /= Void then
+					Result := a_clients_clause.position
+				elseif not is_empty then
+					Result := first.position
+				end
+			end
 		end
 
 	break: ET_BREAK is
@@ -93,7 +99,7 @@ feature -- Access
 					Result := creation_keyword.break
 				end
 			else
-				Result := item (count).break
+				Result := last.break
 			end
 		end
 
@@ -141,16 +147,6 @@ feature -- Setting
 			creation_keyword := a_creation
 		ensure
 			creation_keyword_set: creation_keyword = a_creation
-		end
-
-	set_clients (a_clients: like clients) is
-			-- Set `clients' to `a_clients'.
-		require
-			a_clients_not_void: a_clients /= Void
-		do
-			clients := a_clients
-		ensure
-			clients_set: clients = a_clients
 		end
 
 feature -- Processing

@@ -27,19 +27,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (o: like old_name; an_as: like as_keyword; n: like new_name; a_comma: like comma) is
+	make (o: like old_name; n: like new_name; a_comma: like comma) is
 			-- Create a new rename pair.
 		require
 			o_not_void: o /= Void
-			an_as_not_void: an_as /= Void
 			n_not_void: n /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			make_rename (o, an_as, n)
+			make_rename (o, n)
 			comma := a_comma
 		ensure
 			old_name_set: old_name = o
-			as_keyword_set: as_keyword = an_as
 			new_name_set: new_name = n
 			comma_set: comma = a_comma
 		end

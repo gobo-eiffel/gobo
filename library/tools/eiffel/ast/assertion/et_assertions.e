@@ -17,10 +17,6 @@ inherit
 	ET_AST_NODE
 
 	ET_AST_LIST [ET_ASSERTION_ITEM]
-		rename
-			make as make_ast_list,
-			make_with_capacity as make_ast_list_with_capacity
-		end
 
 feature -- Access
 

@@ -22,33 +22,31 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_if: like if_keyword; an_expression: like expression;
-		a_compound: like then_compound; an_end: like end_keyword) is
+	make (a_conditional: like conditional; a_compound: like then_compound) is
 			-- Create a new if instruction.
 		require
-			an_if_not_void: an_if /= Void
-			an_expression_not_void: an_expression /= Void
-			a_compound_not_void: a_compound /= Void
-			an_end_not_void: an_end /= Void
+			a_conditional_not_void: a_conditional /= Void
 		do
-			if_keyword := an_if
-			expression := an_expression
+			conditional := a_conditional
 			then_compound := a_compound
-			end_keyword := an_end
+			end_keyword := tokens.end_keyword
 		ensure
-			if_keyword_set: if_keyword = an_if
-			expression_set: expression = an_expression
+			conditional_set: conditional = a_conditional
 			then_compound_set: then_compound = a_compound
-			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Access
 
-	if_keyword: ET_KEYWORD
-			-- 'if' keyword
-
-	expression: ET_EXPRESSION
+	conditional: ET_CONDITIONAL
 			-- Condition
+
+	expression: ET_EXPRESSION is
+			-- Boolean expression
+		do
+			Result := conditional.expression
+		ensure
+			expression_not_void: Result /= Void
+		end
 
 	then_compound: ET_COMPOUND
 			-- Then part
@@ -66,7 +64,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := if_keyword.position
+			Result := conditional.position
 		end
 
 	break: ET_BREAK is
@@ -93,6 +91,16 @@ feature -- Setting
 			else_compound_set: else_compound = a_compound
 		end
 
+	set_end_keyword (an_end: like end_keyword) is
+			-- Set `end_keyword' to `an_end'.
+		require
+			an_end_not_void: an_end /= Void
+		do
+			end_keyword := an_end
+		ensure
+			end_keyword_set: end_keyword = an_end
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -103,9 +111,7 @@ feature -- Processing
 
 invariant
 
-	if_keyword_not_void: if_keyword /= Void
-	expression_not_void: expression /= Void
-	then_compound_not_void: then_compound /= Void
+	conditional_not_void: conditional /= Void
 	end_keyword_not_void: end_keyword /= Void
 
 end

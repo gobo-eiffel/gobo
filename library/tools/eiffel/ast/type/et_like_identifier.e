@@ -25,16 +25,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_like: like like_keyword; a_name: like name) is
+	make (a_name: like name) is
 			-- Create a new 'like Identifier' type.
 		require
-			a_like_not_void: a_like /= Void
 			a_name_not_void: a_name /= Void
 		do
-			like_keyword := a_like
+			like_keyword := tokens.like_keyword
 			name := a_name
 		ensure
-			like_keyword_set: like_keyword = a_like
 			name_set: name = a_name
 		end
 
@@ -52,12 +50,27 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := like_keyword.position
+			if Result.is_null then
+				Result := name.position
+			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := name.break
+		end
+
+feature -- Setting
+
+	set_like_keyword (a_like: like like_keyword) is
+			-- Set `like_keyword' to `a_like'.
+		require
+			a_like_not_void: a_like /= Void
+		do
+			like_keyword := a_like
+		ensure
+			like_keyword_set: like_keyword = a_like
 		end
 
 feature -- Status report
@@ -81,8 +94,8 @@ feature -- Validity
 			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
 			-- appears in a constraint of the formal generic
 			-- parameter `a_formal' in class `a_class'.
@@ -96,7 +109,7 @@ feature -- Validity
 
 feature -- Type processing
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_TYPE is
 			-- Replace any 'like identifier' types that appear in the
 			-- implementation of `a_feature in class `a_class' by
 			-- the corresponding 'like feature' or 'like argument'.
@@ -104,19 +117,22 @@ feature -- Type processing
 			-- `a_class.has_flatten_error' to true if an error occurs.
 			-- (Warning: this is a side-effect function.)
 		local
-			features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			other_feature: ET_FEATURE
 			an_index: INTEGER
+			a_like_feature: ET_LIKE_FEATURE
+			a_like_argument: ET_LIKE_ARGUMENT
 		do
-			features := a_class.named_features
-			features.search (name)
-			if features.found then
-				other_feature := features.found_item
-				!ET_LIKE_FEATURE! Result.make (like_keyword, name, other_feature.first_seed)
+			other_feature := a_class.named_feature (name)
+			if other_feature /= Void then
+				!! a_like_feature.make (name, other_feature.first_seed)
+				a_like_feature.set_like_keyword (like_keyword)
+				Result := a_like_feature
 			elseif args /= Void then
 				an_index := args.index_of (name)
 				if an_index /= 0 then
-					!ET_LIKE_ARGUMENT! Result.make (like_keyword, name, an_index)
+					!! a_like_argument.make (name, an_index)
+					a_like_argument.set_like_keyword (like_keyword)
+					Result := a_like_argument
 				end
 			end
 			if Result = Void then

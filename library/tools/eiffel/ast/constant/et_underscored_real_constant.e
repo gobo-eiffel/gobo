@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make, make_with_position
+	make
 
 feature {NONE} -- Initialization
 
@@ -32,24 +32,8 @@ feature {NONE} -- Initialization
 			make_leaf
 		ensure
 			literal_set: literal = a_literal
-		end
-
-	make_with_position (a_literal: like literal; a_line, a_column: INTEGER) is
-			-- Create a new Real constant at given position.
-		require
-			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: ((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?
-			a_line_positive: a_line >= 0
-			a_column_positive: a_column >= 0
-		do
-			literal := a_literal
-			make_leaf_with_position (a_line, a_column)
-		ensure
-			literal_set: literal = a_literal
-			line_set: a_line <= maximum_line implies line = a_line
-			no_line_set: a_line > maximum_line implies line = no_line
-			column_set: a_column <= maximum_column implies column = a_column
-			no_column_set: a_column > maximum_column implies column = no_column
+			line_set: line = no_line
+			column_set: column = no_column
 		end
 
 feature -- Processing
