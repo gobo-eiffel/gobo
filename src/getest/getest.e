@@ -446,7 +446,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Getest usage message
 		once
-			create Result.make ("[-aceghV?][--help][--version]%N%
+			create Result.make ("[-aceghvV?][--help][--version][--verbose]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[--class=<regexp>][--feature=<regexp>]%N%
 				%%T[--compile=<command>]%N%
