@@ -164,10 +164,8 @@ feature {NONE} -- Output
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
 			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
-			print_indentation (indent, a_file)
-			a_file.put_line ("<option>")
 			if an_option.is_abstract_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.abstract then
 					a_file.put_line ("<option name=%"abstract%" value=%"true%"/>")
 				else
@@ -175,7 +173,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_address_expression_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.address_expression then
 					a_file.put_line ("<option name=%"address_expression%" value=%"true%"/>")
 				else
@@ -185,7 +183,7 @@ feature {NONE} -- Output
 			if an_option.is_arguments_declared then
 				a_cursor := an_option.arguments.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"arguments%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -193,7 +191,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_array_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.array_optimization then
 					a_file.put_line ("<option name=%"array_optimization%" value=%"true%"/>")
 				else
@@ -201,7 +199,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_assembly_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"assembly%" value=%"")
 				a_file.put_string (an_option.assembly)
 				a_file.put_line ("%"/>")
@@ -209,7 +207,7 @@ feature {NONE} -- Output
 			if an_option.is_assertion_declared then
 				a_cursor := an_option.assertion.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"assertion%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -217,7 +215,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_case_insensitive_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.case_insensitive then
 					a_file.put_line ("<option name=%"case_insensitive%" value=%"true%"/>")
 				else
@@ -225,7 +223,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_check_vape_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.check_vape then
 					a_file.put_line ("<option name=%"check_vape%" value=%"true%"/>")
 				else
@@ -233,7 +231,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_clean_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.clean then
 					a_file.put_line ("<option name=%"clean%" value=%"true%"/>")
 				else
@@ -241,7 +239,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_cls_compliant_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.cls_compliant then
 					a_file.put_line ("<option name=%"cls_compliant%" value=%"true%"/>")
 				else
@@ -249,13 +247,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_component_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"component%" value=%"")
 				a_file.put_string (an_option.component)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_console_application_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.console_application then
 					a_file.put_line ("<option name=%"console_application%" value=%"true%"/>")
 				else
@@ -263,7 +261,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_create_keyword_extension_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.create_keyword_extension then
 					a_file.put_line ("<option name=%"create_keyword_extension%" value=%"true%"/>")
 				else
@@ -271,7 +269,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_culture_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"culture%" value=%"")
 				a_file.put_string (an_option.culture)
 				a_file.put_line ("%"/>")
@@ -279,7 +277,7 @@ feature {NONE} -- Output
 			if an_option.is_c_compiler_options_declared then
 				a_cursor := an_option.c_compiler_options.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"c_compiler_options%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -289,7 +287,7 @@ feature {NONE} -- Output
 			if an_option.is_dead_code_removal_declared then
 				a_cursor := an_option.dead_code_removal.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"dead_code_removal%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -297,7 +295,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_debug_option_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.debug_option then
 					a_file.put_line ("<option name=%"debug%" value=%"true%"/>")
 				else
@@ -307,7 +305,7 @@ feature {NONE} -- Output
 			if an_option.is_debug_tag_declared then
 				a_cursor := an_option.debug_tag.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"debug_tag%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -315,7 +313,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_debugger_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.debugger then
 					a_file.put_line ("<option name=%"debugger%" value=%"true%"/>")
 				else
@@ -323,13 +321,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_document_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"document%" value=%"")
 				a_file.put_string (an_option.document)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_dotnet_naming_convention_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.dotnet_naming_convention then
 					a_file.put_line ("<option name=%"dotnet_naming_convention%" value=%"true%"/>")
 				else
@@ -337,7 +335,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_dynamic_runtime_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.dynamic_runtime then
 					a_file.put_line ("<option name=%"dynamic_runtime%" value=%"true%"/>")
 				else
@@ -345,7 +343,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_exception_trace_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.exception_trace then
 					a_file.put_line ("<option name=%"exception_trace%" value=%"true%"/>")
 				else
@@ -355,7 +353,7 @@ feature {NONE} -- Output
 			if an_option.is_exclude_declared then
 				a_cursor := an_option.exclude.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"exclude%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -363,7 +361,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_finalize_option_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.finalize_option then
 					a_file.put_line ("<option name=%"finalize%" value=%"true%"/>")
 				else
@@ -371,7 +369,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_flat_fst_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.flat_fst_optimization then
 					a_file.put_line ("<option name=%"flat_fst_optimization%" value=%"true%"/>")
 				else
@@ -379,13 +377,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_fst_expansion_factor_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"fst_expansion_factor%" value=%"")
 				a_file.put_integer (an_option.fst_expansion_factor)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_fst_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.fst_optimization then
 					a_file.put_line ("<option name=%"fst_optimization%" value=%"true%"/>")
 				else
@@ -393,13 +391,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_garbage_collector_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"garbage_collector%" value=%"")
 				a_file.put_string (an_option.garbage_collector)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_gc_info_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.gc_info then
 					a_file.put_line ("<option name=%"gc_info%" value=%"true%"/>")
 				else
@@ -409,7 +407,7 @@ feature {NONE} -- Output
 			if an_option.is_header_declared then
 				a_cursor := an_option.header.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"header%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -417,13 +415,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_heap_size_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"heap_size%" value=%"")
 				a_file.put_integer (an_option.heap_size)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_high_memory_compiler_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.high_memory_compiler then
 					a_file.put_line ("<option name=%"high_memory_compiler%" value=%"true%"/>")
 				else
@@ -431,7 +429,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_il_verifiable_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.il_verifiable then
 					a_file.put_line ("<option name=%"il_verifiable%" value=%"true%"/>")
 				else
@@ -441,7 +439,7 @@ feature {NONE} -- Output
 			if an_option.is_inlining_declared then
 				a_cursor := an_option.inlining.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"inlining%" value=%"")
 					a_file.put_string (a_cursor.item)
 					a_file.put_line ("%"/>")
@@ -449,13 +447,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_inlining_size_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"inlining_size%" value=%"")
 				a_file.put_integer (an_option.inlining_size)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_jumps_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.jumps_optimization then
 					a_file.put_line ("<option name=%"jumps_optimization%" value=%"true%"/>")
 				else
@@ -463,13 +461,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_layout_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"layout%" value=%"")
 				a_file.put_string (an_option.layout)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_layout_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.layout_optimization then
 					a_file.put_line ("<option name=%"layout_optimization%" value=%"true%"/>")
 				else
@@ -477,7 +475,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_leaves_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.leaves_optimization then
 					a_file.put_line ("<option name=%"leaves_optimization%" value=%"true%"/>")
 				else
@@ -485,7 +483,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_line_generation_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.line_generation then
 					a_file.put_line ("<option name=%"line_generation%" value=%"true%"/>")
 				else
@@ -495,7 +493,7 @@ feature {NONE} -- Output
 			if an_option.is_link_declared then
 				a_link_cursor := an_option.link.new_cursor
 				from a_link_cursor.start until a_link_cursor.after loop
-					print_indentation (indent + 1, a_file)
+					print_indentation (indent, a_file)
 					a_file.put_string ("<option name=%"link%" value=%"")
 					a_file.put_string (a_link_cursor.item)
 					a_file.put_line ("%"/>")
@@ -503,13 +501,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_linker_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"linker%" value=%"")
 				a_file.put_string (an_option.linker)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_linux_fpu_double_precision_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.linux_fpu_double_precision then
 					a_file.put_line ("<option name=%"linux_fpu_double_precision%" value=%"true%"/>")
 				else
@@ -517,7 +515,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_manifest_string_trace_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.manifest_string_trace then
 					a_file.put_line ("<option name=%"manifest_string_trace%" value=%"true%"/>")
 				else
@@ -525,7 +523,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_map_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.map then
 					a_file.put_line ("<option name=%"map%" value=%"true%"/>")
 				else
@@ -533,7 +531,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_msil_generation_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.msil_generation then
 					a_file.put_line ("<option name=%"msil_generation%" value=%"true%"/>")
 				else
@@ -541,7 +539,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_multithreaded_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.multithreaded then
 					a_file.put_line ("<option name=%"multithreaded%" value=%"true%"/>")
 				else
@@ -549,7 +547,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_no_default_lib_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.no_default_lib then
 					a_file.put_line ("<option name=%"no_default_lib%" value=%"true%"/>")
 				else
@@ -557,13 +555,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_override_cluster_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"override_cluster%" value=%"")
 				a_file.put_string (an_option.override_cluster)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_portable_code_generation_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.portable_code_generation then
 					a_file.put_line ("<option name=%"portable_code_generation%" value=%"true%"/>")
 				else
@@ -571,19 +569,19 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_precompiled_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"precompiled%" value=%"")
 				a_file.put_string (an_option.precompiled)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_prefix_option_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"prefix%" value=%"")
 				a_file.put_string (an_option.prefix_option)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_profile_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.profile then
 					a_file.put_line ("<option name=%"profile%" value=%"true%"/>")
 				else
@@ -591,13 +589,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_public_key_token_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"public_key_token%" value=%"")
 				a_file.put_string (an_option.public_key_token)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_read_only_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.read_only then
 					a_file.put_line ("<option name=%"read_only%" value=%"true%"/>")
 				else
@@ -605,7 +603,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_recursive_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.recursive then
 					a_file.put_line ("<option name=%"recursive%" value=%"true%"/>")
 				else
@@ -613,7 +611,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_reloads_optimization_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.reloads_optimization then
 					a_file.put_line ("<option name=%"reloads_optimization%" value=%"true%"/>")
 				else
@@ -621,13 +619,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_shared_library_definition_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"shared_library_definition%" value=%"")
 				a_file.put_string (an_option.shared_library_definition)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_split_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.split then
 					a_file.put_line ("<option name=%"split%" value=%"true%"/>")
 				else
@@ -635,19 +633,19 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_stack_size_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"stack_size%" value=%"")
 				a_file.put_integer (an_option.stack_size)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_storable_filename_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"storable_filename%" value=%"")
 				a_file.put_string (an_option.storable_filename)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_strip_option_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.strip_option then
 					a_file.put_line ("<option name=%"strip%" value=%"true%"/>")
 				else
@@ -655,13 +653,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_target_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"target%" value=%"")
 				a_file.put_string (an_option.target)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_trace_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.trace then
 					a_file.put_line ("<option name=%"trace%" value=%"true%"/>")
 				else
@@ -669,7 +667,7 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_verbose_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.verbose then
 					a_file.put_line ("<option name=%"verbose%" value=%"true%"/>")
 				else
@@ -677,33 +675,31 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_version_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"version%" value=%"")
 				a_file.put_string (an_option.version)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_visible_filename_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"visible_filename%" value=%"")
 				a_file.put_string (an_option.visible_filename)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_warning_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"warning%" value=%"")
 				a_file.put_string (an_option.warning)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_wedit_declared then
-				print_indentation (indent + 1, a_file)
+				print_indentation (indent, a_file)
 				if an_option.wedit then
 					a_file.put_line ("<option name=%"wedit%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"wedit%" value=%"false%"/>")
 				end
 			end
-			print_indentation (indent, a_file)
-			a_file.put_line ("</option>")
 		end
 
 	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
