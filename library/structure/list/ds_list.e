@@ -198,7 +198,7 @@ feature -- Element change
 		do
 			extend_left_cursor (other, internal_cursor)
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (old index) = other.first)
 		end
 
@@ -215,7 +215,7 @@ feature -- Element change
 			not_before: not a_cursor.before
 		deferred
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (old (a_cursor.index)) = other.first)
 		end
 
@@ -230,7 +230,7 @@ feature -- Element change
 		do
 			extend_right_cursor (other, internal_cursor)
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (index + 1) = other.first)
 		end
 
@@ -247,7 +247,7 @@ feature -- Element change
 			not_after: not a_cursor.after
 		deferred
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (a_cursor.index + 1) = other.first)
 		end
 
@@ -261,7 +261,7 @@ feature -- Element change
 		do
 			append_left_cursor (other, internal_cursor)
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (old index) = other.first)
 		end
 
@@ -277,7 +277,7 @@ feature -- Element change
 			not_before: not a_cursor.before
 		deferred
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (old (a_cursor.index)) = other.first)
 		end
 
@@ -291,7 +291,7 @@ feature -- Element change
 		do
 			append_right_cursor (other, internal_cursor)
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (index + 1) = other.first)
 		end
 
@@ -307,7 +307,7 @@ feature -- Element change
 			not_after: not a_cursor.after
 		deferred
 		ensure
-			new_count: count = old count + other.count
+			new_count: count = old count + old other.count
 			same_order: (not other.is_empty) implies (item (a_cursor.index + 1) = other.first)
 		end
 

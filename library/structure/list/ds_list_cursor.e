@@ -72,7 +72,7 @@ feature -- Element change
 		do
 			container.put_left_cursor (v, Current)
 		ensure
-			one_more: container.count = old (container.count) + 1
+			one_more: container.count = old container.count + 1
 		end
 
 	put_right (v: G) is
@@ -84,7 +84,7 @@ feature -- Element change
 		do
 			container.put_right_cursor (v, Current)
 		ensure
-			one_more: container.count = old (container.count) + 1
+			one_more: container.count = old container.count + 1
 		end
 
 	force_left (v: G) is
@@ -95,7 +95,7 @@ feature -- Element change
 		do
 			container.force_left_cursor (v, Current)
 		ensure
-			one_more: container.count = old (container.count) + 1
+			one_more: container.count = old container.count + 1
 		end
 
 	force_right (v: G) is
@@ -106,7 +106,7 @@ feature -- Element change
 		do
 			container.force_right_cursor (v, Current)
 		ensure
-			one_more: container.count = old (container.count) + 1
+			one_more: container.count = old container.count + 1
 		end
 
 	extend_left (other: DS_LINEAR [G]) is
@@ -120,7 +120,7 @@ feature -- Element change
 		do
 			container.extend_left_cursor (other, Current)
 		ensure
-			new_count: container.count = old (container.count) + other.count
+			new_count: container.count = old container.count + old other.count
 		end
 
 	extend_right (other: DS_LINEAR [G]) is
@@ -134,7 +134,7 @@ feature -- Element change
 		do
 			container.extend_right_cursor (other, Current)
 		ensure
-			new_count: container.count = old (container.count) + other.count
+			new_count: container.count = old container.count + old other.count
 		end
 
 	append_left (other: DS_LINEAR [G]) is
@@ -147,7 +147,7 @@ feature -- Element change
 		do
 			container.append_left_cursor (other, Current)
 		ensure
-			new_count: container.count = old (container.count) + other.count
+			new_count: container.count = old container.count + old other.count
 		end
 
 	append_right (other: DS_LINEAR [G]) is
@@ -160,7 +160,7 @@ feature -- Element change
 		do
 			container.append_right_cursor (other, Current)
 		ensure
-			new_count: container.count = old (container.count) + other.count
+			new_count: container.count = old container.count + old other.count
 		end
 
 feature -- Removal
@@ -173,7 +173,7 @@ feature -- Removal
 		do
 			container.remove_at_cursor (Current)
 		ensure
-			one_less: container.count = old (container.count) - 1
+			one_less: container.count = old container.count - 1
 		end
 
 	remove_left is
@@ -186,7 +186,7 @@ feature -- Removal
 		do
 			container.remove_left_cursor (Current)
 		ensure
-			one_less: container.count = old (container.count) - 1
+			one_less: container.count = old container.count - 1
 		end
 
 	remove_right is
@@ -199,7 +199,7 @@ feature -- Removal
 		do
 			container.remove_right_cursor (Current)
 		ensure
-			one_less: container.count = old (container.count) - 1
+			one_less: container.count = old container.count - 1
 		end
 
 	prune_left (n: INTEGER) is
@@ -210,7 +210,7 @@ feature -- Removal
 		do
 			container.prune_left_cursor (n, Current)
 		ensure
-			new_count: container.count = old (container.count) - n
+			new_count: container.count = old container.count - n
 		end
 
 	prune_right (n: INTEGER) is
@@ -221,7 +221,7 @@ feature -- Removal
 		do
 			container.prune_right_cursor (n, Current)
 		ensure
-			new_count: container.count = old (container.count) - n
+			new_count: container.count = old container.count - n
 		end
 
 feature {DS_LIST} -- Implementation

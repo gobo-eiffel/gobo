@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion.
 		require
 			other_not_void: other /= Void
+			not_same: other /= Current
 		local
 			other_cursor: DS_LINEAR_CURSOR [G]
 			i, nb: INTEGER
