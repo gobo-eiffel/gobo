@@ -82,12 +82,12 @@ feature -- Status report
 			exists: Result implies exists
 		end
 
-	frozen is_closable: BOOLEAN is
+	is_closable: BOOLEAN is
 			-- Can current file system entry be closed?
-			-- (Note: Could not declare it as a constant because
-			-- of a linker error in VE 4.0.)
 		do
-			Result := True
+			Result := is_open
+		ensure
+			definition: Result = is_open
 		end
 
 feature -- Basic operations
@@ -104,7 +104,6 @@ feature -- Basic operations
 			-- Try to close file system entry. Set `is_closed'
 			-- to true if operation was successful.
 		require
-			not_closed: is_open
 			is_closable: is_closable
 		deferred
 		end
@@ -118,9 +117,5 @@ feature -- Basic operations
 			is_closed: is_closed
 		deferred
 		end
-
-invariant
-
-	is_closable: is_closable
 
 end

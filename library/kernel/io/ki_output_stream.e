@@ -55,6 +55,8 @@ feature -- Status report
 			-- Can current output stream be closed?
 		do
 			Result := False
+		ensure
+			is_open: Result implies is_open_write
 		end
 
 feature -- Access
@@ -72,7 +74,6 @@ feature -- Basic operations
 			-- Try to close output stream if it is closable. Set
 			-- `is_open_write' to false if operation was successful.
 		require
-			is_open: is_open_write
 			is_closable: is_closable
 		do
 		end

@@ -91,6 +91,8 @@ feature -- Status report
 			-- Can current input stream be closed?
 		do
 			Result := False
+		ensure
+			is_open: Result implies is_open_read
 		end
 
 feature -- Access
@@ -116,7 +118,6 @@ feature -- Basic operations
 			-- Try to close input stream if it is closable. Set
 			-- `is_open_read' to false if operation was successful.
 		require
-			is_open: is_open_read
 			is_closable: is_closable
 		do
 		end
