@@ -12,6 +12,13 @@ indexing
 
 class YY_BUFFER
 
+inherit
+
+	KL_STRING_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_from_buffer
@@ -26,11 +33,7 @@ feature -- Initialization
 		local
 			buff: STRING
 		do
-#ifndef VE
-			!! buff.make (str.count + 2)
-#else
-			!! buff.make (0)
-#endif
+			buff := string__make (str.count + 2)
 			buff.append_string (str)
 			buff.append_character (End_of_buffer_character)
 			buff.append_character (End_of_buffer_character)
