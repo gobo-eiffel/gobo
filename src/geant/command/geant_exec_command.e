@@ -56,7 +56,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			log ("  [exec] " + command_line + "%N")
+			trace ("  [exec] " + command_line + "%N")
 			execute_shell (command_line)
 		end
 

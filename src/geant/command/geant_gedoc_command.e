@@ -128,7 +128,7 @@ feature -- Execution
 			cmd.append_string (" -out ")
 			cmd.append_string (output_filename)
 
-			log ("  [gedoc] " + cmd + "%N")
+			trace ("  [gedoc] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

@@ -101,7 +101,7 @@ feature -- Execution
 			if is_compilable then
 				cmd := clone ("vec -no -a:")
 				cmd.append_string (esd_filename)
-				log ("  [ve] " + cmd + "%N")
+				trace ("  [ve] " + cmd + "%N")
 				execute_shell (cmd)
 			else
 				check is_cleanable: is_cleanable end
@@ -125,25 +125,25 @@ feature -- Execution
 					-- compiler has been used to compile this system.
 				cmd := clone ("vec -dc -y -no")
 				if recursive_clean then
-					log ("  [ve] [" + old_cwd + "] " + cmd + "%N")
+					trace ("  [ve] [" + old_cwd + "] " + cmd + "%N")
 				else
-					log ("  [ve] " + cmd + "%N")
+					trace ("  [ve] " + cmd + "%N")
 				end
 				execute_shell (cmd)
 			end
 			if file_system.is_file_readable ("Result.out") then
 				if recursive_clean then
-					log ("  [ve] delete " + old_cwd + "/Result.out%N")
+					trace ("  [ve] delete " + old_cwd + "/Result.out%N")
 				else
-					log ("  [ve] delete Result.out%N")
+					trace ("  [ve] delete Result.out%N")
 				end
 				file_system.delete_file ("Result.out")
 			end
 			if file_system.is_file_readable ("vec.xcp") then
 				if recursive_clean then
-					log ("  [ve] delete " + old_cwd + "/vec.xcp%N")
+					trace ("  [ve] delete " + old_cwd + "/vec.xcp%N")
 				else
-					log ("  [ve] delete vec.xcp%N")
+					trace ("  [ve] delete vec.xcp%N")
 				end
 				file_system.delete_file ("vec.xcp")
 			end

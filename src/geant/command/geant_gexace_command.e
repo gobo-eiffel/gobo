@@ -160,12 +160,12 @@ feature -- Execution
 			if xace_filename /= Void then
 				cmd.append_string (" " + xace_filename)
 			end
-			log ("  [gexace] " + cmd + "%N")
+			trace ("  [gexace] " + cmd + "%N")
 			execute_shell (cmd)
 
 			if compile then
 				cmd := "compile se.ace"
-				log ("  [gexace] " + cmd + "%N")
+				trace ("  [gexace] " + cmd + "%N")
 				execute_shell (cmd)
 			end
 		end

@@ -109,11 +109,11 @@ feature -- Execution
 				a_basename := unix_file_system.basename (file)
 				a_to_file := unix_file_system.pathname (to_directory, a_basename)
 
-				log ("  [move] " + file + " to " + a_to_file + "%N")
+				trace ("  [move] " + file + " to " + a_to_file + "%N")
 				file_system.rename_file (file, a_to_file)
 			else
 				check is_to_file_executable: is_to_file_executable end
-				log ("  [move] " + file + " to " + to_file + "%N")
+				trace ("  [move] " + file + " to " + to_file + "%N")
 				file_system.rename_file (file, to_file)
 			end
 

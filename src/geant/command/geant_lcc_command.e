@@ -80,7 +80,7 @@ feature -- Execution
 			cmd.append_string (executable)
 			cmd.append_string (" ")
 			cmd.append_string (source_filename)
-			log ("  [lcc] " + cmd + "%N")
+			trace ("  [lcc] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

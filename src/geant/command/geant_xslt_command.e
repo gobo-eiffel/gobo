@@ -128,7 +128,7 @@ feature -- Execution
 				i := i + 1
 			end
 
-			log ("  [xslt] " + cmd + "%N")
+			trace ("  [xslt] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

@@ -150,7 +150,7 @@ feature -- Execution
 
 			cmd.append_string (input_filename)
 
-			log ("  [geyacc] " + cmd + "%N")
+			trace ("  [geyacc] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

@@ -78,7 +78,7 @@ feature -- Execution
 				cmd.append_string ("%" ")
 			end
 			cmd.append_string (config_filename)
-			log("  [getest] " + cmd + "%N")
+			trace ("  [getest] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

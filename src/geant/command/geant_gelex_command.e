@@ -246,7 +246,7 @@ feature -- Execution
 
 			cmd.append_string (input_filename)
 
-			log ("  [gelex] " + cmd + "%N")
+			trace ("  [gelex] " + cmd + "%N")
 			execute_shell (cmd)
 		end
 

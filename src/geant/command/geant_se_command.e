@@ -166,7 +166,7 @@ feature -- Execution
 				if file_system.is_file_readable (a_name) then
 						-- Execute the command only if the SmallEiffel
 						-- compiler has been used to compile this system.
-					log ("  [se] " + cmd + "%N")
+					trace ("  [se] " + cmd + "%N")
 					execute_shell (cmd)
 				end
 			else
@@ -175,7 +175,7 @@ feature -- Execution
 				else
 					cmd := new_traditional_cmdline
 				end
-				log ("  [se] " + cmd + "%N")
+				trace ("  [se] " + cmd + "%N")
 				execute_shell (cmd)
 			end
 		end

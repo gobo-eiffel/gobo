@@ -142,36 +142,36 @@ feature -- Execution
 			if finalize then
 				cmd.append_string (" -finalize")
 			end
-			log ("  [ise] " + cmd + "%N")
+			trace ("  [ise] " + cmd + "%N")
 			execute_shell (cmd)
 
 			if finish_freezing then
 				old_cwd := file_system.cwd
 				if finalize then
-					log ("  [ise] cd EIFGEN/F_code%N")
+					trace ("  [ise] cd EIFGEN/F_code%N")
 					file_system.cd ("EIFGEN/F_code")
 				else
-					log ("  [ise] cd EIFGEN/W_code%N")
+					trace ("  [ise] cd EIFGEN/W_code%N")
 					file_system.cd ("EIFGEN/W_code")
 				end
 				cmd := clone ("finish_freezing -silent")
-				log ("  [ise] " + cmd + "%N")
+				trace ("  [ise] " + cmd + "%N")
 				execute_shell (cmd)
 				old_name := clone (system_name)
 				old_name.append_string (file_system.exe_extension)
 				new_name := clone ("../../")
 				new_name.append_string (old_name)
-				log ("  [ise] copy " + old_name + " " + new_name + "%N")
+				trace ("  [ise] copy " + old_name + " " + new_name + "%N")
 				file_system.copy_file (old_name, new_name)
 				if not finalize then
 					old_name := clone (system_name)
 					old_name.append_string (".melted")
 					new_name := clone ("../../")
 					new_name.append_string (old_name)
-					log ("  [ise] copy " + old_name + " " + new_name + "%N")
+					trace ("  [ise] copy " + old_name + " " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 				end
-				log ("  [ise] cd " + old_cwd + "%N")
+				trace ("  [ise] cd " + old_cwd + "%N")
 				file_system.cd (old_cwd)
 			end
 		end
@@ -187,18 +187,18 @@ feature -- Execution
 			a_name := clone (clean)
 			a_name.append_string (".epr")
 			if file_system.is_file_readable (a_name) then
-				log ("  [ise] delete " + a_name + "%N")
+				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			a_name := clone (clean)
 			a_name.append_string (".rc")
 			if file_system.is_file_readable (a_name) then
-				log ("  [ise] delete " + a_name + "%N")
+				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
 			if file_system.is_directory_readable ("EIFGEN") then
 				!! a_dir.make ("EIFGEN")
-				log ("  [ise] delete EIFGEN%N")
+				trace ("  [ise] delete EIFGEN%N")
 				a_dir.recursive_delete
 			end
 		end

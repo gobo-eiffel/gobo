@@ -106,9 +106,10 @@ feature -- Execution
 			cmd.append_string (input_filename)
 			cmd.append_string (" ")
 			cmd.append_string (output_filename)
-
-			log ("  [gepp] " + cmd + "%N")
+			
+			trace ("  [gepp] " + cmd + "%N")
 			execute_shell (cmd)
+
 		end
 
 invariant

@@ -72,7 +72,7 @@ feature -- Execution
 			-- Put variable in project variables pool.
 		do
 			Execution_environment.set_variable_value (name, value)
-			log ("  [setenv] " + name + "=" + value + "%N")
+			trace ("  [setenv] " + name + "=" + value + "%N")
 		end
 
 end -- class GEANT_SETENV_COMMAND

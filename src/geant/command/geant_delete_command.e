@@ -91,12 +91,12 @@ feature -- Execution
 			a_directory: KL_DIRECTORY
 		do
 			if is_directory_executable then
-				log ("  [delete] " + directory + "%N")
+				trace ("  [delete] " + directory + "%N")
 				!! a_directory.make (directory)
 				a_directory.recursive_delete
 			else
 				check is_file_executable: is_file_executable end
-				log ("  [delete] " + file + "%N")
+				trace ("  [delete] " + file + "%N")
 				file_system.delete_file (file)
 			end
 		end
