@@ -188,13 +188,13 @@ feature -- AST factory
 		require
 			a_regexp_not_void: a_regexp /= Void
 		do
-			!LX_DFA_REGULAR_EXPRESSION! Result.compile (a_regexp.name, True)
-			if not Result.compiled then
+			!LX_DFA_REGULAR_EXPRESSION! Result.compile_case_insensitive (a_regexp.name)
+			if not Result.is_compiled then
 				Result := Void
 				error_handler.report_regexp_syntax_error (a_regexp, filename)
 			end
 		ensure
-			compiled: Result /= Void implies Result.compiled
+			compiled: Result /= Void implies Result.is_compiled
 		end
 
 feature -- Defaults
@@ -230,19 +230,19 @@ feature -- Defaults
 	Default_class_regexp: LX_REGULAR_EXPRESSION is
 			-- Default class regexp
 		once
-			!LX_DFA_REGULAR_EXPRESSION! Result.compile ("TEST_.*", True)
+			!LX_DFA_REGULAR_EXPRESSION! Result.compile_case_insensitive ("TEST_.*")
 		ensure
 			regexp_not_void: Result /= Void
-			regexp_compiled: Result.compiled
+			regexp_compiled: Result.is_compiled
 		end
 
 	Default_feature_regexp: LX_REGULAR_EXPRESSION is
 			-- Default feature regexp
 		once
-			!LX_DFA_REGULAR_EXPRESSION! Result.compile ("test_.*", True)
+			!LX_DFA_REGULAR_EXPRESSION! Result.compile_case_insensitive ("test_.*")
 		ensure
 			regexp_not_void: Result /= Void
-			regexp_compiled: Result.compiled
+			regexp_compiled: Result.is_compiled
 		end
 
 	Default_class_prefix: STRING is "X"
@@ -321,7 +321,7 @@ feature -- Error handling
 invariant
 
 	variables_not_void: variables /= Void
-	compiled_class_regexp: class_regexp /= Void implies class_regexp.compiled
-	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.compiled
+	compiled_class_regexp: class_regexp /= Void implies class_regexp.is_compiled
+	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.is_compiled
 
 end

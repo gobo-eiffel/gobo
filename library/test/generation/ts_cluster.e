@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_pathname_not_void: a_pathname /= Void
 			cregexp_not_void: cregexp /= Void
-			cregexp_compiled: cregexp.compiled
+			cregexp_compiled: cregexp.is_compiled
 			fregexp_not_void: fregexp /= Void
-			fregexp_compiled: fregexp.compiled
+			fregexp_compiled: fregexp.is_compiled
 			a_prefix_not_void: a_prefix /= Void
 		do
 			name := a_name
@@ -122,9 +122,9 @@ invariant
 	name_not_void: name /= Void
 	pathname_not_void: pathname /= Void
 	class_regexp_not_void: class_regexp /= Void
-	class_regexp_compiled: class_regexp.compiled
+	class_regexp_compiled: class_regexp.is_compiled
 	feature_regexp_not_void: feature_regexp /= Void
-	feature_regexp_compiled: feature_regexp.compiled
+	feature_regexp_compiled: feature_regexp.is_compiled
 	class_prefix_not_void: class_prefix /= Void
 
 end
