@@ -90,13 +90,13 @@ Note that if you downloaded this package from CVS on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: Halstenbach
-4.0.1, ISE Eiffel 5.2 and 5.1.014, SmallEiffel -0.74,
-Visual Eiffel 4.0 (Build 4001). For more details about the supported Eiffel
-compilers, please see the file "Release_notes.txt". This software might
-work with other Eiffel compilers and/or other compiler versions, however
-no test has been done. To have a better understanding of the way this
-software has been designed and implemented, you can also have a look at
-"$GOBO/doc/portability".
+4.0.1, ISE Eiffel 5.2.1027 (Classic and .NET) and 5.1.014, SmallEiffel -0.74,
+Visual Eiffel 4.0 (Build 4001) and 4.1 beta (Build 2402). For more details
+about the supported Eiffel compilers, please see the file "Release_notes.txt".
+This software might work with other Eiffel compilers and/or other compiler
+versions, however no test has been done. To have a better understanding of
+the way this software has been designed and implemented, you can also have
+a look at "$GOBO/doc/portability".
 
 In this distribution:
 
@@ -178,4 +178,4 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997-2002, Eric Bezault and others
-18 August 2002
+31 August 2002

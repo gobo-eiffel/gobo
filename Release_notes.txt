@@ -2,6 +2,16 @@ HACT 4.0 (Halstenbach)
 
 ISE 5.2 (ISE Eiffel)
 
+	* The Ace files for ISE Eiffel provided in this package are for
+	  Eiffel classic. In order to get Ace files configured for Eiffel
+	  for .NET, you will need to set the environment variable
+	  $GOBO_DOTNET, and the run the following commands:
+
+	    set GOBO_DOTNET=true
+	    cd %GOBO%
+	    geant clobber
+	    geant install
+
 ISE 5.1 (ISE Eiffel)
 
 	* The Gobo Eiffel package has been configured to work with ISE 5.2.
@@ -22,4 +32,6 @@ SE -0.74 (SmallEiffel)
 	  messages, please use the option -no_style_warning.
 
 VE 4.0 (Visual Eiffel)
+
+VE 4.1 (Visual Eiffel)
 
