@@ -29,6 +29,7 @@
 
 		<geant file="library/build.eant" target="install"/>
 		<geant file="src/build.eant" target="install"/>
+		<geant file="example/build.eant" target="install"/>
 	</target>
 
 	<target name="clean" depend="init" dir="${GOBO}">
@@ -45,6 +46,7 @@
 		<delete file="src/getest/getest${exe}"/>
 		<delete file="src/gexace/gexace${exe}"/>
 		<delete file="src/geyacc/geyacc${exe}"/>
+		<geant file="example/build.eant" target="clean"/>
 	</target>
 
 	<target name="clobber" depend="init" dir="${GOBO}">
@@ -54,6 +56,7 @@
 
 		<geant file="library/build.eant" target="clobber"/>
 		<geant file="src/build.eant" target="clobber"/>
+		<geant file="example/build.eant" target="clobber"/>
 	</target>
 
 	<target name="develop" depend="init" dir="${GOBO}">
@@ -120,6 +123,7 @@
 		<geant file="src/gelint/build.eant" target="clean"/>
 		<delete file="bin/gelint${exe}"/>
 		<move file="src/gelint/gelint${exe}" to_file="bin/gelint${exe}"/>
+		<geant file="example/build.eant" target="install"/>
 		<geant target="clean"/>
 	</target>
 
