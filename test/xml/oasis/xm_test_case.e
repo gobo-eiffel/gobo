@@ -20,6 +20,8 @@ inherit
 
 	UC_UNICODE_FACTORY
 
+	KL_SHARED_STANDARD_FILES
+
 feature -- XML asserts
 
 	assert_valid (a_name: STRING; in: STRING) is
@@ -56,13 +58,13 @@ feature -- XML asserts
 
 			debug ("xml_parser")
 				if not parser.is_correct then 
-					io.put_string (parser.last_error_description) 
+					std.output.put_string (parser.last_error_description) 
 				end
 			end
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 
 				-- Constants are in UTF8, so convert if UC_STRING.
-			assert_equal (STRING_.concat ("Output: ", a_name), new_unicode_string_from_utf8 (an_out), output)
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
 		end
 
 	assert_output_utf16 (a_name: STRING; in_utf16: STRING; an_out: STRING) is
@@ -75,7 +77,7 @@ feature -- XML asserts
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf16 (in_utf16))
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
-			assert_equal (STRING_.concat ("Output: ", a_name), new_unicode_string_from_utf8 (an_out), output)
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
 		end
 
 feature {NONE} -- Parser
