@@ -22,7 +22,7 @@ feature -- Access
 			-- Return type
 		do
 			Result := declared_type.declared_type
-		ensure
+		ensure then
 			type_not_void: Result /= Void
 		end
 
