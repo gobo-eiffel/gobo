@@ -116,20 +116,21 @@ feature {NONE} -- Precompilation
 			assert_execute ("gexace " + define_base + "--library=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			assert_execute ("ec -precompile -batch -ace ise.ace" + output_log)
-				-- C compilation.
-			file_system.cd (file_system.pathname ("EIFGEN", "W_code"))
-			assert_execute ("finish_freezing -silent" + output_log)
-				-- Check creation of precompiled files.
-			if dotnet /= Void and then dotnet.count > 0 then
-				assert ("driver_exists", file_system.file_exists ("precomp" + file_system.exe_extension))
-			else
-				eif_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
-				if eif_compiler /= Void and then eif_compiler.count > 0 then
-					assert ("driver_exists", file_system.file_exists (file_system.pathname (eif_compiler, "driver" + file_system.exe_extension)))
-				else
-					assert ("driver_exists", file_system.file_exists ("driver" + file_system.exe_extension))
-				end
-			end
+-- ISE does not generate C code when precompiling with NONE as root class.
+--				-- C compilation.
+--			file_system.cd (file_system.pathname ("EIFGEN", "W_code"))
+--			assert_execute ("finish_freezing -silent" + output_log)
+--				-- Check creation of precompiled files.
+--			if dotnet /= Void and then dotnet.count > 0 then
+--				assert ("driver_exists", file_system.file_exists ("precomp" + file_system.exe_extension))
+--			else
+--				eif_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
+--				if eif_compiler /= Void and then eif_compiler.count > 0 then
+--					assert ("driver_exists", file_system.file_exists (file_system.pathname (eif_compiler, "driver" + file_system.exe_extension)))
+--				else
+--					assert ("driver_exists", file_system.file_exists ("driver" + file_system.exe_extension))
+--				end
+--			end
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
