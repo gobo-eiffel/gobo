@@ -42,12 +42,26 @@ feature -- Status report
 			directory_not_empty: Result implies directory.count > 0
 		end
 
+	is_fileset_executable: BOOLEAN is
+			-- Can command be executed on a fileset?
+		do
+			Result := fileset /= Void
+		ensure
+			fileset_not_void: Result implies fileset /= Void
+		end
+
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := is_file_executable xor is_directory_executable
+			Result :=
+				(is_file_executable and not is_directory_executable and not is_fileset_executable) or
+				(not is_file_executable and is_directory_executable and not is_fileset_executable) or
+				(not is_file_executable and not is_directory_executable and is_fileset_executable)
 		ensure then
-			file_xor_directory: Result implies (is_file_executable xor is_directory_executable)
+			file_xor_directory: Result implies (
+				(is_file_executable and not is_directory_executable and not is_fileset_executable) or
+				(not is_file_executable and is_directory_executable and not is_fileset_executable) or
+				(not is_file_executable and not is_directory_executable and is_fileset_executable))
 		end
 
 feature -- Access
@@ -57,6 +71,9 @@ feature -- Access
 
 	file: STRING
 			-- File to delete
+
+	fileset: GEANT_FILESET
+		-- Fileset for current command
 
 feature -- Setting
 
@@ -82,6 +99,16 @@ feature -- Setting
 			file_set: file = a_file
 		end
 
+	set_fileset (a_fileset: like fileset) is
+			-- Set `fileset' to `a_fileset'.
+		require
+			a_fileset_not_void: a_fileset /= Void
+		do
+			fileset := a_fileset
+		ensure
+			fileset_set: fileset = a_fileset
+		end
+
 feature -- Execution
 
 	execute is
@@ -95,17 +122,34 @@ feature -- Execution
 				trace ("  [delete] " + a_name + "%N")
 				file_system.recursive_delete_directory (a_name)
 				if file_system.directory_exists (a_name) then
-					log ("  [delete] error: cannot delete directory '" + directory + "'%N")
+					log ("  [delete] error: cannot delete directory '" + a_name + "'%N")
 					exit_code := 1
 				end
-			else
-				check is_file_executable: is_file_executable end
+			elseif is_file_executable then
 				a_name := file_system.pathname_from_file_system (file, unix_file_system)
 				trace ("  [delete] " + a_name + "%N")
 				file_system.delete_file (a_name)
 				if file_system.file_exists (a_name) then
-					log ("geant error: cannot delete file '" + file + "'%N")
+					log ("geant error: cannot delete file '" + a_name + "'%N")
 					exit_code := 1
+				end
+			else
+				check is_fileset_executable: is_fileset_executable end
+				from
+					fileset.execute
+					fileset.filenames.start
+				until
+					fileset.filenames.after or else exit_code /= 0
+				loop
+					a_name := file_system.pathname_from_file_system (fileset.filenames.item_for_iteration, unix_file_system)
+					trace ("  [delete] " + a_name + "%N")
+					file_system.delete_file (a_name)
+					if file_system.file_exists (a_name) then
+						log ("geant error: cannot delete file '" + a_name + "'%N")
+						exit_code := 1
+					end
+
+					fileset.filenames.forth
 				end
 			end
 		end
