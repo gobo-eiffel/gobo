@@ -86,7 +86,7 @@
 		<available resource="EIFGEN/${codedir}/${system}.melted" variable="file_available"/>
 		<copy file="EIFGEN/${codedir}/${system}.melted" to_directory="." if="${file_available}=true"/>
 		<copy to_directory=".">
-			<fileset include="@(EIFGEN/${codedir}/${system}_module_*.dll)"/>
+			<fileset directory="EIFGEN/${codedir}" include="@(${system}_module_*.dll)"/>
 		</copy>
 	</target>
 
