@@ -366,6 +366,9 @@ feature -- Processing
 			elseif a_xml_element.name.is_equal (Geant_task_name) then
 					-- geant
 				!GEANT_GEANT_TASK! a_task.make (project, a_xml_element)
+			elseif a_xml_element.name.is_equal (Gexmlsplit_task_name) then
+					-- gexmlsplit
+				!GEANT_GEXMLSPLIT_TASK! a_task.make (project, a_xml_element)
 			elseif a_xml_element.name.is_equal (Echo_task_name) then
 					-- echo
 				!GEANT_ECHO_TASK! a_task.make (project, a_xml_element)

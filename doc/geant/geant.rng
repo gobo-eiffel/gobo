@@ -86,6 +86,7 @@
 				<ref name="gepp"/>
 				<ref name="getest"/>
 				<ref name="gexace"/>
+				<ref name="gexmlsplit"/>
 				<ref name="hact"/>
 				<ref name="ise"/>
 				<ref name="mkdir"/>
@@ -334,6 +335,12 @@
 			<zeroOrMore>
 				<ref name="define"/>
 			</zeroOrMore>
+		</element>
+	</define>
+	<define name="gexmlsplit">
+		<element name="gexmlsplit">
+			<ref name="dir_if_unless"/>
+			<attribute name="input"/>
 		</element>
 	</define>
 	<define name="hact">

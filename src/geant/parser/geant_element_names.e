@@ -167,6 +167,15 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
+	Gexmlsplit_task_name: UC_STRING is
+			-- "gexmlsplit" task name
+		once
+			Result := new_unicode_string ("gexmlsplit")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
 	Echo_task_name: UC_STRING is
 			-- "echo" task name
 		once
