@@ -72,7 +72,7 @@ if yy_act = 4 then
 	last_token := text_item (1).code
 		
 else
---|#line 56
+--|#line 0
 fatal_error ("scanner jammed")
 end
 end
