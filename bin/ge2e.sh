@@ -18,12 +18,13 @@ if [ -d spec/ve/ecluster ]; then cd spec/ve ; vec /dc /y ; cd ../.. ; fi
 rm -f spec/ve/*.e
 if [ ! -d spec/se ]; then mkdir spec/se ; fi
 rm -f spec/se/*.e
-if [ ! -d spec/tower ]; then mkdir spec/tower ; fi
-rm -f spec/tower/*.e
+# if [ ! -d spec/tower ]; then mkdir spec/tower ; fi
+# rm -f spec/tower/*.e
 
 for file in `ls *.ge` ; do
 	echo $file
-	for compiler in ISE HACT VE SE TOWER ; do
+	for compiler in ISE HACT VE SE ; do
+#	for compiler in ISE HACT VE SE TOWER ; do
 #		touch spec/$compiler/`basename $file .ge`.e
 		gepp -D$compiler $file spec/$compiler/`basename $file .ge`.e
 	done
