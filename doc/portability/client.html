@@ -5,14 +5,15 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage 2.0">
-<title>Client Adaptation Technique</title>
+<title>Client /Supplier Adaptation Technique</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
 <table border="0" width="100%">
     <tr>
-        <td><font size="6"><strong>Client Adaptation Technique</strong></font></td>
+        <td><font size="6"><strong>Client/Supplier Adaptation
+        Technique</strong></font></td>
         <td align="right"><a href="inheritance.html"><img
         src="../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a href="gepp.html"><img
@@ -34,7 +35,8 @@ size="3">, or optimized classes such as </font><font
 color="#008080"><em><tt>ARRAY</tt></em></font><font size="3"> or </font><font
 color="#008080"><em><tt>STRING</tt></em></font><font size="3">.</font><font
 size="2"> </font><font size="3">To get around this problem,
-another technique using client relationship can be adopted.</font></p>
+another technique using client/supplier relationship can be
+adopted.</font></p>
 
 <h2>Description</h2>
 
@@ -151,7 +153,7 @@ object. Unfortunately, <em>expanded types</em> are not properly
 supported by all Eiffel compilers, making it impossible to used
 mechanism in portable code. To work around this problem and to
 avoid having to create an instance of these <font color="#008080"><em><tt>_ROUTINES</tt></em></font>
-classes &quot;by hand&quot; each time they are used, they can
+classes &quot;by hand&quot; each time they are used, they can be
 accessed through once functions. For example, for class <font
 color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, the
 following class will be provided:</p>
@@ -199,8 +201,8 @@ will become:</p>
 
 <p>The class name convention <font color="#008080"><em><tt>_IMPORTED_</tt></em></font><em>
 </em>has been adopted after reading an article from Richie Bielak
-which appeared in <em>Eiffel Outlook</em> (volume 3, number 5)
-back in 1994. The use of <font color="#008080"><em><tt>INTEGER_</tt></em></font>,
+which appeared in <em>Eiffel Outlook</em> in May 1994 (volume 3,
+number 5, page 6). The use of <font color="#008080"><em><tt>INTEGER_</tt></em></font>,
 all characters in uppercase (instead of the typical style
 guideline which states that <em>once</em> function names should
 have their first letter capitalized and all remaining in
@@ -210,7 +212,7 @@ really ought to be implemented in class <font color="#008080"><em><tt>INTEGER
 compilation problems since <font color="#008080"><em><tt>INTEGER </tt></em></font>is,
 with no good reasons in my opinion, one of Eiffel's reserved
 words. (Note that if you are using SmallEiffel, you will have to
-specify the command line option <tt>-no_warning </tt>if don't
+specify the command line option <tt>-no_warning </tt>if you don't
 want to be overwhelmed by hundreds of warnings telling you that <font
 color="#008080"><em><tt>INTEGER_ </tt></em></font>and the like
 are in uppercase. I still don't understand why SmallEiffel
@@ -224,7 +226,7 @@ masterpiece of object-oriented programming, but it has the
 advantage of getting around the drawbacks of the other technique
 using <a href="inheritance.html">adaptation by inheritance</a>.
 However the two techniques presented so far only take care of
-class and feature incompatibility, but in the sake for
+class and feature incompatibilities, but for the sake of
 interoperability, they will fail to deal with language
 differences (also known as dialects) due to bugs or extensions
 provided by some Eiffel compilers. The use of a simple <a
@@ -239,13 +241,13 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>maito:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 23 May 1998</font><br>
+            <strong>Last Updated:</strong> 10 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
