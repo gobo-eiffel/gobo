@@ -55,7 +55,7 @@ inherit
 			capacity as byte_capacity,
 			set_count as old_set_count,
 #endif
-#ifdef SE || VE || ISE_5_2
+#ifdef SE || VE || (ISE && ! ISE_5_1)
 			make_empty as old_make_empty,
 			make_filled as old_make_filled,
 #endif
@@ -124,10 +124,10 @@ inherit
 #ifndef VE
 			byte_capacity,
 #endif
-#ifdef SE || VE || HACT || ISE_5_2
+#ifdef SE || VE || HACT || (ISE && ! ISE_5_1)
 			has_substring, insert_character,
 #endif
-#ifdef SE || VE || ISE_5_2
+#ifdef SE || VE || (ISE && ! ISE_5_1)
 			string, same_string, insert_string,
 			keep_head, keep_tail,
 			remove_head, remove_tail,
