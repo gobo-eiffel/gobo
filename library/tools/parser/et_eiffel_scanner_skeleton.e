@@ -41,8 +41,6 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			filename := a_filename
 			error_handler := an_error_handler
-			line := 1
-			column := 1
 		ensure
 			filename_set: filename = a_filename
 			error_handler_set: error_handler = an_error_handler
@@ -55,8 +53,6 @@ feature -- Initialization
 		do
 			reset_compressed_scanner_skeleton
 			last_class := Void
-			line := 1
-			column := 1
 		end
 
 feature -- Access
@@ -69,9 +65,6 @@ feature -- Access
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
-
-	line, column: INTEGER
-			-- Current line and column numbers
 
 	current_position: ET_POSITION is
 			-- Current position
@@ -190,16 +183,8 @@ feature -- AST factory
 		require
 			a_literal_not_void: a_literal /= Void
 			-- valid_literal: regexp: \"([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*\"
-		local
-			l, c: INTEGER
 		do
-			l := line
-			c := column
-			line := ms_line
-			column := ms_column
 			!ET_SPECIAL_MANIFEST_STRING! Result.make (a_literal, current_position)
-			line := l
-			column := c
 		ensure
 			manifest_string_not_void: Result /= Void
 		end
@@ -250,10 +235,6 @@ feature {NONE} -- Implementation
 			-- Line and column numbers of currently
 			-- scanned special manifest string
 
-	ms_count: INTEGER
-			-- Number of characters already scanned in
-			-- current special manifest string
-
 feature {NONE} -- Processing
 
 	process_one_character_symbol (a_token: INTEGER) is
@@ -261,7 +242,6 @@ feature {NONE} -- Processing
 		do
 			last_token := a_token
 			last_value := current_position
-			column := column + 1
 		end
 
 	process_two_character_symbol (a_token: INTEGER) is
@@ -269,7 +249,6 @@ feature {NONE} -- Processing
 		do
 			last_token := a_token
 			last_value := current_position
-			column := column + 2
 		end
 
 	process_c2_character_constant (a_value: CHARACTER) is
@@ -277,7 +256,6 @@ feature {NONE} -- Processing
 		do
 			last_token := E_CHARACTER
 			last_value := new_c2_character_constant ('%A')
-			column := column + 4
 		end
 
 	process_lower_case_c2_character_constant (a_value: CHARACTER) is
@@ -288,11 +266,10 @@ feature {NONE} -- Processing
 				-- upper-case in character constant.
 			column := column + 2
 			error_handler.report_SCCU_error (current_position)
-
 			column := column - 2
+
 			last_token := E_CHARACTER
 			last_value := new_c2_character_constant ('%A')
-			column := column + 4
 		end
 
 invariant
