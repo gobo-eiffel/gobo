@@ -23,4 +23,18 @@ inherit
 
 	KI_CHARACTER_OUTPUT_STREAM
 
+feature -- Basic operations
+
+	open_append is
+			-- Open current file in append mode if it
+			-- can be opened, let it closed otherwise.
+			-- If the file is successfully opened, it is
+			-- either created if it didn't exist or the
+			-- data which will be written to the file will
+			-- appear after its old content otherwise.
+		require
+			is_closed: is_closed
+		deferred
+		end
+
 end -- class KI_OUTPUT_FILE
