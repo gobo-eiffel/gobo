@@ -174,6 +174,49 @@ feature -- Status setting
 
 feature -- Input operations
 
+	read_string (a_stream: like INPUT_STREAM_TYPE; nb_char: INTEGER): STRING is
+			-- Read at most `nb_char' characters read from `a_stream'.
+			-- Return the characters that have actually been read.
+		require
+			a_stream_not_void: a_stream /= Void
+			a_stream_open_read: is_open_read (a_stream)
+			nb_char_large_enough: nb_char >= 0
+#ifdef SE
+		local
+			i: INTEGER
+		do
+			if not a_stream.end_of_input then
+				!! Result.make (nb_char)
+				from i := nb_char until i < 1 loop
+					a_stream.read_character
+					if not a_stream.end_of_input then
+						a_buffer.append_character (a_stream.last_character)
+						i := i - 1
+					else
+						i := 0
+					end
+				end
+			else
+				Result := ""
+			end
+#else
+		do
+			a_stream.read_stream (nb_char)
+#ifdef VE
+			if a_stream.end_of_file then
+				Result := ""
+			else
+				Result := a_stream.last_string
+			end
+#else
+			Result := a_stream.last_string
+#endif
+#endif
+		ensure
+			string_not_void: Result /= Void
+			string_count_small_enough: Result.count <= nb_char
+		end
+
 	read_stream (a_stream: like INPUT_STREAM_TYPE;
 		a_buffer: STRING; pos, nb_char: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos' with
