@@ -163,7 +163,7 @@ feature -- Parsing
 				-- Read file names.
 			if i = nb then
 				options.set_input_filename (argument (i))
-			elseif i < nb then
+			else
 				error_handler.usage_message
 			end
 		end
