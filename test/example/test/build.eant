@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="test" inherit="${GOBO}/misc/test.eant" default="help">
+
+	<description>
+		system:      "Gobo Eiffel Test Examples Tester"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tconcat1"/>
+		<delete directory="Tconcat2"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xtest"/>
+		<set name="library" value="test"/>
+		<set name="system_dir" value="${GOBO}/test/example/${library}"/>
+	</target>
+
+</project>

@@ -1,0 +1,15 @@
+*.ace
+*.esd
+*.se
+*.log
+TESTGEN
+xtest*
+xtest*.*
+EIFGEN
+preferences.wb
+vec*.xcp
+Result.out
+eCluster
+eProject
+Tconcat1
+Tconcat2
