@@ -1412,6 +1412,9 @@ feature {NONE} -- Signature resolving
 			a_type := a_feature.type
 			if a_type /= Void then
 				identifier_type_resolver.resolve_type (a_type, a_feature, current_class)
+				if identifier_type_resolver.has_fatal_error then
+					set_fatal_error (current_class)
+				end
 			end
 			args := a_feature.arguments
 			if args /= Void then
@@ -1422,6 +1425,9 @@ feature {NONE} -- Signature resolving
 					if a_type /= previous_type then
 							-- Not resolved yet.
 						identifier_type_resolver.resolve_type (a_type, a_feature, current_class)
+						if identifier_type_resolver.has_fatal_error then
+							set_fatal_error (current_class)
+						end
 						previous_type := a_type
 					end
 					a_name := an_arg.name

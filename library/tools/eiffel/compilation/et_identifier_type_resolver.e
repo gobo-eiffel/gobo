@@ -51,6 +51,21 @@ feature -- Access
 			-- Feature where the type appears;
 			-- Void if the type does not appear in a feature
 
+feature -- Status report
+
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred when resolving last type?
+
+feature {NONE} -- Error handling
+
+	set_fatal_error is
+			-- Report a fatal error.
+		do
+			has_fatal_error := True
+		ensure
+			has_fatal_error: has_fatal_error
+		end
+
 feature -- Type resolving
 
 	resolve_type (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS) is
@@ -69,6 +84,7 @@ feature -- Type resolving
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_feature := current_feature
 			current_feature := a_feature
 			old_class := current_class
@@ -104,13 +120,13 @@ feature {NONE} -- Type resolving
 						-- VTBT error (ETL2 page 210): The identifier
 						-- in Bit_type must be the final name of a
 						-- constant attribute of type INTEGER.
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_vtbt0a_error (current_class, a_type)
 				end
 			else
 					-- VTBT error (ETL2 page 210): The identifier
 					-- in Bit_type must be the final name of a feature.
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtbt0b_error (current_class, a_type)
 			end
 		end
@@ -149,7 +165,7 @@ feature {NONE} -- Type resolving
 				end
 			end
 			if not resolved then
-				current_class.set_fatal_error
+				set_fatal_error
 				if current_feature /= Void then
 					error_handler.report_vtat1b_error (current_class, current_feature, a_type)
 				else
@@ -170,7 +186,7 @@ feature {NONE} -- Type resolving
 			if a_feature /= Void then
 				a_type.resolve_identifier_type (a_feature.first_seed)
 			else
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtat1c_error (current_class, a_type)
 			end
 		end
@@ -190,11 +206,18 @@ feature {NONE} -- Type resolving
 			a_parameters_not_void: a_parameters /= Void
 		local
 			i, nb: INTEGER
+			had_error: BOOLEAN
 		do
 			nb := a_parameters.count
 			from i := 1 until i > nb loop
 				resolve_type (a_parameters.type (i), current_feature, current_class)
+				if has_fatal_error then
+					had_error := True
+				end
 				i := i + 1
+			end
+			if had_error then
+				set_fatal_error
 			end
 		end
 
@@ -208,7 +231,7 @@ feature {NONE} -- Validity
 		do
 			a_type.compute_size
 			if a_type.has_size_error then
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtbt0c_error (current_class, a_type)
 			elseif a_type.size = 0 and a_type.constant.is_negative then
 					-- Not considered as a fatal error by gelint.
