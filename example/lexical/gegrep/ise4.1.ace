@@ -25,7 +25,6 @@ cluster
 
 		-- Gobo Eiffel Lexical Library
 	lx_automaton:		"$GOBO\library\lexical\automaton";
-	lx_automaton_spec:	"$GOBO\library\lexical\automaton\spec\ise";
 	lx_lex:				"$GOBO\library\lexical\lex";
 	lx_generation:		"$GOBO\library\lexical\generation";
 	lx_regexp:			"$GOBO\library\lexical\regexp";
@@ -47,15 +46,12 @@ cluster
 		-- Gobo Eiffel Structure Library
 	ds_container:		"$GOBO\library\structure\container";
 	ds_cursor:			"$GOBO\library\structure\cursor";
-	ds_cursor_spec:		"$GOBO\library\structure\cursor\spec\ise";
 	ds_list:			"$GOBO\library\structure\list";
 	ds_search:			"$GOBO\library\structure\search";
-	ds_search_spec:		"$GOBO\library\structure\search\spec\ise";
 	ds_sort:			"$GOBO\library\structure\sort";
 	ds_stack:			"$GOBO\library\structure\stack";
 	ds_support:			"$GOBO\library\structure\support";
 	ds_table:			"$GOBO\library\structure\table";
-	ds_table_spec:		"$GOBO\library\structure\table\spec\ise";
 
 		-- EiffelBase
 	kernel:				"$EIFFEL4\library\base\kernel";
