@@ -1,4 +1,4 @@
-<project name="if_demo" default="C">
+<project name="if_demo1" default="C">
 
 	<target name="A" if="$runa">
 		<echo message="A"/>

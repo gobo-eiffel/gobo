@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="variables1">
+<project name="variables5" default="var">
 
 	<target name="var">
 		<description>query a variable</description>

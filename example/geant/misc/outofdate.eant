@@ -9,7 +9,8 @@
 		<outofdate
 			variable="generate"
 			source="${gepp_dir}/${gepp_file}.ge,${GOBO}/example/geant/misc/outofdate.eant"
-			target="${gepp_file}.e"/>
+			target="${gepp_file}.e"
+		/>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${gepp_file}.e" if="${generate}=true">
 			<define name="ISE"/>
 		</gepp>

@@ -1,4 +1,4 @@
-<project name="if_demo" default="A">
+<project name="if_demo5" default="A">
 
 	<target name="A" if="$runa">
 		<echo message="A if" if="$taska"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="variables1">
+<project name="variables3">
 
 	<target name="var">
 		<description>set and query a variable</description>

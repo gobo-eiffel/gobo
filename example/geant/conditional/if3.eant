@@ -1,4 +1,4 @@
-<project name="if_demo" default="list">
+<project name="if_demo3" default="list">
 
 	<target name="windows" if="$WINDIR">
 		<set name="os.windows" value="true"/>

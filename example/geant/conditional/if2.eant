@@ -1,4 +1,4 @@
-<project name="if_demo" default="list">
+<project name="if_demo2" default="list">
 
 	<target name="list_for_windows" if="$WINDIR">
 		<exec executable="dir"/>

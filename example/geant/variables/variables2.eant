@@ -4,8 +4,8 @@
 
 	<target name="var">
 		<description>set and query a variable</description>
-		<set name="lastname" value="Simpson"/>
-		<set name="fullname" value="Bart ${lastname}"/>
+		<set name="firstname" value="Bart"/>
+		<set name="fullname" value="${firstname} Simpson"/>
 		<echo message="Hello ${fullname}"/>
 	</target>
 

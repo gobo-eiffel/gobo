@@ -18,8 +18,7 @@
 		<set name="pathsep" value="/"/>
 	</target>
 
-	<target name="init" depend="windows,unix">
-	</target>
+	<target name="init" depend="windows,unix"/>
 
 	<target name="ls" depend="init">
 		<description>print content of current directory</description>

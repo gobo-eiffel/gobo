@@ -1,4 +1,4 @@
-<project name="if_demo" default="info">
+<project name="if_demo4" default="info">
 
 	<target name="check_eiffel" unless="$GOBO_EIFFEL">
 		<echo message="You have to set GOBO_EIFFEL to one of (ise,hact,se,ve)"/>

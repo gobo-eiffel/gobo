@@ -6,12 +6,8 @@
 
 	<target name="compile" depend="init">
 		<description>compiles HELLO</description>
-		<gexace
-			command="build"
-			command_options="se"
-			xace_filename="${system}.xace"
-			compile="true"
-		/>
+		<gexace system="se" xace="${system}.xace"/>
+		<se ace="se.ace"/>
 	</target>
 
 	<target name="run" depend="init">
@@ -21,8 +17,8 @@
 
 	<target name="clean" depend="init">
 		<description>deletes generated files</description>
-		<exec executable="clean ${system}"/>
-		<exec executable="del ${system}.exe se.ace cecil.se *.bak"/>
+		<se clean="${system}"/>
+		<delete file="${system}${exe}"/>
 	</target>
 
 </project>
