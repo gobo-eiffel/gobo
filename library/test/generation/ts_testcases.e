@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Test Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,8 +15,8 @@ class TS_TESTCASES
 
 inherit
 
+	KL_SHARED_FILE_SYSTEM
 	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 creation
 
@@ -79,8 +79,10 @@ feature -- Generation
 			class_prefix_not_void: class_prefix /= Void
 		local
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
-			a_file: like OUTPUT_STREAM_TYPE
+			a_file: KL_TEXT_OUTPUT_FILE
 			a_filename: STRING
+			a_dirname: STRING
+			a_dir: KL_DIRECTORY
 			new_name: STRING
 			i: INTEGER
 			a_cursor: DS_LIST_CURSOR [STRING]
@@ -89,63 +91,81 @@ feature -- Generation
 			new_name.append_string (class_prefix)
 			new_name.append_string (class_name)
 			if testgen /= Void and then testgen.count > 0 then
-				a_filename := STRING_.make (testgen.count + new_name.count + 3)
-				a_filename.append_string (testgen)
-				a_filename.append_character (Directory_separator)
+				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
+				!! a_dir.make (a_dirname)
+				if not a_dir.exists then
+					a_dir.recursive_create_directory
+				end
+				a_filename := file_system.pathname (a_dirname, STRING_.to_lower (new_name) + ".e")
 			else
 				a_filename := STRING_.make (new_name.count + 2)
+				a_filename.append_string (STRING_.to_lower (new_name))
+				a_filename.append_string (".e")
 			end
-			a_filename.append_string (STRING_.to_lower (new_name))
-			a_filename.append_string (".e")
-			a_file := OUTPUT_STREAM_.make_file_open_write (a_filename)
-			if OUTPUT_STREAM_.is_open_write (a_file) then
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
 				a_file.put_string ("class ")
-				a_file.put_string (new_name)
-				a_file.put_string ("%N%Ninherit%N%N%T")
-				a_file.put_string (class_name)
-				a_file.put_string ("%N%Ncreation%N%N%Tmake%N%N%
-					%feature {NONE} -- Execution%N%N%
-					%%Texecute_i_th (an_id: INTEGER) is%N%
-					%%T%T%T-- Run test case of id `an_id'.%N%
-					%%T%Tdo%N%
-					%%T%T%Tinspect an_id%N")
+				a_file.put_line (new_name)
+				a_file.put_new_line
+				a_file.put_line ("inherit")
+				a_file.put_new_line
+				a_file.put_string ("%T")
+				a_file.put_line (class_name)
+				a_file.put_new_line
+				a_file.put_line ("creation")
+				a_file.put_new_line
+				a_file.put_line ("%Tmake")
+				a_file.put_new_line
+				a_file.put_line ("feature {NONE} -- Execution")
+				a_file.put_new_line
+				a_file.put_line ("%Texecute_i_th (an_id: INTEGER) is")
+				a_file.put_line ("%T%T%T-- Run test case of id `an_id'.")
+				a_file.put_line ("%T%Tdo")
+				a_file.put_line ("%T%T%Tinspect an_id")
 				i := 1
 				a_cursor := feature_names.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_file.put_string ("%T%T%Twhen ")
 					a_file.put_integer (i)
-					a_file.put_string (" then%N%T%T%T%T")
-					a_file.put_string (a_cursor.item)
-					a_file.put_character ('%N')
+					a_file.put_line (" then")
+					a_file.put_string ("%T%T%T%T")
+					a_file.put_line (a_cursor.item)
 					i := i + 1
 					a_cursor.forth
 				end
-				a_file.put_string ("%T%T%Telse%N%
-					%%T%T%T%T-- Unknown id.%N%
-					%%T%T%Tend%N%T%Tend%N%N%
-					%feature {NONE} -- Implementation%N%N%
-					%%Tname_of_id (an_id: INTEGER): STRING is%N%
-					%%T%T%T-- Name of test case of id `an_id'%N%
-					%%T%Tdo%N%
-					%%T%T%Tinspect an_id%N")
+				a_file.put_line ("%T%T%Telse")
+				a_file.put_line ("%T%T%T%T-- Unknown id.")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Tend")
+				a_file.put_new_line
+				a_file.put_line ("feature {NONE} -- Implementation")
+				a_file.put_new_line
+				a_file.put_line ("%Tname_of_id (an_id: INTEGER): STRING is")
+				a_file.put_line ("%T%T%T-- Name of test case of id `an_id'")
+				a_file.put_line ("%T%Tdo")
+				a_file.put_line ("%T%T%Tinspect an_id")
 				i := 1
 				from a_cursor.start until a_cursor.after loop
 					a_file.put_string ("%T%T%Twhen ")
 					a_file.put_integer (i)
-					a_file.put_string (" then%N%T%T%T%TResult := %"")
+					a_file.put_line (" then")
+					a_file.put_string ("%T%T%T%TResult := %"")
 					a_file.put_string (STRING_.to_upper (class_name))
 					a_file.put_character ('.')
 					a_file.put_string (STRING_.to_lower (a_cursor.item))
-					a_file.put_string ("%"%N")
+					a_file.put_line ("%"")
 					i := i + 1
 					a_cursor.forth
 				end
-				a_file.put_string ("%T%T%Telse%N%
-					%%T%T%T%TResult := %"Unknown id%"%N%
-					%%T%T%Tend%N%T%Tend%N%Nend -- class ")
-				a_file.put_string (new_name)
-				a_file.put_character ('%N')
-				OUTPUT_STREAM_.close (a_file)
+				a_file.put_line ("%T%T%Telse")
+				a_file.put_line ("%T%T%T%TResult := %"Unknown id%"")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Tend")
+				a_file.put_new_line
+				a_file.put_string ("end -- class ")
+				a_file.put_line (new_name)
+				a_file.close
 			else
 				!! cannot_write.make (a_filename)
 				error_handler.report_error (cannot_write)
@@ -160,39 +180,52 @@ feature -- Generation
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], STRING]
 			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
-			a_file: like OUTPUT_STREAM_TYPE
+			a_file: KL_TEXT_OUTPUT_FILE
 			a_filename: STRING
+			a_dirname: STRING
+			a_dir: KL_DIRECTORY
 			test_name: STRING
 			upper_class_name: STRING
 			i, nb: INTEGER
 		do
 			if testgen /= Void and then testgen.count > 0 then
-				a_filename := STRING_.make (testgen.count + class_name.count + 3)
-				a_filename.append_string (testgen)
-				a_filename.append_character (Directory_separator)
+				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
+				!! a_dir.make (a_dirname)
+				if not a_dir.exists then
+					a_dir.recursive_create_directory
+				end
+				a_filename := file_system.pathname (a_dirname, STRING_.to_lower (class_name) + ".e")
 			else
 				a_filename := STRING_.make (class_name.count + 2)
+				a_filename.append_string (STRING_.to_lower (class_name))
+				a_filename.append_string (".e")
 			end
-			a_filename.append_string (STRING_.to_lower (class_name))
-			a_filename.append_string (".e")
-			a_file := OUTPUT_STREAM_.make_file_open_write (a_filename)
-			if OUTPUT_STREAM_.is_open_write (a_file) then
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
 				upper_class_name := STRING_.to_upper (class_name)
 				a_file.put_string ("class ")
-				a_file.put_string (upper_class_name)
-				a_file.put_string ("%N%Ninherit%N%N%T")
-				a_file.put_string ("TS_TESTER")
-				a_file.put_string ("%N%Ncreation%N%N%
-					%%Tmake, make_default%N%N%
-					%feature -- Access%N%N%
-					%%Tsuite: TS_TEST_SUITE is%N%
-					%%T%T%T-- Suite of tests to be run%N%
-					%%T%Tlocal%N%
-					%%T%T%Ta_test: TS_TEST%N%
-					%%T%Tdo%N%
-					%%T%T%T!! Result.make (%"")
+				a_file.put_line (upper_class_name)
+				a_file.put_new_line
+				a_file.put_line ("inherit")
+				a_file.put_new_line
+				a_file.put_string ("%T")
+				a_file.put_line ("TS_TESTER")
+				a_file.put_new_line
+				a_file.put_line ("creation")
+				a_file.put_new_line
+				a_file.put_line ("%Tmake, make_default")
+				a_file.put_new_line
+				a_file.put_line ("feature -- Access")
+				a_file.put_new_line
+				a_file.put_line ("%Tsuite: TS_TEST_SUITE is")
+				a_file.put_line ("%T%T%T-- Suite of tests to be run")
+				a_file.put_line ("%T%Tlocal")
+				a_file.put_line ("%T%T%Ta_test: TS_TEST")
+				a_file.put_line ("%T%Tdo")
+				a_file.put_string ("%T%T%T!! Result.make (%"")
 				a_file.put_string (class_name)
-				a_file.put_string ("%")%N")
+				a_file.put_line ("%")")
 				a_cursor := testcases.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					test_name := a_cursor.key
@@ -204,15 +237,17 @@ feature -- Generation
 						a_file.put_string (test_name)
 						a_file.put_string ("! a_test.make (")
 						a_file.put_integer (i)
-						a_file.put_string (")%N%T%T%TResult.put_test (a_test)%N")
+						a_file.put_line (")")
+						a_file.put_line ("%T%T%TResult.put_test (a_test)")
 						i := i + 1
 					end
 					a_cursor.forth
 				end
-				a_file.put_string ("%T%Tend%N%Nend -- class ")
-				a_file.put_string (upper_class_name)
-				a_file.put_character ('%N')
-				OUTPUT_STREAM_.close (a_file)
+				a_file.put_line ("%T%Tend")
+				a_file.put_new_line
+				a_file.put_string ("end -- class ")
+				a_file.put_line (upper_class_name)
+				a_file.close
 			else
 				!! cannot_write.make (a_filename)
 				error_handler.report_error (cannot_write)
@@ -233,12 +268,6 @@ feature {NONE} -- Implementation
 	testcases: DS_HASH_TABLE [DS_PAIR [DS_LIST [STRING], STRING], STRING]
 			-- Testcases (lists of feature names and
 			-- class prefix indexed by class names)
-
-feature {NONE} -- Constants
-
-	Directory_separator: CHARACTER is '/'
-			-- Directory separator used to build
-			-- filenames of generated classes
 
 invariant
 

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Test Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -188,9 +188,7 @@ feature -- Defaults
 		require
 			root_class_not_void: root_class /= Void
 		do
-			Result := STRING_.make (8 + root_class.count)
-			Result.append_string ("compile ")
-			Result.append_string (STRING_.to_upper (root_class))
+			Result := "geant compile"
 		ensure
 			default_compile_not_void: Result /= Void
 		end

@@ -60,6 +60,18 @@ feature -- Access
 	clusters: DS_LIST [TS_CLUSTER]
 			-- List of clusters to be searched
 
+feature -- Setting
+
+	set_compile (a_compile: like compile) is
+			-- Set `compile' to `a_compile'.
+		require
+			a_compile_not_void: a_compile /= Void
+		do
+			compile := a_compile
+		ensure
+			compile_set: compile = a_compile
+		end
+
 feature -- Processing
 
 	process (testcases: TS_TESTCASES; an_error_handler: TS_ERROR_HANDLER) is

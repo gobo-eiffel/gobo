@@ -43,20 +43,20 @@ feature -- Processing
 			a_file := INPUT_STREAM_.make_file_open_read (config_filename)
 			if INPUT_STREAM_.is_open_read (a_file) then
 				if must_generate then
-					std.output.put_string ("Preparing Test Cases")
-					std.output.put_new_line
+					std.output.put_line ("Preparing Test Cases")
 				elseif must_compile then
-					std.output.put_string ("Compiling Test Cases")
-					std.output.put_new_line
+					std.output.put_line ("Compiling Test Cases")
 				elseif must_execute then
-					std.output.put_string ("Running Test Cases")
-					std.output.put_new_line
+					std.output.put_line ("Running Test Cases")
 					std.output.put_new_line
 				end
 				!! config_parser.make (error_handler)
 				config_parser.parse (a_file)
 				INPUT_STREAM_.close (a_file)
 				a_config := config_parser.last_config
+				if compile /= Void then
+					a_config.set_compile (compile)
+				end
 				process (a_config)
 				if error_handler.error_reported then
 					Exceptions.die (1)
@@ -104,6 +104,12 @@ feature -- Processing
 						report_usage_error
 					else
 						config_filename := VE_config_filename
+					end
+				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--compile=") then
+					if arg.count > 10 then
+						compile := arg.substring (11, arg.count)
+					else
+						compile := ""
 					end
 				elseif arg.is_equal ("-g") then
 					must_generate := True
@@ -162,8 +168,7 @@ feature -- Processing
 		do
 			if not error_handler.error_reported then
 				if need_header then
-					std.output.put_string ("Preparing Test Cases")
-					std.output.put_new_line
+					std.output.put_line ("Preparing Test Cases")
 				end
 				!! testcases.make (a_config.testgen, error_handler)
 				a_config.process (testcases, error_handler)
@@ -182,8 +187,7 @@ feature -- Processing
 		do
 			if not error_handler.error_reported then
 				if need_header then
-					std.output.put_string ("Compiling Test Cases")
-					std.output.put_new_line
+					std.output.put_line ("Compiling Test Cases")
 				end
 				a_command_name := a_config.compile
 				if a_command_name.count > 0 then
@@ -207,8 +211,7 @@ feature -- Processing
 		do
 			if not error_handler.error_reported then
 				if need_header then
-					std.output.put_string ("Running Test Cases")
-					std.output.put_new_line
+					std.output.put_line ("Running Test Cases")
 					std.output.put_new_line
 				end
 				a_command_name := a_config.execute
@@ -227,6 +230,10 @@ feature -- Access
 
 	config_filename: STRING
 			-- Configuration filename
+
+	compile: STRING
+			-- Compilation command-line given with
+			-- the option --compile=...
 
 	error_handler: TS_ERROR_HANDLER
 			-- Error handler
