@@ -16,7 +16,7 @@ inherit
 
 	ET_FEATURE_NAME
 		redefine
-			reset, index,
+			reset,
 			is_local, is_argument,
 			is_identifier, is_equal
 		end
@@ -29,15 +29,11 @@ inherit
 	ET_LOCAL_NAME
 		undefine
 			reset, is_equal
-		redefine
-			index
 		end
 
 	ET_ARGUMENT_NAME
 		undefine
 			reset, is_equal
-		redefine
-			index
 		end
 
 	ET_TAG
@@ -48,8 +44,6 @@ inherit
 	ET_WRITABLE
 		undefine
 			reset, is_equal
-		redefine
-			index
 		end
 
 	ET_INDEXING_TERM
@@ -68,13 +62,9 @@ inherit
 
 	ET_FEATURE_CALL
 		rename
-			name as identifier,
-			call_index as index,
-			set_call_index as set_index
+			name as identifier
 		undefine
-			is_equal, set_index
-		redefine
-			index
+			is_equal
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -145,10 +135,6 @@ feature -- Access
 		ensure then
 			no_arguments: Result = Void
 		end
-
-	index: INTEGER
-			-- Index of expression in enclosing feature;
-			-- Used to get dynamic information about this expression.
 
 	hash_code: INTEGER
 			-- Hash code value

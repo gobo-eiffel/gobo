@@ -65,6 +65,9 @@ inherit
 			report_void_constant
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -84,8 +87,8 @@ feature {NONE} -- Initialization
 			make_feature_checker (a_system.universe)
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
-			create dynamic_type_sets.make (100)
-			create dynamic_calls.make (100)
+			create dynamic_type_sets.make (1000)
+			create dynamic_calls.make (100000)
 		ensure
 			current_system_set: current_system = a_system
 		end
@@ -146,9 +149,84 @@ feature -- Status setting
 
 feature -- Generation
 
-	build_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE) is
-			-- Build dynamic type sets for `a_feature' in `a_current_dynamic_type'.
+	build_dynamic_type_sets is
+			-- Build dynamic type sets for `current_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_TYPE
+			j, nb2: INTEGER
+			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_feature: ET_DYNAMIC_FEATURE
+			l_precursor: ET_DYNAMIC_PRECURSOR
+			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			k, nb3: INTEGER
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_call: ET_DYNAMIC_CALL
+			l_target: ET_DYNAMIC_TYPE_SET
+			l_count: INTEGER
+		do
+			has_fatal_error := False
+			l_dynamic_types := current_system.dynamic_types
+			is_built := False
+			from until is_built loop
+				is_built := True
+				nb := l_dynamic_types.count
+				from i := 1 until i > nb loop
+					l_type := l_dynamic_types.item (i)
+					l_features := l_type.features
+					if l_features /= Void then
+						nb2 := l_features.count
+						from j := 1 until j > nb2 loop
+							l_feature := l_features.item (j)
+							build_feature_dynamic_type_sets (l_feature, l_type)
+							l_precursor := l_feature.first_precursor
+							if l_precursor /= Void then
+								build_feature_dynamic_type_sets (l_precursor, l_type)
+								l_other_precursors := l_feature.other_precursors
+								if l_other_precursors /= Void then
+									nb3 := l_other_precursors.count
+									from k := 1 until k > nb3 loop
+										build_feature_dynamic_type_sets (l_other_precursors.item (k), l_type)
+										k := k + 1
+									end
+								end
+							end
+							j := j + 1
+						end
+					end
+					i := i + 1
+				end
+				nb := dynamic_calls.count
+				from i := 1 until i > nb loop
+					l_call := dynamic_calls.item (i)
+					l_count := l_call.count
+					l_call.propagate_types (current_system)
+					if l_call.count /= l_count then
+						is_built := False
+					end
+					l_target := l_call.result_type
+					if l_target /= Void then
+						l_count := l_target.count
+						l_target.propagate_types (current_system)
+						if l_target.count /= l_count then
+							is_built := False
+						end
+					end
+					i := i + 1
+				end
+			end
+			check_catcall_validity
+			dynamic_calls.wipe_out
+		end
+
+feature {NONE} -- Generation
+
+	is_built: BOOLEAN
+			-- Have the dynamic type sets of `current_system' all been built?
+
+	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE) is
+			-- Build dynamic type sets for `a_feature' in `a_current_dynamic_type'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_current_dynamic_type_not_void: a_current_dynamic_type /= Void
@@ -156,57 +234,511 @@ feature -- Generation
 			old_feature: ET_DYNAMIC_FEATURE
 			old_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_dynamic_calls: ET_DYNAMIC_CALL_LIST
 			i, nb: INTEGER
 		do
-			old_feature := current_dynamic_feature
-			current_dynamic_feature := a_feature
-			old_type := current_dynamic_type
-			current_dynamic_type := a_current_dynamic_type
-				-- Dynamic type sets for arguments are stored first
-				-- in `dynamic_type_sets'.
-			l_dynamic_type_sets := a_feature.dynamic_type_sets
-			nb := l_dynamic_type_sets.count
+			if not a_feature.is_built then
+				old_feature := current_dynamic_feature
+				current_dynamic_feature := a_feature
+				old_type := current_dynamic_type
+				current_dynamic_type := a_current_dynamic_type
+					-- Dynamic type sets for arguments are stored first
+					-- in `dynamic_type_sets'.
+				l_dynamic_type_sets := a_feature.dynamic_type_sets
+				nb := l_dynamic_type_sets.count
+				from i := 1 until i > nb loop
+					dynamic_type_sets.force_last (l_dynamic_type_sets.item (i))
+					i := i + 1
+				end
+				if a_feature.is_precursor then
+					check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+				else
+					check_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+				end
+				nb := dynamic_type_sets.count
+				create l_dynamic_type_sets.make_with_capacity (nb)
+				from i := nb until i < 1 loop
+					l_dynamic_type_sets.put_first (dynamic_type_sets.item (i))
+					i := i - 1
+				end
+				a_feature.set_dynamic_type_sets (l_dynamic_type_sets)
+				a_feature.set_built (True)
+				current_index := 0
+				result_index := 0
+				character_index := 0
+				boolean_index := 0
+				double_index := 0
+				integer_index := 0
+				integer_8_index := 0
+				integer_16_index := 0
+				integer_64_index := 0
+				pointer_index := 0
+				none_index := 0
+				string_index := 0
+				dynamic_type_sets.wipe_out
+				current_dynamic_feature := old_feature
+				current_dynamic_type := old_type
+				is_built := False
+			end
+			propagate_types (a_feature)
+		end
+
+	propagate_types (a_feature: ET_DYNAMIC_FEATURE) is
+			-- Propagated types in dynamic type sets of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_target: ET_DYNAMIC_TYPE_SET
+			l_count: INTEGER
+			i, nb: INTEGER
+		do
+			l_arguments := a_feature.static_feature.arguments
+			if l_arguments /= Void then
+				nb := l_arguments.count
+				if nb > 0 then
+						-- Dynamic type sets for arguments are stored first
+						-- in `dynamic_type_sets'.
+					l_dynamic_type_sets := a_feature.dynamic_type_sets
+					if l_dynamic_type_sets.count < nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of formal arguments in
+							-- feature redeclaration.
+						if not has_fatal_error then
+							set_fatal_error
+							error_handler.report_gibdo_error
+						end
+					else
+						from i := 1 until i > nb loop
+							l_target := l_dynamic_type_sets.item (i)
+							l_count := l_target.count
+							l_target.propagate_types (current_system)
+							if l_target.count /= l_count then
+								is_built := False
+							end
+							i := i + 1
+						end
+					end
+				end
+			end
+			l_locals := a_feature.static_feature.locals
+			if l_locals /= Void then
+				nb := l_locals.count
+				from i := 1 until i > nb loop
+					l_target := a_feature.dynamic_type_set (l_locals.local_variable (i).name)
+					if l_target = Void then
+							-- Internal error: the dynamic type sets of the local
+							-- variables should be known at this stage.
+						if not has_fatal_error then
+							set_fatal_error
+							error_handler.report_gibdq_error
+						end
+					else
+						l_count := l_target.count
+						l_target.propagate_types (current_system)
+						if l_target.count /= l_count then
+							is_built := False
+						end
+					end
+					i := i + 1
+				end
+			end
+			l_target := a_feature.result_type
+			if l_target /= Void then
+				l_count := l_target.count
+				l_target.propagate_types (current_system)
+				if l_target.count /= l_count then
+					is_built := False
+				end
+			end
+		end
+
+feature {NONE} -- CAT-calls
+
+	check_catcall_validity is
+			-- Check CAT-call validity.
+		local
+			i, nb: INTEGER
+			l_call: ET_DYNAMIC_CALL
+		do
+			nb := dynamic_calls.count
 			from i := 1 until i > nb loop
-				dynamic_type_sets.force_last (l_dynamic_type_sets.item (i))
+				l_call := dynamic_calls.item (i)
+				check_catcall_call_validity (l_call)
 				i := i + 1
 			end
-			if a_feature.is_precursor then
-				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
-			else
-				check_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+		end
+
+	check_catcall_call_validity (a_call: ET_DYNAMIC_CALL) is
+			-- Check CAT-call validity of `a_call'.
+		require
+			a_call_not_void: a_call /= Void
+		local
+			l_type: ET_DYNAMIC_TYPE
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			i, nb: INTEGER
+		do
+			l_type := a_call.target_type.first_type
+			if l_type /= Void then
+				check_catcall_target_validity (l_type, a_call)
+				l_other_types := a_call.target_type.other_types
+				if l_other_types /= Void then
+					nb := l_other_types.count
+					from i := 1 until i > nb loop
+						check_catcall_target_validity (l_other_types.item (i), a_call)
+						i := i + 1
+					end
+				end
 			end
-			nb := dynamic_type_sets.count
-			create l_dynamic_type_sets.make_with_capacity (nb)
-			from i := nb until i < 1 loop
-				l_dynamic_type_sets.put_first (dynamic_type_sets.item (i))
-				i := i - 1
+		end
+
+	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_CALL) is
+			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
+		require
+			a_type_not_void: a_type /= Void
+			a_call_not_void: a_call /= Void
+		local
+			l_seed: INTEGER
+			l_feature: ET_FEATURE
+			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_sources: ET_DYNAMIC_ATTACHMENT_LIST
+			i, nb: INTEGER
+			l_source: ET_DYNAMIC_ATTACHMENT
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			j, nb2: INTEGER
+			l_source_type: ET_DYNAMIC_TYPE
+			l_target_type: ET_DYNAMIC_TYPE
+			l_static_type: ET_DYNAMIC_TYPE
+			l_base_type: ET_BASE_TYPE
+			l_static_feature: ET_FEATURE
+		do
+			l_static_type := a_call.target_type.static_type
+			if a_type.conforms_to_type (l_static_type, current_system) then
+				l_static_feature := a_call.static_feature
+				l_seed := l_static_feature.first_seed
+				l_feature := a_type.base_class.seeded_feature (l_seed)
+				if l_feature = Void then
+						-- Internal error: there should be a feature with seed
+						-- `l_seed' in all descendants of `target_type.static_type'.
+					set_fatal_error
+					error_handler.report_gibby_error
+				else
+					l_dynamic_feature := a_type.dynamic_feature (l_feature, current_system)
+					l_argument_sources := a_call.argument_sources
+					nb := l_argument_sources.count
+					if nb > 0 then
+						l_formal_arguments := a_call.static_feature.arguments
+							-- Dynamic type sets for arguments are stored first
+							-- in `dynamic_type_sets'.
+						l_argument_types := l_dynamic_feature.dynamic_type_sets
+						if l_argument_types.count < nb then
+								-- Internal error: it has already been checked somewhere else
+								-- that there was the same number of formal arguments in
+								-- feature redeclaration.
+							set_fatal_error
+							error_handler.report_gibbz_error
+						elseif l_formal_arguments = Void or else l_formal_arguments.count /= nb then
+								-- Internal error: it has already been checked somewhere else
+								-- that there was the same number of formal arguments in
+								-- feature redeclaration.
+							set_fatal_error
+							error_handler.report_gibcc_error
+						else
+							l_base_type := l_static_type.base_type
+							from i := 1 until i > nb loop
+								l_target_type := l_argument_types.item (i).static_type
+								l_source := l_argument_sources.item (i)
+								l_source_type_set := l_source.source_type
+								l_source_type := l_source_type_set.first_type
+								if l_source_type /= Void then
+									if l_source_type.base_type.conforms_to_type (l_formal_arguments.formal_argument (i).type, l_base_type, universe.any_class, universe) then
+										if not l_source_type.conforms_to_type (l_target_type, current_system) then
+											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_call)
+										end
+										l_other_types := l_source_type_set.other_types
+										if l_other_types /= Void then
+											nb2 := l_other_types.count
+											from j := 1 until j > nb2 loop
+												l_source_type := l_other_types.item (j)
+												if l_source_type.base_type.conforms_to_type (l_formal_arguments.formal_argument (i).type, l_base_type, universe.any_class, universe) then
+													if not l_source_type.conforms_to_type (l_target_type, current_system) then
+														report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_call)
+													end
+												end
+												j := j + 1
+											end
+										end
+									end
+								end
+								i := i + 1
+							end
+						end
+					end
+				end
 			end
-			a_feature.set_dynamic_type_sets (l_dynamic_type_sets)
-			nb := dynamic_calls.count
-			create l_dynamic_calls.make_with_capacity (nb)
-			from i := nb until i < 1 loop
-				l_dynamic_calls.put_first (dynamic_calls.item (i))
-				i := i - 1
+		end
+
+	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE;
+		an_actual_source: ET_DYNAMIC_ATTACHMENT; a_call: ET_DYNAMIC_CALL) is
+			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
+			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
+			-- argument of type `an_actual_type' (coming from `an_actual_source')
+			-- which does not conform to the type of the `arg'-th corresponding formal
+			-- argument `a_formal_type'.
+		require
+			a_taarget_type_not_void: a_target_type /= Void
+			a_dynamic_feature_not_void: a_dynamic_feature /= Void
+			a_formal_type_not_void: a_formal_type /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_source_not_void: an_actual_source /= Void
+			a_call_not_void: a_call /= Void
+		local
+			l_message: STRING
+			l_class_impl: ET_CLASS
+			l_source: ET_DYNAMIC_ATTACHMENT
+			l_type_set: ET_DYNAMIC_TYPE_SET
+			l_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
+			l_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
+			i, nb: INTEGER
+		do
+-- TODO: better error message reporting.
+			l_message := shared_error_message
+			STRING_.wipe_out (l_message)
+			l_message.append_string ("[CATCALL] class ")
+			l_message.append_string (a_call.current_type.to_text)
+			l_message.append_string (" (")
+			l_class_impl := a_call.current_feature.implementation_class
+			if a_call.current_type.direct_base_class (universe) /= l_class_impl then
+				l_message.append_string (l_class_impl.name.name)
+				l_message.append_character (',')
 			end
-			a_feature.set_dynamic_calls (l_dynamic_calls)
-			a_feature.set_built (True)
-			current_index := 0
-			result_index := 0
-			character_index := 0
-			boolean_index := 0
-			double_index := 0
-			integer_index := 0
-			integer_8_index := 0
-			integer_16_index := 0
-			integer_64_index := 0
-			pointer_index := 0
-			none_index := 0
-			string_index := 0
-			dynamic_type_sets.wipe_out
-			dynamic_calls.wipe_out
-			current_dynamic_feature := old_feature
-			current_dynamic_type := old_type
+			l_message.append_string (a_call.position.line.out)
+			l_message.append_character (',')
+			l_message.append_string (a_call.position.column.out)
+			l_message.append_string ("): type '")
+			l_message.append_string (an_actual_type.base_type.to_text)
+			l_message.append_string ("' of actual argument #")
+			l_message.append_string (arg.out)
+			l_message.append_string (" does not conform to type '")
+			l_message.append_string (a_formal_type.base_type.to_text)
+			l_message.append_string ("' of formal argument in feature `")
+			l_message.append_string (a_dynamic_feature.static_feature.name.name)
+			l_message.append_string ("' in class '")
+			l_message.append_string (a_target_type.base_type.to_text)
+			l_message.append_string ("':%N")
+			l_visited_sources := shared_visited_sources
+			l_visited_sources.wipe_out
+			l_source_stack := shared_source_stack
+			l_source_stack.wipe_out
+			l_message.append_string ("%TTarget type: '")
+			l_message.append_string (a_target_type.base_type.to_text)
+			l_message.append_string ("'%N")
+			from
+				l_type_set := a_call.target_type
+			until
+				l_type_set = Void
+			loop
+				from
+					l_source := l_type_set.sources
+					l_type_set := Void
+				until
+					l_source = Void
+				loop
+					if l_source.has_type (a_target_type) then
+						if not l_source.is_null_attachment then
+							l_message.append_string ("%T%T")
+							from i := 1 until i > nb loop
+								l_message.append_character ('.')
+								i := i + 1
+							end
+							l_message.append_string ("class ")
+							l_message.append_string (l_source.current_type.to_text)
+							l_message.append_string (" (")
+							l_class_impl := l_source.current_feature.implementation_class
+							if l_source.current_type.direct_base_class (universe) /= l_class_impl then
+								l_message.append_string (l_class_impl.name.name)
+								l_message.append_character (',')
+							end
+							l_message.append_string (l_source.position.line.out)
+							l_message.append_character (',')
+							l_message.append_string (l_source.position.column.out)
+							l_message.append_character (')')
+						end
+						if not l_visited_sources.has (l_source) then
+							if not l_source.is_null_attachment then
+								l_message.append_character ('%N')
+								nb := nb + 1
+							end
+							l_source_stack.force (l_source)
+							l_visited_sources.force_last (l_source)
+							l_type_set := l_source.source_type
+								-- Jump out of the loop.
+							l_source := Void
+						else
+							if not l_source.is_null_attachment then
+								l_message.append_string (" -- already visited%N")
+							end
+							from
+								l_source := Void
+							until
+								l_source_stack.is_empty or l_source /= Void
+							loop
+								l_source := l_source_stack.item
+								l_source_stack.remove
+								if not l_source.is_null_attachment then
+									nb := nb - 1
+								end
+								l_source := l_source.next_attachment
+							end
+						end
+					else
+						from
+							l_source := l_source.next_attachment
+						until
+							l_source_stack.is_empty or l_source /= Void
+						loop
+							l_source := l_source_stack.item
+							l_source_stack.remove
+							if not l_source.is_null_attachment then
+								nb := nb - 1
+							end
+							l_source := l_source.next_attachment
+						end
+					end
+				end
+			end
+			l_visited_sources.wipe_out
+			l_source_stack.wipe_out
+			nb := 0
+			l_message.append_string ("%TArgument type: '")
+			l_message.append_string (an_actual_type.base_type.to_text)
+			l_message.append_string ("'%N")
+			from
+				l_source := an_actual_source
+				l_visited_sources.force_last (l_source)
+				l_source_stack.force (l_source)
+				if not l_source.is_null_attachment then
+					l_message.append_string ("%T%Tclass ")
+					l_message.append_string (l_source.current_type.to_text)
+					l_message.append_string (" (")
+					l_class_impl := l_source.current_feature.implementation_class
+					if l_source.current_type.direct_base_class (universe) /= l_class_impl then
+						l_message.append_string (l_class_impl.name.name)
+						l_message.append_character (',')
+					end
+					l_message.append_string (l_source.position.line.out)
+					l_message.append_character (',')
+					l_message.append_string (l_source.position.column.out)
+					l_message.append_string (")%N")
+					nb := nb + 1
+				end
+				l_type_set := l_source.source_type
+			until
+				l_type_set = Void
+			loop
+				from
+					l_source := l_type_set.sources
+					l_type_set := Void
+				until
+					l_source = Void
+				loop
+					if l_source.has_type (an_actual_type) then
+						if not l_source.is_null_attachment then
+							l_message.append_string ("%T%T")
+							from i := 1 until i > nb loop
+								l_message.append_character ('.')
+								i := i + 1
+							end
+							l_message.append_string ("class ")
+							l_message.append_string (l_source.current_type.to_text)
+							l_message.append_string (" (")
+							l_class_impl := l_source.current_feature.implementation_class
+							if l_source.current_type.direct_base_class (universe) /= l_class_impl then
+								l_message.append_string (l_class_impl.name.name)
+								l_message.append_character (',')
+							end
+							l_message.append_string (l_source.position.line.out)
+							l_message.append_character (',')
+							l_message.append_string (l_source.position.column.out)
+							l_message.append_character (')')
+						end
+						if not l_visited_sources.has (l_source) then
+							if not l_source.is_null_attachment then
+								l_message.append_character ('%N')
+								nb := nb + 1
+							end
+							l_source_stack.force (l_source)
+							l_visited_sources.force_last (l_source)
+							l_type_set := l_source.source_type
+								-- Jump out of the loop.
+							l_source := Void
+						else
+							if not l_source.is_null_attachment then
+								l_message.append_string (" -- already visited%N")
+							end
+							from
+								l_source := Void
+							until
+								l_source_stack.is_empty or l_source /= Void
+							loop
+								l_source := l_source_stack.item
+								l_source_stack.remove
+								if not l_source.is_null_attachment then
+									nb := nb - 1
+								end
+								l_source := l_source.next_attachment
+							end
+						end
+					else
+						from
+							l_source := l_source.next_attachment
+						until
+							l_source_stack.is_empty or l_source /= Void
+						loop
+							l_source := l_source_stack.item
+							l_source_stack.remove
+							if not l_source.is_null_attachment then
+								nb := nb - 1
+							end
+							l_source := l_source.next_attachment
+						end
+					end
+				end
+			end
+			l_visited_sources.wipe_out
+			l_source_stack.wipe_out
+			set_fatal_error
+			error_handler.report_error_message (l_message)
+			STRING_.wipe_out (l_message)
+		end
+
+	shared_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT] is
+			-- Shared visited sources (used in `report_catcall_error')
+		once
+			create Result.make (20)
+		ensure
+			shared_visited_sources_not_void: Result /= Void
+		end
+
+	shared_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT] is
+			-- Shared stack of sources (used in `report_catcall_error')
+		once
+			create Result.make (20)
+		ensure
+			shared_source_stack_not_void: Result /= Void
+		end
+
+	shared_error_message: STRING is
+			-- Shared error message (used in `report_catcall_error')
+		once
+			Result := STRING_.make (200)
+		ensure
+			shared_error_message_not_void: Result /= Void
 		end
 
 feature {NONE} -- Instruction validity
@@ -396,7 +928,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibdp_error
 				else
 					create l_dynamic_call.make (l_target, l_dynamic_type_set, an_expression.name, a_feature, current_feature, current_type, current_system)
-					set_dynamic_call (l_dynamic_call, an_expression)
+					dynamic_calls.force_last (l_dynamic_call)
 					l_dynamic_type_set := l_dynamic_call.result_type
 					if l_dynamic_type_set = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -996,7 +1528,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibbb_error
 				else
 					create l_dynamic_call.make (l_target, l_dynamic_type_set, a_call.name, a_feature, current_feature, current_type, current_system)
-					set_dynamic_call (l_dynamic_call, a_call)
+					dynamic_calls.force_last (l_dynamic_call)
 					l_actuals := a_call.arguments
 					if l_actuals /= Void then
 						nb := l_actuals.count
@@ -1053,7 +1585,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibbe_error
 				else
 					create l_dynamic_call.make (l_target, l_dynamic_type_set, a_call.name, a_feature, current_feature, current_type, current_system)
-					set_dynamic_call (l_dynamic_call, a_call)
+					dynamic_calls.force_last (l_dynamic_call)
 					l_actuals := a_call.arguments
 					if l_actuals /= Void then
 						nb := l_actuals.count
@@ -1584,35 +2116,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			dynamic_type_set_set: dynamic_type_set (an_expression) = a_dynamic_type_set
-		end
-
-	set_dynamic_call (a_dynamic_call: ET_DYNAMIC_CALL; a_call: ET_FEATURE_CALL) is
-			-- Set dynamic call associated with `a_call' to `a_dynamic_call'.
-		require
-			a_dynamic_call_not_void: a_dynamic_call /= Void
-			a_call_not_void: a_call /= Void
-		local
-			i, nb: INTEGER
-			l_null_call: ET_DYNAMIC_CALL
-		do
-			i := a_call.call_index
-			if i = 0 then
-				dynamic_calls.force_last (a_dynamic_call)
-				a_call.set_call_index (dynamic_calls.count)
-			else
-				nb := dynamic_calls.count
-				if i <= nb then
-					dynamic_calls.replace (a_dynamic_call, i)
-				else
-					l_null_call := a_dynamic_call
-					i := i - 1
-					from until nb >= i loop
-						dynamic_calls.force_last (l_null_call)
-						nb := nb + 1
-					end
-					dynamic_calls.force_last (a_dynamic_call)
-				end
-			end
 		end
 
 	dynamic_type_sets: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE_SET]

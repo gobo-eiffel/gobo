@@ -35,10 +35,6 @@ feature -- Access
 		deferred
 		end
 
-	call_index: INTEGER
-			-- Index of current call in enclosing feature;
-			-- Used to get dynamic information about this call.
-
 feature -- Status report
 
 	is_qualified_call: BOOLEAN is
@@ -48,21 +44,5 @@ feature -- Status report
 		ensure
 			definition: Result = (target /= Void)
 		end
-
-feature -- Setting
-
-	set_call_index (i: INTEGER) is
-			-- Set `call_index' to `i'.
-		require
-			i_nonnegative: i >= 0
-		do
-			call_index := i
-		ensure
-			call_index_set: call_index = i
-		end
-
-invariant
-
-	call_index_nonnegative: call_index >= 0
 
 end

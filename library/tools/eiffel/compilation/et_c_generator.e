@@ -2177,12 +2177,12 @@ feature {NONE} -- Expression generation
 		local
 			a_name: ET_FEATURE_NAME
 			a_target: ET_EXPRESSION
+			a_target_type_set: ET_DYNAMIC_TYPE_SET
 			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_feature: ET_FEATURE
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_seed: INTEGER
 			i, nb: INTEGER
-			l_call: ET_DYNAMIC_CALL
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
@@ -2191,20 +2191,26 @@ feature {NONE} -- Expression generation
 			a_target := a_call.target
 			a_name := a_call.name
 			an_actuals := a_call.arguments
-			l_call := current_feature.dynamic_call (a_call)
-			if l_call = Void then
-					-- Internal error: there should be a least one feature call
-					-- dynamic representation left.
+			a_target_type_set := current_feature.dynamic_type_set (a_target)
+			if a_target_type_set = Void then
+					-- Internal error: the dynamic type set of the target
+					-- should be known at this stage.
 				set_fatal_error
 				error_handler.report_gibcy_error
 			else
-				a_feature := l_call.static_feature
-				a_seed := a_feature.first_seed
-				l_dynamic_type := l_call.target_type.first_type
-				l_other_dynamic_types := l_call.target_type.other_types
+				a_seed := a_call.name.seed
+				l_dynamic_type := a_target_type_set.first_type
+				l_other_dynamic_types := a_target_type_set.other_types
 				if l_dynamic_type = Void then
 						-- Call on Void target.
-					if a_feature.is_procedure then
+					a_feature := a_target_type_set.static_type.base_class.seeded_feature (a_seed)
+					if a_feature = Void then
+							-- Internal error: there should be a feature with `a_seed'.
+							-- It has been computed in ET_FEATURE_FLATTENER.
+						set_fatal_error
+						error_handler.report_gibco_error
+-- TODO error.
+					elseif a_feature.is_procedure then
 -- TODO
 						local_count := local_count + 1
 						l_local_index := local_count
@@ -2318,7 +2324,13 @@ feature {NONE} -- Expression generation
 					end
 				else
 						-- Dynamic binding.
-					if a_feature.is_procedure then
+					a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
+					if a_feature = Void then
+							-- Internal error: there should be a feature with `a_seed'.
+							-- It has been computed in ET_FEATURE_FLATTENER.
+						set_fatal_error
+						error_handler.report_gibcp_error
+					elseif a_feature.is_procedure then
 						from
 							j := 1
 							nb2 := l_other_dynamic_types.count
@@ -2348,8 +2360,9 @@ feature {NONE} -- Expression generation
 							current_file.put_character (':')
 							current_file.put_new_line
 							indent
-							a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
 							if a_feature = Void then
+									-- Internal error: there should be a feature with `a_seed'.
+									-- It has been computed in ET_FEATURE_FLATTENER.
 								set_fatal_error
 								error_handler.report_gibdf_error
 							else
@@ -2379,6 +2392,7 @@ feature {NONE} -- Expression generation
 								l_dynamic_type := Void
 							else
 								l_dynamic_type := l_other_dynamic_types.item (j)
+								a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
 								j := j + 1
 							end
 						end
@@ -2416,8 +2430,9 @@ feature {NONE} -- Expression generation
 								current_file.put_character (')')
 								current_file.put_character ('?')
 							end
-							a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
 							if a_feature = Void then
+									-- Internal error: there should be a feature with `a_seed'.
+									-- It has been computed in ET_FEATURE_FLATTENER.
 								set_fatal_error
 								error_handler.report_gibdh_error
 							elseif a_feature.is_attribute then
@@ -2459,6 +2474,7 @@ feature {NONE} -- Expression generation
 							else
 								current_file.put_character (':')
 								l_dynamic_type := l_other_dynamic_types.item (j)
+								a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
 								j := j + 1
 							end
 						end

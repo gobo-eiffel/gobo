@@ -313,7 +313,6 @@ feature -- Compilation
 			l_class := universe.root_class
 			if l_class = universe.none_class then
 				compile_all
-				check_catcall_validity
 			elseif l_class /= Void then
 				compile_system
 			end
@@ -348,7 +347,6 @@ feature -- Compilation
 					root_creation_procedure.set_creation (True)
 					root_type.set_alive (True)
 					build_dynamic_type_sets
-					check_catcall_validity
 					generate_ids
 					generate_c_code
 					if universe.system_name /= Void then
@@ -366,7 +364,6 @@ feature -- Compilation
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
-			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_features: ET_FEATURE_LIST
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
@@ -394,7 +391,6 @@ feature -- Compilation
 				universe.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			l_builder := dynamic_type_set_builder
 			l_cursor := universe.classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
@@ -407,7 +403,6 @@ feature -- Compilation
 						from i := 1 until i > nb loop
 							l_feature := l_features.item (i)
 							l_dynamic_feature := l_dynamic_type.dynamic_feature (l_feature, Current)
-							l_builder.build_dynamic_type_sets (l_dynamic_feature, l_dynamic_type)
 							i := i + 1
 						end
 					end
@@ -423,188 +418,14 @@ feature -- Compilation
 	build_dynamic_type_sets is
 			-- Build dynamic type sets for current system.
 		local
-			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-			j, nb2: INTEGER
-			l_features: ET_DYNAMIC_FEATURE_LIST
-			l_feature: ET_DYNAMIC_FEATURE
-			done: BOOLEAN
-			l_precursor: ET_DYNAMIC_PRECURSOR
-			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
-			k, nb3: INTEGER
-		do
-			from until done loop
-				done := True
-				nb := dynamic_types.count
-				from i := 1 until i > nb loop
-					l_type := dynamic_types.item (i)
-					l_features := l_type.features
-					if l_features /= Void then
-						nb2 := l_features.count
-						from j := 1 until j > nb2 loop
-							l_feature := l_features.item (j)
-							if build_feature_dynamic_type_sets (l_feature, l_type) then
-								done := False
-							end
-							l_precursor := l_feature.first_precursor
-							if l_precursor /= Void then
-								if build_feature_dynamic_type_sets (l_precursor, l_type) then
-									done := False
-								end
-								l_other_precursors := l_feature.other_precursors
-								if l_other_precursors /= Void then
-									nb3 := l_other_precursors.count
-									from k := 1 until k > nb3 loop
-										if build_feature_dynamic_type_sets (l_other_precursors.item (k), l_type) then
-											done := False
-										end
-										k := k + 1
-									end
-								end
-							end
-							j := j + 1
-						end
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE): BOOLEAN is
-		require
-			a_feature_not_void: a_feature /= Void
-			a_type_not_void: a_type /= Void
-		local
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_dynamic_calls: ET_DYNAMIC_CALL_LIST
-			l_call: ET_DYNAMIC_CALL
-			l_target: ET_DYNAMIC_TYPE_SET
-			l_count: INTEGER
-			i, nb: INTEGER
 		do
-			if not a_feature.is_built then
-				l_builder := dynamic_type_set_builder
-				l_builder.set_no_debug (True)
-				l_builder.set_no_assertion (True)
-				l_builder.build_dynamic_type_sets (a_feature, a_type)
-				if l_builder.has_fatal_error then
-					set_fatal_error
-				end
-				Result := True
-			end
-			l_arguments := a_feature.static_feature.arguments
-			if l_arguments /= Void then
-				nb := l_arguments.count
-				if nb > 0 then
-						-- Dynamic type sets for arguments are stored first
-						-- in `dynamic_type_sets'.
-					l_dynamic_type_sets := a_feature.dynamic_type_sets
-					if l_dynamic_type_sets.count < nb then
-							-- Internal error: it has already been checked somewhere else
-							-- that there was the same number of formal arguments in
-							-- feature redeclaration.
-						if not has_fatal_error then
-							set_fatal_error
-							error_handler.report_gibdo_error
-						end
-					else
-						from i := 1 until i > nb loop
-							l_target := l_dynamic_type_sets.item (i)
-							l_count := l_target.count
-							l_target.propagate_types (Current)
-							if l_target.count /= l_count then
-								Result := True
-							end
-							i := i + 1
-						end
-					end
-				end
-			end
-			l_locals := a_feature.static_feature.locals
-			if l_locals /= Void then
-				nb := l_locals.count
-				from i := 1 until i > nb loop
-					l_target := a_feature.dynamic_type_set (l_locals.local_variable (i).name)
-					if l_target = Void then
-							-- Internal error: the dynamic type sets of the local
-							-- variables should be known at this stage.
-						if not has_fatal_error then
-							set_fatal_error
-							error_handler.report_gibdq_error
-						end
-					else
-						l_count := l_target.count
-						l_target.propagate_types (Current)
-						if l_target.count /= l_count then
-							Result := True
-						end
-					end
-					i := i + 1
-				end
-			end
-			l_target := a_feature.result_type
-			if l_target /= Void then
-				l_count := l_target.count
-				l_target.propagate_types (Current)
-				if l_target.count /= l_count then
-					Result := True
-				end
-			end
-			l_dynamic_calls := a_feature.dynamic_calls
-			nb := l_dynamic_calls.count
-			from i := 1 until i > nb loop
-				l_call := l_dynamic_calls.item (i)
-				l_count := l_call.count
-				l_call.propagate_types (Current)
-				if l_call.count /= l_count then
-					Result := True
-				end
-				l_target := l_call.result_type
-				if l_target /= Void then
-					l_count := l_target.count
-					l_target.propagate_types (Current)
-					if l_target.count /= l_count then
-						Result := True
-					end
-				end
-				i := i + 1
-			end
-		end
-
-	check_catcall_validity is
-			-- Check CAT-call validity.
-		local
-			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-			j, nb2: INTEGER
-			k, nb3: INTEGER
-			l_features: ET_DYNAMIC_FEATURE_LIST
-			l_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_calls: ET_DYNAMIC_CALL_LIST
-			l_call: ET_DYNAMIC_CALL
-		do
-			nb := dynamic_types.count
-			from i := 1 until i > nb loop
-				l_type := dynamic_types.item (i)
-				l_features := l_type.features
-				if l_features /= Void then
-					nb2 := l_features.count
-					from j := 1 until j > nb2 loop
-						l_feature := l_features.item (j)
-						l_dynamic_calls := l_feature.dynamic_calls
-						nb3 := l_dynamic_calls.count
-						from k := 1 until k > nb3 loop
-							l_call := l_dynamic_calls.item (k)
-							l_call.check_catcall_validity (Current)
-							k := k + 1
-						end
-						j := j + 1
-					end
-				end
-				i := i + 1
+			l_builder := dynamic_type_set_builder
+			l_builder.set_no_debug (True)
+			l_builder.set_no_assertion (True)
+			l_builder.build_dynamic_type_sets
+			if l_builder.has_fatal_error then
+				set_fatal_error
 			end
 		end
 

@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 				create {ET_NESTED_DYNAMIC_TYPE_SET} result_type.make (l_dynamic_type)
 			end
-			dynamic_calls := empty_dynamic_calls
 			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
 			if args /= Void then
@@ -83,23 +82,6 @@ feature -- Access
 			i := an_expression.index
 			if i >= 1 and i <= dynamic_type_sets.count then
 				Result := dynamic_type_sets.item (i)
-			end
-		end
-
-	dynamic_calls: ET_DYNAMIC_CALL_LIST
-			-- Dynamic calls within current feature
-
-	dynamic_call (a_call: ET_FEATURE_CALL): ET_DYNAMIC_CALL is
-			-- Dynamic call associated with `a_call';
-			-- Void if unknown yet
-		require
-			a_call_not_void: a_call /= Void
-		local
-			i: INTEGER
-		do
-			i := a_call.call_index
-			if i >= 1 and i <= dynamic_calls.count then
-				Result := dynamic_calls.item (i)
 			end
 		end
 
@@ -174,16 +156,6 @@ feature -- Setting
 			dynamic_type_sets := a_dynamic_type_sets
 		ensure
 			dynamic_type_sets_set: dynamic_type_sets = a_dynamic_type_sets
-		end
-
-	set_dynamic_calls (a_dynamic_calls: like dynamic_calls) is
-			-- Set `dynamic_calls' to `a_dynamic_calls'.
-		require
-			a_dynamic_calls_not_void: a_dynamic_calls /= Void
-		do
-			dynamic_calls := a_dynamic_calls
-		ensure
-			dynamic_calls_set: dynamic_calls = a_dynamic_calls
 		end
 
 	set_result_type (a_result_type: like result_type) is
@@ -355,19 +327,9 @@ feature {NONE} -- Constants
 			dynamic_type_sets_empty: Result.is_empty
 		end
 
-	empty_dynamic_calls: ET_DYNAMIC_CALL_LIST is
-			-- Empty dynamic call list
-		once
-			create Result.make
-		ensure
-			dynamic_calls_not_void: Result /= Void
-			dynamic_calls_empty: Result.is_empty
-		end
-
 invariant
 
 	static_feature_not_void: static_feature /= Void
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
-	dynamic_calls_not_void: dynamic_calls /= Void
 
 end
