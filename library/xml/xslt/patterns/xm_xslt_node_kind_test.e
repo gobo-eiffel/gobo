@@ -22,21 +22,10 @@ inherit
 		end
 
 	XM_XPATH_NODE_KIND_TEST
-		undefine
-			make
-		end
 
 creation
 
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_node_type: INTEGER) is
-			-- Establish invariant
-		do
-			node_kind := a_node_type
-		end
 
 feature -- Access
 

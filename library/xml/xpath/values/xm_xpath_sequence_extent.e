@@ -166,6 +166,12 @@ feature -- Access
 			end
 		end
 
+	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence in reverse order
+		do
+			create {XM_XPATH_REVERSE_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+		end
+		
 	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
 			-- Item at `an_index'
 		require

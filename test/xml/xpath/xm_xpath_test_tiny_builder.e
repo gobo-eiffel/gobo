@@ -163,7 +163,7 @@ feature
 			-- Test descendant axis - look for "ITEM" descendants of the document_element
 
 			a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
-			create element_test.make (Element_node, a_fingerprint)
+			create element_test.make (Element_node, a_fingerprint, "ITEM")
 			create descendants.make (document, document_element, element_test, False)
 
 			from
@@ -262,7 +262,7 @@ feature
 			a_fingerprint := shared_name_pool.fingerprint ("", "NOTE")
 			an_element := element_list_1.item (2)
 					
-			create attribute_test.make (Attribute_node, a_fingerprint)
+			create attribute_test.make (Attribute_node, a_fingerprint, "NOTE")
 			create attributes.make (document, an_element.node_number, attribute_test)
 				check
 					attributes_before: attributes.before

@@ -39,7 +39,7 @@ feature
 			an_output_string, a_test_string: STRING
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_test_file: KL_BINARY_INPUT_FILE
+			a_test_file: KL_TEXT_INPUT_FILE
 			n: INTEGER
 		do
 			conformance.set_basic_xslt_processor
@@ -53,7 +53,6 @@ feature
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= Void)
 			a_transformer := a_stylesheet.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			a_configuration.set_entity_resolver (new_file_resolver_current_directory) -- bodge
 			create another_uri_source.make ("./data/structure-index.xml")
 			create an_output
 			create an_output_string.make (0)
@@ -104,7 +103,6 @@ feature
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= Void)
 			a_transformer := a_stylesheet.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			a_configuration.set_entity_resolver (new_file_resolver_current_directory) -- bodge
 			create another_uri_source.make ("./data/structure-index.xml")
 			create an_output
 			create an_output_string.make (0)
@@ -155,7 +153,6 @@ feature
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= Void)
 			a_transformer := a_stylesheet.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			a_configuration.set_entity_resolver (new_file_resolver_current_directory) -- bodge
 			create another_uri_source.make ("./data/structure-index.xml")
 			create an_output
 			create an_output_string.make (0)
@@ -163,7 +160,6 @@ feature
 			create a_result.make (an_output)
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			print (an_output_string)
 			create a_test_file.make ("./data/structure-index.xhtml")
 			assert ("Test file exists", a_test_file /= Void)
 			a_test_file.open_read

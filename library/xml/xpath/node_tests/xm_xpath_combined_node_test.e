@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			a_string := STRING_.appended_string (a_string, " ")
 			a_string := STRING_.appended_string (a_string, node_test_two.original_text)
 			a_string := STRING_.appended_string (a_string, ")")
-			set_original_text (a_string)
+			original_text := a_string
 		ensure
 			node_test_one_set: node_test_one = a_node_test
 			node_test_two_set: node_test_two = another_node_test

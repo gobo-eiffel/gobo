@@ -27,9 +27,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_uri: STRING) is
+	make (a_node_type: INTEGER; a_uri, an_original_text: STRING) is
 		require
 			uri_not_void: a_uri /= Void
+			original_text_not_void: an_original_text /= Void
 		do
 			node_kind := a_node_type
 			if shared_name_pool.is_code_for_uri_allocated (a_uri) then
@@ -38,8 +39,10 @@ feature {NONE} -- Initialization
 				shared_name_pool.allocate_code_for_uri (a_uri)
 				uri_code := shared_name_pool.code_for_uri (a_uri)
 			end
+			original_text := an_original_text
 		ensure
 			node_kind_set: node_kind = a_node_type
+			original_text_set: original_text = an_original_text
 		end
 
 feature -- Access

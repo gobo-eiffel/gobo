@@ -210,7 +210,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:translate</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -222,7 +222,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:contains</entry>
-	   <entry>No</entry>
+	   <entry>yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -240,13 +240,13 @@
 	 </row>	
 	 <row>
 	   <entry>fn:substring-before</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:substring-after</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	

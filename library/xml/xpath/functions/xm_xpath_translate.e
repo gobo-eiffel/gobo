@@ -112,6 +112,7 @@ feature {NONE} -- Implementation
 			an_index, a_count: INTEGER
 		do
 			from
+				Result := ""
 				an_index := 1
 				a_count := a_value.count
 			until
@@ -148,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_single: Result.count = 1
+			result_single: Result.count = 1 or else Result.count = 0
 		end
 
 end

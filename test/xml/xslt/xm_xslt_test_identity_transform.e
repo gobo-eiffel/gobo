@@ -52,9 +52,6 @@ feature
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= Void)
 			a_transformer := a_stylesheet.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			a_configuration.set_entity_resolver (new_file_resolver_current_directory) -- bodge
-			-- Why is that a bodge? I can't remember! think about it!
-			
 			create another_uri_source.make ("../xpath/data/books.xml")
 			create an_output
 			create a_result.make (an_output)

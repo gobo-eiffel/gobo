@@ -60,6 +60,11 @@ feature -- Parsers
 		local
 			s: STRING
 		do
+			debug ("XSLT pattern parsing")
+				std.error.put_string ("Parsing pattern ")
+				std.error.put_string (a_pattern_text)
+				std.error.put_new_line
+			end
 			environment := a_context
 			create tokenizer.make
 			tokenizer.tokenize (a_pattern_text, 1, -1)
@@ -72,6 +77,13 @@ feature -- Parsers
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of pattern")
 				report_parse_error (s, 3)
+			end
+			debug ("XSLT pattern parsing")
+				if not is_parse_error then
+					std.error.put_string ("Fingerprint of last parsed pattern is ")
+					std.error.put_string (internal_last_parsed_pattern.fingerprint.out)
+					std.error.put_new_line
+				end
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void
@@ -593,7 +605,7 @@ feature {NONE} -- Implementation
 							else
 								a_name_test ?= an_xpath_node_test
 								if a_name_test /= Void then
-									create {XM_XSLT_NAME_TEST} Result.make (a_name_test.node_kind, a_name_test.fingerprint)
+									create {XM_XSLT_NAME_TEST} Result.make (a_name_test.node_kind, a_name_test.fingerprint, a_name_test.original_text)
 								else
 									a_node_kind_test ?= an_xpath_node_test
 									if a_node_kind_test /= Void then

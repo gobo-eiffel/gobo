@@ -31,9 +31,12 @@ feature {NONE} -- Initialization
 			-- Create intrinsic dependencies, and establish invariant.
 		require
 			strictly_positive_fingerprint: a_fingerprint > 0
+		local
+			an_original_text: STRING
 		do
 			fingerprint := a_fingerprint
-			create name_test.make (Attribute_node, a_fingerprint) 
+			an_original_text := STRING_.concat ("@", shared_name_pool.display_name_from_name_code (fingerprint))
+			create name_test.make (Attribute_node, a_fingerprint, an_original_text) 
 			create intrinsic_dependencies.make (1, 6)
 			intrinsic_dependencies.put (True, 2) -- depends_upon_context_item
 			compute_static_properties
@@ -81,14 +84,9 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "@")
-			a_string := STRING_.appended_string (a_string, shared_name_pool.display_name_from_name_code (fingerprint))
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			end
+			a_string := STRING_.appended_string (indentation (a_level), name_test.original_text)
+			std.error.put_string (a_string)
+			std.error.put_new_line
 		end
 
 feature -- Evaluation

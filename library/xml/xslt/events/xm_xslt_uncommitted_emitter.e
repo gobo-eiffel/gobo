@@ -266,14 +266,14 @@ feature {NONE} -- Implementation
 			not_yet_committed: not committed
 		local
 			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
-			an_xml_indenter: XM_XSLT_XML_INDENTER
+			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
 			output_properties.set_xhtml_defaults
 			create an_xhtml_emitter.make (transformer, outputter, output_properties)
 			base_receiver := an_xhtml_emitter
 			if output_properties.indent then
-				create an_xml_indenter.make (transformer, an_xhtml_emitter, output_properties)
-				base_receiver := an_xml_indenter
+				create an_html_indenter.make (transformer, an_xhtml_emitter, output_properties)
+				base_receiver := an_html_indenter
 			end
 
 			switch

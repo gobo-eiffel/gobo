@@ -105,7 +105,7 @@ feature -- Evaluation
 				if not a_transformer.is_error then
 
 					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
-					todo ("process_leaving_tail (use-attribute-sets) - it is safe to ignore this message", True)
+					--todo ("process_leaving_tail (use-attribute-sets) - it is safe to ignore this message", True)
 
 					process_children (a_context)
 

@@ -176,7 +176,10 @@ feature -- Access
 	Numeric_type_code: INTEGER is 513
 	Object_type_code: INTEGER is 514
 	Explain_type_code: INTEGER is 515
-
+	Indent_spaces_type_code: INTEGER is 516
+	Character_representation_type_code: INTEGER is 517
+	Byte_order_mark_type_code: INTEGER is 518
+	
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 128 + 0..n)
 
 	Xslt_analyze_string_type_code: INTEGER is 640

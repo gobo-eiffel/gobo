@@ -53,6 +53,7 @@ feature -- Events
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (content_emitter)
 			a_parser.parse_from_system (system_id)
+			a_parser.entity_resolver.resolve_finish
 		end
 
 feature -- Element change

@@ -44,6 +44,12 @@ feature -- Access
 	key_expression: XM_XPATH_EXPRESSION
 			-- The expression
 
+	original_text: STRING is
+			-- Original text
+		do
+			Result :=  ("key()")
+		end
+
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do

@@ -180,8 +180,7 @@ feature -- Creation
 			a_name_code: INTEGER
 		do
 			generate_name_code (a_qname, use_default_namespace)
-			create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (a_node_type, last_generated_name_code)
-			internal_last_parsed_node_test.set_original_text (a_qname)
+			create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (a_node_type, last_generated_name_code, a_qname)
 		end
 
 	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
@@ -205,8 +204,7 @@ feature -- Creation
 			valid_node_type: is_node_type (a_node_type)
 			valid_prefix: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		do
-			create Result.make (a_node_type, environment.uri_for_prefix (an_xml_prefix))
-			Result.set_original_text (STRING_.appended_string (an_xml_prefix, ":*"))
+			create Result.make (a_node_type, environment.uri_for_prefix (an_xml_prefix), STRING_.appended_string (an_xml_prefix, ":*"))
 		ensure
 			namespace_test_not_void: Result /= Void
 		end

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant.
 		do
-			create rule_dictionary.make (1, number_of_buckets + Namespace_node + 1)
+			create rule_dictionary.make (1, Number_of_buckets + Namespace_node + 1)
 		end
 
 	make_with_copy (other: XM_XSLT_MODE) is
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			a_rule, a_new_rule: XM_XSLT_RULE
 			a_rule_dictionary: ARRAY [XM_XSLT_RULE]
 		do
-			create rule_dictionary.make (1, number_of_buckets + Namespace_node + 1)
+			create rule_dictionary.make (1, Number_of_buckets + Namespace_node + 1)
 			from
 				a_rule_dictionary := other.rule_dictionary
 				an_index := 1
@@ -77,6 +77,16 @@ feature -- Access
 			a_specific_priority: MA_DECIMAL
 			finished: BOOLEAN
 		do
+			debug ("XSLT template rules")
+				std.error.put_string ("Searching for a rule in Mode ")
+				std.error.put_string (name)
+				std.error.put_new_line
+				std.error.put_string ("Fingerprint is ")
+				std.error.put_string (a_node.fingerprint.out)
+				std.error.put_string (", node type is ")
+				std.error.put_string (a_node.node_type.out)
+				std.error.put_new_line
+			end
 			a_key := rule_key (a_node.fingerprint, a_node.node_type)
 			a_policy := a_transformer.recovery_policy
 			a_specific_precedence := -1
@@ -85,6 +95,11 @@ feature -- Access
 			-- Search the specific list for this node type / node name.
 
 			if a_key /= Any_node + 1 then
+				debug ("XSLT template rules")
+					std.error.put_string ("Searching for a specific rule ...%N")
+					std.error.put_string ("key is " + a_key.out)
+					std.error.put_new_line
+				end
 				from
 					a_rule := rule_dictionary.item (a_key)
 				until
@@ -94,12 +109,26 @@ feature -- Access
 					-- If we already have a match, and the precedence or priority of this
             	--  rule is lower, quit the search for a second match.
 
+					debug ("XSLT template rules")
+						std.error.put_string ("Searching for a specific rule ... found a candidate...%N")
+					end
 					if a_specific_rule /= Void and then (a_rule.precedence  < a_specific_precedence or else
 																	 (a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority)) then
 						finished := True
+						debug ("XSLT template rules")
+							std.error.put_string ("Searching for a specific rule ... found best match.%N")
+						end
 					else
+						debug ("XSLT template rules")
+							std.error.put_string (" Pattern is ")
+							std.error.put_string (a_rule.pattern.original_text)
+							std.error.put_new_line
+						end
 						if a_rule.pattern.matches (a_node, a_transformer) then
-
+							debug ("XSLT template rules")
+								std.error.put_string ("Searching for a specific rule ... found a match.%N")
+							end
+							
 							-- Is this a second match?
 
 							if a_specific_rule /= Void then
@@ -149,9 +178,9 @@ feature -- Element change
 		require
 			name_not_void: a_name /= Void
 		do
-			internal_name := internal_name
+			internal_name := a_name
 		ensure
-			name_set: internal_name = internal_name
+			name_set: internal_name = a_name
 		end
 
 	add_rule (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL) is
@@ -160,10 +189,15 @@ feature -- Element change
 			pattern_not_void: a_pattern /= Void
 			handler_not_void: a_handler /= Void
 		local
-			a_fingerprint, a_node_kind, a_key: INTEGER
+			a_key: INTEGER
 			a_rule, a_new_rule, a_previous_rule: XM_XSLT_RULE
 			finished: BOOLEAN
 		do
+			debug ("XSLT template rules")
+				std.error.put_string ("Adding a rule in Mode: ")
+				std.error.put_string (name)
+				std.error.put_new_line
+			end
 
 			-- Ignore a pattern that will never match, e.g. "@comment"
 
@@ -174,15 +208,30 @@ feature -- Element change
 				--  match one kind of non-element node, and one generic list.
 				-- Each list is sorted in precedence/priority order so we find the highest-priority rule first
 
-				a_fingerprint := a_pattern.fingerprint
-				a_node_kind := a_pattern.node_kind
-				a_key := rule_key (a_fingerprint, a_node_kind)
+				a_key := rule_key (a_pattern.fingerprint, a_pattern.node_kind)
+				debug ("XSLT template rules")
+					std.error.put_string ("Pattern's class is " + a_pattern.generating_type)
+					std.error.put_string (", fingerprint is ")
+					std.error.put_string (a_pattern.fingerprint.out)
+					std.error.put_string (", node type is ")
+					std.error.put_string (a_pattern.node_kind.out)
+				std.error.put_new_line
+					std.error.put_string ("Rule key for node to be added is " + a_key.out)
+					std.error.put_new_line
+				end
+					
 				create a_new_rule.make (a_pattern, a_handler, a_precedence, a_priority, sequence_number)
 				sequence_number := sequence_number + 1
 				a_rule := rule_dictionary.item (a_key)
 				if a_rule = Void then
+					debug ("XSLT template rules")
+						std.error.put_string ("New rule added%N")
+					end
 					rule_dictionary.put (a_new_rule, a_key)
 				else
+					debug ("XSLT template rules")
+						std.error.put_string ("Inserting rule into existing chain%N")
+					end
 
 					-- Insert the new rule into this list before others of the same precedence/priority
 
@@ -226,7 +275,7 @@ feature {XM_XSLT_MODE} -- Local
 
 feature {NONE} -- Implementation
 
-	number_of_buckets: INTEGER is 101
+	Number_of_buckets: INTEGER is 101
 			-- Hash factor
 
 	internal_name: STRING
@@ -239,7 +288,7 @@ feature {NONE} -- Implementation
 				if a_fingerprint = - 1 then
 					Result := Any_node + 1 -- the generic list
 				else
-					Result := Namespace_node + (a_fingerprint \\ number_of_buckets) + 1
+					Result := Namespace_node + (a_fingerprint \\ Number_of_buckets) + 1
 				end
 			else
 				Result := a_node_kind + 1
@@ -269,13 +318,19 @@ feature {NONE} -- Implementation
 			a_rule, a_general_rule: XM_XSLT_RULE
 			finished: BOOLEAN
 		do
+			debug ("XSLT template rules")
+					std.error.put_string ("Searching for a general rule ...%N")
+			end
 			from
 				a_rule := rule_dictionary.item (Any_node + 1)
 			until
 				finished or else a_rule = Void
 			loop
+				debug ("XSLT template rules")
+					std.error.put_string ("Searching for a general rule ... found one%N")
+				end
 				if a_rule.precedence < a_specific_precedence or else
-					(a_rule.precedence = a_specific_precedence and then a_rule.priority <= a_specific_priority) then
+					(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then
 
 					-- no point in looking at a lower priority rule than the one we've got
 
@@ -301,8 +356,14 @@ feature {NONE} -- Implementation
 				a_rule := a_rule.next_rule
 			end
 			if a_specific_rule /= Void and then a_general_rule = Void then
+				debug ("XSLT template rules")
+					std.error.put_string ("found a specific rule%N")
+				end
 				Result := a_specific_rule.handler
 			elseif a_specific_rule = Void and then a_general_rule /= Void then
+				debug ("XSLT template rules")
+					std.error.put_string ("Found a general rule%N")
+				end
 				Result := a_general_rule.handler
 			elseif a_specific_rule /= Void and then a_general_rule /= Void then
 				if a_specific_rule.precedence = a_general_rule.precedence and then
@@ -313,17 +374,35 @@ feature {NONE} -- Implementation
                --  the one that was added last.
 
 					if a_specific_rule.sequence_number > a_general_rule.sequence_number then
+						debug ("XSLT template rules")
+							std.error.put_string ("Found a specific rule%N")
+						end
 						Result := a_specific_rule.handler
 					else
+						debug ("XSLT template rules")
+							std.error.put_string ("Found a general rule%N")
+						end
 						Result := a_general_rule.handler
+					end
+					if  a_policy /= Recover_silently then
+						report_ambiguity (a_node, a_specific_rule, a_general_rule, a_transformer)
 					end
 				elseif a_specific_rule.precedence > a_general_rule.precedence or else
 					(a_specific_rule.precedence = a_general_rule.precedence and then a_specific_rule.priority >= a_general_rule.priority) then
+					debug ("XSLT template rules")
+						std.error.put_string ("Found a specific rule%N")
+					end
 					Result := a_specific_rule.handler
 				else
+					debug ("XSLT template rules")
+						std.error.put_string ("Found a general rule%N")
+					end
 					Result := a_general_rule.handler
 				end
 			else
+				debug ("XSLT template rules")
+					std.error.put_string ("couldn't find a rule%N")
+				end
 				Result := Void
 			end
 		end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			simplified_pattern, type_check, set_original_text
+			simplified_pattern, type_check
 		end
 
 creation
@@ -38,15 +38,20 @@ feature {NONE} -- Initialization
 			else
 				node_type := Any_node
 			end
+			original_text := STRING_.concat (a_pattern_one.original_text, "|")
+			original_text := STRING_.appended_string (original_text, a_pattern_two.original_text)
 		ensure
-				pattern_one_set: left_hand_side = a_pattern_one
-				pattern_two_set: right_hand_side = a_pattern_two
+			pattern_one_set: left_hand_side = a_pattern_one
+			pattern_two_set: right_hand_side = a_pattern_two
 		end
 
 feature -- Access
 
 	left_hand_side, right_hand_side: XM_XSLT_PATTERN
 			-- Patterns forming union
+
+	original_text: STRING
+			-- Original text
 
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
@@ -56,16 +61,6 @@ feature -- Access
 			else
 				create {XM_XSLT_NODE_KIND_TEST} Result.make (node_type)
 			end
-		end
-
-feature -- Status setting
-
-	set_original_text (a_text_string: STRING) is
-			-- Set original text of the pattern.
-		do
-			original_text := clone (a_text_string)
-			left_hand_side.set_original_text (a_text_string)
-			right_hand_side.set_original_text (a_text_string)
 		end
 
 feature -- Analysis

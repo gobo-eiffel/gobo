@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			fingerprint, simplified_pattern, type_check, internal_matches
+			fingerprint, simplified_pattern, type_check, internal_matches, node_kind
 		end
 
 	XM_XPATH_AXIS
@@ -28,6 +28,8 @@ inherit
 	XM_XSLT_SHARED_ANY_NODE_TEST
 
 	MA_DECIMAL_MATH
+
+	XM_XPATH_DEBUGGING_ROUTINES
 
 creation
 
@@ -51,6 +53,26 @@ feature -- Access
 
 	node_test: XM_XSLT_NODE_TEST
 			-- A node test that this pattern matches
+
+	node_kind: INTEGER is
+			-- Type of nodes matched
+		do
+			Result := node_test.node_kind
+		end
+	
+	original_text: STRING is
+			-- Original text
+		do
+			if parent_pattern /= Void then
+				Result := STRING_.concat (parent_pattern.original_text, "/")
+				Result := STRING_.appended_string (Result, node_test.original_text)
+			elseif ancestor_pattern /= Void then
+				Result := STRING_.concat (parent_pattern.original_text, "/")
+				Result := STRING_.appended_string (Result, node_test.original_text)
+			else
+				Result := node_test.original_text
+			end
+		end
 
 	fingerprint: INTEGER is
 			-- Determine the name fingerprint of nodes to which this pattern applies
@@ -436,9 +458,82 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 feature {XM_XSLT_PATTERN} -- Implementation
 
 	internal_matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
-			-- Determine whether this Pattern matches the given Node
+			-- Does `Current' match `a_node'?
+		local
+			another_node: XM_XPATH_NODE
+			is_candidate_match, is_result_determined: BOOLEAN
+			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_context: XM_XSLT_EVALUATION_CONTEXT
+			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			-- TODO
+			if node_test.matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) then
+				if parent_pattern /= void then
+					another_node := a_node.parent
+					if another_node /= Void then
+						is_candidate_match := parent_pattern.internal_matches (another_node, a_transformer)
+					end
+				elseif ancestor_pattern /= Void then
+					from
+						another_node := a_node.parent
+					until
+						is_candidate_match or else another_node = Void
+					loop
+						is_candidate_match := ancestor_pattern.internal_matches (another_node, a_transformer)
+						another_node := another_node.parent	
+					end
+				end
+				if is_candidate_match then
+					if is_special_filter then
+						is_result_determined := True
+						if is_first_element_pattern then
+							a_node_iterator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, node_test)
+							a_node_iterator.start; Result := a_node_iterator.after
+						elseif is_last_element_pattern then
+							a_node_iterator := a_node.new_axis_iterator_with_node_test (Following_sibling_axis, node_test)
+							a_node_iterator.start; Result := a_node_iterator.after
+						elseif equivalent_expression /= Void then
+							Result := equivalent_expression_matches (a_node, a_transformer)
+						else
+							is_result_determined := False
+						end
+					end
+					if not is_result_determined then
+						if filters = Void then
+							Result := True
+						else
+							a_context := a_transformer.new_xpath_context
+							create a_singleton_iterator.make (a_node)
+							a_context.set_current_iterator (a_singleton_iterator)
+
+							-- as it's a non-positional filter, we can handle each node separately
+
+							from
+								a_cursor := filters.new_cursor; a_cursor.start; Result := True
+							variant
+								filters.count + 1 - a_cursor.index
+							until
+								Result = False or else a_cursor.after
+							loop
+								Result := a_cursor.item.effective_boolean_value (a_context).value
+								a_cursor.forth
+							end
+						end
+					end
+				end
+			end
+		end
+	
+feature {NONE} -- Implementation
+
+	equivalent_expression_matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+			-- Does `a_node' matches `equivalent_expression'?
+		require
+			node_not_void: a_node /= Void
+			equivalent_expression_not_void: equivalent_expression /= Void
+			transformer_not_void: a_transformer /= Void
+		do
+			todo ("equivalent_expression_matches", False)
 		end
 
 invariant

@@ -52,8 +52,12 @@ feature -- Status report
 	system_id: STRING
 			-- SYSTEM id of entity where pattern occured
 
-	original_text: STRING
+	original_text: STRING is
 			-- Original text of the pattern, for use in diagnostics
+		deferred
+		ensure
+			original_text_not_void: Result /= Void
+		end
 
 	line_number: INTEGER
 			-- Line number where pattern occured
@@ -74,16 +78,6 @@ feature -- Status setting
 			system_id := clone (a_system_id)
 		ensure
 			system_id_set: system_id /= Void and then STRING_.same_string (system_id, a_system_id)
-		end
-
-	set_original_text (a_text_string: STRING) is
-			-- Set original text of the pattern.
-		require
-			original_text_not_void: a_text_string /= Void
-		do
-			original_text := clone (a_text_string)
-		ensure
-			original_text_set: original_text /= Void and then STRING_.same_string (original_text, a_text_string)
 		end
 
 	set_line_number (a_number: INTEGER) is

@@ -20,6 +20,8 @@ inherit
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
+	XM_XPATH_SHARED_NAME_POOL
+
 creation
 
 	make
@@ -68,8 +70,29 @@ feature -- Access
 			else
 				mode_to_use := a_mode
 			end
+			debug ("XSLT template rules")
+				std.error.put_string ("Looking for a rule to match ")
+				if a_node.parent = Void then
+					std.error.put_string (" parentless node ")
+					std.error.put_string (a_node.node_name)
+				else
+					std.error.put_string (a_node.parent.node_name)
+					std.error.put_string ("/")
+					std.error.put_string (a_node.node_name)
+				end
+				std.error.put_string (", with fingerprint of ")
+				std.error.put_string (a_node.fingerprint.out)
+				std.error.put_new_line
+			end
 			a_rule_value := mode_to_use.rule (a_node, a_transformer)
-			if a_rule_value /= Void and then a_rule_value.is_template then
+			if a_rule_value /= Void then
+				debug ("XSLT template rules")
+					std.error.put_string ("Found a match%N")
+				end
+				check
+					template_rule: a_rule_value.is_template
+					-- Rule manager is only used with template rules
+				end
 				Result := a_rule_value.as_template
 			end
 		end
@@ -116,6 +139,11 @@ feature -- Element change
 					create a_mode.make
 				end
 				mode_map.force (a_mode, a_node_key)
+				debug ("XSLT template rules")
+					std.error.put_string ("Registered mode ")
+					std.error.put_string (shared_name_pool.display_name_from_name_code (a_mode_name_code))
+					std.error.put_new_line
+				end
 			end
 		ensure
 			mode_registered: is_mode_registered (a_mode_name_code)
@@ -125,7 +153,7 @@ feature -- Element change
 			-- Set handler for `a_pattern' using it's default priority.
 		require
 			pattern_not_void: a_pattern /= Void
-			handler_not_void: a_handler /= Void
+			handler_not_void: a_handler /= Void and then a_handler.is_template
 			mode_not_void: a_mode /= Void
 		local
 			a_union_pattern: XM_XSLT_UNION_PATTERN
@@ -146,7 +174,7 @@ feature -- Element change
 			-- Set handler for `a_pattern'.
 		require
 			pattern_not_void: a_pattern /= Void
-			handler_not_void: a_handler /= Void
+			is_template_handler: a_handler /= Void and then a_handler.is_template
 			mode_not_void: a_mode /= Void
 		local
 			a_union_pattern: XM_XSLT_UNION_PATTERN

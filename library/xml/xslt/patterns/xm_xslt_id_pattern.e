@@ -40,6 +40,12 @@ feature -- Access
 	id_expression: XM_XPATH_EXPRESSION
 			-- The expression
 
+	original_text: STRING is
+			-- Original text
+		do
+			Result := "id()"
+		end
+
 	node_kind: INTEGER is
 			-- Type of nodes matched
 		do

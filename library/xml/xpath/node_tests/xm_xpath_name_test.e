@@ -25,10 +25,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_name_code: INTEGER) is
+	make (a_node_type: INTEGER; a_name_code: INTEGER; an_original_text: STRING) is
 		require
 			valid_node_type: is_node_type (a_node_type)
 			positive_name_code: a_name_code >= 0
+			original_text_not_void: an_original_text /= Void
 		local
 			top_bits: INTEGER
 		do
@@ -37,9 +38,11 @@ feature {NONE} -- Initialization
 			--	fingerprint := a_name_code & 0x0fffff
 			
 			top_bits := (a_name_code // bits_20) * bits_20
-			fingerprint  := a_name_code - top_bits			
+			fingerprint  := a_name_code - top_bits
+			original_text := an_original_text
 		ensure
 			node_kind_set: node_kind = a_node_type
+			original_text_set: original_text = an_original_text
 		end
 
 	make_same_type (a_node: XM_XPATH_NODE) is

@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
+	XM_XPATH_NAME_UTILITIES
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -317,6 +319,32 @@ feature -- Element change
 			create document_pool.make
 		end
 
+	clear_parameters is
+			-- Remove all global parameters.
+		do
+			parameters := Void
+		end
+
+	set_string_parameter (a_parameter_value, a_parameter_name: STRING) is
+			-- Set a global string-valued parameter on the stylesheet.
+		require
+			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
+			parameter_value_not_void: a_parameter_value /= Void
+		local
+			a_string_value: XM_XPATH_STRING_VALUE
+			a_fingerprint: INTEGER
+		do
+			if parameters = Void then
+				create parameters.make_empty
+			end
+			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
+				shared_name_pool.allocate_expanded_name (a_parameter_name)
+			end
+			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
+			create a_string_value.make (a_parameter_value)
+			parameters.put (a_string_value, a_fingerprint) -- this does a replace of an existing parameter of the same name
+		end
+
 	register_document (a_document: XM_XPATH_DOCUMENT; a_uri: STRING) is
 			-- Register a document.
 		require
@@ -608,6 +636,9 @@ feature -- Implementation
 	temporary_destination_depth: INTEGER
 			-- Count of temporary output destinations
 
+	parameters: XM_XSLT_PARAMETER_SET
+			-- Global parameters supplied to the transformer
+
 	perform_default_action (a_node: XM_XPATH_NODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
 			-- Perform default action for `a_node'.
 		require
@@ -699,8 +730,8 @@ feature -- Implementation
 					create an_xhtml_emitter.make (Current, a_result.stream, some_properties)
 					a_target := an_xhtml_emitter
 					if some_properties.indent then
-						create an_xml_indenter.make (Current, an_xhtml_emitter, some_properties)
-						a_target := an_xml_indenter
+						create an_html_indenter.make (Current, an_xhtml_emitter, some_properties)
+						a_target := an_html_indenter
 					end
 					-- TODO: character map expander stuff
 				elseif STRING_.same_string (a_method, "text") then
@@ -727,7 +758,9 @@ feature -- Implementation
 
 			-- If parameters were supplied, set them up
 
-			-- TODO
+			if parameters /= Void then
+				bindery.define_global_parameters (parameters)
+			end
 		end
 
 invariant

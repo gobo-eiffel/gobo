@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 					a_string := "&#x"
 					a_string.append_string (INTEGER_.to_hexadecimal (a_code, True))
 				else
-					a_string := "&#x"
+					a_string := "&#"
 					a_string.append_string (a_code.out)
 				end
 				output (a_string)

@@ -87,12 +87,16 @@ feature {NONE} -- Implementation
 			-- Raw outputter
 
 	encoded_string (a_character_string: STRING): STRING is
-			-- Encoded version of `a_character_string'
+			-- Encoded version of `a_character_string';
+			--  `a_character_string' is a UTF-8 encoded string consisting
+			--  solely of code points for which `is_bad_character_code' returns `False'.
+			-- Implementing sub-classes must ensure that `Result' is a valid
+			--  representation of these code points in `encoding'.
 		require
 			valid_character_string: is_valid_string (a_character_string)
 		deferred
 		ensure
-			encoded_string_not_void: result /= Void
+			encoded_string_not_void: Result /= Void
 		end
 
 invariant

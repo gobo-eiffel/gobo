@@ -754,6 +754,16 @@ feature -- Setting special properties
 			ordered_nodeset: ordered_nodeset
 		end
 
+	reset_ordered_nodeset is
+			-- Don't guarentee nodes in the result are in document order.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (False, 2)
+		ensure
+			not_ordered_nodeset: not ordered_nodeset
+		end
+
 	set_reverse_document_order is
 			-- Guarentee delivers items in reverse of correct order,
 			--  when unordered retrieval is requested.
@@ -763,6 +773,17 @@ feature -- Setting special properties
 			special_properties.put (True, 3)
 		ensure
 			reverse_document_order: reverse_document_order
+		end
+
+	reset_reverse_document_order is
+			-- Don't guarentee delivers items in reverse of correct order,
+			--  when unordered retrieval is requested.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (False, 3)
+		ensure
+			not_reverse_document_order: not reverse_document_order
 		end
 
 	set_peer_nodeset is

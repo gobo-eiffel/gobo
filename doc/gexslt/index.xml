@@ -1,0 +1,42 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Introduction to Gobo Eiffel XSLT"
+
+	library: "Gobo Eiffel XSLT"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="gexslt_introduction">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Tuesday, August 31st, 2004</date>
+  </chapterinfo>
+  <title>Introduction to Gobo Eiffel XSLT</title>
+  <para>Gobo Eiffel XSLT is a command-line processor for the XSLT 2.0 language. 
+  It is very much still under development at the moment, and does not even implement the whole
+  of XSLT 1.0 as yet, but it is capable of useful work. In fact, it is used to produce the XHTML pages
+  for all of the Gobo documentation.
+  </para> 
+  <sect1>
+    <title>Credits</title>
+    <para>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which Gobo Eiffel XSLT is built,
+    are derived from <ulink url="http://www.saxonica.com/index.html">Saxon</ulink>, an open source XSLT Processor written in Java, by Michael Kay. 
+    I am very grateful to Michael for making the source code available for study, and for
+    answering all  my questions.
+    </para>
+  </sect1>
+</chapter>

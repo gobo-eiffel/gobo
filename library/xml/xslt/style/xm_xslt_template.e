@@ -67,7 +67,7 @@ feature -- Access
 					STRING_.left_adjust (a_name)
 					STRING_.right_adjust (a_name)
 					generate_name_code (a_name)
-					internal_fingerprint := last_generated_name_code \\ bits_20
+					internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				end
 			end
 			Result := internal_fingerprint
@@ -182,7 +182,9 @@ feature -- Element change
 			-- As well as validation, it can perform first-time initialisation.
 		do
 			check_top_level
-			if match /= Void then type_check_pattern ("match", match) end
+			if match /= Void then
+				type_check_pattern ("match", match)
+			end
 			mark_tail_calls
 			validated := True
 			create compiled_template.make -- so `{XM_XSLT_CALL_TEMPLATE}.compile' can forward-referenece to it
@@ -221,6 +223,24 @@ feature -- Element change
 						a_mode.set_name (shared_name_pool.display_name_from_name_code (a_name_code))
 					end
 					create a_rule_value.make (compiled_template)
+					debug ("XSLT template rules")
+						std.error.put_string ("Adding a template rule for pattern ")
+						std.error.put_string (match.original_text)
+						std.error.put_string (" with precedence " + precedence.out)
+						if is_priority_specified then
+							std.error.put_string (" and priority " + priority.to_scientific_string)
+						else
+							std.error.put_string (" and priority " + match.default_priority.to_scientific_string)
+						end
+						if a_name_code = Default_mode then
+							std.error.put_string (" for default mode.")
+						elseif a_name_code = All_modes then
+							std.error.put_string (" for all modes.")
+						else
+							std.error.put_string (" for mode " + shared_name_pool.display_name_from_name_code (a_name_code) + ".")
+						end
+						std.error.put_new_line
+					end
 					if is_priority_specified then
 						a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
 					else

@@ -457,6 +457,9 @@ feature {NONE} -- Implementation
 		do
 			bind_gexslt_name (Numeric_type_code, "numeric")
 			bind_gexslt_name (Explain_type_code, "explain")
+			bind_gexslt_name (Indent_spaces_type_code, "indent-spaces")
+			bind_gexslt_name (Character_representation_type_code, "character-representation")
+			bind_gexslt_name (Byte_order_mark_type_code, "byte-order-mark")
 		end
 	
 	bind_xdt_names is

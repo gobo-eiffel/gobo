@@ -15,10 +15,8 @@ deferred class XM_XSLT_NODE_TEST
 inherit
 
 	XM_XSLT_PATTERN
-		rename
-			original_text as pattern_text
 		undefine
-			fingerprint, set_original_text, node_kind
+			fingerprint, node_kind
 		end
 	
 	XM_XPATH_NODE_TEST
