@@ -231,8 +231,12 @@ feature {NONE} -- Validation
 			if not a_cluster.has_attribute_by_name (uc_name) then
 				has_error := True
 				error_handler.report_missing_attribute_error (a_cluster, uc_name, a_position_table.item (a_cluster))
+			elseif a_cluster.attribute_by_name (uc_name).value.count > 0 then
+				validate_cluster (a_cluster, a_position_table)
+			else
+				has_error := True
+				error_handler.report_non_empty_attribute_expected_error (a_cluster, uc_name, a_position_table.item (a_cluster))
 			end
-			validate_cluster (a_cluster, a_position_table)
 		end
 
 	validate_cluster (a_cluster: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
