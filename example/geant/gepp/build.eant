@@ -11,14 +11,14 @@
 	</target>
 
 	<target name="gepp1" depend="init">
-		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir_flat}/kl_array_routines.e" lines="false">
+		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="${gendir_flat}/kl_array_routines.e" lines="false">
 			<define name="HACT" if="$HACT"/>
 		</gepp>
 	</target>
 
 	<target name="gepp1a" depend="init">
 		<gepp
-			input="${GOBO}/library/kernel/kl_array_routines.ge"
+			input="${GOBO}/library/kernel/basic/kl_array_routines.ge"
 			output="${gendir_flat}/kl_array_routines.e"
 			lines="false"
 			to_directory="ttt"
@@ -28,7 +28,7 @@
 	</target>
 
 	<target name="gepp2" depend="init">
-		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir_flat}/ttt/kl_array_routines.e" lines="false">
+		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="${gendir_flat}/ttt/kl_array_routines.e" lines="false">
 			<define name="HACT" if="$HACT"/>
 		</gepp>
 	</target>
@@ -43,17 +43,30 @@
 	</target>
 
 	<target name="gepp4" depend="init">
+		<set name="gendir" value="${gendir_deep}"/>
 		<set name="eiffelcomp" value="ise"/>
-		<geant target="gepp_int"/>
+		<geant target="gepp_deep"/>
 		<set name="eiffelcomp" value="hact"/>
-		<geant target="gepp_int"/>
+		<geant target="gepp_deep"/>
 		<set name="eiffelcomp" value="se"/>
-		<geant target="gepp_int"/>
+		<geant target="gepp_deep"/>
 		<set name="eiffelcomp" value="ve"/>
-		<geant target="gepp_int"/>
+		<geant target="gepp_deep"/>
 	</target>
 
+	<target name="clean" depend="prepare">
+		<delete directory="${gendir_deep}"/>
+		<delete directory="${gendir_flat}"/>
+		<delete directory="ttt"/>
+	</target>
+
+
+<!-- Implementation -->
+
 	<target name="gepp_deep" depend="init">
+		<exit code="1" unless="${gendir}"/>
+		<exit code="1" unless="${eiffelcomp}"/>
+
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
 			<define name="$HACT" if="$HACT"/>
 			<fileset directory="${GOBO}" include="@(**/*.ge)">
@@ -63,6 +76,9 @@
 	</target>
 
 	<target name="gepp_flat" depend="init">
+		<exit code="1" unless="${gendir}"/>
+		<exit code="1" unless="${eiffelcomp}"/>
+
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
 			<define name="$HACT" if="$HACT"/>
 			<fileset directory="${GOBO}" include="@(**/*.ge)">
@@ -71,12 +87,6 @@
 				</map>
 			</fileset>
 		</gepp>
-	</target>
-
-	<target name="clean" depend="prepare">
-		<delete directory="${gendir_deep}"/>
-		<delete directory="${gendir_flat}"/>
-		<delete directory="ttt"/>
 	</target>
 
 </project>
