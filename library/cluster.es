@@ -11,7 +11,10 @@ Gobo.Sources.lexical=
 Gobo.Sources.parse=
 Gobo.Sources.structure=
 Gobo.Sources.test=
-Gobo.Sources.time=
+Gobo.Sources.time.clock=
+Gobo.Sources.time.date=
+Gobo.Sources.time.time_zone=
+Gobo.Sources.time.VE=
 Gobo.Sources.tools=
 Gobo.Sources.utility.command=
 Gobo.Sources.utility.error=
@@ -41,9 +44,17 @@ Recursive=True
 Mask=test/*.e
 Recursive=True
 
-[Gobo.Sources.time]
-Mask=time/*.e
-Recursive=True
+[Gobo.Sources.time.clock]
+Mask=time/clock/*.e
+
+[Gobo.Sources.time.date]
+Mask=time/date/*.e
+
+[Gobo.Sources.time.time_zone]
+Mask=time/time_zone/*.e
+
+[Gobo.Sources.time.VE]
+Mask=time/spec/ve/*.e
 
 [Gobo.Sources.tools]
 Mask=tools/*.e
@@ -78,6 +89,7 @@ VE.Kernel=
 VE.Pool=
 VE.gArgs=
 VE.WinLib=
+VE.TimeDate=
 
 [VE.Kernel]
 Name=Kernel
@@ -95,3 +107,6 @@ Path=$VE_LIB/Tools/gArgs
 Name=WinLib
 Path=$VE_LIB/WinLibs/WinLib
 
+[VE.TimeDate]
+Name=TimeDate
+Path=$VE_LIB/TimeDate
