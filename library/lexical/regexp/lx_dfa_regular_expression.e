@@ -26,7 +26,7 @@ indexing
 		% [^A-Z\n]   any character except an uppercase letter or a newline.    %
 		% r*         zero or more r's, where r is any regular expression.      %
 		% r+         one or more r's.                                          %
-		% r?         zero or one r's (that is, "an optional r").               %
+		% r?         zero or one r's (that is, %"an optional r%").             %
 		% r{2,5}     anywhere from two to five r's.                            %
 		% r{2,}      two or more r's.                                          %
 		% r{4}       exactly four r's.                                         %
@@ -39,7 +39,7 @@ indexing
 		% -------------------------------------------------------------------- %
 		% r/s        an r but only if it is followed by an s. The text matched %
 		%            by s is included when determining whether this rule is    %
-		%            the "longest match", but is not taken into account by     %
+		%            the 'longest match', but is not taken into account by     %
 		%            `matched_position'. So `matched_position' only sees the   %
 		%            text matched by r. This type of pattern is called         %
 		%            trailing context. (There are some combinations of r/s     %
@@ -50,7 +50,7 @@ indexing
 		%            a newline has been scanned).                              %
 		% r$         an r, but only at the end of a line (i.e., just before a  %
 		%            new-line) or at the end of the input string. Equivalent   %
-		%            to r/\n. Note that regexp's notion of "newline" is        %
+		%            to r/\n. Note that regexp's notion of 'newline' is        %
 		%            exactly whatever the Eiffel compiler used to compile the  %
 		%            regexp interprets %%N as; in particular, on some DOS      %
 		%            systems you must either filter out \r's in the input      %
