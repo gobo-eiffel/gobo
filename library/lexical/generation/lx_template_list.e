@@ -1,27 +1,27 @@
 indexing
 
---| String too long to be parsed by Visual Eiffel [960812g]
---	description:
---
---		"Templates are a special type of proto. If a transition %
---		%table is homogeneous or nearly homogeneous (all transitions %
---		%go to the same destination) then the odds are good that %
---		%future states will also go to the same destination state %
---		%on basically the same symbol set. These homogeneous states %
---		%are so common when dealing with large rule sets that they %
---		%merit special attention. If the transition table were %
---		%simply made into a proto, then (typically) each subsequent, %
---		%similar state will differ from the proto for two %
---		%out-transitions. One of these out-transitions will be that %
---		%symbol on which the proto does not go to the common %
---		%destination, and one will be that symbol on which the %
---		%state does not go to the common destination. Templates, %
---		%on the other hand, go to the common state on every %
---		%transition symbol, and therefore cost only one difference"
+	description:
+
+		"Templates are a special type of proto. If a transition %
+		%table is homogeneous or nearly homogeneous (all transitions %
+		%go to the same destination) then the odds are good that %
+		%future states will also go to the same destination state %
+		%on basically the same symbol set. These homogeneous states %
+		%are so common when dealing with large rule sets that they %
+		%merit special attention. If the transition table were %
+		%simply made into a proto, then (typically) each subsequent, %
+		%similar state will differ from the proto for two %
+		%out-transitions. One of these out-transitions will be that %
+		%symbol on which the proto does not go to the common %
+		%destination, and one will be that symbol on which the %
+		%state does not go to the common destination. Templates, %
+		%on the other hand, go to the common state on every %
+		%transition symbol, and therefore cost only one difference"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
