@@ -120,11 +120,7 @@ feature -- Execution
 				log ("  [copy] error: cannot find file '" + file + "'%N")
 				exit_code := 1
 			end
-				-- Check that target file does not exist:
-			if exit_code = 0 and then file_system.is_file_readable (a_to_file) then
-				log ("  [copy] error: file '" + a_to_file + "' already exists%N")
-				exit_code := 1
-			end
+
 			if exit_code = 0 then
 				file_system.copy_file (file, a_to_file)
 			end
