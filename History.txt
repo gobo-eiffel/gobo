@@ -52,7 +52,9 @@ Version ?
 
 	Gobo Eiffel Time Library
 
-	* Support clocks with precision to the millisecond.
+	* Support clocks with precision to the millisecond. However
+	  note that with SmartEiffel under Windows the millisecond part
+	  may be stuck to zero.
 
 Version 3.3 - 2 November 2003
 
