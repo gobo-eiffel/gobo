@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			if has_uc_attribute (an_element, Finalize_attribute_name) then
 				set_finalize (uc_boolean_value (an_element, Finalize_attribute_name))
 			end
-				-- fishg:
+				-- fish:
 			if has_uc_attribute (an_element, Fish_attribute_name) then
 				set_fish (uc_boolean_value (an_element, Fish_attribute_name))
 			end
