@@ -1,5 +1,5 @@
 -- system:     "'ascii2ps' pretty-printer"
--- compiler:   "Visual Eiffel 2.5"
+-- compiler:   "Visual Eiffel 3.0"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
@@ -30,7 +30,7 @@ cluster
 	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
 
 		-- Visual Eiffel Kernel
-	[Kernel "$VE_LIB\kernel"] end
+	[Kernel				"$VE_LIB\kernel"] end
 
 option
 
