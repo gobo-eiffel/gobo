@@ -46,7 +46,7 @@ feature -- Access
 
 	name: STRING is
 			-- Name of output stream
-		do
+		once
 			Result := "STRING"
 		end
 

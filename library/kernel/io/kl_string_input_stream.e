@@ -71,7 +71,7 @@ feature -- Access
 
 	name: STRING is
 			-- Name of input stream
-		do
+		once
 			Result := "STRING"
 		end
 
