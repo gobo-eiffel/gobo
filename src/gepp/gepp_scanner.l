@@ -30,7 +30,7 @@ inherit
 
 %}
 
-%x S_PREPROC
+%x S_PREPROC S_READLINE
 
 %option ecs meta-ecs case-insensitive nodefault outfile="gepp_scanner.e"
 
@@ -41,7 +41,44 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 %%
 
 <INITIAL>{
-	^"#"				set_start_condition (S_PREPROC)
+	^"##".*			{
+						-- Comment.
+						set_start_condition (S_PREPROC)
+					}
+	^"#ifdef"		{
+						last_token := P_IFDEF
+						set_start_condition (S_PREPROC)
+					}
+	^"#ifndef"		{
+						last_token := P_IFNDEF
+						set_start_condition (S_PREPROC)
+					}
+	^"#else"		{
+						last_token := P_ELSE
+						set_start_condition (S_PREPROC)
+					}
+	^"#endif"		{
+						last_token := P_ENDIF
+						set_start_condition (S_PREPROC)
+					}
+	^"#include"		{
+						last_token := P_INCLUDE
+						set_start_condition (S_PREPROC)
+					}
+	^"#define"		{
+						last_token := P_DEFINE
+						set_start_condition (S_PREPROC)
+					}
+	^"#undef"		{
+						last_token := P_UNDEF
+						set_start_condition (S_PREPROC)
+					}
+	^"#"			{
+						if not ignored then
+							echo
+						end
+						set_start_condition (S_READLINE)
+					}
 	^[^#\n].*\n		|
 	^\n				{
 						if not ignored then
@@ -56,16 +93,24 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					}
 }
 
+<S_READLINE>{
+	.*\n			{
+						if not ignored then
+							echo
+						end
+						line_nb := line_nb + 1
+						set_start_condition (INITIAL)
+					}
+	.*				{
+						if not ignored then
+							echo
+						end
+						set_start_condition (INITIAL)
+					}
+}
+
 <S_PREPROC>{
 	{WS}				-- Separator.
-	"#".*				-- Comment.
-	"ifdef"				last_token := P_IFDEF
-	"ifndef"			last_token := P_IFNDEF
-	"else"				last_token := P_ELSE
-	"endif"				last_token := P_ENDIF
-	"include"			last_token := P_INCLUDE
-	"define"			last_token := P_DEFINE
-	"undef"				last_token := P_UNDEF
 	\"[^"\n]+\"		{
 						last_token := P_STRING
 						last_value := text_substring (2, text_count - 1)
