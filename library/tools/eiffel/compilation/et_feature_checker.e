@@ -5654,7 +5654,7 @@ feature {NONE} -- Agent validity
 									nb := a_formal_arguments.count
 									create an_implicit_actuals.make_with_capacity (nb)
 									from i := 1 until i > nb loop
-										create an_implicit_actual.make (an_expression)
+										create an_implicit_actual.make (an_expression, i)
 										an_implicit_actuals.put_last (an_implicit_actual)
 										i := i + 1
 									end
@@ -5808,7 +5808,7 @@ feature {NONE} -- Agent validity
 										nb := a_formal_arguments.count
 										create an_implicit_actuals.make_with_capacity (nb)
 										from i := 1 until i > nb loop
-											create an_implicit_actual.make (an_expression)
+											create an_implicit_actual.make (an_expression, i)
 											an_implicit_actuals.put_last (an_implicit_actual)
 											i := i + 1
 										end
@@ -5992,7 +5992,7 @@ feature {NONE} -- Agent validity
 										nb := a_formal_arguments.count
 										create an_implicit_actuals.make_with_capacity (nb)
 										from i := 1 until i > nb loop
-											create an_implicit_actual.make (an_expression)
+											create an_implicit_actual.make (an_expression, i)
 											an_implicit_actuals.put_last (an_implicit_actual)
 											i := i + 1
 										end
