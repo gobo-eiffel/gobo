@@ -520,8 +520,7 @@ feature {NONE} -- CAT-calls
 			l_type_set: ET_DYNAMIC_TYPE_SET
 			l_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
 			l_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
-			i, nb: INTEGER
-			j, nb2: INTEGER
+			i, j, nb: INTEGER
 		do
 -- TODO: better error message reporting.
 			l_message := shared_error_message
@@ -553,7 +552,6 @@ feature {NONE} -- CAT-calls
 			l_source_stack := shared_source_stack
 			l_source_stack.wipe_out
 			from
-				nb := 0
 				l_message.append_string ("%TTarget type: '")
 				l_message.append_string (a_target_type.base_type.to_text)
 				l_message.append_string ("'%N")
@@ -562,24 +560,15 @@ feature {NONE} -- CAT-calls
 				l_type_set = Void
 			loop
 				if l_type_set = a_target_type then
-					nb2 := 0
+					j := j + 1
+					l_message.append_string ("%T%TAttachment stack #")
+					l_message.append_string (j.out)
+					l_message.append_character ('%N')
+					nb := l_source_stack.count
 					from i := 1 until i > nb loop
 						l_source := l_source_stack.i_th (i)
 						if not l_source.is_null_attachment then
-							nb2 := nb2 + 1
-						end
-						i := i + 1
-					end
-					nb := l_source_stack.count
-					from until i > nb loop
-						l_source := l_source_stack.i_th (i)
-						if not l_source.is_null_attachment then
-							l_message.append_string ("%T%T")
-							from j := 1 until j > nb2 loop
-								l_message.append_character ('.')
-								j := j + 1
-							end
-							l_message.append_string ("class ")
+							l_message.append_string ("%T%T%Tclass ")
 							l_message.append_string (l_source.current_type.base_type.to_text)
 							l_message.append_string (" (")
 							l_class_impl := l_source.current_feature.static_feature.implementation_class
@@ -591,8 +580,10 @@ feature {NONE} -- CAT-calls
 							l_message.append_character (',')
 							l_message.append_string (l_source.position.column.out)
 							l_message.append_character (')')
+							l_message.append_character (':')
+							l_message.append_character (' ')
+							l_message.append_string (l_source.description)
 							l_message.append_character ('%N')
-							nb2 := nb2 + 1
 						end
 						i := i + 1
 					end
@@ -603,9 +594,6 @@ feature {NONE} -- CAT-calls
 					loop
 						l_source := l_source_stack.item.next_attachment
 						l_source_stack.remove
-						if nb > l_source_stack.count then
-							nb := l_source_stack.count
-						end
 					end
 				else
 					l_source := l_type_set.sources
@@ -623,9 +611,6 @@ feature {NONE} -- CAT-calls
 						loop
 							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
-							if nb > l_source_stack.count then
-								nb := l_source_stack.count
-							end
 						end
 					elseif l_source.has_type (a_target_type) then
 						l_source.set_visited (True)
@@ -642,9 +627,6 @@ feature {NONE} -- CAT-calls
 						loop
 							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
-							if nb > l_source_stack.count then
-								nb := l_source_stack.count
-							end
 						end
 					end
 				end
@@ -656,51 +638,32 @@ feature {NONE} -- CAT-calls
 			end
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
+			j := 0
 			from
-				nb := 0
 				l_message.append_string ("%TArgument type: '")
 				l_message.append_string (an_actual_type.base_type.to_text)
 				l_message.append_string ("'%N")
 				l_source := an_actual_source
 				l_source.set_visited (True)
 				l_visited_sources.force_last (l_source)
-				if not l_source.is_null_attachment then
-					l_message.append_string ("%T%Tclass ")
-					l_message.append_string (l_source.current_type.base_type.to_text)
-					l_message.append_string (" (")
-					l_class_impl := l_source.current_feature.static_feature.implementation_class
-					if l_source.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-						l_message.append_string (l_class_impl.name.name)
-						l_message.append_character (',')
-					end
-					l_message.append_string (l_source.position.line.out)
-					l_message.append_character (',')
-					l_message.append_string (l_source.position.column.out)
-					l_message.append_string (")%N")
-				end
 				l_type_set := l_source.source_type_set
 			until
 				l_type_set = Void
 			loop
 				if l_type_set = an_actual_type then
-					nb2 := 1
-					from i := 1 until i > nb loop
-						l_source := l_source_stack.i_th (i)
-						if not l_source.is_null_attachment then
-							nb2 := nb2 + 1
-						end
-						i := i + 1
-					end
+					j := j + 1
+					l_message.append_string ("%T%TAttachment stack #")
+					l_message.append_string (j.out)
+					l_message.append_character ('%N')
 					nb := l_source_stack.count
-					from until i > nb loop
-						l_source := l_source_stack.i_th (i)
+					from i := 0 until i > nb loop
+						if i = 0 then
+							l_source := an_actual_source
+						else
+							l_source := l_source_stack.i_th (i)
+						end
 						if not l_source.is_null_attachment then
-							l_message.append_string ("%T%T")
-							from j := 1 until j > nb2 loop
-								l_message.append_character ('.')
-								j := j + 1
-							end
-							l_message.append_string ("class ")
+							l_message.append_string ("%T%T%Tclass ")
 							l_message.append_string (l_source.current_type.base_type.to_text)
 							l_message.append_string (" (")
 							l_class_impl := l_source.current_feature.static_feature.implementation_class
@@ -712,8 +675,10 @@ feature {NONE} -- CAT-calls
 							l_message.append_character (',')
 							l_message.append_string (l_source.position.column.out)
 							l_message.append_character (')')
+							l_message.append_character (':')
+							l_message.append_character (' ')
+							l_message.append_string (l_source.description)
 							l_message.append_character ('%N')
-							nb2 := nb2 + 1
 						end
 						i := i + 1
 					end
@@ -724,9 +689,6 @@ feature {NONE} -- CAT-calls
 					loop
 						l_source := l_source_stack.item.next_attachment
 						l_source_stack.remove
-						if nb > l_source_stack.count then
-							nb := l_source_stack.count
-						end
 					end
 				else
 					l_source := l_type_set.sources
@@ -744,9 +706,6 @@ feature {NONE} -- CAT-calls
 						loop
 							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
-							if nb > l_source_stack.count then
-								nb := l_source_stack.count
-							end
 						end
 					elseif l_source.has_type (an_actual_type) then
 						l_source.set_visited (True)
@@ -763,9 +722,6 @@ feature {NONE} -- CAT-calls
 						loop
 							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
-							if nb > l_source_stack.count then
-								nb := l_source_stack.count
-							end
 						end
 					end
 				end
