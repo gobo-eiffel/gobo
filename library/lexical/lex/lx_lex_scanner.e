@@ -14,30 +14,9 @@ class LX_LEX_SCANNER
 
 inherit
 
-	YY_COMPRESSED_SCANNER_SKELETON
-		rename
-			make as make_compressed_scanner_skeleton,
-			reset as reset_compressed_scanner_skeleton
-		end
-
-	LX_DESCRIPTION
-		rename
-			make as make_description,
-			make_from_description as make_descrition_from_description,
-			reset as reset_description
-		end
+	LX_LEX_SCANNER_SKELETON
 		
 	LX_LEX_TOKENS
-		export
-			{NONE} all
-		end
-
-	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
-
-	KL_SHARED_STRING_ROUTINES
 		export
 			{NONE} all
 		end
@@ -70,35 +49,35 @@ if yy_act <= 7 then
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 73
+--|#line 52
 -- Separator or comment.
 else
---|#line 74
+--|#line 53
 line_nb := line_nb + 1
 end
 else
 if yy_act = 3 then
---|#line 75
+--|#line 54
 
 					line_nb := line_nb + 1
 					set_start_condition (EIFFEL_BLOCK)
 				
 else
---|#line 79
+--|#line 58
 set_start_condition (SCNAME)
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 80
+--|#line 59
 set_start_condition (XSCNAME)
 else
---|#line 81
+--|#line 60
 set_start_condition (OPTION)
 end
 else
---|#line 82
+--|#line 61
 
 						-- Keep track of the definition name.
 					last_string := text
@@ -110,41 +89,41 @@ else
 if yy_act <= 11 then
 if yy_act <= 9 then
 if yy_act = 8 then
---|#line 87
+--|#line 66
 
 					last_token := ENDSECT
 					set_start_condition (SECT2)
 				
 else
---|#line 91
+--|#line 70
 
-					error_handler.unrecognized_directive (filename, line_nb)
+					report_unrecognized_directive_error
 					set_start_condition (RECOVER1)
 				
 end
 else
 if yy_act = 10 then
---|#line 95
+--|#line 74
 
-					error_handler.directive_expected (filename, line_nb)
+					report_directive_expected_error
 					set_start_condition (RECOVER1)
 				
 else
---|#line 102
+--|#line 81
 more
 end
 end
 else
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 103
+--|#line 82
 more
 else
---|#line 104
+--|#line 83
 more
 end
 else
---|#line 105
+--|#line 84
 more
 end
 end
@@ -154,10 +133,10 @@ if yy_act <= 21 then
 if yy_act <= 18 then
 if yy_act <= 16 then
 if yy_act = 15 then
---|#line 106
+--|#line 85
 more
 else
---|#line 107
+--|#line 86
 
 					last_string := text_substring (1, text_count - 2)
 					line_nb := line_nb + last_string.occurrences ('%N')
@@ -167,30 +146,30 @@ else
 end
 else
 if yy_act = 17 then
---|#line 116
+--|#line 95
 -- Separator or comment.
 else
---|#line 117
+--|#line 96
 add_new_start_condition (text, start_condition = XSCNAME)
 end
 end
 else
 if yy_act <= 20 then
 if yy_act = 19 then
---|#line 118
+--|#line 97
 
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
 				
 else
---|#line 122
+--|#line 101
 
-					error_handler.start_condition_expected (filename, line_nb)
+					report_start_condition_expected_error
 					set_start_condition (RECOVER1)
 				
 end
 else
---|#line 129
+--|#line 108
 -- Separator or comment.
 end
 end
@@ -198,14 +177,14 @@ else
 if yy_act <= 24 then
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 130
+--|#line 109
 backing_up_report := True
 else
---|#line 131
+--|#line 110
 backing_up_report := False
 end
 else
---|#line 132
+--|#line 111
 
 					case_insensitive := False
 				
@@ -213,16 +192,16 @@ end
 else
 if yy_act <= 26 then
 if yy_act = 25 then
---|#line 135
+--|#line 114
 
 					case_insensitive := True
 				
 else
---|#line 138
+--|#line 117
 debug_mode := True
 end
 else
---|#line 139
+--|#line 118
 debug_mode := False
 end
 end
@@ -234,32 +213,32 @@ if yy_act <= 34 then
 if yy_act <= 31 then
 if yy_act <= 29 then
 if yy_act = 28 then
---|#line 140
+--|#line 119
 no_default_rule := False
 else
---|#line 141
+--|#line 120
 no_default_rule := True
 end
 else
 if yy_act = 30 then
---|#line 142
+--|#line 121
 equiv_classes_used := True
 else
---|#line 143
+--|#line 122
 equiv_classes_used := False
 end
 end
 else
 if yy_act <= 33 then
 if yy_act = 32 then
---|#line 144
+--|#line 123
 full_table := True
 else
---|#line 145
+--|#line 124
 full_table := False
 end
 else
---|#line 146
+--|#line 125
 meta_equiv_classes_used := True
 end
 end
@@ -267,30 +246,29 @@ else
 if yy_act <= 37 then
 if yy_act <= 36 then
 if yy_act = 35 then
---|#line 147
+--|#line 126
 meta_equiv_classes_used := False
 else
---|#line 148
+--|#line 127
 reject_used := True
 end
 else
---|#line 149
+--|#line 128
 reject_used := False
 end
 else
 if yy_act <= 39 then
 if yy_act = 38 then
---|#line 150
+--|#line 129
 user_action_used := True
 else
---|#line 151
+--|#line 130
 user_action_used := False
 end
 else
---|#line 152
+--|#line 131
 
 					no_warning := False
-					error_handler.set_no_warning (False)
 				
 end
 end
@@ -300,26 +278,25 @@ if yy_act <= 47 then
 if yy_act <= 44 then
 if yy_act <= 42 then
 if yy_act = 41 then
---|#line 156
+--|#line 134
 
 					no_warning := True
-					error_handler.set_no_warning (True)
 				
 else
---|#line 161
+--|#line 138
 set_start_condition (OUTFILE)
 end
 else
 if yy_act = 43 then
---|#line 171
+--|#line 148
 
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
 				
 else
---|#line 175
+--|#line 152
 
-					error_handler.unrecognized_option (text, filename, line_nb)
+					report_unrecognized_option_error (text)
 					set_start_condition (RECOVER1)
 			
 end
@@ -327,21 +304,21 @@ end
 else
 if yy_act <= 46 then
 if yy_act = 45 then
---|#line 182
+--|#line 159
 
 					output_filename := text_substring (2, text_count - 1)
 					set_start_condition (OPTION)
 				
 else
---|#line 186
+--|#line 163
 
 					output_filename := Void
-					error_handler.missing_quote (filename, line_nb)
+					report_missing_quote_error
 					set_start_condition (RECOVER1)
 				
 end
 else
---|#line 194
+--|#line 171
 -- Separates name and definition.
 end
 end
@@ -349,22 +326,22 @@ else
 if yy_act <= 50 then
 if yy_act <= 49 then
 if yy_act = 48 then
---|#line 195
+--|#line 172
 
 					check last_string_not_void: last_string /= Void end
 					process_name_definition (last_string, text)
 					set_start_condition (INITIAL)
 				
 else
---|#line 200
+--|#line 177
 
 					line_nb := line_nb + 1
-					error_handler.incomplete_name_definition (filename, line_nb)
+					report_incomplete_name_definition_error
 					set_start_condition (INITIAL)
 				
 end
 else
---|#line 208
+--|#line 185
 
 						-- Eat characters to end of line.
 					set_start_condition (INITIAL)
@@ -373,18 +350,18 @@ end
 else
 if yy_act <= 52 then
 if yy_act = 51 then
---|#line 212
+--|#line 189
 
 						-- Eat characters to end of line.
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
 				
 else
---|#line 225
+--|#line 202
 -- Separator or comment.
 end
 else
---|#line 226
+--|#line 203
 line_nb := line_nb + 1
 end
 end
@@ -398,13 +375,13 @@ if yy_act <= 60 then
 if yy_act <= 57 then
 if yy_act <= 55 then
 if yy_act = 54 then
---|#line 227
+--|#line 204
 
 					last_token := ENDSECT
 					set_start_condition (SECT3)
 				
 else
---|#line 231
+--|#line 208
 
 					last_token := Caret_code
 						-- The line number is set when creating the rule,
@@ -417,23 +394,23 @@ else
 end
 else
 if yy_act = 56 then
---|#line 240
+--|#line 217
 last_token := Left_brace_code
 else
---|#line 241
+--|#line 218
 last_token := Right_brace_code
 end
 end
 else
 if yy_act <= 59 then
 if yy_act = 58 then
---|#line 242
+--|#line 219
 
 					last_token := Less_than_code
 					set_start_condition (SCOND)
 				
 else
---|#line 246
+--|#line 223
 
 					less (0)
 						-- The line number is set when creating the rule,
@@ -445,7 +422,7 @@ else
 				
 end
 else
---|#line 258
+--|#line 235
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
@@ -457,29 +434,28 @@ if yy_act <= 64 then
 if yy_act <= 62 then
 if yy_act = 61 then
 	yy_position := yy_position - 1
---|#line 262
+--|#line 239
 last_token := Dollar_code
 else
---|#line 263
+--|#line 240
 
-					last_string := string_.to_lower (text)
+					last_string := STRING_.to_lower (text)
 					if name_definitions.has (last_string) then
 						put_back_string (name_definitions.item (last_string))
 					else
-						error_handler.undefined_definition
-							(text, filename, line_nb)
+						report_undefined_definition_error (text)
 					end
 				
 end
 else
 if yy_act = 63 then
---|#line 272
+--|#line 248
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				
 else
---|#line 276
+--|#line 252
 
 					last_string := text
 					if character_classes.has (last_string) then
@@ -497,14 +473,14 @@ end
 else
 if yy_act <= 66 then
 if yy_act = 65 then
---|#line 288
+--|#line 264
 last_token := EOF_OP
 else
---|#line 289
+--|#line 265
 last_token := text_item (1).code
 end
 else
---|#line 290
+--|#line 266
 
 					set_start_condition (ACTION_TEXT)
 				
@@ -516,14 +492,14 @@ if yy_act <= 74 then
 if yy_act <= 71 then
 if yy_act <= 69 then
 if yy_act = 68 then
---|#line 293
+--|#line 269
 
 					line_nb := line_nb + 1
 					last_token := EMPTY
 					set_start_condition (SECT2)
 				
 else
---|#line 298
+--|#line 274
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -531,24 +507,24 @@ else
 end
 else
 if yy_act = 70 then
---|#line 305
+--|#line 281
 -- Separator or comment.
 else
---|#line 306
+--|#line 282
 line_nb := line_nb + 1
 end
 end
 else
 if yy_act <= 73 then
 if yy_act = 72 then
---|#line 307
+--|#line 283
 last_token := Comma_code
 else
---|#line 308
+--|#line 284
 last_token := Star_code
 end
 else
---|#line 309
+--|#line 285
 
 					last_token := Greater_than_code
 					set_start_condition (SECT2)
@@ -559,34 +535,36 @@ else
 if yy_act <= 77 then
 if yy_act <= 76 then
 if yy_act = 75 then
---|#line 313
+--|#line 289
 
 					last_token := NAME
 					last_value := text
 				
 else
---|#line 317
-error_handler.bad_start_condition (text, filename, line_nb)
+--|#line 293
+
+					report_bad_start_condition_error (text)
+				
 end
 else
---|#line 321
+--|#line 299
 -- Separator.
 end
 else
 if yy_act <= 79 then
 if yy_act = 78 then
---|#line 322
+--|#line 300
 
 					last_token := NUMBER
-					check is_integer: string_.is_integer (text) end
+					check is_integer: STRING_.is_integer (text) end
 					last_value := text.to_integer
 				
 else
---|#line 327
+--|#line 305
 last_token := Comma_code
 end
 else
---|#line 328
+--|#line 306
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -601,16 +579,16 @@ if yy_act <= 87 then
 if yy_act <= 84 then
 if yy_act <= 82 then
 if yy_act = 81 then
---|#line 332
+--|#line 310
 
-					error_handler.bad_character_in_brackets (filename, line_nb)
+					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 337
+--|#line 315
 
-					error_handler.missing_bracket (filename, line_nb)
+					report_missing_bracket_error
 					line_nb := line_nb + 1
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -618,13 +596,13 @@ else
 end
 else
 if yy_act = 83 then
---|#line 346
+--|#line 324
 
 					process_character (text_item (1).code)
 					last_token := CHAR
 				
 else
---|#line 350
+--|#line 328
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
@@ -634,15 +612,15 @@ end
 else
 if yy_act <= 86 then
 if yy_act = 85 then
---|#line 354
+--|#line 332
 
-					error_handler.missing_quote (filename, line_nb)
+					report_missing_quote_error
 					line_nb := line_nb + 1
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 362
+--|#line 340
 
 					last_token := CHAR
 					process_escaped_character
@@ -653,7 +631,7 @@ else
 end
 else
 	yy_position := yy_position - 1
---|#line 371
+--|#line 349
 
 					set_start_condition (CCL)
 					last_token := Caret_code
@@ -665,10 +643,10 @@ if yy_act <= 90 then
 if yy_act <= 89 then
 if yy_act = 88 then
 	yy_position := yy_position - 1
---|#line 375
+--|#line 353
 last_token := Caret_code
 else
---|#line 376
+--|#line 354
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -676,9 +654,9 @@ else
 				
 end
 else
---|#line 381
+--|#line 359
 
-					error_handler.bad_character_class (filename, line_nb)
+					report_bad_character_class_error
 					line_nb := line_nb + 1
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
@@ -688,17 +666,17 @@ else
 if yy_act <= 92 then
 if yy_act = 91 then
 	yy_position := yy_position - 1
---|#line 390
+--|#line 368
 last_token := Minus_code
 else
---|#line 391
+--|#line 369
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 end
 else
---|#line 395
+--|#line 373
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
@@ -711,15 +689,15 @@ if yy_act <= 100 then
 if yy_act <= 97 then
 if yy_act <= 95 then
 if yy_act = 94 then
---|#line 399
+--|#line 377
 
-					error_handler.bad_character_class (filename, line_nb)
+					report_bad_character_class_error
 					line_nb := line_nb + 1
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 408
+--|#line 386
 
 					last_token := PIPED
 					set_start_condition (SECT2)
@@ -727,32 +705,32 @@ else
 end
 else
 if yy_act = 96 then
---|#line 412
+--|#line 390
 
 					last_token := EMPTY
 					line_nb := line_nb + 1
 					set_start_condition (SECT2)
 				
 else
---|#line 417
+--|#line 395
 set_start_condition (EIFFEL_BLOCK2)
 end
 end
 else
 if yy_act <= 99 then
 if yy_act = 98 then
---|#line 418
+--|#line 396
 
 					last_token := EIF_CODE
 					last_value := text
 					set_start_condition (SECT2)
 				
 else
---|#line 426
+--|#line 404
 more
 end
 else
---|#line 427
+--|#line 405
 more
 end
 end
@@ -760,14 +738,14 @@ else
 if yy_act <= 103 then
 if yy_act <= 102 then
 if yy_act = 101 then
---|#line 428
+--|#line 406
 more
 else
---|#line 430
+--|#line 408
 more
 end
 else
---|#line 431
+--|#line 409
 
 					last_token := EIF_CODE
 					last_string := text_substring (1, text_count - 1)
@@ -779,19 +757,19 @@ end
 else
 if yy_act <= 105 then
 if yy_act = 104 then
---|#line 444
+--|#line 422
 
 					last_token := EIF_CODE
 					last_value := text
 				
 else
---|#line 449
+--|#line 427
 
 					if text_item (1) = '%N' then
-						error_handler.bad_character ("%%N", filename, line_nb)
+						report_bad_character_error ("%%N")
 						line_nb := line_nb + 1
 					else
-						error_handler.bad_character (text, filename, line_nb)
+						report_bad_character_error (text)
 					end
 				
 end
@@ -1438,251 +1416,5 @@ feature {NONE} -- Constants
 feature -- User-defined features
 
 
-
-feature {NONE} -- Initialization
-
-	make (handler: like error_handler) is
-			-- Create a new scanner description scanner.
-		require
-			handler_not_void: handler /= Void
-		do
-			make_description
-			make_compressed_scanner_skeleton
-			error_handler := handler
-			!! name_definitions.make (Initial_max_nb_names)
-			!! character_classes.make (Initial_max_character_classes)
-			line_nb := 1
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-	make_from_description
-		(a_description: LX_DESCRIPTION; handler: like error_handler) is
-			-- Create a new scanner description scanner and
-			-- initialize it with `a_description'.
-		require
-			a_description_not_void: a_description /= Void
-			handler_not_void: handler /= Void
-		do
-			from_description (a_description)
-			make_compressed_scanner_skeleton
-			error_handler := handler
-			!! name_definitions.make (Initial_max_nb_names)
-			!! character_classes.make (Initial_max_character_classes)
-			line_nb := 1
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-feature -- Initialization
-
-	reset is
-			-- Reset scanner before scanning next input.
-		do
-			reset_compressed_scanner_skeleton
-			reset_description
-			name_definitions.wipe_out
-			character_classes.wipe_out
-			line_nb := 1
-			last_string := Void
-		end
-
-feature -- Access
-
-	error_handler: LX_LEX_ERROR_HANDLER
-			-- Error handler
-
-	line_nb: INTEGER
-			-- Current line number
-
-	rule_line_nb: INTEGER
-			-- Line number of rule being parsed
-
-	filename: STRING is
-			-- Name of file being parsed
-		local
-			file_buffer: YY_FILE_BUFFER
-		do
-			file_buffer ?= input_buffer
-			if file_buffer /= Void then
-				Result := input_stream_.name (file_buffer.file)
-			else
-				Result := "string"
-			end
-		ensure
-			filename_not_void: Result /= Void
-		end
-
-	last_value: ANY
-			-- Semantic value to be passed to the parser
-
-	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
-			-- Character classes declared so far
-
-	name_definitions: DS_HASH_TABLE [STRING, STRING]
-			-- Name definition table
-
-	last_string: STRING
-			-- Last string which has been read
-
-feature -- Setting
-
-	set_error_handler (handler: like error_handler) is
-			-- Set `error_handler' to `handler'.
-		require
-			handler_not_void: handler /= Void
-		do
-			error_handler := handler
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-feature {NONE} -- Implementation
-
-	put_back_string (str: STRING) is
-			-- Put `str' back to buffer for the scanner
-			-- to analyze it again.
-		require
-			str_not_void: str /= Void
-		local
-			i: INTEGER
-		do
-			from i := str.count until i < 1 loop
-				unread_character (str.item (i))
-				i := i - 1
-			end
-		end
-
-	add_new_start_condition (a_name: STRING; exclusive: BOOLEAN) is
-			-- Create a new start condition named `a_name' and
-			-- insert it at the end of `start_conditions'.
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if start_conditions.has_start_condition (a_name) then
-				error_handler.start_condition_declared_twice
-					(a_name, filename, line_nb)
-			else
-				start_conditions.force_new_start_condition (a_name, exclusive)
-			end
-		end
-
-	process_character (a_code: INTEGER) is
-			-- Check whether `a_code' is a valid code for character
-			-- whose printable representation is held in `text'.
-			-- Set `last_value' accordingly.
-		do
-			if a_code < characters_count then
-				last_value := a_code
-			else
-				error_handler.character_out_of_range (text, filename, line_nb)
-				last_value := 0
-			end
-		end
-
-	process_escaped_character is
-			-- Process escaped character whose printable representation
-			-- is held in `text'. Check whether the corresponding 
-			-- character is not out of range. Set `last_value' accordingly.
-		require
-			-- valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
-		local
-			c: CHARACTER
-			a_code: INTEGER
-			i, nb: INTEGER
-		do
-			c := text_item (2)
-			inspect c
-			when 'b' then
-				a_code := Back_space_code
-			when 'f' then
-				a_code := Form_feed_code
-			when 'n' then
-				a_code := New_line_code
-			when 'r' then
-				a_code := Carriage_return_code
-			when 't' then
-				a_code := Tabulation_code
-			when 'a' then
-				a_code := 7
-			when 'v' then
-				a_code := 13
-			when '0'..'7' then
-					-- Octal.
-				nb := text_count
-				a_code := 0
-				from i := 2 until i > nb loop
-					a_code := a_code * 8 + text_item (i).code - Zero_code
-					i := i + 1
-				end
-			when 'x', 'X' then
-				nb := text_count
-				if nb = 2 then
-					a_code := c.code
-				else
-						-- Hexadecimal.
-					a_code := 0
-					from i := 3 until i > nb loop
-					a_code := a_code * 16
-						c := text_item (i)
-						inspect c
-						when '0'..'9' then
-							a_code := a_code + c.code - Zero_code
-						when 'a'..'z' then
-							a_code := a_code + c.code - Lower_a_code + 10
-						when 'A'..'Z' then
-							a_code := a_code + c.code - Upper_a_code + 10
-						end
-						i := i + 1
-					end
-				end
-			else
-				a_code := c.code
-			end
-			process_character (a_code)
-		end
-
-	process_name_definition (a_name, a_definition: STRING) is
-			-- Keep track of name definition.
-			-- Trailing spaces are removed from `a_definition'
-			-- and parentheses are added around it.
-		require
-			a_name_not_void: a_name /= Void
-			a_definition_not_void: a_definition /= Void
-		local
-			bracketed_name: STRING
-			parenthesised_definition: STRING
-		do
-			bracketed_name := string_.make (a_name.count + 2)
-			bracketed_name.append_character ('{')
-			bracketed_name.append_string (string_.to_lower (a_name))
-			bracketed_name.append_character ('}')
-			if name_definitions.has (bracketed_name) then
-				error_handler.name_defined_twice (a_name, filename, line_nb)
-			end
-			parenthesised_definition := string_.make (a_definition.count + 2)
-			parenthesised_definition.append_character ('(')
-			parenthesised_definition.append_string (a_definition)
-				-- Skip trailing white spaces.
-			parenthesised_definition.right_adjust
-			parenthesised_definition.append_character (')')
-			name_definitions.force (parenthesised_definition, bracketed_name)
-		end
-
-feature {NONE} -- Constants
-
-	Initial_max_nb_names: INTEGER is 101
-			-- Maximum number of name definitions
-
-	Initial_max_character_classes: INTEGER is 101
-			-- Maximum number of character classes
-
-invariant
-
-	error_handler_not_void: error_handler /= Void
-	name_definitions_not_void: name_definitions /= Void
-	no_void_name_definition: not name_definitions.has_item (Void)
-	character_classes_not_void: character_classes /= Void
-	no_void_character_class: not character_classes.has_item (Void)
 
 end -- class LX_LEX_SCANNER

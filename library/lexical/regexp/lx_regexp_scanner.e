@@ -14,32 +14,12 @@ class LX_REGEXP_SCANNER
 
 inherit
 
-	YY_COMPRESSED_SCANNER_SKELETON
-		rename
-			make as make_compressed_scanner_skeleton,
-			reset as reset_compressed_scanner_skeleton
-		end
+	LX_LEX_SCANNER_SKELETON
 
-	LX_DESCRIPTION
-		rename
-			make as make_description,
-			make_from_description as make_description_from_description,
-			reset as reset_description
-		end
-		
 	LX_REGEXP_TOKENS
 		export
 			{NONE} all
 		end
-
-	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
-
-	KL_SHARED_STRING_ROUTINES
-
-	KL_SHARED_INPUT_STREAM_ROUTINES
 
 creation
 
@@ -67,13 +47,13 @@ if yy_act <= 7 then
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 63
+--|#line 43
 
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 67
+--|#line 47
 
 					less (0)
 					set_start_condition (REGEXP)
@@ -81,27 +61,27 @@ else
 end
 else
 if yy_act = 3 then
---|#line 74
+--|#line 54
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
 				
 else
 	yy_position := yy_position - 1
---|#line 78
+--|#line 58
 last_token := Dollar_code
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 79
+--|#line 59
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				
 else
---|#line 83
+--|#line 63
 
 					last_string := text
 					if character_classes.has (last_string) then
@@ -117,7 +97,7 @@ else
 				
 end
 else
---|#line 96
+--|#line 76
 last_token := text_item (1).code
 end
 end
@@ -125,48 +105,48 @@ else
 if yy_act <= 11 then
 if yy_act <= 9 then
 if yy_act = 8 then
---|#line 97
+--|#line 77
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 else
---|#line 104
+--|#line 84
 -- Separator.
 end
 else
 if yy_act = 10 then
---|#line 105
+--|#line 85
 
 					last_token := NUMBER
-					check is_integer: string_.is_integer (text) end
+					check is_integer: STRING_.is_integer (text) end
 					last_value := text.to_integer
 				
 else
---|#line 110
+--|#line 90
 last_token := Comma_code
 end
 end
 else
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 111
+--|#line 91
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 115
+--|#line 95
 
-					error_handler.bad_character_in_brackets (filename, line_nb)
+					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 end
 else
---|#line 120
+--|#line 100
 
-					error_handler.missing_bracket (filename, line_nb)
+					report_missing_bracket_error
 					line_nb := line_nb + 1
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -179,13 +159,13 @@ if yy_act <= 21 then
 if yy_act <= 18 then
 if yy_act <= 16 then
 if yy_act = 15 then
---|#line 129
+--|#line 109
 
 					process_character (text_item (1).code)
 					last_token := CHAR
 				
 else
---|#line 133
+--|#line 113
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
@@ -193,15 +173,15 @@ else
 end
 else
 if yy_act = 17 then
---|#line 137
+--|#line 117
 
-					error_handler.missing_quote (filename, line_nb)
+					report_missing_quote_error
 					line_nb := line_nb + 1
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 145
+--|#line 125
 
 					last_token := CHAR
 					process_escaped_character
@@ -215,18 +195,18 @@ else
 if yy_act <= 20 then
 if yy_act = 19 then
 	yy_position := yy_position - 1
---|#line 154
+--|#line 134
 
 					set_start_condition (CCL)
 					last_token := Caret_code
 				
 else
 	yy_position := yy_position - 1
---|#line 158
+--|#line 138
 last_token := Caret_code
 end
 else
---|#line 159
+--|#line 139
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -238,27 +218,27 @@ else
 if yy_act <= 25 then
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 164
+--|#line 144
 
-					error_handler.bad_character_class (filename, line_nb)
+					report_bad_character_class_error
 					line_nb := line_nb + 1
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
 else
 	yy_position := yy_position - 1
---|#line 173
+--|#line 153
 last_token := Minus_code
 end
 else
 if yy_act = 24 then
---|#line 174
+--|#line 154
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 else
---|#line 178
+--|#line 158
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
@@ -268,21 +248,21 @@ end
 else
 if yy_act <= 27 then
 if yy_act = 26 then
---|#line 182
+--|#line 162
 
-					error_handler.bad_character_class (filename, line_nb)
+					report_bad_character_class_error
 					line_nb := line_nb + 1
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 190
+--|#line 170
 
 					if text_item (1) = '%N' then
-						error_handler.bad_character ("%%N", filename, line_nb)
+						report_bad_character_error ("%%N")
 						line_nb := line_nb + 1
 					else
-						error_handler.bad_character (text, filename, line_nb)
+						report_bad_character_error (text)
 					end
 				
 end
@@ -491,181 +471,5 @@ feature {NONE} -- Constants
 feature -- User-defined features
 
 
-
-feature {NONE} -- Initialization
-
-	make (handler: like error_handler) is
-			-- Create a new regular expression scanner.
-		require
-			handler_not_void: handler /= Void
-		do
-			make_description
-			make_compressed_scanner_skeleton
-			error_handler := handler
-			!! character_classes.make (Initial_max_character_classes)
-			line_nb := 1
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-	make_from_description
-		(a_description: LX_DESCRIPTION; handler: like error_handler) is
-			-- Create a new regular expression scanner and
-			-- initialize it with `a_description'.
-		require
-			a_description_not_void: a_description /= Void
-			handler_not_void: handler /= Void
-		do
-			from_description (a_description)
-			make_compressed_scanner_skeleton
-			error_handler := handler
-			!! character_classes.make (Initial_max_character_classes)
-			line_nb := 1
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-feature -- Initialization
-
-	reset is
-			-- Reset scanner before scanning next input.
-		do
-			reset_compressed_scanner_skeleton
-			reset_description
-			character_classes.wipe_out
-			line_nb := 1
-		end
-
-feature -- Access
-
-	error_handler: LX_LEX_ERROR_HANDLER
-			-- Error handler
-
-	line_nb: INTEGER
-			-- Current line number
-
-	filename: STRING is
-			-- Name of file being parsed
-		local
-			file_buffer: YY_FILE_BUFFER
-		do
-			file_buffer ?= input_buffer
-			if file_buffer /= Void then
-				Result := input_stream_.name (file_buffer.file)
-			else
-				Result := "string"
-			end
-		ensure
-			filename_not_void: Result /= Void
-		end
-
-	last_value: ANY
-			-- Semantic value to be passed to the parser
-
-	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
-			-- Character classes declared so far
-
-feature -- Setting
-
-	set_error_handler (handler: like error_handler) is
-			-- Set `error_handler' to `handler'.
-		require
-			handler_not_void: handler /= Void
-		do
-			error_handler := handler
-		ensure
-			error_handler_set: error_handler = handler
-		end
-
-feature {NONE} -- Implementation
-
-	last_string: STRING
-			-- Last string which has been read
-
-	process_character (a_code: INTEGER) is
-			-- Check whether `a_code' is a valid code for character
-			-- whose printable representation is held in `text'.
-			-- Set `last_value' accordingly.
-		do
-			if a_code < characters_count then
-				last_value := a_code
-			else
-				error_handler.character_out_of_range (text, filename, line_nb)
-				last_value := 0
-			end
-		end
-
-	process_escaped_character is
-			-- Process escaped character whose printable representation
-			-- is held in `text'. Check whether the corresponding 
-			-- character is not out of range. Set `last_value' accordingly.
-		require
-			-- valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
-		local
-			c: CHARACTER
-			a_code: INTEGER
-			i, nb: INTEGER
-		do
-			c := text_item (2)
-			inspect c
-			when 'b' then
-				a_code := Back_space_code
-			when 'f' then
-				a_code := Form_feed_code
-			when 'n' then
-				a_code := New_line_code
-			when 'r' then
-				a_code := Carriage_return_code
-			when 't' then
-				a_code := Tabulation_code
-			when 'a' then
-				a_code := 7
-			when 'v' then
-				a_code := 13
-			when '0'..'7' then
-					-- Octal.
-				nb := text_count
-				a_code := 0
-				from i := 2 until i > nb loop
-					a_code := a_code * 8 + text_item (i).code - Zero_code
-					i := i + 1
-				end
-			when 'x', 'X' then
-				nb := text_count
-				if nb = 2 then
-					a_code := c.code
-				else
-						-- Hexadecimal.
-					a_code := 0
-					from i := 3 until i > nb loop
-					a_code := a_code * 16
-						c := text_item (i)
-						inspect c
-						when '0'..'9' then
-							a_code := a_code + c.code - Zero_code
-						when 'a'..'z' then
-							a_code := a_code + c.code - Lower_a_code + 10
-						when 'A'..'Z' then
-							a_code := a_code + c.code - Upper_a_code + 10
-						end
-						i := i + 1
-					end
-				end
-			else
-				a_code := c.code
-			end
-			process_character (a_code)
-		end
-
-feature {NONE} -- Constants
-
-	Initial_max_character_classes: INTEGER is 101
-			-- Maximum number of character classes
-
-invariant
-
-	error_handler_not_void: error_handler /= Void
-	character_classes_not_void: character_classes /= Void
-	no_void_character_class: not character_classes.has_item (Void)
 
 end -- class LX_REGEXP_SCANNER

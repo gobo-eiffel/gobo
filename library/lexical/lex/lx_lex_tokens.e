@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator:   "geyacc version 1.0"
+	generator:   "geyacc version 1.1"
 
 class LX_LEX_TOKENS
 
