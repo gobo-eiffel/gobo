@@ -37,7 +37,7 @@ feature -- Incremental parsing
 			not_possible: False
 		end
 
-	set_end_of_document is
+	finish_incremental is
 			-- Precondition always false.
 		do
 		ensure then
