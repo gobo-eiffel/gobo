@@ -2052,7 +2052,7 @@ feature {NONE} -- Implementation
 			gc_on: memory.collecting
 			obj_not_void: obj /= Void
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C [macro <eif_eiffel.h>] (EIF_OBJECT): EIF_REFERENCE"
 		alias
 			"eif_freeze"
 		end
