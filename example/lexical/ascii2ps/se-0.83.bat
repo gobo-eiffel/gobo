@@ -1,5 +1,5 @@
 @rem system:     "'ascii2ps' pretty-printer"
-@rem compiler:   "SmallEiffel -0.84"
+@rem compiler:   "SmallEiffel -0.83"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1997, Eric Bezault"
 @rem date:       "$Date$"
@@ -20,5 +20,6 @@
 @echo %SmallEiffel%\lib_std\>>				loadpath.se
 
 
-compile_to_c -boost -no_split ASCII2PS make
+set options= -boost -no_split -case_insensitive -no_warning
+compile_to_c %options% ASCII2PS make
 ascii2ps.bat
