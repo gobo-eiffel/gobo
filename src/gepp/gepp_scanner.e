@@ -42,14 +42,17 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-			inspect yy_act
-when 1 then
+if yy_act <= 10 then
+if yy_act <= 5 then
+if yy_act <= 3 then
+if yy_act <= 2 then
+if yy_act = 1 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 41
 set_start_condition (S_PREPROC)
-when 2, 3 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
@@ -60,7 +63,21 @@ when 2, 3 then
 						end
 						line_nb := line_nb + 1
 					
-when 4 then
+end
+else
+	if yy_position > yy_start_position then
+		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
+	end
+--|#line 43
+
+						if not ignored then
+							echo
+						end
+						line_nb := line_nb + 1
+					
+end
+else
+if yy_act = 4 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
@@ -70,61 +87,79 @@ when 4 then
 							echo
 						end
 					
-when 5 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 57
 -- Separator.
-when 6 then
+end
+end
+else
+if yy_act <= 8 then
+if yy_act <= 7 then
+if yy_act = 6 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 58
 -- Comment.
-when 7 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 59
 last_token := P_IFDEF
-when 8 then
+end
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 60
 last_token := P_IFNDEF
-when 9 then
+end
+else
+if yy_act = 9 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 61
 last_token := P_ELSE
-when 10 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 62
 last_token := P_ENDIF
-when 11 then
+end
+end
+end
+else
+if yy_act <= 15 then
+if yy_act <= 13 then
+if yy_act <= 12 then
+if yy_act = 11 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 63
 last_token := P_INCLUDE
-when 12 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 64
 last_token := P_DEFINE
-when 13 then
+end
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 65
 last_token := P_UNDEF
-when 14 then
+end
+else
+if yy_act = 14 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
@@ -133,19 +168,24 @@ when 14 then
 						last_token := P_NAME
 						last_value := text
 					
-when 15 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 70
 last_token := P_AND
-when 16 then
+end
+end
+else
+if yy_act <= 18 then
+if yy_act <= 17 then
+if yy_act = 16 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 71
 last_token := P_OR
-when 17 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
@@ -155,27 +195,31 @@ when 17 then
 						line_nb := line_nb + 1
 						set_start_condition (INITIAL)
 					
-when 18 then
+end
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 77
 last_token := text_item (1).code
-when 19 then
+end
+else
+if yy_act = 19 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 80
 last_token := text_item (1).code
-when 20 then
+else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 82
 fatal_error ("scanner jammed")
-			else
-				fatal_error ("fatal scanner internal error: no action found")
-			end
+end
+end
+end
+end
 		end
 
 	yy_execute_eof_action (yy_sc: INTEGER) is

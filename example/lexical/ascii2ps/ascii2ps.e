@@ -52,39 +52,46 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-			inspect yy_act
-when 1 then
+if yy_act <= 4 then
+if yy_act <= 2 then
+if yy_act = 1 then
 --|#line 44
 output_file.put_string ("%Tnewline%N")
-when 2 then
+else
 --|#line 45
 output_file.put_string ("%T( ) show%N")
-when 3 then
+end
+else
+if yy_act = 3 then
 --|#line 46
 output_file.put_string ("%Tprinttab%N")
-when 4 then
+else
 --|#line 47
 output_file.put_string ("%Tnewpage%N")
-when 5 then
+end
+end
+else
+if yy_act <= 6 then
+if yy_act = 5 then
 --|#line 48
 
 					output_file.put_string ("%T(")
 					output_file.put_string (text)
 					output_file.put_string (") printword%N")
 				
-when 6 then
+else
 --|#line 53
 
 					output_file.put_string ("%T(\")
 					output_file.put_character (text_item (1))
 					output_file.put_string (") printword%N")
 				
-when 7 then
+end
+else
 --|#line 59
 fatal_error ("scanner jammed")
-			else
-				fatal_error ("fatal scanner internal error: no action found")
-			end
+end
+end
 		end
 
 	yy_execute_eof_action (yy_sc: INTEGER) is
