@@ -27,6 +27,7 @@ inherit
 			make as make_scanner_stdin
 		redefine
 			new_file_buffer,
+			set_input_buffer,
 			reset,
 			fatal_error
 		end
@@ -766,8 +767,7 @@ feature -- Input
 			a_file: XF_UTF16_INPUT_STREAM
 			a_buffer: YY_FILE_BUFFER
 		do
-			filename := a_name
-			!! a_file.make (filename)
+			!! a_file.make (a_name)
 			last_input_file_opened := a_file.is_open_read
 			if last_input_file_opened then
 				!! a_buffer.make (a_file)
@@ -775,8 +775,18 @@ feature -- Input
 			else
 				fatal_error (Error_cannot_read_file)
 			end
+			filename := a_name
 		ensure
 			keep_copy: a_name = filename
+		end
+
+	set_input_buffer (a_buffer: like input_buffer) is
+			-- Set `input_buffer' to `a_buffer'.
+		do
+			Precursor (a_buffer)
+			filename := a_buffer.name
+		ensure then
+			filename_set: filename = a_buffer.name
 		end
 
 	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
