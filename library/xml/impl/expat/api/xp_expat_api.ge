@@ -1761,7 +1761,7 @@ feature -- Conversion
 					a_prefix := a_name.substring (1, colon_index - 1)
 					a_name := a_name.substring (colon_index + 1, a_name.count)
 				else
-					!! a_prefix.make (0)
+					a_prefix := new_unicode_string ("")
 				end
 #ifdef SE
 				i := i + 1

@@ -636,7 +636,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		do
 			target := new_uc_string_from_c_utf8_zero_terminated_string_safe (target_ptr)
 			if data_ptr = Void then
-				create data.make (0)
+				data := new_unicode_string ("")
 			else
 				data := new_uc_string_from_c_utf8_zero_terminated_string (data_ptr)
 			end
