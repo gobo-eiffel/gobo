@@ -735,7 +735,7 @@ feature -- Removal
 			-- Remove item at `a_cursor' position.
 			-- Move any cursors at this position `forth'.
 			-- (Synonym of `a_cursor.remove'.)
-			-- (Performance: O(1).)
+			-- (Performance: O(count) if `a_cursor.is_last', O(1) otherwise.)
 		local
 			a_cell, old_cell: like first_cell
 		do
