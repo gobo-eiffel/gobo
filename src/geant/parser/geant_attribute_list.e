@@ -19,6 +19,13 @@ inherit
 			make as ds_arrayed_list_make
 		end
 
+	KL_SHARED_STANDARD_FILES
+		export
+			{NONE} all
+		undefine
+			is_equal, copy
+		end
+
 creation
 
 	make_from_hash_table, make_from_bilinear
