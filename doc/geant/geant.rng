@@ -578,6 +578,7 @@
 				<attribute name="exit_code_variable"/>
 			</optional>
 			<choice>
+				<attribute name="xace"/>
 				<attribute name="esd"/>
 				<group>
 					<attribute name="clean"/>

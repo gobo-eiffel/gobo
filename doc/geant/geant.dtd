@@ -85,6 +85,7 @@
   clean CDATA #IMPLIED
   recursive CDATA #IMPLIED
   esd CDATA #IMPLIED
+  xace CDATA #IMPLIED
   tune CDATA #IMPLIED
   level CDATA #IMPLIED
   if CDATA #IMPLIED
