@@ -224,4 +224,19 @@
 		</delete>
 	</target>
 	
+	<target name="delete_ds1">
+		<description>
+			Remove some directores.
+		</description>
+		<mkdir directory="${GOBO}/example/geant/tmp/abcd/a1"/>
+		<mkdir directory="${GOBO}/example/geant/tmp/abcd/a2"/>
+		<mkdir directory="${GOBO}/example/geant/tmp/abcd/b1"/>
+		<mkdir directory="${GOBO}/example/geant/tmp/xyz/a1"/>
+		<mkdir directory="${GOBO}/example/geant/tmp/xyz/abc/a1"/>
+
+		<delete>
+			<directoryset directory="${GOBO}/example/geant/tmp" include="@(**/a1)" concat="true"/>
+		</delete>
+	</target>
+	
 </project>
