@@ -1353,14 +1353,7 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 					else
 						a_feature := a_class_impl.named_feature (a_name)
-						if a_feature = Void then
-							set_fatal_error
-								-- ISE Eiffel 5.4 reports this error as a VEEN,
-								-- but it is in fact a VUAR-4 (ETL2 p.369).
-							error_handler.report_vuar4a_error (a_class_impl, a_name)
-						elseif a_feature.type = Void then
--- TODO.
-						else
+						if a_feature /= Void then
 							a_seed := a_feature.first_seed
 							a_name.set_seed (a_seed)
 							if a_class_impl = current_class then
@@ -1368,21 +1361,17 @@ feature {NONE} -- Expression validity
 									-- context of `current_class' again.
 								already_checked := True
 								if not has_fatal_error then
-									a_typed_pointer_class := universe.typed_pointer_class
-									if a_typed_pointer_class.is_preparsed then
-											-- Class TYPED_POINTER has been found in the universe.
-											-- Use ISE's implementation.
-										create an_actuals.make_with_capacity (1)
-										an_actuals.put_first (a_feature.type)
-										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
-										type := a_typed_pointer_type
-										context := current_class
-									else
-										type := universe.pointer_class
-										context := current_class
-									end
+										-- $feature_name is of type POINTER, even
+										-- in ISE and its TYPED_POINTER support.
+									type := universe.pointer_class
+									context := current_class
 								end
 							end
+						else
+							set_fatal_error
+								-- ISE Eiffel 5.4 reports this error as a VEEN,
+								-- but it is in fact a VUAR-4 (ETL2 p.369).
+							error_handler.report_vuar4a_error (a_class_impl, a_name)
 						end
 					end
 				end
@@ -1444,27 +1433,16 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 					else
 						a_feature := current_class.seeded_feature (a_seed)
-						if a_feature = Void then
+						if a_feature /= Void then
+								-- $feature_name is of type POINTER, even
+								-- in ISE and its TYPED_POINTER support.
+							type := universe.pointer_class
+							context := current_class
+						else
 								-- Report internal error: if we got a seed, the
 								-- `a_feature' should not be void.
 							set_fatal_error
 							error_handler.report_giaau_error
-						elseif a_feature.type = Void then
--- TODO.
-						else
-							a_typed_pointer_class := universe.typed_pointer_class
-							if a_typed_pointer_class.is_preparsed then
-									-- Class TYPED_POINTER has been found in the universe.
-									-- Use ISE's implementation.
-								create an_actuals.make_with_capacity (1)
-								an_actuals.put_first (a_feature.type)
-								create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
-								type := a_typed_pointer_type
-								context := current_class
-							else
-								type := universe.pointer_class
-								context := current_class
-							end
 						end
 					end
 				end
