@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 		do
 			static_call := a_call
 			target_type_set := a_target_type_set
-			argument_type_sets := empty_argument_type_sets
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
@@ -50,9 +49,6 @@ feature -- Access
 
 	target_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of target
-
-	argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			-- Type sets of arguments, if any
 
 	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of Result, if any
@@ -79,16 +75,6 @@ feature -- Measurement
 
 feature -- Setting
 
-	set_argument_type_sets (an_argument_type_sets: like argument_type_sets) is
-			-- Set `argument_type_sets' to `an_argument_type_sets'.
-		require
-			an_argument_type_sets_not_void: an_argument_type_sets /= Void
-		do
-			argument_type_sets := an_argument_type_sets
-		ensure
-			argument_type_sets_set: argument_type_sets = an_argument_type_sets
-		end
-
 	set_result_type_set (a_result_type_set: like result_type_set) is
 			-- Set `result_type_set' to `a_result_type_set'.
 		do
@@ -114,7 +100,8 @@ feature -- Element change
 			l_seed: INTEGER
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_source_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
@@ -134,23 +121,34 @@ feature -- Element change
 			else
 				l_dynamic_feature := a_type.dynamic_feature (l_feature, a_system)
 				l_dynamic_feature.set_regular (True)
-				l_source_argument_type_sets := argument_type_sets
-				nb := l_source_argument_type_sets.count
-				if nb > 0 then
-						-- Dynamic type sets for arguments are stored first
-						-- in `dynamic_type_sets'.
-					l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-					if l_target_argument_type_sets.count < nb then
-							-- Internal error: it has already been checked somewhere else
-							-- that there was the same number of formal arguments in
-							-- feature redeclaration.
-						l_builder := a_system.dynamic_type_set_builder
-						l_builder.set_fatal_error
-						l_builder.error_handler.report_gibeb_error
-					else
-						from i := 1 until i > nb loop
-							l_source_argument_type_sets.item (i).put_target (l_target_argument_type_sets.item (i), a_system)
-							i := i + 1
+				l_actuals := static_call.arguments
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					if nb > 0 then
+							-- Dynamic type sets for arguments are stored first
+							-- in `dynamic_type_sets'.
+						l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+						if l_target_argument_type_sets.count < nb then
+								-- Internal error: it has already been checked somewhere else
+								-- that there was the same number of formal arguments in
+								-- feature redeclaration.
+							l_builder := a_system.dynamic_type_set_builder
+							l_builder.set_fatal_error
+							l_builder.error_handler.report_gibeb_error
+						else
+							from i := 1 until i > nb loop
+								l_source_argument_type_set := current_feature.dynamic_type_set (l_actuals.actual_argument (i))
+								if l_source_argument_type_set = Void then
+										-- Internal error: the dynamic type sets of the actual
+										-- arguments should be known at this stage.
+									l_builder := a_system.dynamic_type_set_builder
+									l_builder.set_fatal_error
+									l_builder.error_handler.report_gibbd_error
+								else
+									l_source_argument_type_set.put_target (l_target_argument_type_sets.item (i), a_system)
+								end
+								i := i + 1
+							end
 						end
 					end
 				end
@@ -175,22 +173,10 @@ feature -- Element change
 			end
 		end
 
-feature {NONE} -- Constants
-
-	empty_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST is
-			-- Empty list of argument type_sets
-		once
-			create Result.make
-		ensure
-			argument_type_sets_not_void: Result /= Void
-			argument_type_sets_empty: Result.is_empty
-		end
-
 invariant
 
 	static_call_not_void: static_call /= Void
 	target_type_set_not_void: target_type_set /= Void
-	argument_type_sets_not_void: argument_type_sets /= Void
 	current_feature_not_void: current_feature /= Void
 	current_type_not_void: current_type /= Void
 

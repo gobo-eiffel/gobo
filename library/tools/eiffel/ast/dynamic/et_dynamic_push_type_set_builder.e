@@ -558,10 +558,7 @@ feature {NONE} -- Event handling
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_CALL
-			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_EXPRESSION
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_actual: ET_EXPRESSION
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
@@ -576,27 +573,6 @@ feature {NONE} -- Event handling
 				else
 					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_calls.force_last (l_dynamic_call)
-					l_actuals := a_call.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb > 0 then
-							create l_argument_type_sets.make_with_capacity (nb)
-							l_dynamic_call.set_argument_type_sets (l_argument_type_sets)
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_dynamic_type_set := dynamic_type_set (l_actual)
-								if l_dynamic_type_set = Void then
-										-- Internal error: the dynamic type sets of the actual
-										-- arguments should be known at this stage.
-									set_fatal_error
-									error_handler.report_gibex_error
-								else
-									l_argument_type_sets.put_last (l_dynamic_type_set)
-								end
-								i := i + 1
-							end
-						end
-					end
 					l_type := a_feature.type
 					if l_type = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -618,12 +594,8 @@ feature {NONE} -- Event handling
 		local
 			i, nb: INTEGER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_CALL
-			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_EXPRESSION
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_target := a_call.target
@@ -636,27 +608,6 @@ feature {NONE} -- Event handling
 				else
 					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_calls.force_last (l_dynamic_call)
-					l_actuals := a_call.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb > 0 then
-							create l_argument_type_sets.make_with_capacity (nb)
-							l_dynamic_call.set_argument_type_sets (l_argument_type_sets)
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_dynamic_type_set := dynamic_type_set (l_actual)
-								if l_dynamic_type_set = Void then
-										-- Internal error: the dynamic type sets of the actual
-										-- arguments should be known at this stage.
-									set_fatal_error
-									error_handler.report_gibfa_error
-								else
-									l_argument_type_sets.put_last (l_dynamic_type_set)
-								end
-								i := i + 1
-							end
-						end
-					end
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end

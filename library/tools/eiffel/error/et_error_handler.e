@@ -8406,5 +8406,6 @@ feature -- Internal errors
 --					error_handler.report_gibfy_error
 --					error_handler.report_gibfz_error
 --			error_handler.report_gibce_error
+--									error_handler.report_gibex_error
 
 end

@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			make_feature_checker (a_system.universe)
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
-			create dynamic_type_sets.make (1000)
+			create dynamic_type_sets.make_with_capacity (1000)
 			create dynamic_calls.make (100000)
 		ensure
 			current_system_set: current_system = a_system
@@ -313,6 +313,7 @@ feature {NONE} -- Generation
 				dynamic_type_sets.force_last (l_dynamic_type_sets.item (i))
 				i := i + 1
 			end
+			a_feature.set_dynamic_type_sets (dynamic_type_sets)
 			if a_feature.is_precursor then
 				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
 			else
@@ -468,7 +469,8 @@ feature {NONE} -- CAT-calls
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_source_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_current_feature: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -486,41 +488,51 @@ feature {NONE} -- CAT-calls
 				error_handler.report_gibcc_error
 			else
 				l_dynamic_feature := a_type.dynamic_feature (l_feature, current_system)
-				l_source_argument_type_sets := a_call.argument_type_sets
-				nb := l_source_argument_type_sets.count
-				if nb > 0 then
-						-- Dynamic type sets for arguments are stored first
-						-- in `dynamic_type_sets'.
-					l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-					if l_target_argument_type_sets.count < nb then
-							-- Internal error: it has already been checked somewhere else
-							-- that there was the same number of formal arguments in
-							-- feature redeclaration.
-						set_fatal_error
-						error_handler.report_gibee_error
-					else
-						from i := 1 until i > nb loop
-							l_target_type_set := l_target_argument_type_sets.item (i)
-							l_target_type := l_target_type_set.static_type
-							l_source_type_set := l_source_argument_type_sets.item (i)
-							l_source_type := l_source_type_set.first_type
-							if l_source_type /= Void then
-								if not l_source_type.conforms_to_type (l_target_type, current_system) then
-									report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
-								end
-								l_other_types := l_source_type_set.other_types
-								if l_other_types /= Void then
-									nb2 := l_other_types.count
-									from j := 1 until j > nb2 loop
-										l_source_type := l_other_types.item (j)
+				l_actuals := a_call.static_call.arguments
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					if nb > 0 then
+							-- Dynamic type sets for arguments are stored first
+							-- in `dynamic_type_sets'.
+						l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+						if l_target_argument_type_sets.count < nb then
+								-- Internal error: it has already been checked somewhere else
+								-- that there was the same number of formal arguments in
+								-- feature redeclaration.
+							set_fatal_error
+							error_handler.report_gibee_error
+						else
+							l_current_feature := a_call.current_feature
+							from i := 1 until i > nb loop
+								l_target_type_set := l_target_argument_type_sets.item (i)
+								l_target_type := l_target_type_set.static_type
+								l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (i))
+								if l_source_type_set = Void then
+										-- Internal error: the dynamic type sets of the actual
+										-- arguments should be known at this stage.
+									set_fatal_error
+									error_handler.report_gibba_error
+								else
+									l_source_type := l_source_type_set.first_type
+									if l_source_type /= Void then
 										if not l_source_type.conforms_to_type (l_target_type, current_system) then
 											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
 										end
-										j := j + 1
+										l_other_types := l_source_type_set.other_types
+										if l_other_types /= Void then
+											nb2 := l_other_types.count
+											from j := 1 until j > nb2 loop
+												l_source_type := l_other_types.item (j)
+												if not l_source_type.conforms_to_type (l_target_type, current_system) then
+													report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
+												end
+												j := j + 1
+											end
+										end
 									end
 								end
+								i := i + 1
 							end
-							i := i + 1
 						end
 					end
 				end
@@ -539,38 +551,40 @@ feature {NONE} -- CAT-calls
 			a_formal_type_not_void: a_formal_type /= Void
 			an_actual_type_not_void: an_actual_type /= Void
 			a_call_not_void: a_call /= Void
---		local
---			l_message: STRING
---			l_class_impl: ET_CLASS
+		local
+			l_message: STRING
+			l_class_impl: ET_CLASS
 		do
+			if False then
 -- TODO: better error message reporting.
---			l_message := shared_error_message
---			STRING_.wipe_out (l_message)
---			l_message.append_string ("[CATCALL] class ")
---			l_message.append_string (a_call.current_type.base_type.to_text)
---			l_message.append_string (" (")
---			l_class_impl := a_call.current_feature.static_feature.implementation_class
---			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
---				l_message.append_string (l_class_impl.name.name)
---				l_message.append_character (',')
---			end
---			l_message.append_string (a_call.position.line.out)
---			l_message.append_character (',')
---			l_message.append_string (a_call.position.column.out)
---			l_message.append_string ("): type '")
---			l_message.append_string (an_actual_type.base_type.to_text)
---			l_message.append_string ("' of actual argument #")
---			l_message.append_string (arg.out)
---			l_message.append_string (" does not conform to type '")
---			l_message.append_string (a_formal_type.base_type.to_text)
---			l_message.append_string ("' of formal argument in feature `")
---			l_message.append_string (a_dynamic_feature.static_feature.name.name)
---			l_message.append_string ("' in class '")
---			l_message.append_string (a_target_type.base_type.to_text)
---			l_message.append_string ("%'")
---			set_fatal_error
---			error_handler.report_error_message (l_message)
---			STRING_.wipe_out (l_message)
+			l_message := shared_error_message
+			STRING_.wipe_out (l_message)
+			l_message.append_string ("[CATCALL] class ")
+			l_message.append_string (a_call.current_type.base_type.to_text)
+			l_message.append_string (" (")
+			l_class_impl := a_call.current_feature.static_feature.implementation_class
+			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
+				l_message.append_string (l_class_impl.name.name)
+				l_message.append_character (',')
+			end
+			l_message.append_string (a_call.position.line.out)
+			l_message.append_character (',')
+			l_message.append_string (a_call.position.column.out)
+			l_message.append_string ("): type '")
+			l_message.append_string (an_actual_type.base_type.to_text)
+			l_message.append_string ("' of actual argument #")
+			l_message.append_string (arg.out)
+			l_message.append_string (" does not conform to type '")
+			l_message.append_string (a_formal_type.base_type.to_text)
+			l_message.append_string ("' of formal argument in feature `")
+			l_message.append_string (a_dynamic_feature.static_feature.name.name)
+			l_message.append_string ("' in class '")
+			l_message.append_string (a_target_type.base_type.to_text)
+			l_message.append_string ("%'")
+			set_fatal_error
+			error_handler.report_error_message (l_message)
+			STRING_.wipe_out (l_message)
+			end
 		end
 
 	shared_error_message: STRING is
@@ -1152,10 +1166,7 @@ feature {NONE} -- Event handling
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_CALL
-			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_EXPRESSION
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_actual: ET_EXPRESSION
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
@@ -1170,27 +1181,6 @@ feature {NONE} -- Event handling
 				else
 					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_calls.force_last (l_dynamic_call)
-					l_actuals := a_call.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb > 0 then
-							create l_argument_type_sets.make_with_capacity (nb)
-							l_dynamic_call.set_argument_type_sets (l_argument_type_sets)
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_dynamic_type_set := dynamic_type_set (l_actual)
-								if l_dynamic_type_set = Void then
-										-- Internal error: the dynamic type sets of the actual
-										-- arguments should be known at this stage.
-									set_fatal_error
-									error_handler.report_gibba_error
-								else
-									l_argument_type_sets.put_last (l_dynamic_type_set)
-								end
-								i := i + 1
-							end
-						end
-					end
 					l_type := a_feature.type
 					if l_type = Void then
 							-- Internal error: the result type set of a query cannot be void.
@@ -1212,10 +1202,7 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_CALL
-			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_EXPRESSION
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_target := a_call.target
@@ -1228,27 +1215,6 @@ feature {NONE} -- Event handling
 				else
 					create l_dynamic_call.make (a_call, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_calls.force_last (l_dynamic_call)
-					l_actuals := a_call.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb > 0 then
-							create l_argument_type_sets.make_with_capacity (nb)
-							l_dynamic_call.set_argument_type_sets (l_argument_type_sets)
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_dynamic_type_set := dynamic_type_set (l_actual)
-								if l_dynamic_type_set = Void then
-										-- Internal error: the dynamic type sets of the actual
-										-- arguments should be known at this stage.
-									set_fatal_error
-									error_handler.report_gibbd_error
-								else
-									l_argument_type_sets.put_last (l_dynamic_type_set)
-								end
-								i := i + 1
-							end
-						end
-					end
 				end
 			end
 		end
@@ -1602,7 +1568,7 @@ feature {NONE} -- Implementation
 			else
 				nb := dynamic_type_sets.count
 				if i <= nb then
-					dynamic_type_sets.replace (a_dynamic_type_set, i)
+					dynamic_type_sets.put (a_dynamic_type_set, i)
 				else
 					l_none := current_system.none_type
 					i := i - 1
@@ -1617,7 +1583,7 @@ feature {NONE} -- Implementation
 			dynamic_type_set_set: dynamic_type_set (an_expression) = a_dynamic_type_set
 		end
 
-	dynamic_type_sets: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE_SET]
+	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
 
 	dynamic_calls: DS_ARRAYED_LIST [ET_DYNAMIC_CALL]
@@ -1642,7 +1608,6 @@ feature {NONE} -- Implementation
 invariant
 
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
-	no_void_dynamic_type_set: not dynamic_type_sets.has (Void)
 	dynamic_calls_not_void: dynamic_calls /= Void
 	no_void_dynamic_call: not dynamic_calls.has (Void)
 	current_dynamic_type_not_void: current_dynamic_type /= Void
