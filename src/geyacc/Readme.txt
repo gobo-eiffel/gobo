@@ -13,6 +13,12 @@ The original version of GNU Bison (version 1.25) can be downloaded from
 	symtab.c
 	version.c
 
+and the following files have been removed:
+
+	bison.info*
+	bison.texinfo
+	texinfo.tex
+
 The HTML documentation provided with geyacc in "$GOBO\doc\geyacc" is
 also an adaptation of the manual for GNU Bison.
 
