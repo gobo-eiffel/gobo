@@ -59,13 +59,13 @@ feature -- Status report
 				project.log ("  [fileset] error: attribute 'directory' is mandatory%N")
 			end
 			if Result then
-				Result := include_wildcard /= Void and then include_wildcard.is_compiled
+				Result := include_wildcard = Void or else include_wildcard.compiled
 				if not Result then
 					project.log ("  [fileset] error: attribute 'include' is not valid%N")
 				end
 			end
 			if Result then
-				Result := exclude_wildcard = Void or else exclude_wildcard.is_compiled
+				Result := exclude_wildcard = Void or else exclude_wildcard.compiled
 				if not Result then
 					project.log ("  [fileset] error: attribute 'exclude' is not valid%N")
 				end
@@ -80,10 +80,10 @@ feature -- Status report
 		ensure
 			directory_name_not_void: Result implies directory_name /= Void
 			directory_name_not_empty: Result implies directory_name.count > 0
-			include_wildcard_not_void: Result implies include_wildcard /= Void
-			include_wildcard_compiled: Result implies include_wildcard.is_compiled
+			include_wildcard_compiled: Result implies include_wildcard = Void or else
+				include_wildcard.compiled
 			exclude_wildcard_compiled: Result implies exclude_wildcard = Void or else
-				exclude_wildcard.is_compiled
+				exclude_wildcard.compiled
 			map_executable: Result implies (map = Void or else map.is_executable)
 		end
 
@@ -238,7 +238,7 @@ feature -- Setting
 
 				-- Setup wildcard for include patterns:
 			!LX_DFA_WILDCARD! include_wildcard.compile (include_wc_string, True)
-			if not include_wildcard.is_compiled then
+			if not include_wildcard.compiled then
 				project.log ("  [fileset] error: invalid include wildcard: '" + include_wc_string + "'%N")
 			end
 
@@ -257,7 +257,7 @@ feature -- Setting
 
 				-- Setup wildcard for exclude patterns:
 			!LX_DFA_WILDCARD! exclude_wildcard.compile (exclude_wc_string, True)
-			if not exclude_wildcard.is_compiled then
+			if not exclude_wildcard.compiled then
 				project.log ("  [fileset] error: invalid exclude wildcard: '" + exclude_wc_string + "'%N")
 			end
 
@@ -412,7 +412,9 @@ feature -- Execution
 			cs: DS_SET_CURSOR [STRING]
 		do
 			project.trace_debug ("  [*fileset] directory_name: " + directory_name + "%N")
-			project.trace_debug ("  [*fileset] include_wc_string: " + include_wc_string + "%N")
+			if include_wc_string /= Void then
+				project.trace_debug ("  [*fileset] include_wc_string: " + include_wc_string + "%N")
+			end
 
 			al_directory_name := unix_file_system.canonical_pathname (directory_name)
 
@@ -457,8 +459,6 @@ feature -- Execution
 
 	include_wildcard: LX_WILDCARD
 		-- Expression defining filenames for inclusion;
-		-- if Void all filenames found underneath directory
-		-- named `directory_name' will be included
 
 	exclude_wildcard: LX_WILDCARD
 		-- Expression defining filenames for exclusion
@@ -569,3 +569,4 @@ invariant
 	mapped_filename_variable_name_not_empty: mapped_filename_variable_name.count > 0
 
 end
+
