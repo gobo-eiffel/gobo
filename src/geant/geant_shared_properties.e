@@ -19,9 +19,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 
 	KL_SHARED_STANDARD_FILES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 feature -- Access
 

@@ -16,14 +16,10 @@ inherit
 
 	ANY
 	GEANT_SHARED_PROPERTIES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
@@ -83,11 +79,11 @@ feature -- Processing
 				a_file.close
 				project_element := a_project_parser.last_project_element
 			else
-				std.error.put_string ("cannot read file '" + build_filename.out + "':")
+				std.error.put_string ("cannot read file: '" + build_filename.out + "'")
 			end
 
 			if project_element = Void then
-				exit_application (1, "Parsing error in file %"" + build_filename.out + "%"%N")
+				exit_application (1, "Parsing error in file '" + build_filename.out + "'%N")
 			end
 
 	    end

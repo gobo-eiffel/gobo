@@ -35,33 +35,33 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 				-- ace:
-			if has_uc_attribute (Ace_attribute_name) then
+			if has_attribute (Ace_attribute_name) then
 				a_value := attribute_value_or_default (Ace_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_ace_filename (a_value)
 				end
 			end
 				-- system:
-			if has_uc_attribute (System_attribute_name) then
+			if has_attribute (System_attribute_name) then
 				a_value := attribute_value_or_default (System_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_system_name (a_value)
 				end
 			end
 				-- clean:
-			if has_uc_attribute (Clean_attribute_name) then
+			if has_attribute (Clean_attribute_name) then
 				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_clean (a_value)
 				end
 			end
 				-- finalize:
-			if has_uc_attribute (Finalize_attribute_name) then
-				command.set_finalize (uc_boolean_value (Finalize_attribute_name))
+			if has_attribute (Finalize_attribute_name) then
+				command.set_finalize (boolean_value (Finalize_attribute_name))
 			end
 				-- finish_freezing:
-			if has_uc_attribute (Finish_freezing_attribute_name) then
-				command.set_finish_freezing (uc_boolean_value (Finish_freezing_attribute_name))
+			if has_attribute (Finish_freezing_attribute_name) then
+				command.set_finish_freezing (boolean_value (Finish_freezing_attribute_name))
 			end
 		end
 

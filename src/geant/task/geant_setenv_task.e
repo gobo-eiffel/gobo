@@ -35,14 +35,14 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 				-- name:
-			if has_uc_attribute (Name_attribute_name) then
+			if has_attribute (Name_attribute_name) then
 				a_value := uc_attribute_value (Name_attribute_name).out
 				if a_value.count > 0 then
 					command.set_name (a_value)
 				end
 			end
 				-- value:
-			if has_uc_attribute (Value_attribute_name) then
+			if has_attribute (Value_attribute_name) then
 				a_value := uc_attribute_value (Value_attribute_name).out
 				command.set_value (a_value)
 			end

@@ -41,25 +41,25 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
-			if has_uc_attribute (Input_filename_attribute_name) then
+			if has_attribute (Input_filename_attribute_name) then
 				a_value := uc_attribute_value (Input_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_input_filename (a_value)
 				end
 			end
-			if has_uc_attribute (Output_filename_attribute_name) then
+			if has_attribute (Output_filename_attribute_name) then
 				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)
 				end
 			end
-			if has_uc_attribute (Stylesheet_filename_attribute_name) then
+			if has_attribute (Stylesheet_filename_attribute_name) then
 				a_value := uc_attribute_value (Stylesheet_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_stylesheet_filename (a_value)
 				end
 			end
-			if has_uc_attribute (Processor_attribute_name) then
+			if has_attribute (Processor_attribute_name) then
 				a_value := uc_attribute_value (Processor_attribute_name).out
 				if a_value.is_equal (Processor_attribute_value_xalan_cpp.out) then
 					command.set_processor_xalan_cpp
@@ -67,28 +67,28 @@ feature {NONE} -- Initialization
 					command.set_processor_xalan_java
 				end
 			end
-			if has_uc_attribute (Format_attribute_name) then
+			if has_attribute (Format_attribute_name) then
 				a_value := uc_attribute_value (Format_attribute_name).out
 				if a_value.count > 0 then
 					command.set_format (a_value)
 				end
 			end
 
-			if has_uc_attribute (Indent_attribute_name) then
+			if has_attribute (Indent_attribute_name) then
 				a_value := uc_attribute_value (Indent_attribute_name).out
 				if STRING_.is_integer (a_value) then
 					command.set_indent (a_value)
 				end
 			end
 
-			if has_uc_attribute (Extdirs_attribute_name) then
+			if has_attribute (Extdirs_attribute_name) then
 				a_value := uc_attribute_value (Extdirs_attribute_name).out
 				if a_value.count > 0 then
 					command.set_extdirs (a_value)
 				end
 			end
 
-			if has_uc_attribute (Classpath_attribute_name) then
+			if has_attribute (Classpath_attribute_name) then
 				a_value := uc_attribute_value (Classpath_attribute_name).out
 				if a_value.count > 0 then
 					command.set_classpath (a_value)

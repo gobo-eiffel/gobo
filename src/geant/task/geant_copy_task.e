@@ -36,29 +36,29 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, a_xml_element)
-			if has_uc_attribute (File_attribute_name) then
+			if has_attribute (File_attribute_name) then
 				a_value := attribute_value (File_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_file (a_value.out)
 				end
 			end
 
-			if has_uc_attribute (To_file_attribute_name) then
+			if has_attribute (To_file_attribute_name) then
 				a_value := attribute_value (To_file_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_to_file (a_value.out)
 				end
 			end
 
-			if has_uc_attribute (To_directory_attribute_name) then
+			if has_attribute (To_directory_attribute_name) then
 				a_value := attribute_value (To_directory_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_to_directory (a_value.out)
 				end
 			end
 
-			if has_uc_attribute (Force_attribute_name) then
-				command.set_force (uc_boolean_value (Force_attribute_name))
+			if has_attribute (Force_attribute_name) then
+				command.set_force (boolean_value (Force_attribute_name))
 			end
 
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)

@@ -36,15 +36,15 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
-			if has_uc_attribute (Executable_attribute_name) then
+			if has_attribute (Executable_attribute_name) then
 				a_value := attribute_value (Executable_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_command_line (a_value.out)
 				end
 			end
 
-			if has_uc_attribute (Accept_errors_attribute_name) then
-				command.set_accept_errors (uc_boolean_value (Accept_errors_attribute_name))
+			if has_attribute (Accept_errors_attribute_name) then
+				command.set_accept_errors (boolean_value (Accept_errors_attribute_name))
 			end
 
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)

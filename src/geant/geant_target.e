@@ -21,24 +21,16 @@ inherit
 		end
 
 	KL_SHARED_EXCEPTIONS
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	GEANT_SHARED_PROPERTIES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	GEANT_ELEMENT_NAMES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
@@ -308,7 +300,7 @@ feature -- Processing
 					cs.forth
 				end
 
-				if has_uc_attribute (Dir_attribute_name) then
+				if has_attribute (Dir_attribute_name) then
 					project.trace_debug ("changing to directory: '" + a_old_target_cwd + "'%N")
 					file_system.set_current_working_directory (a_old_target_cwd)
 				end

@@ -35,31 +35,31 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 				-- ESD:
-			if has_uc_attribute (Esd_attribute_name) then
+			if has_attribute (Esd_attribute_name) then
 				a_value := attribute_value_or_default (Esd_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_esd_filename (a_value)
 				end
 			end
 				-- clean:
-			if has_uc_attribute (Clean_attribute_name) then
+			if has_attribute (Clean_attribute_name) then
 				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_clean (a_value)
 				end
 					-- recursive:
-				if has_uc_attribute (Recursive_attribute_name) then
-					command.set_recursive_clean (uc_boolean_value (Recursive_attribute_name))
+				if has_attribute (Recursive_attribute_name) then
+					command.set_recursive_clean (boolean_value (Recursive_attribute_name))
 				end
 			end
 				-- tune:
-			if has_uc_attribute (Tune_attribute_name) then
+			if has_attribute (Tune_attribute_name) then
 				a_value := attribute_value_or_default (Tune_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_tuned_system (a_value)
 				end
 					-- level:
-				if has_uc_attribute (Level_attribute_name) then
+				if has_attribute (Level_attribute_name) then
 					a_value := attribute_value_or_default (Level_attribute_name.out, "")
 					if a_value.count > 0 then
 						command.set_tuning_level (a_value)

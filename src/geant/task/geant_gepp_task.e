@@ -40,20 +40,20 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
-			if has_uc_attribute (Input_filename_attribute_name) then
+			if has_attribute (Input_filename_attribute_name) then
 				a_value := uc_attribute_value (Input_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_input_filename (a_value)
 				end
 			end
-			if has_uc_attribute (Output_filename_attribute_name) then
+			if has_attribute (Output_filename_attribute_name) then
 				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)
 				end
 			end
-			if has_uc_attribute (Lines_attribute_name) then
-				a_bool := uc_boolean_value (Lines_attribute_name)
+			if has_attribute (Lines_attribute_name) then
+				a_bool := boolean_value (Lines_attribute_name)
 				command.set_empty_lines (a_bool)
 			end
 
@@ -73,15 +73,15 @@ feature {NONE} -- Initialization
 				cs.forth
 			end
 
-			if has_uc_attribute (To_directory_attribute_name) then
+			if has_attribute (To_directory_attribute_name) then
 				a_value := attribute_value (To_directory_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_to_directory (a_value.out)
 				end
 			end
 
-			if has_uc_attribute (Force_attribute_name) then
-				command.set_force (uc_boolean_value (Force_attribute_name))
+			if has_attribute (Force_attribute_name) then
+				command.set_force (boolean_value (Force_attribute_name))
 			end
 
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)

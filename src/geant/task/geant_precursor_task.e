@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
-			if has_uc_attribute (Parent_attribute_name) then
+			if has_attribute (Parent_attribute_name) then
 				a_value := attribute_value (Parent_attribute_name.out)
 				command.set_parent (a_value)
 			end

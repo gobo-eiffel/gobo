@@ -20,9 +20,7 @@ inherit
 		end
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 feature {NONE} -- Initialization
 

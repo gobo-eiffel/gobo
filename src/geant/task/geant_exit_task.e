@@ -24,9 +24,7 @@ inherit
 	KL_STRING_ROUTINES
 		rename
 			make as kl_string_routines_make
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
@@ -41,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
-			if has_uc_attribute (Code_attribute_name) then
+			if has_attribute (Code_attribute_name) then
 				a_value := attribute_value (Code_attribute_name.out)
 				if not is_integer (a_value) then
 					a_project.log ("  [exit] warning: code '" + a_value + "' is not a valid integer value. Using value '1' instead.")

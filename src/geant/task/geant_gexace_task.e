@@ -39,36 +39,36 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 				-- verbose (optional):
-			if has_uc_attribute (Verbose_attribute_name) then
-				command.set_verbose (uc_boolean_value (Verbose_attribute_name))
+			if has_attribute (Verbose_attribute_name) then
+				command.set_verbose (boolean_value (Verbose_attribute_name))
 			end
 				-- validate:
-			if has_uc_attribute (Validate_attribute_name) then
-				command.set_validate_command (uc_boolean_value (Validate_attribute_name))
+			if has_attribute (Validate_attribute_name) then
+				command.set_validate_command (boolean_value (Validate_attribute_name))
 			end
 				-- system:
-			if has_uc_attribute (System_attribute_name) then
+			if has_attribute (System_attribute_name) then
 				a_value := uc_attribute_value (System_attribute_name).out
 				if a_value.count > 0 then
 					command.set_system_command (a_value)
 				end
 			end
 				-- cluster:
-			if has_uc_attribute (Cluster_attribute_name) then
+			if has_attribute (Cluster_attribute_name) then
 				a_value := uc_attribute_value (Cluster_attribute_name).out
 				if a_value.count > 0 then
 					command.set_cluster_command (a_value)
 				end
 			end
 				-- xace_filename:
-			if has_uc_attribute (Xace_filename_attribute_name) then
+			if has_attribute (Xace_filename_attribute_name) then
 				a_value := uc_attribute_value (Xace_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_xace_filename (a_value)
 				end
 			end
 				-- output_filename:
-			if has_uc_attribute (Output_filename_attribute_name) then
+			if has_attribute (Output_filename_attribute_name) then
 				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)

@@ -18,29 +18,19 @@ inherit
 	ANY
 
 	KL_IMPORTED_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	GEANT_SHARED_PROPERTIES
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	KL_SHARED_OPERATING_SYSTEM
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 

@@ -38,21 +38,21 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, a_xml_element)
 
-			if has_uc_attribute (Source_attribute_name) then
+			if has_attribute (Source_attribute_name) then
 				a_value := uc_attribute_value (Source_attribute_name).out
 				if a_value.count > 0 then
 					command.set_source_filename (a_value)
 				end
 			end
 
-			if has_uc_attribute (Target_attribute_name) then
+			if has_attribute (Target_attribute_name) then
 				a_value := uc_attribute_value (Target_attribute_name).out
 				if a_value.count > 0 then
 					command.set_target_filename (a_value)
 				end
 			end
 			command.set_true_value ("true")
-			if has_uc_attribute (True_value_attribute_name) then
+			if has_attribute (True_value_attribute_name) then
 				a_value := uc_attribute_value (True_value_attribute_name).out
 				if a_value.count > 0 then
 					command.set_true_value (a_value)
@@ -60,14 +60,14 @@ feature {NONE} -- Initialization
 			end
 
 			command.set_false_value ("false")
-			if has_uc_attribute (False_value_attribute_name) then
+			if has_attribute (False_value_attribute_name) then
 				a_value := uc_attribute_value (False_value_attribute_name).out
 				if a_value.count > 0 then
 					command.set_false_value (a_value)
 				end
 			end
 
-			if has_uc_attribute (Variable_attribute_name) then
+			if has_attribute (Variable_attribute_name) then
 				a_value := uc_attribute_value (Variable_attribute_name).out
 				if a_value.count > 0 then
 					command.set_variable_name (a_value)

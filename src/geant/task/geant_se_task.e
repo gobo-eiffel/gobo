@@ -34,13 +34,13 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
-			if has_uc_attribute (Ace_attribute_name) then
+			if has_attribute (Ace_attribute_name) then
 					-- ace_filename (optional)
 				a_value := attribute_value_or_default (Ace_attribute_name.out, "")
 				if a_value.count > 0 then
 					command.set_ace_filename (a_value)
 				end
-			elseif has_uc_attribute (Clean_attribute_name) then
+			elseif has_attribute (Clean_attribute_name) then
 					-- clean:
 				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
 				if a_value.count > 0 then
@@ -48,33 +48,33 @@ feature {NONE} -- Initialization
 				end
 			else
 					-- root_class:
-				if has_uc_attribute (Root_class_attribute_name) then
+				if has_attribute (Root_class_attribute_name) then
 					a_value := attribute_value (Root_class_attribute_name.out)
 					if a_value.count > 0 then
 						command.set_root_class (a_value)
 					end
 				end
 					-- creation_procedure:
-				if has_uc_attribute (Creation_procedure_attribute_name) then
+				if has_attribute (Creation_procedure_attribute_name) then
 					a_value := attribute_value (Creation_procedure_attribute_name.out)
 					if a_value.count > 0 then
 						command.set_creation_procedure (a_value)
 					end
 				end
 					-- executable:
-				if has_uc_attribute (Executable_attribute_name) then
+				if has_attribute (Executable_attribute_name) then
 					a_value := attribute_value (Executable_attribute_name.out)
 					if a_value.count > 0 then
 						command.set_executable (a_value)
 					end
 				end
 					-- case_insensitive:
-				if has_uc_attribute (Case_insensitive_attribute_name) then
-					command.set_case_insensitive (uc_boolean_value (Case_insensitive_attribute_name))
+				if has_attribute (Case_insensitive_attribute_name) then
+					command.set_case_insensitive (boolean_value (Case_insensitive_attribute_name))
 				end
 					-- no_style_warning:
-				if has_uc_attribute (No_style_warning_attribute_name) then
-					command.set_no_style_warning (uc_boolean_value (No_style_warning_attribute_name))
+				if has_attribute (No_style_warning_attribute_name) then
+					command.set_no_style_warning (boolean_value (No_style_warning_attribute_name))
 				end
 			end
 		end

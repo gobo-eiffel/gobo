@@ -35,22 +35,22 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 				-- filename:
-			if has_uc_attribute (Filename_attribute_name) then
+			if has_attribute (Filename_attribute_name) then
 				a_value := attribute_value (Filename_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_filename (a_value.out)
 				end
 			end
 				-- start target:
-			if has_uc_attribute (Start_target_attribute_name) then
+			if has_attribute (Start_target_attribute_name) then
 				a_value := attribute_value (Start_target_attribute_name.out)
 				if a_value.count > 0 then
 					command.set_start_target_name (a_value.out)
 				end
 			end
 				-- reuse_variables:
-			if has_uc_attribute (Reuse_variables_attribute_name) then
-				command.set_reuse_variables (uc_boolean_value(Reuse_variables_attribute_name))
+			if has_attribute (Reuse_variables_attribute_name) then
+				command.set_reuse_variables (boolean_value(Reuse_variables_attribute_name))
 			end
 		end
 
