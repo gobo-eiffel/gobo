@@ -22,7 +22,9 @@
 				<cluster name="dispenser"/>
 				<cluster name="iteration"/>
 				<cluster name="list"/>
-				<cluster name="set"/>
+				<cluster name="set">
+					<cluster name="strategies"/>
+				</cluster>
 				<cluster name="sort"/>
 				<cluster name="storage"/>
 				<cluster name="table"/>
