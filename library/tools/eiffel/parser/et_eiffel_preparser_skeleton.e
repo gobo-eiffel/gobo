@@ -101,39 +101,28 @@ feature -- Parsing
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
 						if a_class.cluster.is_override then
-							-- TODO: two classes with the same name in two override clusters.
-							print ("Class name clash: ")
-							print (a_class.name.name)
-							print ("%N")
-							print ("Cluster1: ")
-							print (a_class.cluster.full_pathname)
-							print ("%N")
-							print ("Cluster2: ")
-							print (a_cluster.full_pathname)
-							print ("%N")
+								-- Two classes with the same name in two override clusters.
+							a_class.set_parsed
+							a_class.set_syntax_error
+							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 						else
 								-- Override.
 							a_class.set_filename (a_filename)
 							a_class.set_cluster (a_cluster)
 						end
 					elseif not a_class.cluster.is_override then
-						-- TODO: two classes with the same name in two non-override clusters.
-						print ("Class name clash: ")
-						print (a_class.name.name)
-						print ("%N")
-						print ("Cluster1: ")
-						print (a_class.cluster.full_pathname)
-						print ("%N")
-						print ("Cluster2: ")
-						print (a_cluster.full_pathname)
-						print ("%N")
+							-- Two classes with the same name in two non-override clusters.
+						a_class.set_parsed
+						a_class.set_syntax_error
+						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 					end
 				else
 					a_class.set_filename (a_filename)
 					a_class.set_cluster (a_cluster)
 				end
 			else
-				-- TODO:
+					-- No class name found.
+				error_handler.report_syntax_error (filename, current_position)
 			end
 			reset
 		rescue
@@ -159,7 +148,8 @@ feature -- Parsing
 			from
 				read_token
 				if last_classname = Void then
-					-- TODO:
+						-- No class name found.
+					error_handler.report_syntax_error (filename, current_position)
 				end
 			until
 				last_classname = Void
@@ -168,32 +158,20 @@ feature -- Parsing
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
 						if a_class.cluster.is_override then
-							-- TODO: two classes with the same name in two override clusters.
-							print ("Class name clash: ")
-							print (a_class.name.name)
-							print ("%N")
-							print ("Cluster1: ")
-							print (a_class.cluster.full_pathname)
-							print ("%N")
-							print ("Cluster2: ")
-							print (a_cluster.full_pathname)
-							print ("%N")
+								-- Two classes with the same name in two override clusters.
+							a_class.set_parsed
+							a_class.set_syntax_error
+							error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 						else
 								-- Override.
 							a_class.set_filename (a_filename)
 							a_class.set_cluster (a_cluster)
 						end
 					elseif not a_class.cluster.is_override then
-						-- TODO: two classes with the same name in two non-override clusters.
-						print ("Class name clash: ")
-						print (a_class.name.name)
-						print ("%N")
-						print ("Cluster1: ")
-						print (a_class.cluster.full_pathname)
-						print ("%N")
-						print ("Cluster2: ")
-						print (a_cluster.full_pathname)
-						print ("%N")
+							-- Two classes with the same name in two non-override clusters.
+						a_class.set_parsed
+						a_class.set_syntax_error
+						error_handler.report_vscn0a_error (a_class, a_cluster, filename)
 					end
 				else
 					a_class.set_filename (a_filename)

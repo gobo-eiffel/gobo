@@ -598,16 +598,9 @@ feature {NONE} -- AST factory
 			if Result.is_parsed and Result.is_preparsed then
 				if cluster.is_override then
 					if Result.cluster.is_override then
-						-- TODO: two classes with the same name in two override clusters.
-						print ("Class name clash: ")
-						print (Result.name.name)
-						print ("%N")
-						print ("Cluster1: ")
-						print (Result.cluster.full_pathname)
-						print ("%N")
-						print ("Cluster2: ")
-						print (cluster.full_pathname)
-						print ("%N")
+							-- Two classes with the same name in two override clusters.
+						set_fatal_error (Result)
+						error_handler.report_vscn0a_error (Result, cluster, filename)
 						Result := Void
 					else
 							-- Override.
@@ -623,16 +616,9 @@ feature {NONE} -- AST factory
 						features.wipe_out
 					end
 				elseif not Result.cluster.is_override then
-					-- TODO: two classes with the same name in two non-override clusters.
-					print ("Class name clash: ")
-					print (Result.name.name)
-					print ("%N")
-					print ("Cluster1: ")
-					print (Result.cluster.full_pathname)
-					print ("%N")
-					print ("Cluster2: ")
-					print (cluster.full_pathname)
-					print ("%N")
+						-- Two classes with the same name in two non-override clusters.
+					set_fatal_error (Result)
+					error_handler.report_vscn0a_error (Result, cluster, filename)
 					Result := Void
 				end
 			else

@@ -136,10 +136,11 @@ feature {NONE} -- Type resolving
 				end
 			end
 			if not resolved then
+				set_fatal_error (current_class)
 				if current_feature /= Void then
-					error_handler.report_vtat0b_error (current_class, current_feature, a_type)
+					error_handler.report_vtat1b_error (current_class, current_feature, a_type)
 				else
-					error_handler.report_vtat0a_error (current_class, a_type)
+					error_handler.report_vtat1a_error (current_class, a_type)
 				end
 			end
 		end
@@ -156,7 +157,8 @@ feature {NONE} -- Type resolving
 			if a_feature /= Void then
 				a_type.resolve_identifier_type (a_feature.first_seed)
 			else
-				error_handler.report_vtat0c_error (current_class, a_type)
+				set_fatal_error (current_class)
+				error_handler.report_vtat1c_error (current_class, a_type)
 			end
 		end
 

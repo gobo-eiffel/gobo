@@ -14,7 +14,7 @@ class ET_VALIDITY_ERROR
 
 inherit
 
-	ET_ERROR
+	ET_EIFFEL_ERROR
 
 creation
 
@@ -65,9 +65,12 @@ creation
 	make_vmss1a,
 	make_vmss2a,
 	make_vmss3a,
-	make_vtat0a,
-	make_vtat0b,
-	make_vtat0c,
+	make_vscn0a,
+	make_vtat1a,
+	make_vtat1b,
+	make_vtat1c,
+	make_vtat1d,
+	make_vtat2a,
 	make_vtbt0a,
 	make_vtbt0b,
 	make_vtbt0c,
@@ -78,7 +81,9 @@ creation
 	make_vtct0c,
 	make_vtug1a,
 	make_vtug2a,
-	make_gvagp0a
+	make_gvagp0a,
+	make_gvhpr4a,
+	make_gvhpr5a
 
 feature {NONE} -- Initialization
 
@@ -89,16 +94,17 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_position_not_void: a_position /= Void
 		do
-			code := default_code
-			etl_code := default_code
-			default_template := default_validity_template
+			code := gvzzz0a_template_code
+			etl_code := gvzzz_etl_code
+			default_template := gvzzz0a_default_template
 			current_class := a_class
 			position := a_position
-			create parameters.make (1, 4)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -106,10 +112,11 @@ feature {NONE} -- Initialization
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
 		end
 
 	make_vcfg1a (a_class: like current_class; a_formal: ET_FORMAL_PARAMETER; other_class: ET_CLASS) is
@@ -131,23 +138,25 @@ feature {NONE} -- Initialization
 			default_template := vcfg1a_default_template
 			current_class := a_class
 			position := a_formal.name.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_formal.name.name, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_formal.name.name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = formal parameter
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal parameter
 		end
 
 	make_vcfg2a (a_class: like current_class; a_formal1, a_formal2: ET_FORMAL_PARAMETER) is
@@ -167,26 +176,29 @@ feature {NONE} -- Initialization
 			default_template := vcfg2a_default_template
 			current_class := a_class
 			position := a_formal1.name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_formal1.name.name, 5)
-			parameters.put (a_formal1.index.out, 6)
-			parameters.put (a_formal2.index.out, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_formal1.name.name, 6)
+			parameters.put (a_formal1.index.out, 7)
+			parameters.put (a_formal2.index.out, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = first formal index
-			-- dollar6: $6 = second formal index
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first formal name
+			-- dollar7: $7 = first formal index
+			-- dollar8: $8 = second formal index
 		end
 
 	make_vcfg3a (a_class: like current_class; a_type: ET_BIT_FEATURE) is
@@ -204,23 +216,25 @@ feature {NONE} -- Initialization
 			default_template := vcfg3a_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vcfg3b (a_class: like current_class; a_type: ET_BIT_N) is
@@ -238,23 +252,25 @@ feature {NONE} -- Initialization
 			default_template := vcfg3b_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vcfg3c (a_class: like current_class; a_type: ET_LIKE_TYPE) is
@@ -272,23 +288,25 @@ feature {NONE} -- Initialization
 			default_template := vcfg3c_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vcfg3d (a_class: like current_class; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
@@ -308,25 +326,27 @@ feature {NONE} -- Initialization
 			default_template := vcfg3d_default_template
 			current_class := a_class
 			position := a_constraint.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_formal.name.name, 5)
-			parameters.put (a_constraint.to_text, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_formal.name.name, 6)
+			parameters.put (a_constraint.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = formal parameter
-			-- dollar6: $6 = constraint
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal parameter
+			-- dollar7: $7 = constraint
 		end
 
 	make_vcfg3e (a_class: like current_class; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE) is
@@ -348,25 +368,27 @@ feature {NONE} -- Initialization
 			default_template := vcfg3e_default_template
 			current_class := a_class
 			position := a_constraint.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_formal.name.name, 5)
-			parameters.put (a_constraint.to_text, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_formal.name.name, 6)
+			parameters.put (a_constraint.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = formal parameter
-			-- dollar6: $6 = constraint
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal parameter
+			-- dollar7: $7 = constraint
 		end
 
 	make_vcfg3g (a_class: like current_class; a_cycle: DS_LIST [ET_FORMAL_PARAMETER]) is
@@ -403,23 +425,25 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_cursor.item.name.name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_string, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = cycle
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = cycle
 		end
 
 	make_vcfg3h (a_class: like current_class; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE) is
@@ -439,25 +463,27 @@ feature {NONE} -- Initialization
 			default_template := vcfg3h_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_formal.name.name, 5)
-			parameters.put (a_type.to_text, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_formal.name.name, 6)
+			parameters.put (a_type.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = formal parameter
-			-- dollar6: $6 = formal type in constraint
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal parameter
+			-- dollar7: $7 = formal type in constraint
 		end
 
 	make_vcfg3j (a_class: like current_class; a_cycle: DS_LIST [ET_FORMAL_PARAMETER]) is
@@ -494,23 +520,25 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_cursor.item.name.name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_string, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = cycle
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = cycle
 		end
 
 	make_vdjr0a (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
@@ -530,27 +558,29 @@ feature {NONE} -- Initialization
 			default_template := vdjr0a_default_template
 			current_class := a_class
 			position := f1.parent.type.name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
-			parameters.put (f2.parent.type.name.name, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = first parent base class
-			-- dollar7: $7 = second parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first parent base class
+			-- dollar8: $8 = second parent base class
 		end
 
 	make_vdjr0b (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE; arg: INTEGER) is
@@ -570,29 +600,31 @@ feature {NONE} -- Initialization
 			default_template := vdjr0b_default_template
 			current_class := a_class
 			position := f1.parent.type.name.position
-			create parameters.make (1, 8)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
-			parameters.put (f2.parent.type.name.name, 7)
-			parameters.put (arg.out, 8)
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.parent.type.name.name, 8)
+			parameters.put (arg.out, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = first parent base class
-			-- dollar7: $7 = second parent base class
-			-- dollar8: $8 = argument index
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first parent base class
+			-- dollar8: $8 = second parent base class
+			-- dollar9: $9 = argument index
 		end
 
 	make_vdjr0c (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
@@ -612,27 +644,29 @@ feature {NONE} -- Initialization
 			default_template := vdjr0c_default_template
 			current_class := a_class
 			position := f1.parent.type.name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
-			parameters.put (f2.parent.type.name.name, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = first parent base class
-			-- dollar7: $7 = second parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first parent base class
+			-- dollar8: $8 = second parent base class
 		end
 
 	make_vdrd2a (a_class: like current_class; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
@@ -653,27 +687,29 @@ feature {NONE} -- Initialization
 			default_template := vdrd2a_default_template
 			current_class := a_class
 			position := f1.name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f2.name.name, 6)
-			parameters.put (f2.parent.type.name.name, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f2.name.name, 7)
+			parameters.put (f2.parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = precursor feature name
-			-- dollar7: $7 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = precursor feature name
+			-- dollar8: $8 = parent base class
 		end
 
 	make_vdrd2b (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
@@ -695,29 +731,31 @@ feature {NONE} -- Initialization
 			default_template := vdrd2b_default_template
 			current_class := a_class
 			position := f1.parent.type.name.position
-			create parameters.make (1, 8)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
-			parameters.put (f2.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.name.name, 8)
+			parameters.put (f2.parent.type.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class of feature
-			-- dollar7: $7 = redeclared feature name
-			-- dollar8: $8 = parent base class of redeclared feature
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class of feature
+			-- dollar8: $8 = redeclared feature name
+			-- dollar9: $9 = parent base class of redeclared feature
 		end
 
 	make_vdrd4a (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
@@ -741,25 +779,27 @@ feature {NONE} -- Initialization
 			default_template := vdrd4a_default_template
 			current_class := a_class
 			position := f2.name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrd4b (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
@@ -783,25 +823,27 @@ feature {NONE} -- Initialization
 			default_template := vdrd4b_default_template
 			current_class := a_class
 			position := f2.name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrd4c (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
@@ -825,25 +867,27 @@ feature {NONE} -- Initialization
 			default_template := vdrd4c_default_template
 			current_class := a_class
 			position := f2.name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrd5a (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
@@ -867,25 +911,27 @@ feature {NONE} -- Initialization
 			default_template := vdrd5a_default_template
 			current_class := a_class
 			position := f1.redefine_name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrs1a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -906,25 +952,27 @@ feature {NONE} -- Initialization
 			default_template := vdrs1a_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrs2a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -945,25 +993,27 @@ feature {NONE} -- Initialization
 			default_template := vdrs2a_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrs2b (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -984,25 +1034,27 @@ feature {NONE} -- Initialization
 			default_template := vdrs2b_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrs3a (a_class: like current_class; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
@@ -1023,25 +1075,27 @@ feature {NONE} -- Initialization
 			default_template := vdrs3a_default_template
 			current_class := a_class
 			position := f2.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f2.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrs4a (a_class: like current_class; a_feature: ET_INHERITED_FEATURE) is
@@ -1062,25 +1116,27 @@ feature {NONE} -- Initialization
 			default_template := vdrs4a_default_template
 			current_class := a_class
 			position := a_feature.redefine_name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_feature.redefine_name.name, 5)
-			parameters.put (a_feature.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.redefine_name.name, 6)
+			parameters.put (a_feature.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdrs4b (a_class: like current_class; a_deferred: ET_INHERITED_FEATURE; an_effective: ET_FLATTENED_FEATURE) is
@@ -1104,25 +1160,27 @@ feature {NONE} -- Initialization
 			default_template := vdrs4b_default_template
 			current_class := a_class
 			position := a_deferred.redefine_name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_deferred.redefine_name.name, 5)
-			parameters.put (a_deferred.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_deferred.redefine_name.name, 6)
+			parameters.put (a_deferred.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdus1a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -1144,25 +1202,27 @@ feature {NONE} -- Initialization
 			default_template := vdus1a_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdus2a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -1183,25 +1243,27 @@ feature {NONE} -- Initialization
 			default_template := vdus2a_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdus2b (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -1222,25 +1284,27 @@ feature {NONE} -- Initialization
 			default_template := vdus2b_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdus3a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -1261,25 +1325,27 @@ feature {NONE} -- Initialization
 			default_template := vdus3a_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vdus4a (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
@@ -1301,25 +1367,27 @@ feature {NONE} -- Initialization
 			default_template := vdus4a_default_template
 			current_class := a_class
 			position := f2.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f2.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vhpr1a (a_class: like current_class; a_cycle: DS_LIST [ET_CLASS]) is
@@ -1355,23 +1423,25 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_cursor.item.name.name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_string, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = cycle
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = cycle
 		end
 
 	make_vhpr3a (a_class: like current_class; a_type: ET_BIT_FEATURE) is
@@ -1389,23 +1459,25 @@ feature {NONE} -- Initialization
 			default_template := vhpr3a_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vhpr3b (a_class: like current_class; a_type: ET_BIT_N) is
@@ -1423,23 +1495,25 @@ feature {NONE} -- Initialization
 			default_template := vhpr3b_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vhpr3c (a_class: like current_class; a_type: ET_LIKE_TYPE) is
@@ -1457,23 +1531,25 @@ feature {NONE} -- Initialization
 			default_template := vhpr3c_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vhrc1a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME) is
@@ -1495,25 +1571,27 @@ feature {NONE} -- Initialization
 			default_template := vhrc1a_default_template
 			current_class := a_class
 			position := a_rename.old_name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_rename.old_name.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename.old_name.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vhrc2a (a_class: like current_class; a_parent: ET_PARENT; a_rename1, a_rename2: ET_RENAME) is
@@ -1536,25 +1614,27 @@ feature {NONE} -- Initialization
 			default_template := vhrc2a_default_template
 			current_class := a_class
 			position := a_rename2.old_name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_rename2.old_name.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename2.old_name.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vhrc4a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FLATTENED_FEATURE) is
@@ -1576,27 +1656,29 @@ feature {NONE} -- Initialization
 			default_template := vhrc4a_default_template
 			current_class := a_class
 			position := a_rename.new_name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_rename.new_name.name, 5)
-			parameters.put (f.name.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename.new_name.name, 6)
+			parameters.put (f.name.name, 7)
+			parameters.put (a_parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = new prefix name
-			-- dollar6: $6 = old feature name
-			-- dollar7: $7 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = new prefix name
+			-- dollar7: $7 = old feature name
+			-- dollar8: $8 = parent base class
 		end
 
 	make_vhrc5a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FLATTENED_FEATURE) is
@@ -1617,27 +1699,29 @@ feature {NONE} -- Initialization
 			default_template := vhrc5a_default_template
 			current_class := a_class
 			position := a_rename.new_name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_rename.new_name.name, 5)
-			parameters.put (f.name.name, 6)
-			parameters.put (a_parent.type.name.name, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename.new_name.name, 6)
+			parameters.put (f.name.name, 7)
+			parameters.put (a_parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = new infix name
-			-- dollar6: $6 = old feature name
-			-- dollar7: $7 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = new infix name
+			-- dollar7: $7 = old feature name
+			-- dollar8: $8 = parent base class
 		end
 
 	make_vmfn0a (a_class: like current_class; f1, f2: ET_FEATURE) is
@@ -1657,23 +1741,25 @@ feature {NONE} -- Initialization
 			default_template := vmfn0a_default_template
 			current_class := a_class
 			position := f2.name.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f2.name.name, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name.name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
 		end
 
 	make_vmfn0b (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
@@ -1695,27 +1781,29 @@ feature {NONE} -- Initialization
 			default_template := vmfn0b_default_template
 			current_class := a_class
 			position := f2.name.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f2.name.name, 5)
-			parameters.put (f1.precursor_feature.name.name, 6)
-			parameters.put (f1.parent.type.name.name, 7)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name.name, 6)
+			parameters.put (f1.precursor_feature.name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = first feature name (in current class)
-			-- dollar6: $6 = second feature name (in parent)
-			-- dollar7: $7 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name (in current class)
+			-- dollar7: $7 = second feature name (in parent)
+			-- dollar8: $8 = parent base class
 		end
 
 	make_vmfn0c (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
@@ -1739,29 +1827,31 @@ feature {NONE} -- Initialization
 			default_template := vmfn0c_default_template
 			current_class := a_class
 			position := f1.parent.type.name.position
-			create parameters.make (1, 8)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f1.precursor_feature.name.name, 5)
-			parameters.put (f1.parent.type.name.name, 6)
-			parameters.put (f2.precursor_feature.name.name, 7)
-			parameters.put (f2.parent.type.name.name, 8)
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.precursor_feature.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.precursor_feature.name.name, 8)
+			parameters.put (f2.parent.type.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = first feature name
-			-- dollar6: $6 = first parent base class
-			-- dollar7: $7 = second feature name
-			-- dollar8: $8 = second parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first parent base class
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second parent base class
 		end
 
 	make_vmrc2a (a_class: like current_class; replicated_features: DS_LIST [ET_INHERITED_FEATURE]) is
@@ -1807,23 +1897,25 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_feature.precursor_feature.name.name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_string, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = replicated features
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = replicated features
 		end
 
 	make_vmrc2b (a_class: like current_class; replicated_features: DS_LIST [ET_INHERITED_FEATURE]) is
@@ -1870,23 +1962,25 @@ feature {NONE} -- Initialization
 				a_string.append_string (a_feature.precursor_feature.name.name)
 				a_cursor.forth
 			end
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_string, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_string, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = replicated features
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = replicated features
 		end
 
 	make_vmss1a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
@@ -1907,25 +2001,27 @@ feature {NONE} -- Initialization
 			default_template := vmss1a_default_template
 			current_class := a_class
 			position := f.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vmss2a (a_class: like current_class; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
@@ -1946,25 +2042,27 @@ feature {NONE} -- Initialization
 			default_template := vmss2a_default_template
 			current_class := a_class
 			position := f2.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (f2.name, 5)
-			parameters.put (a_parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			parameters.put (a_parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
 	make_vmss3a (a_class: like current_class; a_feature: ET_INHERITED_FEATURE) is
@@ -1985,138 +2083,361 @@ feature {NONE} -- Initialization
 			default_template := vmss3a_default_template
 			current_class := a_class
 			position := a_feature.select_name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_feature.select_name.name, 5)
-			parameters.put (a_feature.parent.type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.select_name.name, 6)
+			parameters.put (a_feature.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = feature name
-			-- dollar6: $6 = parent base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
 		end
 
-	make_vtat0a (a_class: like current_class; a_type: ET_LIKE_FEATURE) is
+	make_vscn0a (a_class: like current_class; other_cluster: ET_CLUSTER; other_filename: STRING) is
+			-- Create a new VSCN error: `a_class' also appears in
+			-- `other_cluster'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			other_cluster_not_void: other_cluster /= Void
+			other_filename_not_void: other_filename /= Void
+		do
+			code := vscn0a_template_code
+			etl_code := vscn_etl_code
+			default_template := vscn0a_default_template
+			current_class := a_class
+			position := null_position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class.cluster.full_pathname, 6)
+			parameters.put (a_class.filename, 7)
+			parameters.put (other_cluster.full_pathname, 8)
+			parameters.put (other_filename, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first cluster pathname
+			-- dollar7: $7 = first class filename
+			-- dollar8: $8 = second cluster pathname
+			-- dollar9: $9 = second class filename
+		end
+
+	make_vtat1a (a_class: like current_class; a_type: ET_LIKE_FEATURE) is
 			-- Create a new VTAT error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
 			--
 			-- ETL2: p.214
+			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 		do
-			code := vtat0a_template_code
-			etl_code := vtat_etl_code
-			default_template := vtat0a_default_template
+			code := vtat1a_template_code
+			etl_code := vtat1_etl_code
+			default_template := vtat1a_default_template
 			current_class := a_class
-			position := a_type.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
-			parameters.put (a_type.name.name, 6)
+			position := a_type.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
-			-- dollar6: $6 = anchor name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = anchor name
 		end
 
-	make_vtat0b (a_class: like current_class; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
+	make_vtat1b (a_class: like current_class; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
 			-- Create a new VTAT error: the anchor in the
 			-- Anchored_type must be the final name of a query
 			-- in `a_class' or an argument of `a_feature'.
 			--
 			-- ETL2: p.214
+			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 		do
-			code := vtat0b_template_code
-			etl_code := vtat_etl_code
-			default_template := vtat0b_default_template
+			code := vtat1b_template_code
+			etl_code := vtat1_etl_code
+			default_template := vtat1b_default_template
 			current_class := a_class
-			position := a_type.position
-			create parameters.make (1, 7)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
-			parameters.put (a_type.name.name, 6)
-			parameters.put (a_feature.name.name, 7)
+			position := a_type.name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
+			parameters.put (a_feature.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
-			-- dollar6: $6 = anchor name
-			-- dollar7: $7 = feature name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = anchor name
+			-- dollar8: $8 = feature name
 		end
 
-	make_vtat0c (a_class: like current_class; a_type: ET_QUALIFIED_LIKE_CURRENT) is
+	make_vtat1c (a_class: like current_class; a_type: ET_QUALIFIED_LIKE_CURRENT) is
 			-- Create a new VTAT error: the anchor in the
 			-- Anchored_type must be the final name of a query
 			-- in `a_class'.
 			--
 			-- ETL2: p.214
+			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 		do
-			code := vtat0c_template_code
-			etl_code := vtat_etl_code
-			default_template := vtat0c_default_template
+			code := vtat1c_template_code
+			etl_code := vtat1_etl_code
+			default_template := vtat1c_default_template
 			current_class := a_class
-			position := a_type.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
-			parameters.put (a_type.name.name, 6)
+			position := a_type.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
-			-- dollar6: $6 = anchor name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = anchor name
+		end
+
+	make_vtat1d (a_class: like current_class; a_type: ET_QUALIFIED_TYPE; other_class: ET_CLASS) is
+			-- Create a new VTAT error: the anchor in the Anchored_type
+			-- must be the final name of a query in `other_class'.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			other_class_not_void: other_class /= Void
+		do
+			code := vtat1d_template_code
+			etl_code := vtat1_etl_code
+			default_template := vtat1d_default_template
+			current_class := a_class
+			position := a_type.name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
+			parameters.put (other_class.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = anchor name
+			-- dollar8: $8 = remote class name
+		end
+
+	make_vtat2a (a_class: like current_class; a_cycle: DS_LIST [ET_LIKE_IDENTIFIER]) is
+			-- Create a new VTAT error: the anchors in `a_cycle'
+			-- are cyclic anchors in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.252
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_cyle_not_void: a_cycle /= Void
+			no_void_anchor: not a_cycle.has (Void)
+			is_cycle: a_cycle.count >= 2
+		local
+			a_cursor: DS_LIST_CURSOR [ET_LIKE_IDENTIFIER]
+			a_like: ET_LIKE_IDENTIFIER
+			a_feature: ET_FEATURE
+			a_string: STRING
+		do
+			code := vtat2a_template_code
+			etl_code := vtat2_etl_code
+			default_template := vtat2a_default_template
+			current_class := a_class
+				-- Look for an anchor that has been written
+				-- in `current_class'. Even though we consider
+				-- that there was no cycles in the parents of
+				-- `current_class', it is possible that no anchor
+				-- have been written in `current_class' but get
+				-- a cycle anyway. For example:
+				--
+				--   deferred class A
+				--   feature
+				--      f: like g is do ... end
+				--      g: ANY is deferred end
+				--   end
+				--
+				--   deferred class B
+				--   feature
+				--      f: ANY is deferred end
+				--      g: like f is do ... end
+				--   end
+				--
+				--   class C
+				--   inherit
+				--        A
+				--        B
+				--   end
+				--
+				-- The flat-short of class C will have something
+				-- like that:
+				--
+				--   f: like g is do ... end
+				--   g: like f is do ... end
+				--
+				-- `position' is set to null in that case.
+			position := null_position
+			a_cursor := a_cycle.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_like := a_cursor.item
+				a_feature := current_class.seeded_feature (a_like.seed)
+				if a_feature /= Void and then a_feature.implementation_class = current_class then
+					if a_like.is_like_argument then
+						position := a_like.name.position
+						a_cursor.go_after
+					else
+						a_cursor.forth
+						if not a_cursor.after then
+							position := a_cursor.item.name.position
+							a_cursor.go_after
+						end
+					end
+				else
+					a_cursor.forth
+				end
+			end
+			from
+				create a_string.make (20)
+				a_cursor.start
+				a_like := a_cursor.item
+				if a_like.is_like_argument then
+					a_string.append_string (a_like.name.name)
+				else
+						-- Take care of possible renaming.
+					a_feature := current_class.seeded_feature (a_like.seed)
+					if a_feature /= Void then
+						a_string.append_string (a_feature.name.name)
+					else
+						a_string.append_string (a_like.name.name)
+					end
+				end
+				a_cursor.forth
+			until
+				a_cursor.after
+			loop
+				a_string.append_string (" -> ")
+				a_like := a_cursor.item
+				if a_like.is_like_argument then
+					a_string.append_string (a_like.name.name)
+				else
+						-- Take care of possible renaming.
+					a_feature := current_class.seeded_feature (a_like.seed)
+					if a_feature /= Void then
+						a_string.append_string (a_feature.name.name)
+					else
+						a_string.append_string (a_like.name.name)
+					end
+				end
+				a_cursor.forth
+			end
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_string, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = cycle
 		end
 
 	make_vtbt0a (a_class: like current_class; a_type: ET_BIT_FEATURE) is
@@ -2135,25 +2456,27 @@ feature {NONE} -- Initialization
 			default_template := vtbt0a_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
-			parameters.put (a_type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
-			-- dollar6: $6 = constant feature name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = constant feature name
 		end
 
 	make_vtbt0b (a_class: like current_class; a_type: ET_BIT_FEATURE) is
@@ -2171,25 +2494,27 @@ feature {NONE} -- Initialization
 			default_template := vtbt0b_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
-			parameters.put (a_type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
-			-- dollar6: $6 = constant feature name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = constant feature name
 		end
 
 	make_vtbt0c (a_class: like current_class; a_type: ET_BIT_TYPE) is
@@ -2208,23 +2533,25 @@ feature {NONE} -- Initialization
 			default_template := vtbt0c_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vtbt0d (a_class: like current_class; a_type: ET_BIT_TYPE) is
@@ -2244,23 +2571,25 @@ feature {NONE} -- Initialization
 			default_template := vtbt0d_default_template
 			current_class := a_class
 			position := a_type.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_vtcg0a (a_class: like current_class; an_actual, a_constraint: ET_TYPE) is
@@ -2281,25 +2610,27 @@ feature {NONE} -- Initialization
 			default_template := vtcg0a_default_template
 			current_class := a_class
 			position := an_actual.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (an_actual.to_text, 5)
-			parameters.put (a_constraint.to_text, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_actual.to_text, 6)
+			parameters.put (a_constraint.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = actual generic parameter
-			-- dollar6: $6 = generic constraint
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = actual generic parameter
+			-- dollar7: $7 = generic constraint
 		end
 
 	make_vtct0a (a_class: like current_class; a_type: ET_BASE_TYPE) is
@@ -2318,23 +2649,25 @@ feature {NONE} -- Initialization
 			default_template := vtct0a_default_template
 			current_class := a_class
 			position := a_type.name.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.name.name, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.name.name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = type base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = type base class
 		end
 
 	make_vtct0b (a_class: like current_class; a_type: ET_FORMAL_PARAMETER_TYPE) is
@@ -2353,23 +2686,25 @@ feature {NONE} -- Initialization
 			default_template := vtct0b_default_template
 			current_class := a_class
 			position := a_type.name.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.name.name, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.name.name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = type base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = type base class
 		end
 
 	make_vtct0c (a_class: like current_class) is
@@ -2387,21 +2722,23 @@ feature {NONE} -- Initialization
 			default_template := vtct0c_default_template
 			current_class := a_class
 			position := null_position
-			create parameters.make (1, 4)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
 		end
 
 	make_vtug1a (a_class: like current_class; a_type: ET_CLASS_TYPE) is
@@ -2421,25 +2758,27 @@ feature {NONE} -- Initialization
 			default_template := vtug1a_default_template
 			current_class := a_class
 			position := a_type.name.position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
-			parameters.put (a_type.name.name, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			parameters.put (a_type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
-			-- dollar6: $6 = invalid type's base class
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
+			-- dollar7: $7 = invalid type's base class
 		end
 
 	make_vtug2a (a_class: like current_class; a_type: ET_CLASS_TYPE) is
@@ -2459,23 +2798,25 @@ feature {NONE} -- Initialization
 			default_template := vtug2a_default_template
 			current_class := a_class
 			position := a_type.name.position
-			create parameters.make (1, 5)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (a_type.to_text, 5)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = invalid type
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = invalid type
 		end
 
 	make_gvagp0a (a_class: like current_class; anc1, anc2: ET_BASE_TYPE) is
@@ -2496,25 +2837,99 @@ feature {NONE} -- Initialization
 			default_template := gvagp0a_default_template
 			current_class := a_class
 			position := null_position
-			create parameters.make (1, 6)
-			parameters.put (filename, 1)
-			parameters.put (position.line.out, 2)
-			parameters.put (position.column.out, 3)
-			parameters.put (current_class.name.name, 4)
-			parameters.put (anc1.to_text, 5)
-			parameters.put (anc2.to_text, 6)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (anc1.to_text, 6)
+			parameters.put (anc2.to_text, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
-			-- dollar1: $1 = filename
-			-- dollar2: $2 = line
-			-- dollar3: $3 = column
-			-- dollar4: $4 = class name
-			-- dollar5: $5 = ancestor1
-			-- dollar6: $6 = ancestor2
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = ancestor1
+			-- dollar7: $7 = ancestor2
+		end
+
+	make_gvhpr4a (a_class: like current_class; a_parent: ET_BIT_N) is
+			-- Create a new GVHPR-4 error: cannot inherit from Bit_type.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVHPR-4: See ETL2 VHPR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+		do
+			code := gvhpr4a_template_code
+			etl_code := gvhpr4_etl_code
+			default_template := gvhpr4a_default_template
+			current_class := a_class
+			position := a_parent.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_parent.position.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = parent
+		end
+
+	make_gvhpr5a (a_class: like current_class; a_parent: ET_TUPLE_TYPE) is
+			-- Create a new GVHPR-5 error: cannot inherit from Tuple_type.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVHPR-5: See ETL2 VHPR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+		do
+			code := gvhpr5a_template_code
+			etl_code := gvhpr5_etl_code
+			default_template := gvhpr5a_default_template
+			current_class := a_class
+			position := a_parent.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_parent.position.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = parent
 		end
 
 feature -- Access
@@ -2539,70 +2954,72 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	default_validity_template: STRING is "Validity error"
-	default_code: STRING is "gvvvv"
-			-- Default values
-
-	vcfg1a_default_template: STRING is "formal generic parameter '$5' has the same name as a class in the surrounding universe."
-	vcfg2a_default_template: STRING is "'$5' is the name of formal generic parameters #$6 and #$7."
-	vcfg3a_default_template: STRING is "invalid type '$5' in constraint of formal generic parameter."
-	vcfg3b_default_template: STRING is "invalid type '$5' in constraint of formal generic parameter."
-	vcfg3c_default_template: STRING is "invalid type '$5' in constraint of formal generic parameter."
-	vcfg3d_default_template: STRING is "constraint of formal generic parameter '$5' is '$6' itself."
-	vcfg3e_default_template: STRING is "constraint of formal generic parameter '$5' is another formal generic parameter '$6'."
-	vcfg3g_default_template: STRING is "formal generic constraint cycle $5."
-	vcfg3h_default_template: STRING is "constraint of formal generic parameter '$5' contains '$6' itself."
-	vcfg3j_default_template: STRING is "formal generic constraint cycle $5."
-	vdjr0a_default_template: STRING is "joined deferred features `$5' inherited from $6 and $7 don't have the same signature. Different number of arguments."
-	vdjr0b_default_template: STRING is "joined deferred features `$5' inherited from $6 and $7 don't have the same signature. Type of argument number $8 differs."
-	vdjr0c_default_template: STRING is "joined deferred features `$5' inherited from $6 and $7 don't have the same signature. Type of result differs."
-	vdrd2a_default_template: STRING is "signature of feature `$5' does not conform to the signature of redeclared feature `$6' in parent $7."
-	vdrd2b_default_template: STRING is "signature of feature `$5' inherited from $6 does not conform to the signature of redeclared feature `$7' in parent $8."
-	vdrd4a_default_template: STRING is "deferred feature `$5' inherited from $6 is redefined but is not listed in the Redefine subclause."
-	vdrd4b_default_template: STRING is "effective feature `$5' inherited from $6 is redefined but is not listed in the Redefine subclause."
-	vdrd4c_default_template: STRING is "effective feature `$5' inherited from $6 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
-	vdrd5a_default_template: STRING is "effective feature `$5' inherited from $6 is redefined into a deferred one."
-	vdrs1a_default_template: STRING is "`$5' is not the final name of a feature in $6."
-	vdrs2a_default_template: STRING is "cannot redefine the frozen feature `$5'."
-	vdrs2b_default_template: STRING is "cannot redefine the constant attribute `$5'."
-	vdrs3a_default_template: STRING is "feature name `$5' appears twice in the Redefine subclause of parent $6."
-	vdrs4a_default_template: STRING is "Redefine subclause of $6 lists feature `$5' but it is not redefined."
-	vdrs4b_default_template: STRING is "redeclaration of feature $5 from $6 is an effecting and should not appear in the Redefine subclause."
-	vdus1a_default_template: STRING is "`$5' is not the final name of a feature in $6."
-	vdus2a_default_template: STRING is "cannot undefine the frozen feature `$5'."
-	vdus2b_default_template: STRING is "cannot undefine the attribute `$5'."
-	vdus3a_default_template: STRING is "cannot undefine the deferred feature `$5'."
-	vdus4a_default_template: STRING is "feature name `$5' appears twice in the Undefine subclause of parent $6."
-	vhpr1a_default_template: STRING is "inheritance cycle $5."
-	vhpr3a_default_template: STRING is "invalid type '$5' in parent clause."
-	vhpr3b_default_template: STRING is "invalid type '$5' in parent clause."
-	vhpr3c_default_template: STRING is "invalid type '$5' in parent clause."
-	vhrc1a_default_template: STRING is "`$5' is not the final name of a feature in $6."
-	vhrc2a_default_template: STRING is "feature name `$5' appears as first element of two Rename_pairs."
-	vhrc4a_default_template: STRING is "`$5' is of the Prefix form but `$6' in $7 is not an attribute nor a function with no argument."
-	vhrc5a_default_template: STRING is "`$5' is of the Infix form but `$6' in $7 is not a function with one argument."
-	vmfn0a_default_template: STRING is "two features with the same name `$5'."
-	vmfn0b_default_template: STRING is "two features with the same name `$5' in current class and `$6' inherited from $7."
-	vmfn0c_default_template: STRING is "two features with the same name `$5' inherited from $6 and `$7' inherited from $8."
-	vmrc2a_default_template: STRING is "replicated features $5 have not been selected."
-	vmrc2b_default_template: STRING is "replicated features $5 have been selected more than once."
-	vmss1a_default_template: STRING is "`$5' is not the final name of a feature in $6."
-	vmss2a_default_template: STRING is "feature name `$5' appears twice in the Select subclause of parent $6."
-	vmss3a_default_template: STRING is "`$5' is not a replicated feature."
-	vtat0a_default_template: STRING is "invalid type '$5': the anchor `$6' must be the final name of a query."
-	vtat0b_default_template: STRING is "invalid type '$5': the anchor `$6' must be the final name of a query, or an argument of routine `$7'."
-	vtat0c_default_template: STRING is "invalid type '$5': the anchor `$6' must be the final name of a query."
-	vtbt0a_default_template: STRING is "invalid type '$5': `$6' is not the final name of a constant attribute of type INTEGER."
-	vtbt0b_default_template: STRING is "invalid type '$5': `$6' is not the final name of a feature."
-	vtbt0c_default_template: STRING is "invalid type '$5': bit size must be a positive integer constant."
-	vtbt0d_default_template: STRING is "invalid type '$5': bit size must be a positive integer constant."
-	vtcg0a_default_template: STRING is "actual generic parameter '$5' does not conform to constraint '$6'."
-	vtct0a_default_template: STRING is "type based on unknown class $1."
-	vtct0b_default_template: STRING is "type based on unknown class $1."
-	vtct0c_default_template: STRING is "implicitly inherits from unknown class ANY."
-	vtug1a_default_template: STRING is "type '$5' has actual generic parameters but class $6 is not generic."
-	vtug2a_default_template: STRING is "type '$5' has wrong number of actual generic parameters."
-	gvagp0a_default_template: STRING is "ancestors with generic parameter mismatch: '$5' and '$6'."
+	vcfg1a_default_template: STRING is "[$1] Class $5 ($2,$3): formal generic parameter '$6' has the same name as a class in the surrounding universe."
+	vcfg2a_default_template: STRING is "[$1] Class $5 ($2,$3): '$6' is the name of formal generic parameters #$7 and #$8."
+	vcfg3a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3d_default_template: STRING is "[$1] Class $5 ($2,$3): constraint of formal generic parameter '$6' is '$7' itself."
+	vcfg3e_default_template: STRING is "[$1] Class $5 ($2,$3): constraint of formal generic parameter '$6' is another formal generic parameter '$7'."
+	vcfg3g_default_template: STRING is "[$1] Class $5 ($2,$3): formal generic constraint cycle $6."
+	vcfg3h_default_template: STRING is "[$1] Class $5 ($2,$3): constraint of formal generic parameter '$6' contains '$7' itself."
+	vcfg3j_default_template: STRING is "[$1] Class $5 ($2,$3): formal generic constraint cycle $6."
+	vdjr0a_default_template: STRING is "[$1] Class $5 ($2,$3): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
+	vdjr0b_default_template: STRING is "[$1] Class $5 ($2,$3): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
+	vdjr0c_default_template: STRING is "[$1] Class $5 ($2,$3): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
+	vdrd2a_default_template: STRING is "[$1] Class $5 ($2,$3): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
+	vdrd2b_default_template: STRING is "[$1] Class $5 ($2,$3): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
+	vdrd4a_default_template: STRING is "[$1] Class $5 ($2,$3): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
+	vdrd4b_default_template: STRING is "[$1] Class $5 ($2,$3): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
+	vdrd4c_default_template: STRING is "[$1] Class $5 ($2,$3): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
+	vdrd5a_default_template: STRING is "[$1] Class $5 ($2,$3): effective feature `$6' inherited from $7 is redefined into a deferred one."
+	vdrs1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
+	vdrs2a_default_template: STRING is "[$1] Class $5 ($2,$3): cannot redefine the frozen feature `$6'."
+	vdrs2b_default_template: STRING is "[$1] Class $5 ($2,$3): cannot redefine the constant attribute `$6'."
+	vdrs3a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears twice in the Redefine subclause of parent $7."
+	vdrs4a_default_template: STRING is "[$1] Class $5 ($2,$3): Redefine subclause of $7 lists feature `$6' but it is not redefined."
+	vdrs4b_default_template: STRING is "[$1] Class $5 ($2,$3): redeclaration of feature `$6' from $7 is an effecting and should not appear in the Redefine subclause."
+	vdus1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
+	vdus2a_default_template: STRING is "[$1] Class $5 ($2,$3): cannot undefine the frozen feature `$6'."
+	vdus2b_default_template: STRING is "[$1] Class $5 ($2,$3): cannot undefine the attribute `$6'."
+	vdus3a_default_template: STRING is "[$1] Class $5 ($2,$3): cannot undefine the deferred feature `$6'."
+	vdus4a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears twice in the Undefine subclause of parent $7."
+	vhpr1a_default_template: STRING is "[$1] Class $5: inheritance cycle $6."
+	vhpr3a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in parent clause."
+	vhpr3b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in parent clause."
+	vhpr3c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in parent clause."
+	vhrc1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
+	vhrc2a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears as first element of two Rename_pairs."
+	vhrc4a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
+	vhrc5a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
+	vmfn0a_default_template: STRING is "[$1] Class $5 ($2,$3): two features with the same name `$6'."
+	vmfn0b_default_template: STRING is "[$1] Class $5 ($2,$3): two features with the same name `$6' in current class and `$7' inherited from $8."
+	vmfn0c_default_template: STRING is "[$1] Class $5 ($2,$3): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
+	vmrc2a_default_template: STRING is "[$1] Class $5 ($2,$3): replicated features $6 have not been selected."
+	vmrc2b_default_template: STRING is "[$1] Class $5 ($2,$3): replicated features $6 have been selected more than once."
+	vmss1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
+	vmss2a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears twice in the Select subclause of parent $7."
+	vmss3a_default_template: STRING is "[$1] Class $5 ($2,$3): class name clash: first file '$7', second file '$9'."
+	vscn0a_default_template: STRING is "[$1] Class $5: invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
+	vtat1c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1d_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query in class $8."
+	vtat2a_default_template: STRING is "[$1] Class $5 ($2,$3): anchor cycle $6."
+	vtbt0a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': `$7' is not the final name of a constant attribute of type INTEGER."
+	vtbt0b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': `$7' is not the final name of a feature."
+	vtbt0c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': bit size must be a positive integer constant."
+	vtbt0d_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': bit size must be a positive integer constant."
+	vtcg0a_default_template: STRING is "[$1] Class $5 ($2,$3): actual generic parameter '$6' does not conform to constraint '$7'."
+	vtct0a_default_template: STRING is "[$1] Class $5 ($2,$3): type based on unknown class $6."
+	vtct0b_default_template: STRING is "[$1] Class $5 ($2,$3): type based on unknown class $6."
+	vtct0c_default_template: STRING is "[$1] Class $5: implicitly inherits from unknown class ANY."
+	vtug1a_default_template: STRING is "[$1] Class $5 ($2,$3): type '$6' has actual generic parameters but class $7 is not generic."
+	vtug2a_default_template: STRING is "[$1] Class $5 ($2,$3): type '$6' has wrong number of actual generic parameters."
+	gvagp0a_default_template: STRING is "[$1] Class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
+	gvhpr4a_default_template: STRING is "[$1] Class $5: cannot inherit from Bit_type '$6'."
+	gvhpr5a_default_template: STRING is "[$1] Class $5: cannot inherit from Tuple_type '$6'."
+	gvzzz0a_default_template: STRING is "[$1] Class $5 ($2,$3): validity error"
 			-- Default templates
 
 	vcfg1_etl_code: STRING is "VCFG-1"
@@ -2631,13 +3048,18 @@ feature {NONE} -- Implementation
 	vmss1_etl_code: STRING is "VMSS-1"
 	vmss2_etl_code: STRING is "VMSS-2"
 	vmss3_etl_code: STRING is "VMSS-3"
-	vtat_etl_code: STRING is "VTAT"
+	vscn_etl_code: STRING is "VSCN"
+	vtat1_etl_code: STRING is "VTAT-1"
+	vtat2_etl_code: STRING is "VTAT-2"
 	vtbt_etl_code: STRING is "VTBT"
 	vtcg_etl_code: STRING is "VTCG"
 	vtct_etl_code: STRING is "VTCT"
 	vtug1_etl_code: STRING is "VTUG-1"
 	vtug2_etl_code: STRING is "VTUG-2"
 	gvagp_etl_code: STRING is "GVAGP"
+	gvhpr4_etl_code: STRING is "GVHPR-4"
+	gvhpr5_etl_code: STRING is "GVHPR-5"
+	gvzzz_etl_code: STRING is "GVZZZ"
 			-- ETL validity codes
 
 	vcfg1a_template_code: STRING is "vcfg1a"
@@ -2686,9 +3108,12 @@ feature {NONE} -- Implementation
 	vmss1a_template_code: STRING is "vmss1a"
 	vmss2a_template_code: STRING is "vmss2a"
 	vmss3a_template_code: STRING is "vmss3a"
-	vtat0a_template_code: STRING is "vtat0a"
-	vtat0b_template_code: STRING is "vtat0b"
-	vtat0c_template_code: STRING is "vtat0c"
+	vscn0a_template_code: STRING is "vscn0a"
+	vtat1a_template_code: STRING is "vtat1a"
+	vtat1b_template_code: STRING is "vtat1b"
+	vtat1c_template_code: STRING is "vtat1c"
+	vtat1d_template_code: STRING is "vtat1d"
+	vtat2a_template_code: STRING is "vtat2a"
 	vtbt0a_template_code: STRING is "vtbt0a"
 	vtbt0b_template_code: STRING is "vtbt0b"
 	vtbt0c_template_code: STRING is "vtbt0c"
@@ -2700,6 +3125,9 @@ feature {NONE} -- Implementation
 	vtug1a_template_code: STRING is "vtug1a"
 	vtug2a_template_code: STRING is "vtug2a"
 	gvagp0a_template_code: STRING is "gvagp0a"
+	gvhpr4a_template_code: STRING is "gvhpr4a"
+	gvhpr5a_template_code: STRING is "gvhpr5a"
+	gvzzz0a_template_code: STRING is "gvzzz0a"
 			-- Template error codes
 
 invariant

@@ -67,6 +67,69 @@ feature -- Compilation report
 --			end
 		end
 
+feature -- Cluster errors
+
+	report_cluster_error (an_error: ET_CLUSTER_ERROR) is
+			-- Report cluster error.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			report_error (an_error)
+			if error_file /= Void then
+				error_file.put_line ("----")
+			end
+		end
+
+	report_gcaaa_error (a_cluster: ET_CLUSTER; a_dirname: STRING) is
+			-- Report GCAAA error: cannot read
+			-- `a_cluster''s directory `a_dirname'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_dirname_not_void: a_dirname /= Void
+		local
+			an_error: ET_CLUSTER_ERROR
+		do
+			if reportable_gcaaa_error (a_cluster) then
+				create an_error.make_gcaaa (a_cluster, a_dirname)
+				report_cluster_error (an_error)
+			end
+		end
+
+	report_gcaab_error (a_cluster: ET_CLUSTER; a_filename: STRING) is
+			-- Report GCAAB error: cannot read Eiffel file
+			-- `a_filename' in `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_filename_not_void: a_filename /= Void
+		local
+			an_error: ET_CLUSTER_ERROR
+		do
+			if reportable_gcaab_error (a_cluster) then
+				create an_error.make_gcaab (a_cluster, a_filename)
+				report_cluster_error (an_error)
+			end
+		end
+
+feature -- Cluster error status
+
+	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Can a GCAAA error be reported when it
+			-- appears in `a_cluster'?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := True
+		end
+
+	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Can a GCAAB error be reported when it
+			-- appears in `a_cluster'?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := True
+		end
+
 feature -- Syntax errors
 
 	report_syntax_error (a_filename: STRING; p: ET_POSITION) is
@@ -282,24 +345,9 @@ feature -- Validity errors
 
 	report_validity_error (an_error: ET_VALIDITY_ERROR) is
 			-- Report validity error.
-		local
-			a_position: ET_POSITION
+		require
+			an_error_not_void: an_error /= Void
 		do
-			if error_file /= Void then
-				error_file.put_character ('[')
-				error_file.put_string (an_error.etl_code)
-				error_file.put_string ("] Class ")
-				error_file.put_string (an_error.current_class.name.name)
-				a_position := an_error.position
-				if not a_position.is_null then
-					error_file.put_string (" (")
-					error_file.put_integer (a_position.line)
-					error_file.put_character (',')
-					error_file.put_integer (a_position.column)
-					error_file.put_character (')')
-				end
-				error_file.put_string (": ")
-			end
 			report_error (an_error)
 			if error_file /= Void then
 				error_file.put_line ("----")
@@ -1405,11 +1453,31 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat0a_error (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
+	report_vscn0a_error (a_class: ET_CLASS; other_cluster: ET_CLUSTER; other_filename: STRING) is
+			-- Report VSCN error: `a_class' also appears in
+			-- `other_cluster'.
+			--
+			-- ETL2: p.38
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			other_cluster_not_void: other_cluster /= Void
+			other_filename_not_void: other_filename /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vscn_error (a_class) then
+				create an_error.make_vscn0a (a_class, other_cluster, other_filename)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtat1a_error (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
 			-- Report VTAT error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
 			--
 			-- ETL2: p.214
+			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -1418,17 +1486,18 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtat_error (a_class) then
-				create an_error.make_vtat0a (a_class, a_type)
+				create an_error.make_vtat1a (a_class, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vtat0b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
+	report_vtat1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
 			-- Report VTAT error: the anchor in the
 			-- Anchored_type must be the final name of a query
 			-- in `a_class' or an argument of `a_feature'.
 			--
 			-- ETL2: p.214
+			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -1438,16 +1507,17 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtat_error (a_class) then
-				create an_error.make_vtat0b (a_class, a_feature, a_type)
+				create an_error.make_vtat1b (a_class, a_feature, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vtat0c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_CURRENT) is
+	report_vtat1c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_CURRENT) is
 			-- Report VTAT error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
 			--
 			-- ETL2: p.214
+			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -1456,7 +1526,46 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vtat_error (a_class) then
-				create an_error.make_vtat0c (a_class, a_type)
+				create an_error.make_vtat1c (a_class, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtat1d_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_TYPE; other_class: ET_CLASS) is
+			-- Report VTAT error: the anchor in the Anchored_type
+			-- must be the final name of a query in `other_class'.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			other_class_not_void: other_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtat_error (a_class) then
+				create an_error.make_vtat1d (a_class, a_type, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtat2a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_IDENTIFIER]) is
+			-- Report VTAT error: the anchors in `a_cycle'
+			-- are cyclic anchors in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.252
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_cyle_not_void: a_cycle /= Void
+			no_void_anchor: not a_cycle.has (Void)
+			is_cycle: a_cycle.count >= 2
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtat_error (a_class) then
+				create an_error.make_vtat2a (a_class, a_cycle)
 				report_validity_error (an_error)
 			end
 		end
@@ -1664,7 +1773,43 @@ feature -- Validity errors
 			end
 		end
 
-feature -- Validity status report
+	report_gvhpr4a_error (a_class: ET_CLASS; a_parent: ET_BIT_N) is
+			-- Report GVHPR-4 error: cannot inherit from Bit_type.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVHPR-4: See ETL2 VHPR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvhpr4_error (a_class) then
+				create an_error.make_gvhpr4a (a_class, a_parent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvhpr5a_error (a_class: ET_CLASS; a_parent: ET_TUPLE_TYPE) is
+			-- Report GVHPR-4 error: cannot inherit from Tuple_type.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVHPR-4: See ETL2 VHPR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvhpr5_error (a_class) then
+				create an_error.make_gvhpr5a (a_class, a_parent)
+				report_validity_error (an_error)
+			end
+		end
+
+feature -- Validity error status
 
 	reportable_vcfg1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VCFG-1 error be reported when it
@@ -1926,6 +2071,16 @@ feature -- Validity status report
 			Result := True
 		end
 
+	reportable_vscn_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VSCN error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vtat_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VTAT error be reported when it
 			-- appears in `a_class'?
@@ -1994,6 +2149,120 @@ feature -- Validity status report
 			a_class_preparsed: a_class.is_preparsed
 		do
 			Result := True
+		end
+
+	reportable_gvhpr4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVHPR-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVHPR-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+feature -- Internal errors
+
+	report_internal_error (an_error: ET_INTERNAL_ERROR) is
+			-- Report internal error.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			report_error (an_error)
+			if error_file /= Void then
+				error_file.put_line ("----")
+			end
+		end
+
+	report_giaaa_error is
+			-- Report GIAAA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaaa
+			report_internal_error (an_error)
+		end
+
+	report_giaab_error is
+			-- Report GIAAB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaab
+			report_internal_error (an_error)
+		end
+
+	report_giaac_error is
+			-- Report GIAAC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaac
+			report_internal_error (an_error)
+		end
+
+	report_giaad_error is
+			-- Report GIAAD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaad
+			report_internal_error (an_error)
+		end
+
+	report_giaae_error is
+			-- Report GIAAE internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaae
+			report_internal_error (an_error)
+		end
+
+	report_giaaf_error is
+			-- Report GIAAF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaaf
+			report_internal_error (an_error)
+		end
+
+	report_giaag_error is
+			-- Report GIAAG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaag
+			report_internal_error (an_error)
+		end
+
+	report_giaah_error is
+			-- Report GIAAH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaah
+			report_internal_error (an_error)
+		end
+
+	report_giaai_error is
+			-- Report GIAAI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaai
+			report_internal_error (an_error)
 		end
 
 end

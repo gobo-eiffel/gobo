@@ -14,7 +14,7 @@ class ET_SYNTAX_ERROR
 
 inherit
 
-	ET_ERROR
+	ET_EIFFEL_ERROR
 
 creation
 

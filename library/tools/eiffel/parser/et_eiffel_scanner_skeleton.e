@@ -231,9 +231,10 @@ feature -- AST processing
 			if a_class = none_class then
 				a_class.set_parsed
 			elseif current_class /= unknown_class then
-						-- TODO: Internal error (recursive call)
-print ("INTERNAL ERROR%N")
+					-- Internal error (recursive call)
+					-- This internal error is fatal.
 				set_fatal_error (a_class)
+				error_handler.report_giaae_error
 			elseif a_class /= unknown_class then
 				current_class := a_class
 				if not current_class.is_parsed then
@@ -242,14 +243,15 @@ print ("INTERNAL ERROR%N")
 					end
 					if current_class.is_preparsed then
 						a_filename := current_class.filename
+						a_cluster := current_class.cluster
 						create a_file.make (a_filename)
 						a_file.open_read
 						if a_file.is_open_read then
-							a_cluster := current_class.cluster
 							universe.parse_file (a_file, a_filename, a_cluster)
 							a_file.close
 						else
-							-- TODO: report error
+							set_fatal_error (current_class)
+							error_handler.report_gcaab_error (a_cluster, a_filename)
 						end
 					end
 					if not current_class.is_parsed then

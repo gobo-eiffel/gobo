@@ -85,12 +85,15 @@ feature -- Processing
 			if a_class = none_class then
 				a_class.set_features_flattened
 			elseif current_class /= unknown_class then
-					-- TODO: Internal error (recursive call)
-print ("INTERNAL ERROR%N")
+					-- Internal error (recursive call)
+					-- This internal error is not fatal.
+				error_handler.report_giaab_error
 				create a_processor.make (universe)
 				a_processor.process_class (a_class)
 			elseif a_class /= unknown_class then
 				internal_process_class (a_class)
+			else
+				set_fatal_error (a_class)
 			end
 		ensure then
 			features_flattened: a_class.features_flattened

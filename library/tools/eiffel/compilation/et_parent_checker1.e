@@ -88,7 +88,9 @@ feature {NONE} -- Parent validity
 			a_parent_not_void: a_parent /= Void
 		do
 			if a_type = a_parent.type then
-				-- TODO: cannot inherit from 'BIT N'.
+					-- Cannot inherit from 'BIT N'.
+				set_fatal_error (current_class)
+				error_handler.report_gvhpr4a_error (current_class, a_type)
 			else
 					-- Not considered as a fatal error by gelint.
 				error_handler.report_vhpr3b_error (current_class, a_type)
@@ -178,7 +180,10 @@ feature {NONE} -- Parent validity
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			if a_type = a_parent.type then
-				-- TODO: cannot inherit from 'TUPLE'.
+					-- Cannot inherit from 'TUPLE'.
+					-- ISE allows that though!
+				set_fatal_error (current_class)
+				error_handler.report_gvhpr5a_error (current_class, a_type)
 			else
 				a_parameters := a_type.actual_parameters
 				if a_parameters /= Void then

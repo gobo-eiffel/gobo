@@ -49,8 +49,9 @@ feature -- Processing
 			if a_class = none_class then
 				a_class.set_qualified_signatures_resolved
 			elseif current_class /= unknown_class then
-					-- TODO: Internal error (recursive call)
-print ("INTERNAL ERROR%N")
+					-- Internal error (recursive call)
+					-- This internal error is not fatal.
+				error_handler.report_giaac_error
 				create a_processor.make (universe)
 				a_processor.process_class (a_class)
 			elseif a_class /= unknown_class then

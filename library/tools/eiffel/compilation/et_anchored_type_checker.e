@@ -83,9 +83,8 @@ feature -- Type checking
 			end
 			anchored_type_sorter.sort
 			if anchored_type_sorter.has_cycle then
-print ("Anchor cycle in ")
-print (current_class.name.name)
-print ("%N")
+				set_fatal_error (current_class)
+				error_handler.report_vtat2a_error (current_class, anchored_type_sorter.cycle)
 			end
 			anchored_type_sorter.wipe_out
 		end
@@ -193,10 +192,10 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	anchored_type_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_LIKE_TYPE]
+	anchored_type_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_LIKE_IDENTIFIER]
 			-- Anchored type sorter
 
-	current_anchored_type: ET_LIKE_TYPE
+	current_anchored_type: ET_LIKE_IDENTIFIER
 			-- Anchored type (if any) whose anchor is the
 			-- type being processed
 

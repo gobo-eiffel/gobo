@@ -248,7 +248,9 @@ feature {NONE} -- Constraint validity
 					-- Check validity when the constraint of `a_formal'
 					-- parameter is itself a formal parameter.
 				if a_parameters = Void or else index1 > a_parameters.count then
-						-- TODO: Internal error.
+						-- Internal error.
+					set_fatal_error (current_class)
+					error_handler.report_giaaf_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is
 						-- itself (e.g. "A [G -> G]"). This is not
@@ -282,7 +284,9 @@ feature {NONE} -- Constraint validity
 				end
 			else
 				if a_parameters = Void or else index1 > a_parameters.count then
-						-- TODO: Internal error.
+						-- Internal error.
+					set_fatal_error (current_class)
+					error_handler.report_giaag_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is itself
 						-- (e.g. "A [G -> ARRAY [G]]"). This is not considered
@@ -400,7 +404,9 @@ feature {NONE} -- Constraint cycles
 				end
 				a_parameters := current_class.formal_parameters
 				if a_parameters = Void then
-					-- TODO: internal error
+						-- Internal error.
+					set_fatal_error (current_class)
+					error_handler.report_giaah_error
 				else
 					any_type := universe.any_type
 					a_parameters_count := a_parameters.count
@@ -412,7 +418,9 @@ feature {NONE} -- Constraint cycles
 						if a_constraint /= Void then
 							an_index := a_constraint.index
 							if an_index > a_parameters_count then
-								-- TODO: internal error
+									-- Internal error.
+								set_fatal_error (current_class)
+								error_handler.report_giaai_error
 							else
 									-- We have "G -> H" and the base type of
 									-- H has already been processed (thanks to

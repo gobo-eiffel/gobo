@@ -64,8 +64,16 @@ feature {NONE} -- Type resolving
 			if a_feature /= Void then
 				a_type.resolve_identifier_type (a_feature.first_seed)
 			else
-				-- TODO: pass `a_base_class' as well to the error.
-				--error_handler.report_vtat0a_error (current_class, a_type)
+				set_fatal_error (current_class)
+				if a_base_class /= universe.unknown_class then
+					error_handler.report_vtat1d_error (current_class, a_type, a_base_class)
+				else
+					-- This error has already been reported elsewhere.
+					-- It is either due to a 'BIT name' or anchored type
+					-- not resolved because of another error, or an
+					-- inconsistency introduced manually in the AST after
+					-- some validity rules had already been checked.
+				end
 			end
 		end
 
