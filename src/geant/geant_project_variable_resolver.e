@@ -132,9 +132,14 @@ feature -- Status report
 		local
 			a_value: STRING
 		do
-				-- Search commandline variables:
-			Commandline_variables.search (a_name)
-			Result := Commandline_variables.found
+				-- Check non overrridable variables:
+			Result := STRING_.same_string (a_name, "cwd")
+
+			if not Result then
+					-- Search commandline variables:
+				Commandline_variables.search (a_name)
+				Result := Commandline_variables.found
+			end
 
 			if not Result then
 					-- Search project variables:
