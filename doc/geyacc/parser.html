@@ -153,47 +153,45 @@ parser <a href="description.html">description file</a>. The
 following example shows a typical parser description file:</p>
 
 <blockquote>
-    <pre><font color="#0000FF" size="3">%{</font><font size="3">
-</font><font color="#008080" size="3"><em><strong>class</strong></em><em> MY_PARSER
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> MY_PARSER
 
 </em><em><strong>inherit</strong></em><em>
 
     YY_PARSER_SKELETON </em>[<em>INTEGER</em>]<em>
         </em><em><strong>rename</strong></em><em>
-            make as make_parser_skeleton
+            make <strong>as</strong> make_parser_skeleton
         </em><em><strong>redefine</strong></em><em>
             report_error
         </em><em><strong>end</strong></em><em>
 
     MY_SCANNER
         </em><em><strong>rename</strong></em><em>
-            make as make_scanner
+            make <strong>as</strong> make_scanner
         </em><em><strong>export</strong></em><em>
             </em>{<em>NONE</em>}<em> </em><em><strong>all</strong></em><em>
         </em><em><strong>end</strong></em><em>
 
 </em><em><strong>creation</strong></em><em>
 
-    make</em></font><font size="3"><em>
-</em></font><font color="#0000FF" size="3">%}</font></pre>
-    <pre><font color="#0000FF" size="3">%token</font><font
-size="3"> ...
+    make</em></font>
+<font color="#0000FF">%}</font></pre>
+    <pre><font color="#0000FF">%token</font> ...
 
-</font><font color="#0000FF" size="3">%%</font><font size="3">
+<font color="#0000FF">%%</font>
 
-</font><font color="#FF0000" size="3">...rules...</font><font
-size="3">
+<font color="#FF0000">...rules...</font>
 
-</font><font color="#0000FF" size="3">%%</font><font size="3">
+<font color="#0000FF">%%</font>
 
-</font><font color="#008080" size="3"><em><strong>feature</strong></em><em> </em>{<em>NONE</em>} -- Initialization<em>
+<font color="#008080"><em><strong>feature</strong></em><em> </em>{<em>NONE</em>} -- Initialization<em>
 
     make </em><em><strong>is</strong></em><em>
             </em>-- Create a new parser.<em>
         </em><em><strong>do</strong></em><em>
             make_scanner
             make_parser_skeleton
-            </em>!!<em> error_messages.make
+            </em><em><strong>create</strong> error_messages.make
         </em><em><strong>end</strong></em><em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Access<em>
@@ -213,7 +211,7 @@ feature</strong></em><em> </em>{<em>NONE</em>} -- Error<em> </em>reporting<em>
 
     error_messages_not_void</em>:<em> error_messages </em>/=<em> Void
 
-</em><em><strong>end</strong></em><em> </em>-- class MY_PARSER</font></pre>
+</em><em><strong>end</strong></em><em> </em></font></pre>
 </blockquote>
 
 <p>The generated parser class, named <font color="#008080"><em><tt>MY_PARSER</tt></em></font>,
@@ -239,7 +237,7 @@ is preserved.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -249,7 +247,7 @@ is preserved.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 May 1998</font><br>
+            <strong>Last Updated:</strong> 16 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
