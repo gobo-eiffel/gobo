@@ -489,6 +489,14 @@ feature -- Status report
 			definition: Result = (declared_reloads_optimization /= Void and then not declared_reloads_optimization.is_undefined)
 		end
 
+	is_read_only_declared: BOOLEAN is
+			-- Has 'read_only' option been declared?
+		do
+			Result := declared_read_only /= Void and then not declared_read_only.is_undefined
+		ensure
+			definition: Result = (declared_read_only /= Void and then not declared_read_only.is_undefined)
+		end
+
 	is_recursive_declared: BOOLEAN is
 			-- Has 'recursive' option been declared?
 		do
@@ -1198,6 +1206,16 @@ feature -- Option values
 				Result := declared_public_key_token
 			else
 				Result := default_public_key_token
+			end
+		end
+
+	read_only: BOOLEAN is
+			-- 'read_only' option
+		do
+			if is_read_only_declared then
+				Result := declared_read_only.is_true
+			else
+				Result := default_read_only
 			end
 		end
 
@@ -2174,6 +2192,22 @@ feature -- Status setting
 			public_key_token_set: public_key_token = a_value
 		end
 
+	set_read_only (b: BOOLEAN) is
+			-- Set `read_only' to `b'.
+		do
+			if declared_read_only = Void then
+				create declared_read_only.make_undefined
+			end
+			if b then
+				declared_read_only.set_true
+			else
+				declared_read_only.set_false
+			end
+		ensure
+			read_only_declared: is_read_only_declared
+			read_only_set: read_only = b
+		end
+
 	set_recursive (b: BOOLEAN) is
 			-- Set `recursive' to `b'.
 		do
@@ -2384,9 +2418,10 @@ feature -- Valid values
 	valid_assertion: DS_HASH_SET [STRING] is
 			-- Valid values for 'assertion' option
 		once
-			create Result.make (8)
+			create Result.make (9)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
+			Result.put_last (options.generate_value)
 			Result.put_last (options.require_value)
 			Result.put_last (options.ensure_value)
 			Result.put_last (options.invariant_value)
@@ -2665,6 +2700,9 @@ feature -- Declared values
 
 	declared_public_key_token: STRING
 			-- Declared value for 'public_key_token' option
+
+	declared_read_only: UT_TRISTATE
+			-- Declared value for 'read_only' option
 
 	declared_recursive: UT_TRISTATE
 			-- Declared value for 'recursive' option
@@ -2990,6 +3028,9 @@ feature -- Default values
 		once
 			Result := "b77a5c561934e089"
 		end
+
+	default_read_only: BOOLEAN is False
+			-- Default value for 'read_only' option
 
 	default_recursive: BOOLEAN is False
 			-- Default value for 'recursive' option

@@ -70,6 +70,7 @@ feature -- Option names
 	prefix_option_name: STRING is "prefix"
 	profile_name: STRING is "profile"
 	public_key_token_name: STRING is "public_key_token"
+	read_only_name: STRING is "read_only"
 	recursive_name: STRING is "recursive"
 	reloads_optimization_name: STRING is "reloads_optimization"
 	shared_library_definition_name: STRING is "shared_library_definition"
@@ -144,6 +145,7 @@ feature -- Option codes
 	prefix_option_code: INTEGER is unique
 	profile_code: INTEGER is unique
 	public_key_token_code: INTEGER is unique
+	read_only_code: INTEGER is unique
 	recursive_code: INTEGER is unique
 	reloads_optimization_code: INTEGER is unique
 	shared_library_definition_code: INTEGER is unique
@@ -165,7 +167,7 @@ feature -- Option codes
 		local
 			a_tester: UC_EQUALITY_TESTER
 		once
-			create Result.make (71)
+			create Result.make (72)
 			create a_tester
 			Result.set_key_equality_tester (a_tester)
 			Result.put_new (abstract_code, abstract_name)
@@ -224,6 +226,7 @@ feature -- Option codes
 			Result.put_new (prefix_option_code, prefix_option_name)
 			Result.put_new (profile_code, profile_name)
 			Result.put_new (public_key_token_code, public_key_token_name)
+			Result.put_new (read_only_code, read_only_name)
 			Result.put_new (recursive_code, recursive_name)
 			Result.put_new (reloads_optimization_code, reloads_optimization_name)
 			Result.put_new (shared_library_definition_code, shared_library_definition_name)
@@ -258,6 +261,7 @@ feature -- Option values
 	ensure_value: STRING is "ensure"
 	exe_value: STRING is "exe"
 	feature_value: STRING is "feature"
+	generate_value: STRING is "generate"
 	internal_value: STRING is "internal"
 	invariant_value: STRING is "invariant"
 	loop_invariant_value: STRING is "loop_invariant"

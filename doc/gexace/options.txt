@@ -85,14 +85,19 @@ SE:
 -------------------------------------------------------------
 NAME: assertion
 
-VALUES: none | require | ensure | invariant |
+VALUES: none | generate | require | ensure | invariant |
         loop_invariant | loop_variant | check | all
 DEFAULT: require
 DESCRIPTION: Set default assertion level of the Eiffel system.
 NOTE: There can be several of these options.
+NOTE: The purpose of 'generate' is to generate the code of
+  the assertions in the generated code even if these assertions
+  are turned off. VE can turn them on after the system has been
+  compiled.
 
 ISE:
   none -> assertion (no)
+  generate -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -102,6 +107,7 @@ ISE:
   all -> assertion (all)
 HACT:
   none -> assertion (no)
+  generate -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -116,6 +122,14 @@ HACT:
 VE:
   none ->
        assertions off
+       require off
+       ensure off
+       class invariant off
+       loop invariant off
+       loop variant off
+       check off
+  generate ->
+       assertions on
        require off
        ensure off
        class invariant off
@@ -184,6 +198,7 @@ VE:
   if there is at least one 'on' and 'off' otherwise.
 SE:
   none -> assertion (no)
+  generate -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -1405,16 +1420,21 @@ SE:
 -------------------------------------------------------------
 NAME: assertion
 
-VALUES: none | require | ensure | invariant |
+VALUES: none | generate | require | ensure | invariant |
         loop_invariant | loop_variant | check | all
 DEFAULT: no default
 DESCRIPTION: Set default assertion level for the classes of
   this cluster. Override the assertion level specified at
   the system level.
 NOTE: There can be several of these options.
+NOTE: The purpose of 'generate' is to generate the code of
+  the assertions in the generated code even if these assertions
+  are turned off. VE can turn them on after the system has been
+  compiled.
 
 ISE:
   none -> assertion (no)
+  generate -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -1424,6 +1444,7 @@ ISE:
   all -> assertion (all)
 HACT:
   none -> assertion (no)
+  generate -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -1439,6 +1460,7 @@ VE:
   N/A
 SE:
   none -> assertion (no)
+  generate -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -1689,6 +1711,29 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: read_only
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Specify that the classes in the cluster
+  directory should be considered as read-only by the
+  underlying Eiffel tool.
+NOTE: This option is only supported by ISE's EiffelStudio
+  when the cluster is also 'recursive'. Otherwise it
+  has no effect
+
+ISE:
+  true ->
+      library cluster_name: "pathname"
+  false ->
+      cluster_name: "pathname"
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: recursive
 
 VALUES: true | false
@@ -1793,16 +1838,21 @@ documentation provided with the Eiffel compilers.
 -------------------------------------------------------------
 NAME: assertion
 
-VALUES: none | require | ensure | invariant |
+VALUES: none | generate | require | ensure | invariant |
         loop_invariant | loop_variant | check | all
 DEFAULT: no default
 DESCRIPTION: Set default assertion level for this class.
   Override the assertion level specified at the cluster
   and system levels.
 NOTE: There can be several of these options.
+NOTE: The purpose of 'generate' is to generate the code of
+  the assertions in the generated code even if these assertions
+  are turned off. VE can turn them on after the system has been
+  compiled.
 
 ISE:
   none -> assertion (no): CLASS_NAME
+  generate -> assertion (no): CLASS_NAME
   require -> assertion (require): CLASS_NAME
   ensure -> assertion (ensure): CLASS_NAME
   invariant -> assertion (invariant): CLASS_NAME
@@ -1812,6 +1862,7 @@ ISE:
   all -> assertion (all): CLASS_NAME
 HACT:
   none -> assertion (no): CLASS_NAME
+  generate -> assertion (no): CLASS_NAME
   require -> assertion (require): CLASS_NAME
   ensure -> assertion (ensure): CLASS_NAME
   invariant -> assertion (invariant): CLASS_NAME
@@ -1827,6 +1878,7 @@ VE:
   N/A
 SE:
   none -> assertion (no): CLASS_NAME
+  generate -> assertion (no): CLASS_NAME
   require -> assertion (require): CLASS_NAME
   ensure -> assertion (ensure): CLASS_NAME
   invariant -> assertion (invariant): CLASS_NAME

@@ -214,6 +214,9 @@ feature {NONE} -- Output
 			if an_assertion.has (options.none_value) then
 				-- Do nothing.
 			end
+			if an_assertion.has (options.generate_value) then
+				assertions_on := True
+			end
 			if an_assertion.has (options.require_value) then
 				assertions_on := True
 				require_on := True

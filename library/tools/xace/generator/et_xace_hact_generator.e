@@ -673,6 +673,10 @@ feature {NONE} -- Output
 						a_file.put_new_line
 						print_indentation (an_indent, a_file)
 						a_file.put_string ("assertion (require);")
+					elseif an_assertion.has (options.generate_value) then
+						a_file.put_new_line
+						print_indentation (an_indent, a_file)
+						a_file.put_string ("assertion (no);")
 					elseif an_assertion.has (options.none_value) then
 						a_file.put_new_line
 						print_indentation (an_indent, a_file)
@@ -806,6 +810,12 @@ feature {NONE} -- Output
 							a_file.put_new_line
 							print_indentation (an_indent, a_file)
 							a_file.put_string ("assertion (require): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.generate_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (no): ")
 							a_file.put_string (a_class_name)
 							a_file.put_character (';')
 						elseif an_assertion.has (options.none_value) then

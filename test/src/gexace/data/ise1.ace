@@ -32,7 +32,7 @@ default
 cluster
 
 	all gefoo: "${GOBO}/test/src/gexace/data"
-	all base: "${ISE_EIFFEL}/library/base"
+	library base: "${ISE_EIFFEL}/library/base"
 		exclude
 			"CVS";
 			"table_eiffel3"

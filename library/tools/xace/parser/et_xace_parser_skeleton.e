@@ -1088,6 +1088,14 @@ feature {NONE} -- Element change
 									end
 								when public_key_token_code then
 									an_option.set_public_key_token (a_value)
+								when read_only_code then
+									if is_true (a_value) then
+										an_option.set_read_only (True)
+									elseif is_false (a_value) then
+										an_option.set_read_only (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when recursive_code then
 									if is_true (a_value) then
 										an_option.set_recursive (True)

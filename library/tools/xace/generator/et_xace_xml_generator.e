@@ -85,6 +85,7 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_clusters: ET_XACE_CLUSTERS
+			a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES
 			an_option: ET_XACE_OPTIONS
 		do
 			a_file.put_line ("<?xml version=%"1.0%"?>")
@@ -106,6 +107,10 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 			end
+			a_mounted_libraries := a_system.libraries
+			if a_mounted_libraries /= Void then
+				print_mounted_libraries (a_mounted_libraries, 1, a_file)
+			end
 			a_file.put_line ("</system>")
 		end
 
@@ -119,12 +124,19 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_clusters: ET_XACE_CLUSTERS
+			a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES
 			an_option: ET_XACE_OPTIONS
+			a_prefix: STRING
 		do
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
 			a_file.put_string ("<library name=%"")
 			a_file.put_string (a_library.name)
+			a_prefix := a_library.library_prefix
+			if a_prefix.count > 0 then
+				a_file.put_string ("%" prefix=%"")
+				a_file.put_string (a_prefix)
+			end
 			a_file.put_line ("%">")
 			print_indentation (1, a_file)
 			an_option := a_library.options
@@ -134,6 +146,10 @@ feature {NONE} -- Output
 			a_clusters := a_library.clusters
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
+			end
+			a_mounted_libraries := a_library.libraries
+			if a_mounted_libraries /= Void then
+				print_mounted_libraries (a_mounted_libraries, 1, a_file)
 			end
 			a_file.put_line ("</library>")
 		end
@@ -574,6 +590,14 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.public_key_token)
 				a_file.put_line ("%"/>")
 			end
+			if an_option.is_read_only_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.read_only then
+					a_file.put_line ("<option name=%"read_only%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"read_only%" value=%"false%"/>")
+				end
+			end
 			if an_option.is_recursive_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.recursive then
@@ -797,6 +821,30 @@ feature {NONE} -- Output
 				print_options (a_feature_options.options, indent + 1, a_file)
 				a_feature_cursor.forth
 				a_file.put_line ("</feature>")
+			end
+		end
+
+	print_mounted_libraries (a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_mounted_libraries' to `a_file'.
+		require
+			a_mounted_libraries_not_void: a_mounted_libraries /= Void
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
+			a_library: ET_XACE_MOUNTED_LIBRARY
+		do
+			library_list := a_mounted_libraries.libraries
+			nb := library_list.count
+			from i := 1 until i > nb loop
+				a_library := library_list.item (i)
+				print_indentation (indent, a_file)
+				a_file.put_string ("<mount location=%"")
+				a_file.put_string (a_library.pathname)
+				a_file.put_line ("%"/>")
+				i := i + 1
 			end
 		end
 

@@ -292,6 +292,10 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("assertion (no)")
 			end
+			if an_assertion.has (options.generate_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (no)")
+			end
 			if an_assertion.has (options.require_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("assertion (require)")
@@ -532,9 +536,14 @@ feature {NONE} -- Output
 			a_class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 		do
 			if not a_cluster.is_fully_abstract then
+				an_option := a_cluster.options
 				print_indentation (1, a_file)
 				if a_cluster.is_recursive then
-					a_file.put_string ("all ")
+					if an_option.read_only then
+						a_file.put_string ("library ")
+					else
+						a_file.put_string ("all ")
+					end
 				end
 				print_escaped_name (a_cluster.prefixed_name, a_file)
 				a_parent := a_cluster.parent
@@ -577,7 +586,6 @@ feature {NONE} -- Output
 				end
 				a_file.put_character ('%"')
 				a_file.put_new_line
-				an_option := a_cluster.options
 				if an_option /= Void then
 					need_end_keyword := print_cluster_options (an_option, 2, a_file) or need_end_keyword
 				end
@@ -692,6 +700,10 @@ feature {NONE} -- Output
 				if an_option.is_assertion_declared then
 					an_assertion := an_option.assertion
 					if an_assertion.has (options.none_value) then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("assertion (no)")
+					end
+					if an_assertion.has (options.generate_value) then
 						print_indentation (an_indent, a_file)
 						a_file.put_line ("assertion (no)")
 					end
@@ -818,6 +830,11 @@ feature {NONE} -- Output
 					if an_option.is_assertion_declared then
 						an_assertion := an_option.assertion
 						if an_assertion.has (options.none_value) then
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (no): ")
+							a_file.put_line (a_class_name)
+						end
+						if an_assertion.has (options.generate_value) then
 							print_indentation (an_indent, a_file)
 							a_file.put_string ("assertion (no): ")
 							a_file.put_line (a_class_name)

@@ -32,19 +32,34 @@ feature -- Test
 			compile_program
 			gexace_exe := program_exe
 				-- Test <option name="recursive" value="true"/>
+				-- and <option name="read_only" value="true"/>.
 			xace_filename := file_system.pathname (sample_dirname, "system1.xace")
 			ace_filename := file_system.pathname (sample_dirname, "ise1.ace")
 			assert_execute (gexace_exe + " --system=ise " + xace_filename + output_log)
 			if file_system.file_count (output_log_filename) = 0 then
-				assert ("no_output_log1", True)
+				assert ("no_output_log1a", True)
 			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
 					-- Free version of ISE Eiffel?
-				assert ("freeise_no_output_log", True)
+				assert ("freeise_no_output_log1a", True)
 			else
-				assert_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+				assert_equal ("no_output_log1b", 0, file_system.file_count (output_log_filename))
 			end
-			assert_equal ("no_error_log1", 0, file_system.file_count (error_log_filename))
-			assert_files_equal ("diff1", ace_filename, "ise.ace")
+			assert_equal ("no_error_log1a", 0, file_system.file_count (error_log_filename))
+			assert_files_equal ("diff1a", ace_filename, "ise.ace")
+				-- Test <option name=assertion" value="generate"/>.
+			xace_filename := file_system.pathname (sample_dirname, "system2.xace")
+			ace_filename := file_system.pathname (sample_dirname, "ve2.esd")
+			assert_execute (gexace_exe + " --system=ve " + xace_filename + output_log)
+			if file_system.file_count (output_log_filename) = 0 then
+				assert ("no_output_log2a", True)
+			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+					-- Free version of ISE Eiffel?
+				assert ("freeise_no_output_log2a", True)
+			else
+				assert_equal ("no_output_log2b", 0, file_system.file_count (output_log_filename))
+			end
+			assert_equal ("no_error_log2a", 0, file_system.file_count (error_log_filename))
+			assert_files_equal ("diff2a", ace_filename, "ve.esd")
 		end
 
 feature {NONE} -- Implementation
