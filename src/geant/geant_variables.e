@@ -140,7 +140,7 @@ feature -- Access
 			end
 
 		ensure
-			variable_value_not_void: Result /= Void 
+			variable_value_not_void: Result /= Void
 		end
 
 	environment_variable_value (a_name: STRING): STRING is
@@ -274,6 +274,55 @@ feature -- Access
 			end
 		ensure
 			interpreted_string_not_void: Result /= Void
+		end
+
+	boolean_condition_value (a_condition: STRING): BOOLEAN is
+			-- Is `a_condition' True?;
+			-- used for "if" and "unless" attributes;
+			-- possible forms:
+			-- "$foo": True if variable `foo' is defined
+			-- "${foo}": True if variable `foo' is defined
+			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
+			--             True if variable `foo' is defined and its value is "bar"
+			-- if `a_condition' is not in either form Result is `False'
+		require
+			condition_not_void: a_condition /= Void
+		local
+			a_tokens: DS_ARRAYED_LIST [UC_STRING]
+			s: STRING
+			s2: STRING
+			ucs: UC_STRING
+		do
+			!! ucs.make_from_string (a_condition)
+			a_tokens := string_tokens (ucs, '=')
+			if a_tokens.count = 1 then
+					-- a_condition should be in form "$foo";
+					-- check if $foo is defined
+				s := a_tokens.item (1).out
+				if s.count > 3 and then
+					s.item (1) = '$' and then s.item (2) = '{' and then
+					s.item (s.count) = '}' then
+						-- handle "${bar}" form:
+					s := s.substring (3, s.count - 1)
+					Result := has_variable (s)
+				elseif s.count > 1 and then s.item (1) = '$' and then s.item (2) /= '{' then
+						-- handle "$bar" form:
+					s.tail (s.count - 1)
+					Result := has_variable (s)
+				else
+					exit_application (1, "geant: incorrect conditional: '" + a_condition + "'%N")
+				end
+			elseif a_tokens.count = 2 then
+					-- a_condition should be in form "$foo=bar";
+					-- check if $foo equals "bar"
+				s := a_tokens.item (1).out
+				s := interpreted_string (s)
+				s2 := a_tokens.item (2).out
+				s2 := interpreted_string (s2)
+				Result := s.is_equal (s2)
+			else
+				exit_application (1, "geant: incorrect conditional: '" + a_condition + "'%N")
+			end
 		end
 
 feature -- Setting
