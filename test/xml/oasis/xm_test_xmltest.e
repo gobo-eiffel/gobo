@@ -234,8 +234,7 @@ feature -- Test
 			assert_output ("xmltest, valid, stand alone, 005", xmltest_valid_sa_005, xmltest_valid_sa_out_005)
 			assert_output ("xmltest, valid, stand alone, 006", xmltest_valid_sa_006, xmltest_valid_sa_out_006)
 			assert_output ("xmltest, valid, stand alone, 007", xmltest_valid_sa_007, xmltest_valid_sa_out_007)
-			-- &quot;
-			--assert_output ("xmltest, valid, stand alone, 008", xmltest_valid_sa_008, xmltest_valid_sa_out_008)
+			assert_output ("xmltest, valid, stand alone, 008", xmltest_valid_sa_008, xmltest_valid_sa_out_008)
 			assert_output ("xmltest, valid, stand alone, 009", xmltest_valid_sa_009, xmltest_valid_sa_out_009)
 			assert_output ("xmltest, valid, stand alone, 010", xmltest_valid_sa_010, xmltest_valid_sa_out_010)
 			assert_output ("xmltest, valid, stand alone, 011", xmltest_valid_sa_011, xmltest_valid_sa_out_011)
