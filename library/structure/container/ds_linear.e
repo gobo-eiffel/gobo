@@ -130,6 +130,27 @@ feature -- Cursor movement
 			after: after
 		end
 
+feature -- Duplication
+
+	to_array: ARRAY [G] is
+			-- Array containing the same items as current
+			-- container in the same order
+		local
+			a_cursor: like new_cursor
+			i: INTEGER
+		do
+			!! Result.make (1, count)
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				i := i + 1
+				Result.put (a_cursor.item, i)
+				a_cursor.forth
+			end
+		ensure
+			to_array_not_void: Result /= Void
+			same_count: Result.count = count
+		end
+
 invariant
 
 	after_constraint: after implies off
