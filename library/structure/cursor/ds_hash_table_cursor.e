@@ -10,11 +10,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-#ifdef SE
 class DS_HASH_TABLE_CURSOR [G, K]
-#else
-class DS_HASH_TABLE_CURSOR [G, K -> HASHABLE]
-#endif
 
 inherit
 

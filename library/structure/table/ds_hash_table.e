@@ -12,11 +12,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-#ifdef SE
 class DS_HASH_TABLE [G, K]
-#else
-class DS_HASH_TABLE [G, K -> HASHABLE]
-#endif
 
 inherit
 
