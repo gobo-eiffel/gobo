@@ -81,6 +81,7 @@ Version ?
 	* Support clocks with precision to the millisecond. However
 	  note that with SmartEiffel under Windows the millisecond part
 	  may be stuck to zero.
+	* Better support for days of the week.
 
 	Gobo Eiffel Utility Library
 
