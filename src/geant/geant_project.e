@@ -34,7 +34,7 @@ inherit
 
 creation
 
-	make, make_with_filename
+	make
 
 feature {NONE} -- Initialization
 
