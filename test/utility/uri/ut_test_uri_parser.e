@@ -25,6 +25,7 @@ feature -- Tests
 		do
 			create uri.make ("http://www.ics.uci.edu/pub/ietf/uri/#Related")
 			check_uri (uri, "http", "www.ics.uci.edu", "/pub/ietf/uri/", Void, "Related")
+			assert ("valid_scheme", uri.has_valid_scheme)
 
 			create uri.make ("http://www.ics.uci.edu/cgi-bin/test?id=1")
 			check_uri (uri, "http", "www.ics.uci.edu", "/cgi-bin/test", "id=1", Void)
@@ -41,6 +42,18 @@ feature -- Tests
 			create uri.make ("various.html#index")
 			check_uri (uri, Void, Void, "various.html", Void, "index")
 		end
+		
+	test_broken_parsing is
+			-- Test parsing of broken URI.
+		local
+			uri: UT_URI
+		do
+			create uri.make ("bro,ken:foo")
+			check_uri (uri, "bro,ken", Void, "foo", Void, Void)
+			assert ("invalid_scheme", not uri.has_valid_scheme)
+			assert_equal ("scheme_specific", "foo", uri.scheme_specific_part)
+		end
+			
 
 feature {NONE} -- Implementation
 
