@@ -405,7 +405,7 @@ feature {NONE} -- Processing (nondeterministic)
 
 	new_state (a_state: PR_STATE): PR_STATE is
 			-- Occurrence of `a_state' in FSM if present;
- 			-- otherwise insert `a_state' into FSM
+			-- otherwise insert `a_state' into FSM
 		require
 			a_state_not_void: a_state /= Void
 			states_not_full: not states.is_full
