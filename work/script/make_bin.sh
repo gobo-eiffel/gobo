@@ -12,8 +12,12 @@ cd gelex
 cp $GOBO/src/gelex/Makefile .
 make se
 cd $root_dir
-cp gelex/gelex $1
-cp gelex/gelex.exe $1
+if [ -x gelex/gelex ]; then
+	cp gelex/gelex $1
+fi
+if [ -x gelex/gelex.exe ]; then
+	cp gelex/gelex.exe $1
+fi
 rm -rf gelex
 
 mkdir geyacc
@@ -21,8 +25,12 @@ cd geyacc
 cp $GOBO/src/geyacc/Makefile .
 make se
 cd $root_dir
-cp geyacc/geyacc $1
-cp geyacc/geyacc.exe $1
+if [ -x geyacc/geyacc ]; then
+	cp geyacc/geyacc $1
+fi
+if [ -x geyacc/geyacc.exe ]; then
+	cp geyacc/geyacc.exe $1
+fi
 rm -rf geyacc
 
 mkdir gepp
@@ -30,8 +38,12 @@ cd gepp
 cp $GOBO/src/gepp/Makefile .
 make se
 cd $root_dir
-cp gepp/gepp $1
-cp gepp/gepp.exe $1
+if [ -x gepp/gepp ]; then
+	cp gepp/gepp $1
+fi
+if [ -x gepp/gepp.exe ]; then
+	cp gepp/gepp.exe $1
+fi
 rm -rf gepp
 
 mkdir getest
@@ -39,6 +51,10 @@ cd getest
 cp $GOBO/src/getest/Makefile .
 make se
 cd $root_dir
-cp getest/getest $1
-cp getest/getest.exe $1
+if [ -x getest/getest ]; then
+	cp getest/getest $1
+fi
+if [ -x getest/getest.exe ]; then
+	cp getest/getest.exe $1
+fi
 rm -rf getest
