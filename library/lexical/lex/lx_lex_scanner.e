@@ -146,7 +146,7 @@ else
 --|#line 91
 
 					error_handler.unrecognized_directive (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				
 end
 else
@@ -157,7 +157,7 @@ if yy_act = 10 then
 --|#line 95
 
 					error_handler.directive_expected (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				
 else
 	if yy_position > yy_start_position then
@@ -246,7 +246,7 @@ else
 --|#line 122
 
 					error_handler.start_condition_expected (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				
 end
 else
@@ -452,7 +452,7 @@ else
 --|#line 175
 
 					error_handler.unrecognized_option (text, filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 			
 end
 end
@@ -475,7 +475,7 @@ else
 
 					output_filename := Void
 					error_handler.missing_quote (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				
 end
 else
@@ -1734,7 +1734,7 @@ feature {NONE} -- Constants
 	SECT3: INTEGER is 2
 	EIFFEL_BLOCK: INTEGER is 3
 	OPTION: INTEGER is 4
-	RECOVER: INTEGER is 5
+	RECOVER1: INTEGER is 5
 	SCNAME: INTEGER is 6
 	XSCNAME: INTEGER is 7
 	NUM: INTEGER is 8

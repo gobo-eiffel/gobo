@@ -48,7 +48,7 @@ creation
 	make, make_from_description
 %}
 
-%x SECT2 SECT3 EIFFEL_BLOCK OPTION RECOVER SCNAME XSCNAME NUM QUOTE
+%x SECT2 SECT3 EIFFEL_BLOCK OPTION RECOVER1 SCNAME XSCNAME NUM QUOTE
 %x SCOND ACTION_TEXT DEFINITION FIRSTCCL CCL OUTFILE
 %x REGEXP EIFFEL_BLOCK2
 
@@ -90,11 +90,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	^"%"[a-z]*	{
 					error_handler.unrecognized_directive (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				}
 	.			{
 					error_handler.directive_expected (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				}
 }
 
@@ -121,7 +121,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	.			{
 					error_handler.start_condition_expected (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				}
 }
 
@@ -174,7 +174,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	[-a-z0-9]+|.	{
 					error_handler.unrecognized_option (text, filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 			}
 }
 
@@ -186,7 +186,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	.			{
 					output_filename := Void
 					error_handler.missing_quote (filename, line_nb)
-					set_start_condition (RECOVER)
+					set_start_condition (RECOVER1)
 				}
 }
 
@@ -204,7 +204,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 }
 
-<RECOVER>{
+<RECOVER1>{
 	.*			{
 						-- Eat characters to end of line.
 					set_start_condition (INITIAL)
