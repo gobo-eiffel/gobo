@@ -503,11 +503,16 @@ feature {NONE} -- Output
 		local
 			i, nb: INTEGER
 			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+			a_cluster: ET_XACE_CLUSTER
 		do
 			cluster_list := a_clusters.clusters
 			nb := cluster_list.count
 			from i := 1 until i > nb loop
-				print_cluster (cluster_list.item (i), a_file)
+				a_cluster := cluster_list.item (i)
+				if not a_cluster.is_implicit then
+						-- This cluster has been explicitly declared.
+					print_cluster (a_cluster, a_file)
+				end
 				i := i + 1
 			end
 		end

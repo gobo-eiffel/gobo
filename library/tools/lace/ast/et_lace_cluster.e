@@ -132,6 +132,7 @@ feature {NONE} -- Implementation
 			create Result.make (a_name_id, Void)
 			Result.set_parent (Current)
 			Result.set_recursive (True)
+			Result.set_implicit (True)
 			Result.set_override (is_override)
 			Result.set_exclude (exclude)
 		end
