@@ -97,12 +97,11 @@ feature -- Access
 			valid_year: is_valid_year (a_year)
 		do
 			if a_year <= 0 and then is_year_zero_allowed then
-				Result := is_week (a_week, a_year)
+				Result := valid_week (a_week, a_year)
 			elseif a_year > 0 then
-				Result := is_week (a_week, a_year)
+				Result := valid_week (a_week, a_year)
 			end
 		end
-
 
 feature -- Status report
 

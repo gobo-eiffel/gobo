@@ -20,13 +20,13 @@ clock
 date
     Date, time and duration classes.
 format
-    Formatting and parsing.
+    Formatting and parsing. (STILL UNDER DEVELOPMENT)
 time_zone
-    Time zones, date/time conversions. (STILL UNDER DEVELOPMENT.)
+    Time zones, date/time conversions. (STILL UNDER DEVELOPMENT)
 
 A more detailed documentation for this library, in HTML format,
 is provided in "$GOBO/doc/time". Examples for this library can
 be found in "$GOBO/example/time".
 
 --
-Copyright (c) 2000-2001, Eric Bezault and others
+Copyright (c) 2000-2005, Eric Bezault and others

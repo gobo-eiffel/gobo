@@ -131,6 +131,16 @@ feature -- Access
 			leap_year: is_leap_year implies (Result >= 1 and Result <= Days_in_leap_year)
 		end
 
+	week: INTEGER is
+			-- Week number for `Current' using ISO 8601 specification:
+			-- weeks start on Monday and week number 1 contains the
+			-- first Thursday of the year. Dates before the first week
+			-- of the year have the week number of of last day of
+			-- the previous year.
+		do
+			Result := week_number (year, month, day)
+		end
+
 	week_day: INTEGER is
 			-- Day of week for `Current'
 		obsolete

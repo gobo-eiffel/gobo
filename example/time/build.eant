@@ -21,7 +21,6 @@
 		<description>
 			Install the Gobo Eiffel Time Library examples.
 		</description>
-
 		<set name="target" value="install"/>
 		<geant target="do_all"/>
 	</target>
@@ -30,7 +29,6 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-
 		<set name="target" value="clean"/>
 		<geant target="do_all"/>
 	</target>
@@ -44,7 +42,6 @@
 		<geant target="do_all"/>
 	</target>
 
-
 <!-- Implementation -->
 
 	<target name="init">
@@ -56,7 +53,6 @@
 			Call 'geant' with the same target ${target}
 			in all subdirectories.
 		</description>
-
 		<geant file="build.eant" target="${target}" dir="clock"/>
 	</target>
 

@@ -59,11 +59,6 @@ inherit
 			is_equal
 		end
 
-	KL_IMPORTED_ANY_ROUTINES
-		undefine
-			out, is_equal
-		end
-
 creation
 
 	make, make_precise,
@@ -147,8 +142,8 @@ feature {NONE} -- Initialization
 			d, ss: INTEGER
 		do
 			if s < 0 then
-				d := - ((-s) // Seconds_in_day)
-				ss := - ((-s) \\ Seconds_in_day)
+				d := -((-s) // Seconds_in_day)
+				ss := -((-s) \\ Seconds_in_day)
 			else
 				d := s // Seconds_in_day
 				ss := s \\ Seconds_in_day
@@ -171,8 +166,8 @@ feature {NONE} -- Initialization
 			d, mms: INTEGER
 		do
 			if ms < 0 then
-				d := - ((-ms) // Milliseconds_in_day)
-				mms := - ((-ms) \\ Milliseconds_in_day)
+				d := -((-ms) // Milliseconds_in_day)
+				mms := -((-ms) \\ Milliseconds_in_day)
 			else
 				d := ms // Milliseconds_in_day
 				mms := ms \\ Milliseconds_in_day
@@ -457,7 +452,7 @@ feature -- Status setting
 			if ms < 0 then
 				ms := -ms
 				d := day - ms // Milliseconds_in_day
-				ms := - (ms \\ Milliseconds_in_day)
+				ms := -(ms \\ Milliseconds_in_day)
 				if d > 0 and ms /= 0 then
 					d := d - 1
 					ms := Milliseconds_in_day + ms

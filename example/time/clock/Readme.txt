@@ -6,7 +6,7 @@ To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -28,4 +28,4 @@ To compile this example:
        UTC DateTime Now: 2004/10/16 09:55:48.343
 
 --
-Copyright (c) 2001-2004, Eric Bezault and others
+Copyright (c) 2001-2005, Eric Bezault and others

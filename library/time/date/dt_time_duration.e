@@ -6,7 +6,7 @@ indexing
 
 	note: "Do not take leap seconds into account"
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 		do
 			if ms < 0 then
 				fs := -ms
-				millisecond := - (fs \\ 1000)
+				millisecond := -(fs \\ 1000)
 				fs := fs // 1000
 				second := -(fs \\ Seconds_in_minute)
 				fs := fs // Seconds_in_minute
@@ -170,11 +170,15 @@ feature -- Access
 	second_count: INTEGER is
 			-- Total number of seconds
 		do
-			Result := (hour * Minutes_in_hour + minute) *
-				Seconds_in_minute + second + millisecond // 1000
+			Result := (hour * Minutes_in_hour + minute) * Seconds_in_minute + second
+			if millisecond >= 0 then
+				Result := Result + millisecond // 1000
+			else
+				Result := Result - ((-millisecond) // 1000)
+			end
 		ensure
 			definition: Result = ((hour * Minutes_in_hour + minute) *
-				Seconds_in_minute + second + millisecond // 1000)
+				Seconds_in_minute + second + INTEGER_.div (millisecond, 1000))
 		end
 
 	millisecond_count: INTEGER is
@@ -192,7 +196,7 @@ feature -- Access
 		do
 			Result := millisecond_count
 			if Result < 0 then
-				Result := - (Result + 1)
+				Result := -(Result + 1)
 			end
 		end
 
