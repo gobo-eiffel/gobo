@@ -14,6 +14,10 @@ Version ?
 	* XM_DTD_CALLBACKS: on_doctype called first; on_dtd_end,
 	  on_dtd_comment, on_dtd_processing_instruction added.
 
+  Gobo Eiffel Kernel Library
+
+  * KL_DOUBLE_ROUTINES.log2: new feature.
+
 	Gobo Eiffel String Library
 
 	* New library.
