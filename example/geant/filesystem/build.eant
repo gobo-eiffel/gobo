@@ -4,70 +4,224 @@
 
 	<description>demonstrates filesystem functionality</description>
 
-	<target name="info">
-		<description>displays information about filesystem</description>
-		<echo message="GOBO_OS: ${GOBO_OS}"/>
-		<echo message="is_windows: ${is_windows}"/>
-		<echo message="is_unix: ${is_unix}"/>
-		<echo message="exe: ${exe}"/>
+	<target name="init">
+		<description>
+			Abstracts some OS specific command
+		</description>
+
+		<set name="cp" value="copy" if="${is_windows}"/>
+		<set name="cp" value="cp" unless="${is_windows}"/>
+		<mkdir directory="${GOBO}/examples/geant/tmp"/>
 	</target>
 
-	<target name="mkdir">
-		<description>creates a directory</description>
-		<mkdir directory="testdirectory\subdirectory"/>
-	</target>
+	<!-- ----------------------- copy ------------------------------------------- -->	
+	<target name="copy_file1" depend="init">
+		<description>
+			Copies the Readme from $GOBO to $GOBO/example/geant/filesystem.
+			using mode 'file to file'.
 
-	<target name="deldir">
-		<description>deletes a directory</description>
-		<delete directory="testdirectory"/>
-	</target>
+			(Tip: call 'geant' with the '-n' option to just see what the copy would
+			do but do not actually execute the copy)
+		</description>
 
-	<target name="copyfile">
-		<description>copies the Readme from $GOBO to $GOBO/example/geant/filesystem</description>
 		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
-		<copy file="build.eant" to_file="ttt2.txt"/>
 	</target>
 
-	<target name="copyfile2" dir="${GOBO}">
-		<description>copies the Readme from $GOBO to $GOBO/example/geant/filesystem</description>
-		<copy file="Readme.txt" to_directory="example/geant/filesystem"/>
+	<target name="copy_file2">
+		<description>
+			Copies the Readme from $GOBO to $GOBO/example/geant/filesystem
+			using mode 'file to directory'.
+		</description>
+
+		<copy file="${GOBO}/Readme.txt" to_directory="example/geant/filesystem"/>
 	</target>
 
-	<target name="cpfs1" dir="${GOBO}/library">
-		<copy to_directory="${GOBO}/example/geant/tmp">
+	<target name="copy_file3">
+		<description>
+			Like target 'copy_file2' but using the 'force' attribute.
+
+			Setting the value of attribute 'force' to 'true' means that
+			filestamps are not taken into account so that the files are
+			copied whether they are 'outofdate' or not.
+
+			Not specifying attribute 'force' or setting it's value to 'false' means that
+			filestamps are taken into account and thus only files for which the target file
+			does not exist yet or the source file is newer are copied.
+		</description>
+
+		<copy file="${GOBO}/Readme.txt" to_directory="example/geant/filesystem"/>
+	</target>
+
+	<!-- ----------------------- copy filesets ------------------------------------------- -->	
+	<target name="copy_fs1a">
+		<description>
+			Copy all '*.ge' and '*.?ace' files underneath
+
+			  '${GOBO}/library/kernel'
+
+			to
+
+			  '${GOBO}/example/geant/tmp'
+
+			using mode 'fileset to directory'.
+			
+			(Tip: call 'geant' with the '-d' option to see the contents of the fileset)
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
 			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)"/>
 		</copy>
 	</target>
 	
-	<target name="delfs1" dir="${GOBO}/example/geant/tmp">
-		<delete>
-			<fileset directory="kernel" include="**/*.ge"/>
-		</delete>
+	<target name="copy_fs1b">
+		<description>
+			Like target 'copy_fs1a' additionally using attribute 'concat'.
+
+			Setting the value of attribute 'concat' to 'true' means that the concatenation of
+			the value of attribute 'directory' ('kernel' in this case) and
+			the value of the target filename (mapped if a map is provided) is added to the fileset.
+
+			Not specifying attribute 'concat' or setting it's value to 'false' means that
+			only the value of the target filename (mapped if a map is provided) is added
+			to the fileset.
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
+			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)" concat="true"/>
+		</copy>
 	</target>
 	
-	<target name="movefile">
-		<description>copies the Readme from $GOBO to $GOBO/example/geant/filesystem</description>
+	<!-- ----------------------- copy filesets with maps ------------------------------------------- -->	
+	<target name="copy_fs2a">
+		<description>
+			Simulate a 'gepp' transforming all '*.ge' files underneath '${GOBO}/library/kernel'
+			to '*.e' files underneath '${GOBO}/example/geant/tmp'.
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
+			<fileset directory="kernel" include="@(**/*.ge)">
+				<map type="glob" from="*.ge" to="*.e"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy_fs2b" dir="${GOBO}/library">
+		<description>
+			Like target 'copy_fs2a' but using the 'concat' attribute.
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp">
+			<fileset directory="kernel" include="@(**/*.ge)" concat="true">
+				<map type="glob" from="*.ge" to="*.e"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ----------------------- exec with filesets ------------------------------------------- -->	
+	<target name="copy_fs3a" depend="init">
+		<description>
+			Using task 'exec' to copy a file.
+			Due to its general purpose 'exec', unlike 'copy',
+			cannot determine whether the sourcefile is newer than the target file.
+
+			If we want to behave 'exec' a bit more intelligent
+			we have to prepare the input in advance:
+
+			The element 'fileset' has an attribute 'force'. By default it is set
+			to 'true' so that all selected files are included. This is useful since
+			tasks like 'copy' using 'fileset' usually provide their own 'force' attribute.
+
+			  (shortcut)
+			  It is necessary for some tasks, like 'copy' for example, to define their own 'force'
+			  attribute since they usually append paths to the filenames delivered by filesets.
+			  'copy' is doing this with the 'to_directory' attribute.
+
+			By setting 'force' to 'false' the fileset itself determines whether files
+			are 'outofdate' or not. This means of course that the fileset must have the complete
+			paths to the files and not only parts of them.
+
+			In the following example we moved the path '${GOBO}/example/geant/tmp' which
+			we had in 'copy's 'to_directory' attribute in earlier examples to the 'to'
+			attribute of the 'fileset's 'map' element so that the fileset itself can determine
+			which files to include and which not.
+		</description>
+
+		<exec executable="${cp} ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+			<fileset directory="." include="@(*.ge)" force="false">
+				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy_fs3b" depend="init">
+		<description>
+			Like previous target but copying '*.ge' files from a directory
+			structure into a flat directory. We use a nested flat-map to
+			accomplish this.
+			(We use flat here since a normal copy/cp OS command does not create
+			directories automatically.)
+		</description>
+
+		<exec executable="${cp} ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+			<fileset directory="." include="@(**/*.ge)" force="false">
+				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ----------------------- move ------------------------------------------- -->	
+	<target name="move_file1">
+		<description>
+			Copy the Readme from $GOBO to $GOBO/example/geant/filesystem.
+		</description>
+
 		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
 		<move file="ttt1.txt" to_file="ttt2.txt"/>
 		<move file="ttt2.txt" to_file="${GOBO}/ttt2.txt"/>
 	</target>
 
-	<target name="movefile2" dir="${GOBO}">
-		<description>copies Readme.txt from $GOBO to $GOBO/ttt.txt</description>
+	<target name="move_file2" dir="${GOBO}">
+		<description>
+			Copy Readme.txt from $GOBO to $GOBO/ttt.txt
+			setting the current working directory of this target to $GOBO.
+		</description>
+
 		<copy file="Readme.txt" to_file="ttt.txt"/>
 		<move file="ttt.txt" to_directory="example/geant/filesystem"/>
 	</target>
 
-	<target name="delfile">
-		<description>deletes created files</description>
-		<delete file="ttt1.txt"/>
-		<delete file="ttt2.txt"/>
-	</target>
+	<!-- ----------------------- delete ------------------------------------------- -->	
+	<target name="delete_file1">
+		<description>
+			Remove files created by targets 'copy_file1' and 'copy_file2'.
+		</description>
 
-	<target name="setup" depend="mkdir,copyfile">
+		<delete file="example/geant/filesystem/ttt1.txt"/>
+		<delete file="example/geant/filesystem/Readme.txt"/>
 	</target>
+	
+	<target name="delete_fs1a">
+		<description>
+			Remove files created by target 'copy_fs1a'.
+		</description>
 
-	<target name="clean" depend="delfile,deldir">
+		<delete>
+			<fileset directory="${GOBO}/example/geant/tmp" include="@(**/*.ge|**/*.?ace)" concat="true"/>
+		</delete>
 	</target>
+	
+	<target name="delete_fs2a">
+		<description>
+			Remove some files created by target 'copy_fs2a' but based on a different fileset.
+		</description>
 
+		<delete>
+			<fileset directory="${GOBO}/library/kernel" include="@(**/io/**/*.ge)">
+				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+			</fileset>
+		</delete>
+	</target>
+	
 </project>
