@@ -1,2 +1,3 @@
 ${GOBO}/library/kernel/
+${GOBO}/library/kernel/unicode/
 ${GOBO}/library/kernel/spec/se/
