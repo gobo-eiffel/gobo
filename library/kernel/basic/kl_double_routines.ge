@@ -17,10 +17,10 @@ inherit
 	DOUBLE_MATH
 		rename
 			log as old_log,
-			log10 as old_log10
+			log10 as old_log10,
+			exp as old_exp
 		export
-			{NONE} all;
-			{ANY} exp
+			{NONE} all
 		end
 
 #endif
@@ -28,10 +28,10 @@ inherit
 inherit
 	MATH
 		rename
-			log as old_log
+			log as old_log,
+			exp as old_exp
 		export
-			{NONE} all;
-			{ANY} exp
+			{NONE} all
 		end
 
 #endif
@@ -77,18 +77,28 @@ feature -- Logarithms
 
 feature -- Exponent
 
-#ifdef SE
 	exp (d: DOUBLE): DOUBLE is
 			-- Inverse of the natural logarithm
 		do
+#ifdef SE
 			Result := d.exp
-		end
 #endif
+#ifdef ISE
+			Result := old_exp (d)
+#endif
+#ifdef VE
+			Result := old_exp (d.truncated_to_real)
+#endif
+		end
 
 	nth_root (d, n: DOUBLE): DOUBLE is
 			-- `n'-th root of `d'
 		require
+#ifdef VE
+			divisible: (1.0).divisible (n.truncated_to_real)
+#else
 			divisible: (1.0).divisible (n)
+#endif
 		do
 #ifdef ISE || VE
 			Result := d ^ (1.0 / n)
