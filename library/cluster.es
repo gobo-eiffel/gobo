@@ -9,6 +9,7 @@ Gobo.Sources.kernel=
 Gobo.Sources.kernel.io=
 Gobo.Sources.kernel.misc=
 Gobo.Sources.kernel.unicode=
+Gobo.Sources.kernel.support=
 Gobo.Sources.kernel.OS=
 Gobo.Sources.kernel.VE=
 Gobo.Sources.lexical=
@@ -31,6 +32,9 @@ Mask=kernel/*.e
 
 [Gobo.Sources.kernel.unicode]
 Mask=kernel/unicode/*.e
+
+[Gobo.Sources.kernel.support]
+Mask=kernel/support/*.e
 
 [Gobo.Sources.kernel.io]
 Mask=kernel/io/*.e
