@@ -2,7 +2,7 @@
 
 # description: "Bootstrap Gobo Eiffel package"
 # author:      "Eric Bezault <ericb@gobosoft.com>"
-# copyright:   "Copyright (c) 2001, Eric Bezault and others"
+# copyright:   "Copyright (c) 2001-2002, Eric Bezault and others"
 # license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
 # date:        "$Date$"
 # revision:    "$Revision$"
@@ -63,7 +63,7 @@ elif [ "$EIF" = "" ]; then
 	gobo_usage
 	exit 1
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
-  CC=cl
+	CC=cl
 	CFLAGS='-O2 -nologo -D"WIN32" -w'
 	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c
 	$RM gexace$OBJ
@@ -76,7 +76,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c
 	$RM gepp$OBJ
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
-  CC=bcc32
+	CC=bcc32
 	CFLAGS='-5 -w-aus -w-par -w-rvl -O2 -O-v'
 	$CC $CFLAGS -ogexace$EXE gexace.c
 	$CP gexace$EXE $BIN_DIR

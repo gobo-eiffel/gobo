@@ -2,7 +2,7 @@
 
 rem description: "Bootstrap Gobo Eiffel package"
 rem author:      "Eric Bezault <ericb@gobosoft.com>"
-rem copyright:   "Copyright (c) 2001, Eric Bezault and others"
+rem copyright:   "Copyright (c) 2001-2002, Eric Bezault and others"
 rem license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
 rem date:        "$Date$"
 rem revision:    "$Revision$"
@@ -67,7 +67,7 @@ echo Unknown C compiler: %CC%
 goto exit
 
 :cl
-  set CC=cl
+	set CC=cl
 	set CFLAGS=-O2 -nologo -D"WIN32" -w
 	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c
 	%RM% gexace%OBJ%
@@ -82,7 +82,7 @@ goto exit
 	goto install
 
 :bcc32
-  set CC=bcc32
+	set CC=bcc32
 	set CFLAGS=-5 -w-aus -w-par -w-rvl -O2 -O-v
 	%CC% %CFLAGS% -ogexace%EXE% gexace.c
 	%CP% gexace%EXE% %BIN_DIR%
