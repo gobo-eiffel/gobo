@@ -20,14 +20,14 @@ creation
 
 cluster
 
-	[mcalc_project			"."] end
-	[mcalc					"$GOBO/example/parse/mcalc"] end
+	[mcalc_project	"."] end
+	[mcalc			"$GOBO/example/parse/mcalc"] end
 
 		-- Gobo Eiffel Library
-	[Gobo				"$GOBO/library"] end
+	[Gobo			"$GOBO/library"] end
 
 		-- Kernel
-	[Kernel					"$VE_LIB/kernel"] end
+	[Kernel			"$VE_LIB/kernel"] end
 
 option
 

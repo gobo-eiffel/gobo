@@ -7,9 +7,9 @@
 @rem revision:   "$Revision$"
 
 
-@echo ${GOBO}\example\lexical\ascii2ps\>	loadpath.se
-@echo ${GOBO}\library\lexical\skeleton\>>	loadpath.se
-@echo ${GOBO}\library\kernel\loadpath.se>>	loadpath.se
+@echo ${GOBO}/example/lexical/ascii2ps/>	loadpath.se
+@echo ${GOBO}/library/lexical/skeleton/>>	loadpath.se
+@echo ${GOBO}/library/kernel/loadpath.se>>	loadpath.se
 
 set options= -boost -no_split -no_style_warning -no_gc
 compile %options% ASCII2PS make

@@ -20,14 +20,14 @@ creation
 
 cluster
 
-	[rpcalc_project			"."] end
-	[rpcalc					"$GOBO/example/parse/rpcalc"] end
+	[rpcalc_project		"."] end
+	[rpcalc				"$GOBO/example/parse/rpcalc"] end
 
 		-- Gobo Eiffel Library
 	[Gobo				"$GOBO/library"] end
 
 		-- Kernel
-	[Kernel					"$VE_LIB/kernel"] end
+	[Kernel				"$VE_LIB/kernel"] end
 
 option
 

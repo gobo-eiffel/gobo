@@ -7,10 +7,10 @@
 @rem revision:   "$Revision$"
 
 
-@echo ${GOBO}\example\lexical\eiffel\>		loadpath.se
-@echo ${GOBO}\library\lexical\skeleton\>>	loadpath.se
-@echo ${GOBO}\library\utility\loadpath.se>>	loadpath.se
-@echo ${GOBO}\library\kernel\loadpath.se>>	loadpath.se
+@echo ${GOBO}/example/lexical/eiffel/>		loadpath.se
+@echo ${GOBO}/library/lexical/skeleton/>>	loadpath.se
+@echo ${GOBO}/library/utility/loadpath.se>>	loadpath.se
+@echo ${GOBO}/library/kernel/loadpath.se>>	loadpath.se
 
 set options= -boost -no_split -no_style_warning -no_gc
 compile %options% EIFFEL_SCANNER benchmark

@@ -19,37 +19,37 @@ default
 	console_application (yes);
 	--debug (yes);
 	--assertion (all);
-	--precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
-	rpcalc:				"$GOBO\example\parse\rpcalc";
+	rpcalc:				"$GOBO/example/parse/rpcalc";
 
 		-- Gobo Eiffel Parse Library
-	pr_skeleton:		"$GOBO\library\parse\skeleton";
+	pr_skeleton:		"$GOBO/library/parse/skeleton";
 
 		-- Gobo Eiffel Kernel Library
-	kl_kernel:			"$GOBO\library\kernel";
-	kl_kernel_spec:		"$GOBO\library\kernel\spec\ise";
+	kl_kernel:			"$GOBO/library/kernel";
+	kl_kernel_spec:		"$GOBO/library/kernel/spec/ise";
 
 		-- EiffelBase
-	kernel:				"$EIFFEL4\library\base\kernel";
-	support:			"$EIFFEL4\library\base\support";
-	access:				"$EIFFEL4\library\base\structures\access";
-	cursors:			"$EIFFEL4\library\base\structures\cursors";
-	cursor_trees:		"$EIFFEL4\library\base\structures\cursor_tree";
-	dispenser:			"$EIFFEL4\library\base\structures\dispenser";
-	iteration:			"$EIFFEL4\library\base\structures\iteration";
-	list:				"$EIFFEL4\library\base\structures\list";
-	set:				"$EIFFEL4\library\base\structures\set";
-	sort:				"$EIFFEL4\library\base\structures\sort";
-	storage:			"$EIFFEL4\library\base\structures\storage";
-	table:				"$EIFFEL4\library\base\structures\table";
-	traversing:			"$EIFFEL4\library\base\structures\traversing";
-	tree:				"$EIFFEL4\library\base\structures\tree";
+	kernel:				"$EIFFEL4/library/base/kernel";
+	support:			"$EIFFEL4/library/base/support";
+	access:				"$EIFFEL4/library/base/structures/access";
+	cursors:			"$EIFFEL4/library/base/structures/cursors";
+	cursor_trees:		"$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:			"$EIFFEL4/library/base/structures/dispenser";
+	iteration:			"$EIFFEL4/library/base/structures/iteration";
+	list:				"$EIFFEL4/library/base/structures/list";
+	set:				"$EIFFEL4/library/base/structures/set";
+	sort:				"$EIFFEL4/library/base/structures/sort";
+	storage:			"$EIFFEL4/library/base/structures/storage";
+	table:				"$EIFFEL4/library/base/structures/table";
+	traversing:			"$EIFFEL4/library/base/structures/traversing";
+	tree:				"$EIFFEL4/library/base/structures/tree";
 
 external
 
-	include_path: "$GOBO\library\kernel\include"
+	include_path: "$GOBO/library/kernel/include"
 
 end

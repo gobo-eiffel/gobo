@@ -7,10 +7,10 @@
 @rem revision:   "$Revision$"
 
 
-@echo ${GOBO}\example\parse\mcalc\>				loadpath.se
-@echo ${GOBO}\library\parse\skeleton\>>			loadpath.se
-@echo ${GOBO}\library\structure\loadpath.se>>	loadpath.se
-@echo ${GOBO}\library\kernel\loadpath.se>>		loadpath.se
+@echo ${GOBO}/example/parse/mcalc/>				loadpath.se
+@echo ${GOBO}/library/parse/skeleton/>>			loadpath.se
+@echo ${GOBO}/library/structure/loadpath.se>>	loadpath.se
+@echo ${GOBO}/library/kernel/loadpath.se>>		loadpath.se
 
 set options= -boost -no_split -no_style_warning
 compile %options% MCALC execute

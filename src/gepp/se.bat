@@ -7,8 +7,8 @@
 @rem revision:   "$Revision$"
 
 
-@echo ${GOBO}\src\gepp\>				loadpath.se
-@echo ${GOBO}\library\loadpath.se>>		loadpath.se
+@echo ${GOBO}/src/gepp/>				loadpath.se
+@echo ${GOBO}/library/loadpath.se>>		loadpath.se
 
 set options= -boost -no_split -no_style_warning -no_gc
 compile %options% GEPP execute

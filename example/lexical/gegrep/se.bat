@@ -7,8 +7,8 @@
 @rem revision:   "$Revision$"
 
 
-@echo ${GOBO}\example\lexical\gegrep\>		loadpath.se
-@echo ${GOBO}\library\loadpath.se>>			loadpath.se
+@echo ${GOBO}/example/lexical/gegrep/>		loadpath.se
+@echo ${GOBO}/library/loadpath.se>>			loadpath.se
 
 set options= -boost -no_split -no_style_warning
 compile %options% GEGREP execute
