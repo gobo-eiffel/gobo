@@ -1,4 +1,0 @@
-${GOBO}/example/lexical/eiffel_scanner/
-${GOBO}/library/lexical/skeleton/
-${GOBO}/library/utility/loadpath.se
-${GOBO}/library/kernel/loadpath.se
