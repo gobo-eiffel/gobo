@@ -276,6 +276,14 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
+feature -- Status
+
+	has_testcases: BOOLEAN is
+			-- Have any testcases been added to this object?
+		do
+			Result := not testcases.is_empty
+		end
+
 feature {NONE} -- Implementation
 
 	testcases: DS_HASH_TABLE [DS_PAIR [DS_LIST [STRING], STRING], STRING]
