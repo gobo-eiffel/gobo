@@ -7,7 +7,9 @@
 
 DIRNAME=`dirname $2`
 BASENAME=`basename $2 .ge`
-FILENAME=${DIRNAME}/${BASENAME}.e
+
+# FILENAME=${DIRNAME}/${BASENAME}.e
+FILENAME=${GOBO}/spec/$1/${BASENAME}.e
 
 touch $FILENAME
 ge2e.exe -D"$1" $2 $FILENAME
