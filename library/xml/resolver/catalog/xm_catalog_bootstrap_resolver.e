@@ -84,63 +84,63 @@ feature -- Access
 	Xml_catalog_dtd: STRING is
 			-- OASIS XML Catalogs DTD
 		once
-			Result := "<!-- $Id$ -->" +
-				"<!ENTITY %% pubIdChars %"CDATA%">" +
-				"<!ENTITY %% publicIdentifier %"%%pubIdChars;%">" +
-				"<!ENTITY %% partialPublicIdentifier %"%%pubIdChars;%">" +
-				"<!ENTITY %% uriReference %"CDATA%">" +
-				"<!ENTITY %% string %"CDATA%">" +
-				"<!ENTITY %% systemOrPublic %"(system|public)%">" +
-				"<!ENTITY %% p %"%">" +
-				"<!ENTITY %% s %"%">" +
-				"<!ENTITY %% nsdecl %"xmlns%%s;%">" +
-				"<!ENTITY %% catalog %"%%p;catalog%">" +
-				"<!ENTITY %% public %"%%p;public%">" +
-				"<!ENTITY %% system %"%%p;system%">" +
-				"<!ENTITY %% uri %"%%p;uri%">" +
-				"<!ENTITY %% rewriteSystem %"%%p;rewriteSystem%">" +
-				"<!ENTITY %% rewriteURI %"%%p;rewriteURI%">" +
-				"<!ENTITY %% delegatePublic %"%%p;delegatePublic%">" +
-				"<!ENTITY %% delegateSystem %"%%p;delegateSystem%">" +
-				"<!ENTITY %% delegateURI %"%%p;delegateURI%">" +
-				"<!ENTITY %% nextCatalog %"%%p;nextCatalog%">" +
-				"<!ENTITY %% group %"%%p;group%">" +
-				"<!ENTITY %% local.catalog.mix %"%">" +
-				"<!ENTITY %% local.catalog.attribs %"%">" +
-				"<!ELEMENT %%catalog; (%%public;|%%system;|%%uri;|%%rewriteSystem;|%%rewriteURI;|%%delegatePublic;|%%delegateSystem;|%%delegateURI;|%%nextCatalog;|%%group; %%local.catalog.mix;)+>" +
-				"<!ATTLIST %%catalog; %%nsdecl;	%%uriReference;		#FIXED 'urn:oasis:names:tc:entity:xmlns:xml:catalog'	prefer		%%systemOrPublic;	#IMPLIED	xml:base	%%uriReference;" +
-				"#IMPLIED	%%local.catalog.attribs;>" +
-				"<!ENTITY %% local.public.attribs %"%">" +
-				"<!ELEMENT %%public; EMPTY>" +
-				"<!ATTLIST %%public;	id		ID			#IMPLIED	publicId	%%publicIdentifier;	#REQUIRED	uri		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.public.attribs;>" +
-				"<!ENTITY %% local.system.attribs %"%">" +
-				"<!ELEMENT %%system; EMPTY>" +
-				"<!ATTLIST %%system;	id		ID			#IMPLIED	systemId	%%string;		#REQUIRED	uri		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.system.attribs;>" +
-				"<!ENTITY %% local.uri.attribs %"%">" +
-				"<!ELEMENT %%uri; EMPTY>" +
-				"<!ATTLIST %%uri;	id		ID			#IMPLIED	name		%%string;		#REQUIRED	uri		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.uri.attribs;>" +
-				"<!ENTITY %% local.rewriteSystem.attribs %"%">" +
-				"<!ELEMENT %%rewriteSystem; EMPTY>" +
-				"<!ATTLIST %%rewriteSystem;	id		ID			#IMPLIED	systemIdStartString	%%string;	#REQUIRED	rewritePrefix		%%string;		#REQUIRED        %%local.rewriteSystem.attribs;>" +
-				"<!ENTITY %% local.rewriteURI.attribs %"%">" +
-				"<!ELEMENT %%rewriteURI; EMPTY>" +
-				"<!ATTLIST %%rewriteURI;	id		ID			#IMPLIED	uriStartString	%%string;		#REQUIRED	rewritePrefix	%%string;		#REQUIRED        %%local.rewriteURI.attribs;>" +
-				"<!ENTITY %% local.delegatePublic.attribs %"%">" +
-				"<!ELEMENT %%delegatePublic; EMPTY>" +
-				"<!ATTLIST %%delegatePublic;	id		ID			#IMPLIED	publicIdStartString	%%partialPublicIdentifier;	#REQUIRED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.delegatePublic.attribs;>" +
-				"<!ENTITY %% local.delegateSystem.attribs %"%">" +
-				"<!ELEMENT %%delegateSystem; EMPTY>" +
-				"<!ATTLIST %%delegateSystem;	id		ID			#IMPLIED	systemIdStartString	%%string;	#REQUIRED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.delegateSystem.attribs;>" +
-				"<!ENTITY %% local.delegateURI.attribs %"%">" +
-				"<!ELEMENT %%delegateURI; EMPTY>" +
-				"<!ATTLIST %%delegateURI;	id		ID			#IMPLIED	uriStartString	%%string;		#REQUIRED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.delegateURI.attribs;>" +
-				"<!ENTITY %% local.nextCatalog.attribs %"%">" +
-				"<!ELEMENT %%nextCatalog; EMPTY>" +
-				"<!ATTLIST %%nextCatalog;	id		ID			#IMPLIED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.nextCatalog.attribs;>" +
-				"<!ENTITY %% local.group.mix %"%">" +
-				"<!ENTITY %% local.group.attribs %"%">" +
-				"<!ELEMENT %%group; (%%public;|%%system;|%%uri;|%%rewriteSystem;|%%rewriteURI;|%%delegatePublic;|%%delegateSystem;|%%delegateURI;|%%nextCatalog; %%local.group.mix;)+>" +
-				"<!ATTLIST %%group;	id		ID			#IMPLIED	prefer		%%systemOrPublic;	#IMPLIED	xml:base	%%uriReference;		#IMPLIED        %%local.group.attribs;>"
+			Result := clone ("<!-- $Id$ -->")
+			Result.append_string ("<!ENTITY %% pubIdChars %"CDATA%">")
+			Result.append_string ("<!ENTITY %% publicIdentifier %"%%pubIdChars;%">")
+			Result.append_string ("<!ENTITY %% partialPublicIdentifier %"%%pubIdChars;%">")
+			Result.append_string ("<!ENTITY %% uriReference %"CDATA%">")
+			Result.append_string ("<!ENTITY %% string %"CDATA%">")
+			Result.append_string ("<!ENTITY %% systemOrPublic %"(system|public)%">")
+			Result.append_string ("<!ENTITY %% p %"%">")
+			Result.append_string ("<!ENTITY %% s %"%">")
+			Result.append_string ("<!ENTITY %% nsdecl %"xmlns%%s;%">")
+			Result.append_string ("<!ENTITY %% catalog %"%%p;catalog%">")
+			Result.append_string ("<!ENTITY %% public %"%%p;public%">")
+			Result.append_string ("<!ENTITY %% system %"%%p;system%">")
+			Result.append_string ("<!ENTITY %% uri %"%%p;uri%">")
+			Result.append_string ("<!ENTITY %% rewriteSystem %"%%p;rewriteSystem%">")
+			Result.append_string ("<!ENTITY %% rewriteURI %"%%p;rewriteURI%">")
+			Result.append_string ("<!ENTITY %% delegatePublic %"%%p;delegatePublic%">")
+			Result.append_string ("<!ENTITY %% delegateSystem %"%%p;delegateSystem%">")
+			Result.append_string ("<!ENTITY %% delegateURI %"%%p;delegateURI%">")
+			Result.append_string ("<!ENTITY %% nextCatalog %"%%p;nextCatalog%">")
+			Result.append_string ("<!ENTITY %% group %"%%p;group%">")
+			Result.append_string ("<!ENTITY %% local.catalog.mix %"%">")
+			Result.append_string ("<!ENTITY %% local.catalog.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%catalog; (%%public;|%%system;|%%uri;|%%rewriteSystem;|%%rewriteURI;|%%delegatePublic;|%%delegateSystem;|%%delegateURI;|%%nextCatalog;|%%group; %%local.catalog.mix;)+>")
+			Result.append_string ("<!ATTLIST %%catalog; %%nsdecl;	%%uriReference;		#FIXED 'urn:oasis:names:tc:entity:xmlns:xml:catalog'	prefer		%%systemOrPublic;	#IMPLIED	xml:base	%%uriReference;")
+			Result.append_string ("#IMPLIED	%%local.catalog.attribs;>")
+			Result.append_string ("<!ENTITY %% local.public.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%public; EMPTY>")
+			Result.append_string ("<!ATTLIST %%public;	id		ID			#IMPLIED	publicId	%%publicIdentifier;	#REQUIRED	uri		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.public.attribs;>")
+			Result.append_string ("<!ENTITY %% local.system.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%system; EMPTY>")
+			Result.append_string ("<!ATTLIST %%system;	id		ID			#IMPLIED	systemId	%%string;		#REQUIRED	uri		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.system.attribs;>")
+			Result.append_string ("<!ENTITY %% local.uri.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%uri; EMPTY>")
+			Result.append_string ("<!ATTLIST %%uri;	id		ID			#IMPLIED	name		%%string;		#REQUIRED	uri		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.uri.attribs;>")
+			Result.append_string ("<!ENTITY %% local.rewriteSystem.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%rewriteSystem; EMPTY>")
+			Result.append_string ("<!ATTLIST %%rewriteSystem;	id		ID			#IMPLIED	systemIdStartString	%%string;	#REQUIRED	rewritePrefix		%%string;		#REQUIRED        %%local.rewriteSystem.attribs;>")
+			Result.append_string ("<!ENTITY %% local.rewriteURI.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%rewriteURI; EMPTY>")
+			Result.append_string ("<!ATTLIST %%rewriteURI;	id		ID			#IMPLIED	uriStartString	%%string;		#REQUIRED	rewritePrefix	%%string;		#REQUIRED        %%local.rewriteURI.attribs;>")
+			Result.append_string ("<!ENTITY %% local.delegatePublic.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%delegatePublic; EMPTY>")
+			Result.append_string ("<!ATTLIST %%delegatePublic;	id		ID			#IMPLIED	publicIdStartString	%%partialPublicIdentifier;	#REQUIRED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.delegatePublic.attribs;>")
+			Result.append_string ("<!ENTITY %% local.delegateSystem.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%delegateSystem; EMPTY>")
+			Result.append_string ("<!ATTLIST %%delegateSystem;	id		ID			#IMPLIED	systemIdStartString	%%string;	#REQUIRED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.delegateSystem.attribs;>")
+			Result.append_string ("<!ENTITY %% local.delegateURI.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%delegateURI; EMPTY>")
+			Result.append_string ("<!ATTLIST %%delegateURI;	id		ID			#IMPLIED	uriStartString	%%string;		#REQUIRED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.delegateURI.attribs;>")
+			Result.append_string ("<!ENTITY %% local.nextCatalog.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%nextCatalog; EMPTY>")
+			Result.append_string ("<!ATTLIST %%nextCatalog;	id		ID			#IMPLIED	catalog		%%uriReference;		#REQUIRED	xml:base	%%uriReference;		#IMPLIED        %%local.nextCatalog.attribs;>")
+			Result.append_string ("<!ENTITY %% local.group.mix %"%">")
+			Result.append_string ("<!ENTITY %% local.group.attribs %"%">")
+			Result.append_string ("<!ELEMENT %%group; (%%public;|%%system;|%%uri;|%%rewriteSystem;|%%rewriteURI;|%%delegatePublic;|%%delegateSystem;|%%delegateURI;|%%nextCatalog; %%local.group.mix;)+>")
+			Result.append_string ("<!ATTLIST %%group;	id		ID			#IMPLIED	prefer		%%systemOrPublic;	#IMPLIED	xml:base	%%uriReference;		#IMPLIED        %%local.group.attribs;>")
 		ensure
 			xml_catalog_dtd_not_void: Result /= Void
 		end
@@ -148,165 +148,165 @@ feature -- Access
 	Xml_catalog_xsd: STRING is
 			-- OASIS XML Catalogs W3C schema
 		once
-			Result := "<?xml version=%"1.0%" encoding=%"utf-8%"?>" +
-				"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:er='urn:oasis:names:tc:entity:xmlns:xml:catalog' targetNamespace='urn:oasis:names:tc:entity:xmlns:xml:catalog' elementFormDefault='qualified'>" +
-				"<!-- $Id$ -->" +
-				"<xs:simpleType name='pubIdChars'>" +
-				"<!-- A string of the characters defined as pubIdChar in production 13 of the Second Edition of the XML 1.0 Recommendation. Does not include the whitespace characters because they're normalized by XML parsing. -->" +
-				"<xs:restriction base='xs:string'>" +
-				"<xs:pattern value=%"[a-zA-Z0-9-'()+,./:=?;!*#@$_%%]*%"/>" +
-				"</xs:restriction>" +
-				"</xs:simpleType>" +
-				"<xs:simpleType name='publicIdentifier'>" +
-				"<xs:restriction base='er:pubIdChars'/>" +
-				"</xs:simpleType>" +
-				"<xs:simpleType name='partialPublicIdentifier'>" +
-				"<xs:restriction base='er:pubIdChars'/>" +
-				"</xs:simpleType>" +
-				"<xs:simpleType name='systemOrPublic'>" +
-				"<xs:restriction base='xs:string'>" +
-				"<xs:enumeration value='system'/>" +
-				"<xs:enumeration value='public'/>" +
-				"</xs:restriction>" +
-				"</xs:simpleType>" +
-				"<!-- The global attribute xml:base is not explicitly declared; -->" +
-				"<!-- it is allowed by the anyAttribute declarations. -->" +
-				"<xs:complexType name='catalog'>" +
-				"<xs:choice minOccurs='1' maxOccurs='unbounded'>" +
-				"<xs:element ref='er:public'/>" +
-				"<xs:element ref='er:system'/>" +
-				"<xs:element ref='er:uri'/>" +
-				"<xs:element ref='er:rewriteSystem'/>" +
-				"<xs:element ref='er:rewriteURI'/>" +
-				"<xs:element ref='er:delegatePublic'/>" +
-				"<xs:element ref='er:delegateSystem'/>" +
-				"<xs:element ref='er:delegateURI'/>" +
-				"<xs:element ref='er:nextCatalog'/>" +
-				"<xs:element ref='er:group'/>" +
-				"<xs:any namespace='##other' processContents='skip'/>" +
-				"</xs:choice>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:attribute name='prefer' type='er:systemOrPublic'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='public'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"publicId%" type=%"er:publicIdentifier%" use=%"required%"/>" +
-				"<xs:attribute name=%"uri%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='system'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"systemId%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name=%"uri%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='uri'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"name%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name=%"uri%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='rewriteSystem'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"systemIdStartString%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name=%"rewritePrefix%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='rewriteURI'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"uriIdStartString%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name=%"rewritePrefix%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='delegatePublic'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"publicIdStartString%" type=%"er:partialPublicIdentifier%"	use=%"required%"/>" +
-				"<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='delegateSystem'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"systemIdStartString%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='delegateURI'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"uriStartString%" type=%"xs:string%" use=%"required%"/>" +
-				"<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='nextCatalog'>" +
-				"<xs:complexContent>" +
-				"<xs:restriction base=%"xs:anyType%">" +
-				"<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:restriction>" +
-				"</xs:complexContent>" +
-				"</xs:complexType>" +
-				"<xs:complexType name='group'>" +
-				"<xs:choice minOccurs='1' maxOccurs='unbounded'>" +
-				"<xs:element ref='er:public'/>" +
-				"<xs:element ref='er:system'/>" +
-				"<xs:element ref='er:uri'/>" +
-				"<xs:element ref='er:rewriteSystem'/>" +
-				"<xs:element ref='er:rewriteURI'/>" +
-				"<xs:element ref='er:delegatePublic'/>" +
-				"<xs:element ref='er:delegateSystem'/>" +
-				"<xs:element ref='er:delegateURI'/>" +
-				"<xs:element ref='er:nextCatalog'/>" +
-				"<xs:any namespace='##other' processContents='skip'/>" +
-				"</xs:choice>" +
-				"<xs:attribute name='prefer' type='er:systemOrPublic'/>" +
-				"<xs:attribute name='id' type='xs:ID'/>" +
-				"<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>" +
-				"</xs:complexType>" +
-				"<xs:element name=%"catalog%" type=%"er:catalog%"/>" +
-				"<xs:element name=%"public%" type=%"er:public%"/>" +
-				"<xs:element name=%"system%" type=%"er:system%"/>" +
-				"<xs:element name=%"uri%" type=%"er:uri%"/>" +
-				"<xs:element name=%"rewriteSystem%" type=%"er:rewriteSystem%"/>" +
-				"<xs:element name=%"rewriteURI%" type=%"er:rewriteURI%"/>" +
-				"<xs:element name=%"delegatePublic%" type=%"er:delegatePublic%"/>" +
-				"<xs:element name=%"delegateSystem%" type=%"er:delegateSystem%"/>" +
-				"<xs:element name=%"delegateURI%" type=%"er:delegateURI%"/>" +
-				"<xs:element name=%"nextCatalog%" type=%"er:nextCatalog%"/>" +
-				"<xs:element name=%"group%" type=%"er:group%"/>" +
-				"</xs:schema>"
+			Result := clone ("<?xml version=%"1.0%" encoding=%"utf-8%"?>")
+			Result.append_string ("<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:er='urn:oasis:names:tc:entity:xmlns:xml:catalog' targetNamespace='urn:oasis:names:tc:entity:xmlns:xml:catalog' elementFormDefault='qualified'>")
+			Result.append_string ("<!-- $Id$ -->")
+			Result.append_string ("<xs:simpleType name='pubIdChars'>")
+			Result.append_string ("<!-- A string of the characters defined as pubIdChar in production 13 of the Second Edition of the XML 1.0 Recommendation. Does not include the whitespace characters because they're normalized by XML parsing. -->")
+			Result.append_string ("<xs:restriction base='xs:string'>")
+			Result.append_string ("<xs:pattern value=%"[a-zA-Z0-9-'()+,./:=?;!*#@$_%%]*%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:simpleType>")
+			Result.append_string ("<xs:simpleType name='publicIdentifier'>")
+			Result.append_string ("<xs:restriction base='er:pubIdChars'/>")
+			Result.append_string ("</xs:simpleType>")
+			Result.append_string ("<xs:simpleType name='partialPublicIdentifier'>")
+			Result.append_string ("<xs:restriction base='er:pubIdChars'/>")
+			Result.append_string ("</xs:simpleType>")
+			Result.append_string ("<xs:simpleType name='systemOrPublic'>")
+			Result.append_string ("<xs:restriction base='xs:string'>")
+			Result.append_string ("<xs:enumeration value='system'/>")
+			Result.append_string ("<xs:enumeration value='public'/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:simpleType>")
+			Result.append_string ("<!-- The global attribute xml:base is not explicitly declared; -->")
+			Result.append_string ("<!-- it is allowed by the anyAttribute declarations. -->")
+			Result.append_string ("<xs:complexType name='catalog'>")
+			Result.append_string ("<xs:choice minOccurs='1' maxOccurs='unbounded'>")
+			Result.append_string ("<xs:element ref='er:public'/>")
+			Result.append_string ("<xs:element ref='er:system'/>")
+			Result.append_string ("<xs:element ref='er:uri'/>")
+			Result.append_string ("<xs:element ref='er:rewriteSystem'/>")
+			Result.append_string ("<xs:element ref='er:rewriteURI'/>")
+			Result.append_string ("<xs:element ref='er:delegatePublic'/>")
+			Result.append_string ("<xs:element ref='er:delegateSystem'/>")
+			Result.append_string ("<xs:element ref='er:delegateURI'/>")
+			Result.append_string ("<xs:element ref='er:nextCatalog'/>")
+			Result.append_string ("<xs:element ref='er:group'/>")
+			Result.append_string ("<xs:any namespace='##other' processContents='skip'/>")
+			Result.append_string ("</xs:choice>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:attribute name='prefer' type='er:systemOrPublic'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='public'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"publicId%" type=%"er:publicIdentifier%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"uri%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='system'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"systemId%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"uri%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='uri'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"name%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"uri%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='rewriteSystem'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"systemIdStartString%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"rewritePrefix%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='rewriteURI'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"uriIdStartString%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"rewritePrefix%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='delegatePublic'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"publicIdStartString%" type=%"er:partialPublicIdentifier%"	use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='delegateSystem'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"systemIdStartString%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='delegateURI'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"uriStartString%" type=%"xs:string%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='nextCatalog'>")
+			Result.append_string ("<xs:complexContent>")
+			Result.append_string ("<xs:restriction base=%"xs:anyType%">")
+			Result.append_string ("<xs:attribute name=%"catalog%" type=%"xs:anyURI%" use=%"required%"/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:restriction>")
+			Result.append_string ("</xs:complexContent>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:complexType name='group'>")
+			Result.append_string ("<xs:choice minOccurs='1' maxOccurs='unbounded'>")
+			Result.append_string ("<xs:element ref='er:public'/>")
+			Result.append_string ("<xs:element ref='er:system'/>")
+			Result.append_string ("<xs:element ref='er:uri'/>")
+			Result.append_string ("<xs:element ref='er:rewriteSystem'/>")
+			Result.append_string ("<xs:element ref='er:rewriteURI'/>")
+			Result.append_string ("<xs:element ref='er:delegatePublic'/>")
+			Result.append_string ("<xs:element ref='er:delegateSystem'/>")
+			Result.append_string ("<xs:element ref='er:delegateURI'/>")
+			Result.append_string ("<xs:element ref='er:nextCatalog'/>")
+			Result.append_string ("<xs:any namespace='##other' processContents='skip'/>")
+			Result.append_string ("</xs:choice>")
+			Result.append_string ("<xs:attribute name='prefer' type='er:systemOrPublic'/>")
+			Result.append_string ("<xs:attribute name='id' type='xs:ID'/>")
+			Result.append_string ("<xs:anyAttribute namespace=%"##other%" processContents=%"lax%"/>")
+			Result.append_string ("</xs:complexType>")
+			Result.append_string ("<xs:element name=%"catalog%" type=%"er:catalog%"/>")
+			Result.append_string ("<xs:element name=%"public%" type=%"er:public%"/>")
+			Result.append_string ("<xs:element name=%"system%" type=%"er:system%"/>")
+			Result.append_string ("<xs:element name=%"uri%" type=%"er:uri%"/>")
+			Result.append_string ("<xs:element name=%"rewriteSystem%" type=%"er:rewriteSystem%"/>")
+			Result.append_string ("<xs:element name=%"rewriteURI%" type=%"er:rewriteURI%"/>")
+			Result.append_string ("<xs:element name=%"delegatePublic%" type=%"er:delegatePublic%"/>")
+			Result.append_string ("<xs:element name=%"delegateSystem%" type=%"er:delegateSystem%"/>")
+			Result.append_string ("<xs:element name=%"delegateURI%" type=%"er:delegateURI%"/>")
+			Result.append_string ("<xs:element name=%"nextCatalog%" type=%"er:nextCatalog%"/>")
+			Result.append_string ("<xs:element name=%"group%" type=%"er:group%"/>")
+			Result.append_string ("</xs:schema>")
 		ensure
 			xml_catalog_xsd_not_void: Result /= Void
 		end
@@ -314,217 +314,217 @@ feature -- Access
 	Xml_catalog_rng: STRING is
 			-- Path to OASIS XML Catalogs RELAX NG grammar
 		once
-			Result := "<?xml version=%"1.0%"?>" +
-				"<grammar xmlns=%"http://relaxng.org/ns/structure/1.0%" ns=%"urn:oasis:names:tc:entity:xmlns:xml:catalog%" datatypeLibrary=%"http://www.w3.org/2001/XMLSchema-datatypes%">" +
-				"<!-- $Id$ -->" +
-				"<start>" +
-				"<choice>" +
-				"<ref name=%"Catalog%"/>" +
-				"</choice>" +
-				"</start>" +
-				"<define name=%"pubIdChars%">" +
-				"<data type=%"string%">" +
-				"<param name=%"pattern%">[a-zA-Z0-9-'()+,./:=?;!*#@$_%%]*</param>" +
-				"</data>" +
-				"</define>" +
-				"<define name=%"publicIdentifier%">" +
-				"<ref name=%"pubIdChars%"/>" +
-				"</define>" +
-				"<define name=%"partialPublicIdentifier%">" +
-				"<ref name=%"pubIdChars%"/>" +
-				"</define>" +
-				"<define name=%"systemOrPublic%">" +
-				"<choice>" +
-				"<value>system</value>" +
-				"<value>public</value>" +
-				"</choice>" +
-				"</define>" +
-				"<define name=%"uriReference%">" +
-				"<data type=%"anyURI%"/>" +
-				"</define>" +
-				"<define name=%"OptionalAttributes%">" +
-				"<optional>" +
-				"<attribute name=%"id%">" +
-				"<data type=%"ID%"/>" +
-				"</attribute>" +
-				"</optional>" +
-				"<zeroOrMore>" +
-				"<attribute>" +
-				"<anyName>" +
-				"<except>" +
-            "<nsName ns=%"%"/>" +
-            "<nsName/>" +
-				"</except>" +
-				"</anyName>" +
-				"</attribute>" +
-				"</zeroOrMore>" +
-				"</define>" +
-				"<define name=%"PreferAttribute%">" +
-				"<attribute name=%"prefer%">" +
-				"<ref name=%"systemOrPublic%"/>" +
-				"</attribute>" +
-				"</define>" +
-				"<define name=%"Catalog%">" +
-				"<element name=%"catalog%">" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<optional>" +
-				"<ref name=%"PreferAttribute%"/>" +
-				"</optional>" +
-				"<oneOrMore>" +
-				"<choice>" +
-				"<ref name=%"Group%"/>" +
-				"<ref name=%"Public%"/>" +
-				"<ref name=%"System%"/>" +
-				"<ref name=%"Uri%"/>" +
-				"<ref name=%"RewriteSystem%"/>" +
-				"<ref name=%"RewriteURI%"/>" +
-				"<ref name=%"DelegatePublic%"/>" +
-				"<ref name=%"DelegateSystem%"/>" +
-				"<ref name=%"DelegateURI%"/>" +
-				"<ref name=%"NextCatalog%"/>" +
-				"<ref name=%"AnyOtherElement%"/>" +
-				"</choice>" +
-				"</oneOrMore>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"Group%">" +
-				"<element name=%"group%">" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<optional>" +
-				"<ref name=%"PreferAttribute%"/>" +
-				"</optional>" +
-				"<oneOrMore>" +
-				"<choice>" +
-				"<ref name=%"Public%"/>" +
-				"<ref name=%"System%"/>" +
-				"<ref name=%"Uri%"/>" +
-				"<ref name=%"RewriteSystem%"/>" +
-				"<ref name=%"RewriteURI%"/>" +
-				"<ref name=%"DelegatePublic%"/>" +
-				"<ref name=%"DelegateSystem%"/>" +
-				"<ref name=%"DelegateURI%"/>" +
-				"<ref name=%"NextCatalog%"/>" +
-				"<ref name=%"AnyOtherElement%"/>" +
-				"</choice>" +
-				"</oneOrMore>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"Public%">" +
-				"<element name=%"public%">" +
-				"<attribute name=%"publicId%">" +
-				"<ref name=%"publicIdentifier%"/>" +
-				"</attribute>" +
-				"<attribute name=%"uri%">" +
-				"<ref name=%"uriReference%"/>" +
-				"</attribute>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"System%">" +
-				"<element name=%"system%">" +
-				"<attribute name=%"systemId%"/>" +
-				"<attribute name=%"uri%">" +
-				"<ref name=%"uriReference%"/>" +
-				"</attribute>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"Uri%">" +
-				"<element name=%"uri%">" +
-				"<attribute name=%"name%"/>" +
-				"<attribute name=%"uri%">" +
-				"<ref name=%"uriReference%"/>" +
-				"</attribute>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"RewriteSystem%">" +
-				"<element name=%"rewriteSystem%">" +
-				"<attribute name=%"systemIdStartString%"/>" +
-				"<attribute name=%"rewritePrefix%"/>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"RewriteURI%">" +
-				"<element name=%"rewriteURI%">" +
-				"<attribute name=%"uriStartString%"/>" +
-				"<attribute name=%"rewritePrefix%"/>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"DelegatePublic%">" +
-				"<element name=%"delegatePublic%">" +
-				"<attribute name=%"publicIdStartString%"/>" +
-				"<attribute name=%"catalog%"/>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"DelegateSystem%">" +
-				"<element name=%"delegateSystem%">" +
-				"<attribute name=%"systemIdStartString%"/>" +
-				"<attribute name=%"catalog%"/>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"DelegateURI%">" +
-				"<element name=%"delegateURI%">" +
-				"<attribute name=%"uriStartString%"/>" +
-				"<attribute name=%"catalog%"/>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"NextCatalog%">" +
-				"<element name=%"nextCatalog%">" +
-				"<attribute name=%"catalog%"/>" +
-				"<ref name=%"OptionalAttributes%"/>" +
-				"<empty/>" +
-				"</element>" +
-				"</define>" +
-				"<define name=%"AnyOtherElement%">" +
-				"<choice>" +
-				"<element>" +
-				"<anyName>" +
-				"<except>" +
-            "<nsName ns=%"%"/>" +
-            "<nsName/>" +
-				"</except>" +
-				"</anyName>" +
-				"<zeroOrMore>" +
-				"<attribute>" +
-            "<anyName/>" +
-				"</attribute>" +
-				"</zeroOrMore>" +
-				"<ref name=%"AnyContent%"/>" +
-				"</element>" +
-				"<text/>" +
-				"</choice>" +
-				"</define>" +				
-				"<define name=%"AnyContent%">" +
-				"<mixed>" +
-				"<zeroOrMore>" +
-				"<element>" +
-				"<anyName/>" +
-				"<zeroOrMore>" +
-            "<attribute>" +
-				"<anyName/>" +
-            "</attribute>" +
-				"</zeroOrMore>" +
-				"<zeroOrMore>" +
-            "<ref name=%"AnyContent%"/>" +
-				"</zeroOrMore>" +
-				"</element>" +
-				"</zeroOrMore>" +
-				"</mixed>" +
-				"</define>" +
-				"</grammar>"
+			Result := clone ("<?xml version=%"1.0%"?>")
+			Result.append_string ("<grammar xmlns=%"http://relaxng.org/ns/structure/1.0%" ns=%"urn:oasis:names:tc:entity:xmlns:xml:catalog%" datatypeLibrary=%"http://www.w3.org/2001/XMLSchema-datatypes%">")
+			Result.append_string ("<!-- $Id$ -->")
+			Result.append_string ("<start>")
+			Result.append_string ("<choice>")
+			Result.append_string ("<ref name=%"Catalog%"/>")
+			Result.append_string ("</choice>")
+			Result.append_string ("</start>")
+			Result.append_string ("<define name=%"pubIdChars%">")
+			Result.append_string ("<data type=%"string%">")
+			Result.append_string ("<param name=%"pattern%">[a-zA-Z0-9-'()+,./:=?;!*#@$_%%]*</param>")
+			Result.append_string ("</data>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"publicIdentifier%">")
+			Result.append_string ("<ref name=%"pubIdChars%"/>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"partialPublicIdentifier%">")
+			Result.append_string ("<ref name=%"pubIdChars%"/>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"systemOrPublic%">")
+			Result.append_string ("<choice>")
+			Result.append_string ("<value>system</value>")
+			Result.append_string ("<value>public</value>")
+			Result.append_string ("</choice>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"uriReference%">")
+			Result.append_string ("<data type=%"anyURI%"/>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"OptionalAttributes%">")
+			Result.append_string ("<optional>")
+			Result.append_string ("<attribute name=%"id%">")
+			Result.append_string ("<data type=%"ID%"/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("</optional>")
+			Result.append_string ("<zeroOrMore>")
+			Result.append_string ("<attribute>")
+			Result.append_string ("<anyName>")
+			Result.append_string ("<except>")
+			Result.append_string ("<nsName ns=%"%"/>")
+			Result.append_string ("<nsName/>")
+			Result.append_string ("</except>")
+			Result.append_string ("</anyName>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("</zeroOrMore>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"PreferAttribute%">")
+			Result.append_string ("<attribute name=%"prefer%">")
+			Result.append_string ("<ref name=%"systemOrPublic%"/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"Catalog%">")
+			Result.append_string ("<element name=%"catalog%">")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<optional>")
+			Result.append_string ("<ref name=%"PreferAttribute%"/>")
+			Result.append_string ("</optional>")
+			Result.append_string ("<oneOrMore>")
+			Result.append_string ("<choice>")
+			Result.append_string ("<ref name=%"Group%"/>")
+			Result.append_string ("<ref name=%"Public%"/>")
+			Result.append_string ("<ref name=%"System%"/>")
+			Result.append_string ("<ref name=%"Uri%"/>")
+			Result.append_string ("<ref name=%"RewriteSystem%"/>")
+			Result.append_string ("<ref name=%"RewriteURI%"/>")
+			Result.append_string ("<ref name=%"DelegatePublic%"/>")
+			Result.append_string ("<ref name=%"DelegateSystem%"/>")
+			Result.append_string ("<ref name=%"DelegateURI%"/>")
+			Result.append_string ("<ref name=%"NextCatalog%"/>")
+			Result.append_string ("<ref name=%"AnyOtherElement%"/>")
+			Result.append_string ("</choice>")
+			Result.append_string ("</oneOrMore>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"Group%">")
+			Result.append_string ("<element name=%"group%">")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<optional>")
+			Result.append_string ("<ref name=%"PreferAttribute%"/>")
+			Result.append_string ("</optional>")
+			Result.append_string ("<oneOrMore>")
+			Result.append_string ("<choice>")
+			Result.append_string ("<ref name=%"Public%"/>")
+			Result.append_string ("<ref name=%"System%"/>")
+			Result.append_string ("<ref name=%"Uri%"/>")
+			Result.append_string ("<ref name=%"RewriteSystem%"/>")
+			Result.append_string ("<ref name=%"RewriteURI%"/>")
+			Result.append_string ("<ref name=%"DelegatePublic%"/>")
+			Result.append_string ("<ref name=%"DelegateSystem%"/>")
+			Result.append_string ("<ref name=%"DelegateURI%"/>")
+			Result.append_string ("<ref name=%"NextCatalog%"/>")
+			Result.append_string ("<ref name=%"AnyOtherElement%"/>")
+			Result.append_string ("</choice>")
+			Result.append_string ("</oneOrMore>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"Public%">")
+			Result.append_string ("<element name=%"public%">")
+			Result.append_string ("<attribute name=%"publicId%">")
+			Result.append_string ("<ref name=%"publicIdentifier%"/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("<attribute name=%"uri%">")
+			Result.append_string ("<ref name=%"uriReference%"/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"System%">")
+			Result.append_string ("<element name=%"system%">")
+			Result.append_string ("<attribute name=%"systemId%"/>")
+			Result.append_string ("<attribute name=%"uri%">")
+			Result.append_string ("<ref name=%"uriReference%"/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"Uri%">")
+			Result.append_string ("<element name=%"uri%">")
+			Result.append_string ("<attribute name=%"name%"/>")
+			Result.append_string ("<attribute name=%"uri%">")
+			Result.append_string ("<ref name=%"uriReference%"/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"RewriteSystem%">")
+			Result.append_string ("<element name=%"rewriteSystem%">")
+			Result.append_string ("<attribute name=%"systemIdStartString%"/>")
+			Result.append_string ("<attribute name=%"rewritePrefix%"/>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"RewriteURI%">")
+			Result.append_string ("<element name=%"rewriteURI%">")
+			Result.append_string ("<attribute name=%"uriStartString%"/>")
+			Result.append_string ("<attribute name=%"rewritePrefix%"/>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"DelegatePublic%">")
+			Result.append_string ("<element name=%"delegatePublic%">")
+			Result.append_string ("<attribute name=%"publicIdStartString%"/>")
+			Result.append_string ("<attribute name=%"catalog%"/>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"DelegateSystem%">")
+			Result.append_string ("<element name=%"delegateSystem%">")
+			Result.append_string ("<attribute name=%"systemIdStartString%"/>")
+			Result.append_string ("<attribute name=%"catalog%"/>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"DelegateURI%">")
+			Result.append_string ("<element name=%"delegateURI%">")
+			Result.append_string ("<attribute name=%"uriStartString%"/>")
+			Result.append_string ("<attribute name=%"catalog%"/>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"NextCatalog%">")
+			Result.append_string ("<element name=%"nextCatalog%">")
+			Result.append_string ("<attribute name=%"catalog%"/>")
+			Result.append_string ("<ref name=%"OptionalAttributes%"/>")
+			Result.append_string ("<empty/>")
+			Result.append_string ("</element>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"AnyOtherElement%">")
+			Result.append_string ("<choice>")
+			Result.append_string ("<element>")
+			Result.append_string ("<anyName>")
+			Result.append_string ("<except>")
+			Result.append_string ("<nsName ns=%"%"/>")
+			Result.append_string ("<nsName/>")
+			Result.append_string ("</except>")
+			Result.append_string ("</anyName>")
+			Result.append_string ("<zeroOrMore>")
+			Result.append_string ("<attribute>")
+			Result.append_string ("<anyName/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("</zeroOrMore>")
+			Result.append_string ("<ref name=%"AnyContent%"/>")
+			Result.append_string ("</element>")
+			Result.append_string ("<text/>")
+			Result.append_string ("</choice>")
+			Result.append_string ("</define>")
+			Result.append_string ("<define name=%"AnyContent%">")
+			Result.append_string ("<mixed>")
+			Result.append_string ("<zeroOrMore>")
+			Result.append_string ("<element>")
+			Result.append_string ("<anyName/>")
+			Result.append_string ("<zeroOrMore>")
+			Result.append_string ("<attribute>")
+			Result.append_string ("<anyName/>")
+			Result.append_string ("</attribute>")
+			Result.append_string ("</zeroOrMore>")
+			Result.append_string ("<zeroOrMore>")
+			Result.append_string ("<ref name=%"AnyContent%"/>")
+			Result.append_string ("</zeroOrMore>")
+			Result.append_string ("</element>")
+			Result.append_string ("</zeroOrMore>")
+			Result.append_string ("</mixed>")
+			Result.append_string ("</define>")
+			Result.append_string ("</grammar>")
 		ensure
 			xml_catalog_rng_not_void: Result /= Void
 		end
