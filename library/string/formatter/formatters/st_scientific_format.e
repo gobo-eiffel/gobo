@@ -21,6 +21,9 @@ inherit
 
 	ANY -- Needed for SE 2.1b1.
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -78,6 +81,7 @@ feature -- Resolve format specifiers and return a string
 		ensure
 			result_not_void: Result /= Void
 			all_parameters_seen: args.is_after
+			string_type_unchanged: a_format.same_type (Result)
 		end
 
 	is_correct_format_and_parameters (a_format: STRING; a_para: ARRAY [ANY]): BOOLEAN is
@@ -125,6 +129,7 @@ feature -- Resolve format specifiers and return a string
 			Result := do_sprintf (a_format, <<a_para>>)
 		ensure
 			result_not_void: Result /= Void
+			string_type_unchanged: a_format.same_type (Result)
 		end
 
 feature {NONE} -- Formatting implementation
@@ -134,9 +139,18 @@ feature {NONE} -- Formatting implementation
 			-- parameters in `_a_para'
 		require
 			format_not_void: a_format /= Void
+		local
+			uc: UC_STRING
 		do
 			clear_error
-			create Result.make (a_format.count)
+			-- Create new string of exactly the same type.
+			Result := clone (a_format)
+			-- We don't need the original contents.
+			Result.wipe_out
+			-- We need to be aware if we create unicode strings or not.
+			empty_string := clone (Result)
+			uc ?= empty_string
+			downcast_unicode_parameters := uc = Void
 			from
 				first (a_format)
 				create args.make (a_para)
@@ -165,10 +179,12 @@ feature {NONE} -- Formatting implementation
 					Result.append_string (skipped)
 				end
 			end
+			empty_string := Void
 		ensure
 			not_void: is_correct implies Result /= Void
 			looked_at_entire_string: is_correct implies is_finished
 			looked_at_all_arguments: is_correct implies args.is_after
+			string_type_unchanged: a_format.same_type (Result)
 		end
 
 	do_format (in: STRING; fmt_el: ST_TYPECHAR_FORMATTER; asterisk_allowed: BOOLEAN): STRING is
@@ -305,7 +321,7 @@ feature {NONE} -- Formatting implementation
 				-- HACK! `DOUBLE' does not conform to `REAL', but we want to
 				-- use the same formatting facilities therefore we treat it as
 				-- special case (1999-07-14, frido).
-				
+
 				-- However, SmartEiffel 1 thinks DS_CELL [REAL] conforms to
 				-- DS_CELL [INTEGER], detect and avoid that pitfall (2003-12-10, berend).
 
@@ -347,6 +363,9 @@ feature {NONE} -- Formatting implementation
 
 				-- output
 				Result := fmt_el.fmt.output
+				if downcast_unicode_parameters then
+					Result := STRING_.as_string (Result)
+				end
 			end
 		ensure
 			not_void: is_correct implies Result /= Void
@@ -490,6 +509,15 @@ feature {NONE} -- Argument parsing
 	args: ST_ARGUMENTS_ITERATOR
 			-- The arguments
 
+	downcast_unicode_parameters: BOOLEAN
+			-- If the resulting string is of type STRING, but arguments
+			-- are UC_STRINGs, the argument is downcast to STRING using
+			-- the UTF8 encoding.
+
+	empty_string: STRING
+			-- Empty string to be used when creating a new string so the
+			-- correct STRING or UC_STRING is created
+
 	format_str: STRING
 			-- String with the format specifications that is being parsed
 
@@ -523,10 +551,11 @@ feature {NONE} -- Argument parsing
 			-- no more escape characters present.
 		require
 			format_str_not_void: format_str /= Void
+			have_empty_string: empty_string /= Void and then empty_string.is_empty
 		local
 			yet_another_argument: BOOLEAN
 		do
-			skipped := ""
+			skipped := clone (empty_string)
 			from
 			until
 				cursor > format_str.count or yet_another_argument
@@ -565,12 +594,13 @@ feature {NONE} -- Argument parsing
 				cursor > 1 and then
 				cursor <= format_str.count and then
 				format_str @ (cursor - 1) = default_escape
+			have_empty_string: empty_string /= Void and then empty_string.is_empty
 		local
 			i: INTEGER
 			end_of_escape_seq: BOOLEAN
 			s: STRING
 		do
-			Result := ""
+			Result := clone (empty_string)
 			from
 				i := cursor
 			until

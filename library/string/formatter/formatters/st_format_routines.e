@@ -79,7 +79,7 @@ feature -- Access
 			result_not_void: Result /= Void
 			item_set: Result.item = a_char
 		end
-	
+
 	boolean_cell (a_boolean: BOOLEAN): DS_CELL [BOOLEAN]  is
 			-- New DS_CELL [BOOLEAN] for use in input array
 		do
