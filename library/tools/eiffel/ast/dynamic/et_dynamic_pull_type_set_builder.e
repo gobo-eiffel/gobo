@@ -324,7 +324,6 @@ feature {NONE} -- CAT-calls
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_current_feature: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER

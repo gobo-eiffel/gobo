@@ -1162,7 +1162,6 @@ feature {NONE} -- Event handling
 	report_qualified_call_expression (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
 			-- Report that a qualified call expression has been processed.
 		local
-			i, nb: INTEGER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_CALL
@@ -1199,7 +1198,6 @@ feature {NONE} -- Event handling
 	report_qualified_call_instruction (a_call: ET_FEATURE_CALL; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
 			-- Report that a qualified call instruction has been processed.
 		local
-			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_CALL
 			l_target: ET_EXPRESSION
