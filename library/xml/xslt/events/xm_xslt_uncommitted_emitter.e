@@ -228,6 +228,7 @@ feature {NONE} -- Implementation
 		local
 			an_xml_emitter: XM_XSLT_XML_EMITTER
 			an_xml_indenter: XM_XSLT_XML_INDENTER
+			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			output_properties.set_xml_defaults (0)
 			create an_xml_emitter.make (transformer, outputter, output_properties, character_map_expander)
@@ -236,8 +237,10 @@ feature {NONE} -- Implementation
 				create an_xml_indenter.make (transformer, an_xml_emitter, output_properties)
 				base_receiver := an_xml_indenter
 			end
-			-- TODO: CDATA filter
-
+			if output_properties.cdata_section_elements.count > 0 then
+				create a_cdata_filter.make (base_receiver, an_xml_emitter, output_properties)
+				base_receiver := a_cdata_filter
+			end
 			switch
 		ensure
 			committed: committed
@@ -270,6 +273,7 @@ feature {NONE} -- Implementation
 		local
 			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
+			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			output_properties.set_xhtml_defaults (0)
 			create an_xhtml_emitter.make (transformer, outputter, output_properties, character_map_expander)
@@ -278,7 +282,10 @@ feature {NONE} -- Implementation
 				create an_html_indenter.make (transformer, an_xhtml_emitter, output_properties)
 				base_receiver := an_html_indenter
 			end
-
+			if output_properties.cdata_section_elements.count > 0 then
+				create a_cdata_filter.make (base_receiver, an_xhtml_emitter, output_properties)
+				base_receiver := a_cdata_filter
+			end
 			switch
 		ensure
 			committed: committed

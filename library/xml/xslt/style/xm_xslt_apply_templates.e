@@ -189,7 +189,7 @@ feature -- Element change
 	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
 			-- Set additional properties on `a_trace_instruction'.
 		do
-			a_trace_instruction.add_property (mode.name, "mode")
+			if mode /= Void then a_trace_instruction.add_property (mode.name, "mode") end
 		end
 	
 feature {NONE} -- Implementation

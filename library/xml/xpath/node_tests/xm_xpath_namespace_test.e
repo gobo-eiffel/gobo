@@ -72,7 +72,6 @@ feature -- Matching
 	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is
 			-- Is this node test satisfied by a given node?
 		do
-
 			if a_name_code = - 1 then
 				Result := False
 			elseif a_node_kind /= node_kind then

@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			create Result.make (16)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put (Method_attribute)
-			Result.put (Version_attribute)
+			Result.put (Output_version_attribute)
 			Result.put (Indent_attribute)
 			Result.put (Encoding_attribute)
 			Result.put (Media_type_attribute)

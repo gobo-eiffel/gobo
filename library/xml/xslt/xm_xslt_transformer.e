@@ -34,6 +34,8 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
+	XM_XSLT_SHARED_EMITTER_FACTORY
+
 creation
 
 	make
@@ -574,14 +576,16 @@ feature -- Element change
 				-- set_output_properties TODO
 				a_receiver := selected_receiver (a_result, some_properties)
 
-				-- TODO: add a validator to the pipeline if required
-
-				-- Add a filter to remove duplicate namespaces
-
-				create a_namespace_reducer.make (a_receiver)
-				create a_complex_outputter.make (a_namespace_reducer)
-				a_complex_outputter.start_document
-				current_receiver := a_complex_outputter
+				if not is_error then
+					-- TODO: add a validator to the pipeline if required
+					
+					-- Add a filter to remove duplicate namespaces
+					
+					create a_namespace_reducer.make (a_receiver)
+					create a_complex_outputter.make (a_namespace_reducer)
+					a_complex_outputter.start_document
+					current_receiver := a_complex_outputter
+				end
 			end
 		end
 
@@ -845,23 +849,10 @@ feature -- Implementation
 			result_not_void: a_result /= Void
 			properties_not_void: some_properties /= Void
 		local
-			a_target: XM_XPATH_RECEIVER
 			an_emitter: XM_XSLT_EMITTER
-			an_html_emitter: XM_XSLT_HTML_EMITTER
-			an_html_indenter: XM_XSLT_HTML_INDENTER
-			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
-			an_xml_emitter: XM_XSLT_XML_EMITTER
-			a_text_emitter: XM_XSLT_TEXT_EMITTER
-			an_xml_indenter: XM_XSLT_XML_INDENTER
-			an_uncommitted_emitter: XM_XSLT_UNCOMMITTED_EMITTER
 			a_method: STRING
-			some_character_maps: DS_ARRAYED_LIST [STRING]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
-			a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]
-			a_fingerprint: INTEGER
-			a_character_map: DS_HASH_TABLE [STRING, INTEGER]
-			a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER
-			null_characters_used: BOOLEAN
+			a_method_uri, a_method_local_name: STRING
+			an_index: INTEGER
 			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 		do
 			if a_result.is_emitter then
@@ -874,94 +865,40 @@ feature -- Implementation
 				check
 					stream: a_result.is_stream
 				end
-
-				-- `a_target' is the start of the output pipeline, the receiver that
-				--  instructions will actually write to (except that other things like a
-				--  namespace reducer may get added in front of it).
-				-- `an_emitter' is the last thing in the output pipeline, the receiver
-				--  that actually generates characters or bytes that are written to `a_result.stream'
-				
 				a_method := some_properties.method
-				some_character_maps := some_properties.used_character_maps
-				if some_character_maps.count > 0 then
+				if a_method.count = 0 then
+					a_method_uri := ""; a_method_local_name := ""
+				else
+					if a_method.item (1) = '{' then
+						an_index := a_method.index_of ('}', 3)
+						check
+							closing_brace_found: an_index > 0
+							-- stylesheet compilation will have ensured this
+						end
+						a_method_uri := a_method.substring (2, an_index - 1)
+						a_method_local_name := a_method.substring (an_index + 1, a_method.count)
+					else
+						a_method_uri := ""; a_method_local_name := a_method
+					end
+				end
+				if some_properties.used_character_maps.count > 0 then
 					a_character_map_index := executable.character_map_index
 					check
 						character_map_index: a_character_map_index /= Void
 						-- as it will have been compiled in - we have already checked
 						-- that the xsl:character-maps have been declared.
 					end
-					create a_character_map_list.make (some_character_maps.count)
-					from
-						a_cursor := some_character_maps.new_cursor; a_cursor.start
-					variant
-						some_character_maps.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_cursor.item)
-						check
-							valid_character_map_fingerprint: a_fingerprint > -1
-						end
-						check
-							character_map_compiled: a_character_map_index.has (a_fingerprint)
-						end
-						a_character_map := a_character_map_index.item (a_fingerprint)
-						check
-							valid_character_map: a_character_map /= Void
-						end
-						a_character_map_list.put_last (a_character_map)
-						a_cursor.forth
-					end
-					if not STRING_.same_string (a_method, "text") then
-						null_characters_used := True
-						-- TODO - QName support
-					end
-					create a_character_map_expander.make (a_character_map_list, null_characters_used)
 				end
-
-				if a_method.count = 0 then
-					create an_uncommitted_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
-					a_target := an_uncommitted_emitter
-
-					-- TODO character map expander
-				elseif STRING_.same_string (a_method, "html") then
-					create an_html_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
-					a_target := an_html_emitter
-					if some_properties.indent then
-						create an_html_indenter.make (Current, an_html_emitter, some_properties)
-						a_target := an_html_indenter
-					end
-					-- TODO - character map expander stuff
-				elseif STRING_.same_string (a_method, "xml") then
-					create an_xml_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
-					a_target := an_xml_emitter
-					if some_properties.indent then
-						create an_xml_indenter.make (Current, an_xml_emitter, some_properties)
-						a_target := an_xml_indenter
-					end
-					-- TODO: character map expander stuff and CDATA filter
-					
-				elseif STRING_.same_string (a_method, "xhtml") then
-					create an_xhtml_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
-					a_target := an_xhtml_emitter
-					if some_properties.indent then
-						create an_html_indenter.make (Current, an_xhtml_emitter, some_properties)
-						a_target := an_html_indenter
-					end
-					-- TODO: character map expander stuff
-				elseif STRING_.same_string (a_method, "text") then
-					create a_text_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
-					a_target := a_text_emitter
-					-- TODO: character map expander stuff
-				else
-					todo ("selected_receiver - QName method", True)
+				check
+					valid_output_method: emitter_factory.is_valid_output_method (a_method_uri, a_method_local_name)
+					-- compiler ensures this
 				end
-				Result := a_target
+				Result := emitter_factory.new_receiver (a_method_uri, a_method_local_name, Current, a_result.stream, some_properties,  a_character_map_index)
 				a_result.set_principal_receiver (Result)
 			end
 		ensure
-			selected_receiver_not_void: Result /= Void
-			principal_receiver_set: a_result.principal_receiver /= Void
+			selected_receiver_not_void: Result /= Void or else is_error
+			principal_receiver_set: Result /= Void implies a_result.principal_receiver /= Void
 		end
 
 	initialize_transformer (a_start_node: XM_XPATH_NODE) is

@@ -91,6 +91,9 @@ feature -- Access
 	Gexslt_eiffel_type_uri: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
 			-- Namespace for extension functions, etc. written in Eiffel
 
+	Gexslt_examples_uri: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example"
+			-- Namespace for examples provided in the library, but not regarded as standard extensions
+
 	Exslt_date_uri: STRING is "http://exslt.org/dates-and-times"
 			-- EXSLT dates
 
@@ -299,6 +302,7 @@ feature -- Access
 	Omit_xml_declaration_attribute: STRING is "omit-xml-declaration"
 	Order_attribute: STRING is "order"
 	Ordinal_attribute: STRING is "ordinal"
+	Output_version_attribute: STRING is "output-version"
 	Override_attribute: STRING is "override"
 	Pattern_separator_attribute: STRING is "pattern-separator"
 	Per_mille_attribute: STRING is "per-mille"

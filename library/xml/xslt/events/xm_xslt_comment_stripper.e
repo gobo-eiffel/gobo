@@ -36,12 +36,12 @@ feature {NONE} -- Initialization
 		do
 			base_receiver := an_underlying_receiver
 			system_id := an_underlying_receiver.system_id
+			create character_buffer.make (80)
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
 
 feature -- Events
-
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
@@ -65,7 +65,6 @@ feature -- Events
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
-
 		do
 			do_nothing
 		end
@@ -89,6 +88,10 @@ feature {NONE} -- Implementation
 			end
 			create character_buffer.make (80)
 		end
+
+invariant
+
+	character_buffer_not_void: character_buffer /= Void
 
 end
 	

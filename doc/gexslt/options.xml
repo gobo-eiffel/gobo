@@ -421,4 +421,20 @@
       </para>
     </section>
   </section>
+  <section>
+    <title>Extensions</title>
+    <para>The following options control the availability of extensions:
+    <variablelist>
+      <varlistentry>
+	<term>--no-output-extensions</term>
+	<listitem>
+	  <para>
+	    Disables use of <exmlsyntax>QName</exmlsyntax>s for the
+	    value of the <xslt>xsl:output</xslt> <xslt>method</xslt> attribute.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+  </section>
 </chapter>

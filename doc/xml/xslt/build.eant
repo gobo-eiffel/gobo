@@ -56,6 +56,9 @@
 		<set name="next_chapter" value="transformation_source"/>
 		<geant target="xslt"/>
 
+		<set name="next_chapter" value="output_extensions"/>
+		<geant target="xslt"/>
+
 		<set name="next_chapter" value="overview"/>
 		<geant target="xslt"/>
 	</target>

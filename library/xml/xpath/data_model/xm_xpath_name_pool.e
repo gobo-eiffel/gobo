@@ -428,6 +428,7 @@ feature -- Access
 			-- Fingerprint for the name with a given uri and local name;
 		require
 			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
+			expanded_name_allocated: is_expanded_name_allocated (an_expanded_name)
 		local
 			a_local_name, a_namespace: STRING
 			a_closing_brace: INTEGER

@@ -48,6 +48,7 @@ feature -- Status report
 					end
 					an_index := an_index + 1
 				end
+				
 			end
 		end
 

@@ -283,7 +283,7 @@ invariant
 	output_resolver_not_void: output_resolver /= Void
 	error_listener_not_void: pristine_error_listener /= Void
 	error_reporter_not_void: error_reporter /= Void
-	encoder_factory_not_void: 	encoder_factory /= Void
+	encoder_factory_not_void: encoder_factory /= Void
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 
 end

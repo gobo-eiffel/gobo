@@ -25,7 +25,11 @@ inherit
 
 	XM_XPATH_SHARED_CONFORMANCE
 
+	XM_XSLT_SHARED_EMITTER_FACTORY
+
 	XM_XPATH_NAME_UTILITIES
+
+	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_SHARED_CATALOG_MANAGER
 
@@ -386,6 +390,7 @@ feature -- Error handling
 									  "       --recover-silently%N" +
 									  "       --do-not-recover%N" +
 									  "       --no-line-numbers%N" +
+									  "       --no-output-extensions%N" +
 									  "       --no-gc%N" +
 									  "       --no-catalogs%N" +
 									  "       --no-catalog-pi%N" +
@@ -410,6 +415,9 @@ feature {NONE} -- Implementation
 
 	trace_file: KI_TEXT_OUTPUT_FILE
 			-- File fro trace output
+
+	suppress_output_extensions: BOOLEAN
+			-- Suppress QName methods for xsl:output
 
 	process_option (an_option: STRING) is
 			-- Process `an_option'.
@@ -456,6 +464,8 @@ feature {NONE} -- Implementation
 				set_string_parameter (an_option.substring (7, an_option.count))
 			elseif an_option.substring_index ("file=", 1) = 1 and then an_option.count > 5 then
 				process_file (an_option.substring (6, an_option.count))
+			elseif an_option.is_equal ("no-output-extensions") then
+				suppress_output_extensions := True
 			elseif an_option.is_equal ("no-catalogs") then
 				shared_catalog_manager.suppress_catalogs
 			elseif an_option.is_equal ("no-catalog-pi") then
@@ -569,7 +579,7 @@ feature {NONE} -- Implementation
 		local
 			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE
 			a_destination: XM_OUTPUT
-			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
+			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_stream: KL_TEXT_OUTPUT_FILE
@@ -584,14 +594,17 @@ feature {NONE} -- Implementation
 			configuration.set_line_numbering (is_line_numbering)
 			if is_tracing then set_trace_handler end
 			if highly_secure then configuration.output_resolver.security_manager.set_high_security (True) end
+			if not suppress_output_extensions then
+				register_output_extensions
+			end
 			create a_stylesheet_uri.make (uris.item (1))
-			create a_stylesheet.make (configuration)
-			a_stylesheet.prepare (a_stylesheet_uri)
-			if a_stylesheet.load_stylesheet_module_failed then
-				report_processing_error ("Could not compile stylesheet", a_stylesheet.load_stylesheet_module_error)
+			create a_stylesheet_compiler.make (configuration)
+			a_stylesheet_compiler.prepare (a_stylesheet_uri)
+			if a_stylesheet_compiler.load_stylesheet_module_failed then
+				report_processing_error ("Could not compile stylesheet", a_stylesheet_compiler.load_stylesheet_module_error)
 				Exceptions.die (2)
 			else
-				a_transformer := a_stylesheet.new_transformer
+				a_transformer := a_stylesheet_compiler.new_transformer
 				process_parameters (a_transformer)
 				if uris.count = 2 then
 					create a_source_uri.make (uris.item (2))
@@ -760,6 +773,18 @@ feature {NONE} -- Implementation
 		do
 			create a_listener.make (error_handler, is_timed_tracing)
 			configuration.set_trace_listener (a_listener)
+		end
+
+	register_output_extensions is
+			-- Register output extensions.
+			-- Descendants are encouraged to redefine this routine.
+		require
+			output_extensions_not_suppressed: not suppress_output_extensions
+		local
+			an_emitter_factory: XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY
+		do
+			create an_emitter_factory.make
+			emitter_factory.register_extension_emitter_factory (an_emitter_factory, Gexslt_examples_uri)
 		end
 
 invariant

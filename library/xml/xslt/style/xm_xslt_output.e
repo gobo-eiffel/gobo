@@ -16,14 +16,29 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			make_style_element, validate
 		end
 
 	XM_XSLT_OUTPUT_ROUTINES
 
+	XM_UNICODE_CHARACTERS_1_1
+
+	XM_XSLT_SHARED_EMITTER_FACTORY
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature {NONE} -- Initialization
+	
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;  a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+			-- Establish invariant.
+		do
+			create extension_attributes.make_with_equality_testers (1, string_equality_tester, string_equality_tester)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+		end
 
 feature -- Access
 
@@ -37,7 +52,7 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_name_attribute: STRING
+			an_expanded_name, a_name_attribute, a_uri: STRING
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -67,7 +82,6 @@ feature -- Element change
 					doctype_system := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)					
 				elseif STRING_.same_string (an_expanded_name, Cdata_section_elements_attribute) then
 					cdata_section_elements := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (cdata_section_elements); STRING_.right_adjust (cdata_section_elements)
-					report_compile_warning ("cdata-section-elements (method='xml' only) is not yet supported!") 
 				elseif STRING_.same_string (an_expanded_name, Indent_attribute) then
 					indent := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (indent); STRING_.right_adjust (indent)
 				elseif STRING_.same_string (an_expanded_name, Include_content_type_attribute) then
@@ -87,10 +101,12 @@ feature -- Element change
 				elseif STRING_.same_string (an_expanded_name, Byte_order_mark_attribute) then
 					byte_order_mark := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
 				else
-					-- TODO - confine this check to xslt and gexslt namespaces,
-					--  and allow other namespaces for use with QName methods
-
-					check_unknown_attribute (a_name_code) 
+					a_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
+					if a_uri.count = 0 or else STRING_.same_string (a_uri, Xslt_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+						check_unknown_attribute (a_name_code)
+					else
+						extension_attributes.force (attribute_value_by_index (a_cursor.index), an_expanded_name)
+					end
 				end
 				a_cursor.forth
 			end
@@ -108,7 +124,23 @@ feature -- Element change
 		do
 			check_top_level
 			check_empty
-			-- TODO - validate output_version as NMTOKEN, method as QName but not NCName (except for 4 values)
+			if output_version /= Void and then not is_nmtoken (output_version) then
+				report_compile_error ("xsl:output 'version' attribute must be an 'nmtoken'")
+			end
+			if method /= Void then
+				if is_ncname (method) then
+					if STRING_.same_string (method, "xml") or else
+						STRING_.same_string (method, "xhtml") or else
+						STRING_.same_string (method, "html") or else
+						STRING_.same_string (method, "text") then
+						-- OK
+					else
+						report_compile_error ("XT1570: xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'")
+					end
+				elseif not is_qname (method) then
+					report_compile_error ("XT1570: xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'")
+				end
+			end
 			if indent /= Void then
 				if STRING_.same_string (indent, "yes") or else STRING_.same_string (indent, "no") then
 					-- OK
@@ -123,12 +155,6 @@ feature -- Element change
 					report_compile_error (STRING_.concat (Gexslt_indent_spaces_attribute, " must be a strictly positive integer"))
 				end
 			end
---			if encoding /= Void and then encoding.count = 0 then
---				report_compile_error ("encoding must be a non-zero-length string")
---			end
---			if media_type /= Void and then media_type.count = 0 then
---				report_compile_error ("media-type must be a non-zero-length string")
-			--			end
 			if omit_xml_declaration /= Void then
 				if STRING_.same_string (omit_xml_declaration, "yes") or else STRING_.same_string (omit_xml_declaration, "no") then
 					-- OK
@@ -233,7 +259,36 @@ feature -- Element change
 						a_property_set.set_duplication_error (Method_attribute)
 					end
 				else
-					todo ("gather_output_properties (QName)", true)
+					create a_splitter.make
+					a_splitter.set_separators (":")
+					qname_parts := a_splitter.split (method)
+					if qname_parts.count /= 2 then
+						a_message := STRING_.concat ("XT1570: ", method)
+						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
+						report_compile_error (a_message)
+					else
+						an_xml_prefix := qname_parts.item (1)
+						a_uri := uri_for_prefix (an_xml_prefix, False)
+						a_local_name := qname_parts.item (2)
+						if a_uri = Void then
+							a_message := STRING_.concat ("XT1570: ", an_xml_prefix)
+							a_message := STRING_.appended_string (a_message, " is not an in-scope namespace prefix.")
+							report_compile_error (a_message)
+						else
+							if emitter_factory.is_valid_output_method (a_uri, a_local_name) then
+								if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
+									emitter_factory.set_defaults (a_uri, a_local_name, a_property_set, an_import_precedence)
+								elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
+									not STRING_.same_string (method, a_property_set.method) then
+									a_property_set.set_duplication_error (Method_attribute)
+								end
+							else
+								a_message := STRING_.concat ("XT1570: ", method)
+								a_message := STRING_.appended_string (a_message, " is not supported by this XSLT configuration/processor.")
+								report_compile_error (a_message)
+							end
+						end
+					end
 				end
 			end
 			if output_version /= Void and then not a_property_set.is_error then
@@ -429,6 +484,7 @@ feature -- Element change
 					end
 				end
 			end
+			a_property_set.merge_extension_attributes (extension_attributes)
 		end
 
 feature {NONE} -- Implementation
@@ -480,6 +536,13 @@ feature {NONE} -- Implementation
 
 	byte_order_mark: STRING
 			-- Do we write a byte order mark?
+
+	extension_attributes: DS_HASH_TABLE [STRING, STRING]
+			-- Extension attributs for use by QName methods
+
+invariant
+
+	extension_attributes_not_void: extension_attributes /= Void
 
 end
 
