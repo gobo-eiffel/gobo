@@ -130,8 +130,10 @@ feature -- Escape/unescape data characters
 					-- ok
 				else
 					Result.put ('%%', i)
-					Result.insert_string (to_hexadecimal_2 (c.code), i + 1)
-					i := i + 2
+					i := i + 1
+					STRING_.insert_character (Result, INTEGER_.to_hexadecimal (c.code // 16 \\ 16, True).item (1), i)
+					i := i + 1
+					STRING_.insert_character (Result, INTEGER_.to_hexadecimal (c.code \\ 16, True).item (1), i)
 				end
 				i := i + 1
 			end
@@ -191,10 +193,9 @@ feature -- Character sets
 	Default_unescaped: DS_HASH_SET [CHARACTER] is
 			-- Default character set not to escape
 		once
-			Result := new_character_set (Rfc_lowalpha_characters 
-					+ Rfc_upalpha_characters
-					+ Rfc_digit_characters
-					+ Rfc_mark_characters)
+			Result := new_character_set (STRING_.concat (
+				STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters),
+				STRING_.concat (Rfc_digit_characters, Rfc_mark_characters)))
 		end
 	
 	Rfc_lowalpha_characters: STRING is "abcdefghijklmnopqrstuvwxyz"
@@ -215,24 +216,6 @@ feature -- Character sets
 	Rfc_extra_reserved_characters: STRING is "[]"
 			-- RFC 2732 addition to 'reserved' characters
 			
-feature {NONE} -- Implementation
-
-	to_hexadecimal_2 (a_value: INTEGER): STRING is
-			-- 2 digit hex version of integer.
-		require
-			max_value: a_value < 256
-			positive_value: a_value >= 0
-		do
-			Result := INTEGER_.to_hexadecimal (a_value, True)
-			if Result.count = 1 then
-				STRING_.insert_character (Result, '0', 1)
-			end
-		ensure
-			result_not_void: Result /= Void
-			two_digits: Result.count = 2
-			hexadecimal: STRING_.is_hexadecimal (Result)
-		end
-
 feature -- Valid characters
 
 	has_excluded_characters (s: STRING): BOOLEAN is
