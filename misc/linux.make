@@ -8,6 +8,7 @@
 
 # Shell Commands
 CP=cp
+RM=rm
 ECHO=echo
 GEPP=$(GOBO)/bin/gepp
 GELEX=$(GOBO)/bin/gelex
@@ -18,3 +19,6 @@ SE_PCFLAGS=
 
 # ISE Eiffel
 ISE_PFFLAGS=
+
+# Filenames
+EXE=
