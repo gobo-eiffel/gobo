@@ -68,7 +68,7 @@ feature -- Measurement
 				i := i + 1
 			end
 		ensure
-			count_non_negavite: Result >= 0
+			count_non_negative: Result >= 0
 		end
 
 	override_count: INTEGER is
@@ -82,7 +82,7 @@ feature -- Measurement
 				i := i + 1
 			end
 		ensure
-			override_count_non_negavite: Result >= 0
+			override_count_non_negative: Result >= 0
 		end
 
 	read_write_count: INTEGER is
@@ -96,7 +96,7 @@ feature -- Measurement
 				i := i + 1
 			end
 		ensure
-			read_write_count_non_negavite: Result >= 0
+			read_write_count_non_negative: Result >= 0
 		end
 
 feature {ET_CLUSTER} -- Setting
