@@ -32,14 +32,14 @@ feature {NONE} -- Initialization
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
 		do
-			name := a_qname
+			variable_name := a_qname
 			if an_initial_value /= Void then
 				value := an_initial_value
 			else
 				create {XM_XPATH_EMPTY_SEQUENCE} value.make
 			end
 		ensure
-			name_set: name = a_qname
+			name_set: variable_name = a_qname
 			value_set: an_initial_value /= Void implies value = an_initial_value
 		end
 
@@ -56,7 +56,7 @@ feature -- Access
 			create Result.make_any_sequence
 		end
 	
-	fingerprint: INTEGER is
+	variable_fingerprint: INTEGER is
 			-- Fingerprint of variable name from name pool;
 			-- Not used.
 		do
@@ -95,7 +95,7 @@ feature -- Element change
 
 invariant
 
-	valid_name: name /= Void and then is_qname (name)
+	valid_name: variable_name /= Void and then is_qname (variable_name)
 	valid_value: value /= Void
 
 end

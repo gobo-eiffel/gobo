@@ -90,7 +90,7 @@ feature -- Status setting
 			
 feature -- Optimization
 
-	simplify: XM_XSLT_PATTERN is -- TODO - this needs to be renamed as it is not a command
+	simplified_pattern: XM_XSLT_PATTERN is
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		do

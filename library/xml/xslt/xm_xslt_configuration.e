@@ -17,4 +17,7 @@ feature -- Access
 	are_external_functions_allowed: BOOLEAN
 			-- Are extension functions allowed?
 
+	error_listener: XM_XSLT_ERROR_LISTENER
+			-- Error listener
+
 end

@@ -48,6 +48,33 @@ feature -- Element change
 			end
 		end
 
+	add_context_document_argument (a_position: INTEGER; an_augmented_name: STRING) is
+			-- Add an implicit argument referring to the context document.
+			-- Called by functions such as id() and key() that take the context document as an implicit argument
+		require
+			strictly_positive_position: a_position > 0
+			augmented_name: an_augmented_name /= Void and then an_augmented_name.count > 2
+		local
+			a_root_expression: XM_XPATH_ROOT_EXPRESSION
+		do
+			if supplied_argument_count > a_position then
+
+				-- This happens during expression reduction, when the extra argument is already present
+
+				do_nothing
+			else
+				check
+					correct_number_of_arguments: supplied_argument_count = a_position
+				end
+
+				if not arguments.extendible (1) then
+					arguments.resize (arguments.count + 1)
+				end
+				create a_root_expression.make
+				arguments.put_last (a_root_expression)
+			end
+		end
+
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is

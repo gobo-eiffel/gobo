@@ -75,7 +75,7 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "for $")
-			a_string := STRING_.appended_string (a_string, name)
+			a_string := STRING_.appended_string (a_string, variable_name)
 			if is_error then
 				std.error.put_string (" in error%N")
 			else
@@ -112,7 +112,7 @@ feature -- Optimization
 				set_replacement (sequence)
 			else
 				create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
-				create a_role.make (Variable_role, name, 1)
+				create a_role.make (Variable_role, variable_name, 1)
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then

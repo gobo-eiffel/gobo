@@ -18,6 +18,9 @@ inherit
 
 feature -- Access
 
+	Report_always, Report_unless_forwards_comptible, Report_if_instantiated: INTEGER is unique
+			-- Validation reporting definitions
+
 	Validation_invalid: INTEGER is -1
 	Validation_strict: INTEGER is 1
 	Validation_lax: INTEGER is 2

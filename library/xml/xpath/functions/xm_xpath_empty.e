@@ -85,8 +85,6 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
-		local
-			counter: INTEGER
 		do
 			Precursor (a_context)
 			arguments.item (1).set_unsorted (False)

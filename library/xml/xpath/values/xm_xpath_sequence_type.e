@@ -27,7 +27,8 @@ inherit
 creation
 
 	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic, make_optional_integer,
-	make_single_string, make_single_integer, make_single_node, make_optional_node, make_node_sequence, make_numeric_sequence
+	make_single_string, make_single_integer, make_single_node, make_optional_node, make_node_sequence,
+	make_numeric_sequence, make_atomic_sequence
 
 feature {NONE} -- Initialization
 
@@ -114,6 +115,13 @@ feature {NONE} -- Initialization
 			-- Create a sequence that allows zero or more numeric values
 		do
 			primary_type := type_factory.numeric_type
+			set_cardinality_zero_or_more
+		end
+
+	make_atomic_sequence is
+			-- Create a sequence that allows zero or more atomicic values
+		do
+			primary_type := type_factory.any_atomic_type
 			set_cardinality_zero_or_more
 		end
 

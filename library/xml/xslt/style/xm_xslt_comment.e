@@ -15,17 +15,37 @@ class XM_XSLT_COMMENT
 inherit
 
 	XM_XSLT_STYLE_ELEMENT
+		redefine
+			validate
+		end
 
-creation
+creation {XM_XSLT_NODE_FACTORY}
 
-	make
+	make_style_element
 
 feature -- Element change
 
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		do
+			attributes_prepared := True
 			todo ("prepare_attributes", False)
+		end
+
+	validate is
+			-- Check that the stylesheet element is valid.
+			-- This is called once for each element, after the entire tree has been built.
+			-- As well as validation, it can perform first-time initialisation.
+		do
+			todo ("validate", False)
+			validated := True
+		end
+
+	compile (compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, 
+			--  or to Eiffel code.
+		do
+			todo ("compile", False)
 		end
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Literal result elements"
+		"xsl:namespace-alias element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,18 +10,26 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_LITERAL_RESULT_ELEMENT
+class XM_XSLT_NAMESPACE_ALIAS
 
 inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, validate_children
+			validate
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature -- Access
+
+	stylesheet_uri_code: INTEGER
+			-- TODO: comment
+
+	result_namespace_code: INTEGER
+			-- TODO: comment
 
 feature -- Element change
 
@@ -41,24 +49,11 @@ feature -- Element change
 			validated := True
 		end
 
-		validate_children is
-			-- Validate the children of this node, recursively.
-		do
-			if not top_level then
-				Precursor
-			end
-		end
-
 	compile (compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
 		do
 			todo ("compile", False)
 		end
-
-feature {NONE} -- Implementation
-
-	top_level: BOOLEAN
-			-- Is `Current' a top-level element?
 
 end

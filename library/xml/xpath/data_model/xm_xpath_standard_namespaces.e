@@ -240,12 +240,30 @@ feature -- Access
 			-- XSLT Attribute names
 
 	Name_attribute: STRING is "name"
+	Use_attribute: STRING is "use"
+	Match_attribute: STRING is "match"
+	Collation_attribute: STRING is "collation"
 	Extension_element_prefixes_attribute: STRING is "extension-element-prefixes"
 	Exclude_result_prefixes_attribute: STRING is "exclude-result-prefixes"
 	Version_attribute: STRING is "version"
 	Xpath_default_namespace_attribute: STRING is "xpath-default-namespace"
 	Id_attribute: STRING is "id"
 	Default_validation_attribute: STRING is "default-validation"
+	Decimal_separator_attribute: STRING is "decimal-separator"
+	Grouping_separator_attribute: STRING is "grouping-separator"
+	Pattern_separator_attribute: STRING is "pattern-separator"
+	Infinity_attribute: STRING is "infinity"
+	Minus_sign_attribute: STRING is "minus-sign"
+	Nan_attribute: STRING is "NaN"
+	Percent_attribute: STRING is "percent"
+	Per_mille_attribute: STRING is "per-mille"
+	Zero_digit_attribute: STRING is "zero-digit"
+	Digit_attribute: STRING is "digit"
+	Select_attribute: STRING is "select"
+	As_attribute: STRING is "as"
+	Required_attribute: STRING is "required"
+	Tunnel_attribute: STRING is "tunnel"
+	
 	Xslt_extension_element_prefixes_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Extension_element_prefixes_attribute

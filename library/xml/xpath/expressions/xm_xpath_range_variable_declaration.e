@@ -36,19 +36,19 @@ feature {NONE} -- Initialization
 			required_type_not_void: a_required_type /= Void
 		do
 			create references.make_equal (5)
-			name := a_name
-			fingerprint := a_fingerprint
+			variable_name := a_name
+			variable_fingerprint := a_fingerprint
 			required_type := a_required_type
 		ensure
-			name_set: name = a_name
+			name_set: variable_name = a_name
 		end
 
 feature -- Access
 
-	name: STRING
+	variable_name: STRING
 			-- For use in diagnostics - lexically, a QName
 
-	fingerprint: INTEGER
+	variable_fingerprint: INTEGER
 			-- Fingerprint of variable name from name pool
 
 	required_type: XM_XPATH_SEQUENCE_TYPE
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 invariant
 
 	references_not_void: references /= Void
-	name_not_void: name /= Void and then name.count > 0
+	name_not_void: variable_name /= Void and then variable_name.count > 0
 	required_type_not_void: required_type /= Void
 
 end

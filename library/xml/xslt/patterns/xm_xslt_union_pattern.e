@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			simplify, type_check, set_original_text
+			simplified_pattern, type_check, set_original_text
 		end
 
 creation
@@ -67,11 +67,11 @@ feature -- Status setting
 
 feature -- Analysis
 
-	simplify: XM_XSLT_PATTERN is
+	simplified_pattern: XM_XSLT_PATTERN is
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		do
-			create {XM_XSLT_UNION_PATTERN} Result.make (left_hand_side.simplify, right_hand_side.simplify)
+			create {XM_XSLT_UNION_PATTERN} Result.make (left_hand_side.simplified_pattern, right_hand_side.simplified_pattern)
 		end
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is

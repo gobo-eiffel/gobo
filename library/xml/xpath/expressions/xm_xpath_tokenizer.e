@@ -40,22 +40,6 @@ feature {NONE} -- Initialization
 			input := Void
 		end
 	
-feature -- Tokenizer states
-	
-	Default_state: INTEGER is 0
-			-- Initial state of the tokenizer
-
-	Bare_name_state: INTEGER is 1
-			-- State in which a name is NOT to be merged with what comes next, for example "("
-
-	Sequence_type_state: INTEGER is 2
-			-- State in which the next thing to be read is a sequence type
-
-	Operator_state: INTEGER is 2
-			-- State in which the next thing to be read is an operator
-			--  review -  these last two are the same - I think that is because
-			-- Saxon supports XQuery as well as XSLT. NO. States don't appear to be used any more
-
 feature -- Access
 
 	last_token: INTEGER is
@@ -79,6 +63,9 @@ feature -- Access
 	input: STRING
 			-- The string being parsed
 
+	input_length: INTEGER
+			-- Length of the input string
+
 	last_lexical_error: STRING is
 			-- Error text
 		require
@@ -97,8 +84,8 @@ feature -- Access
 			an_index: INTEGER
 			s: STRING
 		do
-			if input_index > input.count then
-				an_index := input.count
+			if input_index > input_length then
+				an_index := input_length
 			else
 				an_index := input_index
 			end
@@ -118,13 +105,10 @@ feature -- Access
 
 feature -- Status report
 
-	state: INTEGER
-			-- State
-
 	is_input_stream_exhausted: BOOLEAN is
 			-- Are there more characters to read?
 		do
-			Result := input_index > input.count + 2 -- + 2 for the mythical EOF character
+			Result := input_index > input_length + 2 -- + 2 for the mythical EOF character
 		end
 	
 	line_number: INTEGER
@@ -135,37 +119,26 @@ feature -- Status report
 	
 feature -- Status setting
 
-	set_state (new_state: INTEGER) is
-			-- Set `state' to `new_state'.
-		require
-			valid_state: new_state >= Default_state and new_state <= Operator_state
-		do
-			state := new_state
-			if state = Default_state then
-				-- Force the is_operator test to return `True'.
-				preceding_token := Unknown_token
-				current_token := Unknown_token
-			elseif state = Operator_state then
-				preceding_token := Right_parenthesis_token
-				current_token := Right_parenthesis_token
-			end
-		ensure
-			set: state = new_state
-		end
-
-	tokenize (an_input: STRING) is
+	tokenize (an_input: STRING; a_start, an_end: INTEGER) is
 			-- Prepare a string for tokenization.
 		require
 			input_string_not_void: an_input /= Void
+			strictly_positive_start: a_start > 0 and then a_start < an_input.count
+			valid_end_point: an_end = -1 or else an_end >0 and then an_end > a_start and then an_end <= an_input.count
 		do
 			next_token := Eof_token
 			next_token_value := Void
-			next_token_start_index := 1
-			input_index := 1
+			next_token_start_index := a_start
+			input_index := a_start
 			input := an_input
-				check
-					no_error_yet: not is_lexical_error
-				end
+			check
+				no_error_yet: not is_lexical_error
+			end
+			if an_end = -1 then
+				input_length := input.count
+			else
+				input_length := an_end - a_start + 1
+			end
 			look_ahead
 			next
 		end
@@ -218,7 +191,7 @@ feature --Element change
 				std.error.put_new_line
 			end
 
-			-- disambiguate the current token based on the tokenizer state
+			-- disambiguate the current token
 				
 			inspect
 				current_token
@@ -254,131 +227,125 @@ feature --Element change
 				look_ahead
 					
 				if current_token = Name_token then
-					if state = Bare_name_state then
-						do_nothing -- finished
-					else
-						inspect
-							next_token
-								
-						when Left_parenthesis_token then
-							operator_type := binary_operator (current_token_value)
-							if operator_type /= Unknown_token then
-								current_token := operator_type
-							else
-								current_token := function_type (current_token_value)
-								if not is_lexical_error then look_ahead  end -- swallow the (
-							end
-								
-						when Left_curly_token then
-							if state /= Sequence_type_state then
-								current_token := Keyword_curly_token
-								if not is_lexical_error then look_ahead  end -- swallow the (
-							end
-							
-						when Colon_colon_token then
-							if not is_lexical_error then 
-								look_ahead
-								current_token := Axis_token
-								debug ("XPath tokens")
-									std.error.put_string ("Current token is Axis_token")
-									std.error.put_new_line
-								end
-							end
-							
-						when Colon_star_token then
-							if not is_lexical_error then
-								look_ahead
-								current_token := Prefix_token
-							end
-							
-						when Dollar_token then
+					inspect
+						next_token
+						
+					when Left_parenthesis_token then
+						operator_type := binary_operator (current_token_value)
+						if operator_type /= Unknown_token then
+							current_token := operator_type
+						else
+							current_token := function_type (current_token_value)
+							if not is_lexical_error then look_ahead  end -- swallow the (
+						end
+						
+					when Left_curly_token then
+						current_token := Keyword_curly_token
+						if not is_lexical_error then look_ahead  end -- swallow the (
+						
+					when Colon_colon_token then
+						if not is_lexical_error then 
+							look_ahead
+							current_token := Axis_token
 							debug ("XPath tokens")
-								std.error.put_string ("Next token is dollar_token, current_token value is ")
-								std.error.put_string (current_token_value)
+								std.error.put_string ("Current token is Axis_token")
 								std.error.put_new_line
 							end
-							if STRING_.same_string (current_token_value, "for") then
-								current_token := For_token
-							elseif STRING_.same_string (current_token_value, "some") then
-								current_token := Some_token
-							elseif STRING_.same_string (current_token_value, "every") then
-								current_token := Every_token
-							elseif STRING_.same_string (current_token_value, "let") then
-								current_token := Let_token
+						end
+						
+					when Colon_star_token then
+						if not is_lexical_error then
+							look_ahead
+							current_token := Prefix_token
+						end
+						
+					when Dollar_token then
+						debug ("XPath tokens")
+							std.error.put_string ("Next token is dollar_token, current_token value is ")
+							std.error.put_string (current_token_value)
+							std.error.put_new_line
+						end
+						if STRING_.same_string (current_token_value, "for") then
+							current_token := For_token
+						elseif STRING_.same_string (current_token_value, "some") then
+							current_token := Some_token
+						elseif STRING_.same_string (current_token_value, "every") then
+							current_token := Every_token
+						elseif STRING_.same_string (current_token_value, "let") then
+							current_token := Let_token
+						end
+						
+					when Name_token then
+						candidate := -1
+						if STRING_.same_string (current_token_value, "element") then
+							candidate := Element_qname_token
+						elseif STRING_.same_string (current_token_value, "attribute") then
+							candidate := Attribute_qname_token
+						elseif STRING_.same_string (current_token_value, "pi") then
+							candidate := Pi_qname_token
+						end
+						
+						if candidate /= -1 then
+							
+							-- <'element' QName '{'> constructor
+							-- <'attribute' QName '{'> constructor
+							-- <'pi' QName '{'> constructor
+							
+							qname := next_token_value
+							saved_token_value := current_token_value
+							saved_position := input_index
+							check
+								no_error_yet: not is_lexical_error
 							end
-
-						when Name_token then
-							candidate := -1
-							if STRING_.same_string (current_token_value, "element") then
-								candidate := Element_qname_token
-							elseif STRING_.same_string (current_token_value, "attribute") then
-								candidate := Attribute_qname_token
-							elseif STRING_.same_string (current_token_value, "pi") then
-								candidate := Pi_qname_token
+							look_ahead
+							
+							if not is_lexical_error then
+								if next_token = Left_curly_token then
+									current_token := candidate
+									current_token_value := qname
+									look_ahead
+									finished := True
+								else
+									
+									-- backtrack (we don't have 2-token lookahead; this is the
+									-- only case where it's needed. So we backtrack instead.)
+									
+									current_token := Name_token
+									current_token_value := saved_token_value
+									input_index := saved_position
+									next_token := Name_token
+									next_token_value := qname
+								end
 							end
+						end
 
-							if candidate /= -1 then
-
-								-- <'element' QName '{'> constructor
-								-- <'attribute' QName '{'> constructor
-								-- <'pi' QName '{'> constructor
-
-								qname := next_token_value
-								saved_token_value := current_token_value
-								saved_position := input_index
-									check
-										no_error_yet: not is_lexical_error
-									end
+						if not finished then
+							composite := clone (current_token_value)
+							composite := STRING_.appended_string (composite, " ")
+							composite := STRING_.appended_string (composite, next_token_value)
+							
+							if double_keywords.has (composite) then
+								current_token := double_keywords.item (composite)
+								current_token_value := composite
 								look_ahead
-
-								if not is_lexical_error then
-									if next_token = Left_curly_token then
-										current_token := candidate
-										current_token_value := qname
-										look_ahead
-										finished := True
-									else
-										
-										-- backtrack (we don't have 2-token lookahead; this is the
-										-- only case where it's needed. So we backtrack instead.)
-										
-										current_token := Name_token
-										current_token_value := saved_token_value
-										input_index := saved_position
-										next_token := Name_token
-										next_token_value := qname
-									end
-								end
-							end
-
-							if not finished then
-									composite := clone (current_token_value)
-									composite := STRING_.appended_string (composite, " ")
-									composite := STRING_.appended_string (composite, next_token_value)
-
-									if double_keywords.has (composite) then
-										current_token := double_keywords.item (composite)
-										current_token_value := composite
-										look_ahead
-									end
-								end
-							else
-								do_nothing
 							end
 						end
-					end
-					debug ("XPath tokens")
-						std.error.put_string ("Current token on exit from next is set to ")
-						if is_valid_token (current_token) then
-							std.error.put_string (token_name (current_token))
-						else
-							std.error.put_string (current_token.out)
-						end
-						std.error.put_string (", value is ")
-						std.error.put_string (current_token_value)
-						std.error.put_new_line
+					else
+						do_nothing
 					end
 				end
+				debug ("XPath tokens")
+					std.error.put_string ("Current token on exit from next is set to ")
+					if is_valid_token (current_token) then
+						std.error.put_string (token_name (current_token))
+					else
+						std.error.put_string (current_token.out)
+					end
+					std.error.put_string (", value is ")
+					std.error.put_string (current_token_value)
+					std.error.put_new_line
+				end
+			end
 		ensure
 			tokens_set_if_no_error: not is_lexical_error implies last_token_value /= Void
 		end
@@ -408,11 +375,11 @@ feature {NONE} -- Status setting
 				next_token_start_index := input_index
 				internal_last_lexical_error := ""
 			variant
-				input.count + 3 - input_index  -- + 3 to allow for setting the EOF token
+				input_length + 3 - input_index  -- + 3 to allow for setting the EOF token
 			until
 				finished
 			loop
-				if input_index > input.count then
+				if input_index > input_length then
 					next_token := Eof_token
 					finished := True; input_index := input_index + 1
 				else
@@ -421,7 +388,7 @@ feature {NONE} -- Status setting
 						c
 						
 					when ':' then
-						if input_index <= input.count then
+						if input_index <= input_length then
 							if input.item (input_index) = ':' then
 								input_index := input_index + 1
 								next_token := Colon_colon_token
@@ -463,11 +430,10 @@ feature {NONE} -- Status setting
 						
 					when ';' then
 						next_token := Semicolon_token
-						state := Default_state
 						finished := True
 						
 					when '(' then
-						if input_index <= input.count and then input.item (input_index) = ':' then
+						if input_index <= input_length and then input.item (input_index) = ':' then
 
 							-- XPath comment syntax is (: .... :)
 							-- Comments may be nested
@@ -476,9 +442,9 @@ feature {NONE} -- Status setting
 							from
 								nesting_depth := 1
 							variant
-								input.count - input_index
+								input_length - input_index
 							until
-								nesting_depth = 0 or else input_index > input.count - 1
+								nesting_depth = 0 or else input_index > input_length - 1
 							loop
 								if input.item (input_index) = '%N' then
 									next_line_number := next_line_number + 1
@@ -519,7 +485,7 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '!' then
-						if input_index <= input.count and then input.item (input_index) = '=' then
+						if input_index <= input_length and then input.item (input_index) = '=' then
 							input_index := input_index + 1
 							next_token := Not_equal_token
 						else
@@ -529,14 +495,14 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '*' then
-						if input_index <= input.count and then input.item (input_index) = ':' then
+						if input_index <= input_length and then input.item (input_index) = ':' then
 							input_index := input_index + 1
 							next_token := Suffix_token
 
 							-- we leave the parser to get the following name as a separate
 							-- token, but first check there's no intervening white space
 
-							if input_index <= input.count then
+							if input_index <= input_length then
 								ahead := input.item (input_index)
 								if whitespace.has(ahead) then
 									is_lexical_error := True
@@ -561,10 +527,10 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '<' then
-						if input_index <= input.count and then input.item (input_index) = '=' then
+						if input_index <= input_length and then input.item (input_index) = '=' then
 							input_index := input_index + 1
 							next_token := Less_equal_token
-						elseif input_index <= input.count and then input.item (input_index) = '<' then
+						elseif input_index <= input_length and then input.item (input_index) = '<' then
 							input_index := input_index + 1
 							next_token := Precedes_token
 						else
@@ -573,10 +539,10 @@ feature {NONE} -- Status setting
 						finished := True
 
 					when '>' then
-						if input_index <= input.count and then input.item (input_index) = '=' then
+						if input_index <= input_length and then input.item (input_index) = '=' then
 							input_index := input_index + 1
 							next_token := Greater_equal_token
-						elseif input_index <= input.count and then input.item (input_index) = '>' then
+						elseif input_index <= input_length and then input.item (input_index) = '>' then
 							input_index := input_index + 1
 							next_token := Follows_token
 						else
@@ -585,7 +551,7 @@ feature {NONE} -- Status setting
 						finished := True
 
 					when '/' then
-						if input_index <= input.count and then input.item (input_index) = '/' then
+						if input_index <= input_length and then input.item (input_index) = '/' then
 							input_index := input_index + 1
 							next_token := Slash_slash_token
 							finished := True
@@ -602,11 +568,11 @@ feature {NONE} -- Status setting
 						-- These errors will be caught by the numeric creation procedure.
 
 						if c = '.' then
-							if input_index <= input.count and then input.item (input_index) = '.' then
+							if input_index <= input_length and then input.item (input_index) = '.' then
 								input_index := input_index + 1
 								next_token := Dot_dot_token
 								finished := True
-							elseif input_index = input.count
+							elseif input_index = input_length
 								or else input.item (input_index) < '0'
 								or else input.item (input_index) > '9' then
 								next_token := Dot_token
@@ -671,7 +637,7 @@ feature {NONE} -- Status setting
 									end_of_number := True
 								end
 								if not only_state_change then
-									if input_index > input.count then
+									if input_index > input_length then
 										end_of_number := True
 									else
 										c := input.item (input_index); input_index := input_index + 1
@@ -705,7 +671,7 @@ feature {NONE} -- Status setting
 
 								-- look for doubled delimiters
 
-								if input_index <= input.count and then input.item (input_index) = c then
+								if input_index <= input_length and then input.item (input_index) = c then
 									next_token_value := STRING_.appended_string (next_token_value, c.out)
 									next_token_start_index := input_index
 									input_index := input_index + 1
@@ -755,13 +721,13 @@ feature {NONE} -- Status setting
 						from
 							finished_other := False
 						until
-							finished or else finished_other or else input_index > input.count
+							finished or else finished_other or else input_index > input_length
 						loop
 							c := input.item (input_index)
 							inspect
 								c
 							when ':'  then
-								if input_index + 1 <= input.count then
+								if input_index + 1 <= input_length then
 									nc := input.item (input_index + 1)
 									if nc = ':' then
 										next_token_value := input.substring (next_token_start_index, input_index - 1)

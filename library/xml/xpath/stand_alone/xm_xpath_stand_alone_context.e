@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 	bind_system_function (a_name: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Identify a system function appearing in an expression.
 		require
-			valid_qname: a_name /= Void and then is_qname (a_name)
+			valid_local_name: a_name /= Void and then is_ncname (a_name)
 			arguments_not_void: arguments /= Void
 		local
 			a_function_call: XM_XPATH_FUNCTION_CALL

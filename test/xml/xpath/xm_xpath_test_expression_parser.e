@@ -55,7 +55,7 @@ feature -- Test
 		do
 			a_string := "//fred[@son='Jim']"
 			create a_context.make (shared_pool, True, True)
-			expression_factory.make_expression (a_string, a_context)
+			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
 				std.error.put_string (expression_factory.parsed_error_value.error_message)
@@ -133,7 +133,7 @@ feature -- Test
 			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
 			create a_context.make (shared_pool, False, False)
-			expression_factory.make_expression (a_string, a_context)
+			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
 				std.error.put_string (expression_factory.parsed_error_value.error_message)
@@ -200,7 +200,7 @@ feature -- Test
 			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position()) = last()]"
 			create a_context.make (shared_pool, False, False)
-			expression_factory.make_expression (a_string, a_context)
+			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			assert ("Parse failed", expression_factory.is_parse_error)
 			assert ("Error text length", expression_factory.parsed_error_value.error_message.count = 74)
 		end

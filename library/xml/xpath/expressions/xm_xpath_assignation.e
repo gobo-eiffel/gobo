@@ -160,10 +160,10 @@ feature -- Element change
 			new_declaration_not_void: a_declaration /= Void
 		do
 			declaration := a_declaration
-			name := declaration.name
+			variable_name := declaration.variable_name
 		ensure
 			declaration_set: declaration = a_declaration
-			name_not_void: name /= Void
+			name_not_void: variable_name /= Void
 		end
 
 	set_declaration_void is

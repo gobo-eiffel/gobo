@@ -27,6 +27,8 @@ inherit
 
 	XM_XPATH_AXIS
 
+	XM_XPATH_TOKENS
+
 	XM_XPATH_SHARED_CONFORMANCE
 
 	KL_SHARED_STANDARD_FILES
@@ -59,7 +61,7 @@ feature -- Test
 			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
 			create a_context.make (shared_pool, False, False)
-			expression_factory.make_expression (a_string, a_context)
+			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
 				std.error.put_string (expression_factory.parsed_error_value.error_message)

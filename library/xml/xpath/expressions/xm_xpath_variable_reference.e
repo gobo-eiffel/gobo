@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			declaration_not_void: a_declaration /= Void
 		do
 			a_declaration.register_reference (Current)
-			display_name := a_declaration.name
+			display_name := a_declaration.variable_name
 			compute_static_properties
 		end
 

@@ -20,6 +20,8 @@ inherit
 
 	XM_STRING_MODE
 
+	XM_XPATH_TOKENS
+
 	KL_SHARED_STANDARD_FILES
 
 	MA_SHARED_DECIMAL_CONTEXT
@@ -169,7 +171,7 @@ feature -- Evaluation
 		do
 			create a_system_function_factory
 			function_factory.register_system_function_factory (a_system_function_factory)
-			expression_factory.make_expression (an_expression_text, static_context)
+			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				is_error := True
 				internal_error_value := expression_factory.parsed_error_value

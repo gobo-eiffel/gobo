@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Creation
 
-	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
+	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator: INTEGER) is
 			-- Parse an expression;
 			-- This performs the basic analysis of the expression against the grammar,
 			--  it binds variable references and function calls to variable definitions and
@@ -49,6 +49,7 @@ feature -- Creation
 		require
 			expression_not_void: an_expression /= Void
 			context_not_void: a_context /= Void
+			strictly_positive_start: a_start > 0
 		local
 			a_parser: XM_XPATH_EXPRESSION_PARSER
 			an_error_type: INTEGER
@@ -56,7 +57,7 @@ feature -- Creation
 			is_parse_error := False
 			internal_parsed_expression := Void
 			create a_parser.make
-			a_parser.parse (an_expression, a_context)
+			a_parser.parse (an_expression, a_context, a_start, a_terminator)
 			if not a_parser.is_parse_error then
 				internal_parsed_expression := a_parser.last_parsed_expression
 				debug ("XPath expression factory")

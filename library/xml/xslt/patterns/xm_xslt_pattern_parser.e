@@ -16,6 +16,14 @@ inherit
 
 	XM_XPATH_EXPRESSION_PARSER
 
+	XM_XSLT_SHARED_ANY_NODE_TEST
+
+	XM_XSLT_SHARED_NO_NODE_TEST
+
+	XM_XPATH_SHARED_NO_NODE_TEST
+
+	XM_XPATH_DEBUGGING_ROUTINES
+
 feature -- Status report
 
 	last_parsed_pattern: XM_XSLT_PATTERN is
@@ -50,7 +58,7 @@ feature -- Parsers
 		do
 			environment := a_context
 			create tokenizer.make
-			tokenizer.tokenize (a_pattern_text)
+			tokenizer.tokenize (a_pattern_text, 1, -1)
 			is_parse_error := False
 			parse_union_pattern
 
@@ -78,7 +86,7 @@ feature -- Parsers
 			internal_last_parse_error := Void
 			environment := a_context
 			create tokenizer.make
-			tokenizer.tokenize (a_sequence_type_string)
+			tokenizer.tokenize (a_sequence_type_string, 1, -1)
 			is_parse_error := False
 			parse_sequence
 
@@ -463,16 +471,142 @@ feature {NONE} -- Implementation
 	parse_pattern_step (a_principal_node_type: INTEGER) is
 			-- Parse a pattern step (after any axis name or @)
 		local
-			step: XM_XSLT_LOCATION_PATH_PATTERN
-			node_test: XM_XSLT_NODE_TEST
+			a_step: XM_XSLT_LOCATION_PATH_PATTERN
+			a_node_test: XM_XSLT_NODE_TEST
+			a_node_kind: INTEGER
 		do
-			create step
-			-- node_test := parse_node_test (a_principal_node_type)
-			-- TODO
+			create a_step.make
+			parse_node_test (a_principal_node_type)
+			if not is_parse_error then
+				a_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test)
+				if a_node_test = any_xslt_node_test then
+					
+					-- handle node() and @node() specially
+					
+					if a_principal_node_type = Element_node then
+						
+						-- We are on the Child::axis
+						
+						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} a_node_test.make
+					else
+						
+						-- We are on the Attribute::axis
+						
+						todo ("parse_pattern_step - attribute axis", True)
+					end
+				end
+				
+				-- Deal with nonsense patterns such as @comment() or child::attribute().
+				-- These are legal, but will never match anything.
+
+				a_node_kind := a_node_test.node_kind
+				if a_principal_node_type = Element_node and then
+					(a_node_kind = Attribute_node or else a_node_kind = Namespace_node) then
+					a_node_test := xslt_empty_item
+				elseif a_principal_node_type = Attribute_node and then
+					(a_node_kind = Comment_node or else a_node_kind = Text_node
+						or else a_node_kind = Processing_instruction_node
+						or else a_node_kind = Element_node
+						or else a_node_kind = Document_node) then
+					a_node_test := xslt_empty_item
+				end
+				a_step.set_node_test (a_node_test)
+				parse_filters (a_step)
+				last_parsed_pattern_step := a_step
+			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies last_parsed_pattern_step /= Void
 		end
 
+	parse_filters (a_step: XM_XSLT_LOCATION_PATH_PATTERN) is
+			-- Test to see if there are filters for a Pattern, if so, parse them.
+		require
+			pattern_not_void: a_step /= Void
+		local
+			a_qualifier: XM_XPATH_EXPRESSION
+			a_message: STRING
+		do
+			from
+			until
+				tokenizer.last_token /= Left_square_bracket_token
+			loop
+				next_token ("In parse_filters: current token is ")
+				if tokenizer.is_lexical_error then
+					report_parse_error (tokenizer.last_lexical_error, 3)
+				else
+					parse_single_expression
+					if not is_parse_error then
+						a_qualifier := internal_last_parsed_expression
+						if tokenizer.last_token /= Right_parenthesis_token then
+							a_message := "expected %"%)%", found "
+							a_message := STRING_.appended_string (a_message, display_current_token)
+							report_parse_error (a_message, 3)
+						else
+							next_token ("In parse_filters after RPAR: current token is ")
+							if tokenizer.is_lexical_error then
+								report_parse_error (tokenizer.last_lexical_error, 3)
+							else
+								a_step.add_filter (a_qualifier)
+							end
+						end
+					end
+				end
+			end
+		end
+
+	xpath_to_xslt_node_test (an_xpath_node_test: XM_XPATH_NODE_TEST): XM_XSLT_NODE_TEST is
+			-- XSLT node-test-pattern from an XPath node-test
+		require
+			node_test_not_void: an_xpath_node_test /= Void
+		local
+			a_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
+			a_content_test: XM_XPATH_CONTENT_TYPE_TEST
+			a_local_name_test: XM_XPATH_LOCAL_NAME_TEST
+			a_namespace_test: XM_XPATH_NAMESPACE_TEST
+			a_name_test: XM_XPATH_NAME_TEST
+			a_node_kind_test: XM_XPATH_NODE_KIND_TEST
+		do
+			if an_xpath_node_test = any_node_test then
+				Result := any_xslt_node_test
+			elseif an_xpath_node_test = empty_item then
+				Result := xslt_empty_item
+			else
+				a_combined_node_test ?= an_xpath_node_test
+				if a_combined_node_test /= Void then
+					todo ("xpath_to_xslt_node_test - combined node test", True)
+				else
+					a_content_test ?= an_xpath_node_test
+					if a_content_test /= Void then
+						todo ("xpath_to_xslt_node_test - content type test", True)
+					else
+						a_local_name_test ?= an_xpath_node_test
+						if a_local_name_test /= Void then
+							todo ("xpath_to_xslt_node_test - local name test", True)
+						else
+							a_namespace_test ?= an_xpath_node_test
+							if a_namespace_test /= Void then
+								todo ("xpath_to_xslt_node_test - namespace test", True)
+							else
+								a_name_test ?= an_xpath_node_test
+								if a_name_test /= Void then
+									create {XM_XSLT_NAME_TEST} Result.make (a_name_test.node_kind, a_name_test.fingerprint)
+								else
+									a_node_kind_test ?= an_xpath_node_test
+									if a_node_kind_test /= Void then
+										create {XM_XSLT_NODE_KIND_TEST} Result.make (a_node_kind_test.node_kind)
+									else
+										todo ("xpath_to_xslt_node_test - unknown test", True)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			xslt_node_test_not_void: Result /= Void
+		end
+			
 	internal_last_parsed_pattern: XM_XSLT_PATTERN
 			-- Last sucessfully parsed pattern
 

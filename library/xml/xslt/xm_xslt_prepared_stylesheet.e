@@ -53,6 +53,9 @@ feature -- Access
 	last_loaded_module: XM_XPATH_TREE_DOCUMENT
 			-- Last stylesheet module sucessfully loaded
 
+	error_listener: XM_XSLT_ERROR_LISTENER
+			-- Last error listener used by `prepare'
+
 feature -- Status report
 
 	load_stylesheet_module_failed: BOOLEAN
@@ -74,7 +77,11 @@ feature -- Compliation
 			a_node_factory: XM_XSLT_NODE_FACTORY
 		do
 			create a_name_pool.make
-			create a_node_factory.make (a_name_pool, configuration.are_external_functions_allowed)
+			error_listener := configuration.error_listener
+			if error_listener = Void then
+				create {XM_XSLT_DEFAULT_ERROR_LISTENER} error_listener.make
+			end
+			create a_node_factory.make (a_name_pool, error_listener, configuration.are_external_functions_allowed)
 			load_stylesheet_module (a_source, configuration, a_name_pool, a_node_factory)
 			if load_stylesheet_module_failed then
 				todo ("prepare - deal with compile errors", True)
@@ -133,7 +140,7 @@ feature -- Compliation
 			a_stylesheet ?= a_stylesheet_document.document_element
 			if a_stylesheet = Void then
 				todo ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element", True)
-			else
+			elseif not a_stylesheet.is_error then
 
 				-- Preprocess the stylesheet, performing validation and preparing template  definitions
 				
@@ -143,12 +150,17 @@ feature -- Compliation
 				-- Compile the stylesheet, retaining the resulting  executable
 
 				--a_stylesheet.compile (compile_to_eiffel)
-				--if a_stylesheet.was_compile_errors then
-				--	todo ("create_style_sheet_executable - compile failed", True)
-				--else
-					--executable := a_stylesheet.executable
+				if a_stylesheet.is_error then
+					todo ("create_style_sheet_executable - compile failed", True)
+				else
+					--executable ?= a_stylesheet.last_generated_instruction
+					check
+					--	instruction_is_executable: executable /= Void
+						-- as {XM_XSLT_STYLESHEET}.compile produces an
+						-- executable if no error.
+						end
 					--executable.set_configuration (configuration)
-				--end
+				end
 			end
 		ensure
 			node_factory_set: node_factory = a_node_factory
@@ -160,4 +172,3 @@ invariant
 	stylesheet_module_load_suceeded: not load_stylesheet_module_failed implies load_stylesheet_module_error = Void -- and then last_loaded_module /= Void
 
 end
-

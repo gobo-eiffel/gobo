@@ -19,7 +19,7 @@ feature -- Access
 		deferred
 		end
 	
-	name: STRING
+	variable_name: STRING
 			-- name of variable
 
 feature -- Status report
@@ -40,6 +40,6 @@ feature -- Evaluation
 
 invariant
 
-	name_not_void: name /= Void
+	name_not_void: variable_name /= Void
 
 end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			fingerprint, simplify, type_check, internal_matches
+			fingerprint, simplified_pattern, type_check, internal_matches
 		end
 
 	XM_XPATH_AXIS
@@ -24,6 +24,20 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+
+	XM_XSLT_SHARED_ANY_NODE_TEST
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Establish invariant.
+		do
+			node_test := any_xslt_node_test
+		end
 
 feature -- Access
 
@@ -33,12 +47,8 @@ feature -- Access
 	ancestor_pattern: XM_XSLT_PATTERN
 			-- Ancestor pattern
 
-	node_test: XM_XSLT_NODE_TEST is
+	node_test: XM_XSLT_NODE_TEST
 			-- A node test that this pattern matches
-		once
-			create internal_node_test.make
-			Result := internal_node_test
-		end
 
 	fingerprint: INTEGER is
 			-- Determine the name fingerprint of nodes to which this pattern applies
@@ -65,7 +75,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify: XM_XSLT_PATTERN is
+	simplified_pattern: XM_XSLT_PATTERN is
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		local
@@ -78,7 +88,7 @@ feature -- Optimization
 			
 			if parent_pattern = Void and then ancestor_pattern = Void and then filters = Void then
 				Result := clone (node_test)
-				Result.set_system_id (system_id)
+				-- TODO Result.set_system_id (system_id)
 				Result.set_line_number (line_number)
 			else
 				a_result_pattern := clone (Current)
@@ -86,13 +96,13 @@ feature -- Optimization
 				-- Simplify each component of the pattern
 				
 				if parent_pattern /= Void then
-					a_result_pattern.set_parent_pattern (parent_pattern.simplify)
+					a_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
 					a_location_pattern ?= a_result_pattern.parent_pattern
 					if a_location_pattern /= Void then
 						a_result_pattern.set_uses_current (a_location_pattern.uses_current)
 					end
 				elseif ancestor_pattern /= Void then
-					a_result_pattern.set_ancestor_pattern (ancestor_pattern.simplify)
+					a_result_pattern.set_ancestor_pattern (ancestor_pattern.simplified_pattern)
 					a_location_pattern ?= a_result_pattern.ancestor_pattern
 					if a_location_pattern /= Void then
 						a_result_pattern.set_uses_current (a_location_pattern.uses_current)
@@ -299,6 +309,16 @@ feature -- Element change
 			set: equivalent_expression = exp
 		end
 
+	set_node_test (a_node_test: XM_XSLT_NODE_TEST) is
+			-- Set `node_test'.
+		require
+			node_test_not_void: a_node_test /= Void
+		do
+			node_test := a_node_test
+		ensure
+			node_test_set: node_test = a_node_test
+		end
+
 feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 	
 	filters: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
@@ -403,11 +423,6 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 	is_special_filter: BOOLEAN
 			-- `Current' is a special filter
 
-feature {NONE} -- Implementation
-
-	internal_node_test: XM_XSLT_ANY_NODE_TEST
-			-- match any node
-
 feature {XM_XSLT_PATTERN} -- Implementation
 
 	internal_matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
@@ -420,5 +435,6 @@ invariant
 
 	not_parent_and_ancestor: (parent_pattern /= Void implies ancestor_pattern = Void)
 		and then (ancestor_pattern /= Void implies parent_pattern = Void)
+	node_test_not_void: node_test /= Void
 
 end

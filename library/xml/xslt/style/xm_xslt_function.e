@@ -2,26 +2,25 @@ indexing
 
 	description:
 
-		"Literal result elements"
+		"xsl:function element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
+	date: "$Date  $"
 	revision: "$Revision$"
 
-class XM_XSLT_LITERAL_RESULT_ELEMENT
+class XM_XSLT_FUNCTION
 
 inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, validate_children
+			validate
 		end
 
-creation {XM_XSLT_NODE_FACTORY}
+		-- TODO XM_XSLT_FUNCTION_SIGNATURE
 
-	make_style_element
 
 feature -- Element change
 
@@ -41,14 +40,6 @@ feature -- Element change
 			validated := True
 		end
 
-		validate_children is
-			-- Validate the children of this node, recursively.
-		do
-			if not top_level then
-				Precursor
-			end
-		end
-
 	compile (compile_to_eiffel: BOOLEAN) is
 			-- Compile `Current' to an excutable instruction, 
 			--  or to Eiffel code.
@@ -56,9 +47,5 @@ feature -- Element change
 			todo ("compile", False)
 		end
 
-feature {NONE} -- Implementation
+end	
 
-	top_level: BOOLEAN
-			-- Is `Current' a top-level element?
-
-end

@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
+	XM_XPATH_SHARED_FUNCTION_FACTORY
+
 feature
 
 	test_simple is
@@ -51,8 +53,12 @@ feature
 			a_for_each_group: XM_XSLT_FOR_EACH_GROUP
 			a_sort: XM_XSLT_SORT
 			a_number: XM_XSLT_NUMBER
+			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
+			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 		do
 			conformance.set_basic_xslt_processor
+			create a_system_function_factory
+			function_factory.register_system_function_factory (a_system_function_factory)
 			create a_configuration
 			create a_stylesheet.make (a_configuration)
 			create a_uri.make ("../xpath/data/books.xsl")
@@ -63,6 +69,8 @@ feature
 			a_document_element ?= a_stylesheet.last_loaded_module.document_element
 			--print (a_document_element.error_value.error_message)
 			assert ("Stylesheet compiled without errors", not a_document_element.is_stylesheet_in_error)
+			an_error_listener ?= a_stylesheet.error_listener
+			assert ("No errors reported", an_error_listener /= Void and then an_error_listener.total_errors = 0)
 			assert ("xsl:transform", a_document_element /= Void and then STRING_.same_string (a_document_element.node_name, "xsl:transform"))
 			a_key ?= a_document_element.first_child
 			assert ("xsl:key 1", a_key /= Void)

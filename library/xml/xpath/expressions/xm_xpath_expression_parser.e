@@ -80,24 +80,25 @@ feature -- Status report
 
 feature -- Parsers
 
-	parse (an_expression_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
+	parse (an_expression_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator: INTEGER) is
 			--  Parse `an_expression_string'.
 		require
 			expression_string_not_void: an_expression_string /= Void
 			static_context_not_void: a_context /= Void
+			strictly_positive_start: a_start > 0
 		local
 			s: STRING
 		do
 			internal_last_parse_error := Void
 			environment := a_context
 			create tokenizer.make
-			tokenizer.tokenize (an_expression_string)
+			tokenizer.tokenize (an_expression_string, a_start, -1)
 			is_parse_error := False
 			parse_expression
 			
 			if	tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
-			elseif tokenizer.last_token /= Eof_token then
+			elseif tokenizer.last_token /= a_terminator then
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of expression")
 				report_parse_error (s, 3)
@@ -2180,7 +2181,7 @@ feature {NONE} -- Implementation
 					Result /= Void or else a_cursor.before
 				loop
 					a_range_variable := a_cursor.item
-					if a_range_variable.fingerprint = a_fingerprint then
+					if a_range_variable.variable_fingerprint = a_fingerprint then
 						Result := a_range_variable
 					end
 					a_cursor.back

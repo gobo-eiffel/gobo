@@ -14,7 +14,7 @@ deferred class XM_XPATH_VARIABLE_DECLARATION
 
 feature -- Access
 
-	name: STRING is
+	variable_name: STRING is
 			-- Name of variable;
 			-- For use in diagnostics - lexically, a QName
 		deferred
@@ -22,7 +22,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	fingerprint: INTEGER is
+	variable_fingerprint: INTEGER is
 			-- Fingerprint of variable name from name pool
 		deferred
 		end

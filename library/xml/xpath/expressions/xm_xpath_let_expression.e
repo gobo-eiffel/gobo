@@ -78,7 +78,7 @@ feature -- Status report
 			if declaration = Void then
 				a_string := STRING_.appended_string (a_string, "<range variable>")
 			else
-				a_string := STRING_.appended_string (a_string, declaration.name)
+				a_string := STRING_.appended_string (a_string, declaration.variable_name)
 			end
 			std.error.put_string (a_string)
 			if is_error then
@@ -122,7 +122,7 @@ feature -- Optimization
 					else
 						an_expression := sequence
 					end
-					create a_role.make (Variable_role, declaration.name, 1)
+					create a_role.make (Variable_role, declaration.variable_name, 1)
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, an_expression, declaration.required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then

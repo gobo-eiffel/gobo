@@ -88,6 +88,16 @@ feature -- Access
 			Result := attribute_name_codes.new_cursor
 		end
 
+feature -- Measurement
+
+	number_of_attributes: INTEGER is
+			-- Number of attributes in `Current'
+		do
+			Result := attribute_name_codes.count
+		ensure
+			positive_result: Result >= 0
+		end
+
 feature -- Status report
 	
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is

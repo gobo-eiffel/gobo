@@ -20,9 +20,9 @@ inherit
 		--may_contain_template_body, validate, compile
 		--end
 
-creation
+creation {XM_XSLT_NODE_FACTORY}
 
-	make
+	make_style_element
 
 feature -- Status report
 
@@ -37,6 +37,14 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		do
+			do_nothing
+		end
+
+	compile (compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, 
+			--  or to Eiffel code.
+		do
+			todo ("compile", False)
 		end
 
 end

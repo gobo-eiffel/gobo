@@ -14,31 +14,86 @@ class XM_XSLT_VARIABLE
 
 inherit
 
-	XM_XSLT_STYLE_ELEMENT
+	XM_XSLT_VARIABLE_DECLARATION
 		redefine
-			make
+			make_style_element, prepare_attributes
 		end
 
-creation
+	XM_XPATH_CARDINALITY
 
-	make
+creation {XM_XSLT_NODE_FACTORY}
+
+	make_style_element
 
 feature {NONE} -- Initialization
 	
-	make (a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-			a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
 			-- Establish invariant.
 		do
+			cached_variable_fingerprint := -1
 			is_instruction := True
-			Precursor (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			create references.make (5)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 		end
+
+feature -- Access
+
+	required_type: XM_XPATH_SEQUENCE_TYPE is
+			-- Static type of the variable
+		local
+			default_type: XM_XPATH_SEQUENCE_TYPE
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			a_document_test: XM_XPATH_NODE_KIND_TEST
+		do
+			if as_type /= Void then
+				Result := as_type
+			elseif select_expression /= Void then
+				an_empty_sequence ?= select_expression
+				if an_empty_sequence /= Void then
+					create Result.make_any_sequence -- apparently, returning empty sequence as the type gives problems with static type checking
+				else
+
+					-- Try to infer the type from the select expression
+
+					create Result.make (select_expression.item_type, select_expression.cardinality)
+				end
+			elseif has_child_nodes then
+				create a_document_test.make_document_test
+				create Result.make (a_document_test, Required_cardinality_exactly_one)
+			else
+
+				-- No select attribute or content: value is an empty string
+
+				create Result.make_single_string
+			end
+		end
+
+	preparation_state: INTEGER
+			-- Used by `prepare_attributes'
 
 feature -- Element change
 
 	prepare_attributes is
 			-- Set the attribute list for the element.
+		require else
+			preparation_state: preparation_state < 2
 		do
-			todo ("prepare_attributes", False)
+			if preparation_state > 0 then
+				report_compile_error ("Circular reference to variable")
+			else
+				preparation_state := 1
+				Precursor
+				preparation_state := 2
+			end
+		end
+
+	compile (compile_to_eiffel: BOOLEAN) is
+			-- Compile `Current' to an excutable instruction, 
+			--  or to Eiffel code.
+		do
+			todo ("compile", False)
 		end
 
 invariant
