@@ -127,6 +127,10 @@
 		<set name="gepp_dir" value="misc"/>
 		<set name="gepp_file" value="kl_operating_system"/>
 		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_system_clock"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_shell_command"/>
+		<geant target="spec_eif"/>
 	</target>
 
 	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
