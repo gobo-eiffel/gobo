@@ -338,7 +338,7 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				nb := a_list.count
 				from i := 1 until i > nb loop
-					a_list.expression (i).process (Current)
+					a_list.actual_argument (i).process (Current)
 					i := i + 1
 				end
 			end
