@@ -1125,6 +1125,7 @@ feature -- AST leaves
 						from
 							i := i + 1
 							c := l_literal.item (i)
+							l_code := 0
 						until 
 							c = '/'
 						loop
