@@ -37,6 +37,12 @@ feature -- Status report
 			not_found_in_empty: Result implies not empty
 		end
 
+	is_empty: BOOLEAN is
+			-- Is there no element?
+		do
+			Result := empty
+		end
+
 	object_comparison: BOOLEAN
 			-- Must search operations use `equal' rather than `='
 			-- for comparing references? (Default: no, use `='.)
