@@ -40,6 +40,7 @@ inherit
 			remove as remove_i_th,
 			prune as prune_i_th
 		export
+			{DS_ARRAYED_LIST} storage
 			{NONE} all
 		redefine
 			searcher

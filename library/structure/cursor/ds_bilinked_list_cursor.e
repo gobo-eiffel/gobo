@@ -42,7 +42,7 @@ feature -- Cursor movement
 			before := current_cell = Void
 		end
 
-feature {DS_BILINKED_LIST, DS_BILINKED_LIST_SEARCHER} -- Implementation
+feature {DS_LINKED_LIST, DS_LINKED_LIST_SEARCHER} -- Implementation
 
 	current_cell: DS_BILINKABLE [G]
 			-- Cell at cursor position
