@@ -351,14 +351,14 @@ feature -- Basic operations
 			a_dir: KL_DIRECTORY
 		do
 			create_directory
-			if not is_readable then
+			if not exists then
 				a_pathname := file_system.canonical_pathname (name)
 				a_dirname := file_system.dirname (a_pathname)
 				if not a_dirname.is_equal (a_pathname) then
 					!! a_dir.make (a_dirname)
-					if not a_dir.is_readable then
+					if not a_dir.exists then
 						a_dir.recursive_create_directory
-						if a_dir.is_readable then
+						if a_dir.exists then
 							create_directory
 						end
 					end
