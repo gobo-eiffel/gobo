@@ -74,17 +74,6 @@ feature {NONE} -- Implementation
 			a_parser.set_callbacks (standard_callbacks_pipe (<<a_checker>>))
 			a_parser.parse_from_string (a_in)
 			
-			--debug ("xml_parser")
-				if not a_parser.is_correct then
-					std.output.put_string (a_parser.last_error_description)
-					std.output.put_new_line
-				end
-				if a_checker.has_failed then
-					std.output.put_string ("failed: "+ a_checker.failed)
-					std.output.put_new_line
-				end
-			--end
-			
 			assert ("parsing ok for "+a_name, a_parser.is_correct)
 			assert (a_name, not a_checker.has_failed)
 		end
