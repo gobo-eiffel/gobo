@@ -107,7 +107,7 @@ feature -- Access
 		end
 
 	version: STRING is
-			-- Expat library version (e.g. "expat_1.95.1").
+			-- Expat library version (e.g. "expat_1.95.5").
 		do
 			Result := new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_ExpatVersion)
 		end
@@ -467,7 +467,7 @@ feature -- Parsing parameter entities including the external dtd subset
 		do
 			r := exml_XML_SetParamEntityParsing (item, XML_PARAM_ENTITY_PARSING_ALWAYS)
 			if not r then
-				Exceptions.raise ("Library compiled without support for parameter entity parsing (ie XML_DTD not defined)")
+				Exceptions.raise ("Library compiled without support for parameter entity parsing (i.e. XML_DTD not defined) or XML_Parser or XML_ParseBuffer already called in which case this function does not have any effect.")
 			end
 			exml_XML_SetExternalEntityRefHandler (item, $on_external_entity_reference_procedure)
 		end
