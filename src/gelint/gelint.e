@@ -123,7 +123,7 @@ feature -- Processing
 						else
 							create a_lace_parser.make (a_lace_error_handler)
 						end
-						a_lace_parser.parse (a_file)
+						a_lace_parser.parse_file (a_file)
 						a_file.close
 						if not a_lace_parser.syntax_error then
 							a_universe := a_lace_parser.last_universe

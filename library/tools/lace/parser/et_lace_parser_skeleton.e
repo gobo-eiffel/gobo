@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse Ace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -72,6 +72,17 @@ feature -- Parsing
 			override_cluster_name := Void
 			named_clusters.wipe_out
 			yyparse
+		end
+
+	parse (a_file: KI_CHARACTER_INPUT_STREAM) is
+			-- Parse Ace file `a_file'.
+		obsolete
+			"[030724] Use `parse_file (a_file)' instead."
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		do
+			parse_file (a_file)
 		end
 
 feature -- Access
