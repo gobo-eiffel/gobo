@@ -28,6 +28,20 @@ feature -- Status report
 			-- Result := False
 		end
 
+	visited: BOOLEAN
+			-- Has current attachment already been visited
+			-- when looking for the source of a type?
+
+feature -- Status setting
+
+	set_visited (b: BOOLEAN) is
+			-- Set `visited' to `b'.
+		do
+			visited := b
+		ensure
+			visited_set: visited = b
+		end
+
 feature -- Access
 
 	source_type_set: ET_DYNAMIC_TYPE_SET

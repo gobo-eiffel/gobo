@@ -615,7 +615,7 @@ feature {NONE} -- CAT-calls
 				until
 					l_source = Void
 				loop
-					if l_visited_sources.has (l_source) then
+					if l_source.visited then
 						from
 							l_source := l_source.next_attachment
 						until
@@ -628,6 +628,7 @@ feature {NONE} -- CAT-calls
 							end
 						end
 					elseif l_source.has_type (a_target_type) then
+						l_source.set_visited (True)
 						l_visited_sources.force_last (l_source)
 						l_source_stack.force (l_source)
 						l_type_set := l_source.source_type_set
@@ -648,6 +649,11 @@ feature {NONE} -- CAT-calls
 					end
 				end
 			end
+			nb := l_visited_sources.count
+			from i := 1 until i > nb loop
+				l_visited_sources.item (i).set_visited (False)
+				i := i + 1
+			end
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
 			from
@@ -656,6 +662,7 @@ feature {NONE} -- CAT-calls
 				l_message.append_string (an_actual_type.base_type.to_text)
 				l_message.append_string ("'%N")
 				l_source := an_actual_source
+				l_source.set_visited (True)
 				l_visited_sources.force_last (l_source)
 				if not l_source.is_null_attachment then
 					l_message.append_string ("%T%Tclass ")
@@ -729,7 +736,7 @@ feature {NONE} -- CAT-calls
 				until
 					l_source = Void
 				loop
-					if l_visited_sources.has (l_source) then
+					if l_source.visited then
 						from
 							l_source := l_source.next_attachment
 						until
@@ -742,6 +749,7 @@ feature {NONE} -- CAT-calls
 							end
 						end
 					elseif l_source.has_type (an_actual_type) then
+						l_source.set_visited (True)
 						l_visited_sources.force_last (l_source)
 						l_source_stack.force (l_source)
 						l_type_set := l_source.source_type_set
@@ -761,6 +769,11 @@ feature {NONE} -- CAT-calls
 						end
 					end
 				end
+			end
+			nb := l_visited_sources.count
+			from i := 1 until i > nb loop
+				l_visited_sources.item (i).set_visited (False)
+				i := i + 1
 			end
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
