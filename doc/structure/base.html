@@ -15,7 +15,7 @@ content="text/html; charset=iso-8859-1">
         <td><font size="6"><strong>EiffelBase Containers</strong></font></td>
         <td align="right"><a href="dispenser.html"><img
         src="../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="see_also.html"><img
+        width="40" height="40"></a><a href="flatshort/index.html"><img
         src="../image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
@@ -73,9 +73,9 @@ but their features have been implemented by inheriting from the <em>Gobo</em>
 container classes. But although it works with all Eiffel
 compilers supported by <em>Gobo</em>, the <font color="#800000"><tt>base
 </tt></font>cluster is not a port of <em>EiffelBase</em>. Only a
-small subset of <em>EiffelBase</em> classes are available and
-also the interface and semantics of the classes are the same as
-their original versions, the internal implementation and
+small subset of <em>EiffelBase</em> classes is available and
+although the interface and semantics of the classes are the same
+as their original versions, the internal implementation and
 inheritance hierarchy are different. This means that the classes
 provided in the <font color="#800000"><tt>base </tt></font>cluster
 can be used in place of the <em>EiffelBase</em> classes when used
@@ -149,6 +149,15 @@ proceed as follows:</p>
 may slightly differ depending on the platform and the Eiffel
 compiler you are using.</p>
 
+<p align="left">Note that if you use SmallEiffel you will have a
+classname clash with class <font color="#008080"><em><tt>LINKED_LIST</tt></em></font>.
+If you don't use SmallEiffel's version of <font color="#008080"><em><tt>LINKED_LIST
+</tt></em></font>in your program, then this will not be a
+problem. You would just have to make sure that <em>Gobo</em>'s <font
+color="#800000"><tt>base</tt></font> cluster is listed before
+SmallEiffel's <font color="#800000"><tt>lib_std</tt></font>
+cluster in your loadpath file.</p>
+
 <hr size="1">
 
 <table border="0" width="100%">
@@ -179,7 +188,7 @@ $Revision$"
         src="../image/toc.gif" alt="Toc" border="0" width="40"
         height="40"></a><a href="dispenser.html"><img
         src="../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="see_also.html"><img
+        width="40" height="40"></a><a href="flatshort/index.html"><img
         src="../image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
