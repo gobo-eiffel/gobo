@@ -120,6 +120,7 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
+				print_interface_classes (a_clusters, a_file)
 			end
 			create an_external.make
 			a_system.merge_externals (an_external)
@@ -164,12 +165,10 @@ feature {NONE} -- Output
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
-			a_file.put_line ("end")
-			a_file.put_new_line
-			a_file.put_new_line
 			create an_external.make
 			a_library.merge_externals (an_external)
 			if an_external.has_link_libraries then
+				a_file.put_new_line
 				a_file.put_line ("link")
 				a_file.put_new_line
 				print_link_libraries (an_external.link_libraries, a_file)
@@ -179,8 +178,8 @@ feature {NONE} -- Output
 				a_file.put_line ("option")
 				a_file.put_new_line
 				print_options (an_option, 1, a_file)
-				a_file.put_new_line
 			end
+			a_file.put_new_line
 			a_file.put_line ("end")
 		end
 
@@ -563,6 +562,73 @@ feature {NONE} -- Output
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
 				print_clusters (subclusters, a_file)
+			end
+		end
+
+	print_interface_classes (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+		local
+			interface_classes: DS_HASH_SET [STRING]
+			an_interface_cursor: DS_SET_CURSOR [STRING]
+		do
+			create interface_classes.make_equal (0)
+			merge_interface_classes (interface_classes, a_clusters, a_file)
+			if interface_classes.count > 0 then
+				a_file.put_line ("interface")
+				a_file.put_new_line
+				an_interface_cursor := interface_classes.new_cursor
+				from an_interface_cursor.start until an_interface_cursor.after loop
+					print_indentation (1, a_file)
+					print_escaped_name (an_interface_cursor.item, a_file)
+					a_file.put_new_line
+					an_interface_cursor.forth
+				end
+				a_file.put_new_line
+			end
+		end
+	
+	merge_interface_classes (interface_classes: DS_HASH_SET [STRING]; a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print class options specified in `a_cluster' to `a_file'.
+		require
+			interface_classes_not_void: interface_classes /= Void
+			a_clusters_not_void: a_clusters /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+			a_cluster: ET_XACE_CLUSTER
+			an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
+			a_class_options: ET_XACE_CLASS_OPTIONS
+			a_class_name: STRING
+			an_option: ET_XACE_OPTIONS
+			subclusters: ET_XACE_CLUSTERS
+		do
+			cluster_list := a_clusters.clusters
+			nb := cluster_list.count
+			from i := 1 until i > nb loop
+				a_cluster := cluster_list.item (i)
+				if not a_cluster.is_implicit then
+						-- This cluster has been explicitly declared.
+					an_option_list := a_cluster.class_options
+					if an_option_list /= Void then
+						a_class_cursor := an_option_list.new_cursor
+						from a_class_cursor.start until a_class_cursor.after loop
+							a_class_options := a_class_cursor.item
+							a_class_name := a_class_options.class_name
+							an_option := a_class_options.options
+							if an_option.layout.is_equal (options.sequential_value) then
+								interface_classes.force (a_class_name)
+							end
+							a_class_cursor.forth
+						end
+					end
+					subclusters := a_cluster.subclusters
+					if subclusters /= Void then
+						merge_interface_classes (interface_classes, subclusters, a_file)
+					end
+				end
+				i := i + 1
 			end
 		end
 
