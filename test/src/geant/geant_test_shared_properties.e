@@ -5,7 +5,7 @@ indexing
 		"Test features of class GEANT_SHARED_PROPERTIES"
 
 	copyright: "Copyright (c) 2002, Sven Ehrke and others"
-	license: "Eiffel Forum Freeware v1 (see forum.txt)"
+	license: "Eiffel Forum v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
