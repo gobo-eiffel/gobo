@@ -32,14 +32,12 @@ elif [ "$GOBO_OS" = "windows" ]; then
 	CP=copy
 	MV=rename
 	RM=del
-	CHMOD=echo
 	OBJ=.obj
 	EXE=.exe
 else
 	CP=cp
 	MV=mv
 	RM=rm
-	CHMOD=chmod
 	OBJ=.o
 	EXE=
 fi
@@ -152,9 +150,6 @@ geant bootstrap1
 cd $BIN_DIR
 $RM geant$EXE
 $MV geant1$EXE geant$EXE
-$CHMOD a+x geant$EXE
 cd $GOBO
 geant bootstrap2
 cd $BIN_DIR
-$CHMOD a+x getest$EXE
-$CHMOD a+x gelint$EXE
