@@ -6,10 +6,10 @@ To compile Gelex:
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
    ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat (after possible modifications).
+   the script se.bat or se.sh (after possible modifications).
 2. Run Gelex using:
 
-       gelex [--version][--help][-bcefhimsVw?][-a size][-o filename] filename
+       gelex [--version][--help][-bcefhimsVwxz?][-a size][-o filename] filename
 
 A "User's Manual" documentation for Gelex, in HTML format, is provided
 in "$GOBO\doc\gelex".
