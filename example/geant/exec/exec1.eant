@@ -20,7 +20,8 @@
 	<target name="init" depends="windows,unix" >
 	</target>
 
-	<target name="ls" description="print content of current directory" depends="init">
+	<target name="ls" depends="init">
+		<description>print content of current directory</description>
 		<var name="from_dir" value="exec" />
 		<var name="to_dir" value=".." />
 		<exec executable="cd ${to_dir} ${cmdsep} ${dir} ${cmdsep} cd ${from_dir} ${cmdsep} ${dir}" />

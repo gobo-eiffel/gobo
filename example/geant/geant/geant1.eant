@@ -1,5 +1,6 @@
 <project name="geant" >
-	<target name="one" description="calls other ant files">
+	<target name="one" >
+		<description>calls other ant files</description>
 		<var name="who" value="Bart" />
 
 		<echo message="------------------------" />
@@ -8,7 +9,7 @@
 		<echo message="after call of ../variables/variables1.eant" />
 		<echo message="-------" />
 		<echo message="before call of ../variables/variables1.eant" />
-		<geant file="../variables/variables1.eant" fork="true"/> 
+		<geant file="../variables/variables1.eant" reuse_variables="true"/> 
 		<echo message="after call of ../variables/variables1.eant" />
 	</target>
 </project>

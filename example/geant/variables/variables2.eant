@@ -1,7 +1,8 @@
 <?xml version="1.0" ?>
 
 <project name="variables2"  >
-	<target name="var" description="set and query a variable">
+	<target name="var" >
+		<description>set and query a variable</description>
 		<var name="lastname" value="Simpson" />
 		<var name="fullname" value="Bart ${lastname}" />
 		<echo message="Hello ${fullname}" />

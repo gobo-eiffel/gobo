@@ -4,23 +4,23 @@
 		<var name="system" value="hello" />
 	</target>
 
-	<target name="compile" description="compiles HELLO" depends="init">
-
+	<target name="compile" depends="init">
+		<description>compiles HELLO</description>
 		<gexace
 			command="build"
 			command_options="se"
 			xace_filename="${system}.xace"
 			compile="true"
 		/>
-
 	</target>
 
-	<target name="run" description="executes example" depends="init">
+	<target name="run" depends="init">
+		<description>executes example</description>
 		<exec executable="${system}" />
 	</target>
 
-
-	<target name="clean" description="deletes generated files" depends="init">
+	<target name="clean" depends="init">
+		<description>deletes generated files</description>
 		<exec executable="clean ${system}" />
 		<exec executable="del ${system}.exe se.ace cecil.se *.bak" />
 	</target>
