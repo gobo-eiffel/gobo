@@ -46,6 +46,9 @@
 		<set name="next_chapter" value="builtin_variables"/>
 		<geant target="xslt"/>
 
+		<set name="next_chapter" value="target"/>
+		<geant target="xslt"/>
+
 		<set name="next_chapter" value="tasks"/>
 		<geant target="xslt"/>
 
