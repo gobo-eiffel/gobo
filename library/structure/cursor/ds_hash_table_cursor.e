@@ -16,24 +16,13 @@ class DS_HASH_TABLE_CURSOR [G, K -> HASHABLE]
 inherit
 
 	DS_SPARSE_TABLE_CURSOR [G, K]
+		redefine
+			container
+		end
 
 creation
 
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_table: like container) is
-			-- Create a new cursor for `a_table'.
-		require
-			a_table_not_void: a_table /= Void
-		do
-			container := a_table
-			position := Before_position
-		ensure
-			container_set: container = a_table
-			before: before
-		end
 
 feature -- Access
 
