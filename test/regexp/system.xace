@@ -23,6 +23,7 @@
 
 	<cluster name="rx_tester" location="${GOBO}/test/regexp"/>
 	<cluster name="rx_testgen" location="TESTGEN"/>
+	<cluster name="test_common" location="${GOBO}/test/common"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/structure/library.xace"/>

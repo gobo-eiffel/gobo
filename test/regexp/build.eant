@@ -11,13 +11,22 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/misc/eiffel.eant">
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
 
 <!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tpcretest"/>
+	</target>
 
 	<target name="init_system">
 		<set name="system" value="xregexp"/>
