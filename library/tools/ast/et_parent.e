@@ -105,6 +105,7 @@ feature -- Genealogy
 			a_class: ET_CLASS
 			a_class_id: INTEGER
 			a_type, anc_type: ET_CLASS_TYPE
+			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 			has_error: BOOLEAN
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_GENERIC_TYPE
@@ -128,9 +129,12 @@ feature -- Genealogy
 				anc.force (type, a_class_id)
 					-- Find out whether formal parameters have
 					-- been given actual derivations.
-				generics := type.generic_parameters
-				if generics /= Void and then generics.has_derived_parameters then
-					actual_parameters := generics
+				a_generic_class_type ?= type
+				if a_generic_class_type /= Void then
+					generics := a_generic_class_type.generic_parameters
+					if generics /= Void and then generics.has_derived_parameters then
+						actual_parameters := generics
+					end
 				end
 					-- Add proper ancestors of current parent
 					-- to the ancestors of `an_heir'.
@@ -162,16 +166,14 @@ feature -- Genealogy
 			end
 		end
 
-feature -- Generic derivation
-
 	check_generic_derivation (an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current parent is valid
-			-- generic derivations. Report errors if
+			-- generic derivation. Report errors if
 			-- not valid.
 		require
 			an_heir_not_void: an_heir /= Void
 		do
-			Result := type.check_parent_validity2 (an_heir)
+			Result := type.check_parent_validity (an_heir)
 		end
 
 feature -- Flattening status

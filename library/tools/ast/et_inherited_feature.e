@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			f_not_void: f /= Void
 			p_not_void: p /= Void
 		local
+			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 			generics: like actual_parameters
 		do
 			parent := p
@@ -33,10 +34,13 @@ feature {NONE} -- Initialization
 			signature.duplicate_types
 				-- Update the formal generic parameters
 				-- that appear in inherited signature.
-			generics := parent.type.generic_parameters
-			if generics /= Void and then generics.has_derived_parameters then
-				actual_parameters := generics
-				signature.resolve_formal_parameters (actual_parameters)
+			a_generic_class_type ?= parent.type
+			if a_generic_class_type /= Void then
+				generics := a_generic_class_type.generic_parameters
+				if generics /= Void and then generics.has_derived_parameters then
+					actual_parameters := generics
+					signature.resolve_formal_parameters (actual_parameters)
+				end
 			end
 		ensure
 			inherited_feature_set: inherited_feature = f
