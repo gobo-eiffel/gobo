@@ -29,7 +29,10 @@ inherit
 		export {NONE} all end
 
 	RX_PCRE_SHARED_CHARACTER_SETS
-		export {NONE} all end
+		export
+			{ANY} default_character_case_mapping, default_word_set;
+			{NONE} all
+		end
 
 	UT_CHARACTER_CODES
 		export {NONE} all end
@@ -66,6 +69,7 @@ feature {NONE} -- Initialization
 			set_word_set (default_word_set)
 			pattern := clone (empty_pattern)
 			reset
+			set_default_options
 		ensure
 			not_compiled: not is_compiled
 		end
@@ -187,7 +191,7 @@ feature -- Access
 			-- Byte code built during compilation
 
 	character_case_mapping: RX_CASE_MAPPING
-			-- Character lowe- and upper-case mapping
+			-- Character lower- and upper-case mapping
 
 	word_set: RX_CHARACTER_SET
 			-- Set of characters making up words

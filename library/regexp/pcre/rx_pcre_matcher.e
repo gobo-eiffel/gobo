@@ -14,16 +14,14 @@ class RX_PCRE_MATCHER
 
 inherit
 
+	RX_PATTERN_MATCHER
+		redefine
+			wipe_out
+		end
+
 	RX_PCRE_COMPILER
-		rename
-			make as make_compiler,
-			reset as reset_compiler,
-			compile as compile_pattern
-		export
-			{NONE}
-				make_compiler,
-				reset_compiler,
-				compile_pattern
+		redefine
+			make, reset, compile
 		end
 
 	KL_IMPORTED_NATIVE_ARRAY_ROUTINES
@@ -44,7 +42,7 @@ feature {NONE} -- Initialization
 			-- last bracketed group - used for breaking infinite loops matching zero-length
 			-- strings.
 		do
-			make_compiler
+			precursor
 			offset_vector := FIXED_INTEGER_ARRAY_.make (64)
 			offset_vector_count := 0
 			brastart_capacity := 8
@@ -57,23 +55,24 @@ feature {NONE} -- Initialization
 			eptr_upper := -1
 		end
 
-feature -- Element Change
+feature -- Resetting
 
 	reset is
 			-- Reset is needed only if options must be changed.
 			-- For an option change a recompilation is needed.
 		do
-			reset_compiler
-			match_count := 0
-			subject := Void
-			subject_start := 1
-			subject_next_start := subject_start
-			subject_end := 0
-		ensure
-			all_reset: not is_compiled and not has_matched and not is_matcher_active
+			precursor
+			wipe_out
 		end
 
-feature -- Compiler command
+	wipe_out is
+			-- Get rid of last match.
+		do
+			precursor
+			subject_next_start := subject_start
+		end
+
+feature -- Compilation
 
 	compile (a_pattern: STRING) is
 			-- There are two different sets of meta-characters: those  that
@@ -103,48 +102,132 @@ feature -- Compiler command
 			--   -      indicates character range
 			--   ]      terminates the character class
 		do
-			subject := Void
-			compile_pattern (a_pattern)
+			wipe_out
+			precursor (a_pattern)
 			offset_vector_count := subexpression_count * 2 + 2
 			if offset_vector.count < offset_vector_count then
 				offset_vector := FIXED_INTEGER_ARRAY_.resize (offset_vector, offset_vector_count)
 			end
-		ensure
-			matcher_not_active: not is_matcher_active and not has_matched
 		end
 
-feature -- Public matcher infos
-
-	subject: STRING
-			-- Actual subject to match on
-
-	subject_start: INTEGER
-			-- The starting index of the portion of interest of the subject.
-			-- Anchored expressions only matches at this point even on
-			-- repeated matches
-
-	subject_end: INTEGER
-			-- The ending index of the portion of interest of the subject
-
-	match_count: INTEGER
-			-- Number of matched patterns;
-			-- Result > 1 implies there are matched (sub-) portions
+feature -- Status report
 
 	is_matcher_active: BOOLEAN is
 			-- Matcher active state
+		obsolete
+			"[020710] Use `is_matching' instead."
 		do
-			Result := subject /= Void
+			Result := is_matching
 		end
 
-	has_matched: BOOLEAN is
-			-- Was the last match attempt successful?
+feature -- Access
+
+	captured_start_position (n: INTEGER): INTEGER is
+			-- Start position of the `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+			-- Return 0 if undefined captured substring.
 		do
-			Result := match_count > 0
-		ensure
-			definition: Result = (match_count > 0)
+			Result := offset_vector.item (n * 2)
+		end
+
+	captured_end_position (n: INTEGER): INTEGER is
+			-- End position of the `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
+			-- Return -1 if undefined captured substring.
+		do
+			Result := offset_vector.item (n * 2 + 1) - 1
 		end
 
 feature -- Matching
+
+	match_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+			-- Try to match the substring of `a_subject' between
+			-- positions `a_from' and `a_to' with the current pattern.
+			-- Make result available in `has_matched' and the various
+			-- `*_captured_*' features.
+		do
+			subject_start := a_from
+			match_it (a_subject, a_from, a_to)
+		end
+
+	first_match is
+			-- Rewind the matcher to the first match (if any),
+		require
+			is_matching: is_matching
+		do
+			match_it (subject, subject_start, subject_end)
+		end
+
+	next_match is
+			-- Match next portion (if any).
+		require
+			is_matching: is_matching
+		do
+			if offset_vector.item (0) >= offset_vector.item (1) and is_empty_allowed then
+					-- The last match was empty or doesn't exist. To avoid an infinite loop
+					-- we need to lead the matcher one step further.
+				match_it (subject, subject_next_start + 1, subject_end)
+			else
+				match_it (subject, subject_next_start, subject_end)
+			end
+		end
+
+feature {NONE} -- Status report
+
+	is_matching_caseless: BOOLEAN
+
+	is_matching_multiline: BOOLEAN
+
+	is_matching_dotall: BOOLEAN
+
+feature {NONE} -- Access
+
+	subject_next_start: INTEGER
+			-- Points after the last matched character
+
+	first_matched_index: INTEGER
+			-- Points to the first matched character (if any)
+
+	eptr: INTEGER
+			-- Position in `subject'
+
+	offset_vector: like FIXED_INTEGER_ARRAY_TYPE
+			-- FIXED_ARRAY[INTEGER]
+
+	offset_vector_count: INTEGER
+			-- Number of items in `offset_vector'
+
+	offset_top: INTEGER
+
+	brastart_vector: like NATIVE_INTEGER_ARRAY_TYPE
+	brastart_lower: INTEGER
+	brastart_count: INTEGER
+	brastart_capacity: INTEGER
+
+	eptr_vector: like NATIVE_INTEGER_ARRAY_TYPE
+	eptr_lower: INTEGER
+	eptr_upper: INTEGER
+	eptr_capacity: INTEGER
+
+feature {NONE} -- Setting
+
+	set_next_start (an_index: INTEGER) is
+			-- Set `subject_next_start' to `an_index'.
+		do
+			subject_next_start := an_index
+		ensure
+			subject_next_start_set: subject_next_start = an_index
+		end
+
+	set_match_count (a_count: INTEGER) is
+			-- Set `match_count' to `a_count'.
+		do
+			match_count := a_count
+		ensure
+			match_count_set: match_count = a_count
+		end
+
+feature {NONE} -- Matching
 
 	match_it (a_subject: STRING; a_start, a_end: INTEGER) is
 			-- This function applies a compiled regexp to a subject string and picks out
@@ -153,7 +236,7 @@ feature -- Matching
 			-- substring.
 		require
 			compiled: is_compiled
-			valid_subject: a_subject /= Void
+			a_subject_not_void: a_subject /= Void
 		local
 			first_char: INTEGER
 			req_char: INTEGER
@@ -324,66 +407,9 @@ feature -- Matching
 				end
 			end
 		ensure
-			matcher_active: is_matcher_active
-			holding_ref: subject = a_subject
+			is_matching: is_matching
+			subject_set: subject = a_subject
 		end
-
-feature {NONE} -- Access
-
-	subject_next_start: INTEGER
-			-- Points after the last matched character
-
-	first_matched_index: INTEGER
-			-- Points to the first matched character (if any)
-
-	eptr: INTEGER
-			-- Position in `subject'
-
-	offset_vector: like FIXED_INTEGER_ARRAY_TYPE
-			-- FIXED_ARRAY[INTEGER]
-
-	offset_vector_count: INTEGER
-			-- Number of items in `offset_vector'
-
-	offset_top: INTEGER
-
-	brastart_vector: like NATIVE_INTEGER_ARRAY_TYPE
-	brastart_lower: INTEGER
-	brastart_count: INTEGER
-	brastart_capacity: INTEGER
-
-	eptr_vector: like NATIVE_INTEGER_ARRAY_TYPE
-	eptr_lower: INTEGER
-	eptr_upper: INTEGER
-	eptr_capacity: INTEGER
-
-feature {NONE} -- Setting
-
-	set_next_start (an_index: INTEGER) is
-			-- Set `subject_next_start' to `an_index'.
-		do
-			subject_next_start := an_index
-		ensure
-			subject_next_start_set: subject_next_start = an_index
-		end
-
-	set_match_count (a_count: INTEGER) is
-			-- Set `match_count' to `a_count'.
-		do
-			match_count := a_count
-		ensure
-			match_count_set: match_count = a_count
-		end
-
-feature {NONE} -- Status report
-
-	is_matching_caseless: BOOLEAN
-
-	is_matching_multiline: BOOLEAN
-
-	is_matching_dotall: BOOLEAN
-
-feature {NONE} -- Matching
 
 	match_start (a_eptr: INTEGER): BOOLEAN is
 			-- Start a new matching cycle.
@@ -1887,9 +1913,5 @@ feature {NONE} -- Constants
 	return_true: INTEGER is 1
 	return_none: INTEGER is 0
 	return_false: INTEGER is -1
-
-invariant
-
-	is_matcher_active implies is_compiled
 
 end
