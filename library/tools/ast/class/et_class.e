@@ -146,7 +146,8 @@ feature -- Genealogy
 		end
 
 	ancestor (a_type: ET_CLASS_TYPE): ET_CLASS_TYPE is
-			-- Ancestor of `a_type'
+			-- Ancestor of current class with same
+			-- base class as `a_type'
 		require
 			a_type_not_void: a_type /= Void
 			has_ancestor: has_ancestor (a_type.base_class)
