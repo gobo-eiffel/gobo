@@ -24,14 +24,12 @@ first in the <em>gelex</em> description file is chosen.</p>
 
 <p>Once the match is determined, the text corresponding to the
 match (called the <em>token</em>) is made available through
-function <a href="actions.html#text"><font color="#008080"
-size="2" face="Courier New"><em>text</em></font></a>, and its
-length through function <a href="actions.html#text_count"><font
-color="#008080" size="2" face="Courier New"><em>text_count</em></font></a>
-from class <a href="skeleton.html"><font color="#008080" size="2"
-face="Courier New"><em>YY_SCANNER</em></font></a>. The action
-corresponding to the matched pattern is then executed (a more
-detailed description of <a href="actions.html">actions</a>
+function <a href="actions.html#text"><font color="#008080"><em><tt>text</tt></em></font></a>,
+and its length through function <a href="actions.html#text_count"><font
+color="#008080"><em><tt>text_count</tt></em></font></a> from
+class <a href="skeleton.html"><font color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>.
+The action corresponding to the matched pattern is then executed
+(a more detailed description of <a href="actions.html">actions</a>
 follows), and then the remaining input is scanned for another
 match.</p>
 
@@ -58,19 +56,17 @@ character at a time) to its output.</p>
 
 <p><font size="3">When the scanner receives an end-of-file
 indication from its input buffer, it then checks the </font><a
-href="skeleton.html#wrap"><font color="#008080" size="2"
-face="Courier New"><em>wrap</em></font></a><font size="3">
-function. If </font><font color="#008080" size="2"
-face="Courier New"><em>wrap</em></font><font size="3"> returns
-false, then it is assumed that the function has gone ahead and
-set up the scanner to point to another input buffer using </font><a
-href="actions.html#set_input_buffer"><font color="#008080"
-size="2" face="Courier New"><em>set_input_buffer</em></font></a><font
+href="skeleton.html#wrap"><font color="#008080"><em><tt>wrap</tt></em></font></a><font
+size="3"> function. If </font><font color="#008080"><em><tt>wrap</tt></em></font><font
+size="3"> returns false, then it is assumed that the function has
+gone ahead and set up the scanner to point to another input
+buffer using </font><a href="actions.html#set_input_buffer"><font
+color="#008080"><em><tt>set_input_buffer</tt></em></font></a><font
 size="3">, and scanning continues. If it returns true, then there
 is no further files to process. By default, </font><font
-color="#008080" size="2" face="Courier New"><em>wrap</em></font><font
-size="3"> returns true, but this routine can be redefined as in
-the following example:</font></p>
+color="#008080"><em><tt>wrap</tt></em></font><font size="3">
+returns true, but this routine can be redefined as in the
+following example:</font></p>
 
 <blockquote>
     <pre><font color="#0000FF" size="3">%{</font><font size="3">
@@ -112,43 +108,36 @@ the following example:</font></p>
 <p><font size="3">Note that in either case, the </font><a
 href="start_conditions.html"><font size="3">start condition</font></a><font
 size="3"> remains unchanged; it does not revert to </font><font
-color="#800000" size="2" face="Courier New">INITIAL</font><font
-size="3">.</font></p>
+color="#800000"><tt>INITIAL</tt></font><font size="3">.</font></p>
 
-<p><font size="3">The special rule </font><font color="#FF0000"
-size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+<p><font size="3">The special rule </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
 size="3"> indicates actions which are to be taken when an
-end-of-file is encountered and </font><font color="#008080"
-size="2" face="Courier New"><em>wrap</em></font><font size="3">
-returns true. The action must finish by doing one of three
-things:</font></p>
+end-of-file is encountered and </font><font color="#008080"><em><tt>wrap</tt></em></font><font
+size="3"> returns true. The action must finish by doing one of
+three things:</font></p>
 
 <ul>
     <li><font size="3">setting </font><a
-        href="actions.html#last_token"><font color="#008080"
-        size="2" face="Courier New"><em>last_token</em></font></a><font
+        href="actions.html#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a><font
         size="3"> to a non-negative value</font></li>
     <li><font size="3">calling the special action </font><a
-        href="actions.html#terminate"><font color="#008080"
-        size="2" face="Courier New"><em>terminate</em></font></a></li>
+        href="actions.html#terminate"><font color="#008080"><em><tt>terminate</tt></em></font></a></li>
     <li><font size="3">switching to a new buffer using </font><font
-        color="#008080" size="2" face="Courier New"><em>set_input_buffer</em></font><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font><font
         size="3">.</font></li>
 </ul>
 
-<p><font color="#FF0000" size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+<p><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
 size="3"> rules may not be used with other patterns; they may
 only be qualified with a list of start conditions. If an
-unqualified </font><font color="#FF0000" size="2"
-face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font size="3"> rule
-is given, it applies to all start conditions which do not already
-have </font><font color="#FF0000" size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+unqualified </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
+size="3"> rule is given, it applies to all start conditions which
+do not already have </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
 size="3"> actions. If a start condition has no </font><font
-color="#FF0000" size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
-size="3"> action associated with it, it will by default execute
-the </font><font color="#008080" size="2" face="Courier New"><em>terminate</em></font><font
-size="3"> action. To specify an </font><font color="#FF0000"
-size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font size="3">
+action associated with it, it will by default execute the </font><font
+color="#008080"><em><tt>terminate</tt></em></font><font size="3">
+action. To specify an </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
 size="3"> rule for only the initial start condition, use</font></p>
 
 <blockquote>
@@ -202,7 +191,8 @@ size="3">
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

@@ -22,9 +22,8 @@ has the following general form:</p>
     <font color="#0000FF">;</font></pre>
 </blockquote>
 
-<p>where <font size="2" face="Courier New">RESULT</font> is the
-nonterminal symbol that this rule describes and <font size="2"
-face="Courier New">COMPONENTS</font> are various terminal and
+<p>where <tt>RESULT</tt> is the nonterminal symbol that this rule
+describes and <tt>COMPONENTS</tt> are various terminal and
 nonterminal <a href="symbols.html">symbols</a> that are put
 together by this rule. For example,</p>
 
@@ -35,11 +34,10 @@ color="#800080">exp</font>
     <font color="#0000FF">;</font></pre>
 </blockquote>
 
-<p>says that two groupings of type <font color="#800080" size="2"
-face="Courier New">exp</font>, with a <font color="#FF0000"
-size="2" face="Courier New">+</font> token in between, can be
-combined into a larger grouping of type <font color="#800080"
-size="2" face="Courier New">exp</font>. Whitespace in rules is
+<p>says that two groupings of type <font color="#800080"><tt>exp</tt></font>,
+with a <font color="#FF0000"><tt>+</tt></font> token in between,
+can be combined into a larger grouping of type <font
+color="#800080"><tt>exp</tt></font>. Whitespace in rules is
 significant only to separate symbols. You can add extra
 whitespace as you wish.</p>
 
@@ -59,10 +57,9 @@ components. </p>
 
 <h2>Multiple Rules</h2>
 
-<p>Multiple rules for the same <font size="2" face="Courier New">RESULT</font>
-can be written separately or can be joined with the vertical-bar
-character <font color="#0000FF" size="3" face="Courier New">|</font>
-as follows:</p>
+<p>Multiple rules for the same <tt>RESULT</tt> can be written
+separately or can be joined with the vertical-bar character <font
+color="#0000FF"><tt>|</tt></font> as follows:</p>
 
 <blockquote>
     <pre>RESULT<font color="#0000FF">:</font> RULE1-COMPONENTS...
@@ -76,11 +73,10 @@ this way.</p>
 
 <h2>Empty Rules</h2>
 
-<p>If <font size="2" face="Courier New">COMPONENTS</font> in a
-rule is empty, it means that <font size="2" face="Courier New">RESULT</font>
+<p>If <tt>COMPONENTS</tt> in a rule is empty, it means that <tt>RESULT</tt>
 can match the empty string. For example, here is how to define a
-comma-separated sequence of zero or more <font color="#800080"
-size="2" face="Courier New">exp</font> groupings:</p>
+comma-separated sequence of zero or more <font color="#800080"><tt>exp</tt></font>
+groupings:</p>
 
 <blockquote>
     <pre><font color="#800080">expseq</font><font color="#0000FF">:</font> <font
@@ -95,9 +91,8 @@ color="#FF0000">','</font> <font color="#800080">exp</font>
     <font color="#0000FF">;</font></pre>
 </blockquote>
 
-<p>It is customary to write a comment <font color="#008080"
-size="2" face="Courier New">-- /* empty */</font> in each rule
-with no components.</p>
+<p>It is customary to write a comment <font color="#008080"><tt>--
+/* empty */</tt></font> in each rule with no components.</p>
 
 <h2><a name="recursive">Recursive Rules</a></h2>
 
@@ -116,11 +111,10 @@ color="#FF0000">','</font> <font color="#800080">exp</font>
     <font color="#0000FF">;</font></pre>
 </blockquote>
 
-<p>Since the recursive use of <font color="#800080" size="2"
-face="Courier New">expseq1</font> is the leftmost symbol in the
-right hand side, we call this <em>left recursion</em>. By
-contrast, here the same construct is defined using <em>right
-recursion</em>:</p>
+<p>Since the recursive use of <font color="#800080"><tt>expseq1</tt></font>
+is the leftmost symbol in the right hand side, we call this <em>left
+recursion</em>. By contrast, here the same construct is defined
+using <em>right recursion</em>:</p>
 
 <blockquote>
     <pre><font color="#800080">expseq1</font><font
@@ -177,7 +171,8 @@ to the other.</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

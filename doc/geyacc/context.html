@@ -34,34 +34,32 @@ consider this:</p>
 </blockquote>
 
 <p>This looks like a function call statement, but if <font
-color="#808000" size="2" face="Courier New">foo</font> is a
-typedef name, then this is actually a declaration of <font
-color="#808000" size="2" face="Courier New">x</font>. How can a <em>geyacc</em>
-parser for C decide how to parse this input?</p>
+color="#808000"><tt>foo</tt></font> is a typedef name, then this
+is actually a declaration of <font color="#808000"><tt>x</tt></font>.
+How can a <em>geyacc</em> parser for C decide how to parse this
+input?</p>
 
 <p>The method could be to have two different token types, <font
-color="#FF0000" size="2" face="Courier New">IDENTIFIER</font> and
-<font color="#FF0000" size="2" face="Courier New">TYPENAME</font>.
-When <font color="#008080" size="2" face="Courier New"><em>read_token</em></font>
-finds an identifier, it looks up the current declaration of the
-identifier in order to decide which token type to return: <font
-color="#FF0000" size="2" face="Courier New">TYPENAME</font> if
-the identifier is declared as a typedef, <font color="#FF0000"
-size="2" face="Courier New">IDENTIFIER</font> otherwise.</p>
+color="#FF0000"><tt>IDENTIFIER</tt></font> and <font
+color="#FF0000"><tt>TYPENAME</tt></font>. When <font
+color="#008080"><em><tt>read_token</tt></em></font> finds an
+identifier, it looks up the current declaration of the identifier
+in order to decide which token type to return: <font
+color="#FF0000"><tt>TYPENAME</tt></font> if the identifier is
+declared as a typedef, <font color="#FF0000"><tt>IDENTIFIER</tt></font>
+otherwise.</p>
 
 <p>The grammar rules can then express the context dependency by
-the choice of token type to recognize. <font color="#FF0000"
-size="2" face="Courier New">IDENTIFIER</font> is accepted as an
-expression, but <font color="#FF0000" size="2" face="Courier New">TYPENAME</font>
-is not. <font color="#FF0000" size="2" face="Courier New">TYPENAME</font>
-can start a declaration, but <font color="#FF0000" size="2"
-face="Courier New">IDENTIFIER</font> cannot. In contexts where
-the meaning of the identifier is not significant, such as in
-declarations that can shadow a typedef name, either <font
-color="#FF0000" size="2" face="Courier New">TYPENAME</font> or <font
-color="#FF0000" size="2" face="Courier New">IDENTIFIER</font> is
-accepted <font face="Courier New">-</font> there is one rule for
-each of the two token types.</p>
+the choice of token type to recognize. <font color="#FF0000"><tt>IDENTIFIER</tt></font>
+is accepted as an expression, but <font color="#FF0000"><tt>TYPENAME</tt></font>
+is not. <font color="#FF0000"><tt>TYPENAME</tt></font> can start
+a declaration, but <font color="#FF0000"><tt>IDENTIFIER</tt></font>
+cannot. In contexts where the meaning of the identifier is not
+significant, such as in declarations that can shadow a typedef
+name, either <font color="#FF0000"><tt>TYPENAME</tt></font> or <font
+color="#FF0000"><tt>IDENTIFIER</tt></font> is accepted <font
+face="Symbol">-</font> there is one rule for each of the two
+token types.</p>
 
 <p>This technique is simple to use if the decision of which kinds
 of identifiers to allow is made at a place close to where the
@@ -104,12 +102,11 @@ color="#0000FF">
     ;</font></pre>
 </blockquote>
 
-<p>Here <font color="#800080" size="2" face="Courier New">initdcl</font>
-can redeclare a typedef name, but <font color="#800080" size="2"
-face="Courier New">notype_initdcl</font> cannot. The distinction
-between <font color="#800080" size="2" face="Courier New">declarator</font>
-and <font color="#800080" size="2" face="Courier New">notype_declarator</font>
-is the same sort of thing.</p>
+<p>Here <font color="#800080"><tt>initdcl</tt></font> can
+redeclare a typedef name, but <font color="#800080"><tt>notype_initdcl</tt></font>
+cannot. The distinction between <font color="#800080"><tt>declarator</tt></font>
+and <font color="#800080"><tt>notype_declarator</tt></font> is
+the same sort of thing.</p>
 
 <p>There is some similarity between this technique and a lexical
 tie-in (described next), in that information which alters the
@@ -124,11 +121,10 @@ a special-purpose flag controlled by the syntactic context.</p>
 a flag which is set by <em>geyacc</em> actions, whose purpose is
 to alter the way tokens are parsed. For example, suppose we have
 a language vaguely like C, but with a special construct <font
-color="#808000" size="2" face="Courier New">hex (HEX-EXPR)</font>.
-After the keyword <font color="#808000" size="2"
-face="Courier New">hex</font> comes an expression in parentheses
-in which all integers are hexadecimal. In particular, the token <font
-color="#808000" size="2" face="Courier New">a1b</font> must be
+color="#808000"><tt>hex (HEX-EXPR)</tt></font>. After the keyword
+<font color="#808000"><tt>hex</tt></font> comes an expression in
+parentheses in which all integers are hexadecimal. In particular,
+the token <font color="#808000"><tt>a1b</tt></font> must be
 treated as an integer rather than as an identifier if it appears
 in that context. Here is how you can do it:</p>
 
@@ -168,9 +164,8 @@ color="#0000FF">
 </em></font><em>...</em></pre>
 </blockquote>
 
-<p>Here we assume that <font color="#008080" size="2"
-face="Courier New"><em>read_token</em></font> looks at the value
-of <font color="#008080" size="2" face="Courier New"><em>hexflag</em></font>;
+<p>Here we assume that <font color="#008080"><em><tt>read_token</tt></em></font>
+looks at the value of <font color="#008080"><em><tt>hexflag</tt></em></font>;
 when it is true, all integers are parsed in hexadecimal, and
 tokens starting with letters are parsed as integers if possible.</p>
 
@@ -202,16 +197,14 @@ color="#0000FF"> }
 </blockquote>
 
 <p>If there is a syntax error in the middle of a <font
-color="#808000" size="2" face="Courier New">hex (EXPR)</font>
-construct, this error rule will apply, and then the action for
-the completed <font color="#808000" size="2" face="Courier New">hex
-(EXPR)</font> will never run. So <font color="#008080" size="2"
-face="Courier New"><em>hexflag</em></font> would remain set for
-the entire rest of the input, or until the next <font
-color="#808000" size="2" face="Courier New">hex</font> keyword,
-causing identifiers to be misinterpreted as integers. To avoid
-this problem the error recovery rule itself clears <font
-color="#008080" size="2" face="Courier New"><em>hexflag</em></font>.</p>
+color="#808000"><tt>hex (EXPR)</tt></font> construct, this error
+rule will apply, and then the action for the completed <font
+color="#808000"><tt>hex (EXPR)</tt></font> will never run. So <font
+color="#008080"><em><tt>hexflag</tt></em></font> would remain set
+for the entire rest of the input, or until the next <font
+color="#808000"><tt>hex</tt></font> keyword, causing identifiers
+to be misinterpreted as integers. To avoid this problem the error
+recovery rule itself clears <font color="#008080"><em><tt>hexflag</tt></em></font>.</p>
 
 <p>There may also be an error recovery rule that works within
 expressions. For example, there could be a rule which applies
@@ -231,22 +224,21 @@ color="#0000FF">
     </font>...</pre>
 </blockquote>
 
-<p>If this rule acts within the <font color="#808000" size="2"
-face="Courier New">hex</font> construct, it is not going to abort
-that construct (since it applies to an inner level of parentheses
-within the construct). Therefore, it should not clear the flag:
-the rest of the <font color="#808000" size="2" face="Courier New">hex</font>
-construct should be parsed with the flag still in effect.</p>
+<p>If this rule acts within the <font color="#808000"><tt>hex</tt></font>
+construct, it is not going to abort that construct (since it
+applies to an inner level of parentheses within the construct).
+Therefore, it should not clear the flag: the rest of the <font
+color="#808000"><tt>hex</tt></font> construct should be parsed
+with the flag still in effect.</p>
 
 <p>What if there is an error recovery rule which might abort out
-of the <font color="#808000" size="2" face="Courier New">hex</font>
-construct or might not, depending on circumstances? There is no
-way you can write the action to determine whether a <font
-color="#808000" size="2" face="Courier New">hex</font> construct
-is being aborted or not. So if you are using a lexical tie-in,
-you had better make sure your error recovery rules are not of
-this kind. Each rule must be such that you can be sure that it
-always will, or always won't, have to clear the flag.</p>
+of the <font color="#808000"><tt>hex</tt></font> construct or
+might not, depending on circumstances? There is no way you can
+write the action to determine whether a <font color="#808000"><tt>hex</tt></font>
+construct is being aborted or not. So if you are using a lexical
+tie-in, you had better make sure your error recovery rules are
+not of this kind. Each rule must be such that you can be sure
+that it always will, or always won't, have to clear the flag.</p>
 
 <hr size="1">
 <div align="left">
@@ -263,7 +255,8 @@ always will, or always won't, have to clear the flag.</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

@@ -20,22 +20,20 @@ to parse the rest of the input file and check it for errors; a
 calculator should accept another expression.</p>
 
 <p>In a simple interactive command parser where each input is one
-line, it may be sufficient to allow routine <font color="#008080"
-size="2" face="Courier New"><em>parse</em></font> to terminate on
-error and have the caller ignore the rest of the input line when
-that happens (and then call <font color="#008080" size="2"
-face="Courier New"><em>parse</em></font> again). But this is
-inadequate for a compiler, because it forgets all the syntactic
-context leading up to the error. A syntax error deep within a
-function in the compiler input should not cause the compiler to
-treat the following line like the beginning of a source file.</p>
+line, it may be sufficient to allow routine <font color="#008080"><em><tt>parse</tt></em></font>
+to terminate on error and have the caller ignore the rest of the
+input line when that happens (and then call <font color="#008080"><em><tt>parse</tt></em></font>
+again). But this is inadequate for a compiler, because it forgets
+all the syntactic context leading up to the error. A syntax error
+deep within a function in the compiler input should not cause the
+compiler to treat the following line like the beginning of a
+source file.</p>
 
 <p>You can define how to recover from a syntax error by writing
-rules to recognize the special token <font color="#0000FF"
-size="2" face="Courier New">error</font>. This is a terminal
-symbol that is always defined (you need not declare it) and
-reserved for error handling. The <em>geyacc</em> parser generates
-an <font color="#0000FF" size="2" face="Courier New">error</font>
+rules to recognize the special token <font color="#0000FF"><tt>error</tt></font>.
+This is a terminal symbol that is always defined (you need not
+declare it) and reserved for error handling. The <em>geyacc</em>
+parser generates an <font color="#0000FF"><tt>error</tt></font>
 token whenever a syntax error happens; if you have provided a
 rule to recognize this token in the current context, the parse
 can continue. For example:</p>
@@ -56,31 +54,27 @@ color="#0000FF">
 </blockquote>
 
 <p>The fourth rule in this example says that an error followed by
-a newline makes a valid addition to any <font color="#800080"
-size="2" face="Courier New">stmnts</font>. What happens if a
-syntax error occurs in the middle of an <font color="#800080"
-size="2" face="Courier New">exp</font>? The error recovery rule,
+a newline makes a valid addition to any <font color="#800080"><tt>stmnts</tt></font>.
+What happens if a syntax error occurs in the middle of an <font
+color="#800080"><tt>exp</tt></font>? The error recovery rule,
 interpreted strictly, applies to the precise sequence of a <font
-color="#800080" size="2" face="Courier New">stmnts</font>, an <font
-color="#0000FF" size="2" face="Courier New">error</font> and a
-newline. If an error occurs in the middle of an <font
-color="#800080" size="2" face="Courier New">exp</font>, there
-will probably be some additional tokens and subexpressions on the
-stack after the last <font color="#800080" size="2"
-face="Courier New">stmnts</font>, and there will be tokens to
-read before the next newline. So the rule is not applicable in
+color="#800080"><tt>stmnts</tt></font>, an <font color="#0000FF"><tt>error</tt></font>
+and a newline. If an error occurs in the middle of an <font
+color="#800080"><tt>exp</tt></font>, there will probably be some
+additional tokens and subexpressions on the stack after the last <font
+color="#800080"><tt>stmnts</tt></font>, and there will be tokens
+to read before the next newline. So the rule is not applicable in
 the ordinary way.</p>
 
 <p>But <em>geyacc</em> can force the situation to fit the rule,
 by discarding part of the semantic context and part of the input.
 First it discards states and objects from the stack until it gets
-back to a state in which the <font color="#0000FF" size="2"
-face="Courier New">error</font> token is acceptable. (This means
-that the subexpressions already parsed are discarded, back to the
-last complete <font color="#800080" size="2" face="Courier New">stmnts</font>.)
-At this point the <font color="#0000FF" size="2"
-face="Courier New">error</font> token can be shifted. Then, if
-the old look-ahead token is not acceptable to be shifted next,
+back to a state in which the <font color="#0000FF"><tt>error</tt></font>
+token is acceptable. (This means that the subexpressions already
+parsed are discarded, back to the last complete <font
+color="#800080"><tt>stmnts</tt></font>.) At this point the <font
+color="#0000FF"><tt>error</tt></font> token can be shifted. Then,
+if the old look-ahead token is not acceptable to be shifted next,
 the parser reads tokens and discards them until it finds a token
 which is acceptable. In this example, <em>geyacc</em> reads and
 discards input until the next newline so that the fourth rule can
@@ -118,47 +112,44 @@ color="#0000FF">
 <p>Error recovery strategies are necessarily guesses. When they
 guess wrong, one syntax error often leads to another. In the
 above example, the error recovery rule guesses that an error is
-due to bad input within one <font color="#800080" size="2"
-face="Courier New">stmnt</font>. Suppose that instead a spurious
-semicolon is inserted in the middle of a valid <font
-color="#800080" size="2" face="Courier New">stmnt</font>. After
-the error recovery rule recovers from the first error, another
-syntax error will be found straightaway, since the text following
-the spurious semicolon is also an invalid <font color="#800080"
-size="2" face="Courier New">stmnt</font>.</p>
+due to bad input within one <font color="#800080"><tt>stmnt</tt></font>.
+Suppose that instead a spurious semicolon is inserted in the
+middle of a valid <font color="#800080"><tt>stmnt</tt></font>.
+After the error recovery rule recovers from the first error,
+another syntax error will be found straightaway, since the text
+following the spurious semicolon is also an invalid <font
+color="#800080"><tt>stmnt</tt></font>.</p>
 
 <p>To prevent an outpouring of error messages, the parser will
 output no error message for another syntax error that happens
 shortly after the first; only after three consecutive input
 tokens have been successfully shifted will error messages resume.</p>
 
-<p>Note that rules which accept the <font color="#0000FF"
-size="2" face="Courier New">error</font> token may have actions,
-just as any other rules can.</p>
+<p>Note that rules which accept the <font color="#0000FF"><tt>error</tt></font>
+token may have actions, just as any other rules can.</p>
 
 <p>You can make error messages resume immediately by using the
-routine <a href="actions.html#recover"><font color="#008080"
-size="2" face="Courier New"><em>recover</em></font></a> from
-class <font color="#008080" size="2" face="Courier New"><em>YY_PARSER
-</em></font>in an action. If you do this in the error rule's
-action, no error messages will be suppressed.</p>
+routine <a href="actions.html#recover"><font color="#008080"><em><tt>recover</tt></em></font></a>
+from class <font color="#008080"><em><tt>YY_PARSER</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>in
+an action. If you do this in the error rule's action, no error
+messages will be suppressed.</p>
 
 <p>The previous look-ahead token is reanalyzed immediately after
 an error. If this is unacceptable, then the routine <a
-href="actions.html#clear_token"><font color="#008080" size="2"
-face="Courier New"><em>clear_token</em></font></a> may be used to
-clear this token. For example, suppose that on a parse error, an
-error handling routine is called that advances the input stream
-to some point where parsing should once again commence. The next
-symbol returned by the lexical scanner is probably correct. The
-previous look-ahead token ought to be discarded with <font
-color="#008080" size="2" face="Courier New"><em>clear_token</em></font>.</p>
+href="actions.html#clear_token"><font color="#008080"><em><tt>clear_token</tt></em></font></a>
+may be used to clear this token. For example, suppose that on a
+parse error, an error handling routine is called that advances
+the input stream to some point where parsing should once again
+commence. The next symbol returned by the lexical scanner is
+probably correct. The previous look-ahead token ought to be
+discarded with <font color="#008080"><em><tt>clear_token</tt></em></font>.</p>
 
 <p>The boolean feature <a href="actions.html#is_recovering"><font
-color="#008080" size="2" face="Courier New"><em>is_recovering</em></font></a>
-is true when the parser is recovering from a syntax error, and
-false the rest of the time. A true value indicates that error
-messages are currently suppressed for new syntax errors.</p>
+color="#008080"><em><tt>is_recovering</tt></em></font></a> is
+true when the parser is recovering from a syntax error, and false
+the rest of the time. A true value indicates that error messages
+are currently suppressed for new syntax errors.</p>
 
 <hr size="1">
 <div align="left">
@@ -175,7 +166,8 @@ messages are currently suppressed for new syntax errors.</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

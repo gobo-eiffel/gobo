@@ -17,9 +17,8 @@ content="text/html; charset=iso-8859-1">
 <p><font size="3">First some simple examples to get the flavor of
 how one uses <em>gelex</em>. The following <em>gelex</em> input
 specifies a scanner which whenever it encounters the string
-&quot;</font><font size="2" face="Courier New">foo</font><font
-size="3">&quot; will replace it with the string &quot;</font><font
-size="2" face="Courier New">bar</font><font size="3">&quot;:</font></p>
+&quot;</font><tt>foo</tt><font size="3">&quot; will replace it
+with the string &quot;</font><tt>bar</tt><font size="3">&quot;:</font></p>
 
 <blockquote>
     <pre><font color="#0000FF" size="3">%{</font><font size="3">
@@ -47,44 +46,38 @@ size="3">
 </blockquote>
 
 <p><font size="3">This description file is made up of three
-sections separated by </font><font color="#0000FF" size="2"
-face="Courier New">%%</font><font size="3"> marks. The text
-enclosed within the two signs </font><font color="#0000FF"
-size="2" face="Courier New">%{</font><font size="3"> and </font><font
-color="#0000FF" size="2" face="Courier New">%}</font><font
-size="3"> in the first section is Eiffel text which is copied
-verbatim to <em>gelex</em> output class file. It specifies that
-the name of the generated class is </font><font color="#008080"
-size="2" face="Courier New"><em>FOOBAR</em></font><font size="3">
-and that its creation procedure is </font><font color="#008080"
-size="2" face="Courier New"><em>make</em></font><font size="3">,
-a routine inherited from class </font><font color="#008080"
-size="2" face="Courier New"><em>YY_COMPRESSED_SCANNER_SKELETON</em></font><font
+sections separated by </font><font color="#0000FF"><tt>%%</tt></font><font
+size="3"> marks. The text enclosed within the two signs </font><font
+color="#0000FF"><tt>%{</tt></font><font size="3"> and </font><font
+color="#0000FF"><tt>%}</tt></font><font size="3"> in the first
+section is Eiffel text which is copied verbatim to <em>gelex</em>
+output class file. It specifies that the name of the generated
+class is </font><font color="#008080"><em><tt>FOOBAR</tt></em></font><font
+size="3"> and that its creation procedure is </font><font
+color="#008080"><em><tt>make</tt></em></font><font size="3">, a
+routine inherited from class </font><font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font><font
 size="3">. This class contains the pattern-matching engine </font><font
 size="3" face="Symbol">-</font><font size="3"> a Deterministic
 Finite Automaton (or </font><font size="2">DFA</font><font
 size="3"> for short) </font><font size="3" face="Symbol">-</font><font
 size="3"> which is optimized in terms of memory space, hence the
 name of the class. It also provides numerous facilities such as
-routine </font><font color="#008080" size="2" face="Courier New"><em>scan</em></font><font
+routine </font><font color="#008080"><em><tt>scan</tt></em></font><font
 size="3"> for analyzing a given input text. The second section,
 enclosed within the two</font><font color="#0000FF" size="2"
-face="Courier New"> %%</font><font size="3"> marks, contains the
-only rule of this description file. </font><font color="#FF0000"
-size="2" face="Courier New">foo</font><font size="3"> is the
-pattern of this rule and the </font><font color="#008080"
-size="2" face="Courier New"><em>print</em></font><font size="3">
-instruction is the action. By default, any text not matched by a <em>gelex</em>
-scanner is copied to the standard output, so the net effect of
-this scanner is to copy its input file to the standard output
-with each occurrence of &quot;</font><font size="2"
-face="Courier New">foo</font><font size="3">&quot; replaced with
-&quot;</font><font size="2" face="Courier New">bar</font><font
+face="Courier New"> </font><font color="#0000FF"><tt>%%</tt></font><font
+size="3"> marks, contains the only rule of this description file.
+</font><font color="#FF0000"><tt>foo</tt></font><font size="3">
+is the pattern of this rule and the </font><font color="#008080"><em><tt>print</tt></em></font><font
+size="3"> instruction is the action. By default, any text not
+matched by a <em>gelex</em> scanner is copied to the standard
+output, so the net effect of this scanner is to copy its input
+file to the standard output with each occurrence of &quot;</font><tt>foo</tt><font
+size="3">&quot; replaced with &quot;</font><tt>bar</tt><font
 size="3">&quot;. The third section of the file, after the second </font><font
-color="#0000FF" size="2" face="Courier New">%%</font><font
-size="3"> mark, is Eiffel text which is copied verbatim at the
-end of the generated class. In this example, it just contains the
-end of the class keyword.</font></p>
+color="#0000FF"><tt>%%</tt></font><font size="3"> mark, is Eiffel
+text which is copied verbatim at the end of the generated class.
+In this example, it just contains the end of the class keyword.</font></p>
 
 <p><font size="3">Here's another simple example:</font></p>
 
@@ -145,11 +138,10 @@ scanner description is similar to the one described in the first
 example. The generated class is named after the Unix command <em>wc</em>
 which counts the number of characters, words and lines in given
 files. There are two rules, one which matches a newline (</font><font
-color="#FF0000" size="2" face="Courier New">\n</font><font
-size="3">) and increments both the line count and the character
-count, and one which matches any character other than a newline
-(indicated by the </font><font color="#FF0000" size="3"
-face="Courier New"><strong>.</strong></font><font size="3">
+color="#FF0000"><tt>\n</tt></font><font size="3">) and increments
+both the line count and the character count, and one which
+matches any character other than a newline (indicated by the </font><font
+color="#FF0000"><strong><tt>.</tt></strong></font><font size="3">
 regular expression).</font></p>
 
 <p><font size="3">A somewhat more complicated example:</font></p>

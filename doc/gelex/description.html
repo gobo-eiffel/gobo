@@ -80,17 +80,17 @@ a regular expression which matches a letter followed by
 zero-or-more letters-or-digits. A subsequent reference to</p>
 
 <blockquote>
-    <p><font color="#FF0000"><tt>{DIGIT}+&quot;.&quot;{DIGIT}*</tt></font></p>
+    <pre><font color="#FF0000">{DIGIT}+&quot;.&quot;{DIGIT}*</font></pre>
 </blockquote>
 
 <p>is identical to</p>
 
 <blockquote>
-    <p><font color="#FF0000"><tt>([0-9])+&quot;.&quot;([0-9])*</tt></font></p>
+    <pre><font color="#FF0000">([0-9])+&quot;.&quot;([0-9])*</font></pre>
 </blockquote>
 
-<p>and matches one-or-more digits followed by a '<font
-face="Courier New">.</font>' followed by zero-or-more digits.</p>
+<p>and matches one-or-more digits followed by a '<tt>.</tt>'
+followed by zero-or-more digits.</p>
 
 <p>As opposed to <a href="start_conditions.html">start conditions</a>,
 the name definition mechanism has its own name space. Names that
@@ -103,9 +103,9 @@ ambiguity.</p>
 <p>The declarations section may also contain Eiffel code to be
 copied verbatim to the beginning of the generated scanner class.
 The Eiffel text has to be enclosed between two unindented lines
-containing the two marks <font color="#0000FF" size="2"
-face="Courier New">%{</font> and <font color="#0000FF" size="2"
-face="Courier New">%}</font> such as in the following example:</p>
+containing the two marks <font color="#0000FF"><tt>%{</tt></font>
+and <font color="#0000FF"><tt>%}</tt></font> such as in the
+following example:</p>
 
 <blockquote>
     <pre><font color="#0000FF">%{</font>
@@ -126,23 +126,22 @@ formal generics, obsolete, inheritance and creation clauses. As
 the example above shows, Eiffel declarations are used to specify
 such clauses in order to ensure that the generated scanner class
 is syntactically and sematically correct. Here, the name of the
-generated class is <font color="#008080" size="2"
-face="Courier New"><em>MY_SCANNER</em></font> and its creation
-procedure is <font color="#008080" size="2" face="Courier New"><em>make</em></font>,
-a routine inherited from class <font color="#008080" size="2"
-face="Courier New"><em>YY_COMPRESSED_SCANNER_SKELETON</em></font>.
-This class contains the pattern-matching engine - a Deterministic
-Finite Automaton (or DFA for short) - which is optimized in size,
-hence the name of the class. It also provides numerous facilities
-such as routine <font color="#008080" size="2" face="Courier New"><em>scan</em></font>
-for analyzing a given input text. The generated scanner class has
-to inherit from one such class to work properly. Other
-alternatives are <font color="#008080" size="2"
-face="Courier New"><em>YY_FULL_SCANNER_SKELETON</em></font>,
-whose DFA is optimized in speed but not in space, and <font
-color="#008080" size="2" face="Courier New"><em>YY_INTERACTIVE_SCANNER_SKELETON</em></font><font
-size="3">, whose DFA can deal with interactive input such as
-input from the keyboard.</font></p>
+generated class is <font color="#008080"><em><tt>MY_SCANNER</tt></em></font>
+and its creation procedure is <font color="#008080"><em><tt>make</tt></em></font>,
+a routine inherited from class <font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>.
+This class contains the pattern-matching engine <font size="4"
+face="Courier New">-</font> a Deterministic Finite Automaton (or <font
+size="2">DFA</font> for short) <font size="4" face="Courier New">-</font>
+which is optimized in size, hence the name of the class. It also
+provides numerous facilities such as routine <font
+color="#008080"><em><tt>scan</tt></em></font> for analyzing a
+given input text. The generated scanner class has to inherit from
+one such class to work properly. Other alternatives are <font
+color="#008080"><em><tt>YY_FULL_SCANNER_SKELETON</tt></em></font>,
+whose <font size="2">DFA</font> is optimized in speed but not in
+space, and <font color="#008080"><em><tt>YY_INTERACTIVE_SCANNER_SKELETON</tt></em></font><font
+size="3">, whose </font><font size="2">DFA</font><font size="3">
+can deal with interactive input such as input from the keyboard.</font></p>
 
 <p>If several of these Eiffel blocks appear in the declarations
 section, they are all copied to the generated scanner class in
@@ -154,8 +153,8 @@ their order of appearance in the input file.</p>
 series of rules of the form:</p>
 
 <blockquote>
-    <p><font color="#FF0000"><tt>pattern</tt></font><tt> </tt><font
-    color="#008080"><tt>action</tt></font></p>
+    <pre><font color="#FF0000">pattern</font> <font
+color="#008080">action</font></pre>
 </blockquote>
 
 <p>where the pattern can be indented and the action must begin on
@@ -177,8 +176,8 @@ if only to specify the end of the generated scanner class and
 thus ensure that this class is syntactically correct.</p>
 
 <p>Names of implementation features in inherited classes <font
-color="#008080" size="2" face="Courier New"><em>YY_*_SCANNER_SKELETON</em></font>
-are prefixed by <font color="#008080" size="2" face="Courier New"><em>yy</em></font>.
+color="#008080"><em><tt>YY_*_SCANNER_SKELETON</tt></em></font>
+are prefixed by <font color="#008080"><em><tt>yy</tt></em></font>.
 As a consequence, user-declarared feature names beginning with
 this prefix should be avoided. </p>
 
@@ -196,7 +195,8 @@ this prefix should be avoided. </p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </body>
 </html>

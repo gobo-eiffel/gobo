@@ -24,15 +24,14 @@ line</a>.</p>
 
 <p>Options are specified in the <a
 href="description.html#declarations">declarations section</a>
-using unindented lines beginning with <font color="#0000FF"
-size="2" face="Courier New">%option</font> followed by a
-whitespace-separated list of options. One can use more than one <font
-color="#0000FF" size="2" face="Courier New">%option </font>directives
-if necessary. Most options are given simply as names, optionally
-preceded by the word <font color="#800000" size="2"
-face="Courier New">no</font> (with no intervening whitespace) to
-negate their meaning. Following is an excerpt from a scanner
-description file:</p>
+using unindented lines beginning with <font color="#0000FF"><tt>%option</tt></font>
+followed by a whitespace-separated list of options. One can use
+more than one <font color="#0000FF"><tt>%option</tt></font><font
+color="#0000FF" size="2" face="Courier New"> </font>directives if
+necessary. Most options are given simply as names, optionally
+preceded by the word <font color="#800000"><tt>no</tt></font>
+(with no intervening whitespace) to negate their meaning.
+Following is an excerpt from a scanner description file:</p>
 
 <blockquote>
     <pre><font color="#0000FF">%option</font> <font
@@ -43,67 +42,59 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
 <p>The <em>gelex</em> options have the following meanings:</p>
 
 <dl>
-    <dt><a name="backup"><font color="#800000" size="2"
-        face="Courier New">backup</font></a></dt>
+    <dt><a name="backup"><font color="#800000"><tt>backup</tt></font></a></dt>
     <dd><font size="3">Generate backing-up information to
         standard output. This is a list of scanner states which
         require backing up and the input characters on which they
         do so. By adding rules one can remove backing-up states.
         If all backing-up states are eliminated and the </font><font
-        color="#800000" size="2" face="Courier New">full</font><font
-        size="3"> option is used, the generated scanner will run
-        faster. Only users who wish to squeeze every last cycle
-        out of their scanners need worry about this option. (See
-        the section on Performance Considerations.) [default: </font><font
-        color="#800000" size="2" face="Courier New">nobackup</font><font
-        size="3">]</font></dd>
-    <dt><a name="case-insensitive"><font color="#800000" size="2"
-        face="Courier New">case-insensitive</font></a><font
-        color="#800000" size="2" face="Courier New"><br>
-        nocase-sensitive</font></dt>
+        color="#800000"><tt>full</tt></font><font size="3">
+        option is used, the generated scanner will run faster.
+        Only users who wish to squeeze every last cycle out of
+        their scanners need worry about this option. (See the
+        section on Performance Considerations.) [default: </font><font
+        color="#800000"><tt>nobackup</tt></font><font size="3">]</font></dd>
+    <dt><a name="case-insensitive"><font color="#800000"><tt>case-insensitive</tt></font></a><font
+        color="#800000"><tt><br>
+        nocase-sensitive</tt></font></dt>
     <dd><font size="3">Generate a case-insensitive scanner. The
         case of letters given in the <em>gelex</em> input
         patterns will be ignored, and tokens in the generated
         scanner input will be matched regardless of case. The
-        matched text given in </font><font color="#008080"
-        size="2" face="Courier New"><em>text</em></font><font
+        matched text given in </font><font color="#008080"><em><tt>text</tt></em></font><font
         size="3"> will have the preserved case. [default: </font><font
-        color="#800000" size="2" face="Courier New">case-sensitive</font><font
+        color="#800000"><tt>case-sensitive</tt></font><font
         size="3">]</font></dd>
-    <dt><a name="nodefault"><font color="#800000" size="2"
-        face="Courier New">nodefault</font></a></dt>
+    <dt><a name="nodefault"><font color="#800000"><tt>nodefault</tt></font></a></dt>
     <dd><font size="3">Cause the default rule (that unmatched
         scanner input is echoed to the standard output) to be
         suppressed. If the scanner encounters input that does not
         match any of its rules, it aborts with an error. This
         option is useful for finding holes in a scanner's rule
-        set. [default: </font><font color="#800000" size="2"
-        face="Courier New">default</font><font size="3">]</font></dd>
-    <dt><a name="ecs"><font color="#800000" size="2"
-        face="Courier New">ecs</font></a></dt>
+        set. [default: </font><font color="#800000"><tt>default</tt></font><font
+        size="3">]</font></dd>
+    <dt><a name="ecs"><font color="#800000"><tt>ecs</tt></font></a></dt>
     <dd><font size="3">Direct <em>gelex</em> to construct
         equivalence classes, i.e. sets of characters which have
         identical lexical properties (for example, if the only
         appearance of digits in the <em>gelex</em> input is in
-        the character class </font><font color="#FF0000" size="2"
-        face="Courier New">[0-9]</font><font size="3"> then the
-        digits '0', '1', ..., '9' will all be put in the same
-        equivalence class). Equivalence classes usually give
-        dramatic reductions in the final table/object file sizes
-        (typically a factor of 2-5) and are pretty cheap
-        performance-wise (one array look-up per character
-        scanned). [default: </font><font color="#800000" size="2"
-        face="Courier New">ecs</font><font size="3">]</font></dd>
-    <dt><a name="full"><font color="#800000" size="2"
-        face="Courier New">full</font></a></dt>
+        the character class </font><font color="#FF0000"><tt>[0-9]</tt></font><font
+        size="3"> then the digits '0', '1', ..., '9' will all be
+        put in the same equivalence class). Equivalence classes
+        usually give dramatic reductions in the final
+        table/object file sizes (typically a factor of 2-5) and
+        are pretty cheap performance-wise (one array look-up per
+        character scanned). [default: </font><font
+        color="#800000"><tt>ecs</tt></font><font size="3">]</font></dd>
+    <dt><a name="full"><font color="#800000"><tt>full</tt></font></a></dt>
     <dd><font size="3">Specify that the full scanner tables
-        should be generated - <em>gelex</em> should not compress
-        the tables by taking advantages of similar transition
-        functions for different states. The result is large but
-        fast. [default: </font><font color="#800000" size="2"
-        face="Courier New">nofull</font><font size="3">]</font></dd>
-    <dt><a name="meta-ecs"><font color="#800000" size="2"
-        face="Courier New">meta-ecs</font></a></dt>
+        should be generated </font><font size="3" face="Symbol">-</font><font
+        size="3"> <em>gelex</em> should not compress the tables
+        by taking advantages of similar transition functions for
+        different states. The result is large but fast. [default:
+        </font><font color="#800000"><tt>nofull</tt></font><font
+        size="3">]</font></dd>
+    <dt><a name="meta-ecs"><font color="#800000"><tt>meta-ecs</tt></font></a></dt>
     <dd><font size="3">Direct <em>gelex</em> to construct
         meta-equivalence classes, which are sets of equivalence
         classes (or characters, if equivalence classes are not
@@ -112,27 +103,22 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
         compressed tables, but they have a moderate performance
         impact (one or two &quot;if&quot; tests and one array
         look-up per character scanned). This option does not make
-        sense together with option </font><font color="#800000"
-        size="2" face="Courier New">full</font><font size="3">
-        since there is no opportunity for meta-equivalence
-        classes if the table is not being compressed. [default: </font><font
-        color="#800000" size="2" face="Courier New">meta-ecs</font><font
+        sense together with option </font><font color="#800000"><tt>full</tt></font><font
+        size="3"> since there is no opportunity for
+        meta-equivalence classes if the table is not being
+        compressed. [default: </font><font color="#800000"><tt>meta-ecs</tt></font><font
         size="3">]</font></dd>
-    <dt><a name="outfile"><font color="#800000" size="2"
-        face="Courier New">outfile=&quot;filename&quot;</font></a></dt>
+    <dt><a name="outfile"><font color="#800000"><tt>outfile=&quot;filename&quot;</tt></font></a></dt>
     <dd><font size="3">Direct <em>gelex</em> to write the scanner
-        class to the file <em>filename</em> instead of the
-        standard output.</font></dd>
-    <dt><a name="reject"><font color="#800000" size="2"
-        face="Courier New">reject</font></a></dt>
+        class to the file </font><font color="#800000"><tt>filename</tt></font><font
+        size="3"> instead of the standard output.</font></dd>
+    <dt><a name="reject"><font color="#800000"><tt>reject</tt></font></a></dt>
     <dd><font size="3">Specify the feature reject is used in
-        semantic actions. [default: </font><font color="#800000"
-        size="2" face="Courier New">noreject</font><font size="3">]</font></dd>
-    <dt><a name="nowarn"><font color="#800000" size="2"
-        face="Courier New">nowarn</font></a></dt>
-    <dd><font size="3">Suppress warning messages. [default: </font><font
-        color="#800000" size="2" face="Courier New">warn</font><font
+        semantic actions. [default: </font><font color="#800000"><tt>noreject</tt></font><font
         size="3">]</font></dd>
+    <dt><a name="nowarn"><font color="#800000"><tt>nowarn</tt></font></a></dt>
+    <dd><font size="3">Suppress warning messages. [default: </font><font
+        color="#800000"><tt>warn</tt></font><font size="3">]</font></dd>
 </dl>
 
 <h2><a name="command_line">Command-line Options</a></h2>
@@ -141,102 +127,78 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
 Following is <em>gelex</em> command-line usage message:</p>
 
 <blockquote>
-    <p><font color="#800000" size="2" face="Courier New">gelex </font><font
-    size="2" face="Courier New">[</font><font color="#800000"
-    size="2" face="Courier New">--version</font><font size="2"
-    face="Courier New">][</font><font color="#800000" size="2"
-    face="Courier New">--help</font><font size="2"
-    face="Courier New">][</font><font color="#800000" size="2"
-    face="Courier New">-bcefhimsVw?</font><font size="2"
-    face="Courier New">][</font><font color="#800000" size="2"
-    face="Courier New">-a size</font><font size="2"
-    face="Courier New">][</font><font color="#800000" size="2"
-    face="Courier New">-o filename</font><font size="2"
-    face="Courier New">][</font><font color="#800000" size="2"
-    face="Courier New">--</font><font size="2" face="Courier New">]</font><font
-    color="#800000" size="2" face="Courier New"> filename</font></p>
+    <pre><font color="#800000">gelex </font>[<font
+color="#800000">--version</font>][<font color="#800000">--help</font>][<font
+color="#800000">-bcefhimsVw?</font>][<font color="#800000">-a size</font>][<font
+color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
 </blockquote>
 
 <p>The command-line options have the following meanings:</p>
 
 <dl>
-    <dt><a name="--version"><font color="#800000" size="2"
-        face="Courier New">--version</font></a></dt>
+    <dt><a name="--version"><font color="#800000"><tt>--version</tt></font></a></dt>
     <dd><font size="3">Print <em>gelex</em> version number to the
         standard output and exit.</font></dd>
-    <dt><a name="--help"><font color="#800000" size="2"
-        face="Courier New">--help</font></a></dt>
+    <dt><a name="--help"><font color="#800000"><tt>--help</tt></font></a></dt>
     <dd><font size="3">Print <em>gelex</em> usage message to the
         standard output and exit.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-a size</font></dt>
+    <dt><font color="#800000"><tt>-a size</tt></font></dt>
     <dd><font size="3">Some Eiffel compilers experience
         difficulties to process big manifest arrays. This option
         directs <em>geyacc</em> to split manifest arrays with
-        more than </font><font color="#800000" size="2"
-        face="Courier New">size</font><font size="3"> elements
-        into several smaller arrays. [default: </font><font
-        color="#800000" size="2" face="Courier New">3000</font><font
+        more than </font><font color="#800000"><tt>size</tt></font><font
+        size="3"> elements into several smaller arrays. [default:
+        </font><font color="#800000"><tt>3000</tt></font><font
         size="3">]</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-b</font></dt>
+    <dt><font color="#800000"><tt>-b</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#backup"><font
-        color="#800000" size="2" face="Courier New">backup</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-c</font></dt>
+        color="#800000"><tt>backup</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-c</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#full"><font
-        color="#800000" size="2" face="Courier New">nofull</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-e</font></dt>
+        color="#800000"><tt>nofull</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-e</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#ecs"><font
-        color="#800000" size="2" face="Courier New">ecs</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-f</font></dt>
+        color="#800000"><tt>ecs</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-f</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#full"><font
-        color="#800000" size="2" face="Courier New">full</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-h</font></dt>
+        color="#800000"><tt>full</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-h</tt></font></dt>
     <dd><font size="3">Synonym for </font><a href="#--help"><font
-        color="#800000" size="2" face="Courier New">--help</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-i</font></dt>
+        color="#800000"><tt>--help</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-i</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a
-        href="#case-insensitive"><font color="#800000" size="2"
-        face="Courier New">case-insensitive</font></a><font
+        href="#case-insensitive"><font color="#800000"><tt>case-insensitive</tt></font></a><font
         size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-m</font></dt>
+    <dt><font color="#800000"><tt>-m</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#meta-ecs"><font
-        color="#800000" size="2" face="Courier New">meta-ecs</font></a><font
+        color="#800000"><tt>meta-ecs</tt></font></a><font
         size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-s</font></dt>
+    <dt><font color="#800000"><tt>-s</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#nodefault"><font
-        color="#800000" size="2" face="Courier New">nodefault</font></a><font
+        color="#800000"><tt>nodefault</tt></font></a><font
         size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-V</font></dt>
+    <dt><font color="#800000"><tt>-V</tt></font></dt>
     <dd><font size="3">Synonym for </font><a href="#--version"><font
-        color="#800000" size="1" face="Courier">--version</font></a><font
+        color="#800000" face="Courier"><tt>--version</tt></font></a><font
         size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-w</font></dt>
+    <dt><font color="#800000"><tt>-w</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#nowarn"><font
-        color="#800000" size="2" face="Courier New">nowarn</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-?</font></dt>
+        color="#800000"><tt>nowarn</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-?</tt></font></dt>
     <dd><font size="3">Synonym for </font><a href="#--help"><font
-        color="#800000" size="2" face="Courier New">--help</font></a><font
-        size="3">.</font></dd>
-    <dt><font color="#800000" size="2" face="Courier New">-o
-        filename</font></dt>
+        color="#800000"><tt>--help</tt></font></a><font size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-o filename</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#outfile"><font
-        color="#800000" size="2" face="Courier New">outfile=&quot;filename&quot;</font></a></dd>
-    <dt><font color="#800000" size="2" face="Courier New">--</font></dt>
+        color="#800000"><tt>outfile=&quot;filename&quot;</tt></font></a></dd>
+    <dt><font color="#800000"><tt>--</tt></font></dt>
     <dd>Mark the end of the options. Useful when the scanner
-        description filename begins with character '<font
-        size="2" face="Courier New">-</font>'.</dd>
-    <dt><font color="#800000" size="2" face="Courier New">filename</font></dt>
+        description filename begins with character '<tt>-</tt>'.</dd>
+    <dt><font color="#800000"><tt>filename</tt></font></dt>
     <dd>Name of <em>gelex</em> input file containing the scanner
         description. By convention <em>gelex</em> input filenames
         have the extension <font size="3">'</font><font
-        color="#800000" size="2" face="Courier New">.l</font><font
-        size="3">' such as in </font><font color="#800000"
-        size="2" face="Courier New">my_scanner.l</font><font
+        color="#800000"><tt>.l</tt></font><font size="3">' such
+        as in </font><font color="#800000"><tt>my_scanner.l</tt></font><font
         size="3">. One is not required to follow this convention
         though.</font></dd>
 </dl>
@@ -256,7 +218,8 @@ Following is <em>gelex</em> command-line usage message:</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

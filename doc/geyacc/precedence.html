@@ -23,9 +23,8 @@ shift and when to reduce.</p>
 <h2>When Precedence is Needed</h2>
 
 <p>Consider the following ambiguous grammar fragment (ambiguous
-because the input <font color="#808000" size="2"
-face="Courier New">1 - 2 * 3</font> can be parsed in two
-different ways):</p>
+because the input <font color="#808000"><tt>1 - 2 * 3</tt></font>
+can be parsed in two different ways):</p>
 
 <blockquote>
     <pre><font color="#800080">expr</font><font color="#0000FF">:</font> <font
@@ -41,72 +40,60 @@ color="#800080">expr</font> <font color="#FF0000">')'</font>
     <font color="#0000FF">;</font></pre>
 </blockquote>
 
-<p>Suppose the parser has seen the tokens <font color="#808000"
-size="2" face="Courier New">1</font>, <font color="#808000"
-face="Courier New">-</font> and <font color="#808000" size="2"
-face="Courier New">2</font>; should it reduce them via the rule
-for the addition operator? It depends on the next token. Of
-course, if the next token is <font color="#808000"
-face="Courier New">)</font>, we must reduce; shifting is invalid
-because no single rule can reduce the token sequence <font
-color="#808000" face="Courier New">- </font><font color="#808000"
-size="2" face="Courier New">2</font><font color="#808000"
-face="Courier New"> )</font> or anything starting with that. But
-if the next token is <font color="#808000" size="3"
-face="Courier New">*</font> or <font color="#808000" size="2"
-face="Courier New">&lt;</font>, we have a choice: either shifting
-or reduction would allow the parse to complete, but with
-different results.</p>
+<p>Suppose the parser has seen the tokens <font color="#808000"><tt>1</tt></font>,
+<font color="#808000"><tt>-</tt></font> and <font color="#808000"><tt>2</tt></font>;
+should it reduce them via the rule for the addition operator? It
+depends on the next token. Of course, if the next token is <font
+color="#808000"><tt>)</tt></font>, we must reduce; shifting is
+invalid because no single rule can reduce the token sequence <font
+color="#808000"><tt>- 2 )</tt></font> or anything starting with
+that. But if the next token is <font color="#808000" size="4"><tt>*</tt></font>
+or <font color="#808000"><tt>&lt;</tt></font>, we have a choice:
+either shifting or reduction would allow the parse to complete,
+but with different results.</p>
 
 <p>To decide which one <em>geyacc</em> should do, we must
 consider the results. If the next operator token <font
-color="#808000" size="2" face="Courier New">OP</font> is shifted,
-then it must be reduced first in order to permit another
-opportunity to reduce the sum. The result is (in effect) <font
-color="#808000" size="2" face="Courier New">1 - (2 OP 3)</font>.
-On the other hand, if the subtraction is reduced before shifting <font
-color="#808000" size="2" face="Courier New">OP</font>, the result
-is <font color="#808000" size="2" face="Courier New">(1 - 2) OP 3</font>.
+color="#808000"><tt>OP</tt></font> is shifted, then it must be
+reduced first in order to permit another opportunity to reduce
+the sum. The result is (in effect) <font color="#808000"><tt>1 -
+(2 OP 3)</tt></font>. On the other hand, if the subtraction is
+reduced before shifting <font color="#808000"><tt>OP</tt></font>,
+the result is <font color="#808000"><tt>(1 - 2) OP 3</tt></font>.
 Clearly, then, the choice of shift or reduce should depend on the
-relative precedence of the operators <font color="#808000"
-face="Courier New">-</font> and <font color="#808000" size="2"
-face="Courier New">OP</font>: <font color="#808000"
-face="Courier New">*</font> should be shifted first, but not <font
-color="#808000" size="2" face="Courier New">&lt;</font>.</p>
+relative precedence of the operators <font color="#808000"><tt>-</tt></font>
+and <font color="#808000"><tt>OP</tt></font>: <font
+color="#808000" size="4"><tt>*</tt></font> should be shifted
+first, but not <font color="#808000"><tt>&lt;</tt></font>.</p>
 
-<p>What about input such as <font color="#808000" size="2"
-face="Courier New">1 - 2 - 5</font>; should this be <font
-color="#808000" size="2" face="Courier New">(1 - 2) - 5</font> or
-should it be <font color="#808000" size="2" face="Courier New">1
-- (2 - 5)</font>? For most operators we prefer the former, which
-is called <em>left association</em>. The latter alternative, <em>right
-association</em>, is desirable for assignment operators. The
-choice of left or right association is a matter of whether the
-parser chooses to shift or reduce when the stack contains <font
-color="#808000" size="2" face="Courier New">1 - 2</font> and the
-look-ahead token is <font color="#808000" face="Courier New">-</font>:
+<p>What about input such as <font color="#808000"><tt>1 - 2 - 5</tt></font>;
+should this be <font color="#808000"><tt>(1 - 2) - 5</tt></font>
+or should it be <font color="#808000"><tt>1 - (2 - 5)</tt></font>?
+For most operators we prefer the former, which is called <em>left
+association</em>. The latter alternative, <em>right association</em>,
+is desirable for assignment operators. The choice of left or
+right association is a matter of whether the parser chooses to
+shift or reduce when the stack contains <font color="#808000"><tt>1
+- 2</tt></font> and the look-ahead token is <font color="#808000"><tt>-</tt></font>:
 shifting makes right-associativity.</p>
 
 <h2>Specifying Operator Precedence</h2>
 
 <p><em>Geyacc</em> allows you to specify these choices with the
-operator precedence declarations <font color="#0000FF" size="2"
-face="Courier New">%left</font> and <font color="#0000FF"
-size="2" face="Courier New">%right</font>. Each such declaration
-contains a list of tokens, which are operators whose precedence
-and associativity is being declared. The <font color="#0000FF"
-size="2" face="Courier New">%left</font> declaration makes all
-those operators left-associative and the <font color="#0000FF"
-size="2" face="Courier New">%right</font> declaration makes them
-right-associative. A third alternative is <font color="#0000FF"
-size="2" face="Courier New">%nonassoc</font>, which declares that
-it is a syntax error to find the same operator twice &quot;in a
+operator precedence declarations <font color="#0000FF"><tt>%left</tt></font>
+and <font color="#0000FF"><tt>%right</tt></font>. Each such
+declaration contains a list of tokens, which are operators whose
+precedence and associativity is being declared. The <font
+color="#0000FF"><tt>%left</tt></font> declaration makes all those
+operators left-associative and the <font color="#0000FF"><tt>%right</tt></font>
+declaration makes them right-associative. A third alternative is <font
+color="#0000FF"><tt>%nonassoc</tt></font>, which declares that it
+is a syntax error to find the same operator twice &quot;in a
 row&quot;.</p>
 
 <p>The relative precedence of different operators is controlled
 by the order in which they are declared. The first <font
-color="#0000FF" size="2" face="Courier New">%left</font> or <font
-color="#0000FF" size="2" face="Courier New">%right</font>
+color="#0000FF"><tt>%left</tt></font> or <font color="#0000FF"><tt>%right</tt></font>
 declaration in the file declares the operators whose precedence
 is lowest, the next such declaration declares the operators whose
 precedence is a little higher, and so on.</p>
@@ -123,9 +110,9 @@ precedence is a little higher, and so on.</p>
 
 <p>In a more complete example, which supports other operators as
 well, we would declare them in groups of equal precedence. For
-example,<font color="#FF0000" size="2" face="Courier New"> '+'</font>
-is declared with <font color="#FF0000" size="2"
-face="Courier New">'-'</font>:</p>
+example,<font color="#FF0000" size="2" face="Courier New"> </font><font
+color="#FF0000"><tt>'+'</tt></font> is declared with <font
+color="#FF0000"><tt>'-'</tt></font>:</p>
 
 <blockquote>
     <pre><font color="#0000FF">%left </font><font color="#FF0000">'&lt;' '&gt;' '=' NE LE GE</font><font
@@ -135,11 +122,10 @@ color="#0000FF">
 %left </font><font color="#FF0000">'*' '/'</font></pre>
 </blockquote>
 
-<p>Here <font color="#FF0000" size="2" face="Courier New">NE</font>
-and so on stand for the operators for &quot;not equal&quot; and
-so on. We assume that these tokens are more than one character
-long and therefore are represented by names, not character
-literals.</p>
+<p>Here <font color="#FF0000"><tt>NE</tt></font> and so on stand
+for the operators for &quot;not equal&quot; and so on. We assume
+that these tokens are more than one character long and therefore
+are represented by names, not character literals.</p>
 
 <h2>How Precedence Works</h2>
 
@@ -156,8 +142,8 @@ look-ahead token. If the token's precedence is higher, the choice
 is to shift. If the rule's precedence is higher, the choice is to
 reduce. If they have equal precedence, the choice is made based
 on the associativity of that precedence level. The verbose output
-file made by `<font color="#800000" size="2" face="Courier New">-v</font>'
-says how each conflict was resolved.</p>
+file made by <font color="#800000"><tt>-v</tt></font> says how
+each conflict was resolved.</p>
 
 <p>Not all rules and not all tokens have precedence. If either
 the rule or the look-ahead token has no precedence, then the
@@ -172,14 +158,12 @@ a unary operator, and a somewhat lower precedence (lower than
 multiplication) as a binary operator.</p>
 
 <p>The <em>geyacc</em> precedence declarations, <font
-color="#0000FF" size="2" face="Courier New">%left</font>, <font
-color="#0000FF" size="2" face="Courier New">%right</font> and <font
-color="#0000FF" size="2" face="Courier New">%nonassoc</font>, can
-only be used once for a given token; so a token has only one
-precedence declared in this way. For context-dependent
-precedence, you need to use an additional mechanism: the <font
-color="#0000FF" size="2" face="Courier New">%prec</font> modifier
-for rules. The <font color="#0000FF" size="2" face="Courier New">%prec</font>
+color="#0000FF"><tt>%left</tt></font>, <font color="#0000FF"><tt>%right</tt></font>
+and <font color="#0000FF"><tt>%nonassoc</tt></font>, can only be
+used once for a given token; so a token has only one precedence
+declared in this way. For context-dependent precedence, you need
+to use an additional mechanism: the <font color="#0000FF"><tt>%prec</tt></font>
+modifier for rules. The <font color="#0000FF"><tt>%prec</tt></font>
 modifier declares the precedence of a particular rule by
 specifying a terminal symbol whose precedence should be used for
 that rule. It's not necessary for that symbol to appear otherwise
@@ -196,11 +180,11 @@ precedence that would be deduced for it in the ordinary way. The
 altered rule precedence then affects how conflicts involving that
 rule are resolved.</p>
 
-<p>Here is how <font color="#0000FF" size="2" face="Courier New">%prec</font>
-solves the problem of unary minus. First, declare a precedence
-for a fictitious terminal symbol named <font color="#FF0000"
-size="2" face="Courier New">UMINUS</font>. There are no tokens of
-this type, but the symbol serves to stand for its precedence:</p>
+<p>Here is how <font color="#0000FF"><tt>%prec</tt></font> solves
+the problem of unary minus. First, declare a precedence for a
+fictitious terminal symbol named <font color="#FF0000"><tt>UMINUS</tt></font>.
+There are no tokens of this type, but the symbol serves to stand
+for its precedence:</p>
 
 <blockquote>
     <pre>...
@@ -211,8 +195,8 @@ color="#0000FF">
 %left</font> <font color="#FF0000">UMINUS</font></pre>
 </blockquote>
 
-<p>Now the precedence of <font color="#FF0000" size="2"
-face="Courier New">UMINUS</font> can be used in specific rules:</p>
+<p>Now the precedence of <font color="#FF0000"><tt>UMINUS</tt></font>
+can be used in specific rules:</p>
 
 <blockquote>
     <pre><font color="#800080">exp</font><font color="#0000FF">:</font> ...
@@ -239,7 +223,8 @@ color="#FF0000">UMINUS</font></pre>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

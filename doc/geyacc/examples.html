@@ -30,11 +30,10 @@ operator precedence is not an issue. The second example will
 illustrate how operator precedence is handled.</p>
 
 <p>The source code for this calculator can be found in <font
-color="#800000" size="2" face="Courier New">$GOBO\example\parse\rpcalc</font>.
-The <em>geyacc</em> grammar file is named <font color="#800000"
-size="2" face="Courier New">rpcalc.y</font>. The `<font
-color="#800000" size="2" face="Courier New">.y</font>' extension
-is a convention used for <em>geyacc</em> input files. </p>
+color="#800000"><tt>$GOBO\example\parse\rpcalc</tt></font>. The <em>geyacc</em>
+grammar file is named <font color="#800000"><tt>rpcalc.y</tt></font>.
+The `<font color="#800000"><tt>.y</tt></font>' extension is a
+convention used for <em>geyacc</em> input files. </p>
 
 <h3>Declarations for 'rpcalc'</h3>
 
@@ -68,15 +67,12 @@ color="#0000FF">
 
 <p>The Eiffel declarations subsection specifies the indexing,
 class header, inherit and creation clauses of the generated
-parser class. This class is called <font color="#008080" size="2"
-face="Courier New"><em>RPCALC</em></font> and inherits its
-parsing engine from <font color="#008080" size="2"
-face="Courier New"><em>YY_PARSER_SKELETON</em></font>. Since the
-generic parameter of class <font color="#008080" size="2"
-face="Courier New"><em>YY_PARSER_SKELETON </em></font>is <font
-color="#008080" size="2" face="Courier New"><em>DOUBLE</em></font>,
-the values handled by the calculator are double precision real
-numbers.</p>
+parser class. This class is called <font color="#008080"><em><tt>RPCALC</tt></em></font>
+and inherits its parsing engine from <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
+Since the generic parameter of class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>is <font
+color="#008080"><em><tt>DOUBLE</tt></em></font>, the values
+handled by the calculator are double precision real numbers.</p>
 
 <p>The second subsection, <a href="declarations.html"><em>geyacc</em>
 declarations</a>, provides information to <em>geyacc</em> about
@@ -85,8 +81,8 @@ single-character literal must be declared here. (Single-character
 literals normally don't need to be declared.) In this example,
 all the arithmetic operators are designated by single-character
 literals, so the only terminal symbol that needs to be declared
-is <font color="#FF0000" size="2" face="Courier New">NUM</font>,
-the token type for numeric constants.</p>
+is <font color="#FF0000"><tt>NUM</tt></font>, the token type for
+numeric constants.</p>
 
 <h3>Grammar Rules for 'rpcalc'</h3>
 
@@ -140,15 +136,14 @@ color="#0000FF">$1 }
 </blockquote>
 
 <p>The groupings of the rpcalc &quot;language&quot; defined here
-are the expression (given the name <font color="#800080" size="2"
-face="Courier New">exp</font>), the line of input (<font
-color="#800080" size="2" face="Courier New">line</font>), and the
-complete input transcript (<font color="#800080" size="2"
-face="Courier New">input</font>). Each of these nonterminal
-symbols has several alternate rules, joined by the<font
-color="#0000FF" size="2" face="Courier New"> |</font> punctuator
-which is read as &quot;or&quot;. The following sections explain
-what these rules mean.</p>
+are the expression (given the name <font color="#800080"><tt>exp</tt></font>),
+the line of input (<font color="#800080"><tt>line</tt></font>),
+and the complete input transcript (<font color="#800080"><tt>input</tt></font>).
+Each of these nonterminal symbols has several alternate rules,
+joined by the<font color="#0000FF" size="2" face="Courier New"> </font><font
+color="#0000FF"><tt>|</tt></font> punctuator which is read as
+&quot;or&quot;. The following sections explain what these rules
+mean.</p>
 
 <p>The semantics of the language is determined by the <a
 href="actions.html">actions</a> taken when a grouping is
@@ -157,18 +152,16 @@ braces. You must specify these actions in Eiffel, but <em>geyacc</em>
 provides the means for passing <a
 href="introduction.html#semantic_values">semantic values</a>
 between the rules. In each action, the pseudo-variable <font
-color="#0000FF" size="2" face="Courier New">$$</font> stands for
-the semantic value for the grouping that the rule is going to
-construct. Assigning a value to <font color="#0000FF" size="2"
-face="Courier New">$$</font> is the main job of most actions. The
-semantic values of the components of the rule are referred to as <font
-color="#0000FF" size="2" face="Courier New">$1</font>, <font
-color="#0000FF" size="2" face="Courier New">$2</font>, and so on.</p>
+color="#0000FF"><tt>$$</tt></font> stands for the semantic value
+for the grouping that the rule is going to construct. Assigning a
+value to <font color="#0000FF"><tt>$$</tt></font> is the main job
+of most actions. The semantic values of the components of the
+rule are referred to as <font color="#0000FF"><tt>$1</tt></font>,
+<font color="#0000FF"><tt>$2</tt></font>, and so on.</p>
 
 <h4>Explanation of 'input'</h4>
 
-<p>Consider the definition of <font color="#800080" size="2"
-face="Courier New">input</font>:</p>
+<p>Consider the definition of <font color="#800080"><tt>input</tt></font>:</p>
 
 <blockquote>
     <pre><font color="#800080">input</font><font color="#0000FF">: </font><font
@@ -187,32 +180,29 @@ color="#800080" size="2" face="Courier New">input</font> appears
 always as the leftmost symbol in the sequence.</p>
 
 <p>The first alternative is empty because there are no symbols
-between the colon and the first <font color="#0000FF" size="3"
-face="Courier New">|</font>; this means that <font
-color="#800080" size="2" face="Courier New">input</font> can
+between the colon and the first <font color="#0000FF"><tt>|</tt></font>;
+this means that <font color="#800080"><tt>input</tt></font> can
 match an empty string of input (no tokens). We write the rules
 this way because it is legitimate to type `Ctrl-d' right after
 you start the calculator. It's conventional to put an empty
 alternative first and write the comment <font color="#008080"
-size="2" face="Courier New">-- /* empty */</font> in it.</p>
+face="Courier New">-- /* empty */</font> in it.</p>
 
-<p>The second alternate rule (<font color="#800080" size="2"
-face="Courier New">input line</font>) handles all nontrivial
-input. It means, &quot;After reading any number of lines, read
-one more line if possible&quot;. The left recursion makes this
-rule into a loop. Since the first alternative matches empty
-input, the loop can be executed zero or more times.</p>
+<p>The second alternate rule (<font color="#800080"><tt>input
+line</tt></font>) handles all nontrivial input. It means,
+&quot;After reading any number of lines, read one more line if
+possible&quot;. The left recursion makes this rule into a loop.
+Since the first alternative matches empty input, the loop can be
+executed zero or more times.</p>
 
-<p>The parser routine <font color="#008080" size="2"
-face="Courier New"><em>parse</em></font> continues to process
-input until a grammatical error is seen or the lexical analyzer
-says there are no more input tokens; we will arrange for the
-latter to happen at end of file.</p>
+<p>The parser routine <font color="#008080"><em><tt>parse</tt></em></font>
+continues to process input until a grammatical error is seen or
+the lexical analyzer says there are no more input tokens; we will
+arrange for the latter to happen at end of file.</p>
 
 <h4>Explanation of 'line'</h4>
 
-<p>Now consider the definition of <font color="#800080" size="2"
-face="Courier New">line</font>:</p>
+<p>Now consider the definition of <font color="#800080"><tt>line</tt></font>:</p>
 
 <blockquote>
     <pre><font color="#800080">line</font><font color="#0000FF">: </font><font
@@ -230,29 +220,27 @@ this means that rpcalc accepts a blank line (and ignores it,
 since there is no action). The second alternative is an
 expression followed by a newline. This is the alternative that
 makes rpcalc useful. The semantic value of the <font
-color="#800080" size="2" face="Courier New">exp</font> grouping
-is the value of <font color="#0000FF" size="2" face="Courier New">$1</font>
-because the <font color="#800080" size="2" face="Courier New">exp</font>
-in question is the first symbol in the alternative. The action
-prints this value, which is the result of the computation the
-user asked for.</p>
+color="#800080"><tt>exp</tt></font> grouping is the value of <font
+color="#0000FF"><tt>$1</tt></font> because the <font
+color="#800080"><tt>exp</tt></font> in question is the first
+symbol in the alternative. The action prints this value, which is
+the result of the computation the user asked for.</p>
 
 <p>This action is unusual because it does not assign a value to <font
-color="#0000FF" size="2" face="Courier New">$$</font>. As a
-consequence, the semantic value associated with the <font
-color="#800080" size="2" face="Courier New">line</font> is
-uninitialized (its value will be unpredictable). This would be a
-bug if that value were ever used, but we don't use it: once
+color="#0000FF"><tt>$$</tt></font>. As a consequence, the
+semantic value associated with the <font color="#800080"><tt>line</tt></font>
+is uninitialized (its value will be unpredictable). This would be
+a bug if that value were ever used, but we don't use it: once
 rpcalc has printed the value of the user's input line, that value
 is no longer needed.</p>
 
 <h4>Explanation of 'expr'</h4>
 
-<p>The <font color="#800080" size="2" face="Courier New">exp</font>
-grouping has several rules, one for each kind of expression. The
-first rule handles the simplest expressions: those that are just
-numbers. The second handles an addition-expression, which looks
-like two expressions followed by a plus-sign. The third handles
+<p>The <font color="#800080"><tt>exp</tt></font> grouping has
+several rules, one for each kind of expression. The first rule
+handles the simplest expressions: those that are just numbers.
+The second handles an addition-expression, which looks like two
+expressions followed by a plus-sign. The third handles
 subtraction, and so on.</p>
 
 <blockquote>
@@ -272,10 +260,9 @@ color="#0000FF"> $2 }
     ;</font></pre>
 </blockquote>
 
-<p>We have used <font color="#0000FF" size="3" face="Courier New">|</font>
-to join all the rules for <font color="#800080" size="2"
-face="Courier New">exp</font>, but we could equally well have
-written them separately:</p>
+<p>We have used <font color="#0000FF"><tt>|</tt></font> to join
+all the rules for <font color="#800080"><tt>exp</tt></font>, but
+we could equally well have written them separately:</p>
 
 <blockquote>
     <pre><font color="#800080">exp</font><font color="#0000FF">: </font><font
@@ -296,24 +283,21 @@ color="#008080">-</font><font color="#0000FF"> $2 } ;</font>
 <p>Most of the rules have <a href="actions.html">actions</a> that
 compute the value of the expression in terms of the value of its
 parts. For example, in the rule for addition, <font
-color="#0000FF" size="2" face="Courier New">$1</font> refers to
-the first component <font color="#800080" size="2"
-face="Courier New">exp</font> and <font color="#0000FF" size="2"
-face="Courier New">$2</font> refers to the second one. The third
-component, <font color="#FF0000" size="2" face="Courier New">'+'</font>,
-has no meaningful associated semantic value, but if it had one
-you could refer to it as <font color="#0000FF" size="2"
-face="Courier New">$3</font>. When <font color="#008080" size="2"
-face="Courier New"><em>parse</em></font> recognizes a sum
-expression using this rule, the sum of the two subexpressions'
-values is produced as the value of the entire expression.</p>
+color="#0000FF"><tt>$1</tt></font> refers to the first component <font
+color="#800080"><tt>exp</tt></font> and <font color="#0000FF"><tt>$2</tt></font>
+refers to the second one. The third component, <font
+color="#FF0000"><tt>'+'</tt></font>, has no meaningful associated
+semantic value, but if it had one you could refer to it as <font
+color="#0000FF"><tt>$3</tt></font>. When <font color="#008080"><em><tt>parse</tt></em></font>
+recognizes a sum expression using this rule, the sum of the two
+subexpressions' values is produced as the value of the entire
+expression.</p>
 
 <p>You don't have to give an action for every rule. When a rule
 has no action, <em>geyacc</em> by default copies the value of <font
-color="#0000FF" size="2" face="Courier New">$1</font> into <font
-color="#0000FF" size="2" face="Courier New">$$</font>. This is
-what happens in the first rule (the one that uses <font
-color="#FF0000" size="2" face="Courier New">NUM</font>).</p>
+color="#0000FF"><tt>$1</tt></font> into <font color="#0000FF"><tt>$$</tt></font>.
+This is what happens in the first rule (the one that uses <font
+color="#FF0000"><tt>NUM</tt></font>).</p>
 
 <p>The formatting shown here is the recommended convention, but <em>geyacc</em>
 does not require it. You can add or change whitespace as much as
@@ -352,31 +336,30 @@ tokens by calling the lexical analyzer.</p>
 
 <p>Only a simple lexical analyzer is needed for the <font
 size="2">RPN</font> calculator. This lexical analyzer skips
-blanks and tabs, then reads in numbers as <font color="#008080"
-size="2" face="Courier New"><em>DOUBLE</em></font> and returns
-them as <font color="#FF0000" size="2" face="Courier New">NUM</font>
+blanks and tabs, then reads in numbers as <font color="#008080"><em><tt>DOUBLE</tt></em></font>
+and returns them as <font color="#FF0000"><tt>NUM</tt></font>
 tokens. Any other character that isn't part of a number is a
 separate token. Note that the token-code for such a
 single-character token is the character itself.</p>
 
-<p>The lexical analyzer routine <font color="#008080" size="2"
-face="Courier New"><em>read_token</em></font> stores into <font
-color="#008080" size="2" face="Courier New"><em>last_token </em></font>a
+<p>The lexical analyzer routine <font color="#008080"><em><tt>read_token</tt></em></font>
+stores into <font color="#008080"><em><tt>last_token</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>a
 numeric code which represents a token type. The same text used in
 <em>geyacc</em> rules to stand for this token type is also an
 Eiffel expression for the numeric code for the type. This works
 in two ways. If the token type is a character literal, then its
-numeric code is the ASCII code for that character; the same
-character literal can be used in the lexical analyzer to express
-the number. If the token type is an identifier, that identifier
-is defined by <em>geyacc</em> as an integer constant feature with
-the appropriate number. In this example, therefore, <font
-color="#FF0000" face="Courier New">NUM</font> becomes an integer
-constant for <font color="#008080" size="2" face="Courier New"><em>read_token</em></font>
+numeric code is the <font size="2">ASCII</font> code for that
+character; the same character literal can be used in the lexical
+analyzer to express the number. If the token type is an
+identifier, that identifier is defined by <em>geyacc</em> as an
+integer constant feature with the appropriate number. In this
+example, therefore, <font color="#FF0000"><tt>NUM</tt></font>
+becomes an integer constant for <font color="#008080"><em><tt>read_token</tt></em></font>
 to use.</p>
 
 <p>The semantic value of the token (if it has one) is made
-available in <font color="#008080" size="2" face="Courier New"><em>last_value</em></font>,
+available in <font color="#008080"><em><tt>last_value</tt></em></font>,
 which is where the <em>geyacc</em> parser will look for it.</p>
 
 <p>A token type code of zero is returned if the end-of-file is
@@ -444,24 +427,23 @@ indicating the end of the input.)</p>
 
 <h4>The Error Reporting Routine</h4>
 
-<p>When <font color="#008080" size="2" face="Courier New"><em>parse</em></font>
+<p>When <font color="#008080"><em><tt>parse</tt></em></font>
 detects a syntax error, it calls the error reporting routine <font
-color="#008080" size="2" face="Courier New"><em>report_error</em></font>
-to print an error message (usually but not always &quot;parse
-error&quot;). It is up to the programmer to redefine <font
-color="#008080" size="2" face="Courier New"><em>report_error</em></font>
+color="#008080"><em><tt>report_error</tt></em></font> to print an
+error message (usually but not always &quot;parse error&quot;).
+It is up to the programmer to redefine <font color="#008080"><em><tt>report_error</tt></em></font>
 when needed.</p>
 
-<p>After <font color="#008080" size="2" face="Courier New"><em>report_error</em></font>
+<p>After <font color="#008080"><em><tt>report_error</tt></em></font>
 returns, the <em>geyacc</em> parser may recover from the error
 and continue parsing if the grammar contains a suitable <a
 href="error.html">error rule</a>. Otherwise, <font
-color="#008080" size="2" face="Courier New"><em>parse</em></font>
-terminates with <font color="#008080" size="2" face="Courier New"><em>syntax_error</em></font>
-being set to true. There is no error rules in this example, so
-any invalid input will cause the calculator program to exit. This
-is not clean behavior for a real calculator, but it is adequate
-in the first example.</p>
+color="#008080"><em><tt>parse</tt></em></font> terminates with <font
+color="#008080"><em><tt>syntax_error</tt></em></font> being set
+to true. There is no error rules in this example, so any invalid
+input will cause the calculator program to exit. This is not
+clean behavior for a real calculator, but it is adequate in the
+first example.</p>
 
 <h2>Infix Notation Calculator: 'calc'</h2>
 
@@ -469,9 +451,9 @@ in the first example.</p>
 postfix. Infix notation involves the concept of operator
 precedence and the need for parentheses nested to arbitrary
 depth. Here is the <em>geyacc</em> code for<font color="#800000"
-size="2" face="Courier New"> calc.y</font>, an infix desk-top
-calculator (the source code for this calculator can be found in <font
-color="#800000" size="2" face="Courier New">$GOBO\example\parse\calc</font>).</p>
+size="2" face="Courier New"> </font><font color="#800000"><tt>calc.y</tt></font>,
+an infix desk-top calculator (the source code for this calculator
+can be found in <font color="#800000"><tt>$GOBO\example\parse\calc</tt></font>).</p>
 
 <blockquote>
     <pre><font color="#0000FF">%{
@@ -570,41 +552,37 @@ color="#0000FF"> $2 }
 <em><strong>end</strong></em> -- class CALC</font></pre>
 </blockquote>
 
-<p>The routine <font color="#008080" size="2" face="Courier New"><em>read_token</em></font>
+<p>The routine <font color="#008080"><em><tt>read_token</tt></em></font>
 is the same as before. There are two important new features shown
 in this code.</p>
 
 <p>In the first section (<em>geyacc</em> declarations), <font
-color="#0000FF" size="2" face="Courier New">%left</font> declares
-token types and says they are left-associative operators. The
-declarations <font color="#0000FF" size="2" face="Courier New">%left</font>
-and <font color="#0000FF" size="2" face="Courier New">%right</font>
-(right associativity) take the place of <font color="#0000FF"
-size="2" face="Courier New">%token</font> which is used to
-declare a token type name without associativity. (These tokens
-are single-character literals, which ordinarily don't need to be
-declared. We declare them here to specify the associativity.)</p>
+color="#0000FF"><tt>%left</tt></font> declares token types and
+says they are left-associative operators. The declarations <font
+color="#0000FF"><tt>%left</tt></font> and <font color="#0000FF"><tt>%right</tt></font>
+(right associativity) take the place of <font color="#0000FF"><tt>%token</tt></font>
+which is used to declare a token type name without associativity.
+(These tokens are single-character literals, which ordinarily
+don't need to be declared. We declare them here to specify the
+associativity.)</p>
 
 <p><a href="precedence.html">Operator precedence</a> is
 determined by the line ordering of the declarations; the higher
 the line number of the declaration (lower on the page or screen),
 the higher the precedence. Hence, exponentiation has the highest
-precedence, unary minus (<font color="#FF0000" size="2"
-face="Courier New">NEG</font>) is next, followed by <font
-color="#FF0000" size="2" face="Courier New">'*'</font> and <font
-color="#FF0000" size="2" face="Courier New">'/'</font>, and so
-on.</p>
+precedence, unary minus (<font color="#FF0000"><tt>NEG</tt></font>)
+is next, followed by <font color="#FF0000"><tt>'*'</tt></font>
+and <font color="#FF0000"><tt>'/'</tt></font>, and so on.</p>
 
 <p>The other important new feature is the <a
-href="precedence.html#context"><font color="#0000FF" size="2"
-face="Courier New">%prec</font></a> in the grammar section for
-the unary minus operator. The <font color="#0000FF" size="2"
-face="Courier New">%prec</font> simply instructs <em>geyacc</em>
-that the rule <font color="#FF0000" size="2" face="Courier New">'-'</font><font
-size="2" face="Courier New"> </font><font color="#FF0000"
-size="2" face="Courier New">exp</font> has the same precedence as
-<font color="#FF0000" size="2" face="Courier New">NEG </font><font
-face="Courier New">-</font> in this case the next-to-highest.</p>
+href="precedence.html#context"><font color="#0000FF"><tt>%prec</tt></font></a>
+in the grammar section for the unary minus operator. The <font
+color="#0000FF"><tt>%prec</tt></font> simply instructs <em>geyacc</em>
+that the rule <font color="#FF0000"><tt>'-'</tt></font><tt> </tt><font
+color="#FF0000"><tt>exp</tt></font> has the same precedence as <font
+color="#FF0000" face="Times New Roman"><tt>NEG</tt></font><font
+color="#FF0000" size="2" face="Courier New"> </font><font
+face="Symbol">-</font> in this case the next-to-highest.</p>
 
 <h2>Simple Error Recovery</h2>
 
@@ -612,19 +590,16 @@ face="Courier New">-</font> in this case the next-to-highest.</p>
 href="error.html"><em>error recovery</em></a> <font
 face="Courier New">-</font> how to continue parsing after the
 parser detects a syntax error. All we have handled is error
-reporting with feature <font color="#008080" size="2"
-face="Courier New"><em>report_error</em></font>. Recall that by
-default <font color="#008080" size="2" face="Courier New"><em>parse</em></font>
-terminates after calling <font color="#008080" size="2"
-face="Courier New"><em>report_error</em></font>. This means that
-an erroneous input line causes the calculator program to exit.
-Now we show how to rectify this deficiency.</p>
+reporting with feature <font color="#008080"><em><tt>report_error</tt></em></font>.
+Recall that by default <font color="#008080"><em><tt>parse</tt></em></font>
+terminates after calling <font color="#008080"><em><tt>report_error</tt></em></font>.
+This means that an erroneous input line causes the calculator
+program to exit. Now we show how to rectify this deficiency.</p>
 
 <p>The <em>geyacc</em> language itself includes the reserved word
-<font color="#0000FF" size="2" face="Courier New">error</font>,
-which may be included in the grammar rules. In the example below
-it has been added to one of the alternatives for <font
-color="#800080" size="2" face="Courier New">line</font>:</p>
+<font color="#0000FF"><tt>error</tt></font>, which may be
+included in the grammar rules. In the example below it has been
+added to one of the alternatives for <font color="#800080"><tt>line</tt></font>:</p>
 
 <blockquote>
     <pre><font color="#800080">line</font><font color="#0000FF">: </font><font
@@ -643,14 +618,12 @@ color="#0000FF"> }
 <p>This addition to the grammar allows for simple error recovery
 in the event of a parse error. If an expression that cannot be
 evaluated is read, the error will be recognized by the third rule
-for <font color="#800080" size="2" face="Courier New">line</font>,
-and parsing will continue. (The <font color="#008080" size="2"
-face="Courier New"><em>report_error</em></font> routine is still
-called upon to print its message as well.) The action executes
-the routine <font color="#008080" size="2" face="Courier New"><em>recover</em></font>,
-a feature inherited from <font color="#008080" size="2"
-face="Courier New"><em>YY_PARSER_SKELETON</em></font>; its
-meaning is that error recovery is complete.</p>
+for <font color="#800080"><tt>line</tt></font>, and parsing will
+continue. (The <font color="#008080"><em><tt>report_error</tt></em></font>
+routine is still called upon to print its message as well.) The
+action executes the routine <font color="#008080"><em><tt>recover</tt></em></font>,
+a feature inherited from <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>;
+its meaning is that error recovery is complete.</p>
 
 <p>This form of error recovery deals with syntax errors. There
 are other kinds of errors; for example, division by zero, which
@@ -674,7 +647,8 @@ rest of the current line of input.</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

@@ -19,15 +19,13 @@ adapt existing classes, the </font><a href="inheritance.html"><font
 size="3">inheritance mechanism</font></a><font size="3">
 sometimes fails to fulfill its job when dealing with kernel
 classes. This is typically the case for basic types such as </font><font
-color="#008080" size="2" face="Courier New"><em>INTEGER</em></font><font
-size="3"> or </font><font color="#008080" size="2"
-face="Courier New"><em>CHARACTER</em></font><font size="3">, or
-optimized classes such as </font><font color="#008080" size="2"
-face="Courier New"><em>ARRAY</em></font><font size="3"> or </font><font
-color="#008080" size="2" face="Courier New"><em>STRING</em></font><font
-size="3">.</font><font size="2"> </font><font size="3">To get
-around this problem, another technique using client relationship
-can be adopted.</font></p>
+color="#008080"><em><tt>INTEGER</tt></em></font><font size="3">
+or </font><font color="#008080"><em><tt>CHARACTER</tt></em></font><font
+size="3">, or optimized classes such as </font><font
+color="#008080"><em><tt>ARRAY</tt></em></font><font size="3"> or </font><font
+color="#008080"><em><tt>STRING</tt></em></font><font size="3">.</font><font
+size="2"> </font><font size="3">To get around this problem,
+another technique using client relationship can be adopted.</font></p>
 
 <h2>Description</h2>
 
@@ -35,10 +33,9 @@ can be adopted.</font></p>
 object-oriented environment, consists in writing features which
 need to be adapted in a client class instead of in a descendant
 class. For example in <font size="2">ELKS '95</font> there is no
-way to get a <font color="#008080" size="2" face="Courier New"><em>CHARACTER</em></font>
+way to get a <font color="#008080"><em><tt>CHARACTER</tt></em></font>
 knowing its <font size="2">ASCII</font> code. What is needed is
-an extra routine in class <font color="#008080" size="2"
-face="Courier New"><em>INTEGER</em></font>:</p>
+an extra routine in class <font color="#008080"><em><tt>INTEGER</tt></em></font>:</p>
 
 <blockquote>
     <pre><font color="#008080"><em>to_character</em>: <em>CHARACTER</em>
@@ -51,13 +48,14 @@ face="Courier New"><em>INTEGER</em></font>:</p>
 </blockquote>
 
 <p>Some Eiffel compilers already support this routine in class <font
-color="#008080" size="2" face="Courier New"><em>INTEGER</em></font>.
-The other compilers provide other means to get the same result.
-But class <font color="#008080" size="2" face="Courier New"><em>INTEGER
-</em></font>is half built-in in most compilers, so adapting this
-class through inheritance would result in run-time misbehaviors.
-The solution adopted here is to introduce a facility class <font
-color="#008080" size="2" face="Courier New"><em>KL_INTEGER_ROUTINES</em></font>
+color="#008080"><em><tt>INTEGER</tt></em></font>. The other
+compilers provide other means to get the same result. But class <font
+color="#008080"><em><tt>INTEGER</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>is
+half built-in in most compilers, so adapting this class through
+inheritance would result in run-time misbehaviors. The solution
+adopted here is to introduce a facility class <font
+color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>
 containing the following routine:</p>
 
 <blockquote>
@@ -71,12 +69,11 @@ containing the following routine:</p>
 </blockquote>
 
 <p>and other such adapted routines to be applied to <font
-color="#008080" size="2" face="Courier New"><em>INTEGER</em></font>s.
-As with the inheritance technique, there will be a different
-cluster for each supported Eiffel compiler, and each such cluster
-will have the same set of classes. These classes are facility
-classes, such as <font color="#008080" size="2"
-face="Courier New"><em>KL_INTEGER_ROUTINES</em></font>,
+color="#008080"><em><tt>INTEGER</tt></em></font>s. As with the
+inheritance technique, there will be a different cluster for each
+supported Eiffel compiler, and each such cluster will have the
+same set of classes. These classes are facility classes, such as <font
+color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>,
 associated with a given kernel class. They contain a set of
 routines whose first argument is the object that routine should
 be applied to.</p>
@@ -111,9 +108,9 @@ to its features, as shown below:</p>
 <em><strong>end</strong></em> -- class FOO</font></pre>
 </blockquote>
 
-<p>(Note that all features of <font color="#008080" size="2"
-face="Courier New"><em>KL_INTEGER_ROUTINES </em></font>have been
-made secret since this class is inherited for implementation
+<p>(Note that all features of <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>have
+been made secret since this class is inherited for implementation
 only.) The disadvantage of this method is that it rapidly pollute
 the name space in the application classes. As a consequence,
 facility classes are also often used as expanded in local
@@ -138,19 +135,17 @@ entities:</p>
 <em><strong>end</strong></em> -- class FOO</font></pre>
 </blockquote>
 
-<p>Some Eiffel compilers will even optimized the above code by
-inlining the call to <font color="#008080" size="2"
-face="Courier New"><em>to_character</em></font> and hence
-avoiding the (implicit) creation of the expanded object.
-Unfortunately, <em>expanded types</em> are not properly supported
-by all Eiffel compilers, making it impossible to used mechanism
-in portable code. To work around this problem and to avoid having
-to create an instance of these <font color="#008080" size="2"
-face="Courier New"><em>_ROUTINES</em></font> classes &quot;by
-hand&quot; each time they are used, they can accessed through
-once functions. For example, for class <font color="#008080"
-size="2" face="Courier New"><em>KL_INTEGER_ROUTINES</em></font>,
-the following class will be provided:</p>
+<p>Some Eiffel compilers will even optimized the code above by
+inlining the call to <font color="#008080"><em><tt>to_character</tt></em></font>
+and hence avoiding the (implicit) creation of the expanded
+object. Unfortunately, <em>expanded types</em> are not properly
+supported by all Eiffel compilers, making it impossible to used
+mechanism in portable code. To work around this problem and to
+avoid having to create an instance of these <font color="#008080"><em><tt>_ROUTINES</tt></em></font>
+classes &quot;by hand&quot; each time they are used, they can
+accessed through once functions. For example, for class <font
+color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, the
+following class will be provided:</p>
 
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_SHARED_INTEGER_ROUTINES</em>
@@ -168,7 +163,7 @@ the following class will be provided:</p>
 <em><strong>end</strong></em> -- class KL_SHARED_INTEGER_ROUTINES</font></pre>
 </blockquote>
 
-<p>and class <font color="#008080" size="2" face="Courier New"><em>FOO</em></font>
+<p>and class <font color="#008080"><em><tt>FOO</tt></em></font>
 will become:</p>
 
 <blockquote>
@@ -221,7 +216,8 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

@@ -23,8 +23,8 @@ an excerpt of the specification for a program which deletes all
 occurrences of &quot;<tt>zap me</tt>&quot; from its input:</p>
 
 <blockquote>
-    <p><font color="#0000FF"><tt>%%</tt></font><tt><br>
-    </tt><font color="#FF0000"><tt>&quot;zap me&quot;</tt></font></p>
+    <pre><font color="#0000FF">%%</font>
+<font color="#FF0000">&quot;zap me&quot;</font></pre>
 </blockquote>
 
 <p>It will copy all other characters in the input to the output
@@ -52,64 +52,57 @@ for the next rule&quot;. See below for an illustration.</p>
 
 <p>Actions can include arbitrary Eiffel code. There are a number
 of special features, inherited from class <a href="skeleton.html"><font
-color="#008080" size="2" face="Courier New"><em>YY_SCANNER</em></font></a>,
-which can be used in actions:</p>
+color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>, which
+can be used in actions:</p>
 
 <dl>
     <dt><a href="skeleton.html#echo" name="echo"><font
-        color="#008080" size="2" face="Courier New"><em>echo</em></font></a></dt>
-    <dd>Copy <font color="#008080" size="2" face="Courier New"><em>text</em></font>
+        color="#008080"><em><tt>echo</tt></em></font></a></dt>
+    <dd>Copy <font color="#008080"><em><tt>text</tt></em></font>
         to the scanner's output file.</dd>
     <dt><a href="skeleton.html#flush_input_buffer"
-        name="flush_input_buffer"><font color="#008080" size="2"
-        face="Courier New"><em>flush_input_buffer</em></font></a></dt>
+        name="flush_input_buffer"><font color="#008080"><em><tt>flush_input_buffer</tt></em></font></a></dt>
     <dd>Flush the scanner's internal buffer so that the next time
         the scanner attempts to match a token it will first
         refill the buffer, unless end of file has been found.</dd>
     <dt><a href="skeleton.html#input_buffer" name="input_buffer"><font
-        color="#008080" size="2" face="Courier New"><em>input_buffer</em></font></a><font
-        color="#008080" size="2" face="Courier New">: <em>YY_BUFFER</em></font></dt>
+        color="#008080"><em><tt>input_buffer</tt></em></font></a><font
+        color="#008080"><tt>: </tt><em><tt>YY_BUFFER</tt></em></font></dt>
     <dd>Input buffer of the scanner. By default the input buffer
         is filled from the standard input. To avoid unexpected
-        behaviors, the routine <font color="#008080" size="2"
-        face="Courier New"><em>set_input_buffer</em></font>
+        behaviors, the routine <font color="#008080"><em><tt>set_input_buffer</tt></em></font>
         should be used to switch to other input buffers.</dd>
     <dt><a href="skeleton.html#last_character"
-        name="last_character"><font color="#008080" size="2"
-        face="Courier New"><em>last_character</em></font></a><font
-        color="#008080" size="2" face="Courier New">:<em>
-        CHARACTER</em></font></dt>
+        name="last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> CHARACTER</tt></em></font></dt>
     <dd><font size="3">Last character read by </font><font
-        color="#008080" size="2" face="Courier New"><em>read_character</em></font>.</dd>
+        color="#008080"><em><tt>read_character</tt></em></font>.</dd>
     <dt><a href="skeleton.html#last_token" name="last_token"><font
-        color="#008080" size="2" face="Courier New"><em>last_token</em></font></a><font
-        color="#008080" size="2" face="Courier New">:<em> INTEGER</em></font></dt>
+        color="#008080"><em><tt>last_token</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Code of the last token read. When this attribute is given
-        a non-negative value the procedure <font color="#008080"
-        size="2" face="Courier New"><em>read_token</em></font>
+        a non-negative value the procedure <font color="#008080"><em><tt>read_token</tt></em></font>
         stops, giving the opportunity to its caller (e.g. a
         parser routine) to inspect this code. Each time <font
-        color="#008080" size="2" face="Courier New"><em>read_token</em></font>
-        is called again it continues processing tokens from where
-        it last left off until it either reaches the end of the
-        file or <font color="#008080" size="2" face="Courier New"><em>last_token</em></font>
+        color="#008080"><em><tt>read_token</tt></em></font> is
+        called again it continues processing tokens from where it
+        last left off until it either reaches the end of the file
+        or <font color="#008080"><em><tt>last_token</tt></em></font>
         is given a non-negative value again.</dd>
     <dt><a href="skeleton.html#less" name="less"><font
-        color="#008080" size="2" face="Courier New"><em>less</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>n</em>:<em>
-        INTEGER</em>)</font></dt>
+        color="#008080"><em><tt>less</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>n</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
     <dd>Return all but the first <font color="#008080" size="2"
         face="Courier New"><em>n</em></font> characters of the
         current token back to the input stream, where they will
         be rescanned when the scanner looks for the next match. <font
-        color="#008080" size="2" face="Courier New"><em>text</em></font>
-        and <font color="#008080" size="2" face="Courier New"><em>text_count</em></font>
-        are adjusted appropriately (e.g., <font color="#008080"
-        size="2" face="Courier New"><em>text_count</em></font>
-        will now be equal to <font color="#008080" size="2"
-        face="Courier New"><em>n</em></font>). For example, on
-        the input &quot;<tt>foobar</tt>&quot; the following will
-        write out &quot;<tt>foobarbar</tt>&quot;:<br>
+        color="#008080"><em><tt>text</tt></em></font> and <font
+        color="#008080"><em><tt>text_count</tt></em></font> are
+        adjusted appropriately (e.g., <font color="#008080"><em><tt>text_count</tt></em></font>
+        will now be equal to <font color="#008080"><em><tt>n</tt></em></font>).
+        For example, on the input &quot;<tt>foobar</tt>&quot; the
+        following will write out &quot;<tt>foobarbar</tt>&quot;:<br>
         <dl>
             <dd><pre><font color="#0000FF">%%</font>
 <font color="#FF0000">foobar</font>    <font color="#008080"><em>echo</em>;<em> less </em>(<em>3</em>)</font>
@@ -117,22 +110,20 @@ which can be used in actions:</p>
             </dd>
         </dl>
     </dd>
-    <dd>An argument of <font size="2" face="Courier New"><em>0</em></font>
-        to <font color="#008080" size="2" face="Courier New"><em>less</em></font>
-        will cause the entire current input string to be scanned
-        again. Unless the way the scanner subsequently process
-        its input has been changed (using <font color="#008080"
-        size="2" face="Courier New"><em>set_start_condition</em></font>,
+    <dd>An argument of <em><tt>0</tt></em> to <font
+        color="#008080"><em><tt>less</tt></em></font> will cause
+        the entire current input string to be scanned again.
+        Unless the way the scanner subsequently process its input
+        has been changed (using <font color="#008080"><em><tt>set_start_condition</tt></em></font>,
         for example), this will result in an endless loop.</dd>
     <dt><a href="skeleton.html#more" name="more"><font
-        color="#008080" size="2" face="Courier New"><em>more</em></font></a></dt>
+        color="#008080"><em><tt>more</tt></em></font></a></dt>
     <dd>Tell the scanner that the next time it matches a rule,
         the corresponding token should be appended onto the
-        current value of<em> </em><font color="#008080" size="2"
-        face="Courier New"><em>text</em></font> rather than
-        replacing it. For example, given the input &quot;<tt>mega-kludge</tt>&quot;
-        the following will write &quot;<tt>mega-mega-kludge</tt>&quot;
-        to the output:<br>
+        current value of<em> </em><font color="#008080"><em><tt>text</tt></em></font>
+        rather than replacing it. For example, given the input
+        &quot;<tt>mega-kludge</tt>&quot; the following will write
+        &quot;<tt>mega-mega-kludge</tt>&quot; to the output:<br>
         <dl>
             <dd><pre><font color="#0000FF">%%</font>
 <font color="#FF0000">mega-</font>      <font color="#008080"><em>echo</em>;<em> more</em></font>
@@ -143,26 +134,23 @@ which can be used in actions:</p>
     <dd>First &quot;<tt>mega-</tt>&quot; is matched and echoed to
         the output. Then &quot;<tt>kludge</tt>&quot; is matched,
         but the previous &quot;<tt>mega-</tt>&quot; is still
-        hanging around at the beginning of <font color="#008080"
-        size="2" face="Courier New"><em>text</em></font> so the <font
-        color="#008080" size="2" face="Courier New"><em>echo</em></font>
+        hanging around at the beginning of <font color="#008080"><em><tt>text</tt></em></font>
+        so the <font color="#008080"><em><tt>echo</tt></em></font>
         for the &quot;<tt>kludge</tt>&quot; rule will actually
         write &quot;<tt>mega-kludge</tt>&quot;.</dd>
     <dt><a href="skeleton.html#output_file" name="output_file"><font
-        color="#008080" size="2" face="Courier New"><em>output_file</em></font></a><font
-        color="#008080" size="2" face="Courier New">:<em> FILE</em></font></dt>
-    <dd>File to which <font color="#008080" size="2"
-        face="Courier New"><em>echo</em></font> actions are done.
-        It is set to the standard output by default and can be
-        reassigned using feature <font color="#008080" size="2"
-        face="Courier New"><em>set_output_file</em></font>.</dd>
+        color="#008080"><em><tt>output_file</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> FILE</tt></em></font></dt>
+    <dd>File to which <font color="#008080"><em><tt>echo</tt></em></font>
+        actions are done. It is set to the standard output by
+        default and can be reassigned using feature <font
+        color="#008080"><em><tt>set_output_file</tt></em></font>.</dd>
     <dt><a href="skeleton.html#read_character"
-        name="read_character"><font color="#008080" size="2"
-        face="Courier New"><em>read_character</em></font></a></dt>
+        name="read_character"><font color="#008080"><em><tt>read_character</tt></em></font></a></dt>
     <dd>Read the next character from the input stream. Make the
-        result available in <font color="#008080" size="2"
-        face="Courier New"><em>last_character</em></font>. For
-        example, the following is one way to eat up C comments:<dl>
+        result available in <font color="#008080"><em><tt>last_character</tt></em></font>.
+        For example, the following is one way to eat up C
+        comments:<dl>
             <dd><pre>
 <font color="#0000FF">%%</font>
 <font color="#FF0000">&quot;/*&quot;</font>  <font
@@ -199,21 +187,20 @@ color="#0000FF">{</font>
     </dd>
     <dd>This feature should be used with care since it bypasses
         the pattern-matching <font size="2">DFA</font> engine.</dd>
-    <dt><a name="reject"><font color="#008080" size="2"
-        face="Courier New"><em>reject</em></font></a></dt>
+    <dt><a name="reject"><font color="#008080"><em><tt>reject</tt></em></font></a></dt>
     <dd>Direct the scanner to proceed on to the &quot;second
         best&quot; rule which matched the input (or a prefix of
         the input). The rule is chosen as described in <a
         href="matching_rules.html">Matching Rules</a>, and <font
-        color="#008080" size="2" face="Courier New"><em>text</em></font>
-        and <font color="#008080" size="2" face="Courier New"><em>text_count</em></font>
+        color="#008080"><em><tt>text</tt></em></font> and <font
+        color="#008080"><em><tt>text_count</tt></em></font>
         return the appropriate values. It may either be one which
         matched as much text as the originally chosen rule but
         came later in the <em>gelex</em> input file, or one which
         matched less text. For example, the following will both
         count the words in the input and call the routine <font
-        color="#008080" size="2" face="Courier New"><em>special</em></font>
-        whenever &quot;<tt>frob</tt>&quot; is seen:<br>
+        color="#008080"><em><tt>special</tt></em></font> whenever
+        &quot;<tt>frob</tt>&quot; is seen:<br>
         <dl>
             <dd><pre><font color="#0000FF">%%</font>
 <font color="#FF0000">frob</font>         <font color="#008080"><em>special</em>;<em> reject</em></font>
@@ -223,16 +210,14 @@ color="#0000FF">{</font>
     special </em><em><strong>is do</strong></em><em> ... </em><em><strong>end</strong></em></font></pre>
             </dd>
         </dl>
-        <p>Without the <font color="#008080" size="2"
-        face="Courier New"><em>reject</em></font>, any &quot;<tt>frob</tt>&quot;'s
-        in the input would not be counted as words, since the
-        scanner normally executes only one action per token.
-        Multiple <font color="#008080" size="2"
-        face="Courier New"><em>reject</em></font>'s are allowed,
-        each one finding the next best choice to the currently
-        active rule. For example, when the following scanner
-        scans the token &quot;<tt>abcd</tt>&quot;, it will write
-        &quot;<tt>abcdabcaba</tt>&quot; to the output:</p>
+        <p>Without the <font color="#008080"><em><tt>reject</tt></em></font>,
+        any &quot;<tt>frob</tt>&quot;'s in the input would not be
+        counted as words, since the scanner normally executes
+        only one action per token. Multiple <font color="#008080"><em><tt>reject</tt></em></font>'s
+        are allowed, each one finding the next best choice to the
+        currently active rule. For example, when the following
+        scanner scans the token &quot;<tt>abcd</tt>&quot;, it
+        will write &quot;<tt>abcdabcaba</tt>&quot; to the output:</p>
         <dl>
             <dd><pre><font color="#0000FF">%%</font>
 <font color="#FF0000">a </font>       <font color="#0000FF">|</font>
@@ -245,120 +230,106 @@ color="#0000FF">{</font>
     </dd>
     <dd>(The first three rules share the fourth's action since
         they use the special '<font color="#0000FF"><tt>|</tt></font>'
-        action.) <font color="#008080" size="2"
-        face="Courier New"><em>reject</em></font> is a
-        particularly expensive feature in terms of scanner
+        action.) <font color="#008080"><em><tt>reject</tt></em></font>
+        is a particularly expensive feature in terms of scanner
         performance. If it is used in any of the scanner's
-        actions the <font color="#0000FF" size="2"
-        face="Courier New">%option</font><font size="2"
-        face="Courier New"> </font><a href="options.html#reject"><font
-        color="#800000" size="2" face="Courier New">reject</font></a>
+        actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#reject"><font color="#800000"><tt>reject</tt></font></a>
         will have to be set and it will slow down all of the
-        scanner's matching. Furthermore, <font color="#008080"
-        size="2" face="Courier New"><em>reject</em></font> cannot
-        be used with the <font color="#0000FF"><tt>%option</tt></font><tt>
+        scanner's matching. Furthermore, <font color="#008080"><em><tt>reject</tt></em></font>
+        cannot be used with the <font color="#0000FF"><tt>%option</tt></font><tt>
         </tt><a href="options.html#full"><font color="#800000"><tt>full</tt></font></a>
         and this feature is only available to descendants of
-        class <font color="#008080" size="2" face="Courier New"><em>YY_COMPRESSED_SCANNER_SKELETON</em></font>.</dd>
+        class <font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>.</dd>
     <dt><a href="skeleton.html#set_input_buffer"
-        name="set_input_buffer"><font color="#008080" size="2"
-        face="Courier New"><em>set_input_buffer</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>a_buffer</em>:<em>
-        </em><em><strong>like</strong></em><em> input_buffer</em>)</font></dt>
+        name="set_input_buffer"><font color="#008080"><em><tt>set_input_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_buffer</tt></em><tt>:</tt><em><tt>
+        </tt></em><em><strong><tt>like</tt></strong></em><em><tt>
+        input_buffer</tt></em><tt>)</tt></font></dt>
     <dd>Switch the scanner's input buffer so that subsequent
-        tokens will come from <font color="#008080" size="2"
-        face="Courier New"><em>a_buffer</em></font>. This routine
-        can be used to continue scanning another file when the
-        end-of-file has been read, or to deal with preprocessor
-        instructions such as <font size="2" face="Courier New">#include</font>.
-        It can eventually be given as argument the result of one
-        of the functions <a href="skeleton.html#new_file_buffer"><font
-        color="#008080" size="2" face="Courier New"><em>new_file_buffer</em></font></a>
+        tokens will come from <font color="#008080"><em><tt>a_buffer</tt></em></font>.
+        This routine can be used to continue scanning another
+        file when the end-of-file has been read, or to deal with
+        preprocessor instructions such as <tt>#include</tt>. It
+        can eventually be given as argument the result of one of
+        the functions <a href="skeleton.html#new_file_buffer"><font
+        color="#008080"><em><tt>new_file_buffer</tt></em></font></a>
         or <a href="skeleton.html#new_string_buffer"><font
-        color="#008080" size="2" face="Courier New"><em>new_string_buffer</em></font></a>.
+        color="#008080"><em><tt>new_string_buffer</tt></em></font></a>.
         Note that switching input buffers does not change the
         start condition of the scanner.</dd>
     <dt><a href="skeleton.html#set_last_token"
-        name="set_last_token"><font color="#008080" size="2"
-        face="Courier New"><em>set_last_token</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>a_token</em>:<em>
-        INTEGER</em>)</font></dt>
-    <dd>Set <font color="#008080" size="2" face="Courier New"><em>last_token</em></font>
-        to <font color="#008080" size="2" face="Courier New"><em>a_token</em></font>.</dd>
+        name="set_last_token"><font color="#008080"><em><tt>set_last_token</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_token</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
+    <dd>Set <font color="#008080"><em><tt>last_token</tt></em></font>
+        to <font color="#008080"><em><tt>a_token</tt></em></font>.</dd>
     <dt><a href="skeleton.html#set_output_file"
-        name="set_output_file"><font color="#008080" size="2"
-        face="Courier New"><em>set_output_file</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>a_file</em>:<em>
-        </em><em><strong>like</strong></em><em> output_file</em>)</font></dt>
-    <dd>Set <font color="#008080" size="2" face="Courier New"><em>output_file</em></font>
-        to <font color="#008080" size="2" face="Courier New"><em>a_file</em></font>.</dd>
+        name="set_output_file"><font color="#008080"><em><tt>set_output_file</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
+        </tt></em><em><strong><tt>like</tt></strong></em><em><tt>
+        output_file</tt></em><tt>)</tt></font></dt>
+    <dd>Set <font color="#008080"><em><tt>output_file</tt></em></font>
+        to <font color="#008080"><em><tt>a_file</tt></em></font>.</dd>
     <dt><a href="skeleton.html#set_start_condition"
-        name="set_start_condition"><font color="#008080" size="2"
-        face="Courier New"><em>set_start_condition</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>a_start_condition</em>:<em>
-        INTEGER</em>)</font></dt>
+        name="set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_start_condition</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
     <dd>Put the scanner in the corresponding start condition. See
         discussion on <a href="start_conditions.html">start
         conditions</a> for further details.</dd>
     <dt><a href="skeleton.html#start_condition"
-        name="start_condition"><font color="#008080" size="2"
-        face="Courier New"><em>start_condition</em></font></a><font
-        color="#008080" size="2" face="Courier New">:<em> INTEGER</em></font></dt>
+        name="start_condition"><font color="#008080"><em><tt>start_condition</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Current start condition. This value can subsequently be
-        used with <font color="#008080" size="2"
-        face="Courier New"><em>set_start_condition</em></font> to
-        return to that start condition. See discussion on <a
+        used with <font color="#008080"><em><tt>set_start_condition</tt></em></font>
+        to return to that start condition. See discussion on <a
         href="start_conditions.html">start conditions</a> for
         further details.</dd>
     <dt><a href="skeleton.html#terminate" name="terminate"><font
-        color="#008080" size="2" face="Courier New"><em>terminate</em></font></a></dt>
-    <dd>Terminate the scanner and sets <font color="#008080"
-        size="2" face="Courier New"><em>last_token</em></font> to
-        <font size="2" face="Courier New"><em>0</em></font>,
-        indicating &quot;all done&quot;. By default, <font
-        color="#008080" size="2" face="Courier New"><em>terminate</em></font>
+        color="#008080"><em><tt>terminate</tt></em></font></a></dt>
+    <dd>Terminate the scanner and sets <font color="#008080"><em><tt>last_token</tt></em></font>
+        to <em><tt>0</tt></em>, indicating &quot;all done&quot;.
+        By default, <font color="#008080"><em><tt>terminate</tt></em></font>
         is also called when an end-of-file is encountered.</dd>
     <dt><a href="skeleton.html#text" name="text"><font
-        color="#008080" size="2" face="Courier New"><em>text</em></font></a><font
-        color="#008080" size="2" face="Courier New">:<em> STRING</em></font></dt>
+        color="#008080"><em><tt>text</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> STRING</tt></em></font></dt>
     <dd>Text of the last token read. This feature is a function
         which creates a new string each time it is called.
         Actions are hence free to alter the result of <font
-        color="#008080" size="2" face="Courier New"><em>text</em></font>
-        without damaging the input buffer.</dd>
+        color="#008080"><em><tt>text</tt></em></font> without
+        damaging the input buffer.</dd>
     <dt><a href="skeleton.html#text_count" name="text_count"><font
-        color="#008080" size="2" face="Courier New"><em>text_count</em></font></a><font
-        color="#008080" size="2" face="Courier New">:<em> INTEGER</em></font></dt>
+        color="#008080"><em><tt>text_count</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Length of the last token read. This feature is a function
         which computes the number of characters matched by the
         corresponding pattern. If efficiency is a concern and
         this function is called several times in the same action,
         its result can be stored in a temporariry variable.</dd>
     <dt><a href="skeleton.html#text_item" name="text_item"><font
-        color="#008080" size="2" face="Courier New"><em>text_item</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>i</em>:<em>
-        INTEGER</em>):<em> CHARACTER</em></font></dt>
-    <dd>Character at a given index in <font color="#008080"
-        size="2" face="Courier New"><em>text</em></font>. For
-        efficiency reason, this function bypasses the call to <font
-        color="#008080" size="2" face="Courier New"><em>text</em></font>
-        and reads the character directly from the input buffer.</dd>
+        color="#008080"><em><tt>text_item</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>i</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>):</tt><em><tt> CHARACTER</tt></em></font></dt>
+    <dd>Character at a given index in <font color="#008080"><em><tt>text</tt></em></font>.
+        For efficiency reason, this function bypasses the call to
+        <font color="#008080"><em><tt>text</tt></em></font> and
+        reads the character directly from the input buffer.</dd>
     <dt><a href="skeleton.html#text_substring"
-        name="text_substring"><font color="#008080" size="2"
-        face="Courier New"><em>text_substring</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>s</em>,<em>
-        e</em>:<em> INTEGER</em>):<em> STRING</em></font></dt>
-    <dd>Substring of <font color="#008080" size="2"
-        face="Courier New"><em>text</em></font>. This function
-        creates a new string each time it is called. For
-        efficiency reason, this function bypasses the call to <font
-        color="#008080" size="2" face="Courier New"><em>text</em></font>
+        name="text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>):</tt><em><tt>
+        STRING</tt></em></font></dt>
+    <dd>Substring of <font color="#008080"><em><tt>text</tt></em></font>.
+        This function creates a new string each time it is
+        called. For efficiency reason, this function bypasses the
+        call to <font color="#008080"><em><tt>text</tt></em></font>
         and creates the substring directly from the input buffer.</dd>
     <dt><a href="skeleton.html#unread_character"
-        name="unread_character"><font color="#008080" size="2"
-        face="Courier New"><em>unread_character</em></font></a><font
-        color="#008080" size="2" face="Courier New"><em> </em>(<em>c</em>:<em>
-        CHARACTER</em>)</font></dt>
+        name="unread_character"><font color="#008080"><em><tt>unread_character</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>c</tt></em><tt>:</tt><em><tt>
+        CHARACTER</tt></em><tt>)</tt></font></dt>
     <dd>Put the character <font color="#008080" size="2"
         face="Courier New"><em>c</em></font> back onto the input
         stream. It will be the next character scanned. The
@@ -377,20 +348,18 @@ color="#0000FF">{</font>
             </dd>
         </dl>
     </dd>
-    <dd>Note that since each <font color="#008080" size="2"
-        face="Courier New"><em>unread_character</em></font> puts
-        the given character back at the beginning of the input
-        stream, pushing back strings must be done back-to-front.
-        An important potential problem when using <font
-        color="#008080" size="2" face="Courier New"><em>unread_character</em></font>
+    <dd>Note that since each <font color="#008080"><em><tt>unread_character</tt></em></font>
+        puts the given character back at the beginning of the
+        input stream, pushing back strings must be done
+        back-to-front. An important potential problem when using <font
+        color="#008080"><em><tt>unread_character</tt></em></font>
         is that it alters the input stream. If you need the value
-        of <font color="#008080" size="2" face="Courier New"><em>text</em></font>
-        after a call to <font color="#008080" size="2"
-        face="Courier New"><em>unread_character</em></font> (as
-        in the above example), you must first save it elsewhere.
-        Finally, note that you cannot put back <tt>EOF</tt> (i.e.
-        '<tt>%/255/</tt>') to attempt to mark the input stream
-        with an end-of-file.</dd>
+        of <font color="#008080"><em><tt>text</tt></em></font>
+        after a call to <font color="#008080"><em><tt>unread_character</tt></em></font>
+        (as in the above example), you must first save it
+        elsewhere. Finally, note that you cannot put back <tt>EOF</tt>
+        (i.e. '<tt>%/255/</tt>') to attempt to mark the input
+        stream with an end-of-file.</dd>
 </dl>
 
 <hr size="1">
@@ -408,7 +377,8 @@ color="#0000FF">{</font>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

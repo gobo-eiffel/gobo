@@ -39,9 +39,9 @@ these declarations are not needed.</p>
 <p>This section may also contain <a name="eiffel_declarations">Eiffel
 code</a> to be copied verbatim to the beginning of the generated
 parser class. The Eiffel text has to be enclosed between two
-marks <font color="#0000FF" size="2" face="Courier New">%{</font>
-and <font color="#0000FF" size="2" face="Courier New">%}</font>
-such as in the following example:</p>
+marks <font color="#0000FF"><tt>%{</tt></font> and <font
+color="#0000FF"><tt>%}</tt></font> such as in the following
+example:</p>
 
 <blockquote>
     <pre><font color="#0000FF">%{</font>
@@ -62,15 +62,13 @@ formal generics, obsolete, inheritance and creation clauses. As
 the example above shows, Eiffel declarations are used to specify
 such clauses in order to ensure that the generated parser class
 is syntactically and sematically correct. Here, the name of the
-generated class is <font color="#008080" size="2"
-face="Courier New"><em>MY_PARSER</em></font> and its creation
-procedure is <font color="#008080" size="2" face="Courier New"><em>make</em></font>,
-a routine inherited from class <font color="#008080" size="2"
-face="Courier New"><em>YY_PARSER_SKELETON</em></font>. This class
-also provides numerous facilities such as routine <font
-color="#008080" size="2" face="Courier New"><em>parse</em></font>
-for analyzing a given input text. The generated parser class has
-to inherit from one such class to work properly. </p>
+generated class is <font color="#008080"><em><tt>MY_PARSER</tt></em></font>
+and its creation procedure is <font color="#008080"><em><tt>make</tt></em></font>,
+a routine inherited from class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
+This class also provides numerous facilities such as routine <font
+color="#008080"><em><tt>parse</tt></em></font> for analyzing a
+given input text. The generated parser class has to inherit from
+one such class to work properly. </p>
 
 <p>If several of these Eiffel blocks appear in the declarations
 section, they are all copied to the generated parser class in
@@ -81,9 +79,9 @@ their order of appearance in the input file.</p>
 <p>The rules section of the <em>geyacc</em> input contains one or
 more <a href="rules.html">grammar rules</a>, and nothing else.
 There must be at least one grammar rule, and the first <font
-color="#0000FF" size="2" face="Courier New">%%</font> (which
-precedes the rules section) may never be omitted even if it is
-the first thing in the description file.</p>
+color="#0000FF"><tt>%%</tt></font> (which precedes the rules
+section) may never be omitted even if it is the first thing in
+the description file.</p>
 
 <h2><a name="user_code">User code section</a></h2>
 
@@ -100,10 +98,10 @@ the end of the generated parser class and thus ensure that this
 class is syntactically correct.</p>
 
 <p>Names of implementation features inherited from class <font
-color="#008080" size="2" face="Courier New"><em>YY_PARSER_SKELETON</em></font>
-are prefixed by <font color="#008080" size="2" face="Courier New"><em>yy</em></font>.
-As a consequence, user-declarared feature names beginning with
-this prefix should be avoided. </p>
+color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font> are
+prefixed by <font color="#008080"><em><tt>yy</tt></em></font>. As
+a consequence, user-declarared feature names beginning with this
+prefix should be avoided. </p>
 
 <hr size="1">
 <div align="left">
@@ -120,7 +118,8 @@ this prefix should be avoided. </p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>

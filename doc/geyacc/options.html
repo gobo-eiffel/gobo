@@ -20,68 +20,57 @@ content="text/html; charset=iso-8859-1">
     <pre><font color="#800000">geyacc filename</font></pre>
 </blockquote>
 
-<p>Here <font color="#800000" size="2" face="Courier New">filename</font>
-is the grammar file name, which usually ends in <font size="2">'</font><font
-color="#800000" size="3" face="Courier New">.</font><font
-color="#800000" size="2" face="Courier New">y</font><font
-size="2">'</font>. The parser file's name is made by replacing
-the <font size="2">'</font><font color="#800000" size="3"
-face="Courier New">.</font><font color="#800000" size="2"
-face="Courier New">y</font><font size="2">'</font> with <font
-size="2">'</font><font color="#800000" size="3"
-face="Courier New">.</font><font color="#800000" size="2"
-face="Courier New">e</font><font size="2">'</font>. Thus, the <font
-color="#800000" size="2" face="Courier New">geyacc foo.y</font>
-filename yields <font color="#800000" size="2" face="Courier New">foo.e</font>,
-and the <font color="#800000" size="2" face="Courier New">geyacc
-hack/foo.y </font>filename yields <font color="#800000" size="2"
-face="Courier New">hack/foo.e</font>.</p>
+<p>Here <font color="#800000"><tt>filename</tt></font> is the
+grammar file name, which usually ends in <font size="2">'</font><font
+color="#800000"><tt>.y</tt></font><font size="2">'</font>. The
+parser file's name is made by replacing the <font size="2">'</font><font
+color="#800000"><tt>.y</tt></font><font size="2">'</font> with <font
+size="2">'</font><font color="#800000"><tt>.e</tt></font><font
+size="2">'</font>. Thus, the <font color="#800000"><tt>geyacc
+foo.y</tt></font> filename yields <font color="#800000"><tt>foo.e</tt></font>,
+and the <font color="#800000"><tt>geyacc hack/foo.y</tt></font><font
+color="#800000" size="2" face="Courier New"> </font>filename
+yields <font color="#800000"><tt>hack/foo.e</tt></font>.</p>
 
 <p><em>Geyacc</em> supports both traditional single-letter
 options and mnemonic long option names. Long option names are
-indicated with <font color="#800000" size="2" face="Courier New">--</font>
-instead of <font color="#800000" size="2" face="Courier New">-</font>.
-Abbreviations for option names are allowed as long as they are
-unique. When a long option takes an argument, like <font
-color="#800000" size="2" face="Courier New">--output-file</font>,
+indicated with <font color="#800000"><tt>--</tt></font> instead
+of <font color="#800000"><tt>-</tt></font>. Abbreviations for
+option names are allowed as long as they are unique. When a long
+option takes an argument, like <font color="#800000"><tt>--output-file</tt></font>,
 connect the option name and the argument with <font
-color="#800000" size="3" face="Courier New">=</font>. </p>
+color="#800000"><tt>=</tt></font>. </p>
 
 <p>Here is a list of options that can be used with <em>geyacc</em>,
 alphabetized by short option:</p>
 
 <dl>
-    <dt><font color="#800000" size="2" face="Courier New">-d
-        classname<br>
-        --defines=classname</font></dt>
-    <dd>Write an extra class named <font color="#800000" size="2"
-        face="Courier New">classname</font> (in upper-case)
-        containing integer constants for the token type names
-        defined in the grammar. This class is saved in file <font
-        color="#800000" size="2" face="Courier New">classname.e</font>
+    <dt><font color="#800000"><tt>-d classname<br>
+        --defines=classname</tt></font></dt>
+    <dd>Write an extra class named <font color="#800000"><tt>classname</tt></font>
+        (in upper-case) containing integer constants for the
+        token type names defined in the grammar. This class is
+        saved in file <font color="#800000"><tt>classname.e</tt></font>
         (in lower-case).<br>
         <br>
         This class is essential if you wish to put the definition
-        of routine <font color="#008080" size="2"
-        face="Courier New"><em>read_token</em></font> in a
-        separate class, because <font color="#008080" size="2"
-        face="Courier New"><em>read_token </em></font>needs to be
-        able to refer to token type codes.</dd>
-    <dt><font color="#800000" size="2" face="Courier New">-h<br>
-        --help</font></dt>
+        of routine <font color="#008080"><em><tt>read_token</tt></em></font>
+        in a separate class, because <font color="#008080"><em><tt>read_token</tt></em></font><font
+        color="#008080" size="2" face="Courier New"><em> </em></font>needs
+        to be able to refer to token type codes.</dd>
+    <dt><font color="#800000"><tt>-h<br>
+        --help</tt></font></dt>
     <dd>Print a summary of the command-line options to <em>geyacc</em>
         and exit.</dd>
-    <dt><font color="#800000" size="2" face="Courier New">-o
-        filename<br>
-        --output-file=filename</font></dt>
-    <dd>Specify the name <font color="#800000" size="2"
-        face="Courier New">filename</font> for the parser file.
-        The other output files' names are constructed from <font
-        color="#800000" size="2" face="Courier New">filename</font>
-        as described under the <font color="#800000" size="2"
-        face="Courier New">-v</font> option.</dd>
-    <dt><font color="#800000" size="2" face="Courier New">-v<br>
-        --verbose</font></dt>
+    <dt><font color="#800000"><tt>-o filename<br>
+        --output-file=filename</tt></font></dt>
+    <dd>Specify the name <font color="#800000"><tt>filename</tt></font>
+        for the parser file. The other output files' names are
+        constructed from <font color="#800000"><tt>filename</tt></font>
+        as described under the <font color="#800000"><tt>-v</tt></font>
+        option.</dd>
+    <dt><font color="#800000"><tt>-v<br>
+        --verbose</tt></font></dt>
     <dd>Write an extra output file containing verbose
         descriptions of the parser states and what is done for
         each type of look-ahead token in that state. This file
@@ -89,17 +78,15 @@ alphabetized by short option:</p>
         operator precedence and the unresolved ones.<br>
         <br>
         The file's name is made by removing '<font
-        color="#800000" size="2" face="Courier New">.e</font>'
-        from the parser output file name, and adding '<font
-        color="#800000" size="2" face="Courier New">.output</font>'
+        color="#800000"><tt>.e</tt></font>' from the parser
+        output file name, and adding '<font color="#800000"><tt>.output</tt></font>'
         instead. Therefore, if the input file is <font
-        color="#800000" size="2" face="Courier New">foo.y</font>,
-        then the parser file is called <font color="#800000"
-        size="2" face="Courier New">foo.e</font> by default. As a
-        consequence, the verbose output file is called <font
-        color="#800000" size="2" face="Courier New">foo.output</font>.</dd>
-    <dt><font color="#800000" size="2" face="Courier New">-V<br>
-        --version</font></dt>
+        color="#800000"><tt>foo.y</tt></font>, then the parser
+        file is called <font color="#800000"><tt>foo.e</tt></font>
+        by default. As a consequence, the verbose output file is
+        called <font color="#800000"><tt>foo.output</tt></font>.</dd>
+    <dt><font color="#800000"><tt>-V<br>
+        --version</tt></font></dt>
     <dd>Print the version number of <em>geyacc</em> and exit.</dd>
 </dl>
 
@@ -118,7 +105,8 @@ alphabetized by short option:</p>
     <!--webbot bot="PurpleText"
     preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+    --> 
 </address>
 </div>
 </body>
