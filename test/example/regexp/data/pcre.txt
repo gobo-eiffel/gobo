@@ -1,0 +1,36 @@
+ll
+----------------
+l
+----------------
+he(ll)o eiffelians
+----------------
+ff
+----------------
+hello ei[ff]elians
+----------------
+hel-lo eif-felians
+----------------
+this
+is
+a
+tab
+separated
+line
+with
+an
+empty
+
+column
+----------------
+Erdbr
+----------------
+Erdbrügger
+----------------
+Erdbr
+----------------
+E
+----------------
+E
+----------------
+Erdbrügger
+----------------
