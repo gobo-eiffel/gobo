@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath contains() function"
+		"Objects that implement the XPath ends-with() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_CONTAINS
+class XM_XPATH_ENDS_WITH
 
 inherit
 
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "contains"
+			name := "ends-with"
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
@@ -63,10 +63,6 @@ feature -- Status report
 				create Result.make_single_string
 			end
 		end
-
-	is_test_for_zero: BOOLEAN
-			-- If this is set we return 0 for a zero length string, 1 for any other;
-			-- Set by the optimizer.
 
 feature -- Evaluation
 
@@ -107,7 +103,7 @@ feature -- Evaluation
 						elseif s1.count = 0 then
 							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 						else
-							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (collation_contains (s1, s2, a_collator))
+							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (ends_with (s1, s2, a_collator))
 						end
 					end
 				end
@@ -124,28 +120,24 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	collation_contains (s1, s2: STRING; a_collator: ST_COLLATOR): BOOLEAN is
-			-- Does `s1' contain `s2' according to the rules of `a_collator'?
+	ends_with (s1, s2: STRING; a_collator: ST_COLLATOR): BOOLEAN is
+			-- Does `s1' end with `s2' according to the rules of `a_collator'?
 		require
 			first_string_not_void: s1 /= Void
 			second_string_not_void: s2 /= Void
 			collator_not_void: a_collator /= Void
 		local
-			an_index: INTEGER
 			a_substring: STRING
 		do
-			from
-				an_index := 1
-			variant
-				s1.count - s2.count + 2 - an_index
-			until
-				Result or else an_index > s1.count - s2.count + 1
-			loop
-				a_substring := s1.substring (an_index, an_index + s2.count - 1)
+
+			-- TODO: In general, this algorithm does not work, as a collation
+			--       may specify ignorable collation units, but for now it will do
+
+			if s2.count <= s1.count then
+				a_substring := s1.substring (s1.count - s2.count + 1, s1.count)
 				Result := a_collator.three_way_comparison (a_substring, s2) = 0
-				an_index := an_index + 1
 			end
 		end
-	
+		
 end
 	

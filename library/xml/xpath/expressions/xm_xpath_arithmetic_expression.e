@@ -315,7 +315,6 @@ feature {NONE} -- Implementation
 		require
 			first_type_not_void: t1 /= Void
 			second_type_not_void: t2 /= Void
-			not_integer_division: operator /= Integer_division_token
 		do
 			inspect
 				operator

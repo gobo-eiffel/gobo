@@ -57,7 +57,10 @@ feature -- Access
 
 	evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			-- Results from `evaluate'
-	
+
+	document: XM_XPATH_DOCUMENT
+			-- Document node against which XPath is evaluated
+
 feature -- Status report
 
 	is_line_numbering: BOOLEAN
@@ -210,9 +213,6 @@ feature -- Evaluation
 		end
 
 feature {NONE} -- Implementation
-
-	document: XM_XPATH_DOCUMENT
-			-- Document node against which XPath is evaluated
 
 	source_uri: STRING
 			-- URI of source document

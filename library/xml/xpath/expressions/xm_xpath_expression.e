@@ -324,7 +324,12 @@ feature -- Evaluation
 							if a_length = 0 then
 								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 							elseif a_length = 1 then
-								last_evaluation := an_extent.item_at (1).as_value
+								an_item := an_extent.item_at (1)
+								if an_item.is_error then
+									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+								else
+									last_evaluation := an_item.as_value
+								end
 							else
 								last_evaluation := an_extent
 							end

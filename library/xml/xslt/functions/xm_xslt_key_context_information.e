@@ -12,6 +12,10 @@ indexing
 
 class XM_XSLT_KEY_CONTEXT_INFORMATION
 
+inherit
+
+	ANY -- SE 2.1
+
 creation
 
 	make

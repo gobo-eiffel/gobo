@@ -152,7 +152,7 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_instruction := Void
-			if not principal_stylesheet.is_collator_defined (collation_uri) = Void then
+			if not principal_stylesheet.is_collator_defined (collation_uri) then
 				a_message := STRING_.concat ("The collation named '", collation_uri)
 				a_message := STRING_.appended_string (a_message, "' has not been defined")
 				create an_error.make_from_string (a_message, "", "XT1210", Static_error)

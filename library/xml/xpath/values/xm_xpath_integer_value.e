@@ -177,7 +177,12 @@ feature -- Status report
 			Result := value.is_zero
 		end
 
-	
+	is_negative: BOOLEAN is
+			-- Is value less than zero?
+		do
+			Result := value.is_negative
+		end
+
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
@@ -218,11 +223,36 @@ feature -- Conversions
 		do
 			Result := Current
 		end
+
+	rounded_half_even (a_scale: INTEGER): like Current is
+			-- `a_numeric_value' rounded towards the nearest even number;
+		local
+			a_decimal: MA_DECIMAL
+		do
+			if a_scale >= 0 then
+				Result := Current
+			else
+				a_decimal := value.rescale (0 - a_scale, shared_half_even_context)
+				create Result.make (a_decimal)
+			end
+		end
 	
 	floor: like Current is
 			-- Value rounded towards minus infinity
 		do
 			Result := Current
+		end
+	
+	ceiling: like Current is
+			-- Value rounded towards plus infinity
+		do
+			Result := Current
+		end
+
+	negated_value: like Current is
+			-- Same abaolute value but opposite sign
+		do
+			create Result.make (-value)
 		end
 
 feature -- Basic operations
@@ -294,6 +324,13 @@ feature {NONE} -- Implementation
 			-- Decimal context for use by all instances of `Current'
 		once
 			create Result.make (shared_decimal_context.digits, Round_down)
+		end
+
+	
+	shared_half_even_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by rounded-half-even
+		once
+			create Result.make (shared_decimal_context.digits, Round_half_even)
 		end
 
 invariant

@@ -114,6 +114,11 @@ feature -- Status_report
 		deferred
 		end
 
+	is_negative: BOOLEAN is
+			-- Is value less than zero?
+		deferred
+		end
+
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		deferred
@@ -166,19 +171,41 @@ feature -- Basic operations
 
 feature -- Conversions
 
-	rounded_value: like current is
+	rounded_value: like Current is
 			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up);
-			-- Implements Xpath round().
+			-- Implements XPath round().
+		deferred
+		end
+
+	rounded_half_even (a_scale: INTEGER): like Current is
+			-- `a_numeric_value' rounded towards the nearest even number;
+			-- Implements XPath round-to-half-even().
 		deferred
 		end
 
 	floor: like Current is
 			-- Value rounded towards minus infinity;
-			-- Implements Xpath floor().
+			-- Implements XPath floor().
 		deferred
 		ensure
 			same_infinity: old is_infinite implies Result.is_infinite -- and then same sign
 			same_nan: old is_nan implies Result.is_nan
+		end
+
+	ceiling: like Current is
+			-- Value rounded towards plus infinity;
+			-- Implements XPath ceiling().
+		deferred
+		ensure
+			same_infinity: old is_infinite implies Result.is_infinite -- and then same sign
+			same_nan: old is_nan implies Result.is_nan
+		end
+
+	negated_value: like Current is
+			-- Same abaolute value but opposite sign
+		deferred
+		ensure
+			negated_value_not_void: Result /= Void
 		end
 
 end

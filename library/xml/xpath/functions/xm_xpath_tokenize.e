@@ -19,9 +19,7 @@ inherit
 			simplify, iterator
 		end
 
-	XM_XPATH_REGEXP_CACHE_ROUTINES
-
-	XM_XPATH_SHARED_REGEXP_CACHE
+	XM_XPATH_REGEXP_ROUTINES
 
 creation
 
@@ -77,7 +75,8 @@ feature -- Optimization
 		do
 			simplify_arguments
 			if arguments.count = 3 then n := 3 end
-			try_to_compile (n)
+			try_to_compile (n, arguments)
+			if regexp_error_value /= Void then set_last_error (regexp_error_value) end
 		end
 		
 feature -- Evaluation
@@ -144,51 +143,5 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_cardinality_zero_or_more
 		end
 
-feature {NONE} -- Implementation
-
-	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
-			-- Cached regular expression
-
-	try_to_compile (a_flag_argument_position: INTEGER) is
-			-- Attempt to compile `regexp'.
-		require
-			flag_argument_number: a_flag_argument_position = 0
-				or else ( a_flag_argument_position > 2 and then a_flag_argument_position <= arguments.count)
-		local
-			a_flags_string, a_key: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
-		do
-			if a_flag_argument_position = 0 then
-				a_flags_string := ""
-			else
-				a_string_value ?= arguments.item (a_flag_argument_position)
-				if a_string_value /= Void then
-					a_flags_string := normalized_flags_string (a_string_value.string_value)
-				end
-			end
-			if a_flags_string = Void then
-				set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
-			else
-				a_string_value ?= arguments.item (2) -- the pattern
-				if a_string_value /= Void then
-					a_key := composed_key (a_string_value.string_value, a_flags_string)
-					regexp_cache_entry :=  shared_regexp_cache.item (a_key)
-					if regexp_cache_entry = Void then
-						create regexp_cache_entry.make (a_string_value.string_value, a_flags_string)
-						if regexp_cache_entry.is_error then
-							regexp_cache_entry := Void
-						else
-							shared_regexp_cache.put (regexp_cache_entry, a_key)
-						end
-					end
-					if regexp_cache_entry /= Void then
-						if regexp_cache_entry.regexp.matches ("") then
-							set_last_error_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Static_error)
-						end
-					end
-				end
-			end
-		end
-	
 end
 	

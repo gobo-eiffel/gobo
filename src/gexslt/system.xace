@@ -29,8 +29,9 @@
 	<option if="${GOBO_EIFFEL}=se">
 		<option name="warning" value="none"/>
 	</option>
-	<option name="exception_trace" value="false"/>
+	<option name="exception_trace" value="true"/>
 	<option name="trace" value="false"/>
+	<!-- <option name="debug_tag" value="XPath content emitter"/> -->
 	<!-- <option name="debug_tag" value="XPath name pool - URIs"/>  -->
 	<!-- <option name="debug_tag" value="XPath name pool - namespaces"/> -->
 	<!-- <option name="debug_tag" value="XSLT key manager"/> -->

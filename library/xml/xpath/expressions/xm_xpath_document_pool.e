@@ -62,7 +62,7 @@ feature -- Element change
 			not_mapped: not is_mapped (a_uri)
 			document_not_void: a_document /= Void
 		do
-			document_name_map.put (a_document, a_uri)
+			document_name_map.force (a_document, a_uri)
 		ensure
 			uri_mapped: is_mapped (a_uri)
 		end

@@ -161,7 +161,7 @@ feature -- Status report
 				Result := False				
 				todo ("is-convertible (xs:date)", True)
 			else
-				Result := False -- TODO qname, dtd type, dates and times
+				Result := False -- TODO dtd type, datetimes and times
 				todo ("is-convertible", True)
 			end
 		end

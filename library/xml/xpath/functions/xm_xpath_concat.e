@@ -76,6 +76,7 @@ feature -- Evaluation
 		local
 			a_string: STRING
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			an_item: XM_XPATH_ITEM
 		do
 			from
 				create a_string.make (0)
@@ -87,7 +88,13 @@ feature -- Evaluation
 			loop
 				a_cursor.item.evaluate_item (a_context)
 				if a_cursor.item.last_evaluated_item /= Void then
-					a_string := STRING_.appended_string (a_string, a_cursor.item.last_evaluated_item.string_value)
+					an_item := a_cursor.item.last_evaluated_item
+					if an_item.is_error then
+						a_string := ""
+						set_last_error (an_item.error_value)
+					else
+						a_string := STRING_.appended_string (a_string, an_item.string_value)
+					end
 				end
 				a_cursor.forth
 			end

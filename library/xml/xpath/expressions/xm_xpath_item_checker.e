@@ -205,16 +205,14 @@ feature {NONE} -- Implementation
 		require
 			item_not_in_error: an_item /= Void and then not an_item.is_error 
 		local
-			a_type: XM_XPATH_ITEM_TYPE
 			a_message: STRING
 		do
-			a_type := an_item.item_type
-			if not is_sub_type (a_type, required_item_type) then
+			if not required_item_type.matches_item (an_item) then
 				a_message := STRING_.appended_string ("Required type of ", role_locator.message)
 				a_message := STRING_.appended_string (a_message, " is ")
 				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
-				a_message := STRING_.appended_string (a_message, a_type.conventional_name)
+				a_message := STRING_.appended_string (a_message, an_item.item_type.conventional_name)
 				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, "XP0006", Type_error)
 			end
 		end

@@ -26,7 +26,7 @@
     <date>Tuesday, April 13th, 2004</date>
   </chapterinfo>
   <title>Core functions - implementation status</title>
-  <para>This chapter lists all the core functions (functions provided by host languages such as XSLT are not listed here)
+  <para>This chapter lists all the core functions (functions provided by host lanages such as XSLT are not listed here)
    along with their implementation status.
   </para> 
   <para>The first column of the table gives the function's name, from <ulink url="http://www.w3.org/TR/xpath-functions/">XQuery 1.0 and XPath 2.0 Functions and Operators</ulink>.
@@ -114,13 +114,13 @@
 	 </row>	
 	 <row>
 	   <entry>fn:abs</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:ceiling</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -138,8 +138,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:round-half-to-even</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -216,8 +216,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:escape-uri</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Ues</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -234,7 +234,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:ends-with</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -252,14 +252,14 @@
 	 </row>	
        <row>
 	   <entry>fn:matches</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes (but unicode case stuff not implemented yet)</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:replace</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>fn:replace (but unicode case stuff not implemented yet)</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -462,14 +462,14 @@
 	 </row>	
 	 <row>
 	   <entry>fn:lang</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:root</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -498,8 +498,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:index-of</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>

@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 		require
 			types_not_populated: not types_created
 		do
-			-- TODO: need to bind all standard names
 			make_common_types
 			make_time_types
 			make_numeric_types

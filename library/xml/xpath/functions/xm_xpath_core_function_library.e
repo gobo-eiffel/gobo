@@ -34,7 +34,11 @@ feature -- Access
 	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN is
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		do
-			if a_fingerprint = Boolean_function_type_code then
+			if a_fingerprint = Abs_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Boolean_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Ceiling_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Compare_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
@@ -54,8 +58,12 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Empty_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Ends_with_function_type_code then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = Error_function_type_code then
 				Result := an_arity < 4
+			elseif a_fingerprint = Escape_uri_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Exists_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = False_function_type_code then
@@ -66,15 +74,23 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Index_of_function_type_code then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = Insert_before_function_type_code then
 				Result := an_arity = -1 or else an_arity = 3				
+			elseif a_fingerprint = Lang_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Last_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Local_name_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Lower_case_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Matches_function_type_code then
+				Result := an_arity = -1 or else an_arity = 3	or else an_arity = 2
 			elseif a_fingerprint = Max_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1	or else an_arity = 2
+			elseif a_fingerprint = Min_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1	or else an_arity = 2
 			elseif a_fingerprint = Name_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
@@ -90,8 +106,14 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Position_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
+			elseif a_fingerprint = Replace_function_type_code then
+				Result := an_arity = -1 or else an_arity = 3 or else an_arity = 4
+			elseif a_fingerprint = Root_function_type_code then
+				Result := an_arity = -1 or else an_arity = 0  or else an_arity = 1
 			elseif a_fingerprint = Round_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Round_half_to_even_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = Starts_with_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
 			elseif a_fingerprint = String_length_function_type_code then
@@ -128,8 +150,12 @@ feature -- Element change
 		local
 			a_function_call: XM_XPATH_FUNCTION_CALL
 		do
-			if a_fingerprint = Boolean_function_type_code then
+			if a_fingerprint = Abs_function_type_code then
+				create {XM_XPATH_ABS} a_function_call.make
+			elseif a_fingerprint = Boolean_function_type_code then
 				create {XM_XPATH_BOOLEAN} a_function_call.make
+			elseif a_fingerprint = Ceiling_function_type_code then
+				create {XM_XPATH_CEILING} a_function_call.make
 			elseif a_fingerprint = Compare_function_type_code then
 				create {XM_XPATH_COMPARE} a_function_call.make
 			elseif a_fingerprint = Concat_function_type_code then
@@ -148,8 +174,12 @@ feature -- Element change
 				create {XM_XPATH_DOC} a_function_call.make
 			elseif a_fingerprint = Empty_function_type_code then
 				create {XM_XPATH_EMPTY} a_function_call.make
+			elseif a_fingerprint = Ends_with_function_type_code then
+				create {XM_XPATH_ENDS_WITH} a_function_call.make				
 			elseif a_fingerprint = Error_function_type_code then
 				create {XM_XPATH_ERROR} a_function_call.make				
+			elseif a_fingerprint = Escape_uri_function_type_code then
+				create {XM_XPATH_ESCAPE_URI} a_function_call.make
 			elseif a_fingerprint = Exists_function_type_code then
 				create {XM_XPATH_EXISTS} a_function_call.make
 			elseif a_fingerprint = False_function_type_code then
@@ -160,16 +190,24 @@ feature -- Element change
 				create {XM_XPATH_ID} a_function_call.make
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
 				create {XM_XPATH_IN_SCOPE_PREFIXES} a_function_call.make
+			elseif a_fingerprint = Index_of_function_type_code then
+				create {XM_XPATH_INDEX_OF} a_function_call.make
 			elseif a_fingerprint = Insert_before_function_type_code then
 				create {XM_XPATH_INSERT_BEFORE} a_function_call.make
 			elseif a_fingerprint = Last_function_type_code then
 				create {XM_XPATH_LAST} a_function_call.make
+			elseif a_fingerprint = Lang_function_type_code then
+				create {XM_XPATH_LANG} a_function_call.make
 			elseif a_fingerprint = Local_name_function_type_code then
 				create {XM_XPATH_LOCAL_NAME} a_function_call.make
 			elseif a_fingerprint = Lower_case_function_type_code then
 				create {XM_XPATH_LOWER_CASE} a_function_call.make
+			elseif a_fingerprint = Matches_function_type_code then
+				create {XM_XPATH_MATCHES} a_function_call.make												
 			elseif a_fingerprint = Max_function_type_code then
 				create {XM_XPATH_MAX} a_function_call.make												
+			elseif a_fingerprint = Min_function_type_code then
+				create {XM_XPATH_MIN} a_function_call.make												
 			elseif a_fingerprint = Name_function_type_code then
 				create {XM_XPATH_NAME} a_function_call.make
 			elseif a_fingerprint = Namespace_uri_function_type_code then
@@ -184,8 +222,14 @@ feature -- Element change
 				create {XM_XPATH_NUMBER} a_function_call.make
 			elseif a_fingerprint = Position_function_type_code then
 				create {XM_XPATH_POSITION} a_function_call.make								
+			elseif a_fingerprint = Replace_function_type_code then
+				create {XM_XPATH_REPLACE} a_function_call.make
+			elseif a_fingerprint = Root_function_type_code then
+				create {XM_XPATH_ROOT} a_function_call.make
 			elseif a_fingerprint = Round_function_type_code then
 				create {XM_XPATH_ROUND} a_function_call.make
+			elseif a_fingerprint = Round_half_to_even_function_type_code then
+				create {XM_XPATH_ROUND_HALF_EVEN} a_function_call.make
 			elseif a_fingerprint = Starts_with_function_type_code then
 				create {XM_XPATH_STARTS_WITH} a_function_call.make								
 			elseif a_fingerprint = String_length_function_type_code then

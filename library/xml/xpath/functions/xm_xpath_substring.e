@@ -89,7 +89,7 @@ feature -- Evaluation
 					check
 						second_argument_is_double: a_double_value /= Void
 					end
-					a_starting_position := a_double_value.value.rounded
+					a_starting_position := a_double_value.rounded_value.value.truncated_to_integer
 					if arguments.count = 3 then
 						arguments.item (3).evaluate_item (a_context)
 						if arguments.item (3).last_evaluated_item.is_error then
@@ -104,7 +104,7 @@ feature -- Evaluation
 							check
 								third_argument_is_double: a_double_value /= Void
 							end
-							a_count := a_double_value.value.rounded
+							a_count := a_double_value.rounded_value.value.truncated_to_integer
 							if a_count < 1 then
 								a_count := 0
 							end

@@ -52,21 +52,17 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			a_collator: ST_COLLATOR
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			a_double_value: XM_XPATH_DOUBLE_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			a_primitive_type, another_primitive_type: INTEGER
 			already_finished: BOOLEAN
 		do
-			a_collator := collator (2, a_context, True)
-			if a_collator = Void then
+			a_comparer := atomic_comparer (2, a_context)
+			if a_comparer = Void then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else
-				create {XM_XPATH_ATOMIC_COMPARER} a_comparer.make (a_collator)
 				if is_max then create {XM_XPATH_DESCENDING_COMPARER} a_comparer.make (a_comparer) end
 				an_iterator := arguments.item (1).iterator (a_context)
 				an_iterator.start

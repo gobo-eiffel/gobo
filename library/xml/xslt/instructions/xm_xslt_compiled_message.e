@@ -82,13 +82,15 @@ feature -- Evaluation
 			a_transformer.change_output_destination (some_output_properties, a_result, False, Validation_strip, Void)
 			if select_expression /= Void then
 				an_iterator := select_expression.iterator (a_context)
-				from
-					an_iterator.start
-				until
-					an_iterator.after
-				loop
-					a_tree_receiver.append_item (an_iterator.item)
-					an_iterator.forth
+				if not an_iterator.is_error then
+					from
+						an_iterator.start
+					until
+						an_iterator.after
+					loop
+						a_tree_receiver.append_item (an_iterator.item)
+						an_iterator.forth
+					end
 				end
 			end
 			process_children (a_context)

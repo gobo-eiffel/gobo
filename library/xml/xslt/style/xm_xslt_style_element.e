@@ -544,7 +544,7 @@ feature -- Status_report
 							debug ("XSLT stylesheet compilation")
 								std.error.put_string ("Style element marked in error:%N")
 								std.error.put_string (a_style_element.error_value.error_message)
-								print (a_style_element);print ("%N")
+								print (a_style_element.out);print ("%N")
 							end
 							a_cursor.go_after
 						end

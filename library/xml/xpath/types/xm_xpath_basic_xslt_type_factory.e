@@ -158,14 +158,14 @@ feature -- Access
 			-- xdt:yearMonthDuration
 		once
 			create Result.make (Xpath_defined_datatypes_uri, "yearMonthDuration", any_atomic_type, Year_month_duration_type_code)
-			type_map.put (Result, Year_month_duration_type_code)
+			--type_map.put (Result, Year_month_duration_type_code)
 		end
 
 	day_time_duration_type: XM_XPATH_ATOMIC_TYPE is
 			-- xdt:dayTimeDuration
 		once
 			create Result.make (Xpath_defined_datatypes_uri, "dayTimeDuration", any_atomic_type, Day_time_duration_type_code)
-			type_map.put (Result, Day_time_duration_type_code)
+			--type_map.put (Result, Day_time_duration_type_code)
 		end
 
 	normalized_string_type: XM_XPATH_ATOMIC_TYPE is

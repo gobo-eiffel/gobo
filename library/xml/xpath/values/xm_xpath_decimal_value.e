@@ -214,6 +214,12 @@ feature -- Status report
 			Result := value.is_zero
 		end
 
+	is_negative: BOOLEAN is
+			-- Is value less than zero?
+		do
+			Result := value.is_negative
+		end
+
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
@@ -263,6 +269,15 @@ feature -- Conversion
 			create Result.make (a_decimal)
 		end
 
+	rounded_half_even (a_scale: INTEGER): like Current is
+			-- `a_numeric_value' rounded towards the nearest even number;
+		local
+			a_decimal: MA_DECIMAL
+		do
+			a_decimal := value.rescale (0 - a_scale, shared_half_even_context)
+			create Result.make (a_decimal)
+		end
+
 	floor: like Current is
 			-- Value rounded towards minus infinity
 		local
@@ -273,6 +288,22 @@ feature -- Conversion
 			create Result.make (a_decimal)
 		end
 
+	ceiling: like Current is
+			-- Value rounded towards plus infinity;
+		local
+			a_decimal: MA_DECIMAL
+		do
+			create a_decimal.make_copy (value)
+			a_decimal := a_decimal.round_to_integer (shared_ceiling_context)
+			create Result.make (a_decimal)
+		end
+
+	negated_value: like Current is
+			-- Same abaolute value but opposite sign
+		do
+			create Result.make (-value)
+		end
+	
 feature -- Basic operations
 
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
@@ -331,10 +362,22 @@ feature {NONE} -- Implementation
 			create Result.make (shared_decimal_context.digits, Round_ceiling)
 		end
 
+	shared_half_even_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by rounded-half-even
+		once
+			create Result.make (shared_decimal_context.digits, Round_half_even)
+		end
+
 	shared_floor_context: MA_DECIMAL_CONTEXT is
 			-- Decimal context for use by floor
 		once
 			create Result.make (shared_decimal_context.digits, Round_floor)
+		end
+
+	shared_ceiling_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by ceiling
+		once
+			create Result.make (shared_decimal_context.digits, Round_ceiling)
 		end
 
 end

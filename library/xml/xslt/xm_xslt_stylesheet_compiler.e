@@ -20,6 +20,8 @@ inherit
 	
 	XM_XPATH_DEBUGGING_ROUTINES
 
+	MA_DECIMAL_MATH
+
 creation
 
 	make
@@ -176,7 +178,10 @@ feature -- Compilation
 			if a_stylesheet = Void then
 				todo ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element", True)
 			elseif not a_stylesheet.is_error then
-
+				if a_stylesheet.version.is_equal (one) then
+					error_listener.warning ("XSLT 1.0 stylesheet is being run on an XSLT 2.0 processor.", Void)
+				end
+				
 				-- Preprocess the stylesheet, performing validation and preparing template  definitions
 				
 				a_stylesheet.set_stylesheet_compiler (Current, configuration)

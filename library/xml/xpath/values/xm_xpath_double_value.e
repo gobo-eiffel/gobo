@@ -164,6 +164,12 @@ feature -- Status report
 			Result := value = 0.0 or else value = -0.0
 		end
 
+	is_negative: BOOLEAN is
+			-- Is value less than zero?
+		do
+			Result := value.sign = -1
+		end
+	
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
@@ -212,6 +218,21 @@ feature -- Conversion
 			end
 		end
 
+	rounded_half_even (a_scale: INTEGER): like Current is
+			-- `a_numeric_value' rounded towards the nearest even number;
+		local
+			a_decimal: MA_DECIMAL
+		do
+			if is_nan or else is_infinite then
+				Result := Current
+			elseif is_zero then
+				Result := Current
+			else
+				create a_decimal.make_from_string (value.out)
+				create Result.make (a_decimal.rescale (0 - a_scale, shared_half_even_context).to_double)
+			end
+		end
+
 	floor: like Current is
 			-- Value rounded towards minus infinity
 		local
@@ -225,6 +246,29 @@ feature -- Conversion
 				create a_decimal.make_from_string (value.out)
 				create Result.make (a_decimal.round_to_integer (shared_floor_context).to_double)
 			end
+		end
+
+	ceiling: like Current is
+			-- Value rounded towards plus infinity;
+		local
+			a_decimal: MA_DECIMAL		
+		do
+			if is_infinite or else is_nan then
+				Result := Current
+			elseif is_zero then
+				Result := Current
+			else
+				create a_decimal.make_from_string (value.out)
+				create Result.make (a_decimal.round_to_integer (shared_ceiling_context).to_double)
+			end
+
+			
+		end
+
+	negated_value: like Current is
+			-- Same abaolute value but opposite sign
+		do
+			create Result.make (-value)
 		end
 
 feature -- Basic operations
@@ -302,11 +346,23 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (shared_decimal_context.digits, Round_half_up)
 		end
+	
+	shared_half_even_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by rounded-hal-even
+		once
+			create Result.make (shared_decimal_context.digits, Round_half_even)
+		end
 
 	shared_floor_context: MA_DECIMAL_CONTEXT is
 			-- Decimal context for use by floor
 		once
 			create Result.make (shared_decimal_context.digits, Round_floor)
+		end
+
+	shared_ceiling_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by ceiling
+		once
+			create Result.make (shared_decimal_context.digits, Round_ceiling)
 		end
 
 end

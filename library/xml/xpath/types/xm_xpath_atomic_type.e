@@ -62,6 +62,8 @@ feature -- Access
 					end
 				if fingerprint = an_atomic_type.fingerprint then
 					Result := True
+				else
+					Result := is_promotable (an_item.item_type, Current) or else is_sub_type (an_item.item_type, Current)
 				end
 			end
 		end

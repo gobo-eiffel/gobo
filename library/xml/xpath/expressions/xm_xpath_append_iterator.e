@@ -35,6 +35,9 @@ feature {NONE} -- Initialization
 			second_expression := an_expression
 			context := a_context
 			current_iterator := base_iterator
+			if current_iterator.is_error then
+				set_last_error (current_iterator.error_value)
+			end
 		ensure
 			base_set: base_iterator = a_base_iterator
 			second_expression_set: second_expression = an_expression
@@ -58,7 +61,12 @@ feature -- Status report
 			if Result and then current_iterator = base_iterator then
 				current_iterator := second_expression.iterator (context)
 				current_iterator.start
-				Result := current_iterator.after
+				if current_iterator.is_error then
+					set_last_error (current_iterator.error_value)
+					Result := True -- Hm.
+				else
+					Result := current_iterator.after
+				end
 			end
 		end
 
@@ -71,10 +79,17 @@ feature -- Cursor movement
 			if current_iterator = base_iterator and then not current_iterator.before and then current_iterator.after then
 				current_iterator := second_expression.iterator (context)
 			end
-			if current_iterator.before then
-				current_iterator.start
+			if current_iterator.is_error then
+				set_last_error (current_iterator.error_value)
 			else
-				current_iterator.forth
+				if current_iterator.before then
+					current_iterator.start
+				else
+					current_iterator.forth
+				end
+				if current_iterator.is_error then
+					set_last_error (current_iterator.error_value)
+				end
 			end
 		end
 

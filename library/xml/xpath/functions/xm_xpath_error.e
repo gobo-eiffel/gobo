@@ -147,7 +147,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_empty
+			set_cardinality_exactly_one
 		end
 
 end

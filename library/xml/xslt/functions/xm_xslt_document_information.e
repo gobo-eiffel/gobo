@@ -12,6 +12,10 @@ indexing
 
 class XM_XSLT_DOCUMENT_INFORMATION
 
+inherit
+
+	ANY -- SE 2.1
+
 creation
 
 	make

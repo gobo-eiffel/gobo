@@ -588,7 +588,7 @@ feature {NONE} -- Implementation
 			-- Read `uris' and perform transform(s).
 		require
 			uri_list_valid: uris /= Void
-				and then uris.count = 2 -- for now
+				and then uris.count = 2 or else  uris.count = 1
 			xml_stylesheet_pi_not_yet_supported: not use_processing_instruction
 		local
 			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE

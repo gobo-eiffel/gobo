@@ -35,7 +35,7 @@ feature -- Access
 feature -- Status report
 
 	before: BOOLEAN is
-			-- Has `forth' been called yet on this sequence?
+			-- Has `start' been called yet on this sequence?
 		require
 			not_in_error: not is_error
 		do

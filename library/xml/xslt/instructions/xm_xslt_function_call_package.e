@@ -11,6 +11,10 @@ indexing
 
 class XM_XSLT_FUNCTION_CALL_PACKAGE
 
+inherit
+
+	ANY -- SE 2.1
+
 creation
 
 	make

@@ -126,31 +126,33 @@ feature {NONE} -- Implementation
 			a_number: XM_XPATH_NUMERIC_VALUE
 			finished: BOOLEAN
 		do
-			from
-				an_iterator.start
-			until
-				finished or else an_iterator.after
-			loop
-				a_number ?= an_iterator.item
-				if a_number = Void then
-					finished := True
-				else
-					if not a_number.is_nan then
-						if Result = Void then
-							create Result.make (1,2)
-							Result.put (a_number, 1)
-							Result.put (a_number, 2)
-						else
-							if a_number.three_way_comparison (Result.item (1)) = -1 then
+			if not an_iterator.is_error then
+				from
+					an_iterator.start
+				until
+					finished or else an_iterator.after
+				loop
+					a_number ?= an_iterator.item
+					if a_number = Void then
+						finished := True
+					else
+						if not a_number.is_nan then
+							if Result = Void then
+								create Result.make (1,2)
 								Result.put (a_number, 1)
-							end
-							if a_number.three_way_comparison (Result.item (2)) = 1 then
 								Result.put (a_number, 2)
-							end							
+							else
+								if a_number.three_way_comparison (Result.item (1)) = -1 then
+									Result.put (a_number, 1)
+								end
+								if a_number.three_way_comparison (Result.item (2)) = 1 then
+									Result.put (a_number, 2)
+								end							
+							end
 						end
 					end
+					an_iterator.forth
 				end
-				an_iterator.forth
 			end
 		ensure
 			void_or_two_numbers: Result /= Void implies Result.count = 2

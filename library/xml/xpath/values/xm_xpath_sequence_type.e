@@ -31,7 +31,7 @@ creation
 	make, make_any_sequence, make_single_item, make_optional_item, make_single_atomic, make_optional_atomic, make_optional_integer,
 	make_single_string, make_optional_string, make_single_integer, make_single_double, make_single_node, make_optional_node, make_node_sequence,
 	make_numeric_sequence, make_atomic_sequence, make_string_sequence, make_empty, make_single_number, make_optional_number,
-	make_single_qname, make_optional_qname
+	make_single_qname, make_optional_qname, make_single_boolean
 
 feature {NONE} -- Initialization
 
@@ -86,6 +86,13 @@ feature {NONE} -- Initialization
 			set_cardinality_optional
 		end
 
+	make_single_boolean is
+			-- Create a sequence of a single xs:boolean
+		do
+			primary_type := type_factory.boolean_type
+			set_cardinality_exactly_one
+		end
+	
 	make_single_qname is
 			-- Create a sequence of a single QName
 		do

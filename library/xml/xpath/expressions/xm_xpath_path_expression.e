@@ -366,7 +366,7 @@ feature -- Evaluation
 								
 				-- Error occured
 
-				create an_invalid_item.make (step.error_value)
+				create an_invalid_item.make (an_iterator.error_value)
 				create Result.make_item (an_invalid_item)
 			else
 				create Result.make_sequence (an_iterator)

@@ -52,7 +52,7 @@ feature -- Element change
 			-- Add an implicit argument referring to the context document.
 			-- Called by functions such as id() and key() that take the context document as an implicit argument
 		require
-			strictly_positive_position: a_position > 0
+			positive_position: a_position >= 0
 			augmented_name: an_augmented_name /= Void and then an_augmented_name.count > 2
 		local
 			a_root_expression: XM_XPATH_ROOT_EXPRESSION

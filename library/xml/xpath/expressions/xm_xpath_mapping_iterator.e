@@ -121,28 +121,36 @@ feature {NONE} -- Implementation
 				finished
 			loop
 				if results /= Void then
-					if results.before then
+					if results.is_error then
+						finished := True
+						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
+					elseif results.before then
 						results.start
 					elseif not results.after then
 						results.forth
 					end
-					if not results.after then
-						item := results.item
-						finished := True
-					else
-						results := Void
+					if not results.is_error then
+						if not results.after then
+							item := results.item
+							finished := True
+						else
+							results := Void
+						end
 					end
 				end
 				if not finished then
 						check
 							no_results_yet: results = Void
 						end
-					if base_iterator.before then
+					if base_iterator.is_error then
+						finished := True
+						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
+					elseif base_iterator.before then
 						base_iterator.start
 					elseif not base_iterator.after then
 						base_iterator.forth
 					end
-					if not base_iterator.after then
+					if not base_iterator.is_error and then not base_iterator.after then
 						next_source := base_iterator.item
 
 						-- Call the supplied mapping function
@@ -156,12 +164,15 @@ feature {NONE} -- Implementation
 								item := a_mapped_item.item
 							else
 								results := a_mapped_item.sequence
-								if results.before then
+								if results.is_error then
+									finished := True
+									create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
+								elseif results.before then
 									results.start
 								elseif not results.after then
 									results.forth
 								end
-								if not results.after then
+								if not results.is_error and then not results.after then
 									item := results.item
 									finished := True
 								end

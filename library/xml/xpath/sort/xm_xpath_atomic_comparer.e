@@ -15,8 +15,8 @@ class XM_XPATH_ATOMIC_COMPARER
 inherit
 
 	KL_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
-	
-	KL_SHARED_EXCEPTIONS
+
+	XM_XPATH_DEBUGGING_ROUTINES
 
 creation
 
@@ -113,10 +113,7 @@ feature -- Status report
 					if a_string_value /= Void then
 						Result := a_string_value.is_comparable (another_atomic_value)
 					else
-
-						-- TODO
-
-						Exceptions.raise ("Incomplete set of atomic values in {XM_XPATH_ATOMIC_COMPARER}.are_comparable")
+						Result := an_atomic_value.is_comparable (another_atomic_value)
 					end
 				end
 			end

@@ -84,7 +84,12 @@ feature -- Evaluation
 					else
 						if conversion /= Void then
 							conversion.eagerly_evaluate (a_context)
-							a_bindery.set_local_variable (slot_number, conversion.last_evaluation)
+							a_value := conversion.last_evaluation
+							if a_value.is_error then
+								a_transformer.report_fatal_error (a_value.error_value, Current)
+							else
+								a_bindery.set_local_variable (slot_number, a_value)
+							end
 						end
 					end
 				end

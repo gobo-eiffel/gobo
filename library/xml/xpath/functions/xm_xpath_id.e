@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			name := "id"
 			minimum_argument_count := 1
-			maximum_argument_count := 1
+			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties

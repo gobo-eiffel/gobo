@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 invariant
 
 	document_not_void: document /= Void
-	parent_element_not_void: parent_element /= Void
+	strictly_positive_parent_element: parent_element > 0
 	node_test_not_void: node_test /= Void
 	
 end

@@ -57,7 +57,7 @@ feature -- Access
 		local
 			a_function: XM_XSLT_FUNCTION
 		do
-			a_function ?= Current
+			a_function ?= parent_node
 			Result := a_function = Void
 		end
 
@@ -66,7 +66,7 @@ feature -- Access
 		local
 			a_function: XM_XSLT_FUNCTION
 		do
-			a_function ?= Current
+			a_function ?= parent_node
 			Result := a_function = Void
 		end
 

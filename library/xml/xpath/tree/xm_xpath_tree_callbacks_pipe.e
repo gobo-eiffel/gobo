@@ -79,6 +79,9 @@ feature -- Access
 	tree: XM_XPATH_TREE_BUILDER
 			-- Tree construction
 
+--	debugger: XM_PRETTY_PRINT_FILTER
+			-- Only used when debugging
+
 	document: XM_XPATH_TREE_DOCUMENT is
 			-- Document (from tree building filter)
 		require

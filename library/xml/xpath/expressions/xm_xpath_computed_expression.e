@@ -27,8 +27,6 @@ inherit
 
 	XM_XPATH_EXPRESSION
 
-	KL_SHARED_EXCEPTIONS
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -144,7 +142,6 @@ feature -- Evaluation
 			a_boolean: XM_XPATH_BOOLEAN_VALUE
 			a_string: XM_XPATH_STRING_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
-			a_double: XM_XPATH_DOUBLE_VALUE
 		do
 			an_iterator := iterator (a_context)
 			if not an_iterator.is_error then
@@ -225,7 +222,7 @@ feature -- Evaluation
 			if last_evaluated_item = Void then
 				create last_evaluated_string.make ("")
 			elseif last_evaluated_item.is_error then
-				Exceptions.raise ("Logic error in {XM_XPATH_COMPUTED_EXPRESSION}.evaluate_as_string")
+				todo ("Logic error in {XM_XPATH_COMPUTED_EXPRESSION}.evaluate_as_string", True)
 			else
 				a_string ?= last_evaluated_item
 				if a_string = Void then

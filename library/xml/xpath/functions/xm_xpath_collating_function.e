@@ -34,6 +34,7 @@ feature -- Access
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_string_value: XM_XPATH_STRING_VALUE
+			a_collation_name: STRING
 		do
 			if arguments.count >= an_argument_number then
 				arguments.item (an_argument_number).evaluate_item (a_context)
@@ -47,7 +48,11 @@ feature -- Access
 					string_value: a_string_value /= Void
 					-- it's statically typed as a string
 				end
-				Result := a_context.collator (a_string_value.string_value)
+				a_collation_name := a_string_value.string_value
+				if a_context.is_known_collation (a_collation_name) then
+					Result := a_context.collator (a_collation_name)
+					-- otherwise `Result' = `Void' and a FOCH0002 error will be reported by the caller 
+				end
 			elseif use_default_collator then
 				Result := a_context.collator (default_collation_name)
 			else
@@ -56,6 +61,24 @@ feature -- Access
 
 				Result := a_context.unicode_codepoint_collator
 			end
+		ensure
+			Maybe_unsupported_collation: True
+		end
+
+	atomic_comparer (an_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_COMPARER is
+			-- Atomic comparer to be used
+		require
+			context_not_void: a_context /= Void
+			default_collation_name_not_void: default_collation_name /= Void
+		local
+			a_collator: ST_COLLATOR
+		do
+			a_collator := collator (an_argument_number, a_context, True)
+			if a_collator /= Void then
+				create Result.make (a_collator)
+			end
+		ensure
+			Maybe_unsupported_collation: True
 		end
 
 feature -- Optimization

@@ -312,6 +312,8 @@ feature -- Events
 						finished := True
 					end
 				end
+			else
+				a_typed_item := an_item
 			end
 			if not finished then
 				underlying_receiver.append_item (a_typed_item)
