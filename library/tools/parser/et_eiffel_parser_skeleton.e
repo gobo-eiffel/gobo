@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -34,12 +34,31 @@ feature {NONE} -- Initialization
 		require
 			a_universe_not_void: a_universe /= Void
 			an_error_handler_not_void: an_error_handler /= Void
+		local
+			a_factory: ET_AST_FACTORY
+		do
+			!! a_factory.make
+			make_with_factory (a_universe, a_factory, an_error_handler)
+		ensure
+			universe_set: universe = a_universe
+			error_handler_set: error_handler = an_error_handler
+		end
+
+	make_with_factory (a_universe: ET_UNIVERSE; a_factory: like ast_factory;
+		an_error_handler: like error_handler) is
+			-- Create a new Eiffel parser.
+		require
+			a_universe_not_void: a_universe /= Void
+			a_factory_not_void: a_factory /= Void
+			an_error_handler_not_void: an_error_handler /= Void
 		do
 			universe := a_universe
+			ast_factory := a_factory
 			make_eiffel_scanner ("unknown file", an_error_handler)
 			make_parser_skeleton
 		ensure
 			universe_set: universe = a_universe
+			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
 
@@ -47,6 +66,9 @@ feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Eiffel class universe
+
+	ast_factory: ET_AST_FACTORY
+			-- Abstract Syntax Tree factory
 
 	last_clients: ET_CLIENTS
 			-- Last clients read
@@ -62,6 +84,8 @@ feature -- Parsing
 			a_cluster_not_void: a_cluster /= Void
 		do
 			reset
+			feature_list_count := 0
+			rename_list_count := 0
 			filename := a_filename
 			input_buffer := Eiffel_buffer
 			Eiffel_buffer.set_file (a_file)
@@ -96,15 +120,29 @@ feature -- AST factory
 
 	new_actual_arguments (an_expression: ET_EXPRESSION): ET_ACTUAL_ARGUMENTS is
 			-- New actual argument list
+		require
+			an_expression_not_void: an_expression /= Void
 		do
-			!! Result.make (an_expression)
+			Result := ast_factory.new_actual_arguments (an_expression)
 		ensure
 			actual_arguments_not_void: Result /= Void
 		end
 
-	new_any_clients: ET_CLIENTS is
+	new_actual_generics (a_type: ET_TYPE): ET_ACTUAL_GENERIC_TYPES is
+			-- New actual generic parameter list with initially
+			-- one actual generic parameter `a_type'
+		require
+			a_type_not_void: a_type /= Void
 		do
-			!! Result.make_any
+			Result := ast_factory.new_actual_generics (a_type)
+		ensure
+			actual_generics_not_void: Result /= Void
+		end
+
+	new_any_clients: ET_CLIENTS is
+			-- Client list with only one client: ANY
+		do
+			Result := ast_factory.new_any_clients
 			last_clients := Result
 		ensure
 			clients_not_void: Result /= Void
@@ -116,7 +154,7 @@ feature -- AST factory
 		require
 			an_assertion_not_void: an_assertion /= Void
 		do
-			!! Result.make (an_assertion)
+			Result := ast_factory.new_assertions (an_assertion)
 		ensure
 			assertions_not_void: Result /= Void
 		end
@@ -127,7 +165,7 @@ feature -- AST factory
 			a_target_not_void: a_target /= Void
 			a_source_not_void: a_source /= Void
 		do
-			!! Result.make (a_target, a_source)
+			Result := ast_factory.new_assignment (a_target, a_source)
 		ensure
 			assignment_not_void: Result /= Void
 		end
@@ -138,7 +176,7 @@ feature -- AST factory
 			a_target_not_void: a_target /= Void
 			a_source_not_void: a_source /= Void
 		do
-			!! Result.make (a_target, a_source)
+			Result := ast_factory.new_assignment_attempt (a_target, a_source)
 		ensure
 			assignment_attempt_not_void: Result /= Void
 		end
@@ -150,10 +188,33 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, a_type, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_attribute (a_name, a_type, last_clients, last_class, an_id)
 		ensure
 			attribute_not_void: Result /= Void
+		end
+
+	new_bit_identifier (an_id: ET_IDENTIFIER): ET_TYPE is
+			-- New 'BIT Identifier' type
+		require
+			an_id_not_void: an_id /= Void
+		do
+			Result := ast_factory.new_bit_identifier (an_id)
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	new_bit_type (an_int: ET_INTEGER_CONSTANT): ET_TYPE is
+			-- New 'BIT n' type
+		require
+			an_int_not_void: an_int /= Void
+		do
+			Result := ast_factory.new_bit_type (an_int)
+		ensure
+			type_not_void: Result /= Void
 		end
 
 	new_call_expression (a_target: ET_EXPRESSION; a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENTS): ET_CALL_EXPRESSION is
@@ -161,7 +222,7 @@ feature -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_target, a_name, args)
+			Result := ast_factory.new_call_expression (a_target, a_name, args)
 		ensure
 			call_expression_not_void: Result /= Void
 		end
@@ -171,17 +232,21 @@ feature -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_target, a_name, args)
+			Result := ast_factory.new_call_instruction (a_target, a_name, args)
 		ensure
 			call_instruction_not_void: Result /= Void
 		end
 
 	new_check_instruction: ET_CHECK_INSTRUCTION is
+			-- New check instruction
 		do
-			!! Result
+			Result := ast_factory.new_check_instruction
+		ensure
+			check_instruction_not_void: Result /= Void
 		end
 
 	new_class (a_name: ET_IDENTIFIER): ET_CLASS is
+			-- New Eiffel class
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -197,12 +262,35 @@ feature -- AST factory
 			class_not_void: Result /= Void
 		end
 
+	new_class_type (a_name: ET_IDENTIFIER;
+		a_generics: like new_actual_generics): ET_TYPE is
+			-- New Eiffel class type or formal
+			-- generic paramater
+		require
+			a_name_not_void: a_name /= Void
+			last_class_not_void: last_class /= Void
+		local
+			a_class: ET_CLASS
+		do
+			Result := last_class.generic_parameter (a_name)
+			if Result /= Void then
+				if a_generics /= Void then
+					-- Error
+				end
+			else
+				a_class := universe.eiffel_class (a_name)
+				Result := ast_factory.new_class_type (a_name, a_generics, a_class)
+			end
+		ensure
+			class_type_not_void: Result /= Void
+		end
+
 	new_client (a_name: ET_IDENTIFIER): ET_CLIENT is
 			-- New client
 		require
 			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_name)
+			Result := ast_factory.new_client (a_name)
 		ensure
 			client_not_void: Result /= Void
 		end
@@ -212,7 +300,7 @@ feature -- AST factory
 		require
 			a_client_not_void: a_client /= Void
 		do
-			!! Result.make (a_client)
+			Result := ast_factory.new_clients (a_client)
 			last_clients := Result
 		ensure
 			clients_not_void: Result /= Void
@@ -221,7 +309,7 @@ feature -- AST factory
 	new_comment_assertion (a_tag: ET_IDENTIFIER): ET_COMMENT_ASSERTION is
 			-- New comment assertion
 		do
-			!! Result.make (a_tag)
+			Result := ast_factory.new_comment_assertion (a_tag)
 		ensure
 			assertion_not_void: Result /= Void
 		end
@@ -231,7 +319,7 @@ feature -- AST factory
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
-			!! Result.make (an_instruction)
+			Result := ast_factory.new_compound (an_instruction)
 		ensure
 			compound_not_void: Result /= Void
 		end
@@ -245,21 +333,29 @@ feature -- AST factory
 			a_constant_not_void: a_constant /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, a_type, a_constant, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_constant_attribute (a_name, a_type, a_constant, last_clients, last_class, an_id)
 		ensure
 			constant_attribute_not_void: Result /= Void
 		end
 
 	new_creation_instruction (a_type: ET_TYPE; a_target: ET_WRITABLE; a_call: ANY): ET_CREATION_INSTRUCTION is
+			-- New creation instruction
 		do
-			!! Result
+			Result := ast_factory.new_creation_instruction (a_type, a_target, a_call)
+		ensure
+			creation_instruction_not_void: Result /= Void
 		end
 
 	new_current (a_position: ET_POSITION): ET_CURRENT is
 			-- New current entity
+		require
+			a_position_not_void: a_position /= Void
 		do
-			!! Result.make (a_position)
+			Result := ast_factory.new_current (a_position)
 		ensure
 			current_not_void: Result /= Void
 		end
@@ -267,17 +363,21 @@ feature -- AST factory
 	new_current_address: ET_CURRENT_ADDRESS is
 			-- New address of Current
 		do
-			!! Result
+			Result := ast_factory.new_current_address
 		ensure
 			current_address_not_void: Result /= Void
 		end
 
 	new_debug_instruction: ET_DEBUG_INSTRUCTION is
+			-- New debug instruction
 		do
-			!! Result
+			Result := ast_factory.new_debug_instruction
+		ensure
+			debug_instruction_not_void: Result /= Void
 		end
 
 	new_deferred_class (a_name: ET_IDENTIFIER): ET_CLASS is
+			-- New deferred class
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -285,6 +385,7 @@ feature -- AST factory
 			Result.set_deferred
 		ensure
 			class_not_void: Result /= Void
+			is_deferred: Result.is_deferred
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
@@ -296,9 +397,13 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, a_type, an_obsolete,
-				a_preconditions, a_postconditions, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_deferred_function (a_name, args,
+				a_type, an_obsolete, a_preconditions, a_postconditions,
+				last_clients, last_class, an_id)
 		ensure
 			deferred_function_not_void: Result /= Void
 		end
@@ -311,9 +416,13 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, an_obsolete,
-				a_preconditions, a_postconditions, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_deferred_procedure (a_name, args,
+				an_obsolete, a_preconditions, a_postconditions,
+				last_clients, last_class, an_id)
 		ensure
 			deferred_procedure_not_void: Result /= Void
 		end
@@ -328,9 +437,14 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_do_function (a_name, args,
+				a_type, an_obsolete, a_preconditions, a_locals,
+				a_compound, a_postconditions, a_rescue,
+				last_clients, last_class, an_id)
 		ensure
 			do_function_not_void: Result /= Void
 		end
@@ -344,9 +458,13 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_do_procedure (a_name, args,
+				an_obsolete, a_preconditions, a_locals, a_compound,
+				a_postconditions, a_rescue, last_clients, last_class, an_id)
 		ensure
 			do_procedure_not_void: Result /= Void
 		end
@@ -357,9 +475,21 @@ feature -- AST factory
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result.make (l, r)
+			Result := ast_factory.new_equal_expression (l, r)
 		ensure
 			equal_not_void: Result /= Void
+		end
+
+	new_expanded_class (a_name: ET_IDENTIFIER): ET_CLASS is
+			-- New expanded class
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := new_class (a_name)
+			Result.set_expanded
+		ensure
+			class_not_void: Result /= Void
+			is_expanded: Result.is_expanded
 		end
 
 	new_export_list (nb: INTEGER): ARRAY [ET_EXPORT] is
@@ -367,7 +497,7 @@ feature -- AST factory
 		require
 			nb_positive: nb > 0
 		do
-			!! Result.make (0, nb - 1)
+			Result := ast_factory.new_export_list (nb)
 		ensure
 			export_list_not_void: Result /= Void
 		end
@@ -377,7 +507,7 @@ feature -- AST factory
 		require
 			e_not_void: e /= Void
 		do
-			!! Result.make (e)
+			Result := ast_factory.new_expression_address (e)
 		ensure
 			expression_address_not_void: Result /= Void
 		end
@@ -387,7 +517,7 @@ feature -- AST factory
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			!! Result.make (a_tag, an_expression)
+			Result := ast_factory.new_expression_assertion (a_tag, an_expression)
 		ensure
 			assertion_not_void: Result /= Void
 		end
@@ -403,9 +533,13 @@ feature -- AST factory
 			a_language_not_void: a_language /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
-				a_language, an_alias, a_postconditions, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_external_function (a_name, args,
+				a_type, an_obsolete, a_preconditions, a_language, an_alias,
+				a_postconditions, last_clients, last_class, an_id)
 		ensure
 			external_function_not_void: Result /= Void
 		end
@@ -420,16 +554,23 @@ feature -- AST factory
 			a_language_not_void: a_language /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, an_obsolete, a_preconditions,
-				a_language, an_alias, a_postconditions, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_external_procedure (a_name, args,
+				an_obsolete, a_preconditions, a_language, an_alias,
+				a_postconditions, last_clients, last_class, an_id)
 		ensure
 			external_procedure_not_void: Result /= Void
 		end
 
 	new_feature_address: ET_FEATURE_ADDRESS is
+			-- New feature address
 		do
-			!! Result
+			Result := ast_factory.new_feature_address
+		ensure
+			feature_address_not_void: Result /= Void
 		end
 
 	new_feature_list (nb: INTEGER): ARRAY [ET_FEATURE_NAME] is
@@ -437,7 +578,7 @@ feature -- AST factory
 		require
 			nb_positive: nb > 0
 		do
-			!! Result.make (0, nb - 1)
+			Result := ast_factory.new_feature_list (nb)
 		ensure
 			feature_list_not_void: Result /= Void
 		end
@@ -449,14 +590,40 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		do
-			!! Result.make (a_name, a_type)
+			Result := ast_factory.new_formal_arguments (a_name, a_type)
 		ensure
 			formal_arguments_not_void: Result /= Void
 		end
 
-	new_if_instruction (a_condition: ET_EXPRESSION; a_compound: ET_COMPOUND): ET_IF_INSTRUCTION is
+	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_TYPE is
+			-- New formal generic parameter
+		require
+			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (a_condition, a_compound)
+			Result := ast_factory.new_formal_generic (a_name, a_constraint)
+		ensure
+			formal_generic_not_void: Result /= Void
+		end
+
+	new_formal_generics (a_type: ET_FORMAL_GENERIC_TYPE): ET_FORMAL_GENERIC_TYPES is
+			-- New formal generic parameter list with initially
+			-- one formal generic parameter `a_type'
+		require
+			a_type_not_void: a_type /= Void
+		do
+			Result := ast_factory.new_formal_generics (a_type)
+		ensure
+			formal_generics_not_void: Result /= Void
+		end
+
+	new_if_instruction (a_condition: ET_EXPRESSION; a_compound: ET_COMPOUND): ET_IF_INSTRUCTION is
+			-- New if instruction
+		require
+			a_condition_not_void: a_condition /= Void
+		do
+			Result := ast_factory.new_if_instruction (a_condition, a_compound)
+		ensure
+			if_instruction_not_void: Result /= Void
 		end
 
 	new_infix_and (p: ET_POSITION): ET_INFIX_AND is
@@ -464,7 +631,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_and (p)
 		ensure
 			infix_and_not_void: Result /= Void
 		end
@@ -478,8 +645,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_AND
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_and (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			and_expression_not_void: Result /= Void
 		end
@@ -489,7 +656,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_and_then (p)
 		ensure
 			infix_and_then_not_void: Result /= Void
 		end
@@ -503,8 +670,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_AND_THEN
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_and_then (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			and_then_expression_not_void: Result /= Void
 		end
@@ -514,7 +681,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_div (p)
 		ensure
 			infix_div_not_void: Result /= Void
 		end
@@ -528,8 +695,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_DIV
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_div (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			div_expression_not_void: Result /= Void
 		end
@@ -539,7 +706,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_divide (p)
 		ensure
 			infix_division_not_void: Result /= Void
 		end
@@ -553,8 +720,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_DIVIDE
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_divide (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			division_expression_not_void: Result /= Void
 		end
@@ -566,7 +733,7 @@ feature -- AST factory
 			p_not_void: p /= Void
 		do
 			a_string.compute (error_handler)
-			!! Result.make (a_string.value, p)
+			Result := ast_factory.new_infix_freeop (a_string.value, p)
 		ensure
 			infix_freeop_not_void: Result /= Void
 		end
@@ -580,8 +747,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_FREEOP
 		do
-			!! a_name.make (a_token.text, a_token.position)
-			!! Result.make (l, a_name, r)
+			a_name := ast_factory.new_infix_freeop (a_token.text, a_token.position)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			freeop_expression_not_void: Result /= Void
 		end
@@ -591,7 +758,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_ge (p)
 		ensure
 			infix_ge_not_void: Result /= Void
 		end
@@ -605,8 +772,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_GE
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_ge (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			ge_expression_not_void: Result /= Void
 		end
@@ -616,7 +783,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_gt (p)
 		ensure
 			infix_gt_not_void: Result /= Void
 		end
@@ -630,8 +797,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_GT
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_gt (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			gt_expression_not_void: Result /= Void
 		end
@@ -641,7 +808,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_implies (p)
 		ensure
 			infix_implies_not_void: Result /= Void
 		end
@@ -655,8 +822,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_IMPLIES
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_implies (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			implies_expression_not_void: Result /= Void
 		end
@@ -666,7 +833,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_le (p)
 		ensure
 			infix_le_not_void: Result /= Void
 		end
@@ -680,8 +847,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_LE
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_le (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			le_expression_not_void: Result /= Void
 		end
@@ -691,7 +858,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_lt (p)
 		ensure
 			infix_lt_not_void: Result /= Void
 		end
@@ -705,8 +872,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_LT
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_lt (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			lt_expression_not_void: Result /= Void
 		end
@@ -716,7 +883,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_minus (p)
 		ensure
 			infix_minus_not_void: Result /= Void
 		end
@@ -730,8 +897,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_MINUS
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_minus (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			minus_expression_not_void: Result /= Void
 		end
@@ -741,7 +908,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_mod (p)
 		ensure
 			infix_mod_not_void: Result /= Void
 		end
@@ -755,8 +922,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_MOD
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_mod (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			mod_expression_not_void: Result /= Void
 		end
@@ -766,7 +933,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_or (p)
 		ensure
 			infix_or_not_void: Result /= Void
 		end
@@ -780,8 +947,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_OR
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_or (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			or_expression_not_void: Result /= Void
 		end
@@ -791,7 +958,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_or_else (p)
 		ensure
 			infix_or_else_not_void: Result /= Void
 		end
@@ -805,8 +972,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_OR_ELSE
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_or_else (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			or_else_expression_not_void: Result /= Void
 		end
@@ -816,7 +983,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_plus (p)
 		ensure
 			infix_plus_not_void: Result /= Void
 		end
@@ -830,8 +997,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_PLUS
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_plus (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			plus_expression_not_void: Result /= Void
 		end
@@ -841,7 +1008,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_power (p)
 		ensure
 			infix_power_not_void: Result /= Void
 		end
@@ -855,8 +1022,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_POWER
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_power (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			power_expression_not_void: Result /= Void
 		end
@@ -866,7 +1033,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_times (p)
 		ensure
 			infix_times_not_void: Result /= Void
 		end
@@ -880,8 +1047,8 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_TIMES
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_times (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			times_expression_not_void: Result /= Void
 		end
@@ -891,7 +1058,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_infix_xor (p)
 		ensure
 			infix_xor_not_void: Result /= Void
 		end
@@ -905,15 +1072,18 @@ feature -- AST factory
 		local
 			a_name: ET_INFIX_XOR
 		do
-			!! a_name.make (p)
-			!! Result.make (l, a_name, r)
+			a_name := new_infix_xor (p)
+			Result := ast_factory.new_infix_expression (l, a_name, r)
 		ensure
 			xor_expression_not_void: Result /= Void
 		end
 
 	new_inspect_instruction: ET_INSPECT_INSTRUCTION is
+			-- New inspect instruction
 		do
-			!! Result
+			Result := ast_factory.new_inspect_instruction
+		ensure
+			inspect_instruction_not_void: Result /= Void
 		end
 
 	new_invalid_infix (a_string: ET_MANIFEST_STRING; p: ET_POSITION): ET_INFIX_FREEOP is
@@ -923,23 +1093,41 @@ feature -- AST factory
 			p_not_void: p /= Void
 		do
 -- ERROR
-			a_string.compute (error_handler)
-			!! Result.make (a_string.value, p)
+			Result := new_infix_freeop (a_string, p)
 		ensure
 			invalid_infix_not_void: Result /= Void
 		end
 
-	new_invalid_prefix (a_string: ET_MANIFEST_STRING; p: ET_POSITION): ET_INFIX_FREEOP is
+	new_invalid_prefix (a_string: ET_MANIFEST_STRING; p: ET_POSITION): ET_PREFIX_FREEOP is
 			-- New invalid prefix feature name
 		require
 			a_string_not_void: a_string /= Void
 			p_not_void: p /= Void
 		do
 -- ERROR
-			a_string.compute (error_handler)
-			!! Result.make (a_string.value, p)
+			Result := new_prefix_freeop (a_string, p)
 		ensure
 			invalid_prefix_not_void: Result /= Void
+		end
+
+	new_like_current (p: ET_POSITION): ET_LIKE_CURRENT is
+			-- New 'like Current' type
+		require
+			p_not_void: p /= Void
+		do
+			Result := ast_factory.new_like_current (p)
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	new_like_identifier (an_id: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
+			-- New 'like Identifier' type
+		require
+			an_id_not_void: an_id /= Void
+		do
+			Result := ast_factory.new_like_identifier (an_id)
+		ensure
+			type_not_void: Result /= Void
 		end
 
 	new_local_variables (a_name: ET_IDENTIFIER; a_type: ET_TYPE): ET_LOCAL_VARIABLES is
@@ -949,24 +1137,31 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		do
-			!! Result.make (a_name, a_type)
+			Result := ast_factory.new_local_variables (a_name, a_type)
 		ensure
 			local_variables_not_void: Result /= Void
 		end
 
 	new_loop_instruction: ET_LOOP_INSTRUCTION is
+			-- New loop instruction
 		do
-			!! Result
+			Result := ast_factory.new_loop_instruction
+		ensure
+			loop_instruction_not_void: Result /= Void
 		end
 
 	new_manifest_array: ET_MANIFEST_ARRAY is
+			-- New manifest array
 		do
-			!! Result
+			Result := ast_factory.new_manifest_array
+		ensure
+			manifest_array_not_void: Result /= Void
 		end
 
 	new_none_clients: ET_CLIENTS is
+			-- New client list with only one client: NONE
 		do
-			!! Result.make_none
+			Result := ast_factory.new_none_clients
 			last_clients := Result
 		ensure
 			clients_not_void: Result /= Void
@@ -978,7 +1173,7 @@ feature -- AST factory
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result.make (l, r)
+			Result := ast_factory.new_not_equal_expression (l, r)
 		ensure
 			not_equal_not_void: Result /= Void
 		end
@@ -988,7 +1183,7 @@ feature -- AST factory
 		require
 			e_not_void: e /= Void
 		do
-			!! Result.make (e)
+			Result := ast_factory.new_old_expression (e)
 		ensure
 			old_expression_not_void: Result /= Void
 		end
@@ -1003,9 +1198,13 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_once_function (a_name, args,
+				a_type, an_obsolete, a_preconditions, a_locals, a_compound,
+				a_postconditions, a_rescue, last_clients, last_class, an_id)
 		ensure
 			once_function_not_void: Result /= Void
 		end
@@ -1019,14 +1218,18 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, args, an_obsolete, a_preconditions,
-				a_locals, a_compound, a_postconditions, a_rescue, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_once_procedure (a_name, args,
+				an_obsolete, a_preconditions, a_locals, a_compound,
+				a_postconditions, a_rescue, last_clients, last_class, an_id)
 		ensure
 			once_procedure_not_void: Result /= Void
 		end
 
-	new_parent (a_name: ET_IDENTIFIER; a_generic_parameters: ANY;
+	new_parent (a_name: ET_IDENTIFIER; a_generic_parameters: like new_actual_generics;
 		a_renames: like new_rename_list; an_exports: like new_export_list;
 		an_undefines: like new_feature_list; a_redefines: like new_feature_list;
 		a_selects: like new_feature_list): ET_PARENT is
@@ -1037,21 +1240,23 @@ feature -- AST factory
 			a_type: ET_CLASS_TYPE
 			a_class: ET_CLASS
 		do
-			if not last_class.has_generic_parameter (a_name) then
-				a_class := universe.eiffel_class (a_name)
-				!! a_type.make (a_name, a_generic_parameters, a_class)
-				!! Result.make (a_type, a_renames, an_exports, an_undefines, a_redefines, a_selects)
-			else
+			if last_class.has_generic_parameter (a_name) then
+				-- Error
 			end
+			a_class := universe.eiffel_class (a_name)
+			!! a_type.make (a_name, a_generic_parameters, a_class)
+			Result := ast_factory.new_parent (a_type, a_renames,
+				an_exports, an_undefines, a_redefines, a_selects)
 		ensure
 			parent_not_void: Result /= Void
 		end
 
 	new_parents (a_parent: ET_PARENT): ET_PARENTS is
+			-- New parent list with one parent `a_parent'
 		require
 			a_parent_not_void: a_parent /= Void
 		do
-			!! Result.make (a_parent)
+			Result := ast_factory.new_parents (a_parent)
 		ensure
 			parents_not_void: Result /= Void
 		end
@@ -1062,7 +1267,7 @@ feature -- AST factory
 		require
 			an_assertion_not_void: an_assertion /= Void
 		do
-			!! Result.make (an_assertion)
+			Result := ast_factory.new_postconditions (an_assertion)
 		ensure
 			postconditions_not_void: Result /= Void
 		end
@@ -1073,19 +1278,25 @@ feature -- AST factory
 		require
 			an_assertion_not_void: an_assertion /= Void
 		do
-			!! Result.make (an_assertion)
+			Result := ast_factory.new_preconditions (an_assertion)
 		ensure
 			preconditions_not_void: Result /= Void
 		end
 
 	new_precursor_expression (a_parent: ANY; args: ANY): ET_PRECURSOR_EXPRESSION is
+			-- New precursor expression
 		do
-			!! Result
+			Result := ast_factory.new_precursor_expression (a_parent, args)
+		ensure
+			precursor_expression_not_void: Result /= Void
 		end
 
 	new_precursor_instruction (a_parent: ANY; args: ANY): ET_PRECURSOR_INSTRUCTION is
+			-- New precursor instruction
 		do
-			!! Result
+			Result := ast_factory.new_precursor_instruction (a_parent, args)
+		ensure
+			precursor_instruction_not_void: Result /= Void
 		end
 
 	new_prefix_freeop (a_string: ET_MANIFEST_STRING; p: ET_POSITION): ET_PREFIX_FREEOP is
@@ -1095,7 +1306,7 @@ feature -- AST factory
 			p_not_void: p /= Void
 		do
 			a_string.compute (error_handler)
-			!! Result.make (a_string.value, p)
+			Result := ast_factory.new_prefix_freeop (a_string.value, p)
 		ensure
 			prefix_freeop_not_void: Result /= Void
 		end
@@ -1108,8 +1319,8 @@ feature -- AST factory
 		local
 			a_name: ET_PREFIX_FREEOP
 		do
-			!! a_name.make (a_token.text, a_token.position)
-			!! Result.make (a_name, e)
+			a_name := ast_factory.new_prefix_freeop (a_token.text, a_token.position)
+			Result := ast_factory.new_prefix_expression (a_name, e)
 		ensure
 			freeop_expression_not_void: Result /= Void
 		end
@@ -1119,7 +1330,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_prefix_minus (p)
 		ensure
 			prefix_minus_not_void: Result /= Void
 		end
@@ -1132,8 +1343,8 @@ feature -- AST factory
 		local
 			a_name: ET_PREFIX_MINUS
 		do
-			!! a_name.make (p)
-			!! Result.make (a_name, e)
+			a_name := new_prefix_minus (p)
+			Result := ast_factory.new_prefix_expression (a_name, e)
 		ensure
 			minus_expression_not_void: Result /= Void
 		end
@@ -1143,7 +1354,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_prefix_not (p)
 		ensure
 			prefix_not_not_void: Result /= Void
 		end
@@ -1156,8 +1367,8 @@ feature -- AST factory
 		local
 			a_name: ET_PREFIX_NOT
 		do
-			!! a_name.make (p)
-			!! Result.make (a_name, e)
+			a_name := new_prefix_not (p)
+			Result := ast_factory.new_prefix_expression (a_name, e)
 		ensure
 			not_expression_not_void: Result /= Void
 		end
@@ -1167,7 +1378,7 @@ feature -- AST factory
 		require
 			p_not_void: p /= Void
 		do
-			!! Result.make (p)
+			Result := ast_factory.new_prefix_plus (p)
 		ensure
 			prefix_plus_not_void: Result /= Void
 		end
@@ -1180,8 +1391,8 @@ feature -- AST factory
 		local
 			a_name: ET_PREFIX_PLUS
 		do
-			!! a_name.make (p)
-			!! Result.make (a_name, e)
+			a_name := new_prefix_plus (p)
+			Result := ast_factory.new_prefix_expression (a_name, e)
 		ensure
 			plus_expression_not_void: Result /= Void
 		end
@@ -1191,7 +1402,7 @@ feature -- AST factory
 		require
 			nb_positive: nb > 0
 		do
-			!! Result.make (0, nb - 1)
+			Result := ast_factory.new_rename_list (nb)
 		ensure
 			rename_list_not_void: Result /= Void
 		end
@@ -1202,7 +1413,7 @@ feature -- AST factory
 			old_name_not_void: old_name /= Void
 			new_name_not_void: new_name /= Void
 		do
-			!! Result.make (old_name, new_name)
+			Result := ast_factory.new_rename (old_name, new_name)
 		ensure
 			renames_not_void: Result /= Void
 		end
@@ -1212,7 +1423,7 @@ feature -- AST factory
 		require
 			a_position_not_void: a_position /= Void
 		do
-			!! Result.make (a_position)
+			Result := ast_factory.new_result (a_position)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -1220,31 +1431,52 @@ feature -- AST factory
 	new_result_address: ET_RESULT_ADDRESS is
 			-- New address of Result
 		do
-			!! Result
+			Result := ast_factory.new_result_address
 		ensure
 			result_address_not_void: Result /= Void
 		end
 
 	new_retry_instruction: ET_RETRY_INSTRUCTION is
+			-- New retry instruction
 		do
-			!! Result
+			Result := ast_factory.new_retry_instruction
+		ensure
+			retry_instruction_not_void: Result /= Void
+		end
+
+	new_separate_class (a_name: ET_IDENTIFIER): ET_CLASS is
+			-- New separate class
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := new_class (a_name)
+			Result.set_separate
+		ensure
+			class_not_void: Result /= Void
+			is_separate: Result.is_separate
 		end
 
 	new_strip_expression: ET_STRIP_EXPRESSION is
+			-- New strip expression
 		do
-			!! Result
+			Result := ast_factory.new_strip_expression
+		ensure
+			strip_expression_not_void: Result /= Void
 		end
 
---	new_undefines (a_names: like new_feature_list): ET_UNDEFINES is
---			-- New undefine clause
---		require
---			a_names_not_void: a_names /= Void
---			no_void_name: not ANY_ARRAY.has (a_names, Void)
---		do
---			!! Result.make (a_names)
---		ensure
---			undefines_not_void: Result /= Void
---		end
+	new_synonym_feature (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE): ET_FEATURE is
+			-- New synomym for feature `a_feature'
+		require
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_synonym_feature (a_name, a_feature, an_id)
+		ensure
+			synonym_not_void: Result /= Void
+		end
 
 	new_unique_attribute (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		a_type: ET_TYPE): ET_UNIQUE_ATTRIBUTE is
@@ -1254,8 +1486,11 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
+		local
+			an_id: INTEGER
 		do
-			!! Result.make (a_name, a_type, last_clients, last_class)
+			an_id := universe.next_feature_id
+			Result := ast_factory.new_unique_attribute (a_name, a_type, last_clients, last_class, an_id)
 		ensure
 			unique_attribute_not_void: Result /= Void
 		end
@@ -1286,5 +1521,6 @@ feature {NONE} -- Constants
 invariant
 
 	universe_not_void: universe /= Void
+	ast_factory_not_void: ast_factory /= Void
 
 end -- class ET_EIFFEL_PARSER_SKELETON
