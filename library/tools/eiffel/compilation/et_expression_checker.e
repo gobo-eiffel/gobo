@@ -65,9 +65,9 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_universe: like universe) is
-			-- Create a new call validity checker.
+			-- Create a new expression validity checker.
 		do
-			Precursor (a_universe)
+			precursor (a_universe)
 			current_target_type := a_universe.any_class
 			create expression_context.make_with_capacity (current_class, 10)
 			create actual_context.make_with_capacity (current_class, 10)
@@ -2419,6 +2419,8 @@ feature {ET_CALL_CHECKER} -- Validity checking
 			a_feature_not_void: a_feature /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_class_not_void: a_current_class /= Void
+			implementation_checked: a_current_class /= a_current_feature.implementation_class implies
+				a_current_feature.implementation_feature.implementation_checked
 		local
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
