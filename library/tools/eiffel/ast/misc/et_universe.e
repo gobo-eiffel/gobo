@@ -1223,6 +1223,19 @@ feature -- Parsing
 			end
 		end
 
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
+			-- Parse all classes in `a_file' within cluster `a_cluster'.
+			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
+			-- its time stamp just before it was open.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_filename_not_void: a_filename /= Void
+			a_cluster_not_void: a_cluster /= Void
+		do
+			eiffel_parser.parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+		end
+
 feature -- Compilation
 
 	compile (flat: BOOLEAN) is
