@@ -1,6 +1,6 @@
 Gobo Eiffel Structure Library
 
-When this library has been developed, there was data structure library
+When this library has been developed, there was no data structure library
 standard, and no portable library was publicly available. Each Eiffel
 compiler provides its own data structure library, but none of them is
 portable (see portability issues in "$GOBO\doc\portability"). This
@@ -50,14 +50,8 @@ table
     the Gobo Eiffel Lexical Library. It is likely though that this
     class will be improved in future releases.
 
-Clusters of the form "<cluster_name>\spec\<compiler_name>", where
-<cluster_name> is one of the clusters listed above and <compiler_name> 
-is either "hact", "ise", "se", "tower" or "ve", contain classes adapted
-from non-portable classes in <cluster_name> (filenames suffixed by ".ge").
-See "$GOBO\doc\portability" for details.
-
-A more detailed documentation for this library will be provided in
-future releases.
+A more detailed documentation for this library, in HTML format, is
+provided in "$GOBO\doc\structure".
 
 --
 Eric Bezault <ericb@gobo.demon.co.uk>
