@@ -132,7 +132,10 @@ creation
 [iI][fF]								last_token := E_IF
 [iI][mM][pP][lL][iI][eE][sS]			last_token := E_IMPLIES
 [iI][nN][dD][eE][xX][iI][nN][gG]		last_token := E_INDEXING
-[iI][nN][fF][iI][xX]					last_token := E_INFIX
+[iI][nN][fF][iI][xX]				{
+										is_operator := True
+										last_token := E_INFIX
+									}
 [iI][nN][hH][eE][rR][iI][tT]			last_token := E_INHERIT
 [iI][nN][sS][pP][eE][cC][tT]			last_token := E_INSPECT
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	last_token := E_INVARIANT
@@ -145,7 +148,10 @@ creation
 [oO][lL][dD]							last_token := E_OLD
 [oO][nN][cC][eE]						last_token := E_ONCE
 [oO][rR]								last_token := E_OR
-[pP][rR][eE][fF][iI][xX]				last_token := E_PREFIX
+[pP][rR][eE][fF][iI][xX]			{
+										is_operator := True
+										last_token := E_PREFIX
+									}
 [rR][eE][dD][eE][fF][iI][nN][eE]		last_token := E_REDEFINE
 [rR][eE][nN][aA][mM][eE]				last_token := E_RENAME
 [rR][eE][qQ][uU][iI][rR][eE]			last_token := E_REQUIRE
@@ -177,7 +183,7 @@ creation
 
 		--/** Eiffel free operators **/
 
-[@#|&][^%"\0-\32\127-\255]*		{
+[@#|&][^%" \t\r\n]*		{
 							last_token := E_FREEOP
 							last_value := text
 						}
@@ -241,8 +247,9 @@ creation
 \"[aA][nN][dD]\ [tT][hH][eE][nN]\"	last_token := process_operator (E_STRANDTHEN)
 \"[oO][rR]\ [eE][lL][sS][eE]\"		last_token := process_operator (E_STRORELSE)
 \"[iI][mM][pP][lL][iI][eE][sS]\"	last_token := process_operator (E_STRIMPLIES)
-\"[@#|&][^%"\0-\32\127-\255]*\"		{
+\"[@#|&][^%" \t\r\n]*\"		{
 			if is_operator then
+				is_operator := False
 				last_token := E_STRFREEOP
 			else
 				last_token := E_STRING
@@ -498,6 +505,7 @@ feature {NONE} -- Processing
 			text_count_large_enough: text_count > 2
 		do
 			if is_operator then
+				is_operator := False
 				Result := op
 			else
 				Result := E_STRING
