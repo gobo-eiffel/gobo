@@ -27,9 +27,13 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := is_compilable xor is_cleanable
+			Result := (is_compilable and not (is_cleanable or is_tunable)) or
+				(is_cleanable and not (is_compilable or is_tunable)) or
+				(is_tunable and not (is_compilable or is_cleanable))
 		ensure then
-			compilable_xor_cleanable: Result implies (is_compilable xor is_cleanable)
+			definition: Result = ((is_compilable and not (is_cleanable or is_tunable)) or
+				(is_cleanable and not (is_compilable or is_tunable)) or
+				(is_tunable and not (is_compilable or is_cleanable)))
 		end
 
 	is_compilable: BOOLEAN is
@@ -50,6 +54,15 @@ feature -- Status report
 			clean_not_empty: Result implies clean.count > 0
 		end
 
+	is_tunable: BOOLEAN is
+			-- Can system be tuned?
+		do
+			Result := tuned_system /= Void and then tuned_system.count > 0
+		ensure
+			tuned_system_not_void: Result implies tuned_system /= Void
+			tuned_system_not_empty: Result implies tuned_system.count > 0
+		end
+
 feature -- Access
 
 	esd_filename: STRING
@@ -61,6 +74,12 @@ feature -- Access
 	recursive_clean: BOOLEAN
 			-- Should clean be run recursively on
 			-- subdirectories?
+
+	tuned_system: STRING
+			-- Name of system being tuned by 'vetuner'.
+
+	tuning_level: STRING
+			-- Tuning level
 
 feature -- Setting
 
@@ -88,6 +107,22 @@ feature -- Setting
 			recursive_clean_set: recursive_clean = b
 		end
 
+	set_tuned_system (a_tuned_system: like tuned_system) is
+			-- Set `tuned_system' to `a_tuned_system'.
+		do
+			tuned_system := a_tuned_system
+		ensure
+			tuned_system_set: tuned_system = a_tuned_system
+		end
+
+	set_tuning_level (a_tuning_level: like tuning_level) is
+			-- Set `tuning_level' to `a_tuning_level'.
+		do
+			tuning_level := a_tuning_level
+		ensure
+			tuning_level_set: tuning_level = a_tuning_level
+		end
+
 feature -- Execution
 
 	execute is
@@ -102,10 +137,61 @@ feature -- Execution
 				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
 				cmd.append_string (a_filename)
 				trace ("  [ve] " + cmd + "%N")
+				file_system.delete_file ("Result.out")
 				execute_shell (cmd)
+			elseif is_tunable then
+				execute_tuner
 			else
 				check is_cleanable: is_cleanable end
 				execute_clean
+			end
+		end
+
+	execute_tuner is
+			-- Tune system.
+		require
+			is_tunable: is_tunable
+		local
+			cmd: STRING
+		do
+			if operating_system.is_windows then
+				if tuning_level /= Void then
+					if tuning_level.is_equal ("large") then
+						cmd := "vetuner -c -zone_1_reserved=67108864 %
+							%-zone_2_reserved=67108864 -zone_3_reserved=67108864 %
+							%-zone_4_reserved=67108864 -zone_5_reserved=67108864 %
+							%-zone_6_reserved=67108864 -zone_7_reserved=67108864 %
+							%-zone_8_reserved=67108864 -zone_9_reserved=67108864 %
+							%-zone_10_reserved=67108864 -zone_11_reserved=134217728 %
+							%-zone_12_reserved=67108864 -zone_1_committed=8192 %
+							%-zone_2_committed=8192 -zone_3_committed=8192 %
+							%-zone_4_committed=8192 -zone_5_committed=8192 %
+							%-zone_6_committed=8192 -zone_7_committed=8192 %
+							%-zone_8_committed=8192 -zone_9_committed=8192 %
+							%-zone_10_committed=8192 -zone_11_committed=65536 %
+							%-zone_12_committed=8192 " + tuned_system
+						trace ("  [ve] " + cmd + "%N")
+						execute_shell (cmd)
+					elseif tuning_level.is_equal ("huge") then
+						cmd := "vetuner -c -zone_1_reserved=134217728 %
+							%-zone_2_reserved=134217728 -zone_3_reserved=134217728 %
+							%-zone_4_reserved=134217728 -zone_5_reserved=134217728 %
+							%-zone_6_reserved=134217728 -zone_7_reserved=134217728 %
+							%-zone_8_reserved=134217728 -zone_9_reserved=134217728 %
+							%-zone_10_reserved=134217728 -zone_11_reserved=300000000 %
+							%-zone_12_reserved=134217728 -zone_1_committed=16384 %
+							%-zone_2_committed=16384 -zone_3_committed=16384 %
+							%-zone_4_committed=16384 -zone_5_committed=16384 %
+							%-zone_6_committed=16384 -zone_7_committed=16384 %
+							%-zone_8_committed=16384 -zone_9_committed=16384 %
+							%-zone_10_committed=16384 -zone_11_committed=131072 %
+							%-zone_12_committed=16384 " + tuned_system
+						trace ("  [ve] " + cmd + "%N")
+						execute_shell (cmd)
+					else
+						exit_code := 1
+					end
+				end
 			end
 		end
 

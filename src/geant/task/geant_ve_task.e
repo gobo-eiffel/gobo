@@ -54,6 +54,20 @@ feature {NONE} -- Initialization
 					command.set_recursive_clean (uc_boolean_value (Recursive_attribute_name))
 				end
 			end
+				-- tune:
+			if has_uc_attribute (Tune_attribute_name) then
+				a_value := attribute_value_or_default (Tune_attribute_name.out, "")
+				if a_value.count > 0 then
+					command.set_tuned_system (a_value)
+				end
+					-- level:
+				if has_uc_attribute (Level_attribute_name) then
+					a_value := attribute_value_or_default (Level_attribute_name.out, "")
+					if a_value.count > 0 then
+						command.set_tuning_level (a_value)
+					end
+				end
+			end
 		end
 
 feature -- Access
@@ -85,6 +99,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "recursive"
 		once
 			!! Result.make_from_string ("recursive")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+	Tune_attribute_name: UC_STRING is
+			-- Name of xml attribute for "tune"
+		once
+			!! Result.make_from_string ("tune")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+	Level_attribute_name: UC_STRING is
+			-- Name of xml attribute for "level"
+		once
+			!! Result.make_from_string ("level")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
