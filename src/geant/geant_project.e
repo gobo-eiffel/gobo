@@ -56,6 +56,9 @@ feature -- Access
 	build_successful: BOOLEAN
 			-- Was last build successful?
 
+	verbose: BOOLEAN
+		-- Print additional information during build process?
+
 	target_with_name (a_name: UC_STRING): GEANT_ELEMENT is
 			-- Target with `name' `a_name'
 		require
@@ -81,6 +84,14 @@ feature -- Access
 		end
 
 feature -- Setting
+
+	set_verbose (a_verbose: BOOLEAN) is
+			-- Set `verbose' to `a_verbose'
+		do
+			verbose := a_verbose
+		ensure
+			verbose_set: verbose = a_verbose
+		end
 
 feature -- Processing
 
@@ -154,17 +165,19 @@ feature -- Processing
 			build_targets_not_empty: Build_targets.count > 0
 		local
 			a_target: GEANT_ELEMENT
-			a_dependend_targets: DS_ARRAYED_STACK [GEANT_ELEMENT]
+			a_dependent_targets: DS_ARRAYED_STACK [GEANT_ELEMENT]
 		do
-				-- Get dependend targets:
+				-- Get dependent targets:
 			a_target := Build_targets.item
 --!!print("**pushing target : " + a_target.attribute_value_by_name (Name_attribute_name).out + "%N")
-			a_dependend_targets := targets_dependend_targets(a_target)
-				-- Add all dependend targets to `Build_targets':
-			from until a_dependend_targets.count = 0 loop
-				Build_targets.force (a_dependend_targets.item)
-				a_dependend_targets.remove
-					-- Recursive call of routine for dependend target:
+			a_dependent_targets := targets_dependent_targets(a_target)
+
+
+				-- Add all dependent targets to `Build_targets':
+			from until a_dependent_targets.count = 0 loop
+				Build_targets.force (a_dependent_targets.item)
+				a_dependent_targets.remove
+					-- Recursive call of routine for dependent target:
 				calculate_build_order
 			end
 		end
@@ -195,33 +208,130 @@ feature -- Processing
 
 		end
 
-	targets_dependend_targets (a_target: GEANT_ELEMENT): DS_ARRAYED_STACK [GEANT_ELEMENT] is
-			-- Execute all tasks of `a_target' in sequential order
+	targets_dependent_targets (a_target: GEANT_ELEMENT): DS_ARRAYED_STACK [GEANT_ELEMENT] is
+			-- All dependent targets of `a_target'
 			--!! Candidate feature for GEANT_TARGET
 		require
 			target_not_void: a_target /= Void
 		local
 			an_element: GEANT_ELEMENT
 			a_value: UC_STRING
+			a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]
+			i: INTEGER
 		do
 			!! Result.make (10)
 			if a_target.has_attribute (Depends_attribute_name) then
 				a_value := a_target.attribute_value_by_name (Depends_attribute_name)
 
-					--!! Todo: check for more than one target separated by commas
-					--!! Currently only one dependent target possible
+					-- Check for targets separated by commas:
+				a_dependent_targets := string_tokens (a_value)
 
-				an_element := target_with_name (a_value)
-				if an_element /= Void then
-					Result.force (an_element)
-				else
-					print ("geant error: unknown dependend target '" + a_value.out + "'%N")
+				if verbose then
+					show_dependent_targets (a_dependent_targets)
+				end
+
+					-- Loop backwards so that leftmost dependent target gets executed first
+				from i := 1 until i > a_dependent_targets.count loop
+					a_value := a_dependent_targets.item (i)
+					an_element := target_with_name (a_value)
+					if an_element /= Void then
+						Result.force (an_element)
+					else
+						print ("geant error: unknown dependent target '" + a_value.out + "'%N")
 --!!					Exceptions.die (1)
+					end
+					i := i + 1
 				end
 			end
 		ensure
-			dependend_targets_not_void: Result /= Void
+			dependent_targets_not_void: Result /= Void
 		end
+
+	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]) is
+		local
+			i: INTEGER
+		do
+			print ("======= DEPS ==========%N")
+			from i := 1 until i > a_dependent_targets.count loop
+				print (a_dependent_targets.item (i).out + "%N")
+				i := i + 1
+			end
+			print ("=================%N")
+		end
+
+	string_tokens (a_string: UC_STRING): DS_ARRAYED_LIST [UC_STRING] is
+			-- Strings delimited by commas in `a_string'
+			-- Candidate for STRING_ROUTINES
+		require
+			string_not_void: a_string /= Void
+		local
+			a_delimiter: UC_CHARACTER
+			s: UC_STRING
+			ucs: UC_STRING
+			p_start: INTEGER
+			p_end: INTEGER
+			nice_string: BOOLEAN
+		do
+			s := clone (a_string)
+			!! Result.make (5)
+			a_delimiter.make_from_character (',')
+
+				-- Cleanup String:
+			from
+				s.left_adjust
+				s.right_adjust
+			until
+				nice_string
+			loop
+				nice_string := True
+				if s.count > 0 then
+					if s.item (1) = a_delimiter then
+						s.tail(s.count - 1)
+						nice_string := False
+					end
+				end
+	
+				if s.count > 0 then
+					if s.item (s.count) = a_delimiter then
+						s.head(s.count - 1)
+						nice_string := False
+					end
+				end
+
+			end
+
+				-- Find Tokens:
+			from 
+				p_start := 1
+				p_end := s.index_of (a_delimiter, p_start)
+			until
+				p_end = 0 or p_start > s.count
+			loop
+				ucs := s.substring (p_start, p_end - 1)
+				ucs.left_adjust
+				ucs.right_adjust
+				if ucs.count > 0 then
+					Result.force_last (ucs)
+				end
+				p_start := p_end + 1
+
+				if p_start <= s.count then
+					p_end := s.index_of (a_delimiter, p_start)
+				end
+			end
+
+				-- Append last token:
+			if p_start <= s.count then
+				ucs := s.substring (p_start, s.count)
+				ucs.left_adjust
+				ucs.right_adjust
+				if ucs.count > 0 then
+					Result.force_last (ucs)
+				end
+			end
+
+		end
+
 
 	execute_tasks_of_target (a_target: GEANT_ELEMENT) is
 			-- Execute all tasks of `a_target' in sequential order
