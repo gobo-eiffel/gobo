@@ -28,7 +28,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_prefix: like ns_prefix; a_value: like value; a_parent: XM_ELEMENT) is
+	make (a_name: like name; a_ns: like namespace; a_value: like value; a_parent: XM_ELEMENT) is
 			-- Create a new attribute.
 		require
 			a_name_not_void: a_name /= Void
@@ -37,12 +37,12 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 		do
 			name := a_name
-			ns_prefix := a_prefix
+			namespace := a_ns
 			value := a_value
 			parent := a_parent
 		ensure
 			name_set: name = a_name
-			ns_prefix_set: ns_prefix = a_prefix
+			ns_prefix_set: namespace = a_ns
 			value_set: value = a_value
 			parent_set: parent = a_parent
 		end
@@ -60,9 +60,6 @@ feature -- Status report
 		end
 
 feature -- Access
-
-	value: STRING
-			-- Value
 
 	namespace_declaration: XM_NAMESPACE is
 			-- Namespace declaration
@@ -86,6 +83,11 @@ feature -- Access
 		ensure
 			namespace_not_void: Result /= Void
 		end
+
+feature -- Access
+
+	value: STRING
+			-- Value
 
 feature -- Setting
 

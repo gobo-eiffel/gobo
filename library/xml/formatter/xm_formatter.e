@@ -248,7 +248,7 @@ feature -- Non standard processor routines
 			a_node_not_void: a_node /= Void
 		do
 			if a_node.has_namespace then
-				append (a_node.namespace)
+				append (a_node.namespace.uri)
 				append (Eq_s)
 			end
 			append (a_node.name)
