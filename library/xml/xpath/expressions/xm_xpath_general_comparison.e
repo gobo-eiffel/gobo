@@ -245,29 +245,40 @@ feature {NONE} -- Implementation
 			second_type_not_void: another_type /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if a_type = type_factory.untyped_atomic_type then
 				if another_type = type_factory.untyped_atomic_type then
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.string_type, False)
+					adopt_child_expression (first_operand)
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.string_type, False)
+					adopt_child_expression (second_operand)
 				elseif is_sub_type (another_type, type_factory.numeric_type) then
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.double_type, False)
+					adopt_child_expression (first_operand)
 				else
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (second_operand, another_type, False)
+					adopt_child_expression (first_operand)
 				end
 			elseif another_type = type_factory.untyped_atomic_type then
 				if is_sub_type (a_type, type_factory.numeric_type) then
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.double_type, False)
+					adopt_child_expression (second_operand)
 				else
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, a_type, False)
+					adopt_child_expression (second_operand)
 				end	
 			end
 			
-			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
-			an_expression.simplify
-			if not an_expression.is_error then
-				if an_expression.was_expression_replaced then
-					an_expression := an_expression.replacement_expression
+			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
+			-- TODO copy location
+			a_computed_expression.set_parent (container)
+			a_computed_expression.simplify
+			if not a_computed_expression.is_error then
+				if a_computed_expression.was_expression_replaced then
+					an_expression := a_computed_expression.replacement_expression
+				else
+					an_expression := a_computed_expression
 				end
 				an_expression.analyze (a_context)
 				if an_expression.was_expression_replaced then

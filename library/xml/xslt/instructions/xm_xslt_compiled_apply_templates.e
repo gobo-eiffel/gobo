@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
 
 			if returns_tail_call then
-				select_expression.lazily_evaluate (a_context)
+				select_expression.lazily_evaluate (a_context, False)
 				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} last_tail_call.make ( select_expression.last_evaluation,
 																									a_mode, some_parameters,
 																									some_tunnel_parameters,

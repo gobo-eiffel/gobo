@@ -79,9 +79,21 @@ feature -- Status setting
 			-- Set all arguments.
 		require
 			arguments_not_void: args /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			arguments := args
-			arguments.set_equality_tester (expression_tester)
+			arguments.set_equality_tester (expression_tester)											
+			from
+				a_cursor := arguments.new_cursor; a_cursor.start
+			variant
+				arguments.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				adopt_child_expression (a_cursor.item)
+				a_cursor.forth
+			end
 		ensure
 			arguments_set: arguments = args
 		end
@@ -116,6 +128,7 @@ feature -- Optimization
 					set_last_error (an_argument.error_value)
 				elseif an_argument.was_expression_replaced then
 					arguments_cursor.replace (an_argument.replacement_expression)
+					adopt_child_expression (an_argument.replacement_expression)
 				end
 				arguments_cursor.forth
 			end
@@ -149,6 +162,7 @@ feature -- Optimization
 					if arguments_cursor.item.was_expression_replaced then
 						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
 						arguments_cursor.item.mark_unreplaced
+						adopt_child_expression (arguments_cursor.item)
 					end
 					
 					a_value ?= arguments_cursor.item

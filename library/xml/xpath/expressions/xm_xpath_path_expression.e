@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions, same_expression, iterator
+			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions,
+			same_expression, iterator, is_repeated_sub_expression
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -43,6 +44,8 @@ feature {NONE} -- Initialization
 		do
 			start := a_start
 			step := a_step
+			adopt_child_expression (start)
+			adopt_child_expression (step)
 
 			-- If start is a path expression such as a, and step is b/c, then
 			--  instead of a/(b/c) we construct (a/b)/c.
@@ -96,6 +99,12 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 			Result.put (start, 1)
 			Result.put (step, 2)
+		end
+
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' a repeatedly-evaluated sub-expression?
+		do
+			Result := a_child = step
 		end
 
 	first_step: XM_XPATH_EXPRESSION is

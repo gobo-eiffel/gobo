@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 			operator := a_token
 			set_first_operand (an_operand_one)
 			set_second_operand (an_operand_two)
+			adopt_child_expression (an_operand_one)
+			adopt_child_expression (an_operand_two)
 			compute_static_properties
 			initialize
 		ensure

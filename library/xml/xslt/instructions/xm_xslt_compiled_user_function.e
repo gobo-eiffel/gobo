@@ -31,8 +31,14 @@ feature {NONE} -- Initialization
 			body_not_void: a_body /= Void
 			function_name_not_void: a_function_name /= Void
 			system_id_not_void: a_system_id /= Void
+		local
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			body := a_body
+			a_computed_expression ?= body
+			if a_computed_expression /= Void then
+				a_computed_expression.set_parent (Current)
+			end
 			function_name := a_function_name
 			create details.make ("xsl:function", a_system_id, a_line_number, empty_property_set)
 		ensure
@@ -61,7 +67,7 @@ feature -- Evaluation
 				end
 				a_bindery := a_transformer.bindery
 				a_bindery.open_stack_frame_with_positional_parameters (some_actual_arguments)
-				body.eagerly_evaluate (a_transformer.new_xpath_context)
+				body.lazily_evaluate (a_transformer.new_xpath_context, False)
 				last_called_value := body.last_evaluation
 				if evaluate_tail_calls then
 					an_object_value ?= last_called_value

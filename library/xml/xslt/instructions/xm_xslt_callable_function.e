@@ -16,6 +16,8 @@ inherit
 
 	HASHABLE
 
+	XM_XPATH_EXPRESSION_CONTAINER
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
@@ -31,16 +33,55 @@ feature -- Access
 	last_called_value: XM_XPATH_VALUE
 			-- Result of last call
 
+	parameter_definitions: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]
+			-- Parameters to the call
+
 	hash_code: INTEGER is
 			-- hash code
 		do
 			Result := function_name.hash_code
 		end
 
+	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
+			-- Approximate count of references by parameters of `Current' to `a_binding'
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_USER_FUNCTION_PARAMETER]
+		do
+			if parameter_definitions /= Void then
+				from
+					a_cursor := parameter_definitions.new_cursor; a_cursor.start
+				variant
+					parameter_definitions.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					if a_binding = a_cursor.item then
+						Result := 1
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
+				end
+				if Result = 0 then Result := 10 end -- if binding not found, assume many references
+			end
+		end
+
 feature -- Status report
 
 	is_memo_function: BOOLEAN
 			-- Is `Current' marked as a memo function?
+
+	is_computed_expression: BOOLEAN is
+			-- Is `Current' a computed expression?
+		do
+			-- Result := False
+		end
+
+	is_user_function: BOOLEAN is
+			-- Is `Current' a compiled user function?
+		do
+			Result := True
+		end
 
 feature -- Evaluation
 
@@ -53,6 +94,18 @@ feature -- Evaluation
 		deferred
 		ensure
 			called_value_not_void: last_called_value /= Void -- but may be an error value
+		end
+
+feature -- Element change
+
+	set_parameter_definitions (some_parameters: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]) is
+			-- Set `parameter_definitions'.
+		require
+			parameter_definitions_not_void: some_parameters /= Void
+		do
+			parameter_definitions := some_parameters
+		ensure
+			parameter_definitions_set: parameter_definitions = some_parameters
 		end
 
 feature {NONE} -- Implementation

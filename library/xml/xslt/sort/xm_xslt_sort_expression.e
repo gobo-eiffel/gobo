@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, iterator, compute_special_properties
+			simplify, iterator, compute_special_properties, is_repeated_sub_expression 
 		end
 
 creation
@@ -83,6 +83,33 @@ feature -- Access
 			-- Data type of the expression, when known
 		do
 			Result := select_expression.item_type
+		end
+
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' a repeatedly-evaluated sub-expression?
+		do
+			Result := is_sort_key (a_child)
+		end
+
+	is_sort_key (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' one of the sort-keys?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+		do
+			from
+				a_cursor := sort_key_list.new_cursor; a_cursor.start
+			variant
+				sort_key_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				if a_child = a_cursor.item.sort_key then
+					Result := True
+					a_cursor.go_after
+				else
+					a_cursor.forth
+				end
+			end
 		end
 
 feature -- Status report

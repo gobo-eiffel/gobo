@@ -15,9 +15,9 @@ class XM_XPATH_ITEM_CHECKER
 
 inherit
 
-	XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
+			simplify, analyze, iterator, evaluate_item, item_type, same_expression
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -35,22 +35,20 @@ feature {NONE} -- Initialization
 				role_locator_not_void: a_role_locator /= Void
 				item_type_not_void: an_item_type /= Void
 		do
-			sequence := a_sequence
+			make_unary (a_sequence)
 			role_locator := a_role_locator
 			required_item_type := an_item_type
 			compute_static_properties
+			adopt_child_expression (base_expression)
 			initialize
 		ensure
-			sequence_set: sequence = a_sequence
+			base_expression_set: base_expression = a_sequence
 			role_locator_set: role_locator = a_role_locator
 			item_type_set: required_item_type = an_item_type
 			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
-
-	sequence: XM_XPATH_EXPRESSION
-			-- The underlying expression
 
 	required_item_type: XM_XPATH_ITEM_TYPE
 			-- The required type for items
@@ -68,30 +66,17 @@ feature -- Access
 			end
 		end
 
+feature -- Comparison
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
-		do
-			create Result.make (1)
-			Result.set_equality_tester (expression_tester)
-			Result.put_last (sequence)
-		end
-
-feature -- Status report
-
-	display (a_level: INTEGER) is
-			-- Diagnostic print of expression structure to `std.error'
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
 		local
-			a_string: STRING
+			other_checker: XM_XPATH_ITEM_CHECKER
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "treat as ")
-			a_string := STRING_.appended_string (a_string, required_item_type.conventional_name)
-			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				sequence.display (a_level + 1)
+			other_checker ?= other
+			if other_checker /= Void then
+				Result := base_expression.same_expression (other_checker.base_expression) 
+					and then other_checker.required_item_type = required_item_type
 			end
 		end
 
@@ -100,37 +85,38 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		do
-			sequence.simplify
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
+			base_expression.simplify
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end
-			if required_item_type = any_item or else sequence.is_error then
-				set_replacement (sequence)
+			if required_item_type = any_item or else base_expression.is_error then
+				set_replacement (base_expression)
 			end
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
+		local
+			a_relation: INTEGER
+			a_message: STRING
 		do
 			mark_unreplaced
-			sequence.analyze (a_context)
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end
-			if sequence.is_error then
-				set_last_error (sequence.error_value)
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			else
-				if is_sub_type (sequence.item_type, required_item_type) then
-					set_replacement (sequence)
+				a_relation := type_relationship (required_item_type, base_expression.item_type)
+				if a_relation = Same_item_type or else a_relation = Subsuming_type then
+					set_replacement (base_expression)
+				elseif a_relation = Disjoint_types then
+					a_message := "Required type of " + role_locator.message + " is "
+					+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
+					set_last_error_from_string (a_message, Xpath_errors_uri, "XP0004", Static_error)
 				end
 			end
-		end
-
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this subexpression.
-		do
-			sequence.promote (an_offer)
-			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 		end
 
 feature -- Evaluation
@@ -138,8 +124,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			sequence.evaluate_item (a_context)
-			last_evaluated_item := sequence.last_evaluated_item
+			base_expression.evaluate_item (a_context)
+			last_evaluated_item := base_expression.last_evaluated_item
 			if last_evaluated_item = Void then
 				do_nothing  -- can this occur?
 			elseif last_evaluated_item.is_error then
@@ -150,11 +136,11 @@ feature -- Evaluation
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
+			-- Iterator over the values of a base_expression
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := sequence.iterator (a_context)
+			an_iterator := base_expression.iterator (a_context)
 			if an_iterator.is_error then
 				Result := an_iterator
 			else
@@ -169,32 +155,12 @@ feature -- Evaluation
 			create Result.make_item (an_item)
 		end
 
-feature {XM_XPATH_ITEM_CHECKER} -- Local
-
-	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
-			-- Set `sequence'.
-		require
-			underlying_expression_not_void: a_sequence /= Void
-		do
-			sequence := a_sequence
-			if sequence.was_expression_replaced then sequence.mark_unreplaced end
-		ensure
-			sequence_set: sequence = a_sequence
-			sequence_not_marked_for_replacement: not sequence.was_expression_replaced
-		end
-
 feature {XM_XPATH_EXPRESSION} -- Restricted
 	
-	compute_cardinality is
-			-- Compute cardinality.
+	display_operator: STRING is
+			-- Format `operator' for display
 		do
-			clone_cardinality (sequence)
-		end
-
-	compute_special_properties is
-			-- Compute special properties.
-		do
-			clone_special_properties (sequence)
+			Result := "treat as " + required_item_type.conventional_name
 		end
 
 feature {NONE} -- Implementation
@@ -219,7 +185,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	underlying_expression_not_void: sequence /= Void
 	role_locator_not_void: role_locator /= void
 	item_type_not_void: required_item_type /= Void
 

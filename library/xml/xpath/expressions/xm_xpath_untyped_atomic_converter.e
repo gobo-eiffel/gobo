@@ -15,9 +15,9 @@ class XM_XPATH_UNTYPED_ATOMIC_CONVERTER
 
 inherit
 
-	XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			sub_expressions, simplify, promote, evaluate_item, iterator
+			item_type, analyze, evaluate_item, iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -34,13 +34,13 @@ feature {NONE} -- Initialization
 			sequence_not_void: a_sequence /= Void
 			target_type_not_void: a_required_type /= Void
 		do
-			sequence := a_sequence
+			make_unary (a_sequence)
 			target_type := a_required_type
 			compute_static_properties
 			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
-			sequence_set: sequence = a_sequence
+			base_expression_set: base_expression = a_sequence
 			target_type_set: target_type = a_required_type
 			static_properties_computed: are_static_properties_computed
 		end
@@ -50,84 +50,53 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			Result := sequence.item_type
+			Result := target_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
 		end
 
-
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
-		do
-			create Result.make (1)
-			Result.set_equality_tester (expression_tester)
-			Result.put (sequence, 1)
-		end
-			
-feature -- Status report
-
-	display (a_level: INTEGER) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indentation (a_level), "convert untyped atomic items to ")
-			a_string := STRING_.appended_string (a_string, target_type.conventional_name)
-			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				sequence.display (a_level + 1)
-			end
-		end
-
 feature -- Optimization	
-
-	simplify is
-			-- Perform context-independent static optimizations.
-		do
-			sequence.simplify
-			if sequence.is_error then
-				set_last_error (sequence.error_value)
-			elseif sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
-			end
-		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
 			a_type: XM_XPATH_ITEM_TYPE
+			a_value: XM_XPATH_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			mark_unreplaced
-			sequence.analyze (a_context)
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end
-			if sequence.is_error then
-				set_last_error (sequence.error_value)
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			else
-				a_type := sequence.item_type
-				if not is_sub_type (a_type, any_node_test) then
-					if not (a_type = any_item or else a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type) then
-
-						-- The sequence can't contain any untyped atomic values,
-						--  so there's no need for a converter
-
-						set_replacement (sequence)
+				a_value ?= base_expression
+				if a_value /= Void then
+					an_iterator := iterator (Void)
+					if an_iterator.is_error then
+						set_last_error (an_iterator.error_value)
+					else
+						create an_extent.make (an_iterator)
+						set_replacement (an_extent)
+					end
+				else
+					a_type := base_expression.item_type
+					if not is_sub_type (a_type, any_node_test) then
+						if not (a_type = any_item or else a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type) then
+							
+							-- The base_expression can't contain any untyped atomic values,
+							--  so there's no need for a converter
+							
+							set_replacement (base_expression)
+						end
 					end
 				end
 			end
-		end
-
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this subexpression.
-		do
-			sequence.promote (an_offer)
-			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 		end
 
 feature -- Evaluation
@@ -137,17 +106,17 @@ feature -- Evaluation
 		local
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
-			sequence.evaluate_item (a_context)
-			if sequence.last_evaluated_item = Void then
+			base_expression.evaluate_item (a_context)
+			if base_expression.last_evaluated_item = Void then
 				last_evaluated_item := Void
-			elseif sequence.last_evaluated_item.is_error then
-				last_evaluated_item := sequence.last_evaluated_item
+			elseif base_expression.last_evaluated_item.is_error then
+				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				an_untyped_atomic_value ?= sequence.last_evaluated_item
+				an_untyped_atomic_value ?= base_expression.last_evaluated_item
 				if an_untyped_atomic_value /= Void then
 					last_evaluated_item := an_untyped_atomic_value.convert_to_type (target_type)
 				else
-					last_evaluated_item := sequence.last_evaluated_item
+					last_evaluated_item := base_expression.last_evaluated_item
 				end
 			end
 		end
@@ -157,7 +126,7 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := sequence.iterator (a_context)
+			an_iterator := base_expression.iterator (a_context)
 			if an_iterator.is_error then
 				Result := an_iterator
 			else
@@ -180,32 +149,17 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 	
-	sequence: XM_XPATH_EXPRESSION
-			-- Base expression 
-
 	target_type: XM_XPATH_ITEM_TYPE
 			-- Target type 
 
-	compute_cardinality is
-			-- Compute cardinality.
+	display_operator: STRING is
+			-- Format `operator' for display
 		do
-			clone_cardinality (sequence)
+			Result := "convert untyped atomic items to " + target_type.conventional_name
 		end
-
-	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
-			-- Set `sequence'
-		require
-			sequence_not_void: a_sequence /= Void
-		do
-			sequence := a_sequence
-		ensure
-			sequence_set: sequence = a_sequence
-		end
-
 
 invariant
 
-	sequence_not_void: sequence /= Void
 	target_type_not_void: target_type /= Void
 
 end

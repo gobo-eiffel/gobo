@@ -384,7 +384,6 @@ feature {NONE} -- Implementation
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_user_function: XM_XSLT_COMPILED_USER_FUNCTION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
-			a_param: XM_XSLT_COMPILED_PARAM
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			debug ("XSLT memo function")
@@ -402,10 +401,7 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.after
 			loop
-				a_param ?= a_cursor.item
-				if a_param = Void then
-					some_children.put_last (a_cursor.item)
-				end
+				some_children.put_last (a_cursor.item)
 				a_cursor.forth
 			end
 			an_expression := converted_expression (some_children, 1)
@@ -422,6 +418,7 @@ feature {NONE} -- Implementation
 			end
 			create a_user_function.make (an_expression, function_name, system_id, line_number)
 			fixup_instruction (a_user_function)
+			set_parameter_definitions (a_user_function)
 		end
 
 	converted_expression (some_children: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]; a_position: INTEGER): XM_XPATH_EXPRESSION is
@@ -489,7 +486,6 @@ feature {NONE} -- Implementation
 			some_children: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
 			a_function: XM_XSLT_FUNCTION_INSTRUCTION
-			a_param: XM_XSLT_COMPILED_PARAM
 		do
 			debug ("XSLT memo function")
 				if is_memo_function then
@@ -506,15 +502,13 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.after
 			loop
-				a_param ?= a_cursor.item
-				if a_param = Void then
-					some_children.put_last (a_cursor.item)
-				end
+				some_children.put_last (a_cursor.item)
 				a_cursor.forth
 			end
 			a_body.set_children (some_children)
 			create a_function.make (a_body, function_name, base_uri, line_number, is_memo_function)
 			fixup_instruction (a_function)
+			set_parameter_definitions (a_function)
 		end
 
 	fixup_instruction (a_user_function: XM_XSLT_CALLABLE_FUNCTION) is
@@ -539,6 +533,34 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_parameter_definitions (a_user_function: XM_XSLT_CALLABLE_FUNCTION) is
+			-- Compile and save the xsl:param definitions.
+		require
+			user_function_not_void: a_user_function /= Void
+		local
+			some_parameters: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_param: XM_XSLT_PARAM
+			a_function_param: XM_XSLT_USER_FUNCTION_PARAMETER
+			a_reference_count: INTEGER
+		do
+			create some_parameters.make_default
+			a_user_function.set_parameter_definitions (some_parameters)
+			from
+				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+			until
+				an_iterator.after
+			loop
+				a_param ?= an_iterator.item
+				if a_param /= Void then
+					create a_function_param.make (a_param.required_type, a_param.slot_number, a_param.variable_name)
+					a_param.fixup_binding (a_function_param)
+					a_function_param.set_reference_count (a_param.references)
+				end
+				an_iterator.forth
+			end
+		end
+			
 invariant
 
 	references_not_void: references /= Void

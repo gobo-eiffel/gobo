@@ -1896,6 +1896,7 @@ feature {NONE} -- Implementation
 							else
 								function_library.bind_function (a_fingerprint, arguments, environment.is_restricted)
 								internal_last_parsed_expression := function_library.last_bound_function
+								-- TODO set location
 							end
 						end
 					end

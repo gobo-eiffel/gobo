@@ -113,6 +113,7 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_type: XM_XPATH_ITEM_TYPE
 			a_value: XM_XPATH_VALUE
+			a_reference_count: INTEGER
 		do
 			mark_unreplaced
 			if	declaration = Void then
@@ -152,7 +153,6 @@ feature -- Optimization
 				-- Now set the static type of the binding reference, more accurately:
 				
 				declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
-				set_declaration_void 
 				
 				action.analyze (a_context)
 				if action.was_expression_replaced then
@@ -161,6 +161,18 @@ feature -- Optimization
 				if action.is_error then
 					set_last_error (action.error_value)
 				end
+				a_reference_count := declaration.reference_count (Current)
+				if a_reference_count = 0 then
+
+					-- variable is not used - no need to evaluate it
+
+					set_replacement (action)
+				elseif a_reference_count = 1 then
+					keep_value := False
+				else
+					keep_value := True
+				end
+				set_declaration_void 
 			end
 		end
 
@@ -219,7 +231,7 @@ feature -- Evaluation
 		local
 			a_value: XM_XPATH_VALUE
 		do
-			sequence.lazily_evaluate (a_context)
+			sequence.lazily_evaluate (a_context, keep_value)
 			a_value := last_evaluation
 			if slot_number = 0 then
 				set_slot_number (a_context.next_available_slot)
@@ -233,7 +245,7 @@ feature -- Evaluation
 		local
 			a_value: XM_XPATH_VALUE
 		do
-			sequence.lazily_evaluate (a_context)
+			sequence.lazily_evaluate (a_context, keep_value)
 			a_value ?= sequence.last_evaluation
 			if slot_number = 0 then
 				set_slot_number (a_context.next_available_slot)
@@ -257,6 +269,9 @@ feature {NONE} -- Implementation
 		do
 			set_cardinality (action.cardinality)
 		end
+
+	keep_value: BOOLEAN
+			-- Set by `analyze' if the expression will be read more than once
 
 invariant
 

@@ -266,6 +266,8 @@ feature {NONE} -- Implementation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
 			a_function_call: XM_XSLT_FUNCTION_CALL_PACKAGE
+			an_expression: XM_XPATH_EXPRESSION
+			a_value: XM_XPATH_VALUE
 		do
 			create some_actual_arguments.make (arguments.count)
 			from
@@ -275,8 +277,14 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.after
 			loop
-				a_cursor.item.eagerly_evaluate (a_context) -- TODO - lazy evaluation is not working - investigate
-				some_actual_arguments.put (a_cursor.item.last_evaluation, a_cursor.index)
+				an_expression := a_cursor.item
+				a_value ?= an_expression
+				if a_value /= Void then
+					some_actual_arguments.put (a_value, a_cursor.index)
+				else
+					an_expression.lazily_evaluate (a_context, False)
+					some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
+				end
 				a_cursor.forth
 			end
 			if is_tail_recursive then

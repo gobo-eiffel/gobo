@@ -14,9 +14,9 @@ class XM_XPATH_DOCUMENT_SORTER
 
 inherit
 
-		XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, compute_special_properties, sub_expressions, promote, iterator, effective_boolean_value
+			simplify, analyze, compute_special_properties, promote, iterator, effective_boolean_value
 		end
 
 creation
@@ -29,58 +29,21 @@ feature {NONE} -- Initialization
 		require
 			expression_not_void: an_expression /= Void and then an_expression.are_static_properties_computed
 		do
-			base_expression := an_expression
+			make_unary (an_expression)
 			if base_expression.context_document_nodeset then
 				create {XM_XPATH_LOCAL_ORDER_COMPARER} comparer
 			else
 				create {XM_XPATH_GLOBAL_ORDER_COMPARER} comparer
 			end
 			compute_static_properties
+			initialize
 		end
 
 feature -- Access
 
-	base_expression: XM_XPATH_EXPRESSION
-			-- Base expression
-
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Comparer
 	
-	item_type: XM_XPATH_ITEM_TYPE is
-			-- Data type of the expression, where known
-		do
-			Result := base_expression.item_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
-		end
-
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
-		do
-			create Result.make (1)
-			Result.set_equality_tester (expression_tester)
-			Result.put (base_expression, 1)
-		end
-
-feature -- Status report
-
-	display (a_level: INTEGER) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indentation (a_level), "Sort into Document Order")
-			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-			end
-		end
-
 feature -- Optimization
 
 	simplify is
@@ -89,7 +52,9 @@ feature -- Optimization
 			base_expression.simplify
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
-			end			
+			elseif base_expression.ordered_nodeset then
+				set_replacement (base_expression)
+			end
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -102,6 +67,8 @@ feature -- Optimization
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
+			elseif base_expression.ordered_nodeset then
+				set_replacement (base_expression)
 			end
 		end
 
@@ -158,31 +125,11 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_ordered_nodeset
 		end
 	
-feature {XM_XPATH_DOCUMENT_SORTER} -- Local
-
-	set_base_expression (an_expression: XM_XPATH_EXPRESSION) is
-			-- Set `base_expression'.
-		require
-			expression_not_void: an_expression /= Void
+	display_operator: STRING is
+			-- Format `operator' for display
 		do
-			base_expression := an_expression
-			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
-		ensure
-			set: base_expression = an_expression
-			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
+			Result := "sort unique"
 		end
-
-feature {NONE} -- Implementation
-	
-	compute_cardinality is
-			-- Compute cardinality.
-		do
-			clone_cardinality (base_expression)
-		end
-
-invariant
-
-	base_expression_not_void: base_expression /= Void
 
 end
 	

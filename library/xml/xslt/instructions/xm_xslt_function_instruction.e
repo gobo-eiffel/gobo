@@ -32,8 +32,14 @@ feature {NONE} -- Initialization
 			body_not_void: a_body /= Void
 			function_name_not_void: a_function_name /= Void
 			base_uri_not_void: a_base_uri /= Void
+		local
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			body := a_body
+			a_computed_expression ?= body
+			if a_computed_expression /= Void then
+				a_computed_expression.set_parent (Current)
+			end
 			function_name := a_function_name
 			is_memo_function := is_a_memo_function
 			create details.make ("xsl:function", a_base_uri, a_line_number, empty_property_set)

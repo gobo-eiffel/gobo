@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			evaluate_item, effective_boolean_value
+			evaluate_item, effective_boolean_value, is_repeated_sub_expression 
 		end
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -70,6 +70,12 @@ feature -- Access
 			-- Static type of variable
 		do
 			create result.make (sequence.item_type, Required_cardinality_exactly_one)
+		end
+
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' a repeatedly-evaluated sub-expression?
+		do
+			Result := a_child = action
 		end
 
 feature -- Status report

@@ -14,10 +14,9 @@ class XM_XPATH_REVERSER
 
 inherit
 
-	XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, compute_special_properties,
-			sub_expressions, promote, iterator, effective_boolean_value
+			compute_special_properties, promote, iterator, effective_boolean_value
 		end
 
 creation
@@ -31,75 +30,14 @@ feature {NONE} -- Initialization
 		require
 			base_expression_not_void: an_expression /= Void
 		do
-			base_expression := an_expression
+			make_unary (an_expression)
 			compute_static_properties
+			initialize
 		ensure
 			base_expression_set: base_expression = an_expression
 		end
 
-feature -- Access
-
-	base_expression: XM_XPATH_EXPRESSION
-			-- Base expression
-
-	item_type: XM_XPATH_ITEM_TYPE is
-			--Data type of the expression, where known
-		do
-			Result := base_expression.item_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
-		end
-
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
-		do
-			create Result.make (1)
-			Result.set_equality_tester (expression_tester)
-			Result.put (base_expression, 1)
-		end
-
-feature -- Status report
-
-	display (a_level: INTEGER) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indentation (a_level), "Sort into Reverse Order")
-			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-			end
-		end
-
 feature -- Optimization
-
-	simplify is
-			-- Perform context-independent static optimizations.
-		do
-			base_expression.simplify
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-		end
-
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
-		do
-			mark_unreplaced
-			base_expression.analyze (a_context)
-			if base_expression.was_expression_replaced then
-				base_expression := base_expression.replacement_expression
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			end
-		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
@@ -141,20 +79,6 @@ feature -- Evaluation
 			Result := base_expression.effective_boolean_value (a_context)
 		end
 
-feature -- Element change
-
-	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
-			-- Set `base_expression.
-		require
-			base_expression_not_void: a_base_expression /= Void
-		do
-			base_expression := a_base_expression
-			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
-		ensure
-			base_expression_set: base_expression = a_base_expression
-			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
-			end
-
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_special_properties is
@@ -169,17 +93,14 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-feature {NONE} -- Implementation
+
+feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
 	
-	compute_cardinality is
-			-- Compute cardinality.
+	display_operator: STRING is
+			-- Format `operator' for display
 		do
-			clone_cardinality (base_expression)
+			Result := "reverse order"
 		end
-
-invariant
-
-	base_expression_not_void: base_expression /= Void
 
 end
 	

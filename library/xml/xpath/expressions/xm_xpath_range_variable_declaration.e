@@ -19,6 +19,8 @@ inherit
 
 	XM_XPATH_VARIABLE_DECLARATION
 
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_CARDINALITY
@@ -53,7 +55,15 @@ feature -- Access
 
 	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Sequence type required for this variable
-	
+
+	reference_count (a_binding: XM_XPATH_BINDING): INTEGER is
+			-- Reference count
+		require
+			binding_not_void: a_binding /= Void
+		do
+			Result := variable_reference_count (references, a_binding)
+		end
+
 feature -- Element change
 
 	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is

@@ -76,11 +76,16 @@ feature -- Optimization
 			a_value: XM_XPATH_VALUE
 			a_relationship: INTEGER
 			a_required_cardinality: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
-			if a_context /= Void then function_library := a_context.available_functions end
+			static_context := a_context
+			if static_context /= Void then function_library := static_context.available_functions end
 			a_required_cardinality := a_required_type.cardinality
 			initialize (a_supplied_expression, a_required_type)
-
+			handle_xpath_one_compatibility (backwards_compatible)
+			if not item_type_ok then handle_xpath_two_rules end
+			
 			-- If both the cardinality and item type are statically OK, return now.
 			
 			if item_type_ok and cardinality_ok then
@@ -104,16 +109,16 @@ feature -- Optimization
 					-- If we haven't evaluated the item type of the supplied expression, do it now					
 
 					if supplied_item_type = Void then supplied_item_type := checked_expression.item_type end
+
+					-- If the supplied value is () and () isn't allowed, fail now
+
 					if supplied_cardinality = Required_cardinality_empty and then not is_cardinality_allows_zero (a_required_cardinality) then
 						report_error (STRING_.appended_string ("An empty sequence is not allowed as the ", a_role_locator.message))
 					else
-						handle_xpath_one_compatibility (backwards_compatible)
-						conditionally_atomize
-						conditionally_add_untyped_converter
 						
 						-- Try a static type check. We only throw it out if the call cannot possibly succeed.
 						
-						if conformance.customized_host_language and then a_context /= Void and then a_context.is_data_type_valid (supplied_item_type.fingerprint) then
+						if conformance.customized_host_language and then static_context /= Void and then static_context.is_data_type_valid (supplied_item_type.fingerprint) then
 							report_type_check_error (a_role_locator)
 						else
 							a_relationship := type_relationship (supplied_item_type, required_item_type)
@@ -130,7 +135,7 @@ feature -- Optimization
 										a_message := STRING_.appended_string (a_message, "; supplied value has item type ")
 										a_message := STRING_.appended_string (a_message, supplied_item_type.conventional_name)
 										a_message := STRING_.appended_string (a_message, ". The expression can succeed only if the supplied value is an empty sequence.")
-										a_context.issue_warning (a_message)
+										static_context.issue_warning (a_message)
 									end
 								else
 									report_type_check_error (a_role_locator)
@@ -145,16 +150,20 @@ feature -- Optimization
 							--  as well report the error now.
 							
 							if a_relationship /= Same_item_type and then a_relationship /= Subsumed_type then
-								create {XM_XPATH_ITEM_CHECKER} checked_expression.make (checked_expression, required_item_type, a_role_locator)
-								-- TODO need to copy location information
+								an_expression := checked_expression
+								create {XM_XPATH_ITEM_CHECKER} a_computed_expression.make (an_expression, required_item_type, a_role_locator)
+								a_computed_expression.adopt_child_expression (an_expression)
+								checked_expression := a_computed_expression
 							end
 							if not cardinality_ok then
 								a_value ?= checked_expression
 								if a_value /= Void then
 									report_type_check_error (a_role_locator)
 								else
-									create {XM_XPATH_CARDINALITY_CHECKER} checked_expression.make (checked_expression, a_required_type.cardinality, a_role_locator)
-									-- TODO need to copy location information
+									an_expression := checked_expression
+									create {XM_XPATH_CARDINALITY_CHECKER} a_computed_expression.make (an_expression, a_required_type.cardinality, a_role_locator)
+									a_computed_expression.adopt_child_expression (an_expression)
+									checked_expression := a_computed_expression
 								end
 							end
 						end				
@@ -221,38 +230,6 @@ feature {NONE} -- Implementation
 			if not item_type_ok then
 				supplied_item_type := a_supplied_expression.item_type
 				item_type_ok := is_sub_type (supplied_item_type, required_item_type)
-				if not item_type_ok then
-					if is_promotable (supplied_item_type, required_item_type) then
-						item_type_ok := True
-						an_atomic_type ?= required_item_type
-						if allows_many then
-							create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} checked_expression.make (a_supplied_expression, an_atomic_type)
-						else
-							create {XM_XPATH_CAST_EXPRESSION} checked_expression.make (a_supplied_expression, an_atomic_type, True)
-						end
-						a_value ?= checked_expression
-						if a_value /= Void then
-							a_value.eagerly_evaluate (Void)
-							checked_expression := a_value.last_evaluation
-						end
-						supplied_item_type := required_item_type
-					end
-					if supplied_item_type.primitive_type = type_factory.untyped_atomic_type.fingerprint then
-						item_type_ok := True
-						an_atomic_type ?= required_item_type
-						if allows_many then
-							create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} checked_expression.make (a_supplied_expression, an_atomic_type)
-						else
-							create {XM_XPATH_CAST_EXPRESSION} checked_expression.make (a_supplied_expression, an_atomic_type, True)
-						end
-						a_value ?= checked_expression
-						if a_value /= Void then
-							a_value.eagerly_evaluate (Void)
-							checked_expression := a_value.last_evaluation
-						end
-						supplied_item_type := required_item_type
-					end
-				end
 			end
 		end
 
@@ -269,109 +246,26 @@ feature {NONE} -- Implementation
 			-- Handle the special rules for 1.0 compatibility mode
 		local
 			a_number_function: XM_XPATH_NUMBER
-			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			a_value: XM_XPATH_VALUE
+			an_expression: XM_XPATH_EXPRESSION
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if backwards_compatible and not allows_many then
-				if is_sub_type (required_item_type, type_factory.string_type) then
-					if not is_sub_type (supplied_item_type, type_factory.any_atomic_type) then
-						create {XM_XPATH_ATOMIZER_EXPRESSION} checked_expression.make (checked_expression)
-						-- TODO need to copy location information
-					end
-					a_value ?= checked_expression
-					create {XM_XPATH_STRING_CONVERTER_EXPRESSION} checked_expression.make (checked_expression)
-					-- TODO need to copy location information
-					if a_value /= Void then
-						checked_expression.eagerly_evaluate (Void)
-						checked_expression := a_value.last_evaluation
-					end
-					supplied_item_type := type_factory.string_type
-					supplied_cardinality := Required_cardinality_exactly_one
+				if is_cardinality_allows_many (supplied_cardinality) then -- Rule 1
+					an_expression := checked_expression
+					create {XM_XPATH_FIRST_ITEM_EXPRESSION} a_computed_expression.make (an_expression)
+					a_computed_expression.adopt_child_expression (an_expression)
+					checked_expression := a_computed_expression
+					supplied_cardinality := Required_cardinality_optional
 					cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
-				elseif required_item_type = type_factory.numeric_type or else is_sub_type (required_item_type, type_factory.double_type) then
-					
-					-- TODO: in the Nov 2003 draft, the rules have changed so that number() is called
-					-- only if the supplied value doesn't match the expected type. We're currently
-					-- returning different results for round(()) depending on whether the arg value
-					-- is known statically or not.
-
-					if function_library /= Void then
-						create new_arguments.make (1)
-						new_arguments.put_last (checked_expression)
-						function_library.bind_function (Number_function_type_code, new_arguments, False)
-						a_number_function ?= function_library.last_bound_function
-						check
-							number_function: a_number_function /= Void
-						end
-						checked_expression := a_number_function
-						-- TODO copy location info
-						a_value ?= checked_expression
-						if a_value /= Void then
-							checked_expression.eagerly_evaluate (Void)
-							checked_expression := a_value.last_evaluation
-						end
-						supplied_item_type := type_factory.double_type
-						supplied_cardinality := Required_cardinality_exactly_one
-					else
-						check
-							False
-							-- We must have a static context to detect XPath 1.0 compatibility, and therefore
-							--  `function_library' cannot be Void
-						end
+				end
+				if not item_type_ok then
+					if required_item_type = type_factory.string_type then -- Rule 2
+						wrap_in_string_function
+					elseif required_item_type = type_factory.numeric_type
+						or else required_item_type = type_factory.double_type then  -- Rule 3
+						wrap_in_number_function
 					end
-				elseif required_item_type = any_node_test or else required_item_type = any_item or else required_item_type = type_factory.any_atomic_type then
-					-- TODO:this last condition isn't in the rules for function calls,
-					-- but is needed for arithmetic expressions
-					if is_cardinality_allows_many (supplied_cardinality) then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} checked_expression.make (checked_expression)
-						-- TODO copy location info
-					end
-					supplied_cardinality := Required_cardinality_zero_or_more
-					cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
 				end						
-			end
-		end
-
-	conditionally_atomize is
-			-- Conditionally add an Atomizer
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-		do
-			an_atomic_type ?= required_item_type
-			if an_atomic_type /= Void then
-				an_atomic_type ?= supplied_item_type
-				if an_atomic_type = Void then
-					if supplied_cardinality /= Required_cardinality_empty then
-						create {XM_XPATH_ATOMIZER_EXPRESSION} checked_expression.make (checked_expression)
-						-- TODO need to copy location information
-						supplied_item_type := checked_expression.item_type
-						supplied_cardinality := checked_expression.cardinality
-						cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
-					end
-				end
-			end
-		end
-
-	conditionally_add_untyped_converter is	
-			--  Conditionally add an Untyped Atomic Converter
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-		do
-			if required_item_type /= type_factory.any_atomic_type then
-				an_atomic_type ?= required_item_type
-				if an_atomic_type /= Void then
-					an_atomic_type ?= supplied_item_type
-					if an_atomic_type /= Void then
-						if supplied_item_type = type_factory.any_atomic_type or else is_sub_type (supplied_item_type, type_factory.untyped_atomic_type)
-							and then supplied_cardinality /= Required_cardinality_empty then
-							create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} checked_expression.make (checked_expression, required_item_type)
-							-- TODO need to copy location information
-							supplied_item_type := checked_expression.item_type
-							supplied_cardinality := checked_expression.cardinality
-							cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
-						end
-					end
-				end
 			end
 		end
 
@@ -392,8 +286,194 @@ feature {NONE} -- Implementation
 			checked_expression := Void
 		end
 
+	wrap_in_string_function is
+			-- Wrap an fn:string() function around `checked_expression'.
+		local
+			a_string_function: XM_XPATH_STRING
+			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			if function_library /= Void then
+				create new_arguments.make (1)
+				new_arguments.put_last (checked_expression)
+				function_library.bind_function (String_function_type_code, new_arguments, False)
+				a_string_function ?= function_library.last_bound_function
+				check
+					string_function: a_string_function /= Void
+				end
+				a_string_function.simplify
+				if a_string_function.was_expression_replaced then
+					an_expression := a_string_function.replacement_expression
+				else
+					an_expression := a_string_function
+				end
+				an_expression.analyze (static_context)
+				if an_expression.was_expression_replaced then								
+					checked_expression := an_expression.replacement_expression
+				else
+					checked_expression := an_expression
+				end
+				supplied_item_type := type_factory.string_type
+				supplied_cardinality := Required_cardinality_exactly_one
+				cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
+				item_type_ok := True
+			else
+				check
+					False
+					-- We must have a static context to detect XPath 1.0 compatibility, and therefore
+					--  `function_library' cannot be Void
+				end
+			end
+		end
+
+	wrap_in_number_function is
+			-- Wrap an fn:number() function around `checked_expression'.
+		local
+			a_number_function: XM_XPATH_NUMBER
+			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			if function_library /= Void then
+				create new_arguments.make (1)
+				new_arguments.put_last (checked_expression)
+				function_library.bind_function (Number_function_type_code, new_arguments, False)
+				a_number_function ?= function_library.last_bound_function
+				check
+					number_function: a_number_function /= Void
+				end
+				a_number_function.simplify
+				if a_number_function.was_expression_replaced then
+					an_expression := a_number_function.replacement_expression
+				else
+					an_expression := a_number_function
+				end
+				an_expression.analyze (static_context)
+				if an_expression.was_expression_replaced then								
+					checked_expression := an_expression.replacement_expression
+				else
+					checked_expression := an_expression
+				end
+				supplied_item_type := type_factory.double_type
+				supplied_cardinality := Required_cardinality_exactly_one
+				cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
+				item_type_ok := True
+			else
+				check
+					False
+					-- We must have a static context to detect XPath 1.0 compatibility, and therefore
+					--  `function_library' cannot be Void
+				end
+			end
+		end
+
+	handle_xpath_two_rules is
+			-- Apply conversions needed in 2.0 mode.
+		local
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			a_required_item_type_fingerprint: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			an_atomic_type ?= required_item_type
+			if an_atomic_type /= Void then
+
+				-- Rule 1: Atomize
+
+				conditionally_atomize
+
+				-- Rule 2: convert untypedAtomic to the required type
+
+				conditionally_add_untyped_converter
+
+				-- Rule 3: numeric promotion decimal -> float -> double
+
+				a_required_item_type_fingerprint := required_item_type.fingerprint
+				if a_required_item_type_fingerprint = Float_type_code or else
+					a_required_item_type_fingerprint = Double_type_code then
+					if type_relationship (supplied_item_type, type_factory.numeric_type) /= Disjoint_types then
+						an_expression := checked_expression
+						create {XM_XPATH_NUMERIC_PROMOTER} an_expression.make (an_expression, a_required_item_type_fingerprint)
+						an_expression.simplify
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						else
+							an_expression := an_expression
+						end
+						an_expression.analyze (static_context)
+						if an_expression.was_expression_replaced then								
+							checked_expression := an_expression.replacement_expression
+						else
+							checked_expression := an_expression
+						end
+						if a_required_item_type_fingerprint = Double_type_code then
+							supplied_item_type := type_factory.double_type
+						else
+							supplied_item_type := type_factory.float_type
+						end
+					end
+				end
+			end
+		end
+
+	conditionally_atomize is
+			-- Conditionally add an Atomizer
+		local
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			an_expression: XM_XPATH_EXPRESSION
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+		do
+			an_atomic_type ?= supplied_item_type
+			if an_atomic_type = Void then
+				if supplied_cardinality /= Required_cardinality_empty then
+					an_expression := checked_expression
+					create {XM_XPATH_ATOMIZER_EXPRESSION} a_computed_expression.make (an_expression)
+					a_computed_expression.adopt_child_expression (an_expression)
+					checked_expression := a_computed_expression
+					supplied_item_type := checked_expression.item_type
+					supplied_cardinality := checked_expression.cardinality
+					cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
+				end
+			end
+		end
+
+	conditionally_add_untyped_converter is	
+			--  Conditionally add an Untyped Atomic Converter
+		local
+			an_expression: XM_XPATH_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+
+			-- Rule 2a: all supplied values are untyped atomic. Convert if necessary, and we're finished.
+			-- Rule 2b: some supplied values are untyped atomic. Convert these to the required type; but
+			--   there may be other values in the sequence that won't convert and still need to be checked
+
+			if (supplied_item_type = type_factory.untyped_atomic_type or else supplied_item_type = type_factory.any_atomic_type) and then
+				required_item_type /= type_factory.untyped_atomic_type and then
+				required_item_type /= type_factory.any_atomic_type then
+				an_expression := checked_expression
+				create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} checked_expression.make (an_expression, required_item_type)
+				a_value ?= an_expression
+				if a_value /= Void then
+					an_iterator := checked_expression.iterator (Void)
+					if an_iterator.is_error then
+						checked_expression.set_last_error (an_iterator.error_value)
+					else
+						create {XM_XPATH_SEQUENCE_EXTENT} checked_expression .make (an_iterator)
+						checked_expression.simplify
+					end
+				end
+				if supplied_item_type = type_factory.untyped_atomic_type then
+					supplied_item_type := required_item_type
+					item_type_ok := True
+				end
+			end
+		end
+
 	function_library: XM_XPATH_FUNCTION_LIBRARY
 			-- Function library
+
+	static_context: XM_XPATH_STATIC_CONTEXT
+			-- Static context
 
 invariant
 

@@ -165,13 +165,9 @@ feature -- Element change
 			if a_function /= Void then
 				
 				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
-            --  the general-purpose XM_XSLT_COMPILED_PARAM object
+            --  the general-purpose XM_XSLT_COMPILED_PARAM object, and this has been compiled
+				--  when compiling the parent xsl:function
 
-				check
-					strictly_positive_slot_number: slot_number > 0
-				end
-				create a_function_param.make (required_type, slot_number, variable_name)
-				fixup_binding (a_function_param)
 				last_generated_instruction := Void
 			elseif not is_redundant_variable then
 				check

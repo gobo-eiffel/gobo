@@ -1023,7 +1023,7 @@ feature -- Implementation
 				a_cursor.after
 			loop
 				a_fingerprint := a_cursor.key
-				a_value := an_expression_factory.created_closure (a_cursor.item, a_context)
+				a_value := an_expression_factory.created_closure (a_cursor.item, a_context, True)
 				parameters.put (a_value, a_fingerprint) -- replaces existing value
 				a_cursor.forth
 			end

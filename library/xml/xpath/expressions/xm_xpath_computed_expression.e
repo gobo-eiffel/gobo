@@ -27,6 +27,8 @@ inherit
 
 	XM_XPATH_EXPRESSION
 
+	XM_XPATH_EXPRESSION_CONTAINER
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -51,6 +53,26 @@ feature -- Access
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
 		end
+	
+	container: XM_XPATH_EXPRESSION_CONTAINER is
+			-- Containing parent
+		do
+			Result := parent
+		end
+
+	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
+			-- Approximate count of references by parameters of `Current' to `a_binding'
+		do
+			-- pre-condition cannot be met
+		end
+
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' a repeatedly-evaluated sub-expression?
+		require
+			child_not_void: a_child /= Void
+		do
+			Result := False -- default implementation
+		end
 
 feature -- Comparison
 
@@ -58,6 +80,20 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := Current = other
+		end
+
+feature -- Status report
+	
+	frozen is_computed_expression: BOOLEAN is
+			-- Is `Current' a computed expression?
+		do
+			Result := True
+		end
+
+	frozen is_user_function: BOOLEAN is
+			-- Is `Current' a compiled user function?
+		do
+			-- `False'
 		end
 
 feature -- Status setting
@@ -279,6 +315,34 @@ feature -- Element change
 			set: line_number = a_line_number
 		end
 
+	set_parent (a_container: XM_XPATH_EXPRESSION_CONTAINER) is
+			-- Set `a_container' to be parent of `Current'.
+		require
+			not_self: a_container /= Current
+		do
+			parent := a_container
+		ensure
+			parent_set: parent = a_container
+		end
+
+	adopt_child_expression (a_child: XM_XPATH_EXPRESSION) is
+			-- Adopt `a_child' if it is a computed expression.
+		require
+			child_expression_not_void: a_child /= Void
+			not_self: a_child /= Current
+		local
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+		do
+			a_computed_expression ?= a_child
+			if a_computed_expression /= Void then
+				if parent = Void and then a_computed_expression.container /= Current then
+					parent := a_computed_expression.container
+				end
+				a_computed_expression.set_parent (Current)
+				-- TODO copy location information
+			end
+		end
+	
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
@@ -299,6 +363,11 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		ensure
 			computed: are_special_properties_computed and then special_properties /= Void
 		end
+
+feature {NONE} -- Implementation
+	
+	parent: XM_XPATH_EXPRESSION_CONTAINER
+			-- Containing parent
 
 end
 	

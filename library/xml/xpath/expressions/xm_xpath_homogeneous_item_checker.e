@@ -32,16 +32,16 @@ feature {NONE} -- Initialization
 	make (a_sequence: XM_XPATH_EXPRESSION; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Establish invariant.
 		require
-				underlying_expression_not_void: a_sequence /= Void
-				role_locator_not_void: a_role_locator /= Void
+			underlying_expression_not_void: a_sequence /= Void
+			role_locator_not_void: a_role_locator /= Void
 		do
-			sequence := a_sequence
+			make_unary (a_sequence)
 			role_locator := a_role_locator
 			required_item_type := any_item
 			compute_static_properties
 			initialize
 		ensure
-			sequence_set: sequence = a_sequence
+			base_expression_set: base_expression = a_sequence
 			role_locator_set: role_locator = a_role_locator
 			item_type_set: required_item_type = any_item
 			static_properties_computed: are_static_properties_computed

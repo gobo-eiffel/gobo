@@ -164,7 +164,7 @@ feature -- Evaluation
 					if select_expression.is_error then
 						create {XM_XPATH_INVALID_VALUE} Result.make (select_expression.error_value)
 					else
-						select_expression.lazily_evaluate (a_context)
+						select_expression.lazily_evaluate (a_context, True)
 						Result := select_expression.last_evaluation
 					end
 				end

@@ -1,0 +1,215 @@
+indexing
+
+	description:
+
+	"Objects that promote numeric types"
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_NUMERIC_PROMOTER
+
+inherit
+
+	XM_XPATH_UNARY_EXPRESSION
+		redefine
+			item_type, same_expression, simplify, analyze, evaluate_item, iterator
+		end
+
+	XM_XPATH_MAPPING_FUNCTION
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: INTEGER) is
+			-- Establish invariant.
+		require
+			sequence_not_void: a_sequence /= Void
+		do
+			make_unary (a_sequence)
+			required_type := a_required_type
+			compute_static_properties
+			initialize
+		ensure
+			static_properties_computed: are_static_properties_computed
+			base_expression_set: base_expression = a_sequence
+			required_type_set: required_type = a_required_type
+			static_properties_computed: are_static_properties_computed
+		end
+
+feature -- Access
+
+	required_type: INTEGER
+			-- Required type
+	
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Determine the data type of the expression, if possible
+		do
+			if required_type = Double_type_code then
+				Result := type_factory.double_type
+			else
+				Result := type_factory.float_type
+			end
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
+		end
+
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			other_promoter: XM_XPATH_NUMERIC_PROMOTER
+		do
+			other_promoter ?= other
+			if other_promoter /= Void then
+				Result := base_expression.same_expression (other_promoter.base_expression) 
+					and then other_promoter.required_type = required_type
+			end
+		end
+	
+feature -- Optimization	
+	
+	simplify is
+			-- Perform context-independent static optimizations.
+		local
+			a_value: XM_XPATH_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_extent: XM_XPATH_SEQUENCE_EXTENT
+		do
+			base_expression.simplify
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			else
+				a_value ?= base_expression
+				if a_value /= Void then
+					an_iterator := iterator (Void)
+					if an_iterator.is_error then
+						set_last_error (an_iterator.error_value)
+					else
+						create an_extent.make (an_iterator)
+						set_replacement (an_extent)
+					end
+				end
+			end
+		end
+
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of an expression and its subexpressions
+		local
+			a_type: XM_XPATH_ITEM_TYPE
+			a_value: XM_XPATH_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_extent: XM_XPATH_SEQUENCE_EXTENT
+		do
+			mark_unreplaced
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			else
+				a_value ?= base_expression
+				if a_value /= Void then
+					an_iterator := iterator (Void)
+					if an_iterator.is_error then
+						set_last_error (an_iterator.error_value)
+					else
+						create an_extent.make (an_iterator)
+						set_replacement (an_extent)
+					end
+				end
+			end
+		end
+
+feature -- Evaluation
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
+		local
+			a_value: XM_XPATH_ATOMIC_VALUE
+		do
+			base_expression.evaluate_item (a_context)
+			if base_expression.last_evaluated_item = Void then
+				last_evaluated_item := Void
+			elseif base_expression.last_evaluated_item.is_error then
+				last_evaluated_item := base_expression.last_evaluated_item
+			else
+				a_value ?= base_expression.last_evaluated_item
+				if a_value /= Void then
+					promote_number (a_value, a_context)
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
+																				Xpath_errors_uri, "XP0006", Dynamic_error)
+				end
+			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := base_expression.iterator (a_context)
+			if an_iterator.is_error then
+				Result := an_iterator
+			else
+				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+			end
+		end
+	
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		local
+			a_value: XM_XPATH_ATOMIC_VALUE
+		do
+			a_value ?= an_item
+			if a_value /= Void then
+				promote_number (a_value, a_context)
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
+																	  Xpath_errors_uri, "XP0006", Dynamic_error)
+			end
+			create Result.make_item (last_evaluated_item)
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+	
+	display_operator: STRING is
+			-- Format `operator' for display
+		do
+			Result := "promote items to " + item_type.conventional_name
+		end
+
+feature {NONE} -- Implementation
+
+	promote_number (an_atomic_value: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT) is
+			-- Promote of `an_atomic_value'.
+		require
+			atomic_value_not_void: an_atomic_value /= Void
+			context_not_void: a_context /= Void
+			no_previous_error: not is_error
+		local
+			a_primitive_value: XM_XPATH_ATOMIC_VALUE
+		do
+			a_primitive_value := an_atomic_value.primitive_value
+			if a_primitive_value.is_convertible (item_type) then
+				last_evaluated_item := a_primitive_value.convert_to_type (item_type)
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
+													 Xpath_errors_uri, "XP0006", Dynamic_error)
+			end
+		ensure
+			promotion_not_void: last_evaluated_item /= Void
+		end
+
+end

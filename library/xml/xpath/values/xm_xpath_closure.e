@@ -27,17 +27,8 @@ creation {XM_XPATH_EXPRESSION_FACTORY}
 		--  by an expression, together with saved values of all the context variables that the
 		--  expression depends on.
 
-		-- The XM_XPATH_CLOSURE maintains a reservoir containing those items in the value that have
-		--  already been read. When a new iterator is requested to read the value, this iterator
-		--  first examines and returns any items already placed in the reservoir by previous
-		--  users of the XM_XPATH_CLOSURE. When the reservoir is exhausted, it then uses an underlying
-		--  input iterator to read further values of the underlying expression. If the value is
-		--  not read to completion (for example, if the first user did exists($expr), then the
-		--  input iterator is left positioned where this user abandoned it. The next user will read
-		--  any values left in the reservoir by the first user, and then pick up iterating the
-		--  base expression where the first user left off. Eventually, all the values of the
-		--  expression will find their way into the reservoir, and future users simply iterate
-		--  over the reservoir contents. Alternatively, of course, the values may be left unread.
+		-- This form of closure is designed for when the value is only read once.
+		-- If it is designed to be repeatedly read, then XM_XPATH_MEMO_CLOSURE i used instead.
 
 		-- Delayed evaluation is used only for expressions with a static type that allows
 		--  more than one item, so the evaluate_item routine will not normally be used, but it is
@@ -69,12 +60,10 @@ feature {NONE} -- Initialization
 			clone_special_properties (base_expression)
 			saved_xpath_context := a_context.new_context
 			save_local_variables (a_context)
-			state := Unread_state
 			if saved_xpath_context.current_iterator /= Void and then not saved_xpath_context.current_iterator.off then -- TODO: Is this the right test?
 				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item)
 				saved_xpath_context.set_current_iterator (new_singleton_iterator)
 			end
-			create reservoir.make_default
 		ensure
 			base_expression_set: base_expression = an_expression
 		end
@@ -139,25 +128,11 @@ feature -- Evaluation
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- An iterator over the values of a sequence
 		do
-			if reservoir.count > 0 then
-				if input_iterator /= Void and then input_iterator.after then
-					state := All_read_state
-				end
-			end
-			inspect
-				state
-			when Unread_state then
-				state := Busy_state
+			if input_iterator = Void then
 				input_iterator := base_expression.iterator (saved_xpath_context)
-				state := Maybe_more_state
-				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator) 
-			when Maybe_more_state then
-				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator)
-			when All_read_state then
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (reservoir)
-			when Busy_state then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Attempt to access a lazily-evaluated variable while it is being evaluated",
-																								Gexslt_eiffel_type_uri, "BUSY_CLOSURE", Dynamic_error)
+				Result := input_iterator
+			else
+				Result := input_iterator.another
 			end
 		end
 
@@ -178,19 +153,8 @@ feature {XM_XPATH_CLOSURE} -- Local
 	saved_xpath_context: XM_XPATH_CONTEXT
 			-- Context created when the closure was created
 
-	state: INTEGER
-			-- Information on items read
-
-	Unread_state: INTEGER is 1
-	Maybe_more_state: INTEGER is 2
-	All_read_state: INTEGER is 3
-	Busy_state: INTEGER is 4
-	
 	input_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Underlying iterator 
-	
-	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
-			-- List of items already read
 
 	depth: INTEGER
 			-- Nesting depth
@@ -258,7 +222,5 @@ invariant
 
 	base_expression_not_void: base_expression /= Void
 	saved_xpath_context_not_void: saved_xpath_context /= Void
-	state: Unread_state <= state and state <= All_read_state
-	reservoir_not_void: reservoir /= Void
 
 end

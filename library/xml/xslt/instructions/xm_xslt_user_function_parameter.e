@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Compile-time references to xsl:functions"
+		"Compile-time references to xsl:param within xsl:function"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -15,6 +15,8 @@ class XM_XSLT_USER_FUNCTION_PARAMETER
 inherit
 
 	XM_XPATH_BINDING
+
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
 
 creation
 
@@ -43,12 +45,25 @@ feature -- Access
 	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of variable
 
+	reference_count: INTEGER
+			-- Number of references to `Current'
+
 feature -- Evaluation
 
 	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
 			-- Evaluate variable
 		do
 			last_evaluated_binding := a_context.evaluated_local_variable (slot_number)
+		end
+
+feature -- Element change
+	
+	set_reference_count (some_references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]) is
+			-- Set `reference_count'.
+		require
+			references_not_void: some_references /= Void
+		do
+			reference_count := variable_reference_count (some_references, Current)
 		end
 
 feature {NONE} -- Implementation

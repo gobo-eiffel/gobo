@@ -66,6 +66,13 @@ feature -- Access
 			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
 		end
 
+	container: XM_XPATH_EXPRESSION_CONTAINER is
+			-- Containing parent;
+			-- `Void' for top-level expressions and literal values.
+			-- Within an XSLT stylesheet, returns the XSLT instruction.
+		deferred
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -346,7 +353,7 @@ feature -- Evaluation
 			evaluated: last_evaluation /= Void
 		end
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT) is
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
 			-- Lazily evaluate `Current'.
 			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
 			--  which is a wrapper around an iterator over the value of the expression.
@@ -389,7 +396,7 @@ feature -- Evaluation
 				
 						-- Create a Closure, a wrapper for the expression and its context
 				
-						last_evaluation := expression_factory.created_closure (Current, a_context)
+						last_evaluation := expression_factory.created_closure (Current, a_context, save_values)
 					end
 				end
 			end
@@ -398,7 +405,7 @@ feature -- Evaluation
 		end
 
 feature -- Element change
-
+	
 	allocate_slots (next_free_slot: INTEGER) is
 			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
 		require

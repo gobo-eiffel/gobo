@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			iterator
+			iterator, is_repeated_sub_expression
 		end
 
 	XM_XPATH_ROLE
@@ -66,7 +66,13 @@ feature -- Access
 		do
 			create result.make_single_integer
 		end
-	
+
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' a repeatedly-evaluated sub-expression?
+		do
+			Result := a_child = action
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER) is

@@ -129,7 +129,7 @@ feature -- Creation
 			iterator_created: Result /= Void
 		end
 
-	created_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	created_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN): XM_XPATH_VALUE is
 			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT'). 
 		require
 			expression_not_void: an_expression /= Void
@@ -145,7 +145,7 @@ feature -- Creation
 			if a_tail_expression /= Void then
 				a_variable_reference ?= a_tail_expression.base_expression
 				if a_variable_reference /= Void then
-					a_variable_reference.lazily_evaluate (a_context)
+					a_variable_reference.lazily_evaluate (a_context, False)
 					a_sequence_extent ?= a_variable_reference.last_evaluation
 					if a_sequence_extent /= Void then
 						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
@@ -153,7 +153,11 @@ feature -- Creation
 				end
 			end
 			if Result = Void then
-				create {XM_XPATH_CLOSURE} Result.make (an_expression, a_context)
+				if save_values then
+					create {XM_XPATH_MEMO_CLOSURE} Result.make (an_expression, a_context)
+				else
+					create {XM_XPATH_CLOSURE} Result.make (an_expression, a_context)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void

@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			compute_dependencies, compute_special_properties, simplify, promote, sub_expressions, same_expression, iterator
+			compute_dependencies, compute_special_properties, simplify, promote, sub_expressions,
+			same_expression, iterator, is_repeated_sub_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -85,6 +86,8 @@ feature {NONE} -- Initialization
 				end
 			end
 			compute_static_properties
+			adopt_child_expression (base_expression)
+			adopt_child_expression (filter)
 			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -116,6 +119,13 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 			Result.put (base_expression, 1)
 			Result.put (filter, 2)
+		end
+
+	
+	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `a_child' a repeatedly-evaluated sub-expression?
+		do
+			Result := a_child = filter
 		end
 
 feature -- Comparison

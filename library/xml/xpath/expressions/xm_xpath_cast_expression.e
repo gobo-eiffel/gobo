@@ -14,52 +14,41 @@ class XM_XPATH_CAST_EXPRESSION
 
 inherit
 
-	XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, sub_expressions, promote, evaluate_item
+			item_type, analyze, evaluate_item, compute_cardinality, same_expression
 		end
 
 	XM_XPATH_ROLE
 
 creation
 
-	make, make_from_sequence_type
+	make
 
 feature {NONE} -- Initialization
 
 	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ATOMIC_TYPE; empty_ok: BOOLEAN) is
 			-- Establish invariant.
 		do
-			source := a_source
+			make_unary (a_source)
 			target_type := a_target_type
-			allows_empty := empty_ok
+			is_empty_allowed := empty_ok
 			compute_static_properties
 			initialize
 		ensure
-			source_set: source = a_source
+			base_expression_set: base_expression = a_source
 			target_type_set: target_type = a_target_type
-			allows_empty_set: allows_empty = empty_ok
+			is_empty_allowed_set: is_empty_allowed = empty_ok
 			static_properties_computed: are_static_properties_computed
-		end
-
-	make_from_sequence_type (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
-			-- Establish invariant. -- TODO - is this still used?
-		require
-			source_not_void: a_source /= Void
-			valid_target_type: a_target /= Void and then not a_target.cardinality_allows_many
-				and then not is_sub_type (a_target.primary_type, any_node_test)
-				and then is_sub_type (a_target.primary_type, type_factory.any_atomic_type)
-		do
-			source := a_source
-			target_type ?= a_target.primary_type
-			compute_static_properties
-		ensure
-			static_properties_computed: are_static_properties_computed
-			source_set: source = a_source
-			target_type_set: target_type = a_target.primary_type
 		end
 
 feature -- Access
+
+	target_type: XM_XPATH_ATOMIC_TYPE
+			-- Target type 
+
+	is_empty_allowed: BOOLEAN
+			-- Is empty sequence allowed?
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -71,42 +60,22 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
-		do
-			create Result.make (1)
-			Result.put (source, 1)
-			Result.set_equality_tester (expression_tester)
-		end
+feature -- Comparison
 
-feature -- Status report
-
-	display (a_level: INTEGER) is
-			-- Diagnostic print of expression structure to `std.error'
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
 		local
-			a_string: STRING
+			other_cast: XM_XPATH_CAST_EXPRESSION
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "cast as ")
-			a_string := STRING_.appended_string (a_string, target_type.conventional_name)
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			source.display (a_level + 1)
+			other_cast ?= other
+			if other_cast /= Void then
+				Result := base_expression.same_expression (other_cast.base_expression) 
+					and then other_cast.is_empty_allowed = is_empty_allowed
+					and then other_cast.target_type = target_type
+			end
 		end
 
 feature -- Optimization	
-
-	simplify is
-			-- Perform context-independent static optimizations.
-		do
-			source.simplify
-			if source.is_error then
-				set_last_error (source.error_value)
-			else
-				if source.was_expression_replaced then
-					set_source (source.replacement_expression)
-				end
-			end
-		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
@@ -119,17 +88,17 @@ feature -- Optimization
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			mark_unreplaced
-			source.analyze (a_context)
-			if source.was_expression_replaced then
-				set_source (source.replacement_expression)
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end
-			if source.is_error then
-				set_last_error (source.error_value)
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			else
 				create a_sequence_type.make (type_factory.any_atomic_type, cardinality)
 				create a_role.make (Type_operation_role, "cast as", 1)
 				create a_type_checker
-				a_type_checker.static_type_check (a_context, source, a_sequence_type, False, a_role)
+				a_type_checker.static_type_check (a_context, base_expression, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 				else
@@ -141,7 +110,7 @@ feature -- Optimization
 						-- On the other hand, it's generally true that any expression defined to return an X
 						--  is allowed to return a subtype of X:
 
-					elseif is_sub_type (target_type, type_factory.qname_type) then
+					elseif is_sub_type (target_type, type_factory.qname_type) then --or else (type_factory.notation_type /= Void and then is_sub_type (target_type, type_factory.notation_type)) then
 						create a_qname_cast.make (an_expression)
 						a_qname_cast.analyze (a_context)
 						if a_qname_cast.is_error then
@@ -158,18 +127,11 @@ feature -- Optimization
 								set_replacement (an_atomic_value)
 							end
 						else
-							set_source (an_expression)
+							set_base_expression (an_expression)
 						end
 					end
 				end
 			end
-		end
-
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this subexpression.
-		do
-			source.promote (an_offer)
-			if source.was_expression_replaced then set_source (source.replacement_expression) end
 		end
 
 feature -- Evaluation
@@ -179,13 +141,13 @@ feature -- Evaluation
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			source.evaluate_item (a_context)
-			if source.last_evaluated_item = Void or else source.last_evaluated_item.is_error then
-				last_evaluated_item := source.last_evaluated_item
+			base_expression.evaluate_item (a_context)
+			if base_expression.last_evaluated_item = Void or else base_expression.last_evaluated_item.is_error then
+				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				an_atomic_value ?= source.last_evaluated_item
+				an_atomic_value ?= base_expression.last_evaluated_item
 				if an_atomic_value = Void then
-					if allows_empty then
+					if is_empty_allowed then
 						last_evaluated_item := Void
 					else
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target typr for cast as does not allow empty sequence",
@@ -200,44 +162,30 @@ feature -- Evaluation
 			end
 		end
 
-feature {XM_XPATH_CAST_EXPRESSION} -- Local
 
-		set_source (a_source: XM_XPATH_EXPRESSION) is
-			-- Set `source'.
-		require
-			source_not_void: a_source /= Void
+feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
+	
+	display_operator: STRING is
+			-- Format `operator' for display
 		do
-			source := a_source
-			if source.was_expression_replaced then source.mark_unreplaced end
-		ensure
-			source_set:	source = a_source
-			source_not_marked_for_replacement: not source.was_expression_replaced
+			Result := "cast as " + target_type.conventional_name
 		end
 
+	
 feature {NONE} -- Implementation
 	
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			if allows_empty then
+			if is_empty_allowed then
 				set_cardinality_optional
 			else
 				set_cardinality_exactly_one
 			end
 		end
 
-	source: XM_XPATH_EXPRESSION
-			-- Castable expression 
-	
-	target_type: XM_XPATH_ATOMIC_TYPE
-			-- Target type 
-
-	allows_empty: BOOLEAN
-			-- Is empty sequence allowed?
-
 invariant
 
-	source_expression_not_void: source /= Void
 	target_type_not_void: target_type /= Void
 
 end

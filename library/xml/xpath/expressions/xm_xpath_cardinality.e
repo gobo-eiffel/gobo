@@ -105,5 +105,27 @@ feature -- Conversion
 			strictly_positive_result: Result > 0
 		end
 
+	cardinality_in_english (a_cardinality: INTEGER): STRING is
+			-- English description
+		require
+			cardinality_in_range: Required_cardinality_empty <= a_cardinality and then a_cardinality <= Required_cardinality_zero_or_more
+		do
+			inspect
+				a_cardinality
+			when Required_cardinality_empty then
+				Result := "exactly zero"
+			when Required_cardinality_optional then
+				Result := "zero or one"
+			when Required_cardinality_exactly_one then
+				Result := "exactly one"
+			when Required_cardinality_one_or_more then
+				Result := "one or more"
+			when Required_cardinality_zero_or_more then
+				Result := "zero or more"
+			end
+		ensure
+			description_not_void: Result /= Void
+		end
+
 end
 	

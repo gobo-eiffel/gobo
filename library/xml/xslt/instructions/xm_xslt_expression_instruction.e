@@ -49,6 +49,13 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	
+	container: XM_XPATH_EXPRESSION_CONTAINER is
+			-- Containing parent
+		do
+			Result := Void
+		end
 	
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'

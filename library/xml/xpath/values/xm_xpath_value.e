@@ -39,6 +39,12 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
+	frozen container: XM_XPATH_EXPRESSION_CONTAINER is
+			-- Containing parent
+		do
+			-- `Void'
+		end
+
 feature -- Status report
 
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is

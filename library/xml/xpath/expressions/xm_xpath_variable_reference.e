@@ -175,7 +175,7 @@ feature -- Evaluation
 			last_evaluated_binding := binding.last_evaluated_binding
 		end
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT) is
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
 			-- Lazily evaluate `Current'.
 		do
 			eagerly_evaluate (a_context)

@@ -132,11 +132,6 @@ feature -- Element change
 			validated := True
 		end
 
-feature {NONE} -- Implementation
-
-	internal_slot_number: INTEGER
-			-- Slot number
-
 	fixup_binding (a_binding: XM_XPATH_BINDING) is
 			-- Notify all variable references of the Binding instruction.
 		require
@@ -156,6 +151,11 @@ feature {NONE} -- Implementation
 				a_cursor.forth
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	internal_slot_number: INTEGER
+			-- Slot number
 
 invariant
 

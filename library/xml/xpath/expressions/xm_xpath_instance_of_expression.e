@@ -14,9 +14,10 @@ class XM_XPATH_INSTANCE_OF_EXPRESSION
 
 inherit
 
-	XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			sub_expressions, simplify, promote, effective_boolean_value, evaluate_item
+			same_expression, analyze, effective_boolean_value, evaluate_item,
+			compute_cardinality, item_type, display
 		end
 
 creation
@@ -31,18 +32,21 @@ feature {NONE} -- Initialization
 			source_expression_not_void: a_source /= Void
 			target_sequence_type_not_void: a_target_type /= Void
 		do
-			source := a_source
+			make_unary (a_source)
 			target_type := a_target_type
 			compute_static_properties
 			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
-			source_set: source = a_source
+			base_expression_set: base_expression = a_source
 			target_set: target_type = a_target_type
 		end
 
 feature -- Access
-	
+
+	target_type: XM_XPATH_SEQUENCE_TYPE
+			-- Target sequence type
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
@@ -53,12 +57,19 @@ feature -- Access
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			other_instance_of: XM_XPATH_INSTANCE_OF_EXPRESSION
 		do
-			create Result.make (1)
-			Result.put (source, 1)
-			Result.set_equality_tester (expression_tester)
+			other_instance_of ?= other
+			if other_instance_of /= Void then
+				Result := base_expression.same_expression (other_instance_of.base_expression) 
+					and then other_instance_of.target_type = target_type
+					and then other_instance_of.cardinality = cardinality
+			end
 		end
 
 feature -- Status report
@@ -74,7 +85,7 @@ feature -- Status report
 				std.error.put_string (" in error%N")
 			else
 				std.error.put_new_line
-				source.display (a_level + 1)
+				base_expression.display (a_level + 1)
 				a_string := STRING_.appended_string (indentation (a_level + 1), target_type.primary_type.conventional_name)
 				a_string := STRING_.appended_string (a_string, target_type.occurence_indicator)			
 				std.error.put_string (a_string)
@@ -84,55 +95,41 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
-			-- Promote context-independent static optimizations
-		do
-			source.simplify
-			if source.is_error then
-				set_last_error (source.error_value)
-			elseif source.was_expression_replaced then
-				set_source (source.replacement_expression)
-			end		
-		end
-
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			a_value: XM_XPATH_VALUE
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			mark_unreplaced
-			source.analyze (a_context)
-			if source.was_expression_replaced then
-				set_source (source.replacement_expression)
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end
-			if source.is_error then
-				set_last_error (source.error_value)
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			else
-				a_value ?= source
+				a_value ?= base_expression
 				if a_value /= Void then
-					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
+					evaluate_item (Void)
+					if last_evaluated_item /= Void then
+						an_atomic_value ?= last_evaluated_item
+						set_replacement (an_atomic_value)
+					end
 				else
 					
 					-- See if we can get the answer by static analysis.
-
-					if target_type.cardinality_subsumes (source.cardinality) and then
-						is_sub_type (source.item_type, target_type.primary_type) then
-
+					
+					if target_type.cardinality_subsumes (base_expression.cardinality) and then
+						is_sub_type (base_expression.item_type, target_type.primary_type) then
 						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
+						set_replacement (an_expression)
 					end
 				end
-				if an_expression /= Void then set_replacement (an_expression) end
 			end
 		end
-
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this subexpression.
-		do
-			source.promote (an_offer)
-			if source.was_expression_replaced then set_source (source.replacement_expression) end
-		end
-
+	
 feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
@@ -143,7 +140,7 @@ feature -- Evaluation
 			counter: INTEGER
 			finished: BOOLEAN
 		do
-			an_iterator := source.iterator (a_context)
+			an_iterator := base_expression.iterator (a_context)
 			if an_iterator.is_error then
 				create Result.make (False)
 				Result.set_last_error (an_iterator.error_value)
@@ -179,20 +176,6 @@ feature -- Evaluation
 			last_evaluated_item := effective_boolean_value (a_context)
 		end
 
-feature {XM_XPATH_INSTANCE_OF_EXPRESSION} -- Local
-
-	set_source (a_source: XM_XPATH_EXPRESSION) is
-			-- Set `source'.
-		require
-			source_expression_not_void: a_source /= Void
-		do
-			source := a_source
-			if source.was_expression_replaced then source.mark_unreplaced end
-		ensure
-			source_set: source = a_source
-			source_not_marked_for_replacement: not source.was_expression_replaced
-		end
-
 feature {NONE} -- Implementation
 	
 	compute_cardinality is
@@ -201,15 +184,14 @@ feature {NONE} -- Implementation
 			set_cardinality_exactly_one
 		end
 	
-	source: XM_XPATH_EXPRESSION
-			--  Source expression
-
-	target_type: XM_XPATH_SEQUENCE_TYPE
-			-- Target sequence type
+	display_operator: STRING is
+			-- Format `operator' for display
+		do
+			-- not used
+		end
 
 invariant
 
-	source_expression_not_void: source /= Void
 	target_sequence_type_not_void: target_type /= Void
 
 end

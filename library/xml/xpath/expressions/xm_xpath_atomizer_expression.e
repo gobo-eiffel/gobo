@@ -14,9 +14,9 @@ class XM_XPATH_ATOMIZER_EXPRESSION
 
 inherit
 
-	XM_XPATH_COMPUTED_EXPRESSION
+	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions, iterator, evaluate_item
+			item_type, simplify, analyze, iterator, evaluate_item, compute_cardinality
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		require
 			sequence_not_void: a_sequence /= Void
 		do
-			base_expression := a_sequence
+			make_unary (a_sequence)
 			compute_static_properties
 			initialize
 		ensure
@@ -44,49 +44,64 @@ feature -- Access
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
+		local
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE 
 		do
-			Result := type_factory.any_atomic_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
+			Result := base_expression.item_type
+			an_atomic_type ?= Result
+			if an_atomic_type = Void then
+				Result := type_factory.any_atomic_type -- best guess
 			end			
-		end
-
-	base_expression: XM_XPATH_EXPRESSION
-			-- Base expression
-
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Immediate sub-expressions of `Current'
-		do
-			create Result.make (1)
-			Result.set_equality_tester (expression_tester)
-			Result.put_last (base_expression)
-		end
-
-feature -- Status report
-
-	display (a_level: INTEGER) is
-			-- Diagnostic print of expression structure to `std.error'
-		do
-			std.error.put_string (STRING_.appended_string (indentation (a_level), "atomize"))
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-			end
 		end
 
 feature -- Optimization	
 
 	simplify is
 			-- Perform context-independent static optimizations
+		local
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_value: XM_XPATH_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			finished: BOOLEAN
+			a_node: XM_XPATH_NODE
 		do
 			base_expression.simplify
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			elseif base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
+			end
+			an_atomic_value ?= base_expression
+			if an_atomic_value /= Void then
+				set_replacement (an_atomic_value)
+			else
+				a_value ?= base_expression
+				if a_value /= Void then
+					from
+						an_iterator := base_expression.iterator (Void)
+						if an_iterator.is_error then
+							finished := True
+							set_last_error (an_iterator.error_value)
+						else
+							an_iterator.start
+						end
+					until
+						finished or else an_iterator.after
+					loop
+
+						-- If all items in the sequence are atomic (they generally will be, since this is
+						--  done at compile time), then return the sequence.
+						a_node ?= an_iterator.item
+						if a_node /= Void then
+							finished := True
+						else
+							an_iterator.forth
+						end
+					end
+					if not finished then
+						set_replacement (base_expression)
+					end
+				end
 			end
 		end
 
@@ -104,22 +119,6 @@ feature -- Optimization
 				reset_static_properties
 				if is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
 					set_replacement (base_expression)
-				end
-			end
-		end
-
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this subexpression.
-		local
-			a_promotion: XM_XPATH_EXPRESSION
-		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
-			else
-				base_expression.promote (an_offer)
-				if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression)
 				end
 			end
 		end
@@ -175,32 +174,22 @@ feature -- Evaluation
 			end
 		end
 
-feature -- Element change
-
-	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
-			-- Set `base_expression.
-		require
-			base_expression_not_void: a_base_expression /= Void
+feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
+	
+	display_operator: STRING is
+			-- Format `operator' for display
 		do
-			base_expression := a_base_expression
-			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
-		ensure
-			base_expression_set: base_expression = a_base_expression
-			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
+			Result := "atomize"
 		end
 
-feature {XM_XPATH_EXPRESSION} -- Restricted
 	
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			-- TODO - this changes when we allow nodes to contain sequences
-			clone_cardinality (base_expression)
+			set_cardinality_zero_or_more -- TODO: we can do better than this
 		end
-
-invariant
-
-	base_expression_not_void: base_expression /= Void
 
 end
 

@@ -250,6 +250,7 @@ feature -- Element change
 		do
 			condition := a_condition
 			if condition.was_expression_replaced then condition.mark_unreplaced end
+			adopt_child_expression (condition)
 		ensure
 			condition_set: condition = a_condition
 			condition_not_marked_for_replacement: not condition.was_expression_replaced
@@ -262,6 +263,7 @@ feature -- Element change
 		do
 			then_expression := a_then_expression
 			if then_expression.was_expression_replaced then then_expression.mark_unreplaced end
+			adopt_child_expression (then_expression)
 		ensure
 			then_set: then_expression = a_then_expression
 				then_expression_not_marked_for_replacement: not then_expression.was_expression_replaced
@@ -274,6 +276,7 @@ feature -- Element change
 		do
 			else_expression := an_else_expression
 			if else_expression.was_expression_replaced then else_expression.mark_unreplaced end
+			adopt_child_expression (else_expression)
 		ensure
 			else_set: else_expression = an_else_expression
 			else_expression_not_marked_for_replacement: not else_expression.was_expression_replaced

@@ -127,6 +127,7 @@ feature -- Element change
 		do
 			sequence := a_sequence
 			if sequence.was_expression_replaced then sequence.mark_unreplaced end
+			adopt_child_expression (sequence)
 		ensure
 			sequence_set: sequence = a_sequence
 			sequence_not_marked_for_replacement: not sequence.was_expression_replaced
@@ -139,6 +140,7 @@ feature -- Element change
 		do
 			action := an_action
 			if action.was_expression_replaced then action.mark_unreplaced end
+			adopt_child_expression (action)
 		ensure
 			action_set: action = an_action
 			action_not_marked_for_replacement: not action.was_expression_replaced

@@ -181,6 +181,7 @@ feature {NONE} -- Implementation
 			promoted_expression := a_variable
 
 			create a_let_expression.make (a_range_variable, a_child_expression, containing_expression)
+			a_let_expression.adopt_child_expression (containing_expression)
 			set_containing_expression (a_let_expression)
 		end
 
