@@ -21,6 +21,7 @@
 			<cluster name="feature"/>
 			<cluster name="instruction"/>
 			<cluster name="lace"/>
+			<cluster name="misc"/>
 			<cluster name="name"/>
 			<cluster name="type"/>
 		</cluster>
