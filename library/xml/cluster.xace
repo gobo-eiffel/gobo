@@ -48,7 +48,8 @@
 			</cluster>
 			<external unless="${GOBO_OS}=windows">
 				<include_dir location="${EXPAT}/include"/>
-				<link_library location="expat"/>
+				<link_library location="expat" unless="${GOBO_EIFFEL}=ve"/>
+				<link_library location="/usr/local/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
 			</external>
 			<external if="${GOBO_OS}=windows">
 				<include_dir location="${EXPAT}\Source\lib" if="${GOBO_EIFFEL}=se"/>
