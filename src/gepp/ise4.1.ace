@@ -39,7 +39,7 @@ cluster
 		-- Gobo Eiffel Structure Library
 	ds_container:		"$GOBO\library\structure\container";
 	ds_cursor:			"$GOBO\library\structure\cursor";
-	ds_cursor_spec:		"$GOBO\library\structure\cursor\spec";
+	ds_cursor_spec:		"$GOBO\library\structure\cursor\spec\ise";
 	ds_list:			"$GOBO\library\structure\list";
 	ds_search:			"$GOBO\library\structure\search";
 	ds_search_spec:		"$GOBO\library\structure\search\spec\ise";
