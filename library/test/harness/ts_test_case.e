@@ -26,9 +26,19 @@ feature {NONE} -- Initialization
 		do
 			id := an_id
 			variables := a_variables
+			initialize
 		ensure
 			id_set: id = an_id
 			variables_set: variables = a_variables
+		end
+
+feature -- Initialization
+
+	initialize is
+			-- Initialize current test case.
+			-- (This routine is called by the creation routine
+			-- and can be redefined in descendant classes.)
+		do
 		end
 
 feature -- Access
