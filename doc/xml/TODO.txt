@@ -7,7 +7,7 @@ EXPAT:
 
 EIFFEL:
 
-- Test ISO latin 1
+- Test/finish ISO latin 1
 - xml declaration for entities event and parsing (rm special scanner?)
 - Better error message when failing to resolve DTD
 - Check that stand alone handling makes some sense
@@ -18,16 +18,22 @@ EIFFEL:
 
 GENERAL:
 
+- Q: obsolete/hide nodes' `set_parent', ordinary `make'?
+- Q: actually checking tree nodes's parent /= Void (creation issue)
+- Tree attribute make require not duplicate attribute, or invariant
 - Tree pipe to include concatenation and comment filters
 - check XM_FORMATTER handling of namespaces
 - DTD model should contain attribute enumeration decls
 - Add some generic DTD filters, eg pretty print
+- Add some way to add before after root_element in XM_DOCUMENT
+- XM_EIFFEL_DECLARATION -> XM_DECLARATION
+- Q: Tree clipboard
 - Q: cache queries by name in tree?
 - Q: where does the end tag checker belong (filter or parser)?
 
 TESTS:
 
-- test tree's by_name routines
+- more extensive tree tests
 - full OASIS test suite to integrate
 - DTD events testing
 - XM_FORMATTER tests
