@@ -16,6 +16,9 @@ class XM_DOCUMENT
 inherit
 
 	XM_COMPOSITE
+		redefine
+			make_default
+		end
 
 creation
 

@@ -21,7 +21,8 @@ inherit
 		undefine
 			root_node
 		redefine
-			remove_namespace_declarations_from_attributes_recursive, resolve_namespaces_start
+			remove_namespace_declarations_from_attributes_recursive,
+			resolve_namespaces_start, make_default
 		end
 
 	XM_NAMED_NODE
