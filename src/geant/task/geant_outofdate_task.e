@@ -33,39 +33,19 @@ feature {NONE} -- Initialization
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
-			i: INTEGER
-			ucs: UC_STRING
-			a_source_filenames: DS_ARRAYED_LIST [UC_STRING]
 			a_xml_subelement: GEANT_XML_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
 		do
 			!! command.make (a_project)
 			task_make (command, a_xml_element)
 
-			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
-			if a_xml_subelement /= Void then
-				!! a_fs_element.make (project, a_xml_subelement)
-				a_fs_element.fileset.execute
-				command.set_source_filenames (a_fs_element.fileset.filenames)
-				project.trace_debug ("[outofdate] fileset directory: " + a_fs_element.fileset.directory_name + "%N")
-				project.trace_debug ("[outofdate] number of sourcefilenames: " + a_fs_element.fileset.filenames.count.out + "%N")
-			else
-				project.trace_debug ("[outofdate] no <fileset> subelement.%N")
-			end
-
 			if has_uc_attribute (Source_attribute_name) then
-				ucs := uc_attribute_value (Source_attribute_name)
-				a_source_filenames := string_tokens (ucs, ',')
-				from i := 1 until i > a_source_filenames.count loop
-					a_value := a_source_filenames.item (i).out
-					if a_value.count > 0 then
-						command.source_filenames.force_last (a_value)
-					end
-
-					i := i + 1
+				a_value := uc_attribute_value (Source_attribute_name).out
+				if a_value.count > 0 then
+					command.set_source_filename (a_value)
 				end
 			end
-			
+
 			if has_uc_attribute (Target_attribute_name) then
 				a_value := uc_attribute_value (Target_attribute_name).out
 				if a_value.count > 0 then
@@ -94,6 +74,13 @@ feature {NONE} -- Initialization
 					command.set_variable_name (a_value)
 				end
 			end
+
+			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
+			if a_xml_subelement /= Void then
+				!! a_fs_element.make (project, a_xml_subelement)
+				command.set_fileset (a_fs_element.fileset)
+			end
+
 		end
 
 feature -- Access
