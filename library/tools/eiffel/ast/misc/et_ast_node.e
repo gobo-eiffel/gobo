@@ -43,8 +43,13 @@ feature -- Status report
 
 	has_comment: BOOLEAN is
 			-- Is there a comment after current node?
+		local
+			a_break: like break
 		do
-			-- TODO
+			a_break := break
+			if a_break /= Void then
+				Result := a_break.text.has ('-')
+			end
 		end
 
 feature -- Processing
