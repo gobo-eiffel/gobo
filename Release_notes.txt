@@ -7,7 +7,7 @@ ISE 5.4/5.5 (ISE Eiffel)
 	* The Ace files for ISE Eiffel provided in this package are for
 	  Eiffel classic. In order to get Ace files configured for Eiffel
 	  for .NET, you will need to set the environment variable
-	  $GOBO_DOTNET, and the run the following commands:
+	  $GOBO_DOTNET, and then run the following commands:
 
 	    set GOBO_DOTNET=true
 	    cd %GOBO%
@@ -25,7 +25,7 @@ SE 2.1 (SmartEiffel)
 	  order to avoid being overwhelmed by zillions of unjustified warning
 	  messages, please use the option -no_style_warning.
 
-	* Futhermore, SmartEiffel has decided to make the live of portable
+	* Furthermore, SmartEiffel has decided to make the life of portable
 	  Eiffel library developers even more difficult than it used to be
 	  by departing from the Eiffel standard without raising the issue
 	  at NICE or ECMA. If like me you are sick of getting zillions of
@@ -68,7 +68,7 @@ VE 5.0a (Visual Eiffel)
 
 	  where <app_name> stands for the name of your application.
 
-	* Running 'geant test_debug_ve' in $GOBO/test/kernel make the test
+	* Running 'geant test_debug_ve' in $GOBO/test/kernel makes the test
 	  crash. It seems to be a bug in the compiler or its runtime/GC.
 
 	* There is a linking error when trying to compile the test in

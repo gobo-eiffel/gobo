@@ -16,7 +16,7 @@ open-source project whose development is hosted at SourceForge
 Note that this release is not a full-fledged version. In particular its
 documentation is out of date or missing. It was decided to build this
 package anyway because it contains a lot of new library classes and a
-couple of new tools which have already been in used for several months
+couple of new tools which have already been in use for several months
 by other Eiffel projects. So now that the code of these tools and Eiffel
 libraries is stable, it was deemed useful to make it available in an
 official package rather that still requiring those third party Eiffel
@@ -100,7 +100,7 @@ a look at "$GOBO/doc/portability".
 
 In this distribution:
 
-    bin                         WinNT or Linux executables (gelex, geyacc, etc.)
+    bin                         Windows or Linux executables (gelex, geyacc, etc.)
     doc                         Gobo Eiffel documentation in HTML format
     doc/geant                   geant documentation
     doc/gelex                   gelex documentation in HTML format
