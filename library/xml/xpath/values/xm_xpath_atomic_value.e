@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"An XPath value that is not a sequence (strictly, a sequence of one item)"
+		"Objects that are XPath values that are not a sequence (strictly, a sequence of one item)"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

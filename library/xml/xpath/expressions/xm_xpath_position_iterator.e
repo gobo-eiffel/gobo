@@ -79,6 +79,7 @@ feature -- Cursor movement
 				index := index + 1
 				if not base_iterator.after then base_iterator.forth end
 			end
+			if index < minimum then index := minimum end
 		end
 
 	forth is

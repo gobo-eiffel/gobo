@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pure XPath implementation of the content-type-test pattern"
+		"Objects that test for a match against nodes with a specific  content-type"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

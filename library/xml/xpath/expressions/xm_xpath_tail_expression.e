@@ -31,7 +31,9 @@ feature {NONE} -- Initialization
 			base_expression := a_base_expression
 			start := a_start
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_base_expression
 			start_set: start = a_start
 		end
@@ -58,7 +60,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "tail ")
+			a_string := STRING_.appended_string (indentation (a_level), "tail ")
 			a_string := STRING_.appended_string (a_string, start.out)
 			std.error.put_string (a_string)
 			std.error.put_new_line

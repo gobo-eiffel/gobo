@@ -126,7 +126,7 @@ feature -- Test
 			suggestion: STRING
 			name_code, fingerprint, fingerprint2: INTEGER
 		do
-			suggestion := default_pool.suggest_prefix_for_uri (Xslt_uri)
+			suggestion := default_pool.suggested_prefix_for_uri (Xslt_uri)
 			assert ("Suggestion", suggestion.is_equal ("xsl"))
 			default_pool.allocate_name ("test4", testing_namespace, "test4")
 			fingerprint := default_pool.fingerprint (testing_namespace, "test4")

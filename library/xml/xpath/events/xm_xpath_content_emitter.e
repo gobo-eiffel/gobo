@@ -43,7 +43,10 @@ inherit
 		--      Only an exact match with the name declared in the DTD will work.
 		--      This is a normal consequence of using DTDs with namespaces.
 		--      Roll on a RELAX-NG validator!
-	
+
+		-- This class raises exceptions for events that should NEVER occur,
+		--  as they violate the XML events processing model.
+
 creation
 
 	make
@@ -183,6 +186,7 @@ feature -- Errors
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		do
+			std.error.put_string ("XML parse error: ")
 			std.error.put_string (a_message)
 			std.error.put_new_line
 		end
@@ -250,10 +254,7 @@ feature -- Tag
 			-- Start of attribute or namespace declaration
 		local
 			a_name_code, a_namespace_code: INTEGER
-			a_type_code: INTEGER -- should be INTEGER_16
-			an_attribute_qname, a_prefix, a_namespace_prefix: STRING
-			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			an_attribute_model: XM_DTD_ATTRIBUTE_CONTENT
+			a_prefix, a_namespace_prefix: STRING
 		do
 			if a_namespace = Void then
 				Exceptions.raise ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
@@ -279,7 +280,9 @@ feature -- Tag
 				std.error.put_new_line
 			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
+
 				-- Notify a namespace declaration
+
 				if STRING_.same_string (a_local_part, "xmlns") then
 					a_namespace_prefix := "" -- default namespace
 				else
@@ -293,46 +296,7 @@ feature -- Tag
 				end
 				receiver.namespace (a_namespace_code, 0)
 			else
-				-- Notify an attribute
-				if attribute_types.has (current_element_name) then
-					an_attribute_table := attribute_types.item (current_element_name)
-						check
-							attribute_table_not_void: an_attribute_table /= Void
-							-- because `has' returned `True'
-						end
-					if a_prefix.count = 0 then
-						an_attribute_qname := clone (a_local_part)
-					else
-						an_attribute_qname := clone (a_prefix)
-						an_attribute_qname.append_character (':')
-						an_attribute_qname.append_string (a_local_part)
-					end
-					
-					if an_attribute_table.has (an_attribute_qname) then
-						an_attribute_model := an_attribute_table.item (an_attribute_qname)
-							check
-								attribute_model_not_void: an_attribute_model /= Void
-								-- because `has' returned `True'
-							end
-
-						if an_attribute_model.is_id then
-							a_type_code := Id_type
-						elseif an_attribute_model.is_id_ref then
-							a_type_code := Idref_type
-						elseif an_attribute_model.is_token then
-							a_type_code := Nmtoken_type
-						elseif an_attribute_model.is_entity then
-							a_type_code := Entity_type
-						elseif an_attribute_model.is_notation then
-							a_type_code := Notation_type
-						else
-							-- Ignore CDATA (it basically means "anySimpleType")
-							-- Ignore NMTOKENS, ENTITIES, IDREFS: we can't handle list types yet
-							a_type_code := 0 -- not a valid type code
-						end
-					end
-				end
-				receiver.attribute (a_name_code, a_type_code, a_value, 0)
+				notify_attribute (a_name_code, a_prefix, a_local_part, a_value)
 			end
 		end
 
@@ -400,6 +364,57 @@ feature {NONE} -- Implementation
 				std.error.put_string (Result.out)
 				std.error.put_new_line
 			end
+		end
+
+	notify_attribute (a_name_code: INTEGER; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+			-- Notify an attribute
+		local
+			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
+			an_attribute_model: XM_DTD_ATTRIBUTE_CONTENT
+			a_type_code: INTEGER -- should be INTEGER_16
+			an_attribute_qname: STRING
+		do
+			if attribute_types.has (current_element_name) then
+				an_attribute_table := attribute_types.item (current_element_name)
+					check
+						attribute_table_not_void: an_attribute_table /= Void
+						-- because `has' returned `True'
+					end
+				if a_prefix.count = 0 then
+					an_attribute_qname := clone (a_local_part)
+				else
+					an_attribute_qname := clone (a_prefix)
+					an_attribute_qname.append_character (':')
+					an_attribute_qname.append_string (a_local_part)
+				end
+					
+				if an_attribute_table.has (an_attribute_qname) then
+					an_attribute_model := an_attribute_table.item (an_attribute_qname)
+						check
+							attribute_model_not_void: an_attribute_model /= Void
+							-- because `has' returned `True'
+						end
+
+					if an_attribute_model.is_id then
+						a_type_code := Id_type
+					elseif an_attribute_model.is_id_ref then
+						a_type_code := Idref_type
+					elseif an_attribute_model.is_token then
+						a_type_code := Nmtoken_type
+					elseif an_attribute_model.is_entity then
+						a_type_code := Entity_type
+					elseif an_attribute_model.is_notation then
+						a_type_code := Notation_type
+					else
+
+						-- Ignore CDATA (it basically means "anySimpleType")
+						-- Ignore NMTOKENS, ENTITIES, IDREFS: we can't handle list types yet
+
+						a_type_code := 0 -- not a valid type code
+					end
+				end
+			end
+			receiver.attribute (a_name_code, a_type_code, a_value, 0)
 		end
 
 invariant

@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
+			simplified_expression, promoted_expression, sub_expressions, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			required_item_type := an_item_type
 			required_content_type := a_content_type
 			compute_static_properties
+			initialize
 		ensure
 			sequence_set: sequence = a_sequence
 			role_locator_set: role_locator = a_role_locator
@@ -85,7 +86,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "treat as ")
+			a_string := STRING_.appended_string (indentation (a_level), "treat as ")
 			a_string := STRING_.appended_string (a_string, type_name (required_item_type))
 			std.error.put_string (a_string)
 			std.error.put_new_line
@@ -94,14 +95,14 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_result_expression: XM_XPATH_ITEM_CHECKER
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.simplify)
-			if required_item_type = Any_item then
+			a_result_expression.set_sequence (sequence.simplified_expression)
+			if required_item_type = Any_item or else sequence.is_error then
 				Result := a_result_expression.sequence
 			else
 				Result := a_result_expression
@@ -118,6 +119,7 @@ feature -- Optimization
 			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
+				sequence.set_analyzed
 			end
 			if sequence.is_error then
 				set_last_error (sequence.last_error)
@@ -129,11 +131,14 @@ feature -- Optimization
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
+		local
+			a_result_expression: XM_XPATH_ITEM_CHECKER
 		do
-			set_sequence (sequence.promote (an_offer))
-			Result := Current
+			a_result_expression := clone (Current)
+			a_result_expression.set_sequence (sequence.promoted_expression (an_offer))
+			Result := a_result_expression
 		end
 
 feature -- Evaluation
@@ -142,10 +147,11 @@ feature -- Evaluation
 			-- Evaluate `Current' as a single item
 		do
 			sequence.evaluate_item (a_context)
-			if sequence.is_error then
-				set_last_error (sequence.last_error)
-			elseif last_evaluated_item = Void then
-				do_nothing -- can this occur?
+			last_evaluated_item := sequence.last_evaluated_item
+			if last_evaluated_item = Void then
+				do_nothing  -- can this occur?
+			elseif last_evaluated_item.is_item_in_error then
+				do_nothing
 			else
 				test_conformance (last_evaluated_item)
 			end
@@ -157,7 +163,11 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			an_iterator := sequence.iterator (a_context)
-			create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+			if an_iterator.is_error then
+				Result := an_iterator
+			else
+				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+			end
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is

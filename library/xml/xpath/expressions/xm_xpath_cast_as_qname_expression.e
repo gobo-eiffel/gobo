@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			source := an_expression
 			compute_static_properties
+			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
 			source_set: source = an_expression
@@ -61,7 +62,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "cast as QName")
+			a_string := STRING_.appended_string (indentation (a_level), "cast as QName")
 			if is_error then
 				std.error.put_string (a_string)
 				std.error.put_string ("In error%N")
@@ -74,7 +75,7 @@ feature -- Status report
 
 feature -- Optimization	
 
-		analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			todo ("analyze", False)
@@ -93,7 +94,6 @@ feature {NONE} -- Implementation
 	source: XM_XPATH_EXPRESSION
 			-- Expression to be cast
 
-	
 	compute_cardinality is
 			-- Compute cardinality.
 		do

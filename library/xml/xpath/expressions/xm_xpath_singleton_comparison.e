@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
 		ensure
+			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
 			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
 			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
@@ -73,22 +74,32 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
-			an_atomic_value ?= first_operand.last_evaluated_item
-			if an_atomic_value = Void then
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_item_in_error then
 				create Result.make (False)
+				Result.set_last_error (first_operand.last_evaluated_item.evaluation_error_value)
 			else
-				second_operand.evaluate_item (a_context)
-				another_atomic_value ?= second_operand.last_evaluated_item
-				if another_atomic_value = Void then
+				an_atomic_value ?= first_operand.last_evaluated_item
+				if an_atomic_value = Void then
 					create Result.make (False)
 				else
-					create a_comparison_checker
-					a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
-					if a_comparison_checker.is_comparison_type_error then
-						set_last_error (a_comparison_checker.last_type_error)
+					second_operand.evaluate_item (a_context)
+					if second_operand.last_evaluated_item.is_item_in_error then
 						create Result.make (False)
+						Result.set_last_error (second_operand.last_evaluated_item.evaluation_error_value)
 					else
-						create Result.make (a_comparison_checker.last_check_result)
+						another_atomic_value ?= second_operand.last_evaluated_item
+						if another_atomic_value = Void then
+							create Result.make (False)
+						else
+							create a_comparison_checker
+							a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
+							if a_comparison_checker.is_comparison_type_error then
+								set_last_error (a_comparison_checker.last_type_error)
+								create Result.make (False)
+							else
+								create Result.make (a_comparison_checker.last_check_result)
+							end
+						end
 					end
 				end
 			end

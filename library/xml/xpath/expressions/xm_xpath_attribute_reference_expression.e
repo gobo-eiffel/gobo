@@ -70,12 +70,18 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Is the dynamic context in a suitable condition to call `node'?
+		do
+			Result := a_context /= Void and then a_context.context_item /= Void
+		end
+
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "@")
+			a_string := STRING_.appended_string (indentation (a_level), "@")
 			a_string := STRING_.appended_string (a_string, a_pool.display_name_from_name_code (fingerprint))
 			std.error.put_string (a_string)
 			std.error.put_new_line
@@ -89,16 +95,21 @@ feature -- Evaluation
 			an_element: XM_XPATH_ELEMENT
 			a_string: STRING
 		do
-			an_element := find_element_node (a_context)
-			if an_element = Void then
-				create last_evaluated_string.make ("")
-			else
-				a_string := an_element.attribute_value (fingerprint)
-				if a_string = Void then
+			if a_context /= Void and then a_context.context_item /= Void then
+				an_element := find_element_node (a_context)
+				if an_element = Void then
 					create last_evaluated_string.make ("")
 				else
-					create last_evaluated_string.make (a_string)
+					a_string := an_element.attribute_value (fingerprint)
+					if a_string = Void then
+						create last_evaluated_string.make ("")
+					else
+						create last_evaluated_string.make (a_string)
+					end
 				end
+			else
+				create last_evaluated_string.make ("")
+				last_evaluated_string.set_last_error (dynamic_error_value (a_context))
 			end
 		end
 
@@ -118,21 +129,31 @@ feature {NONE} -- Implementation
 	name_test: XM_XPATH_NAME_TEST
 			-- Test if a node matches `Current'
 
+	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is
+			-- Dynamic error value
+		do
+			if a_context = Void then
+				create Result.make_from_string 	("Evaluating 'attribute::node()': dynamic the context is not avaialable", 2, Dynamic_error)
+			else
+					check
+						a_context.context_item = Void
+						-- follows from pre-condition
+					end
+				create Result.make_from_string ("Evaluating 'attribute::node()': the context item is not set", 2, Dynamic_error)
+			end
+		end
+	
 	find_element_node (a_context: XM_XPATH_CONTEXT): XM_XPATH_ELEMENT is
 			-- The parent element
 		require
-			context_not_void: a_context /= Void
+			context_item_set: a_context /= Void and then a_context.context_item /= Void
 		local
 			an_item: XM_XPATH_ITEM
 			an_element: XM_XPATH_ELEMENT
 		do
 			an_item := a_context.context_item
-			if an_item = Void then
-				set_last_error_from_string ("Evaluating 'attribute::node()': the context item is not set", 2, Dynamic_error)
-			else
-				an_element ?= an_item
-				Result := an_element -- may be Void!
-			end
+			an_element ?= an_item
+			Result := an_element -- may be Void!
 		end
 
 	find_attribute_node (an_element: XM_XPATH_ELEMENT): XM_XPATH_ATTRIBUTE is

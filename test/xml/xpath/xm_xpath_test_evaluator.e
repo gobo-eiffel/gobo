@@ -134,9 +134,63 @@ feature
 			an_evaluator.evaluate ("(21 to 29)[5]")
 			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Twenty evaluated_items", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
 			an_integer_value ?= evaluated_items.item (1)
 			assert ("Fifth number is 25", an_integer_value /= Void and then an_integer_value.value = 25)
+		end
+
+	test_value_comparison is
+			-- Test a value comparison
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("BOOKLIST/BOOKS/ITEM[4]/AUTHOR eq 'Bonner'")
+			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
+
+	test_general_comparison is
+			-- Test a general comparison
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM/AUTHOR = 'Bonner'")
+			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
+
+	test_node_comparison is
+			-- Test a node comparison
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] is //ITEM[child::TITLE = 'When We Were Very Young']")
+			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
 
 	-- Eventually, all errors should be tested here
@@ -240,9 +294,6 @@ feature
 --			assert ("XP0021", an_evaluator.error_value.type = Dynamic_error and an_evaluator.error_value.code = 21)
 --		end
 
---			print (an_evaluator.error_value.error_message); print ("%N")
---			print (an_evaluator.error_value.code.out)
-
 	test_for_error_xp0051 is
 			-- Named type can't be found in the static context
 		local
@@ -278,6 +329,15 @@ feature {NONE} -- Implementation
 					Result := STRING_.same_string (another_node.string_value, a_title)
 				end
 			end
+		end
+
+	diagnose_evaluation_error (an_evaluator: XM_XPATH_EVALUATOR) is
+		-- Print error diagnosis to standard error stream.
+		do
+			std.error.put_string (an_evaluator.error_value.error_message)
+			std.error.put_string (", error code is ")
+			std.error.put_string (an_evaluator.error_value.code.out)
+			std.error.put_new_line
 		end
 
 end

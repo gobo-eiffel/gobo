@@ -78,7 +78,7 @@ feature -- Status report
 			a_string: STRING
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			a_string := STRING_.appended_string (indent (a_level), "sequence of ")
+			a_string := STRING_.appended_string (indentation (a_level), "sequence of ")
 			a_string := STRING_.appended_string (a_string, type_name (item_type))
 			a_string := STRING_.appended_string (a_string, " (")
 			from
@@ -90,7 +90,7 @@ feature -- Status report
 			until
 				an_iterator.after
 			loop
-				std.error.put_string (indent (a_level + 1))
+				std.error.put_string (indentation (a_level + 1))
 				std.error.put_string (an_iterator.item.string_value)
 				std.error.put_new_line
 				an_iterator.forth				
@@ -115,8 +115,13 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			an_iterator := iterator (a_context)
-			if not an_iterator.before then
-				last_evaluated_item := an_iterator.item
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
+			else
+				an_iterator.start
+				if not an_iterator.after then
+					last_evaluated_item := an_iterator.item
+				end
 			end
 		end
 

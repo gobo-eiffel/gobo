@@ -15,6 +15,9 @@ class XM_XPATH_ARRAY_LIST_ITERATOR [G -> XM_XPATH_ITEM]
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
+		redefine
+			start
+		end
 
 creation
 
@@ -49,6 +52,13 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
+	start is
+			-- Move to first position
+		do
+			index := 1
+			cursor.start
+		end
 
 	forth is
 			-- Move to next position

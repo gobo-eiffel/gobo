@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pure XPath implementation of the local-name-test pattern"
+		"Objects that test for a node with a given local-name"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

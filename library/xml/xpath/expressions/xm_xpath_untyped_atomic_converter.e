@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, simplify, promote, evaluate_item, iterator
+			sub_expressions, simplified_expression, promoted_expression, evaluate_item, iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -37,7 +37,9 @@ feature {NONE} -- Initialization
 			sequence := a_sequence
 			target_type := a_required_type
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			sequence_set: sequence = a_sequence
 			target_type_set: target_type = a_required_type
 			static_properties_computed: are_static_properties_computed
@@ -67,7 +69,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "convert untyped atomic items to ")
+			a_string := STRING_.appended_string (indentation (a_level), "convert untyped atomic items to ")
 			a_string := STRING_.appended_string (a_string, type_name (target_type))
 			std.error.put_string (a_string)
 			std.error.put_new_line
@@ -76,13 +78,16 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify (perform context-independent optimizations)
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_result_expression: XM_XPATH_UNTYPED_ATOMIC_CONVERTER
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.simplify)
+			a_result_expression.set_sequence (sequence.simplified_expression)
+			if a_result_expression.sequence.is_error then
+				a_result_expression.set_last_error (a_result_expression.sequence.last_error)
+			end
 			Result := a_result_expression
 		end
 
@@ -95,6 +100,7 @@ feature -- Optimization
 				sequence.analyze (a_context)
 				if sequence.was_expression_replaced then
 					set_sequence (sequence.replacement_expression)
+					sequence.set_analyzed
 				end
 			end
 			if sequence.is_error then
@@ -109,18 +115,19 @@ feature -- Optimization
 
 						was_expression_replaced := True
 						replacement_expression := sequence
+						replacement_expression.set_analyzed
 					end
 				end
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
 		local
 			a_result_expression: XM_XPATH_UNTYPED_ATOMIC_CONVERTER
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.promote (an_offer))
+			a_result_expression.set_sequence (sequence.promoted_expression (an_offer))
 			Result := a_result_expression
 		end
 
@@ -134,6 +141,8 @@ feature -- Evaluation
 			sequence.evaluate_item (a_context)
 			if sequence.last_evaluated_item = Void then
 				last_evaluated_item := Void
+			elseif sequence.last_evaluated_item.is_item_in_error then
+				last_evaluated_item := sequence.last_evaluated_item
 			else
 				an_untyped_atomic_value ?= sequence.last_evaluated_item
 				if an_untyped_atomic_value /= Void then
@@ -146,8 +155,15 @@ feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- An iterator over the values of a sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			create {XM_XPATH_MAPPING_ITERATOR} Result.make (sequence.iterator (a_context), Current, Void, Void)
+			an_iterator := sequence.iterator (a_context)
+			if an_iterator.is_error then
+				Result := an_iterator
+			else
+				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+			end
 		end
 	
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
@@ -155,7 +171,7 @@ feature -- Evaluation
 		local
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
-			an_untyped_atomic_value ?= sequence.last_evaluated_item
+			an_untyped_atomic_value ?= an_item
 			if an_untyped_atomic_value /= Void then
 				create Result.make_item (an_untyped_atomic_value.convert_to_type (target_type))
 			else

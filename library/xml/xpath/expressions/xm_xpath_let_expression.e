@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			promote, iterator, evaluate_item, compute_special_properties
+			promoted_expression, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_ROLE
@@ -41,7 +41,9 @@ feature {NONE} -- Initialization
 			set_sequence (a_sequence_expression)
 			set_action (an_action)
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			declaration_set: declaration = a_range_variable
 			action_set: action = an_action
 			sequence_set: sequence = a_sequence_expression
@@ -68,12 +70,12 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "let $")
+			a_string := STRING_.appended_string (indentation (a_level), "let $")
 			a_string := STRING_.appended_string (a_string, declaration.name)
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			sequence.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indent (a_level), "return")
+			a_string := STRING_.appended_string (indentation (a_level), "return")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			action.display (a_level + 1, a_pool)
@@ -106,19 +108,18 @@ feature -- Optimization
 			else
 				if sequence.was_expression_replaced then
 					an_expression := sequence.replacement_expression
+					an_expression.set_analyzed
 				else
 					an_expression := sequence
 				end
 				create a_role.make (Variable_role, declaration.name, 1)
 				create a_type_checker
-				an_expression := a_type_checker.static_type_check (an_expression, declaration.required_type, False, a_role)
-				if an_expression = Void then
-						check
-							static_type_error: a_type_checker.is_static_type_check_error
-						end
+				a_type_checker.static_type_check (an_expression, declaration.required_type, False, a_role)
+				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
-					set_sequence (an_expression)
+					set_sequence (a_type_checker.checked_expression)
+					sequence.set_analyzed
 					a_type := sequence.item_type
 					a_value ?= sequence
 
@@ -130,7 +131,10 @@ feature -- Optimization
 					if	action.may_analyze then
 						action.analyze (a_context)
 					end
-					if action.was_expression_replaced then set_action (action.replacement_expression) end
+					if action.was_expression_replaced then
+						set_action (action.replacement_expression)
+						action.set_analyzed
+					end
 					if action.is_error then
 						set_last_error (action.last_error)
 					end
@@ -138,7 +142,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -146,7 +150,8 @@ feature -- Optimization
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			another_offer: XM_XPATH_PROMOTION_OFFER
 		do
-			an_expression := an_offer.accept (Current)
+			an_offer.accept (Current)
+			an_expression := an_offer.accepted_expression
 			if an_expression /= Void then
 				Result := an_expression
 			else
@@ -154,7 +159,7 @@ feature -- Optimization
 
 				-- Pass the offer on to the sequence expression
 
-				an_expression := sequence.promote (an_offer)
+				an_expression := sequence.promoted_expression (an_offer)
 				a_result_expression.set_sequence (sequence)
 				if an_offer.action = Inline_variable_references
 					or else an_offer.action = Unordered then
@@ -163,7 +168,7 @@ feature -- Optimization
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
 
-					a_result_expression.set_action (action.promote (an_offer))
+					a_result_expression.set_action (action.promoted_expression (an_offer))
 				end
 
 				-- If this results in the expression (let $x := $y return Z), replace all references to
@@ -173,7 +178,7 @@ feature -- Optimization
 				a_variable_reference ?= a_result_expression.sequence
 				if a_variable_reference /= Void then
 					create another_offer.make (Inline_variable_references, Current, a_variable_reference, False, False)
-					Result := a_result_expression.action.promote (another_offer)
+					Result := a_result_expression.action.promoted_expression (another_offer)
 				end
 				
 				if Result = Void then Result := a_result_expression end

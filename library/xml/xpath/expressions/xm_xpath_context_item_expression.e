@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 	make is
 		do
 			compute_static_properties
+			initialize
+		ensure
+			static_properties_computed: are_static_properties_computed			
 		end
 
 feature -- Access
@@ -56,7 +59,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), ".")
+			a_string := STRING_.appended_string (indentation (a_level), ".")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
@@ -85,22 +88,20 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := a_context.context_item
-			if last_evaluated_item = Void then
-				set_last_error_from_string ("The context item is not set", 2, Dynamic_error)				
+			if a_context /= Void and then a_context.is_context_position_set then
+				last_evaluated_item := a_context.context_item
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", 2, Dynamic_error)				
 			end
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
-		local
-			an_item: XM_XPATH_ITEM
 		do
-			an_item := a_context.context_item
-			if an_item = Void then
-				set_last_error_from_string ("The context item is not set", 2, Dynamic_error)				
+			if a_context /= Void and then a_context.is_context_position_set then
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (a_context.context_item)
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (an_item)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", 2, Dynamic_error)
 			end
 		end
 	

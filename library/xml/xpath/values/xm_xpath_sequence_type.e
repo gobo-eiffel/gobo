@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath sequences"
+		"XPath sequence types"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -23,7 +23,7 @@ inherit
 creation
 
 	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic, make_optional_integer,
-	make_single_string, make_single_integer, make_single_node, make_node_sequence, make_numeric_sequence
+	make_single_string, make_single_integer, make_single_node, make_optional_node, make_node_sequence, make_numeric_sequence
 
 feature {NONE} -- Initialization
 
@@ -120,6 +120,17 @@ feature {NONE} -- Initialization
 			primary_type := Any_node
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
+			cardinalities.put (True, 2)
+		end
+
+	make_optional_node is
+			-- Create a sequence that allows exactly one node
+		do
+			content_type := Any_item
+			primary_type := Any_node
+			create cardinalities.make (1, 3)
+			are_cardinalities_computed := True
+			cardinalities.put (True, 1)
 			cardinalities.put (True, 2)
 		end
 

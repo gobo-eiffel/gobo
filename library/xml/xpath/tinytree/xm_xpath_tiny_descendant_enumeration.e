@@ -79,7 +79,6 @@ feature {NONE} -- Initialization
 				std.error.put_new_line
 			end
 			
-			
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node

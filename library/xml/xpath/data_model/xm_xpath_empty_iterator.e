@@ -76,8 +76,7 @@ feature -- Cursor movement
 feature -- Duplication
 
 	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
+			-- Another iterator that iterates over the same items as the original
 		do
 			Result := Current
 		end

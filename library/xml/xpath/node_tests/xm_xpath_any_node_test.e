@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pure XPath implementation of the any-node-test pattern"
+		"Objects that test for a match against any node"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

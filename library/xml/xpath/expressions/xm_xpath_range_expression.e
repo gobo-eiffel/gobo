@@ -56,13 +56,13 @@ feature -- Optimization
 		local
 			a_value, another_value: XM_XPATH_VALUE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			an_expression: XM_XPATH_EXPRESSION
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 			if first_operand.may_analyze then first_operand.analyze (a_context) end
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
+				first_operand.set_analyzed
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.last_error)
@@ -70,6 +70,7 @@ feature -- Optimization
 				if second_operand.may_analyze then second_operand.analyze (a_context) end
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
+					second_operand.set_analyzed
 				end
 				if second_operand.is_error then
 					set_last_error (second_operand.last_error)
@@ -77,25 +78,20 @@ feature -- Optimization
 					create a_sequence_type.make_optional_integer
 					create a_role.make (Binary_expression_role, "to", 1)
 					create a_type_checker
-					an_expression := a_type_checker.static_type_check (first_operand, a_sequence_type, False, a_role)
-					if an_expression = Void then
-							check
-								static_type_error: a_type_checker.is_static_type_check_error
-							end
+					a_type_checker.static_type_check (first_operand, a_sequence_type, False, a_role)
+					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else
-						set_first_operand (an_expression)
+						set_first_operand (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, "to", 2)
-						an_expression := a_type_checker.static_type_check (second_operand, a_sequence_type, False, another_role)
-						if an_expression = Void then
-								check
-									static_type_error: a_type_checker.is_static_type_check_error
-								end
+						a_type_checker.static_type_check (second_operand, a_sequence_type, False, another_role)
+						if a_type_checker.is_static_type_check_error then
 							set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 						else
-							set_second_operand (an_expression)
-							replacement_expression := simplify
+							set_second_operand (a_type_checker.checked_expression)
+							replacement_expression := simplified_expression
 							was_expression_replaced := True
+							if not replacement_expression.analyzed then replacement_expression.set_analyzed end
 						end
 					end
 				end

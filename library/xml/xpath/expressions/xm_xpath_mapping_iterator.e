@@ -18,9 +18,16 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-		-- This class is not used where the filter is a constant number.
-		-- Instead, use XM_XPATH_POSITION_FILTER, as this class does not
-		-- optimization for numeric predicates.
+		-- This class merges a sequence of sequences into a single flat
+		--  sequence. It takes as inputs an iteration, and a mapping function to be
+		--  applied to each Item returned by that iteration. The mapping function itself
+		--  returns another iteration. The result is an iteration of the concatenation of all
+		--  the iterations returned by the mapping function.
+
+		-- This is a powerful class. It is used, with different mapping functions,
+		--  in a great variety of ways. It underpins the way that "for" expressions and
+		--  path expressions are evaluated, as well as sequence expressions. It is also
+		--  used in the implementation of the XSLT document(), key(), and id() functions.
 
 creation
 
@@ -168,16 +175,6 @@ feature {NONE} -- Implementation
 						item := Void
 						finished := True
 					end
-				end
-			end
-			debug ("XPath mapping iterator")
-				std.error.put_string ("Advance: generating class of base iterator is ")
-				std.error.put_string (base_iterator.generating_type); std.error.put_new_line
-				std.error.put_string ("Item value is ")
-				if item = void then
-					std.error.put_string ("Void%N")
-				else
-					std.error.put_string (item.string_value); std.error.put_new_line
 				end
 			end
 		end

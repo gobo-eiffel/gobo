@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions
+			simplified_expression, promoted_expression, sub_expressions
 		end
 
 feature -- Access
@@ -52,7 +52,7 @@ feature -- Status report
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			std.error.put_string (indent (a_level))
+			std.error.put_string (indentation (a_level))
 			std.error.put_string ("function ")
 			std.error.put_string (name)
 			std.error.put_new_line
@@ -84,28 +84,26 @@ feature -- Status setting
 	
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			result_expression: XM_XPATH_FUNCTION_CALL
-			simplified_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
 		do
 			result_expression := clone (Current)
-			simplified_arguments := simplify_arguments
-			if simplified_arguments /= Void then
-				result_expression.set_arguments (simplified_arguments)
-			else
-				
-				-- don't simplify arguments if an error occured;
-				-- The error will be picked up later (?? - TODO check out this reasoning)
 
-				do_nothing
+			create a_simplifier
+			a_simplifier.simplify_arguments (arguments)
+			if not a_simplifier.is_error then
+				result_expression.set_arguments (a_simplifier.simplified_arguments)
+			else
+				result_expression.set_last_error (a_simplifier.error_value)
 			end
 			Result := result_expression
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions;
+			-- Perform static analysis of `Current' and its subexpressions.
 			-- This also calls pre_evaluate to evaluate the function
 			--  if all the arguments are constant;
 			-- Functions that do not require this behavior
@@ -153,7 +151,7 @@ feature -- Optimization
 			set_analyzed
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
 		local
 			an_expression:  XM_XPATH_EXPRESSION
@@ -162,7 +160,8 @@ feature -- Optimization
 			a_result_expression: XM_XPATH_FUNCTION_CALL
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			an_expression := an_offer.accept (Current)
+			an_offer.accept (Current)
+			an_expression := an_offer.accepted_expression
 			if an_expression = Void then
 				if an_offer.action = Unordered then
 					Result := Current					
@@ -176,7 +175,7 @@ feature -- Optimization
 					until
 						result_arguments.after
 					loop
-						an_argument := a_cursor.item.promote (an_offer)
+						an_argument := a_cursor.item.promoted_expression (an_offer)
 						a_cursor.replace (an_argument)
 						a_cursor.forth
 					end
@@ -206,6 +205,7 @@ feature -- Evaluation
 			eagerly_evaluate (Void)
 			replacement_expression := last_evaluation
 			was_expression_replaced := True
+			if not replacement_expression.analyzed then replacement_expression.set_analyzed end
 		ensure
 			evaluated: was_expression_replaced
 		end
@@ -223,38 +223,6 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 		end
 
 feature {NONE} -- Implementation
-
-	simplify_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- Simplify `arguments'
-		local
-			an_argument: XM_XPATH_EXPRESSION
-			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			in_error: BOOLEAN
-		do
-			from
-				create result_arguments.make (arguments.count)
-				arguments_cursor := arguments.new_cursor
-				arguments_cursor.start
-			variant
-				arguments.count + 1 - arguments_cursor.index
-			until
-				in_error or else arguments_cursor.after
-			loop
-				an_argument := arguments_cursor.item.simplify
-				if an_argument.is_error then
-					in_error := True
-				else
-					result_arguments.put_last (an_argument)
-				end
-				arguments_cursor.forth
-			end
-			if not in_error then
-				Result := result_arguments
-			end
-		ensure
-			simplified_arguments_void_on_error: True
-		end
 
 	check_argument_count (a_minimum_count, a_maximum_count: INTEGER) is
 			-- Check number of arguments

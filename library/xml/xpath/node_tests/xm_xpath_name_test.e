@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pure XPath implementation of the name-test pattern"
+		"Objects that implement XPath's NameTest production"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			item_type := a_node_type
 			
 			--	fingerprint := a_name_code & 0x0fffff
+			
 			top_bits := (a_name_code // bits_20) * bits_20
 			fingerprint  := a_name_code - top_bits			
 		ensure
@@ -79,6 +80,7 @@ feature -- Matching
 			a_fingerprint := a_name_code - top_bits
 
 			-- The next line is in this order for speed - the first test usually fails
+
 			Result := a_fingerprint = fingerprint or else a_node_type = item_type 
 		end
 

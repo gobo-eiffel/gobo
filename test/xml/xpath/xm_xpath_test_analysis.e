@@ -58,12 +58,14 @@ feature -- Test
 			create a_system_function_factory
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create a_context.make (default_pool, True, False)
-			an_expression := Expression_factory.make_expression (a_string, a_context)
-			if an_expression = Void then
+			create a_context.make (default_pool, False, False)
+			Expression_factory.make_expression (a_string, a_context)
+			if Expression_factory.is_parse_error then
 				-- Shouldn't happen
-				std.error.put_string (Expression_factory.error_value.error_message)
+				std.error.put_string (Expression_factory.parsed_error_value.error_message)
 				std.error.put_new_line
+			else
+				an_expression := Expression_factory.parsed_expression
 			end
 			assert ("Parse sucessful", an_expression /= Void)
 			an_expression.analyze (a_context)

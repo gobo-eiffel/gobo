@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions, iterator, evaluate_item
+			simplified_expression, promoted_expression, sub_expressions, iterator, evaluate_item
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			base_expression := a_sequence
 			compute_static_properties
+			initialize
 		ensure
 			base_expression_set: base_expression = a_sequence
 			static_properties_computed: are_static_properties_computed
@@ -63,21 +64,27 @@ feature -- Status report
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			std.error.put_string (STRING_.appended_string (indent (a_level), "atomize"))
+			std.error.put_string (STRING_.appended_string (indentation (a_level), "atomize"))
 			std.error.put_new_line
 			base_expression.display (a_level + 1, a_pool)
 		end
 
 feature -- Optimization	
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify (perform context-independent optimizations)
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_result_expression: XM_XPATH_ATOMIZER_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_base_expression (base_expression.simplify)
-			Result := a_result_expression
+			an_expression := base_expression.simplified_expression
+			if an_expression.is_error then
+				Result := an_expression
+			else
+				a_result_expression.set_base_expression (an_expression)
+				Result := a_result_expression
+			end
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -98,15 +105,16 @@ feature -- Optimization
 			set_analyzed
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
 		local
 			a_result_expression: XM_XPATH_ATOMIZER_EXPRESSION
 		do
-			Result := an_offer.accept (Current)
+			an_offer.accept (Current)
+			Result := an_offer.accepted_expression
 			if Result = Void then
 				a_result_expression := clone (Current)
-				a_result_expression.set_base_expression (base_expression.promote (an_offer))
+				a_result_expression.set_base_expression (base_expression.promoted_expression (an_offer))
 				Result := a_result_expression
 			end
 		end
@@ -124,6 +132,8 @@ feature -- Evaluation
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
 				last_evaluated_item := Void
+			elseif base_expression.last_evaluated_item.is_item_in_error then
+				last_evaluated_item := base_expression.last_evaluated_item
 			else
 				a_mapped_item := map (base_expression.last_evaluated_item, a_context, Void)
 				if a_mapped_item = Void then
@@ -143,7 +153,11 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			an_iterator := base_expression.iterator (a_context)
-			create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+			if an_iterator.is_error then
+				Result := an_iterator
+			else
+				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+			end
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is

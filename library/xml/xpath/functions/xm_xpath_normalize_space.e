@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, evaluate_item
+			simplified_expression, evaluate_item
 		end
 
 creation
@@ -75,14 +75,21 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			result_expression: XM_XPATH_NORMALIZE_SPACE
+			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
 		do
 			result_expression := clone (Current)
 			result_expression.use_context_item_as_default
-			result_expression.set_arguments (simplify_arguments)
+			create a_simplifier
+			a_simplifier.simplify_arguments (arguments)
+			if not a_simplifier.is_error then
+				result_expression.set_arguments (a_simplifier.simplified_arguments)
+			else
+				result_expression.set_last_error (a_simplifier.error_value)
+			end
 			Result := result_expression
 		end
 
@@ -107,7 +114,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_exactly_one --?? check with Mike
+			set_cardinality_exactly_one
 		end
 
 end

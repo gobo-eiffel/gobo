@@ -46,6 +46,8 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	-- TODO scrap this
+
 	content_property: STRING
 			-- Content property from the infoset
 end

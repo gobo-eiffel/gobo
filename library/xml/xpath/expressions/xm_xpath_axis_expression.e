@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
+			simplified_expression, iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
 		end
 
 	XM_XPATH_AXIS
@@ -34,9 +34,11 @@ feature {NONE} -- Initialization
 			axis := an_axis_type
 			node_test := a_node_test
 			compute_static_properties
+			initialize
 		ensure
 			axis_set: axis = an_axis_type
 			node_test_set: node_test = a_node_test
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
@@ -103,7 +105,7 @@ feature -- Status report
 				end
 			end
 
-			a_string := STRING_.appended_string (indent (a_level), axis_name (axis))
+			a_string := STRING_.appended_string (indentation (a_level), axis_name (axis))
 			a_string := STRING_.appended_string (a_string, "::")
 			a_string := STRING_.appended_string (a_string, test_string)
 			std.error.put_string (a_string)
@@ -112,7 +114,7 @@ feature -- Status report
 
 feature -- Status setting
 
-		compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies is
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			create intrinsic_dependencies.make (1, 6)
@@ -123,8 +125,8 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current';
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_name_test: XM_XPATH_NAME_TEST
 			any_node_test: XM_XPATH_ANY_NODE_TEST
@@ -143,6 +145,9 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+
+			-- Nothing to do
+
 			set_analyzed
 		end
 
@@ -156,7 +161,7 @@ feature -- Evaluation
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis step is not set.", 2, Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis step is not set.", 2, Dynamic_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then

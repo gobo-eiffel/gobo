@@ -24,6 +24,10 @@ feature -- Evaluation
 --			context_item: a_context /= Void implies an_item.is_equal (a_context.context_item)
 			information: True -- /= Void implies must be immutable and read-only for the duration of the iteration
 		deferred
+
+			-- If an error is detected, then this function should return call create Result.make_item
+			--  passing it an item in error.
+
 		end
 
 end

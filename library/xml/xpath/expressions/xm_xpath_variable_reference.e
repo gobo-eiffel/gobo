@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze, same_expression, promote, iterator, evaluate_item
+			may_analyze, same_expression, promoted_expression, iterator, evaluate_item
 		end
 
 	XM_XPATH_BINDING_REFERENCE
@@ -45,11 +45,7 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
-			-- All expression return sequences, in general;
-			-- This routine determines the type of the items within the
-			-- sequence, assuming that (a) this is known in advance,
-			-- and (b) it is the same for all items in the sequence.
+			--Data type of the expression, where known
 		do
 			if static_type = Void then
 				Result := Any_item
@@ -69,11 +65,11 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 			-- (Note, we only compare expressions that
 			--  have the same static and dynamic context).
-			-- I'm not entirely happy with this, as if
-			--  binding is `Void', then we cannot know
+			-- I'm not entirely happy with the routine logic,
+			--  since if binding is `Void', then we cannot know
 			--  if the two references are to the same
 			--  binding or not.
-			-- But it is necessary to return `Trure' to avoid
+			-- But it is necessary to return `Ture' to avoid
 			--  {DS_ARRAYED_LIST}.put from failing it's post-condition.
 		local
 			other_reference: XM_XPATH_VARIABLE_REFERENCE
@@ -107,11 +103,11 @@ feature -- Status report
 			a_string: STRING
 		do
 			if display_name = Void then
-				a_string := STRING_.appended_string (indent (a_level), "$(unbound variable)")
+				a_string := STRING_.appended_string (indentation (a_level), "$(unbound variable)")
 				std.error.put_string (a_string)
 				std.error.put_new_line
 			else
-				a_string := STRING_.appended_string (indent (a_level), "$")
+				a_string := STRING_.appended_string (indentation (a_level), "$")
 				a_string := STRING_.appended_string (a_string, display_name)				
 				std.error.put_string (a_string)
 				std.error.put_new_line
@@ -127,17 +123,19 @@ feature -- Optimization
 			if constant_value /= Void then
 				replacement_expression := constant_value
 				was_expression_replaced := True
+				replacement_expression.set_analyzed
 			end
 			set_analyzed
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 		local
 			a_result_expression: XM_XPATH_FILTER_EXPRESSION
 		do
 			if an_offer.action = Inline_variable_references then
-				a_result_expression ?= an_offer.accept (Current)
+				an_offer.accept (Current)
+				a_result_expression ?= an_offer.accepted_expression
 				if a_result_expression /= Void then
 					Result := a_result_expression
 				else

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		string_value: STRING is
+	string_value: STRING is
 			-- String-value
 		local
 			start, length: INTEGER

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"A boolean XPath value"
+		"Objects that represent an XPath boolean value"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -115,7 +115,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "boolean (")
+			a_string := STRING_.appended_string (indentation (a_level), "boolean (")
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)

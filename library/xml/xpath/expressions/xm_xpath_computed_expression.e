@@ -27,10 +27,13 @@ inherit
 
 	XM_XPATH_EXPRESSION
 
+	KL_SHARED_EXCEPTIONS
+
 feature {NONE} -- Initialization
 
-	initialize is -- TODO - all creation routines should call this
+	initialize is
 			-- Initialize attributes.
+			-- All creation routines should call this
 		do
 			line_number := -1
 		end
@@ -43,6 +46,7 @@ feature -- Access
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
+
 			-- Default implementation returns an empty list;
 			-- Suitable for an expression without sub-expressions.
 			
@@ -123,15 +127,15 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current';
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 			-- This default implementation does nothing.
 		do
 			Result := Current
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for `Current'
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+			-- Promoted version of this subexpression
 		do
 			Result := Current
 		end
@@ -150,13 +154,9 @@ feature -- Evaluation
 			a_double: XM_XPATH_DOUBLE_VALUE
 		do
 			an_iterator := iterator (a_context)
-
 			if not an_iterator.is_error then
 				an_iterator.start
 				an_item := an_iterator.item
-					check
-						item_not_void: an_item /= Void
-					end
 				a_node ?= an_item
 				if a_node /= Void then
 					create Result.make (True)
@@ -195,6 +195,9 @@ feature -- Evaluation
 			else
 
 				-- Mark the result as in error both as an expression and as an item
+				-- TODO - this is clearly inefficient. If this is necessary
+				--  then the two errors and their status reports should
+				--  be merged as one for ATOMIC_VALUE. Review!
 
 				create Result.make (False)
 				Result.set_last_error (an_iterator.last_error)
@@ -202,7 +205,7 @@ feature -- Evaluation
 			end
 		end
 
-		evaluate_item (a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -212,14 +215,17 @@ feature -- Evaluation
 				end
 			last_evaluated_item := Void
 			an_iterator := iterator (a_context)
-			if an_iterator.after then
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error) 
+			elseif an_iterator.after then
 				last_evaluated_item := Void
 			else
-					check
-						before: an_iterator.before
-					end
-				an_iterator.forth
-				last_evaluated_item := an_iterator.item
+				an_iterator.start
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
+				else
+					last_evaluated_item := an_iterator.item
+				end
 			end
 		end
 
@@ -231,6 +237,8 @@ feature -- Evaluation
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
 				create last_evaluated_string.make ("")
+			elseif last_evaluated_item.is_item_in_error then
+				Exceptions.raise ("Logic error in {XM_XPATH_COMPUTED_EXPRESSION}.evaluate_as_string")
 			else
 				a_string ?= last_evaluated_item
 				if a_string = Void then
@@ -244,11 +252,13 @@ feature -- Evaluation
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
 		do
+			
 			-- The value of every expression can be regarded as a sequence, s
 			--  so this routine is supported for all expressions.
 			-- This default implementation handles iteration for expressions that
 			--  return singleton values: for non-singleton expressions, the subclass must
 			--  provide its own implementation.
+
 				check
 					singleton_expression: not cardinality_allows_many
 					-- Not a prefect check, as cardinality may not have been set!
@@ -256,6 +266,8 @@ feature -- Evaluation
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
 				Result := empty_abstract_item_iterator
+			elseif last_evaluated_item.is_item_in_error then
+				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_item.evaluation_error_value) 
 			else
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item) 
 			end

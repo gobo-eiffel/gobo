@@ -42,7 +42,9 @@ feature {NONE} -- Initialization
 			sequence := a_sequence_expression
 			action := an_action
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			operator_set: operator = an_operator
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
@@ -74,14 +76,14 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), token_name (operator))
+			a_string := STRING_.appended_string (indentation (a_level), token_name (operator))
 			a_string := STRING_.appended_string (a_string, " $")
 			a_string := STRING_.appended_string (a_string, declaration.name)
 			a_string := STRING_.appended_string (a_string, " in")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			sequence.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indent (a_level), "satisfies")
+			a_string := STRING_.appended_string (indentation (a_level), "satisfies")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			action.display (a_level + 1, a_pool)
@@ -93,7 +95,6 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions		
 		local
 			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			an_expression: XM_XPATH_EXPRESSION
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			actual_item_type: INTEGER
@@ -109,7 +110,10 @@ feature -- Optimization
 					sequence.may_analyze
 				end
 			sequence.analyze (a_context)
-			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
+			if sequence.was_expression_replaced then
+				set_sequence (sequence.replacement_expression)
+				sequence.set_analyzed
+			end
 			if sequence.is_error then
 				set_last_error (sequence.last_error)
 			end
@@ -123,44 +127,25 @@ feature -- Optimization
 				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 				create a_role.make (Variable_role, declaration.name, 1)
 				create a_type_checker
-				an_expression := a_type_checker.static_type_check (sequence, declaration.required_type, False, a_role)
-				if an_expression = Void then
-						check
-							static_type_error: a_type_checker.is_static_type_check_error
-						end
+				a_type_checker.static_type_check (sequence, declaration.required_type, False, a_role)
+				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
-					set_sequence (an_expression)
+					set_sequence (a_type_checker.checked_expression)
 					actual_item_type := sequence.item_type
 					declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
 					set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again. Also sets analyzed to `True'
 					if	action.may_analyze then
 						action.analyze (a_context)
 					end
-					if action.was_expression_replaced then set_action (action.replacement_expression) end
+					if action.was_expression_replaced then
+						set_action (action.replacement_expression)
+						action.set_analyzed
+					end
 					if action.is_error then
 						set_last_error (action.last_error)
 					end
-
-					--create an_offer.make (Range_independent, Current, Current, False, False)
-					--action := action.promote (an_offer)
-					--a_let_expression ?= an_offer.containing_expression
-					--if a_let_expression /= Void then
-					--		check
-					--			let_expression_not_analyzed: a_let_expression.may_analyze
-					--		end
-					--	a_let_expression.analyze (a_context)
-					--	if a_let_expression.is_error then
-					--		set_last_error (a_let_expression.last_error)
-					--	else
-					--		was_expression_replaced := True
-					--		if a_let_expression.was_expression_replaced then
-					--			replacement_expression := a_let_expression.replacement_expression
-					--		else
-					--			replacement_expression := a_let_expression
-					--		end
-					--	end
-					--end
+					-- TODO debug and reinstate promotion code at end of file
 				end
 			end
 		end
@@ -171,35 +156,47 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_value: XM_XPATH_ATOMIC_VALUE
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			some: BOOLEAN
-			found_a_match: BOOLEAN
+			found_a_match, finished: BOOLEAN
 		do
 
 			-- First create an iteration of the base sequence.
 
 			a_base_iterator := sequence.iterator (a_context)
-
-			-- Now test to see if some or all of the tests are true. The same
-			-- logic is used for the SOME and EVERY operators
-
-			some := operator = Some_token
-
-			from
-				a_base_iterator.start
-			until
-				a_base_iterator.after
-			loop
-				a_value ?= a_base_iterator.item.as_value
-				-- set_local_variable omitted, as slot_number can only be -1
-				if some = action.effective_boolean_value (a_context).value then
-					create Result.make (some); found_a_match := True
+			if a_base_iterator.is_error then
+				create Result.make (False)
+				Result.set_last_error (a_base_iterator.last_error)
+			else
+			
+				-- Now test to see if some or all of the tests are true. The same
+				-- logic is used for the SOME and EVERY operators
+				
+				some := operator = Some_token
+				
+				from
+					a_base_iterator.start
+				until
+					finished or else a_base_iterator.after
+				loop
+					an_atomic_value ?= a_base_iterator.item.as_value
+					-- set_local_variable omitted, as slot_number can only be -1
+					a_boolean_value := action.effective_boolean_value (a_context)
+					if a_boolean_value.is_error then
+						Result := a_boolean_value
+						finished := True
+					else
+						if some = a_boolean_value.value then
+							create Result.make (some); found_a_match := True
+						end
+					end
+					
+					a_base_iterator.forth
 				end
-
-				a_base_iterator.forth
+				
+				if not (finished or else found_a_match) then create Result.make (not some) end
 			end
-
-			if not found_a_match then create Result.make (not some) end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -222,3 +219,22 @@ invariant
 
 end
 	
+					--create an_offer.make (Range_independent, Current, Current, False, False)
+					--action := action.promoted_expression (an_offer)
+					--a_let_expression ?= an_offer.containing_expression
+					--if a_let_expression /= Void then
+					--		check
+					--			let_expression_not_analyzed: a_let_expression.may_analyze
+					--		end
+					--	a_let_expression.analyze (a_context)
+					--	if a_let_expression.is_error then
+					--		set_last_error (a_let_expression.last_error)
+					--	else
+					--		was_expression_replaced := True
+					--		if a_let_expression.was_expression_replaced then
+					--			replacement_expression := a_let_expression.replacement_expression
+					--		else
+					--			replacement_expression := a_let_expression
+					--		end
+					--	end
+					--end

@@ -50,6 +50,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- TODO - a sequence of zero or more items
+			todo ("required-type", False)
 		end
 
 feature -- Evaluation

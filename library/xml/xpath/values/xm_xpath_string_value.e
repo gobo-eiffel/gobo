@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			value := clone (a_value)
 		ensure
 			value_set: STRING_.same_string (value, a_value)
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
@@ -104,7 +105,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "string (%"")
+			a_string := STRING_.appended_string (indentation (a_level), "string (%"")
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, "%")")
 			std.error.put_string (a_string)

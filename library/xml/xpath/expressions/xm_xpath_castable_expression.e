@@ -28,6 +28,10 @@ feature {NONE} -- Initialization
 			-- TODO
 		do
 			todo ("make", False)
+			compute_static_properties
+			initialize
+		ensure
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
@@ -46,11 +50,11 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "castable")
+			a_string := STRING_.appended_string (indentation (a_level), "castable")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			source.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indent (a_level + 1), "as")
+			a_string := STRING_.appended_string (indentation (a_level + 1), "as")
 			a_string := STRING_.appended_string (a_string, type_name (target_type))
 			std.error.put_string (a_string)
 			std.error.put_new_line			

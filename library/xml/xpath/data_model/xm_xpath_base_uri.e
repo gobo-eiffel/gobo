@@ -14,6 +14,8 @@ class XM_XPATH_BASE_URI
 
 feature {NONE} -- Access
 
+	-- TODO - scarp this class
+
 	base_uri_property: STRING
 			-- Base-uri property from the infoset
 

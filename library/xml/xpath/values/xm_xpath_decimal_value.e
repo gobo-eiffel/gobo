@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"An XPath decimal value"
+		"Objects that represent XPath decimal value"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -23,9 +23,11 @@ creation
 
 	make, make_from_string
 
+		-- TODO The whole class needs re-working to use some kind of decimal arithmetic type
+
 feature {NONE} -- Initialization
 
-	make (a_value: DOUBLE) is
+	make (a_value: DOUBLE) is -- TODO
 		do
 			make_atomic_value
 			value := a_value
@@ -114,7 +116,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "decimal (")
+			a_string := STRING_.appended_string (indentation (a_level), "decimal (")
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)

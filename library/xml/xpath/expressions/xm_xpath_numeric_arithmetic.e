@@ -34,27 +34,31 @@ feature -- Evaluation
 		do
 			if operator = Integer_division_token then
 				first_operand.evaluate_item (a_context)
-				an_atomic_value ?= first_operand.last_evaluated_item
-				if an_atomic_value /= Void then
-					if an_atomic_value.is_convertible (Integer_type) then
-						an_integer_value ?= an_atomic_value.convert_to_type (Integer_type)
-						second_operand.evaluate_item (a_context)
-						another_atomic_value ?= second_operand.last_evaluated_item
-						if another_atomic_value /= Void then
-							if another_atomic_value.is_convertible (Integer_type) then
-								another_integer_value ?= another_atomic_value.convert_to_type (Integer_type)
-								last_evaluated_item := an_integer_value.arithmetic (operator, another_integer_value)
+				if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_item_in_error then
+					last_evaluated_item := first_operand.last_evaluated_item
+				else
+					an_atomic_value ?= first_operand.last_evaluated_item
+					if an_atomic_value /= Void then
+						if an_atomic_value.is_convertible (Integer_type) then
+							an_integer_value ?= an_atomic_value.convert_to_type (Integer_type)
+							second_operand.evaluate_item (a_context)
+							another_atomic_value ?= second_operand.last_evaluated_item
+							if another_atomic_value /= Void then
+								if another_atomic_value.is_convertible (Integer_type) then
+									another_integer_value ?= another_atomic_value.convert_to_type (Integer_type)
+									last_evaluated_item := an_integer_value.arithmetic (operator, another_integer_value)
+								else
+									set_last_error_from_string ("Second argument to idiv must be an integer", Type_error, 6)
+								end
 							else
-								set_last_error_from_string ("Second argument to idiv must be an integer", Type_error, 6)
+							last_evaluated_item := Void -- represents empty sequence
 							end
 						else
-							last_evaluated_item := Void -- represents empty sequence
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to idiv must be an integer", Type_error, 6)
 						end
 					else
-						set_last_error_from_string ("First argument to idiv must be an integer", Type_error, 6)
+						last_evaluated_item := Void -- represents empty sequence
 					end
-				else
-					last_evaluated_item := Void -- represents empty sequence
 				end
 			else
 				evaluate_for_non_integer_division (a_context)				
@@ -73,27 +77,35 @@ feature {NONE} -- Implementation
 			a_double_value, another_double_value: XM_XPATH_DOUBLE_VALUE
 		do
 			first_operand.evaluate_item (a_context)
-			an_atomic_value ?= first_operand.last_evaluated_item
-			if an_atomic_value /= Void then
-				if an_atomic_value.is_convertible (Double_type) then
-					a_double_value ?= an_atomic_value.convert_to_type (Double_type) 
-				else
-					create a_double_value.make_nan
-				end
-				second_operand.evaluate_item (a_context)
-				another_atomic_value ?= second_operand.last_evaluated_item
-				if another_atomic_value /= Void then
-					if another_atomic_value.is_convertible (Double_type) then
-						another_double_value ?= another_atomic_value.convert_to_type (Double_type) 
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_item_in_error then
+				last_evaluated_item := first_operand.last_evaluated_item
+			else
+				an_atomic_value ?= first_operand.last_evaluated_item
+				if an_atomic_value /= Void then
+					if an_atomic_value.is_convertible (Double_type) then
+						a_double_value ?= an_atomic_value.convert_to_type (Double_type) 
 					else
-						create another_double_value.make_nan
+						create a_double_value.make_nan
 					end
-					last_evaluated_item := a_double_value.arithmetic (operator, another_double_value)
+					second_operand.evaluate_item (a_context)
+					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_item_in_error then
+						last_evaluated_item := second_operand.last_evaluated_item
+					else
+						another_atomic_value ?= second_operand.last_evaluated_item
+						if another_atomic_value /= Void then
+							if another_atomic_value.is_convertible (Double_type) then
+								another_double_value ?= another_atomic_value.convert_to_type (Double_type) 
+							else
+								create another_double_value.make_nan
+							end
+							last_evaluated_item := a_double_value.arithmetic (operator, another_double_value)
+						else
+							last_evaluated_item := Void -- represents empty sequence
+						end
+					end
 				else
 					last_evaluated_item := Void -- represents empty sequence
 				end
-			else
-				last_evaluated_item := Void -- represents empty sequence
 			end
 		end
 

@@ -111,8 +111,8 @@ feature -- Duplication
 			create Result.make (items, first_item, last_item)
 		end
 
-	make_slice_iterator (a_min, a_max: INTEGER): XM_XPATH_ARRAY_ITERATOR [G] is
-			-- Create a new ArrayIterator over the same items, with a different start point and end point
+	new_slice_iterator (a_min, a_max: INTEGER): XM_XPATH_ARRAY_ITERATOR [G] is
+			-- A new ArrayIterator over the same items, with a different start point and end point
 		require
 			valid_minimum: a_min >= first_item and then a_min <= last_item
 			valid_maximum: a_max >= a_min and then a_min <= last_item

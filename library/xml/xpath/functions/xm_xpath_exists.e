@@ -50,6 +50,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- TODO
+			todo ("required-type", False)
 		end
 
 feature -- Evaluation
@@ -58,6 +59,7 @@ feature -- Evaluation
 			-- Effective boolean value
 		do
 			-- TODO
+			todo ("effective-boolean-value", False)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

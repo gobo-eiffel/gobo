@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pure XPath implementation of the namespace-test pattern"
+		"Objects that test for a node with a specific namespace-uri"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

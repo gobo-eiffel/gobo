@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
+			simplified_expression, promoted_expression, sub_expressions, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			required_cardinality := a_request
 			role_locator := a_role_locator
 			compute_static_properties
+			initialize
 		ensure
 			sequence_set: sequence = a_sequence
 			required_cardinality_set: required_cardinality = a_request
@@ -79,7 +80,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "check-cardinality (")
+			a_string := STRING_.appended_string (indentation (a_level), "check-cardinality (")
 			a_string := STRING_.appended_string (a_string, required_cardinality.out)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
@@ -89,14 +90,20 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_result_expression: XM_XPATH_CARDINALITY_CHECKER
+			an_expression: XM_XPATH_EXPRESSION
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_sequence (sequence.simplify)
-			Result := a_result_expression
+			an_expression := sequence.simplified_expression
+			if an_expression.is_error then
+				Result := an_expression
+			else
+				a_result_expression := clone (Current)
+				a_result_expression.set_sequence (an_expression)
+				Result := a_result_expression
+			end
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -104,7 +111,7 @@ feature -- Optimization
 		do
 			set_analyzed
 				check
-					sequence.may_analyze -- TODO - this certainly won't be the case
+					sequence.may_analyze
 				end
 			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
@@ -123,11 +130,14 @@ feature -- Optimization
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
+		local
+			a_result_expression: XM_XPATH_CARDINALITY_CHECKER
 		do
-			set_sequence (sequence.promote (an_offer))
-			Result := Current
+			a_result_expression := clone (Current)
+			a_result_expression.set_sequence (sequence.promoted_expression (an_offer))
+			Result := a_result_expression
 		end
 
 feature -- Evaluation
@@ -146,7 +156,7 @@ feature -- Evaluation
 				from
 					an_iterator.start
 				until
-					finished
+					finished or else an_iterator.is_error
 				loop
 					if an_iterator.is_error then
 						finished := True
@@ -159,22 +169,23 @@ feature -- Evaluation
 							items := items + 1
 						end
 						if items > 1 then
-							set_last_error_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ", role_locator.message), 6, Type_error)							
-							finished := true
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ", role_locator.message), 6, Type_error)
+							finished := True
 						else
 							an_iterator.forth
 						end
 					end
 				end
 
-				if not is_error then
+				if not an_iterator.is_error then
 					if items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
-						last_evaluated_item := Void
-						set_last_error_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
 					end
 				else
-					last_evaluated_item := Void
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
 				end
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
 			end
 		end
 
@@ -198,7 +209,6 @@ feature -- Evaluation
 				end
 				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, an_iterator)
 			else
-				set_last_error (sequence.last_error)
 				Result := an_iterator 
 			end
 		end
@@ -209,6 +219,7 @@ feature -- Evaluation
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_stopper: XM_XPATH_OBJECT_VALUE
 			a_position: INTEGER
+			an_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 				check
 					information_object_not_void: an_information_object /= Void
@@ -217,12 +228,15 @@ feature -- Evaluation
 			a_sequence_iterator ?= an_information_object
 				check
 					iterator_not_void: a_sequence_iterator /= Void
+					iterator_not_in_error: not a_sequence_iterator.is_error
+					-- See logic of `iterator' above.
 				end
 			a_position := a_sequence_iterator.index
 			a_stopper ?= an_item
 			if a_stopper /= Void then
 				if a_position = 1 then
-					set_last_error_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
+					create an_invalid_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
+					create Result.make_item (an_invalid_item)
 				end
 
 				-- We don't include the stopper in the result
@@ -230,8 +244,8 @@ feature -- Evaluation
 					Result := Void
 			else -- no stopper
 				if a_position = 2 and then not cardinality_allows_many then
-					Result := Void
-					set_last_error_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ", role_locator.message), 6, Type_error)
+					create an_invalid_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ", role_locator.message), 6, Type_error)
+					create Result.make_item (an_invalid_item)
 				else
 					create Result.make_item (an_item)
 				end

@@ -117,7 +117,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "** external object **")
+			a_string := STRING_.appended_string (indentation (a_level), "** external object **")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end

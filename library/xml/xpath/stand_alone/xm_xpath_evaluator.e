@@ -17,6 +17,8 @@ inherit
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
+
+	KL_SHARED_STANDARD_FILES
 	
 	-- TODO: need to add a white-space stripper
 
@@ -101,7 +103,7 @@ feature -- Element change
 			-- This provides control over the environment in which the expression is compiled.
 			-- For example it allows namespace prefixes to be declared,
 			--  variables to be bound and functions to be defined.
-			-- For most purposes, the static* context can be defined
+			-- For most purposes, the static context can be defined
 			--  by providing and tailoring an instance of `XM_XPATH_STAND_ALONE_CONTEXT'.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -131,78 +133,40 @@ feature -- Evaluation
 			context_item_not_void: context_item /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
-			a_controller: XM_XPATH_CONTROLLER
-			a_context: XM_XPATH_CONTEXT
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
-			an_item: XM_XPATH_ITEM
 		do
 			create a_system_function_factory
 			Function_factory.register_system_function_factory (a_system_function_factory)
-			an_expression := Expression_factory.make_expression (an_expression_text, static_context)
-			if an_expression = Void then
+			Expression_factory.make_expression (an_expression_text, static_context)
+			if Expression_factory.is_parse_error then
 				is_evaluation_in_error := True
-				internal_error_value := Expression_factory.error_value
+				internal_error_value := Expression_factory.parsed_error_value
 			else
+				an_expression := Expression_factory.parsed_expression
 				an_expression.analyze (static_context)
 				if an_expression.is_error then
 					is_evaluation_in_error := True
 					internal_error_value := an_expression.last_error
 				else
-					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 					if not an_expression.is_error then
-						create a_controller.make (context_item, static_context)
-						a_context := a_controller.new_xpath_context
-						a_context.set_current_iterator (a_controller.current_iterator)
-							check
-								context_set: a_context.context_item = context_item
-							end
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						end
 						debug ("XPath evaluator")
-							an_expression.display (1, static_context.name_pool)
-						end
-						a_sequence_iterator := an_expression.iterator (a_context)
-							
-						if a_sequence_iterator.is_error then
-							is_evaluation_in_error := True
-							internal_error_value := a_sequence_iterator.last_error
-						else
-							from
-								a_sequence_iterator.start
-								if a_sequence_iterator.is_error then -- can happen due to mapping iterators
-									is_evaluation_in_error := True
-									internal_error_value := a_sequence_iterator.last_error
-								end
-								create evaluated_items.make
-							until
-								is_evaluation_in_error or else a_sequence_iterator.is_error or else a_sequence_iterator.after
-							loop
-									check
-										item_not_void: a_sequence_iterator.item /= Void
-										-- Because start ensures not before and until clause ensures not after
-									end
-								an_item := a_sequence_iterator.item
-								if an_item.is_item_in_error then
-									is_evaluation_in_error := True
-									internal_error_value := an_item.evaluation_error_value
-								else
-									evaluated_items.put_last (an_item)
-								end
-
-								a_sequence_iterator.forth
-								if a_sequence_iterator.is_error then -- can happen due to mapping iterators
-									is_evaluation_in_error := True
-									internal_error_value := a_sequence_iterator.last_error
-								end
+							if not an_expression.analyzed then
+								std.error.put_string ("Analyzed expression not marked analyzed:%N")
+								an_expression.display (1, static_context.name_pool)
 							end
 						end
+						evaluate_post_analysis (an_expression)
 					else
 						is_evaluation_in_error := True
-						internal_error_value := Expression_factory.error_value
+						internal_error_value := an_expression.last_error
 					end
 				end
 			end
 		ensure
-			error_or_item_list: -- TODO
+			error_or_item_list: not is_evaluation_in_error implies evaluated_items /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -237,8 +201,66 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
 			-- Tree builder
 
+	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION) is
+			-- perform evaluation on `an_expression'.
+		require
+			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error and then an_expression.analyzed
+		local
+			a_controller: XM_XPATH_CONTROLLER
+			a_context: XM_XPATH_CONTEXT
+			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+				an_item: XM_XPATH_ITEM
+		do
+			create a_controller.make (context_item, static_context)
+			a_context := a_controller.new_xpath_context
+			a_context.set_current_iterator (a_controller.current_iterator)
+				check
+					context_set: a_context.context_item = context_item
+				end
+			debug ("XPath evaluator")
+				an_expression.display (1, static_context.name_pool)
+			end
+			a_sequence_iterator := an_expression.iterator (a_context)
+			
+			if a_sequence_iterator.is_error then
+				is_evaluation_in_error := True
+				internal_error_value := a_sequence_iterator.last_error
+			else
+				from
+					a_sequence_iterator.start
+					if a_sequence_iterator.is_error then -- can happen due to mapping iterators
+						is_evaluation_in_error := True
+						internal_error_value := a_sequence_iterator.last_error
+					end
+					create evaluated_items.make
+				until
+					is_evaluation_in_error or else a_sequence_iterator.is_error or else a_sequence_iterator.after
+				loop
+						check
+							item_not_void: a_sequence_iterator.item /= Void
+							-- Because start ensures not before and until clause ensures not after
+						end
+					an_item := a_sequence_iterator.item
+					if an_item.is_item_in_error then
+						is_evaluation_in_error := True
+						internal_error_value := an_item.evaluation_error_value
+					else
+						evaluated_items.put_last (an_item)
+					end
+					
+					a_sequence_iterator.forth
+					if a_sequence_iterator.is_error then -- can happen due to mapping iterators
+						is_evaluation_in_error := True
+						internal_error_value := a_sequence_iterator.last_error
+					end
+				end
+			end
+		ensure
+			error_or_item_list: not is_evaluation_in_error implies evaluated_items /= Void
+		end
+				
 invariant
-
-				build_error_implies_error_message: was_build_error implies error_message /= Void
-
+	
+	build_error_implies_error_message: was_build_error implies error_message /= Void
+				
 end

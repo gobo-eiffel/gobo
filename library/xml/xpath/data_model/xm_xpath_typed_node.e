@@ -22,6 +22,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	-- TODO - scrap this
 	type_property: INTEGER
 			-- Type property from the infoset
 

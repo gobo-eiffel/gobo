@@ -68,6 +68,9 @@ feature -- Access
 			-- When a subexpression is promoted, an expression of the form let $VAR := SUB return ORIG is created,
 			--  and this replaces the original `containing_expression' within `Current'.
 
+	accepted_expression : XM_XPATH_EXPRESSION
+			-- Result from `accept'
+	
 feature -- Status report
 
 	promote_document_dependent: BOOLEAN
@@ -86,7 +89,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	accept (a_child_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+	accept (a_child_expression: XM_XPATH_EXPRESSION) is
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
 			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
@@ -99,38 +102,41 @@ feature -- Optimization
 				action
 			when Range_independent then
 				if depends_upon_variable (a_child_expression, binding_expression) then
-					Result := Void
+					accepted_expression := Void
 				else
-					Result := promote (a_child_expression)
+					promote (a_child_expression)
+					accepted_expression := promoted_expression
 				end
 			when Focus_independent then
 				if not a_child_expression.depends_upon_focus then
-					Result := promote (a_child_expression)
+					promote (a_child_expression)
+					accepted_expression := promoted_expression
 				elseif promote_document_dependent and not a_child_expression.depends_upon_non_document_focus then
-					Result := promote (a_child_expression)
+					promote (a_child_expression)
+					accepted_expression := promoted_expression
 				else
-					Result := Void
+					accepted_expression := Void
 				end
 			when Inline_variable_references then
 				variable_reference ?= a_child_expression
 				if variable_reference /= Void and then variable_reference.binding.is_equal (binding_expression) then
-					Result := containing_expression
+					accepted_expression := containing_expression
 				else
-					Result := Void
+					accepted_expression := Void
 				end
 			when Unordered then
 				reverser ?= a_child_expression
 				if reverser /= Void then
-					Result := reverser.base_expression
+					accepted_expression := reverser.base_expression
 				elseif not must_eliminate_duplicates then
 					document_sorter ?= a_child_expression
 					if document_sorter /= Void then
-						Result := document_sorter.base_expression
+						accepted_expression := document_sorter.base_expression
 					else
-						Result := Void
+						accepted_expression := Void
 					end
 				else
-					Result := Void
+					accepted_expression := Void
 				end
 			end			
 		end
@@ -149,7 +155,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	promote (a_child_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+	promoted_expression: XM_XPATH_EXPRESSION
+			-- Result from `promote'
+
+	promote (a_child_expression: XM_XPATH_EXPRESSION) is
 			-- Promote `a_child_expression'
 		require
 			sub_expression_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_cardinalities_computed
@@ -169,10 +178,10 @@ feature {NONE} -- Implementation
 			create a_range_variable.make (a_variable_name, -1, a_type)
 
 			create a_variable.make (a_range_variable)
-			Result := a_variable
+			promoted_expression := a_variable
 
 			create a_let_expression.make (a_range_variable, a_child_expression, containing_expression)
-			containing_expression := a_let_expression
+			set_containing_expression (a_let_expression)
 		end
 
 	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding: XM_XPATH_BINDING):BOOLEAN is

@@ -26,7 +26,7 @@ feature -- Access
 feature -- Status report
 
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
-			-- Type of argument number `argument_number'
+			-- Required type for argument number `argument_number'
 		require
 			argument_number_in_range: argument_number > 0 and then argument_number <= supplied_argument_count
 		deferred
@@ -90,14 +90,11 @@ feature {NONE} -- Implementation
 		do
 			create a_type_checker
 			create a_role_locator.make (Function_role, name, argument_number)
-			an_argument := a_type_checker.static_type_check (arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
+			a_type_checker.static_type_check (arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
 			if a_type_checker.is_static_type_check_error then
 				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 			else
-					check
-						argument_not_void: an_argument /= Void
-					end
-				an_argument := an_argument.simplify
+				an_argument := a_type_checker.checked_expression.simplified_expression
 				if an_argument.is_error then
 					set_last_error_from_string (an_argument.last_error.error_message, 4, Type_error)
 				else

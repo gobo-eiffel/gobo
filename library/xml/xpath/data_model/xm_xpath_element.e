@@ -63,6 +63,8 @@ feature -- Status report
 
 feature {NONE} -- Access
 
+	-- TODO - scrap this
+
 	nilled_property: BOOLEAN
 			-- Nilled property from the infoset
 

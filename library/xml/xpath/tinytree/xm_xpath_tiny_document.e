@@ -11,6 +11,7 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_TINY_DOCUMENT
+
 	-- A node in the XML parse tree representing the Document itself
 	-- (or equivalently, the root node of the Document).
 

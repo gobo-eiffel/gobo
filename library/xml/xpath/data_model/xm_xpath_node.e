@@ -21,7 +21,7 @@ inherit
 		-- This class represents a node in gexslt's object model.
 		-- It combines the features of the XPath data model, 
 		--  with some of the features from the W3C's dom::Node (for convenience),
-		-- along with some extra features to make life easier.
+		--  along with additional features to make life easier.
 
 feature -- Access
 
@@ -236,13 +236,7 @@ feature -- Access
 				end
 				an_iterator.start
 				Result ?= an_iterator.item
-					check
-						node_is_element: Result /= Void
-						-- All documents must have a document element (?? I this true?)
-					end
 			end
-		ensure
-			document_element_present: Result /= Void
 		end
 	
 	typed_value: XM_XPATH_VALUE is
@@ -271,19 +265,19 @@ feature -- Access
 			valid_axis: is_axis_valid (an_axis_type)
 		deferred
 		ensure
-			result_not_void: Result /= Void
+			result_not_in_error: Result /= Void and then not Result.is_error
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
-			-- Only nodes that match the pattern specified by `test' will be selected.
+			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		require
 			not_in_error: not is_item_in_error
-			test_not_void: test /= Void
+			node_test_not_void: a_node_test /= Void
 			valid_axis: is_axis_valid (an_axis_type)
 		deferred
 		ensure
-			result_not_void: Result /= Void
+			result_not_in_error: Result /= Void and then not Result.is_error
 		end
 	
 feature -- Status report
@@ -300,7 +294,7 @@ feature -- Status report
 		require
 			not_in_error: not is_item_in_error
 		deferred
-			end
+		end
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?

@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			name_pool_not_void: a_name_pool /= Void
+			warnings_implies_backwards_compatibility: warnings implies backwards
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
@@ -54,6 +55,7 @@ feature {NONE} -- Initialization
 	make_upon_node is
 			-- TODO
 		do
+			print ("{XM_XPATH_STAND_ALONE_CONTEXT}.make_upon_node not implemented!%N")
 		end
 
 feature -- Access
@@ -186,7 +188,7 @@ feature -- Element change
 		do
 			var := variables.item (a_fingerprint)
 			internal_last_bound_variable := var
-			-- An option to return boolean false value if not found can be provided by re-defing this routine
+			-- An option to return boolean false value if not found can be provided by re-defining this routine
 			--  along with `is_variable_declared' in a descendant class.
 		end
 
@@ -237,7 +239,7 @@ feature -- Element change
 						-- TODO
 
 						was_last_function_bound := False
-						set_bind_function_failure_message ("Not implemented")
+						set_bind_function_failure_message ("Constructor functions not implemented yet.")
 					end
 				else
 					was_last_function_bound := False
@@ -329,5 +331,6 @@ invariant
 	default_collation_name: default_collation_name /= Void
 	collations: collations /= Void
 	variables: variables /= Void
+	warnings_implies_backwards_compatibility: warnings_to_std_error implies is_backwards_compatible_mode
 
 end

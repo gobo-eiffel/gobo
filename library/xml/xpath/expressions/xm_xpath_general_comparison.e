@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
 		ensure
+			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
 			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
 			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
@@ -100,52 +101,62 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			an_iterator := first_operand.iterator (a_context)
-			another_iterator := second_operand.iterator (a_context)
-
-			-- The second operand is more likely to be a singleton than the first so:
-			
-			create a_sequence_extent.make (another_iterator)
-			a_count := a_sequence_extent.count
-			if a_count = 0 then
+			if an_iterator.is_error then
 				create Result.make (False)
-			elseif a_count = 1 then
-				Result := effective_boolean_value_with_second_operand_singleton (a_context, a_sequence_extent.item_at (1), an_iterator)
-			else -- a_count > 1 - so nested loop comparison
-				from
-					an_iterator.start
-				until
-					finished or else is_error or else an_iterator.after
-				loop
-					an_atomic_value ?= an_iterator.item
-					if an_atomic_value = Void then
-						set_last_error_from_string ("Atomization failed for first operand of general comparison", 6, Type_error)
-					else
+				Result.set_last_error (an_iterator.last_error)
+			else
+				another_iterator := second_operand.iterator (a_context)
+				if another_iterator.is_error then
+					create Result.make (False)
+					Result.set_last_error (another_iterator.last_error)
+				else
+					
+					-- The second operand is more likely to be a singleton than the first so:
+				
+					create a_sequence_extent.make (another_iterator)
+					a_count := a_sequence_extent.count
+					if a_count = 0 then
+						create Result.make (False)
+					elseif a_count = 1 then
+						Result := effective_boolean_value_with_second_operand_singleton (a_context, a_sequence_extent.item_at (1), an_iterator)
+					else -- a_count > 1 - so nested loop comparison
 						from
-							a_third_iterator := a_sequence_extent.iterator (Void)
-							a_third_iterator.start
+							an_iterator.start
 						until
-							finished or else a_third_iterator.after
+							finished or else is_error or else an_iterator.after
 						loop
-							another_atomic_value ?= a_third_iterator.item
-							if another_atomic_value = Void then
-								set_last_error_from_string ("Atomization failed for second operand of general comparison", 6, Type_error)
+							an_atomic_value ?= an_iterator.item
+							if an_atomic_value = Void then
+								set_last_error_from_string ("Atomization failed for first operand of general comparison", 6, Type_error)
 							else
-								create a_comparison_checker
-								a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
-								if a_comparison_checker.is_comparison_type_error then
-									set_last_error (a_comparison_checker.last_type_error)
-								elseif a_comparison_checker.last_check_result then
-									create Result.make (True)
-									finished := True
+								from
+									a_third_iterator := a_sequence_extent.iterator (Void)
+									a_third_iterator.start
+								until
+									finished or else a_third_iterator.after
+								loop
+									another_atomic_value ?= a_third_iterator.item
+									if another_atomic_value = Void then
+										set_last_error_from_string ("Atomization failed for second operand of general comparison", 6, Type_error)
+									else
+										create a_comparison_checker
+										a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
+										if a_comparison_checker.is_comparison_type_error then
+											set_last_error (a_comparison_checker.last_type_error)
+										elseif a_comparison_checker.last_check_result then
+											create Result.make (True)
+											finished := True
+										end
+									end
+									a_third_iterator.forth
 								end
 							end
-							a_third_iterator.forth
+							an_iterator.forth
 						end
 					end
-					an_iterator.forth
+					if Result = Void then create Result.make (False) end
 				end
 			end
-			if Result = Void then create Result.make (False) end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -246,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 			
 			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
-			an_expression := an_expression.simplify
+			an_expression := an_expression.simplified_expression
 			if not an_expression.is_error then
 					check
 						an_expression.may_analyze
@@ -254,6 +265,7 @@ feature {NONE} -- Implementation
 				an_expression.analyze (a_context)
 				if an_expression.was_expression_replaced then
 					replacement_expression := an_expression.replacement_expression
+					replacement_expression.set_analyzed
 				else
 					replacement_expression := an_expression
 				end
@@ -276,34 +288,22 @@ feature {NONE} -- Implementation
 		do
 			create a_type_checker
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
-
-			--	Check for compatibility with XPath 1.0 rules
-
 			if is_backwards_compatible_mode then
 				issue_warnings (first_operand.item_type, second_operand.item_type, a_context)
 			end
-
 			create an_atomic_type.make (Atomic_type, Required_cardinality_zero_or_more)
 			create a_role.make (Binary_expression_role, token_name (operator), 1)
-			an_expression := a_type_checker.static_type_check (first_operand, an_atomic_type, False, a_role)
-			if an_expression = Void then
-					check
-						static_type_error: a_type_checker.is_static_type_check_error
-					end
+			a_type_checker.static_type_check (first_operand, an_atomic_type, False, a_role)
+			if a_type_checker.is_static_type_check_error then
 				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 			else
-				set_first_operand (an_expression)
-
+				set_first_operand (a_type_checker.checked_expression)
 				create another_role.make (Binary_expression_role, token_name (operator), 2)
-				an_expression := a_type_checker.static_type_check (second_operand, an_atomic_type, False, another_role)
-				if an_expression = Void then
-						check
-							static_type_error: a_type_checker.is_static_type_check_error
-						end
+				a_type_checker.static_type_check (second_operand, an_atomic_type, False, another_role)
+				if a_type_checker.is_static_type_check_error	then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
-					set_second_operand (an_expression)
-
+					set_second_operand (a_type_checker.checked_expression)
 					a_type := first_operand.item_type
 					another_type := second_operand.item_type
 					if not is_backwards_compatible_mode then
@@ -356,6 +356,7 @@ feature {NONE} -- Implementation
 			a_singleton_comparison.analyze (a_context)
 			if a_singleton_comparison.was_expression_replaced then
 				replacement_expression := a_singleton_comparison.replacement_expression
+				replacement_expression.set_analyzed
 			else
 				replacement_expression := a_singleton_comparison
 			end
@@ -374,6 +375,7 @@ feature {NONE} -- Implementation
 			a_general_comparison.analyze (a_context)
 			if a_general_comparison.was_expression_replaced then
 				replacement_expression := a_general_comparison.replacement_expression
+				replacement_expression.set_analyzed
 			else
 				replacement_expression := a_general_comparison
 			end
@@ -419,34 +421,30 @@ feature {NONE} -- Implementation
 			create a_type_checker
 			create a_numeric_type.make_numeric_sequence
 			create a_role.make (Binary_expression_role, token_name (operator), 1)
-			first_operand := a_type_checker.static_type_check (first_operand, a_numeric_type, is_backwards_compatible_mode, a_role)
-			if first_operand = Void then
-					check
-						static_type_error: a_type_checker.is_static_type_check_error
-					end
-				first_operand.set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
-				replacement_expression := first_operand -- Any expression with the correct error message will do
+			a_type_checker.static_type_check (first_operand, a_numeric_type, is_backwards_compatible_mode, a_role)
+			if a_type_checker.is_static_type_check_error then
+				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+				set_analyzed
 			else
+				set_first_operand (a_type_checker.checked_expression)
 				if not is_sub_type (another_type, Number_type) then
 					create another_role.make (Binary_expression_role, token_name (operator), 2)
-					second_operand := a_type_checker.static_type_check (second_operand, a_numeric_type, is_backwards_compatible_mode, another_role)
-					if second_operand = Void then
-							check
-								static_type_error: a_type_checker.is_static_type_check_error
-							end
-						second_operand.set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
-						replacement_expression := second_operand -- Any expression with the correct error message will do
+					a_type_checker.static_type_check (second_operand, a_numeric_type, is_backwards_compatible_mode, another_role)
+					if a_type_checker.is_static_type_check_error then
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else
+						set_second_operand (a_type_checker.checked_expression)
 						create a_minimax_comparison.make (first_operand, operator, second_operand)
 						a_minimax_comparison.analyze (a_context)
 						if a_minimax_comparison.was_expression_replaced then
 							replacement_expression := a_minimax_comparison.replacement_expression
+							replacement_expression.set_analyzed
 						else
 							replacement_expression := a_minimax_comparison
 						end
+						was_expression_replaced := True
 					end
 				end
-				was_expression_replaced := True
 			end
 		end
 
@@ -460,6 +458,7 @@ feature {NONE} -- Implementation
 			if a_value /= Void and then another_value /= Void then
 				evaluate_item (Void)
 				replacement_expression := last_evaluation
+				replacement_expression.set_analyzed
 				was_expression_replaced := True
 			end
 		end

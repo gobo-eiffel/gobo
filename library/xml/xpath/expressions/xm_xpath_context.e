@@ -14,7 +14,7 @@ class XM_XPATH_CONTEXT
 
 inherit
 
-	KL_SHARED_STANDARD_FILES -- TODO - remove
+	KL_SHARED_STANDARD_FILES -- TODO - remove when all todo routines are removed
 
 creation
 
@@ -128,7 +128,7 @@ feature 	-- Element change
 feature {NONE} -- Implementation
 
 	controller: XM_XPATH_CONTROLLER
-			-- XPATH controller
+			-- XPath controller
 
 	cached_last: INTEGER
 			-- Used by `last'

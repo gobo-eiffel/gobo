@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_STRING_VALUE
 		redefine
-			display, convert_to_type, item_type, effective_boolean_value
+			display, convert_to_type, item_type, effective_boolean_value, is_comparable
 		end
 
 	-- N.B. Inheritance from XM_XPATH_STRING_VALUE is an implementation convenience;
@@ -37,25 +37,58 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison_using_collator (an_atomic_value: XM_XPATH_ATOMIC_VALUE; a_collator: ST_COLLATOR): INTEGER is
+	three_way_comparison_using_collator (other: XM_XPATH_ATOMIC_VALUE; a_collator: ST_COLLATOR): INTEGER is
 			-- Comparison with `an_atomic_value'
 		require
-			atomic_value_valid: an_atomic_value /= Void -- and then is_comparable
+			atomic_value_valid: other /= Void and then is_comparable (other)
+			collator_not_void: a_collator /= Void
+		local
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			-- TODO
-			todo ("three-way-comparison" ,False)
+			a_numeric_value ?= other
+			if a_numeric_value /= Void then
+				if double_value = Void then
+					double_value ?= convert_to_type (Double_type)
+						check
+							double_value_not_void: double_value /= Void
+							-- because is_comparable
+						end
+				end
+				Result := double_value.three_way_comparison (a_numeric_value)
+			else
+				Result := a_collator.three_way_comparison (string_value, other.string_value)
+			end
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 			
 feature -- Status report
 
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Is `other' comparable to `Current'?
+		local
+			a_string_value: XM_XPATH_STRING_VALUE
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+		do
+			a_numeric_value ?= other
+			if a_numeric_value /= Void then
+				if double_value /= Void then
+					Result := True
+				else
+					Result := is_convertible (Double_type)
+				end
+			else
+				Result := True -- Is this correct?
+			end
+		end
+
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "untyped (%"")
+			a_string := STRING_.appended_string (indentation (a_level), "untyped (%"")
 			a_string := STRING_.appended_string (a_string, value)
 			a_string := STRING_.appended_string (a_string, "%")")
 			std.error.put_string (a_string)
@@ -65,7 +98,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
 			create Result.make (True)

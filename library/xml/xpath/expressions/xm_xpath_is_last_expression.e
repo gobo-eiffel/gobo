@@ -30,7 +30,9 @@ feature {NONE} -- Initialization
 		do
 			condition := a_condition
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			condition_set: condition = a_condition
 		end
 
@@ -65,7 +67,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "isLast()")
+			a_string := STRING_.appended_string (indentation (a_level), "isLast()")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			end

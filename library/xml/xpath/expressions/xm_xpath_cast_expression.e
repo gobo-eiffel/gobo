@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, sub_expressions, promote, evaluate_item
+			simplified_expression, sub_expressions, promoted_expression, evaluate_item
 		end
 
 	XM_XPATH_ROLE
@@ -31,6 +31,10 @@ feature {NONE} -- Initialization
 			-- TODO
 		do
 			todo ("make", False)
+			compute_static_properties
+			initialize
+		ensure
+			static_properties_computed: are_static_properties_computed
 		end
 
 	make_from_sequence_type (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
@@ -71,7 +75,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "cast as ")
+			a_string := STRING_.appended_string (indentation (a_level), "cast as ")
 			if is_error then
 				std.error.put_string (a_string)
 				std.error.put_string ("In error%N")
@@ -85,18 +89,16 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_result_expression: XM_XPATH_CAST_EXPRESSION
 			a_source: XM_XPATH_EXPRESSION
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			a_source := source.simplify
+			a_source := source.simplified_expression
 			if a_source.is_error then
-				a_result_expression := clone (Current)
-				a_result_expression.set_last_error (a_source.last_error)
-				Result := a_result_expression
+				Result := a_source
 			else
 				an_atomic_value ?= a_source
 				if	an_atomic_value /= Void then
@@ -129,18 +131,14 @@ feature -- Optimization
 				create a_sequence_type.make (Atomic_type, cardinality)
 				create a_role.make (Type_operation_role, "cast as", 1)
 				create a_type_checker
-				an_expression := a_type_checker.static_type_check (source, a_sequence_type, False, a_role)
-				if an_expression = Void then
-						check
-							static_type_error: a_type_checker.is_static_type_check_error
-						end
+				a_type_checker.static_type_check (source, a_sequence_type, False, a_role)
+				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
-					if not an_expression.analyzed then an_expression.set_analyzed end
+					an_expression := a_type_checker.checked_expression
 					if is_sub_type (an_expression.item_type, target_type) then
 						was_expression_replaced := True
-						replacement_expression := an_expression
-						-- TODO: wrong, should change the type label?
+						replacement_expression := an_expression -- TODO: wrong, should change the type label?
 					elseif is_sub_type (target_type, Qname_type) then
 						create a_qname_cast.make (an_expression)
 						a_qname_cast.analyze (a_context)
@@ -168,13 +166,13 @@ feature -- Optimization
 			if not analyzed then set_analyzed end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 		local
 			a_result_expression: XM_XPATH_CAST_EXPRESSION
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_source (source.promote (an_offer))
+			a_result_expression.set_source (source.promoted_expression (an_offer))
 			Result := a_result_expression
 		end
 
@@ -186,13 +184,17 @@ feature -- Evaluation
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			source.evaluate_item (a_context)
-			an_atomic_value ?= source.last_evaluated_item
-			if an_atomic_value = Void then
-				last_evaluated_item := Void
-			elseif an_atomic_value.is_convertible (target_type) then
-				last_evaluated_item := an_atomic_value.convert_to_type (target_type)
+			if source.last_evaluated_item.is_item_in_error then
+				last_evaluated_item := source.last_evaluated_item
 			else
-				set_last_error_from_string (STRING_.appended_string ("Could not cast expression to type ", type_name (target_type)), Dynamic_error, 21)
+				an_atomic_value ?= source.last_evaluated_item
+				if an_atomic_value = Void then
+					last_evaluated_item := Void
+				elseif an_atomic_value.is_convertible (target_type) then
+					last_evaluated_item := an_atomic_value.convert_to_type (target_type)
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ", type_name (target_type)), Dynamic_error, 21)
+				end
 			end
 		end
 

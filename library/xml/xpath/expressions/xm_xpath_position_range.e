@@ -31,7 +31,9 @@ feature {NONE} -- Initialization
 			minimum_position := an_integer
 			maximum_position := another_integer
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			minumum_set: minimum_position = an_integer
 			maxumum_set: maximum_position = another_integer
 		end
@@ -58,7 +60,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "positionRange(")
+			a_string := STRING_.appended_string (indentation (level), "positionRange(")
 			a_string := STRING_.appended_string (a_string, minimum_position.out)
 			a_string := STRING_.appended_string (a_string, ",")
 			a_string := STRING_.appended_string (a_string, maximum_position.out)

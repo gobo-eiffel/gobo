@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, evaluate_item, promote, iterator, sub_expressions
+			simplified_expression, evaluate_item, promoted_expression, iterator, sub_expressions
 		end
 
 creation
@@ -36,10 +36,12 @@ feature {NONE} -- Initialization
 			set_else_expression (an_else_expression)
 			set_then_expression (a_then_expression)
 			compute_static_properties
+			initialize
 		ensure
-				condition_set: condition = a_condition
-				else_set: else_expression = an_else_expression
-				then_set: then_expression = a_then_expression
+			static_properties_computed: are_static_properties_computed
+			condition_set: condition = a_condition
+			else_set: else_expression = an_else_expression
+			then_set: then_expression = a_then_expression
 		end
 
 feature -- Access
@@ -81,15 +83,15 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "if (")
+			a_string := STRING_.appended_string (indentation (a_level), "if (")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			condition.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indent (a_level), "then")
+			a_string := STRING_.appended_string (indentation (a_level), "then")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			then_expression.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indent (a_level), "else")
+			a_string := STRING_.appended_string (indentation (a_level), "else")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			else_expression.display (a_level + 1, a_pool)				
@@ -97,8 +99,8 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -106,7 +108,7 @@ feature -- Optimization
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			an_if_expression := clone (Current)
-			an_expression := condition.simplify
+			an_expression := condition.simplified_expression
 			an_if_expression.set_condition (an_expression)
 			if an_expression.is_error then
 				an_if_expression.set_last_error (an_expression.last_error)
@@ -115,21 +117,21 @@ feature -- Optimization
 				if a_value /= Void then
 					a_boolean_value := condition.effective_boolean_value (Void)
 					if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
-						an_expression := then_expression.simplify
+						an_expression := then_expression.simplified_expression
 						an_if_expression.set_then_expression (an_expression)
 						if an_expression.is_error then
 							an_if_expression.set_last_error (an_expression.last_error)
 						end
 					else
-						an_expression := else_expression.simplify
+						an_expression := else_expression.simplified_expression
 						an_if_expression.set_else_expression (an_expression)
 						if an_expression.is_error then
 							an_if_expression.set_last_error (an_expression.last_error)
 						end						
 					end
 				else
-					an_if_expression.set_then_expression (then_expression.simplify)
-					an_if_expression.set_else_expression (else_expression.simplify)
+					an_if_expression.set_then_expression (then_expression.simplified_expression)
+					an_if_expression.set_else_expression (else_expression.simplified_expression)
 				end
 			end
 			Result := an_if_expression
@@ -142,7 +144,10 @@ feature -- Optimization
 					condition.may_analyze
 				end
 			condition.analyze (a_context)
-			if condition.was_expression_replaced then set_condition (condition.replacement_expression) end
+			if condition.was_expression_replaced then
+				set_condition (condition.replacement_expression)
+				condition.set_analyzed
+			end
 			if condition.is_error then
 				set_last_error (condition.last_error)
 			else
@@ -150,7 +155,10 @@ feature -- Optimization
 						then_expression.may_analyze
 					end
 				then_expression.analyze (a_context)
-				if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
+				if then_expression.was_expression_replaced then
+					set_then_expression (then_expression.replacement_expression)
+					then_expression.set_analyzed
+				end
 				if then_expression.is_error then
 					set_last_error (then_expression.last_error)
 				else
@@ -158,34 +166,39 @@ feature -- Optimization
 							else_expression.may_analyze
 						end
 					else_expression.analyze (a_context)
-					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end
+					if else_expression.was_expression_replaced then
+						set_else_expression (else_expression.replacement_expression)
+						else_expression.set_analyzed
+					end
 					if else_expression.is_error then
 						set_last_error (else_expression.last_error)
 					end
 				end
 				if not is_error then
-					replacement_expression := simplify
+					replacement_expression := simplified_expression
+					replacement_expression.set_analyzed
 					was_expression_replaced := True
 				end
 			end
 			set_analyzed
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 		local
 			an_expression: XM_XPATH_IF_EXPRESSION
 		do
-			an_expression ?= an_offer.accept (Current)
+			an_offer.accept (Current)
+			an_expression ?= an_offer.accepted_expression
 				check
 					an_expression_not_void: an_expression /= Void
 				end
 			if an_expression = Current then -- not accepted
 				an_expression := clone (Current)
-				an_expression.set_condition (condition.promote (an_offer))
+				an_expression.set_condition (condition.promoted_expression (an_offer))
 				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references then
-					an_expression.set_then_expression (then_expression.promote (an_offer))
-					an_expression.set_else_expression (else_expression.promote (an_offer))
+					an_expression.set_then_expression (then_expression.promoted_expression (an_offer))
+					an_expression.set_else_expression (else_expression.promoted_expression (an_offer))
 				end
 			end
 			Result := an_expression

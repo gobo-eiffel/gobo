@@ -37,8 +37,7 @@ feature {NONE} -- Initialization
 			are_special_properties_computed := True
 		ensure
 			set: node = a_node
-			cardinalities_computed: are_cardinalities_computed = True
-			special_properties_computed: are_special_properties_computed = True
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
@@ -85,7 +84,7 @@ feature -- Status report
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-				std.error.put_string (indent (a_level))
+				std.error.put_string (indentation (a_level))
 			if node = Void then
 				std.error.put_string ("Empty node-set")
 			else

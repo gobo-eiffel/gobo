@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions, same_expression, iterator
+			simplified_expression, promoted_expression, compute_dependencies, compute_special_properties, sub_expressions, same_expression, iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -62,6 +62,9 @@ feature {NONE} -- Initialization
 				end
 			end
 			compute_static_properties
+			initialize
+		ensure
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
@@ -112,7 +115,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "path /")
+			a_string := STRING_.appended_string (indentation (a_level), "path /")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			start.display (a_level + 1, a_pool)
@@ -137,8 +140,8 @@ feature -- Status setting
 	
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
@@ -148,10 +151,10 @@ feature -- Optimization
 			a_result_expression, a_step_path, a_start_path, a_path: XM_XPATH_PATH_EXPRESSION
 		do
 			a_result_expression := clone (Current)
-			an_expression := start.simplify
+			an_expression := start.simplified_expression
 			if not an_expression.is_error then
 				a_result_expression.set_start (an_expression)
-				an_expression := step.simplify
+				an_expression := step.simplified_expression
 				if not an_expression.is_error then
 					a_result_expression.set_step (an_expression)
 				
@@ -200,25 +203,26 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
-			an_expression, another_expression: XM_XPATH_EXPRESSION
-			a_path: XM_XPATH_PATH_EXPRESSION
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
-			an_offer: XM_XPATH_PROMOTION_OFFER
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			path_not_void: BOOLEAN
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 			set_analyzed
 			create a_type_checker
 			if	start.may_analyze then
 				start.analyze (a_context)
-				if start.was_expression_replaced then set_start (start.replacement_expression) end
+				if start.was_expression_replaced then
+					set_start (start.replacement_expression)
+					start.set_analyzed
+				end
 			end
 			if not start.is_error then
 				if	step.may_analyze then
 					step.analyze (a_context)
-					if step.was_expression_replaced then set_step (step.replacement_expression) end
+					if step.was_expression_replaced then
+						set_step (step.replacement_expression)
+						step.set_analyzed
+					end
 				end
 				if not step.is_error then
 
@@ -232,98 +236,18 @@ feature -- Optimization
 
 					create a_role.make (Binary_expression_role, "/", 1)
 					create a_node_sequence.make_node_sequence
-					another_expression := a_type_checker.static_type_check(start, a_node_sequence, False, a_role)
-					if another_expression = Void then
-							check
-								static_type_error: a_type_checker.is_static_type_check_error
-							end
+					a_type_checker.static_type_check(start, a_node_sequence, False, a_role)
+					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else
-						set_start (another_expression)
+						set_start (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, "/", 2)
-						another_expression := a_type_checker.static_type_check (step, a_node_sequence, False, another_role)
-						if another_expression = Void then
-								check
-									static_type_error: a_type_checker.is_static_type_check_error
-								end
+						a_type_checker.static_type_check (step, a_node_sequence, False, another_role)
+						if a_type_checker.is_static_type_check_error then
 							set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 						else
-							set_step (another_expression)
-
-							-- Try to simplify descendant expressions such as a//b
-							
-							a_path := simplify_descendant_path
-							path_not_void := a_path /= Void
-							if path_not_void then
-
-								-- Descendant expressions such as a//b were simplified
-								
-								another_expression := a_path.simplify
-								if not another_expression.is_error then
-									a_path ?= another_expression
-										check
-											path_not_void: a_path /= Void
-										end
-										check
-											a_path.may_analyze
-										end
-									a_path.analyze (a_context)
-									if a_path.was_expression_replaced then
-										replacement_expression := a_path.replacement_expression
-									else
-										replacement_expression := a_path
-									end
-									was_expression_replaced := True
-								else
-								
-									-- Failed to simplify expressions such as a//b
-
-									-- If any subexpressions within the step are not dependent on the focus, promote them:
-									-- this causes them to be evaluated once, outside the path  expression.
-
-									-- This lot produces an infinite loop in let expression analysis
-
-									-- 								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.context_document_nodeset)
-									-- 								an_expression := a_result_expression.step.promote (an_offer)
-									-- 								an_expression.display (1, a_context.name_pool)
-									-- 								a_result_expression.set_step (an_expression)
-									-- 								a_let_expression ?= an_offer.containing_expression
-									-- 								if a_let_expression /= Void then
-									-- 										check
-									-- 											let_expression_not_analyzed: a_let_expression.may_analyze
-									-- 										end
-									-- 									a_let_expression.display (1, a_context.name_pool)
-									-- 									another_expression := a_let_expression.analyze (a_context)
-									-- 										check
-									-- 											another_expression.analyzed
-									-- 										end
-									-- 									if another_expression.is_error then
-									-- 										a_result_expression.set_last_error (another_expression.last_error)
-									-- 									else
-									-- 										an_offer.set_containing_expression (another_expression)
-									-- 									end
-									-- 								end
-									-- 								
-									-- 								if not a_result_expression.is_error then
-									-- 									
-									-- 									-- Decide whether the result needs to be wrapped in a sorting
-									-- 									-- expression to deliver the results in document order
-									-- 										
-									-- 									a_path ?= an_offer.containing_expression
-									-- 									if a_path /= Void then
-									-- 										if a_path.ordered_nodeset then
-									-- 											Result := a_path
-									-- 										elseif a_path.reverse_document_order then
-									-- 											create {XM_XPATH_REVERSER} Result.make (a_path)
-									-- 										else
-									-- 											create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
-									--										end
-									-- 								else
-									-- 										Result := an_offer.containing_expression
-									-- 									end
-									-- 								end
-								end
-							end
+							set_step (a_type_checker.checked_expression)
+							optimize (a_context)
 						end
 					end
 				else
@@ -334,22 +258,23 @@ feature -- Optimization
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
 		local
 			a_result_expression: XM_XPATH_PATH_EXPRESSION
 		do
-			a_result_expression ?= an_offer.accept (Current)
+			an_offer.accept (Current)
+			a_result_expression ?= an_offer.accepted_expression
 			if a_result_expression = Void then
 				a_result_expression := clone (Current)
-				a_result_expression.set_start (start.promote (an_offer))
+				a_result_expression.set_start (start.promoted_expression (an_offer))
 				if an_offer.action = Inline_variable_references then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
 
-					a_result_expression.set_step (step.promote (an_offer))
+					a_result_expression.set_step (step.promoted_expression (an_offer))
 				end
 			else
 				do_nothing
@@ -370,55 +295,29 @@ feature -- Evaluation
 			another_context: XM_XPATH_CONTEXT
 		do
 			an_iterator := start.iterator (a_context)
-			if an_iterator = Void then
-					check
-						start_in_error: start.is_error
-						-- By post-condition of iterator
-					end
-				set_last_error (start.last_error)
+			if an_iterator.is_error then
+				Result := an_iterator
 			else
-				debug ("XPath path iterator")
-					print ("Iterating a path%N")
-					from
-						an_iterator.start
-					until
-						an_iterator.after
-					loop
-						print (an_iterator.item); print ("%N")
-						an_iterator.forth
-					end
-				end
 				another_context := a_context.new_context
 				another_context.set_current_iterator (an_iterator)
 
 				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, another_context, Void)
-				debug ("XPath path iterator")
-					print ("Iterating a path 2%N")
-					from
-						Result.start
-					until
-						Result.after
-					loop
-						print (Result.item); print ("%N")
-						Result.forth
-					end
-					Result := Result.another -- to counteract side effect of iteration
-				end
 			end
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
 			-- Map `an_item' to a sequence
-	local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]		
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 			an_iterator := step.iterator (a_context)
 			if an_iterator.is_error then
-				Result := Void
-				
+								
 				-- Error occured
 
-				set_last_error (step.last_error)
+				create an_invalid_item.make (step.last_error)
+				create Result.make_item (an_invalid_item)
 			else
 				create Result.make_sequence (an_iterator)
 			end
@@ -513,7 +412,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	simplify_descendant_path: XM_XPATH_PATH_EXPRESSION is
+	simplified_descendant_path: XM_XPATH_PATH_EXPRESSION is
 			-- Simplified descendant path, or `Void' if not possible
 		local
 			st: XM_XPATH_EXPRESSION
@@ -735,9 +634,97 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform context-dependent optimizations
+		local
+			a_path: XM_XPATH_PATH_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
+			an_offer: XM_XPATH_PROMOTION_OFFER
+			path_not_void: BOOLEAN
+		do
+			
+			-- Try to simplify descendant expressions such as a//b
+			
+			a_path := simplified_descendant_path
+			path_not_void := a_path /= Void
+			if path_not_void then
+				
+				-- Descendant expressions such as a//b were simplified
+				
+				an_expression := a_path.simplified_expression
+				if not an_expression.is_error then
+					a_path ?= an_expression
+						check
+							path_not_void: a_path /= Void
+						end
+						check
+							a_path.may_analyze
+						end
+					a_path.analyze (a_context)
+					if a_path.was_expression_replaced then
+						replacement_expression := a_path.replacement_expression
+					else
+						replacement_expression := a_path
+					end
+					was_expression_replaced := True
+				else
+					do_nothing -- TODO See bottom of file for code which needs debugging and reinstating
+				end
+			end
+		end
+
 invariant
 
 	start_not_void: start /= Void
 	step_not_void: step /= Void
 
 end
+
+-- Failed to simplify expressions such as a//b
+					
+-- If any subexpressions within the step are not dependent on the focus, promote them:
+-- this causes them to be evaluated once, outside the path  expression.
+	
+-- This lot produces an infinite loop in let expression analysis
+					
+-- 								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.context_document_nodeset)
+-- 								an_expression := a_result_expression.step.promoted_expression (an_offer)
+-- 								an_expression.display (1, a_context.name_pool)
+-- 								a_result_expression.set_step (an_expression)
+-- 								a_let_expression ?= an_offer.containing_expression
+-- 								if a_let_expression /= Void then
+-- 										check
+-- 											let_expression_not_analyzed: a_let_expression.may_analyze
+-- 										end
+-- 									a_let_expression.display (1, a_context.name_pool)
+-- 									another_expression := a_let_expression.analyze (a_context)
+-- 										check
+-- 											another_expression.analyzed
+-- 										end
+-- 									if another_expression.is_error then
+-- 										a_result_expression.set_last_error (another_expression.last_error)
+-- 									else
+-- 										an_offer.set_containing_expression (another_expression)
+-- 									end
+-- 								end
+-- 								
+-- 								if not a_result_expression.is_error then
+-- 									
+-- 									-- Decide whether the result needs to be wrapped in a sorting
+-- 									-- expression to deliver the results in document order
+-- 										
+-- 									a_path ?= an_offer.containing_expression
+-- 									if a_path /= Void then
+-- 										if a_path.ordered_nodeset then
+-- 											Result := a_path
+-- 										elseif a_path.reverse_document_order then
+-- 											create {XM_XPATH_REVERSER} Result.make (a_path)
+-- 										else
+-- 											create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
+--										end
+-- 								else
+-- 										Result := an_offer.containing_expression
+-- 									end
+-- 								end
+
+

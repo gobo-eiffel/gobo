@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-		pre_evaluate, evaluate_item, compute_intrinsic_dependencies
+			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
 		end
 
 	creation
@@ -71,16 +71,34 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			a_context_position: INTEGER
 		do
-			create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make (a_context.context_position)
+			if a_context = Void then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Dynamic context is Void", Dynamic_error, 2)
+			elseif not a_context.is_context_position_set then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not available", Dynamic_error, 2)
+			else
+				a_context_position := a_context.context_position
+				if a_context_position = 0 then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position cannot be zero", Dynamic_error, 2)
+				else
+					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make (a_context_position)
+				end
+			end
+		ensure then
+			possible_dynamic_error: last_evaluated_item.is_item_in_error implies
+				last_evaluated_item.evaluation_error_value.code = 2 and then
+				last_evaluated_item.evaluation_error_value.type = Dynamic_error
 		end
 
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
+			-- This forces pre-evaluation not to occur, as
+			--  the value of `Current' depends upon the dynamic context.
 		do
-			replacement_expression := Current
-			was_expression_replaced := True			
+			do_nothing
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted

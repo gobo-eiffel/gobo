@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, evaluate_item
+			simplified_expression, evaluate_item
 		end
 
 creation
@@ -50,6 +50,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- TODO - a sequence of zero or more items
+			todo ("required-type", False)
 		end
 
 	is_test_for_zero: BOOLEAN
@@ -68,11 +69,12 @@ feature -- Status setting
 
 feature -- Optimization
 
-		simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current';
+		simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 			-- This default implementation does nothing.
 		do
 			-- TODO
+			todo ("simplified-expression", False)
 		end
 
 feature -- Evaluation

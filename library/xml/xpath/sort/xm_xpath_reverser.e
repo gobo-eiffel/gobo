@@ -41,6 +41,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 
 feature -- Status report
@@ -50,7 +51,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "Sort into Reverse Order")
+			a_string := STRING_.appended_string (indentation (a_level), "Sort into Reverse Order")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			base_expression.display (a_level + 1, a_pool)
@@ -62,7 +63,7 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			-- TODO
-			todo ("reverser", False)
+			todo ("analyze", False)
 		end
 
 feature {NONE} -- Implementation
@@ -71,6 +72,7 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			-- TODO
+			todo ("compute-cardinality", False)
 		end
 
 invariant

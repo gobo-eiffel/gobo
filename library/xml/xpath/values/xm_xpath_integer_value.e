@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"An integer XPath value"
+		"XPath integer values"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -23,6 +23,9 @@ creation
 
 	make, make_from_string
 
+		-- TODO: This whole class needs a different basis - at least INTEGER_64, but
+		--  prefereably a type representing unbounded integers.
+
 feature {NONE} -- Initialization
 
 	make (a_value: INTEGER) is
@@ -42,10 +45,10 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: value = a_value.to_double
 		end
+
 feature -- Access
 
-	value: INTEGER
-
+	value: INTEGER --  TODO should be INTEGER_64, or EDA_INTEGER or something
 	
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
 		do
@@ -105,7 +108,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "integer (")
+			a_string := STRING_.appended_string (indentation (a_level), "integer (")
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)

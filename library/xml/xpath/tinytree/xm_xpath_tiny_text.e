@@ -56,4 +56,5 @@ feature {XM_XPATH_NODE} -- Restricted
 		do
 			Result := True
 		end
+
 end

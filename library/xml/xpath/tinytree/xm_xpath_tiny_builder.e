@@ -93,43 +93,9 @@ feature -- Events
 
 			an_owner_node := previously_at_depth.item (current_depth - 1)
 			if a_previous_sibling > 0 then
-				debug ("XPath tiny builder")
-					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (a_previous_sibling.out)
-					std.error.put_string (" to element node ")
-					std.error.put_string (node_number.out)
-					std.error.put_string (" when at depth ")
-					std.error.put_string (current_depth.out)
-					std.error.put_new_line
-				end
 				document.set_next_sibling (node_number, a_previous_sibling)
 			end
 
-			debug ("XPath tiny builder")
-				std.error.put_string ("Found an element with local name: ")
-				std.error.put_string (name_pool.local_name_from_name_code (a_name_code))
-				std.error.put_string (", node number is: ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (", at depth ")
-				std.error.put_string (current_depth.out)
-				std.error.put_string (". Previous sibling is: ")
-				std.error.put_string (a_previous_sibling.out)
-				std.error.put_string (", owner is: ")
-				std.error.put_string (an_owner_node.out)
-				std.error.put_new_line
-				std.error.put_string ("Name code is ")
-				std.error.put_string (a_name_code.out)
-				std.error.put_new_line
-			end
-			debug ("XPath tiny builder")
-				std.error.put_string ("Setting owner for element ")
-					std.error.put_string (node_number.out)
-					std.error.put_string (" to ")
-					std.error.put_string (an_owner_node.out)
-					std.error.put_string (" when at depth ")
-					std.error.put_string (current_depth.out)
-					std.error.put_new_line
-			end
 			document.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
 			
 			previously_at_depth.put (node_number, current_depth)
@@ -200,26 +166,8 @@ feature -- Events
 
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				debug ("XPath tiny builder")
-					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (a_previous_sibling.out)
-					std.error.put_string (" to text node ")
-					std.error.put_string (node_number.out)
-					std.error.put_string (" when at depth ")
-					std.error.put_string (current_depth.out)
-					std.error.put_new_line
-				end				
 				document.set_next_sibling (node_number, a_previous_sibling)
 			end
-			debug ("XPath tiny builder")
-				std.error.put_string ("Setting owner for text node ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (" to ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (" when at depth ")
-				std.error.put_string (previously_at_depth.item (current_depth - 1).out)
-				std.error.put_new_line
-			end			
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end
@@ -241,26 +189,8 @@ feature -- Events
 			
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				debug ("XPath tiny builder")
-					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (a_previous_sibling.out)
-					std.error.put_string (" to PI node ")
-					std.error.put_string (node_number.out)
-					std.error.put_string (" when at depth ")
-					std.error.put_string (current_depth.out)
-					std.error.put_new_line
-				end
 				document.set_next_sibling (node_number, a_previous_sibling)
 			end
-			debug ("XPath tiny builder")
-				std.error.put_string ("Setting owner for PI node ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (" to ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (" when at depth ")
-				std.error.put_string (previously_at_depth.item (current_depth - 1).out)
-				std.error.put_new_line
-			end		
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)		
 		end
@@ -277,26 +207,8 @@ feature -- Events
 			
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				debug ("XPath tiny builder")
-					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (a_previous_sibling.out)
-					std.error.put_string (" to comment node ")
-					std.error.put_string (node_number.out)
-					std.error.put_string (" when at depth ")
-					std.error.put_string (current_depth.out)
-					std.error.put_new_line
-				end				
 				document.set_next_sibling (node_number, a_previous_sibling)
 			end
-			debug ("XPath tiny builder")
-				std.error.put_string ("Setting owner for comment node ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (" to ")
-				std.error.put_string (node_number.out)
-				std.error.put_string (" when at depth ")
-				std.error.put_string (previously_at_depth.item (current_depth - 1).out)
-				std.error.put_new_line
-			end					
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end

@@ -29,6 +29,7 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		do
+			-- TODO - make this deferred
 			Result := base_uri_property
 		ensure then
 			base_uri_property: Result = base_uri_property

@@ -283,7 +283,7 @@ feature
 
 		end
 
-		test_with_namespaces is
+	test_with_namespaces is
 			-- Read a file with namespaces
 		local
 			input_stream: KL_TEXT_INPUT_FILE
@@ -308,7 +308,15 @@ feature
 			a_name := document_element.node_name
 			assert("root name", STRING_.same_string (a_name, "xsl:transform"))
 		end
-	
+
+	test_document_in_error is
+			-- Test production of error messages.
+		do
+			make_parser
+			parser.parse_from_string ("<doc><a><b/></doc>")
+			assert ("Parsing error", tree_pipe.error.has_error)
+		end
+
 feature {NONE} -- Implementation
 
 	make_parser is

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			compute_cardinality, simplify, iterator
+			compute_cardinality, simplified_expression, iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -35,21 +35,22 @@ feature -- Access
 
 feature -- Optimization	
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			an_append_expression, another_append_expression, a_third_append_expression: XM_XPATH_APPEND_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_value, another_value: XM_XPATH_VALUE
 		do
 			an_append_expression := clone (Current)
-			an_append_expression.set_first_operand (first_operand.simplify)
+			an_append_expression.set_first_operand (first_operand.simplified_expression)
 			if an_append_expression.first_operand.is_error then
 				an_append_expression.set_last_error (an_append_expression.first_operand.last_error)
 			end
 
 			if not an_append_expression.is_error then
-				an_append_expression.set_second_operand (second_operand.simplify)
+				an_append_expression.set_second_operand (second_operand.simplified_expression)
 				if an_append_expression.second_operand.is_error then
 					an_append_expression.set_last_error (an_append_expression.second_operand.last_error)
 				end
@@ -79,8 +80,18 @@ feature -- Optimization
 							if a_value /= Void and then another_append_expression /= Void then
 								another_value ?= another_append_expression.first_operand
 								if another_value /= Void then
-									create a_third_append_expression.make (first_operand, operator, another_append_expression.first_operand.simplify)
-									create {XM_XPATH_APPEND_EXPRESSION} Result.make (a_third_append_expression, operator, another_append_expression.second_operand.simplify)
+									an_expression := another_append_expression.first_operand.simplified_expression
+									if an_expression.is_error then
+										Result := an_expression
+									else
+										create a_third_append_expression.make (first_operand, operator, an_expression)
+										an_expression := another_append_expression.second_operand.simplified_expression
+										if an_expression.is_error then
+											Result := an_expression
+										else
+											create {XM_XPATH_APPEND_EXPRESSION} Result.make (a_third_append_expression, operator, an_expression)
+										end
+									end
 								end
 							end
 						end

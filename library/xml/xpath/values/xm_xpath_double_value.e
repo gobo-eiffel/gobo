@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"An XPath double value"
+		"Objects that represent XPath double values"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: DOUBLE -- TODO - insufficient??
+	value: DOUBLE
 
 	
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
@@ -90,7 +90,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "number (")
+			a_string := STRING_.appended_string (indentation (a_level), "number (")
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)

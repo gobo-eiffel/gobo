@@ -105,6 +105,9 @@ feature -- Status report
 					if a_string_value /= Void then
 						Result := a_string_value.is_comparable (another_atomic_value)
 					else
+
+						-- TODO
+
 						Exceptions.raise ("Incomplete set of atomic values in {XM_XPATH_ATOMIC_COMPARER}.are_comparable")
 					end
 				end

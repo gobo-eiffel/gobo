@@ -218,8 +218,8 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	suggest_prefix_for_uri (a_uri: STRING): STRING is
-			-- Suggest a prefix for a given `uri';
+	suggested_prefix_for_uri (a_uri: STRING): STRING is
+			-- Suggested prefix for a given `uri';
 			-- If there are several, it's undefined which one is returned.;
 			-- If there are no prefixes registered for this `uri', return `Void'
 		require
@@ -861,6 +861,7 @@ feature -- Element change
 
 	allocate_name_using_uri_code (an_xml_prefix: STRING; a_uri_code: INTEGER; a_local_name: STRING) is
 			-- Allocate a name from the pool, or a new Name if there is not a matching one there
+			-- TODO: this is too long, and raises an exception.
 		require
 			prefix_not_void: an_xml_prefix /= Void
 			valid_uri_code:  a_uri_code >= 0 and a_uri_code <= 32000
@@ -970,7 +971,7 @@ feature -- Conversion
 		do
 			an_entry := name_entry (a_name_code)
 			if an_entry = Void then
-				unknown_name_code (a_name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- TODO Exceptions.raises an exception
 			else
 				Result := uris.item (an_entry.uri_code + 1)
 			end
@@ -987,7 +988,7 @@ feature -- Conversion
 		do
 			an_entry := name_entry (a_name_code)
 			if an_entry = Void then
-				unknown_name_code (a_name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- TODO Exceptions.raises an exception
 			else
 				Result := an_entry.uri_code
 			end	
@@ -1002,7 +1003,7 @@ feature -- Conversion
 		do
 			an_entry := name_entry (a_name_code)
 			if an_entry = Void then
-				unknown_name_code (a_name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- TODO Exceptions.raises an exception
 			else
 				Result := an_entry.local_name
 			end
@@ -1040,7 +1041,7 @@ feature -- Conversion
 		do
 			an_entry := name_entry (a_name_code)
 			if an_entry = Void then
-				unknown_name_code (a_name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- TODO Exceptions.raises an exception
 			else
 				a_prefix_index := name_code_to_prefix_index (a_name_code)
 				if a_prefix_index = 0 then
@@ -1270,7 +1271,8 @@ std.error.put_new_line
 		end
 
 	unknown_name_code (a_name_code: INTEGER) is
-		-- Exceptions.Raise an exception
+			-- Exceptions.Raise an exception
+			-- TODO - scrap this
 		require
 			always_valid: True
 		local

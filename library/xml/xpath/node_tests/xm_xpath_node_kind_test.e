@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Pure XPath implementation of the node-kind-test pattern"
+		"Objects that implement the XPath KindTest production"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

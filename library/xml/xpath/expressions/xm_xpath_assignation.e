@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze, simplify, promote, sub_expressions
+			may_analyze, simplified_expression, promoted_expression, sub_expressions
 		end
 	
 	XM_XPATH_BINDING
@@ -60,19 +60,19 @@ feature -- Status report
 			
 feature -- Optimization
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_simplified_assignation: XM_XPATH_ASSIGNATION
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_simplified_assignation := clone (Current)
-			an_expression := sequence.simplify
+			an_expression := sequence.simplified_expression
 			a_simplified_assignation.set_sequence (an_expression)
 			if an_expression.is_error then
 				a_simplified_assignation.set_last_error (an_expression.last_error)
 			else
-				an_expression := action.simplify
+				an_expression := action.simplified_expression
 				a_simplified_assignation.set_action (an_expression)
 				if an_expression.is_error then
 					a_simplified_assignation.set_last_error (an_expression.last_error)
@@ -81,23 +81,24 @@ feature -- Optimization
 			Result := a_simplified_assignation
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 		local
 			a_promotion: XM_XPATH_EXPRESSION
 		do
-			a_promotion := an_offer.accept (Current)
+			an_offer.accept (Current)
+			a_promotion := an_offer.accepted_expression
 			if a_promotion /= Void then
 				Result := a_promotion
 			else
-				sequence := sequence.promote (an_offer)
+				sequence := sequence.promoted_expression (an_offer)
 				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					-- them to say we are interested in subexpressions that don't depend on either the
 					-- outer context or the inner context.
 					
-					action := action.promote (an_offer)
+					action := action.promoted_expression (an_offer)
 				end
 				Result := Current
 			end

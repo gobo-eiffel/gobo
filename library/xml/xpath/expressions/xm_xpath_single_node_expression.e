@@ -33,12 +33,18 @@ feature -- Access
 	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
 			-- The single node
 		require
-			context_not_void: a_context /= Void
+			dynamic_context: is_valid_context_for_node (a_context)
 		deferred
 		ensure
 			May_be_an_empty_node_set: True
 		end
 
+feature -- Status report
+
+	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Is the dynamic context in a suitable condition to call `node'?
+		deferred
+		end
 
 feature -- Optimization
 
@@ -53,7 +59,12 @@ feature -- Evaluation
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
-			create Result.make (node (a_context) /= Void)
+			if is_valid_context_for_node (a_context) then
+				create Result.make (node (a_context) /= Void)
+			else
+				create Result.make (False)
+				Result.set_last_error (dynamic_error_value (a_context))
+			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -61,13 +72,21 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			last_evaluated_item := node (a_context)
+			if is_valid_context_for_node (a_context) then
+				last_evaluated_item := node (a_context)
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (dynamic_error_value (a_context))
+			end
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
 		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node (a_context)) 
+			if is_valid_context_for_node (a_context) then
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node (a_context))
+			else
+				create {XM_XPATH_INVALID_ITERATOR} Result.make (dynamic_error_value (a_context))
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -76,6 +95,15 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
+		end
+
+	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is
+			-- Dynamic error value
+		require
+			invalid_context: not is_valid_context_for_node (a_context)
+		deferred
+		ensure
+			error_value_not_void: Result /= Void
 		end
 
 end

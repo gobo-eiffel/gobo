@@ -36,7 +36,9 @@ feature {NONE} -- Initialization
 			sequence := a_sequence_expression
 			action := an_action
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
 			action_set: action = an_action
@@ -70,7 +72,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "for $")
+			a_string := STRING_.appended_string (indentation (a_level), "for $")
 			a_string := STRING_.appended_string (a_string, variable_name)
 			-- TODO
 			todo ("display", True)

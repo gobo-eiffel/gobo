@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, simplify, sub_expressions, same_expression
+			promoted_expression, simplified_expression, sub_expressions, same_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -34,10 +34,12 @@ feature {NONE} -- Initialization
 			set_first_operand (an_operand_one)
 			set_second_operand (an_operand_two)
 			compute_static_properties
+			initialize
 		ensure
 			operator_set: operator = a_token
 			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
 			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
+			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
@@ -103,7 +105,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "operator ")
+			a_string := STRING_.appended_string (indentation (a_level), "operator ")
 			a_string := STRING_.appended_string (a_string, display_operator)
 			std.error.put_string (a_string)
 			std.error.put_new_line
@@ -113,19 +115,19 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_binary_expression: XM_XPATH_BINARY_EXPRESSION
 		do
 			a_binary_expression := clone (Current)
-			a_binary_expression.set_first_operand (first_operand.simplify)
+			a_binary_expression.set_first_operand (first_operand.simplified_expression)
 			if a_binary_expression.first_operand.is_error then
 				a_binary_expression.set_last_error (a_binary_expression.first_operand.last_error)
 			end
 
 			if not a_binary_expression.is_error then
-				a_binary_expression.set_second_operand (second_operand.simplify)
+				a_binary_expression.set_second_operand (second_operand.simplified_expression)
 				if a_binary_expression.second_operand.is_error then
 					a_binary_expression.set_last_error (a_binary_expression.second_operand.last_error)
 				end
@@ -167,20 +169,21 @@ feature -- Optimization
 			if not analyzed then set_analyzed end
 		end
 	
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_result_expression: XM_XPATH_BINARY_EXPRESSION
 		do
-			an_expression := an_offer.accept (Current)
+			an_offer.accept (Current)
+			an_expression := an_offer.accepted_expression
 			if an_expression /= Void then
 				Result := an_expression
 			else
 				if an_offer.action = Unordered then
 					a_result_expression := clone (Current)
-					a_result_expression.set_first_operand (first_operand.promote (an_offer))
-					a_result_expression.set_second_operand (second_operand.promote (an_offer))
+					a_result_expression.set_first_operand (first_operand.promoted_expression (an_offer))
+					a_result_expression.set_second_operand (second_operand.promoted_expression (an_offer))
 					Result := a_result_expression
 				else
 					Result := Current

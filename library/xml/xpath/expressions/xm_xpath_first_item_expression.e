@@ -29,7 +29,9 @@ feature {NONE} -- Initialization
 		do
 			base_expression := a_base_expression
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_base_expression
 		end
 
@@ -52,7 +54,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "first item of ")
+			a_string := STRING_.appended_string (indentation (a_level), "first item of ")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			base_expression.display (a_level + 1, a_pool)

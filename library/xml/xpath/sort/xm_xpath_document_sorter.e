@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Expressions that sort a sequence of nodes into document order"
+		"Objects that sort a sequence of nodes into document order"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -16,7 +16,7 @@ inherit
 
 		XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, compute_special_properties, sub_expressions, promote, iterator, effective_boolean_value
+			simplified_expression, compute_special_properties, sub_expressions, promoted_expression, iterator, effective_boolean_value
 		end
 
 creation
@@ -32,8 +32,10 @@ feature {NONE} -- Initialization
 			base_expression := an_expression
 			if base_expression.context_document_nodeset then
 				-- TODO - comparer
+				todo ("make", True)
 			else
 				-- TODO - comparer
+				todo ("make", True)
 			end
 			compute_static_properties
 		end
@@ -57,7 +59,7 @@ feature -- Access
 			Result.put (base_expression, 1)
 		end
 
-		iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
 		do
 			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("TODO", Static_error, 1) -- TODO
@@ -70,7 +72,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "Sort into Document Order")
+			a_string := STRING_.appended_string (indentation (a_level), "Sort into Document Order")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			base_expression.display (a_level + 1, a_pool)
@@ -78,14 +80,14 @@ feature -- Status report
 
 feature -- Optimization
 
-		simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current'
-	local
-		a_result_expression: XM_XPATH_DOCUMENT_SORTER
-		an_expression: XM_XPATH_EXPRESSION
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
+		local
+			a_result_expression: XM_XPATH_DOCUMENT_SORTER
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_result_expression := clone (Current)
-			an_expression := base_expression.simplify
+			an_expression := base_expression.simplified_expression
 			if not an_expression.is_error then
 				a_result_expression.set_base_expression (an_expression)
 			else
@@ -93,7 +95,6 @@ feature -- Optimization
 			end			
 			
 			Result := a_result_expression
-			Result.set_analyzed			
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -114,16 +115,17 @@ feature -- Optimization
 			set_analyzed
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for `Current'
 		local
 			a_result_expression: XM_XPATH_DOCUMENT_SORTER
 			an_expression: XM_XPATH_EXPRESSION		
 		do
-			an_expression := an_offer.accept (Current)
+			an_offer.accept (Current)
+			an_expression := an_offer.accepted_expression
 			if an_expression = Void then
 				a_result_expression := clone (Current)
-				an_expression := base_expression.promote (an_offer)
+				an_expression := base_expression.promoted_expression (an_offer)
 				a_result_expression.set_base_expression (an_expression)
 				Result := a_result_expression
 			else

@@ -33,7 +33,9 @@ feature {NONE} -- Initialization
 			minimum_bound := a_min
 			maximum_bound := a_max
 			compute_static_properties
+			initialize
 		ensure
+			static_properties_computed: are_static_properties_computed
 			value_set: value = a_value
 			minimum_bound_set: minimum_bound = a_min
 			maximum_bound_set: maximum_bound = a_max
@@ -62,7 +64,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "range test minimum<=value<=maximum ")
+			a_string := STRING_.appended_string (indentation (a_level), "range test minimum<=value<=maximum ")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			minimum_bound.display (a_level + 1, a_pool)

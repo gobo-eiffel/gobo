@@ -27,6 +27,7 @@ feature -- Access
 			-- Otherwise, if the node has a parent,
 			--  then use the parent's base_uri.
 			-- Otherwise return Void.
+		-- TODO - change all this.
 		do
 			if base_uri_property /= Void then
 				Result := base_uri_property

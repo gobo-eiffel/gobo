@@ -47,6 +47,7 @@ feature -- Access
 	string_value: STRING is
 			-- String-value
 		do
+			-- TODO - change this
 			Result := clone (uri_property)
 		end
 
@@ -58,6 +59,8 @@ feature -- Access
 --		end
 
 feature {NONE} -- Access
+
+	-- TODO scrap these
 
 	prefix_property: STRING
 			-- Prefix property from the infoset.

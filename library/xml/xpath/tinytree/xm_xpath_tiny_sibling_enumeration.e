@@ -33,34 +33,15 @@ feature {NONE} -- Initialization
 			document := a_document
 			starting_node := a_starting_node
 			node_test := a_node_test
-			debug ("XPath tiny sibling enumeration")
-				std.error.put_string ("Node test fingerprint is ")
-				std.error.put_string (node_test.fingerprint.out)
-				std.error.put_new_line
-			end
 			get_children := children
-
 			if get_children then -- child:: axis
-				debug ("XPath tiny sibling enumeration")
-					std.error.put_string ("Child axis%N")
-				end
 				parent_node := starting_node 
 				-- move to first child
 				next_node_number := starting_node.node_number + 1
 			else -- following-sibling axis
-				debug ("XPath tiny sibling enumeration")
-					std.error.put_string ("Following-sibling axis%N")
-				end
 				parent_node := starting_node.parent
 				-- move to next sibling
 				next_node_number := document.retrieve_next_sibling (starting_node.node_number)
-				debug ("XPath tiny sibling enumeration")
-					std.error.put_string ("Starting node number is ")
-					std.error.put_string (starting_node.node_number.out)
-					std.error.put_string (", and it's next sibling is  ")
-					std.error.put_string (next_node_number.out)
-					std.error.put_new_line
-				end
 				if next_node_number < starting_node.node_number then -- owner pointer
 					next_node_number := -1
 				end
@@ -69,13 +50,7 @@ feature {NONE} -- Initialization
 			-- check if this matches the conditions
 
 			if next_node_number > 0 and then node_test /= Void then
-				debug ("XPath tiny sibling enumeration")
-					std.error.put_string ("Node test present%N")
-				end
 				if not node_test.matches_node (a_document.retrieve_node_kind (next_node_number), a_document.name_code_for_node (next_node_number), a_document.element_annotation (next_node_number)) then
-					debug ("XPath tiny sibling enumeration")
-						std.error.put_string ("Need to advance%N")
-					end
 					need_to_advance := True
 				end
 			end

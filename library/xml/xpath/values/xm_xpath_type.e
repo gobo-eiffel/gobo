@@ -29,162 +29,9 @@ feature -- Initialization
 	initialize_type_tables is
 		do
 			if type_names.all_default then
-
-				define_type (Any_item, "item")
-				define_type (Any_node, "node")
-				define_type (Element_node, "element")
-				define_type (Document_node, "document")
-				define_type (Attribute_node, "attribute")
-				define_type (Text_node, "text")
-				define_type (Comment_node, "comment")
-				define_type (Processing_instruction_node, "processing-instruction")
-				define_type (Namespace_node, "namespace")
-
-				define_type (Empty_item, "empty")
-				define_type (Number_type, "number")
-
-				define_builtin_type (Untyped_atomic_type, "xdt:untypedAtomic")
-				define_builtin_type (Untyped_type, "xdt:untyped")
-				define_builtin_type (Atomic_type, "xdt:anyAtomicType")
-				define_builtin_type (Year_month_duration_type, "xdt:yearMonthDuration")
-				define_builtin_type (Day_time_duration_type, "xdt:dayTimeDuration")
-
-				define_builtin_type (String_type, "xs:string")
-				define_builtin_type (Boolean_type, "xs:boolean")
-				define_builtin_type (Decimal_type, "xs:decimal")
-				if not conformance.basic_xslt_processor then
-					define_builtin_type (Float_type, "xs:float")
-				end
-				define_builtin_type (Double_type, "xs:double")
-				if not conformance.basic_xslt_processor then
-					define_builtin_type (Duration_type, "xs:duration")
-				end
-				define_builtin_type (Date_time_type, "xs:dateTime")
-				define_builtin_type (Time_type, "xs:time")
-				define_builtin_type (Date_type, "xs:date")
-				if not conformance.basic_xslt_processor then
-					define_builtin_type (G_year_month_type, "xs:gYearMonth")
-					define_builtin_type (G_year_type, "xs:gYear")
-					define_builtin_type (G_month_day_type, "xs:gMonthDay")
-					define_builtin_type (G_day_type, "xs:gDay")
-					define_builtin_type (G_month_type, "xs:gMonth")
-					define_builtin_type (Hex_binary_type, "xs:hexBinary");
-					define_builtin_type (Base64_binary_type, "xs:base64Binary")
-				end
-				define_builtin_type (Any_uri_type, "xs:anyURI")
-				define_builtin_type (Qname_type, "xs:QName")
-				if not conformance.basic_xslt_processor then
-					define_builtin_type (Notation_type, "xs:NOTATION")
-				end
-				define_builtin_type (Integer_type, "xs:integer")
-				if not conformance.basic_xslt_processor then
-					define_builtin_type (Non_positive_integer_type,"xs:nonPositiveInteger")
-					define_builtin_type (Negative_integer_type, "xs:negativeInteger")
-					define_builtin_type (Long_type, "xs:long")
-					define_builtin_type (Int_type, "xs:int")
-					define_builtin_type (Short_type, "xs:short")
-					define_builtin_type (Byte_type, "xs:byte")
-					define_builtin_type (Non_negative_integer_type, "xs:nonNegativeInteger")
-					define_builtin_type (Positive_integer_type, "xs:positiveInteger")
-					define_builtin_type (Unsigned_long_type, "xs:unsignedLong")
-					define_builtin_type (Unsigned_int_type, "xs:unsignedInt")
-					define_builtin_type (Unsigned_short_type, "xs:unsignedShort")
-					define_builtin_type (Unsigned_byte_type, "xs:unsignedByte")				
-					define_builtin_type (Normalized_string_type, "xs:normalizedString")
-					define_builtin_type (Token_type, "xs:token")
-					define_builtin_type (Language_type, "xs:language")
-					define_builtin_type (Nmtoken_type, "xs:NMTOKEN")
-					define_builtin_type (Nmtokens_type, "xs:NMTOKENS")
-					define_builtin_type (Name_type, "xs:Name")
-					define_builtin_type (Ncname_type, "xs:NCName")				
-					define_builtin_type (Id_type, "xs:ID")
-					define_builtin_type (Idref_type, "xs:IDREF")
-					define_builtin_type (Idrefs_type, "xs:IDREFS")				
-					define_builtin_type (Entity_type, "xs:ENTITY")
-					define_builtin_type (Entities_type, "xs:ENTITIES")
-				end
-				define_builtin_type (Object_type, "eiffel:ANY")				
-																																																																			
-				define_sub_type (Any_item, Any_node)
-				
-				define_sub_type (Any_node, Element_node)
-				define_sub_type (Any_node, Attribute_node)
-				define_sub_type (Any_node, Document_node)
-				define_sub_type (Any_node, Text_node)
-				define_sub_type (Any_node, Comment_node)
-				define_sub_type (Any_node, Processing_instruction_node)
-				define_sub_type (Any_node, Namespace_node)
-
-				define_sub_type (Any_item, Untyped_type)
-				define_sub_type (Any_item, Atomic_type)
-				
-				define_sub_type (Atomic_type, String_type)
-				define_sub_type (Atomic_type, Boolean_type)
-				if conformance.basic_xslt_processor then
-					define_sub_type (Atomic_type, Number_type)
-					define_sub_type (Number_type, Decimal_type)
-					define_sub_type (Number_type, Double_type)
-				else
-					define_sub_type (Atomic_type, Number_type)
-					define_sub_type (Number_type, Decimal_type)
-					define_sub_type (Number_type, Double_type)
-					define_sub_type (Number_type, Float_type)
-				end
-				if conformance.basic_xslt_processor then
-					define_sub_type (Atomic_type, Year_month_duration_type)
-					define_sub_type (Atomic_type, Day_time_duration_type)
-
-				else
-					define_sub_type (Atomic_type, Duration_type)
-					define_sub_type (Duration_type, Year_month_duration_type)
-					define_sub_type (Duration_type, Day_time_duration_type)
-				end
-				define_sub_type (Atomic_type, Date_time_type)
-				define_sub_type (Atomic_type, Date_type)
-				if not conformance.basic_xslt_processor then
-					define_sub_type (Atomic_type, G_year_month_type)
-					define_sub_type (Atomic_type, G_month_day_type)
-					define_sub_type (Atomic_type, G_day_type)
-					define_sub_type (Atomic_type, G_month_type)
-					define_sub_type (Atomic_type, Hex_binary_type)
-					define_sub_type (Atomic_type, Base64_binary_type)
-				end
-				define_sub_type (Atomic_type, Any_uri_type)
-				define_sub_type (Atomic_type, Qname_type)
-				if not conformance.basic_xslt_processor then
-					define_sub_type (Atomic_type, Notation_type)
-				end
-				
-				define_sub_type (Atomic_type, Untyped_atomic_type)
-
-				define_sub_type (Atomic_type, Object_type)
-
-				define_sub_type (Decimal_type, Integer_type)
-
-				if not conformance.basic_xslt_processor then
-					define_sub_type (Integer_type, Non_positive_integer_type)
-					define_sub_type (Non_positive_integer_type, Negative_integer_type)
-					define_sub_type (Integer_type, Long_type)
-					define_sub_type (Long_type, Int_type)
-					define_sub_type (Int_type, Short_type)
-					define_sub_type (Short_type, Byte_type)
-					define_sub_type (Integer_type, Non_negative_integer_type)
-					define_sub_type (Non_negative_integer_type, Positive_integer_type)
-					define_sub_type (Non_negative_integer_type, Unsigned_long_type)
-					define_sub_type (Unsigned_long_type, Unsigned_int_type)
-					define_sub_type (Unsigned_int_type, Unsigned_short_type)
-					define_sub_type (Unsigned_short_type, Unsigned_byte_type)
-					
-					define_sub_type (String_type, Normalized_string_type)
-					define_sub_type (Normalized_string_type, Token_type)
-					define_sub_type (Token_type, Language_type)
-					define_sub_type (Token_type, Name_type)
-					define_sub_type (Token_type, Nmtoken_type)
-					define_sub_type (Name_type, Ncname_type)
-					define_sub_type (Ncname_type, Id_type)
-					define_sub_type (Ncname_type, Idref_type)
-					define_sub_type (Ncname_type, Entity_type)
-				end
+				define_types
+				define_builtin_types
+				define_subtypes
 			end
 		ensure
 			type_names_filled: type_names.count > 0
@@ -725,6 +572,169 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			in_range: is_valid_type (Result)
+		end
+
+	define_types is
+			-- Register system types.
+		do
+				define_type (Any_item, "item")
+				define_type (Any_node, "node")
+				define_type (Element_node, "element")
+				define_type (Document_node, "document")
+				define_type (Attribute_node, "attribute")
+				define_type (Text_node, "text")
+				define_type (Comment_node, "comment")
+				define_type (Processing_instruction_node, "processing-instruction")
+				define_type (Namespace_node, "namespace")
+
+				define_type (Empty_item, "empty")
+				define_type (Number_type, "number")			
+		end
+
+	define_builtin_types is
+			-- Register built-in types.
+		do
+			define_builtin_type (Untyped_atomic_type, "xdt:untypedAtomic")
+			define_builtin_type (Untyped_type, "xdt:untyped")
+			define_builtin_type (Atomic_type, "xdt:anyAtomicType")
+			define_builtin_type (Year_month_duration_type, "xdt:yearMonthDuration")
+			define_builtin_type (Day_time_duration_type, "xdt:dayTimeDuration")
+			
+			define_builtin_type (String_type, "xs:string")
+			define_builtin_type (Boolean_type, "xs:boolean")
+			define_builtin_type (Decimal_type, "xs:decimal")
+			if not conformance.basic_xslt_processor then
+				define_builtin_type (Float_type, "xs:float")
+			end
+			define_builtin_type (Double_type, "xs:double")
+			if not conformance.basic_xslt_processor then
+				define_builtin_type (Duration_type, "xs:duration")
+			end
+			define_builtin_type (Date_time_type, "xs:dateTime")
+			define_builtin_type (Time_type, "xs:time")
+			define_builtin_type (Date_type, "xs:date")
+			if not conformance.basic_xslt_processor then
+				define_builtin_type (G_year_month_type, "xs:gYearMonth")
+				define_builtin_type (G_year_type, "xs:gYear")
+				define_builtin_type (G_month_day_type, "xs:gMonthDay")
+				define_builtin_type (G_day_type, "xs:gDay")
+				define_builtin_type (G_month_type, "xs:gMonth")
+				define_builtin_type (Hex_binary_type, "xs:hexBinary");
+				define_builtin_type (Base64_binary_type, "xs:base64Binary")
+			end
+			define_builtin_type (Any_uri_type, "xs:anyURI")
+			define_builtin_type (Qname_type, "xs:QName")
+			if not conformance.basic_xslt_processor then
+				define_builtin_type (Notation_type, "xs:NOTATION")
+			end
+			define_builtin_type (Integer_type, "xs:integer")
+			if not conformance.basic_xslt_processor then
+				define_builtin_type (Non_positive_integer_type,"xs:nonPositiveInteger")
+				define_builtin_type (Negative_integer_type, "xs:negativeInteger")
+				define_builtin_type (Long_type, "xs:long")
+				define_builtin_type (Int_type, "xs:int")
+				define_builtin_type (Short_type, "xs:short")
+				define_builtin_type (Byte_type, "xs:byte")
+				define_builtin_type (Non_negative_integer_type, "xs:nonNegativeInteger")
+				define_builtin_type (Positive_integer_type, "xs:positiveInteger")
+				define_builtin_type (Unsigned_long_type, "xs:unsignedLong")
+				define_builtin_type (Unsigned_int_type, "xs:unsignedInt")
+				define_builtin_type (Unsigned_short_type, "xs:unsignedShort")
+				define_builtin_type (Unsigned_byte_type, "xs:unsignedByte")				
+				define_builtin_type (Normalized_string_type, "xs:normalizedString")
+				define_builtin_type (Token_type, "xs:token")
+				define_builtin_type (Language_type, "xs:language")
+				define_builtin_type (Nmtoken_type, "xs:NMTOKEN")
+				define_builtin_type (Nmtokens_type, "xs:NMTOKENS")
+				define_builtin_type (Name_type, "xs:Name")
+				define_builtin_type (Ncname_type, "xs:NCName")				
+				define_builtin_type (Id_type, "xs:ID")
+				define_builtin_type (Idref_type, "xs:IDREF")
+				define_builtin_type (Idrefs_type, "xs:IDREFS")				
+				define_builtin_type (Entity_type, "xs:ENTITY")
+				define_builtin_type (Entities_type, "xs:ENTITIES")
+			end
+			define_builtin_type (Object_type, "eiffel:ANY")				
+		end
+
+	define_subtypes is
+			-- Define sub-type hierarchy
+		do
+			define_sub_type (Any_item, Any_node)
+			define_sub_type (Any_node, Element_node)
+			define_sub_type (Any_node, Attribute_node)
+			define_sub_type (Any_node, Document_node)
+			define_sub_type (Any_node, Text_node)
+			define_sub_type (Any_node, Comment_node)
+			define_sub_type (Any_node, Processing_instruction_node)
+			define_sub_type (Any_node, Namespace_node)
+
+			define_sub_type (Any_item, Untyped_type)
+			define_sub_type (Any_item, Atomic_type)
+				
+			define_sub_type (Atomic_type, String_type)
+			define_sub_type (Atomic_type, Boolean_type)
+			if conformance.basic_xslt_processor then
+				define_sub_type (Atomic_type, Number_type)
+				define_sub_type (Number_type, Decimal_type)
+				define_sub_type (Number_type, Double_type)
+			else
+				define_sub_type (Atomic_type, Number_type)
+				define_sub_type (Number_type, Decimal_type)
+				define_sub_type (Number_type, Double_type)
+				define_sub_type (Number_type, Float_type)
+			end
+			if conformance.basic_xslt_processor then
+				define_sub_type (Atomic_type, Year_month_duration_type)
+				define_sub_type (Atomic_type, Day_time_duration_type)
+
+			else
+				define_sub_type (Atomic_type, Duration_type)
+				define_sub_type (Duration_type, Year_month_duration_type)
+				define_sub_type (Duration_type, Day_time_duration_type)
+			end
+			define_sub_type (Atomic_type, Date_time_type)
+			define_sub_type (Atomic_type, Date_type)
+			if not conformance.basic_xslt_processor then
+				define_sub_type (Atomic_type, G_year_month_type)
+				define_sub_type (Atomic_type, G_month_day_type)
+				define_sub_type (Atomic_type, G_day_type)
+				define_sub_type (Atomic_type, G_month_type)
+				define_sub_type (Atomic_type, Hex_binary_type)
+				define_sub_type (Atomic_type, Base64_binary_type)
+			end
+			define_sub_type (Atomic_type, Any_uri_type)
+			define_sub_type (Atomic_type, Qname_type)
+			if not conformance.basic_xslt_processor then
+				define_sub_type (Atomic_type, Notation_type)
+			end
+			define_sub_type (Atomic_type, Untyped_atomic_type)
+			define_sub_type (Atomic_type, Object_type)
+			define_sub_type (Decimal_type, Integer_type)
+			if not conformance.basic_xslt_processor then
+				define_sub_type (Integer_type, Non_positive_integer_type)
+				define_sub_type (Non_positive_integer_type, Negative_integer_type)
+				define_sub_type (Integer_type, Long_type)
+				define_sub_type (Long_type, Int_type)
+				define_sub_type (Int_type, Short_type)
+				define_sub_type (Short_type, Byte_type)
+				define_sub_type (Integer_type, Non_negative_integer_type)
+				define_sub_type (Non_negative_integer_type, Positive_integer_type)
+				define_sub_type (Non_negative_integer_type, Unsigned_long_type)
+				define_sub_type (Unsigned_long_type, Unsigned_int_type)
+				define_sub_type (Unsigned_int_type, Unsigned_short_type)
+				define_sub_type (Unsigned_short_type, Unsigned_byte_type)
+					
+				define_sub_type (String_type, Normalized_string_type)
+				define_sub_type (Normalized_string_type, Token_type)
+				define_sub_type (Token_type, Language_type)
+				define_sub_type (Token_type, Name_type)
+				define_sub_type (Token_type, Nmtoken_type)
+				define_sub_type (Name_type, Ncname_type)
+				define_sub_type (Ncname_type, Id_type)
+				define_sub_type (Ncname_type, Idref_type)
+				define_sub_type (Ncname_type, Entity_type)
+			end
 		end
 
 end

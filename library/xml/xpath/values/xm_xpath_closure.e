@@ -108,7 +108,7 @@ feature -- Status report
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			std.error.put_string (indent (a_level))
+			std.error.put_string (indentation (a_level))
 			std.error.put_string ("closure of expression ")
 			std.error.put_new_line
 			base_expression.display (a_level + 1, a_pool)
