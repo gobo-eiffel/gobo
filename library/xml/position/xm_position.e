@@ -54,9 +54,9 @@ feature -- Output
 			-- Textual representation
 		do
 			create Result.make_empty
-			Result := STRING_.appended_string (Result, " ln: ")
+			Result := STRING_.appended_string (Result, "line: ")
 			Result := STRING_.appended_string (Result, row.out)
-			Result := STRING_.appended_string (Result, " cl: ")
+			Result := STRING_.appended_string (Result, " column: ")
 			Result := STRING_.appended_string (Result, column.out)
 			Result := STRING_.appended_string (Result, " byte: ")
 			Result := STRING_.appended_string (Result, byte_index.out)
