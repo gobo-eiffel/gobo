@@ -132,6 +132,8 @@ feature -- Processing
 					if a_universe /= Void then
 						if not is_verbose then
 							a_universe.error_handler.set_info_null
+						else
+							a_universe.error_handler.set_compilers
 						end
 						process_universe (a_universe)
 					end
