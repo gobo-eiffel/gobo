@@ -15,7 +15,13 @@ class XM_DTD_EXTERNAL_ID
 inherit
 
 	ANY
+		undefine
+			out
+		end
+		
+	HASHABLE
 		redefine
+			hash_code,
 			out
 		end
 		
@@ -76,6 +82,19 @@ feature -- Access
 	public_id: STRING
 			-- PUBLIC
 
+feature -- Access
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			if public_id /= Void then
+				Result := public_id.hash_code // 3
+			end
+			if system_id /= Void then
+				Result := Result + (system_id.hash_code // 3)
+			end
+		end
+		
 feature -- Setting
 
 	set_base (a_base: like base) is
