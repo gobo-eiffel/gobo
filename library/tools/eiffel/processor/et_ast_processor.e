@@ -29,6 +29,16 @@ feature -- Access
 	universe: ET_UNIVERSE
 			-- Surrounding universe
 
+feature -- Error handling
+
+	error_handler: ET_ERROR_HANDLER is
+			-- Error handler
+		do
+			Result := universe.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
+		end
+
 feature {ET_AST_NODE} -- Processing
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
