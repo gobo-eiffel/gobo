@@ -20,6 +20,6 @@ feature -- Access
 			-- TODO
 		end
 			
-end -- class XM_XPATH_SYSTEM_ID_MAP
+end
 
 	

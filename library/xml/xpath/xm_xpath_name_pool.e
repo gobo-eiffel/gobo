@@ -13,9 +13,9 @@ indexing
 class XM_XPATH_NAME_POOL
 
 	-- A collection of XML names, each containing a Namespace URI,
-	-- a Namespace prefix, and a local name;
+	-- a Namespace prefix, and a local name
 	-- plus a collection of namespaces, each consisting of a prefix/URI pair.
 	
-end -- class XM_XPATH_NAME_POOL
+end
 
 	
