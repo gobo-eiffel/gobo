@@ -150,7 +150,7 @@ feature {ET_AST_NODE} -- Processing
 					output_file.put_string (": ")
 					output_file.put_string (arg.type.base_type (current_context, universe).to_text)
 					if i /= nb then
-						output_file.put_string (", ")
+						output_file.put_string ("; ")
 					end
 					i := i + 1
 				end
