@@ -62,6 +62,8 @@ feature {NONE} -- Initialization
 		do
 			characters_count := a_description.characters_count
 			array_size := a_description.array_size
+			inspect_used := a_description.inspect_used
+			actions_separated := a_description.actions_separated
 			eiffel_code := a_description.eiffel_code
 			eiffel_header := a_description.eiffel_header
 			bol_needed := a_description.bol_needed
@@ -126,7 +128,7 @@ feature -- Generation
 			print_actions (a_file)
 			a_file.put_character ('%N')
 			print_eof_actions (a_file)
-			a_file.put_string ("%Nfeature {NONE} -- Tables%N%N")
+			a_file.put_string ("%Nfeature {NONE} -- Table templates%N%N")
 			print_eiffel_tables (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Constants%N%N")
 			print_constants (a_file)
@@ -198,7 +200,7 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
-			inspect_used: BOOLEAN
+			i, nb: INTEGER
 		do
 			a_file.put_string ("%Tyy_execute_action (yy_act: INTEGER) is%N%
 				%%T%T%T-- Execute semantic action.%N%
@@ -213,6 +215,14 @@ feature {NONE} -- Generation
 				a_file.put_string ("%T%T%Tyy_set_beginning_of_line%N")
 			end
 			a_file.put_string ("%T%Tend%N")
+			if actions_separated then
+				nb := yy_rules.upper
+				from i := yy_rules.lower until i > nb loop
+					a_file.put_character ('%N')
+					print_action_routine (a_file, yy_rules.item (i))
+					i := i + 1
+				end
+			end
 		end
 
 	print_inspect_actions (a_file: like OUTPUT_STREAM_TYPE) is
@@ -266,7 +276,7 @@ feature {NONE} -- Generation
 					end
 				end
 				a_file.put_string (" then%N")
-				print_action (a_file, rule)
+				print_action_call (a_file, rule)
 			end
 			a_file.put_string ("%T%T%Telse%N%T%T%T%Tfatal_error %
 				%(%"fatal scanner internal error: no action found%")%N%
@@ -288,14 +298,14 @@ feature {NONE} -- Generation
 			t: INTEGER
 		do
 			if l = u then
-				print_action (a_file, yy_rules.item (l))
+				print_action_call (a_file, yy_rules.item (l))
 			elseif l + 1 = u then
 				a_file.put_string ("if yy_act = ")
 				a_file.put_integer (l)
 				a_file.put_string (" then%N")
-				print_action (a_file, yy_rules.item (l))
+				print_action_call (a_file, yy_rules.item (l))
 				a_file.put_string ("else%N")
-				print_action (a_file, yy_rules.item (u))
+				print_action_call (a_file, yy_rules.item (u))
 				a_file.put_string ("end%N")
 			else
 				t := l + (u - l) // 2
@@ -309,8 +319,42 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_action (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
-			-- Print code for `a_rule's action to `a_file'.
+	print_action_call (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+			-- Print code for `a_rule's action call to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_rule_not_void: a_rule /= Void
+		do
+			if actions_separated then
+				a_file.put_string ("%T%T--|#line ")
+				a_file.put_integer (a_rule.line_nb)
+				a_file.put_string ("%N%Tyy_execute_action_")
+				a_file.put_integer (a_rule.id)
+				a_file.put_character ('%N')
+			else
+				print_action_body (a_file, a_rule)
+			end
+		end
+
+	print_action_routine (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+			-- Print code for `a_rule's action routine to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_rule_not_void: a_rule /= Void
+		do
+			a_file.put_string ("%Tyy_execute_action_")
+			a_file.put_integer (a_rule.id)
+			a_file.put_string (" is%N%T%T%T--|#line ")
+			a_file.put_integer (a_rule.line_nb)
+			a_file.put_string ("%N%T%Tdo%N")
+			print_action_body (a_file, a_rule)
+			a_file.put_string ("%N%T%Tend%N")
+		end
+
+	print_action_body (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+			-- Print code for `a_rule's action body to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
@@ -481,6 +525,7 @@ feature {NONE} -- Generation
 		require
 			a_name_not_void: a_name /= Void
 			a_table_not_void: a_table /= Void
+			zero_based_table: a_table.lower = 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
@@ -489,8 +534,9 @@ feature {NONE} -- Generation
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
-			a_file.put_string (": ARRAY [INTEGER] is%N%
-				%%T%Tonce%N")
+			a_file.put_string (": ANY is%N%
+				%%T%T%T-- This is supposed to be %"like FIXED_INTEGER_ARRAY_TYPE%",%N%
+				%%T%T%T-- but once functions cannot be declared with anchored types.%N")
 			if array_size = 0 then
 				nb := 1
 			else
@@ -498,13 +544,12 @@ feature {NONE} -- Generation
 			end
 			if nb = 1 then
 				a_file.put_string
-					("%T%T%TResult := INTEGER_ARRAY_.make_from_array (<<%N")
+					("%T%Tonce%N%T%T%TResult := yy_fixed_array (<<%N")
 				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
-				a_file.put_string (">>, ")
-				a_file.put_integer (a_table.lower)
-				a_file.put_string (")%N%T%Tend%N")
+				a_file.put_string (">>)%N%T%Tend%N")
 			else
-				a_file.put_string ("%T%T%T!! Result.make (")
+				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
+					%%T%Tonce%N%T%T%T!! an_array.make (")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
@@ -512,11 +557,12 @@ feature {NONE} -- Generation
 				from j := 1 until j > nb loop
 					a_file.put_string (Indentation)
 					a_file.put_string (a_name)
+					a_file.put_character ('_')
 					a_file.put_integer (j)
-					a_file.put_string (" (Result)%N")
+					a_file.put_string (" (an_array)%N")
 					j := j + 1
-				end	
-				a_file.put_string ("%T%Tend%N")
+				end
+				a_file.put_string ("%T%T%TResult := yy_fixed_array (an_array)%N%T%Tend%N")
 				from
 					j := 1
 					i := a_table.lower
@@ -526,9 +572,10 @@ feature {NONE} -- Generation
 				loop
 					a_file.put_string ("%N%T")
 					a_file.put_string (a_name)
+					a_file.put_character ('_')
 					a_file.put_integer (j)
 					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
-						%%T%Tdo%N%T%T%TINTEGER_ARRAY_.subcopy (an_array, <<%N")
+						%%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
 					k := a_table_upper.min (i + array_size - 1)
 					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
 					a_file.put_string (">>,%N%T%T%T")
@@ -810,6 +857,14 @@ feature {NONE} -- Access
 
 	array_size: INTEGER
 			-- Maximum size supported for manifest arrays
+
+	actions_separated: BOOLEAN
+			-- Should semantic actions be generated in separate routines?
+
+	inspect_used: BOOLEAN
+			-- Should the generated code uses an inspect instruction
+			-- to find out which action to execute? The alternative is
+			-- to use binary-search implemented with "if" instructions.
 
 feature {NONE} -- Constants
 

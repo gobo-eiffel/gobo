@@ -61,6 +61,8 @@ feature -- Initialization
 			full_table := False
 			no_default_rule := False
 			no_warning := False
+			actions_separated := False
+			inspect_used := False
 			reject_used := False
 			user_action_used := False
 			input_filename := Void
@@ -75,13 +77,14 @@ feature -- User-defined options
 
 	array_size: INTEGER
 			-- Maximum size supported for manifest array
+			-- ("-a" option)
 
 	backing_up_report: BOOLEAN
 			-- Should a backing-up report be generated?
 			-- ("-b" option)
 
 	backing_up_filename: STRING
-			-- FIlename for backing-up reports
+			-- Filename for backing-up reports
 
 	case_insensitive: BOOLEAN
 			-- Should a case-insensitive scanner be generated?
@@ -115,6 +118,17 @@ feature -- User-defined options
 	no_warning: BOOLEAN
 			-- Should warning messages be suppressed?
 			-- ("-w" option)
+
+	actions_separated: BOOLEAN
+			-- Should each semantic action be generated into
+			-- separate routine?
+			-- ("-x" option)
+
+	inspect_used: BOOLEAN
+			-- Should the generated code uses an "inspect" instruction
+			-- to find out which action to execute? The alternative is
+			-- to use binary-search implemented with "if" instructions.
+			-- ("-z" option)
 
 	reject_used: BOOLEAN
 			-- Is `reject' used in semantic actions?
@@ -222,6 +236,22 @@ feature -- Option setting
 			no_warning := b
 		ensure
 			no_warning_set: no_warning = b
+		end
+
+	set_actions_separated (b: like actions_separated) is
+			-- Set `actions_separated' to `b'.
+		do
+			actions_separated := b
+		ensure
+			actions_separated_set: actions_separated = b
+		end
+
+	set_inspect_used (b: like inspect_used) is
+			-- Set `inspect_used' to `b'.
+		do
+			inspect_used := b
+		ensure
+			inspect_used_set: inspect_used = b
 		end
 
 	set_reject_used (b: like reject_used) is
@@ -377,6 +407,8 @@ feature -- Conversion
 			full_table := other.full_table
 			no_default_rule := other.no_default_rule
 			no_warning := other.no_warning
+			actions_separated := other.actions_separated
+			inspect_used := other.inspect_used
 			reject_used := other.reject_used
 			user_action_used := other.user_action_used
 			input_filename := other.input_filename
