@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+
+<project name="concat1" default="help">
+
+	<description>
+		system:      "concat1 getest example"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant "/>
+		<echo message="   geant test_ise"/>
+		<echo message="   geant test_hact"/>
+		<echo message="   geant test_se"/>
+		<echo message="   geant test_ve"/>
+		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant test_debug_hact"/>
+		<echo message="   geant test_debug_se"/>
+		<echo message="   geant test_debug_ve"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_hact"/>
+		<echo message="   geant compile_se"/>
+		<echo message="   geant compile_ve"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant compile_debug_hact"/>
+		<echo message="   geant compile_debug_se"/>
+		<echo message="   geant compile_debug_ve"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Install ${system} directory.
+		</description>
+
+		<gexace command="build" command_options="ise"/>
+		<gexace command="build" command_options="hact"/>
+		<gexace command="build" command_options="se"/>
+		<gexace command="build" command_options="ve"/>
+	</target>
+
+	<target name="test" depend="init">
+		<description>
+			Test '${system}'.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="test_${eiffel}"/>
+	</target>
+
+	<target name="test_ise" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with ISE Eiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_ise > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with Halstenbach Eiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_hact > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with Visual Eiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_ve > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_se" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with SmallEiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_se > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_debug" depend="init">
+		<description>
+			Test '${system}' in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="test_debug_${eiffel}"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with ISE Eiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_ise > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_debug_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with Halstenbach Eiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_hact > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_debug_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with Visual Eiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_ve > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="test_debug_se" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Test '${system}' with SmallEiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_se > xcompile.log 2>&1"/>
+	</target>
+
+	<target name="compile" depend="init">
+		<description>
+			Compile '${system}'.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="compile_${eiffel}"/>
+	</target>
+
+	<target name="compile_ise" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with ISE Eiffel.
+		</description>
+
+		<gexace command="build" command_options="ise"/>
+		<ise ace="ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
+	</target>
+
+	<target name="compile_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with Halstenbach Eiffel.
+		</description>
+
+		<gexace command="build" command_options="hact"/>
+		<hact ace="hact.ace" system="${system}" finalize="true" fish="true"/>
+	</target>
+
+	<target name="compile_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with Visual Eiffel.
+		</description>
+
+		<gexace command="build" command_options="ve"/>
+		<ve esd="ve.esd"/>
+	</target>
+
+	<target name="compile_se" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with SmallEiffel.
+		</description>
+
+		<gexace command="build" command_options="se"/>
+		<se ace="se.ace"/>
+	</target>
+
+	<target name="compile_debug" depend="init">
+		<description>
+			Compile '${system}' in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="compile_debug_${eiffel}"/>
+	</target>
+
+	<target name="compile_debug_ise" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with ISE Eiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="ise">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<ise ace="ise.ace" system="${system}" finalize="false" finish_freezing="true"/>
+	</target>
+
+	<target name="compile_debug_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with Halstenbach Eiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="hact">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<hact ace="hact.ace" system="${system}" finalize="false" fish="true"/>
+	</target>
+
+	<target name="compile_debug_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with Visual Eiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="ve">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<ve esd="ve.esd"/>
+	</target>
+
+	<target name="compile_debug_se" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Compile '${system}' with SmallEiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="se">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<se ace="se.ace"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<ise clean="${system}"/>
+		<hact clean="${system}"/>
+		<se clean="${system}"/>
+		<ve clean="${system}"/>
+		<delete directory="TESTGEN"/>
+		<delete file="xcompile.log"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}/example/${library}/${example}">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="ise.ace"/>
+		<delete file="hact.ace"/>
+		<delete file="se.ace"/>
+		<delete file="ve.esd"/>
+		<delete file="${system}${exe}"/>
+		<delete file="${system}.melted"/>
+		<delete file="${system}.h2o"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<set name="system" value="xconcat1"/>
+		<set name="library" value="test"/>
+		<set name="example" value="concat1"/>
+		<set name="eiffel" value="se"/>
+		<geant target="init_eiffel"/>
+		<geant target="init_os"/>
+	</target>
+
+	<target name="init_eiffel" if="${GOBO_EIFFEL}">
+		<set name="eiffel" value="${GOBO_EIFFEL}"/>
+	</target>
+
+	<target name="init_os">
+		<geant target="init_windows"/>
+		<geant target="init_unix"/>
+	</target>
+
+	<target name="init_windows" if="${GOBO_OS}=windows">
+		<set name="exe" value=".exe"/>
+	</target>
+
+	<target name="init_unix" unless="${GOBO_OS}=windows">
+		<set name="exe" value=""/>
+	</target>
+
+</project>

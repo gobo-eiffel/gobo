@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project name="time" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel Time Library examples"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}/example/time">
+		<description>
+			Install the Gobo Eiffel Time Library examples.
+		</description>
+
+		<geant file="clock/build.eant" target="install"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}/example/time">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="clock/build.eant" target="clean"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}/example/time">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="clock/build.eant" target="clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+</project>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<project name="lexical" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel Lexical Library examples"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}/example/lexical">
+		<description>
+			Install the Gobo Eiffel Lexical Library examples.
+		</description>
+
+		<geant file="ascii2ps/build.eant" target="install"/>
+		<geant file="calculator/build.eant" target="install"/>
+		<geant file="eiffel_scanner/build.eant" target="install"/>
+		<geant file="gegrep/build.eant" target="install"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}/example/lexical">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="ascii2ps/build.eant" target="clean"/>
+		<geant file="calculator/build.eant" target="clean"/>
+		<geant file="eiffel_scanner/build.eant" target="clean"/>
+		<geant file="gegrep/build.eant" target="clean"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}/example/lexical">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="ascii2ps/build.eant" target="clobber"/>
+		<geant file="calculator/build.eant" target="clobber"/>
+		<geant file="eiffel_scanner/build.eant" target="clobber"/>
+		<geant file="gegrep/build.eant" target="clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+</project>
