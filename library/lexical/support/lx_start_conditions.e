@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Lexical analyzer start condition lists";
+		"Lexical analyzer start condition lists"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_START_CONDITIONS
@@ -16,9 +16,7 @@ inherit
 
 	DS_ARRAYED_LIST [LX_START_CONDITION]
 
-	KL_STRING_ROUTINES
-		export
-			{NONE} all
+	KL_SHARED_STRING_ROUTINES
 		undefine
 			is_equal, copy
 		end
@@ -59,12 +57,12 @@ feature -- Status report
 			from
 				i := 1
 				nb := count
-				a_lower_name := string__to_lower (a_name)
+				a_lower_name := string_.to_lower (a_name)
 			until
 				Result or i > nb
 			loop
 				Result :=
-					a_lower_name.is_equal (string__to_lower (item (i).name))
+					a_lower_name.is_equal (string_.to_lower (item (i).name))
 				i := i + 1
 			end
 		end
@@ -84,13 +82,13 @@ feature -- Access
 			from
 				i := 1
 				nb := count
-				a_lower_name := string__to_lower (a_name)
+				a_lower_name := string_.to_lower (a_name)
 			until
 				Result /= Void or i > nb
 			loop
 				Result := item (i)
 				if
-					not a_lower_name.is_equal (string__to_lower (Result.name))
+					not a_lower_name.is_equal (string_.to_lower (Result.name))
 				then
 					Result := Void
 					i := i + 1
