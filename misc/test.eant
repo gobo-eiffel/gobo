@@ -45,7 +45,7 @@
 			or 'se' if this variable is not defined.
 		</description>
 
-		<geant target="test_${eiffel}"/>
+		<getest config="getest.cfg" compile="geant compile_${eiffel} ${compilation_log}"/>
 	</target>
 
 	<target name="test_ise" depend="init" dir="${system_dir}">
@@ -53,7 +53,8 @@
 			Test '${system}' with ISE Eiffel.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_ise ${compilation_log}"/>
+		<set name="eiffel" value="ise"/>
+		<geant target="test"/>
 	</target>
 
 	<target name="test_hact" depend="init" dir="${system_dir}">
@@ -130,7 +131,7 @@
 		<ise clean="${system}"/>
 		<hact clean="${system}"/>
 		<se clean="${system}"/>
-		<ve clean="${system}"/>
+		<ve clean="${system}" recursive="true"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="${system}.h2o"/>

@@ -148,7 +148,7 @@
 		<ise clean="${system}"/>
 		<hact clean="${system}"/>
 		<se clean="${system}"/>
-		<ve clean="${system}"/>
+		<ve clean="${system}" recursive="true"/>
 		<geant target="other_clean"/>
 	</target>
 
