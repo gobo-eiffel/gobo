@@ -5,8 +5,9 @@ indexing
 
 		"Eiffel parsers"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -62,7 +63,7 @@ creation
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%expect 262
+%expect 226
 %start Class_declarations
 
 %%
@@ -693,8 +694,8 @@ Expression: Call
 	| Expression E_AND Expression
 	| Expression E_OR Expression
 	| Expression E_XOR Expression
-	| Expression E_AND E_THEN Expression
-	| Expression E_OR E_ELSE Expression
+	| Expression E_AND E_THEN Expression %prec E_AND
+	| Expression E_OR E_ELSE Expression %prec E_OR
 	| Expression E_IMPLIES Expression
 	| E_OLD Expression
 	| E_STRIP '(' Attribute_list ')'
