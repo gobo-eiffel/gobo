@@ -47,8 +47,8 @@ feature -- Initialization
 
 	wipe_out is
 			-- Clear `last_string'.
+		obsolete "Not meaningful now that streams are used"
 		do
---			last_string.wipe_out
 		end
 
 feature -- Access
