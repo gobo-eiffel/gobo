@@ -758,11 +758,9 @@ feature {NONE} -- Implementation
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME
-			a_clients: ET_NONE_CLIENTS
 		once
 			create {ET_IDENTIFIER} a_name.make ("**dummy**")
-			create a_clients.make (tokens.left_brace_symbol, tokens.right_brace_symbol)
-			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, a_clients, current_class)
+			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, tokens.any_clients, current_class)
 		ensure
 			dummy_feature_not_void: Result /= Void
 		end

@@ -1018,4 +1018,26 @@ feature -- Features
 			features_empty: Result.is_empty
 		end
 
+feature -- Clients
+
+	empty_clients: ET_CLASS_NAME_LIST is
+			-- Shared empty clients
+		once
+			create Result.make_with_capacity (0)
+		ensure
+			clients_not_void: Result /= Void
+			clients_empty: Result.is_empty
+		end
+
+	any_clients: ET_CLASS_NAME_LIST is
+			-- Shared ANY clients
+		once
+			create Result.make_with_capacity (1)
+			Result.put_first (any_class_name)
+		ensure
+			clients_not_void: Result /= Void
+			one_client: Result.count = 1
+			any_clients: Result.class_name (1) = any_class_name
+		end
+
 end

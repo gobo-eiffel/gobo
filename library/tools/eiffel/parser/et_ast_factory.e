@@ -1139,13 +1139,15 @@ feature -- AST nodes
 			a_name: ET_IDENTIFIER
 			a_position: ET_POSITION
 		do
-			create Result.make_with_capacity (1)
-			create a_name.make (tokens.any_class_name.name)
-			if a_keyword /= Void then
+			if a_keyword = Void or else a_keyword.position.is_null then
+				Result := tokens.any_clients
+			else
+				create Result.make_with_capacity (1)
+				create a_name.make (tokens.any_class_name.name)
 				a_position := a_keyword.position
 				a_name.set_position (a_position.line, a_position.column)
+				Result.put_first (a_name)
 			end
-			Result.put_first (a_name)
 		end
 
 	new_argument_name_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_ARGUMENT_NAME is
