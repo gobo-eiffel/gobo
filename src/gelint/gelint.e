@@ -43,50 +43,32 @@ feature -- Processing
 			a_universe: ET_UNIVERSE
 			all_breaks: BOOLEAN
 			is_verbose: BOOLEAN
-			nb: INTEGER
+			is_cat: BOOLEAN
+			i, nb: INTEGER
+			arg: STRING
 		do
-			inspect Arguments.argument_count
-			when 1 then
-				a_filename := Arguments.argument (1)
-			when 2 then
-				if equal (Arguments.argument (1), "--all_breaks") then
+			Arguments.set_program_name ("gelint")
+			nb := Arguments.argument_count
+			from i := 1 until i > nb loop
+				arg := Arguments.argument (i)
+				if equal (arg, "--all_breaks") then
 					all_breaks := True
-					a_filename := Arguments.argument (2)
-				elseif equal (Arguments.argument (1), "--verbose") then
+				elseif equal (arg, "--verbose") then
 					is_verbose := True
-					a_filename := Arguments.argument (2)
+				elseif equal (arg, "--cat") then
+					is_cat := True
+				elseif i = nb then
+					a_filename := arg
 				else
-					std.error.put_line ("usage: gelint filename")
+					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat] filename")
 					Exceptions.die (1)
 				end
-			when 3 then
-				if equal (Arguments.argument (1), "--all_breaks") then
-					all_breaks := True
-					if equal (Arguments.argument (2), "--verbose") then
-						is_verbose := True
-						a_filename := Arguments.argument (3)
-					else
-						std.error.put_line ("usage: gelint filename")
-						Exceptions.die (1)
-					end
-				elseif equal (Arguments.argument (1), "--verbose") then
-					is_verbose := True
-					if equal (Arguments.argument (2), "--all_breaks") then
-						all_breaks := True
-						a_filename := Arguments.argument (3)
-					else
-						std.error.put_line ("usage: gelint filename")
-						Exceptions.die (1)
-					end
-				else
-					std.error.put_line ("usage: gelint filename")
-					Exceptions.die (1)
-				end
-			else
-				std.error.put_line ("usage: gelint filename")
-				Exceptions.die (1)
+				i := i + 1
 			end
-			if a_filename /= Void then
+			if a_filename = Void then
+				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat] filename")
+				Exceptions.die (1)
+			else
 				create a_file.make (a_filename)
 				a_file.open_read
 				if a_file.is_open_read then
@@ -135,6 +117,12 @@ feature -- Processing
 						else
 							a_universe.error_handler.set_compilers
 						end
+						if is_cat then
+							a_universe.set_cat_enabled (True)
+							a_universe.set_anchored_cat_features (False)
+						else
+							a_universe.set_cat_enabled (False)
+						end
 						process_universe (a_universe)
 					end
 				else
@@ -155,6 +143,7 @@ end
 		do
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
+			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
 			a_universe.set_use_recast_keyword (True)
