@@ -679,7 +679,7 @@ feature -- Removal
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
 			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
-			-- Use KL_STRING_ROUTINES.keep_tail instead.
+			-- Use KL_STRING_ROUTINES.remove_head instead.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
@@ -694,7 +694,7 @@ feature -- Removal
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
 			-- Note: Not supported in HACT 4.0.1 and ISE 5.1.
-			-- Use KL_STRING_ROUTINES.keep_head instead.
+			-- Use KL_STRING_ROUTINES.remove_tail instead.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
