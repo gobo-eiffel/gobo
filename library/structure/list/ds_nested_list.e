@@ -33,4 +33,18 @@ feature -- Access
 			remote_items_not_void: Result /= Void
 		end
 
+feature {DS_NESTED_LIST_FLATTENER} -- Implementation
+
+	index: INTEGER
+			-- Index used to detect possible cycles
+			-- in the di-graph made of nested lists
+
+	set_index (i: INTEGER) is
+			-- Set `index' to `i'.
+		do
+			index := i
+		ensure
+			index_set: index = i
+		end
+
 end -- class DS_NESTED_LIST
