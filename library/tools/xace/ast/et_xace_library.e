@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Xace systems"
+		"Xace libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_SYSTEM
+class ET_XACE_LIBRARY
 
 creation
 
@@ -18,24 +18,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_clusters: like clusters) is
-			-- Create a new Xace system.
+	make is
+			-- Create a new Xace library.
 		do
-			clusters := a_clusters
-		ensure
-			clusters_set: clusters = a_clusters
 		end
 
 feature -- Access
 
-	system_name: STRING
-			-- Name of system
-
-	root_class_name: STRING
-			-- Name of root class
-
-	creation_procedure_name: STRING
-			-- Name of root creation procedure
+	name: STRING
+			-- Name of library
 
 	options: ET_XACE_OPTIONS
 			-- Options
@@ -46,36 +37,17 @@ feature -- Access
 	libraries: ET_XACE_MOUNTED_LIBRARIES
 			-- Mounted libraries
 
-	mounted_clusters: ET_XACE_MOUNTED_CLUSTERS
-			-- Mounted clusters
-
 	externals: ET_XACE_EXTERNALS
 			-- External clause
 
 feature -- Setting
 
-	set_system_name (a_name: like system_name) is
-			-- Set `system_name' to `a_name'.
+	set_name (a_name: like name) is
+			-- Set `name' to `a_name'.
 		do
-			system_name := a_name
+			name := a_name
 		ensure
-			system_name_set: system_name = a_name
-		end
-
-	set_root_class_name (a_name: like root_class_name) is
-			-- Set `root_class_name' to `a_name'.
-		do
-			root_class_name := a_name
-		ensure
-			root_class_name_set: root_class_name = a_name
-		end
-
-	set_creation_procedure_name (a_name: like creation_procedure_name) is
-			-- Set `creation_procedure_name' to `a_name'.
-		do
-			creation_procedure_name := a_name
-		ensure
-			creation_procedure_name_set: creation_procedure_name = a_name
+			name_set: name = a_name
 		end
 
 	set_options (an_options: like options) is
@@ -95,25 +67,11 @@ feature -- Setting
 		end
 
 	set_libraries (a_libraries: like libraries) is
-			-- Set `a_libraries' to `libraries'.
+			-- Set `libraries' to `a_libraries'.
 		do
 			libraries := a_libraries
 		ensure
 			libraries_set: libraries = a_libraries
-		end
-
-	set_mounted_clusters (a_clusters: like mounted_clusters) is
-			-- Set `mounted_clusters' to `a_clusters'.
-		do
-			if mounted_clusters /= Void then
-				mounted_clusters.unmount_root (Current)
-			end
-			mounted_clusters := a_clusters
-			if mounted_clusters /= Void then
-				mounted_clusters.mount_root (Current)
-			end
-		ensure
-			mounted_clusters_set: mounted_clusters = a_clusters
 		end
 
 	set_externals (an_externals: like externals) is
@@ -138,9 +96,21 @@ feature -- Basic operations
 			end
 		end
 
+	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER) is
+			-- Add `libraries' to `a_libraries'.
+			-- Report any error (e.g. incompatible prefixes) in `an_error_handler'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		do
+			if libraries /= Void then
+				libraries.merge_libraries (a_libraries, an_error_handler)
+			end
+		end
+
 	merge_externals is
 			-- Merge the external clauses of all clusters
-			-- and subclusters of current system to `externals'.
+			-- and subclusters of current library to `externals'.
 		local
 			was_void: BOOLEAN
 		do

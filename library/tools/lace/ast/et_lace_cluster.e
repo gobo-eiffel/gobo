@@ -34,9 +34,11 @@ feature {NONE} -- Initialization
 		do
 			name_id := a_name
 			pathname_id := a_pathname
+			is_relative := (a_pathname = Void)
 		ensure
 			name_id_set: name_id = a_name
 			pathname_id_set: pathname_id = a_pathname
+			is_relative: is_relative = (a_pathname = Void)
 		end
 
 feature -- Access
@@ -48,7 +50,7 @@ feature -- Access
 		end
 
 	pathname: STRING is
-			-- Directory pathname (May be Void)
+			-- Directory pathname (may be Void)
 		do
 			if pathname_id /= Void then
 				Result := pathname_id.name

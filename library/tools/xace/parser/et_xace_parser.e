@@ -84,12 +84,14 @@ feature {NONE} -- Initialization
 		do
 			error_handler := an_error_handler
 			ast_factory := a_factory
-			-- We must not create a new ET_XACE_CLUSTER_PARSER
-			-- object if `Current' is one already, or we will
-			-- recurse in this routine forever
-			cluster_parser ?= Current
-			if cluster_parser = Void then
-				!! cluster_parser.make_with_variables (a_variables, error_handler)
+			!! parsed_libraries.make (10)
+				-- We must not create a new ET_XACE_LIBRARY_PARSER
+				-- object if `Current' is one already, or we will
+				-- recurse in this routine forever.
+			library_parser ?= Current
+			if library_parser = Void then
+				!! library_parser.make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+				library_parser.set_parsed_libraries (parsed_libraries)
 			end
 			!! xml_preprocessor.make (a_variables, error_handler)
 			!! xml_validator.make (an_error_handler)
@@ -118,7 +120,7 @@ feature -- Parsing
 		local
 			a_root_name: UC_STRING
 			a_system: ET_XACE_SYSTEM
-			a_cluster: ET_XACE_CLUSTER
+			a_library: ET_XACE_LIBRARY
 		do
 			if xml_parser /= Void then
 				xml_parser.parse_from_stream (a_file)
@@ -129,12 +131,17 @@ feature -- Parsing
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
 							a_system := new_system (xml_parser.document.root_element, xml_parser.last_position_table)
+							parsed_libraries.wipe_out
 						end
-					elseif a_root_name.is_equal (uc_cluster) then
-						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)
+					elseif
+						a_root_name.is_equal (uc_library) or
+						a_root_name.is_equal (uc_cluster)
+					then
+						xml_validator.validate_library_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_cluster := new_cluster (xml_parser.document.root_element, xml_parser.last_position_table)
+							a_library := new_library (xml_parser.document.root_element, xml_parser.last_position_table)
+							parsed_libraries.wipe_out
 						end
 					else
 						error_handler.report_not_xace_file_error (a_file.name)
@@ -149,8 +156,24 @@ feature -- Parsing
 
 feature -- Access
 
-	cluster_parser: ET_XACE_CLUSTER_PARSER
-			-- Cluster Parser
+	library_parser: ET_XACE_LIBRARY_PARSER
+			-- Library Parser
+
+	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY, STRING]
+			-- Already parsed Xace libraries, indexed by filenames
+
+feature -- Setting
+
+	set_parsed_libraries (a_libraries: like parsed_libraries) is
+			-- Set `parsed_libraries' to `a_libraries'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+			no_void_library: not a_libraries.has_item (Void)
+		do
+			parsed_libraries := a_libraries
+		ensure
+			parsed_libraries_set: parsed_libraries = a_libraries
+		end
 
 feature {NONE} -- Implementation
 

@@ -21,7 +21,8 @@ inherit
 
 creation
 
-	make, make_with_variables
+	make, make_with_factory, make_with_variables,
+	make_with_variables_and_factory
 
 feature -- Parsing
 
@@ -36,6 +37,7 @@ feature -- Parsing
 					if not xml_validator.has_error then
 						xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
 						last_system := new_system (xml_parser.document.root_element, xml_parser.last_position_table)
+						parsed_libraries.wipe_out
 					end
 				else
 					error_handler.report_parser_error (xml_parser.last_error_extended_description)

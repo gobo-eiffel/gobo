@@ -259,13 +259,24 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
+	report_multiple_library_prefix_error (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY) is
+			-- Report that a library has been mounted several times
+			-- with different prefixes.
+		require
+			a_mount1_not_void: a_mount1 /= Void
+			a_mount2_not_void: a_mount2 /= Void
+		local
+			an_error: ET_XACE_MULTIPLE_LIBRARY_PREFIX_ERROR
+		do
+			!! an_error.make (a_mount1, a_mount2)
+			report_error (an_error)
+		end
+
 	report_error (an_error: UT_ERROR) is
 			-- Report `an_error'.
 		do
 			error_count := error_count + 1
 			precursor (an_error)
 		end
-
-feature -- Reporting warnings
 
 end

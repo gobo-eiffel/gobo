@@ -52,16 +52,9 @@ feature -- Status report
 			-- should subdirectories be considered as subclusters?
 			-- (i.e. 'all' keyword in ISE's LACE.)
 
-	is_full_pathname_meaningful: BOOLEAN is
-			-- Is `pathname' not Void nor empty in current cluster
-			-- or at least in one of its ancestor clusters?
-		do
-			if pathname /= Void and then pathname.count > 0 then
-				Result := True
-			elseif parent /= Void then
-				Result := parent.is_full_pathname_meaningful
-			end
-		end
+	is_relative: BOOLEAN
+			-- Is the pathname of current cluster relative to the
+			-- pathname of its parent cluster?
 
 feature -- Access
 
@@ -74,7 +67,7 @@ feature -- Access
 		end
 
 	pathname: STRING is
-			-- Directory pathname (May be Void)
+			-- Directory pathname (may be Void)
 		deferred
 		end
 
@@ -108,15 +101,19 @@ feature -- Access
 			a_basename: STRING
 		do
 			a_pathname := pathname
-			if a_pathname /= Void and then a_pathname.count > 0 then
-				Result := a_pathname
-			elseif parent /= Void then
+			if is_relative and parent /= Void then
 				parent_pathname := parent.full_pathname
-				a_basename := name
+				if a_pathname /= Void and then a_pathname.count > 0 then
+					a_basename := a_pathname
+				else
+					a_basename := name
+				end
 				Result := STRING_.make (parent_pathname.count + a_basename.count + 1)
 				Result.append_string (parent_pathname)
 				Result.append_character ('/')
 				Result.append_string (a_basename)
+			elseif a_pathname /= Void and then a_pathname.count > 0 then
+				Result := a_pathname
 			else
 				Result := name
 			end
@@ -171,6 +168,14 @@ feature -- Status setting
 			is_recursive := b
 		ensure
 			recursive_set: is_recursive = b
+		end
+
+	set_relative (b: BOOLEAN) is
+			-- Set `is_relative' to `b'.
+		do
+			is_relative := b
+		ensure
+			relative_set: is_relative = b
 		end
 
 feature -- Setting

@@ -58,18 +58,26 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cluster_parser: ET_XACE_CLUSTER_PARSER is
-			-- Cluster Parser
-		deferred
-		ensure
-			cluster_parser_not_void: Result /= Void
-		end
-
 	ast_factory: ET_XACE_AST_FACTORY
 			-- Abstract Syntax Tree factory
 
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
+
+	library_parser: ET_XACE_LIBRARY_PARSER is
+			-- Library parser
+		deferred
+		ensure
+			library_parser_not_void: Result /= Void
+		end
+
+	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY, STRING] is
+			-- Already parsed Xace libraries, indexed by filenames
+		deferred
+		ensure
+			parsed_libraries_not_void: Result /= Void
+			no_void_library: not Result.has_item (Void)
+		end
 
 feature {NONE} -- AST factory
 
@@ -82,6 +90,7 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_system (Void)
 			fill_system (Result, an_element, a_position_table)
+			Result.mount_libraries
 		end
 
 	new_universe (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_UNIVERSE is
@@ -98,6 +107,20 @@ feature {NONE} -- AST factory
 			a_factory := ast_factory.new_ast_factory
 			Result := ast_factory.new_universe (Void, a_factory, an_error_handler)
 			fill_system (Result, an_element, a_position_table)
+			Result.mount_libraries
+		end
+
+	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_LIBRARY is
+			-- New library build from `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			is_library: an_element.name.is_equal (uc_library) or
+				an_element.name.is_equal (uc_cluster)
+			a_position_table_not_void: a_position_table /= Void
+		do
+			Result := ast_factory.new_library
+			fill_library (Result, an_element, a_position_table)
+			Result.mount_libraries
 		end
 
 	new_cluster (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLUSTER is
@@ -117,8 +140,8 @@ feature {NONE} -- AST factory
 			an_option: ET_XACE_OPTIONS
 			an_external: ET_XACE_EXTERNALS
 			subclusters: ET_XACE_CLUSTERS
-			a_mount: ET_XACE_MOUNTED_CLUSTER
-			a_mounts: ET_XACE_MOUNTED_CLUSTERS
+			a_mount: ET_XACE_MOUNTED_LIBRARY
+			a_mounts: ET_XACE_MOUNTED_LIBRARIES
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
@@ -144,6 +167,17 @@ feature {NONE} -- AST factory
 							end
 						end
 					end
+					if an_element.has_attribute_by_name (uc_relative) then
+						a_value := an_element.attribute_by_name (uc_relative).value
+						if a_value /= Void then
+							a_bool := a_value.to_utf8
+							if is_true (a_bool) then
+								Result.set_relative (True)
+							elseif is_false (a_bool) then
+								Result.set_relative (False)
+							end
+						end
+					end
 					a_cursor := an_element.new_cursor
 					from a_cursor.start until a_cursor.after loop
 						a_child ?= a_cursor.item
@@ -161,10 +195,9 @@ feature {NONE} -- AST factory
 								a_mount := new_mount (a_child, a_position_table)
 								if a_mount /= Void then
 									if a_mounts = Void then
-										a_mounts := ast_factory.new_mounted_clusters (a_mount)
-									else
-										a_mounts.put_last (a_mount)
+										a_mounts := ast_factory.new_mounted_libraries
 									end
+									a_mounts.put_last (a_mount)
 								end
 							elseif a_child.name.is_equal (uc_option) then
 								if an_option /= Void then
@@ -183,13 +216,13 @@ feature {NONE} -- AST factory
 						a_cursor.forth
 					end
 					Result.set_subclusters (subclusters)
-					Result.set_mounted_subclusters (a_mounts)
+					Result.set_libraries (a_mounts)
 				end
 			end
 		end
 
-	new_mount (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_MOUNTED_CLUSTER is
-			-- New mounted cluster build from `an_element'
+	new_mount (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_MOUNTED_LIBRARY is
+			-- New mounted library build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
 			is_mount: an_element.name.is_equal (uc_mount)
@@ -197,53 +230,42 @@ feature {NONE} -- AST factory
 		local
 			a_value: UC_STRING
 			a_pathname: STRING
-			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
-			an_excluded: DS_LINKED_LIST [STRING]
-			a_cluster: ET_XACE_CLUSTER
+			a_library: ET_XACE_LIBRARY
+			a_prefix: STRING
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
-			clusters: ET_XACE_CLUSTERS
 		do
 			if an_element.has_attribute_by_name (uc_location) then
 				a_value := an_element.attribute_by_name (uc_location).value
 				if a_value /= Void then
 					a_pathname := a_value.to_utf8
-					if a_pathname.count > 0 then
-						a_cursor := an_element.new_cursor
-						from a_cursor.start until a_cursor.after loop
-							a_child ?= a_cursor.item
-							if a_child /= Void then
-								if a_child.name.is_equal (uc_exclude) then
-									if a_child.has_attribute_by_name (uc_cluster) then
-										a_value := a_child.attribute_by_name (uc_cluster).value
-										if a_value /= Void then
-											if an_excluded = Void then
-												!! an_excluded.make
-											end
-											an_excluded.force_last (a_value.to_utf8)
-										end
-									end
-								end
+					if an_element.has_attribute_by_name (uc_prefix) then
+						a_value := an_element.attribute_by_name (uc_prefix).value
+						if a_value /= Void then
+							a_prefix := a_value.to_utf8
+							if a_prefix.count = 0 then
+								a_prefix := Void
 							end
-							a_cursor.forth
 						end
+					end
+					parsed_libraries.search (a_pathname)
+					if parsed_libraries.found then
+						a_library := parsed_libraries.found_item
+					else
+						a_library := ast_factory.new_library
+						parsed_libraries.force_new (a_library, a_pathname)
 						a_filename := Execution_environment.interpreted_string (a_pathname)
 						!! a_file.make (a_filename)
 						a_file.open_read
 						if a_file.is_open_read then
-							cluster_parser.parse_file (a_file)
+							library_parser.parse_library (a_library, a_file)
 							a_file.close
-							a_cluster := cluster_parser.last_cluster
-							if a_cluster /= Void then
-								clusters := ast_factory.new_clusters (a_cluster)
-								Result := ast_factory.new_mounted_cluster (a_pathname, clusters)
-								Result.set_excluded (an_excluded)
-							end
 						else
 							error_handler.report_cannot_read_file_error (a_pathname)
 						end
 					end
+					Result := ast_factory.new_mounted_library (a_pathname, a_library, a_position_table.item (an_element))
+					Result.set_library_prefix (a_prefix)
 				end
 			end
 		end
@@ -399,9 +421,12 @@ feature {NONE} -- Element change
 			an_option: ET_XACE_OPTIONS
 			an_external: ET_XACE_EXTERNALS
 			a_clusters: ET_XACE_CLUSTERS
-			a_mount: ET_XACE_MOUNTED_CLUSTER
-			a_mounts: ET_XACE_MOUNTED_CLUSTERS
+			a_mount: ET_XACE_MOUNTED_LIBRARY
+			a_mounts: ET_XACE_MOUNTED_LIBRARIES
 			a_value: UC_STRING
+			nb_clusters: INTEGER
+			i, nb: INTEGER
+			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
@@ -422,9 +447,139 @@ feature {NONE} -- Element change
 					end
 				end
 			end
-			if an_element.has_element_by_name (uc_cluster) then
+			a_cursor := an_element.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_child ?= a_cursor.item
+				if a_child /= Void then
+					if a_child.name.is_equal (uc_cluster) then
+						nb_clusters := nb_clusters + 1
+					elseif a_child.name.is_equal (uc_option) then
+							-- New syntax.
+						nb_clusters := 2
+					elseif a_child.name.is_equal (uc_mount) then
+							-- New syntax.
+						nb_clusters := 2
+					elseif a_child.name.is_equal (uc_external) then
+							-- New syntax.
+						nb_clusters := 2
+					end
+				end
+				a_cursor.forth
+			end
+			if nb_clusters /= 1 then
+					-- New syntax.
+				a_cursor := an_element.new_cursor
+			else
+					-- Old syntax.
 				a_root_cluster := an_element.element_by_name (uc_cluster)
 				a_cursor := a_root_cluster.new_cursor
+			end
+			from a_cursor.start until a_cursor.after loop
+				a_child ?= a_cursor.item
+				if a_child /= Void then
+					if a_child.name.is_equal (uc_cluster) then
+						a_cluster := new_cluster (a_child, a_position_table)
+						if a_cluster /= Void then
+							if a_clusters = Void then
+								a_clusters := ast_factory.new_clusters (a_cluster)
+							else
+								a_clusters.put_last (a_cluster)
+							end
+						end
+					elseif a_child.name.is_equal (uc_mount) then
+						a_mount := new_mount (a_child, a_position_table)
+						if a_mount /= Void then
+							if a_mounts = Void then
+								a_mounts := ast_factory.new_mounted_libraries
+							end
+							a_mounts.put_last (a_mount)
+						end
+					elseif a_child.name.is_equal (uc_option) then
+						if an_option /= Void then
+							fill_options (an_option, a_child, a_position_table)
+						else
+							an_option := new_options (a_child, a_position_table)
+						end
+					elseif a_child.name.is_equal (uc_external) then
+						an_external := new_externals (a_child, a_position_table)
+					end
+				end
+				a_cursor.forth
+			end
+			if a_mounts /= Void then
+				a_mounts.set_root (True)
+				a_library_list := a_mounts.libraries
+				nb := a_library_list.count
+				from i := 1 until i > nb loop
+					a_library_list.item (i).library.merge_libraries (a_mounts, error_handler)
+					i := i + 1
+				end
+			end
+			if a_clusters /= Void then
+				if a_mounts = Void then
+					a_mounts := ast_factory.new_mounted_libraries
+				end
+				a_clusters.merge_libraries (a_mounts, error_handler)
+			end
+			a_system.set_clusters (a_clusters)
+			a_system.set_system_name (a_name)
+			a_system.set_root_class_name (a_class)
+			a_system.set_creation_procedure_name (a_creation)
+			a_system.set_options (an_option)
+			a_system.set_externals (an_external)
+			a_system.set_libraries (a_mounts)
+		end
+
+	fill_library (a_library: ET_XACE_LIBRARY; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+			-- Fill Xace library `a_library' with data found in `an_element'.
+		require
+			a_library_not_void: a_library /= Void
+			an_element_not_void: an_element /= Void
+			is_library: an_element.name.is_equal (uc_library) or
+				an_element.name.is_equal (uc_cluster)
+			a_position_table_not_void: a_position_table /= Void
+		local
+			a_name: STRING
+			a_value: UC_STRING
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_child: XM_ELEMENT
+			a_cluster: ET_XACE_CLUSTER
+			an_option: ET_XACE_OPTIONS
+			an_external: ET_XACE_EXTERNALS
+			a_clusters: ET_XACE_CLUSTERS
+			a_mount: ET_XACE_MOUNTED_LIBRARY
+			a_mounts: ET_XACE_MOUNTED_LIBRARIES
+			a_warning: UT_MESSAGE
+			a_pathname: STRING
+			i, nb: INTEGER
+			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
+		do
+			if an_element.has_attribute_by_name (uc_name) then
+				a_value := an_element.attribute_by_name (uc_name).value
+				if a_value /= Void then
+					a_name := a_value.to_utf8
+					if a_name.count > 0 then
+						a_library.set_name (a_name)
+					end
+				end
+			end
+			if an_element.name.is_equal (uc_cluster) then
+				!! a_warning.make ("Warning: <cluster> is obsolete, use <library> instead%N" + a_position_table.item (an_element).out)
+				error_handler.report_warning (a_warning)
+				a_cluster := new_cluster (an_element, a_position_table)
+				a_library.set_name (a_cluster.name)
+				a_pathname := a_cluster.pathname
+				if a_pathname = Void and a_cluster.is_abstract then
+					a_library.set_name (a_cluster.name)
+					a_library.set_options (a_cluster.options)
+					a_library.set_externals (a_cluster.externals)
+					a_clusters := a_cluster.subclusters
+					a_mounts := a_cluster.libraries
+				else
+					a_clusters := ast_factory.new_clusters (a_cluster)
+				end
+			else
+				a_cursor := an_element.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_child ?= a_cursor.item
 					if a_child /= Void then
@@ -441,31 +596,44 @@ feature {NONE} -- Element change
 							a_mount := new_mount (a_child, a_position_table)
 							if a_mount /= Void then
 								if a_mounts = Void then
-									a_mounts := ast_factory.new_mounted_clusters (a_mount)
-								else
-									a_mounts.put_last (a_mount)
+									a_mounts := ast_factory.new_mounted_libraries
 								end
+								a_mounts.put_last (a_mount)
 							end
 						elseif a_child.name.is_equal (uc_option) then
 							if an_option /= Void then
 								fill_options (an_option, a_child, a_position_table)
 							else
 								an_option := new_options (a_child, a_position_table)
+								a_library.set_options (an_option)
 							end
 						elseif a_child.name.is_equal (uc_external) then
 							an_external := new_externals (a_child, a_position_table)
+							if an_external /= Void then
+								a_library.set_externals (an_external)
+							end
 						end
 					end
 					a_cursor.forth
 				end
 			end
-			a_system.set_clusters (a_clusters)
-			a_system.set_system_name (a_name)
-			a_system.set_root_class_name (a_class)
-			a_system.set_creation_procedure_name (a_creation)
-			a_system.set_options (an_option)
-			a_system.set_externals (an_external)
-			a_system.set_mounted_clusters (a_mounts)
+			if a_mounts /= Void then
+				a_mounts.set_root (True)
+				a_library_list := a_mounts.libraries
+				nb := a_library_list.count
+				from i := 1 until i > nb loop
+					a_library_list.item (i).library.merge_libraries (a_mounts, error_handler)
+					i := i + 1
+				end
+			end
+			if a_clusters /= Void then
+				if a_mounts = Void then
+					a_mounts := ast_factory.new_mounted_libraries
+				end
+				a_clusters.merge_libraries (a_mounts, error_handler)
+			end
+			a_library.set_clusters (a_clusters)
+			a_library.set_libraries (a_mounts)
 		end
 
 	fill_options (an_option: ET_XACE_OPTIONS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is

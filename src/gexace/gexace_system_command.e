@@ -56,9 +56,9 @@ feature -- Execution
 				a_system := a_parser.last_system
 				if
 					a_system /= Void and then
-					(a_system.system_name /= Void and
-					a_system.root_class_name /= Void and
-					a_system.creation_procedure_name /= Void)
+					((a_system.system_name /= Void and then a_system.system_name.count > 0) and
+					(a_system.root_class_name /= Void and then a_system.root_class_name.count > 0) and
+					(a_system.creation_procedure_name /= Void and then a_system.creation_procedure_name.count > 0))
 				then
 					execute_generators (a_system)
 				end
@@ -72,8 +72,11 @@ feature -- Execution
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
+			system_name_not_empty: a_system.system_name.count > 0
 			root_class_name_not_void: a_system.root_class_name /= Void
+			root_class_name_not_empty: a_system.root_class_name.count > 0
 			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
+			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_GENERATOR]
 		do

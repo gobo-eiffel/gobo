@@ -110,6 +110,8 @@ feature {NONE} -- Command-line processing
 				process_system
 			elseif match_long_option ("cluster") then
 				process_cluster
+			elseif match_long_option ("library") then
+				process_library
 			elseif match_long_option ("validate") then
 				process_validate
 			else
@@ -147,7 +149,30 @@ feature {NONE} -- Command-line processing
 		require
 			is_cluster: match_long_option ("cluster")
 		local
-			a_command: GEXACE_CLUSTER_COMMAND
+			a_command: GEXACE_LIBRARY_COMMAND
+			a_compiler: STRING
+		do
+			!! a_command.make (variables, error_handler)
+			commands.force_last (a_command)
+			if is_next_option_long_option and then has_next_option_value then
+				a_compiler := next_option_value
+				consume_option
+				process_compilers (a_command, a_compiler)
+				process_output (a_command)
+				process_xace_file (a_command)
+			else
+					-- No compiler specified.
+				report_usage_error
+				Exceptions.die (1)
+			end
+		end
+
+	process_library is
+			-- Process 'library' command.
+		require
+			is_library: match_long_option ("library")
+		local
+			a_command: GEXACE_LIBRARY_COMMAND
 			a_compiler: STRING
 		do
 			!! a_command.make (variables, error_handler)
@@ -289,7 +314,7 @@ feature {NONE} -- Usage message
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose%N%
 				%%Tcommand:  --system=(se|ise|ve|hact|xml) [--output=<filename>]%N%
-				%%Tcommand:  --cluster=(se|ise|ve|hact|xml) [--output=<filename>]%N%
+				%%Tcommand:  --library=(se|ise|ve|hact|xml) [--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void

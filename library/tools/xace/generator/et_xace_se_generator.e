@@ -64,11 +64,12 @@ feature -- Output
 			end
 		end
 
-	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
-			-- Generate a new loadpath file from `a_cluster'.
+	generate_library (a_library: ET_XACE_LIBRARY) is
+			-- Generate a new Ace file from `a_library'.
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
+			a_clusters: ET_XACE_CLUSTERS
 		do
 			if output_filename /= Void then
 				a_filename := output_filename
@@ -78,7 +79,10 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				print_loadpath_cluster (a_cluster, a_file)
+				a_clusters := a_library.clusters
+				if a_clusters /= Void then
+					print_loadpath_clusters (a_clusters, a_file)
+				end
 				a_file.close
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
@@ -92,8 +96,11 @@ feature {NONE} -- Output
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
+			system_name_not_empty: a_system.system_name.count > 0
 			root_class_name_not_void: a_system.root_class_name /= Void
+			root_class_name_not_empty: a_system.root_class_name.count > 0
 			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
+			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
@@ -105,16 +112,16 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string (a_system.system_name)
+			print_escaped_name (a_system.system_name, a_file)
 			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_string ("root")
 			a_file.put_new_line
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string (a_system.root_class_name)
+			print_escaped_name (a_system.root_class_name, a_file)
 			a_file.put_string (": ")
-			a_file.put_string (a_system.creation_procedure_name)
+			print_escaped_name (a_system.creation_procedure_name, a_file)
 			a_file.put_new_line
 			a_file.put_new_line
 			an_option := a_system.options
@@ -353,7 +360,7 @@ feature {NONE} -- Output
 		do
 			if not a_cluster.is_abstract then
 				print_indentation (1, a_file)
-				a_file.put_string (a_cluster.full_name ('_'))
+				print_escaped_name (a_cluster.prefixed_name, a_file)
 				a_file.put_string (": %"")
 				a_pathname := a_cluster.full_pathname
 				a_file.put_string (a_pathname)
@@ -536,38 +543,6 @@ feature {NONE} -- Output
 				else
 					error_handler.report_cannot_write_file_error (cecil_filename)
 				end
-			end
-		end
-
-	print_include_directories_as_c_options (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_directories' to `a_file'.
-		require
-			a_directories_not_void: a_directories /= Void
-			no_void_directory: not a_directories.has (Void)
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			a_pathname: STRING
-		do
-			if not a_directories.is_empty then
-				print_indentation (1, a_file)
-				a_file.put_string ("c_compiler_options:")
-				a_file.put_new_line
-				print_indentation (2, a_file)
-				a_file.put_character ('%"')
-				a_file.put_string ("-O ")
-				a_cursor := a_directories.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_pathname := a_cursor.item
-					a_file.put_string (a_pathname)
-					if not a_cursor.is_last then
-						a_file.put_character (' ')
-					end
-					a_cursor.forth
-				end
-				a_file.put_character ('%"')
-				a_file.put_new_line
 			end
 		end
 

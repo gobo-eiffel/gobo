@@ -57,6 +57,15 @@ feature -- Constants
 			uc_creation_not_empty: Result.count > 0
 		end
 
+	uc_library: UC_STRING is
+			-- "library" element name
+		once
+			Result := new_unicode_string ("library")
+		ensure
+			uc_library_not_void: Result /= Void
+			uc_library_not_empty: Result.count > 0
+		end
+
 	uc_cluster: UC_STRING is
 			-- "cluster" element name
 		once
@@ -93,6 +102,15 @@ feature -- Constants
 			uc_abstract_not_empty: Result.count > 0
 		end
 
+	uc_relative: UC_STRING is
+			-- "relative" attribute name
+		once
+			Result := new_unicode_string ("relative")
+		ensure
+			uc_relative_not_void: Result /= Void
+			uc_relative_not_empty: Result.count > 0
+		end
+
 	uc_mount: UC_STRING is
 			-- "mount" element name
 		once
@@ -109,6 +127,15 @@ feature -- Constants
 		ensure
 			uc_location_not_void: Result /= Void
 			uc_location_not_empty: Result.count > 0
+		end
+
+	uc_prefix: UC_STRING is
+			-- "prefix" attribute name
+		once
+			Result := new_unicode_string ("prefix")
+		ensure
+			uc_prefix_not_void: Result /= Void
+			uc_prefix_not_empty: Result.count > 0
 		end
 
 	uc_description: UC_STRING is

@@ -78,6 +78,14 @@ feature -- AST factory
 			externals_not_void: Result /= Void
 		end
 
+	new_library: ET_XACE_LIBRARY is
+			-- New Xace library
+		do
+			!! Result.make
+		ensure
+			library_not_void: Result /= Void
+		end
+
 	new_mounted_cluster (a_pathname: STRING; a_clusters: ET_XACE_CLUSTERS): ET_XACE_MOUNTED_CLUSTER is
 			-- New mounted cluster
 		require
@@ -98,6 +106,26 @@ feature -- AST factory
 			!! Result.make (a_cluster)
 		ensure
 			mounted_clusters_not_void: Result /= Void
+		end
+
+	new_mounted_library (a_pathname: STRING; a_library: ET_XACE_LIBRARY; a_position: XM_POSITION): ET_XACE_MOUNTED_LIBRARY is
+			-- New mounted library
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_library_not_void: a_library /= Void
+			a_position_not_void: a_position /= Void
+		do
+			!! Result.make (a_pathname, a_library, a_position)
+		ensure
+			mounted_library_not_void: Result /= Void
+		end
+
+	new_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES is
+			-- New mounted library list
+		do
+			!! Result.make_empty
+		ensure
+			mounted_libraries_not_void: Result /= Void
 		end
 
 	new_options: ET_XACE_OPTIONS is

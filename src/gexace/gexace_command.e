@@ -48,8 +48,8 @@ feature {NONE} -- Constants
 	default_system_filename: STRING is "system.xace"
 			-- Default name of system Xace file
 
-	default_cluster_filename: STRING is "cluster.xace"
-			-- Default name of cluster Xace file
+	default_library_filename: STRING is "library.xace"
+			-- Default name of library Xace file
 
 invariant
 

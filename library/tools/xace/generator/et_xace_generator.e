@@ -61,15 +61,20 @@ feature -- Output
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
+			system_name_not_empty: a_system.system_name.count > 0
 			root_class_name_not_void: a_system.root_class_name /= Void
+			root_class_name_not_empty: a_system.root_class_name.count > 0
 			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
+			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
 		deferred
 		end
 
-	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
-			-- Generate a new Ace file from `a_cluster'.
+	generate_library (a_library: ET_XACE_LIBRARY) is
+			-- Generate a new Ace file from `a_library'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_library_not_void: a_library /= Void
+			a_library_name_not_void: a_library.name /= Void
+			a_library_name_not_empty: a_library.name.count > 0
 		deferred
 		end
 
@@ -88,6 +93,16 @@ feature {NONE} -- Output
 				a_file.put_character ('%T')
 				i := i + 1
 			end
+		end
+
+	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print escaped version of `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (a_name)
 		end
 
 feature {NONE} -- Implementation

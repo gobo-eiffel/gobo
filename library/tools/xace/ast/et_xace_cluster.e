@@ -32,10 +32,14 @@ feature {NONE} -- Initialization
 			a_name_not_empty: a_name.count > 0
 		do
 			name := a_name
+			prefixed_name := a_name
 			pathname := a_pathname
+			is_relative := (a_pathname = Void)
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
+			prefixed_name_set: prefixed_name = a_name
+			is_relative: is_relative = (a_pathname = Void)
 		end
 
 feature -- Access
@@ -43,8 +47,20 @@ feature -- Access
 	name: STRING
 			-- Name
 
+	prefixed_name: STRING
+			-- Prefixed cluster name
+
 	pathname: STRING
-			-- Directory pathname (May be Void)
+			-- Directory pathname (may be Void)
+
+	libraries: ET_XACE_MOUNTED_LIBRARIES
+			-- Mounted libraries
+
+	options: ET_XACE_OPTIONS
+			-- Options
+
+	externals: ET_XACE_EXTERNALS
+			-- External clause
 
 feature -- Status report
 
@@ -66,15 +82,15 @@ feature -- Nested
 	mounted_subclusters: ET_XACE_MOUNTED_CLUSTERS
 			-- Mounted subclusters
 
-feature -- Options
-
-	options: ET_XACE_OPTIONS
-			-- Options
-
-	externals: ET_XACE_EXTERNALS
-			-- External clause
-
 feature -- Setting
+
+	set_libraries (a_libraries: like libraries) is
+			-- Set `libraries' to `a_libraries'.
+		do
+			libraries := a_libraries
+		ensure
+			libraries_set: libraries = a_libraries
+		end
 
 	set_options (an_options: like options) is
 			-- Set `options' to `an_options'.
@@ -104,6 +120,35 @@ feature -- Setting
 			end
 		ensure
 			mounted_subclusters_set: mounted_subclusters = a_subclusters
+		end
+
+	set_name_prefix (a_prefix: STRING) is
+			-- Prepend `a_prefix' to cluster name, and recursively
+			-- to the name of the subclusters.
+		do
+			if a_prefix = Void then
+				prefixed_name := name
+			else
+				prefixed_name := STRING_.make (a_prefix.count + name.count)
+				prefixed_name.append_string (a_prefix)
+				prefixed_name.append_string (name)
+			end
+			if subclusters /= Void then
+				subclusters.set_name_prefix (a_prefix)
+			end
+		ensure
+			prefixed_name_set: a_prefix /= Void implies prefixed_name.is_equal (a_prefix + name)
+			non_prefixed_name_set: a_prefix = Void implies prefixed_name = name
+		end
+
+feature -- Status setting
+
+	set_mounted (b: BOOLEAN) is
+			-- Set `is_mounted' to `b'.
+		do
+			is_mounted := b
+		ensure
+			mounted_set: is_mounted = b
 		end
 
 feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
@@ -207,6 +252,21 @@ feature -- Removal
 
 feature -- Basic operations
 
+	merge_libraries (a_libraries: ET_XACE_MOUNTED_LIBRARIES; an_error_handler: ET_XACE_ERROR_HANDLER) is
+			-- Add `libraries', and recursively the libraries of subclusters, to `a_libraries'.
+			-- Report any error (e.g. incompatible prefixes) in `an_error_handler'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		do
+			if libraries /= Void then
+				libraries.merge_libraries (a_libraries, an_error_handler)
+			end
+			if subclusters /= Void then
+				subclusters.merge_libraries (a_libraries, an_error_handler)
+			end
+		end
+
 	merge_externals (an_externals: like externals) is
 			-- Merge current cluster's externals to `an_externals'.
 		require
@@ -229,5 +289,10 @@ feature {NONE} -- Implementation
 			Result.set_parent (Current)
 			Result.set_recursive (True)
 		end
+
+invariant
+
+	prefixed_name_not_void: prefixed_name /= Void
+	prefixed_name_not_empty: prefixed_name.count > 0
 
 end

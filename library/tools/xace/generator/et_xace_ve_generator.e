@@ -16,6 +16,8 @@ inherit
 
 	ET_XACE_GENERATOR
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 	UT_STRING_ROUTINES
 		export {NONE} all end
 
@@ -61,11 +63,12 @@ feature -- Output
 			end
 		end
 
-	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
-			-- Generate a new ELD file from `a_cluster'.
+	generate_library (a_library: ET_XACE_LIBRARY) is
+			-- Generate a new Ace file from `a_library'.
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
+			an_externals: ET_XACE_EXTERNALS
 		do
 			if output_filename /= Void then
 				a_filename := output_filename
@@ -75,8 +78,14 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				print_eld_file (a_cluster, a_file)
+				an_externals := a_library.externals
+				if an_externals /= Void then
+					an_externals := an_externals.cloned_externals
+				end
+				a_library.merge_externals
+				print_eld_file (a_library, a_file)
 				a_file.close
+				a_library.set_externals (an_externals)
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -89,8 +98,11 @@ feature {NONE} -- Output
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
+			system_name_not_empty: a_system.system_name.count > 0
 			root_class_name_not_void: a_system.root_class_name /= Void
+			root_class_name_not_empty: a_system.root_class_name.count > 0
 			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
+			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
@@ -101,17 +113,20 @@ feature {NONE} -- Output
 			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_line (a_system.system_name)
+			print_escaped_name (a_system.system_name, a_file)
+			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_line ("root")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_line (a_system.root_class_name)
+			print_escaped_name (a_system.root_class_name, a_file)
+			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_line ("creation")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_line (a_system.creation_procedure_name)
+			print_escaped_name (a_system.creation_procedure_name, a_file)
+			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_line ("cluster")
 			a_file.put_new_line
@@ -136,25 +151,39 @@ feature {NONE} -- Output
 			a_file.put_line ("end")
 		end
 
-	print_eld_file (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print ELD `a_cluster' to `a_file'.
+	print_eld_file (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print ELD `a_library' to `a_file'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_library_not_void: a_library /= Void
+			a_library_name_not_void: a_library.name /= Void
+			a_library_name_not_empty: a_library.name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
+			a_clusters: ET_XACE_CLUSTERS
 			an_option: ET_XACE_OPTIONS
+			an_external: ET_XACE_EXTERNALS
 		do
 			a_file.put_line ("library")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_line (a_cluster.name)
+			print_escaped_name (a_library.name, a_file)
+			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_line ("cluster")
 			a_file.put_new_line
-			print_cluster (a_cluster, a_file)
-			a_file.put_new_line
-			an_option := a_cluster.options
+			a_clusters := a_library.clusters
+			if a_clusters /= Void then
+				print_clusters (a_clusters, a_file)
+				a_file.put_new_line
+			end
+			an_external := a_library.externals
+			if an_external /= Void and then an_external.has_link_libraries then
+				a_file.put_line ("link")
+				a_file.put_new_line
+				print_link_libraries (an_external.link_libraries, a_file)
+			end
+			an_option := a_library.options
 			if an_option /= Void then
 				a_file.put_line ("option")
 				a_file.put_new_line
@@ -520,7 +549,7 @@ feature {NONE} -- Output
 			if not a_cluster.is_abstract then
 				print_indentation (1, a_file)
 				a_file.put_character ('[')
-				a_file.put_string (a_cluster.full_name ('_'))
+				print_escaped_name (a_cluster.prefixed_name, a_file)
 				a_file.put_string (" %"")
 				a_pathname := a_cluster.full_pathname
 					-- Visual Eiffel does not like the currly
@@ -565,6 +594,84 @@ feature {NONE} -- Output
 				end
 				a_file.put_new_line
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	is_esd_keyword (a_name: STRING): BOOLEAN is
+			-- Is `a_name' an ESD keyword?
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+			a_keywords: like esd_keywords
+		do
+			a_keywords := esd_keywords
+			i := a_keywords.lower
+			nb := a_keywords.upper
+			from until i > nb loop
+				if a_keywords.item (i).is_equal (a_name) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	esd_keywords: ARRAY [STRING] is
+			-- ESD keywords
+		once
+			Result := <<
+				"as",
+				"assertions",
+				"call_back",
+				"calls",
+				"check",
+				"class",
+				"cluster",
+				"code",
+				"console",
+				"constants",
+				"creation",
+				"debug",
+				"dll",
+				"dyn_type",
+				"end",
+				"ensure",
+				"exe",
+				"fst",
+				"heap_size",
+				"inline",
+				"interface",
+				"invariant",
+				"leaves",
+				"library",
+				"link",
+				"linker",
+				"loop",
+				"makepath",
+				"off",
+				"on",
+				"once",
+				"optimize",
+				"option",
+				"rename",
+				"require",
+				"root",
+				"run_time",
+				"select",
+				"stack_size",
+				"strip",
+				"subscript",
+				"system",
+				"target",
+				"threshold",
+				"variant"
+			>>
+		ensure
+			esd_keywords_not_void: Result /= Void
+			no_void_keyword: not STRING_ARRAY_.has (Result, Void)
 		end
 
 end
