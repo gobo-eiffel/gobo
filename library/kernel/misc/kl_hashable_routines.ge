@@ -11,15 +11,6 @@ indexing
 	revision: "$Revision$"
 
 class KL_HASHABLE_ROUTINES
-#ifdef TOWER
-
-inherit
-
-	ANY
-		rename
-			hash_value as tower_hash_value
-		end
-#endif
 
 feature -- Access
 
@@ -27,14 +18,9 @@ feature -- Access
 			-- Hash code value
 		require
 			an_any_not_void: an_any /= Void
-#ifndef TOWER
 		local
 			hashable: HASHABLE
-#endif
 		do
-#ifdef TOWER
-			Result := an_any.hash_value
-#else
 			hashable ?= an_any
 			if hashable /= Void then
 				Result := hashable.hash_code
@@ -45,7 +31,6 @@ feature -- Access
 				Result := generator.hash_code
 #endif
 			end
-#endif
 		ensure
 			hash_value_positive: Result >= 0
 		end
