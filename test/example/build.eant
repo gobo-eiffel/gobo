@@ -177,12 +177,16 @@
 		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="parse"/>
 		<geant file="build.eant" target="clean" dir="parse" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="pattern"/>
+		<geant file="build.eant" target="clean" dir="pattern" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="regexp"/>
 		<geant file="build.eant" target="clean" dir="regexp" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="test"/>
 		<geant file="build.eant" target="clean" dir="test" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="time"/>
 		<geant file="build.eant" target="clean" dir="time" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="tools"/>
+		<geant file="build.eant" target="clean" dir="tools" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="xml"/>
 		<geant file="build.eant" target="clean" dir="xml" if="${do_clean}"/>
 	</target>
