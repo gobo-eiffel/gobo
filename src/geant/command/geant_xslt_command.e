@@ -213,35 +213,35 @@ feature -- Execution
 			i, nb: INTEGER
 			a_filename: STRING
 		do
-			cmd := clone ("testxslt ")
-
-			cmd.append_string (" -IN ")
-			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
-			cmd.append_string (" -XSL ")
-			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
-			cmd.append_string (" -OUT ")
-			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
-
-			cmd.append_string (" -INDENT ")
+			cmd := clone ("Xalan ")
+				-- Append option for indentation:
+			cmd.append_string (" -i ")
 			cmd := STRING_.appended_string (cmd, indent)
 
-			if format /= Void and then format.count > 0 then
-				cmd.append_string (" -")
-				cmd := STRING_.appended_string (cmd, format)
-			end
+				-- Append option for outputfile:
+			cmd.append_string (" -o ")
+			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" -PARAM ")
+				cmd.append_string (" -p ")
 				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
 				cmd.append_string (" ")
 				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
 				i := i + 1
 			end
+
+				-- Append source argument:
+			cmd.append_string (" ")
+			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
+
+				-- Append stylesheet argument:
+			cmd.append_string (" ")
+			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)

@@ -38,9 +38,21 @@ feature {NONE} -- Initialization
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			parameter_element: GEANT_DEFINE_ELEMENT
 			a_pair: DS_PAIR [STRING, STRING]
+			a_is_xalan_java: BOOLEAN
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
+			if has_attribute (Processor_attribute_name) then
+				a_value := attribute_value (Processor_attribute_name)
+				if a_value.is_equal (Processor_attribute_value_xalan_cpp) then
+					command.set_processor_xalan_cpp
+				elseif a_value.is_equal (Processor_attribute_value_xalan_java) then
+					a_is_xalan_java := True
+					command.set_processor_xalan_java
+				end
+			end
+
+				-- Handle attributes common to Xalan-CPP and Xalan-J:
 			if has_attribute (Input_filename_attribute_name) then
 				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
@@ -59,38 +71,13 @@ feature {NONE} -- Initialization
 					command.set_stylesheet_filename (a_value)
 				end
 			end
-			if has_attribute (Processor_attribute_name) then
-				a_value := attribute_value (Processor_attribute_name)
-				if a_value.is_equal (Processor_attribute_value_xalan_cpp) then
-					command.set_processor_xalan_cpp
-				elseif a_value.is_equal (Processor_attribute_value_xalan_java) then
-					command.set_processor_xalan_java
-				end
-			end
-			if has_attribute (Format_attribute_name) then
-				a_value := attribute_value (Format_attribute_name)
-				if a_value.count > 0 then
-					command.set_format (a_value)
-				end
-			end
 			if has_attribute (Indent_attribute_name) then
 				a_value := attribute_value (Indent_attribute_name)
 				if STRING_.is_integer (a_value) then
 					command.set_indent (a_value)
 				end
 			end
-			if has_attribute (Extdirs_attribute_name) then
-				a_value := attribute_value (Extdirs_attribute_name)
-				if a_value.count > 0 then
-					command.set_extdirs (a_value)
-				end
-			end
-			if has_attribute (Classpath_attribute_name) then
-				a_value := attribute_value (Classpath_attribute_name)
-				if a_value.count > 0 then
-					command.set_classpath (a_value)
-				end
-			end
+
 			parameter_elements := elements_by_name (Parameter_element_name)
 			cs := parameter_elements.new_cursor
 			from cs.start until cs.after loop
@@ -107,6 +94,29 @@ feature {NONE} -- Initialization
 				end
 				cs.forth
 			end
+
+				-- Handle attributes supported only by Xalan-J:
+			if a_is_xalan_java then
+				if has_attribute (Format_attribute_name) then
+					a_value := attribute_value (Format_attribute_name)
+					if a_value.count > 0 then
+						command.set_format (a_value)
+					end
+				end
+				if has_attribute (Extdirs_attribute_name) then
+					a_value := attribute_value (Extdirs_attribute_name)
+					if a_value.count > 0 then
+						command.set_extdirs (a_value)
+					end
+				end
+				if has_attribute (Classpath_attribute_name) then
+					a_value := attribute_value (Classpath_attribute_name)
+					if a_value.count > 0 then
+						command.set_classpath (a_value)
+					end
+				end
+			end
+
 		end
 
 feature -- Access
