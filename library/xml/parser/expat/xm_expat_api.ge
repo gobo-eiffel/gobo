@@ -425,7 +425,7 @@ feature -- Miscellaneous
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -476,11 +476,11 @@ feature -- Miscellaneous
 	exml_XML_ExpatVersion: POINTER  is
 			-- Return a string containing the version number of this expat
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
