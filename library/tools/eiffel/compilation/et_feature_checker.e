@@ -3627,11 +3627,13 @@ feature {NONE} -- Expression validity
 							a_context.wipe_out
 							report_expression
 							check_subexpression_validity (an_expression.right, a_context, formal_context)
+							if not has_fatal_error then
+								formal_context.remove_first
+								report_qualified_call_expression (a_target, formal_context, a_name, a_feature, an_actual)
+							end
 						else
+							report_qualified_call_expression (a_target, a_context, a_name, a_feature, an_actual)
 							a_context.force_first (a_type)
-						end
-						if not has_fatal_error then
-							report_qualified_call_expression (a_target, a_name, a_feature, an_actual)
 						end
 					end
 				end
@@ -4169,7 +4171,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giach_error
 							end
 						elseif not has_fatal_error then
-							report_qualified_call_instruction (a_target, a_name, a_feature, an_actuals)
+							report_qualified_call_instruction (a_target, a_context, a_name, a_feature, an_actuals)
 						end
 					else
 						if a_type = Void then
@@ -4196,14 +4198,17 @@ feature {NONE} -- Expression validity
 									a_context.wipe_out
 									report_expression
 									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
+									if not has_fatal_error then
+										formal_context.remove_first
+										report_qualified_call_expression (a_target, formal_context, a_name, a_feature, an_actuals)
+									end
 								else
+									report_qualified_call_expression (a_target, a_context, a_name, a_feature, an_actuals)
 									a_context.force_first (a_type)
 								end
 							else
+								report_qualified_call_expression (a_target, a_context, a_name, a_feature, an_actuals)
 								a_context.force_first (a_type)
-							end
-							if not has_fatal_error then
-								report_qualified_call_expression (a_target, a_name, a_feature, an_actuals)
 							end
 						end
 					end
@@ -6213,24 +6218,26 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_expression (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	report_qualified_call_expression (a_target: ET_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; 
+		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
 			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_qualified_call_instruction (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	report_qualified_call_instruction (a_target: ET_EXPRESSION; a_target_type: ET_TYPE_CONTEXT;
+		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
 			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure

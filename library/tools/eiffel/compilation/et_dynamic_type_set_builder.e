@@ -801,8 +801,8 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_expression (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	report_qualified_call_expression (a_target: ET_EXPRESSION; a_target_type: ET_TYPE_CONTEXT;
+		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call expression has been processed.
 		local
 			i, nb: INTEGER
@@ -856,8 +856,8 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_instruction (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	report_qualified_call_instruction (a_target: ET_EXPRESSION; a_target_type: ET_TYPE_CONTEXT;
+		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call instruction has been processed.
 		local
 			i, nb: INTEGER
