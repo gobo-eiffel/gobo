@@ -175,7 +175,6 @@ feature {NONE} -- Parser
 			create an_attribute.make_null
 			parser.set_dtd_callbacks (an_attribute)
 			parser.set_callbacks (callbacks_pipe (<<  
-				new_end_tag_checker,
 				new_unicode_validation,
 				an_attribute,
 				error,
