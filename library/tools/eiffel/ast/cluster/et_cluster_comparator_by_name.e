@@ -16,6 +16,9 @@ inherit
 
 	KL_COMPARATOR [ET_CLUSTER]
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -32,7 +35,7 @@ feature -- Status report
 	less_than (u, v: ET_CLUSTER): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		do
-			Result := u.name < v.name
+			Result := (STRING_.three_way_case_insensitive_comparison (u.name, v.name) = -1)
 		end
 
 end
