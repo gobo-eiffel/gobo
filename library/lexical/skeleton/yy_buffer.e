@@ -206,6 +206,17 @@ feature -- Element change
 			beginning_of_line: beginning_of_line
 		end
 
+	wipe_out is
+			-- Wipe out buffer.
+		do
+			flush
+			filled := False
+		ensure
+			wiped_out: count = 0
+			beginning_of_line: beginning_of_line
+			not_filled: not filled
+		end
+
 	compact_left is
 			-- Move unconsumed characters to the start of buffer
 			-- and make sure there is still available space at

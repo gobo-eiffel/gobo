@@ -19,7 +19,7 @@ inherit
 		rename
 			make as make_from_string
 		redefine
-			fill
+			fill, wipe_out
 		end
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
@@ -142,6 +142,16 @@ feature -- Element change
 			else
 				filled := False
 			end
+		end
+
+	wipe_out is
+			-- Wipe out buffer.
+		do
+			flush
+			filled := False
+			end_of_file := True
+		ensure then
+			end_of_file: end_of_file
 		end
 
 feature {NONE} -- Constants
