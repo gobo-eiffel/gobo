@@ -26,7 +26,7 @@ inherit
 			out
 		end
 		
-feature {ANY} -- Access
+feature -- Access
 
 	byte_index: INTEGER is
 			-- byte index of token in stream.
@@ -43,14 +43,19 @@ feature {ANY} -- Access
 		deferred
 		end
 
-feature {ANY} -- Debug
+feature -- Output
 
 	out: STRING is
 		do
-			Result := string_.concat (
-				" ln: " + row.out + " cl: " + column.out + 
-					" byte: " + byte_index.out + " -> ",
-				source.out)
+			Result := STRING_.make (40)
+			Result.append_string (" ln: ")
+			Result.append_string (row.out)
+			Result.append_string (" cl: ")
+			Result.append_string (column.out)
+			Result.append_string (" byte: ")
+			Result.append_string (byte_index.out)
+			Result.append_string (" -> ")
+			Result.append_string (source.out)
 		end
 
 invariant
