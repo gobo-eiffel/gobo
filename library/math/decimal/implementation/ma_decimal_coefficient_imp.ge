@@ -145,7 +145,7 @@ feature -- Element change
 #else
 					put ((c.code - ('0').code).to_integer_8, k)
 #endif
-					k := k+1
+					k := k + 1
 				else
 					-- Do nothing.
 				end
@@ -221,7 +221,7 @@ feature -- Comparison
 				loop
 #ifdef VE
 					local_difference := l_digits.item (index).code - l_other_digits.item (index).code 
-#else					
+#else
 					local_difference := l_digits.item (index) - l_other_digits.item (index)
 #endif
 					index := index - 1
