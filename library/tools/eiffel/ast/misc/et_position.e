@@ -103,7 +103,7 @@ feature -- Output
 		do
 			nb := line
 			if nb = no_line then
-				-- TODO.
+				-- No line specified.
 			else
 				create a_file.make (a_filename)
 				a_file.open_read
@@ -115,7 +115,7 @@ feature -- Output
 					end
 					nb := column
 					if nb = no_column then
-							-- TODO
+							-- No column specified.
 						append_line_to_string (a_file, a_string)
 						a_string.append_character ('%N')
 						a_string.append_character ('^')
