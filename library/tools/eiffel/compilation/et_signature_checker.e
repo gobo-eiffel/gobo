@@ -202,11 +202,31 @@ feature {NONE} -- Signature validity
 					-- We already checked in `check_redeclaration_validity' whether
 					-- `a_flattened_feature' was an attribute and reported
 					-- an error otherwise.
-				elseif a_type.type.is_type_expanded (current_class, universe) /= other_type.is_type_expanded (current_class, universe) then
-						-- VDRD-6 says that the types of the two attributes should
-						-- be both expanded or both non-expanded.
-					set_fatal_error
-					error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+				elseif a_type.is_type_expanded (current_class, universe) then
+					if not other_type.is_type_expanded (parent_context, universe) then
+							-- VDRD-6 says that the types of the two attributes should
+							-- be both expanded or both non-expanded.
+						set_fatal_error
+						error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+					end
+				elseif a_type.is_type_reference (current_class, universe) then
+					if not other_type.is_type_reference (parent_context, universe) then
+							-- VDRD-6 says that the types of the two attributes should
+							-- be both expanded or both non-expanded.
+						set_fatal_error
+						error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+					end
+				else
+						-- Here we don't know about the expandedness of the type:
+						-- it has to be a formal generic parameter for which we don't
+						-- know yet whether the actual generic parameter will be
+						-- expanded or not.
+					if not a_type.same_named_type (other_type, parent_context, current_class, universe) then
+							-- VDRD-6 says that the types of the two attributes should
+							-- be both expanded or both non-expanded.
+						set_fatal_error
+						error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+					end
 				end
 			end
 			an_arguments := a_flattened_feature.arguments

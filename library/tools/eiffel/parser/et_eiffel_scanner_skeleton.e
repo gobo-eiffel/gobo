@@ -345,6 +345,21 @@ feature {NONE} -- String handler
 		once
 			create Result.make_map (100000)
 			Result.set_key_equality_tester (string_equality_tester)
+				-- Needed for compatibility with 5.6.0610 (to be removed later):
+			Result.force_new (-1, tokens.capitalized_boolean_ref_name)
+			Result.force_new (-1, tokens.capitalized_character_ref_name)
+			Result.force_new (-1, tokens.capitalized_double_ref_name)
+			Result.force_new (-1, tokens.capitalized_integer_ref_name)
+			Result.force_new (-1, tokens.capitalized_integer_8_ref_name)
+			Result.force_new (-1, tokens.capitalized_integer_16_ref_name)
+			Result.force_new (-1, tokens.capitalized_integer_64_ref_name)
+			Result.force_new (-1, tokens.capitalized_pointer_ref_name)
+			Result.force_new (-1, tokens.capitalized_real_ref_name)
+			Result.force_new (-1, tokens.capitalized_wide_character_ref_name)
+			Result.force_new (-1, tokens.capitalized_numeric_name)
+			Result.force_new (-1, tokens.capitalized_comparable_name)
+			Result.force_new (-1, tokens.capitalized_part_comparable_name)
+			Result.force_new (-1, tokens.capitalized_hashable_name)
 				-- Insert basic strings in `strings'.
 			Result.force_new (-1, tokens.builtin_marker)
 			Result.force_new (-1, tokens.capitalized_any_name)

@@ -2778,6 +2778,7 @@ feature {NONE} -- Expression validity
 		local
 			a_convert_feature: ET_CONVERT_FEATURE
 			an_actuals: ET_ACTUAL_ARGUMENTS
+			a_builtin: ET_BUILTIN_CONVERT_FEATURE
 		do
 			a_convert_feature := an_expression.convert_feature
 			if a_convert_feature.is_convert_from then
@@ -2787,7 +2788,17 @@ feature {NONE} -- Expression validity
 			else
 				check_expression_validity (an_expression.expression, a_context, current_target_type, feature_impl, current_feature, current_type)
 				an_expression.set_index (an_expression.expression.index)
-				a_context.force_last (current_target_type.named_type (universe))
+				a_context.reset (current_type)
+				a_builtin ?= an_expression.convert_feature
+				if a_builtin /= Void then
+						-- Needed for compatibility with ISE 5.6.0610:
+						-- a formal generic parameter either conforms or converts to its constraint,
+						-- then the converted version can still be chained with a conformance to
+						-- `current_target_type'.
+					a_context.force_last (a_builtin.type)
+				else
+					a_context.force_last (current_target_type.named_type (universe))
+				end
 			end
 		end
 
@@ -3820,8 +3831,14 @@ feature {NONE} -- Expression validity
 										other_class := l_actual_context.base_class (universe)
 										if
 											other_class /= a_class or else
-											not l_actual_context.same_named_type (l_formal_type, l_formal_context, universe)
+											not l_actual_context.same_named_type (tokens.like_current, l_formal_context, universe)
 										then
+												-- Either the base classes of the left- and right-hand sides
+												-- are not the same, or they have different types. No need
+												-- to go further is the left- and right-hand sides have the
+												-- same types.
+												-- Left-hand side type: `l_formal_context' (same as 'like current' in context `l_formal_context')
+												-- Right-hand side type: `l_actual_context'
 											other_class.process (universe.interface_checker)
 											if other_class.interface_checked and then not other_class.has_interface_error then
 												other_feature := other_class.named_feature (a_name)
@@ -3842,7 +3859,6 @@ feature {NONE} -- Expression validity
 														a_convert_class.process (universe.feature_flattener)
 														if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
 																-- Error already reported by the feature flattener.
-															had_error := True
 															set_fatal_error
 															a_convert_feature := Void
 														end

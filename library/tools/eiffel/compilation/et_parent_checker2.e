@@ -121,7 +121,11 @@ feature {NONE} -- Parent validity
 						else
 							a_constraint := universe.any_type
 						end
-						if not an_actual.conforms_to_type (a_constraint, current_class, current_class, universe) then
+							-- Test below uses conformance of reference types for compatibility with ISE 5.6.0610.
+							-- the reference version of the actual generic parameter should conform to the
+							-- reference version of the constraint, and the actual generic parameter should
+							-- either conform or convert to the constraint (the latter condition is not checked here).
+						if not an_actual.reference_conforms_to_type (a_constraint, current_class, current_class, universe) then
 								-- The actual parameter does not conform to the
 								-- constraint of its corresponding formal parameter.
 							set_fatal_error

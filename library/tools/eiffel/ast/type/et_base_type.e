@@ -26,6 +26,9 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type,
+			reference_conforms_from_bit_type,
+			reference_conforms_from_formal_parameter_type,
+			reference_conforms_from_tuple_type,
 			resolved_formal_parameters,
 			is_valid_context_type
 		end
@@ -55,6 +58,11 @@ inherit
 			conforms_from_class_type as context_conforms_from_class_type,
 			conforms_from_formal_parameter_type as context_conforms_from_formal_parameter_type,
 			conforms_from_tuple_type as context_conforms_from_tuple_type,
+			reference_conforms_to_type as reference_context_conforms_to_type,
+			reference_conforms_from_bit_type as reference_context_conforms_from_bit_type,
+			reference_conforms_from_class_type as reference_context_conforms_from_class_type,
+			reference_conforms_from_formal_parameter_type as reference_context_conforms_from_formal_parameter_type,
+			reference_conforms_from_tuple_type as reference_context_conforms_from_tuple_type,
 			has_formal_type as context_has_formal_type,
 			has_formal_types as context_has_formal_types,
 			base_type_has_class as context_base_type_has_class,
@@ -302,7 +310,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- `a_formal' is implicitly constrained by "ANY",
 						-- so it conforms to any type that conforms to "ANY".
 					any_type := a_universe.any_type
-					Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+						-- Test below needed for compatibility with ISE 5.6.0610:
+						-- expanded types don't conform to reference types, the possibly convert to them.
+					if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context, a_universe) then
+						Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+					end
 				else
 					a_base_type := a_formal.constraint_base_type
 					if a_base_type /= Void then
@@ -310,7 +322,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- parameter, or if it is there is no cycle and
 							-- the resolved base type of this constraint has
 							-- been made available in `base_type'.
-						Result := a_base_type.conforms_to_type (Current, a_context, other_context, a_universe)
+							-- Test below needed for compatibility with ISE 5.6.0610:
+							-- expanded types don't conform to reference types, the possibly convert to them.
+						if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context, a_universe) then
+							Result := a_base_type.conforms_to_type (Current, a_context, other_context, a_universe)
+						end
 					else
 							-- There is a cycle of the form "A [G -> H, H -> G]"
 							-- in the constraint of `a_formal'. Therefore `other'
@@ -340,6 +356,100 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					-- to current class type if "ANY" conforms to it.
 				any_type := a_universe.any_class
 				Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+			end
+		end
+
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			a_base_class: ET_CLASS
+			any_type: ET_CLASS_TYPE
+		do
+			a_base_class := other.direct_base_class (a_universe)
+			if a_base_class.is_preparsed then
+				Result := reference_conforms_from_class_type (a_base_class, other_context, a_context, a_universe)
+			end
+			if not Result then
+					-- See VNCB-1 (ETL2 p.229).
+					-- "BIT N" conforms to "ANY", so "BIT N" conforms to current
+					-- class type if "ANY" conforms to it.
+				any_type := a_universe.any_class
+				Result := reference_conforms_from_class_type (any_type, other_context, a_context, a_universe)
+			end
+		end
+
+	reference_conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			an_index: INTEGER
+			a_formal: ET_FORMAL_PARAMETER
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_constraint: ET_TYPE
+			a_base_type: ET_BASE_TYPE
+			any_type: ET_CLASS_TYPE
+		do
+			an_index := other.index
+			a_formals := other_context.base_class (a_universe).formal_parameters
+			if a_formals = Void or else an_index > a_formals.count then
+					-- Internal error: does `other' type really
+					-- appear in `other_context'?
+				Result := False
+			else
+				a_formal := a_formals.formal_parameter (an_index)
+				a_constraint := a_formal.constraint
+				if a_constraint = Void then
+						-- `a_formal' is implicitly constrained by "ANY",
+						-- so it conforms to any type that conforms to "ANY".
+					any_type := a_universe.any_type
+					Result := reference_conforms_from_class_type (any_type, other_context, a_context, a_universe)
+				else
+					a_base_type := a_formal.constraint_base_type
+					if a_base_type /= Void then
+							-- The constraint of `a_formal' is not another formal
+							-- parameter, or if it is there is no cycle and
+							-- the resolved base type of this constraint has
+							-- been made available in `base_type'.
+						Result := a_base_type.reference_conforms_to_type (Current, a_context, other_context, a_universe)
+					else
+							-- There is a cycle of the form "A [G -> H, H -> G]"
+							-- in the constraint of `a_formal'. Therefore `other'
+							-- can only conform to itself.
+						Result := False
+					end
+				end
+			end
+		end
+
+	reference_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			a_base_class: ET_CLASS
+			any_type: ET_CLASS_TYPE
+		do
+			a_base_class := other.direct_base_class (a_universe)
+			if a_base_class.is_preparsed then
+				Result := reference_conforms_from_class_type (a_base_class, other_context, a_context, a_universe)
+			end
+			if not Result then
+					-- Tuple_type conforms to "ANY", so Tuple_type conforms
+					-- to current class type if "ANY" conforms to it.
+				any_type := a_universe.any_class
+				Result := reference_conforms_from_class_type (any_type, other_context, a_context, a_universe)
 			end
 		end
 
@@ -610,6 +720,56 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_from_tuple_type (other, other_context, Current, a_universe)
+		end
+
+feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_context_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of current context conform to
+			-- the reference version of `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		do
+			Result := reference_conforms_to_type (other, other_context, Current, a_universe)
+		end
+
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_context_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		do
+			Result := reference_conforms_from_bit_type (other, other_context, Current, a_universe)
+		end
+
+	reference_context_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		do
+			Result := reference_conforms_from_class_type (other, other_context, Current, a_universe)
+		end
+
+	reference_context_conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		do
+			Result := reference_conforms_from_formal_parameter_type (other, other_context, Current, a_universe)
+		end
+
+	reference_context_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		do
+			Result := reference_conforms_from_tuple_type (other, other_context, Current, a_universe)
 		end
 
 invariant

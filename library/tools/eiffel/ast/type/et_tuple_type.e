@@ -23,6 +23,8 @@ inherit
 			same_base_tuple_type,
 			conforms_from_class_type,
 			conforms_from_tuple_type,
+			reference_conforms_from_class_type,
+			reference_conforms_from_tuple_type,
 			tuple_keyword, actual_parameters,
 			resolved_formal_parameters
 		end
@@ -322,6 +324,65 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			a_parameters: like actual_parameters
+			other_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			if other = Current and other_context = a_context then
+				Result := True
+			else
+				a_parameters := actual_parameters
+				other_parameters := other.actual_parameters
+				if a_parameters = Void then
+					Result := True
+				elseif other_parameters = Void then
+					Result := a_parameters.is_empty
+				else
+					Result := other_parameters.tuple_conforms_to_types (a_parameters, a_context, other_context, a_universe)
+				end
+			end
+		end
+
+feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of current type appearing in `a_context'
+			-- conform to the reference version `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			else
+				Result := other.reference_conforms_from_tuple_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			other_base_class: ET_CLASS
+		do
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.none_class then
+					-- "NONE" conforms to any tuple type since it is a reference type.
+				Result := True
+			end
+		end
+
+	reference_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local

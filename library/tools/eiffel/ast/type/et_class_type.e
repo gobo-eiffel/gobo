@@ -20,6 +20,7 @@ inherit
 			same_named_class_type,
 			same_base_class_type,
 			conforms_from_class_type,
+			reference_conforms_from_class_type,
 			resolved_formal_parameters
 		end
 
@@ -432,7 +433,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				if other_base_class = a_universe.none_class then
 						-- "NONE" conforms to any class type that is not expanded.
 					Result := True
-				else
+						-- Test below needed for compatibility with ISE 5.6.0610:
+						-- expanded types don't conform to reference types, the possibly convert to them.
+				elseif not other.is_expanded then
 					other_base_class.process (a_universe.ancestor_builder)
 						-- If there was an error building the ancestors of
 						-- `other_base_class', this error has already been
@@ -449,6 +452,94 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						end
 						Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_universe)
 					end
+				end
+			end
+		end
+
+feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of current type appearing in `a_context'
+			-- conform to the reference version `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			other_base_class: ET_CLASS
+		do
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
+					-- "*UNKNOWN*" conforms to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
+				Result := True
+			else
+				Result := other.reference_conforms_from_class_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		local
+			other_base_class: ET_CLASS
+			an_ancestor: ET_BASE_TYPE
+			other_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
+					-- "*UNKNOWN*" conforms to no type, not even itself.
+				Result := False
+			elseif other = Current and other_context = a_context then
+				Result := True
+			elseif eiffel_class = other_base_class then
+				if not other.is_generic then
+					Result := not is_generic
+				elseif not is_generic then
+					Result := False
+				else
+					other_parameters := other.actual_parameters
+					check
+						is_generic: actual_parameters /= Void
+						other_is_generic: other_parameters /= Void
+					end
+					if
+						eiffel_class = a_universe.routine_class or
+						eiffel_class = a_universe.procedure_class or
+						eiffel_class = a_universe.function_class or
+						eiffel_class = a_universe.predicate_class
+					then
+							-- SmartEiffel's agent type conformance.
+						-- Result := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+					else
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+					end
+				end
+			elseif other_base_class = a_universe.none_class then
+					-- "NONE" conforms to any class type that is not expanded.
+				Result := True
+			else
+				other_base_class.process (a_universe.ancestor_builder)
+					-- If there was an error building the ancestors of
+					-- `other_base_class', this error has already been
+					-- reported, so we assume here that everything went
+					-- fine in order to catch other possible errors. Of
+					-- course we might catch errors which are not errors
+					-- but just consequences of the error which occurred
+					-- when building the ancestors, but this is OK.
+				an_ancestor := other_base_class.ancestor (Current, a_universe)
+				if an_ancestor /= Void then
+					other_parameters := other.actual_parameters
+					if other_parameters /= Void then
+						an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
+					end
+					Result := an_ancestor.reference_conforms_to_type (Current, a_context, other_context, a_universe)
 				end
 			end
 		end

@@ -186,6 +186,8 @@ feature {NONE} -- Constraint validity
 			a_formals: ET_FORMAL_PARAMETER_LIST
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			a_class: ET_CLASS
+			l_formal: ET_FORMAL_PARAMETER
+			l_actual: ET_TYPE
 		do
 			a_class := a_type.direct_base_class (universe)
 			a_class.process (universe.eiffel_parser)
@@ -217,8 +219,21 @@ feature {NONE} -- Constraint validity
 				else
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
+						l_actual := an_actuals.type (i)
+						l_formal := a_formals.formal_parameter (i)
+						if l_formal.is_expanded then
+							if not l_actual.is_type_expanded (current_class, universe) then
+								error_handler.report_gvtcg5b_error (current_class, l_actual, l_formal)
+								set_fatal_error
+							end
+						elseif l_formal.is_reference then
+							if not l_actual.is_type_reference (current_class, universe) then
+								error_handler.report_gvtcg5a_error (current_class, l_actual, l_formal)
+								set_fatal_error
+							end
+						end
 						internal_call := True
-						an_actuals.type (i).process (Current)
+						l_actual.process (Current)
 						internal_call := False
 						i := i + 1
 					end

@@ -41,6 +41,10 @@ inherit
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type,
+			reference_conforms_from_bit_type,
+			reference_conforms_from_class_type,
+			reference_conforms_from_formal_parameter_type,
+			reference_conforms_from_tuple_type,
 			resolved_formal_parameters,
 			is_valid_context_type
 		end
@@ -1204,7 +1208,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 								if a_base_type /= Void then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-									Result := a_constraint.conforms_to_type (Current, a_context.root_context, other_context, a_universe)
+										-- Test below needed for compatibility with ISE 5.6.0610:
+										-- expanded types don't conform to reference types, the possibly convert to them.
+									if other.is_type_reference (other_context, a_universe) and is_type_reference (a_context.root_context, a_universe) then
+										Result := a_constraint.reference_conforms_to_type (Current, a_context.root_context, other_context, a_universe)
+									end
 								else
 										-- There is a cycle. If `other' is "G" and current
 										-- type is "K", we still want to return True when
@@ -1284,6 +1292,230 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					Result := False
 				else
 					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.root_context, a_universe)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			end
+		end
+
+feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of current type appearing in `a_context'
+			-- conform to the reference version `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance.)
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := other.reference_conforms_from_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
+				else
+					Result := an_actual.reference_conforms_to_type (other, other_context, a_context.root_context, a_universe)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			end
+		end
+
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
+
+	reference_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance.)
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- No type other than itself conforms to
+						-- a formal generic type.
+					Result := False
+				else
+					Result := an_actual.reference_conforms_from_bit_type (other, other_context, a_context.root_context, a_universe)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			end
+		end
+
+	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance.)
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- No type other than itself conforms to
+						-- a formal generic type.
+					Result := False
+				else
+					Result := an_actual.reference_conforms_from_class_type (other, other_context, a_context.root_context, a_universe)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			end
+		end
+
+	reference_conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance.)
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			an_index, other_index: INTEGER
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formal: ET_FORMAL_PARAMETER
+			a_constraint: ET_TYPE
+			a_base_type: ET_BASE_TYPE
+			visited: ARRAY [BOOLEAN]
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					an_index := a_formal_type.index
+					other_index := other.index
+					if an_index = an_index then
+						Result := True
+					else
+							-- Check for constraints of the form "[G -> H,
+							-- H -> K, K]" where "G" conforms to "K".
+							-- (Note that since `a_context' and `other_context'
+							-- are both root contexts, and knowing that their
+							-- root contexts are the same, it does not matter
+							-- whether we operate in `a_context' or `other_context'
+							-- from now on.)
+						a_class := a_context.root_context.direct_base_class (a_universe)
+						a_formals := a_class.formal_parameters
+						if a_formals /= Void and then other_index <= a_formals.count then
+							a_formal := a_formals.formal_parameter (other_index)
+							a_constraint := a_formal.constraint
+							if a_constraint /= Void then
+									-- We know that there is a constraint.
+								a_base_type := a_formal.constraint_base_type
+								if a_base_type /= Void then
+										-- There is no cycle of the form
+										-- "[G -> G]" or "[G -> H, H -> G]".
+									Result := a_constraint.reference_conforms_to_type (Current, a_context.root_context, other_context, a_universe)
+								else
+										-- There is a cycle. If `other' is "G" and current
+										-- type is "K", we still want to return True when
+										-- "[G -> H, H -> K, K -> G]" but False (and
+										-- without entering an infinite loop) when
+										-- "[G -> H, H -> G, K]".
+									a_formal_type ?= a_constraint
+									if a_formal_type /= Void then
+										from
+											create visited.make (1, a_formals.count)
+											visited.put (True, other_index)
+											other_index := a_formal_type.index
+											Result := an_index = other_index
+										until
+											Result or visited.item (other_index)
+										loop
+											visited.put (True, other_index)
+											if other_index <= a_formals.count then
+												a_formal := a_formals.formal_parameter (other_index)
+												a_formal_type ?= a_formal.constraint
+												if a_formal_type /= Void then
+													other_index := a_formal_type.index
+													Result := an_index = other_index
+												else
+														-- Internal error: we know that there is a cycle
+														-- of the form "[G -> H, H -> G]", so the constraint
+														-- has to be a formal parameter.
+													Result := False
+												end
+											else
+													-- Internal error: does `other' type really
+													-- appear in `other_context'?
+												Result := False
+											end
+										end
+									else
+											-- Internal error: we know that there is a cycle
+											-- of the form "[G -> H, H -> G]", so the constraint
+											-- has to be a formal parameter.
+										Result := False
+									end
+								end
+							end
+						else
+								-- Internal error: does `other' type really
+								-- appear in `other_context'?
+							Result := False
+						end
+					end
+				else
+					Result := an_actual.reference_conforms_from_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			end
+		end
+
+	reference_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the reference version of `other' type appearing in `other_context'
+			-- conform to the reference version of current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance.)
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- No type other than itself conforms to
+						-- a formal generic type.
+					Result := False
+				else
+					Result := an_actual.reference_conforms_from_tuple_type (other, other_context, a_context.root_context, a_universe)
 				end
 			else
 					-- Internal error: does current type really

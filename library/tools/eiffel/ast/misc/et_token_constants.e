@@ -266,6 +266,120 @@ feature -- Class names
 			unknown_class_name_not_void: Result /= Void
 		end
 
+feature -- Class names (used for compatibility with 5.6.0610, to be removed later)
+
+	boolean_ref_class_name: ET_CLASS_NAME is
+			-- "BOOLEAN_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_boolean_ref_name)
+		ensure
+			boolean_ref_class_name_not_void: Result /= Void
+		end
+
+	character_ref_class_name: ET_CLASS_NAME is
+			-- "CHARACTER_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_character_ref_name)
+		ensure
+			character_ref_class_name_not_void: Result /= Void
+		end
+
+	wide_character_ref_class_name: ET_CLASS_NAME is
+			-- "WIDE_CHARACTER_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_wide_character_ref_name)
+		ensure
+			wide_character_ref_class_name_not_void: Result /= Void
+		end
+
+	integer_ref_class_name: ET_CLASS_NAME is
+			-- "INTEGER_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_ref_name)
+		ensure
+			integer_class_name_not_void: Result /= Void
+		end
+
+	integer_8_ref_class_name: ET_CLASS_NAME is
+			-- "INTEGER_8_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_8_ref_name)
+		ensure
+			integer_8_ref_class_name_not_void: Result /= Void
+		end
+
+	integer_16_ref_class_name: ET_CLASS_NAME is
+			-- "INTEGER_16_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_16_ref_name)
+		ensure
+			integer_16_ref_class_name_not_void: Result /= Void
+		end
+
+	integer_64_ref_class_name: ET_CLASS_NAME is
+			-- "INTEGER_64_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_ref_name)
+		ensure
+			integer_64_ref_class_name_not_void: Result /= Void
+		end
+
+	real_ref_class_name: ET_CLASS_NAME is
+			-- "REAL_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_real_ref_name)
+		ensure
+			real_ref_class_name_not_void: Result /= Void
+		end
+
+	double_ref_class_name: ET_CLASS_NAME is
+			-- "DOUBLE_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_double_ref_name)
+		ensure
+			double_ref_class_name_not_void: Result /= Void
+		end
+
+	pointer_ref_class_name: ET_CLASS_NAME is
+			-- "POINTER_REF" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_pointer_ref_name)
+		ensure
+			pointer_ref_class_name_not_void: Result /= Void
+		end
+
+	numeric_class_name: ET_CLASS_NAME is
+			-- "NUMERIC" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_numeric_name)
+		ensure
+			numeric_class_name_not_void: Result /= Void
+		end
+
+	comparable_class_name: ET_CLASS_NAME is
+			-- "COMPARABLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_comparable_name)
+		ensure
+			comparable_class_name_not_void: Result /= Void
+		end
+
+	part_comparable_class_name: ET_CLASS_NAME is
+			-- "PART_COMPARABLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_part_comparable_name)
+		ensure
+			part_comparable_class_name_not_void: Result /= Void
+		end
+
+	hashable_class_name: ET_CLASS_NAME is
+			-- "HASHABLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_hashable_name)
+		ensure
+			hashable_class_name_not_void: Result /= Void
+		end
+
 feature -- Feature names
 
 	area_feature_name: ET_FEATURE_NAME is
@@ -1231,6 +1345,24 @@ feature -- Keyword and symbol names
 
 	unknown_name: STRING is "***UNKNOWN_NAME***"
 			-- Unknown name
+
+feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be removed later)
+
+	capitalized_boolean_ref_name: STRING is "BOOLEAN_REF"
+	capitalized_character_ref_name: STRING is "CHARACTER_REF"
+	capitalized_double_ref_name: STRING is "DOUBLE_REF"
+	capitalized_integer_ref_name: STRING is "INTEGER_REF"
+	capitalized_integer_8_ref_name: STRING is "INTEGER_8_REF"
+	capitalized_integer_16_ref_name: STRING is "INTEGER_16_REF"
+	capitalized_integer_64_ref_name: STRING is "INTEGER_64_REF"
+	capitalized_pointer_ref_name: STRING is "POINTER_REF"
+	capitalized_real_ref_name: STRING is "REAL_REF"
+	capitalized_wide_character_ref_name: STRING is "WIDE_CHARACTER_REF"
+	capitalized_numeric_name: STRING is "NUMERIC"
+	capitalized_comparable_name: STRING is "COMPARABLE"
+	capitalized_part_comparable_name: STRING is "PART_COMPARABLE"
+	capitalized_hashable_name: STRING is "HASHABLE"
+		-- Eiffel class names
 
 feature -- Infix and prefix feature names
 
