@@ -16,6 +16,7 @@ inherit
 
 	KL_TEST_CASE
 	KL_SHARED_PLATFORM
+	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Test
 
@@ -1960,6 +1961,8 @@ feature -- Test
 			-- Test feature `hash_code'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
+			s: STRING
+			c: CHARACTER
 		do
 			!! a_string.make_from_string ("foobar")
 			a_string.append_code (978)
@@ -1967,12 +1970,29 @@ feature -- Test
 			!! a_string2.make_from_string ("foobar")
 			a_string2.append_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
+			s := "foobar"
+			!! a_string.make_from_string (clone (s))
+			assert ("same_string1", a_string.same_string (s))
+			assert_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
+			s := ""
+			!! a_string.make_from_string (clone (s))
+			assert ("same_string2", a_string.same_string (s))
+			assert_equal ("same_hash_code2", s.hash_code, a_string.hash_code)
+			s := "foo"
+			c := INTEGER_.to_character (Platform.Maximum_character_code)
+			s.append_character (c)
+			s.append_string ("bar")
+			!! a_string.make_from_string (clone (s))
+			assert ("same_string3", a_string.same_string (s))
+			assert_equal ("same_hash_code3", s.hash_code, a_string.hash_code)
 		end
 
 	test_hash_code2 is
 			-- Test feature `hash_code'.
 		local
 			a_string, a_string2: UC_STRING
+			s: STRING
+			c: CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			a_string.append_code (978)
@@ -1980,6 +2000,21 @@ feature -- Test
 			!UC_UTF8_STRING! a_string2.make_from_string ("foobar")
 			a_string2.append_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
+			s := "foobar"
+			!UC_UTF8_STRING! a_string.make_from_string (clone (s))
+			assert ("same_string1", a_string.same_string (s))
+			assert_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
+			s := ""
+			!UC_UTF8_STRING! a_string.make_from_string (clone (s))
+			assert ("same_string2", a_string.same_string (s))
+			assert_equal ("same_hash_code2", s.hash_code, a_string.hash_code)
+			s := "foo"
+			c := INTEGER_.to_character (Platform.Maximum_character_code)
+			s.append_character (c)
+			s.append_string ("bar")
+			!UC_UTF8_STRING! a_string.make_from_string (clone (s))
+			assert ("same_string3", a_string.same_string (s))
+			assert_equal ("same_hash_code3", s.hash_code, a_string.hash_code)
 		end
 
 	test_hash_code3 is
@@ -1987,6 +2022,8 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 			utf8: UC_UTF8_STRING
+			s: STRING
+			c: CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			utf8 ?= a_string
@@ -1998,6 +2035,27 @@ feature -- Test
 			assert ("utf8_2", utf8 /= Void)
 			utf8.append_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
+			s := "foobar"
+			!UC_UTF8_STRING! a_string.make_from_string (clone (s))
+			utf8 ?= a_string
+			assert ("uc_string3", utf8 /= Void)
+			assert ("same_string1", utf8.same_string (s))
+			assert_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
+			s := ""
+			!UC_UTF8_STRING! a_string.make_from_string (clone (s))
+			utf8 ?= a_string
+			assert ("uc_string4", utf8 /= Void)
+			assert ("same_string2", utf8.same_string (s))
+			assert_equal ("same_hash_code2", s.hash_code, a_string.hash_code)
+			s := "foo"
+			c := INTEGER_.to_character (Platform.Maximum_character_code)
+			s.append_character (c)
+			s.append_string ("bar")
+			!UC_UTF8_STRING! a_string.make_from_string (clone (s))
+			utf8 ?= a_string
+			assert ("uc_string5", utf8 /= Void)
+			assert ("same_string3", utf8.same_string (s))
+			assert_equal ("same_hash_code3", s.hash_code, a_string.hash_code)
 		end
 
 	test_same_string1 is
