@@ -22,17 +22,17 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (val: STRING) is
+	make (a_value: STRING) is
 			-- Establish invariant
 		require
-			value_not_void: val /= Void
+			value_not_void: a_value /= Void
 		do
 			make_atomic_value
-			value := clone (val)
+			value := clone (a_value)
 		ensure
-			value_set: STRING_.same_string (value, val)
+			value_set: STRING_.same_string (value, a_value)
 		end
 
 feature -- Access
@@ -44,45 +44,21 @@ feature -- Access
 		end
 
 	type: INTEGER is
-			-- Type;
-			-- The data model requires zero or one xs:QNames.
-			-- To convert, call type_name (Result) if Result > 0
+			-- Type
 		do
 			Result := String_type
 		end
 	
 	item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
-			-- All expression return sequences, in general;
-			-- This method determines the type of the items within the
-			-- sequence, assuming that (a) this is known in advance,
-			-- and (b) it is the same for all items in the sequence.
+			--Determine the data type, if possible;
 		do
 			Result := String_type
 		end
 
-	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value of the expression;
-			-- This returns `False' if the value is the empty sequence,
-			-- a zero-length string, a number equal to zero, or the boolean
-			-- `False'. Otherwise it returns `True'.
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Effective boolean value
 		do
 			Result := value.count > 0
-		end
-
-
-feature -- Status report
-
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indent (level), "string (%"")
-			a_string := STRING_.appended_string (a_string, string_value)
-			a_string := STRING_.appended_string (a_string, "%")")
-			std.error.put_string (a_string)
-			std.error.put_new_line
 		end
 			
 feature -- Comparison
@@ -98,10 +74,24 @@ feature -- Comparison
 			end
 		end
 
-feature -- Conversions
+feature -- Status report
 
-	convert_to_type (required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
-			-- Convert `Current' to `required_type'
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (a_level), "string (%"")
+			a_string := STRING_.appended_string (a_string, string_value)
+			a_string := STRING_.appended_string (a_string, "%")")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
+
+feature -- Conversion
+
+	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+			-- Convert `Current' to `a_required_type'
 		do
 			-- TODO
 		end

@@ -23,6 +23,14 @@ feature -- Access
 			-- TODO
 		end
 
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		do
+			-- TODO - awaiting final decision on numeric structure
+		end
+
 feature -- Status_report
 
 	is_nan: BOOLEAN is
@@ -35,14 +43,6 @@ feature -- Status_report
 			-- Is value integral?
 		do
 			-- TODO
-		end
-
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
-		do
-			-- TODO - awaiting final decision on numeric structure
 		end
 	
 end

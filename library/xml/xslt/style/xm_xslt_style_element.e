@@ -19,7 +19,7 @@ feature -- Status setting
 		deferred
 		end
 
-	allocate_slots (exp: XM_XPATH_EXPRESSION) is
+	allocate_slots (an_expr: XM_XPATH_EXPRESSION) is
 			-- TODO
 		do
 		end

@@ -22,10 +22,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (exp: XM_XPATH_EXPRESSION) is
+	make (an_expression: XM_XPATH_EXPRESSION) is
 			-- TODO
 		do
-			base_expression := exp
+			base_expression := an_expression
 		end
 
 feature -- Access
@@ -34,28 +34,28 @@ feature -- Access
 			-- Base expression
 
 	item_type: INTEGER is
-			--Determine the data type of the expression, if possible
+			-- Determine the data type of the expression, if possible
 		do
 			-- TODO
 		end
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "Sort into Document Order")
+			a_string := STRING_.appended_string (indent (a_level), "Sort into Document Order")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			base_expression.display (level + 1, pool)
+			base_expression.display (a_level + 1, a_pool)
 		end
 
 feature -- Optimization
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions
 		do
 			-- TODO
 		end

@@ -31,13 +31,13 @@ feature -- Access
 
 feature -- Element change
 
-	register_reference (ref: XM_XPATH_BINDING_REFERENCE) is
-			-- Register `ref' as a reference to this variable for fix-up.
+	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+			-- Register `a_reference' as a reference to this variable for fix-up.
 		local
-			seq: XM_XPATH_SEQUENCE_TYPE
+			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			create seq.make_any_sequence
-			ref.set_static_type (seq, Void, 0)
+			create a_sequence_type.make_any_sequence
+			a_reference.set_static_type (a_sequence_type, Void, 0)
 		end
 
 end

@@ -25,22 +25,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (p1, p2: XM_XSLT_PATTERN) is
+	make (a_pattern_one, a_pattern_two: XM_XSLT_PATTERN) is
 			-- Establish invariant.
 		require
-				pattern_one_not_void: p1 /= Void
-				pattern_two_not_void: p2 /= Void
+				pattern_one_not_void: a_pattern_one /= Void
+				pattern_two_not_void: a_pattern_two /= Void
 		do
-			left_hand_side := p1
-			right_hand_side := p2
-			if p1.item_type = p2.item_type then
-				node_type := p1.item_type
+			left_hand_side := a_pattern_one
+			right_hand_side := a_pattern_two
+			if a_pattern_one.item_type = a_pattern_two.item_type then
+				node_type := a_pattern_one.item_type
 			else
 				node_type := Any_node
 			end
 		ensure
-				pattern_one_set: left_hand_side = p1
-				pattern_two_set: right_hand_side = p2
+				pattern_one_set: left_hand_side = a_pattern_one
+				pattern_two_set: right_hand_side = a_pattern_two
 		end
 
 feature -- Access
@@ -57,12 +57,12 @@ feature -- Access
 
 feature -- Status setting
 
-	set_original_text (text: STRING) is
+	set_original_text (a_text_string: STRING) is
 			-- Set original text of the pattern.
 		do
-			original_text := clone (text)
-			left_hand_side.set_original_text (text)
-			right_hand_side.set_original_text (text)
+			original_text := clone (a_text_string)
+			left_hand_side.set_original_text (a_text_string)
+			right_hand_side.set_original_text (a_text_string)
 		end
 
 feature -- Analysis
@@ -74,12 +74,12 @@ feature -- Analysis
 			create {XM_XSLT_UNION_PATTERN} Result.make (left_hand_side.simplify, right_hand_side.simplify)
 		end
 
-	type_check (context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
 		do
-			create {XM_XSLT_UNION_PATTERN} Result.make (left_hand_side.type_check (context), right_hand_side.type_check (context))
+			create {XM_XSLT_UNION_PATTERN} Result.make (left_hand_side.type_check (a_context), right_hand_side.type_check (a_context))
 		end
 
 feature -- Matching

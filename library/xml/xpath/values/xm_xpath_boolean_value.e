@@ -36,20 +36,13 @@ feature -- Access
 			-- Value of expression
 
 	item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
-			-- All expression return sequences, in general;
-			-- This method determines the type of the items within the
-			-- sequence, assuming that (a) this is known in advance,
-			-- and (b) it is the same for all items in the sequence.
+			--Determine the data type of the expression, if possible
 		do
 			Result := Boolean_type
 		end
 
 	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value of the expression;
-			-- This returns `False' if the value is the empty sequence,
-			-- a zero-length string, a number equal to zero, or the boolean
-			-- `False'. Otherwise it returns `True'.
+			-- Effective boolean value of the expression
 		do
 			Result := value
 		end
@@ -64,20 +57,6 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
-
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indent (level), "boolean (")
-			a_string := STRING_.appended_string (a_string, string_value)
-			a_string := STRING_.appended_string (a_string, ")")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-		end
-	
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -91,17 +70,31 @@ feature -- Comparison
 			end
 		end
 
+feature -- Status report
+
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (a_level), "boolean (")
+			a_string := STRING_.appended_string (a_string, string_value)
+			a_string := STRING_.appended_string (a_string, ")")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
+	
 feature -- Conversions
 	
-	convert_to_type (required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
-			-- Convert `Current' to `required_type'
+	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+			-- Convert `Current' to `a_required_type'
 		local
 			a_value: INTEGER
 			an_integer: XM_XPATH_INTEGER_VALUE
 		do
 			if value then a_value := 1 end
 			inspect
-				required_type
+				a_required_type
 
 			when Boolean_type  then
 				Result := Current
@@ -120,7 +113,7 @@ feature -- Conversions
 
 			when Decimal_type..Double_type then
 				create an_integer.make (a_value)
-				Result := an_integer.convert_to_type (required_type)
+				Result := an_integer.convert_to_type (a_required_type)
 
 			when String_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)

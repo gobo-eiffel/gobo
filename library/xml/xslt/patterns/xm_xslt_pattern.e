@@ -73,14 +73,14 @@ feature -- Status setting
 			system_id_set: system_id /= Void and then STRING_.same_string (system_id, a_system_id)
 		end
 
-	set_original_text (text: STRING) is
+	set_original_text (a_text_string: STRING) is
 			-- Set original text of the pattern.
 		require
-			original_text_not_void: text /= Void
+			original_text_not_void: a_text_string /= Void
 		do
-			original_text := clone (text)
+			original_text := clone (a_text_string)
 		ensure
-			original_text_set: original_text /= Void and then STRING_.same_string (original_text, text)
+			original_text_set: original_text /= Void and then STRING_.same_string (original_text, a_text_string)
 		end
 
 	set_line_number (a_number: INTEGER) is
@@ -91,7 +91,7 @@ feature -- Status setting
 			line_number_set: line_number = a_number
 		end
 			
-feature -- Analysis
+feature -- Optimization
 
 	simplify: XM_XSLT_PATTERN is
 			-- Simplify a pattern by applying any context-independent optimizations;
@@ -102,12 +102,12 @@ feature -- Analysis
 			pattern_not_void: Result /= Void
 		end
 
-	type_check (context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
 		require
-			context_not_void: context /= Void
+			context_not_void: a_context /= Void
 		do
 			Result := Current
 		ensure
@@ -127,7 +127,7 @@ feature -- Matching
 		deferred
 		end
 
-feature {XM_XSLT_PATTERN} -- Implementation
+feature {XM_XSLT_PATTERN} -- Local
 
 	internal_matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;

@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		item_type: INTEGER is
+	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
 			Result := Empty_item
 		end
 
-	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Yields an iterator to iterate over the values of a sequence
 		do
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
@@ -50,28 +50,6 @@ feature -- Access
 			Result := False
 		end
 
-feature -- Evaluation
-
-	evaluate_as_string (context: XM_XPATH_CONTEXT): STRING is
-			-- Evaluate an expression as a String
-			-- This function must only be called in contexts where it is known
-			-- that the expression will return a single string (or where an empty sequence
-			-- is to be treated as a zero-length string). Implementations should not attempt to convert
-			-- the result to a string, other than converting () to "". This routine is used mainly to
-			-- evaluate expressions produced by compiling an attribute value template.
-		do
-			Result := ""
-		end
-
-feature -- Status report
-
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		do
-			std.error.put_string (STRING_.appended_string (indent (level), "()"))
-			std.error.put_new_line
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -81,6 +59,23 @@ feature -- Comparison
 		do
 			other2 ?= other
 			Result := other2 /= Void
+		end
+
+feature -- Status report
+
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		do
+			std.error.put_string (STRING_.appended_string (indent (a_level), "()"))
+			std.error.put_new_line
+		end
+
+feature -- Evaluation
+
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+			-- Evaluate `Current' as a String
+		do
+			Result := ""
 		end
 
 end

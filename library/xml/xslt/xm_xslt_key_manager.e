@@ -14,7 +14,7 @@ class XM_XSLT_KEY_MANAGER
 
 feature -- Access
 
-	select_by_key (key_fingerprint: INTEGER; document: XM_XPATH_DOCUMENT; key_value: XM_XPATH_STRING_VALUE; a_controller: XM_XSLT_CONTROLLER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	select_by_key (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_STRING_VALUE; a_controller: XM_XSLT_CONTROLLER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 		require
 			-- TODO
 		do

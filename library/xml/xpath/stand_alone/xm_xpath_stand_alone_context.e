@@ -51,19 +51,19 @@ feature -- Access
 			Result := Null_prefix_index
 		end
 
-	uri_for_prefix (xml_prefix: STRING): STRING is
+	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix;
 			-- The default namespace is NOT used when the prefix is empty.
 		do
-			Result := namespaces.item (xml_prefix)
+			Result := namespaces.item (an_xml_prefix)
 		end
 
 feature -- Status report
 
-	is_declared_prefix (xml_prefix: STRING): BOOLEAN is
-			-- Is `xml_prefix' allocated to a namespace?
+	is_declared_prefix (an_xml_prefix: STRING): BOOLEAN is
+			-- Is `an_xml_prefix' allocated to a namespace?
 		do
-			Result := namespaces.has (xml_prefix)
+			Result := namespaces.has (an_xml_prefix)
 		end
 
 feature -- Element change
@@ -74,12 +74,12 @@ feature -- Element change
 			--TODO
 		end
 
-	bind_variable (fingerprint: INTEGER) is
+	bind_variable (a_fingerprint: INTEGER) is
 			-- Bind variable to it's declaration.
 		local
 			var: XM_XPATH_VARIABLE
 		do
-			var := variables.item (fingerprint)
+			var := variables.item (a_fingerprint)
 			if var /= Void then
 				was_last_variable_bound := True
 				internal_last_bound_variable := var
@@ -87,7 +87,7 @@ feature -- Element change
 			end
 		end
 
-	bind_function (qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Identify a function appearing in an expression.
 		do
 			-- TODO

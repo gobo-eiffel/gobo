@@ -195,43 +195,43 @@ feature -- Initialization
 
 feature -- Access
 
-	type_name (type: INTEGER): STRING is
-		-- Name of `type'
+	type_name (a_type: INTEGER): STRING is
+		-- Name of `a_type'
 		require
-			type_in_range: type > 0 and type <= 255
+			type_in_range: a_type > 0 and a_type <= 255
 		do
-			if type_names.valid_index (type) then
-				Result := type_names.item (type)
+			if type_names.valid_index (a_type) then
+				Result := type_names.item (a_type)
 				if Result = Void then
-					create Result.make_from_string (type.out)
+					create Result.make_from_string (a_type.out)
 				end
 			else
-				create Result.make_from_string (type.out)
+				create Result.make_from_string (a_type.out)
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	type_code (name: STRING): INTEGER is
-			-- Type code associated with `name'
+	type_code (a_name: STRING): INTEGER is
+			-- Type code associated with `a_name'
 		require
-			valid_name: name /= Void and then is_type_name_valid (name)
+			valid_name: a_name /= Void and then is_type_name_valid (a_name)
 		do
-			Result := type_table.item (name)
+			Result := type_table.item (a_name)
 		ensure
 			valid_type_code: is_valid_type (Result)
 		end
 
-	primitive_type (type: INTEGER): INTEGER is
+	primitive_type (a_type: INTEGER): INTEGER is
 			-- For an atomic type, get the primitive type (treating NUMBER as a primitive type)
 		require
-			valid_type: is_valid_type (type) and type /= Any_item
+			valid_type: is_valid_type (a_type) and a_type /= Any_item
 		local
 			s: INTEGER
 		do
-			s := super_type (type)
+			s := super_type (a_type)
 			if s = Atomic_type then
-				Result := type
+				Result := a_type
 			else
 				Result := primitive_type (s)
 			end
@@ -264,59 +264,59 @@ feature -- Access
 			in_range: is_valid_type (Result)
 		end
 
-	named_type (uri: STRING; local_name: STRING): INTEGER is
+	named_type (a_uri: STRING; a_local_name: STRING): INTEGER is
 			-- Type with a given expanded name
 		require
-			local_name_not_void: local_name /= Void
-			uri_not_void: uri /= Void
-			valid_qname: is_qname_valid_type (uri, local_name)
+			local_name_not_void: a_local_name /= Void
+			uri_not_void: a_uri /= Void
+			valid_qname: is_qname_valid_type (a_uri, a_local_name)
 		local
-			qname: STRING
+			a_qname: STRING
 		do
-			if STRING_.same_string (uri, Xml_schema_uri) or else STRING_.same_string (uri, Xml_schema_datatypes_uri) then
-				create qname.make_from_string ("xs:")
-			elseif STRING_.same_string (uri, Xpath_defined_datatypes_uri) then
-				create qname.make_from_string ("xdt:")
-			elseif STRING_.same_string (uri, Gexslt_eiffel_type_uri) then
-				create qname.make_from_string ("eiffel:")
+			if STRING_.same_string (a_uri, Xml_schema_uri) or else STRING_.same_string (a_uri, Xml_schema_datatypes_uri) then
+				create a_qname.make_from_string ("xs:")
+			elseif STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
+				create a_qname.make_from_string ("xdt:")
+			elseif STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+				create a_qname.make_from_string ("eiffel:")
 			else
 				Exceptions.raise ("URI is not recognized")	
 			end
-			qname.append_string (local_name)
-			Result := type_code (qname)
+			a_qname.append_string (a_local_name)
+			Result := type_code (a_qname)
 		ensure
 			valid_type_code: is_valid_type (Result)			
 		end
 
-	system_type (name: STRING): INTEGER is
+	system_type (a_name: STRING): INTEGER is
 			-- Name of a system type;
-			-- I.e. `name' is a keyword rather than a QName;
+			-- I.e. `a_name' is a keyword rather than a QName;
 			-- These include the node kinds, such as element,
 			--  the generic typrs such as node() and item(),
 			--  and the pseudo-type empty()
 		require
-			name_not_void: name /= Void
-			system_type_name: is_system_type (name)
+			name_not_void: a_name /= Void
+			system_type_name: is_system_type (a_name)
 		do
-			if STRING_.same_string (name, "item") then
+			if STRING_.same_string (a_name, "item") then
 				Result := Any_item
-			elseif STRING_.same_string (name, "empty") then
+			elseif STRING_.same_string (a_name, "empty") then
 				Result := Empty_item
-			elseif STRING_.same_string (name, "node") then
+			elseif STRING_.same_string (a_name, "node") then
 				Result := Any_node
-			elseif STRING_.same_string (name, "document") then
+			elseif STRING_.same_string (a_name, "document") then
 				Result := Document_node
-			elseif STRING_.same_string (name, "element") then
+			elseif STRING_.same_string (a_name, "element") then
 				Result := Element_node
-			elseif STRING_.same_string (name, "attribute") then
+			elseif STRING_.same_string (a_name, "attribute") then
 				Result := Attribute_node
-			elseif STRING_.same_string (name, "text") then
+			elseif STRING_.same_string (a_name, "text") then
 				Result := Text_node
-			elseif STRING_.same_string (name, "comment") then
+			elseif STRING_.same_string (a_name, "comment") then
 				Result := Comment_node
-			elseif STRING_.same_string (name, "processing-instruction") then
+			elseif STRING_.same_string (a_name, "processing-instruction") then
 				Result := Processing_instruction_node
-			elseif STRING_.same_string (name, "namespace") then
+			elseif STRING_.same_string (a_name, "namespace") then
 				Result := Namespace_node
 			else
 				Exceptions.raise ("Not a system type")
@@ -327,126 +327,126 @@ feature -- Access
 
 feature -- Status report
 	
-	is_type_name_valid (name: STRING): BOOLEAN is
+	is_type_name_valid (a_name: STRING): BOOLEAN is
 		require
-			name_not_void: name /= Void
+			name_not_void: a_name /= Void
 		do
-			Result := type_table.has (name)
+			Result := type_table.has (a_name)
 		end
 
-	is_qname_valid_type (uri: STRING; local_name: STRING): BOOLEAN is
-			-- Is the expanded name specified by `uri' and `local_name' a registered type?
+	is_qname_valid_type (a_uri: STRING; a_local_name: STRING): BOOLEAN is
+			-- Is the expanded name specified by `a_uri' and `a_local_name' a registered type?
 		require
-			uri_not_void: uri /= Void
-			local_name_not_void: local_name /= Void
+			uri_not_void: a_uri /= Void
+			local_name_not_void: a_local_name /= Void
 		local
-			qname: STRING
+			a_qname: STRING
 		do
 			Result := True
-			if STRING_.same_string (uri, Xml_schema_uri) or else STRING_.same_string (uri, Xml_schema_datatypes_uri) then
-				create qname.make_from_string ("xs:")
-				qname.append_string (local_name)
-			elseif STRING_.same_string (uri, Xpath_defined_datatypes_uri) then
-				create qname.make_from_string ("xdt:")
-			elseif STRING_.same_string (uri, Gexslt_eiffel_type_uri) then
-				create qname.make_from_string ("eiffel:")
+			if STRING_.same_string (a_uri, Xml_schema_uri) or else STRING_.same_string (a_uri, Xml_schema_datatypes_uri) then
+				create a_qname.make_from_string ("xs:")
+				a_qname.append_string (a_local_name)
+			elseif STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
+				create a_qname.make_from_string ("xdt:")
+			elseif STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+				create a_qname.make_from_string ("eiffel:")
 			else
 				Result := False
 			end
 			if Result = True then
-				Result := is_type_name_valid (qname)
+				Result := is_type_name_valid (a_qname)
 			end
 		end
 
-	is_system_type (name: STRING): BOOLEAN is
-			-- Is `name' a system type
+	is_system_type (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a system type
 		require
-			name_not_void: name /= Void
+			name_not_void: a_name /= Void
 		do
-			if STRING_.same_string (name, "item") then
+			if STRING_.same_string (a_name, "item") then
 				Result := True
-			elseif STRING_.same_string (name, "empty") then
+			elseif STRING_.same_string (a_name, "empty") then
 				Result := True
-			elseif STRING_.same_string (name, "node") then
+			elseif STRING_.same_string (a_name, "node") then
 				Result := True
-			elseif STRING_.same_string (name, "document") then
+			elseif STRING_.same_string (a_name, "document") then
 				Result := True
-			elseif STRING_.same_string (name, "element") then
+			elseif STRING_.same_string (a_name, "element") then
 				Result := True
-			elseif STRING_.same_string (name, "attribute") then
+			elseif STRING_.same_string (a_name, "attribute") then
 				Result := True
-			elseif STRING_.same_string (name, "text") then
+			elseif STRING_.same_string (a_name, "text") then
 				Result := True
-			elseif STRING_.same_string (name, "comment") then
+			elseif STRING_.same_string (a_name, "comment") then
 				Result := True
-			elseif STRING_.same_string (name, "processing-instruction") then
+			elseif STRING_.same_string (a_name, "processing-instruction") then
 				Result := True
-			elseif STRING_.same_string (name, "namespace") then
+			elseif STRING_.same_string (a_name, "namespace") then
 				Result := True
 			else
 				Result := False
 			end
 		end
 
-	is_atomic_type (type: INTEGER): BOOLEAN is
-			-- Is `type' atomic?
+	is_atomic_type (a_type: INTEGER): BOOLEAN is
+			-- Is `a_type' atomic?
 		require
-			positive_type: type > 0
+			positive_type: a_type > 0
 		do
-			Result := is_sub_type (type, Atomic_type)
+			Result := is_sub_type (a_type, Atomic_type)
 		end
 	
-	is_node_type (type: INTEGER): BOOLEAN is
+	is_node_type (a_type: INTEGER): BOOLEAN is
 			-- `True' if the item type is node() or a subtype of node()
 		require
-			positive_type: type > 0
+			positive_type: a_type > 0
 		do
-			Result := type <= Maximum_node
+			Result := a_type <= Maximum_node
 		end
 	
-	is_valid_type (type: INTEGER): BOOLEAN is
-			-- Is `type' a registered type code?
+	is_valid_type (a_type: INTEGER): BOOLEAN is
+			-- Is `a_type' a registered type code?
 		require
-			in_range: type > 0 and type <= 255
+			in_range: a_type > 0 and a_type <= 255
 		do
-			Result := type_names.item (type) /= Void
+			Result := type_names.item (a_type) /= Void
 		end
 
-	is_sub_type (sub_type: INTEGER; super: INTEGER): BOOLEAN is
-			-- Is `sub_type' a descendant of `super'?
+	is_sub_type (a_sub_type: INTEGER; a_super_type: INTEGER): BOOLEAN is
+			-- Is `a_sub_type' a descendant of `a_super_type'?
 		require
-			valid_super_type: is_valid_type (super)
-			valid_sub_type: is_valid_type (sub_type)
+			valid_super_type: is_valid_type (a_super_type)
+			valid_sub_type: is_valid_type (a_sub_type)
 		local
 			s: INTEGER
 		do
-			if sub_type = super then
+			if a_sub_type = a_super_type then
 				Result := True
-			elseif super = Any_item then
+			elseif a_super_type = Any_item then
 				Result := True
-			elseif sub_type = Any_item then
+			elseif a_sub_type = Any_item then
 				Result := False
-			elseif sub_type = Untyped_type then
+			elseif a_sub_type = Untyped_type then
 				Result := False
-			elseif sub_type = Empty_item then
+			elseif a_sub_type = Empty_item then
 				Result := True -- an empty sequence can satisfy any required item type
 			else
-				s := super_type (sub_type)
-				Result := is_sub_type (s, super)
+				s := super_type (a_sub_type)
+				Result := is_sub_type (s, a_super_type)
 			end
 		end
 
-	is_promotable (source_type: INTEGER; target_type: INTEGER): BOOLEAN is
-			-- Can `source_type' be numerically promoted to `target_type?
+	is_promotable (a_source_type: INTEGER; a_target_type: INTEGER): BOOLEAN is
+			-- Can `a_source_type' be numerically promoted to `a_target_type?
 			--  (e.g. xs:integer is promotable to xs:double)
 		require
-			valid_source_type: is_valid_type (source_type)
-			valid_target_type: is_valid_type (target_type)
+			valid_a_source_type: is_valid_type (a_source_type)
+			valid_a_target_type: is_valid_type (a_target_type)
 		do
-			if is_sub_type (source_type, Decimal_type) then
-				Result := target_type = Float_type or else target_type = Double_type
-			elseif is_sub_type (source_type, Float_type) then
-				Result := target_type = Double_type
+			if is_sub_type (a_source_type, Decimal_type) then
+				Result := a_target_type = Float_type or else a_target_type = Double_type
+			elseif is_sub_type (a_source_type, Float_type) then
+				Result := a_target_type = Double_type
 			end
 		end
 
@@ -674,50 +674,50 @@ feature {NONE} -- Implementation
 			create Result.make (255)
 		end
 
-	define_builtin_type (type: INTEGER; name: STRING) is
+	define_builtin_type (a_type: INTEGER; a_name: STRING) is
 			-- Add a type to the table of built-in types
 			-- TODO changes needed for user-defined types
 		require
-			valid_name: name /= Void and then (name.substring_index ("xs:", 1) > 0 or else  name.substring_index ("xdt:", 1) > 0 or else  name.substring_index ("eiffel:", 1) > 0)
-			type_in_range: type > 0 and type <= 255
+			valid_name: a_name /= Void and then (a_name.substring_index ("xs:", 1) > 0 or else  a_name.substring_index ("xdt:", 1) > 0 or else  a_name.substring_index ("eiffel:", 1) > 0)
+			type_in_range: a_type > 0 and a_type <= 255
 		do
-			type_names.put (name, type)
-			type_table.put (type, name)
+			type_names.put (a_name, a_type)
+			type_table.put (a_type, a_name)
 		ensure
-			type_in_table: type_table.item (name) = type
-			type_listed: STRING_.same_string (type_names.item (type), name)
+			type_in_table: type_table.item (a_name) = a_type
+			type_listed: STRING_.same_string (type_names.item (a_type), a_name)
 		end
 
-	define_type  (type: INTEGER; name: STRING) is
+	define_type  (a_type: INTEGER; a_name: STRING) is
 			-- Register a system type
 		require
-			valid_name: name /= Void and then name.substring_index ("xs:", 1) = 0 and  name.substring_index ("xdt:", 1) = 0 and  name.substring_index ("eiffel:", 1) = 0
-			type_in_range: type > 0 and type <= 255
+			valid_name: a_name /= Void and then a_name.substring_index ("xs:", 1) = 0 and  a_name.substring_index ("xdt:", 1) = 0 and  a_name.substring_index ("eiffel:", 1) = 0
+			type_in_range: a_type > 0 and a_type <= 255
 		do
-			type_names.put (name, type)
-			type_table.put (type, name)
+			type_names.put (a_name, a_type)
+			type_table.put (a_type, a_name)
 		ensure
-			type_in_table: type_table.item (name) = type
-			type_listed: STRING_.same_string (type_names.item (type), name)
+			type_in_table: type_table.item (a_name) = a_type
+			type_listed: STRING_.same_string (type_names.item (a_type), a_name)
 		end
 
-	define_sub_type  (super: INTEGER; sub_type: INTEGER) is
+	define_sub_type  (a_super_type: INTEGER; a_sub_type: INTEGER) is
 			-- Register a type inheritance relationship
 		require
-			valid_super_type: is_valid_type (super)
-			valid_sub_type: is_valid_type (sub_type)
+			valid_super_type: is_valid_type (a_super_type)
+			valid_sub_type: is_valid_type (a_sub_type)
 		do
-			hierarchy.put (super, sub_type)
+			hierarchy.put (a_super_type, a_sub_type)
 		ensure
-			relationship_defined: super_type (sub_type) = super
+			relationship_defined: super_type (a_sub_type) = a_super_type
 		end
 
-	super_type (sub_type: INTEGER): INTEGER is
-			-- Super-type for `sub_type'
+	super_type (a_sub_type: INTEGER): INTEGER is
+			-- Super-type for `a_sub_type'
 		require
-			valid_sub_type: is_valid_type (sub_type)
+			valid_sub_type: is_valid_type (a_sub_type)
 		do
-			Result := hierarchy.item (sub_type)
+			Result := hierarchy.item (a_sub_type)
 		ensure
 			in_range: is_valid_type (Result)
 		end

@@ -62,34 +62,19 @@ feature -- Status setting
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression;
-			-- This performs any static optimization 
-			--  (by rewriting the expression as a different expression);
-			-- The default implementation does nothing.
+			-- Simplify `Current'
 		do
 			Result := Current
 		end
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
-			-- This checks statically that the operands of the expression have the correct type;
-			-- If necessary it generates code to do run-time type checking or type conversion;
-			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
-			-- This routine is called after all references to functions and variables have been resolved
-			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions
 		do
 			Result := Current
 		end
 
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
-			-- The offer will be accepted if the subexpression is not dependent on
-			-- the factors (e.g. the context item) identified in the PromotionOffer.
-			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
-			-- such as constant values and variable references where promotion would give no performance
-			-- advantage. This method is always called at compile time.
 		do
 			Result := Current
 		end

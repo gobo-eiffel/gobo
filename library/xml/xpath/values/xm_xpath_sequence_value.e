@@ -29,22 +29,22 @@ feature -- Access
 		require
 			position_strictly_positive: p > 0
 		local
-			iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
-			counter: INTEGER
+			a_counter: INTEGER
 		do
 			from
-				iter := iterator (Void)
-				counter := 1
+				an_iterator := iterator (Void)
+				a_counter := 1
 			until
-				counter > p or else iter.after
+				a_counter > p or else an_iterator.after
 			loop
-				iter.forth
-				an_item := iter.item_for_iteration
-				if counter = p then
+				an_iterator.forth
+				an_item := an_iterator.item_for_iteration
+				if a_counter = p then
 					Result := an_item
 				else
-					counter := counter + 1
+					a_counter := a_counter + 1
 				end
 			end
 		ensure
@@ -53,28 +53,28 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
-			iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			a_string := STRING_.appended_string (indent (level), "sequence of ")
+			a_string := STRING_.appended_string (indent (a_level), "sequence of ")
 			a_string := STRING_.appended_string (a_string, type_name (item_type))
 			a_string := STRING_.appended_string (a_string, " (")
 			from
-				iter := iterator (Void)
+				an_iterator := iterator (Void)
 					check
-						before: iter.before
+						before: an_iterator.before
 					end
-				iter.forth
+				an_iterator.forth
 			until
-				iter.after
+				an_iterator.after
 			loop
-				std.error.put_string (indent (level + 1))
-				std.error.put_string (iter.item_for_iteration.string_value)
+				std.error.put_string (indent (a_level + 1))
+				std.error.put_string (an_iterator.item_for_iteration.string_value)
 				std.error.put_new_line
-				iter.forth				
+				an_iterator.forth				
 			end
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
@@ -83,14 +83,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-		evaluate_item (context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+		evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate an expression as a single item
 		local
-			iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			iter := iterator (context)
-			if not iter.before then
-				Result := iter.item_for_iteration
+			an_iterator := iterator (a_context)
+			if not an_iterator.before then
+				Result := an_iterator.item_for_iteration
 			end
 		end
 

@@ -69,14 +69,14 @@ feature -- Status setting
 			finished: is_constructed
 		end
 
-feature -- Analysis
+feature -- Optimization
 
 	simplify: XM_XSLT_PATTERN is
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		local
-			a_location_pattern, result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
-			filter_expression: XM_XPATH_EXPRESSION
+			a_location_pattern, a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
+			a_filter_expression: XM_XPATH_EXPRESSION
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
@@ -86,45 +86,45 @@ feature -- Analysis
 				Result.set_system_id (system_id)
 				Result.set_line_number (line_number)
 			else
-				result_pattern := clone (Current)
+				a_result_pattern := clone (Current)
 				
 				-- Simplify each component of the pattern
 				
 				if parent_pattern /= Void then
-					result_pattern.set_parent_pattern (parent_pattern.simplify)
-					a_location_pattern ?= result_pattern.parent_pattern
+					a_result_pattern.set_parent_pattern (parent_pattern.simplify)
+					a_location_pattern ?= a_result_pattern.parent_pattern
 					if a_location_pattern /= Void then
-						result_pattern.set_uses_current (a_location_pattern.uses_current)
+						a_result_pattern.set_uses_current (a_location_pattern.uses_current)
 					end
 				elseif ancestor_pattern /= Void then
-					result_pattern.set_ancestor_pattern (ancestor_pattern.simplify)
-					a_location_pattern ?= result_pattern.ancestor_pattern
+					a_result_pattern.set_ancestor_pattern (ancestor_pattern.simplify)
+					a_location_pattern ?= a_result_pattern.ancestor_pattern
 					if a_location_pattern /= Void then
-						result_pattern.set_uses_current (a_location_pattern.uses_current)
+						a_result_pattern.set_uses_current (a_location_pattern.uses_current)
 					end
 				end
 				
 				if filters /= Void then
 					from
-						result_pattern.filters.start
+						a_result_pattern.filters.start
 					variant
-						result_pattern.filters.count + 1 - result_pattern.filters.index
+						a_result_pattern.filters.count + 1 - a_result_pattern.filters.index
 					until
-						result_pattern.filters.after
+						a_result_pattern.filters.after
 					loop
-						filter_expression := result_pattern.filters.item_for_iteration.simplify
-						result_pattern.filters.put (filter_expression, result_pattern.filters.index)
-						if filter_expression.depends_upon_current_item then
-							result_pattern.set_uses_current (True)
+						a_filter_expression := a_result_pattern.filters.item_for_iteration.simplify
+						a_result_pattern.filters.put (a_filter_expression, a_result_pattern.filters.index)
+						if a_filter_expression.depends_upon_current_item then
+							a_result_pattern.set_uses_current (True)
 						end
-						result_pattern.filters.forth
+						a_result_pattern.filters.forth
 					end
 				end
-				Result := result_pattern
+				Result := a_result_pattern
 			end
 		end
 
-	type_check (context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
@@ -133,80 +133,80 @@ feature -- Analysis
 			an_integer: XM_XPATH_INTEGER_VALUE
 			a_position_range: XM_XPATH_POSITION_RANGE
 			is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
-			expression_context: XM_XSLT_EXPRESSION_CONTEXT
-			result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
-			filter_expression: XM_XPATH_EXPRESSION
+			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
+			a_filter_expression: XM_XPATH_EXPRESSION
 		do
-			result_pattern := clone (Current)
+			a_result_pattern := clone (Current)
 
 			-- Analyze each component of the pattern
 
 			if parent_pattern /= Void then
-				result_pattern.set_parent_pattern (parent_pattern.type_check (context))
+				a_result_pattern.set_parent_pattern (parent_pattern.type_check (a_context))
 			elseif ancestor_pattern /= Void then
-				result_pattern.set_ancestor_pattern (ancestor_pattern.type_check (context))
+				a_result_pattern.set_ancestor_pattern (ancestor_pattern.type_check (a_context))
 			end
 
 			if filters /= Void then
 				from
-					result_pattern.filters.start
+					a_result_pattern.filters.start
 				variant
-					result_pattern.filters.count + 1 - result_pattern.filters.index
+					a_result_pattern.filters.count + 1 - a_result_pattern.filters.index
 				until
-					result_pattern.filters.after
+					a_result_pattern.filters.after
 				loop
-					filter_expression := result_pattern.filters.item_for_iteration.analyze (context)
+					a_filter_expression := a_result_pattern.filters.item_for_iteration.analyze (a_context)
 					
 					-- If the last filter is constant true, remove it.
 					
-					a_boolean ?= filter_expression
+					a_boolean ?= a_filter_expression
 					if a_boolean /= Void and then a_boolean.value then
 						do_nothing
 					else
-						result_pattern.filters.put (filter_expression, result_pattern.filters.index)
+						a_result_pattern.filters.put (a_filter_expression, a_result_pattern.filters.index)
 					end
-					expression_context ?= context
+					an_expression_context ?= a_context
 						check
-							expression_context_not_void: expression_context /= Void
+							an_expression_context_not_void: an_expression_context /= Void
 						end
-					expression_context.style_element.allocate_slots (filter_expression)
+					an_expression_context.style_element.allocate_slots (a_filter_expression)
 					
-					result_pattern.filters.forth
+					a_result_pattern.filters.forth
 				end
 			end
 
 			-- See if it's an element pattern with a single positional predicate of [1]
 
-			if node_test.item_type = Element_node and then result_pattern.filters.count = 1 then
-				filter_expression := result_pattern.filters.item (1)
-				an_integer ?= filter_expression
-				a_position_range ?= filter_expression
+			if node_test.item_type = Element_node and then a_result_pattern.filters.count = 1 then
+				a_filter_expression := a_result_pattern.filters.item (1)
+				an_integer ?= a_filter_expression
+				a_position_range ?= a_filter_expression
 				if (an_integer /= Void and then an_integer.value = 1)
 					or else (a_position_range /= Void and then
 								a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
-					result_pattern.set_first_element_pattern (True)
-					result_pattern.set_special_filter (True)
-					result_pattern.set_filters (Void)
+					a_result_pattern.set_first_element_pattern (True)
+					a_result_pattern.set_special_filter (True)
+					a_result_pattern.set_filters (Void)
 				end
 			end
 
 			-- See if it's an element pattern with a single positional predicate
 			-- of [position()=last()]
 
-			if not result_pattern.is_first_element_pattern and then node_test.item_type = Element_node and then result_pattern.filters.count = 1 then
-				is_last_expression ?= result_pattern.filters.item (1)
+			if not a_result_pattern.is_first_element_pattern and then node_test.item_type = Element_node and then a_result_pattern.filters.count = 1 then
+				is_last_expression ?= a_result_pattern.filters.item (1)
 				if is_last_expression /= Void and then is_last_expression.condition then
-					result_pattern.set_last_element_pattern (True)
-					result_pattern.set_special_filter (True)
-					result_pattern.set_filters (Void)
+					a_result_pattern.set_last_element_pattern (True)
+					a_result_pattern.set_special_filter (True)
+					a_result_pattern.set_filters (Void)
 				end
 			end
 
-			if result_pattern.is_positional then
-				result_pattern.set_equivalent_expression (make_equivalent_expression.analyze (context))
-				result_pattern.set_special_filter (True)
+			if a_result_pattern.is_positional then
+				a_result_pattern.set_equivalent_expression (make_equivalent_expression.analyze (a_context))
+				a_result_pattern.set_special_filter (True)
 			end
-			Result := result_pattern
+			Result := a_result_pattern
 		end
 
 feature -- Matching
@@ -214,15 +214,15 @@ feature -- Matching
 	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		local
-			saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
 		do
 			if uses_current then
-				saved_iterator := a_controller.current_iterator
-				create singleton_iterator.make (a_node)
-				a_controller.set_current_iterator (singleton_iterator)
+				a_saved_iterator := a_controller.current_iterator
+				create a_singleton_iterator.make (a_node)
+				a_controller.set_current_iterator (a_singleton_iterator)
 				Result := internal_matches (a_node, a_controller)
-				a_controller.set_current_iterator (saved_iterator)
+				a_controller.set_current_iterator (a_saved_iterator)
 			else
 				Result := internal_matches (a_node, a_controller)
 			end
@@ -230,11 +230,11 @@ feature -- Matching
 
 feature -- Element change
 
-	add_filter (filter_expression: XM_XPATH_EXPRESSION) is
-			-- Add `filter_expression' to the pattern (whilst under construction).
+	add_filter (a_filter_expression: XM_XPATH_EXPRESSION) is
+			-- Add `a_filter_expression' to the pattern (whilst under construction).
 		require
 			under_construction: not is_constructed
-			valid_filter: filter_expression /= Void
+			valid_filter: a_filter_expression /= Void
 		do
 			if filters = Void then
 				create filters.make (3)
@@ -243,7 +243,7 @@ feature -- Element change
 			if not filters.extendible (1) then
 				filters.resize (2 * filters.count)
 			end
-			filters.put_last (filter_expression)
+			filters.put_last (a_filter_expression)
 		ensure
 			filters_present: filters /= Void
 		end
@@ -290,7 +290,7 @@ feature -- Element change
 			set: equivalent_expression = exp
 		end
 
-feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Implementation
+feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 	
 	filters: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Filters applied to `node_test`
@@ -353,7 +353,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Implementation
 			-- Does `Current' use positional filters?
 		local
 			type: INTEGER
-			filter_expression: XM_XPATH_EXPRESSION
+			a_filter_expression: XM_XPATH_EXPRESSION
 		do
 			if filters /= Void then
 				from
@@ -363,13 +363,13 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Implementation
 				until
 					filters.after
 				loop
-					filter_expression := filters.item_for_iteration
-					type := filter_expression.item_type
+					a_filter_expression := filters.item_for_iteration
+					type := a_filter_expression.item_type
 					if type = Double_type or else type = Decimal_type
 						or else type = Integer_type or else type = Float_type
 						or else type = Atomic_type then
 						Result := True
-					elseif filter_expression.depends_upon_position or else filter_expression.depends_upon_last then
+					elseif a_filter_expression.depends_upon_position or else a_filter_expression.depends_upon_last then
 						Result := True
 					end
 					filters.forth
@@ -400,18 +400,18 @@ feature {XM_XSLT_PATTERN} -- Implementation
 	internal_matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node
 		local
-			the_parent, an_ancestor, another_node: XM_XPATH_NODE
-			enumerator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
-			nsv: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			new_context: XM_XPATH_CONTEXT
+			a_parent, an_ancestor, another_node: XM_XPATH_NODE
+			an_enumerator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+			a_nsv: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_new_context: XM_XPATH_CONTEXT
 			finished: BOOLEAN
 		do
 			if node_test.matches_node (a_node.item_type, a_node.fingerprint, Any_item) then
 				if parent_pattern /= Void then
-					the_parent := a_node.parent
-					if the_parent /= Void then
-						if parent_pattern.internal_matches (the_parent, a_controller) then
+					a_parent := a_node.parent
+					if a_parent /= Void then
+						if parent_pattern.internal_matches (a_parent, a_controller) then
 							if ancestor_pattern /= Void then
 								an_ancestor := a_node.parent
 								from
@@ -427,39 +427,39 @@ feature {XM_XSLT_PATTERN} -- Implementation
 								if an_ancestor /= Void then
 									if is_special_filter then
 										if is_first_element_pattern then
-											enumerator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, node_test)
-											Result := enumerator.after
+											an_enumerator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, node_test)
+											Result := an_enumerator.after
 										elseif is_last_element_pattern then
-											enumerator := a_node.new_axis_iterator_with_node_test (Following_sibling_axis, node_test)
-											Result := enumerator.after
+											an_enumerator := a_node.new_axis_iterator_with_node_test (Following_sibling_axis, node_test)
+											Result := an_enumerator.after
 										elseif equivalent_expression /= Void then
 
 											-- For a positional pattern, we do it the hard way: test whether
 											-- `a_node' is a member of the nodeset obtained by evaluating the
 											-- equivalent expression
 
-											new_context := a_controller.new_xpath_context
-											create singleton_iterator.make (a_node)
-											new_context.set_current_iterator (singleton_iterator)
-											nsv := equivalent_expression.iterator (new_context)
+											a_new_context := a_controller.new_xpath_context
+											create a_singleton_iterator.make (a_node)
+											a_new_context.set_current_iterator (a_singleton_iterator)
+											a_nsv := equivalent_expression.iterator (a_new_context)
 											from
 												finished := False
-												nsv.forth
+												a_nsv.forth
 											until
-												finished or else nsv.after
+												finished or else a_nsv.after
 											loop
-												another_node ?= nsv.item_for_iteration
+												another_node ?= a_nsv.item_for_iteration
 												if another_node /= Void and then another_node.is_same_node (a_node) then
 													Result := True
 													finished := True
 												end
-												nsv.forth
+												a_nsv.forth
 											end
 										end
 									elseif filters /= Void then
-										new_context := a_controller.new_xpath_context
-										create singleton_iterator.make (a_node)
-										new_context.set_current_iterator (singleton_iterator)
+										a_new_context := a_controller.new_xpath_context
+										create a_singleton_iterator.make (a_node)
+										a_new_context.set_current_iterator (a_singleton_iterator)
 
 										-- It's a non-positional filter, so we can handle each node separately
 
@@ -471,7 +471,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 										until
 											finished or else filters.after
 										loop
-											if not filters.item_for_iteration.effective_boolean_value (new_context)  then
+											if not filters.item_for_iteration.effective_boolean_value (a_new_context)  then
 												finished := True
 												Result := False
 											end

@@ -27,14 +27,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (type: INTEGER; card: INTEGER) is
+	make (a_type: INTEGER; a_cardinality: INTEGER) is
 			-- Create a specific sequence
 		require
-			valid_cardinality: is_valid_required_cardinality (card)
+			valid_cardinality: is_valid_required_cardinality (a_cardinality)
 		do
-			primary_type := type
+			primary_type := a_type
 			content_type := Any_item
-			set_cardinality (card)
+			set_cardinality (a_cardinality)
 		end
 
 	make_any_sequence is

@@ -34,17 +34,17 @@ feature -- Status report
 
 feature -- Parsers
 
-	parse_pattern (pattern_text: STRING; env: XM_XPATH_STATIC_CONTEXT) is
-			-- Parse `pattern_text', which represents an XSLT pattern
+	parse_pattern (a_pattern_text: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Parse `a_pattern_text', which represents an XSLT pattern
 		require
-			pattern_text_not_void: pattern_text /= Void
-			static_context_not_void: env /= Void
+			pattern_text_not_void: a_pattern_text /= Void
+			static_context_not_void: a_context /= Void
 		local
 			s: STRING
 		do
-			environment := env
+			environment := a_context
 			create tokenizer.make
-			tokenizer.tokenize (pattern_text)
+			tokenizer.tokenize (a_pattern_text)
 			is_parse_error := False
 			parse_union_pattern
 
@@ -60,7 +60,7 @@ feature -- Parsers
 			static_context_not_void: environment /= Void
 		end
 
-feature {NONE} -- Pattern parsers
+feature {NONE} -- Implementation
 
 	parse_union_pattern is
 			-- Parse a Union Pattern;
@@ -425,20 +425,18 @@ feature {NONE} -- Pattern parsers
 		end
 
 
-	parse_pattern_step (principal_node_type: INTEGER) is
+	parse_pattern_step (a_principal_node_type: INTEGER) is
 			-- Parse a pattern step (after any axis name or @)
 		local
 			step: XM_XSLT_LOCATION_PATH_PATTERN
 			node_test: XM_XSLT_NODE_TEST
 		do
 			create step
-			-- node_test := parse_node_test (principal_node_type)
+			-- node_test := parse_node_test (a_principal_node_type)
 			-- TODO
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies last_parsed_pattern_step /= Void
 		end
-
-feature {NONE} -- Implementation
 
 	internal_last_parsed_pattern: XM_XSLT_PATTERN
 			-- Last sucessfully parsed pattern

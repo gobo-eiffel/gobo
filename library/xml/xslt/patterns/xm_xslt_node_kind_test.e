@@ -30,12 +30,12 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (node_type: INTEGER) is
+	make (a_node_type: INTEGER) is
 			-- Establish invariant
 		do
-			kind := node_type
+			kind := a_node_type
 		end
 
 feature -- Access

@@ -51,16 +51,16 @@ feature -- Access
 			Result := Element_node
 		end
 
-feature -- Analysis
+feature -- Optimization
 
-	type_check (context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
 			-- Type-check the pattern;
 		local
-			id_pattern: XM_XSLT_ID_PATTERN
+			an_id_pattern: XM_XSLT_ID_PATTERN
 		do
-			id_pattern := clone (Current)
-			id_pattern.set_expression (id_expression.analyze (context))
-			Result := id_pattern
+			an_id_pattern := clone (Current)
+			an_id_pattern.set_expression (id_expression.analyze (a_context))
+			Result := an_id_pattern
 		end
 
 feature -- Matching
@@ -68,35 +68,35 @@ feature -- Matching
 	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		local
-			doc: XM_XPATH_DOCUMENT
-			id_value: XM_XPATH_STRING_VALUE
-			id, ids: STRING
-			splitter: ST_SPLITTER
+			a_doc: XM_XPATH_DOCUMENT
+			an_id_value: XM_XPATH_STRING_VALUE
+			an_id, ids: STRING
+			a_splitter: ST_SPLITTER
 			strings:  DS_LIST [STRING]
-			element: XM_XPATH_ELEMENT
+			an_element: XM_XPATH_ELEMENT
 			finished: BOOLEAN
 		do
 			if a_node.item_type = Element_node then
-				doc := a_node.document_root
-				if doc = Void then
+				a_doc := a_node.document_root
+				if a_doc = Void then
 					Result := False
 				else
-					id_value ?= id_expression.evaluate_item (a_controller.new_xpath_context)
-					if id_value = Void then
+					an_id_value ?= id_expression.evaluate_item (a_controller.new_xpath_context)
+					if an_id_value = Void then
 						Result := False						
 					else
-						ids := id_value.string_value
-						create splitter.make
-						strings := splitter.split (ids)
+						ids := an_id_value.string_value
+						create a_splitter.make
+						strings := a_splitter.split (ids)
 							check
 								more_than_zero_ids: strings.count > 0
 							end
 						if strings.count = 1 then
-							element := doc.select_id (ids)
-							if element = Void then
+							an_element := a_doc.select_id (ids)
+							if an_element = Void then
 								Result := False
 							else
-								Result := element.is_same_node (a_node)
+								Result := an_element.is_same_node (a_node)
 							end
 						else
 							from
@@ -107,9 +107,9 @@ feature -- Matching
 							until
 								finished or else strings.after
 							loop
-								id := strings.item_for_iteration
-								element := doc.select_id (id)
-								if element /= Void and then element.is_same_node (a_node) then
+								an_id := strings.item_for_iteration
+								an_element := a_doc.select_id (an_id)
+								if an_element /= Void and then an_element.is_same_node (a_node) then
 									Result := True
 									finished := True
 								end
@@ -121,16 +121,16 @@ feature -- Matching
 			end
 		end
 
-feature {XM_XSLT_ID_PATTERN} -- Implementation
+feature {XM_XSLT_ID_PATTERN} -- Local
 
-	set_expression (exp: XM_XPATH_EXPRESSION) is
+	set_expression (an_expr: XM_XPATH_EXPRESSION) is
 			-- Set `id_expression'.
 		require
-			id_expression_not_void: exp /= Void
+			id_expression_not_void: an_expr /= Void
 		do
-			id_expression := exp
+			id_expression := an_expr
 		ensure
-			id_expression_set: id_expression = exp
+			id_expression_set: id_expression = an_expr
 		end
 
 feature {NONE} -- Implementation
