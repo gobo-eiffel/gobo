@@ -278,12 +278,9 @@
 			</element>
 			<optional>
 				<element name="arguments">
-					<text/>
 					<oneOrMore>
 						<element name="argument"><text/></element>
-						<text/>
 					</oneOrMore>
-					<text/>
 				</element>
 			</optional>
 		</element>
