@@ -1,0 +1,14 @@
+2001-07-02    <majkel.kretschmar@epost.de>
+
+
+
+	* uc_character_ref.e: added `as_hexadecimal' and `and
+
+	as_character'. modified `out' so it can print characters greater
+
+	than 0xffff in hexadecimal representation. references to
+
+	character's maximum code not longer hard wired, using now platform.
+
+
+
