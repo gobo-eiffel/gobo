@@ -158,6 +158,31 @@ feature -- Status report
 			Result := current_class.is_creation_exported_to (name, a_class)
 		end
 
+	is_directly_exported_to (a_class: ET_CLASS): BOOLEAN is
+			-- Does `a_class' appear in the list of clients of current feature?
+			-- This is different from `is_exported_to' where `a_class' can
+			-- be a descendant of a class appearing in the list of clients.
+			-- Note: The use of 'direct' in the name of this feature has not
+			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := clients.has (a_class)
+		end
+
+	is_creation_directly_exported_to (a_class: ET_CLASS): BOOLEAN is
+			-- Is current feature listed in the creation clauses
+			-- of `current_class' and directly exported to `a_class'?
+			-- This is different from `is_creation_exported_to' where `a_class'
+			-- can be a descendant of a class appearing in the list of clients.
+			-- Note: The use of 'direct' in the name of this feature has not
+			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := current_class.is_creation_directly_exported_to (name, a_class)
+		end
+
 feature -- Comparison
 
 	same_version (other: ET_FEATURE): BOOLEAN is
