@@ -4,33 +4,38 @@ indexing
 
 	description:
 
-		""
+		"Scanner for XML Parsers"
 
-	author:     "Sven Ehrke <sven.ehrke@ubs.com>"
+	library:    "Gobo Eiffel XML Library"
+	author:     "Sven Ehrke <sven.ehrke@web.de>"
+	copyright:  "Copyright (c) 1999-2002, Sven Ehrke and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	note:	    "Based on mexp source"
-class
-   XF_SCANNER
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class XF_SCANNER
+
 inherit
-   YY_COMPRESSED_SCANNER_SKELETON
 
---   UT_CHACRACTER_CODES
+	YY_COMPRESSED_SCANNER_SKELETON
+
+--	UT_CHACRACTER_CODES
 
 
-   KL_IMPORTED_INTEGER_ROUTINES
-   KL_IMPORTED_STRING_ROUTINES
-   KL_SHARED_PLATFORM
-   KL_SHARED_EXCEPTIONS
-   KL_SHARED_ARGUMENTS
-
-   XF_TOKENS
+	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
+	KL_SHARED_PLATFORM
+	KL_SHARED_EXCEPTIONS
+	KL_SHARED_ARGUMENTS
+	
+	XF_TOKENS
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 
 creation
 
-   make
+	make
 %}
 
 %option nodefault outfile="xf_scanner.e"
@@ -71,8 +76,8 @@ S_WORD        [.+\-a-zA-Z0-9()_]*
 S_NS_WORD     {S_WORD}:{S_WORD}
 
 %s B_IN_TAG B_IN_CONTENT B_IN_PI B_IN_XML_DECL B_IN_DOCTYPE
-%s B_IN_PI_AFTER_TARGET B_IN_COMMENT B_IN_COMMENT_AFTER_CONTENT
-%x B_IN_ATTR_TEXT B_IN_XML_DECL_ATTR_TEXT
+%s B_IN_PI_AFTER_TARGET
+%x B_IN_ATTR_TEXT B_IN_XML_DECL_ATTR_TEXT B_IN_COMMENT B_IN_COMMENT_AFTER_CONTENT
 
 %%
 
@@ -277,19 +282,29 @@ S_NS_WORD     {S_WORD}:{S_WORD}
 			set_start_condition (B_IN_COMMENT)
 		}
 
-<B_IN_COMMENT>.*/{S_END_COMMENT} {
-			last_token := T_COMMENT_CONTENT
-			handle_found_text
-			set_start_condition (B_IN_COMMENT_AFTER_CONTENT)
-		}
-
 <B_IN_COMMENT_AFTER_CONTENT>{S_END_COMMENT} {
 			last_token := T_END_COMMENT
 			set_start_condition (B_IN_CONTENT)
 		}
 
+<B_IN_COMMENT>(.|\n)*/{S_END_COMMENT} {
+				-- since the longest text is matched by gelex
+				-- having more than one comment this rule will
+				-- match until the last S_END_COMMENT in the input.
+				-- What we want is that it matches the shortest text.
+				-- Since this is not possible with the current implementation
+				-- of gelex's regexp's this is simulated by unreading the text
+				-- matched too much.
+			if text.substring_index ("-->", 1) > 0 then
+				less (text.substring_index ("-->", 1) - 1)
+			end
 
-. {
+			last_token := T_COMMENT_CONTENT
+			handle_found_text
+			set_start_condition (B_IN_COMMENT_AFTER_CONTENT)
+		}
+
+<*>.|\n {
 	handle_found_text
   }
 
