@@ -34,7 +34,7 @@ feature -- Access
 			href_not_void: href /= Void
 		local
 			a_stylesheet: XM_XSLT_STYLESHEET
-			a_pss: XM_XSLT_PREPARED_STYLESHEET
+			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_source: XM_XSLT_URI_SOURCE
 			a_uri, a_base_uri: UT_URI
@@ -51,8 +51,8 @@ feature -- Access
 					parent_is_stylesheet: a_stylesheet /= Void
 					-- check_top_level ensured this
 				end
-				a_pss := prepared_stylesheet
-				a_configuration := a_pss.configuration
+				a_stylesheet_compiler := stylesheet_compiler
+				a_configuration := a_stylesheet_compiler.configuration
 				a_uri_resolver := a_configuration.uri_resolver
 				create a_base_uri.make (base_uri)
 				create a_uri.make_resolve (a_base_uri, href)
@@ -66,11 +66,11 @@ feature -- Access
 					else
 						create a_source.make (a_uri_resolver.last_system_id.full_reference)
 						create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
-						a_pss.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id, a_configuration, a_node_factory)
-						if a_pss.load_stylesheet_module_failed then
-							report_compile_error (a_pss.load_stylesheet_module_error)
+						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
+						if a_stylesheet_compiler.load_stylesheet_module_failed then
+							report_compile_error (a_stylesheet_compiler.load_stylesheet_module_error)
 						else
-							included_document := a_pss.last_loaded_module
+							included_document := a_stylesheet_compiler.last_loaded_module
 							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
 							Result ?= included_document.document_element
 							if Result = Void then

@@ -222,7 +222,7 @@ feature -- Element change
 			if STRING_.same_string (a_uri, Xpath_functions_uri) then
 				bind_system_function (a_local_name, arguments)
 			else
-				is_debugging := style_element.prepared_stylesheet.configuration.is_trace_external_functions
+				is_debugging := style_element.stylesheet_compiler.configuration.is_trace_external_functions
 				if is_debugging then
 					std.error.put_string ("Resolving external function call to " + a_qname + "%N")
 				end

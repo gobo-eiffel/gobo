@@ -128,16 +128,16 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			pat: XM_XSLT_PATTERN
+			a_left_pattern, a_right_pattern: XM_XSLT_PATTERN
 			finished: BOOLEAN
 		do
 			parse_path_pattern
 			if not is_parse_error then
 				from
-					pat := internal_last_parsed_pattern
+					a_left_pattern := internal_last_parsed_pattern
 					finished := tokenizer.last_token /= Union_token
 				until
-					finished or tokenizer.last_token /= Union_token
+					finished or else tokenizer.last_token /= Union_token
 				loop
 					tokenizer.next
 					if tokenizer.is_lexical_error then
@@ -146,10 +146,12 @@ feature {NONE} -- Implementation
 					else
 						parse_path_pattern
 						if not is_parse_error then
-							create {XM_XSLT_UNION_PATTERN} internal_last_parsed_pattern.make (pat, internal_last_parsed_pattern)
+							a_right_pattern := internal_last_parsed_pattern
+							create {XM_XSLT_UNION_PATTERN} a_left_pattern.make (a_left_pattern, a_right_pattern)
 						end
 					end
 				end
+				internal_last_parsed_pattern := a_left_pattern
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void

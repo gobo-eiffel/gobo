@@ -152,10 +152,10 @@ feature -- Access
 			prinicpal_stylesheet_not_void: Result /= Void
 		end
 
-	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET is
-			-- Prepared stylesheet
+	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER is
+			-- Stylesheet compiler
 		do
-			Result := principal_stylesheet.prepared_stylesheet
+			Result := principal_stylesheet.stylesheet_compiler
 		end
 
 	owning_procedure: XM_XSLT_PROCEDURE is
@@ -1482,7 +1482,7 @@ feature -- Element change
 									module_registered: a_stylesheet.is_module_registered (a_style_element.system_id)
 								end
 								another_instruction.set_source_location (a_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
-								if prepared_stylesheet.configuration.is_tracing then
+								if stylesheet_compiler.configuration.is_tracing then
 									another_instruction := a_style_element.new_trace_instruction (another_instruction)
 								end
 								an_instruction_list.put_last (another_instruction)

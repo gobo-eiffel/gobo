@@ -28,7 +28,7 @@ feature -- Evaluation
 	parse_document (a_uri_reference: STRING; a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
 			-- Parse `a_uri_reference' as a document'.
 		require
-			uri_reference_not_void: a_uri_reference /= Void
+			uri_reference_not_void: a_uri_reference /= Void -- and then has no fragment-id
 			base_uri_not_void: a_base_uri /= Void and then a_base_uri.is_absolute
 			context_not_void: a_context /= Void
 		local
@@ -40,7 +40,9 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string ("Argument to fn:doc is not a valid URI", "FODC0005", Dynamic_error)
 			else
 				create a_uri.make_resolve (a_base_uri, a_uri_reference)
-				if a_context.available_documents.is_mapped (a_uri.full_reference) then
+				if a_uri.has_fragment then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string ("Argument to fn:doc must not contain a fragment-id", "FODC0005", Dynamic_error) -- is this true?
+				elseif a_context.available_documents.is_mapped (a_uri.full_reference) then
 					last_evaluated_document := a_context.available_documents.document (a_uri.full_reference)
 				else
 					a_context.build_document (a_uri.full_reference)

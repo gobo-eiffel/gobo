@@ -40,17 +40,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XSLT_CONFIGURATION; a_prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET) is
+	make (a_configuration: XM_XSLT_CONFIGURATION; a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER) is
 			-- Establish invariant.
 		require
 			configuration_not_void: a_configuration /= Void
-			stylesheet_not_void: a_prepared_stylesheet /= Void
+			stylesheet_compiler_not_void: a_stylesheet_compiler /= Void
+			executable_compiled: a_stylesheet_compiler.executable /= Void
 		do
 			configuration := a_configuration
 			output_resolver := a_configuration.output_resolver
 			error_listener := configuration.error_listener
-			prepared_stylesheet := a_prepared_stylesheet
-			executable := prepared_stylesheet.executable
+			stylesheet_compiler := a_stylesheet_compiler
+			executable := stylesheet_compiler.executable
 			rule_manager := executable.rule_manager
 			decimal_format_manager := executable.decimal_format_manager
 			create document_pool.make
@@ -61,7 +62,7 @@ feature {NONE} -- Initialization
 			create current_date_time.make_from_epoch (0)
 		ensure
 			configuration_set: configuration = a_configuration
-			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
+			stylesheet_compiler_set: stylesheet_compiler = a_stylesheet_compiler
 		end
 			
 feature -- Access
@@ -118,8 +119,8 @@ feature -- Access
 	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 
-	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET
-			-- Compiled stylesheet
+	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			-- Stylesheet compiler
 
 	rule_manager: XM_XSLT_RULE_MANAGER
 			-- Manager of template-matching rules
@@ -430,6 +431,8 @@ feature -- Element change
 			
 	clear_document_pool is
 			-- Empty `document_pool'.
+			-- This might need to be done between multiple
+			--  transformations, but you lose caching benefits if you do call it.
 		do
 			create document_pool.make
 		end
@@ -613,19 +616,19 @@ feature -- Transformation
 		do
 			utc_system_clock.set_date_time_to_now (current_date_time)
 			if a_source /= Void then
-
-				-- Hm. This certainly applies to a uri source, but may need
-				-- additional logic for other sources
-				
-				a_parser := new_parser
-				a_builder := new_builder (a_parser)
-				a_source.send (a_parser, new_stripper (a_builder), False)
-				if a_builder.has_error then
-					report_fatal_error (a_builder.last_error, Void)
+				if	document_pool.is_mapped (a_source.system_id) then
+					a_start_node := document_pool.document (a_source.system_id)
 				else
-					a_document := a_builder.document
-					register_document (a_document, a_source.system_id)
-					a_start_node := a_document
+					a_parser := new_parser
+					a_builder := new_builder (a_parser)
+					a_source.send (a_parser, new_stripper (a_builder), False)
+					if a_builder.has_error then
+						report_fatal_error (a_builder.last_error, Void)
+					else
+						a_document := a_builder.document
+						register_document (a_document, a_source.system_id)
+						a_start_node := a_document
+					end
 				end
 			end
 
@@ -633,69 +636,6 @@ feature -- Transformation
 				transform_document (a_start_node, a_result)
 			end
 			configuration.reset_entity_resolver
-		end
-
-	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
-			-- Transform document supplied as in-memory tree.
-		require
-			executable_not_void: executable /= Void
-			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
-			destination_result_not_void: a_result /= Void
-			no_error_yet: not is_error
-		local
-			properties: XM_XSLT_OUTPUT_PROPERTIES
-		do
-			principal_result := a_result
-			principal_result_uri := a_result.system_id
-			initialize_transformer (a_start_node)
-			properties := executable.default_output_properties
-
-			-- TODO: overlay properties defined by API
-			-- TODO: stylesheet chaining
-
-			change_output_destination (properties, a_result, True, Validation_preserve, Void)
-
-			-- Process the source document using the handlers that have been set up.
-
-			if initial_template = Void then
-				perform_transformation (a_start_node)
-			else
-				initial_template.process (Current)
-			end
-
-			if is_tracing then
-				trace_listener.stop_tracing
-			end
-
-			reset_output_destination (Void)
-		end
-		
-	perform_transformation (a_start_node: XM_XPATH_NODE) is
-			--  Perform transformation.
-		require
-			start_node_in_document: a_start_node /= Void and then a_start_node.document_root /= Void
-			no_error_yet: not is_error
-		local
-			a_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
-			finished: BOOLEAN
-			a_last_tail_call: like last_tail_call
-		do
-			if not is_error then
-				create a_sequence_iterator.make (a_start_node)
-				from
-					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), Void, Void)
-					a_last_tail_call := last_tail_call
-				until
-					is_error or else finished
-				loop
-					if a_last_tail_call /= Void then
-						a_last_tail_call.process_leaving_tail (Current)
-						a_last_tail_call := a_last_tail_call.last_tail_call
-					else
-						finished := True
-					end
-				end
-			end
 		end
 
 	apply_templates (a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mode: XM_XSLT_MODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
@@ -776,6 +716,71 @@ feature -- Transformation
 			set_current_mode (saved_mode)
 			set_current_iterator (saved_iterator)
 			last_tail_call := a_last_tail_call
+		end
+
+feature {XM_XSLT_TRANSFORMER} -- Transformation internals
+
+	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+			-- Transform document supplied as in-memory tree.
+		require
+			executable_not_void: executable /= Void
+			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
+			destination_result_not_void: a_result /= Void
+			no_error_yet: not is_error
+		local
+			properties: XM_XSLT_OUTPUT_PROPERTIES
+		do
+			principal_result := a_result
+			principal_result_uri := a_result.system_id
+			initialize_transformer (a_start_node)
+			properties := executable.default_output_properties
+
+			-- TODO: overlay properties defined by API
+			-- TODO: stylesheet chaining
+
+			change_output_destination (properties, a_result, True, Validation_preserve, Void)
+
+			-- Process the source document using the handlers that have been set up.
+
+			if initial_template = Void then
+				perform_transformation (a_start_node)
+			else
+				initial_template.process (Current)
+			end
+
+			if is_tracing then
+				trace_listener.stop_tracing
+			end
+
+			reset_output_destination (Void)
+		end
+		
+	perform_transformation (a_start_node: XM_XPATH_NODE) is
+			--  Perform transformation.
+		require
+			start_node_in_document: a_start_node /= Void and then a_start_node.document_root /= Void
+			no_error_yet: not is_error
+		local
+			a_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			finished: BOOLEAN
+			a_last_tail_call: like last_tail_call
+		do
+			if not is_error then
+				create a_sequence_iterator.make (a_start_node)
+				from
+					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), Void, Void)
+					a_last_tail_call := last_tail_call
+				until
+					is_error or else finished
+				loop
+					if a_last_tail_call /= Void then
+						a_last_tail_call.process_leaving_tail (Current)
+						a_last_tail_call := a_last_tail_call.last_tail_call
+					else
+						finished := True
+					end
+				end
+			end
 		end
 
 feature -- Implementation
@@ -983,7 +988,7 @@ invariant
 
 	parser_factory_not_void: parser_factory /= Void
 	configuration_not_void: configuration /= Void
-	stylesheet_not_void: prepared_stylesheet /= Void
+	stylesheet_compiler_not_void: stylesheet_compiler /= Void
 	document_pool_not_void: document_pool /= Void
 	executable_not_void: executable /= Void
 	rule_manager_not_void: rule_manager /= Void

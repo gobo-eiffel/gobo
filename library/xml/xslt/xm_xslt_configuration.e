@@ -259,7 +259,7 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 			document_validator_not_void: Result /= Void
 		end
 
-feature {XM_XSLT_PREPARED_STYLESHEET, XM_XSLT_MODULE} -- Compliation
+feature {XM_XSLT_STYLESHEET_COMPILER, XM_XSLT_MODULE} -- Compliation
 	
 	are_external_functions_allowed: BOOLEAN
 			-- Are extension functions allowed?

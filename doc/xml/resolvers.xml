@@ -93,14 +93,18 @@
 	      This resolver handles any <exmlsyntax>SYSTEM</exmlsyntax> id by examining it's URI scheme, and
 	      delegating it to a descendant of <classname>XM_URI_RESOLVER</classname>,
 	      whose purpose is to open URIs for that particular scheme.
-	    </para>
-	    
+	    </para>	    
 	    <para>
 	      The library provides (and registers for you), <classname>XM_FILE_URI_RESOLVER</classname>
 	      to handle the file protocol. If you need to handle other protocols, such as http or ftp,
 	      then you may be able to find them in other libraries (such as ePOSIX for http), or
 	      you can write one yourself. After creating such a resolver, you need to register it
 	      by calling <featurename>register_scheme</featurename> on the <classname>XM_FILE_URI_RESOLVER</classname>.
+	    </para>
+	    <para>
+	      There is also <classname>XM_STRING_URI_RESOLVER</classname>, which resolves URIs in the <uri>string</uri> scheme
+	      for naming <classname>STRING</classname>s. This is designed to work with the <classname>XM_CATALOG_BOOTSTRAP_RESOLVER</classname>
+	      (see below).
 	    </para>
 	  </listitem>
 	</varlistentry>

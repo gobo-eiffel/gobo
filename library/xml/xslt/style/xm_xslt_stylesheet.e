@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_STYLE_ELEMENT
 		redefine
 			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared,
-			any_compile_errors, prepared_stylesheet
+			any_compile_errors, stylesheet_compiler
 		end
 
 	XM_XSLT_PROCEDURE
@@ -65,8 +65,8 @@ feature -- Access
 			-- The stylesheet that imported or included `Current';
 			-- `Void' for the prinicpal stylesheet.
 
-	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET
-			-- Prepared stylesheet object used to load `Current'
+	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			-- Stylesheet compiler object used to load `Current'
 
 	top_level_elements: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			-- Top-level elements in this logical stylesheet (after include/import processing)
@@ -445,15 +445,15 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	set_prepared_stylesheet (a_prepared_stylesheet: like prepared_stylesheet) is
-			-- Set `prepared_stylesheet'.
+	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler) is
+			-- Set `stylesheet_compiler'.
 		require
-			prepared_stylesheet_not_void: a_prepared_stylesheet /= Void
+			stylesheet_compiler_not_void: a_stylesheet_compiler /= Void
 		do
-			prepared_stylesheet := a_prepared_stylesheet
+			stylesheet_compiler := a_stylesheet_compiler
 			create rule_manager.make
 		ensure
-			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
+			stylesheet_compiler_set: stylesheet_compiler = a_stylesheet_compiler
 		end
 
 	preprocess is

@@ -27,7 +27,7 @@ feature
 	test_simple is
 			-- Simple tree.
 		local
-			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
+			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source: XM_XSLT_URI_SOURCE
@@ -56,15 +56,15 @@ feature
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
-			create a_stylesheet.make (a_configuration)
+			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("../xpath/data/books.xsl")
-			a_stylesheet.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= Void)
-			a_document_element ?= a_stylesheet.last_loaded_module.document_element
+			a_stylesheet_compiler.prepare (a_uri_source)
+			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
+			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
+			a_document_element ?= a_stylesheet_compiler.last_loaded_module.document_element
 			--print (a_document_element.error_value.error_message)
 			assert ("Stylesheet compiled without errors", not a_document_element.is_stylesheet_in_error)
-			an_error_listener ?= a_stylesheet.error_listener
+			an_error_listener ?= a_stylesheet_compiler.error_listener
 			assert ("No errors reported", an_error_listener /= Void and then an_error_listener.total_errors = 0)
 			assert ("xsl:transform", a_document_element /= Void and then STRING_.same_string (a_document_element.node_name, "xsl:transform"))
 			a_key ?= a_document_element.first_child
@@ -270,7 +270,7 @@ feature
 			assert ("xsl:value-of 11", a_value_of /= Void)			
 			a_literal_result ?= a_literal_result.next_sibling
 			assert ("hr 3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "hr"))
-			a_transformer := a_stylesheet.new_transformer
+			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
 		end
 

@@ -23,6 +23,8 @@ inherit
 			check_arguments, compute_special_properties, pre_evaluate, iterator
 		end
 
+	XM_UNICODE_CHARACTERS_1_1
+
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
 creation
@@ -112,6 +114,10 @@ feature -- Evaluation
 			a_map_object: XM_XSLT_DOCUMENT_INFORMATION
 			a_base_uri: UT_URI
 			a_node, another_node: XM_XPATH_NODE
+			a_document: XM_XPATH_DOCUMENT
+			a_uri, a_fragment_id: STRING
+			a_splitter: ST_SPLITTER
+			uri_parts: DS_LIST [STRING]
 		do
 			a_map_object ?= an_information_object
 			check
@@ -127,16 +133,42 @@ feature -- Evaluation
 					a_base_uri := a_map_object.stylesheet_base_uri
 				end
 			end
-			parse_document (an_item.string_value, a_base_uri, a_context)
-			if last_evaluated_document.is_error then
+			create a_splitter.make
+			a_splitter.set_separators ("#")
+			uri_parts := a_splitter.split (an_item.string_value)
+			if uri_parts.count > 2 then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			else
-				another_node ?= last_evaluated_document
-				check
-					node: another_node /= Void
-					-- as `parse_document' only returns documents or invalid items
+				a_uri := uri_parts.item (1)
+				if uri_parts.count = 2 then
+					a_fragment_id := uri_parts.item (2)
 				end
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (another_node)
+				parse_document (a_uri, a_base_uri, a_context)
+				if last_evaluated_document.is_error then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+				else
+					a_document ?= last_evaluated_document
+					check
+						document: a_document /= Void
+						-- as `parse_document' only returns documents or invalid items
+					end
+					if a_fragment_id /= Void and then is_ncname (a_fragment_id) then
+
+						-- Note the test for `is_ncname'. If not, it is a recoverable error
+						--  and we recover silently by ignoring the fragment id
+						--  and returning the document node
+
+						-- Note we are ignoring any media-type (as we don't have the information)
+						--  and assuming that the rules for the media-type concerned are
+						--  that the ID selects one element node (and it's descendants).
+						-- TODO: review this
+	
+						another_node := a_document.selected_id (a_fragment_id)
+					else
+						another_node := a_document
+					end
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (another_node)
+				end
 			end
 		end
 

@@ -29,15 +29,38 @@
   <para>
     Once you have an executable stylesheet, you need to create an <classname>XM_XSLT_TRANSFORMER</classname>
     from it. This is accomplished by calling <featurecall><featurename>new_transformer</featurename></featurecall>
-    on the <classname>XM_XSLT_PREPARED_STYLESHEET</classname>.
+    on the <classname>XM_XSLT_STYLESHEET_COMPILER</classname>.
   </para>
   <para>
-    The <classname>XM_XSLT_PREPARED_STYLESHEET</classname> is supposed to be serially reusable. That is, once
+    The <classname>XM_XSLT_STYLESHEET_COMPILER</classname> is supposed to be serially reusable. That is, once
     you have executed one transform with the transformer you obtained from it, you can create another transformer
     from it. You do not have to re-compile the stylesheet.
   </para>
   <para>
-    However, you should <emphasis>not</emphasis> attempt to run two transformations at once (not even if they involve different stylesheets),
-    and you should <emphasis>not</emphasis> reuse a transformer - always create a new one for each transformation.
+    However, you should <emphasis>not</emphasis> attempt to run two transformations at once (not even if they involve different stylesheets).
+  </para>
+  <para>
+    If you reuse a transformer, then before calling <featurecall><featurename>transform</featurename></featurecall> a second time,
+    you may wish to call <featurecall><featurename>clear_document_pool</featurename></featurecall>. This clears all document nodes
+    from memory, and destroys the mapping of URIs to document nodes. The reasons you might want to do this are:
+  <itemizedlist>
+    <listitem>
+      <para>
+	To save memory (and hence garbage collection cycles) by throwing away documents which will not be used again.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+	If you reuse the same URIs to refer to different documents from one transformation to another. This is a doubtful practice,
+	but if you insist on doing it then you <emphasis>must</emphasis> call <featurecall><featurename>clear_document_pool</featurename></featurecall>
+	otherwise you will get incorrect results.
+      </para>
+    </listitem>
+  </itemizedlist>
+  </para>
+  <para>
+    In general, it is better to <emphasis>not </emphasis> call <featurecall><featurename>clear_document_pool</featurename></featurecall>, as you
+    will then get better performance if you reuse a document (for example, by using the <xslt>document()</xslt> function), as the transformer will not have
+    to parse the document afresh.
   </para>
 </chapter>

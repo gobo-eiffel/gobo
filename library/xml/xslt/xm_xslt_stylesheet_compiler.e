@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent a compiled stylesheet"
+		"Objects that compile astylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_PREPARED_STYLESHEET
+class XM_XSLT_STYLESHEET_COMPILER
 
 inherit
 
@@ -32,9 +32,11 @@ feature {NONE} -- Initialization
 			configuration_not_void: a_configuration /= Void
 		do
 			configuration := a_configuration
-			create stripper_rules.make
+			error_listener := configuration.error_listener
+			create node_factory.make (error_listener, configuration.are_external_functions_allowed)
 		ensure
 			configuration_set: configuration = a_configuration
+			stylesheet_not_yet_compiled: executable = Void
 		end
 
 feature -- Access
@@ -54,9 +56,6 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Last error listener used by `prepare'
 
-	stripper_rules: XM_XSLT_MODE
-			-- Strip/preserve space rules
-
 feature -- Status report
 
 	load_stylesheet_module_failed: BOOLEAN
@@ -71,26 +70,24 @@ feature -- Compilation
 			-- Prepare a stylesheet from a source document.
 		require
 			source_not_void: a_source /= Void
-		local
-			a_node_factory: XM_XSLT_NODE_FACTORY
+			stylesheet_not_yet_compiled: executable = Void
 		do
-			error_listener := configuration.error_listener
-			create a_node_factory.make (error_listener, configuration.are_external_functions_allowed)
-			load_principal_stylesheet_module (a_source, configuration, a_node_factory)
+			load_principal_stylesheet_module (a_source)
 			if not load_stylesheet_module_failed then
-				create_style_sheet_executable (last_loaded_module, a_node_factory)
+				create_style_sheet_executable (last_loaded_module)
 			end
+		ensure
+			error_or_executable: executable = Void implies load_stylesheet_module_failed
 		end
 
-	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_configuration: XM_XSLT_CONFIGURATION; a_node_factory: XM_XSLT_NODE_FACTORY) is
+	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI) is
 			-- Create a tree-representation of a subordinate stylesheet module
 		require
 			source_not_void: a_source /= Void
 			stream_open_read: a_stream /= Void and then a_stream.is_open_read
 			system_id_is_absolute: a_system_id /= Void and then a_system_id.is_absolute
-			configuration_not_void: a_configuration /= Void
-			node_factory_not_void: a_node_factory /= Void
 			no_error_loading_previous_stylesheet_modules: not load_stylesheet_module_failed
+			stylesheet_not_yet_compiled: executable = Void
 		local
 			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
 			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
@@ -98,16 +95,14 @@ feature -- Compilation
 			a_parser: XM_EIFFEL_PARSER
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
-			load_stylesheet_module_error := Void
 			last_loaded_module := Void
 			create a_parser.make
-			a_parser.set_resolver (a_configuration.entity_resolver)
-			a_parser.copy_string_mode (a_configuration)
-
-			create a_tree_builder.make (a_node_factory)
+			a_parser.set_resolver (configuration.entity_resolver)
+			a_parser.copy_string_mode (configuration)
+			create a_tree_builder.make (node_factory)
 			create a_locator.make (a_parser)
 			a_tree_builder.set_document_locator (a_locator)
-			a_tree_builder.set_line_numbering (a_configuration.is_line_numbering)
+			a_tree_builder.set_line_numbering (configuration.is_line_numbering)
 			create a_stylesheet_stripper.make (a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
 			a_source.send_from_stream (a_stream, a_system_id, a_parser, a_comment_stripper, True)
@@ -122,13 +117,12 @@ feature -- Compilation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	load_principal_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_configuration: XM_XSLT_CONFIGURATION; a_node_factory: XM_XSLT_NODE_FACTORY) is
+	load_principal_stylesheet_module (a_source: XM_XSLT_URI_SOURCE) is
 			-- Create a tree-representation of principal stylesheet module
 		require
 			source_not_void: a_source /= Void
-			configuration_not_void: a_configuration /= Void
-			node_factory_not_void: a_node_factory /= Void
 			no_error_loading_previous_stylesheet_modules: not load_stylesheet_module_failed
+			stylesheet_not_yet_compiled: executable = Void
 		local
 			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
 			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
@@ -139,13 +133,12 @@ feature -- Compilation
 			load_stylesheet_module_error := Void
 			last_loaded_module := Void
 			create a_parser.make
-			a_parser.set_resolver (a_configuration.entity_resolver)
-			a_parser.copy_string_mode (a_configuration)
-
-			create a_tree_builder.make (a_node_factory)
+			a_parser.set_resolver (configuration.entity_resolver)
+			a_parser.copy_string_mode (configuration)
+			create a_tree_builder.make (node_factory)
 			create a_locator.make (a_parser)
 			a_tree_builder.set_document_locator (a_locator)
-			a_tree_builder.set_line_numbering (a_configuration.is_line_numbering)
+			a_tree_builder.set_line_numbering (configuration.is_line_numbering)
 			create a_stylesheet_stripper.make (a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
 			a_source.send (a_parser, a_comment_stripper, True)
@@ -160,19 +153,18 @@ feature -- Compilation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	create_style_sheet_executable (a_document: XM_XPATH_TREE_DOCUMENT; a_node_factory: XM_XSLT_NODE_FACTORY) is
+	create_style_sheet_executable (a_document: XM_XPATH_TREE_DOCUMENT) is
 			-- Create an executable stylesheet.
 		require
 			document_not_void: a_document /= Void
-			node_factory_not_void: a_node_factory /= Void
-			no_error_loading_stylesheet_modules: not load_stylesheet_module_failed
+			no_error_loading_stylesheet_modules: last_loaded_module /= Void
+			stylesheet_not_yet_compiled: executable = Void
 		local
 			a_stylesheet_document: XM_XPATH_TREE_DOCUMENT
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_top_node: XM_XSLT_LITERAL_RESULT_ELEMENT
 		do
 			a_stylesheet_document := a_document
-			node_factory := a_node_factory
 
 			-- If top-level node is a literal result element, stitch it into a skeleton stylesheet
 
@@ -187,7 +179,7 @@ feature -- Compilation
 
 				-- Preprocess the stylesheet, performing validation and preparing template  definitions
 				
-				a_stylesheet.set_prepared_stylesheet (Current)
+				a_stylesheet.set_stylesheet_compiler (Current)
 				a_stylesheet.preprocess
 
 				-- Compile the stylesheet, retaining the resulting  executable
@@ -208,7 +200,7 @@ feature -- Compilation
 				end
 			end
 		ensure
-			node_factory_set: node_factory = a_node_factory
+			executable_compiled: not load_stylesheet_module_failed implies executable /= Void
 		end
 
 feature -- Creation
@@ -226,6 +218,9 @@ feature -- Creation
 invariant
 	
 	configuration_not_void: configuration /= Void
-	stylesheet_module_load_suceeded: not load_stylesheet_module_failed implies load_stylesheet_module_error = Void -- and then last_loaded_module /= Void
+	error_listener_not_void: error_listener /= Void
+	node_factory_not_void: node_factory /= Void
+	stylesheet_module_load_suceeded: not load_stylesheet_module_failed implies load_stylesheet_module_error = Void
+	stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void
 
 end

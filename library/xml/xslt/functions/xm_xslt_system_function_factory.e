@@ -38,7 +38,9 @@ feature -- Creation
 				create {XM_XSLT_GENERATE_ID} Result.make
 			elseif STRING_.same_string (a_function_name, "key") then
 				create {XM_XSLT_KEY_FUNCTION} Result.make
-			elseif STRING_.same_string (a_function_name, "unparsed-entity-uri") then
+			elseif STRING_.same_string (a_function_name, "key") then
+				create {XM_XSLT_SYSTEM_PROPERTY} Result.make
+			elseif STRING_.same_string (a_function_name, "system-property") then
 				create {XM_XSLT_UNPARSED_ENTITY_URI} Result.make
 			else
 				Result := Precursor (a_function_name)

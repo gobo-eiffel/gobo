@@ -48,7 +48,7 @@
       </listitem>
       <listitem>
 	<para>
-	  Create an <classname>XM_XSLT_PREPARED_STYLESHEET</classname>, passing it the <classname>XM_XSLT_CONFIGURATION</classname>
+	  Create an <classname>XM_XSLT_STYLESHEET_COMPILER</classname>, passing it the <classname>XM_XSLT_CONFIGURATION</classname>
 	  you previously created.
 	</para>
       </listitem>
