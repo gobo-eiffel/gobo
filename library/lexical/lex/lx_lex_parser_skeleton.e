@@ -6,7 +6,7 @@ indexing
 		%generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ deferred class LX_LEX_PARSER_SKELETON
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton
 		redefine
@@ -1002,7 +1002,7 @@ feature {NONE} -- Implementation
 			equiv_classes.build
 			cursor := character_classes.new_cursor
 			from cursor.start until cursor.after loop
-				cursor.item.convert (equiv_classes)
+				cursor.item.convert_to_equivalence (equiv_classes)
 				cursor.forth
 			end
 		ensure

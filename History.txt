@@ -13,6 +13,35 @@ Version 3.2 - ?
 	* Added attributes 'class' and 'feature' to task task <getest>.
 	* The task <hact> now takes advantage of Halstenbach incremental
 	  compiler.
+	* Added attributes 'old_typing' and 'new_typing' to task <geyacc>.
+
+	geyacc:
+
+	* Made the semantic values more type-safe. Now the parser
+	  skeleton class is not generic anymore, and there is one
+	  different stack generated per declared type in the %type
+	  or %token clauses. Geyacc also generates the corresponding
+	  attributes `last_<type>_value' instead of `last_value'
+	  to be used to set the semantic values of tokens.
+	  Transition path: If you still want to use the old typing
+	  mechanism (now made obsolete), use geyacc with the command-
+	  line option --old_typing or with geant's attribute 'old_typing'
+	  in task <geyacc>. It is also recommended that you replace
+	  class YY_PARSER_SKELETON by YY_OLD_PARSER_SKELETON in your
+	  code. Alternatively you can now switch to the new typing
+	  mechanism using geyacc's --new_typing command-line option
+	  or attribute 'new_typing' in task <geyacc> in geant. In
+	  that case you will have to use the non-generic class
+	  YY_NEW_PARSER_SKELETON instead of YY_PARSER_SKELETON and
+	  replace the calls to `last_value' by the corresponding
+	  `last_<type>_value' in your code. In the next release
+	  YY_PARSER_SKELETON will stop to be a synonym of
+	  YY_OLD_PARSER_SKELETON and will be used as a replacement
+	  of YY_NEW_PARSER_SKELETON. In the release after, the old
+	  typing mechanism will not be supported anymore, classes
+	  YY_OLD_PARSER_SKELETON and YY_NEW_PARSER_SKELETON will be
+	  removed, and you will have to use YY_PARSER_SKELETON along
+	  with the `last_<type>_value' attributes in your code.
 
 	getest:
 
@@ -22,6 +51,11 @@ Version 3.2 - ?
 	  fields of the config file (needed by Guy Fokou).
 	* Better formatting of the message when `assert_equal' or
 	  `assert_not_equal' fail (suggested by Berend de Boer).
+
+	Gobo Eiffel Lexical Library:
+
+	* Renamed `convert' as `convert_to_equivalence' in class
+	  LX_SYMBOL_CLASS because 'convert' is a keyword in ETL3.
 
 	Gobo Eiffel XML Library:
 
