@@ -1,0 +1,53 @@
+indexing
+
+	description:
+
+		"Singleton accessor class TEMPLATE. With this class you can turn%
+		% any class into a singleton, the class does not necessarily have%
+		%to inherit from DP_SINGLETON"
+
+	thanks: "Thanks to Design Patterns and Contracts."
+	warning: "COPY THIS CLASS, DO NOT INHERIT, THAT'S WHY IT DOESN'T COMPILE"
+
+	usage:
+		"Copy this code into a new class and:%
+		%1. Introduce the `singleton' and `is_real_singleton' methods%
+		%   in your descendent.%
+		%2. Introduce the invariant in your descendent."
+
+	library: "Gobo Eiffel Pattern Library"
+	copyright: "Copyright (c) 2002, Berend de Boer and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+
+class
+
+	DP_SINGLETON_ACCESSOR
+
+feature {NONE} -- Implementation
+
+	singleton: DP_SINGLETON is
+			-- Access to a unique instance.
+			-- It is quite useful to rename this routine.
+			-- Note that your class does not have to inherit from
+			-- DP_SINGLETON to be turned into a singleton.
+		once
+			create Result
+    ensure
+      singleton_not_void: Result /= Void
+		end
+
+	is_real_singleton: BOOLEAN is
+			-- Do multiple calls to `singleton' return the same result?
+			-- It is quite useful to rename this routine.
+		do
+			Result := singleton = singleton
+		end
+
+invariant
+
+	accessing_real_singleton: is_real_singleton
+
+end
