@@ -398,6 +398,18 @@ feature -- Directory handling
 			tmp_directory.recursive_delete
 		end
 
+	recursive_copy_directory (old_name, new_name: STRING) is
+			-- Copy recursively directory named `old_name' to `new_name'.
+			-- Do nothing if the directory could not be copied,
+			-- if it did not exist, or if `new_name' already existed.
+			-- (`old_name' and `new_name' should follow the pathname
+			-- convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
+		do
+			tmp_directory.reset (old_name)
+			tmp_directory.recursive_copy_directory (new_name)
+		end
+
 feature -- Working directory
 
 	cwd, current_working_directory: STRING is

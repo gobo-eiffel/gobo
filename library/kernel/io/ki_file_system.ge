@@ -316,6 +316,19 @@ feature -- Directory handling
 		deferred
 		end
 
+	recursive_copy_directory (old_name, new_name: STRING) is
+			-- Copy recursively directory named `old_name' to `new_name'.
+			-- Do nothing if the directory could not be copied,
+			-- if it did not exist, or if `new_name' already existed.
+			-- (`old_name' and `new_name' should follow the pathname
+			-- convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			old_name_not_void: old_name /= Void
+			new_name_not_void: new_name /= Void
+		deferred
+		end
+
 feature -- Working directory
 
 	cwd, current_working_directory: STRING is

@@ -5,7 +5,7 @@ indexing
 		"Interface for directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,6 +115,19 @@ feature -- Basic operations
 			-- Do nothing if the directory could not
 			-- be deleted, if it did not exist.
 		require
+			is_closed: is_closed
+		deferred
+		end
+
+	recursive_copy_directory (new_name: STRING) is
+			-- Copy recursively current directory to `new_name'.
+			-- Do nothing if the directory could not be copied,
+			-- if it did not exist, or if `new_name' already existed.
+			-- (`new_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			new_name_not_void: new_name /= Void
 			is_closed: is_closed
 		deferred
 		end

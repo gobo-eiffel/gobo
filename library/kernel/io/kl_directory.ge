@@ -442,6 +442,57 @@ feature -- Basic operations
 			end
 		end
 
+	recursive_copy_directory (new_name: STRING) is
+			-- Copy recursively current directory to `new_name'.
+			-- Do nothing if the directory could not be copied,
+			-- if it did not exist, or if `new_name' already existed.
+			-- (`new_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		local
+			rescued: BOOLEAN
+			a_name: STRING
+			a_dir: KL_DIRECTORY
+			a_new_dir: KL_DIRECTORY
+			a_pathname: STRING
+			a_new_pathname: STRING
+		do
+			if not rescued then
+				if string_name.count > 0 then
+					create a_new_dir.make (new_name)
+					if not a_new_dir.exists and not file_system.file_exists (new_name) then
+						a_new_dir.recursive_create_directory
+						open_read
+						if is_open_read then
+							from read_entry until end_of_input loop
+								a_name := last_entry
+								if
+									not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+									not STRING_.same_string (a_name, file_system.relative_parent_directory)
+								then
+									a_pathname := file_system.pathname (string_name, a_name)
+									a_new_pathname := file_system.pathname (new_name, a_name)
+									if file_system.is_file_readable (a_pathname) then
+										file_system.copy_file (a_pathname, a_new_pathname)
+									else
+										create a_dir.make (a_pathname)
+										a_dir.recursive_copy_directory (a_new_pathname)
+									end
+								end
+								read_entry
+							end
+							close
+						end
+					end
+				end
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
 feature -- Input
 
 	read_entry is
