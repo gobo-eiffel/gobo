@@ -141,34 +141,27 @@ feature {NONE} -- Output
 				a_file.put_new_line
 			end
 			an_external := a_system.externals
-			if an_external /= Void then
-				if (an_external.has_link_libraries or an_external.has_exported_features) then
-					a_file.put_string ("external")
-					a_file.put_new_line
-					a_file.put_new_line
-					if an_external.has_exported_features then
-						print_indentation (1, a_file)
-						a_file.put_string ("cecil (%"")
-						a_file.put_string (cecil_filename)
-						a_file.put_string ("%")")
-						a_file.put_new_line
-					end
-					print_link_libraries (an_external.link_libraries, a_file)
+			if an_external /= Void and then not an_external.is_empty then
+				a_file.put_string ("external")
+				a_file.put_new_line
+				a_file.put_new_line
+				if an_external.has_exported_features then
+					print_indentation (1, a_file)
+					a_file.put_string ("cecil (%"")
+					a_file.put_string (cecil_filename)
+					a_file.put_string ("%")")
 					a_file.put_new_line
 				end
+				print_include_directories (an_external.include_directories, a_file)
+				print_link_libraries (an_external.link_libraries, a_file)
+				a_file.put_new_line
 			end
-			a_file.put_string ("generate")
-			a_file.put_new_line
+			a_file.put_line ("generate")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string ("no_split (yes)")
+			a_file.put_line ("no_split (yes)")
 			a_file.put_new_line
-			if an_external /= Void then
-				print_include_directories (an_external.include_directories, a_file)
-			end
-			a_file.put_new_line
-			a_file.put_string ("end")
-			a_file.put_new_line
+			a_file.put_line ("end")
 		end
 
 	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -354,7 +347,7 @@ feature {NONE} -- Output
 		do
 			if not a_directories.is_empty then
 				print_indentation (1, a_file)
-				a_file.put_string ("c_compiler_options:")
+				a_file.put_string ("external_lib_path:")
 				a_file.put_new_line
 				print_indentation (2, a_file)
 				a_file.put_character ('%"')
