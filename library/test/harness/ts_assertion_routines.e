@@ -81,6 +81,66 @@ feature -- Equality
 			end
 		end
 
+	assert_integers_equal (a_tag: STRING; expected, actual: INTEGER) is
+			-- Assert that `expected = actual'.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			Assertions.add_assertion
+			if expected /= actual then
+				a_message := assert_integers_equal_message (a_tag, expected, actual)
+				Assertions.set_error_message (a_message)
+				Exceptions.raise (Assertion_failure)
+			end
+		end
+
+	assert_integers_not_equal (a_tag: STRING; expected, actual: INTEGER) is
+			-- Assert that `expected /= actual'.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			Assertions.add_assertion
+			if expected = actual then
+				a_message := assert_integers_not_equal_message (a_tag, expected, actual)
+				Assertions.set_error_message (a_message)
+				Exceptions.raise (Assertion_failure)
+			end
+		end
+
+	assert_strings_equal (a_tag: STRING; expected, actual: STRING) is
+			-- Assert that `expected' and `actual' are the same string.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			Assertions.add_assertion
+			if not STRING_.same_string (expected, actual) then
+				a_message := assert_strings_equal_message (a_tag, expected, actual)
+				Assertions.set_error_message (a_message)
+				Exceptions.raise (Assertion_failure)
+			end
+		end
+
+	assert_strings_not_equal (a_tag: STRING; expected, actual: STRING) is
+			-- Assert that `expected' and `actual' are not the same string.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			Assertions.add_assertion
+			if STRING_.same_string (expected, actual) then
+				a_message := assert_strings_not_equal_message (a_tag, expected, actual)
+				Assertions.set_error_message (a_message)
+				Exceptions.raise (Assertion_failure)
+			end
+		end
+
 feature -- Files
 
 	assert_files_equal (a_tag: STRING; a_filename1, a_filename2: STRING) is
@@ -262,7 +322,7 @@ feature -- Containers
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
-				a_message := assert_equal_message (new_tag, expected.count, actual.count)
+				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
 				Assertions.set_error_message (a_message)
 				Exceptions.raise (Assertion_failure)
 			else
@@ -307,7 +367,7 @@ feature -- Containers
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
-				a_message := assert_equal_message (new_tag, expected.count, actual.count)
+				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
 				Assertions.set_error_message (a_message)
 				Exceptions.raise (Assertion_failure)
 			else
@@ -365,7 +425,7 @@ feature -- Containers
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
-				a_message := assert_equal_message (new_tag, expected.count, actual.count)
+				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
 				Assertions.set_error_message (a_message)
 				Exceptions.raise (Assertion_failure)
 			else
@@ -380,7 +440,7 @@ feature -- Containers
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
 						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
-						a_message := assert_equal_message (new_tag, expected_item, actual_item)
+						a_message := assert_integers_equal_message (new_tag, expected_item, actual_item)
 						Assertions.set_error_message (a_message)
 						Exceptions.raise (Assertion_failure)
 					else
@@ -415,7 +475,7 @@ feature -- Execution
 		do
 			create a_command.make (a_shell_command)
 			a_command.execute
-			assert_equal (a_shell_command, an_exit_code, a_command.exit_code)
+			assert_integers_equal (a_shell_command, an_exit_code, a_command.exit_code)
 		end
 
 	assert_not_exit_code_execute (a_shell_command: STRING; an_exit_code: INTEGER) is
@@ -429,15 +489,40 @@ feature -- Execution
 		do
 			create a_command.make (a_shell_command)
 			a_command.execute
-			assert_not_equal (a_shell_command, an_exit_code, a_command.exit_code)
+			assert_integers_not_equal (a_shell_command, an_exit_code, a_command.exit_code)
 		end
 
 feature {NONE} -- Messages
 
+	void_or_out (an_any: ANY): STRING is
+			-- Return `an_any.out' or Void if `an_any' is Void.
+		do
+			if an_any /= Void then
+				Result := an_any.out
+			end
+		end
+		
 	assert_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
+		do
+			Result := assert_strings_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
+		end
+
+	assert_integers_equal_message (a_tag: STRING; expected, actual: INTEGER): STRING is
+			-- Message stating that `expected' and `actual' should be equal.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			Result := assert_strings_equal_message (a_tag, expected.out, actual.out)
+		end
+	
+	assert_strings_equal_message (a_tag: STRING; expected, actual: STRING): STRING is
+			-- Message stating that `expected' and `actual' should be equal.
+		require
+			a_tag_not_void: a_tag /= Void
+
 		do
 			create Result.make (50)
 			Result.append_string (a_tag)
@@ -445,19 +530,35 @@ feature {NONE} -- Messages
 			if expected = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (expected.out)
+				Result.append_string (expected)
 			end
 			Result.append_string ("%N   but  got: ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (actual.out)
+				Result.append_string (actual)
 			end
 		ensure
 			message_not_void: Result /= Void
 		end
-
+	
 	assert_not_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
+			-- Message stating that `expected' and `actual' should not be equal.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
+		end
+		
+	assert_integers_not_equal_message (a_tag: STRING; expected, actual: INTEGER): STRING is
+			-- Message stating that `expected' and `actual' should not be equal.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			Result := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
+		end
+		
+	assert_strings_not_equal_message (a_tag: STRING; expected, actual: STRING): STRING is
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -468,13 +569,13 @@ feature {NONE} -- Messages
 			if actual = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (actual.out)
+				Result.append_string (actual)
 			end
 			Result.append_string ("%N   should not match: ")
 			if expected = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (expected.out)
+				Result.append_string (expected)
 			end
 		ensure
 			message_not_void: Result /= Void
