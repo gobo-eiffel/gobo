@@ -17,7 +17,6 @@ inherit
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_STANDARD_FILES
-	KL_SHARED_STREAMS
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
@@ -36,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			!! error_handler.make_standard
 				-- Set non-verbose mode.
-			error_handler.set_message_file (null_output_stream)
+			error_handler.set_info_null
 			read_arguments
 			!! in_file.make (input_filename)
 			in_file.open_read
@@ -81,10 +80,8 @@ feature -- Processing
 			a_gexmlsplit_parser: GEXMLSPLIT_PARSER
 			a_gexmlsplit_dispatcher: GEXMLSPLIT_DISPATCHER
 			filters: ARRAY [XM_CALLBACKS_FILTER]
-			a_message: UT_MESSAGE
 		do
-			!! a_message.make ("parsing data...")
-			error_handler.report_message (a_message)
+			error_handler.report_info_message ("parsing data...")
 
 			!XM_EIFFEL_PARSER! a_xml_parser.make
 			!! a_gexmlsplit_dispatcher.make (error_handler)
@@ -97,14 +94,11 @@ feature -- Processing
 			a_xml_parser.parse_from_stream (in_file)
 
 			if not a_xml_parser.is_correct then
-				!! a_message.make (a_xml_parser.last_error_extended_description)
-				error_handler.report_error (a_message)
+				error_handler.report_error_message (a_xml_parser.last_error_extended_description)
 			else
-				!! a_message.make ("parsing ok.")
-				error_handler.report_message (a_message)
+				error_handler.report_info_message ("parsing ok.")
 			end
-			!! a_message.make ("exiting...")
-			error_handler.report_message (a_message)
+			error_handler.report_info_message ("exiting...")
 		end
 
 feature -- Access

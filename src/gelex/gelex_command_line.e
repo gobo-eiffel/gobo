@@ -218,7 +218,7 @@ feature {NONE} -- Error handling
 	report_usage_message is
 			-- Report usage message and exit.
 		do
-			error_handler.report_message (Usage_message)
+			error_handler.report_info (Usage_message)
 			Exceptions.die (0)
 		end
 
@@ -228,7 +228,7 @@ feature {NONE} -- Error handling
 			a_message: UT_VERSION_NUMBER
 		do
 			!! a_message.make (Version_number)
-			error_handler.report_message (a_message)
+			error_handler.report_info (a_message)
 			Exceptions.die (0)
 		end
 

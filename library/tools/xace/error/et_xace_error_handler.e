@@ -16,7 +16,7 @@ inherit
 
 	UT_ERROR_HANDLER
 		redefine
-			report_error
+			report_error_message
 		end
 
 creation
@@ -28,24 +28,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new error handler using the standard
 			-- error file for error and warning reporting
-			-- and ignoring messages.
+			-- and ignoring info messages.
 		do
-			error_file := std.error
-			warning_file := std.error
-			message_file := null_output_stream
+			make_standard
+			set_info_null
 		ensure
 			error_file_set: error_file = std.error
 			warning_file_set: warning_file = std.error
-			message_file_set: message_file = null_output_stream
+			info_file_set: info_file = null_output_stream
 		end
 
 feature -- Status report
-
-	is_verbose: BOOLEAN is
-			-- Is error handler in verbose mode?
-		do
-			Result := (message_file /= null_output_stream)
-		end
 
 	has_error: BOOLEAN is
 			-- Has an error been reported?
@@ -58,7 +51,7 @@ feature -- Status setting
 	enable_verbose is
 			-- Set `is_verbose' to True.
 		do
-			message_file := std.output
+			info_file := std.output
 		ensure
 			verbose: is_verbose
 		end
@@ -66,7 +59,7 @@ feature -- Status setting
 	disable_verbose is
 			-- Set `is_verbose' to False.
 		do
-			message_file := null_output_stream
+			info_file := null_output_stream
 		ensure
 			not_verbose: not is_verbose
 		end
@@ -263,7 +256,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_error (an_error: UT_ERROR) is
+	report_error_message (an_error: STRING) is
 			-- Report `an_error'.
 		do
 			error_count := error_count + 1

@@ -200,7 +200,7 @@ feature -- Error handling
 	report_usage_message is
 			-- Report usage message.
 		do
-			error_handler.report_message (Usage_message)
+			error_handler.report_info (Usage_message)
 		end
 
 	report_version_number is
@@ -209,7 +209,7 @@ feature -- Error handling
 			a_message: UT_VERSION_NUMBER
 		do
 			!! a_message.make (Version_number)
-			error_handler.report_message (a_message)
+			error_handler.report_info (a_message)
 		end
 
 	Usage_message: UT_USAGE_MESSAGE is
