@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,11 +23,6 @@ inherit
 	DS_SET_CURSOR [G]
 		undefine
 			off
-		end
-
-	KL_IMPORTED_FIXED_ARRAY_ROUTINES
-		undefine
-			is_equal, copy
 		end
 
 creation
@@ -85,9 +80,10 @@ feature -- Status report
 			i: INTEGER
 			a_set: like container
 		do
-			if not container.is_empty then
+			a_set := container
+			if not a_set.is_empty then
 				from
-					a_set := container
+					i := 1
 				until
 					a_set.clashes_item (i) > Free_watermark
 				loop
@@ -103,10 +99,10 @@ feature -- Status report
 			i: INTEGER
 			a_set: like container
 		do
-			if not container.is_empty then
+			a_set := container
+			if not a_set.is_empty then
 				from
-					a_set := container
-					i := a_set.capacity - 1
+					i := a_set.last_position
 				until
 					a_set.clashes_item (i) > Free_watermark
 				loop
@@ -131,13 +127,14 @@ feature -- Cursor movement
 			a_set: like container
 			was_off: BOOLEAN
 		do
-			if container.is_empty then
+			a_set := container
+			if a_set.is_empty then
 				position := After_position
 			else
 				was_off := off
 				from
-					a_set := container
-					nb := a_set.capacity - 1
+					i := 1
+					nb := a_set.last_position
 				until
 					i > nb or else
 					a_set.clashes_item (i) > Free_watermark
@@ -165,20 +162,20 @@ feature -- Cursor movement
 			a_set: like container
 			was_off: BOOLEAN
 		do
-			if container.is_empty then
+			a_set := container
+			if a_set.is_empty then
 				position := Before_position
 			else
 				was_off := off
 				from
-					a_set := container
-					i := a_set.capacity - 1
+					i := a_set.last_position
 				until
-					i < 0 or else
+					i < 1 or else
 					a_set.clashes_item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
-				if i < 0 then
+				if i < 1 then
 					position := Before_position
 					if not was_off then
 						a_set.remove_traversing_cursor (Current)
@@ -201,14 +198,14 @@ feature -- Cursor movement
 		do
 			if position = Before_position then
 				was_off := True
-				-- i := 0
+				i := 1
 			else
 				-- was_off := False
 				i := position + 1
 			end
 			from
 				a_set := container
-				nb := a_set.capacity - 1
+				nb := a_set.last_position
 			until
 				i > nb or else
 				a_set.clashes_item (i) > Free_watermark
@@ -238,19 +235,19 @@ feature -- Cursor movement
 			a_set := container
 			if position = After_position then
 				was_off := True
-				i := a_set.capacity - 1
+				i := a_set.last_position
 			else
 				-- was_off := False
 				i := position - 1
 			end
 			from
 			until
-				i < 0 or else
+				i < 1 or else
 				a_set.clashes_item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
-			if i < 0 then
+			if i < 1 then
 				position := Before_position
 				if not was_off then
 					a_set.remove_traversing_cursor (Current)
@@ -398,7 +395,7 @@ feature {NONE} -- Implementation
 	After_position: INTEGER is -2
 			-- Special values for before and after positions
 
-	Free_watermark: INTEGER is -2
+	Free_watermark: INTEGER is -1
 			-- Limit between free and occupied slots in
 			-- `container.clashes'
 
