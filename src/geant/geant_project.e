@@ -5,7 +5,7 @@ indexing
 		"Contents of geant project files"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2002, Sven Ehrke and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,16 +27,6 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
-	KL_SHARED_STANDARD_FILES
-		export
-			{NONE} all
-		end
-
 	GEANT_SHARED_PROPERTIES
 		export
 			{NONE} all
@@ -48,159 +38,89 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_VARIABLES) is
-			-- Create a new project using file `build.eant'.
-		do
-			make_with_filename (Default_build_filename, a_variables, Void)
-		end
-
-	make_with_filename (a_filename: UC_STRING; a_variables: GEANT_VARIABLES; a_child_project: like Current) is
-			-- Create a new project using file `a_filename'.
-			-- Set `variables' to `a_variables'. If Void create new variables
-			-- Set `child_project' to `a_child_project'.
+	make (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
+			-- Create a new project.
 		require
-			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: a_filename.count > 0
-		local
-			a_parent_projects: DS_ARRAYED_LIST [like Current]
+			a_variables_not_void: a_variables /= Void
+			a_options_not_void: a_options /= Void
 		do
-				-- TODO: Note: There is a bug in ISE 5.1.14 which does not allow the
-				-- creation with an explicit creation type containing anchored types.
-				-- Use a local variable as a workaround.
-			create a_parent_projects.make (5)
-			parent_projects := a_parent_projects
-			-- create {DS_ARRAYED_LIST [like Current]} parent_projects.make (5)
-			build_filename := a_filename
-			if not file_system.is_file_readable (build_filename.out) then
-				exit_application (1, "cannot read build file '" + build_filename.out + "' (Current working directory: " + file_system.current_working_directory + ")")
-			end
-
 			if a_variables = Void then
-				!! variables.make
+				create variables.make
 			else
 				set_variables (a_variables)
 			end
-			child_project := a_child_project
+			set_options (a_options)
+			create selected_targets.make (5)
+			build_successful := True
 		ensure
-			build_filename_set: build_filename = a_filename
 			variables_set: a_variables /= Void implies variables = a_variables
 			variables_created: a_variables = Void implies variables /= Void
-			child_project_set: child_project = a_child_project
+			options_set: a_options /= Void implies options = a_options
+			selected_targets_not_void: selected_targets /= Void
 		end
 
 feature -- Access
 
-	build_filename: UC_STRING
-			-- Name of the file containing the configuration
-			-- information to build current project
-
 	name: STRING
 			-- Name of project
 
-	start_target_name: UC_STRING
+	start_target_name: STRING
 			-- Name of first target to be built
 
 	description: STRING
-			-- project description
+			-- Project description
 
 	variables: GEANT_VARIABLES
-			-- project variables
+			-- Project variables
 
-	targets: DS_ARRAYED_LIST [GEANT_TARGET]
-			-- Target elements found in current project
+	options: GEANT_PROJECT_OPTIONS
+			-- Project options
+
+	targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
+			-- Immediate targets
+
+	selected_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
+			-- Targets selected in heir
 
 	build_successful: BOOLEAN
 			-- Was last build successful?
 
-	verbose: BOOLEAN
-		-- Print additional information during build process?
+	inherit_clause: GEANT_INHERIT
+		-- Inherit clause
 
-	debug_mode: BOOLEAN
-		-- Print additional, internal information during build process?
+	old_inherit: BOOLEAN
+			-- Was current defined via old inheritance mechanism?
+			-- TODO: remove after obsolete period
 
-	no_exec: BOOLEAN
-			-- Do not execute commands (only show what they would do)?
-
-	parent_projects: DS_LIST [like Current]
-			-- Parent projects if set by xml attribute 'inherit';
-			-- or a nested 'inherit' element
-			-- Void otherwise
-
-	child_project: like Current
-			-- Child project if Current was created through xml attribute 'inherit';
-			-- Void otherwise
-
-	target_with_name (a_name: UC_STRING): GEANT_TARGET is
-			-- Target with `name' `a_name'
+	target_name (a_target: GEANT_TARGET): STRING is
+			-- Name of target `a_target' within context of current project
 		require
-			loaded: targets /= Void
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
+			a_target_not_void: a_target /= Void
+			has_target: targets.has_item (a_target)
 		local
-			i, nb: INTEGER
-			a_target: GEANT_TARGET
-			a_project: GEANT_PROJECT
+			a_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 		do
-				-- Search "youngest" project in hierarchy:
 			from
-				a_project := Current
+				a_cursor := targets.new_cursor
+				a_cursor.start
 			until
-				a_project.child_project = Void
+				a_cursor.after or else Result /= Void
 			loop
-				a_project := a_project.child_project
-			end
-
-				-- Search target named `a_name' from "youngest" project
-				-- up to "oldest" project in hierarchy:
-			from
-			until
-				Result /= Void or else a_project = Void
-			loop
-				if a_project.targets /= Void then
-					nb := a_project.targets.count
-					from i := 1 until i > nb or Result /= Void loop
-						a_target := a_project.targets.item (i)
-						trace_debug ("checking target name: '" + a_target.name + "'%N")
-						if a_target.name.is_equal (a_name.out) then
-							Result := a_target
-						end
-						i := i + 1
-					end
+				if a_target = a_cursor.item then
+					Result := a_cursor.key
 				end
-				if a_project.parent_projects.count > 0 then
-					a_project := a_project.parent_projects.item (1)
-				else
-					a_project := Void
-				end
-			end
 
+				a_cursor.forth
+			end
+		ensure
+			target_name_not_void: Result /= Void
+			target_name_not_empty: Result.count > 0
 		end
+
+	default_target_name: STRING
+			-- Name of default target if set
 
 feature -- Setting
-
-	set_verbose (a_verbose: BOOLEAN) is
-			-- Set `verbose' to `a_verbose'
-		do
-			verbose := a_verbose
-		ensure
-			verbose_set: verbose = a_verbose
-		end
-
-	set_debug_mode (a_debug_mode: BOOLEAN) is
-			-- Set `debug_mode' to `a_debug_mode'
-		do
-			debug_mode := a_debug_mode
-		ensure
-			debug_mode_set: debug_mode = a_debug_mode
-		end
-
-	set_no_exec (a_no_exec: BOOLEAN) is
-			-- Set `no_exec' to `a_no_exec'
-		do
-			no_exec := a_no_exec
-		ensure
-			no_exec_set: no_exec = a_no_exec
-		end
 
 	set_description (a_description: STRING) is
 			-- Set `description' to `a_description'.
@@ -224,6 +144,38 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
+	set_start_target_name (a_start_target_name: STRING) is
+			-- Set `start_target_name' to `a_start_target_name'.
+		require
+			a_start_target_name_not_void: a_start_target_name /= Void
+			a_start_target_name_not_empty: a_start_target_name.count > 0
+		do
+			start_target_name := a_start_target_name
+		ensure
+			start_target_name_set: start_target_name = a_start_target_name
+		end
+
+	set_default_target_name (a_default_target_name: STRING) is
+			-- Set `default_target_name' to `a_default_target_name'.
+		require
+			a_default_target_name_not_void: a_default_target_name /= Void
+			a_default_target_name_not_empty: a_default_target_name.count > 0
+		do
+			default_target_name := a_default_target_name
+		ensure
+			default_target_name_set: default_target_name = a_default_target_name
+		end
+
+	set_targets (a_targets: like targets) is
+			-- Set `targets' to `a_targets'.
+		require
+			a_targets_not_void: a_targets /= Void
+		do
+			targets := a_targets
+		ensure
+			targets_set: targets = a_targets
+		end
+
 	set_variables (a_variables: like variables) is
 			-- Set `variables' to `a_variables'.
 		require
@@ -234,125 +186,91 @@ feature -- Setting
 			variables_set: variables = a_variables
 		end
 
+	set_options (a_options: like options) is
+			-- Set `options' to `a_options'.
+		require
+			a_options_not_void: a_options /= Void
+		do
+			options := a_options
+		ensure
+			options_set: options = a_options
+		end
+
+	set_inherit_clause (a_inherit_clause: like inherit_clause) is
+			-- Set `inherit_clause' to `a_inherit_clause'.
+		require
+			a_inherit_clause_not_void: a_inherit_clause /= Void
+		do
+			inherit_clause := a_inherit_clause
+		ensure
+			inherit_clause_set: inherit_clause = a_inherit_clause
+		end
+
+	set_old_inherit (a_old_inherit: BOOLEAN) is
+			-- Set `old_inherit' to `a_old_inherit'.
+			-- TODO: remove after obsolete period
+		do
+			old_inherit := a_old_inherit
+		ensure
+			old_inherit_set: old_inherit = a_old_inherit
+		end
+
 feature -- Processing
 
-	load (a_start_target_name: STRING) is
-			-- Read current project's configuration from `build_filename'
-			-- and convert it into a 'GEANT_DOM'.
-			-- When set use `a_start_target_name' for first target to execute
+	merge_in_parent_projects is
+			-- Load parent projects if present.
 		local
-			xml_parser: GEANT_PROJECT_PARSER
-			xml_parser_impl: XI_EVENT_PARSER
-			ucs: UC_STRING
-			tmp_start_target_name: UC_STRING
-			target_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			a_parent: GEANT_PARENT
+			a_parent_cursor: DS_LINEAR_CURSOR [GEANT_PARENT]
 			a_target: GEANT_TARGET
-			i: INTEGER
-			a_parent_project_filename: UC_STRING
-			a_parent_project: like Current
-	    do
-				-- Reset current project's state:
-			reset
-			trace ("Loading Project's configuration from " + build_filename.out + "%N")
+			a_target_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
+		do
+				-- Handle inherit_clause:
+			if inherit_clause /= Void then
+					-- Prepare parent projects:
+				from
+					a_parent_cursor := inherit_clause.parents.new_cursor
+					a_parent_cursor.start
+				until
+					a_parent_cursor.after
+				loop
+					a_parent := a_parent_cursor.item
+					a_parent.prepare_project
 
-				-- Create xml parser:
-			if Parser_factory.is_expat_event_available then
-				xml_parser_impl := Parser_factory.new_expat_event_parser_imp
-			elseif Parser_factory.is_eiffel_event_available then
-				xml_parser_impl := Parser_factory.new_eiffel_event_parser_imp
-			else
-				exit_application (1, "geant error: no XML parser available%N")
+					a_parent_cursor.forth
+				end
+
+					-- Merge parent projects:
+				from
+					a_parent_cursor := inherit_clause.parents.new_cursor
+					a_parent_cursor.start
+				until
+					a_parent_cursor.after
+				loop
+					a_parent := a_parent_cursor.item
+					inherit_clause.merge_in_parent_project (a_parent)
+
+					a_parent_cursor.forth
+				end
+
+				inherit_clause.apply_selects
+
+					-- List all targets:
+				from
+					a_target_cursor := targets.new_cursor
+					a_target_cursor.start
+					trace_debug ("Project '" + name + "': target list:%N")
+				until
+					a_target_cursor.after
+				loop
+					a_target := a_target_cursor.item
+					trace_debug ("  target `" + a_target_cursor.key  + "' (" + a_target.full_name + ")%N")
+					a_target.show_precursors
+
+					a_target_cursor.forth
+				end
 			end
-			!! xml_parser.make_from_implementation (xml_parser_impl)
-			xml_parser.parse_from_file_name (build_filename)
-
-				-- Setup project's root element:
-			if xml_parser.root_element /= Void then
-				!! project_element.make (Current, xml_parser.root_element)
-
-					-- determine description if available:
-				if project_element.has_description then
-					set_description (project_element.description)
-				end
-					-- handle project name if present:
-				if project_element.has_name then
-					set_name (project_element.name)
-				end
-
-					-- handle parent project if present:
-				if project_element.has_inherit_attribute then
-					a_parent_project_filename := new_unicode_string (variables.interpreted_string (project_element.parent))
-					trace_debug ("inheriting from: " + a_parent_project_filename.out + "%N")
-					if a_parent_project_filename.count > 0 then
-						!! a_parent_project.make_with_filename (a_parent_project_filename, variables, Current)
-						parent_projects.force_last (a_parent_project)
-						a_parent_project.set_verbose (verbose)
-						a_parent_project.set_debug_mode (debug_mode)
-						a_parent_project.set_no_exec (no_exec)
-						a_parent_project.load (Void)
-					end
-				end
-
-					-- Find all target elements of current project:
-				target_elements := project_element.xml_target_elements
-
-					-- Create real GEANT_TARGETs from the GEANT_ELEMENTs:
-				!! targets.make (target_elements.count)
-				from i := 1 until i > target_elements.count loop
-					!! a_target.make (Current, target_elements.item (i))
-					targets.force_last (a_target)
-					i := i + 1
-				end
-
-					-- Use passed start target if provided and exists:
-				if a_start_target_name /= Void and then a_start_target_name.count > 0 then
-					ucs := new_unicode_string (a_start_target_name)
-					if target_with_name (ucs) /= Void then
-						tmp_start_target_name := ucs
-					else
-						exit_application (1, "geant error: unknown target: '" + a_start_target_name.out + "'%N")
-					end
-				end
-
-					-- Find start target:
-				if tmp_start_target_name = Void or else tmp_start_target_name.count = 0 then
-					if project_element.has_default_target_name then
-						ucs := new_unicode_string (project_element.default_target_name)
-						if target_with_name (ucs) /= Void then
-							tmp_start_target_name := ucs
-						else
-							trace_debug ("default target NOT found: " + project_element.default_target_name + "%N")
-						end
-					else
-							-- Use first target in project file for start_target_name:
-						if targets /= void and then targets.count > 0 then
-							tmp_start_target_name := new_unicode_string (targets.item (1).name)
-						end
-					end
-				end
-				if tmp_start_target_name = Void then
-					reset
-					print ("geant error: unknown target%N")
-				elseif tmp_start_target_name.count = 0 then
-					reset
-					print ("geant error: unknown target%N")
-				else
-						-- put start target on the stack:
-					start_target_name := tmp_start_target_name
-				end
-			else
-				reset
-				exit_application (1, "Parsing error in file %"" + build_filename.out + "%"%N")
-			end
-
-			if start_target_name = Void or else start_target_name.count = 0 then
-				exit_application (1, "Invalid start target%N")
-			end
-
-		ensure
-			start_target_name_not_void: start_target_name /= Void
-			start_target_name_not_empty: start_target_name.count > 0
-	    end
+		end
 
 	calculate_depend_order (a_depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]) is
 			-- Setup `build_targets' according to target dependencies
@@ -380,14 +298,32 @@ feature -- Processing
 	build is
 			-- Build project: execute project's tasks.
 		require
-			loaded: targets /= Void
-			start_target_name_not_void: start_target_name /= Void
-			start_target_name_not_empty: start_target_name.count > 0
+			targets_not_void: targets /= Void
+		local
+			a_target: GEANT_TARGET
 		do
-			if verbose then
-				print("Building Project%N")
+			trace ("Building Project%N")
+
+			if start_target_name /= Void and then start_target_name.count > 0 then
+				if targets.has (start_target_name) then
+					a_target := targets.item (start_target_name)
+				else
+					exit_application (1, "Cannot determine start target `" + start_target_name + "'%N")
+				end
 			end
-			build_target (target_with_name (start_target_name))
+			if a_target = Void then
+					-- Use default target as start target if exists:
+				if default_target_name /= Void and then default_target_name.count > 0 then
+					if targets.has (default_target_name) then
+						a_target := targets.item (default_target_name)
+					end
+				end
+			end
+			if a_target = Void then
+				exit_application (1, "Cannot determine start target.")
+			end
+
+			build_target (a_target)
 		end
 
 	build_target (a_target: GEANT_TARGET) is
@@ -397,53 +333,48 @@ feature -- Processing
 		local
 			depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 		do
-			-- Analyze dependencies of targets.
-			!! depend_targets.make (10)
+			-- Analyze dependencies of targets:
+			create depend_targets.make (10)
 			depend_targets.force (a_target)
 			calculate_depend_order (depend_targets)
 				-- Execute depend targets:
 			from until depend_targets.count = 1 loop
-				execute_target (depend_targets.item, False)
+				execute_target (depend_targets.item, False, True)
 				depend_targets.remove
 			end
-				-- Execute `a_target'.
+				-- Execute `a_target':
 			check last_target: depend_targets.item = a_target end
-			execute_target (a_target, True)
+			execute_target (a_target, True, True)
 		end
 
-	execute_target (a_target: GEANT_TARGET; a_force: BOOLEAN) is
+	execute_target (a_target: GEANT_TARGET; a_force: BOOLEAN; a_polymorph: BOOLEAN) is
 			-- Execute `a_target' if not executed before;
 			-- Execute anyway if `a_force' is True.
 		require
 			target_not_void: a_target /= Void
 		local
-			s: STRING
+			old_current_target: like current_target
+			a_execute_target: like current_target
 		do
+			trace_debug ("project '" + name + "': excuting target `" + a_target.full_name + "'%N")
+			old_current_target := current_target
 			if a_force or else not a_target.is_executed then
-				current_target := a_target
-				if verbose then
-					s := clone ("%N")
-					if name /= Void then
-						s.append_string (a_target.project.name)
-						s.append_string (".")
-					end
-					s.append_string (a_target.name)
-					s.append_string (":%N%N")
-					print (s)
-				end
-				a_target.execute
-			end
-			current_target := Void
-		ensure
-			current_target_void: current_target = Void
-		end
 
-	reset is
-			-- Reset current state of project.
-		do
-			project_element := Void
-			targets := Void
-			build_successful := True
+					-- Handle polymorphic calls:
+				if a_polymorph then
+					a_execute_target := a_target.final_target
+				else
+					a_execute_target := a_target
+				end
+				current_target := a_execute_target
+				if a_execute_target.project /= Current then
+					a_execute_target.project.execute_target (a_execute_target, a_force, a_polymorph)
+				else
+					a_execute_target.execute
+				end
+			end
+
+			current_target := old_current_target
 		end
 
 feature -- Output
@@ -453,7 +384,7 @@ feature -- Output
 		require
 			message_not_void: a_message /= Void
 		do
-			if verbose then
+			if options.verbose then
 				std.output.put_string (a_message)
 				std.output.flush
 			end
@@ -473,7 +404,7 @@ feature -- Output
 		require
 			message_not_void: a_message /= Void
 		do
-			if debug_mode then
+			if options.debug_mode then
 				std.output.put_string (a_message)
 				std.output.flush
 			end
@@ -485,34 +416,8 @@ feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 		-- Currently executing target;
 		-- Set during processing `execute_target'
 
-feature {NONE} -- Implementation
-
-	project_element: GEANT_PROJECT_ELEMENT
-			-- Project element of build script
-
-	Parser_factory: XM_PARSER_FACTORY is
-			-- Factory to create xml parsers
-		once
-			!! Result.make
-		ensure
-			parser_factory_not_void: Result /= Void
-		end
-
-feature {NONE} -- Constants
-
-	Default_build_filename: UC_STRING is
-			-- Default Name of build file
-		once
-			Result := new_unicode_string ("build.eant")
-		ensure
-			filename_not_void: Result /= Void
-			filename_not_empty: Result.count > 0
-		end
-
 invariant
 
-	build_filename_not_void: build_filename /= Void
-	build_filename_not_empty: build_filename.count > 0
 	no_void_target: targets /= Void implies not targets.has (Void)
 
 end
