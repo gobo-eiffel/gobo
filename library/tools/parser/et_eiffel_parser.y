@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -24,7 +24,7 @@ inherit
 
 creation
 
-	make
+	make, make_with_factory
 
 %}
 
@@ -70,6 +70,7 @@ creation
 %right E_NOT E_OLD
 
 %type <ET_ACTUAL_ARGUMENTS>    Actuals_opt Actual_list
+%type <ET_ACTUAL_GENERIC_TYPES>  Actual_generics_opt Type_list
 %type <ET_ASSERTION>           Assertion_clause
 %type <ET_ASSERTIONS>          Assertion_list Invariant_opt
 %type <ET_BOOLEAN_CONSTANT>    Boolean_constant
@@ -86,6 +87,8 @@ creation
                                Deferred_function_declaration External_function_declaration
 %type <ET_FEATURE_NAME>        Feature_name Feature_list_item
 %type <ET_FORMAL_ARGUMENTS>    Formal_arguments_opt Formal_argument_list
+%type <ET_FORMAL_GENERIC_TYPE> Formal_generic
+%type <ET_FORMAL_GENERIC_TYPES> Formal_generics_opt Formal_generic_list
 %type <ET_IDENTIFIER>          Identifier Class_name
 %type <ET_IF_INSTRUCTION>      Conditional If_elseif_list
 %type <ET_INSTRUCTION>         Instruction Creation_instruction Assignment
@@ -175,24 +178,37 @@ Class_header: E_CLASS Identifier
 	| E_DEFERRED E_CLASS Identifier
 		{ last_class := new_deferred_class ($3) }
 	| E_EXPANDED E_CLASS Identifier
-		{ last_class := new_class ($3) }
+		{ last_class := new_expanded_class ($3) }
 	| E_SEPARATE E_CLASS Identifier
-		{ last_class := new_class ($3) }
+		{ last_class := new_separate_class ($3) }
 	;
 
 --------------------------------------------------------------------------------
 
 Formal_generics_opt: -- Empty
+		-- { $$ := Void }
+	| '[' ']'
+		-- Warning!
+		-- { $$ := Void }
 	| '[' Formal_generic_list ']'
+		{ last_class.set_generic_parameters ($2) }
 	;
 
-Formal_generic_list: -- Empty
-	| Identifier Constraint_opt
-	| Formal_generic_list ',' Identifier Constraint_opt
+Formal_generic_list: Formal_generic
+		{
+			$$ := new_formal_generics ($1)
+		}
+	| Formal_generic_list ',' Formal_generic
+		{
+			$$ := $1
+			$$.put ($3)
+		}
 	;
 
-Constraint_opt: -- Empty
-	| E_ARROW Class_type
+Formal_generic: Identifier
+		{ $$ := new_formal_generic ($1, Void) }
+	| Identifier E_ARROW Class_type
+		{ $$ := new_formal_generic ($1, $3) }
 	;
 
 --------------------------------------------------------------------------------
@@ -469,9 +485,9 @@ Feature_declaration: Single_feature_declaration
 	| E_FROZEN Single_feature_declaration
 		{ $$ := $2; register_frozen_feature ($$) }
 	| Feature_name Feature_synonym_separator Feature_declaration
-		{ $$ := $3.synonym ($1); register_feature ($$) }
+		{ $$ := new_synonym_feature ($1, $3); register_feature ($$) }
 	| E_FROZEN Feature_name Feature_synonym_separator Feature_declaration
-		{ $$ := $4.synonym ($2); register_frozen_feature ($$) }
+		{ $$ := new_synonym_feature ($2, $4); register_frozen_feature ($$) }
 	;
 
 Feature_synonym_separator: -- Empty
@@ -786,34 +802,47 @@ Rescue_opt: -- Empty
 --------------------------------------------------------------------------------
 
 Type: Class_type
-		{!ET_TYPE! $$ }
+		{ $$ := $1 }
 	| E_EXPANDED Class_type
-		{!ET_TYPE! $$ }
+	-- TODO:
+		{ $$ := $2 }
 	| E_SEPARATE Class_type
-		{!ET_TYPE! $$ }
+		-- TODO
+		{ $$ := $2 }
 	| E_LIKE E_CURRENT
-		{!ET_TYPE! $$ }
+		{ $$ := new_like_current ($2) }
 	| E_LIKE Identifier
-		{!ET_TYPE! $$ }
+		{ $$ := new_like_identifier ($2) }
 	| E_BITTYPE Integer_constant
-		{!ET_TYPE! $$ }
+		{ $$ := new_bit_type ($2) }
 	| E_BITTYPE Identifier
-		{!ET_TYPE! $$ }
+		{ $$ := new_bit_identifier ($2)  }
 	;
 
 Class_type: Class_name Actual_generics_opt
+		{ $$ := new_class_type ($1, $2) }
 	;
 
 Class_name: E_IDENTIFIER
+		{ $$ := $1 }
 	;
 
 Actual_generics_opt: -- Empty
+		-- { $$ := Void }
+	| '[' ']'
+		-- Warning:
+		-- { $$ := Void }
 	| '[' Type_list ']'
+		{ $$ := $2 }
 	;
 
-Type_list: -- Empty
-	| Type
+Type_list: Type
+		{ $$ := new_actual_generics ($1) }
 	| Type_list ',' Type
+		{
+			$$ := $1
+			$$.put ($3)
+		}
 	;
 
 --------------------------------------------------------------------------------
