@@ -21,30 +21,34 @@ Let's have a look at the project file which produces this output.
 		</target>
 	</project>
 
-Since we do not provide a buildfile on the commandline the default name (build.eant) is
-used. With the option '-b' respectively '--buildfile' it is possible to use a different file.
-There is no target specified on the commandline either. In this case geant tries to find a
-'default' attribute in the <project> element by which the start target for the build process
-can be specified. When there is no default attribute as in this simple example the first
-target (named 'hi' in our example) is the first target which will be executed.
-If there is no target in the project geant gives up and terminates.
+Since we do not provide a buildfile on the commandline the default
+name (build.eant) is used. With the option '-b' respectively
+'--buildfile' it is possible to use a different file.  There is no
+target specified on the commandline either. In this case geant tries
+to find a 'default' attribute in the <project> element by which the
+start target for the build process can be specified. When there is no
+default attribute as in this simple example the first target (named
+'hi' in our example) is the first target which will be executed.  If
+there is no target in the project geant gives up and terminates.
 
-A target can have an optional 'description' attribute which should describe briefly what
-the target does. In a future version there will be a '--projecthelp' commandline option
-which will just list all the targetnames with its description without starting the build
-process.
+A target can have an optional 'description' attribute which should
+describe briefly what the target does. In a future version there will
+be a '--projecthelp' commandline option which will just list all the
+targetnames with its description without starting the build process.
 
 
-A <target> elements can contain zero or more task elements as direct children. Each task
-element is executed in sequential order. The specific action which is performed is dependent
-on the individual tasks.
+A <target> elements can contain zero or more task elements as direct
+children. Each task element is executed in sequential order. The
+specific action which is performed is dependent on the individual
+tasks.
 
-The only task wich our 'hi' target contains is <echo>. <echo> has a single attribute called
-'message' and this message is printed to stdout. This is the reason why you see 'Hello world'
-on your screen.
+The only task wich our 'hi' target contains is <echo>. <echo> has a
+single attribute called 'message' and this message is printed to
+stdout. This is the reason why you see 'Hello world' on your screen.
 
-In the following sections all other examples are explained. We usually do not use 'build.eant'
-as filename for the examples since we have mostly more than one build file in a directory.
+In the following sections all other examples are explained. We usually
+do not use 'build.eant' as filename for the examples since we have
+mostly more than one build file in a directory.
 
 Variables:
 ===========
@@ -70,7 +74,7 @@ cd to examples/variables
 	output:
 
 		var:
-		
+
 		  [echo] Hello world
 
 	With the <var> task a variable can be defined. The 'name' attribute specifies
@@ -87,7 +91,7 @@ cd to examples/variables
 	output:
 
 		var:
-		
+
 		  [echo] Hello Eiffel
 
 	call:
@@ -97,7 +101,7 @@ cd to examples/variables
 	output:
 
 		var:
-		
+
 		  [echo] Hello Eiffel World
 
 	Once a variable has been set it cannot be set again.
@@ -126,15 +130,16 @@ cd to examples/variables
 	output:
 
 		var:
-		
+
 		  [echo] Hello Bart Simpson
 
-	This examples demonstrates how variables can be constructed from other variables.
+	This examples demonstrates how variables can be constructed from
+	other variables.
 
 	NOTE:
-		The Eiffel XML parser which geant uses has a bug at the moment, which does not
-		allow you to set an empty XML attribute value like "" or which contains only whitespace
-		like in " ".
+		The Eiffel XML parser which geant uses has a bug at the moment,
+		which does not allow you to set an empty XML attribute value like
+		"" or which contains only whitespace like in " ".
 
 
 exec:
@@ -159,9 +164,11 @@ cd to examples/exec
 
 		the same output as a 'dir' command on the commandline would show.
 
-	The exec task can be used as a general means to execute a command as one would do
-	on the commandline. This can always be used when there is no appropriate task available.
-	The attribute 'executable' takes the exact string one would specify on the commandline.
+	The exec task can be used as a general means to execute a command as
+	one would do on the commandline. This can always be used when there
+	is no appropriate task available.
+	The attribute 'executable' takes the exact string one would specify
+	on the commandline.
 
 	call (unix):
 
@@ -173,11 +180,12 @@ cd to examples/exec
 
 	NOTE:
 
-		One job of the tasks is to make commands platform independent. At the moment
-		geant is at the very beginning regarding this issue.
-		Let's take an example. For copying a file it should not be necessary to
-		invoke <exec executable="copy ....." /> on windows and <exec executable="cp ....." />
-		on unix but rather have a <cp> task which makes it transparent.
+		One job of the tasks is to make commands platform independent. At
+		the moment geant is at the very beginning regarding this issue.
+		Let's take an example. For copying a file it should not be
+		necessary to invoke <exec executable="copy ....." /> on windows
+		and <exec executable="cp ....." /> on unix but rather have a <cp>
+		task which makes it transparent.
 
 
 geant:
@@ -190,14 +198,14 @@ cd to examples/geant
 		<project name="geant" >
 			<target name="one" description="calls other ant files">
 				<var name="who" value="Bart" />
-		
+
 				<echo message="------------------------" />
 				<echo message="before call of ../variables/variables1.eant" />
 				<geant file="../variables/variables1.eant" />
 				<echo message="after call of ../variables/variables1.eant" />
 				<echo message="-------" />
 				<echo message="before call of ../variables/variables1.eant" />
-				<geant file="../variables/variables1.eant" fork="true"/> 
+				<geant file="../variables/variables1.eant" fork="true"/>
 				<echo message="after call of ../variables/variables1.eant" />
 			</target>
 		</project>
@@ -209,41 +217,43 @@ cd to examples/geant
 	output:
 
 		one:
-		
+
 		  [echo] ------------------------
 		  [echo] before call of ../variables/variables1.eant
-		
+
 		var:
-		
+
 		  [echo] Hello Bart
 		  [echo] after call of ../variables/variables1.eant
 		  [echo] -------
 		  [echo] before call of ../variables/variables1.eant
 		  [geant] geant -b ../variables/variables1.eant
-		
+
 		var:
-		
+
 		  [echo] Hello world
 		  [echo] after call of ../variables/variables1.eant
 
 
 
-	With the geant task other geant files can be invoked. This can be done in the same
-	process (default behaviour) or in a new process when the 'force' attribute is set to
-	'true'.
-	At the moment the big difference is that for an inprocess invokation all defined variables
-	are still available in the called build file. The example makes this visible by displaying
-	'Hello Bart' instead of 'Hello World' for the first <geant> invokation. The second <geant>
-	invocation creates a new process and all variables vanish. Thats why you see 'Hello world'
-	instead of 'Hello Bart'.
-	The current behaviour results from the fact that variables are held globally inside of geant.
-	This will certainly change in the future where variables will be project bound. <geant> will
-	be able to take arguments which can be passed to the called build project exactly like you
-	can do it on the commandline already.
+	With the geant task other geant files can be invoked. This can be
+	done in the same process (default behaviour) or in a new process
+	when the 'force' attribute is set to 'true'.
+	At the moment the big difference is that for an inprocess invokation
+	all defined variables are still available in the called build
+	file. The example makes this visible by displaying 'Hello Bart'
+	instead of 'Hello World' for the first <geant> invokation. The
+	second <geant> invocation creates a new process and all variables
+	vanish. Thats why you see 'Hello world' instead of 'Hello Bart'.
+	The current behaviour results from the fact that variables are held
+	globally inside of geant.  This will certainly change in the future
+	where variables will be project bound. <geant> will be able to take
+	arguments which can be passed to the called build project exactly
+	like you can do it on the commandline already.
 
 
 depends/01:
-Demonstrates the depends attribute of targets.
+Demonstrates the depend attribute of targets.
 
 cd to examples/depends
 
@@ -253,10 +263,10 @@ cd to examples/depends
 			<target name="A" >
 				<echo message="A" />
 			</target>
-			<target name="B" depends="A" >
+			<target name="B" depend="A" >
 				<echo message="B" />
 			</target>
-			<target name="C" depends="B" >
+			<target name="C" depend="B" >
 				<echo message="C" />
 			</target>
 		</project>
@@ -268,32 +278,36 @@ cd to examples/depends
 	output:
 
 		A:
-		
+
 		  [echo] A
-		
+
 		B:
-		
+
 		  [echo] B
-		
+
 		C:
-		
+
 		  [echo] C
 
 
-	With the 'depends' XML attribute targets can be made dependent on each other. In the
-	example target 'C' is dependent on target 'B'. This means that target 'B' will be executed
-	before target 'C' is executed. It is possible to specify more than one target dependencies
-	using comma separated target names in the 'depends' attribute:
+	With the 'depend' XML attribute targets can be made dependent on
+	each other. In the example target 'C' is dependent on target
+	'B'. This means that target 'B' will be executed before target 'C'
+	is executed. It is possible to specify more than one target
+	dependencies using comma separated target names in the 'depend'
+	attribute:
 
-			<target name="C" depends="B,A" >
+			<target name="C" depend="B,A" >
 				<echo message="C" />
 			</target>
 
-	This means that target 'B' is executed first, then target 'A' and then target 'C'.
+	This means that target 'B' is executed first, then target 'A' and
+	then target 'C'.
 
 gexace:
-Demonstrates how to compile an Eiffel program. It builds on the 'gexace' tool which will
-be the 'gobo way' to compile an Eiffel program.
+Demonstrates how to compile an Eiffel program. It builds on the
+'gexace' tool which will be the 'gobo way' to compile an Eiffel
+program.
 
 cd to examples/gexace.
 
@@ -323,49 +337,52 @@ cd to examples/gexace.
 
 		geant
 
-		Note: Since the default target of the project is 'compile' this starts the build
-				process with the 'compile' target. Currently only SmallEiffel is used !
-				And since the name of the buildfile is 'build.eant' we do not have to
-				provide the -b option on the commandline.
+		Note: Since the default target of the project is 'compile' this
+				starts the build process with the 'compile' target. Currently
+				only SmallEiffel is used !  And since the name of the
+				buildfile is 'build.eant' we do not have to provide the -b
+				option on the commandline.
 
 	output:
 
 		init:
-		
-		
+
+
 		compile:
-		
+
 		gexace
 		  [gexace] gexace  --build --se hello.xace
 		  [gexace] compile se.ace
 
-	This calls the gexace tool which generates a SmallEiffel ace file and which will be
-	compiled immediately since we provided the 'compile="true"' attribute.
-	Note: 'gexace' will not be described here since it's documentation can be found in (TBD!!).
+	This calls the gexace tool which generates a SmallEiffel ace file
+	and which will be compiled immediately since we provided the
+	'compile="true"' attribute.  Note: 'gexace' will not be described
+	here since it's documentation can be found in (TBD!!).
 
-	Now we could simply invoke the hello program from the commandline but since this would be
-	too easy simply invoke 'geant run' which produces the following output:
+	Now we could simply invoke the hello program from the commandline
+	but since this would be too easy simply invoke 'geant run' which
+	produces the following output:
 
 		init:
-		
-		
+
+
 		run:
-		
+
 		  [exec] hello
 		Hello World
 
 	The clean target ('geant clean') is more useful:
 
 		init:
-		
-		
+
+
 		clean:
-		
+
 		  [exec] clean hello
 		  [exec] del hello.exe se.ace cecil.se *.bak
 
-	Note: the 'del' command is windows specific. In future os independent special tasks
-		will be provided like <del>.
+	Note: the 'del' command is windows specific. In future os
+		independent special tasks will be provided like <del>.
 
 
 
@@ -396,25 +413,27 @@ cd to examples/conditional.
 	output:
 
 		A:
-		
-		
+
+
 		B:
-		
-		
+
+
 		C:
-		
+
 		  [echo] C
 
 
-	As values of the 'if' and 'unless' XML attributes of target elements you can use
-	variable values and environmentvariables. The '${}' syntax is not used for these
-	attributes since we do not want to evaluate the variables but only check if they
-	are defined. This means the 'if' attribute returns true if the variable is defined
-	otherwise true. The value of the variable does not matter. The same is true for
-	'unless' except that it returns true if it is not defined.
+	As values of the 'if' and 'unless' XML attributes of target elements
+	you can use variable values and environmentvariables. The '${}'
+	syntax is not used for these attributes since we do not want to
+	evaluate the variables but only check if they are defined. This
+	means the 'if' attribute returns true if the variable is defined
+	otherwise true. The value of the variable does not matter. The same
+	is true for 'unless' except that it returns true if it is not
+	defined.
 
-	Since the variables 'runa' and 'runb' are not defined target 'A' and target 'B' do
-	not produce any output.
+	Since the variables 'runa' and 'runb' are not defined target 'A' and
+	target 'B' do not produce any output.
 
 	If we call it like this:
 
@@ -427,14 +446,14 @@ cd to examples/conditional.
 	output:
 
 		A:
-		
+
 		  [echo] A
-		
+
 		B:
-		
-		
+
+
 		C:
-		
+
 		  [echo] C
 
 	If we call it like this:
@@ -448,24 +467,27 @@ cd to examples/conditional.
 	output:
 
 		A:
-		
+
 		  [echo] A
-		
+
 		B:
-		
+
 		  [echo] B
-		
+
 		C:
-		
+
 		  [echo] C
 
-	As you can see the if's return true and targets 'A' respectively 'B' get executed.
+	As you can see the if's return true and targets 'A' respectively 'B'
+	get executed.
 
 
-	The file unless1.eant contains the same examples but the if's have been replaced with unless's.
+	The file unless1.eant contains the same examples but the if's have
+	been replaced with unless's.
 
 condidional/if2:
-Demonstrates how we can use 'if' and 'unless' to create a os independent buildfile.
+Demonstrates how we can use 'if' and 'unless' to create a os
+independent buildfile.
 
 cd to examples/conditional.
 
@@ -489,13 +511,13 @@ cd to examples/conditional.
 	output (windows):
 
 		list_for_windows:
-		
+
 		  [exec] dir
 		 Volume in drive D has no label.
 		 Volume Serial Number is 72CB-0D64
-		
+
 		 Directory of D:\cvsstuff\gobo-eiffel\gobo\example\geant\conditional
-		
+
 		07/20/01  08:06p        <DIR>          .
 		07/20/01  08:06p        <DIR>          ..
 		07/20/01  07:13p                   264 if1.eant
@@ -504,19 +526,19 @@ cd to examples/conditional.
 		07/20/01  07:45p                   272 unless1.eant
 		               6 File(s)          1,475 bytes
 		                          2,103,660,544 bytes free
-		
+
 		list_for_unix:
-		
-		
+
+
 		list:
 
 	output (unix):
 
 		list_for_windows:
-		
-		
+
+
 		list_for_unix:
-		
+
 		  [exec] ls -l
 		    D:\cvsstuff\gobo-eiffel\gobo\example\geant\conditional\*.*
 		--a--       264 Fri Jul 20 19:13:51 2001 if1.eant
@@ -524,16 +546,17 @@ cd to examples/conditional.
 		--a--       611 Fri Jul 20 20:03:19 2001 if3.eant
 		--a--       272 Fri Jul 20 19:45:30 2001 unless1.eant
 		    1475 (1475) bytes in 4 files
-		
+
 		list:
 
 
-	Note: for simplicity we assume here that if a environmentvariable 'windir' exists
-		that we are in a windows environment. Otherwise we are on unix. This should
-		be ok for most situations.
+	Note: for simplicity we assume here that if a environment variable
+		'windir' exists that we are in a windows environment. Otherwise we
+		are on unix. This should be ok for most situations.
 
-	File if3.eant basically has the same behaviour but introduces an additional abstraction
-	layer by introducing some variables defining the operating system:
+	File if3.eant basically has the same behaviour but introduces an
+	additional abstraction layer by introducing some variables defining
+	the operating system:
 
 		<project name="if_demo" default="list" >
 			<target name="windows" if="env.windir" >
@@ -553,5 +576,3 @@ cd to examples/conditional.
 			<target name="list" depends="list_for_windows,list_for_unix" >
 			</target>
 		</project>
-
-
