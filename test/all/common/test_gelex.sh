@@ -36,14 +36,14 @@ grep -v "\$\(Date\|Revision\):" calc_scanner.e > tmp1.e
 grep -v "\$\(Date\|Revision\):" $GOBO/example/lexical/calculator/calc_scanner.e > tmp2.e
 diff tmp1.e tmp2.e
 
-cp $GOBO/example/lexical/eiffel/eiffel_scanner.l .
+cp $GOBO/example/lexical/eiffel_scanner/eiffel_scanner.l .
 ./gelex eiffel_scanner.l
 grep -v "\$\(Date\|Revision\):" eiffel_scanner.e >  tmp1.e
-grep -v "\$\(Date\|Revision\):" $GOBO/example/lexical/eiffel/eiffel_scanner.e > tmp2.e
+grep -v "\$\(Date\|Revision\):" $GOBO/example/lexical/eiffel_scanner/eiffel_scanner.e > tmp2.e
 diff tmp1.e tmp2.e
 
-cp $GOBO/example/parse/eiffel/eiffel_scanner.l .
+cp $GOBO/example/parse/eiffel_parser/eiffel_scanner.l .
 ./gelex eiffel_scanner.l
 grep -v "\$\(Date\|Revision\):" eiffel_scanner.e > tmp1.e
-grep -v "\$\(Date\|Revision\):" $GOBO/example/parse/eiffel/eiffel_scanner.e > tmp2.e
+grep -v "\$\(Date\|Revision\):" $GOBO/example/parse/eiffel_parser/eiffel_scanner.e > tmp2.e
 diff tmp1.e tmp2.e
