@@ -19,7 +19,7 @@ inherit
 		rename
 			make as make_bit_type
 		redefine
-			check_parent_validity1,
+			check_parent_validity,
 			check_constraint_validity,
 			deep_cloned_type,
 			append_to_string
@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			feature_id := a_feature_id
 			position := p
+			size := No_size
 		ensure
 			constant_set: constant = a_constant
 			name_set: name = a_name
@@ -64,21 +65,23 @@ feature -- Access
 
 feature -- Validity
 
-	check_parent_validity1 (an_heir: ET_CLASS): BOOLEAN is
+	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current type is valid when
 			-- it appears in parent clause of `an_heir'.
-			-- Do not check conformance to generic
-			-- constraints. Report errors if not valid.
+			-- Report errors if not valid.
 		do
 			Result := False
 			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
 		end
 
-	check_constraint_validity (a_class: ET_CLASS): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
-			-- appears in a constraint of a formal generic
-			-- parameter of class `a_class'. Report errors
-			-- if not valid.
+			-- appears in a constraint of the formal generic
+			-- parameter `a_formal' in class `a_class'.
+			-- `a_sorter' is used to find possible cycle in
+			-- formal generic parameter declaration.
+			-- Report errors if not valid.
 		do
 			Result := False
 			a_class.error_handler.report_vcfg3_error (a_class, Current)

@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			constant := a_constant
 			position := p
+			size := No_size
 		ensure
 			constant_set: constant = a_constant
 			position_set: position = p
@@ -66,22 +67,23 @@ feature -- Status report
 			if a_bit /= Void then
 				other_constant := a_bit.constant
 				if other_constant.literal.is_equal (constant.literal) then
-					Result := True
+					Result := (other_constant.is_negative = constant.is_negative)
 				else
 						-- Compare directly their sizes.
 					s1 := size
-					if s1 /= 0 then
+					if s1 /= No_size then
 						has_s1 := True
 					else
 						constant.compute_value
 						if not constant.has_value_error then
-							s1 := constant.value
+							size := constant.value
+							s1 := size
 							has_s1 := True
 						end
 					end
 					if has_s1 then
 						s2 := a_bit.size
-						if s2 /= 0 then
+						if s2 /= No_size then
 							Result := (s1 = s2)
 						else
 							other_constant.compute_value
@@ -110,18 +112,19 @@ feature -- Status report
 			if a_bit /= Void then
 					-- See VNCB-2 (ETL2 p.229).
 				s1 := size
-				if s1 /= 0 then
-					has_s1 := True
+				if s1 /= No_size then
+					has_s1 := (s1 >= 0)
 				else
 					constant.compute_value
 					if not constant.has_value_error then
-						s1 := constant.value
-						has_s1 := True
+						size := constant.value
+						s1 := size
+						has_s1 := (s1 >= 0)
 					end
 				end
 				if has_s1 then
 					s2 := a_bit.size
-					if s2 /= 0 then
+					if s2 /= No_size then
 						Result := (s1 <= s2)
 					else
 						other_constant := a_bit.constant
@@ -141,56 +144,64 @@ feature -- Status report
 
 feature -- Validity
 
-	check_parent_validity1 (an_heir: ET_CLASS): BOOLEAN is
+	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current type is valid when
 			-- it appears in parent clause of `an_heir'.
-			-- Do not check conformance to generic
-			-- constraints. Report errors if not valid.
+			-- Report errors if not valid.
 		do
-			if constant.is_negative then
-				Result := False
-				an_heir.error_handler.report_vtbt_error (an_heir, Current)
-			else
+			Result := True
+			if size = No_size then
 				constant.compute_value
 				if constant.has_value_error then
 					Result := False
 					an_heir.error_handler.report_vtbt_error (an_heir, Current)
 				else
 					size := constant.value
-					if size <= 0 then
-						Result := False
-						an_heir.error_handler.report_vtbt_error (an_heir, Current)
-					else
-						Result := True
-						an_heir.error_handler.report_vhpr3_bitn_error (an_heir, Current)
-					end
+				end
+			end
+			if Result then
+				if size < 0 then
+					Result := False
+					an_heir.error_handler.report_vtbt_error (an_heir, Current)
+				elseif size = 0 and constant.is_negative then
+					Result := True
+					an_heir.error_handler.report_vtbt_minus_zero_error (an_heir, Current)
+				else
+					Result := True
+					an_heir.error_handler.report_vhpr3_bitn_error (an_heir, Current)
 				end
 			end
 		end
 
-	check_constraint_validity (a_class: ET_CLASS): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
-			-- appears in a constraint of a formal generic
-			-- parameter of class `a_class'. Report errors
-			-- if not valid.
+			-- appears in a constraint of the formal generic
+			-- parameter `a_formal' in class `a_class'.
+			-- `a_sorter' is used to find possible cycle in
+			-- formal generic parameter declaration.
+			-- Report errors if not valid.
 		do
-			if constant.is_negative then
-				Result := False
-				a_class.error_handler.report_vtbt_error (a_class, Current)
-			else
+			Result := True
+			if size = No_size then
 				constant.compute_value
 				if constant.has_value_error then
 					Result := False
 					a_class.error_handler.report_vtbt_error (a_class, Current)
 				else
 					size := constant.value
-					if size <= 0 then
-						Result := False
-						a_class.error_handler.report_vtbt_error (a_class, Current)
-					else
-						Result := True
-						a_class.error_handler.report_vcfg3_bitn_error (a_class, Current)
-					end
+				end
+			end
+			if Result then
+				if size < 0 then
+					Result := False
+					a_class.error_handler.report_vtbt_error (a_class, Current)
+				elseif size = 0 and constant.is_negative then
+					Result := True
+					a_class.error_handler.report_vtbt_minus_zero_error (a_class, Current)
+				else
+					Result := True
+					a_class.error_handler.report_vcfg3_bitn_error (a_class, Current)
 				end
 			end
 		end
@@ -232,6 +243,10 @@ feature {NONE} -- Constants
 	bit_keyword: STRING is "BIT"
 			-- Eiffel keywords
 
+	No_size: INTEGER is -1
+			-- Marker which says that `size' has not
+			-- been computed yet, or has the invalid
+			-- value -1
 invariant
 
 	constant_not_void: constant /= Void
