@@ -700,56 +700,58 @@ feature -- removal
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move all cursors `off'.
-			-- (Performance: O(count^2).)
+			-- (Performance: O(count).)
 		local
-			i, j, k: INTEGER
+			i, j, nb: INTEGER
 			old_count: INTEGER
 			a_tester: like equality_tester
 		do
 			move_all_cursors_after
 			if not is_empty then
-				old_count := count
+				nb := count
 				a_tester := equality_tester
 				if a_tester /= Void then
-					from i := count until i < 1 loop
-						if a_tester.test (storage.item (i), v) then
-							from
-								k := i + 1
-								j := 1 
-								i := i - 1
-							until
-								i < 1 or else
-								not a_tester.test (storage.item (i), v)
-							loop
-								j := j + 1
-								i := i - 1
-							end
-							move_left (k, j)
-						else
-							i := i - 1
+					from i := 1 until i > nb loop
+						from
+						until
+							i > nb or else
+							not a_tester.test (storage.item (i), v)
+						loop
+							i := i + 1
+						end
+						from
+						until
+							i > nb or else
+							a_tester.test (storage.item (i), v)
+						loop
+							j := j + 1
+							storage.put (storage.item (i), j)
+							i := i + 1
 						end
 					end
 				else
 						-- Use `=' as comparison criterion.
-					from i := count until i < 1 loop
-						if storage.item (i) = v then
-							from
-								k := i + 1
-								j := 1 
-								i := i - 1
-							until
-								i < 1 or else
-								storage.item (i) /= v
-							loop
-								j := j + 1
-								i := i - 1
-							end
-							move_left (k, j)
-						else
-							i := i - 1
+					from i := 1 until i > nb loop
+						from
+						until
+							i > nb or else
+							storage.item (i) /= v
+						loop
+							i := i + 1
+						end
+						from
+						until
+							i > nb or else
+							storage.item (i) = v
+						loop
+							j := j + 1
+							storage.put (storage.item (i), j)
+							i := i + 1
 						end
 					end
 				end
+				old_count := count
+				count := j
 				clear_items (count + 1, old_count)
 			end
 		end
