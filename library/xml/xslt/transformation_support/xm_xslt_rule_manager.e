@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			create mode_for_default_mode.make
-			create mode_map.make (5)
+			create mode_map.make_map (5)
 		end
 
 feature -- Access

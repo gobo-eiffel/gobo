@@ -392,7 +392,7 @@ feature -- Access
 			an_element: XM_XPATH_TINY_ELEMENT
 		do
 			if element_list = Void then
-				create element_list.make (10)
+				create element_list.make_map (10)
 			end
 			if not element_list.has (a_fingerprint) then
 				debug ("XPath tiny document")

@@ -168,7 +168,8 @@ feature -- Elements
 		local
 			a_table: DS_HASH_TABLE [STRING, STRING]
 		do
-			create a_table.make_default
+			create a_table.make_map_default
+			a_table.set_key_equality_tester (string_equality_tester)
 			prefixes.force_last (a_table)
 
 			element_prefixes.wipe_out

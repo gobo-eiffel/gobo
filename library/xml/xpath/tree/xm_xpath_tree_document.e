@@ -111,7 +111,7 @@ feature -- Access
 			a_node: XM_XPATH_TREE_NODE
 		do
 			if element_list = Void then
-				create element_list.make (10)
+				create element_list.make_map (10)
 			end
 			if not element_list.has (a_fingerprint) then
 				create a_list.make_default

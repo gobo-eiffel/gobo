@@ -15,10 +15,10 @@ class XM_STRING_EXTERNAL_RESOLVER
 inherit
 
 	XM_EXTERNAL_RESOLVER
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
 creation
 
 	make
@@ -28,7 +28,8 @@ feature {NONE} -- Creation
 	make is
 			-- Make.
 		do
-			create strings.make_default
+			create strings.make_map_default
+			strings.set_key_equality_tester (string_equality_tester)
 			last_error := "no stream"
 		ensure
 			empty: strings.is_empty
@@ -38,7 +39,7 @@ feature -- Access
 
 	strings: DS_HASH_TABLE [STRING, STRING]
 			-- Table of strings indexed by resolution names.
-			
+
 feature -- Action(s)
 
 	resolve (a_system_name: STRING) is
@@ -52,15 +53,15 @@ feature -- Action(s)
 				last_stream := Void
 			end
 		end
-		
+
 feature -- Result
 
 	last_stream: KI_CHARACTER_INPUT_STREAM
 			-- File matching stream.
-			
+
 	last_error: STRING
 			-- Last error.
-		
+
 	has_error: BOOLEAN is
 			-- Is there an error.
 		do
@@ -71,5 +72,5 @@ invariant
 
 	error_or_stream: last_stream /= Void xor last_error /= Void
 	strings_not_void: strings /= Void
-		
+
 end

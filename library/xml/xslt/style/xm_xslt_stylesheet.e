@@ -542,7 +542,7 @@ feature -- Element change
 			decimal_format_manager.fixup_default_default
 			last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
 
-			create a_compiled_templates_index.make (named_templates_index.count)
+			create a_compiled_templates_index.make_map (named_templates_index.count)
 			from
 				another_cursor := named_templates_index.new_cursor; another_cursor.start
 			until

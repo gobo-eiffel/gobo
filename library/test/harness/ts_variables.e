@@ -12,6 +12,13 @@ indexing
 
 class TS_VARIABLES
 
+inherit
+
+	ANY
+
+	KL_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 creation
 
 	make
@@ -21,7 +28,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new empty variables.
 		do
-			create variables.make (10)
+			create variables.make_map (10)
+			variables.set_key_equality_tester (string_equality_tester)
 		end
 
 feature -- Status report

@@ -502,10 +502,10 @@ feature -- Basic operations
 					j >= l_a_count -- local_a.count
 				loop
 #ifdef VE
-					carry := carry + l_a_digits.item (j).code * digit + l_digits.item (i + j).code
+					carry := carry + digit * l_a_digits.item (j).code + l_digits.item (i + j).code
 					l_digits.put (to_character (carry \\ 10), i + j)
 #else
-					carry := carry + l_a_digits.item (j) * digit + l_digits.item (i + j)
+					carry := carry + digit * l_a_digits.item (j) + l_digits.item (i + j)
 					l_digits.put ((carry \\ 10).to_integer_8, i + j)
 #endif
 					carry := carry // 10

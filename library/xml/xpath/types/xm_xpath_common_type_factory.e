@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	type_map: DS_HASH_TABLE [XM_XPATH_SCHEMA_TYPE, INTEGER] is
 			-- Table of built-in types, keyed on fingerprint
 		once
-			create Result.make (1024)
+			create Result.make_map (1024)
 
 			-- Add all types required by a Basic-level XSLT processor
 
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 	local_names: DS_HASH_TABLE [STRING, INTEGER] is
 			-- Table of standard local names, keyed on fingerprint
 		once
-			create Result.make (1024)
+			create Result.make_map (1024)
 			Result.set_equality_tester (string_equality_tester)
 		end
 

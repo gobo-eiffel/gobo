@@ -19,6 +19,9 @@ inherit
 			resolve_finish
 		end
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 creation
 
 	make,
@@ -31,7 +34,8 @@ feature {NONE} -- Creation
 			-- (Useful to descendant to establish invariant.)
 		do
 			create {DS_LINKED_STACK [UT_URI]} uris.make	
-			create schemes.make_default
+			create schemes.make_map_default
+			schemes.set_key_equality_tester (string_equality_tester)
 		end
 		
 	make_with_base (a_uri: UT_URI) is
