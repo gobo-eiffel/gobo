@@ -1,5 +1,5 @@
 @rem system:     "'gepp' preprocessor"
-@rem compiler:   "SmallEiffel -0.82"
+@rem compiler:   "SmallEiffel -0.81"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1998, Eric Bezault"
 @rem date:       "$Date$"
@@ -37,6 +37,6 @@
 @echo %SmallEiffel%\lib_std\>>						loadpath.se
 
 
-set options= -boost -no_split -case_insensitive -no_warning
+set options= -boost -no_split -no_warning -no_gc
 compile_to_c %options% GEPP execute
 gepp.bat
