@@ -16,6 +16,12 @@ inherit
 
 	EXCEPTIONS
 
+	UT_ARRAY_ROUTINES
+		export
+			{NONE} all;
+			{ANY} array_has
+		end
+
 feature -- Access
 
 	program_name: STRING is
@@ -406,7 +412,7 @@ feature -- Error handling
 			-- Report an error message and terminate.
 		require
 			message_not_void: message /= Void
-			no_void_info: not message.has (Void)
+			no_void_info: not array_has (message, Void)
 		local
 			i, nb: INTEGER
 		do
@@ -429,7 +435,7 @@ feature -- Error handling
 			-- Report an info message and exit.
 		require
 			message_not_void: message /= Void
-			no_void_info: not message.has (Void)
+			no_void_info: not array_has (message, Void)
 		local
 			i, nb: INTEGER
 		do
@@ -451,7 +457,7 @@ feature -- Error handling
 		require
 			filename_not_void: filename /= Void
 			message_not_void: message /= Void
-			no_void_info: not message.has (Void)
+			no_void_info: not array_has (message, Void)
 		do
 			parsing_message (filename, line, message)
 			syntax_error := True
@@ -465,7 +471,7 @@ feature -- Error handling
 		require
 			filename_not_void: filename /= Void
 			message_not_void: message /= Void
-			no_void_info: not message.has (Void)
+			no_void_info: not array_has (message, Void)
 		local
 			i, nb: INTEGER
 		do
@@ -494,7 +500,7 @@ feature -- Error handling
 		require
 			filename_not_void: filename /= Void
 			message_not_void: message /= Void
-			no_void_info: not message.has (Void)
+			no_void_info: not array_has (message, Void)
 		local
 			i, nb: INTEGER
 		do
