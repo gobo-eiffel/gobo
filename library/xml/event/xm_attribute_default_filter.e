@@ -255,8 +255,8 @@ feature {NONE} -- Content implementation
 			a_local_not_void: a_local /= Void
 		do
 			if has_prefix (a_prefix) then
-				Result := string_.concat (a_prefix, Prefix_separator)
-				Result := string_.concat (Result, a_local)
+				Result := STRING_.concat (a_prefix, Prefix_separator)
+				Result := STRING_.concat (Result, a_local)
 			else
 				Result := a_local
 			end

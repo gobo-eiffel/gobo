@@ -43,15 +43,15 @@ feature -- Access
 	uri: STRING is
 			-- File URI.
 		do
-			Result := string_.concat ("file:", file_name)
+			Result := STRING_.concat ("file:", file_name)
 		end
 
-feature -- Out
+feature -- Output
 
 	out: STRING is
 			-- Filename.
 		do
-			Result := file_name
+			Result := file_name.out
 		end
 
 invariant

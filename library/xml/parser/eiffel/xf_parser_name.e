@@ -82,7 +82,7 @@ feature -- Any
 			until
 				i > count
 			loop
-				Result := string_.concat (Result, item(i))
+				Result := STRING_.concat (Result, item(i))
 				i := i + 1
 			end
 		end
@@ -169,7 +169,7 @@ feature
 				until
 					it.after
 				loop
-					Result := string_.concat (Result, it.item)
+					Result := STRING_.concat (Result, it.item)
 					it.forth
 				end
 			end
