@@ -29,13 +29,13 @@ feature -- Element change
 		local
 			a_parser: LX_REGEXP_PARSER
 			a_description: LX_DESCRIPTION
-			an_error_handler: LX_REGEXP_ERROR_HANDLER
+			an_error_handler: UT_ERROR_HANDLER
 			a_dfa: LX_FULL_DFA
 			a_full_tables: LX_FULL_TABLES
 			a_string: STRING
 			nb: INTEGER
 		do
-			!! an_error_handler.make
+			!! an_error_handler.make_null
 			!! a_description.make
 			a_description.set_equiv_classes_used (False)
 			a_description.set_meta_equiv_classes_used (False)
@@ -58,15 +58,15 @@ feature -- Element change
 				has_dollar := False
 			end
 			a_parser.parse_string (a_string)
-			if an_error_handler.syntax_error then
-				yy_nxt := Void
-				yy_accept := Void
-			else
+			if a_parser.successful then
 				!! a_dfa.make (a_description)
 				a_full_tables := a_dfa
 				yy_nxt := a_full_tables.yy_nxt
 				yy_accept := a_full_tables.yy_accept
 				yyNb_rows := a_full_tables.yyNb_rows
+			else
+				yy_nxt := Void
+				yy_accept := Void
 			end
 		end
 
