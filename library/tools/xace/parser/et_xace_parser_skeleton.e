@@ -89,6 +89,8 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_system (Void)
 			fill_system (Result, an_element, a_position_table)
 			Result.mount_libraries
+		ensure
+			new_system_not_void: Result /= Void
 		end
 
 	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_LIBRARY is
@@ -102,6 +104,8 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_library
 			fill_library (Result, an_element, a_position_table)
 			Result.mount_libraries
+		ensure
+			new_library_not_void: Result /= Void
 		end
 
 	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: XM_POSITION_TABLE): ET_XACE_CLUSTER is
