@@ -24,7 +24,8 @@ cd $rootdir
 # Build Gobo files.
 $GOBO/work/script/make_gobo.sh $1
 
-# Remove hidden files.
+# Remove develop files.
+echo ''; echo "Removing develop files..."
 cd $GOBO
 rm -rf work
 rm -rf doc/structure/visio
