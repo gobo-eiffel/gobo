@@ -26,9 +26,6 @@ cluster
 		-- Gobo Eiffel Library
 	[Gobo				"$GOBO/library"] end
 
-		-- Kernel
-	[Kernel				"$VE_LIB/kernel"] end
-
 option
 
 	target exe console
