@@ -70,7 +70,6 @@ feature -- Parsing
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
-			a_position_table: XM_POSITION_TABLE
 		do
 			last_project_element := Void
 			xml_parser.parse_from_stream (a_file)
@@ -78,7 +77,6 @@ feature -- Parsing
 				if not tree_pipe.error.has_error then
 					a_document := tree_pipe.document
 					a_root_element := a_document.root_element
-					a_position_table := tree_pipe.tree.last_position_table
 
 					create last_project_element.make (a_root_element, variables, options, build_filename)
 				else
@@ -109,5 +107,8 @@ invariant
 
 	build_filename_not_void: build_filename /= Void
 	build_filename_not_empty: build_filename.count > 0
+	xml_parser_not_void: xml_parser /= Void
+	tree_pipe_not_void: tree_pipe /= Void
+
 
 end

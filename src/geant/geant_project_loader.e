@@ -74,6 +74,7 @@ feature -- Processing
 			a_file: KL_TEXT_INPUT_FILE
 			a_project_parser: GEANT_PROJECT_PARSER
 	    do
+			project_element := Void
 			create a_file.make (build_filename.out)
 			a_file.open_read
 			if a_file.is_open_read then
@@ -85,7 +86,7 @@ feature -- Processing
 				std.error.put_string ("cannot read file '" + build_filename.out + "':")
 			end
 
-			if a_project_parser.last_project_element = Void then
+			if project_element = Void then
 				exit_application (1, "Parsing error in file %"" + build_filename.out + "%"%N")
 			end
 
