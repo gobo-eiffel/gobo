@@ -28,8 +28,8 @@ inherit
 			make as make_arrayed_list,
 			is_equal as arrayed_list_is_equal
 		export
-			{ANY} item, count, valid_entry
-			{DS_ARRAYED_LIST} storage
+			{ANY} item, count;
+			{DS_ARRAYED_LIST} storage;
 			{NONE} all
 		end
 

@@ -39,7 +39,7 @@ inherit
 
 	LX_FULL_TABLES
 		export
-			{LX_FULL_TABLES, LX_DFA_REGULAR_EXPRESSION} all
+			{LX_FULL_TABLES, LX_DFA_REGULAR_EXPRESSION} all;
 			{ANY} to_tables
 		undefine
 			is_equal, copy

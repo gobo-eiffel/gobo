@@ -23,7 +23,7 @@ inherit
 
 	LX_TABLES
 		export
-			{LX_TABLES} all
+			{LX_TABLES} all;
 			{ANY} to_tables, from_tables
 		end
 

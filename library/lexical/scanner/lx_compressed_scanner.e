@@ -45,7 +45,7 @@ inherit
 			yy_accept as yy_accept_template,
 			yy_acclist as yy_acclist_template
 		export
-			{LX_COMPRESSED_TABLES} all
+			{LX_COMPRESSED_TABLES} all;
 			{ANY} to_tables, from_tables
 		end
 
