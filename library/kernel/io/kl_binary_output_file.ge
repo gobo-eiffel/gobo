@@ -88,7 +88,7 @@ inherit
 	BINARY_FILE_WRITE
 		rename
 #ifndef SE_0_74
-			flush as old_flush
+			flush as old_flush,
 #endif
 			make as old_make,
 			is_connected as old_is_open_write,
