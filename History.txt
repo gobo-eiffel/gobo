@@ -11,7 +11,13 @@ Version ?
 	  added to allow pretty indented output.
 	* XM_NAMESPACE_RESOLVER has new option to forward 
 	  xmlns attribute events (forward_xmlns).
-	  
+	* XM_DTD_CALLBACKS: on_doctype called first, on_dtd_end added.
+
+	Gobo Eiffel String Library
+
+	* new library
+	* DS_SPLITTER: parse a string to and from lists of tokens. 
+
 Version 3.3 - 2 November 2003
 
 	geant:
