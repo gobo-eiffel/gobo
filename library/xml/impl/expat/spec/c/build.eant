@@ -44,10 +44,9 @@
 			or 'se' if this variable is not defined.
 			Use C compiler set in ${GOBO_CC} or 'gcc' 
 			if this variable is not defined.
+			Define ${GOBO_C_DEBUG} if you would like to
+			compile the glue library with debug checks enabled.
 		</description>
-		<echo message="compiling libexml-expat for:"/>
-		<echo message="C compiler: ${cc}"/>
-		<echo message="Eiffel compiler: ${eiffel}"/>
 		<geant target="compile_${cc}"/>
 	</target>
 
