@@ -88,15 +88,13 @@ feature -- Element
 				
 			if current_element = Void then
 					-- This is the first element in the document.
-				create an_element.make (document, a_name, new_namespace (namespace, ns_prefix))
-				document.set_root_element (an_element)
+				create an_element.make_root (document, a_name, new_namespace (namespace, ns_prefix))
 			else
 					-- This is not the first element in the parent.
 				check
 					document_not_finished: current_element /= Void
 				end
-				create an_element.make (current_element, a_name, new_namespace (namespace, ns_prefix))
-				current_element.force_last (an_element)
+				create an_element.make_last (current_element, a_name, new_namespace (namespace, ns_prefix))
 			end
 			current_element := an_element
 			handle_position (current_element)
@@ -113,9 +111,8 @@ feature -- Element
 			check
 				element_not_void: current_element /= Void
 			end
-			create xml.make (a_name, new_namespace (namespace, a_prefix), a_value, current_element)
+			create xml.make_last (a_name, new_namespace (namespace, a_prefix), a_value, current_element)
 			handle_position (xml)
-			current_element.force_last (xml)
 		end
 
 	on_content (a_data: STRING) is
@@ -126,8 +123,7 @@ feature -- Element
 			check
 				not_finished: current_element /= Void
 			end
-			create xml.make (current_element, a_data)
-			current_element.force_last (xml)
+			create xml.make_last (current_element, a_data)
 			handle_position (xml)
 		end
 
@@ -150,11 +146,9 @@ feature -- Element
 			xml: XM_PROCESSING_INSTRUCTION
 		do
 			if current_element = Void then
-				create xml.make (document, target, data)
-				document.force_last (xml)
+				create xml.make_last_in_document (document, target, data)
 			else
-				create xml.make (current_element, target, data)
-				current_element.force_last (xml)
+				create xml.make_last (current_element, target, data)
 			end
 			handle_position (xml)
 		end
@@ -165,11 +159,9 @@ feature -- Element
 			xml: XM_COMMENT
 		do
 			if current_element = Void then
-				create xml.make (document, com)
-				document.force_last (xml)
+				create xml.make_last_in_document (document, com)
 			else
-				create xml.make (current_element, com)
-				current_element.force_last (xml)
+				create xml.make_last (current_element, com)
 			end
 			handle_position (xml)
 		end
