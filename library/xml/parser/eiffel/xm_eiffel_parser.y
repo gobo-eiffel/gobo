@@ -54,7 +54,7 @@ creation
 %type <DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]> attlist_decl_trail
 %type <XM_DTD_ATTRIBUTE_CONTENT> att_def att_type att_tokenized_type enumerated_type default_decl
 %type <DS_BILINKED_LIST [STRING]> enumeration enumeration_trail
-%type <STRING> version_info encoding_decl
+%type <STRING> version_info encoding_decl space_eq
 %type <BOOLEAN> sd_decl
 %type <XM_EIFFEL_DECLARATION> xml_decl xml_decl_opt xml_decl_misc
 
@@ -425,10 +425,16 @@ xml_decl_opt: maybe_space
 		}
 	;
 
-version_info: XMLDECLARATION_VERSION APOS XMLDECLARATION_VERSION_10 APOS
-		{ $$ := $3 }
-	| XMLDECLARATION_VERSION QUOT XMLDECLARATION_VERSION_10 QUOT
-		{ $$ := $3 }
+space_eq: EQ
+	| SPACE EQ
+	| EQ SPACE
+	| SPACE EQ SPACE
+	;
+	
+version_info: XMLDECLARATION_VERSION space_eq APOS XMLDECLARATION_VERSION_10 APOS
+		{ $$ := $4 }
+	| XMLDECLARATION_VERSION space_eq QUOT XMLDECLARATION_VERSION_10 QUOT
+		{ $$ := $4 }
 	;
 
 misc: comment
@@ -517,10 +523,10 @@ markup_decl: element_decl
 
 -- 2.9 Stand-alone document declaration
 
-sd_decl: XMLDECLARATION_STANDALONE APOS XMLDECLARATION_STANDALONE_YES APOS { $$ := True }
-	| XMLDECLARATION_STANDALONE QUOT XMLDECLARATION_STANDALONE_YES QUOT { $$ := True }
-	| XMLDECLARATION_STANDALONE APOS XMLDECLARATION_STANDALONE_NO APOS { $$ := False }
-	| XMLDECLARATION_STANDALONE QUOT XMLDECLARATION_STANDALONE_NO QUOT { $$ := False }
+sd_decl: XMLDECLARATION_STANDALONE space_eq APOS XMLDECLARATION_STANDALONE_YES APOS { $$ := True }
+	| XMLDECLARATION_STANDALONE space_eq QUOT XMLDECLARATION_STANDALONE_YES QUOT { $$ := True }
+	| XMLDECLARATION_STANDALONE space_eq APOS XMLDECLARATION_STANDALONE_NO APOS { $$ := False }
+	| XMLDECLARATION_STANDALONE space_eq QUOT XMLDECLARATION_STANDALONE_NO QUOT { $$ := False }
 	;
 
 -- 3. Element
@@ -912,10 +918,10 @@ text_decl: -- Empty
 	| XMLDECLARATION_START error { force_error (Error_xml_declaration) }
 	;
 
-encoding_decl: XMLDECLARATION_ENCODING APOS XMLDECLARATION_ENCODING_VALUE APOS
-		{ $$ := $3 }
-	| XMLDECLARATION_ENCODING QUOT XMLDECLARATION_ENCODING_VALUE QUOT
-		{ $$ := $3 }
+encoding_decl: XMLDECLARATION_ENCODING space_eq APOS XMLDECLARATION_ENCODING_VALUE APOS
+		{ $$ := $4 }
+	| XMLDECLARATION_ENCODING space_eq QUOT XMLDECLARATION_ENCODING_VALUE QUOT
+		{ $$ := $4 }
 	;
 
 -- 4.7 Notation declaration

@@ -40,9 +40,9 @@ creation
 
 APOS [']
 QUOT ["]
+SPACECHAR [\r\n\t ]
 
-ASCIICHAR [\r\n\t\x20-\x7F]
--- NOSPASCIICHAR [\x21-\x7F]
+NOSPASCIICHAR [\x21-\x7F]
 UTF8CHAR (([\xC2-\xDF][\x80-\xBF])|(\xE0[\xA0-\xBF][\x80-\xBF])|([\xE1-\xEF][\x80-\xBF][\x80-\xBF])|(\xF0[\x90-\xBF][\x80-\xBF][\x80-\xBF])|([\xF1-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]))
 
 -- CHARUTF8 only accepts legal UTF8 sequences.
@@ -59,11 +59,8 @@ UTF8CHAR (([\xC2-\xDF][\x80-\xBF])|(\xE0[\xA0-\xBF][\x80-\xBF])|([\xE1-\xEF][\x8
 --
 -- open issue: disable surrogates, max char 10FFFF?
 
-SPACECHAR [\r\n\t ]
 
 XMLENCODING [a-zA-Z0-9\x2D]+
-
-EQUAL [\r\n\t ]*[=][\r\n\t ]*
 
 CONTENTCHARASCII [\x21-\x25\x27-\x3B\x3D-\X5C\x5E-\x7F]
 -- = NOSPASCIICHAR less &<]
@@ -72,10 +69,10 @@ PIASCIICHAR [\x21-\x3E\x40-\x7F]
 -- = NOSPASCIICHAR less "?" = \x3F
 
 CDATAASCIICHAR [\t\x20-\x5C\x5E-\x7F]
--- = ASCIICHAR less \r\n]
+-- = SPACECHAR less \r\n, NOSPASCIICHAR less ]
 
 COMMENTASCIICHAR [\x20-\x2C\x2E-\x7F]
--- = ASCIICHAR - [\r\n\t\-]
+-- = NOSPASCIICHAR less -, " "
 
 ATTRIBUTECHAR [\x21\x23-\x25\x28-\x3B\x3D-\x7F]
 -- = NOSPASCIICHAR less " & ' <
@@ -145,13 +142,18 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (COMMENT_DASHDASH) -- conformance error XML1.0:2.5
 			last_value := text
 		}
-				
-		({SPACECHAR}|{COMMENTASCIICHAR})+ {
+		
+		({SPACECHAR})+ {
+			set_last_token (CHARDATA)
+			last_value := text
+		}
+		
+		({COMMENTASCIICHAR})+ {
 			set_last_token (CHARDATA)
 			last_value := text
 		}
 			
-		({SPACECHAR}|{COMMENTASCIICHAR}|{UTF8CHAR})+ {
+		({COMMENTASCIICHAR}|{UTF8CHAR})+ {
 			set_last_token (CHARDATA_UTF8)
 			last_value := text
 		}
@@ -191,7 +193,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		}
 
 			-- Version declaration.
-		"version"{EQUAL} {
+		"version" {
 			set_last_token (XMLDECLARATION_VERSION)
 		}
 
@@ -201,7 +203,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		}
 
 			-- Standalone declaration.
-		"standalone"{EQUAL} {
+		"standalone" {
 			set_last_token (XMLDECLARATION_STANDALONE) 
 		}
 		
@@ -216,7 +218,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		}
 
 			-- Encoding
-		"encoding"{EQUAL} {
+		"encoding" {
 			set_last_token (XMLDECLARATION_ENCODING)
 		}
 			
@@ -224,6 +226,10 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			-- 'yes' 'no' '1.0' caught by previous rules
 			set_last_token (XMLDECLARATION_ENCODING_VALUE)
 			last_value := text
+		}
+
+		"=" {
+			set_last_token (EQ)
 		}
 		
 		{APOS} {
@@ -435,8 +441,12 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			pop_start_condition
 		}
 
-		({ASCIICHAR}|{UTF8CHAR}) {
+		({NOSPASCIICHAR}|{UTF8CHAR}) {
 			set_last_token (CHARDATA)
+		}
+
+		{SPACECHAR} {
+			set_last_token (CHARDATA) 
 		}
 	}
 
@@ -510,6 +520,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			last_value := system_literal_text
 			push_start_condition (public_system)
 		}
+
 	}
 
 <public_system> {
@@ -535,6 +546,12 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 				pop_start_condition -- go out of dtd_notation
 			}
 		
+		"\n" {
+				-- the global INPUT_INVALID does not catch \n, which is caught
+				-- explicitly under other start conditions.
+			set_last_token (INPUT_INVALID)
+			pop_start_condition
+		}
 	}
 	
 <dtd_element, dtd_attlist>
@@ -894,7 +911,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	last_value := text
 }
 
-<*>(.|\n) {
+<*>. {
 		-- Default rule.
 	set_last_token (INPUT_INVALID)
 	last_value := text
