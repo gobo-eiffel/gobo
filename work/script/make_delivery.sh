@@ -25,8 +25,9 @@ cd $rootdir
 $GOBO/work/script/make_gobo.sh $1
 
 # Remove hidden files.
-rm -rf $GOBO/work
-rm -rf $GOBO/doc/structure/visio
-rm -rf $GOBO/doc/time/visio
-
+cd $GOBO
+rm -rf work
+rm -rf doc/structure/visio
+rm -rf doc/time/visio
+find . -name ".cvsignore" -print -exec rm -f {} \;
 cd $rootdir
