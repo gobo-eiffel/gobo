@@ -37,8 +37,11 @@ feature
 
 feature
 
-	is_available: BOOLEAN is True
+	is_available: BOOLEAN is
 			-- Is this type of parser compiled in?
+		do
+			Result := event_parser_factory.is_available
+		end
 
 	new_tree_parser: XM_TREE_PARSER is
 			-- Create and return a new tree parser.
