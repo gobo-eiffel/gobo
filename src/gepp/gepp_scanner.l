@@ -113,13 +113,13 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
-	include_stack: DS_STACK [YY_BUFFER] is
-			-- Input buffers not completely parsed yet
-		deferred
-		ensure
-			include_stack_not_void: Result /= Void
-			no_void_buffer: not Result.has (Void)
-		end
+--	include_stack: DS_STACK [YY_BUFFER] is
+--			-- Input buffers not completely parsed yet
+--		deferred
+--		ensure
+--			include_stack_not_void: Result /= Void
+--			no_void_buffer: not Result.has (Void)
+--		end
 
 feature -- Status report
 
@@ -136,17 +136,18 @@ feature -- Element change
 		local
 			old_buffer: YY_FILE_BUFFER
 		do
-			if not include_stack.is_empty then
-				old_buffer ?= input_buffer
-				set_input_buffer (include_stack.item)
-				include_stack.remove
-				if old_buffer /= Void then
-					input_stream_.close (old_buffer.file)
-				end
-				set_start_condition (INITIAL)
-			else
+-- Bug in SmallEiffel -0.83
+--			if not include_stack.is_empty then
+--				old_buffer ?= input_buffer
+--				set_input_buffer (include_stack.item)
+--				include_stack.remove
+--				if old_buffer /= Void then
+--					input_stream_.close (old_buffer.file)
+--				end
+--				set_start_condition (INITIAL)
+--			else
 				Result := True
-			end
+--			end
 		end
 
 end -- class GEPP_SCANNER
