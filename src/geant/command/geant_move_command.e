@@ -152,7 +152,7 @@ feature -- Execution
 			else
 				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
 				if not fileset.is_executable then
-					project.log (<<"  [copy] error: fileset definition wrong">>)
+					project.log (<<"  [move] error: fileset definition wrong">>)
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -162,8 +162,8 @@ feature -- Execution
 					until
 						fileset.after or else exit_code /= 0
 					loop
-						a_from_file := unix_file_system.pathname(fileset.directory_name, fileset.item_filename)
-						a_to_file := unix_file_system.pathname(to_directory, fileset.item_mapped_filename)
+						a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
+						a_to_file := unix_file_system.pathname (to_directory, fileset.item_mapped_filename)
 							-- Create target directory if necessary:
 						create_directory_for_pathname (a_to_file)
 						move_file (a_from_file, a_to_file)
