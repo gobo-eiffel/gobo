@@ -328,4 +328,12 @@ feature -- Comparison
 				time_storage < other.time_storage)
 		end
 
+	same_date_time (other: DT_DATE_TIME): BOOLEAN is
+			-- Is `Current' date-time equal to `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := date_storage = other.date_storage and time_storage = other.time_storage
+		end
+
 end
