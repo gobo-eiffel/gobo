@@ -59,6 +59,7 @@ feature -- Processing
 			nice_string: BOOLEAN
 			i, j, nb: INTEGER
 			stop: BOOLEAN
+			a_uc_char: UC_CHARACTER
 		do
 			from
 				i := 1
@@ -66,7 +67,8 @@ feature -- Processing
 			until
 				i > nb or stop
 			loop
-				inspect a_string.item (i).code
+				a_uc_char := a_string.item (i)
+				inspect a_uc_char.code
 				-- when ' ', '%T', '%R', '%N' then
 				when 32, 9, 13, 10 then
 					i := i + 1
@@ -83,7 +85,10 @@ feature -- Processing
 				until
 					stop
 				loop
-					inspect a_string.item (j).code
+--!! the following inspect gives smalleiffel a problem with 'assertion (all)' (not in boost)
+--!!					inspect a_string.item (j).code
+					a_uc_char := a_string.item (j)
+					inspect a_uc_char.code
 					-- when ' ', '%T', '%R', '%N' then
 					when 32, 9, 13, 10 then
 						j := j - 1
@@ -132,7 +137,9 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
-					inspect s.item (i).code
+--!!					inspect s.item (i).code
+					a_uc_char := s.item (i)
+					inspect a_uc_char.code
 					-- when ' ', '%T', '%R', '%N' then
 					when 32, 9, 13, 10 then
 						i := i + 1
@@ -149,7 +156,9 @@ feature -- Processing
 					until
 						stop
 					loop
-						inspect s.item (j).code
+--!!						inspect s.item (j).code
+					a_uc_char := s.item (j)
+					inspect a_uc_char.code
 						-- when ' ', '%T', '%R', '%N' then
 						when 32, 9, 13, 10 then
 							j := j - 1
@@ -178,7 +187,9 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
-					inspect s.item (i).code
+--!!					inspect s.item (i).code
+					a_uc_char := s.item (i)
+					inspect a_uc_char.code
 					-- when ' ', '%T', '%R', '%N' then
 					when 32, 9, 13, 10 then
 						i := i + 1
@@ -195,7 +206,9 @@ feature -- Processing
 					until
 						stop
 					loop
-						inspect s.item (j).code
+--!!						inspect s.item (j).code
+						a_uc_char := s.item (j)
+						inspect a_uc_char.code
 						-- when ' ', '%T', '%R', '%N' then
 						when 32, 9, 13, 10 then
 							j := j - 1
