@@ -41,7 +41,7 @@ feature -- Processing
 			nb: INTEGER
 		do
 			if Arguments.argument_count /= 1 then
-				std.error.put_string ("usage: gelint filename%N")
+				std.error.put_line ("usage: gelint filename")
 				Exceptions.die (1)
 			else
 				a_filename := Arguments.argument (1)
@@ -77,7 +77,7 @@ feature -- Processing
 				else
 					std.error.put_string ("gelint: cannot read %'")
 					std.error.put_string (a_filename)
-					std.error.put_string ("%'%N")
+					std.error.put_line ("%'")
 				end
 			end
 io.read_line
