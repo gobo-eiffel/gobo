@@ -62,4 +62,28 @@ else
 	fi
 fi
 
-$GOBO/test/all/$compiler/test_harness.sh $getest $version $finalize $exename $dirname
+#$GOBO/test/all/$compiler/test_harness.sh $getest $version $finalize $exename $dirname
+if [ "$getest" = "--getest" ]; then
+	mkdir $exename
+	cd $exename
+	mkdir TESTGEN
+	cp $dirname/Makefile .
+	if [ "$finalize" = "--finalize" ]; then
+		sed "s/$compiler-debug/$compiler/g" $dirname/getest.$compiler > getest.$compiler
+	else
+		cp $dirname/getest.$compiler .
+	fi
+	getest --$compiler
+else
+	echo "Preparing Test Cases"
+	mkdir $exename
+	cd $exename
+	cp $dirname/Makefile .
+	echo "Compiling Test Cases"
+	if [ "$finalize" = "--finalize" ]; then
+		make $compiler > tmp_compile.txt 2>&1
+	else
+		make $compiler-debug > tmp_compile.txt 2>&1
+	fi
+	$GOBO/test/all/common/test_exe.sh $version $compiler $exename
+fi
