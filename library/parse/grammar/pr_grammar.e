@@ -147,7 +147,7 @@ feature -- Element change
 			-- Add `a_type' at the end of the
 			-- list of symbol types.
 		require
-			a_variable_not_void: a_variable /= Void
+			a_type_not_void: a_type /= Void
 		do
 			if types.is_full then
 				types.resize (types.count + Max_nb_types_increment)
