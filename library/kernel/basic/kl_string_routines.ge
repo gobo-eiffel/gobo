@@ -943,6 +943,52 @@ feature -- Removal
 			kept: a_string.is_equal (old substring (a_string, a_string.count - n.min (a_string.count) + 1, a_string.count))
 		end
 
+	remove_head (a_string: STRING; n: INTEGER) is
+			-- Remove the first `n' characters of `a_string';
+			-- if `n' > `a_string.count', remove all.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon as
+			-- ISE and HACT supports it, which is not yet the case
+			-- as of ISE 5.1 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+			n_non_negative: n >= 0
+		local
+			a_string_count: INTEGER
+		do
+			a_string_count := a_string.count
+			if n >= a_string_count then
+				keep_tail (a_string, 0)
+			elseif n /= 0 then
+				keep_tail (a_string, a_string_count - n)
+			end
+		ensure
+			removed: a_string.is_equal (old substring (a_string, n.min (a_string.count) + 1, a_string.count))
+		end
+
+	remove_tail (a_string: STRING; n: INTEGER) is
+			-- Remove the last `n' characters of `a_string';
+			-- if `n' > `a_string.count', remove all.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon as
+			-- ISE and HACT supports it, which is not yet the case
+			-- as of ISE 5.1 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+			n_non_negative: n >= 0
+		local
+			a_string_count: INTEGER
+		do
+			a_string_count := a_string.count
+			if n >= a_string_count then
+				keep_head (a_string, 0)
+			elseif n /= 0 then
+				keep_head (a_string, a_string_count - n)
+			end
+		ensure
+			removed: a_string.is_equal (old substring (a_string, 1, a_string.count - n.min (a_string.count)))
+		end
+
 	remove_substring (a_string: STRING; start_index, end_index: INTEGER) is
 			-- Remove all characters of `a_string' from `start_index'
 			-- to `end_index' inclusive.
