@@ -48,7 +48,15 @@ feature -- Parsing
 			a_system_not_void: a_system /= Void
 		deferred
 		end
-		
+	
+	parse_from_public (a_public: STRING; a_system: STRING) is
+			-- Parse from public/system identifier using resolver.
+		require
+			a_public_not_void: a_public /= Void;
+			a_system_not_void: a_system /= Void
+		deferred
+		end
+			
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is

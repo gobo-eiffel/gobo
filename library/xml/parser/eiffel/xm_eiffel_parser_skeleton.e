@@ -128,6 +128,22 @@ feature -- Parsing
 		do
 			reset
 			entity_resolver.resolve (a_system)
+			parse_from_entity
+		end
+
+	parse_from_public (a_public: STRING; a_system: STRING) is
+			-- Parse from public/system identifier using resolver.
+		do
+			reset
+			entity_resolver.resolve_public (a_public, a_system)
+			parse_from_entity
+		end
+		
+feature {NONE} -- Implementation
+
+	parse_from_entity is
+			-- Parse from entity resolver
+		do
 			if not entity_resolver.has_error then
 				scanner.set_input_from_resolver (entity_resolver)
 				parse_with_events
@@ -135,9 +151,7 @@ feature -- Parsing
 				force_error (Error_entity_unresolved_external)
 			end
 		end
-
-feature {NONE} -- Implementation
-
+		
 	parse_with_events is
 			-- Parse with start/finish events.
 		do
@@ -718,7 +732,8 @@ feature {NONE} -- Scanner entity processing
 			else
 					-- Push scanner.
 				debug ("xml_parser")
-					std.error.put_string ("Pushing entity scanner. Start condition: " + scanner.start_condition.out)
+					std.error.put_string ("Pushing entity scanner. Start condition: ")
+					std.error.put_string (scanner.start_condition.out)
 					std.error.put_new_line
 				end
 				a_def.set_start_condition (scanner.start_condition)

@@ -161,14 +161,29 @@ feature -- Parsing
 			-- Parse from system identifier using resolver.
 		do
 			entity_resolver.resolve (a_system)
+			parse_from_entity
+		end
+
+	parse_from_public (a_public: STRING; a_system: STRING) is
+			-- Parse from public/system identifier using resolver.
+		do
+			entity_resolver.resolve_public (a_public, a_system)
+			parse_from_entity
+		end
+		
+feature {NONE} -- Implementation
+
+	parse_from_entity is
+			-- Parse from entity resolver
+		do
 			if not entity_resolver.has_error then
-				parse_from_stream (entity_resolver.last_stream)
-				entity_resolver.resolve_finish
+				scanner.set_input_from_resolver (entity_resolver)
+				parse_with_events
 			else
 				force_error (Error_entity_unresolved_external)
 			end
 		end
-
+		
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
