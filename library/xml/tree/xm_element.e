@@ -256,6 +256,7 @@ feature {XM_PARSER} -- Element change
 
 	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
 			-- Add an attribute to current element.
+		obsolete "Use force_last on an attribute node"
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
