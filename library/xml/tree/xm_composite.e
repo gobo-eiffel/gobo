@@ -137,28 +137,6 @@ feature -- Text
 		deferred
 		end
 
-feature -- Namespaces
-
-	remove_namespace_declarations_from_attributes is
-			-- Remove all attributes that are namespace declarations.
-			-- That is any attribute whose name starts with "xmlns".
-		local
-			typer: XM_NODE_TYPER
-			a_cursor: like new_cursor
-		do
-			create typer
-			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.process (typer)
-				if typer.is_composite then
-						-- Found an element, now let's check if it has "xmlns"
-						-- attributes defined.
-					typer.composite.remove_namespace_declarations_from_attributes
-				end
-				a_cursor.forth
-			end
-		end
-
 feature {XM_NODE} -- Removal
 
 	equality_delete (v: XM_NODE) is

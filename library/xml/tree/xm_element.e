@@ -15,13 +15,10 @@ class XM_ELEMENT
 inherit
 
 	XM_COMPOSITE
-		rename
-			remove_namespace_declarations_from_attributes as remove_namespace_declarations_from_attributes_recursive
 		undefine
 			root_node
 		redefine
-			equality_tester,
-			remove_namespace_declarations_from_attributes_recursive
+			equality_tester
 		end
 
 	XM_NAMED_NODE
@@ -565,32 +562,6 @@ feature -- Removal
 			end
 		end
 
-	remove_namespace_declarations_from_attributes_recursive is
-			-- Remove the namespace declarations from the attributes 
-			-- in current element and all child-elements recursively.
-		do
-			remove_namespace_declarations_from_attributes
-			Precursor
-		end
-
-	remove_namespace_declarations_from_attributes is
-			-- Remove all attributes that start with "xmlns:".
-		obsolete "xmlns attributes are not in the tree"
-		local
-			a_cursor: like new_cursor
-			typer: XM_NODE_TYPER
-		do
-			create typer
-			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.process (typer)
-				if typer.is_attribute and then typer.attribute.is_namespace_declaration then
-					remove_at_cursor (a_cursor)
-				else
-					a_cursor.forth
-				end
-			end
-		end
 
 feature -- Processing
 
