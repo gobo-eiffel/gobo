@@ -137,9 +137,9 @@ feature -- Processing
 						elseif an_element.name.is_equal (Var_task_name) then
 								-- var
 							!GEANT_VAR_TASK! a_task.make_from_element (an_element)
-						elseif an_element.name.is_equal (Xace_task_name) then
-								-- xace
-							!GEANT_XACE_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Gexace_task_name) then
+								-- gexace
+							!GEANT_GEXACE_TASK! a_task.make_from_element (an_element)
 						elseif an_element.name.is_equal (Gelex_task_name) then
 								-- gelex
 							!GEANT_GELEX_TASK! a_task.make_from_element (an_element)

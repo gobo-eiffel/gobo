@@ -145,10 +145,10 @@ feature -- Task names
 			task_name_not_empty: not Result.empty
 		end
 
-	Xace_task_name: UC_STRING is
+	Gexace_task_name: UC_STRING is
 			-- "xace" task name
 		once
-			!! Result.make_from_string ("xace")
+			!! Result.make_from_string ("gexace")
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: not Result.empty
