@@ -35,6 +35,7 @@ feature -- Tests
 			create an_encoder.make (an_output_stream, False)
 			assert ("is_open_write", an_encoder.is_open_write)
 			an_encoder.put_string (a_decoder.last_string)
+			an_encoder.close
 			assert ("round_trip", STRING_.same_string (an_output_stream.string, encoded_string))
 		end
 
