@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			universe := a_universe
 			nb := a_universe.classes.capacity
+			create dynamic_type_set_builder.make (Current)
 			create dynamic_types.make (nb)
 			make_basic_types
 		ensure
@@ -484,7 +485,7 @@ feature -- Compilation
 			i, nb: INTEGER
 		do
 			if not a_feature.is_built then
-				create l_builder.make (Current)
+				l_builder := dynamic_type_set_builder
 				l_builder.set_no_debug (True)
 				l_builder.set_no_assertion (True)
 				l_builder.build_dynamic_type_sets (a_feature, a_type)
@@ -693,6 +694,11 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
+feature {NONE} -- Processors
+
+	dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
+			-- Builder of dynamic type sets
+
 invariant
 
 	universe_not_void: universe /= Void
@@ -714,5 +720,6 @@ invariant
 	predicate_type_not_void: predicate_type /= Void
 	function_type_not_void: function_type /= Void
 	root_creation_procedure: root_creation_procedure /= Void implies root_creation_procedure.is_procedure
+	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
 
 end
