@@ -206,7 +206,7 @@ feature -- Test
 			a_name: STRING
 			filenames: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: DS_COMPARABLE_COMPARATOR [STRING]
+			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
 			an_entry: STRING
 			cvs_dir: STRING
@@ -254,7 +254,7 @@ feature -- Test
 			a_name: STRING
 			filenames: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: DS_COMPARABLE_COMPARATOR [STRING]
+			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			an_entry: STRING
 			cvs_dir: STRING
 		do
@@ -525,7 +525,7 @@ feature -- Test
 			filenames: ARRAY [STRING]
 			filenames_list: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: DS_COMPARABLE_COMPARATOR [STRING]
+			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
 			i, nb: INTEGER
 		do
@@ -557,7 +557,7 @@ feature -- Test
 			directory_names: ARRAY [STRING]
 			directory_names_list: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
-			name_comparator: DS_COMPARABLE_COMPARATOR [STRING]
+			name_comparator: KL_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
 			i, nb: INTEGER
 		do
