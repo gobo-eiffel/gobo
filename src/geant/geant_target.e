@@ -122,45 +122,6 @@ feature -- Setting
 			is_executed_set: is_executed = a_is_executed
 		end
 
-feature -- Status report
-
-	is_enabled: BOOLEAN is
-			-- Do conditions allow to execute target?
-			-- conditions is boolean of the expression
-			-- "(xml attribute 'if') and not
-			-- (xml attribute 'unless')"
-			-- if xml attribute 'if' is missing it is assumed to be `True'
-			-- if xml attribute 'unless' is missing it is assumed to be `False'
-		local
-			if_condition: BOOLEAN
-			unless_condition: BOOLEAN
-			ucs: UC_STRING
-		do
-				-- Set default execution conditions:
-			if_condition := true
-			unless_condition := false
-
-				-- Look for an 'if' XML attribute
-			if target_element.has_attribute (If_attribute_name) then
-				ucs := target_element.attribute_value_by_name (If_attribute_name)
-				if_condition := project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
-				end
-			end
-
-				-- Look for an 'unless' XML attribute
-			if target_element.has_attribute (Unless_attribute_name) then
-				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
-				end
-			end
-
-			Result := if_condition and not unless_condition
-		end
-
 feature -- Processing
 
 	execute  is
@@ -177,7 +138,7 @@ feature -- Processing
 		do
 			children := target_element.children
 			nb := children.count
-			if is_enabled then
+			if is_element_enabled (target_element) then
 					-- change to the specified directory if "dir" attribue is provided:
 				if target_element.has_attribute (Dir_attribute_name) then
 					a_new_target_cwd := project.variables.interpreted_string (
@@ -196,7 +157,7 @@ feature -- Processing
 						i := 1
 					end
 				until
-					i > nb or not is_enabled
+					i > nb or not is_element_enabled (target_element)
 				loop
 					an_element := children.item (i)
 						-- Dispatch tasks:
@@ -276,7 +237,7 @@ feature -- Processing
 					elseif not a_task.is_executable then
 						print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
 					else
-						if a_task.is_enabled then
+						if is_element_enabled (a_task.element) then
 								-- change to task directory if "dir" attribute is provided:
 							if a_task.element.has_attribute (a_task.Dir_attribute_name) then
 								a_new_task_cwd := project.variables.interpreted_string (
@@ -375,24 +336,6 @@ feature {NONE} -- Constants
 			-- "depend" attribute name
 		once
 			!! Result.make_from_string ("depend")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
-		end
-
-	If_attribute_name: UC_STRING is
-			-- "if" attribute name
-		once
-			!! Result.make_from_string ("if")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
-		end
-
-	Unless_attribute_name: UC_STRING is
-			-- "unless" attribute name
-		once
-			!! Result.make_from_string ("unless")
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: not Result.empty

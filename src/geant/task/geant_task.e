@@ -18,7 +18,9 @@ inherit
 
 	GEANT_COMMAND
 	GEANT_ELEMENT_NAMES
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -29,45 +31,6 @@ feature {NONE} -- Initialization
 		do
 			make (a_project)
 			element := an_element
-		end
-
-feature -- Status report
-
-	is_enabled: BOOLEAN is
-			-- Do conditions allow to execute task?
-			-- conditions is boolean of the expression
-			-- "(xml attribute 'if') and not
-			-- (xml attribute 'unless')"
-			-- if xml attribute 'if' is missing it is assumed to be `True'
-			-- if xml attribute 'unless' is missing it is assumed to be `False'
-		local
-			if_condition: BOOLEAN
-			unless_condition: BOOLEAN
-			ucs: UC_STRING
-		do
-				-- Set default execution conditions:
-			if_condition := true
-			unless_condition := false
-
-				-- Look for an 'if' XML attribute
-			if element.has_attribute (If_attribute_name) then
-				ucs := element.attribute_value_by_name (If_attribute_name)
-				if_condition := project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
-				end
-			end
-
-				-- Look for an 'unless' XML attribute
-			if element.has_attribute (Unless_attribute_name) then
-				ucs := element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
-				end
-			end
-
-			Result := if_condition and not unless_condition
 		end
 
 feature {NONE} -- Implementation
@@ -241,24 +204,6 @@ feature {GEANT_TASK, GEANT_TARGET} -- Constants
 
 	element: GEANT_ELEMENT
 		-- XML Element defining this task
-
-	If_attribute_name: UC_STRING is
-			-- "if" attribute name
-		once
-			!! Result.make_from_string ("if")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
-		end
-
-	Unless_attribute_name: UC_STRING is
-			-- "unless" attribute name
-		once
-			!! Result.make_from_string ("unless")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
-		end
 
 	Dir_attribute_name: UC_STRING is
 			-- "dir" attribute name
