@@ -263,18 +263,19 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_accepting_id (acc_id: INTEGER) is
-			-- Make `final_state' be an accepting state.
+	set_accepted_rule (a_rule: LX_RULE) is
+			-- Make `final_state' be an accepting state
+			-- for `a_rule'.
 		do
-			final_state.set_accepting_id (acc_id)
+			final_state.set_accepted_rule (a_rule)
 		ensure
-			accepting_id_set: final_state.accepting_id = acc_id
+			accepted_rule_set: final_state.accepted_rule = a_rule
 		end
 
 	set_beginning_as_normal is
 			-- Set each state of the epsilon closure of
-			-- `start_state' as normal (i.e. not trailing
-			-- context-associated).
+			-- `start_state' as normal (i.e. not in trailing
+			-- context).
 		do
 			start_state.set_beginning_as_normal
 		end

@@ -232,7 +232,7 @@ feature {NONE} -- Building
 			from i := 1 until i > nb loop
 				a_state := item (i)
 				if a_state.is_accepting then
-					yy_accept_.put (a_state.accepting_ids.first, i)
+					yy_accept_.put (a_state.accepted_rules.first.id, i)
 				else
 					yy_accept_.put (0, i)
 				end
