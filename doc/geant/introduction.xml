@@ -47,4 +47,123 @@
 
 	</section>
 
+
+	<section id="typical_compile">
+    <title>Typical script that covers compilation</title>
+    <para>
+      The following script covers 90% of the cases people use
+      <emphasis>geant</emphasis> for. It inherits the Gobo default
+      tasks and only adds project specific info:
+    </para>
+
+    <programlisting><![CDATA[
+<?xml version="1.0"?>
+
+<project name="my_project" inherit="${GOBO}/misc/eiffel.eant" default="help">
+
+	<description>
+		system:      "My example"
+		author:      "John Doe [john@doe.net]"
+		copyright:   "Copyright (c) 2004, John Doe"
+		license:     "Eiffel Forum Freeware License v2 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="init_system">
+		<set name="system" value="my_program"/>
+		<set name="system_dir" value="."/>
+	</target>
+
+</project>
+]]>
+    </programlisting>
+
+    <para>
+      This script assumes you have a <emphasis>system.xace</emphasis>
+      in your system_dir.
+    </para>
+
+    <para>
+      With this script it is now possible to compile the project for
+      SmartEiffel by typing <userinput>geant
+      compile_se</userinput>. Compile it for VisualEiffel by typing
+      <userinput>geant compile_ve</userinput>. Compile it in debug
+      mode for ISE Eiffel by typing <userinput>geant
+      compile_debug_ise</userinput>.
+    </para>
+
+    <para>
+      You have to be in the project directory when invoking
+      <emphasis>geant</emphasis>. This is due to the specification of
+      a dot as the directory in the <featurename>set</featurename>
+      system_dir task. If you have an environment variable that points
+      to the root of your project directory (recommended), the script
+      would look like this:
+    </para>
+
+    <programlisting><![CDATA[
+<project name="my_project" inherit="${GOBO}/misc/eiffel.eant" default="help">
+
+	<target name="init_system">
+		<set name="system" value="my_program"/>
+		<set name="system_dir" value="${MY_PROJECT}/src/my_program"/>
+	</target>
+
+</project>
+]]></programlisting>
+
+    <para>
+      It is now possible to invoke this
+      <emphasis>build.eant</emphasis> script from any location.
+    </para>
+
+  </section>
+
+
+	<section id="typical_test">
+    <title>Typical script that covers Gobo Test</title>
+    <para>
+      The following script covers the typical cases of using the Gobo
+      Test frame work to test your classes. It inherits from
+      <emphasis>test.eant</emphasis> which provides most of the
+      scripting functionality.
+    </para>
+
+    <programlisting><![CDATA[
+<?xml version="1.0"?>
+
+<project name="my_test" inherit="${GOBO}/misc/test.eant" default="help">
+
+	<description>
+		system:      "tests for my project"
+		author:      "John Doe [john@doe.com]"
+		copyright:   "Copyright (c) 2004, John Doe Ltd."
+	</description>
+
+	<target name="init_system">
+		<set name="system" value="my_test"/>
+		<set name="system_dir" value="${MY_PROJECT}/test/feature"/>
+	</target>
+
+</project>
+]]></programlisting>
+
+    <para>
+      As for the compile <emphasis>build.eant</emphasis>, the only two
+      settings that are important are the values of the system and
+      system_dir variables.
+    </para>
+
+    <para>
+      With this script it is now possible to test the project for
+      SmartEiffel by typing <userinput>geant
+      test_se</userinput>. Test it with VisualEiffel by typing
+      <userinput>geant test_ve</userinput>. Test it in debug
+      mode for ISE Eiffel by typing <userinput>geant
+      test_debug_ise</userinput>.
+    </para>
+
+  </section>
+
 </chapter>
