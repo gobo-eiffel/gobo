@@ -148,22 +148,22 @@ feature -- Processing
 					if i > nb then
 						report_usage_error
 					else
-						token_classname := STRING_.to_upper (Arguments.argument (i))
+						token_classname := Arguments.argument (i).as_upper
 						if token_filename = Void then
-							token_filename := STRING_.to_lower (token_classname)
+							token_filename := token_classname.as_lower
 							token_filename.append_string (Eiffel_extension)
 						end
 					end
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--tokens=") then
-					token_classname := STRING_.to_upper (arg.substring (10, arg.count))
+					token_classname := arg.substring (10, arg.count).as_upper
 					if token_filename = Void then
-						token_filename := STRING_.to_lower (token_classname)
+						token_filename := token_classname.as_lower
 						token_filename.append_string (Eiffel_extension)
 					end
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--defines=") then
-					token_classname := STRING_.to_upper (arg.substring (11, arg.count))
+					token_classname := arg.substring (11, arg.count).as_upper
 					if token_filename = Void then
-						token_filename := STRING_.to_lower (token_classname)
+						token_filename := token_classname.as_lower
 						token_filename.append_string (Eiffel_extension)
 					end
 				elseif arg.is_equal ("-k") then

@@ -58,9 +58,7 @@ inherit
 			read_character as old_read_character,
 			read_stream as old_read_stream,
 			read_line as old_read_line,
-#ifdef (ISE && ! ISE_5_1)
 			read_to_string as old_read_to_string,
-#endif
 			change_name as old_change_name,
 			flush as old_flush,
 			close as old_close,
@@ -143,27 +141,6 @@ feature {NONE} -- Implementation
 	string_name: STRING
 			-- Name of file (STRING version)
 
-#ifdef ISE_5_1
-	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
-			-- Fill `a_string', starting at position `pos' with at
-			-- most `nb' characters read from current file.
-			-- Return the number of characters actually read.
-		local
-			str_area: ANY
-		do
-			str_area := a_string.area
-			Result := file_gss (file_pointer, c_rtid ($str_area) + (pos - 1), nb)
-		end
-
-	c_rtid (p: POINTER): POINTER is
-			-- Return `p'
-		external
-			"C [macro <eif_macros.h>]"
-		alias
-			"/**/"
-		end
-
-#endif
 #endif
 #endif
 end

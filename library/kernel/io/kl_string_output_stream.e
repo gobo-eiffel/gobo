@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Create string for output.
 		do
-			string := STRING_.make (256)
+			create string.make (256)
 		ensure
 			empty: string.count = 0
 		end

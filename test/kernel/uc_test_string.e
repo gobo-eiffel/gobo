@@ -1621,11 +1621,9 @@ feature -- Test
 			create a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- TODO: Note: The postcondition inherited from ISE 5.1 and
-			-- does not allow replacing a substring by itself:
-			-- create a_string.make_from_string ("foobar")
-			-- a_string.replace_substring (a_string, 4, 6)
-			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string.replace_substring (a_string, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
 			create a_string.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string.replace_substring (a_string2, 4, 3)
@@ -1653,11 +1651,9 @@ feature -- Test
 			create {UC_STRING} a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- TODO: Note: The postcondition inherited from ISE 5.1
-			-- does not allow replacing a substring by itself:
-			-- create {UC_STRING} a_string.make_from_string ("foobar")
-			-- a_string.replace_substring (a_string, 4, 6)
-			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
+			create {UC_STRING} a_string.make_from_string ("foobar")
+			a_string.replace_substring (a_string, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
 			create {UC_STRING} a_string.make_from_string ("foobar")
 			create {UC_STRING} a_string2.make_from_string ("toto")
 			a_string.replace_substring (a_string2, 4, 3)

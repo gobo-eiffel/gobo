@@ -14,7 +14,6 @@ class UT_INTEGER_FORMATTER
 
 inherit
 
-	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Access
@@ -24,7 +23,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: 0|(-?[1-9][0-9]*)
 		do
-			Result := STRING_.make (10)
+			create Result.make (10)
 			append_decimal_integer (Result, an_int)
 		ensure
 			decimal_integer_out_not_void: Result /= Void
@@ -37,7 +36,7 @@ feature -- Access
 		require
 			an_int_positive: an_int >= 0
 		do
-			Result := STRING_.make (10)
+			create Result.make (10)
 			append_octal_integer (Result, an_int)
 		ensure
 			octal_integer_out_not_void: Result /= Void

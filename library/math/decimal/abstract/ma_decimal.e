@@ -2528,7 +2528,7 @@ feature {MA_DECIMAL} -- Basic operations
 					if exponent < 0 then
 						after_point_count := exponent.abs
 						if after_point_count > str_coefficient.count then
-							str_zero_pad := STRING_.make_filled ('0', after_point_count - str_coefficient.count)
+							create str_zero_pad.make_filled ('0', after_point_count - str_coefficient.count)
 							Result.append_string ("0.")
 							Result.append_string (str_zero_pad)
 							Result.append_string (str_coefficient)

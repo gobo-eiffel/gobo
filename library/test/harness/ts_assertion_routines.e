@@ -112,7 +112,7 @@ feature -- Files
 						i := i + 1
 						if a_file1.end_of_file then
 							if not a_file2.end_of_file then
-								a_message := STRING_.make (50)
+								create a_message.make (50)
 								a_message.append_string (a_tag)
 								a_message.append_string (" (diff between files '")
 								a_message.append_string (a_filename1)
@@ -131,7 +131,7 @@ feature -- Files
 								done := True
 							end
 						elseif a_file2.end_of_file then
-							a_message := STRING_.make (50)
+							create a_message.make (50)
 							a_message.append_string (a_tag)
 							a_message.append_string (" (diff between files '")
 							a_message.append_string (a_filename1)
@@ -145,7 +145,7 @@ feature -- Files
 							Assertions.set_error_message (a_message)
 							Exceptions.raise (Assertion_failure)
 						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
-							a_message := STRING_.make (50)
+							create a_message.make (50)
 							a_message.append_string (a_tag)
 							a_message.append_string (" (diff between files '")
 							a_message.append_string (a_filename1)
@@ -161,7 +161,7 @@ feature -- Files
 						end
 					end
 				else
-					a_message := STRING_.make (50)
+					create a_message.make (50)
 					a_message.append_string (a_tag)
 					a_message.append_string (" (cannot read file '")
 					a_message.append_string (a_filename2)
@@ -171,7 +171,7 @@ feature -- Files
 					Exceptions.raise (Assertion_failure)
 				end
 			else
-				a_message := STRING_.make (50)
+				create a_message.make (50)
 				a_message.append_string (a_tag)
 				a_message.append_string (" (cannot read file '")
 				a_message.append_string (a_filename1)
@@ -197,14 +197,14 @@ feature -- Files
 			Assertions.add_assertion
 			nb := a_filename1.count
 			if a_filename2.count = nb then
-				a_name1 := STRING_.to_lower (a_filename1)
-				a_name2 := STRING_.to_lower (a_filename2)
+				a_name1 := a_filename1.as_lower
+				a_name2 := a_filename2.as_lower
 				from i := 1 until i > nb loop
 					c1 := a_name1.item (i)
 					c2 := a_name2.item (i)
 					if c1 /= c2 and not ((c1 = '\' and c2 = '/') or (c1 = '/' and c2 = '\')) then
 						i := nb + 1 -- Jump out of the loop.
-						a_message := STRING_.make (50)
+						create a_message.make (50)
 						a_message.append_string (a_tag)
 						a_message.append_string (" (filenames '")
 						a_message.append_string (a_filename1)
@@ -217,7 +217,7 @@ feature -- Files
 					i := i + 1
 				end
 			else
-				a_message := STRING_.make (50)
+				create a_message.make (50)
 				a_message.append_string (a_tag)
 				a_message.append_string (" (filenames '")
 				a_message.append_string (a_filename1)
@@ -259,7 +259,7 @@ feature -- Containers
 		do
 			Assertions.add_assertion
 			if expected.count /= actual.count then
-				new_tag := STRING_.make (15)
+				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_equal_message (new_tag, expected.count, actual.count)
@@ -273,7 +273,7 @@ feature -- Containers
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i1)
 					if expected_item /= actual_item then
-						new_tag := STRING_.make (15)
+						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
 						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
@@ -304,7 +304,7 @@ feature -- Containers
 		do
 			Assertions.add_assertion
 			if expected.count /= actual.count then
-				new_tag := STRING_.make (15)
+				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_equal_message (new_tag, expected.count, actual.count)
@@ -318,7 +318,7 @@ feature -- Containers
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i1)
 					if not equal (expected_item, actual_item) then
-						new_tag := STRING_.make (15)
+						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
 						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
@@ -362,7 +362,7 @@ feature -- Containers
 		do
 			Assertions.add_assertion
 			if expected.count /= actual.count then
-				new_tag := STRING_.make (15)
+				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_equal_message (new_tag, expected.count, actual.count)
@@ -376,7 +376,7 @@ feature -- Containers
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i2)
 					if expected_item /= actual_item then
-						new_tag := STRING_.make (15)
+						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
 						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
@@ -439,7 +439,7 @@ feature {NONE} -- Messages
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			Result := STRING_.make (50)
+			create Result.make (50)
 			Result.append_string (a_tag)
 			Result.append_string ("%N   expected: ")
 			if expected = Void then
@@ -462,7 +462,7 @@ feature {NONE} -- Messages
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			Result := STRING_.make (50)
+			create Result.make (50)
 			Result.append_string (a_tag)
 			Result.append_string ("%N   got actual value: ")
 			if actual = Void then

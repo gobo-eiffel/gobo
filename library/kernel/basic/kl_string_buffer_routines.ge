@@ -33,14 +33,7 @@ feature -- Initialization
 			-- to contain `n' characters.
 		require
 			non_negative_n: n >= 0
-#ifdef (ISE && ISE_5_1)
-		local
-			to_special: TO_SPECIAL [CHARACTER]
-		do
-			create to_special.make_area (n)
-			Result := to_special.area
-#endif
-#ifdef (ISE && ! ISE_5_1)
+#ifdef ISE
 		do
 			create Result.make (n)
 			Result.set_count (n)
@@ -82,11 +75,7 @@ feature -- Conversion
 			a_string_not_void: a_string /= Void
 			is_string: a_string.same_type ("")
 		do
-#ifdef (ISE && ISE_5_1)
-			Result := a_string.area
-#else
 			Result := a_string
-#endif
 		ensure
 			string_buffer_not_void: Result /= Void
 			count_set: Result.count >= a_string.count
@@ -103,12 +92,6 @@ feature -- Access
 			s_large_enough: s >= lower
 			e_small_enough: e <= upper (a_buffer)
 			valid_interval: s <= e + 1
-#ifdef (ISE && ISE_5_1)
-		local
-			a: ANY
-			nb: INTEGER
-			p: POINTER
-#endif
 		do
 			if e < s then
 					-- Empty string
@@ -118,16 +101,7 @@ feature -- Access
 				create Result.make (0)
 #endif
 			else
-#ifdef (ISE && ISE_5_1)
-				nb := e - s + 1
-				create Result.make (nb)
-				a := Result.area
-				p := c_rtid ($a)
-				p.memory_copy (c_rtid ($a_buffer) + s, nb)
-				Result.set_count (nb)
-#else
 				Result := a_buffer.substring (s, e)
-#endif
 			end
 		ensure
 			substring_not_void: Result /= Void
@@ -137,11 +111,7 @@ feature -- Access
 
 feature -- Measurement
 
-#ifdef (ISE && ISE_5_1)
-	lower: INTEGER is 0
-#else
 	lower: INTEGER is 1
-#endif
 			-- Lower index
 
 	upper (a_buffer: like STRING_BUFFER_TYPE): INTEGER is
@@ -168,28 +138,9 @@ feature -- Element change
 			s_large_enough: s >= lower
 			e_small_enough: e <= upper (a_buffer)
 			valid_interval: s <= e + 1
-#ifdef (ISE && ISE_5_1)
-		local
-			nb, old_count, new_count: INTEGER
-			a: ANY
-			p: POINTER
-#endif
 		do
 			if s <= e then
-#ifdef (ISE && ISE_5_1)
-				nb := e - s + 1
-				old_count := a_string.count
-				new_count := old_count + nb
-				if new_count > a_string.capacity then
-					a_string.resize (new_count + a_string.additional_space)
-				end
-				a := a_string.area
-				p := c_rtid ($a) + old_count
-				p.memory_move (c_rtid ($a_buffer) + s, nb)
-				a_string.set_count (new_count)
-#else
 				a_string.append_string (a_buffer.substring (s, e))
-#endif
 			end
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
@@ -208,27 +159,16 @@ feature -- Element change
 			enough_space: (pos + a_string.count - 1) <= upper (a_buffer)
 		local
 			nb: INTEGER
-#ifdef (ISE && ISE_5_1)
-			a: ANY
-			p: POINTER
-#else
 			i, j: INTEGER
-#endif
 		do
 			nb := a_string.count
 			if nb > 0 then
-#ifdef (ISE && ISE_5_1)
-				a := a_string.area
-				p := c_rtid ($a_buffer) + pos
-				p.memory_copy ($a, nb)
-#else
 				j := pos
 				from i := 1 until i > nb loop
 					a_buffer.put (a_string.item (i), j)
 					j := j + 1
 					i := i + 1
 				end
-#endif
 			end
 		ensure
 			charaters_set: equal (substring (a_buffer, pos, a_string.count + pos - 1), a_string)
@@ -246,30 +186,8 @@ feature -- Element change
 			a_stream_open_read: INPUT_STREAM_.is_open_read (a_stream)
 			nb_char_large_enough: nb_char >= 0
 			enough_space: (pos + nb_char - 1) <= upper (a_buffer)
-#ifdef (ISE && ISE_5_1)
-		local
-			a_file: FILE
-			a_string: STRING
-			a_console: CONSOLE
-		do
-			a_file ?= a_stream
-			if a_file /= Void then
-				a_console ?= a_file
-				if a_console /= Void then
-					Result := c_console_readstream (a_console.file_pointer, c_rtid ($a_buffer) + pos, nb_char)
-				else
-					Result := c_file_gss (a_file.file_pointer, c_rtid ($a_buffer) + pos, nb_char)
-				end
-			else
-				a_stream.read_stream (nb_char)
-				a_string := a_stream.last_string
-				Result := a_string.count
-				copy_from_string (a_buffer, pos, a_string)
-			end
-#else
 		do
 			Result := INPUT_STREAM_.read_stream (a_stream, a_buffer, pos, nb_char)
-#endif
 		ensure
 			nb_char_read_large_enough: Result >= 0
 			nb_char_read_small_enough: Result <= nb_char
@@ -286,15 +204,10 @@ feature -- Element change
 			new_pos_large_enough: new_pos >= lower
 			enough_space: (new_pos + nb - 1) <= upper (a_buffer)
 			move_left: old_pos > new_pos
-#ifndef (ISE && ISE_5_1)
 		local
 			i, j, nb2: INTEGER
-#endif
 		do
 			if nb > 0 then
-#ifdef (ISE && ISE_5_1)
-				(c_rtid ($a_buffer) + new_pos).memory_move (c_rtid ($a_buffer) + old_pos, nb)
-#else
 				j := new_pos
 				nb2 := old_pos + nb - 1
 				from i := old_pos until i > nb2 loop
@@ -302,7 +215,6 @@ feature -- Element change
 					j := j + 1
 					i := i + 1
 				end
-#endif
 			end
 		end
 
@@ -317,22 +229,16 @@ feature -- Element change
 			new_pos_large_enough: new_pos >= lower
 			enough_space: (new_pos + nb - 1) <= upper (a_buffer)
 			move_right: old_pos < new_pos
-#ifndef (ISE && ISE_5_1)
 		local
 			i, j: INTEGER
-#endif
 		do
 			if nb > 0 then
-#ifdef (ISE && ISE_5_1)
-				(c_rtid ($a_buffer) + new_pos).memory_move (c_rtid ($a_buffer) + old_pos, nb)
-#else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
 					a_buffer.put (a_buffer.item (i), j)
 					j := j - 1
 					i := i - 1
 				end
-#endif
 			end
 		end
 
@@ -352,10 +258,7 @@ feature -- Resizing
 			i: INTEGER
 #endif
 		do
-#ifdef (ISE && ISE_5_1)
-			Result := c_str_resize ($a_buffer, n)
-#endif
-#ifdef (ISE && ! ISE_5_1)
+#ifdef ISE
 			a_buffer.resize (n)
 			a_buffer.set_count (n)
 			Result := a_buffer
@@ -380,41 +283,4 @@ feature -- Resizing
 			count_set: Result.count = n
 		end
 
-#ifdef (ISE && ISE_5_1)
-feature {NONE} -- Externals
-
-	c_str_resize (a: POINTER; newsize: INTEGER): SPECIAL [CHARACTER] is
-			-- Area which can accomodate at least `newsize' characters
-		external
-			"C | %"eif_malloc.h%""
-		alias
-			"sprealloc"
-		end
-
-	c_file_gss (a_file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
-			-- Read min (`length', remaining bytes in `a_file')
-			-- characters into `a_string'.
-		external
-			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER"
-		alias
-			"file_gss"
-		end
-
-	c_console_readstream (a_file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
-			-- Read a stream from the console
-		external
-			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER"
-		alias
-			"console_readstream"
-		end
-
-	c_rtid (p: POINTER): POINTER is
-			-- Return `p'
-		external
-			"C [macro <eif_macros.h>]"
-		alias
-			"/**/"
-		end
-
-#endif
 end

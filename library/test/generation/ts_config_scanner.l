@@ -121,7 +121,7 @@ creation
 			if text_count > 1 then
 				buffer.append_string (text_substring (1, text_count - 1))
 			end
-			str_ := STRING_.make (buffer.count)
+			create str_.make (buffer.count)
 			str_.append_string (buffer)
 			buffer.wipe_out
 			last_et_identifier_value := new_identifier (str_)

@@ -19,11 +19,11 @@
 
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ise/${gepp_file}.e" lines="true">
 			<define name="ISE"/>
-			<define name="ISE_5_1" if="${ISE_5_1}"/>
 			<define name="GOBO_DOTNET" if="${GOBO_DOTNET}"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/se/${gepp_file}.e" lines="true">
 			<define name="SE"/>
+			<define name="SE_2_0" if="${SE_2_0}"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ve/${gepp_file}.e" lines="true">
 			<define name="VE"/>

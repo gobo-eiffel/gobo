@@ -771,7 +771,7 @@ feature {NONE} -- String mode
 					if maximum_item_code (Result) > 255 then
 						force_error (Error_unicode_in_latin1_string_mode)
 					else
-						Result := STRING_.string (Result)
+						Result := Result.string
 					end
 				end
 			end
@@ -825,7 +825,7 @@ feature {NONE} -- String mode: shared empty string implementation
 	shared_empty_string_string: STRING is
 			-- Empty string of type STRING
 		once
-			Result := STRING_.make_empty
+			create Result.make_empty
 		ensure
 			string_type: Result.same_type ("")
 		end

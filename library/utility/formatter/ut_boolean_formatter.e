@@ -12,10 +12,6 @@ indexing
 
 class UT_BOOLEAN_FORMATTER
 
-inherit
-
-	KL_IMPORTED_STRING_ROUTINES
-
 feature -- Access
 
 	eiffel_boolean_out (b: BOOLEAN): STRING is
@@ -23,7 +19,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: true|false
 		do
-			Result := STRING_.make (5)
+			create Result.make (5)
 			append_eiffel_boolean (Result, b)
 		ensure
 			eiffel_boolean_out_not_void: Result /= Void

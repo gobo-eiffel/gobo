@@ -46,14 +46,14 @@ feature -- Output
 	out: STRING is
 			-- Printable representation (year/month/day)
 		do
-			Result := STRING_.make (10)
+			create Result.make (10)
 			append_to_string (Result)
 		end
 
 	date_out: STRING is
 			-- Printable representation (year/month/day)
 		do
-			Result := STRING_.make (10)
+			create Result.make (10)
 			append_date_to_string (Result)
 		ensure
 			date_out_not_void: Result /= Void

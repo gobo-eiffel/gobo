@@ -14,7 +14,6 @@ class UT_CHARACTER_FORMATTER
 
 inherit
 
-	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
 feature -- Access
@@ -27,7 +26,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: [ !#$&(-~]|%[BFNRTU%'"]|%/[0-9]+/
 		do
-			Result := STRING_.make (1)
+			create Result.make (1)
 			append_eiffel_character (Result, c)
 		ensure
 			eiffel_character_out_not_void: Result /= Void
@@ -41,7 +40,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: \'([ !#$&(-~]|%[BFNRTU%'"]|%/[0-9]+/)\'
 		do
-			Result := STRING_.make (3)
+			create Result.make (3)
 			append_quoted_eiffel_character (Result, c)
 		ensure
 			quoted_eiffel_character_out_not_void: Result /= Void

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	make_default is
 			-- Make default namespace (empty URI)
 		do
-			make (STRING_.make_empty, STRING_.make_empty)
+			make ("", "")
 		ensure
 			no_prefix: not has_prefix
 			default_namespace: uri.count = 0

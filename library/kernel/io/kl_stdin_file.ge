@@ -49,9 +49,7 @@ inherit
 			read_stream as old_read_stream,
 			read_line as old_read_line,
 			read_character as old_read_character,
-#ifdef (ISE && ! ISE_5_1)
 			read_to_string as old_read_to_string,
-#endif
 			end_of_file as old_end_of_file,
 			is_open_read as old_is_open_read,
 			append as old_append,
@@ -500,37 +498,5 @@ feature {NONE} -- Implementation
 	dummy_string: STRING is ""
 			-- Dummy string
 
-#ifdef ISE_5_1
-	c_rtid (p: POINTER): POINTER is
-			-- Return `p'
-		external
-			"C [macro <eif_macros.h>]"
-		alias
-			"/**/"
-		end
-
-	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
-			-- Fill `a_string', starting at position `pos' with at
-			-- most `nb' characters read from current file.
-			-- Return the number of characters actually read.
-		require
-			is_readable: file_readable
-			not_end_of_file: not old_end_of_file
-			a_string_not_void: a_string /= Void
-			valid_position: a_string.valid_index (pos)
-			nb_large_enough: nb > 0
-			nb_small_enough: nb <= a_string.count - pos + 1
-		local
-			str_area: ANY
-		do
-			str_area := a_string.area
-			Result := console_readstream (file_pointer, c_rtid ($str_area) + (pos - 1), nb)
-		ensure
-			nb_char_read_large_enough: Result >= 0
-			nb_char_read_small_enough: Result <= nb
-			character_read: not old_end_of_file implies Result > 0
-		end
-
-#endif
 #endif
 end

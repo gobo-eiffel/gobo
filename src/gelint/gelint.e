@@ -57,27 +57,27 @@ feature -- Execution
 				elseif arg.is_equal ("-h") or arg.is_equal ("-?") or arg.is_equal ("--help") then
 					report_usage_message
 					Exceptions.die (0)
-				elseif equal (arg, "--all_breaks") then
+				elseif arg.is_equal ("--all_breaks") then
 					all_breaks := True
-				elseif equal (arg, "--verbose") then
+				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
-				elseif equal (arg, "--cat") then
+				elseif arg.is_equal ("--cat") then
 					is_cat := True
-				elseif equal (arg, "--forget") then
+				elseif arg.is_equal ("--forget") then
 					is_forget := True
-				elseif equal (arg, "--flat") then
+				elseif arg.is_equal ("--flat") then
 					is_flat := True
-				elseif equal (arg, "--compile") then
+				elseif arg.is_equal ("--compile") then
 					do_compile := True
-				elseif equal (arg, "--c_compile") then
+				elseif arg.is_equal ("--c_compile") then
 					do_c_compile := True
-				elseif equal (arg, "--push") then
+				elseif arg.is_equal ("--push") then
 					push_dynamic_type_sets := True
-				elseif equal (arg, "--pull") then
+				elseif arg.is_equal ("--pull") then
 					pull_dynamic_type_sets := True
-				elseif equal (arg, "--no_output") then
+				elseif arg.is_equal ("--no_output") then
 					no_output := True
-				elseif equal (arg, "--void") then
+				elseif arg.is_equal ("--void") then
 					void_feature := True
 				elseif i = nb then
 					a_filename := arg

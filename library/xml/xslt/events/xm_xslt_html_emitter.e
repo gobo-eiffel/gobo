@@ -55,7 +55,7 @@ feature -- Events
 			-- Notify the start of an element
 		do
 			Precursor (a_name_code, a_type_code, properties)
-			element_name := STRING_.to_lower (element_qname_stack.item)
+			element_name := element_qname_stack.item.as_lower
 			element_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 			if element_uri_code = Default_uri_code and then
 				(STRING_.same_string (element_name, "script") or else
@@ -90,7 +90,7 @@ feature -- Events
 			if in_script <= 0 then in_script := -1000000 end
 			if is_empty_tag (element_name) and then element_uri_code = Default_uri_code then
 				element_qname_stack.remove
-				element_name := STRING_.to_lower (element_qname_stack.item)
+				element_name := element_qname_stack.item.as_lower
 			else
 				Precursor
 			end
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			Result.put ("uuml", 252)
 			Result.put ("yacute", 253)
 			Result.put ("thorn", 254)
-			Result.put ("yuml", 255)			
+			Result.put ("yuml", 255)
 		end
 
 	set_boolean_attribute (an_element, an_attribute: STRING) is
@@ -273,10 +273,10 @@ feature {NONE} -- Implementation
 			element_name_not_void: an_element /= Void
 			attribute_name_not_void: an_attribute /= Void
 		do
-			if not boolean_attributes_set.has (STRING_.to_lower (an_attribute)) then
-				boolean_attributes_set.put (STRING_.to_lower (an_attribute))
+			if not boolean_attributes_set.has (an_attribute.as_lower) then
+				boolean_attributes_set.put (an_attribute.as_lower)
 			end
-			boolean_combinations_set.put (STRING_.to_lower (an_element + "+" + an_attribute))
+			boolean_combinations_set.put ((an_element + "+" + an_attribute).as_lower)
 		end
 
 	is_boolean_attribute (an_element, an_attribute, a_value: STRING): BOOLEAN is
@@ -287,8 +287,8 @@ feature {NONE} -- Implementation
 			value_not_void: a_value /= Void
 		do
 			if STRING_.same_case_insensitive (an_attribute, a_value) then
-				if boolean_attributes_set.has (STRING_.to_lower (an_attribute)) then
-					Result := boolean_combinations_set.has (STRING_.to_lower (an_element + "+" + an_attribute))
+				if boolean_attributes_set.has (an_attribute.as_lower) then
+					Result := boolean_combinations_set.has ((an_element + "+" + an_attribute).as_lower)
 				end
 			end
 		end
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			a_character_representation, a_non_ascii_representation, an_excluded_representation: STRING
 			an_index: INTEGER
 		do
-			encoding := STRING_.to_upper (output_properties.encoding)
+			encoding := output_properties.encoding.as_upper
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
 			if outputter = Void then

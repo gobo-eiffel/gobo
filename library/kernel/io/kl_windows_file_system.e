@@ -503,7 +503,7 @@ feature -- Pathname handling
 			a_drive: STRING
 			a_hostname: STRING
 		do
-			Result := STRING_.make (50)
+			create Result.make (50)
 			a_drive := a_pathname.drive
 			if a_drive /= Void then
 				Result := STRING_.appended_string (Result, a_drive)

@@ -5,7 +5,7 @@ indexing
 		"Portable interface for class STRING"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,11 +68,7 @@ feature -- Initialization
 			-- Create empty string, or remove all characters from
 			-- existing string.
 			-- (ELKS 2001 STRING)
-			-- Note: Incorrect implementation in VE 4.0: the
-			-- postcondition says "count = suggested_capacity".
-			-- Use KL_STRING_ROUTINES.make instead.
 		require
-			not_portable: False
 			non_negative_suggested_capacity: suggested_capacity >= 0
 		deferred
 		ensure
@@ -88,11 +84,7 @@ feature -- Initialization
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
 			-- run-time errors or crashes.
-			-- Note2: Incorrect implementation in ISE 5.1:
-			-- sharing internal representation (fixed in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.make_from_string instead.
 		require
-			not_portable: False
 			s_not_void: s /= Void
 		deferred
 		ensure
@@ -117,10 +109,6 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Create empty string.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.make_empty instead.
-		require
-			not_portable: False
 		deferred
 		ensure
 			empty: count = 0
@@ -129,10 +117,7 @@ feature {NONE} -- Initialization
 	make_filled (c: CHARACTER; n: INTEGER) is
 			-- Create string of length `n' filled with `c'.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.make_filled instead.
 		require
-			not_portable: False
 			valid_count: n >= 0
 		deferred
 		ensure
@@ -195,10 +180,6 @@ feature -- Access
 			-- where characters which do not fit in a CHARACTER are
 			-- replaced by a '%U'
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.string instead.
-		require
-			not_portable: False
 		deferred
 		ensure
 			string_not_void: Result /= Void
@@ -238,20 +219,13 @@ feature -- Access
 			-- run-time errors or crashes.
 		require
 			other_not_void: other /= Void
-				-- Note: ISE Eiffel 5.1 is more constraining than ELKS 2001 (fixed in ISE 5.2):
-			-- valid_start_index: start_index >= 1 and start_index <= count + 1
-			other_not_empty: other.count > 0
-			start_index_large_enough: start_index >= 1
-			start_index_small_enough: start_index <= count
+			valid_start_index: start_index >= 1 and start_index <= count + 1
 		deferred
 		ensure
 			valid_result: Result = 0 or else (start_index <= Result and Result <= count - other.count + 1)
-				-- Note: ISE Eiffel 5.1 does not support feature `has_substring':
-			zero_if_absent: (Result = 0) = not STRING_.has_substring (substring (start_index, count).current_string, other)
-				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			at_this_index: Result >= start_index implies STRING_.elks_same_string (other, substring (Result, Result + other.count - 1).current_string)
-				-- Note: ISE Eiffel 5.1 does not support feature `has_substring':
-			none_before: Result > start_index implies not STRING_.has_substring (substring (start_index, Result + other.count - 2).current_string, other)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has_substring (other)
+			at_this_index: Result >= start_index implies other.same_string (substring (Result, Result + other.count - 1).current_string)
+			none_before: Result > start_index implies not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
 	infix "+" (other: STRING): like Current is
@@ -271,8 +245,7 @@ feature -- Access
 			result_not_void: Result /= Void
 			result_count: Result.count = count + other.count
 			initial: Result.substring (1, count).is_equal (Current)
-				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			final: STRING_.elks_same_string (Result.substring (count + 1, count + other.count).current_string, other)
+			final: Result.substring (count + 1, count + other.count).same_string (other)
 		end
 
 feature -- Measurement
@@ -318,16 +291,13 @@ feature -- Status report
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
 			-- and this may lead to run-time errors or crashes.
-			-- Note2: Not supported in ISE 5.1 (implemented in ISE 5.2).
 		require
-			not_portable: False
 			other_not_void: other /= Void
 		deferred
 		ensure
 			false_if_too_small: count < other.count implies not Result
-				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			true_if_initial: (count >= other.count and then STRING_.elks_same_string (other, substring (1, other.count).current_string)) implies Result
-			recurse: (count >= other.count and then not STRING_.elks_same_string (other, substring (1, other.count).current_string)) implies (Result = STRING_.has_substring (substring (2, count).current_string, other))
+			true_if_initial: (count >= other.count and then other.same_string (substring (1, other.count).current_string)) implies Result
+			recurse: (count >= other.count and then not other.same_string (substring (1, other.count).current_string)) implies (Result = substring (2, count).has_substring (other))
 		end
 
 	valid_index (i: INTEGER): BOOLEAN is
@@ -462,19 +432,17 @@ feature -- Comparison
 			-- `Current' is considered with its characters which do not
 			-- fit in a CHARACTER replaced by a '%U'.
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Use feature KL_STRING_ROUTINES.same_string instead of
+			-- Note: Use feature KL_STRING_ROUTINES.elks_same_string instead of
 			-- this routine when `Current' can be of dynamic type STRING and
 			-- `other' of dynamic type other than STRING such as UC_STRING,
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
 			-- and this may lead to run-time errors or crashes.
-			-- Note2: Not supported in ISE 5.1 (implemented in ISE 5.2).
 		require
-			not_portable: False
 			other_not_void: other /= Void
 		deferred
 		ensure
-			definition: Result = string.is_equal (STRING_.string (other))
+			definition: Result = string.is_equal (other.string)
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -538,10 +506,6 @@ feature -- Element change
 	fill_with (c: CHARACTER) is
 			-- Replace every character with `c'.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.fill_with instead.
-		require
-			not_portable: False
 		deferred
 		ensure
 			same_count: old count = count
@@ -552,10 +516,7 @@ feature -- Element change
 			-- Insert `c' at index `i', shifting characters between
 			-- ranks `i' and `count' rightwards.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.insert_character instead.
 		require
-			not_portable: False
 			valid_insertion_index: 1 <= i and i <= count + 1
 		deferred
 		ensure
@@ -575,20 +536,21 @@ feature -- Element change
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
 			-- run-time errors or crashes.
-			-- Note2: Not supported in ISE 5.1 (implemented in 5.2)
+			-- Note2: There is a bug in ISE 5.4/5.5 when inserting a string 
+			-- to itself.
 		require
-			not_portable: False
 			string_not_void: s /= Void
 			valid_insertion_index: 1 <= i and i <= count + 1
+				-- Bug in ISE 5.4/5.5.
+			not_current: s /= current_string
 		deferred
 		ensure
 			inserted: is_equal (old substring (1, i - 1) + old clone (s) + old substring (i, count).current_string)
 		end
 
 	replace_substring (s: like Current; start_index, end_index: INTEGER) is
-		-- Note: VE 4.0 and ISE 5.1 have 'like Current'
-		-- in their signature instead of STRING as specified in
-		-- ELKS 2001 (fixed in ISE 5.2):
+		-- Note: VE 4.1 has 'like Current' in its signature instead
+		-- of STRING as specified in ELKS 2001:
 	-- replace_substring (s: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `s'.
@@ -603,12 +565,7 @@ feature -- Element change
 			string_not_void: s /= Void
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
-				-- Note: ISE 5.1 does not support empty interval yet (fixed in ISE 5.2):
-			-- meaningful_interval: start_index <= end_index + 1
-			meaningful_interval: start_index <= end_index
-				-- Note: ISE 5.1 does not support replacing
-				-- a substring by itself (fixed in ISE 5.2):
-			not_current: s /= Current
+			meaningful_interval: start_index <= end_index + 1
 		deferred
 		ensure
 			replaced: is_equal (old (substring (1, start_index - 1) + s.current_string + substring (end_index + 1, count).current_string))
@@ -620,11 +577,7 @@ feature -- Removal
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.keep_head instead.
-			-- Note2: Named `head' in ISE 5.1.
 		require
-			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
@@ -635,11 +588,7 @@ feature -- Removal
 			-- Remove all the characters except for the last `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.keep_tail instead.
-			-- Note2: Named `tail' in ISE 5.1.
 		require
-			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
@@ -650,10 +599,7 @@ feature -- Removal
 			-- Remove the first `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.remove_head instead.
 		require
-			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
@@ -664,10 +610,7 @@ feature -- Removal
 			-- Remove the last `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.remove_tail instead.
 		require
-			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
@@ -689,10 +632,7 @@ feature -- Removal
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Use KL_STRING_ROUTINES.remove_substring instead.
 		require
-			not_portable: False
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
 			meaningful_interval: start_index <= end_index + 1
@@ -714,10 +654,6 @@ feature -- Conversion
 	as_lower: like Current is
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ise 5.2).
-			-- Use KL_STRING_ROUTINES.as_lower instead.
-		require
-			not_portable: False
 		deferred
 		ensure
 			as_lower_not_void: Result /= Void
@@ -729,10 +665,6 @@ feature -- Conversion
 	as_upper: like Current is
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in ISE 5.1 (implemented in ise 5.2).
-			-- Use KL_STRING_ROUTINES.as_upper instead.
-		require
-			not_portable: False
 		deferred
 		ensure
 			as_upper_not_void: Result /= Void
@@ -746,12 +678,11 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: ISE 5.1 does not support `as_lower' (implemented in ise 5.2):
-				-- Note2: There is an infinite loop with SE -0.74 because SE
+				-- Note: There is an infinite loop with SE 1.0 because SE
 				-- checks assertions even when execution assertions and `as_lower'
 				-- in descendant classes is implemented by calling `to_lower'
 				-- on a clone of `Current':
-			-- length_and_content: current_string.is_equal (old STRING_.as_lower (current_string))
+			-- length_and_content: is_equal (old as_lower)
 		end
 
 	to_upper is
@@ -759,12 +690,11 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: ISE 5.1 does not support `as_upper' (implemented in ise 5.2):
-				-- Note2: There is an infinite loop with SE -0.74 because SE
+				-- Note: There is an infinite loop with SE 1.0 because SE
 				-- checks assertions even when execution assertions and `as_upper'
 				-- in descendant classes is implemented by calling `to_upper'
 				-- on a clone of `Current':
-			-- length_and_content: current_string.is_equal (old STRING_.as_upper (current_string))
+			-- length_and_content: is_equal (old as_upper)
 		end
 
 -- TODO: Not tested yet.
@@ -829,8 +759,7 @@ feature -- Output
 		deferred
 		ensure then
 			out_not_void: Result /= Void
-				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			same_items: same_type ("") implies STRING_.elks_same_string (Result, current_string)
+			same_items: same_type ("") implies Result.same_string (current_string)
 		end
 
 feature -- Implementation

@@ -137,7 +137,7 @@ feature -- Conversion
 		require
 			valid: is_valid
 		do
-			Result := STRING_.make (6)
+			create Result.make (6)
 			utf8.append_code_to_utf8 (Result, code)
 		ensure
 			to_utf8_not_void: Result /= Void

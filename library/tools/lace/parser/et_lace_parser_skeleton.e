@@ -166,7 +166,7 @@ feature {NONE} -- AST factory
 					else
 						inspect a_pathname_string.item (2)
 						when '/', '\' then
-							a_full_pathname_string := STRING_.make (a_parent_full_pathname.count + nb - 1)
+							create a_full_pathname_string.make (a_parent_full_pathname.count + nb - 1)
 							a_full_pathname_string.append_string (a_parent_full_pathname)
 							a_full_pathname_string.append_string (a_pathname_string.substring (2, nb))
 							create a_full_pathname.make (a_full_pathname_string)
@@ -251,7 +251,7 @@ feature -- Error handling
 			a_lined_message: STRING
 			an_error: UT_MESSAGE
 		do
-			a_lined_message := STRING_.make (30)
+			create a_lined_message.make (30)
 			f_buffer ?= input_buffer
 			if f_buffer /= Void then
 				a_lined_message.append_string (f_buffer.file.name)

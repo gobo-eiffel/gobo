@@ -82,35 +82,41 @@ feature -- Test
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
-				if not eiffel_compiler.is_ve or else not a_class.name.name.is_equal ("SORTED_ARRAY") then
+				if
+					(not eiffel_compiler.is_ve or else not a_class.name.name.is_equal ("SORTED_ARRAY")) and
 						-- Class SORTED_ARRAY in VE 4.0 has a feature named `create'.
+					(not eiffel_compiler.is_ise or else not a_class.name.name.is_equal ("ANY"))
+						-- Class ANY in ISE 5.4 has 'Void' as a feature and not as a keyword.
+				then
 					if a_class.is_preparsed then
-						if not a_class.is_parsed then
-								-- If the class has already been parsed, this means that it
-								-- is contained in a file containing more than one class
-								-- text (allowed in VE). This is case is not handled by the
-								-- current test.
-							a_class.process (a_universe.eiffel_parser)
-							assert (a_class.name.name + "_parsed", a_class.is_parsed)
-							assert (a_class.name.name + "_no_syntax_error", not a_class.has_syntax_error)
-							if eiffel_compiler.is_ve then
-								new_count := a_universe.parsed_classes_count
-							else
-								new_count := old_count + 1
+						if not variables.has ("debug") or else a_class.cluster.prefixed_name.item (1) = 'e' then
+							if not a_class.is_parsed then
+									-- If the class has already been parsed, this means that it
+									-- is contained in a file containing more than one class
+									-- text (allowed in VE). This is case is not handled by the
+									-- current test.
+								a_class.process (a_universe.eiffel_parser)
+								assert (a_class.name.name + "_parsed", a_class.is_parsed)
+								assert (a_class.name.name + "_no_syntax_error", not a_class.has_syntax_error)
+								if eiffel_compiler.is_ve then
+									new_count := a_universe.parsed_classes_count
+								else
+									new_count := old_count + 1
+								end
+								if new_count = old_count + 1 then
+										-- Do not handle files containing more
+										-- than one class text (allowed by VE).
+									create a_file.make ("gobo.txt")
+									a_file.open_write
+									assert ("is_open_write", a_file.is_open_write)
+									a_printer.set_file (a_file)
+									a_class.process (a_printer)
+									a_printer.set_null_file
+									a_file.close
+									assert_files_equal (a_class.name.name + "_diff", a_class.filename, "gobo.txt")
+								end
+								old_count := new_count
 							end
-							if new_count = old_count + 1 then
-									-- Do not handle files containing more
-									-- than one class text (allowed by VE).
-								create a_file.make ("gobo.txt")
-								a_file.open_write
-								assert ("is_open_write", a_file.is_open_write)
-								a_printer.set_file (a_file)
-								a_class.process (a_printer)
-								a_printer.set_null_file
-								a_file.close
-								assert_files_equal (a_class.name.name + "_diff", a_class.filename, "gobo.txt")
-							end
-							old_count := new_count
 						end
 					end
 				end

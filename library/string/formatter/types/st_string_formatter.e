@@ -40,9 +40,9 @@ feature -- Output
 			if value.is_empty then
 				Result := ""
 			else
-				Result := STRING_.make_from_string (value)
+				Result := clone (value)
 				if is_precision_given then
-					STRING_.keep_head (Result, precision)
+					Result.keep_head (precision)
 				end
 				justify (Result)
 			end

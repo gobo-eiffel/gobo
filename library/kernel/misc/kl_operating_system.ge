@@ -18,22 +18,25 @@ feature -- Status report
 			-- Is underlying operating system Windows-like?
 		local
 			cwd: STRING
-			gobo_os: STRING
+			gobo_os, os: STRING
 		once
 			gobo_os := variable_value ("GOBO_OS")
 			if gobo_os /= Void and then gobo_os.count > 0 then
 				if gobo_os.is_equal ("windows") then
 					Result := True
 				end
-			elseif equal (variable_value ("OS"), "Windows_NT") then
-				Result := True
 			else
-				cwd := current_working_directory
-				if cwd.count >= 3 then
-					if (cwd.item (2) = ':' and cwd.item (3) = '\') then
-						Result := True
-					elseif (cwd.item (1) = '\' and cwd.item (2) = '\') then
-						Result := True
+				os := variable_value ("OS")
+				if os /= Void and then os.is_equal ("Windows_NT") then
+					Result := True
+				else
+					cwd := current_working_directory
+					if cwd.count >= 3 then
+						if (cwd.item (2) = ':' and cwd.item (3) = '\') then
+							Result := True
+						elseif (cwd.item (1) = '\' and cwd.item (2) = '\') then
+							Result := True
+						end
 					end
 				end
 			end
@@ -60,7 +63,7 @@ feature -- Status report
 
 	is_dotnet: BOOLEAN is
 			-- Has this application been compiled with Eiffel for .NET?
-#ifdef (ISE && ! ISE_5_1)
+#ifdef ISE
 		local
 			p: PLATFORM
 		once

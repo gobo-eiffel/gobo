@@ -72,7 +72,7 @@ feature -- Result
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_NAMESPACE, STRING]
 		do
 			from
-				Result := STRING_.make_empty
+				create Result.make_empty
 				a_cursor := namespaces.new_cursor
 				a_cursor.start
 			until	

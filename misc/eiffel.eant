@@ -69,7 +69,7 @@
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
 		<delete>
-			<fileset include="@(${system}_module_*.dll)"/>
+			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
@@ -82,7 +82,7 @@
 		<available resource="EIFGEN/${codedir}/${system}.melted" variable="file_available"/>
 		<copy file="EIFGEN/${codedir}/${system}.melted" to_directory="." if="${file_available}=true"/>
 		<copy to_directory=".">
-			<fileset include="@(EIFGEN/${codedir}/${system}_module_*.dll)">
+			<fileset include="EIFGEN/${codedir}/?(${system}_)module_*.dll">
 				<map type="flat"/>
 			</fileset>
 		</copy>
@@ -197,7 +197,7 @@
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
 		<delete>
-			<fileset include="@(${system}_module_*.dll)"/>
+			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
 		<delete file="${system}.h2o"/>
 		<geant target="other_clobber"/>
@@ -216,7 +216,7 @@
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
-			Pass $ISE_5_1 option to 'gexace' if defined.
+			Pass $SE_2_0 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
@@ -229,7 +229,7 @@
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
-			<define name="ISE_5_1" value="true" if="${ISE_5_1}"/>
+			<define name="SE_2_0" value="true" if="${SE_2_0}"/>
 		</gexace>
 	</target>
 

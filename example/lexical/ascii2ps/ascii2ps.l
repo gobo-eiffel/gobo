@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 				nb := a_string.count
-				Result := STRING_.make (nb)
+				create Result.make (nb)
 			until
 				i > nb
 			loop
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 			if i < nb then
 				Result := a_filename.substring (i + 1,  nb)
 			else
-				Result := STRING_.make (0)
+				create Result.make (0)
 			end
 		ensure
 			basename_not_void: Result /= Void

@@ -79,7 +79,7 @@ feature -- Access
 			if yy_start < yy_end then
 				Result := yy_content.substring (yy_start, yy_end - 1)
 			else
-				Result := STRING_.make (0)
+				create Result.make (0)
 			end
 		end
 
@@ -101,7 +101,7 @@ feature -- Access
 			-- from the input buffer.)
 		do
 			if e < s then
-				Result := STRING_.make (0)
+				create Result.make (0)
 			else
 				Result := yy_content.substring (yy_start + s - 1, yy_start + e - 1)
 			end

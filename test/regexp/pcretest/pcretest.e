@@ -19,7 +19,6 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_PLATFORM
-	KL_IMPORTED_ARRAY_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
 
 	UT_CHARACTER_CODES
@@ -644,8 +643,8 @@ feature {NONE} -- Input
 			from
 				has_subject := False
 				maximum_subexpressions := Platform.Maximum_integer
-				BOOLEAN_ARRAY_.clear_all (copy_string_mask)
-				BOOLEAN_ARRAY_.clear_all (get_string_mask)
+				copy_string_mask.clear_all
+				get_string_mask.clear_all
 				is_get_list := False
 				skip_spaces (a_file, a_text)
 			until

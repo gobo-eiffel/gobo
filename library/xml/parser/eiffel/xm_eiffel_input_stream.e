@@ -493,7 +493,7 @@ feature {NONE} -- Constants
 	utf8_buffer: STRING is
 			-- Buffer for UTF-8 encoding
 		once
-			Result := STRING_.make (6)
+			create Result.make (6)
 		ensure
 			utf8_buffer_not_void: Result /= Void
 			string_type: Result.same_type ("")

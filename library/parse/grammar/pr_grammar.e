@@ -257,7 +257,7 @@ feature -- Processing
 				end
 			end
 			if useless_variables > 0 or useless_rules > 0 then
-				message := STRING_.make (128)
+				create message.make (128)
 				message.append_string ("Parser contains ")
 				if useless_variables = 1 then
 					message.append_string ("1 useless nonterminal")

@@ -58,7 +58,7 @@ feature -- Output
 	to_text: STRING is
 			-- Textual representation
 		do
-			Result := STRING_.make (50)
+			create Result.make (50)
 			append_to_string (Result)
 		end
 
@@ -125,7 +125,7 @@ feature -- Output
 					else
 						from
 							i := 1
-							an_arrow := STRING_.make (80)
+							create an_arrow.make (80)
 							a_file.read_character
 						until
 							a_file.end_of_file or eol

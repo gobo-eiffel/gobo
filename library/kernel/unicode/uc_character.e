@@ -139,11 +139,11 @@ feature -- Output
 		do
 			max_ascii_code := unicode.maximum_ascii_character_code
 			if code <= max_ascii_code then
-				Result := STRING_.make (1)
+				create Result.make (1)
 				Result.append_character (INTEGER_.to_character (code))
 			else
 				code_out := code.out
-				Result := STRING_.make (3 + code_out.count)
+				create Result.make (3 + code_out.count)
 				Result.append_character ('%%')
 				Result.append_character ('/')
 				Result.append_string (code_out)

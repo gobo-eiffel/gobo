@@ -1626,7 +1626,7 @@ feature {NONE} -- Instruction generation
 				l_instruction_buffer_string := l_instruction_buffer.string
 				STRING_.wipe_out (l_instruction_buffer_string)
 			else
-				l_instruction_buffer_string := STRING_.make (256)
+				create l_instruction_buffer_string.make (256)
 				create l_instruction_buffer.make (l_instruction_buffer_string)
 			end
 			old_file := current_file
@@ -1637,7 +1637,7 @@ feature {NONE} -- Instruction generation
 				l_local_buffer_string := l_local_buffer.string
 				STRING_.wipe_out (l_local_buffer_string)
 			else
-				l_local_buffer_string := STRING_.make (256)
+				create l_local_buffer_string.make (256)
 				create l_local_buffer.make (l_local_buffer_string)
 			end
 			old_local_buffer := current_local_buffer

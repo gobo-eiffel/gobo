@@ -28,7 +28,7 @@ feature -- Access
 	name: STRING is
 			-- Name of feature
 		do
-			Result := STRING_.make (free_operator_name.count + 8)
+			create Result.make (free_operator_name.count + 8)
 			Result.append_string (infix_double_quote)
 			Result.append_string (free_operator_name)
 			Result.append_character ('%"')

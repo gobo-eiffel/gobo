@@ -5,7 +5,7 @@ indexing
 		"Test features of class STRING listed in KS_STRING"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,107 @@ inherit
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
 
+	KL_SHARED_OPERATING_SYSTEM
+		export {NONE} all end
+
 feature -- Test
+
+	test_make is
+			-- Test feature `make'.
+		local
+			a_string: STRING
+		do
+				-- Creation routine.
+			create a_string.make (5)
+			assert_equal ("count1", 0, a_string.count)
+			create a_string.make (0)
+			assert_equal ("count2", 0, a_string.count)
+				-- Regular routine.
+			a_string := "foobar"
+			a_string.make (5)
+			assert_equal ("count3", 0, a_string.count)
+			a_string := "foobar"
+			a_string.make (0)
+			assert_equal ("count4", 0, a_string.count)
+		end
+
+	test_make_from_string is
+			-- Test feature `make_from_string'.
+		local
+			a_string1, a_string2: STRING
+		do
+				-- Creation routine.
+			a_string1 := "foobar"
+			create a_string2.make_from_string (a_string1)
+			assert_equal ("equal1", "foobar", a_string2)
+			a_string1.put ('g', 3)
+			assert_equal ("changed1", "fogbar", a_string1)
+			assert_equal ("not_aliased1", "foobar", a_string2)
+				-- Creation with empty string.
+			a_string1 := ""
+			create a_string2.make_from_string (a_string1)
+			assert_equal ("equal2", "", a_string2)
+			a_string1.append_character ('g')
+			assert_equal ("changed2", "g", a_string1)
+			assert_equal ("not_aliased2", "", a_string2)
+				-- Regular routine.
+			a_string1 := "foobar"
+			a_string2 := "go"
+			a_string2.make_from_string (a_string1)
+			assert_equal ("equal3", "foobar", a_string2)
+			a_string1.put ('g', 3)
+			assert_equal ("changed3", "fogbar", a_string1)
+			assert_equal ("not_aliased3", "foobar", a_string2)
+				-- Target string longer than argument.
+			a_string1 := "foobar"
+			a_string2 := "gobogobogobo"
+			a_string2.make_from_string (a_string1)
+			assert_equal ("equal4", "foobar", a_string2)
+			a_string1.put ('g', 3)
+			assert_equal ("changed4", "fogbar", a_string1)
+			assert_equal ("not_aliased4", "foobar", a_string2)
+				-- Empty target string.
+			a_string1 := "foobar"
+			a_string2 := ""
+			a_string2.make_from_string (a_string1)
+			assert_equal ("equal5", "foobar", a_string2)
+			a_string1.put ('g', 3)
+			assert_equal ("changed5", "fogbar", a_string1)
+			assert_equal ("not_aliased5", "foobar", a_string2)
+				-- Empty argument string.
+			a_string1 := ""
+			a_string2 := "gobo"
+			create a_string2.make_from_string (a_string1)
+			assert_equal ("equal6", "", a_string2)
+			a_string1.append_character ('g')
+			assert_equal ("changed6", "g", a_string1)
+			assert_equal ("not_aliased6", "", a_string2)
+				-- Target string same as argument.
+			a_string1 := "foobar"
+			a_string2 := a_string1
+			a_string2.make_from_string (a_string1)
+			assert_equal ("equal5", "foobar", a_string2)
+		end
+
+	test_make_empty is
+			-- Test feature `make_empty'.
+		local
+			a_string: STRING
+		do
+			create a_string.make_empty
+			assert_equal ("empty", 0, a_string.count)
+		end
+
+	test_make_filled is
+			-- Test feature `make_filled'.
+		local
+			a_string: STRING
+		do
+			create a_string.make_filled ('G', 4)
+			assert_equal ("filled1", "GGGG",  a_string) 
+			create a_string.make_filled ('s', 0)
+			assert_equal ("filled2", "",  a_string) 
+		end
 
 	test_count is
 			-- Test feature `count'.
@@ -103,6 +203,26 @@ feature -- Test
 			assert_equal ("item9", 'z', a_string.item (3)) 
 		end
 
+	test_string is
+			-- Test feature `string'.
+		local
+			a_string1, a_string2: STRING
+		do
+			a_string1 := "foo"
+			a_string2 := a_string1.string
+			assert ("not_void1", a_string2 /= Void)
+			assert ("string_type1", a_string2.same_type ("")) 
+			assert ("new_string1", a_string2 /= a_string1) 
+			assert_equal ("value1", "foo", a_string2) 
+				-- Empty string.
+			a_string1 := ""
+			a_string2 := a_string1.string
+			assert ("not_void2", a_string2 /= Void)
+			assert ("string_type2", a_string2.same_type ("")) 
+			assert ("new_string2", a_string2 /= a_string1) 
+			assert_equal ("value2", "", a_string2) 
+		end
+
 	test_substring is
 			-- Test feature `substring'.
 		local
@@ -130,6 +250,29 @@ feature -- Test
 			a_string := clone ("")
 			assert ("is_equal2", a_string.is_equal ("")) 
 			assert ("not_is_equal4", not a_string.is_equal ("foo")) 
+		end
+
+	test_same_string is
+			-- Test feature `same_string'.
+		local
+			a_string1, a_string2: STRING
+		do
+			a_string1 := "foo"
+			a_string2 := "foo"
+			assert ("same1", a_string1.same_string (a_string2))
+			a_string1 := "foo"
+			a_string2 := "bar"
+			assert ("not_same1", not a_string1.same_string (a_string2))
+				-- Empty strings.
+			a_string1 := ""
+			a_string2 := ""
+			assert ("same2", a_string1.same_string (a_string2))
+			a_string1 := ""
+			a_string2 := "bar"
+			assert ("not_same2", not a_string1.same_string (a_string2))
+			a_string1 := "foo"
+			a_string2 := ""
+			assert ("not_same3", not a_string1.same_string (a_string2))
 		end
 
 	test_out is
@@ -160,6 +303,19 @@ feature -- Test
 			a_string := clone ("toto")
 			a_string.copy (a_string)
 			assert_equal ("copy4", "toto", a_string) 
+		end
+
+	test_fill_with is
+			-- Test feature `fill_with'.
+		local
+			a_string: STRING
+		do
+			a_string := "foo"
+			a_string.fill_with ('a')
+			assert_equal ("fill1", "aaa", a_string)
+			a_string := ""
+			a_string.fill_with ('a')
+			assert_equal ("fill2", "", a_string)
 		end
 
 	test_append_character is
@@ -214,6 +370,51 @@ feature -- Test
 			assert_equal ("append_string4", "foofoo", a_string + a_string) 
 		end
 
+	test_insert_character is
+			-- Test feature `insert_character'.
+		local
+			a_string: STRING
+		do
+			a_string := "foo"
+			a_string.insert_character ('a', 2)
+			assert_equal ("insert1", "faoo", a_string)
+			a_string.insert_character ('g', 5)
+			assert_equal ("insert2", "faoog", a_string)
+			a_string.insert_character ('s', 1)
+			assert_equal ("insert3", "sfaoog", a_string)
+				-- Empty string.
+			a_string := ""
+			a_string.insert_character ('a', 1)
+			assert_equal ("insert4", "a", a_string)
+		end
+
+	test_insert_string is
+			-- Test feature `insert_string'.
+		local
+			a_string: STRING
+		do
+			a_string := "foo"
+			a_string.insert_string ("aa", 2)
+			assert_equal ("insert1", "faaoo", a_string)
+			a_string.insert_string ("", 1)
+			assert_equal ("insert2", "faaoo", a_string)
+			a_string.insert_string ("gobo", 6)
+			assert_equal ("insert3", "faaoogobo", a_string)
+			a_string.insert_string ("s", 1)
+			assert_equal ("insert4", "sfaaoogobo", a_string)
+				-- Empty string.
+			a_string := ""
+			a_string.insert_string ("foo", 1)
+			assert_equal ("insert5", "foo", a_string)
+				-- Same object.
+				-- Does not work with ISE 5.4/5.5 due to a bug.
+			if not eiffel_compiler.is_ise then
+				a_string := "bar"
+				a_string.insert_string (a_string, 2)
+				assert_equal ("insert6", "bbarar", a_string)
+			end
+		end
+
 	test_index_of is
 			-- Test feature `index_of'.
 		local
@@ -240,6 +441,61 @@ feature -- Test
 			assert_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
 		end
 
+	test_substring_index1 is
+			-- Test feature `substring_index'.
+		local
+			a_string1: STRING
+		do
+			a_string1 := "foobar"
+			assert_equal ("index1", 4, a_string1.substring_index ("bar", 1))
+			assert_equal ("index2", 4, a_string1.substring_index ("bar", 4))
+			assert_equal ("index3", 0, a_string1.substring_index ("bar", 5))
+			assert_equal ("index4", 0, a_string1.substring_index ("bar", 7))
+			assert_equal ("index5", 3, a_string1.substring_index ("oba", 2))
+			assert_equal ("index6", 1, a_string1.substring_index ("fo", 1))
+			assert_equal ("index7", 2, a_string1.substring_index ("o", 1))
+			assert_equal ("index8", 3, a_string1.substring_index ("o", 3))
+			assert_equal ("index9", 5, a_string1.substring_index ("", 5))
+			if not operating_system.is_dotnet then
+					-- Bug in ISE 5.5 for .NET.
+				assert_equal ("index10", 7, a_string1.substring_index ("", 7))
+			end
+			assert_equal ("index11", 0, a_string1.substring_index ("gobo", 2))
+			assert_equal ("index12", 0, a_string1.substring_index ("gobogobogobo", 1))
+			assert_equal ("index13", 0, a_string1.substring_index (a_string1, 2))
+			assert_equal ("index14", 1, a_string1.substring_index (a_string1, 1))
+			assert_equal ("index15", 0, a_string1.substring_index (a_string1, 7))
+			a_string1 := ""
+			assert_equal ("index16", 0, a_string1.substring_index ("gobo", 1))
+			if not operating_system.is_dotnet then
+					-- Bug in ISE 5.5 for .NET.
+				assert_equal ("index17", 1, a_string1.substring_index ("", 1))
+			end
+		end
+
+	test_substring_index2 is
+			-- Test feature `substring_index'.
+		local
+			a_string, a_string2: STRING
+		do
+			a_string := "foobar"
+			a_string2 := "bar"
+			assert_equal ("index1", 4, a_string.substring_index (a_string2, 1)) 
+			assert_equal ("index2", 4, a_string.substring_index (a_string2, 2)) 
+			assert_equal ("index3", 4, a_string.substring_index (a_string2, 3)) 
+			assert_equal ("index4", 4, a_string.substring_index (a_string2, 4)) 
+			assert_equal ("index5", 0, a_string.substring_index (a_string2, 5)) 
+			assert_equal ("index6", 0, a_string.substring_index (a_string2, 6)) 
+			a_string := "bar"
+			a_string2 := "foobar"
+			assert_equal ("index6", 0, a_string.substring_index (a_string2, 1)) 
+			assert_equal ("index7", 0, a_string.substring_index (a_string2, 2)) 
+			assert_equal ("index8", 0, a_string.substring_index (a_string2, 3)) 
+			assert_equal ("index9", 1, a_string.substring_index (a_string, 1)) 
+			assert_equal ("index10", 0, a_string.substring_index (a_string, 2)) 
+			assert_equal ("index11", 0, a_string.substring_index (a_string, 3)) 
+		end
+
 	test_has is
 			-- Test feature `has'.
 		local
@@ -252,6 +508,26 @@ feature -- Test
 			assert ("not_has_o", not a_string.has ('o')) 
 			a_string := clone ("")
 			assert ("not_has_f", not a_string.has ('f')) 
+		end
+
+	test_has_substring is
+			-- Test feature `has_substring'.
+		local
+			a_string1: STRING
+		do
+			a_string1 := "foobar"
+			assert ("has1", a_string1.has_substring ("oo")) 
+			assert ("has2", a_string1.has_substring ("foobar")) 
+			assert ("has3", a_string1.has_substring (a_string1)) 
+			assert ("has4", a_string1.has_substring ("")) 
+			assert ("not_has1", not a_string1.has_substring ("gobo")) 
+				-- Empty string.
+			a_string1 := ""
+			if not operating_system.is_dotnet then
+					-- Bug in ISE 5.5 for .NET.
+				assert ("has5", a_string1.has_substring ("")) 
+			end
+			assert ("not_has2", not a_string1.has_substring ("gobo")) 
 		end
 
 	test_occurrences is
@@ -270,36 +546,117 @@ feature -- Test
 			assert_equal ("x", 0, a_string.occurrences ('x')) 
 		end
 
-	test_head is
-			-- Test feature `head'.
+	test_keep_head is
+			-- Test feature `keep_head'.
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foobar")
-			a_string.head (10)
+			a_string := "foobar"
+			a_string.keep_head (10)
 			assert_equal ("head_10", "foobar", a_string) 
-			a_string.head (6)
+			a_string.keep_head (6)
 			assert_equal ("head_6", "foobar", a_string) 
-			a_string.head (3)
+			a_string.keep_head (3)
 			assert_equal ("head_3", "foo", a_string) 
-			a_string.head (0)
+			a_string.keep_head (0)
 			assert_equal ("head_0", "", a_string) 
+				-- Empty string.
+			a_string := ""
+			a_string.keep_head (0)
+			assert_equal ("head2_0", "", a_string) 
+			a_string.keep_head (5)
+			assert_equal ("head2_5", "", a_string) 
 		end
 
-	test_tail is
-			-- Test feature `tail'.
+	test_keep_tail is
+			-- Test feature `keep_tail'.
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foobar")
-			a_string.tail (10)
+			a_string := "foobar"
+			a_string.keep_tail (10)
 			assert_equal ("tail_10", "foobar", a_string) 
-			a_string.tail (6)
+			a_string.keep_tail (6)
 			assert_equal ("tail_6", "foobar", a_string) 
-			a_string.tail (3)
+			a_string.keep_tail (3)
 			assert_equal ("tail_3", "bar", a_string) 
-			a_string.tail (0)
+			a_string.keep_tail (0)
 			assert_equal ("tail_0", "", a_string) 
+				-- Empty string.
+			a_string := ""
+			a_string.keep_head (0)
+			assert_equal ("tail2_0", "", a_string) 
+			a_string.keep_head (5)
+			assert_equal ("tail2_5", "", a_string) 
+		end
+
+	test_remove_head is
+			-- Test feature `remove_head'.
+		local
+			a_string: STRING
+		do
+			a_string := "foobar"
+			a_string.remove_head (10)
+			assert_equal ("tail_10", "", a_string) 
+			a_string := "foobar"
+			a_string.remove_head (6)
+			assert_equal ("tail_6", "", a_string) 
+			a_string := "foobar"
+			a_string.remove_head (3)
+			assert_equal ("tail_3", "bar", a_string) 
+			a_string := "foobar"
+			a_string.remove_head (0)
+			assert_equal ("tail_0", "foobar", a_string) 
+				-- Empty string.
+			a_string := ""
+			a_string.remove_head (0)
+			assert_equal ("tail2_0", "", a_string) 
+			a_string.remove_head (5)
+			assert_equal ("tail2_5", "", a_string) 
+		end
+
+	test_remove_tail is
+			-- Test feature `remove_tail'.
+		local
+			a_string: STRING
+		do
+			a_string := "foobar"
+			a_string.remove_tail (10)
+			assert_equal ("head_10", "", a_string) 
+			a_string := "foobar"
+			a_string.remove_tail (6)
+			assert_equal ("head_6", "", a_string) 
+			a_string := "foobar"
+			a_string.remove_tail (3)
+			assert_equal ("head_3", "foo", a_string) 
+			a_string := "foobar"
+			a_string.remove_tail (0)
+			assert_equal ("head_0", "foobar", a_string) 
+				-- Empty string.
+			a_string := ""
+			a_string.remove_tail (0)
+			assert_equal ("head2_0", "", a_string) 
+			a_string.remove_tail (5)
+			assert_equal ("head2_5", "", a_string) 
+		end
+
+	test_remove_substring is
+			-- Test feature `remove_substring'.
+		local
+			a_string: STRING
+		do
+			a_string := "foobar"
+			a_string.remove_substring (2, 4)
+			assert_equal ("remove1", "far", a_string)
+			a_string := "gobo"
+			a_string.remove_substring (1, 4)
+			assert_equal ("remove2", "", a_string)
+			a_string := "gobo"
+			a_string.remove_substring (1, 0)
+			assert_equal ("remove3", "gobo", a_string)
+			a_string := ""
+			a_string.remove_substring (1, 0)
+			assert_equal ("remove4", "", a_string)
 		end
 
 	test_hash_code is
@@ -313,55 +670,44 @@ feature -- Test
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 		end
 
-	test_substring_index is
-			-- Test feature `substring_index'.
-		local
-			a_string, a_string2: STRING
-		do
-			a_string := clone ("foobar")
-			a_string2 := clone ("bar")
-			assert_equal ("index1", 4, a_string.substring_index (a_string2, 1)) 
-			assert_equal ("index2", 4, a_string.substring_index (a_string2, 2)) 
-			assert_equal ("index3", 4, a_string.substring_index (a_string2, 3)) 
-			assert_equal ("index4", 4, a_string.substring_index (a_string2, 4)) 
-			assert_equal ("index5", 0, a_string.substring_index (a_string2, 5)) 
-			assert_equal ("index6", 0, a_string.substring_index (a_string2, 6)) 
-			a_string := clone ("bar")
-			a_string2 := clone ("foobar")
-			assert_equal ("index6", 0, a_string.substring_index (a_string2, 1)) 
-			assert_equal ("index7", 0, a_string.substring_index (a_string2, 2)) 
-			assert_equal ("index8", 0, a_string.substring_index (a_string2, 3)) 
-			assert_equal ("index9", 1, a_string.substring_index (a_string, 1)) 
-			assert_equal ("index10", 0, a_string.substring_index (a_string, 2)) 
-			assert_equal ("index11", 0, a_string.substring_index (a_string, 3)) 
-		end
-
 	test_replace_substring is
 			-- Test feature `replace_substring'.
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foobar")
-			a_string2 := clone ("toto")
+			a_string := "foobar"
+			a_string2 := "toto"
 			a_string.replace_substring (a_string2, 1, 6)
 			assert_equal ("replaced1", "toto", a_string) 
-			a_string := clone ("foobar")
-			a_string2 := clone ("toto")
+			a_string := "foobar"
+			a_string2 := "toto"
 			a_string.replace_substring (a_string2, 1, 1)
 			assert_equal ("replaced2", "totooobar", a_string) 
-			a_string := clone ("foobar")
-			a_string2 := clone ("toto")
+			a_string := "foobar"
+			a_string2 := "toto"
 			a_string.replace_substring (a_string2, 4, 6)
 			assert_equal ("replaced3", "foototo", a_string) 
-			a_string := clone ("foobar")
-			a_string2 := clone ("")
+			a_string := "foobar"
+			a_string2 := ""
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string) 
-			-- TODO: Note: ISE 5.1 does not support replacing
-			-- a substring by itself:
-			-- a_string := clone ("foobar")
-			-- a_string.replace_substring (a_string, 4, 6)
-			-- assert_equal ("replaced5", "foofoobar", a_string) 
+				-- Empty string.
+			a_string := ""
+			a_string.replace_substring ("", 1, 0)
+			assert_equal ("replaced6", "", a_string)
+			a_string.replace_substring ("gobo", 1, 0)
+			assert_equal ("replaced7", "gobo", a_string)
+				-- Empty substring.
+			a_string := "foo"
+			a_string.replace_substring ("bar", 2, 1)
+			assert_equal ("replaced8", "fbaroo", a_string)
+				-- Replacing a substring by itself.
+			if not operating_system.is_dotnet then
+					-- Bug in ISE 5.5 for .NET.
+				a_string := "foobar"
+				a_string.replace_substring (a_string, 4, 6)
+				assert_equal ("replaced5", "foofoobar", a_string) 
+			end
 		end
 
 	test_wipe_out is
@@ -415,6 +761,38 @@ feature -- Test
 			a_string := clone ("")
 			a_string.to_upper
 			assert_equal ("to_upper2", "", a_string)
+		end
+
+	test_as_lower is
+			-- Test feature `as_lower'.
+		local
+			a_string, a_string2: STRING
+		do
+			a_string := "FoO"
+			a_string2 := a_string.as_lower
+			assert ("new_string1", a_string2 /= a_string)
+			assert_equal ("lower1", "foo", a_string2)
+				-- Empty string.
+			a_string := ""
+			a_string2 := a_string.as_lower
+			assert ("new_string2", a_string2 /= a_string)
+			assert_equal ("lower2", "", a_string2)
+		end
+
+	test_as_upper is
+			-- Test feature `as_upper'.
+		local
+			a_string, a_string2: STRING
+		do
+			a_string := "Foo"
+			a_string2 := a_string.as_upper
+			assert ("new_string1", a_string2 /= a_string)
+			assert_equal ("upper1", "FOO", a_string2)
+				-- Empty string.
+			a_string := ""
+			a_string2 := a_string.as_upper
+			assert ("new_string2", a_string2 /= a_string)
+			assert_equal ("upper2", "", a_string2)
 		end
 
 	test_infix_less is

@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			if generics.is_empty then
 				name := a_name
 			else
-				name := STRING_.make (50)
+				create name.make (50)
 				name.append_string (a_name)
 				name.append_string (" [")
 				name.append_string (generics.item (1).name)
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			a_name_long_enough: a_name.count > 0
 		do
 			id := an_id
-			name := STRING_.make (a_name.count + 5)
+			create name.make (a_name.count + 5)
 			name.append_string ("like ")
 			name.append_string (a_name)
 		ensure
@@ -105,7 +105,7 @@ feature -- Access
 			c: CHARACTER
 		do
 			nb := name.count
-			Result := STRING_.make (nb + 11)
+			create Result.make (nb + 11)
 			Result.append_string ("last_")
 			from i := 1 until i > nb loop
 				c := name.item (i)
@@ -264,7 +264,7 @@ feature -- Output
 		end
 
 	print_clear_yyvs (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print "yyspecial_routines.clear_all (yyvs)" to `a_file'.
+			-- Print "yyvs.clear_all" to `a_file'.
 		require
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
@@ -275,11 +275,9 @@ feature -- Output
 			a_file.put_integer (id)
 			a_file.put_line (" /= Void then")
 			print_indentation (indent + 1, a_file)
-			a_file.put_string ("yyspecial_routines")
+			a_file.put_string ("yyvs")
 			a_file.put_integer (id)
-			a_file.put_string (".clear_all (yyvs")
-			a_file.put_integer (id)
-			a_file.put_line (")")
+			a_file.put_line (".clear_all")
 			print_indentation (indent, a_file)
 			a_file.put_line ("end")
 		end

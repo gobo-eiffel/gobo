@@ -202,7 +202,7 @@ feature {NONE} -- Implemenation
 						in_separator := True
 					else
 						if insert_between_separators then
-							Result.force_last (STRING_.make_empty)
+							Result.force_last ("")
 						end
 					end
 					check in: in_separator end
@@ -220,7 +220,7 @@ feature {NONE} -- Implemenation
 				Result.force_last (unescape (a_string.substring (last_after_separator, cnt)))
 			end
 			if insert_between_separators and in_separator and cnt > 0 then
-				Result.force_last (STRING_.make_empty)
+				Result.force_last ("")
 			end
 		end
 		

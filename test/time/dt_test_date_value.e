@@ -15,7 +15,6 @@ deferred class DT_TEST_DATE_VALUE
 inherit
 
 	TS_TEST_CASE
-	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Test
 
@@ -111,49 +110,49 @@ feature -- Test
 			a_string: STRING
 		do
 			create {DT_DATE} dv.make (2000, 3, 24)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string1", "G#2000/03/24", a_string)
 
 			create {DT_DATE} dv.make (-50, 12, 4)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string2", "G#-50/12/04", a_string)
 
 			create {DT_DATE_DURATION} dv.make (10, 5, 58)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string3", "G#10/5/58", a_string)
 
 			create {DT_DATE_DURATION} dv.make (-2, 40, -23)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string4", "G#-2/40/-23", a_string)
 
 			create {DT_DATE_TIME} dv.make_precise (1967, 5, 17, 6, 30, 15, 123)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string5", "G#1967/05/17 06:30:15.123", a_string)
 
 			create {DT_DATE_TIME} dv.make_precise (-156, 8, 16, 23, 12, 3, 2)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string6", "G#-156/08/16 23:12:03.002", a_string)
 
 			create {DT_DATE_TIME_DURATION} dv.make_precise (3, -12, 123, 23, -3, 12, -45)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string7", "G#3/-12/123 23:-3:12.-45", a_string)
 
 			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
 			assert_equal ("append_to_string8", "G#0/3/2 0:4:3.456", a_string)
@@ -166,49 +165,49 @@ feature -- Test
 			a_string: STRING
 		do
 			create {DT_DATE} dv.make (2000, 3, 24)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string1", "G#2000/03/24", a_string)
 
 			create {DT_DATE} dv.make (-50, 12, 4)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string2", "G#-50/12/04", a_string)
 
 			create {DT_DATE_DURATION} dv.make (10, 5, 58)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string3", "G#10/5/58", a_string)
 
 			create {DT_DATE_DURATION} dv.make (-2, 40, -23)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string4", "G#-2/40/-23", a_string)
 
 			create {DT_DATE_TIME} dv.make_precise (1967, 5, 17, 6, 30, 15, 123)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string5", "G#1967/05/17", a_string)
 
 			create {DT_DATE_TIME} dv.make_precise (-156, 8, 16, 23, 12, 3, 2)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string6", "G#-156/08/16", a_string)
 
 			create {DT_DATE_TIME_DURATION} dv.make_precise (3, -12, 123, 23, -3, 12, -45)
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string7", "G#3/-12/123", a_string)
 
 			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456) 
-			a_string := STRING_.make (50)
+			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_date_to_string (a_string)
 			assert_equal ("append_date_to_string8", "G#0/3/2", a_string)

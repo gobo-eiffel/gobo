@@ -74,8 +74,6 @@
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_imported_native_array_type"/>
 		<geant target="ge2e"/>
-		<set name="gepp_file" value="kl_imported_string_buffer_routines"/>
-		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_integer_routines"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_native_array_routines"/>

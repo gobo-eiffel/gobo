@@ -344,7 +344,7 @@ feature -- Pathname handling
 		local
 			i, nb: INTEGER
 		do
-			Result := STRING_.make (50)
+			create Result.make (50)
 			if not a_pathname.is_relative then
 				Result := STRING_.appended_string (Result, root_directory)
 			end

@@ -581,7 +581,7 @@ feature {NONE} -- CAT-calls
 	shared_error_message: STRING is
 			-- Shared error message (used in `report_catcall_error')
 		once
-			Result := STRING_.make (200)
+			create Result.make (200)
 		ensure
 			shared_error_message_not_void: Result /= Void
 		end

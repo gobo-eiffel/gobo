@@ -110,7 +110,7 @@ feature -- Conflicts
 				i := i + 1
 			end
 			if (sr_total > 0 and sr_total /= grammar.expected_conflicts) or rr_total > 0 then
-				message := STRING_.make (128)
+				create message.make (128)
 				message.append_string ("Parser contains ")
 				if sr_total = 1 then
 					message.append_string ("1 shift/reduce conflict")
@@ -194,7 +194,7 @@ feature -- Conflicts
 				a_file.put_new_line
 			end
 			if (sr_total > 0 and sr_total /= grammar.expected_conflicts) or rr_total > 0 then
-				message := STRING_.make (128)
+				create message.make (128)
 				message.append_string ("Parser contains ")
 				if sr_total = 1 then
 					message.append_string ("1 shift/reduce conflict")
@@ -331,7 +331,7 @@ feature -- Setting
 				i := i + 1
 			end
 			if nb_conflicts >= 1 then
-				message := STRING_.make (128)
+				create message.make (128)
 				message.append_string ("Parser contains ")
 				if nb_conflicts = 1 then
 					message.append_string ("1 error action conflict.%N")
@@ -479,7 +479,7 @@ feature -- Setting
 			end
 			if nb_conflicts >= 1 then
 				a_file.put_new_line
-				message := STRING_.make (128)
+				create message.make (128)
 				message.append_string ("Parser contains ")
 				if nb_conflicts = 1 then
 					message.append_string ("1 error action conflict.%N")

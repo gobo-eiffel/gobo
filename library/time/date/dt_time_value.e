@@ -52,14 +52,14 @@ feature -- Output
 			-- Printable representation (hour:minute:second[.millisecond])
 			-- (The millisecond part appears only when not zero.)
 		do
-			Result := STRING_.make (12)
+			create Result.make (12)
 			append_to_string (Result)
 		end
 
 	precise_out: STRING is
 			-- Printable representation (hour:minute:second.millisecond)
 		do
-			Result := STRING_.make (12)
+			create Result.make (12)
 			append_precise_to_string (Result)
 		ensure
 			precise_out_not_void: Result /= Void
@@ -69,7 +69,7 @@ feature -- Output
 			-- Printable representation (hour:minute:second[.millisecond])
 			-- (The millisecond part appears only when not zero.)
 		do
-			Result := STRING_.make (12)
+			create Result.make (12)
 			append_time_to_string (Result)
 		ensure
 			time_out_not_void: Result /= Void
@@ -78,7 +78,7 @@ feature -- Output
 	precise_time_out: STRING is
 			-- Printable representation (hour:minute:second.millisecond)
 		do
-			Result := STRING_.make (12)
+			create Result.make (12)
 			append_precise_time_to_string (Result)
 		ensure
 			precise_time_out_not_void: Result /= Void

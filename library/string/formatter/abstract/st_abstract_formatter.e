@@ -200,7 +200,7 @@ feature {NONE} -- String padding routines
 			until
 				offset <= 0
 			loop
-				STRING_.insert_character (a_string, padding_character, 1)
+				a_string.insert_character (padding_character, 1)
 				offset := offset - 1
 			end
 		ensure

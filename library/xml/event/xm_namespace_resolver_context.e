@@ -153,7 +153,7 @@ feature {NONE} -- Constants
 	Default_pseudo_prefix: STRING is
 			-- Default pseudo prefix
 		once
-			Result := STRING_.make_empty
+			create Result.make_empty
 		ensure
 			prefix_not_void: Result /= Void
 		end
@@ -161,7 +161,7 @@ feature {NONE} -- Constants
 	Default_namespace: STRING is
 			-- Default namespace (empty)
 		once
-			Result := STRING_.make_empty
+			create Result.make_empty
 		ensure
 			namespace_not_void: Result /= Void
 		end

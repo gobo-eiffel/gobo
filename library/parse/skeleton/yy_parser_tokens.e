@@ -63,12 +63,12 @@ feature {NONE} -- Implementation
 				when '%"' then
 					Result := "%'\%"%'"
 				when ' ', '!', '#', '$', '&', '('..'~' then
-					Result := STRING_.make (3)
+					create Result.make (3)
 					Result.append_character ('%'')
 					Result.append_character (c)
 					Result.append_character ('%'')
 				else
-					Result := STRING_.make (6)
+					create Result.make (6)
 					Result.append_character ('%'')
 					Result.append_character ('\')
 					if a_token = 0 then

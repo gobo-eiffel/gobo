@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			Result.put ("isindex")
 			Result.put ("link")
 			Result.put ("meta")
-			Result.put ("param")			
+			Result.put ("param")
 		end
 	
 	is_empty_tag (a_tag: STRING): BOOLEAN is
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 		require
 			tag_not_void: a_tag /= Void
 		do			
-			Result := empty_tags_set.has (STRING_.to_lower (a_tag))
+			Result := empty_tags_set.has (a_tag.as_lower)
 		end
 	
 	url_attributes_set: DS_HASH_SET [STRING] is
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 		local
 			a_character_representation: STRING
 		do
-			encoding := STRING_.to_upper (output_properties.encoding)
+			encoding := output_properties.encoding.as_upper
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
 			if outputter = Void then
@@ -773,10 +773,10 @@ feature {NONE} -- Implementation
 			element_name_not_void: an_element /= Void
 			attribute_name_not_void: an_attribute /= Void
 		do
-			if not url_attributes_set.has (STRING_.to_lower (an_attribute)) then
-				url_attributes_set.put (STRING_.to_lower (an_attribute))
+			if not url_attributes_set.has (an_attribute.as_lower) then
+				url_attributes_set.put (an_attribute.as_lower)
 			end
-			url_combinations_set.put (STRING_.to_lower (an_element + "+" + an_attribute))
+			url_combinations_set.put ((an_element + "+" + an_attribute).as_lower)
 		end
 
 	escaped_url (a_url: STRING): STRING is

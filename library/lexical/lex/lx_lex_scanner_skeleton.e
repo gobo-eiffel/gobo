@@ -263,14 +263,14 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			stop: BOOLEAN
 		do
-			bracketed_name := STRING_.make (a_name.count + 2)
+			create bracketed_name.make (a_name.count + 2)
 			bracketed_name.append_character ('{')
-			bracketed_name.append_string (STRING_.to_lower (a_name))
+			bracketed_name.append_string (a_name.as_lower)
 			bracketed_name.append_character ('}')
 			if name_definitions.has (bracketed_name) then
 				report_name_defined_twice_error (a_name)
 			end
-			parenthesised_definition := STRING_.make (a_definition.count + 2)
+			create parenthesised_definition.make (a_definition.count + 2)
 			parenthesised_definition.append_character ('(')
 				-- Skip trailing white spaces.
 			from

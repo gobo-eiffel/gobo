@@ -14,12 +14,10 @@
 		<option name="abstract" value="true"/>
 		<cluster name="base">
 			<option name="abstract" value="true"/>
-			<cluster name="kernel" if="${ISE_5_1}"/>
-			<cluster name="kernel" unless="${ISE_5_1}">
+			<cluster name="kernel">
 				<cluster name="kernel_classic" location="classic" relative="true" unless="${GOBO_DOTNET}"/>
 			</cluster>
-			<cluster name="support" if="${ISE_5_1}"/>
-			<cluster name="support" unless="${ISE_5_1}">
+			<cluster name="support">
 				<cluster name="support_classic" location="classic" relative="true" unless="${GOBO_DOTNET}"/>
 			</cluster>
 			<cluster name="structures" unless="${GOBO_EIFFELBASE}">

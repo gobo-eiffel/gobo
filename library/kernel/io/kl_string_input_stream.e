@@ -109,7 +109,7 @@ feature -- Input
 			i: INTEGER
 		do
 			if last_string = Void then
-				last_string := STRING_.make (256)
+				create last_string.make (256)
 			else
 				STRING_.wipe_out (last_string)
 			end
@@ -137,7 +137,7 @@ feature -- Input
 			is_eof: BOOLEAN
 		do
 			if last_string = Void then
-				last_string := STRING_.make (256)
+				create last_string.make (256)
 			else
 				STRING_.wipe_out (last_string)
 			end
@@ -169,7 +169,7 @@ feature -- Input
 			-- was found.
 		do
 			if last_string = Void then
-				last_string := STRING_.make (256)
+				create last_string.make (256)
 			else
 				STRING_.wipe_out (last_string)
 			end

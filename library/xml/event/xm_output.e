@@ -27,7 +27,7 @@ feature -- Output
 	set_output_to_string is
 			-- Set output to new string.
 		do
-			last_output := STRING_.make_empty
+			create last_output.make_empty
 			output_stream := Void
 		ensure
 			last_output_not_void: last_output /= Void

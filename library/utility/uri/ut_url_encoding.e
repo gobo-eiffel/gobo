@@ -131,9 +131,9 @@ feature -- Escape/unescape data characters
 				else
 					Result.put ('%%', i)
 					i := i + 1
-					STRING_.insert_character (Result, INTEGER_.to_hexadecimal (c.code // 16 \\ 16, True).item (1), i)
+					Result.insert_character (INTEGER_.to_hexadecimal (c.code // 16 \\ 16, True).item (1), i)
 					i := i + 1
-					STRING_.insert_character (Result, INTEGER_.to_hexadecimal (c.code \\ 16, True).item (1), i)
+					Result.insert_character (INTEGER_.to_hexadecimal (c.code \\ 16, True).item (1), i)
 				end
 				i := i + 1
 			end

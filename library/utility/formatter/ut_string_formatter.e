@@ -29,7 +29,7 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := STRING_.make (a_string.count)
+			create Result.make (a_string.count)
 			append_eiffel_string (Result, a_string)
 		ensure
 			eiffel_string_out_not_void: Result /= Void
@@ -46,7 +46,7 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := STRING_.make (a_string.count + 2)
+			create Result.make (a_string.count + 2)
 			append_quoted_eiffel_string (Result, a_string)
 		ensure
 			quoted_eiffel_string_out_not_void: Result /= Void

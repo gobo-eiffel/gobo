@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 		require
 			tag_name_not_void: a_tag_name /= Void
 		do
-			Result := inline_tags.has (STRING_.to_lower (a_tag_name))
+			Result := inline_tags.has (a_tag_name.as_lower)
 		end
 
 	formatted_tags: DS_HASH_SET [STRING] is
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 		require
 			tag_name_not_void: a_tag_name /= Void
 		do
-			Result := formatted_tags.has (STRING_.to_lower (a_tag_name))
+			Result := formatted_tags.has (a_tag_name.as_lower)
 		end
 
 	indent is

@@ -260,11 +260,7 @@ feature {NONE} -- Output
 			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
 			an_inlining: DS_HASH_SET [STRING]
 			a_target: STRING
-			is_version_5_1: BOOLEAN
 		do
-				-- Some options have been introduced in ISE 5.2 and
-				-- are not supported in ISE 5.1.
-			is_version_5_1 := variables.value ("ISE_5_1") /= Void
 			if an_option.address_expression then
 				print_indentation (indent, a_file)
 				a_file.put_line ("address_expression (yes)")
@@ -331,16 +327,12 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("check_vape (no)")
 			end
-			if not is_version_5_1 then
-					-- This option has been introduced in ISE 5.2 and
-					-- is not supported in ISE 5.1.
-				if an_option.cls_compliant then
-					print_indentation (indent, a_file)
-					a_file.put_line ("cls_compliant (yes)")
-					else
-					print_indentation (indent, a_file)
-					a_file.put_line ("cls_compliant (no)")
-				end
+			if an_option.cls_compliant then
+				print_indentation (indent, a_file)
+				a_file.put_line ("cls_compliant (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("cls_compliant (no)")
 			end
 			a_dead_code_removal := an_option.dead_code_removal
 			if an_option.console_application then
@@ -382,16 +374,12 @@ feature {NONE} -- Output
 				a_file.put_string (an_option.document)
 				a_file.put_line ("%")")
 			end
-			if not is_version_5_1 then
-					-- This option has been introduced in ISE 5.2 and
-					-- is not supported in ISE 5.1.
-				if an_option.dotnet_naming_convention then
-					print_indentation (indent, a_file)
-					a_file.put_line ("dotnet_naming_convention (yes)")
-				else
-					print_indentation (indent, a_file)
-					a_file.put_line ("dotnet_naming_convention (no)")
-				end
+			if an_option.dotnet_naming_convention then
+				print_indentation (indent, a_file)
+				a_file.put_line ("dotnet_naming_convention (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("dotnet_naming_convention (no)")
 			end
 			if an_option.dynamic_runtime then
 				print_indentation (indent, a_file)

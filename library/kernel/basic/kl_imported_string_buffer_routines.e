@@ -30,11 +30,7 @@ feature -- Access
 
 feature -- Type anchors
 
-#ifdef (ISE && ISE_5_1)
-	STRING_BUFFER_TYPE: SPECIAL [CHARACTER] is do end
-#else
 	STRING_BUFFER_TYPE: STRING is do end
-#endif
 			-- Type anchor
 
 end

@@ -145,10 +145,7 @@ feature -- Resizing
 			valid_fixed_array: valid_fixed_array (an_array)
 			n_large_enough: n >= an_array.count
 		do
-#ifdef (ISE && ISE_5_1)
-			Result := c_arycpy ($an_array, n, 0, an_array.count)
-#endif
-#ifdef (ISE && ! ISE_5_1)
+#ifdef ISE
 			if n > an_array.count then
 				Result := an_array.resized_area (n)
 			else
@@ -176,11 +173,7 @@ feature -- Removal
 		require
 			an_array_not_void: an_array /= Void
 			valid_fixed_array: valid_fixed_array (an_array)
-#ifdef (ISE && ISE_5_1)
-		do
-			c_spclearall ($an_array)
-#endif
-#ifdef (ISE && ! ISE_5_1)
+#ifdef ISE
 		do
 			an_array.clear_all
 #endif
@@ -207,26 +200,4 @@ feature -- Removal
 			--		an_array.item (i) = an_array.item (i).default
 		end
 
-#ifdef (ISE && ISE_5_1)
-feature {NONE} -- Externals
-
-	c_arycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [G] is
-			-- New area of size `newsize' containing `n' items
-			-- from `oldarea'.
-			-- Old items are at position `s' in new area.
-		external
-			"C | %"eif_misc.h%""
-		alias
-			"arycpy"
-		end
-
-	c_spclearall (p: POINTER) is
-			-- Reset all items to default value.
-		external
-			"C | %"eif_copy.h%""
-		alias
-			"spclearall"
-		end
-
-#endif
 end

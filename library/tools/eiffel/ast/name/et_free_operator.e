@@ -66,10 +66,10 @@ feature -- Access
 			-- Name of feature
 		do
 			if is_infix_freeop then
-				Result := STRING_.make (free_operator_name.count + 8)
+				create Result.make (free_operator_name.count + 8)
 				Result.append_string (infix_double_quote)
 			else
-				Result := STRING_.make (free_operator_name.count + 9)
+				create Result.make (free_operator_name.count + 9)
 				Result.append_string (prefix_double_quote)
 			end
 			Result.append_string (free_operator_name)

@@ -314,7 +314,7 @@ creation
 			if text_count > 1 then
 				eif_buffer.append_string (text_substring (1, text_count - 1))
 			end
-			str_ := STRING_.make (eif_buffer.count)
+			create str_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
 			last_value := str_
@@ -411,7 +411,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
-			eif_buffer := STRING_.make (Init_buffer_size)
+			create eif_buffer.make (Init_buffer_size)
 			eif_lineno := 1
 			create_keyword := True
 		end

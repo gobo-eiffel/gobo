@@ -331,7 +331,7 @@ feature -- Conversion
 				Result := uc_string.to_utf8
 			else
 				nb := a_string.count
-				Result := STRING_.make (nb)
+				create Result.make (nb)
 				from i := 1 until i > nb loop
 					append_code_to_utf8 (Result, a_string.item_code (i))
 					i := i + 1

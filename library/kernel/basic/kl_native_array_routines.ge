@@ -75,14 +75,7 @@ feature -- Resizing
 			old_size_positive: old_size >= 0
 			new_size_large_enough: new_size > old_size
 		do
-#ifdef (ISE && ISE_5_1)
-			if new_size > an_array.count then
-				Result := c_arycpy ($an_array, new_size, 0, an_array.count)
-			else
-				Result := an_array
-			end
-#endif
-#ifdef (ISE && ! ISE_5_1)
+#ifdef ISE
 			if new_size > an_array.count then
 				Result := an_array.resized_area (new_size)
 			else
@@ -107,18 +100,4 @@ feature -- Resizing
 			valid_native_array: valid_native_array (Result)
 		end
 
-#ifdef (ISE && ISE_5_1)
-feature {NONE} -- Externals
-
-	c_arycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [G] is
-			-- New area of size `newsize' containing `n' items
-			-- from `oldarea'.
-			-- Old items are at position `s' in new area.
-		external
-			"C | %"eif_misc.h%""
-		alias
-			"arycpy"
-		end
-
-#endif
 end

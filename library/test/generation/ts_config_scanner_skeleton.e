@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			filename := a_filename
 			error_handler := an_error_handler
-			buffer := STRING_.make (Init_buffer_size)
+			create buffer.make (Init_buffer_size)
 		ensure
 			filename_set: filename = a_filename
 			error_handler_set: error_handler = an_error_handler

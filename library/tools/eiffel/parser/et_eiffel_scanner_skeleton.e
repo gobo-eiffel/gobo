@@ -259,7 +259,7 @@ feature -- Tokens
 					strings.replace_found_item (Result.hash_code)
 				end
 			else
-				a_name := STRING_.make (a_string.count)
+				create a_name.make (a_string.count)
 				a_name.append_string (a_string)
 				create Result.make (a_name)
 				strings.force_new (Result.hash_code, a_name)
@@ -303,7 +303,7 @@ feature -- Tokens
 			if strings.found then
 				Result := strings.found_key
 			else
-				Result := STRING_.make (a_string.count)
+				create Result.make (a_string.count)
 				Result.append_string (a_string)
 				strings.force_new (-1, Result)
 			end
@@ -322,7 +322,7 @@ feature -- Tokens
 			if strings.found then
 				Result := strings.found_key
 			else
-				Result := STRING_.make (a_string.count)
+				create Result.make (a_string.count)
 				Result.append_string (a_string)
 				strings.force_new (-1, Result)
 			end
@@ -497,7 +497,7 @@ feature {NONE} -- String handler
 	string_buffer: STRING is
 			-- String buffer
 		once
-			Result := STRING_.make (30)
+			create Result.make (30)
 		ensure
 			string_buffer_not_void: Result /= Void
 		end

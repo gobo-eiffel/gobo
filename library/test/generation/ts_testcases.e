@@ -87,7 +87,7 @@ feature -- Generation
 			i: INTEGER
 			a_cursor: DS_LIST_CURSOR [STRING]
 		do
-			new_name := STRING_.make (class_name.count + class_prefix.count)
+			create new_name.make (class_name.count + class_prefix.count)
 			new_name.append_string (class_prefix)
 			new_name.append_string (class_name)
 			if testgen /= Void and then testgen.count > 0 then
@@ -97,10 +97,10 @@ feature -- Generation
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 				end
-				a_filename := file_system.pathname (a_dirname, STRING_.to_lower (new_name) + ".e")
+				a_filename := file_system.pathname (a_dirname, new_name.as_lower + ".e")
 			else
-				a_filename := STRING_.make (new_name.count + 2)
-				a_filename.append_string (STRING_.to_lower (new_name))
+				create a_filename.make (new_name.count + 2)
+				a_filename.append_string (new_name.as_lower)
 				a_filename.append_string (".e")
 			end
 			create a_file.make (a_filename)
@@ -152,9 +152,9 @@ feature -- Generation
 					a_file.put_integer (i)
 					a_file.put_line (" then")
 					a_file.put_string ("%T%T%T%TResult := %"")
-					a_file.put_string (STRING_.to_upper (class_name))
+					a_file.put_string (class_name.as_upper)
 					a_file.put_character ('.')
-					a_file.put_string (STRING_.to_lower (a_cursor.item))
+					a_file.put_string (a_cursor.item.as_lower)
 					a_file.put_line ("%"")
 					i := i + 1
 					a_cursor.forth
@@ -196,16 +196,16 @@ feature -- Generation
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
 				end
-				a_filename := file_system.pathname (a_dirname, STRING_.to_lower (class_name) + ".e")
+				a_filename := file_system.pathname (a_dirname, class_name.as_lower + ".e")
 			else
-				a_filename := STRING_.make (class_name.count + 2)
-				a_filename.append_string (STRING_.to_lower (class_name))
+				create a_filename.make (class_name.count + 2)
+				a_filename.append_string (class_name.as_lower)
 				a_filename.append_string (".e")
 			end
 			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				upper_class_name := STRING_.to_upper (class_name)
+				upper_class_name := class_name.as_upper
 				a_file.put_string ("class ")
 				a_file.put_line (upper_class_name)
 				a_file.put_new_line

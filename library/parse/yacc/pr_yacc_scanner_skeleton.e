@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
-			action_buffer := STRING_.make (Init_buffer_size)
+			create action_buffer.make (Init_buffer_size)
 			successful := True
 			line_nb := 1
 		ensure
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 		require
 			a_string /= Void
 		do
-			Result := STRING_.make (a_string.count)
+			create Result.make (a_string.count)
 			Result.append_string (a_string)
 		ensure
 			cloned_string_not_void: Result /= Void

@@ -253,7 +253,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"$"/[ \t\r\n]	last_token := Dollar_code
 	"{"{NAME}"}"	{
-					last_string := STRING_.to_lower (text)
+					last_string := text.as_lower
 					if name_definitions.has (last_string) then
 						put_back_string (name_definitions.item (last_string))
 					else

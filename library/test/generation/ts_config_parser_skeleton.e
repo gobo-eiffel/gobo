@@ -247,7 +247,7 @@ feature -- Defaults
 			a_name: STRING
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
-			a_name := STRING_.to_lower (root_class) + file_system.exe_extension
+			a_name := root_class.as_lower + file_system.exe_extension
 			Result := file_system.pathname (file_system.relative_current_directory, a_name)
 			if fail_on_rescue then
 				Result.append_string (" -a")

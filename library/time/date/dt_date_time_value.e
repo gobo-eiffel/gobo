@@ -48,7 +48,7 @@ feature -- Output
 			-- (year/month/day hour:minute:second[.millisecond])
 			-- (The millisecond part appears only when not zero.)
 		do
-			Result := STRING_.make (23)
+			create Result.make (23)
 			append_to_string (Result)
 		end
 
@@ -56,7 +56,7 @@ feature -- Output
 			-- Printable representation
 			-- (year/month/day hour:minute:second.millisecond)
 		do
-			Result := STRING_.make (23)
+			create Result.make (23)
 			append_precise_to_string (Result)
 		end
 

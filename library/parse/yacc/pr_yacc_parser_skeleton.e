@@ -319,7 +319,7 @@ feature {NONE} -- Factory
 			lower_name: STRING
 			an_id: INTEGER
 		do
-			lower_name := STRING_.to_lower (a_name)
+			lower_name := a_name.as_lower
 			if terminal_symbols.has (lower_name) then
 				Result := terminal_symbols.item (lower_name)
 			else
@@ -458,7 +458,7 @@ feature {NONE} -- Factory
 			lower_name: STRING
 			an_id: INTEGER
 		do
-			lower_name := STRING_.to_lower (a_name)
+			lower_name := a_name.as_lower
 			if nonterminal_symbols.has (lower_name) then
 				Result := nonterminal_symbols.item (lower_name)
 			else
@@ -479,7 +479,7 @@ feature {NONE} -- Factory
 			a_name: STRING
 			an_id: INTEGER
 		do
-			a_name := STRING_.make (10)
+			create a_name.make (10)
 			a_name.append_character ('@')
 			INTEGER_FORMATTER_.append_decimal_integer (a_name, nonterminal_symbols.count)
 				-- Variables are indexed from 0.
@@ -503,7 +503,7 @@ feature {NONE} -- Factory
 			a_variable: PR_VARIABLE
 			an_id: INTEGER
 		do
-			lower_name := STRING_.to_lower (a_name)
+			lower_name := a_name.as_lower
 			if nonterminal_symbols.has (lower_name) then
 				Result := nonterminal_symbols.item (lower_name)
 			elseif terminal_symbols.has (lower_name) then
@@ -530,7 +530,7 @@ feature {NONE} -- Factory
 			upper_name: STRING
 			an_id: INTEGER
 		do
-			upper_name := STRING_.to_upper (a_name)
+			upper_name := a_name.as_upper
 			if types.has (upper_name) then
 				Result := types.item (upper_name)
 			else
@@ -555,7 +555,7 @@ feature {NONE} -- Factory
 			upper_name: STRING
 			an_id: INTEGER
 		do
-			upper_name := STRING_.to_upper (a_name)
+			upper_name := a_name.as_upper
 			if types.has (upper_name) then
 				Result := types.item (upper_name)
 			else
@@ -586,7 +586,7 @@ feature {NONE} -- Factory
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make_generic (an_id, a_name, generics)
-				upper_name := STRING_.to_upper (Result.name)
+				upper_name := Result.name.as_upper
 				if types.has (upper_name) then
 					Result := types.item (upper_name)
 				else
@@ -610,7 +610,7 @@ feature {NONE} -- Factory
 			lower_name: STRING
 			an_id: INTEGER
 		do
-			lower_name := STRING_.to_lower (a_name)
+			lower_name := a_name.as_lower
 			if types.has (lower_name) then
 				Result := types.item (lower_name)
 			else
@@ -934,7 +934,7 @@ feature {NONE} -- Status report
 		local
 			lower_name: STRING
 		do
-			lower_name := STRING_.to_lower (a_name)
+			lower_name := a_name.as_lower
 			Result := terminal_symbols.has (lower_name)
 		end
 
@@ -945,7 +945,7 @@ feature {NONE} -- Status report
 		local
 			lower_name: STRING
 		do
-			lower_name := STRING_.to_lower (a_name)
+			lower_name := a_name.as_lower
 			Result := nonterminal_symbols.has (lower_name)
 		end
 

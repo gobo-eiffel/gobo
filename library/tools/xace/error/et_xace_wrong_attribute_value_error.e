@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			from
 				a_cursor := an_expected_values.new_cursor
 				a_cursor.start
-				a_string := STRING_.make (50)
+				create a_string.make (50)
 				a_string.append_character ('%'')
 				a_string := STRING_.appended_string (a_string, a_cursor.item)
 				a_string.append_character ('%'')

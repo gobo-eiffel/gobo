@@ -869,7 +869,7 @@ feature -- Output
 			-- Textual representation of current type
 			-- (Create a new string at each call.)
 		do
-			Result := STRING_.make (15)
+			create Result.make (15)
 			append_to_string (Result)
 		ensure
 			to_text_not_void: Result /= Void

@@ -88,7 +88,7 @@ feature -- Output
 				inspect alignment
 				when align_left then
 					if output_sign then
-						STRING_.insert_character (Result, sign, 1)
+						Result.insert_character (sign, 1)
 					end
 					right_pad (Result, align_char, width)
 				when align_right then
@@ -101,13 +101,13 @@ feature -- Output
 						end
 					else -- align right with ' '
 						if output_sign then
-							STRING_.insert_character (Result, sign, 1)
+							Result.insert_character (sign, 1)
 						end
 						left_pad (Result, align_char, width)
 					end
 				when align_center then
 					if output_sign then
-						STRING_.insert_character (Result, sign, 1)
+						Result.insert_character (sign, 1)
 					end
 					center_pad (Result,  ' ', width)
 				end

@@ -84,7 +84,7 @@ feature -- Initialization.
 								path := clone (base.path)
 							elseif base.path = Void then
 								-- 2. Parent doesn't have a path, make our path absolute
-								STRING_.insert_character (path, '/', 1)
+								path.insert_character ('/', 1)
 									check
 										absolute: has_absolute_path
 									end

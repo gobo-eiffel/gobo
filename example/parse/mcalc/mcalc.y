@@ -140,7 +140,7 @@ feature {NONE} -- Scanner
 						-- Process numbers
 					last_token := NUM
 					from
-						buffer := STRING_.make (10)
+						create buffer.make (10)
 						buffer.append_character (c)
 						std.input.read_character
 						c := std.input.last_character
