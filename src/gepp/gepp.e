@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			-- Make sure that SmallEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local
-			et1: DS_EQUALITY_TESTER [STRING]
+			et1: KL_EQUALITY_TESTER [STRING]
 		do
 			!! et1
 		end
