@@ -12,7 +12,7 @@ indexing
 
 deferred class XM_DTD_CALLBACKS
 
-feature -- Document type definuition callbacks
+feature -- Document type definition callbacks
 
 	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
