@@ -4,11 +4,11 @@ indexing
 
 		"Variables for GEANT"
 
-	author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-	copyright:  "Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	author:		"Sven Ehrke (sven.ehrke@sven-ehrke.de)"
+	copyright:	"Sven Ehrke and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 
 class GEANT_VARIABLES
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			-- Create a new variables object.
 		do
 			!! variables.make_equal (10)
-			
+
 				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
 			if operating_system.is_windows then
 				if not has_variable ("GOBO_OS") then
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	variables : DS_HASH_TABLE [STRING, STRING]
-			
+
 	has_variable (a_name: STRING): BOOLEAN is
 			-- Is there a variable named `a_name'
 			-- in `variables'?
@@ -92,13 +92,13 @@ feature -- Access
 				-- Search commandline variables:
 			Commandline_variables.search (a_name)
 			Result := Commandline_variables.found
-		
+
 			if not Result then
 					-- Search project variables:
 				variables.search (a_name)
 				Result := variables.found
 			end
-			
+
 			if not Result then
 					-- Search environment variables:
 				value := Execution_environment.variable_value (a_name)
@@ -125,7 +125,7 @@ feature -- Access
 					Result := Commandline_variables.found_item
 				end
 			end
-			
+
 			if Result = Void then
 					-- Search project variables:
 				variables.search (a_name)
@@ -291,7 +291,7 @@ feature -- Access
 			-- "$foo": True if variable `foo' is defined
 			-- "${foo}": True if variable `foo' is defined
 			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
-			--             True if variable `foo' is defined and its value is "bar"
+			--					True if variable `foo' is defined and its value is "bar"
 			-- if `a_condition' is not in either form Result is `False'
 		require
 			condition_not_void: a_condition /= Void

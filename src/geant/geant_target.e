@@ -4,12 +4,12 @@ indexing
 
 		"Target of geant build file"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Ant"
+	author:		"Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:	"Copyright (c) 2001, Sven Ehrke and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 
 class GEANT_TARGET
@@ -115,7 +115,7 @@ feature -- Setting
 
 feature -- Processing
 
-	execute  is
+	execute	is
 			-- Execute all tasks of `a_target' in sequential order
 		local
 			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
@@ -241,7 +241,7 @@ feature -- Processing
 					file_system.set_current_working_directory (a_old_target_cwd)
 
 				end
-				
+
 				set_executed (True)
 			end	-- if
 		end
