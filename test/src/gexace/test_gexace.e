@@ -42,9 +42,9 @@ feature -- Test
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log1a", True)
 			else
-				assert_equal ("no_output_log1b", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log1b", 0, file_system.file_count (output_log_filename))
 			end
-			assert_equal ("no_error_log1a", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log1a", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff1a", ace_filename, "ise.ace")
 				-- Test <option name=assertion" value="generate"/>.
 			xace_filename := file_system.pathname (sample_dirname, "system2.xace")
@@ -57,9 +57,9 @@ feature -- Test
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log2a", True)
 			else
-				assert_equal ("no_output_log2b", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log2b", 0, file_system.file_count (output_log_filename))
 			end
-			assert_equal ("no_error_log2a", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log2a", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff2a", ace_filename, "ve.esd")
 				-- Generate Xace file.
 			ace_filename := file_system.pathname (sample_dirname, "ve2.xace")
@@ -70,9 +70,9 @@ feature -- Test
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log3a", True)
 			else
-				assert_equal ("no_output_log3b", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log3b", 0, file_system.file_count (output_log_filename))
 			end
-			assert_equal ("no_error_log3a", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log3a", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff3a", ace_filename, "ve.xace")
 		end
 

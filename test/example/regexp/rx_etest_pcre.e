@@ -35,7 +35,7 @@ feature -- Test
 				-- Run example.
 			pcre_exe := program_exe
 			assert_execute (pcre_exe + output_log)
-			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 			if file_system.same_text_files (pcre_filename, output_log_filename) then
 				assert ("diff", True)
 			else

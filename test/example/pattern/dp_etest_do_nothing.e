@@ -51,7 +51,7 @@ feature -- Test
 					assert_files_equal ("output_log2", do_nothing_log_filename, output_log_filename)
 				end
 			end
-			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 		end
 
 feature {NONE} -- Implementation

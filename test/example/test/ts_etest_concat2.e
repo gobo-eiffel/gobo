@@ -85,7 +85,7 @@ feature -- Test
 					end
 				end
 			end
-			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 				-- Clean.
 			assert_execute ("geant -b " + a_geant_filename + " clean" + output_log)
 		end

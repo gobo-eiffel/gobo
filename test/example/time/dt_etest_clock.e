@@ -35,7 +35,7 @@ feature -- Test
 				-- Run example.
 			clock_exe := program_exe
 			assert_execute (clock_exe + output_log)
-			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 		end
 
 end
