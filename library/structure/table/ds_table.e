@@ -63,6 +63,17 @@ feature -- Element change
 			one_more: (not old has (k)) implies (count = old count + 1)
 		end
 
+	put_new (v: G; k: K) is
+			-- Associate `v' with key `k'.
+		require
+			valid_key: valid_key (k)
+			new_item: not has (k)
+		deferred
+		ensure
+			one_more: count = old count + 1
+			inserted: has (k) and then item (k) = v
+		end
+
 	swap (k, l: K) is
 			-- Exchange items associated with `k' and `l'.
 		require
