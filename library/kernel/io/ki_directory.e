@@ -122,6 +122,18 @@ feature -- Basic operations
 		deferred
 		end
 
+	recursive_create_directory is
+			-- Create current directory on disk.
+			-- Create its subdirectories if they do not exist yet.
+			-- Do nothing if the directory could not be created,
+			-- if it already existed or `name' is a nested directory
+			-- name and its parent directory does not exist and 
+			-- could not be created.
+		require
+			is_closed: is_closed
+		deferred
+		end
+
 	delete is
 			-- Delete current directory.
 			-- Do nothing if the directory could not
