@@ -87,15 +87,7 @@
 
 	<target name="install_io">
 		<set name="gepp_dir" value="io"/>
-		<set name="gepp_file" value="ki_binary_input_file"/>
-		<geant target="spec_eif"/>
-		<set name="gepp_file" value="ki_binary_output_file"/>
-		<geant target="spec_eif"/>
 		<set name="gepp_file" value="ki_file_system"/>
-		<geant target="spec_eif"/>
-		<set name="gepp_file" value="ki_text_input_file"/>
-		<geant target="spec_eif"/>
-		<set name="gepp_file" value="ki_text_output_file"/>
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="kl_binary_input_file"/>
 		<geant target="spec_eif"/>
