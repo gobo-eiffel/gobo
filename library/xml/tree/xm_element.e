@@ -117,7 +117,7 @@ feature {NONE} -- Name comparison with namespace.
 					(a_named.namespace.is_default_namespace or same_namespace (a_named))
 			-- TODO: should we remove same_namespace?
 		ensure
-			same_name: Result implies same_string (a_name.name, a_name)
+			same_name: Result implies same_string (a_named.name, a_name)
 			default_ns: a_named.namespace.is_default_namespace implies (Result = same_string (a_named.name, a_name))
 		end
 		
@@ -129,7 +129,7 @@ feature {NONE} -- Name comparison with namespace.
 		do
 			Result := same_string (a_named.name, a_name) and same_namespace (a_named)
 		ensure
-			same_name: Result implies same_string (a_name.name, a_name)
+			same_name: Result implies same_string (a_named.name, a_name)
 		end
 		
 feature -- Access
