@@ -16,4 +16,8 @@ inherit
 
 	XM_NODE
 
+invariant
+
+	document_parent_not_void: parent /= Void
+	
 end
