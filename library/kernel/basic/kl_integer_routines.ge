@@ -77,7 +77,7 @@ feature -- Conversion
 		end
 
 	to_integer (an_int: INTEGER): INTEGER is
-			-- Return `an_int'.
+			-- Return `an_int';
 			-- This can be used to force integer manifest constants to 
 			-- be of INTEGER type -- some versions of SmartEiffel use 
 			-- the smallest possible INTEGER_* type. A manifest array 
