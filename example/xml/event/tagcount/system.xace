@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<system name="tagcount">
+	<description>
+		system: "Tag count example"
+		copyright: "Copyright (c) 2003, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="TAGCOUNT" creation="make"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="internal"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+	<option if="${GOBO_EIFFEL}=se">
+		<option name="warning" value="none"/>
+	</option>
+
+	<cluster name="tagcount" location="${GOBO}/example/xml/event/tagcount"/>
+	<mount location="${GOBO}/library/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace" />
+</system>
+
+
