@@ -15,16 +15,17 @@ class DT_ZONED_TIME
 inherit
 
 	DT_ZONED
-		undefine
-			is_equal
 		redefine
-			time_zone
+			time_zone, is_equal
 		end
 
 	HASHABLE
+		redefine
+			is_equal
+		end
 
 	COMPARABLE
-		undefine
+		redefine
 			is_equal
 		end
 
@@ -35,14 +36,13 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_time: like time; a_time_zone: like time_zone) is
-			-- Establish invariant.
+			-- Create a new time `a_time' in time zone `a_time_zone'.
 		require
 			time_not_void: a_time /= Void
 			time_zone_not_void: a_time_zone /= Void
 		do
 			time := a_time
 			time_zone := a_time_zone
-			hash_code := time.hash_code 
 		ensure
 			time_set: time = a_time
 			time_zone_set: time_zone = a_time_zone
@@ -54,10 +54,13 @@ feature -- Access
 			-- Time within `time_zone'
 
 	time_zone: DT_FIXED_OFFSET_TIME_ZONE
-		-- Time zone
-		
-	hash_code: INTEGER
+			-- Time zone
+
+	hash_code: INTEGER is
 			-- Hash code
+		do
+			Result := time.hash_code
+		end
 
 feature -- Comparison
 
@@ -65,6 +68,14 @@ feature -- Comparison
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := time_to_utc < other.time_to_utc
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `Current' time equal to `other'?
+		do
+			if same_type (other) then
+				Result := same_time (other)
+			end
 		end
 
 	same_time (other: DT_ZONED_TIME): BOOLEAN is
@@ -78,14 +89,11 @@ feature -- Comparison
 feature -- Conversion
 
 	time_to_utc: DT_TIME is
-			-- Convert `time' into the same time in the zone UTC+0.
+			-- Convert `time' into the same time but relative to UTC.
 			-- (Create a new time object at each call.)
-		local
-			a_date_time: DT_DATE_TIME -- dummy argument
 		do
-			create a_date_time.make_from_epoch (0)
 			Result := clone (time)
-			Result.add_milliseconds (-(time_zone.offset (a_date_time).millisecond_count))
+			Result.add_milliseconds (-(time_zone.fixed_offset.millisecond_count))
 		ensure
 			time_not_void: Result /= Void
 		end

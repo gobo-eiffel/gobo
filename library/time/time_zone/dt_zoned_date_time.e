@@ -15,14 +15,17 @@ class DT_ZONED_DATE_TIME
 inherit
 
 	DT_ZONED
-		undefine
+		redefine
 			is_equal
 		end
 
 	HASHABLE
+		redefine
+			is_equal
+		end
 
 	COMPARABLE
-		undefine
+		redefine
 			is_equal
 		end
 
@@ -33,14 +36,13 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_date_time: like date_time; a_time_zone: like time_zone) is
-			-- Establish invariant.
+			-- Create a new date-time `a_date_time' in time zone `a_time_zone'.
 		require
 			date_time_not_void: a_date_time /= Void
 			time_zone_not_void: a_time_zone /= Void
 		do
 			date_time := a_date_time
 			time_zone := a_time_zone
-			hash_code := date_time.hash_code 
 		ensure
 			date_time_set: date_time = a_date_time
 			time_zone_set: time_zone = a_time_zone
@@ -51,8 +53,11 @@ feature -- Access
 	date_time: DT_DATE_TIME
 			-- Date-time within `time_zone'
 
-	hash_code: INTEGER
+	hash_code: INTEGER is
 			-- Hash code
+		do
+			Result := date_time.hash_code
+		end
 
 feature -- Comparison
 
@@ -62,8 +67,16 @@ feature -- Comparison
 			Result := date_time_to_utc < other.date_time_to_utc
 		end
 
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `Current' date-time equal to `other'?
+		do
+			if same_type (other) then
+				Result := same_date_time (other)
+			end
+		end
+
 	same_date_time (other: DT_ZONED_DATE_TIME): BOOLEAN is
-			-- Is `Current' time equal to `other'?
+			-- Is `Current' date-time equal to `other'?
 		require
 			other_not_void: other /= Void
 		do
@@ -73,8 +86,8 @@ feature -- Comparison
 feature -- Conversion
 
 	date_time_to_utc: DT_DATE_TIME is
-			-- Convert `date_time' into the same date-time in the zone UTC+0.
-			-- (Create a new date_time object at each call.)
+			-- Convert `date_time' into the same date-time but relative to UTC.
+			-- (Create a new date-time object at each call.)
 		do
 			Result := time_zone.date_time_to_utc (date_time)
 		ensure

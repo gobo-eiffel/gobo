@@ -27,7 +27,7 @@ feature -- Access
 		end
 
 	offset (a_date_time: DT_DATE_TIME): DT_TIME_DURATION is
-			-- UTC offset for `a_date_time' in current time zone
+			-- UTC offset for `a_date_time' in `Current' time zone
 		require
 			a_date_time_not_void: a_date_time /= Void
 		do
@@ -41,7 +41,7 @@ feature -- Access
 feature -- Conversion
 
 	date_time_to_utc (a_date_time: DT_DATE_TIME): DT_DATE_TIME is
-			-- Convert `a_date_time', considered to be relative to current
+			-- Convert `a_date_time', considered to be relative to `Current'
 			-- time zone, into the same time but relative to UTC.
 			-- (Create a new date_time object at each call.)
 		require
@@ -55,7 +55,7 @@ feature -- Conversion
 
 	date_time_from_utc (a_date_time: DT_DATE_TIME): DT_DATE_TIME is
 			-- Convert `a_date_time', considered to be relative to UTC,
-			-- into the same time but relative to current time zone.
+			-- into the same time but relative to `Current' time zone.
 			-- (Create a new date_time object at each call.)
 		require
 			a_date_time_not_void: a_date_time /= Void
@@ -68,7 +68,7 @@ feature -- Conversion
 
 	date_time_from (a_date_time: DT_DATE_TIME; a_time_zone: DT_TIME_ZONE): DT_DATE_TIME is
 			-- Convert `a_date_time', considered to be relative to `a_time_zone',
-			-- into the same time but relative to current time zone.
+			-- into the same time but relative to `Current' time zone.
 			-- (Create a new date_time object at each call.)
 		require
 			a_date_time_not_void: a_date_time /= Void
@@ -84,7 +84,7 @@ feature -- Conversion
 		end
 
 	convert_to_utc (a_date_time: DT_DATE_TIME) is
-			-- Convert `a_date_time', considered to be relative to current
+			-- Convert `a_date_time', considered to be relative to `Current'
 			-- time zone, into the same time but relative to UTC.
 			-- (`a_date_time' will be altered by the call.)
 		require
@@ -94,7 +94,7 @@ feature -- Conversion
 
 	convert_from_utc (a_date_time: DT_DATE_TIME) is
 			-- Convert `a_date_time', considered to be relative to UTC,
-			-- into the same time but relative to current time zone.
+			-- into the same time but relative to `Current' time zone.
 			-- (`a_date_time' will be altered by the call.)
 		require
 			a_date_time_not_void: a_date_time /= Void
