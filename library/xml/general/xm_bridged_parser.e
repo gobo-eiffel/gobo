@@ -11,7 +11,7 @@ indexing
 	date:		"$Date$"
 	revision:	"$Revision$"
 
-class XM_PARSER_BRIDGED
+class XM_BRIDGED_PARSER
 
 inherit
 
@@ -22,6 +22,14 @@ inherit
 			implementation
 		end
 	
+feature -- Callbacks
+
+	set_callbacks (c: XM_CALLBACKS) is
+			-- Callbacks not implemented for bridged parsers.
+		do
+			check not_implemented: false end
+		end
+		
 feature {ANY} -- Access
 
 	is_incremental: BOOLEAN is

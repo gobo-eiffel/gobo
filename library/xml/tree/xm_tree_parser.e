@@ -15,7 +15,7 @@ class XM_TREE_PARSER
 
 inherit
 
-	XM_PARSER_BRIDGED
+	XM_BRIDGED_PARSER
 		redefine
 			implementation
 		end
