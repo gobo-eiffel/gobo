@@ -1,11 +1,14 @@
 <?xml version="1.0" ?>
 
 <project name="filesystem_examples" default="all" >
+	<description>demonstrates filesystem functionality</description>
 	<target name="mkdir1">
+		<description>creates a directory</description>
 		<mkdir directory="testdirectory" />
 	</target>
 
 	<target name="deldir1">
+		<description>deletes a directory</description>
 		<delete directory="testdirectory" />
 	</target>
 
