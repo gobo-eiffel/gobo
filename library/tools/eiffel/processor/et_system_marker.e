@@ -121,6 +121,19 @@ feature -- Processing
 			process_class (a_class)
 		end
 
+	mark_shallow_no_unmark (a_class: ET_CLASS) is
+			-- Identify the classes that `a_class' directly depends on
+			-- (see definition in ETL page 35) and mark them as being part
+			-- of the system. Do not mark `a_class' if it does not
+			-- directly depend on itself. (Do not call `unmark_all'
+			-- before marking the classes.)
+		require
+			a_class_not_void: a_class /= Void
+		do
+			is_recursive := False
+			process_class (a_class)
+		end
+
 	unmark_all is
 			-- Unmark all classes of universe as if none of them
 			-- was in the system.
