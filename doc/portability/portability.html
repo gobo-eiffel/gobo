@@ -55,8 +55,8 @@ equivalent. But some don't.</p>
 </strong>The name of the classes have been systematically
 prefixed with a two-letter library code. For example the classes
 from the <em>Gobo Eiffel Structure Library</em> have been
-prefixed by <font size="2">DS (which stands for Data Structures)</font>,
-as in <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>,
+prefixed by <font size="2">DS </font>(which stands for Data
+Structures), as in <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>,
 whereas classes from the <em>Gobo Eiffel Lexical Library</em>
 have been prefixed by <font size="2">LX</font>, as in <font
 color="#008080"><em><tt>LX_SCANNER</tt></em></font>.</p>
@@ -205,7 +205,7 @@ and output files provided in class <font color="#008080"><em><tt>STD_FILES</tt><
 from <font size="2">ELKS</font> are not of type <font
 color="#008080"><em><tt>KL_FILE</tt></em></font>, they cannot be
 passed as argument to this routine, making the routine rather
-useless. The ideal solution would be to take advantage each
+useless. The ideal solution would be to take advantage of each
 compiler implementation choices, transparently allowing the use
 of <font color="#008080"><em><tt>IO_MEDIUM </tt></em></font>or <font
 color="#008080"><em><tt>TEXT_STREAM</tt></em></font> without
@@ -390,6 +390,7 @@ end</strong></em> -- class KL_INPUT_STREAM_ROUTINES</font></pre>
             <em>a_file</em> := <em>INPUT_STREAM_</em>.<em>make_file_open_read</em> (<em>&quot;foo.txt&quot;</em>)
             <em><strong>if</strong></em> <em>INPUT_STREAM_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
                 <em>parse_from_file</em> (<em>a_file</em>)
+                <em>INPUT_STREAM_.close </em>(<em>a_file</em>)
             <em><strong>else</strong></em>
                     -- Parse from standard input.
                 <em>parse_from_file</em> (<em>io</em>.<em>input</em>)
@@ -434,7 +435,6 @@ class from <font size="2">ELKS</font>:</p>
 </em><em><strong>inherit</strong></em><em>
 
     KL_IMPORTED_INPUT_STREAM_ROUTINES
-
     KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 </em><em><strong>feature</strong></em> -- Access
@@ -536,9 +536,9 @@ way as in the following example:</p>
                 <em>std</em>.<em>error</em>.<em>put_string</em> (<em>a_name</em>)
                     -- According to ELKS, the following line should
                     -- be written &quot;std.error.put_new_line&quot;, however
-                    -- this routine is named `new_line' in ISE Eiffel
-                    -- and Halstenbach. At least, the following line
-                    -- is portable.
+                    -- this routine was named `new_line' in ISE Eiffel
+                    -- 4.2 and Halstenbach 2.0. At least, the following
+                    -- line is portable.
                 <em>std</em>.<em>error</em>.<em>put_character</em> (<em>'%N'</em>)
                     -- Parse from standard input instead.
                 <em>parse_from_file</em> (<em>std</em>.<em>input</em>)
@@ -694,7 +694,5 @@ $Revision$"
         height="40"></a></td>
     </tr>
 </table>
-
-<p align="left">&nbsp;</p>
 </body>
 </html>

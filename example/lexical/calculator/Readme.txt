@@ -1,4 +1,4 @@
-This example demonstrates how to use Gelex with iss-yacc from Halstenbach.
+This example shows how to use Gelex with iss-yacc from Halstenbach.
 The directory contains the source code of the calculator example provided
 with iss-yacc and the associated lexical analyzer generated with Gelex.
 

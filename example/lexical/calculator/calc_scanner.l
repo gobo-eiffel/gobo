@@ -74,6 +74,6 @@ feature -- Initialization
 feature -- Access
 
 	last_token: INTEGER
-		-- Last token read by the scanner
+			-- Last token read by the scanner
 
 end -- class CALC_SCANNER
