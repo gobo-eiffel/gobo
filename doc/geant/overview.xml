@@ -1,0 +1,105 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gobo Eiffel Ant overview"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2003, Sven Ehrke and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="geant_overview">
+	<title>Overview of Geant</title>
+
+	<sect1 id="what_is_it">
+		<para>
+			Geant is a build tool specifically tailored for the Eiffel programming language.
+		</para>
+	</sect1>
+
+	<sect1 id="introduction">
+		<title>Why Geant?</title>
+
+		<para>
+			Like the build tool 'make', well known to C and C++ developers 'geant'
+			is a build tool for Eiffel developers. It is based on the ideas of Jakarta Ant,
+			a build tool for the Java programming language.
+		</para>
+
+		<para>
+			There are several reasons why this build tool has been created. The first one
+			is that I found it annoying to download interesting Eiffel libraries and
+			having difficulties compiling and using them. Very often I gave up although
+			I did spend quite some time trying to get it running. The frustrating thing in this
+			situation is that you do not really know whether you just did anything wrong or if
+			you simply had no chance to compile or use it since the software is not in
+			a stable state. What I wanted to have is a build procedure and a readme file
+			telling me how to invoke the build procedure so that I could use the software.
+			If the build procedure failed I would know that it wasn't my fault and could send
+			a bug report to the author.
+		</para>
+
+		<para>
+			In the Java world there has been exactly the same problem. With the widespread use
+			of Jakarta Ant the situation improved a lot. Having used Jakarta Ant for Java I thought
+			it would be a good idea to have something similar for Eiffel and that's how Geant was born.
+		</para>
+
+		<para>
+			Another advantage is that Geant is OS portable (tested on Windows, Linux, Solaris)
+			and that it includes commands (so called tasks) which are tailored specifically for
+			the usage with Eiffel. All available Eiffel compilers are supported.
+		</para>
+	
+		<para>
+			Reusability in build systems has always been an issue which wasn't addressed properly.
+			Therefore Geant's build scripts can be used as classes: build scripts can inherit
+			from other build scripts.
+		</para>
+	
+	</sect1>
+
+	<sect1>
+		<title>How to invoke Geant</title>
+		<para>
+			Like other build tools geant is invoked on the commandline
+			optionally followed by a so called targetname. Here are some examples (the $ sign
+			represents the shell prompt):
+		</para>
+		
+		<programlisting>
+		  $ geant
+		  $ geant help
+		  $ geant compile
+		</programlisting>
+		
+		<para>
+			Geant then is looking for a file named 'build.eant' which contains the build instructions.
+			So far all this sounds familiar to anyone who has used <emphasis>make</emphasis>.
+			The first difference we encounter is that the format of 'build.eant' or generally
+			eant files is XML. If you know Jakarta's Java build tool Ant you will see that the
+			syntax is very similar.
+		</para>
+	
+	</sect1>
+
+	<sect1>
+		<title>Diving into geant</title>
+		<para>
+			<link linkend="introduction">Introduction to geant</link>
+		</para>
+		<para>
+			<link linkend="examples">geant examples</link>
+		</para>
+		<para>
+			<link linkend="tasks">geant's tasks</link>
+		</para>
+		<para>
+			<link linkend="builtin_variables">Built-in variables</link>
+		</para>
+	</sect1>
+</chapter>
