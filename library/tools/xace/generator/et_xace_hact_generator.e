@@ -530,8 +530,10 @@ feature {NONE} -- Output
 				if a_cluster.is_abstract then
 					a_file.put_string ("abstract ")
 				end
-				print_escaped_name (a_cluster.name, a_file)
-				if a_cluster.pathname /= Void then
+				if a_cluster.is_relative and a_cluster.pathname = Void then
+					print_escaped_name (a_cluster.name, a_file)
+				else
+					print_escaped_name (a_cluster.prefixed_name, a_file)
 					a_file.put_string (": %"")
 					a_file.put_string (a_cluster.full_pathname)
 					a_file.put_character ('%"')
