@@ -28,7 +28,7 @@ creation
 feature -- Scanner
 
 	read_token is
-			-- Redefine token routine to add space before and 
+			-- Redefine token routine to add space before and
 			-- after PE entity.
 		do
 			if not pre_sent then

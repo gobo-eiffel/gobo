@@ -52,7 +52,7 @@ feature -- Node processor.
 feature -- State
 
 	namespaces: DS_HASH_TABLE [XM_NAMESPACE, STRING]
-			-- All of the document namespaces with 
+			-- All of the document namespaces with
 			-- explicit prefixes (indexed by URI).
 			-- ensure prefixes are unique.
 		
@@ -64,7 +64,7 @@ feature {NONE} -- State
 feature -- Result
 
 	top_level_declaration: STRING is
-			-- Top level declaration of all xml namespaces within 
+			-- Top level declaration of all xml namespaces within
 			-- the document.
 		require
 			namespaces_not_void: namespaces /= Void
@@ -136,8 +136,8 @@ feature {NONE} -- Implementation
 					and then not prefixes.has (a_namespace.ns_prefix)
 				then
 					register_namespace (a_namespace)
-				else 
-					-- The namespace may be without prefix (a default 
+				else
+					-- The namespace may be without prefix (a default
 					-- declaration) or the prefix is already used.
 					-- Use an alternative prefix.
 					create a_candidate_namespace.make (unique_prefix, a_namespace.uri)
@@ -145,8 +145,8 @@ feature {NONE} -- Implementation
 				end
 			else
 				check has: namespaces.has (a_namespace.uri) end
-				-- The namespace is known, this may be with another 
-				-- prefix, in which case the first prefix will be 
+				-- The namespace is known, this may be with another
+				-- prefix, in which case the first prefix will be
 				-- used everywhere.
 			end
 		end
@@ -177,17 +177,17 @@ feature {NONE} -- Implementation
 		end
 		
 	unique_prefix: STRING is
-			-- Find out a prefix not used in current 
+			-- Find out a prefix not used in current
 			-- namespaces.
 		require
 			namespaces_not_void: namespaces /= Void
 		local
 			i: INTEGER
 		do
-			-- This linear search will not be very efficient 
-			-- if there are lots of different namespaces with 
-			-- duplicate prefixes, but this seems unlikely. 
-			-- An alternative implementation could use 
+			-- This linear search will not be very efficient
+			-- if there are lots of different namespaces with
+			-- duplicate prefixes, but this seems unlikely.
+			-- An alternative implementation could use
 			-- dichotomic search on i, or a pseudo-random i.
 			from
 				Result := "ns1"

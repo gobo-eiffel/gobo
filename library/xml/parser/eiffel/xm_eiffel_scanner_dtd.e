@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Scanner adapter to external DTD"
 
@@ -41,7 +41,7 @@ feature {NONE} -- State
 feature -- Input
 
 	read_token is
-			-- Horrible hack that places the content of an external 
+			-- Horrible hack that places the content of an external
 			-- DTD within a (DOCTYPE_DECL_START, DOCTYPE_DECL_END)
 			-- token pair.
 		do

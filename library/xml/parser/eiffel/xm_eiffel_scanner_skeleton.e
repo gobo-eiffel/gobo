@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Scanner skeletons for an XML parser"
 
@@ -120,7 +120,7 @@ feature -- Encoding
 feature {NONE} -- Encodings
 
 	Encoding_us_ascii: STRING is "us-ascii"
-	Encoding_latin_1: STRING is "iso-8859-1" 
+	Encoding_latin_1: STRING is "iso-8859-1"
 	Encoding_utf_8: STRING is "utf-8"
 	Encoding_utf_16: STRING is "utf-16"
 
@@ -170,11 +170,11 @@ feature {NONE} -- Start condition stack
 			-- Restore previous start condition.
 		do
 			if not start_conditions.is_empty then
-					-- This would be a precondition save for 
+					-- This would be a precondition save for
 					-- invalid input document.
 				set_start_condition (start_conditions.item)
 				start_conditions.remove
-			else 
+			else
 				-- Error, to be reported later in parser hopefully.
 			end
 		end

@@ -102,7 +102,7 @@ feature -- Status report
 					-- Non conforming: excluded >32 unicode character:
 				Result := (code = 9) or -- tab
 					(code = 10) or (code = 13) or -- cr/lf
-					(code >= 32 and 
+					(code >= 32 and
 						(code /= 65279) and -- #xFEFF
 						(code /= 65535) -- #xFFFF
 					)

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Entity definition and scanner"
 
@@ -141,7 +141,7 @@ feature -- Scanner: set input buffer
 					-- Literal string.
 				reset
 				-- the value we get may be UC_STRING, so it must be
-				-- converted back to UTF8 for the scanner which operates 
+				-- converted back to UTF8 for the scanner which operates
 				-- on UTF8-in-STRING input
 				create str_stream.make (utf8.to_utf8 (value))
 				set_input_stream (str_stream)
@@ -164,9 +164,9 @@ feature {NONE} -- Newline normalization
 			-- Newline normalized text (2.11)
 		do
 				-- Newline normalization has already been applied
-				-- to a literal entity and should not be applied 
-				-- again, e.g. for literal entities which contain 
-				-- character entities of newline characters which 
+				-- to a literal entity and should not be applied
+				-- again, e.g. for literal entities which contain
+				-- character entities of newline characters which
 				-- should get out as is.
 			if is_literal then
 				Result := text
@@ -179,9 +179,9 @@ feature {NONE} -- Newline normalization
 			-- Has newline normalization already been applied?
 		do
 				-- Newline normalization has already been applied
-				-- to a literal entity and should not be applied 
-				-- again, e.g. for literal entities which contain 
-				-- character entities of newline characters which 
+				-- to a literal entity and should not be applied
+				-- again, e.g. for literal entities which contain
+				-- character entities of newline characters which
 				-- should get out as is.
 			Result := is_literal
 		end
@@ -213,8 +213,8 @@ feature -- Scanner: events
 							enc_count := enc_count + 1
 						elseif last_token = XMLDECLARATION_VERSION then
 							vers_count := vers_count + 1
-						elseif last_token = SPACE 
-							or last_token = APOS or last_token = QUOT 
+						elseif last_token = SPACE
+							or last_token = APOS or last_token = QUOT
 							or last_token = XMLDECLARATION_ENCODING_VALUE
 							or last_token = XMLDECLARATION_VERSION_10
 						then

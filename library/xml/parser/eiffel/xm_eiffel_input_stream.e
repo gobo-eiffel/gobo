@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Variant of KI_CHARACTER_INPUT_STREAM that accepts UTF16 and Latin1 and converts it to UTF8"
 
@@ -74,7 +74,7 @@ feature -- Encoding
 				lower_encoding := STRING_.as_lower (an_encoding)
 				Result := lower_encoding.is_equal (Encoding_latin_1)
 					or lower_encoding.is_equal (Encoding_us_ascii)
-					or lower_encoding.is_equal (Encoding_utf_8) 
+					or lower_encoding.is_equal (Encoding_utf_8)
 					or lower_encoding.is_equal (Encoding_utf_16)
 			end
 		end
@@ -94,10 +94,10 @@ feature -- Encoding
 					lower_encoding.is_equal (Encoding_latin_1) or
 					lower_encoding.is_equal (Encoding_us_ascii)
 				then
-					Result := encoding = Utf_8_or_compatible 
+					Result := encoding = Utf_8_or_compatible
 						or encoding = Utf_8 or encoding = Latin_1
 				elseif lower_encoding.is_equal (Encoding_utf_8) then
-					Result := encoding = Utf_8_or_compatible 
+					Result := encoding = Utf_8_or_compatible
 						or encoding = Utf_8
 				elseif lower_encoding.is_equal (Encoding_utf_16) then
 					Result := encoding = Utf16_msb_first or encoding = Utf16_msb_last
@@ -115,7 +115,7 @@ feature -- Encoding
 				std.output.put_string ("set_encoding to ")
 				std.output.put_string (an_encoding)
 				std.output.put_new_line
-			end 
+			end
 			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
 				encoding := Latin_1
 			elseif STRING_.as_lower (an_encoding).is_equal (Encoding_utf_16) then
@@ -129,7 +129,7 @@ feature -- Encoding
 feature {NONE} -- Encodings
 
 	Encoding_us_ascii: STRING is "us-ascii"
-	Encoding_latin_1: STRING is "iso-8859-1" 
+	Encoding_latin_1: STRING is "iso-8859-1"
 	Encoding_utf_8: STRING is "utf-8"
 	Encoding_utf_16: STRING is "utf-16"
 
@@ -144,8 +144,8 @@ feature -- Input
 			if encoding = Undetected then
 				utf16_detect_read_character
 
-					-- If detection has not put back read character in queue, 
-					-- read from upstream, which may be empty if the stream 
+					-- If detection has not put back read character in queue,
+					-- read from upstream, which may be empty if the stream
 					-- contains only the byte order character.
 				if utf_queue.count = 0 and not impl.end_of_input then
 					noqueue_read_character
@@ -169,7 +169,7 @@ feature -- Input
 					std.output.put_string ("read_character: " + last_character.code.out + " " + last_character.out)
 					std.output.put_new_line
 				end
-			end 
+			end
 		end
 
 	read_string (nb: INTEGER) is
@@ -181,9 +181,9 @@ feature -- Input
 		do
 				-- Naive implementation.
 				-- When the file is not UTF16 we could use
-				-- impl.read_string; last_string := impl.last_string but 
-				-- that would break the fact that `last_string' must 
-				-- remain the same object. It would also require 
+				-- impl.read_string; last_string := impl.last_string but
+				-- that would break the fact that `last_string' must
+				-- remain the same object. It would also require
 				-- to duplicate some of the detection handling.
 			from
 				last_string.wipe_out
@@ -204,9 +204,9 @@ feature -- Input
 			-- Return the number of characters actually read.
 		do
 			if encoding = Undetected or encoding = Utf_8_or_compatible or else utf_queue.count > 0 then
-					-- Read one by one, 
+					-- Read one by one,
 					-- if Undetected because detection operates on the first few characters,
-					-- if Utf_8_or_compatible because the actual encoding may be set soon 
+					-- if Utf_8_or_compatible because the actual encoding may be set soon
 					-- and we should not read too much with the wrong encoding.
 				read_character
 				if not end_of_input then
@@ -223,7 +223,7 @@ feature -- Input
 			debug ("xml_input_stream")
 				std.output.put_string ("read_to_string: " + Result.out + " chars read")
 				std.output.put_new_line
-			end 
+			end
 		end
 
 	unread_character (an_item: CHARACTER) is
@@ -258,7 +258,7 @@ feature -- Access
 
 	last_character: CHARACTER is
 			-- Last character read.
-		do 
+		do
 			if utf_queue.count > 0 then
 				Result := utf_queue.item
 			else
@@ -268,7 +268,7 @@ feature -- Access
 
 	last_string: STRING
 			-- Last string read
-			-- (Note: unlike the abstract specification, this _often_ but 
+			-- (Note: unlike the abstract specification, this _often_ but
 			-- not always returns the same object.)
 
 feature {NONE} -- State
@@ -293,7 +293,7 @@ feature {NONE} -- State
 feature {NONE} -- Input
 
 	noqueue_read_character is
-			-- Read character after detection and when detection queue has 
+			-- Read character after detection and when detection queue has
 			-- been flushed.
 		require
 			open_read: is_open_read
@@ -337,7 +337,7 @@ feature {NONE} -- UTF16 implementation
 						encoding := Utf16_msb_first
 					elseif utf16.is_endian_detection_character_least_first (first_char.code, second_char.code) then
 						encoding := Utf16_msb_last
-					elseif (first_char.code = 0 and second_char = Lt_char) then 
+					elseif (first_char.code = 0 and second_char = Lt_char) then
 							-- Check wide '<'.
 						encoding := Utf16_msb_first
 						utf_queue.force (Lt_char)
@@ -358,7 +358,7 @@ feature {NONE} -- UTF16 implementation
 		end
 
 	utf16_read_character is
-			-- Read two characters at a time and fill queue with 
+			-- Read two characters at a time and fill queue with
 			-- UTF8 encoding of character.
 		require
 			utf16: (encoding = Utf16_msb_first) or (encoding = Utf16_msb_last)
@@ -399,13 +399,13 @@ feature {NONE} -- UTF16 implementation
 									if utf16.is_low_surrogate (a_most) then
 										append_character (utf16.surrogate (a_high_surrogate, utf16.least_10_bits (a_most, a_least)))
 									else
-										-- Error condition: unexpected second byte of a 
+										-- Error condition: unexpected second byte of a
 										-- surrogate pair.
 									end
 								end
 							end
 						else
-							-- Error condition: unexpected second byte of a 
+							-- Error condition: unexpected second byte of a
 							-- surrogate pair.
 						end
 					else
@@ -419,7 +419,7 @@ feature {NONE} -- UTF16 implementation
 feature {NONE} -- Latin-1 implementation
 
 	latin1_read_character is
-			-- Read character from source and convert it to UTF8 if latin1 
+			-- Read character from source and convert it to UTF8 if latin1
 			-- character (8th bit set).
 		require
 			latin1: encoding = Latin_1

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"XML declaration"
 

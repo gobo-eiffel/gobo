@@ -91,7 +91,7 @@ feature -- Status report
 	is_namespace_name: BOOLEAN is
 			-- Is current name with a namespace?
 		do
-			Result := count = 2 and then 
+			Result := count = 2 and then
 				(first.count > 0 and second.count > 0)
 		end
 
@@ -269,7 +269,7 @@ feature -- Comparison
 				elseif count = 1 then
 					Result := same_string (first, other.first)
 				elseif count = 2 then
-					Result := same_string (first, other.first) 
+					Result := same_string (first, other.first)
 						and same_string (second, other.second)
 				else
 					Result := same_string (first, other.first)
@@ -318,7 +318,7 @@ feature {XM_EIFFEL_PARSER_NAME} -- Implementation
 			-- Second (name).
 
 	tail: DS_LIST [STRING]
-			-- Inefficient(?) tail, because "a:b:c:d" is valid XML 1.0 but 
+			-- Inefficient(?) tail, because "a:b:c:d" is valid XML 1.0 but
 			-- it is supposed to be rare in practice.
 
 invariant

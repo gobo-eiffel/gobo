@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 		end
 
 	process_named (a_node: XM_NAMED_NODE) is
-			-- Process named node: display resolved namespace 
+			-- Process named node: display resolved namespace
 			-- URI before name.
 		require
 			a_node_not_void: a_node /= Void

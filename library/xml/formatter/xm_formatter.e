@@ -16,12 +16,12 @@ inherit
 
 	XM_NODE_PROCESSOR
 		redefine
-			process_document, 
-			process_element, 
+			process_document,
+			process_element,
 			process_character_data,
 			process_processing_instruction,
-			process_comment, 
-			process_attributes, 
+			process_comment,
+			process_attributes,
 			process_attribute
 		end
 
@@ -270,8 +270,8 @@ feature {NONE} -- Non standard processor routines
 		require
 			a_node_not_void: a_node /= Void
 		do
-			check 
-				root_namespace_not_void: root_namespace /= Void 
+			check
+				root_namespace_not_void: root_namespace /= Void
 				namespaces_not_void: namespaces /= Void
 			end
 
@@ -289,8 +289,8 @@ feature {NONE} -- Non standard processor routines
 		local
 			a_typer: XM_NODE_TYPER
 		do
-			check 
-				root_namespace_not_void: root_namespace /= Void 
+			check
+				root_namespace_not_void: root_namespace /= Void
 				namespaces_not_void: namespaces /= Void
 			end
 

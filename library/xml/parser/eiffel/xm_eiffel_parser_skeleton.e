@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"XML parser skeletons using a native Eiffel parser"
 
@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a new parser.
-			-- The string mode (see XM_STRING_MODE parent) is set by 
-			-- default to a safe mode, and the parser will be in error 
+			-- The string mode (see XM_STRING_MODE parent) is set by
+			-- default to a safe mode, and the parser will be in error
 			-- if the XML input contains characters above the maximum:
-			-- another string mode must be set explicitely to accept 
+			-- another string mode must be set explicitely to accept
 			-- the full range of unicode characters.
 		do
 			make_scanner
@@ -141,9 +141,9 @@ feature -- Obsolete
 feature -- Namespace mode
 
 	disable_namespaces is
-			-- Disable namespace parsing and allow strict 
-			-- XML 1.0 names (eg ":" or ":a:b:c:"). 
-			-- Namespace field in events is always Void. 
+			-- Disable namespace parsing and allow strict
+			-- XML 1.0 names (eg ":" or ":a:b:c:").
+			-- Namespace field in events is always Void.
 			
 		do
 			use_namespaces := False
@@ -672,7 +672,7 @@ feature {NONE} -- Scanner entity processing
 
 	process_entity_scanner (a_def: XM_EIFFEL_ENTITY_DEF) is
 			-- Save previous scannner, create new scanner, and
-			-- reset it with previous scanner state. 
+			-- reset it with previous scanner state.
 		require
 			a_def_not_void: a_def /= Void
 		do
