@@ -13,6 +13,7 @@
 	<inherit>
 		<parent location="${GOBO}/misc/test.eant">
 			<redefine target="init_system"/>
+			<redefine target="other_clean"/>
 		</parent>
 	</inherit>
 
@@ -24,6 +25,14 @@
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/test/${library}/expat"/>
 		<set name="GOBO_XML_EXPAT" value="true"/>
+	</target>
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete file="xexpat.pdb"/>
 	</target>
 
 </project>
