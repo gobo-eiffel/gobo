@@ -45,7 +45,10 @@ creation
 
 Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
 	Defaults_opt Clusters_opt Externals_opt L_END
-		{ last_universe := new_universe ($8) }
+		{
+			last_universe := new_universe ($8)
+			last_universe.set_root_class ($4)
+		}
 	;
 
 Root_cluster_opt: -- Empty

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			error_handler := an_error_handler
 			ast_factory := a_factory
 			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
+			eiffel_parser.set_create_keyword (True)
 			make_basic_classes
 		ensure
 			clusters_set: clusters = a_clusters
@@ -46,6 +47,7 @@ feature {NONE} -- Initialization
 		local
 			id: ET_IDENTIFIER
 			p: ET_FILE_POSITION
+			any_parent: ET_PARENT
 		do
 			!! p.make ("", 0, 0)
 			!! id.make ("ANY", p)
@@ -56,18 +58,22 @@ feature {NONE} -- Initialization
 			none_class := eiffel_class (id)
 			!! any_type.make (any_class.name, Void, any_class)
 			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
+			!! any_parents.make (any_parent)
 		ensure
 			any_class_not_void: any_class /= Void
 			general_class_not_void: general_class /= Void
 			none_class_not_void: none_class /= Void
 			any_type_not_void: any_type /= Void
-			any_parent_not_void: any_parent /= Void
+			any_parents_not_void: any_parents /= Void
 		end
 
 feature -- Access
 
 	clusters: ET_CLUSTERS
 			-- Clusters
+
+	root_class: ET_CLASS
+			-- Root class
 
 	classes: DS_HASH_TABLE [ET_CLASS, ET_IDENTIFIER]
 			-- Classes in universe
@@ -112,8 +118,21 @@ feature -- Basic classes
 	any_type: ET_CLASS_TYPE
 			-- Class type ANY
 
-	any_parent: ET_PARENT
-			-- Default parent
+	any_parents: ET_PARENTS
+			-- Default parents
+
+feature -- Setting
+
+	set_root_class (a_name: ET_IDENTIFIER) is
+			-- Set `root_class'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			root_class := eiffel_class (a_name)
+		ensure
+			root_class_not_void: root_class /= Void
+			root_class_set: root_class.name.same_identifier (a_name)
+		end
 
 feature -- Parsing
 
@@ -141,12 +160,26 @@ feature -- Compilation
 	compute_ancestors is
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_class: ET_CLASS
+			nb: INTEGER
 		do
+			if root_class /= Void then
+				root_class.add_to_system
+			end
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.flatten
+				a_class := a_cursor.item
+				if a_class.in_system then
+					nb := nb + 1
+					if a_class.is_parsed and then not a_class.has_syntax_error then
+						a_class.flatten
+					end
+				end
 				a_cursor.forth
 			end
+			print ("Flattened ")
+			print (nb)
+			print (" classes%N")
 		end
 
 feature {NONE} -- Implementation
@@ -168,6 +201,6 @@ invariant
 	general_class_not_void: general_class /= Void
 	none_class_not_void: none_class /= Void
 	any_type_not_void: any_type /= Void
-	any_parent_not_void: any_parent /= Void
+	any_parents_not_void: any_parents /= Void
 
 end -- class ET_UNIVERSE
