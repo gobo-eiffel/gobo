@@ -11,5 +11,6 @@ ${GOBO}/library/kernel/loadpath.se
 ${GOBO}/library/lexical/loadpath.se
 ${GOBO}/library/parse/loadpath.se
 ${GOBO}/library/structure/loadpath.se
+${GOBO}/library/time/loadpath.se
 ${GOBO}/library/tools/loadpath.se
 ${GOBO}/library/utility/loadpath.se

@@ -9,6 +9,7 @@ Gobo.Sources.kernel.VE=
 Gobo.Sources.lexical=
 Gobo.Sources.parse=
 Gobo.Sources.structure=
+Gobo.Sources.time=
 Gobo.Sources.utility=
 
 [Gobo.Sources.kernel]
@@ -27,6 +28,10 @@ Recursive=True
 
 [Gobo.Sources.structure]
 Mask=structure/*.e
+Recursive=True
+
+[Gobo.Sources.time]
+Mask=time/*.e
 Recursive=True
 
 [Gobo.Sources.utility]
