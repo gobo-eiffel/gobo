@@ -1064,7 +1064,7 @@ feature -- Option values
 			end
 		end
 
-	link: DS_HASH_SET [STRING] is
+	link: DS_ARRAYED_LIST [STRING] is
 			-- 'link' option
 		do
 			if is_link_declared then
@@ -2659,7 +2659,7 @@ feature -- Declared values
 	declared_line_generation: UT_TRISTATE
 			-- Declared value for 'line_generation' option
 
-	declared_link: DS_HASH_SET [STRING]
+	declared_link: DS_ARRAYED_LIST [STRING]
 			-- Declared values for 'link' option
 
 	declared_linker: STRING
@@ -2963,7 +2963,7 @@ feature -- Default values
 	default_line_generation: BOOLEAN is False
 			-- Default value for 'line_generation' option
 
-	default_link: DS_HASH_SET [STRING] is
+	default_link: DS_ARRAYED_LIST [STRING] is
 			-- Default value for 'link' option
 		once
 			create Result.make (0)

@@ -177,6 +177,7 @@ feature -- Basic operations
 		local
 			i, nb: INTEGER
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
+			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 			an_options: ET_XACE_OPTIONS
 		do
 			nb := libraries.count
@@ -193,10 +194,10 @@ feature -- Basic operations
 						an_externals.put_include_directory (a_cursor.item)
 						a_cursor.forth
 					end
-					a_cursor := an_options.link.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						an_externals.put_link_library (a_cursor.item)
-						a_cursor.forth
+					a_link_cursor := an_options.link.new_cursor
+					from a_link_cursor.start until a_link_cursor.after loop
+						an_externals.put_link_library (a_link_cursor.item)
+						a_link_cursor.forth
 					end
 				end
 				i := i + 1

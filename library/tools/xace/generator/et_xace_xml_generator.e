@@ -162,6 +162,7 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
+			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
 			print_indentation (indent, a_file)
 			a_file.put_line ("<option>")
@@ -486,13 +487,13 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_link_declared then
-				a_cursor := an_option.link.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				a_link_cursor := an_option.link.new_cursor
+				from a_link_cursor.start until a_link_cursor.after loop
 					print_indentation (indent + 1, a_file)
 					a_file.put_string ("<option name=%"link%" value=%"")
-					a_file.put_string (a_cursor.item)
+					a_file.put_string (a_link_cursor.item)
 					a_file.put_line ("%"/>")
-					a_cursor.forth
+					a_link_cursor.forth
 				end
 			end
 			if an_option.is_linker_declared then

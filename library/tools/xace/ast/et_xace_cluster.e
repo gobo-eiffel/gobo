@@ -197,6 +197,7 @@ feature -- Basic operations
 			an_externals_not_void: an_externals /= Void
 		local
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
+			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
 			if options /= Void then
 				a_cursor := options.c_compiler_options.new_cursor
@@ -209,10 +210,10 @@ feature -- Basic operations
 					an_externals.put_include_directory (a_cursor.item)
 					a_cursor.forth
 				end
-				a_cursor := options.link.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					an_externals.put_link_library (a_cursor.item)
-					a_cursor.forth
+				a_link_cursor := options.link.new_cursor
+				from a_link_cursor.start until a_link_cursor.after loop
+					an_externals.put_link_library (a_link_cursor.item)
+					a_link_cursor.forth
 				end
 			end
 			if subclusters /= Void then
