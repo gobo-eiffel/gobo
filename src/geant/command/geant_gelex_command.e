@@ -27,11 +27,14 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a new 'gelex' command
+			-- Create a new 'gelex' command.
 		do
-			size := ""
 			output_filename := ""
 			input_filename := ""
+				-- Set defaults:
+			size := ""
+			ecs := True
+			meta_ecs := True
 		end
 
 feature -- Status report

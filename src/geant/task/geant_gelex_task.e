@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		local
 			a_value: STRING
 		do
+			make
 				-- size:
 			if has_uc_attribute (an_element, Size_attribute_name) then
 				a_value := uc_attribute_value (an_element, Size_attribute_name).out
