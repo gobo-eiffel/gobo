@@ -6,7 +6,7 @@ Test Summary for xconcat1
 # Total:      1 test (2 assertions)
 
 Test Results:
-FAIL:  [TEST_CONCAT1.test_concat] foo+bar
+FAIL:  [TEST_CONCAT1.test_concat] foobar
    expected: foobar
    but  got: foofoo
 
