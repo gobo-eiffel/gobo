@@ -19,9 +19,9 @@ inherit
 feature -- Test
 
 	test_counter is
-			-- Test XM_EVENT_COUNTER
+			-- Test XM_EVENT_COUNT_FILTER
 		local
-			counter: XM_EVENT_COUNTER
+			counter: XM_EVENT_COUNT_FILTER
 		do
 			create counter.make_null
 			counter.on_start
@@ -53,7 +53,7 @@ feature -- Test
 		local
 			pretty: XM_PRETTY_PRINT_FILTER 
 			concat: XM_CONTENT_CONCATENATOR
-			counter: XM_EVENT_COUNTER
+			counter: XM_EVENT_COUNT_FILTER
 		do
 			create pretty.make_null
 			create counter.set_next (pretty)
@@ -65,9 +65,9 @@ feature -- Test
 			concat.on_start_tag (Void, Void, "doc")
 			concat.on_start_tag_finish
 			concat.on_content ("doc1")
-			concat.on_processing_instruction ("nm", "val") -- do split content
+			concat.on_processing_instruction ("nm", "val")
 			concat.on_content ("doc2.1")
-			concat.on_comment ("com in content") -- do not split content, rm comment
+			concat.on_comment ("com in content")
 			concat.on_content ("doc2.2")
 			concat.on_start_tag (Void, Void, "zoo")
 			concat.on_attribute (Void, Void, "attr1", "val1")
@@ -77,12 +77,34 @@ feature -- Test
 			concat.on_end_tag (Void, Void, "zoo")
 			concat.on_content ("doc3")
 			concat.on_end_tag (Void, Void, "doc")
-			concat.on_comment ("com2") -- kept
+			concat.on_comment ("com2")
 			concat.on_finish
 			
-			assert_equal ("content concatenated", counter.contents, 4)
-			assert_equal ("pretty", pretty.last_output, "<doc>doc1<?nm val?>doc2.1doc2.2<zoo attr1=%"val1%">zoo.1zoo.2</zoo>doc3</doc><!--com2-->")
+			assert_equal ("content concatenated", counter.contents, 5)
+			assert_equal ("pretty", pretty.last_output, "<doc>doc1<?nm val?>doc2.1<!--com in content-->doc2.2<zoo attr1=%"val1%">zoo.1zoo.2</zoo>doc3</doc><!--com2-->")
 		end
 	
+	test_no_comment is
+			-- Test XM_NO_COMMENT_FILTER.
+		local
+			tested: XM_NO_COMMENT_FILTER
+			counter: XM_EVENT_COUNT_FILTER
+		do
+			create counter.make_null
+			create tested.set_next (counter)
+			
+			tested.on_start
+			tested.on_comment ("c1")
+			tested.on_start_tag (Void, Void, "doc")
+			tested.on_start_tag_finish
+			tested.on_content ("t1")
+			tested.on_comment ("c2")
+			tested.on_content ("t2")
+			tested.on_end_tag (Void, Void, "doc")
+			tested.on_comment ("c3")
+			tested.on_finish
+			
+			assert_equal ("no comment", counter.comments, 0)
+		end
 end
  
