@@ -25,6 +25,14 @@ creation
 
 	make, make_from_description
 
+feature -- Status report
+
+	valid_start_condition (sc: INTEGER): BOOLEAN is
+			-- Is `sc' a valid start condition?
+		do
+			Result := (INITIAL <= sc and sc <= EIFFEL_BLOCK2)
+		end
+
 feature {NONE} -- Implementation
 
 	yy_build_tables is
@@ -793,6 +801,7 @@ else
 end
 else
 --|#line 0
+last_token := yyError_token
 fatal_error ("scanner jammed")
 end
 end

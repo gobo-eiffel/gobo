@@ -25,18 +25,26 @@ creation
 
 	make, make_from_description
 
+feature -- Status report
+
+	valid_start_condition (sc: INTEGER): BOOLEAN is
+			-- Is `sc' a valid start condition?
+		do
+			Result := (INITIAL <= sc and sc <= REGEXP)
+		end
+
 feature {NONE} -- Implementation
 
 	yy_build_tables is
 			-- Build scanner tables.
 		do
-			yy_nxt := yy_nxt_
-			yy_chk := yy_chk_
-			yy_base := yy_base_
-			yy_def := yy_def_
-			yy_ec := yy_ec_
-			yy_meta := yy_meta_
-			yy_accept := yy_accept_
+			yy_nxt ?= yy_nxt_template
+			yy_chk ?= yy_chk_template
+			yy_base ?= yy_base_template
+			yy_def ?= yy_def_template
+			yy_ec ?= yy_ec_template
+			yy_meta ?= yy_meta_template
+			yy_accept ?= yy_accept_template
 		end
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -268,6 +276,7 @@ else
 end
 else
 --|#line 0
+last_token := yyError_token
 fatal_error ("scanner jammed")
 end
 end
@@ -284,11 +293,13 @@ end
 			end
 		end
 
-feature {NONE} -- Tables
+feature {NONE} -- Table templates
 
-	yy_nxt_: ARRAY [INTEGER] is
+	yy_nxt_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,   66,   66,   15,   15,   51,   51,   45,   55,   44,
 			   44,   46,   46,   49,   47,   47,   16,   16,   18,   19,
 			   49,   46,   45,   20,   47,   21,   21,   46,   44,   44,
@@ -314,12 +325,14 @@ feature {NONE} -- Tables
 			   36,   36,   36,   36,   45,   66,   45,   45,   48,   48,
 			   48,   48,   50,   50,   50,   52,   66,   52,   52,   13,
 			   66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
-			   66,   66,   66,   66,   66,   66,   66,   66>>, 0)
+			   66,   66,   66,   66,   66,   66,   66,   66>>)
 		end
 
-	yy_chk_: ARRAY [INTEGER] is
+	yy_chk_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    0,    1,    2,   38,   38,   78,   77,   21,
 			   21,   26,   29,   30,   26,   29,    1,    2,    3,    3,
 			   30,   34,   54,    3,   34,    3,    3,   41,   44,   44,
@@ -345,12 +358,14 @@ feature {NONE} -- Tables
 			   72,   72,   72,   72,   73,    0,   73,   73,   74,   74,
 			   74,   74,   75,   75,   75,   76,    0,   76,   76,   66,
 			   66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
-			   66,   66,   66,   66,   66,   66,   66,   66>>, 0)
+			   66,   66,   66,   66,   66,   66,   66,   66>>)
 		end
 
-	yy_base_: ARRAY [INTEGER] is
+	yy_base_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    1,   16,   33,   49,   61,   73,   87,  101,
 			  114,  127,  142,   58,  219,  219,  219,  219,   48,  219,
 			  219,    0,  219,  219,  219,  219,    2,  219,  219,    3,
@@ -358,12 +373,14 @@ feature {NONE} -- Tables
 			   25,   18,  219,   35,   19,  219,   24,    0,  219,  219,
 			  219,  219,   17,   29,   13,    0,   35,  219,  151,  158,
 			  165,  168,   31,   34,   40,   42,  219,  179,  183,  187,
-			  191,  195,  199,  203,  207,  211,  214,    5,    4>>, 0)
+			  191,  195,  199,  203,  207,  211,  214,    5,    4>>)
 		end
 
-	yy_def_: ARRAY [INTEGER] is
+	yy_def_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,   67,   67,   68,   68,   69,   69,   70,   70,   71,
 			   71,   72,   72,   66,   66,   66,   66,   66,   66,   66,
 			   66,   66,   66,   66,   66,   66,   73,   66,   66,   73,
@@ -371,12 +388,14 @@ feature {NONE} -- Tables
 			   76,   73,   66,   66,   66,   66,   66,   77,   66,   66,
 			   66,   66,   76,   76,   66,   78,   76,   66,   76,   76,
 			   59,   59,   76,   76,   76,   76,    0,   66,   66,   66,
-			   66,   66,   66,   66,   66,   66,   66,   66,   66>>, 0)
+			   66,   66,   66,   66,   66,   66,   66,   66,   66>>)
 		end
 
-	yy_ec_: ARRAY [INTEGER] is
+	yy_ec_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -404,26 +423,30 @@ feature {NONE} -- Tables
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1>>, 0)
+			    1,    1,    1,    1,    1,    1,    1>>)
 		end
 
-	yy_meta_: ARRAY [INTEGER] is
+	yy_meta_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    1,    1,    1,    1,    1,    3,
-			    3,    3,    1,    1,    1,    4,    1,    1,    1>>, 0)
+			    3,    3,    1,    1,    1,    4,    1,    1,    1>>)
 		end
 
-	yy_accept_: ARRAY [INTEGER] is
+	yy_accept_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,   29,    2,   27,    1,   13,    9,   14,
 			   11,   10,   12,   15,   17,   16,   15,   21,   22,   21,
 			   21,   24,   26,   24,   24,   25,    8,    3,    8,    7,
 			    8,    8,    5,    9,   10,   18,   18,   18,   19,   20,
 			   23,    4,    0,    0,   18,   18,    0,    6,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0>>, 0)
+			    0,    0,    0,    0,    0,    0,    0>>)
 		end
 
 feature {NONE} -- Constants
