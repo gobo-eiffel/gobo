@@ -21,17 +21,12 @@ inherit
 		end
 
 	PR_YACC_TOKENS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
-	UT_IMPORTED_FORMATTERS
 
 feature {NONE} -- Initialization
 
@@ -40,7 +35,7 @@ feature {NONE} -- Initialization
 		require
 			handler_not_void: handler /= Void
 		do
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			error_handler := handler
 			action_buffer := STRING_.make (Init_buffer_size)
 			successful := True
@@ -113,29 +108,41 @@ feature {NONE} -- Implementation
 			-- Number of characters { not-yet-balanced
 			-- in semantic actions
 
-	nb_rhs: INTEGER
-			-- Number of right-hand-side items
-			-- read so far in current rule
+	rule: PR_RULE
+			-- Rule being parsed
 
-	process_dollar_n (n: INTEGER) is
+	process_dollar_n (n: INTEGER; a_rule: PR_RULE) is
 			-- Process $`n' in semantic actions.
+		require
+			a_rule_not_void: a_rule /= Void
 		local
-			offset: INTEGER
+			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
+			nb_rhs: INTEGER
+			a_type: PR_TYPE
 		do
-			offset := nb_rhs - n
-			if offset = 0 then
-				action_buffer.append_string ("yyvs.item (yyvsp)")
+			rhs := a_rule.rhs
+			nb_rhs := rhs.count
+			if n <= 0 then
+				report_dangerous_dollar_n_warning (n)
+				a_type := Unknown_type
+			elseif n > nb_rhs then
+				report_invalid_dollar_n_error (n)
+				a_type := Unknown_type
 			else
-				action_buffer.append_string ("yyvs.item (yyvsp - ")
-				INTEGER_FORMATTER_.append_decimal_integer (action_buffer, offset)
-				action_buffer.append_character (')')
+				a_type := rhs.item (n).type
 			end
+			a_type.append_dollar_n_to_string (n, nb_rhs, action_buffer)
 		end
 
-	process_dollar_dollar is
+	process_dollar_dollar (a_rule: PR_RULE) is
 			-- Process $$ in semantic actions.
+		require
+			a_rule_not_void: a_rule /= Void
+		local
+			a_type: PR_TYPE
 		do
-			action_buffer.append_string ("yyval")
+			a_type := a_rule.lhs.type
+			a_type.append_dollar_dollar_to_string (action_buffer)
 		end
 
 	cloned_string (a_string: STRING): STRING is
@@ -143,8 +150,8 @@ feature {NONE} -- Implementation
 		require
 			a_string /= Void
 		do
-			Result := STRING_.make (action_buffer.count)
-			Result.append_string (action_buffer)
+			Result := STRING_.make (a_string.count)
+			Result.append_string (a_string)
 		ensure
 			cloned_string_not_void: Result /= Void
 			is_equal: Result.is_equal (a_string)
@@ -180,10 +187,44 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
+	report_invalid_dollar_n_error (n: INTEGER) is
+			-- Report that $`n' has been used in a semantic
+			-- action but `n' is not a valid index for the
+			-- rhs of the corresponding rule.
+		local
+			an_error: PR_INVALID_DOLLAR_N_ERROR
+		do
+			!! an_error.make (filename, line_nb, n)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_dangerous_dollar_n_warning (n: INTEGER) is
+			-- Report that $`n' has been used in a semantic
+			-- action but `n' is not a valid index for the
+			-- rhs of the corresponding rule and therefore
+			-- its use is dangerous.
+		local
+			an_error: PR_DANGEROUS_DOLLAR_N_ERROR
+		do
+			!! an_error.make (filename, line_nb, n)
+			error_handler.report_warning (an_error)
+		end
+
 feature {NONE} -- Constants
 
 	Init_buffer_size: INTEGER is 256
 				-- Initial size for `action_buffer'
+
+	Unknown_type: PR_NO_TYPE is
+			-- Type used when type is not known
+		once
+			!! Result.make (0, "ANY")
+		ensure
+			no_type_not_void: Result /= Void
+		end
 
 invariant
 

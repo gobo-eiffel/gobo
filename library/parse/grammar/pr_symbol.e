@@ -19,18 +19,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_name: like name) is
+	make (an_id: INTEGER; a_name: like name; a_type: like type) is
 			-- Create a new symbol named `a_name'.
 		require
 			valid_id: id >= 0
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: not a_name.empty
+			a_type_not_void: a_type /= Void
 		do
 			id := an_id
 			name := a_name
+			type := a_type
 		ensure
 			id_set: id = an_id
 			name_set: name = a_name
+			type_set: type = a_type
 		end
 
 feature -- Status report
@@ -48,6 +51,9 @@ feature -- Access
 	name: STRING
 			-- Symbol name
 
+	type: PR_TYPE
+			-- Symbol type
+
 	id: INTEGER
 			-- Internal symbol id used in generated tables
 			-- (Symbols are indexed from 0.)
@@ -63,6 +69,16 @@ feature -- Status setting
 		end
 
 feature -- Setting
+
+	set_type (a_type: like type) is
+			-- Set `a_type' to `type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			type := a_type
+		ensure
+			type_set: type = a_type
+		end
 
 	set_id (i: INTEGER) is
 			-- Set `id' to i'.
@@ -92,5 +108,6 @@ invariant
 	valid_id: id >= 0
 	name_not_void: name /= Void
 	name_long_enough: not name.empty
+	type_not_void: type /= Void
 
 end -- class PR_SYMBOL

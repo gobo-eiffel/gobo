@@ -27,6 +27,8 @@ inherit
 			reset as reset_yacc_scanner
 		end
 
+	UT_IMPORTED_FORMATTERS
+
 feature {NONE} -- Initialization
 
 	make (handler: like error_handler) is
@@ -40,6 +42,7 @@ feature {NONE} -- Initialization
 			!! last_grammar.make
 			!! terminal_symbols.make (Initial_max_nb_tokens)
 			!! nonterminal_symbols.make (Initial_max_nb_variables)
+			!! types.make (Initial_max_nb_types)
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -53,6 +56,7 @@ feature -- Initialization
 			!! last_grammar.make
 			terminal_symbols.wipe_out
 			nonterminal_symbols.wipe_out
+			types.wipe_out
 			rule := Void
 			precedence_token := Void
 			start_symbol := Void
@@ -119,6 +123,185 @@ feature {NONE} -- Factory
 			no_action: Result.action = No_action
 		end
 
+	new_terminal (a_name: STRING; a_type: PR_TYPE): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %token <a_type> a_name
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+			a_type_not_void: a_type /= Void
+		do
+			if is_nonterminal (a_name) then
+				report_token_declared_as_variable_error (a_name)
+				Result := new_char_token ("'a'")
+			else
+				Result := new_token (a_name)
+			end
+			if Result.type /= Unknown_type then
+				report_token_declared_twice_error (a_name)
+			end
+			Result.set_type (a_type)
+		ensure
+			terminal_not_void: Result /= Void
+			type_set: Result.type = a_type
+		end
+
+	new_char_terminal (a_char: STRING; a_type: PR_TYPE): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %token <a_type> a_char
+		require
+			a_char_not_void: a_char /= Void
+			-- valid_char: `a_char' recognized by
+			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+			a_type_not_void: a_type /= Void
+		do
+			Result := new_char_token (a_char)
+			if Result.type /= Unknown_type then
+				report_token_declared_twice_error (a_char)
+			end
+			Result.set_type (a_type)
+		ensure
+			terminal_not_void: Result /= Void
+			type_set: Result.type = a_type
+		end
+
+	new_left_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %left a_name
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		do
+			if is_nonterminal (a_name) then
+				report_token_declared_as_variable_error (a_name)
+				Result := new_char_token ("'a'")
+			else
+				Result := new_token (a_name)
+			end
+			Result.set_left_associative
+			set_precedence (Result, a_precedence)
+		ensure
+			terminal_not_void: Result /= Void
+			associtivity_set: Result.is_left_associative
+			precedence_set: Result.precedence = a_precedence
+		end
+
+	new_left_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %left a_char
+		require
+			a_char_not_void: a_char /= Void
+			-- valid_char: `a_char' recognized by
+			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+		do
+			Result := new_char_token (a_char)
+			Result.set_left_associative
+			set_precedence (Result, a_precedence)
+		ensure
+			terminal_not_void: Result /= Void
+			associtivity_set: Result.is_left_associative
+			precedence_set: Result.precedence = a_precedence
+		end
+
+	new_right_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %right a_name
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		do
+			if is_nonterminal (a_name) then
+				report_token_declared_as_variable_error (a_name)
+				Result := new_char_token ("'a'")
+			else
+				Result := new_token (a_name)
+			end
+			Result.set_right_associative
+			set_precedence (Result, a_precedence)
+		ensure
+			terminal_not_void: Result /= Void
+			associtivity_set: Result.is_right_associative
+			precedence_set: Result.precedence = a_precedence
+		end
+
+	new_right_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %right a_char
+		require
+			a_char_not_void: a_char /= Void
+			-- valid_char: `a_char' recognized by
+			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+		do
+			Result := new_char_token (a_char)
+			Result.set_right_associative
+			set_precedence (Result, a_precedence)
+		ensure
+			terminal_not_void: Result /= Void
+			associtivity_set: Result.is_right_associative
+			precedence_set: Result.precedence = a_precedence
+		end
+
+	new_nonassoc_terminal (a_name: STRING; a_precedence: INTEGER): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %nonassoc a_name
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		do
+			if is_nonterminal (a_name) then
+				report_token_declared_as_variable_error (a_name)
+				Result := new_char_token ("'a'")
+			else
+				Result := new_token (a_name)
+			end
+			Result.set_non_associative
+			set_precedence (Result, a_precedence)
+		ensure
+			terminal_not_void: Result /= Void
+			associtivity_set: Result.is_non_associative
+			precedence_set: Result.precedence = a_precedence
+		end
+
+	new_nonassoc_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN is
+			-- Terminal symbol declared as:
+			--   %nonassoc a_char
+		require
+			a_char_not_void: a_char /= Void
+			-- valid_char: `a_char' recognized by
+			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
+		do
+			Result := new_char_token (a_char)
+			Result.set_non_associative
+			set_precedence (Result, a_precedence)
+		ensure
+			terminal_not_void: Result /= Void
+			associtivity_set: Result.is_non_associative
+			precedence_set: Result.precedence = a_precedence
+		end
+
+	new_nonterminal (a_name: STRING; a_type: PR_TYPE): PR_VARIABLE is
+			-- Nonterminal symbol declared as:
+			-- %type <a_type> a_name
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+			a_type_not_void: a_type /= Void
+		do
+			if is_terminal (a_name) then
+				report_variable_declared_as_token_error (a_name)
+				Result := new_dummy_variable
+			elseif is_nonterminal (a_name) then
+				report_variable_declared_twice_error (a_name)
+				Result := new_dummy_variable
+			else
+				Result := new_variable (a_name)
+			end
+			Result.set_type (a_type)
+		ensure
+			nonterminal_not_void: Result /= Void
+			type_set: Result.type = a_type
+		end
+
 	new_token (a_name: STRING): PR_TOKEN is
 			-- Terminal symbol named `a_name';
 			-- Create a new symbol if it does not exist
@@ -126,6 +309,7 @@ feature {NONE} -- Factory
 			-- `last_grammar'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
 			is_terminal: not is_nonterminal (a_name)
 		local
 			lower_name: STRING
@@ -138,30 +322,12 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				!! Result.make (an_id, a_name)
+				!! Result.make (an_id, a_name, Unknown_type)
 				terminal_symbols.force (Result, lower_name)
 				last_grammar.put_token (Result)
 			end
 		ensure
 			token_not_void: Result /= Void
-		end
-
-	new_token_with_id (a_name: STRING; id: INTEGER): PR_TOKEN is
-			-- Terminal symbol named `a_name' with token id
-			-- `id'; Create a new symbol if it does not exist
-			-- yet, and add it to the list of tokens of
-			-- `last_grammar'.
-		require
-			a_name_not_void: a_name /= Void
-			is_terminal: not is_nonterminal (a_name)
-		local
-			lower_name: STRING
-		do
-			Result := new_token (a_name)
-			Result.set_token_id (id)
-		ensure
-			token_not_void: Result /= Void
-			token_id_set: Result.token_id = id
 		end
 
 	new_char_token (a_char: STRING): PR_TOKEN is
@@ -239,30 +405,13 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				!! Result.make (an_id, a_char)
+				!! Result.make (an_id, a_char, Unknown_type)
 				Result.set_token_id (a_code)
 				terminal_symbols.force (Result, a_key)
 				last_grammar.put_token (Result)
 			end
 		ensure
 			token_not_void: Result /= Void
-		end
-
-	new_char_token_with_id (a_char: STRING; id: INTEGER): PR_TOKEN is
-			-- Terminal symbol associated with `a_char' and
-			-- with token id `id'; Create a new symbol if it
-			-- does not exist yet, and add it to the list of
-			-- tokens of `last_grammar'.
-		require
-			a_char_not_void: a_char /= Void
-			-- valid_char: `a_char' recognized by
-			--		\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\'
-		do
-			Result := new_char_token (a_char)
-			Result.set_token_id (id)
-		ensure
-			token_not_void: Result /= Void
-			token_id_set: Result.token_id = id
 		end
 
 	new_variable (a_name: STRING): PR_VARIABLE is
@@ -272,6 +421,7 @@ feature {NONE} -- Factory
 			-- of `last_grammar'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
 			is_nonterminal: not is_terminal (a_name)
 		local
 			lower_name: STRING
@@ -283,7 +433,7 @@ feature {NONE} -- Factory
 			else
 					-- Variables are indexed from 0.
 				an_id := last_grammar.variables.count
-				!! Result.make (an_id, a_name)
+				!! Result.make (an_id, a_name, Unknown_type)
 				nonterminal_symbols.force (Result, lower_name)
 				last_grammar.put_variable (Result)
 			end
@@ -303,7 +453,7 @@ feature {NONE} -- Factory
 			INTEGER_FORMATTER_.append_decimal_integer (a_name, nonterminal_symbols.count)
 				-- Variables are indexed from 0.
 			an_id := last_grammar.variables.count
-			!! Result.make (an_id, a_name)
+			!! Result.make (an_id, a_name, Unknown_type)
 			nonterminal_symbols.force (Result, a_name)
 			last_grammar.put_variable (Result)
 		ensure
@@ -316,6 +466,7 @@ feature {NONE} -- Factory
 			-- the list of variables of `last_grammar'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
 		local
 			lower_name: STRING
 			a_variable: PR_VARIABLE
@@ -329,7 +480,7 @@ feature {NONE} -- Factory
 			else
 					-- Variables are indexed from 0.
 				an_id := last_grammar.variables.count
-				!! a_variable.make (an_id, a_name)
+				!! a_variable.make (an_id, a_name, Unknown_type)
 				nonterminal_symbols.force (a_variable, lower_name)
 				last_grammar.put_variable (a_variable)
 				Result := a_variable
@@ -338,33 +489,94 @@ feature {NONE} -- Factory
 			symbol_not_void: Result /= Void
 		end
 
+	new_type (a_name: STRING): PR_TYPE is
+			-- Type named `a_name'; Create a new type if
+			-- it does not exist yet.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		local
+			upper_name: STRING
+			an_id: INTEGER
+		do
+			upper_name := STRING_.to_upper (a_name)
+			if types.has (upper_name) then
+				Result := types.item (upper_name)
+			else
+					-- Types are indexed from 1.
+					-- (0 is reserved for no-type)
+				an_id := last_grammar.types.count + 1
+				!! Result.make (an_id, a_name)
+				types.force (Result, upper_name)
+				last_grammar.put_type (Result)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	new_basic_type (a_name: STRING): PR_TYPE is
+			-- Basic type named `a_name'; Create a new type if
+			-- it does not exist yet.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+		local
+			upper_name: STRING
+			an_id: INTEGER
+		do
+			upper_name := STRING_.to_upper (a_name)
+			if types.has (upper_name) then
+				Result := types.item (upper_name)
+			else
+					-- Types are indexed from 1.
+					-- (0 is reserved for no-type)
+				an_id := last_grammar.types.count + 1
+				!PR_BASIC_TYPE! Result.make (an_id, a_name)
+				types.force (Result, upper_name)
+				last_grammar.put_type (Result)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	new_generic_type (a_name: STRING; generics: DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE is
+			-- Type named `a_name' with generic parameters `generics';
+			-- Create a new type if it does not exist yet.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: not a_name.empty
+			valid_generics: generics /= Void implies not generics.has (Void)
+		local
+			upper_name: STRING
+			an_id: INTEGER
+		do
+			if generics /= Void then
+					-- Types are indexed from 1.
+					-- (0 is reserved for no-type)
+				an_id := last_grammar.types.count + 1
+				!! Result.make_generic (an_id, a_name, generics)
+				upper_name := STRING_.to_upper (result.name)
+				if types.has (upper_name) then
+					Result := types.item (upper_name)
+				else
+					types.force (Result, upper_name)
+					last_grammar.put_type (Result)
+				end
+			else
+				Result := new_type (a_name)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
 	new_action (a_text: STRING): UT_COMMAND is
+			-- Action associated with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
 		do
 			Result := action_factory.new_action (a_text)
 		ensure
 			action_not_void: Result /= Void
-		end
-
-feature {NONE} -- Conversion
-
-	dollar_integer (val: ANY): INTEGER is
-		local
-			int: INTEGER_REF
-		do
-			int ?= val
-			Result := int.item
-		end
-
-	dollar_string (val: ANY): STRING is
-		do
-			Result ?= val
-		end
-
-	dollar_token (val: ANY): PR_TOKEN is
-		do
-			Result ?= val
 		end
 
 feature {NONE} -- Implementation
@@ -376,7 +588,8 @@ feature {NONE} -- Implementation
 		do
 				-- Error token. The token id value 256
 				-- is specified by POSIX.
-			a_token := new_token_with_id ("error", 256)
+			a_token := new_token ("error")
+			a_token.set_token_id (256)
 			a_token.set_useful (True)
 				-- Token that represents all undefined
 				-- literal tokens. It is always the 
@@ -451,52 +664,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_left_associative (a_token: PR_TOKEN) is
-			-- Set `a_token' to be left associative and set
-			-- its precedence level to `precedence'.
+	set_precedence (a_token: PR_TOKEN; a_precedence: INTEGER) is
+			-- Set precedence of `a_token' to `a_precedence'.
 		require
 			a_token_not_void: a_token /= Void
 		do
 			if a_token.has_precedence then
 				report_precedence_defined_twice_error (a_token.name)
 			end
-			a_token.set_left_associative
-			a_token.set_precedence (precedence)
+			a_token.set_precedence (a_precedence)
 		ensure
-			associtivity_set: a_token.is_left_associative
-			precedence_set: a_token.precedence = precedence
-		end
-
-	set_right_associative (a_token: PR_TOKEN) is
-			-- Set `a_token' to be right associative and set
-			-- its precedence level to `precedence'.
-		require
-			a_token_not_void: a_token /= Void
-		do
-			if a_token.has_precedence then
-				report_precedence_defined_twice_error (a_token.name)
-			end
-			a_token.set_right_associative
-			a_token.set_precedence (precedence)
-		ensure
-			associtivity_set: a_token.is_right_associative
-			precedence_set: a_token.precedence = precedence
-		end
-
-	set_non_associative (a_token: PR_TOKEN) is
-			-- Set `a_token' to be non-associative and set
-			-- its precedence level to `precedence'.
-		require
-			a_token_not_void: a_token /= Void
-		do
-			if a_token.has_precedence then
-				report_precedence_defined_twice_error (a_token.name)
-			end
-			a_token.set_non_associative
-			a_token.set_precedence (precedence)
-		ensure
-			associtivity_set: a_token.is_non_associative
-			precedence_set: a_token.precedence = precedence
+			precedence_set: a_token.precedence = a_precedence
 		end
 
 	process_rule (a_rule: PR_RULE) is
@@ -586,15 +764,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Access
 
-	rule: PR_RULE
-			-- Rule being parsed
-
 	precedence: INTEGER
 			-- Precedence level of operators
 
 	precedence_token: PR_TOKEN
 			-- %prec token used to set the precedence level
 			-- and associativity of the rule being parsed
+
+	type: PR_TYPE
 
 	start_symbol: DS_PAIR [STRING, INTEGER]
 			-- Name and line number of the start symbol
@@ -607,6 +784,10 @@ feature {NONE} -- Access
 	nonterminal_symbols: DS_HASH_TABLE [PR_VARIABLE, STRING]
 			-- Nonterminal symbols already created so far
 			-- indexed by symbol names in lowercase
+
+	types: DS_HASH_TABLE [PR_TYPE, STRING]
+			-- Types already created so far indexed
+			-- by type names in uppercase
 
 feature {NONE} -- Status report
 
@@ -753,6 +934,66 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
+	report_token_declared_twice_error (a_name: STRING) is
+			-- Report that the token `a_name' has been
+			-- declared twice.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			an_error: PR_TOKEN_DECLARED_TWICE_ERROR
+		do
+			!! an_error.make (filename, line_nb, a_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_variable_declared_twice_error (a_name: STRING) is
+			-- Report that the variable `a_name' has been
+			-- declared twice.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			an_error: PR_VARIABLE_DECLARED_TWICE_ERROR
+		do
+			!! an_error.make (filename, line_nb, a_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_variable_declared_as_token_error (a_name: STRING) is
+			-- Report that the variable `a_name' has already
+			-- been declared as a token.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			an_error: PR_SYMBOL_DECLARED_TOKEN_ERROR
+		do
+			!! an_error.make (filename, line_nb, a_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_token_declared_as_variable_error (a_name: STRING) is
+			-- Report that the token `a_name' has already
+			-- been declared as a variable.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			an_error: PR_SYMBOL_DECLARED_VARIABLE_ERROR
+		do
+			!! an_error.make (filename, line_nb, a_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
 	report_no_rules_error is
 			-- Report that no rules has been specified 
 			-- in the input grammar.
@@ -794,8 +1035,8 @@ feature {NONE} -- Error handling
 		end
 
 	report_token_id_used_twice_warning (token1, token2: PR_TOKEN) is
-			-- Create a new error reporting that `token1' and
-			-- `token2' have been assigned the same token id.
+			-- Report that `token1' and `token2' have been
+			-- assigned the same token id.
 		require
 			token1_not_void: token1 /= Void
 			token2_not_void: token2 /= Void
@@ -813,12 +1054,24 @@ feature {NONE} -- Constants
 			-- Initial maximum number of terminal
 			-- and nonterminal symbols
 
+	Initial_max_nb_types: INTEGER is 300
+			-- Initial maximum number of types
+
 	No_action: UT_COMMAND is
 			-- Do nothing semantic action
 		once
 			Result := action_factory.new_action ("")
 		ensure
 			no_action_not_void: Result /= Void
+		end
+
+	No_type: PR_NO_TYPE is
+			-- Type used when no type has been specified:
+			--   %token token_name
+		once
+			!! Result.make (0, "ANY")
+		ensure
+			no_type_not_void: Result /= Void
 		end
 
 invariant
@@ -828,8 +1081,9 @@ invariant
 	no_void_terminal_symbol: not terminal_symbols.has_item (Void)
 	nonterminal_symbols_not_void: nonterminal_symbols /= Void
 	no_void_nonterminal_symbol: not nonterminal_symbols.has_item (Void)
-	start_symbol_name_not_void:
-		start_symbol /= Void implies start_symbol.first /= Void
+	types_not_void: types /= Void
+	no_void_type: not types.has_item (Void)
+	start_symbol_name_not_void: start_symbol /= Void implies start_symbol.first /= Void
 	action_factory_not_void: action_factory /= Void
 
 end -- class PR_YACC_PARSER_SKELETON

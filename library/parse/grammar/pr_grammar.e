@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 		do
 			!! tokens.make (Initial_max_nb_tokens)
 			!! variables.make (Initial_max_nb_variables)
+			!! types.make (Initial_max_nb_types)
 			!! rules.make (Initial_max_nb_rules)
 			!! eiffel_header.make (1)
 		end
@@ -40,6 +41,9 @@ feature -- Access
 
 	variables: DS_ARRAYED_LIST [PR_VARIABLE]
 			-- Non-terminal symbols of current grammar
+
+	types: DS_ARRAYED_LIST [PR_TYPE]
+			-- Symbol types of current grammar
 
 	rules: DS_ARRAYED_LIST [PR_RULE]
 			-- Rules of current grammar
@@ -137,6 +141,21 @@ feature -- Element change
 		ensure
 			one_more: variables.count = old (variables.count) + 1
 			inserted: variables.last = a_variable
+		end
+
+	put_type (a_type: PR_TYPE) is
+			-- Add `a_type' at the end of the
+			-- list of symbol types.
+		require
+			a_variable_not_void: a_variable /= Void
+		do
+			if types.is_full then
+				types.resize (types.count + Max_nb_types_increment)
+			end
+			types.put_last (a_type)
+		ensure
+			one_more: types.count = old (types.count) + 1
+			inserted: types.last = a_type
 		end
 
 	put_rule (a_rule: PR_RULE) is
@@ -561,6 +580,10 @@ feature {NONE} -- Constants
 			-- Maximum number of terminal
 			-- and nonterminal symbols
 
+	Initial_max_nb_types: INTEGER is 300
+	Max_nb_types_increment: INTEGER is 300
+			-- Maximum number of types
+
 	Initial_max_nb_rules: INTEGER is 500
 	Max_nb_rules_increment: INTEGER is 500
 			-- Maximum number of rules
@@ -571,6 +594,8 @@ invariant
 	no_void_token: not tokens.has (Void)
 	variables_not_void: variables /= Void
 	no_void_variable: not variables.has (Void)
+	types_not_void: types /= Void
+	no_void_type: not types.has (Void)
 	rules_not_void: rules /= Void
 	no_void_rule: not rules.has (Void)
 	eiffel_header_not_void: eiffel_header /= Void

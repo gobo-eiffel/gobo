@@ -34,12 +34,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_name: like name) is
+	make (an_id: INTEGER; a_name: like name; a_type: like type) is
 			-- Create a new variable named `a_name'.
 			-- (Variables are indexed from 0.)
 		do
 			id := an_id
 			name := a_name
+			type := a_type
 			!! rules.make (Initial_max_nb_rules)
 			!! transitions.make
 			!! derives.make

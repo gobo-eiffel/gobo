@@ -39,9 +39,14 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	"%left"				last_token := T_LEFT
 	"%right"			last_token := T_RIGHT
 	"%nonassoc"			last_token := T_NONASSOC
+	"%type"				last_token := T_TYPE
 	"%start"			last_token := T_START
 	"%expect"			last_token := T_EXPECT
 	","					last_token := Comma_code
+	"<"					last_token := Less_than_code
+	">"					last_token := Greater_than_code
+	"["					last_token := Left_bracket_code
+	"]"					last_token := Right_bracket_code
 	"%{"{WS}?{NL}	{
 						line_nb := line_nb + 1
 						set_start_condition (EIFFEL_CODE)
@@ -60,6 +65,30 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	{WS}|{C}			 -- Separator or comment.
 	{NL}				line_nb := line_nb + 1
 
+	[iI][nN][tT][eE][gG][eE][rR]	{
+						last_token := T_INTEGER
+						last_value := text
+					}
+	[bB][oO][oO][lL][eE][aA][nN]	{
+						last_token := T_BOOLEAN
+						last_value := text
+					}
+	[rR][eE][aA][lL]	{
+						last_token := T_REAL
+						last_value := text
+					}
+	[dD][oO][uU][bB][lL][eE]	{
+						last_token := T_DOUBLE
+						last_value := text
+					}
+	[cC][hH][aA][rR][aA][cC][tT][eE][rR]	{
+						last_token := T_CHARACTER
+						last_value := text
+					}
+	[pP][oO][iI][nN][tT][eE][rR]	{
+						last_token := T_POINTER
+						last_value := text
+					}
 	[a-z][a-z0-9_]*	{
 						last_token := T_IDENTIFIER
 						last_value := text
@@ -144,15 +173,15 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					action_buffer.append_string (text)
 				}
 	"$$"		{
-					process_dollar_dollar
+					process_dollar_dollar (rule)
 				}
 	\$[0-9]+	{
 					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
-					process_dollar_n (text_substring (2, text_count).to_integer)
+					process_dollar_n (text_substring (2, text_count).to_integer, rule)
 				}
 	\$\-[0-9]+	{
 					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
-					process_dollar_n (- text_substring (3, text_count).to_integer)
+					process_dollar_n (- text_substring (3, text_count).to_integer, rule)
 				}
 	"{"			{
 					action_buffer.append_character ('{')

@@ -73,6 +73,7 @@ feature -- Generation
 			end
 			a_file.put_string ("%Nfeature {NONE} -- Table templates%N%N")
 			print_eiffel_tables (a_file)
+			print_conversion_routines (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Constants%N%N")
 			print_constants (a_file)
 			a_file.put_string ("%Nfeature -- User-defined features%N%N")
@@ -236,12 +237,24 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 			rules: DS_ARRAYED_LIST [PR_RULE]
+			types: DS_ARRAYED_LIST [PR_TYPE]
 			a_rule: PR_RULE
 			an_action: STRING
+			a_type: PR_TYPE
 		do
 			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
-				%%T%T%T-- Execute semantic action.%N%
-				%%T%Tdo%N%T%T%Tinspect yy_act%N")
+				%%T%T%T-- Execute semantic action.%N")
+			types := machine.grammar.types
+			if not types.is_empty then
+				a_file.put_string ("%T%Tlocal%N")
+				nb := types.count
+				from i := 1 until i > nb loop
+					types.item (i).print_dollar_dollar_declaration (a_file)
+					a_file.put_character ('%N')
+					i := i + 1
+				end
+			end
+			a_file.put_string ("%T%Tdo%N%T%T%Tinspect yy_act%N")
 			rules := machine.grammar.rules
 			nb := rules.count
 			from i := 1 until i > nb loop
@@ -253,12 +266,18 @@ feature {NONE} -- Generation
 					a_file.put_string (" then%N--|#line ")
 					a_file.put_integer (a_rule.line_nb)
 					a_file.put_character ('%N')
+					a_type := a_rule.lhs.type
+					a_type.print_dollar_dollar_initialization (a_file)
+					a_file.put_character ('%N')
 					a_file.put_string (an_action)
+					a_file.put_character ('%N')
+					a_type.print_dollar_dollar_finalization (a_file)
 					a_file.put_character ('%N')
 				end
 				i := i + 1
 			end
-			a_file.put_string ("%T%T%Telse%N%T%T%T%T-- No action%N%
+			a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
+				%%T%T%T%Tyyval := yyval_default%N%
 				%%T%T%Tend%N%T%Tend%N")
 		end
 
@@ -273,6 +292,7 @@ feature {NONE} -- Generation
 			rules: DS_ARRAYED_LIST [PR_RULE]
 			a_rule: PR_RULE
 			an_action: STRING
+			a_type: PR_TYPE
 		do
 			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
 				%%T%T%T-- Execute semantic action.%N%
@@ -294,7 +314,8 @@ feature {NONE} -- Generation
 				end
 				i := i + 1
 			end
-			a_file.put_string ("%T%T%Telse%N%T%T%T%T-- No action%N%
+			a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
+				%%T%T%T%Tyyval := yyval_default%N%
 				%%T%T%Tend%N%T%Tend%N")
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
@@ -304,11 +325,39 @@ feature {NONE} -- Generation
 					a_file.put_integer (i)
 					a_file.put_string (" is%N%T%T%T--|#line ")
 					a_file.put_integer (a_rule.line_nb)
+					a_type := a_rule.lhs.type
+					a_file.put_string ("%N%T%Tlocal%N")
+					a_type.print_dollar_dollar_declaration (a_file)
 					a_file.put_string ("%N%T%Tdo%N")
+					a_type.print_dollar_dollar_initialization (a_file)
+					a_file.put_character ('%N')
 					a_file.put_string (an_action)
+					a_file.put_character ('%N')
+					a_type.print_dollar_dollar_finalization (a_file)
 					a_file.put_string ("%N%T%Tend%N")
 				end
 				i := i + 1
+			end
+		end
+
+	print_conversion_routines (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print code for type conversion routines to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			types: DS_ARRAYED_LIST [PR_TYPE]
+			i, nb: INTEGER
+		do
+			types := machine.grammar.types
+			if not types.is_empty then
+				a_file.put_string ("%Nfeature {NONE} -- Conversion%N%N")
+				nb := types.count
+				from i := 1 until i > nb loop
+					types.item (i).print_conversion_routine (a_file)
+					a_file.put_character ('%N')
+					i := i + 1
+				end
 			end
 		end
 

@@ -263,7 +263,7 @@ feature {NONE} -- Processing (nondeterministic)
 				states.put_last (next_to_final_state)
 				start_state.shifts.force_last (next_to_final_state)
 			end
-			!! eof_token.make (0, "$")
+			!! eof_token.make (0, "$", No_type)
 			!! final_state.make (states.count, eof_token)
 			states.put_last (final_state)
 			next_to_final_state.shifts.force_last (final_state)
@@ -566,6 +566,14 @@ feature {NONE} -- Constants
 	Initial_max_nb_states: INTEGER is 100
 	Max_nb_states_increment: INTEGER is 100
 			-- Maxium number of states
+
+	No_type: PR_NO_TYPE is
+			-- Type used when no type has been specified
+		once
+			!! Result.make (0, "ANY")
+		ensure
+			no_type_not_void: Result /= Void
+		end
 
 invariant
 
