@@ -69,7 +69,7 @@
 
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
 			<define name="$HACT" if="$HACT"/>
-			<fileset directory="${GOBO}" include="@(**/*.ge)">
+			<fileset include="@(**/*.ge)" filename_directory="${GOBO}" dir="${GOBO}">
 				<map type="glob" from="*.ge" to="*.e"/>
 			</fileset>
 		</gepp>
@@ -81,7 +81,7 @@
 
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
 			<define name="$HACT" if="$HACT"/>
-			<fileset directory="${GOBO}" include="@(**/*.ge)">
+			<fileset include="@(**/*.ge)" filename_directory="${GOBO}" dir="${GOBO}">
 				<map type="glob" from="*.ge" to="*.e">
 					<map type="flat"/>
 				</map>

@@ -13,74 +13,37 @@
 
 	<target name="cp2">
 		<copy to_directory="out">
-			<fileset directory="in" include="@(*.xml)"/>
+			<fileset include="@(in/*.xml)"/>
 		</copy>
 	</target>
 
 	<target name="cp3">
 		<copy to_directory="out">
-			<fileset directory="in" include="@(**/*.xml)"/>
-		</copy>
-	</target>
-
-	<target name="cpm0">
-		<copy to_directory="out">
-			<fileset directory="in" include="@(**/*.xml)"/>
-			<map/>
+			<fileset include="@(in/**/*.xml)"/>
 		</copy>
 	</target>
 
 	<target name="cpm1">
-		<copy file="build.eant" to_directory="out">
-			<map/>
-		</copy>
-	</target>
-
-	<target name="cpm2">
-		<copy file="in/ttt/ttt.xml" to_directory="out">
-			<map/>
-		</copy>
-	</target>
-
-	<target name="cpm3">
-		<copy file="in/ttt/ttt.xml" to_directory="out">
-			<map type="flatten"/>
-		</copy>
-	</target>
-
-	<target name="cpm4">
 		<copy to_directory="out">
-			<fileset directory="in" include="@(**/*.xml)"/>
-			<map/>
-		</copy>
-	</target>
-
-	<target name="cpm5">
-		<copy to_directory="out">
-			<fileset directory="in" include="@(**/*.xml)"/>
-			<map type="flatten"/>
-		</copy>
-	</target>
-
-	<target name="cpm6">
-		<copy to_directory="out">
-			<fileset directory="in" include="@(**/*.xml)">
-				<map type="glob" from="*.xml" to="*.xml2"/>
+			<fileset include="@(in/**/*.xml)">
+				<map/>
 			</fileset>
 		</copy>
 	</target>
 
-	<target name="cpm7">
+	<target name="cpm2">
 		<copy to_directory="out">
-			<fileset directory="in" include="@(**/*.xml)"/>
-			<mapper type="glob" from="b*.xml" to="xml2_*"/>
+			<fileset include="@(in/**/*.xml)">
+				<map type="flat"/>
+			</fileset>
 		</copy>
 	</target>
 
-	<target name="cpm8">
+	<target name="cpm3">
 		<copy to_directory="out">
-			<fileset directory="${GOBO}" include="@(**/*.ge)" exclude="@(**/sven/**/*)"/>
-			<mapper type="glob" from="*.ge" to="*.e"/>
+			<fileset dir="in" include="@(**/*.xml)" filename_directory="in">
+				<map type="glob" from="*.xml" to="*.xml2"/>
+			</fileset>
 		</copy>
 	</target>
 

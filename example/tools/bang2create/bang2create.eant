@@ -22,7 +22,7 @@
 		</description>
 
 		<exec executable="bang2create ${fs.filename} ${fs.filename}" dir="${directory}">
-			<fileset directory="." include="@(*.e)"/>
+			<fileset include="@(*.e)"/>
 		</exec>
 	</target>
 
@@ -33,7 +33,7 @@
 		</description>
 
 		<exec executable="bang2create ${fs.filename} ${fs.filename}" dir="${directory}">
-			<fileset directory="." include="@(**/*.e)"/>
+			<fileset include="@(**/*.e)"/>
 		</exec>
 	</target>
 

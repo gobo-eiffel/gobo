@@ -20,7 +20,7 @@
 
 	<target name="ood2" depend="init">
 		<outofdate variable="generate" dir="${GOBO}/library/kernel">
-			<fileset directory="." include="@(**/*.ge)">
+			<fileset include="@(**/*.ge)">
 				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e">
 					<map type="flat"/>
 				</map>
@@ -32,7 +32,7 @@
 	<target name="ood3" depend="init">
 		<mkdir directory="${gepp_out_dir}"/>
 		<outofdate variable="generate">
-			<fileset directory=".">
+			<fileset>
 				<include name="outofdate.eant"/>
 				<include name="build.eant"/>
 				<map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
@@ -44,7 +44,7 @@
 
 	<target name="ood4" depend="init">
 		<outofdate variable="generate" dir="${GOBO}/library/kernel">
-			<fileset directory=".">
+			<fileset>
 				<include name="${gepp_in_dir}/${gepp_file}.ge"/>
 				<include name="${GOBO}/example/geant/misc/outofdate.eant)"/>
 				<map type="glob" from="*.ge" to="${gepp_out_dir}/*.e">
