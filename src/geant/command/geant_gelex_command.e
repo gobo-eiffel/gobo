@@ -29,7 +29,7 @@ creation
 feature
 	make is
 		do
-			a_size := ""
+			size := ""
 			outfile := ""
 			gelex_input_filename := ""
 		end
@@ -42,62 +42,62 @@ feature
 
 			-- -a
 			if size /= void and then not size.is_empty then
-				cmd.append("-a ")
-				cmd.append(size.out)
+				cmd.append_string("-a ")
+				cmd.append_string(size.out)
 			end
 
 			-- -b
 			if backup then
-				cmd.append("-b ")
+				cmd.append_string("-b ")
 			end
 
 			-- -e
 			--!! ecs is the default. there seems no way to set it to false
 			if ecs then
-				cmd.append("-e ")
+				cmd.append_string("-e ")
 			end
 
 			-- -f
 			if full then
-				cmd.append("-f ")
+				cmd.append_string("-f ")
 			end
 
 			-- -i
 			if case_insensitive then
-				cmd.append("-i ")	--?? how do I set it to false ?
+				cmd.append_string("-i ")	--?? how do I set it to false ?
 			end
 
 			-- -m
 			if meta_ecs then
-				cmd.append("-m ")	--?? how do I set it to false ?
+				cmd.append_string("-m ")	--?? how do I set it to false ?
 			end
 
 			-- -s
 			if no_default then
-				cmd.append("-s ")
+				cmd.append_string("-s ")
 			end
 
 			-- -w
 			if no_warn then
-				cmd.append("-w ")
+				cmd.append_string("-w ")
 			end
 
 			-- -x
 			if separate_actions then
-				cmd.append("-x ")
+				cmd.append_string("-x ")
 			end
 
 			-- -o
 			if outfile /= void and then not outfile.is_empty then
-				cmd.append("-o ")
-				cmd.append(outfile)
-				cmd.append(" ")
+				cmd.append_string("-o ")
+				cmd.append_string(outfile)
+				cmd.append_string(" ")
 			end
 
-			cmd.append(gelex_input_filename)
+			cmd.append_string(gelex_input_filename)
 
 			log("  [gelex] " + cmd + "%N")
-			system(cmd)
+			execute_command(cmd)
 		end
 
 	is_executable : BOOLEAN is

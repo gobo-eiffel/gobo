@@ -41,9 +41,10 @@ feature {ANY} -- Commands
 ---------------------------------------------------------------
 add (new_child : T) is
 	-- add `new_child' to the composite
-	require new_child_not_void: new_child /= Void
+	require
+		new_child_not_void: new_child /= Void
 	do
-	children.add(new_child)
+		children.force_last(new_child)
 	end
 ---------------------------------------------------------------
 remove (child : T) is
@@ -53,7 +54,11 @@ remove (child : T) is
 	i, cnt	: INTEGER
 	found	: BOOLEAN
 	do
-	children.remove(child)
+		if children.has(child) then
+			children.start
+			children.search_forth(child)
+			children.remove(children.index)
+		end
 	end -- remove
 
 	children	: DS_ARRAYED_LIST [T]

@@ -32,10 +32,10 @@ feature
 			cmd	: STRING
 		do
 			cmd := "lcc"
-			cmd.append(" -Fo"); cmd.append(executable)
-			cmd.append(" "); cmd.append(sourcefilename)
+			cmd.append_string(" -Fo"); cmd.append_string(executable)
+			cmd.append_string(" "); cmd.append_string(sourcefilename)
 			log("  [lcc] " + cmd + "%N")
-			system(cmd)
+			execute_command(cmd)
 		end
 
 	is_executable : BOOLEAN is

@@ -29,8 +29,7 @@ creation
 feature
 	make is
 		do
-			a_size := ""
-			eiffel_parser_classname := ""
+			eiffel_parser_filename := ""
 			grammar_filename := ""
 		end
 
@@ -42,34 +41,34 @@ feature
 
 			-- -v
 			if verbose_filename /= void and then verbose_filename.count > 0 then
-				cmd.append("-v ")
-				cmd.append(verbose_filename)
-				cmd.append(" ")
+				cmd.append_string("-v ")
+				cmd.append_string(verbose_filename)
+				cmd.append_string(" ")
 			end
 
 			-- -x
 			if separate_actions then
-				cmd.append("-x ")
+				cmd.append_string("-x ")
 			end
 
 			-- -t
 			if eiffel_tokens_classname /= void and then eiffel_tokens_classname.count > 0 then
-				cmd.append("-t ")
-				cmd.append(eiffel_tokens_classname)
-				cmd.append(" ")
+				cmd.append_string("-t ")
+				cmd.append_string(eiffel_tokens_classname)
+				cmd.append_string(" ")
 			end
 
 			-- -o
 			if eiffel_parser_filename /= void and then eiffel_parser_filename.count > 0 then
-				cmd.append("-o ")
-				cmd.append(eiffel_parser_filename)
-				cmd.append(" ")
+				cmd.append_string("-o ")
+				cmd.append_string(eiffel_parser_filename)
+				cmd.append_string(" ")
 			end
 
-			cmd.append(grammar_filename)
+			cmd.append_string(grammar_filename)
 
 			log("  [geyacc] " + cmd + "%N")
-			system(cmd)
+			execute_command(cmd)
 		end
 
 	is_executable : BOOLEAN is

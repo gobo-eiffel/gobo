@@ -51,7 +51,7 @@ get_child(a_name : UC_STRING) : GEANT_ELEMENT is
 	-- returns the first child element within this element with the given local name
 	-- and belonging to no namespace.
 	require
-		valid_name : a_name /= void and then not a_name.is_empty
+		valid_name : a_name /= void and then a_name.count > 0
 --		existing_child : -- has_child(a_name)
 	local
 		i		: INTEGER
@@ -117,22 +117,6 @@ set_content(a_content : UC_STRING) is
     do
         content := a_content
     end
-
-
-show is
-	do
-		print("======================================================%N")
-		print(as_text)
-		print("======================================================%N")
-	end
-
-as_text : UC_STRING is
-	do
-		Result := get_writer.as_text(Current)
-	end
-
-
-feature {NONE}
 
 
 feature {NONE} -- internal

@@ -41,19 +41,19 @@ feature
 
 			-- add defines
 			from i := 1 until i > defines.count loop
-				cmd.append(" -D")
-				cmd.append(defines.item(i))
+				cmd.append_string(" -D")
+				cmd.append_string(defines.item(i))
 
 				i := i + 1
 			end
 
-			cmd.append(" ")
-			cmd.append(inputfile)
-			cmd.append(" ")
-			cmd.append(outputfile)
+			cmd.append_string(" ")
+			cmd.append_string(inputfile)
+			cmd.append_string(" ")
+			cmd.append_string(outputfile)
 
 			log("  [gepp] " + cmd + "%N")
-			system(cmd)
+			execute_command(cmd)
 		end
 
 	is_executable : BOOLEAN is

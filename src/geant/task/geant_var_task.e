@@ -13,9 +13,13 @@ indexing
 
 
 class GEANT_VAR_TASK
-	inherit
+
+inherit
+
 		GEANT_VAR_COMMAND
 		GEANT_TASK
+
+		KL_SHARED_EXECUTION_ENVIRONMENT
 		end
 
 	
@@ -39,7 +43,7 @@ feature
 			-- support for environment variables
 			if s.item(1) = '$' then
 				s := s.substring(2, s.count)
-				s := get_environment_variable(s)
+				s := Execution_environment.variable_value(s)
 			end
 
 			set_value(s)

@@ -70,7 +70,7 @@ show is
   do
    	 from i := 1 until i > count loop
         attr := item(i)
-        print(attr.name + "=" + "%"" + attr.value + "%"%N")
+        print(attr.name.out + "=" + "%"" + attr.value.out + "%"%N")
         i := i + 1
    	  end
 	end

@@ -71,7 +71,7 @@ feature -- auxiliar
 			ucs	: UC_STRING
 		do
 			!!ucs.make_from_string(a_attr_name)
-			Result := has_attribute(a_el, a_attr_name)
+			Result := has_attribute_uc(a_el, ucs)
 		end
 
 
@@ -111,7 +111,7 @@ feature -- auxiliar
 			ucs	: UC_STRING
 		do
 			ucs := get_attribute_value_uc(a_el, a_attr_name)
-			check ucs /= void and then ucs.count /= 0 end
+			check ucs /= void and then ucs.count > 0 end
 
 			if ucs_true.is_equal(ucs) then
 				Result := true
@@ -126,7 +126,6 @@ feature -- auxiliar
 
 	has_attribute_uc(a_el : GEANT_ELEMENT; a_attr_name : UC_STRING) : BOOLEAN is
 		do
-			!!ucs.make_from_string(a_attr_name)
 			Result := a_el.has_attribute(a_attr_name)
 		end
 

@@ -34,4 +34,12 @@ feature
 			print(a_msg)
 		end
 
+	execute_command(a_command : STRING) is
+		local
+			sys	: UT_SHELL_COMMAND
+		do
+			!!sys.make(a_command)
+			sys.execute
+		end
+
 end

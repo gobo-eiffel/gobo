@@ -37,7 +37,7 @@ feature
 			end
 
 			log("  [compile_se] " + cmd + "%N")
-			system(cmd)
+			execute_command(cmd)
 		end
 
 	is_executable : BOOLEAN is
@@ -72,7 +72,7 @@ feature
 			valid_ace_configuration : valid_ace_configuration
 		do
 			!!Result.make_from_string("compile ")
-			Result.append(ace_file)
+			Result.append_string(ace_file)
 		end
 
 	create_traditional_cmdline : STRING is
@@ -81,23 +81,23 @@ feature
 		do
 			!!Result.make_from_string("compile")
 
-			Result.append(" -o "); Result.append(executable)
+			Result.append_string(" -o "); Result.append_string(executable)
 
 
 			if case_insensitive then
-				Result.append(" -case_insensitive")
+				Result.append_string(" -case_insensitive")
 			end
 
 			if no_style_warning then
-				Result.append(" -no_style_warning")
+				Result.append_string(" -no_style_warning")
 			end
 
-			Result.append(" "); Result.append(root_class)
-			Result.append(" ")
+			Result.append_string(" "); Result.append_string(root_class)
+			Result.append_string(" ")
 			if creation_procedure /= void and then not creation_procedure.is_empty then
-				Result.append(creation_procedure)
+				Result.append_string(creation_procedure)
 			else
-				Result.append("make")
+				Result.append_string("make")
 			end
 		end
 

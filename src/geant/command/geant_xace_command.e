@@ -34,17 +34,17 @@ feature
 			cmd	: STRING
 		do
 			cmd := "xace "
-			cmd.append(options)
-			cmd.append(" --" + command)
-			cmd.append(" --" + command_options)
-			cmd.append(" " + xace_filename)
-			print("  [xace] " + cmd + "%N")
-			system(cmd)
+			cmd.append_string(options)
+			cmd.append_string(" --" + command)
+			cmd.append_string(" --" + command_options)
+			cmd.append_string(" " + xace_filename)
+			log("  [xace] " + cmd + "%N")
+			execute_command(cmd)
 
 			if compile then
 				cmd := "compile se.ace"
 				log("  [xace] " + cmd + "%N")
-				system(cmd)
+				execute_command(cmd)
 			end
 		end
 
@@ -104,12 +104,6 @@ feature
 		do
 			compile := a_compile
 --!!1 print("setting compile to " + compile.out)
-		end
-
-
-	vars : DS_HASH_TABLE [STRING, STRING] is
-		once
-			!!Result.make(1)
 		end
 
 	options : STRING

@@ -49,18 +49,18 @@ set_value(a_value : UC_STRING) is
 
 to_xml : UC_STRING is
     do
-    Result := STRING_.make(10)
-	Result.append(name)
-	Result.append("=%"")
-	Result.append(value)
-	Result.append("%"")
+	    !!Result.make_from_string("")
+		Result.append_uc_string(name)
+		Result.append_string("=%"")
+		Result.append_uc_string(value)
+		Result.append_string("%"")
 	end
 
 name	: UC_STRING
 value	: UC_STRING
 
 invariant
-	valid_name : name /= void and then not name.is_empty
+	valid_name : name /= void and then name.count > 0
 	valid_value : value /= void
 
 end

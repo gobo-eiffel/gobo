@@ -13,8 +13,12 @@ indexing
 
 
 class GEANT_PROJECT
-	inherit
-		GEANT_ELEMENT_NAMES
+
+inherit
+
+	GEANT_ELEMENT_NAMES
+
+	KL_SHARED_ARGUMENTS
 
 
 creation
@@ -23,6 +27,7 @@ creation
 feature
 	make_with_filename(a_filename : UC_STRING) is
 		do
+			Arguments.set_program_name ("geant")
 			build_filename := a_filename
 		end
 
@@ -37,7 +42,7 @@ feature
 	    -- read the project configuration from `build_filename' and convert it into a 'GEANT_DOM'
 	    require
 			build_filename_not_void : build_filename /= Void
-			build_filename_not_empty: not build_filename.is_empty
+			build_filename_not_empty: build_filename.count > 0
 	    local
 	        xml_parser  : GEANT_PROJECT_PARSER
 	
@@ -54,8 +59,8 @@ feature
 			targets := project_element.get_children_by_name(ucs_target)
 
 			-- determine start target
-			if argument_count /= 0 then
-				!!start_target_name.make_from_string(argument(1))
+			if Arguments.argument_count > 0 then
+				!!start_target_name.make_from_string(Arguments.argument(1))
 			else
 				start_target_name := project_element.get_attributevalue_by_name(ucs_default)
 			end

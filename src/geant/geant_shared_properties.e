@@ -18,7 +18,7 @@ feature
 	vars : DS_HASH_TABLE [STRING, STRING] is
 		-- global variables (called 'properties' in ant)
 		once
-			!!Result.make(1)
+			!!Result.make(10)
 		end
 
 end
