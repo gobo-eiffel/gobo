@@ -32,16 +32,17 @@ carefully.</p>
 <h2>Languages and Context-Free Grammars</h2>
 
 <p>In order for <em>geyacc</em> to parse a language, it must be
-described by a <em>context-free grammar</em>. This means that you
-specify one or more <em>syntactic groupings</em> and give rules
-for constructing them from their parts. For example, in the
-Eiffel language, one kind of grouping is called an <font
-color="#800080" size="2" face="Courier New">expression</font>.
-One rule for making an expression might be, &quot;An expression
-can be made of a minus sign and another expression&quot;. Another
-would be, &quot;An expression can be an integer&quot;. As you can
-see, rules are often recursive, but there must be at least one
-rule which leads out of the recursion.</p>
+described by a <em><strong>context-free grammar</strong></em>.
+This means that you specify one or more <em><strong>syntactic
+groupings</strong></em> and give rules for constructing them from
+their parts. For example, in the Eiffel language, one kind of
+grouping is called an <font color="#800080" size="2"
+face="Courier New">expression</font>. One rule for making an
+expression might be, &quot;An expression can be made up of a
+minus sign and another expression&quot;. Another would be,
+&quot;An expression can be an integer&quot;. As you can see,
+rules are often recursive, but there must be at least one rule
+which leads out of the recursion.</p>
 
 <p>The most common formal system for presenting such rules for
 humans to read is <em>Backus-Naur Form</em> or <font size="2"><em>BNF</em></font>,
@@ -64,11 +65,11 @@ fails to be <font size="2">LALR(1)</font>.</p>
 <p>In the formal grammatical rules for a language, each kind of
 syntactic unit or grouping is named by a <a href="symbols.html"><em>symbol</em></a>.
 Those which are built by grouping smaller constructs according to
-grammatical rules are called <em>nonterminal symbols</em>; those
-which can't be subdivided are called <em>terminal symbols</em> or
-<em>token types</em>. A piece of input corresponding to a single
-terminal symbol is called a <em>token</em>, and a piece
-corresponding to a single nonterminal symbol a <em>grouping</em>.</p>
+grammatical rules are called <em><strong>nonterminal symbols</strong></em>;
+those which can't be subdivided are called <em><strong>terminal
+symbols</strong></em> or <em>token types</em>. A piece of input
+corresponding to a single terminal symbol is called a <em><strong>token</strong></em>,
+and a piece corresponding to a single nonterminal symbol a <em><strong>grouping</strong></em>.</p>
 
 <p>Let's use the Eiffel language as an example of what symbols,
 terminal and nonterminal, mean. The tokens of Eiffel are
@@ -116,7 +117,7 @@ follows:</p>
 
 <blockquote>
     <p>An <font color="#800080"><tt>instruction</tt></font> can
-    be made of an <font color="#800080"><tt>identifier</tt></font>,
+    be made up of an <font color="#800080"><tt>identifier</tt></font>,
     an assign-sign (<tt>:=</tt>) and an <font color="#800080"><tt>expression</tt></font>.</p>
 </blockquote>
 
@@ -125,10 +126,11 @@ one for each kind of instruction in Eiffel.</p>
 
 <p><a name="start_symbol">One</a> nonterminal symbol must be
 distinguished as the special one which defines a complete
-utterance in the language. It is called the <em>start symbol</em>.
-In a compiler, this means a complete input program. In the Eiffel
-language, the nonterminal symbol <font color="#800080"><tt>class_declaration</tt></font>
-plays this role. For example, <font color="#008080"><em><tt>1 </tt></em><tt>+
+utterance in the language. It is called the <em><strong>start
+symbol</strong></em>. In a compiler, this means a complete input
+program. In the Eiffel language, the nonterminal symbol <font
+color="#800080"><tt>class_declaration</tt></font> plays this
+role. For example, <font color="#008080"><em><tt>1 </tt></em><tt>+
 </tt><em><tt>2</tt></em></font> is a valid Eiffel expression <font
 face="Symbol">-</font> a valid part of an Eiffel class <font
 face="Symbol">-</font> but it is not valid as an entire Eiffel
@@ -200,7 +202,7 @@ means once it is parsed. A compiler is useless if it fails to
 distinguish between <font color="#808000"><tt>4</tt></font>, <font
 color="#808000"><tt>1</tt></font> and <font color="#808000"><tt>3989</tt></font>
 as constants in the program! Therefore, each token in a <em>geyacc</em>
-grammar has both a token type and a <em>semantic value</em>.</p>
+grammar has both a token type and a <em><strong>semantic value</strong></em>.</p>
 
 <p>The token type is a terminal symbol defined in the grammar,
 such as <font color="#FF0000"><tt>NUMBER</tt></font>, <font
@@ -297,17 +299,17 @@ does not depend on this.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 8 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

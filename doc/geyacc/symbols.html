@@ -27,20 +27,20 @@ content="text/html; charset=iso-8859-1">
 <p><em>Symbols</em> in <em>geyacc</em> grammars represent the
 grammatical classifications of the language.</p>
 
-<p>A <em>terminal symbol</em> (also known as a <em>token type</em>)
-represents a class of syntactically equivalent tokens. You use
-the symbol in grammar rules to mean that a token in that class is
-allowed. The symbol is represented in the <em>geyacc</em> parser
-by a numeric code, and the <font color="#008080"><em><tt>read_token</tt></em></font>
+<p>A <em><strong>terminal symbol</strong></em> (also known as a <em><strong>token</strong></em><em>
+type</em>) represents a class of syntactically equivalent tokens.
+You use the symbol in grammar rules to mean that a token in that
+class is allowed. The symbol is represented in the <em>geyacc</em>
+parser by a numeric code, and the <font color="#008080"><em><tt>read_token</tt></em></font>
 routine returns a token type code <font color="#008080"><em><tt>last_token</tt></em></font>
 to indicate what kind of token has been read. You don't need to
 know what the code value is; you can use the symbol to stand for
 it.</p>
 
-<p>A <em>nonterminal symbol</em> stands for a class of
-syntactically equivalent groupings. The symbol name is used in
-writing grammar rules. By convention, it should be all lower
-case.</p>
+<p>A <em><strong>nonterminal symbol</strong></em> stands for a
+class of syntactically equivalent groupings. The symbol name is
+used in writing grammar rules. By convention, it should be in
+lower case.</p>
 
 <p>Symbol names are case-insensitive words beginning with a
 letter and followed by zero or more letters, digits, or
@@ -101,7 +101,7 @@ can use the name to stand for the code.</p>
 <p>If <font color="#008080"><em><tt>read_token</tt></em></font>
 is defined in a separate class, you need to arrange for the
 token-type integer constants definitions to be available there.
-Use the <font color="#800000"><tt>-d</tt></font><font
+Use the <a href="options.html#-t"><font color="#800000"><tt>-t</tt></font></a><font
 color="#800000" size="2" face="Courier New"> </font>option when
 running <em>geyacc</em>, so that it will write these constants
 definitions into a separate class from which you can inherit in
@@ -118,17 +118,17 @@ return this value.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 9 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

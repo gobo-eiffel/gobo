@@ -25,7 +25,7 @@ content="text/html; charset=iso-8859-1">
 
 <p>As <em>geyacc</em> reads tokens, it pushes them onto a stack
 along with their semantic values. The stack is called the <em>parser
-stack</em>. Pushing a token is traditionally called <em>shifting</em>.
+stack</em>. Pushing a token is traditionally called <em><strong>shifting</strong></em>.
 For example, suppose the infix calculator has read <font
 color="#808000"><tt>1 + 5 *</tt></font>, with a <font
 color="#808000"><tt>3</tt></font> to come. The stack will have
@@ -35,15 +35,15 @@ four elements, one for each token that was shifted.</p>
 read. When the last <font size="2" face="Courier New">N</font>
 tokens and groupings shifted match the components of a grammar
 rule, they can be combined according to that rule. This is called
-<em>reduction</em>. Those tokens and groupings are replaced on
-the stack by a single grouping whose symbol is the result (left
-hand side) of that rule. Running the rule's action is part of the
-process of reduction, because this is what computes the semantic
-value of the resulting grouping. For example, if the infix
-calculator's parser stack contains <font color="#808000"><tt>1 +
-5 * 3</tt></font> and the next input token is a newline
-character, then the last three elements can be reduced to <font
-color="#808000"><tt>15</tt></font> via the rule:</p>
+<em><strong>reduction</strong></em>. Those tokens and groupings
+are replaced on the stack by a single grouping whose symbol is
+the result (left hand side) of that rule. Running the rule's
+action is part of the process of reduction, because this is what
+computes the semantic value of the resulting grouping. For
+example, if the infix calculator's parser stack contains <font
+color="#808000"><tt>1 + 5 * 3</tt></font> and the next input
+token is a newline character, then the last three elements can be
+reduced to <font color="#808000"><tt>15</tt></font> via the rule:</p>
 
 <blockquote>
     <pre><font color="#800080">expr</font><font color="#0000FF">:</font> <font
@@ -73,14 +73,14 @@ sometimes <em>looks ahead</em> at the next token in order to
 decide what to do.</p>
 
 <p>When a token is read, it is not immediately shifted; first it
-becomes the<em> look-ahead token</em>, which is not on the stack.
-Now the parser can perform one or more reductions of tokens and
-groupings on the stack, while the look-ahead token remains off to
-the side. When no more reductions should take place, the
-look-ahead token is shifted onto the stack. This does not mean
-that all possible reductions have been done; depending on the
-token type of the look-ahead token, some rules may choose to
-delay their application.</p>
+becomes the<em> </em><em><strong>look-ahead token</strong></em>,
+which is not on the stack. Now the parser can perform one or more
+reductions of tokens and groupings on the stack, while the
+look-ahead token remains off to the side. When no more reductions
+should take place, the look-ahead token is shifted onto the
+stack. This does not mean that all possible reductions have been
+done; depending on the token type of the look-ahead token, some
+rules may choose to delay their application.</p>
 
 <p>Here is a simple case where look-ahead is needed. These three
 rules define expressions which contain binary addition operators
@@ -156,14 +156,14 @@ But it is also legitimate to shift the <font color="#FF0000"><tt>ELSE</tt></font
 because that would lead to eventual reduction by the second rule.</p>
 
 <p>This situation, where either a shift or a reduction would be
-valid, is called a <em>shift/reduce conflict</em>. <em>Geyacc</em>
-is designed to resolve these conflicts by choosing to shift,
-unless otherwise directed by operator precedence declarations. To
-see the reason for this, let's contrast it with the other
-alternative. Since the parser prefers to shift the <font
-color="#FF0000"><tt>ELSE</tt></font>, the result is to attach the
-else-clause to the innermost if-statement, making these two
-inputs equivalent:</p>
+valid, is called a <em><strong>shift/reduce conflict</strong></em>.
+<em>Geyacc</em> is designed to resolve these conflicts by
+choosing to shift, unless otherwise directed by operator
+precedence declarations. To see the reason for this, let's
+contrast it with the other alternative. Since the parser prefers
+to shift the <font color="#FF0000"><tt>ELSE</tt></font>, the
+result is to attach the else-clause to the innermost
+if-statement, making these two inputs equivalent:</p>
 
 <blockquote>
     <pre><font color="#808000"><strong>if</strong> x <strong>then</strong> <strong>if</strong> y <strong>then</strong> win (); <strong>else</strong> lose;
@@ -202,9 +202,10 @@ in the specifications of Algol 60 and is called the <em>dangling
 
 <p>To avoid warnings from <em>geyacc</em> about predictable,
 legitimate shift/reduce conflicts, use the <a
-href="declarations.html#expect"><font color="#0000FF"><tt>%expect</tt></font></a><tt>
-N</tt> declaration. There will be no warning as long as the
-number of shift/reduce conflicts is exactly <tt>N</tt>.</p>
+href="declarations.html#expect"><font color="#0000FF"><tt>%expect</tt></font></a><font
+color="#0000FF"><tt> N</tt></font> declaration. There will be no
+warning as long as the number of shift/reduce conflicts is
+exactly <tt>N</tt>.</p>
 
 <p>The definition of <font color="#800080"><tt>if_stmt</tt></font>
 above is solely to blame for the conflict, but the conflict does
@@ -268,11 +269,12 @@ href="error.html">error processing</a> to begin.</p>
 
 <h2><a name="reduce_reduce">Reduce/Reduce Conflicts</a></h2>
 
-<p>A reduce/reduce conflict occurs if there are two or more rules
-that apply to the same sequence of input. This usually indicates
-a serious error in the grammar. For example, here is an erroneous
-attempt to define a sequence of zero or more <font
-color="#800080"><tt>word</tt></font> groupings.</p>
+<p>A <em><strong>reduce/reduce conflict</strong></em> occurs if
+there are two or more rules that apply to the same sequence of
+input. This usually indicates a serious error in the grammar. For
+example, here is an erroneous attempt to define a sequence of
+zero or more <font color="#800080"><tt>word</tt></font>
+groupings.</p>
 
 <blockquote>
     <pre><font color="#800080">sequence</font><font
@@ -581,17 +583,17 @@ color="#0000FF">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 5 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

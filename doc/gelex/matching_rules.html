@@ -32,9 +32,10 @@ finds two or more matches of the same length, the rule listed
 first in the <em>gelex</em> description file is chosen.</p>
 
 <p>Once the match is determined, the text corresponding to the
-match (called the <em>token</em>) is made available through
-function <a href="actions.html#text"><font color="#008080"><em><tt>text</tt></em></font></a>,
-and its length through function <a href="actions.html#text_count"><font
+match (called the <em><strong>token</strong></em>) is made
+available through function <a href="actions.html#text"><font
+color="#008080"><em><tt>text</tt></em></font></a>, and its length
+through function <a href="actions.html#text_count"><font
 color="#008080"><em><tt>text_count</tt></em></font></a> from
 class <a href="skeleton.html"><font color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>.
 The action corresponding to the matched pattern is then executed
@@ -42,10 +43,10 @@ The action corresponding to the matched pattern is then executed
 follows), and then the remaining input is scanned for another
 match.</p>
 
-<p>If no match is found, then the <a name="default_rule"><em>default
-rule</em></a> is executed: the next character in the input is
-considered matched and copied to the standard output. Thus, the
-simplest legal <em>gelex</em> input has an empty <a
+<p>If no match is found, then the <a name="default_rule"><em><strong>default
+rule</strong></em></a> is executed: the next character in the
+input is considered matched and copied to the standard output.
+Thus, the simplest legal <em>gelex</em> input has an empty <a
 href="description.html#rules">rules section</a>:</p>
 
 <blockquote>
@@ -194,11 +195,11 @@ size="3">
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
             <strong>Last Updated:</strong> 7 September 1997</font><br>
             <!--webbot bot="PurpleText"

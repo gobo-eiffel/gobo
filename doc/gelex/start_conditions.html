@@ -38,7 +38,7 @@ color="#008080">-- Eat up the string body ...
 </blockquote>
 
 <p>will be active only when the scanner is in the <font
-color="#800000"><tt>STRING</tt></font> start condition, and</p>
+color="#800000"><tt>STRING</tt></font> start condition, and:</p>
 
 <blockquote>
     <pre><font color="#800000">&lt;INITIAL,STRING,QUOTE&gt;</font><font
@@ -57,10 +57,11 @@ href="description.html#declarations">declarations section</a> of
 the input using unindented lines beginning with either <font
 color="#0000FF"><tt>%s</tt></font> or <font color="#0000FF"><tt>%x</tt></font>
 followed by a whitespace-separated list of names. The former
-declares <em>inclusive</em> start conditions, the latter <em>exclusive
-</em>start conditions. The name of the start conditions are
-case-insensitive and are made up of a letter followed by zero or
-more letters, digits, or underscores. For each start condition <em>gelex</em>
+declares <em><strong>inclusive</strong></em> start conditions,
+the latter <em><strong>exclusive</strong></em><em> </em>start
+conditions. The name of the start conditions are case-insensitive
+and are made up of a letter followed by zero or more letters,
+digits, or underscores. For each start condition <em>gelex</em>
 generates an Eiffel integer constant attribute which can be used
 to refer to it. The name of the start conditions must therefore
 be different from other feature names in the generated class.</p>
@@ -83,7 +84,7 @@ condition describe a scanner which is independent of any of the
 other rules in the <em>gelex</em> input. Because of this,
 exclusive start conditions make it easy to specify
 &quot;mini-scanners&quot; which scan portions of the input that
-are syntactically different from the rest (e.g., strings).</p>
+are syntactically different from the rest (e.g. strings).</p>
 
 <p>If the distinction between inclusive and exclusive start
 conditions is still a little vague, here's a simple example
@@ -111,7 +112,7 @@ color="#FF0000">bar</font>   <font color="#008080"><em>something_else</em></font
 
 <p>Without the <font color="#800000"><tt>&lt;INITIAL,example&gt;</tt></font>
 qualifier, the <font color="#FF0000"><tt>bar</tt></font> pattern
-in the second example wouldn't be active (i.e., couldn't match)
+in the second example wouldn't be active (i.e. couldn't match)
 when in start condition <font color="#800000" size="2"
 face="Courier New">example</font>. If we just used <font
 color="#800000"><tt>&lt;example&gt;</tt></font> to qualify <font
@@ -249,7 +250,7 @@ color="#008080"><em>set_start_condition</em> (<em>comment_caller</em>)</font>
 <p>Furthermore, you can access the current start condition using
 the integer function <font color="#008080"><em><tt>start_condition</tt></em></font>.
 For example, the above assignments to <font color="#008080"><em><tt>comment_caller</tt></em></font>
-could instead be written</p>
+could instead have been written:</p>
 
 <blockquote>
     <pre><font color="#008080"><em>comment_caller</em> := <em>start_condition</em></font></pre>
@@ -269,7 +270,7 @@ escape sequences:</p>
 <font color="#0000FF">%%</font>
 <font color="#FF0000">\&quot;</font>            <font
 color="#008080"><em>buffer</em>.<em>wipe_out</em>; <em>set_start_condition</em> (<em>str</em>)</font>
-<font color="#800000">&lt;str&gt;</font><font color="#FF0000">[^%\n&quot;]</font>  <font
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">[^%\n&quot;]+</font> <font
 color="#008080"><em>buffer</em>.<em>append_string</em> (<em>text</em>)</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">%A </font>      <font
 color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%A</em>')</font>
@@ -325,7 +326,7 @@ color="#0000FF">{</font>
      <font color="#0000FF">}</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\r?\n[ \t\r]*%</font>    <font
 color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
-<font color="#800000">&lt;str&gt;</font>\&quot;     <font
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">\&quot;</font>     <font
 color="#0000FF">{</font>
                  <font color="#008080"><em>set_start_condition</em> (<em>INITIAL</em>)
                  -- Pass string value to parser.
@@ -336,7 +337,7 @@ color="#0000FF">{</font>
 color="#0000FF">|</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\r?\n[ \t\r]*</font>      <font
 color="#0000FF">|</font>
-<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\/([0-9]+(\/)?)</font>?   <font
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\/([0-9]+(\/)?)?</font>   <font
 color="#0000FF">|</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">&lt;&lt;EOF&gt;&gt;</font>             <font
 color="#0000FF">{</font>   <font color="#008080">-- Catch-all rules (no backing up)
@@ -348,8 +349,8 @@ color="#0000FF">{</font>   <font color="#008080">-- Catch-all rules (no backing 
 <p>Often, such as in some of the examples above, you wind up
 writing a whole bunch of rules all preceded by the same start
 condition(s). <em>Gelex</em> makes this a little easier and
-cleaner by introducing a notion of <em>start condition scope</em>.
-A start condition scope begins with:</p>
+cleaner by introducing a notion of <em><strong>start condition
+scope</strong></em>. A start condition scope begins with:</p>
 
 <blockquote>
     <pre><font color="#800000">&lt;SCs&gt;</font><font
@@ -397,13 +398,13 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 19 May 1998</font><br>
+            <strong>Last Updated:</strong> 4 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

@@ -78,13 +78,14 @@ first, but not <font color="#808000"><tt>&lt;</tt></font>.</p>
 <p>What about input such as <font color="#808000"><tt>1 - 2 - 5</tt></font>;
 should this be <font color="#808000"><tt>(1 - 2) - 5</tt></font>
 or should it be <font color="#808000"><tt>1 - (2 - 5)</tt></font>?
-For most operators we prefer the former, which is called <em>left
-association</em>. The latter alternative, <em>right association</em>,
-is desirable for assignment operators. The choice of left or
-right association is a matter of whether the parser chooses to
-shift or reduce when the stack contains <font color="#808000"><tt>1
-- 2</tt></font> and the look-ahead token is <font color="#808000"><tt>-</tt></font>:
-shifting makes right-associativity.</p>
+For most operators we prefer the former, which is called <em><strong>left
+association</strong></em>. The latter alternative, <em><strong>right
+association</strong></em>, is desirable for assignment operators.
+The choice of left or right association is a matter of whether
+the parser chooses to shift or reduce when the stack contains <font
+color="#808000"><tt>1 - 2</tt></font> and the look-ahead token is
+<font color="#808000"><tt>-</tt></font>: shifting makes
+right-associativity.</p>
 
 <h2>Specifying Operator Precedence</h2>
 
@@ -151,8 +152,8 @@ look-ahead token. If the token's precedence is higher, the choice
 is to shift. If the rule's precedence is higher, the choice is to
 reduce. If they have equal precedence, the choice is made based
 on the associativity of that precedence level. The verbose output
-file made by <font color="#800000"><tt>-v</tt></font> says how
-each conflict was resolved.</p>
+file made by <a href="options.html#-v"><font color="#800000"><tt>-v</tt></font></a>
+says how each conflict was resolved.</p>
 
 <p>Not all rules and not all tokens have precedence. If either
 the rule or the look-ahead token has no precedence, then the
@@ -222,17 +223,17 @@ color="#FF0000">UMINUS</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 9 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

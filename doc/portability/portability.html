@@ -55,7 +55,8 @@ equivalent. But some don't.</p>
 </strong>The name of the classes have been systematically
 prefixed with a two-letter library code. For example the classes
 from the <em>Gobo Eiffel Structure Library</em> have been
-prefixed by <font size="2">DS</font>, as in <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>,
+prefixed by <font size="2">DS (which stands for Data Structures)</font>,
+as in <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>,
 whereas classes from the <em>Gobo Eiffel Lexical Library</em>
 have been prefixed by <font size="2">LX</font>, as in <font
 color="#008080"><em><tt>LX_SCANNER</tt></em></font>.</p>
@@ -96,7 +97,7 @@ of the reader only.</strong></font></p>
 <p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font><strong>
 </strong>After several attempts, it was impossible to make
 classes using hash tables portable using either the <a
-href="inheritance.html">inheritance</a> or <a href="client.html">client</a>
+href="inheritance.html">inheritance</a> or <a href="client.html">client/supplier</a>
 adaptation techniques. Even creating a dummy class <font
 color="#008080"><em><tt>HASHABLE</tt></em></font> in SmallEiffel
 didn't work mainly because of the fact that <font color="#008080"><em><tt>hash_code
@@ -214,11 +215,11 @@ breaking too much portability constraints.</p>
 </strong></font>From the description above, the <a
 href="inheritance.html">adaptation by inheritance</a> technique
 has naturally been discarded, <a href="client.html">adaptation
-using client</a> relationship being a better choice when dealing
-with standard files as regular text files. To accommodate with
-SmallEiffel viewpoint, the file functionalities had to be split
-into two separate categories: input and output. Finally, using
-anchor types would ease the use of <font color="#008080"><em><tt>IO_MEDIUM</tt></em></font>
+using client/supplier</a> relationship being a better choice when
+dealing with standard files as regular text files. To accommodate
+with SmallEiffel viewpoint, the file functionalities had to be
+split into two separate categories: input and output. Finally,
+using anchor types would ease the use of <font color="#008080"><em><tt>IO_MEDIUM</tt></em></font>
 and <font color="#008080"><em><tt>TEXT_STREAM </tt></em></font>while
 keeping portability in mind. Following are two classes taking
 care of input functionalities. The same kind of classes provides
@@ -270,9 +271,9 @@ color="#008080">
 derived from the name of the class and suffixed by an underscore
 character (<tt>_</tt>) to try to avoid name clashes with
 user-defined feature names. The second class uses the <a
-href="client.html">client adaptation</a> technique to provide
-portable input features. This class should only be used through
-the once function of the class above.</p>
+href="client.html">client/supplier adaptation</a> technique to
+provide portable input features. This class should only be used
+through the once function of the class above.</p>
 
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em><em> KL_INPUT_STREAM_ROUTINES
@@ -561,7 +562,7 @@ be useful (specially as a precondition for <font color="#008080"><em><tt>to_inte
 <p><font color="#008000"><strong><u>Solution</u></strong><strong>:
 </strong></font>The solution adopted is the same as when a
 feature specified in <font size="2">ELKS</font> is not supported
-by some compilers, which is to use <a href="client.html">client
+by some compilers, which is to use <a href="client.html">client/supplier
 adaptation</a>. For the example above, class <font
 color="#008080"><em><tt>KL_STRING_ROUTINES</tt></em></font> will
 provide the following portable feature:</p>
@@ -617,7 +618,7 @@ null. However, Visual Eiffel sets <font color="#008080"><em><tt>count</tt></em><
 to <font color="#008080"><em><tt>n</tt></em></font> in that case.</p>
 
 <p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font>
-The solution adopted is similar to the <a href="client.html">client
+The solution adopted is similar to the <a href="client.html">client/supplier
 adaptation</a> of regular features. The only difference is that
 the adapted routine will be a factory function with the same
 arguments as the original creation procedure instead of a routine
@@ -667,13 +668,13 @@ color="#008080">
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 23 May 1998</font><br>
+            <strong>Last Updated:</strong> 10 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

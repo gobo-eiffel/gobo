@@ -126,16 +126,16 @@ a special-purpose flag controlled by the syntactic context.</p>
 
 <h2><a name="tie_in">Lexical Tie-ins</a></h2>
 
-<p>One way to handle context-dependency is the <em>lexical tie-in</em>:
-a flag which is set by <em>geyacc</em> actions, whose purpose is
-to alter the way tokens are parsed. For example, suppose we have
-a language vaguely like C, but with a special construct <font
-color="#808000"><tt>hex (HEX-EXPR)</tt></font>. After the keyword
-<font color="#808000"><tt>hex</tt></font> comes an expression in
-parentheses in which all integers are hexadecimal. In particular,
-the token <font color="#808000"><tt>a1b</tt></font> must be
-treated as an integer rather than as an identifier if it appears
-in that context. Here is how you can do it:</p>
+<p>One way to handle context-dependency is the <em><strong>lexical
+tie-in</strong></em>: a flag which is set by <em>geyacc</em>
+actions, whose purpose is to alter the way tokens are parsed. For
+example, suppose we have a language vaguely like C, but with a
+special construct <font color="#808000"><tt>hex (HEX-EXPR)</tt></font>.
+After the keyword <font color="#808000"><tt>hex</tt></font> comes
+an expression in parentheses in which all integers are
+hexadecimal. In particular, the token <font color="#808000"><tt>a1b</tt></font>
+must be treated as an integer rather than as an identifier if it
+appears in that context. Here is how you can do it:</p>
 
 <blockquote>
     <pre><font color="#800080">expr</font><font color="#0000FF">: </font><font
@@ -209,7 +209,7 @@ color="#0000FF"> }
 color="#808000"><tt>hex (EXPR)</tt></font> construct, this error
 rule will apply, and then the action for the completed <font
 color="#808000"><tt>hex (EXPR)</tt></font> will never run. So <font
-color="#008080"><em><tt>hexflag</tt></em></font> would remain set
+color="#008080"><em><tt>hexflag </tt></em></font>would remain set
 for the entire rest of the input, or until the next <font
 color="#808000"><tt>hex</tt></font> keyword, causing identifiers
 to be misinterpreted as integers. To avoid this problem the error
@@ -258,11 +258,11 @@ that it always will, or always won't, have to clear the flag.</p>
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
             <strong>Last Updated:</strong> 7 September 1997</font><br>
             <!--webbot bot="PurpleText"

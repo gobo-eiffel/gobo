@@ -27,7 +27,7 @@ content="text/html; charset=iso-8859-1">
 <p><font size="2">NICE</font> (Nonprofit International Consortium
 for Eiffel) has provided us with a kernel library standard that
 we can rely on for interoperability between Eiffel compilers.
-This standard is made of a set of classes, such as <font
+This standard is made up of a set of classes, such as <font
 color="#008080"><em><tt>ANY</tt></em></font>, <font
 color="#008080"><em><tt>INTEGER</tt></em></font> or <font
 color="#008080"><em><tt>STRING</tt></em></font>, and a set of
@@ -51,12 +51,12 @@ among other things should have the two following features:</p>
 
 <blockquote>
     <pre><font color="#008080"><em>Minimum_character_code</em>: <em>INTEGER</em>
-        -- Smallest supported codes for CHARACTER values
+        -- Smallest supported code for CHARACTER values
     <em><strong>ensure</strong></em>
         <em>meaningful</em>: <em>Result</em> &lt;= <em>0</em>
 
 <em>Maximum_character_code</em>: <em>INTEGER</em>
-        -- Largest supported codes for CHARACTER values
+        -- Largest supported code for CHARACTER values
     <em><strong>ensure</strong></em>
         <em>meaningful</em>: <em>Result</em> &gt;= <em>127</em></font></pre>
 </blockquote>
@@ -104,7 +104,7 @@ wouldn't be true for clients of <font color="#008080"><em><tt>PLATFORM</tt></em>
 
 <p>This technique can also be used to supply missing classes. For
 example the class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
-is not provided in SmallEiffel -0.81. However this class is
+was not provided in SmallEiffel -0.81. However this class is
 useful when a system has to be terminated using feature <font
 color="#008080"><em><tt>die</tt></em></font>. This routine can
 easily be implemented using SmallEiffel's built-in <font
@@ -213,10 +213,10 @@ solve this problem, one would then have to write:</p>
 
 <p>which is cumbersome and inefficient with some compilers.</p>
 
-<p>Another problem encountered with technique is that most Eiffel
-compilers do not support some of their kernel classes to be
-adapted using inheritance. This is for example the case for basic
-types such as <font color="#008080"><em><tt>INTEGER</tt></em></font>
+<p>Another problem encountered with this technique is that most
+Eiffel compilers do not support some of their kernel classes to
+be adapted using inheritance. This is for example the case for
+basic types such as <font color="#008080"><em><tt>INTEGER</tt></em></font>
 or <font color="#008080"><em><tt>CHARACTER</tt></em></font>, and
 also for some other classes such <font color="#008080"><em><tt>ARRAY</tt></em></font>
 or <font color="#008080"><em><tt>STRING</tt></em></font> where
@@ -234,7 +234,7 @@ the name space and might cause name clashes dependent on the
 Eiffel compiler used.</p>
 
 <p>Another <a href="client.html">adaptation technique</a>, using
-the client relationship, gets around these problems.</p>
+the client/supplier relationship, gets around these problems.</p>
 
 <hr size="1">
 
@@ -245,13 +245,13 @@ the client relationship, gets around these problems.</p>
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 23 May 1998</font><br>
+            <strong>Last Updated:</strong> 10 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

@@ -53,8 +53,11 @@ content="text/html; charset=iso-8859-1">
 
     <a href="actions.html#error_count" name="error_count"><em>error_count</em></a>: <em>INTEGER</em>
             -- Number of errors detected during last parsing
+            -- (<em>error_count</em> can be positive even though
+            -- <em>syntax_error</em> is false. This can happen when
+            -- error recovery occurred.)
         <em><strong>ensure</strong></em>
-            <em>error_count_positive</em>: <em>Result</em> &gt;= <em>0</em>
+            <em>error_count_non_negative</em>: <em>Result</em> &gt;= <em>0</em>
 
 <em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Status report
 
@@ -84,7 +87,7 @@ content="text/html; charset=iso-8859-1">
 
     <a href="actions.html#report_error" name="report_error"><em>report_error</em></a> (<em>a_message</em>: <em>STRING</em>)
             -- Print error message.
-            -- (This routine is called by `parse' when it detects
+            -- (This routine is called by <em>parse</em> when it detects
             -- a syntax error. It can be redefined in descendants.)
         <em><strong>require</strong></em>
             <em>a_message_not_void</em>: <em>a_message</em> /= <em>Void</em>
@@ -97,14 +100,14 @@ content="text/html; charset=iso-8859-1">
 <pre>    <a href="actions.html#clear_all" name="clear_all"><em>clear_all</em></a>
             -- Clear temporary objects so that they can be collected
             -- by the garbage collector. (This routine is called by
-            -- `parse' before exiting. It can be redefined in descendants.)
+            -- <em>parse</em> before exiting. It can be redefined in descendants.)
 
 <em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Scanning
 
     <a href="actions.html#read_token" name="read_token"><em>read_token</em></a>
             -- Read a token from input stream.
             -- Make result available in <em>last_token</em>.
-            -- (This routine is called by `parse' when it needs a
+            -- (This routine is called by <em>parse</em> when it needs a
             -- new token from the input stream.)
 
     <a href="actions.html#last_token" name="last_token"><em>last_token</em></a>: <em>INTEGER</em>
@@ -120,17 +123,17 @@ content="text/html; charset=iso-8859-1">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 9 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
