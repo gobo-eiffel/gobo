@@ -1,0 +1,58 @@
+indexing
+	description:
+
+		"Properties of numeric types."
+
+	library: "GOBO Eiffel Decimal Arithmetic Library"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+
+deferred class KL_NUMERIC
+
+inherit
+
+	NUMERIC
+#ifdef SE
+		rename
+			sign as smarteiffel_sign
+		redefine
+			smarteiffel_sign
+		end
+
+#endif
+#ifdef VE
+		rename 
+			exponentiable as ve_exponentiable,
+			infix "^" as ve_exponentiation
+		end
+#endif
+
+#ifdef SE
+feature -- Measurement
+
+	sign : INTEGER is
+			-- Sign : positive = 1; negative = -1
+		deferred
+		end
+		
+	smarteiffel_sign : INTEGER_8 is
+		do
+			Result := sign.to_integer_8
+		end
+#endif
+#ifdef VE
+feature -- Basic operations
+
+	ve_exponentiation (other : DOUBLE) : DOUBLE is
+			-- Not implemented
+		do
+		end
+		
+	ve_exponentiable (other : DOUBLE) : BOOLEAN is
+			-- Not implemented
+		do
+		end
+#endif
+
+end

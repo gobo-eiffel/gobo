@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<library name="decimal" prefix="ma_">
+	<description>
+		description: "Xace file for the GOBO Eiffel decimal Library."
+		library:     "GOBO Eiffel Decimal Arithmetic Library"
+		copyright:   "Copyright (c) 2004, Paul G. Crismer and others"
+		license:     "Eiffel Forum License v2 (see forum.txt)"
+		date:        "$Date$"
+	</description>
+
+	<cluster name="decimal" location="${GOBO}/library/math/decimal" prefix="ma_">
+		<cluster name="abstract"/>
+		<cluster name="implementation"/>
+		<cluster name="spec">
+			<option name="abstract" value="true"/>
+			<cluster name="${GOBO_EIFFEL}"/>
+		</cluster>
+	</cluster>
+
+</library>
