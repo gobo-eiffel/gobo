@@ -233,8 +233,9 @@ feature -- Examples
 				-- `default_character_case_mapping' and/or `default_word_set'.
 			regexp.default_character_case_mapping.clear
 			regexp.default_character_case_mapping.add ("ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ", "abcdefghijklmnopqrstuvwxyzäöü")
-			regexp.default_word_set.wipe_out
-			regexp.default_word_set.add_string ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ÄÖÜäöü")
+			word_set := regexp.default_word_set
+			word_set.wipe_out
+			word_set.add_string ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ÄÖÜäöü")
 				-- After these instructions all new created regular expressions uses
 				-- the `character_case_mapping' and `word_set' of the changed default values
 				-- defined above. Only a explicit setting of `regexp.set_character_case_mapping'
