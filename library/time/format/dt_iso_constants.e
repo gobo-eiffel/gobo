@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Constants used in ISO 8601 parsrers and formatters"
+		"Constants used in ISO 8601 parsers and formatters"
 
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	DT_ISO_CONSTANTS
+class DT_ISO_CONSTANTS
 
 feature -- Access
 
@@ -25,6 +25,5 @@ feature -- Access
 
 	Specific_century: INTEGER is 3
 			-- Calendar dates may be reduced to the century alone
-
 
 end
