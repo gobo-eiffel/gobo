@@ -55,6 +55,7 @@ feature -- Test
 		local
 			l_ai: ARRAY [INTEGER]
 			l_as: ARRAY [STRING]
+			void_as: ARRAY [STRING]
 		do
 			create l_ai.make (4, 7)
 			l_ai.put (1, 4)
@@ -71,7 +72,8 @@ feature -- Test
 			l_as := <<"1", "2", "3", "4">>
 			assert_arrays_equal ("as_initialized", <<"1", "2", "3", "4">>, l_as)
 			l_as.clear_all
-			assert_arrays_same ("as_all_cleared", <<Void, Void, Void, Void>>, l_as)
+			create void_as.make (1,4)
+			assert_arrays_same ("as_all_cleared", void_as, l_as)
 				-- Empty array.
 			create l_as.make (3, 2)
 			assert_integers_equal ("as_empty2", 0, l_as.count)
