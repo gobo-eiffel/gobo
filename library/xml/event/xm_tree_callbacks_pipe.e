@@ -38,9 +38,7 @@ feature {NONE} -- Initialization
 				-- a variable of a descendant type
 			a_dummy := callbacks_pipe (<<
 				start,
-				-- new_namespace_resolver,
-				-- -- should be used once tree does not 
-				-- -- resolve namespaces itself
+				new_namespace_resolver,
 				-- new_shared_strings,
 				-- -- check this is valuable?
 				error,
