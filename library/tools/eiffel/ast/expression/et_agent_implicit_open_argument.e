@@ -16,6 +16,7 @@ inherit
 
 	ET_AGENT_ARGUMENT_OPERAND
 		redefine
+			is_open_operand,
 			first_position, last_position
 		end
 
@@ -25,20 +26,31 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_agent: like call_agent) is
+	make (an_agent: like call_agent; an_index: INTEGER) is
 			-- Create a new agent implicit open argument.
 		require
 			an_agent_not_void: an_agent /= Void
+			an_index_nonnegative: an_index >= 1
 		do
 			call_agent := an_agent
+			argument_index := an_index
 		ensure
 			call_agent_set: call_agent = an_agent
+			argument_index_set: argument_index = an_index
 		end
+
+feature -- Status report
+
+	is_open_operand: BOOLEAN is True
+			-- Is current operand open?
 
 feature -- Access
 
 	call_agent: ET_CALL_AGENT
 			-- Call agent to which current implicit open argument belongs
+
+	argument_index: INTEGER
+			-- Index of argument
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -89,5 +101,6 @@ feature -- Processing
 invariant
 
 	call_agent_not_void: call_agent /= Void
+	argument_index_nonnegative: argument_index >= 1
 
 end
