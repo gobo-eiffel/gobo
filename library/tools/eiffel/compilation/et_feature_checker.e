@@ -78,7 +78,8 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
-			process_verbatim_string
+			process_verbatim_string,
+			process_void
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -262,6 +263,7 @@ feature -- Validity checking
 			current_class := a_current_type.direct_base_class (universe)
 			nb := a_compound.count
 			from i := 1 until i > nb loop
+				has_fatal_error := False
 				in_instruction := True
 				internal_call := True
 				a_compound.item (i).process (Current)
@@ -1412,6 +1414,7 @@ feature {NONE} -- Instruction validity
 
 	check_assignment_validity (an_instruction: ET_ASSIGNMENT) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
@@ -1425,7 +1428,9 @@ feature {NONE} -- Instruction validity
 			a_target_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
+			had_error: BOOLEAN
 		do
+			has_fatal_error := False
 			actual_context.reset (current_type)
 			a_source_context := actual_context
 			formal_context.reset (current_type)
@@ -1433,11 +1438,15 @@ feature {NONE} -- Instruction validity
 			a_target := an_instruction.target
 			check_writable_validity (a_target, a_target_context)
 			if has_fatal_error then
+				had_error := True
 				a_target_context.wipe_out
 				a_target_context.force_first (universe.any_type)
 			end
 			a_source := an_instruction.source
 			check_subexpression_validity (a_source, a_source_context, a_target_context)
+			if had_error then
+				set_fatal_error
+			end
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
 				if not a_source_context.conforms_to_type (a_target_type, a_target_context, universe) then
@@ -1453,6 +1462,12 @@ feature {NONE} -- Instruction validity
 						a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
 						if a_convert_expression /= Void then
 							an_instruction.set_source (a_convert_expression)
+-- TODO:
+--							report_convert_expression
+							report_assignment
+						else
+							set_fatal_error
+-- TODO: error
 						end
 					else
 						set_fatal_error
@@ -1473,6 +1488,7 @@ feature {NONE} -- Instruction validity
 
 	check_assignment_attempt_validity (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
@@ -1482,7 +1498,9 @@ feature {NONE} -- Instruction validity
 			a_source_context: ET_NESTED_TYPE_CONTEXT
 			a_target_named_type: ET_NAMED_TYPE
 			a_class_impl: ET_CLASS
+			had_error: BOOLEAN
 		do
+			has_fatal_error := False
 			actual_context.reset (current_type)
 			a_source_context := actual_context
 			formal_context.reset (current_type)
@@ -1490,6 +1508,7 @@ feature {NONE} -- Instruction validity
 			a_target := an_instruction.target
 			check_writable_validity (a_target, a_target_context)
 			if has_fatal_error then
+				had_error := True
 				a_target_context.wipe_out
 				a_target_context.force_first (universe.any_type)
 			elseif a_target_context.is_type_expanded (universe) then
@@ -1504,10 +1523,17 @@ feature {NONE} -- Instruction validity
 			end
 			a_source := an_instruction.source
 			check_subexpression_validity (a_source, a_source_context, a_target_context)
+			if had_error then
+				set_fatal_error
+			end
+			if not has_fatal_error then
+				report_assignment_attempt
+			end
 		end
 
 	check_bang_instruction_validity (an_instruction: ET_BANG_INSTRUCTION) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
@@ -1516,6 +1542,7 @@ feature {NONE} -- Instruction validity
 
 	check_call_instruction_validity (an_instruction: ET_CALL_INSTRUCTION) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
@@ -1529,6 +1556,7 @@ feature {NONE} -- Instruction validity
 
 	check_check_instruction_validity (an_instruction: ET_CHECK_INSTRUCTION) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
@@ -1539,12 +1567,12 @@ feature {NONE} -- Instruction validity
 			a_named_type: ET_NAMED_TYPE
 			had_error: BOOLEAN
 		do
+			has_fatal_error := False
 			boolean_type := universe.boolean_class
 			actual_context.reset (current_type)
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_expression := an_instruction.assertion (i).expression
-				has_fatal_error := False
 				check_subexpression_validity (an_expression, actual_context, boolean_type)
 				if has_fatal_error then
 					had_error := True
@@ -1571,6 +1599,7 @@ feature {NONE} -- Instruction validity
 
 	check_create_instruction_validity (an_instruction: ET_CREATE_INSTRUCTION) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
@@ -1579,6 +1608,7 @@ feature {NONE} -- Instruction validity
 
 	check_creation_instruction_validity (an_instruction: ET_CREATION_INSTRUCTION) is
 			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
@@ -1603,6 +1633,7 @@ feature {NONE} -- Instruction validity
 			a_name: ET_FEATURE_NAME
 			a_position: ET_POSITION
 		do
+			has_fatal_error := False
 			actual_context.reset (current_type)
 			formal_context.reset (current_type)
 			a_target_context := formal_context
@@ -1793,6 +1824,7 @@ feature {NONE} -- Instruction validity
 					end
 					if not has_fatal_error then
 						report_creation_expression (a_creation_named_type, a_feature)
+						report_assignment
 					end
 				end
 			end
@@ -3745,6 +3777,7 @@ feature {NONE} -- Expression validity
 			a_like: ET_LIKE_FEATURE
 			any_type: ET_CLASS_TYPE
 		do
+			report_qualified_call
 			any_type := universe.any_type
 			a_seed := a_name.seed
 			if a_seed = 0 then
@@ -4609,6 +4642,15 @@ feature {NONE} -- Expression validity
 			a_context.force_first (universe.string_type)
 		end
 
+	check_void_validity (an_expression: ET_VOID; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			a_context.force_first (universe.none_type)
+		end
+
 	check_vape_validity (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Check VAPE validity rule when calling `a_feature' named `a_name'
 			-- in a precondition of `current_feature' in `current_class'.
@@ -4664,7 +4706,7 @@ feature {NONE} -- Expression validity
 									end
 								end
 							end
-						elseif not l_feature_clients.has (l_client_name) and then not l_feature_clients.has_any then
+						elseif not l_feature_clients.has_class_name (l_client_name) and then not l_feature_clients.has_any then
 								-- The feature is not exported to `l_client_name'.
 								-- Note that `l_client_name' is not a class in the universe.
 								-- Therefore we expect this class name to be explicitly
@@ -4836,8 +4878,8 @@ feature {NONE} -- Agent validity
 			if a_target = Void then
 				check_unqualified_call_agent_validity (a_name, an_arguments, a_context)
 			else
-				-- SmartEiffel 1.1 does not allow the assignment attempt
-				-- because ET_EXPRESSION does not conform to ET_AGENT_TARGET.
+					-- SmartEiffel 1.1 does not allow the assignment attempt
+					-- because ET_EXPRESSION does not conform to ET_AGENT_TARGET.
 				-- an_expression_target ?= a_target
 				an_any := a_target
 				an_expression_target ?= an_any
@@ -5464,6 +5506,13 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_assignment_attempt is
+			-- Report that an assignment attempt instruction has been processed.
+		require
+			no_error: not has_fatal_error
+		do
+		end
+
 	report_attribute_assignment_target (an_attribute: ET_FEATURE) is
 			-- Report that `an_attribute' has been processed
 			-- as target of an assignment (attempt).
@@ -5531,6 +5580,13 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			a_type_not_void: a_type /= Void
+		do
+		end
+
+	report_qualified_call is
+			-- Report that a qualified call will be processed.
+		require
+			no_error: not has_fatal_error
 		do
 		end
 
@@ -6168,6 +6224,15 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_verbatim_string_validity (a_string, current_context)
+			end
+		end
+
+	process_void (an_expression: ET_VOID) is
+			-- Process `an_expression'.
+		do
+			if internal_call then
+				internal_call := False
+				check_void_validity (an_expression, current_context)
 			end
 		end
 
