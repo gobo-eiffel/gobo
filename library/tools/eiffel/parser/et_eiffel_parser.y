@@ -31,7 +31,7 @@ creation
 
 %}
 
-%token <ET_TOKEN>              E_ALIAS E_ALL E_AS E_CHECK
+%token <ET_TOKEN>              E_AGENT E_ALIAS E_ALL E_AS E_CHECK
 %token <ET_TOKEN>              E_CLASS E_CREATE E_CREATION E_DEBUG E_DEFERRED
 %token <ET_TOKEN>              E_DO E_ELSE E_ELSEIF E_END E_ENSURE
 %token <ET_TOKEN>              E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
@@ -83,7 +83,7 @@ creation
 
 %token <ET_TOKEN>              E_OLD
 %token <ET_SYMBOL>             '{' '}'
-%token <ET_SYMBOL>             '(' ')' ':' ',' '[' ']' '$' '.' '!'
+%token <ET_SYMBOL>             '(' ')' ':' ',' '[' ']' '$' '.' '!' '?'
 %token <ET_MINUS_SYMBOL>       '-'
 %token <ET_PLUS_SYMBOL>        '+'
 %token <ET_EQUAL_SYMBOL>       '='
@@ -101,11 +101,12 @@ creation
 %right E_NOT E_OLD
 
 %type <ET_ACTUAL_ARGUMENTS>    Actuals_opt Actuals_expression_list
-%type <ET_ACTUAL_GENERIC_PARAMETERS>  Actual_generics_opt Type_list
+%type <ET_ACTUAL_GENERIC_PARAMETERS>  Actual_generics_opt Type_list Actual_generics
                                Constraint_actual_generics_opt Constraint_type_list
 %type <ET_BIT_CONSTANT>        Bit_constant
 %type <ET_BOOLEAN_CONSTANT>    Boolean_constant
 %type <ET_BREAK>               Break_opt
+%type <ET_CALL_AGENT>          Call_agent
 %type <ET_CALL_EXPRESSION>     Call_expression
 %type <ET_CHARACTER_CONSTANT>  Character_constant
 %type <ET_CHOICE>              Choice
@@ -157,9 +158,9 @@ creation
 %type <ET_PARENTHESIZED_EXPRESSION>  Parenthesized_expression
 %type <ET_PARENTS>             Parent_list_to_end
 %type <ET_POSTCONDITIONS>      Postcondition_opt
-%type <ET_PRECONDITIONS>       Precondition_opt
 %type <ET_QUALIFIED_PRECURSOR_EXPRESSION>  Qualified_precursor_expression
-%type <ET_QUALIFIED_PRECURSOR_INSTRUCTION>  Qualified_precursor_instruction
+%type <ET_QUALIFIED_PRECURSOR_INSTRUCTION> Qualified_precursor_instruction
+%type <ET_PRECONDITIONS>       Precondition_opt
 %type <ET_REAL_CONSTANT>       Real_constant
 %type <ET_REFERENCE_MARK>      Reference
 %type <ET_RENAMES>             Rename_clause Rename_list
@@ -171,17 +172,17 @@ creation
 %type <ET_STRIP_EXPRESSION>    Strip_expression Strip_feature_name_list
 %type <ET_SYMBOL>              Assign Bang Bangbang Colon Comma Dollar Dot Left_array Right_array
                                Left_brace Right_brace Left_bracket Right_bracket Left_parenthesis
-                               Right_parenthesis Reverse Dotdot Arrow
+                               Right_parenthesis Reverse Dotdot Arrow Question_mark
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
                                Rename Redefine Export Undefine All Creation As Do Once
-                               Rescue Like Bit Local Obsolete Inherit Class
+                               Rescue Like Bit Local Obsolete Inherit Class Agent
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
 %type <ET_WRITABLE>            Writable
 
-%expect 35
+%expect 43
 %start Class_declarations
 
 %%
@@ -1679,7 +1680,11 @@ Class_name: E_IDENTIFIER
 
 Actual_generics_opt: -- Empty
 		-- { $$ := Void }
-	| Left_bracket Right_bracket
+	| Actual_generics
+		{ $$ := $1 }
+	;
+
+Actual_generics: Left_bracket Right_bracket
 		-- Warning:
 		{ $$ := new_actual_generics ($1, $2) }
 	| Left_bracket
@@ -2117,12 +2122,12 @@ Call_instruction: Identifier Actuals_opt
 		{ $$ := $1 }
 	;
 
-Qualified_precursor_instruction: Precursor Left_brace Identifier Right_brace Actuals_opt
+Qualified_precursor_instruction: Precursor Left_brace Class_name Right_brace Actuals_opt
 		{
 			$$ := new_qualified_precursor_instruction ($2, $3, $4, $1, $5)
 			$$.set_parent_prefixed (False)
 		}
-	| Left_brace Identifier Right_brace Precursor Actuals_opt
+	| Left_brace Class_name Right_brace Precursor Actuals_opt
 		{
 			$$ := new_qualified_precursor_instruction ($1, $2, $3, $4, $5)
 			$$.set_parent_prefixed (True)
@@ -2141,12 +2146,12 @@ Precursor_expression: Precursor Actuals_opt
 		{ $$ := $1 }
 	;
 
-Qualified_precursor_expression: Precursor Left_brace Identifier Right_brace Actuals_opt
+Qualified_precursor_expression: Precursor Left_brace Class_name Right_brace Actuals_opt
 		{
 			$$ := new_qualified_precursor_expression ($2, $3, $4, $1, $5)
 			$$.set_parent_prefixed (False)
 		}
-	| Left_brace Identifier Right_brace Precursor Actuals_opt
+	| Left_brace Class_name Right_brace Precursor Actuals_opt
 		{
 			$$ := new_qualified_precursor_expression ($1, $2, $3, $4, $5)
 			$$.set_parent_prefixed (True)
@@ -2161,9 +2166,7 @@ Call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Parenthesized_expression
 		{ $$ := $1 }
-	| Precursor Actuals_opt
-		{ $$ := new_precursor_expression ($1, $2) }
-	| Qualified_precursor_expression
+	| Precursor_expression
 		{ $$ := $1 }
 	| Call_chain Dot Identifier Actuals_opt
 		{ $$ := new_qualified_call_expression ($1, $2, $3, $4) }
@@ -2236,6 +2239,8 @@ Writable: Identifier
 --DONE------------------------------------------------------------------------------
 
 Expression: Call_expression
+		{ $$ := $1 }
+	| Call_agent
 		{ $$ := $1 }
 	| Precursor_expression
 		{ $$ := $1 }
@@ -2593,6 +2598,92 @@ Manifest_constant: Boolean_constant
 		{ $$ := $1 }
 	;
 
+------------------------------------------------------------------------------------
+
+Call_agent: Agent Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent ($1) }
+	| Agent Identifier Dot Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent ($1) }
+	| Agent Parenthesized_expression Dot Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent ($1) }
+	| Agent Left_brace Type Right_brace Dot Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent ($1) }
+	;
+
+Agent_actuals_opt: -- Empty
+		-- { $$ := Void }
+	| Left_parenthesis Right_parenthesis
+		-- { $$ := new_actual_arguments ($1, $2) }
+	| Left_parenthesis
+		-- { add_counter }
+	  Agent_actual_list Right_parenthesis
+		-- {
+			-- $$ := $3
+			-- $$.set_left_symbol ($1)
+			-- $$.set_right_symbol ($4)
+			-- remove_counter
+		-- }
+	;
+
+Agent_actual_list: Agent_actual
+		--{
+			--$$ := new_actual_arguments_with_capacity (counter_value + 1)
+			--$$.put_first ($1)
+		--}
+	| Agent_actual Comma
+		-- TODO: syntax error.
+		--{
+			--$$ := new_actual_arguments_with_capacity (counter_value + 1)
+			--$$.put_first (new_expression_comma ($1, $2))
+		--}
+	| Agent_actual Comma 
+		--{ increment_counter }
+	  Agent_actual_list
+		--{
+			--$$ := $4
+			--$$.put_first (new_expression_comma ($1, $2))
+		--}
+	| Agent_actual
+		--{ increment_counter }
+	  Agent_actual_list
+		-- TODO: syntax error.
+		--{
+			--$$ := $3
+			--$$.put_first ($1)
+		--}
+	;
+
+Agent_actual: Expression
+	| Question_mark
+	| Left_brace Class_name Right_brace
+		-- TODO:
+		--{ $$ := new_named_type (Void, $1, $2) }
+	| Left_brace Class_name Actual_generics Right_brace
+		-- TODO:
+		--{ $$ := new_named_type (Void, $1, $2) }
+	| Left_brace Expanded Class_name Actual_generics_opt Right_brace
+		-- TODO:
+		--{ $$ := new_named_type ($1, $2, $3) }
+	| Left_brace Separate Class_name Actual_generics_opt Right_brace
+		-- TODO:
+		--{ $$ := new_named_type ($1, $2, $3) }
+	| Left_brace Reference Class_name Actual_generics_opt Right_brace
+		-- TODO:
+		--{ $$ := new_named_type ($1, $2, $3) }
+	| Left_brace Like Current Right_brace
+		-- TODO:
+		--{ $$ := new_like_current ($1, $2) }
+	| Left_brace Like Identifier Right_brace
+		-- TODO:
+		--{ $$ := new_like_identifier ($1, $2) }
+	| Left_brace Bit Integer_constant Right_brace
+		-- TODO:
+		--{ $$ := new_bit_type ($1, $2) }
+	| Left_brace Bit Identifier Right_brace
+		-- TODO:
+		--{ $$ := new_bit_identifier ($1, $2)  }
+	;
+
 --DONE------------------------------------------------------------------------------
 
 Manifest_string: E_STRING
@@ -2864,6 +2955,17 @@ Break_opt: -- Empty
 	;
 
 --DONE------------------------------------------------------------------------------
+
+Agent: E_AGENT
+		{ $$ := $1 }
+	| E_AGENT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
 
 All: E_ALL
 		{ $$ := $1 }
@@ -3511,6 +3613,17 @@ Bang: '!'
 Bangbang: E_BANGBANG 
 		{ $$ := $1 }
 	|  E_BANGBANG E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Question_mark: '?' 
+		{ $$ := $1 }
+	|  '?' E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then

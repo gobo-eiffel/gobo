@@ -364,6 +364,16 @@ feature {NONE} -- AST factory
 			type_not_void: Result /= Void
 		end
 
+	new_call_agent (an_agent: ET_TOKEN): ET_CALL_AGENT is
+			-- New call agent
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			Result := ast_factory.new_call_agent (an_agent)
+		ensure
+			call_agent_not_void: Result /= Void
+		end
+
 	new_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENTS): ET_CALL_EXPRESSION is
 			-- New call expression
 		require
@@ -2112,7 +2122,7 @@ feature {NONE} -- AST factory
 			qualified_create_instruction_not_void: Result /= Void
 		end
 
-	new_qualified_precursor_expression (l: ET_SYMBOL; a_parent: ET_IDENTIFIER;
+	new_qualified_precursor_expression (l: ET_SYMBOL; a_parent: ET_CLASS_NAME;
 		r: ET_SYMBOL; a_keyword: ET_TOKEN; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_PRECURSOR_EXPRESSION is
 			-- New qualified precursor expression
 		require
@@ -2126,7 +2136,7 @@ feature {NONE} -- AST factory
 			qualified_precursor_expression_not_void: Result /= Void
 		end
 
-	new_qualified_precursor_instruction (l: ET_SYMBOL; a_parent: ET_IDENTIFIER; r: ET_SYMBOL;
+	new_qualified_precursor_instruction (l: ET_SYMBOL; a_parent: ET_CLASS_NAME; r: ET_SYMBOL;
 		a_keyword: ET_TOKEN; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_PRECURSOR_INSTRUCTION is
 			-- New qualified precursor instruction
 		require
