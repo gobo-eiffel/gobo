@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			-- Convert `t' seconds since 1 January 1970 at 00:00:00 UTC
 			-- to local time 'struct tm*'
 		external
-			"C | <time.h>"
+			"C (const time_t*): EIF_POINTER | <time.h>"
 		alias
 			"localtime"
 		end
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			-- Convert `t' seconds since 1 January 1970 at 00:00:00 UTC
 			-- to Coordinated Universal Time (UTC) 'struct tm*'
 		external
-			"C | <time.h>"
+			"C (const time_t*): EIF_POINTER | <time.h>"
 		alias
 			"gmtime"
 		end
