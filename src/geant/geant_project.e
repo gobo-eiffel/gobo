@@ -206,6 +206,9 @@ feature -- Processing
 					elseif an_element.name.is_equal (Getest_task_name) then
 							-- getest
 						!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Geant_task_name) then
+							-- geant
+						!GEANT_GEANT_TASK! a_task.make_from_element (an_element)
 					elseif an_element.name.is_equal (Echo_task_name) then
 							-- echo
 						!GEANT_ECHO_TASK! a_task.make_from_element (an_element)

@@ -190,6 +190,15 @@ feature -- Task names
 			task_name_not_empty: not Result.empty
 		end
 
+	Geant_task_name: UC_STRING is
+			-- "geant" task name
+		once
+			!! Result.make_from_string ("geant")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
 	Echo_task_name: UC_STRING is
 			-- "echo" task name
 		once
