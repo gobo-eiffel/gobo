@@ -392,5 +392,6 @@ invariant
 	chardata: is_character_data_allowed = (is_content_mixed or is_content_any)
 	type_enumeration: ("|,?0").has (type)
 	repetition_enumeration: (" +?*").has (repetition)
+	leaf_or_items: is_name = (items = Void)
 
 end
