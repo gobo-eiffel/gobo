@@ -560,6 +560,16 @@
 					-->
 				</attribute>
 			</optional>
+			<zeroOrMore>
+				<element name="include">
+					<attribute name="name"/>
+				</element>
+			</zeroOrMore>
+			<zeroOrMore>
+				<element name="exclude">
+					<attribute name="name"/>
+				</element>
+			</zeroOrMore>
 			<optional>
 				<ref name="map"/>
 			</optional>
