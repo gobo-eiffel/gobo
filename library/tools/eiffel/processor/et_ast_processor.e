@@ -12,6 +12,10 @@ indexing
 
 deferred class ET_AST_PROCESSOR
 
+inherit
+
+	ANY -- Needed by SE 2.1.
+
 feature {NONE} -- Initialization
 
 	make (a_universe: like universe) is

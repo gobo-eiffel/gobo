@@ -16,7 +16,7 @@ inherit
 
 	ET_DYNAMIC_ATTACHMENT
 		rename
-			attachment as argument
+			attachment as actual_argument
 		end
 
 creation
@@ -25,7 +25,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type_set: like source_type_set; an_argument: like argument;
+	make (a_type_set: like source_type_set; an_argument: like actual_argument;
 		a_current_feature: like current_feature; a_current_type: like current_type) is
 			-- Create a new argument passing.
 		require
@@ -35,25 +35,25 @@ feature {NONE} -- Initialization
 			a_current_type_not_void: a_current_type /= Void
 		do
 			source_type_set := a_type_set
-			argument := an_argument
+			actual_argument := an_argument
 			current_feature := a_current_feature
 			current_type := a_current_type
 		ensure
 			source_type_set_set: source_type_set = a_type_set
-			argument_set: argument = an_argument
+			actual_argument_set: actual_argument = an_argument
 			current_feature_set: current_feature = a_current_feature
 			current_type_set: current_type = a_current_type
 		end
 
 feature -- Access
 
-	argument: ET_ARGUMENT_OPERAND
+	actual_argument: ET_ARGUMENT_OPERAND
 			-- Actual argument
 
 	position: ET_POSITION is
 			-- Position of attachment
 		do
-			Result := argument.position
+			Result := actual_argument.position
 		end
 
 	description: STRING is
@@ -61,10 +61,10 @@ feature -- Access
 		local
 			l_implicit: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 		do
-			l_implicit ?= argument
+			l_implicit ?= actual_argument
 			if l_implicit /= Void then
 				Result := implicit_open_argument_description + l_implicit.argument_index.out
-			elseif argument.is_open_operand then
+			elseif actual_argument.is_open_operand then
 				Result := open_argument_description
 			else
 				Result := argument_description
@@ -80,6 +80,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	argument_not_void: argument /= Void
+	actual_argument_not_void: actual_argument /= Void
 
 end

@@ -12,6 +12,10 @@ indexing
 
 class ET_XACE_MOUNTED_LIBRARY
 
+inherit
+
+	ANY -- Needed by SE 2.1.
+
 creation
 
 	make

@@ -3172,7 +3172,11 @@ feature {NONE} -- Agent generation
 				if an_expression_target /= Void then
 					print_qualified_call_agent (an_expression_target, a_name, an_arguments)
 				else
-					a_type_target ?= a_target
+					-- SmartEiffel 2.1 does not allow the assignment attempt
+					-- because ET_TARGET_TYPE does not conform to ET_AGENT_TARGET.
+					-- a_type_target ?= a_target
+					an_any := a_target
+					a_type_target ?= an_any
 					if a_type_target /= Void then
 						print_typed_call_agent (a_type_target.type, a_name, an_arguments)
 					else

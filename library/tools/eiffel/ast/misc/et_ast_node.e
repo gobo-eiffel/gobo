@@ -14,6 +14,8 @@ deferred class ET_AST_NODE
 
 inherit
 
+	ANY -- Needed by SE 2.1.
+
 	ET_SHARED_TOKEN_CONSTANTS
 
 feature -- Access

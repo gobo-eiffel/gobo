@@ -14,6 +14,8 @@ class ET_XACE_MOUNTED_LIBRARIES
 
 inherit
 
+	ANY -- Needed by SE 2.1.
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
