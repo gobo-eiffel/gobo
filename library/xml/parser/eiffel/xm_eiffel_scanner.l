@@ -124,7 +124,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 %x dtd_notation
 %x dtd_ignore
 
-%option line nodefault
+%option line position nodefault
 
 %%
 
@@ -820,7 +820,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 }
 
 \r\n {
-	 	-- End of line handling XML1.0:2.11.
+		-- End of line handling XML1.0:2.11.
 	set_last_token (SPACE)
 	last_value := normalized_newline
 }
