@@ -90,13 +90,13 @@ feature {ANY} -- Standard processor routines
 			ucappend (c.content)
 		end
 
-	process_processing_instruction (pi: XM_PROCESSING_INSTRUCTION) is
+	process_processing_instruction (a_pi: XM_PROCESSING_INSTRUCTION) is
 		do
-			try_process_position (pi)
+			try_process_position (a_pi)
 			append ("<? ")
-			ucappend (pi.target)
+			ucappend (a_pi.target)
 			append (" ")
-			ucappend (pi.data)
+			ucappend (a_pi.data)
 			append (" ?>")
 		end
 

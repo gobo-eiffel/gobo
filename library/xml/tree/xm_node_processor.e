@@ -25,9 +25,9 @@ feature {ANY} -- Access
 		do
 		end
 
-	process_processing_instruction (pi: XM_PROCESSING_INSTRUCTION) is
+	process_processing_instruction (a_pi: XM_PROCESSING_INSTRUCTION) is
 		require
-			pi_not_void: pi /= Void
+			pi_not_void: a_pi /= Void
 		do
 		end
 
