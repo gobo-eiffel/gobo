@@ -513,7 +513,7 @@ feature {NONE} -- URI parsing
 				else
 					inspect state
 					when State_authority_prefix then
-						state := state_path
+						state := State_path
 					else -- ok
 					end
 				end
