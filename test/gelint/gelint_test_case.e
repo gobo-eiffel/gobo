@@ -74,46 +74,8 @@ feature {NONE} -- Test
 			a_filename1_not_empty: a_filename1.count > 0
 			a_filename2_not_void: a_filename2 /= Void
 			a_filename2_not_empty: a_filename2.count > 0
-		local
-			a_file1, a_file2: KL_TEXT_INPUT_FILE
-			done: BOOLEAN
 		do
-			create a_file1.make (Execution_environment.interpreted_string (a_filename1))
-			a_file1.open_read
-			if a_file1.is_open_read then
-				create a_file2.make (Execution_environment.interpreted_string (a_filename2))
-				a_file2.open_read
-				if a_file2.is_open_read then
-					Result := True
-					from until done loop
-						a_file1.read_line
-						a_file2.read_line
-						if a_file1.end_of_file then
-							if not a_file2.end_of_file then
-								Result := False
-							end
-							a_file1.close
-							a_file2.close
-							done := True
-						elseif a_file2.end_of_file then
-							Result := False
-							a_file1.close
-							a_file2.close
-							done := True
-						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
-							Result := False
-							a_file1.close
-							a_file2.close
-							done := True
-						end
-					end
-				else
-					a_file1.close
-					assert ("cannot open file '" + a_filename2 + "'", False)
-				end
-			else
-				assert ("cannot open file '" + a_filename1 + "'", False)
-			end
+			Result := file_system.same_text_files (Execution_environment.interpreted_string (a_filename1), Execution_environment.interpreted_string (a_filename2))
 		end
 
 feature {NONE} -- Test SmartEiffel

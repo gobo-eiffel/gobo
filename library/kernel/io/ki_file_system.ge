@@ -106,6 +106,21 @@ feature -- File handling
 		deferred
 		end
 
+	same_text_files (a_filename1, a_filename2: STRING): BOOLEAN is
+			-- Do files named `a_filename1' and `a_filename2'
+			-- contain the same number of lines and are these
+			-- lines equal? Return False if one or both files
+			-- don't exist or cannot be open in read mode.
+			-- (`a_filename1' and `a_filename2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename2_not_void: a_filename2 /= Void
+		deferred
+		end
+
 	rename_file (old_name, new_name: STRING) is
 			-- Rename file named `old_name' as `new_name'.
 			-- Do nothing if the file could not be renamed, if

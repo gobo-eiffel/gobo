@@ -132,6 +132,57 @@ feature -- File handling
 			Result := tmp_file.same_physical_file (a_filename2)
 		end
 
+	same_text_files (a_filename1, a_filename2: STRING): BOOLEAN is
+			-- Do files named `a_filename1' and `a_filename2'
+			-- contain the same number of lines and are these
+			-- lines equal? Return False if one or both files
+			-- don't exist or cannot be open in read mode.
+			-- (`a_filename1' and `a_filename2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+		local
+			a_file1, a_file2: like new_input_file
+			done: BOOLEAN
+		do
+			a_file1 := new_input_file (a_filename1)
+			a_file1.open_read
+			if a_file1.is_open_read then
+				a_file2 := new_input_file (a_filename2)
+				a_file2.open_read
+				if a_file2.is_open_read then
+					Result := True
+					from until done loop
+						a_file1.read_line
+						a_file2.read_line
+						if a_file1.end_of_file then
+							if not a_file2.end_of_file then
+								Result := False
+							end
+							a_file1.close
+							a_file2.close
+							done := True
+						elseif a_file2.end_of_file then
+							Result := False
+							a_file1.close
+							a_file2.close
+							done := True
+						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
+							Result := False
+							a_file1.close
+							a_file2.close
+							done := True
+						end
+					end
+				else
+					a_file1.close
+					-- Result := False
+				end
+			else
+				-- Result := False
+			end
+		end
+
 	rename_file (old_name, new_name: STRING) is
 			-- Rename file named `old_name' as `new_name'.
 			-- Do nothing if the file could not be renamed, if
