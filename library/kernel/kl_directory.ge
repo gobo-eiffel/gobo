@@ -1,0 +1,271 @@
+indexing
+
+	description:
+
+		"Filesystem's directories"
+
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_DIRECTORY
+
+#ifdef ISE || HACT
+inherit
+
+	DIRECTORY
+		rename
+			make as ise_make,
+			open_read as ise_open_read,
+			close as ise_close
+		end
+
+#else
+#ifdef VE
+inherit
+
+	FIND_FILES
+		rename
+			make as ve_make
+		export
+			{NONE} all
+		end
+
+#endif
+#endif
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: STRING) is
+			-- Create a new directory object.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+#ifdef VE
+		local
+			a_mask: STRING
+#endif
+		do
+#ifdef ISE || HACT
+			ise_make (a_name)
+#else
+			name := a_name
+#ifdef VE
+			a_mask := clone (a_name)
+			a_mask.append_string (Slash_star)
+			ve_make (a_mask, False, True, False, False)
+#endif
+#endif
+		ensure
+			name_set: name = a_name
+		end
+
+feature -- Access
+
+#ifndef ISE || HACT
+	name: STRING
+			-- Directory name
+
+#endif
+	last_entry: STRING is
+			-- Last entry (file or subdirectory name) read
+		require
+			is_open_read: is_open_read
+			not_end_of_input: not end_of_input
+		do
+#ifdef ISE || HACT
+			Result := lastentry
+#else
+#ifdef SE
+			Result := basic_directory.last_entry
+#else
+#ifdef VE
+			if position < filenames.lower then
+					-- `read_entry' not called yet!!
+				Result := ""
+			else
+				Result := filenames.item (position)
+			end
+#endif
+#endif
+#endif
+		ensure
+			last_entry_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_open_read: BOOLEAN is
+			-- Has directory been opened in read mode?
+		do
+#ifdef ISE || HACT
+			Result := not is_closed
+#else
+#ifdef SE
+			Result := basic_directory.is_connected
+#else
+#ifdef VE
+			Result := filenames /= Void
+#endif
+#endif
+#endif
+		ensure
+			not_closed: Result implies not is_closed
+		end
+
+#ifndef ISE || HACT
+	is_closed: BOOLEAN is
+			-- Is directory closed?
+		do
+#ifdef SE
+			Result := not basic_directory.is_connected
+#else
+#ifdef VE
+			Result := filenames = Void
+#endif
+#endif
+		end
+
+#endif
+	end_of_input: BOOLEAN is
+			-- Have all entries been read?
+		require
+			is_open_read: is_open_read
+		do
+#ifdef ISE || HACT
+			Result := lastentry = Void
+#else
+#ifdef SE
+			Result := basic_directory.end_of_input
+#else
+#ifdef VE
+			Result := position > filenames.upper
+#endif
+#endif
+#endif
+		end
+
+feature -- Basic operations
+
+	open_read is
+			-- Try to open directory in read mode.  Set `is_open_read'
+			-- to true and is ready to read first entry in directory
+			-- if operation was successful.
+		require
+			closed: is_closed
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				ise_open_read
+				lastentry := Dummy_entry
+#else
+#ifdef SE
+				basic_directory.connect_to (name)
+#else
+#ifdef VE
+				filenames := files
+				if filenames = Void then
+					filenames := Empty_filenames
+				end
+				position := filenames.lower - 1
+#endif
+#endif
+#endif
+			elseif not is_closed then
+				close
+			end
+		ensure
+			not_end_of_input: is_open_read implies not end_of_input
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	close is
+			-- Close directory.
+		require
+			not_closed: not is_closed
+		do
+#ifdef ISE || HACT
+			ise_close
+			lastentry := Void
+#else
+#ifdef SE
+			basic_directory.disconnect
+#else
+#ifdef VE
+			filenames := Void
+#endif
+#endif
+#endif
+		ensure
+			closed: is_closed
+		end
+
+feature -- Cursor movement
+
+	read_entry is
+			-- Read next entry in directory.
+			-- Make result available in `last_entry'.
+		require
+			is_open_read: is_open_read
+			not_end_of_input: not end_of_input
+		do
+#ifdef ISE || HACT
+			readentry
+#else
+#ifdef SE
+			basic_directory.read_entry
+#else
+#ifdef VE
+			position := position + 1
+#endif
+#endif
+#endif
+		end
+
+feature {NONE} -- Implementation
+
+#ifdef SE
+	basic_directory: BASIC_DIRECTORY
+			-- Internal data
+#else
+#ifdef ISE || HACT
+	Dummy_entry: STRING is ""
+#else
+#ifdef VE
+	filenames: ARRAY [STRING]
+			-- Filenames in directory
+
+	position: INTEGER
+			-- Current position in `filenames'
+
+	Slash_star: STRING is "/*"
+			-- Mask suffix
+
+	Empty_filenames: ARRAY [STRING] is
+			-- Empty array of filenames
+		once
+			!! Result.make (1, 0)
+		ensure
+			Empty_filenames_not_void: Result /= Void
+		end
+#endif
+#endif
+#endif
+
+invariant
+
+	name_not_void: name /= Void
+	name_not_empty: not name.empty
+
+end -- class KL_DIRECTORY
