@@ -29,6 +29,14 @@ feature -- Access
 	creation_call: ET_QUALIFIED_CALL
 			-- Call to creation procedure
 
+	arguments: ET_ACTUAL_ARGUMENT_LIST is
+			-- Arguments of creation call
+		do
+			if creation_call /= Void then
+				Result := creation_call.arguments
+			end
+		end
+		
 invariant
 
 	target_not_void: target /= Void
