@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 			a_exports: DS_ARRAYED_LIST [STRING]
 		do
 			precursor (a_project, a_xml_element)
+
+				-- name:
 			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
 			a_description_element := a_xml_element.element_by_name (Description_element_name)
 			if a_description_element /= Void then
@@ -55,6 +57,8 @@ feature {NONE} -- Initialization
 			else
 				set_description ("")
 			end
+
+				-- export:
 			if a_xml_element.has_attribute_by_name (Export_attribute_name) then
 				a_exports := string_tokens (
 					a_xml_element.attribute_by_name (Export_attribute_name).value, ',')
@@ -65,6 +69,11 @@ feature {NONE} -- Initialization
 			create a_tester
 			a_exports.set_equality_tester (a_tester)
 			set_exports (a_exports)
+
+				-- once:
+			if has_attribute (Once_attribute_name) then
+				set_execute_once (boolean_value (Once_attribute_name))
+			end
 		end
 
 feature -- Access
@@ -153,6 +162,9 @@ feature -- Status report
 
 	is_executed: BOOLEAN
 			-- Was this target executed already?
+
+	execute_once: BOOLEAN
+			-- Is this target supposed to be executed only once?
 
 	is_exported_to_any: BOOLEAN is
 			-- Is this target exported to any project?
@@ -294,6 +306,14 @@ feature -- Setting
 			is_executed_set: is_executed = a_is_executed
 		end
 
+	set_execute_once (a_execute_once: BOOLEAN) is
+			-- Set `execute_once' to `a_execute_once'.
+		do
+			execute_once := a_execute_once
+		ensure
+			execute_once_set: execute_once = a_execute_once
+		end
+
 	set_precursor_target (a_precursor_target: GEANT_TARGET) is
 			-- Set `precursor_target' to `a_precursor_target'.
 		require
@@ -352,39 +372,45 @@ feature -- Processing
 			a_new_target_cwd: STRING
 			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
-			if is_enabled then
-				if project.options.verbose then
-					project.trace (<<"">>)
-					project.trace (<<project.name, ".", project.target_name (Current), ":">>)
-					project.trace (<<"">>)
-				end
-					-- Change to the specified directory if "dir" attribute is provided:
-				if xml_element.has_attribute_by_name (Dir_attribute_name) then
-					a_new_target_cwd := project.variables.interpreted_string (
-						xml_element.attribute_by_name (Dir_attribute_name).value.out)
-					project.trace_debug (<<"changing to directory: '", a_new_target_cwd, "%'">>)
-					a_old_target_cwd := file_system.current_working_directory
-					file_system.set_current_working_directory (a_new_target_cwd)
-				end
-				cs := xml_element.new_cursor
-				from
-					cs.start
-				until
-					cs.after or not is_enabled
-				loop
-					a_xml_element ?= cs.item
-					if a_xml_element /= Void then
-						if not STRING_.same_string (a_xml_element.name, Description_element_name) then
-							execute_task (a_xml_element)
-						end
+			if not execute_once or else not is_executed then
+				if is_enabled then
+					if project.options.verbose then
+						project.trace (<<"">>)
+						project.trace (<<project.name, ".", project.target_name (Current), ":">>)
+						project.trace (<<"">>)
 					end
-					cs.forth
+						-- Change to the specified directory if "dir" attribute is provided:
+					if xml_element.has_attribute_by_name (Dir_attribute_name) then
+						a_new_target_cwd := project.variables.interpreted_string (
+							xml_element.attribute_by_name (Dir_attribute_name).value.out)
+						project.trace_debug (<<"changing to directory: '", a_new_target_cwd, "%'">>)
+						a_old_target_cwd := file_system.current_working_directory
+						file_system.set_current_working_directory (a_new_target_cwd)
+					end
+	
+						-- Execute nested tasks:
+					cs := xml_element.new_cursor
+					from
+						cs.start
+					until
+						cs.after or not is_enabled
+					loop
+						a_xml_element ?= cs.item
+						if a_xml_element /= Void then
+							if not STRING_.same_string (a_xml_element.name, Description_element_name) then
+								execute_task (a_xml_element)
+							end
+						end
+						cs.forth
+					end
+						-- Change back to original directory before target was entered:
+					if has_attribute (Dir_attribute_name) then
+						project.trace_debug (<<"changing to directory: '", a_old_target_cwd, "%'">>)
+						file_system.set_current_working_directory (a_old_target_cwd)
+					end
+						-- Mark target as already executed:
+					set_executed (True)
 				end
-				if has_attribute (Dir_attribute_name) then
-					project.trace_debug (<<"changing to directory: '", a_old_target_cwd, "%'">>)
-					file_system.set_current_working_directory (a_old_target_cwd)
-				end
-				set_executed (True)
 			end
 		end
 
@@ -566,6 +592,15 @@ feature {NONE} -- Constants
 		ensure
 			export_name_not_void: Result /= Void
 			export_name_not_empty: Result.count > 0
+		end
+
+	Once_attribute_name: STRING is
+			-- "once" attribute name
+		once
+			Result := "once"
+		ensure
+			once_name_not_void: Result /= Void
+			once_name_not_empty: Result.count > 0
 		end
 
 	Project_name_any: STRING is
