@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<cluster name="lexical_skl" location="${GOBO}/library/lexical" abstract="true">
+
+	<description>
+		description: "Xace file for the Gobo Eiffel scanner skeletons"
+		library: "Gobo Eiffel Lexical Library"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="skeleton"/>
+
+</cluster>
