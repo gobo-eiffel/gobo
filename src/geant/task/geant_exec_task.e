@@ -29,11 +29,15 @@ feature
 		local
 			s	: UC_STRING
 		do
-			s := a_el.get_attributevalue_by_name(ucs_attr_executable)
+			s := a_el.get_attributevalue_by_name(Attribute_name_executable)
 			set_cmd(s.out)
 		end
 
 
-ucs_attr_executable			: UC_STRING is once !!Result.make_from_string("executable") end
+	Attribute_name_executable : UC_STRING is
+			-- Name of xml attribute executable.
+		once
+			!!Result.make_from_string("executable")
+		end
 
 end

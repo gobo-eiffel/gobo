@@ -19,6 +19,9 @@ deferred class GEANT_TASK
 
 feature
 	load_from_element(a_el : GEANT_ELEMENT) is
+			-- Initialize from a_el.
+		require
+			element_not_void : a_el /= Void
 		deferred
 		end
 
@@ -113,9 +116,9 @@ feature -- auxiliar
 			ucs := get_attribute_value_uc(a_el, a_attr_name)
 			check ucs /= void and then ucs.count > 0 end
 
-			if ucs_true.is_equal(ucs) then
+			if Attribute_value_true.is_equal(ucs) then
 				Result := true
-			elseif ucs_false.is_equal(ucs) then
+			elseif Attribute_value_false.is_equal(ucs) then
 				Result := false
 			else
 				print("WARNING: wrong value (" + ucs.out + ") for attribute " + a_attr_name.out + " Valid values are `true' and `false'. Using to `false' now.")

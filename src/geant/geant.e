@@ -42,7 +42,7 @@ feature
 		do
 			from i := 1 until i > project.targets.count loop
 				target := project.targets.item(i)
-				if target.get_attributevalue_by_name(ucs_name).is_equal(project.current_target_name) then
+				if target.get_attributevalue_by_name(Attribute_name_name).is_equal(project.current_target_name) then
 
 					print(project.current_target_name.out + ":%N")
 
@@ -51,37 +51,42 @@ feature
 	
 						------- task dispatching ------
 						-- compile_se --
-						if task_el.name.is_equal(ucs_compile_se) then
+						if task_el.name.is_equal(Compile_se_task_name) then
 							-- SmallEiffel compilation
 							!GEANT_COMPILE_SE_TASK!task.load_from_element(task_el)
 
 						-- exec --
-						elseif task_el.name.is_equal(ucs_exec) then
+						elseif task_el.name.is_equal(Exec_task_name) then
 							!GEANT_EXEC_TASK!task.load_from_element(task_el)
 
-						-- var --
-						elseif task_el.name.is_equal(ucs_var) then
-							!GEANT_VAR_TASK!task.load_from_element(task_el)
-
 						-- lcc --
-						elseif task_el.name.is_equal(ucs_lcc) then
+						elseif task_el.name.is_equal(Lcc_task_name) then
 							!GEANT_LCC_TASK!task.load_from_element(task_el)
 
+						-- var --
+						elseif task_el.name.is_equal(Var_task_name) then
+							!GEANT_VAR_TASK!task.load_from_element(task_el)
+
 						-- xace --
-						elseif task_el.name.is_equal(ucs_xace) then
+						elseif task_el.name.is_equal(Xace_task_name) then
 							!GEANT_XACE_TASK!task.load_from_element(task_el)
 
 						-- gelex --
-						elseif task_el.name.is_equal(ucs_gelex) then
+						elseif task_el.name.is_equal(Gelex_task_name) then
 							!GEANT_GELEX_TASK!task.load_from_element(task_el)
 
 						-- geyacc --
-						elseif task_el.name.is_equal(ucs_geyacc) then
+						elseif task_el.name.is_equal(Geyacc_task_name) then
 							!GEANT_GEYACC_TASK!task.load_from_element(task_el)
 
 						-- gepp --
-						elseif task_el.name.is_equal(ucs_gepp) then
+						elseif task_el.name.is_equal(Gepp_task_name) then
 							!GEANT_GEPP_TASK!task.load_from_element(task_el)
+
+						-- getest --
+						elseif task_el.name.is_equal(Getest_task_name) then
+							!GEANT_GETEST_TASK!task.load_from_element(task_el)
+
 
 						-- DEFAULT --
 						else

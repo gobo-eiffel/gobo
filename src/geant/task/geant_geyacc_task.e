@@ -28,34 +28,59 @@ feature
 	load_from_element(a_el : GEANT_ELEMENT) is
 		do
 			-- separate_actions
-			if has_attribute(a_el, attr_separate_actions) then
-				set_separate_actions(get_boolean_value(a_el, attr_separate_actions))
+			if has_attribute_uc(a_el, Attribute_name_separate_actions) then
+				set_separate_actions(get_boolean_value(a_el, Attribute_name_separate_actions.out))
 			end
 
 			-- verbose_filename
-			if has_attribute(a_el, attr_verbose_filename) then
-				set_verbose_filename(get_attribute_value(a_el, attr_verbose_filename))
+			if has_attribute_uc(a_el, Attribute_name_verbose_filename) then
+				set_verbose_filename(get_attribute_value(a_el, Attribute_name_verbose_filename.out))
 			end
 
 			-- eiffel_tokens_classname
-			if has_attribute(a_el, attr_eiffel_tokens_classname) then
-				set_eiffel_tokens_classname(get_attribute_value(a_el, attr_eiffel_tokens_classname))
+			if has_attribute_uc(a_el, Attribute_name_eiffel_tokens_classname) then
+				set_eiffel_tokens_classname(get_attribute_value(a_el, Attribute_name_eiffel_tokens_classname.out))
 			end
 
 			-- eiffel_parser_filename
-			if has_attribute(a_el, attr_eiffel_parser_filename) then
-				set_eiffel_parser_filename(get_attribute_value(a_el, attr_eiffel_parser_filename))
+			if has_attribute_uc(a_el, Attribute_name_eiffel_parser_filename) then
+				set_eiffel_parser_filename(get_attribute_value(a_el, Attribute_name_eiffel_parser_filename.out))
 			end
 
 			-- grammar_filename
-			set_grammar_filename(get_attribute_value(a_el, attr_grammar_filename))
+			set_grammar_filename(get_attribute_value(a_el, Attribute_name_grammar_filename.out))
 
 		end
 
-attr_separate_actions			: STRING is "separate_actions"
-attr_verbose_filename			: STRING is "verbose_filename"
-attr_eiffel_tokens_classname	: STRING is "eiffel_tokens_classname"
-attr_eiffel_parser_filename		: STRING is "eiffel_parser_filename"
-attr_grammar_filename			: STRING is "grammar_filename"
+feature -- Xml attributes
+	Attribute_name_separate_actions : UC_STRING is
+			-- Name of xml attribute for separate_actions
+		once
+			!!Result.make_from_string("separate_actions")
+		end
+
+	Attribute_name_verbose_filename : UC_STRING is
+			-- Name of xml attribute for verbose_filename
+		once
+			!!Result.make_from_string("verbose_filename")
+		end
+
+	Attribute_name_eiffel_tokens_classname : UC_STRING is
+			-- Name of xml attribute for eiffel_tokens_classname
+		once
+			!!Result.make_from_string("eiffel_tokens_classname")
+		end
+
+	Attribute_name_eiffel_parser_filename : UC_STRING is
+			-- Name of xml attribute for eiffel_parser_filename
+		once
+			!!Result.make_from_string("eiffel_parser_filename")
+		end
+
+	Attribute_name_grammar_filename : UC_STRING is
+			-- Name of xml attribute for grammar_filename
+		once
+			!!Result.make_from_string("eiffel_grammar_filename")
+		end
 
 end

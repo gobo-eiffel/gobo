@@ -33,25 +33,38 @@ feature
 			i			: INTEGER
 		do
 			make
-			s := a_el.get_attributevalue_by_name(ucs_attr_inputfile)
+			s := a_el.get_attributevalue_by_name(Attribute_name_inputfile)
 			set_inputfile(s.out)
 
-			s := a_el.get_attributevalue_by_name(ucs_attr_outputfile)
+			s := a_el.get_attributevalue_by_name(Attribute_name_outputfile)
 			set_outputfile(s.out)
 
-			defines_el := a_el.get_children_by_name(ucs_attr_define)
+			defines_el := a_el.get_children_by_name(Element_name_define)
 			from i := 1 until i > defines_el.count loop
 				define_el := defines_el.item(i)
-				s := define_el.get_attributevalue_by_name(ucs_name)
+				s := define_el.get_attributevalue_by_name(Attribute_name_name)
 				defines.force_last(s.out)
 
 				i := i + 1
 			end
 		end
 
+	Attribute_name_inputfile : UC_STRING is
+			-- Name of xml attribute for inputfile
+		once
+			!!Result.make_from_string("inputfile")
+		end
 
-ucs_attr_inputfile			: UC_STRING is once !!Result.make_from_string("inputfile") end
-ucs_attr_outputfile			: UC_STRING is once !!Result.make_from_string("outputfile") end
-ucs_attr_define				: UC_STRING is once !!Result.make_from_string("define") end
+	Attribute_name_outputfile : UC_STRING is
+			-- Name of xml attribute for outputfile
+		once
+			!!Result.make_from_string("outputfile")
+		end
+
+	Element_name_define : UC_STRING is
+			-- Name of xml subelement for defines
+		once
+			!!Result.make_from_string("define")
+		end
 
 end

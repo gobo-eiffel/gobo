@@ -27,15 +27,23 @@ feature
 	load_from_element(a_el : GEANT_ELEMENT) is
 		do
 			-- -Fo
-			set_executable(get_attribute_value(a_el, attr_executable))
+			set_executable(get_attribute_value(a_el, Attribute_name_executable.out))
 
 			-- -sourcefilename
-			set_sourcefilename(get_attribute_value(a_el, attr_sourcefilename))
+			set_sourcefilename(get_attribute_value(a_el, Attribute_name_sourcefilename.out))
 
 		end
 
-attr_executable			: STRING is "executable"
-attr_sourcefilename		: STRING is "sourcefilename"
+	Attribute_name_executable : UC_STRING is
+			-- Name of xml attribute for executable
+		once
+			!!Result.make_from_string("executable")
+		end
 
+	Attribute_name_sourcefilename : UC_STRING is
+			-- Name of xml attribute for sourcefilename
+		once
+			!!Result.make_from_string("sourcefilename")
+		end
 
 end

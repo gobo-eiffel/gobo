@@ -34,11 +34,11 @@ feature
 			s	: STRING
 		do
 			-- name
-			set_name(get_attribute_value(a_el, attr_name))
+			set_name(get_attribute_value(a_el, Attribute_name_name.out))
 
 
 			-- value
-			s := get_attribute_value(a_el, attr_value)
+			s := get_attribute_value(a_el, Attribute_name_value.out)
 
 			-- support for environment variables
 			if s.item(1) = '$' then
@@ -50,8 +50,11 @@ feature
 
 		end
 
-attr_name			: STRING is "name"
-attr_value			: STRING is "value"
+	Attribute_name_value : UC_STRING is
+			-- Name of xml attribute for value
+		once
+			!!Result.make_from_string("value")
+		end
 
 
 end

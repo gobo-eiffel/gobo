@@ -28,32 +28,34 @@ make(a_name, a_value : UC_STRING) is
 	end
 
 set_name(a_name : UC_STRING) is
-	-- assigns 'a_name' to 'name'
-	-- the client is responsible to clone 'a_name' before
-	-- calling this routine if that's what he likes
+	-- Set `name' to `a_name'.
 	require
 		valid_name : a_name /= void and then a_name.count > 0
 	do
 		name := a_name
+	ensure
+		name_set : name = a_name
 	end
 
 set_value(a_value : UC_STRING) is
-	-- assigns 'a_value' to 'value'
-	-- the client is responsible to clone 'a_value' before
-	-- calling this routine if that's what he likes
+	-- Set `value' to `a_value'.
 	require
 		valid_value : a_value /= void
 	do
 		value := a_value
+	ensure
+		value_set : value = a_value
 	end
 
-to_xml : UC_STRING is
+as_xml : UC_STRING is
+	-- XML representation.
     do
 	    !!Result.make_from_string("")
 		Result.append_uc_string(name)
 		Result.append_string("=%"")
 		Result.append_uc_string(value)
 		Result.append_string("%"")
+
 	end
 
 name	: UC_STRING

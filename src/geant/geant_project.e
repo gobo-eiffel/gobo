@@ -35,7 +35,7 @@ feature
 	make is
 		-- create the project with the default filename `build.eant'
 		do
-			make_with_filename(ucs_default_build_filename)
+			make_with_filename(Default_build_filename)
 		end
 
 	load is
@@ -56,13 +56,13 @@ feature
 	        project_element := xml_parser.root_element
 
 			-- determine all the targets of the project
-			targets := project_element.get_children_by_name(ucs_target)
+			targets := project_element.get_children_by_name(Element_name_target)
 
 			-- determine start target
 			if Arguments.argument_count > 0 then
 				!!start_target_name.make_from_string(Arguments.argument(1))
 			else
-				start_target_name := project_element.get_attributevalue_by_name(ucs_default)
+				start_target_name := project_element.get_attributevalue_by_name(Default_attribute_name)
 			end
 
 			current_target_name := start_target_name
@@ -98,5 +98,16 @@ feature
 	factory: expanded XM_PARSER_FACTORY
 		-- the factory to create the parser
 
+	Default_attribute_name : UC_STRING is
+			-- Name of xml attribute for project default target.
+		once
+			!!Result.make_from_string("default")
+		end
+
+	Element_name_project : UC_STRING is
+			-- Name of xml element for geant project
+		once
+			!!Result.make_from_string("project")
+		end
 
 end

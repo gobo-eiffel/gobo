@@ -30,30 +30,30 @@ feature
 			s	: STRING
 		do
 			-- ace_file (optional)
-			if has_attribute(a_el, attr_ace_file) then
-				s := get_attribute_value_with_default(a_el, attr_ace_file, "")
+			if has_attribute_uc(a_el, Attribute_name_ace_file) then
+				s := get_attribute_value_with_default(a_el, Attribute_name_ace_file.out, "")
 				set_ace_file(s)
 			else
 				-- root_class
-				s := get_attribute_value(a_el, attr_root_class)
+				s := get_attribute_value(a_el, Attribute_name_root_class.out)
 				set_root_class(s)
 
 				-- creation_procedure
-				s := get_attribute_value(a_el, attr_creation_procedure)
+				s := get_attribute_value(a_el, Attribute_name_creation_procedure.out)
 				set_creation_procedure(s)
 	
 				-- executable
-				s := get_attribute_value(a_el, attr_executable)
+				s := get_attribute_value(a_el, Attribute_name_executable.out)
 				set_executable(s)
 	
 				-- case_insensitive
-				if has_attribute(a_el, attr_case_insensitive) then
-					set_case_insensitive(get_boolean_value(a_el, attr_case_insensitive))
+				if has_attribute_uc(a_el, Attribute_case_insensitive) then
+					set_case_insensitive(get_boolean_value(a_el, Attribute_case_insensitive.out))
 				end
 	
 				-- no_style_warning
-				if has_attribute(a_el, attr_no_style_warning) then
-					set_no_style_warning(get_boolean_value(a_el, attr_no_style_warning))
+				if has_attribute_uc(a_el, Attribute_no_style_warning) then
+					set_no_style_warning(get_boolean_value(a_el, Attribute_no_style_warning.out))
 				end
 	
 			end
@@ -62,12 +62,41 @@ feature
 	
 		end
 
-attr_ace_file			: STRING is "ace_file"
-attr_root_class			: STRING is "root_class"
-attr_creation_procedure	: STRING is "creation_procedure"
-attr_executable			: STRING is "executable"
-attr_case_insensitive	: STRING is "case_insensitive"
-attr_no_style_warning	: STRING is "no_style_warning"
+	Attribute_name_ace_file: UC_STRING is
+			-- Name of xml attribute for ace_file
+		once
+			!!Result.make_from_string("ace_file")
+		end
+
+	Attribute_name_root_class: UC_STRING is
+			-- Name of xml attribute for root_class
+		once
+			!!Result.make_from_string("root_class")
+		end
+
+	Attribute_name_creation_procedure: UC_STRING is
+			-- Name of xml attribute for creation_procedure
+		once
+			!!Result.make_from_string("creation_procedure")
+		end
+
+	Attribute_name_executable: UC_STRING is
+			-- Name of xml attribute for executable
+		once
+			!!Result.make_from_string("executable")
+		end
+
+	Attribute_case_insensitive: UC_STRING is
+			-- Name of xml attribute for case_insensitive
+		once
+			!!Result.make_from_string("case_insensitive")
+		end
+
+	Attribute_no_style_warning: UC_STRING is
+			-- Name of xml attribute for no_style_warning
+		once
+			!!Result.make_from_string("no_style_warning")
+		end
 
 
 end

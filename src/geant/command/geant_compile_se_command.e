@@ -13,24 +13,28 @@ indexing
 
 
 class GEANT_COMPILE_SE_COMMAND
-	inherit
-		GEANT_COMMAND
-		end
+
+inherit
+
+	GEANT_COMMAND
 
 	
 creation
+
 	make
 
-feature
+feature -- Initialization
+
 	make is
 		do
 		end
 
 	execute is
+			-- Execute command.
 		local
 			cmd	: STRING
 		do
-			if valid_ace_configuration then
+			if is_ace_configuration then
 				cmd := create_ace_cmdline
 			else
 				cmd := create_traditional_cmdline
@@ -41,43 +45,48 @@ feature
 		end
 
 	is_executable : BOOLEAN is
+			-- Is command ready to execute ?
 		do
-			Result := valid_ace_configuration or else valid_traditional_configuration
+			Result := is_ace_configuration or else is_traditional_configuration
 		ensure then
-			valid_configuration : Result implies valid_ace_configuration
-									or else valid_traditional_configuration
+			valid_configuration : Result implies is_ace_configuration
+									or else is_traditional_configuration
 		end
 
-	valid_ace_configuration : BOOLEAN is
+	is_ace_configuration : BOOLEAN is
+			-- Does ace file configuration apply ?
 		do
-			Result := (ace_file /= void and then ace_file.count > 0) and not valid_traditional_configuration
+			Result := (ace_file /= void and then ace_file.count > 0) and not is_traditional_configuration
 		ensure
-			Result implies (ace_file /= void and then ace_file.count > 0) and not valid_traditional_configuration
+			Result implies (ace_file /= void and then ace_file.count > 0) and not is_traditional_configuration
 		end
 
-	valid_traditional_configuration : BOOLEAN is
+	is_traditional_configuration : BOOLEAN is
+			-- Does traditional configuration apply ?
 		do
 			Result :=
 				(root_class /= void and then root_class.count > 0) and
-				(executable /= void and then executable.count > 0) and not valid_ace_configuration
+				(executable /= void and then executable.count > 0) and not is_ace_configuration
 		ensure
 			Result implies
 				(root_class /= void and then root_class.count > 0) and
-				(executable /= void and then executable.count > 0) and not valid_ace_configuration
+				(executable /= void and then executable.count > 0) and not is_ace_configuration
 		end
 
 
 	create_ace_cmdline : STRING is
+			-- Execution commandline for Ace configuration.
 		require
-			valid_ace_configuration : valid_ace_configuration
+			is_ace_configuration : is_ace_configuration
 		do
 			!!Result.make_from_string("compile ")
 			Result.append_string(ace_file)
 		end
 
 	create_traditional_cmdline : STRING is
+			-- Execution commandline for traditional configuration.
 		require
-			valid_traditional_configuration : valid_traditional_configuration
+			is_traditional_configuration : is_traditional_configuration
 		do
 			!!Result.make_from_string("compile")
 
@@ -144,7 +153,6 @@ feature
 			ace_file := a_ace_file
 		end
 
---feature {NONE}
 case_insensitive	: BOOLEAN
 no_style_warning	: BOOLEAN
 executable			: STRING

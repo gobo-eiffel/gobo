@@ -8,7 +8,6 @@
 			xace_filename="geant.xace"
 			compile="true"
 		/>
-		<exec executable="mv geant.exe g.exe" />
 
 	</target>
 
