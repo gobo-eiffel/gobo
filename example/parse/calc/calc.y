@@ -34,23 +34,22 @@ creation
 
 %%
 
-input: -- /* empty */
+input: -- Empty
 	| input line
 	;
 
 line: '\n'
-	| exp '\n' { print ($1); print ('%N') }
-	| error '\n' { recover }
-	
+	| exp '\n'		{ print ($1); print ('%N') }
+	| error '\n'	{ recover }
 	;
 
-exp: NUM
-	| exp '+' exp { $$ := $1 + $3 }
-	| exp '-' exp { $$ := $1 - $3 }
-	| exp '*' exp { $$ := $1 * $3 }
-	| exp '/' exp { $$ := $1 / $3 }
-	| '-' exp %prec NEG { $$ := -$2 }
-	| '(' exp ')' { $$ := $2 }
+exp: NUM				{ $$ := $1 }
+	| exp '+' exp		{ $$ := $1 + $3 }
+	| exp '-' exp		{ $$ := $1 - $3 }
+	| exp '*' exp		{ $$ := $1 * $3 }
+	| exp '/' exp		{ $$ := $1 / $3 }
+	| '-' exp %prec NEG	{ $$ := -$2 }
+	| '(' exp ')'		{ $$ := $2 }
 	;
 
 %%
@@ -80,7 +79,7 @@ feature {NONE} -- Scanner
 				if has_pending_character then
 					c := pending_character
 					has_pending_character := False
-				else
+				elseif not INPUT_STREAM_.end_of_input (std.input) then
 					std.input.read_character
 					c := std.input.last_character
 				end
@@ -139,7 +138,7 @@ feature {NONE} -- Scanner
 				last_token := c.code
 			end
 		end
-	
+
 	last_token: INTEGER
 			-- Last token read
 
