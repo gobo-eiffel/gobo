@@ -12,6 +12,8 @@ indexing
 
 class XM_FILE_SOURCE
 
+obsolete "Use XM_POSITION instead"
+
 inherit
 
 	XM_URI_SOURCE
