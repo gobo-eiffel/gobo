@@ -72,6 +72,9 @@ feature -- Status report
 					Result := Result and target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
 				end
 			end
+			if map /= Void then
+				Result := Result and map.is_executable
+			end
 
 		ensure
 			type_name_not_void: Result implies type /= Void
@@ -86,6 +89,8 @@ feature -- Status report
 
 			good_glob_target: Result implies type.is_equal (Type_attribute_value_glob) implies
 				target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
+
+			nested_map_executable: Result implies map /= Void implies map.is_executable
 		end
 
 feature -- Access
@@ -99,67 +104,86 @@ feature -- Access
 	target_pattern: STRING
 			-- Target pattern for mapping
 
+	map: GEANT_MAP
+			-- Nested Map
+
 	mapped_filename (a_filename: STRING): STRING is
 			-- Mapped `a_filename' according to patterns
 			-- `source_pattern' and `target_pattern'
 			-- depending on `type'
+			-- If nested `map' is not Void `map.mapped_filename (a_filename)'
+			-- is taken as input for this routine instead of `a_filename'
 		require
 			a_filename_not_void: a_filename /= Void
 			is_executable: is_executable
 		local
 			s: STRING
+			a_map_filename: STRING
 			source_prefix: STRING
 			source_postfix: STRING
 			filename_prefix: STRING
 			filename_postfix: STRING
 			target_prefix: STRING
 			target_postfix: STRING
+			a_exit_code: INTEGER
 		do
-			project.trace_debug ("  mapping type: " + type + "%N")
-			if type.is_equal (Type_attribute_value_identity) then
-					-- handle identity mapping:
-				Result := clone (a_filename)
-			elseif type.is_equal (Type_attribute_value_flat) then
-					-- handle flat mapping:
-				Result := clone (unix_file_system.basename (a_filename))
-			elseif type.is_equal (Type_attribute_value_merge) then
-					-- handle merge mapping:
-				Result := clone (target_pattern)
-			else
-					-- handle glob mapping:
-				check type_is_glob: type.is_equal (Type_attribute_value_glob) end
-				project.trace_debug ("  source pattern: " + source_pattern + "%N")
-				project.trace_debug ("  target pattern: " + target_pattern + "%N")
-				source_prefix := glob_prefix (source_pattern)
-				source_postfix := glob_postfix (source_pattern)
-				target_prefix := glob_prefix (target_pattern)
-				target_postfix := glob_postfix (target_pattern)
-
-				filename_prefix := clone (a_filename)
-				filename_prefix.head (source_prefix.count)
-				filename_postfix := clone (a_filename)
-				filename_postfix.tail (source_postfix.count)
-
-				if
-					filename_prefix.is_equal (source_prefix) and
-					filename_postfix.is_equal (source_postfix)
-				then
-					s := clone (a_filename)
-
---					s.remove_head (filename_prefix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
-					s := string_remove_head (s, filename_prefix.count) -- workaround
---					s.remove_tail (filename_postfix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
-					s := string_remove_tail (s, filename_postfix.count) -- workaround
-
-					Result := clone (target_prefix)
-					Result.append_string (s)
-					Result.append_string (target_postfix)
+			if map /= Void then
+				if map.is_executable then
+					a_map_filename := map.mapped_filename (a_filename)
 				else
-					project.trace_debug ("  no match for '" + a_filename + "'%N")
-					Result := clone (a_filename)
+					project.log ("  [map] error: map definition wrong'%N")
+					a_exit_code := 1
 				end
+			else
+				a_map_filename := clone (a_filename)
 			end
-			project.trace_debug ("  mapping '" + a_filename + " to '" + Result + "'%N")
+			if a_exit_code = 0 then
+				project.trace_debug ("  mapping type: " + type + "%N")
+				if type.is_equal (Type_attribute_value_identity) then
+						-- handle identity mapping:
+					Result := clone (a_map_filename)
+				elseif type.is_equal (Type_attribute_value_flat) then
+						-- handle flat mapping:
+					Result := clone (unix_file_system.basename (a_map_filename))
+				elseif type.is_equal (Type_attribute_value_merge) then
+						-- handle merge mapping:
+					Result := clone (target_pattern)
+				else
+						-- handle glob mapping:
+					check type_is_glob: type.is_equal (Type_attribute_value_glob) end
+					project.trace_debug ("  source pattern: " + source_pattern + "%N")
+					project.trace_debug ("  target pattern: " + target_pattern + "%N")
+					source_prefix := glob_prefix (source_pattern)
+					source_postfix := glob_postfix (source_pattern)
+					target_prefix := glob_prefix (target_pattern)
+					target_postfix := glob_postfix (target_pattern)
+	
+					filename_prefix := clone (a_map_filename)
+					filename_prefix.head (source_prefix.count)
+					filename_postfix := clone (a_map_filename)
+					filename_postfix.tail (source_postfix.count)
+	
+					if
+						filename_prefix.is_equal (source_prefix) and
+						filename_postfix.is_equal (source_postfix)
+					then
+						s := clone (a_map_filename)
+	
+	--					s.remove_head (filename_prefix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
+						s := string_remove_head (s, filename_prefix.count) -- workaround
+	--					s.remove_tail (filename_postfix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
+						s := string_remove_tail (s, filename_postfix.count) -- workaround
+	
+						Result := clone (target_prefix)
+						Result.append_string (s)
+						Result.append_string (target_postfix)
+					else
+						project.trace_debug ("  no match for '" + a_map_filename + "'%N")
+						Result := clone (a_map_filename)
+					end
+				end
+				project.trace_debug ("  mapping '" + a_map_filename + " to '" + Result + "'%N")
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -199,6 +223,16 @@ feature -- Setting
 			target_pattern := a_target_pattern
 		ensure
 			target_pattern_set: target_pattern = a_target_pattern
+		end
+
+	set_map (a_map: like map) is
+			-- Set `map' to `a_map'.
+		require
+			a_map_not_void: a_map /= Void
+		do
+			map := a_map
+		ensure
+			map_set: map = a_map
 		end
 
 feature -- Constants

@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			a_xml_subelement := xml_element.child_by_name (Mapper_element_name)
+			a_xml_subelement := xml_element.child_by_name (Map_element_name)
 			if a_xml_subelement /= Void then
 				!! a_map_element.make (project, a_xml_subelement)
 				fileset.set_map (a_map_element.map)
@@ -100,8 +100,8 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Mapper_element_name: UC_STRING is
-			-- Name of xml subelement for mapper
+	Map_element_name: UC_STRING is
+			-- Name of xml subelement for map
 		once
 			Result := new_unicode_string ("map")
 		ensure

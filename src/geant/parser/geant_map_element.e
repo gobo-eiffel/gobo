@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			-- Create new fileset element with information held in `a_xml_element'.
 		local
 			a_value: STRING
+			a_xml_subelement: GEANT_XML_ELEMENT
+			a_map_element: GEANT_MAP_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
 			!! map.make (project)
@@ -54,6 +56,12 @@ feature {NONE} -- Initialization
 				if a_value.count > 0 then
 					map.set_target_pattern (a_value)
 				end
+			end
+
+			a_xml_subelement := xml_element.child_by_name (Map_element_name)
+			if a_xml_subelement /= Void then
+				!! a_map_element.make (project, a_xml_subelement)
+				map.set_map (a_map_element.map)
 			end
 
 		end
@@ -90,6 +98,15 @@ feature {NONE} -- Constants
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
+		end
+
+	Map_element_name: UC_STRING is
+			-- Name of xml subelement for map
+		once
+			Result := new_unicode_string ("map")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_MAP_ELEMENT
