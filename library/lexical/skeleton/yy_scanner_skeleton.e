@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 		end
 
 	yy_refill_input_buffer is
-			-- Refill `input_fill'.
+			-- Refill `input_buffer'.
 			-- Update `yy_start_position' and `yy_position'.
 		local
 			yy_new_position: INTEGER
