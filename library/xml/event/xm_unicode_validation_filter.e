@@ -24,7 +24,7 @@ inherit
 			on_content
 		end
 
-	XM_UNICODE_CHARACTER_CLASSES
+	XM_UNICODE_STRING_ROUTINES
 		export {NONE} all end
 
 creation
@@ -84,7 +84,7 @@ feature {NONE} -- Validation
 		require
 			a_string_not_void: a_string /= Void
 		do
-			if not valid_string (a_string) then
+			if not is_xml_string (a_string) then
 				on_error (Error_unicode_invalid_character)
 			end
 		end
@@ -94,54 +94,8 @@ feature {NONE} -- Validation
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if not valid_name (a_name) then
+			if not is_xml_name (a_name) then
 				on_error (Error_unicode_invalid_character)
-			end
-		end
-
-feature {NONE} -- Status report
-
-	valid_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' a UTF8 string with no invalid character?
-		require
-			a_string_not_void: a_string /= Void
-		local
-			i, nb: INTEGER
-		do
-			Result := True
-			nb := a_string.count
-			from i := 1 until i > nb loop
-				if not is_char (a_string.item_code (i)) then
-					Result := False
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-		ensure
-			empty: (a_string.count = 0) implies Result
-		end
-
-	valid_name (a_name: STRING): BOOLEAN is
-			-- Is `a_name' a UTF8 string with a valid name?
-		require
-			a_name_not_void: a_name /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := a_name.count
-				-- First.
-			if nb = 0 or else is_name_first (a_name.item_code (1)) then
-				Result := True
-					-- Tail.
-				from i := 2 until i > nb loop
-					if not is_name_char (a_name.item_code (i)) then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
 			end
 		end
 
