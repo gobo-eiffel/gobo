@@ -1,5 +1,5 @@
 @rem system:     "Reverse Polish Notation Calculator"
-@rem compiler:   "SmallEiffel -0.82"
+@rem compiler:   "SmallEiffel -0.81"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1998, Eric Bezault"
 @rem date:       "$Date$"
@@ -20,6 +20,6 @@
 @echo %SmallEiffel%\lib_std\>>				loadpath.se
 
 
-set options= -boost -no_split -case_insensitive -no_warning
+set options= -boost -no_split -no_warning
 compile_to_c %options% RPCALC execute
 rpcalc.bat

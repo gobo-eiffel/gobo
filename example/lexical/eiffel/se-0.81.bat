@@ -1,5 +1,5 @@
-@rem system:     "Eiffel parser"
-@rem compiler:   "SmallEiffel -0.82"
+@rem system:     "Eiffel scanner"
+@rem compiler:   "SmallEiffel -0.81"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1998, Eric Bezault"
 @rem date:       "$Date$"
@@ -7,10 +7,7 @@
 
 
 @echo .\>									loadpath.se
-@echo %GOBO%\example\parse\eiffel\>>		loadpath.se
-
-@rem	-- Gobo Eiffel Parse Library
-@echo %GOBO%\library\parse\skeleton\>>		loadpath.se
+@echo %GOBO%\example\lexical\eiffel\>>		loadpath.se
 
 @rem	-- Gobo Eiffel Lexical Library
 @echo %GOBO%\library\lexical\skeleton\>>	loadpath.se
@@ -26,6 +23,6 @@
 @echo %SmallEiffel%\lib_std\>>				loadpath.se
 
 
-set options= -boost -no_split -case_insensitive -no_warning
-compile_to_c %options% EIFFEL_PARSER benchmark
-eiffel_parser.bat
+set options= -boost -no_split -no_warning -no_gc
+compile_to_c %options% EIFFEL_SCANNER benchmark
+eiffel_scanner.bat
