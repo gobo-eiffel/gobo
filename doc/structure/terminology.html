@@ -49,7 +49,7 @@ color="#008080"><em><tt>DS_LIST</tt></em></font>, <font
 color="#008080"><em><tt>DS_STACK</tt></em></font> or <font
 color="#008080"><em><tt>DS_TABLE</tt></em></font> for instance.
 And finally these data structures are given various
-implementations in descendant classes. There are four main kinds
+implementations in descendant classes. There are five main kinds
 of implementations. Data structures implemented with singly
 linkable cells have their names prefixed by <font color="#008080"><em><tt>LINKED</tt></em></font>
 such as <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>
@@ -58,6 +58,9 @@ Other containers like <font color="#008080"><em><tt>DS_BILINKED_LIST</tt></em></
 are made up of doubly linkable cells. A third alternative is to
 use an array internally, as in <font color="#008080"><em><tt>DS_ARRAYED_LIST</tt></em></font>
 or <font color="#008080"><em><tt>DS_ARRAYED_STACK</tt></em></font>.
+To avoid too many resizing of these internal arrays, some
+containers are implemented with a list of array chunks, such as <font
+color="#008080"><em><tt>DS_MULTIARRAYED_STACK</tt></em></font>.
 And finally data structures using a hashing mechanism will have
 their class names prefixed by <font color="#008080"><em><tt>HASH</tt></em></font>,
 <font color="#008080"><em><tt>DS_HASH_TABLE</tt></em></font>
@@ -298,7 +301,7 @@ classes are described in the table below:</p>
         <dt><font color="#008000"><tt>-- Element change</tt></font></dt>
         <dd>Commands which add or change items in the container.</dd>
         <dt><font color="#008000"><tt>-- Removal</tt></font></dt>
-        <dd>Commands which removes items from the container.</dd>
+        <dd>Commands which remove items from the container.</dd>
         <dt><font color="#008000"><tt>-- Resizing</tt></font></dt>
         <dd>Commands which change the size of the container.</dd>
         <dt><font color="#008000"><tt>-- Implementation</tt></font></dt>
@@ -315,7 +318,7 @@ appear in the same predictable order in the classes.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -325,7 +328,7 @@ appear in the same predictable order in the classes.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 August 1999</font><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
