@@ -54,13 +54,8 @@ feature -- Access
 			Result := feature_name.position
 		end
 
-feature -- Duplication
-
-	cloned_attachment: like Current is
-			-- Cloned version of current attachment
-		do
-			create Result.make (source_type_set, feature_name, current_feature, current_type)
-		end
+	description: STRING is "agent implicit actual argument"
+			-- Kind of attachment
 
 invariant
 
