@@ -1,17 +1,23 @@
-<project name="gexace" default="compile">
+<?xml version="1.0"?>
 
-	<target name="compile" description="compiles GEXACE">
-		<gexace
-			command="build"
-			command_options="se"
-		/>
+<project name="gexace" default="compile-se">
+
+	<target name="compile-se">
+		<description>
+			Compile 'gexace' with SmallEiffel.
+		</description>
+
+		<gexace command="build" command_options="se"/>
+		<compile_se ace_file="se.ace"/>
 	</target>
 
-	<target name="compile-ise" description="compiles GEXACE">
-		<gexace
-			command="build"
-			command_options="ise"
-		/>
+	<target name="compile-ise">
+		<description>
+			Compile 'gexace' with ISE Eiffel.
+		</description>
+
+		<gexace command="build" command_options="ise"/>
+		<exec executable="ec -batch -finalize -ace ise.ace"/>
 	</target>
 
 </project>
