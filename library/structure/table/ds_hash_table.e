@@ -37,12 +37,23 @@ inherit
 #endif
 		redefine
 			searcher
+#ifdef VE
+--| Bug in VE (970520a)
+		select
+			copy
+#endif
 		end
 
 	DS_RESIZABLE [G]
 #ifdef ISE || HACT
 		undefine
 			consistent, setup
+		end
+#endif
+#ifdef VE
+--| Bug in VE (970520a)
+		select
+			copy
 		end
 #endif
 
