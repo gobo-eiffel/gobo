@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
+			a_xml_element: GEANT_XML_ELEMENT
+			a_fs_element: GEANT_FILESET_ELEMENT
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
@@ -56,6 +58,13 @@ feature {NONE} -- Initialization
 					command.set_to_directory (a_value.out)
 				end
 			end
+
+			a_xml_element := xml_element.child_by_name (Fileset_element_name)
+			if a_xml_element /= Void then
+				!! a_fs_element.make (project, a_xml_element)
+				command.set_fileset (a_fs_element.fileset)
+			end
+
 		end
 
 feature -- Access
@@ -90,6 +99,15 @@ feature {NONE} -- Constants
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
+		end
+
+	Fileset_element_name: UC_STRING is
+			-- Name of xml subelement for fileset
+		once
+			!! Result.make_from_string ("fileset")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: not Result.empty
 		end
 
 end -- class GEANT_COPY_TASK
