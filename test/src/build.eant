@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+
+<project name="src" default="help">
+
+	<description>
+		description: "Eiffel Ant file for testing Gobo Eiffel tools"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant test"/>
+		<echo message="   geant test_ise"/>
+		<echo message="   geant test_hact"/>
+		<echo message="   geant test_se"/>
+		<echo message="   geant test_ve"/>
+		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant test_debug_hact"/>
+		<echo message="   geant test_debug_se"/>
+		<echo message="   geant test_debug_ve"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel tools testers.
+		</description>
+
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test" depend="init">
+		<description>
+			Test Gobo tools.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<set name="target" value="test"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_ise" depend="init">
+		<description>
+			Test Gobo tools with ISE Eiffel.
+		</description>
+
+		<set name="target" value="test_ise"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_hact" depend="init">
+		<description>
+			Test Gobo tools with Halstenbach Eiffel.
+		</description>
+
+		<set name="target" value="test_hact"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_ve" depend="init">
+		<description>
+			Test Gobo tools with Visual Eiffel.
+		</description>
+
+		<set name="target" value="test_ve"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_se" depend="init">
+		<description>
+			Test Gobo tools with SmallEiffel.
+		</description>
+
+		<set name="target" value="test_se"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug" depend="init">
+		<description>
+			Test Gobo tools in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<set name="target" value="test_debug"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init">
+		<description>
+			Test Gobo tools with ISE Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_ise"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_hact" depend="init">
+		<description>
+			Test Gobo tools with Halstenbach Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_hact"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_ve" depend="init">
+		<description>
+			Test Gobo tools with Visual Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_ve"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="test_debug_se" depend="init">
+		<description>
+			Test Gobo tools with SmallEiffel in debug mode.
+		</description>
+
+		<set name="target" value="test_debug_se"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="build.eant" target="${target}" dir="gelex"/>
+		<geant file="build.eant" target="${target}" dir="gepp"/>
+		<geant file="build.eant" target="${target}" dir="getest"/>
+		<geant file="build.eant" target="${target}" dir="geyacc"/>
+	</target>
+
+</project>
