@@ -183,6 +183,7 @@ feature -- Error reporting
 		end
 
 invariant
+
 	resolvers_not_void: entity_resolver /= Void and dtd_resolver /= Void
-	
+
 end
