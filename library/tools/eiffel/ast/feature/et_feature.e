@@ -91,10 +91,12 @@ feature -- Access
 			-- current node in source code
 		do
 			if not is_frozen then
-				Result := name.position
+				Result := name_item.position
 			else
-				-- TODO:
-				Result := name.position
+				Result := frozen_keyword.position
+				if Result.is_null then
+					Result := name_item.position
+				end
 			end
 		end
 
