@@ -56,9 +56,15 @@ feature -- Execution
 
 	execute is
 			-- Execute command.
+		local
+			a_directory: KI_DIRECTORY
+			a_name: STRING
 		do
 			log ("  [mkdir] " + directory + "%N")
-			file_system.create_directory (directory)
+			a_name := file_system.pathname_from (directory, unix_file_system)
+
+			! KL_DIRECTORY ! a_directory.make (a_name)
+			a_directory.recursive_create_directory
 		end
 
 end -- class GEANT_MKDIR_COMMAND
