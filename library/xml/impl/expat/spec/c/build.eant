@@ -14,10 +14,10 @@
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message="   geant compile"/>
-		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_hact"/>
-		<echo message="   geant compile_se"/>
-		<echo message="   geant compile_ve"/>
+		<echo message="   geant compile_gcc"/>
+		<echo message="   geant compile_cl"/>
+		<echo message="   geant compile_lcc"/>
+		<echo message="   geant compile_bcc"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -52,27 +52,27 @@
 	</target>
 
 	<target name="compile_gcc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="gcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include}"/> 
-		<exec executable="gcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include}"/> 
+		<exec executable="gcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="gcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
 		<exec executable="ar rc libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
 		<exec executable="ranlib libexml-expat-${eiffel}${lib}"/>
    	</target>
 
-	<target name="compile_msc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="cl -c exml_helper.c -D${eiffel} ${gobo_eiffel_include}"/> 
-		<exec executable="cl -c exml_expat.c -D${eiffel} ${gobo_eiffel_include}"/> 
+	<target name="compile_cl" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
+		<exec executable="cl -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="cl -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
 		<exec executable="lib /OUT:libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
    	</target>
 
 	<target name="compile_lcc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="lcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include}"/> 
-		<exec executable="lcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include}"/> 
+		<exec executable="lcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="lcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
 		<exec executable="lcclib /OUT:libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
    	</target>
 
 	<target name="compile_bcc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="bcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include}"/> 
-		<exec executable="bcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include}"/> 
+		<exec executable="bcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="bcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
 		<exec executable="tlib libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
    	</target>
 
@@ -85,6 +85,8 @@
 		<set name="system" value="libexml-expat"/>
 		<set name="eiffel" value="se"/>
 		<set name="cc" value="gcc"/>
+		<set name="expat_include" value=""/>
+		<set name="bench_name" value="bench"/>
 		<geant target="init_eiffel"/>
 		<geant target="init_os"/>
 		<geant target="init_cc"/>
@@ -108,7 +110,7 @@
 	</target>
 
 	<target name="init_ise" if="${eiffel}=ise">
-		<set name="gobo_eiffel_include" value="-I${ISE_EIFFEL}/studio/spec/${PLATFORM}/include"/>
+		<set name="gobo_eiffel_include" value="-I${ISE_EIFFEL}/${bench_name}/spec/${PLATFORM}/include"/>
 	</target>
 
 	<target name="init_hact" if="${eiffel}=hact">
@@ -116,7 +118,7 @@
 	</target>
 
 	<target name="init_expat" if="${EXPAT}">
-		<set name="gobo_eiffel_include" value="$gobo_eiffel_include -I${EXPAT}"/>
+		<set name="expat_include" value="-I${EXPAT}\Source\lib"/>
 	</target>
 
 	<target name="init_os">
@@ -128,17 +130,19 @@
 		<set name="exe" value=".exe"/>
 		<set name="obj" value=".obj"/>
 		<set name="lib" value=".lib"/>
+		<set name="PLATFORM" value="windows"/>
 	</target>
 
 	<target name="init_unix" unless="${GOBO_OS}=windows">
 		<set name="exe" value=""/>
 		<set name="obj" value=".o"/>
 		<set name="lib" value=".a"/>
+		<set name="bench_name" value="studio"/>
 	</target>
 
 	<target name="init_cc">
 		<geant target="init_gcc"/>
-		<geant target="init_msc"/>
+		<geant target="init_cl"/>
 		<geant target="init_lcc"/>
 		<geant target="init_bcc"/>
 	</target>
@@ -147,7 +151,7 @@
 		<set name="cc" value="gcc"/>
 	</target>
 
-	<target name="init_msc" if="${GOBO_CC}=msc">
+	<target name="init_cl" if="${GOBO_CC}=cl">
 		<set name="cc" value="msc"/>
 	</target>
 
