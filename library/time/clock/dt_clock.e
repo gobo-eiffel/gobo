@@ -1,0 +1,77 @@
+indexing
+
+	description:
+
+		"Abstract clocks"
+
+	library:    "Gobo Eiffel Time Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+deferred class DT_CLOCK
+
+inherit
+
+	DT_DATE_HANDLER
+	DT_TIME_HANDLER
+	DT_DATE_TIME_HANDLER
+
+feature -- Access
+
+	time_now: DT_TIME is
+			-- Current time
+			-- (Create a new time object at each call.)
+		do
+			!! Result.make_from_storage (0)
+			set_time_to_now (Result)
+		ensure
+			time_now_not_void: Result /= Void
+		end
+
+	date_now: DT_DATE is
+			-- Current date
+			-- (Create a new date object at each call.)
+		do
+			!! Result.make_from_storage (0)
+			set_date_to_now (Result)
+		ensure
+			date_now_not_void: Result /= Void
+		end
+
+	date_time_now: DT_DATE_TIME is
+			-- Current date time
+			-- (Create a new date time object at each call.)
+		do
+			!! Result.make_from_storage (0, 0)
+			set_date_time_to_now (Result)
+		ensure
+			date_time_now_not_void: Result /= Void
+		end
+
+feature -- Setting
+
+	set_time_to_now (a_time: DT_TIME) is
+			-- Set `a_time' to current time.
+		require
+			a_time_not_void: a_time /= Void
+		deferred
+		end
+
+	set_date_to_now (a_date: DT_DATE) is
+			-- Set `a_date' to current date.
+		require
+			a_date_not_void: a_date /= Void
+		deferred
+		end
+
+	set_date_time_to_now (a_date_time: DT_DATE_TIME) is
+			-- Set `a_date_time' to current date time.
+		require
+			a_date_time_not_void: a_date_time /= Void
+		deferred
+		end
+
+end -- class DT_CLOCK

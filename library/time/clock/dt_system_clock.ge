@@ -1,0 +1,202 @@
+indexing
+
+	description:
+
+		"System clocks (precision to the second)"
+
+	library:    "Gobo Eiffel Time Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class DT_SYSTEM_CLOCK
+
+inherit
+
+	DT_CLOCK
+
+	DT_GREGORIAN_CALENDAR
+		export {NONE} all end
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new system clock.
+		do
+		end
+
+feature -- Setting
+
+	set_time_to_now (a_time: DT_TIME) is
+			-- Set `a_time' to current time.
+		local
+			s: INTEGER
+		do
+#ifdef SE
+			basic_time.update
+			s := basic_time.second
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_time.set_precise_hour_minute_second (basic_time.hour,
+				basic_time.minute, s, 0)
+#endif
+#ifdef VE
+			timestamp.set_to_now
+			s := timestamp.second
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_time.set_precise_hour_minute_second (timestamp.hour,
+				timestamp.minute, s, 0)
+#endif
+#ifdef HACT
+			c_localtime (c_time, $ty, $tm, $td, $thr, $tme, $tsd, $tdst)
+			s := tsd
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_time.set_precise_hour_minute_second (thr, tme, s, 0)
+#endif
+#ifdef ISE
+			gobo_get_time ($th, $tmi, $ts)
+			s := ts
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_time.set_precise_hour_minute_second (th, tmi, s, 0)
+#endif
+		end
+
+	set_date_to_now (a_date: DT_DATE) is
+			-- Set `a_date' to current date.
+		do
+#ifdef SE
+			basic_time.update
+			a_date.set_year_month_day (basic_time.year,
+				basic_time.month, basic_time.day)
+#endif
+#ifdef VE
+			timestamp.set_to_now
+			a_date.set_year_month_day (timestamp.year,
+				timestamp.month, timestamp.day)
+#endif
+#ifdef HACT
+			c_localtime (c_time, $ty, $tm, $td, $thr, $tme, $tsd, $tdst)
+			a_date.set_year_month_day (ty, tm, td)
+#endif
+#ifdef ISE
+			gobo_get_date ($ty, $tm, $td)
+			a_date.set_year_month_day (ty, tm, td)
+#endif
+		end
+
+	set_date_time_to_now (a_date_time: DT_DATE_TIME) is
+			-- Set `a_date_time' to current date time.
+		local
+			s: INTEGER
+		do
+#ifdef SE
+			basic_time.update
+			s := basic_time.second
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_date_time.set_year_month_day (basic_time.year,
+				basic_time.month, basic_time.day)
+			a_date_time.set_precise_hour_minute_second (basic_time.hour,
+				basic_time.minute, s, 0)
+#endif
+#ifdef VE
+			timestamp.set_to_now
+			s := timestamp.second
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_date_time.set_year_month_day (timestamp.year,
+				timestamp.month, timestamp.day)
+			a_date_time.set_precise_hour_minute_second (timestamp.hour,
+				timestamp.minute, s, 0)
+#endif
+#ifdef HACT
+			c_localtime (c_time, $ty, $tm, $td, $thr, $tme, $tsd, $tdst)
+			s := tsd
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_date_time.set_year_month_day (ty, tm, td)
+			a_date_time.set_precise_hour_minute_second (thr, tme, s, 0)
+#endif
+#ifdef ISE
+			gobo_get_date_time ($ty, $tm, $td, $th, $tmi, $ts)
+			s := ts
+			if s >= Seconds_in_minute then
+				s := Seconds_in_minute - 1
+			end
+			a_date_time.set_year_month_day (ty, tm, td)
+			a_date_time.set_precise_hour_minute_second (th, tmi, s, 0)
+#endif
+		end
+
+feature {NONE} -- Implementation
+
+#ifdef SE
+	basic_time: BASIC_TIME
+			-- System time
+#endif
+#ifdef VE
+	timestamp: TIMESTAMP is
+			-- System time
+		once
+			!! Result.clear
+		ensure
+			timestamp_not_void: Result /= Void
+		end
+#endif
+#ifdef HACT
+	ty, tm, td, thr, tme, tsd, tdst: INTEGER
+			-- Temporary variables
+
+	c_time: INTEGER is
+			-- Read system time in seconds since 00:00:00 UTC, January 1, 1970
+		external
+			"C | <eif_sysclock.h>"
+		end
+
+	c_localtime (t: INTEGER; y, m, d, hr, me, sd, dst: POINTER) is
+			-- Convert `t' seconds since 00:00:00 UTC, January 1, 1970 to
+			-- local time year `y', month `m', day `d', hour `hr',
+			-- minute `me' and second `sd'.
+			-- Status of day light saving is stored in `dst'.
+			-- All Pointer's must be pointer's to a Variable of type INTEGER.
+		external
+			"C | <eif_sysclock.h>"
+		end
+#endif
+#ifdef ISE
+	ty, tm, td, th, tmi, ts: INTEGER
+			-- Temporary variables
+
+	gobo_get_date (y, m, d: POINTER) is
+		external
+			"C | <ise_clock.h>"
+		end
+
+	gobo_get_time (h, mi, s: POINTER) is
+		external
+			"C | <ise_clock.h>"
+		end
+
+	gobo_get_date_time (y, m, d, h, mi, s: POINTER) is
+		external
+			"C | <ise_clock.h>"
+		end
+#endif
+
+end -- class DT_SYSTEM_CLOCK
