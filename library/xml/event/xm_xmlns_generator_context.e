@@ -41,12 +41,12 @@ feature {NONE} -- Creation
 feature {NONE} -- Default context
 	
 	default_namespaces: DS_LINKED_STACK [STRING]
-			-- Default namespace URI strack.
+			-- Default namespace URI stack.
 
 feature -- Default
 
-	is_default (a_namespace: STRING): BOOLEAN is
-			-- Is namespace the same as the default one?
+	is_same_as_default (a_namespace: STRING): BOOLEAN is
+			-- Is namespace the same as the default one for the current element?
 		require
 			a_namespace_not_void: a_namespace /= Void
 		do

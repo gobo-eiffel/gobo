@@ -43,7 +43,7 @@ feature {NONE} -- Default element namespace handling
 		require
 			not_void: a_namespace /= Void
 		do
-			if not context.is_default (a_namespace) then
+			if not context.is_same_as_default (a_namespace) then
 					-- Change of default namespace, issue a declaration.
 				context.set_default (a_namespace)
 				next.on_attribute (Xmlns_namespace, Void, Xmlns, a_namespace)
