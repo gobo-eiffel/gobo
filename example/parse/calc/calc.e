@@ -16,7 +16,6 @@ inherit
 	YY_PARSER_SKELETON [DOUBLE]
 
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 creation
@@ -24,7 +23,12 @@ creation
 	make, execute
 
 
-feature {NONE} -- Tables
+feature -- Token codes
+
+	NUM: INTEGER is 258
+	NEG: INTEGER is 259
+
+feature {NONE} -- Implementation
 
 	yy_build_parser_tables is
 			-- Build parser tables.
@@ -40,155 +44,159 @@ feature {NONE} -- Tables
 			yycheck := yycheck_
 		end
 
-	yyFinal: INTEGER is 23
-
-	yyFlag: INTEGER is -32768
-
-	yyNtbase: INTEGER is 13
-
-	yyMax_token: INTEGER is 259
-	yyNsyms: INTEGER is 16
-
-	yytranslate_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<0,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,    10,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,    11,
-    12,     6,     5,     2,     4,     2,     7,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     9,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     1,     2,     3,     8>>, 0)
-		end
-
-	yyr1_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<0,
-    13,    13,    14,    14,    14,    15,    15,    15,    15,    15,
-    15,    15>>, 0)
-		end
-
-	yyr2_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<0,
-     0,     2,     1,     2,     2,     1,     3,     3,     3,     3,
-     2,     3>>, 0)
-		end
-
-	yydefact_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<     1,
-     0,     0,     6,     0,     3,     0,     2,     0,     5,    11,
-     0,     0,     0,     0,     0,     4,    12,     8,     7,     9,
-    10,     0,     0>>, 0)
-		end
-
-	yydefgoto_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<     1,
-     7,     8>>, 0)
-		end
-
-	yypact_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
-     0,    -8,-32768,    18,-32768,    18,-32768,    26,-32768,-32768,
-    13,    18,    18,    18,    18,-32768,-32768,     2,     2,-32768,
--32768,     6,-32768>>, 0)
-		end
-
-	yypgoto_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
--32768,     1>>, 0)
-		end
-
-	yyLast: INTEGER is 36
-
-	yytable_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<    22,
-     2,     9,     3,     4,    10,    23,    11,    14,    15,     5,
-     6,     0,    18,    19,    20,    21,    12,    13,    14,    15,
-     3,     4,     0,     0,    17,     0,     0,     0,     6,    12,
-    13,    14,    15,     0,     0,    16>>, 0)
-		end
-
-	yycheck_: ARRAY [INTEGER] is
-		once
-			Result := INTEGER_ARRAY_.make_from_array (<<     0,
-     1,    10,     3,     4,     4,     0,     6,     6,     7,    10,
-    11,    -1,    12,    13,    14,    15,     4,     5,     6,     7,
-     3,     4,    -1,    -1,    12,    -1,    -1,    -1,    11,     4,
-     5,     6,     7,    -1,    -1,    10>>, 0)
-		end
-
 feature {NONE} -- Semantic actions
 
 	yy_do_action (yy_act: INTEGER) is
+			-- Execute semantic action.
 		do
 			inspect yy_act
-
 when 4 then
---#line 43 "calc.y"
- print (yyvs.item (yyvsp - 1)); print ('%N') 
-
+--|#line 42
+print (yyvs.item (yyvsp - 1)); print ('%N') 
 when 5 then
---#line 44 "calc.y"
- recover 
-
+--|#line 43
+recover 
 when 7 then
---#line 49 "calc.y"
- yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp) 
-
+--|#line 48
+yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp) 
 when 8 then
---#line 50 "calc.y"
- yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp) 
-
+--|#line 49
+yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp) 
 when 9 then
---#line 51 "calc.y"
- yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp) 
-
+--|#line 50
+yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp) 
 when 10 then
---#line 52 "calc.y"
- yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp) 
-
-when 11 then
---#line 53 "calc.y"
- yyval := -yyvs.item (yyvsp) 
-
+--|#line 51
+yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp) 
 when 12 then
---#line 54 "calc.y"
- yyval := yyvs.item (yyvsp - 1) 
-
+--|#line 53
+yyval := yyvs.item (yyvsp - 1) 
 			else
 				-- No action
 			end
 		end
 
-feature {NONE} -- Token codes
+feature {NONE} -- Tables
 
-	NUM: INTEGER is 258
-	NEG: INTEGER is 259
+	yytranslate_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			   10,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			   11,   12,    6,    5,    2,    4,    2,    7,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    9,    2,    2,    2,    2,    2,
+
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    1,    2,    3,    8>>, 0)
+		end
+
+	yyr1_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    0,   13,   13,   14,   14,   14,   15,   15,   15,   15,
+			   15,   15,   15>>, 0)
+		end
+
+	yyr2_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    0,    0,    2,    1,    2,    2,    1,    3,    3,    3,
+			    3,    2,    3>>, 0)
+		end
+
+	yydefact_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    1,    0,    0,    3,    0,    6,    0,    2,    0,    0,
+			    0,    5,    4,    0,    0,    0,    0,   12,    0,    0,
+			    0,    0,    0,    0>>, 0)
+		end
+
+	yydefgoto_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    1,    7,    8>>, 0)
+		end
+
+	yypact_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			 -32768,    5,   18, -32768,   18, -32768,   -7, -32768,   26,   13,
+			   33, -32768, -32768,   18,   18,   18,   18, -32768,   33,   33,
+			   33,   33,    1, -32768>>, 0)
+		end
+
+	yypgoto_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			 -32768, -32768,   -2>>, 0)
+		end
+
+	yytable_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    9,   23,   10,   11,    0,   22,    6,    0,    5,    4,
+			    0,   18,   19,   20,   21,    3,    2,   16,   15,   14,
+			   13,    5,    4,    0,    0,   17,    0,    0,    0,    2,
+			   16,   15,   14,   13,    0,    0,   12,   16,   15,   14,
+			   13>>, 0)
+		end
+
+	yycheck_: ARRAY [INTEGER] is
+		once
+			Result := INTEGER_ARRAY_.make_from_array (<<
+			    2,    0,    4,   10,    0,    0,    1,    0,    3,    4,
+			    0,   13,   14,   15,   16,   10,   11,    4,    5,    6,
+			    7,    3,    4,    0,    0,   12,    0,    0,    0,   11,
+			    4,    5,    6,    7,    0,    0,   10,    4,    5,    6,
+			    7>>, 0)
+		end
+
+feature {NONE} -- Constants
+
+	yyFinal: INTEGER is 23
+			-- Termination state id
+
+	yyFlag: INTEGER is -32768
+			-- Most negative INTEGER
+
+	yyNtbase: INTEGER is 13
+			-- Number of tokens
+
+	yyLast: INTEGER is 40
+			-- Upper bound of `yytable' and `yycheck'
+
+	yyMax_token: INTEGER is 259
+			-- Maximum token id
+			-- (upper bound of `yytranslate'.)
+
+	yyNsyms: INTEGER is 16
+			-- Number of symbols
+			-- (terminal and nonterminal)
+
+feature -- User-defined features
+
 
 
 feature {NONE} -- Initialization
