@@ -29,7 +29,7 @@ feature
 			if not tree_pipe.error.has_error then
 				assert_has_element (tree_pipe.document, "doc")
 				a_root := tree_pipe.document.root_element
-				assert_equal ("root name", a_root.name, "doc")
+				assert_strings_equal ("root name", a_root.name, "doc")
 				assert_has_element (a_root, "a")
 				assert_has_element (a_root, "b")
 			end
@@ -248,7 +248,7 @@ feature {NONE} -- Walk assertions
 		do
 			node.process (typer)
 			assert ("comment expected", typer.is_comment)
-			assert_equal ("comment value", a, typer.comment.data)
+			assert_strings_equal ("comment value", a, typer.comment.data)
 		end
 		
 		
@@ -259,7 +259,7 @@ feature {NONE} -- Walk assertions
 		do
 			node.process (typer)
 			assert ("element expected", typer.is_element)
-			assert_equal ("element name", a_name, typer.element.name)
+			assert_strings_equal ("element name", a_name, typer.element.name)
 		end
 	
 	assert_element_has_qualified (a_uri: STRING; a_name: STRING) is
@@ -282,7 +282,7 @@ feature {NONE} -- Walk assertions
 			assert_element (a_name)
 			node.process (typer)
 			assert ("has_qualified_name", typer.element.has_qualified_name (a_ns, a_name))
-			assert_equal ("element namespace", a_ns, typer.element.namespace.uri)
+			assert_strings_equal ("element namespace", a_ns, typer.element.namespace.uri)
 		end
 		
 	assert_childless is
@@ -304,8 +304,8 @@ feature {NONE} -- Walk assertions
 			node.process (typer)
 			assert ("attribute expected", typer.is_attribute)
 			an_attribute := typer.xml_attribute
-			assert_equal ("attribute name", a_name, an_attribute.name)
-			assert_equal ("attribute value", a_value, an_attribute.value)
+			assert_strings_equal ("attribute name", a_name, an_attribute.name)
+			assert_strings_equal ("attribute value", a_value, an_attribute.value)
 			
 			assert_attribute_element (an_attribute)
 		end
@@ -335,7 +335,7 @@ feature {NONE} -- Walk assertions
 			assert_attribute (a_name, a_value)
 			node.process (typer)
 			assert ("has_qualified_name", typer.xml_attribute.has_qualified_name (a_ns, a_name))
-			assert_equal ("attribute namespace", a_ns, typer.xml_attribute.namespace.uri)
+			assert_strings_equal ("attribute namespace", a_ns, typer.xml_attribute.namespace.uri)
 		end
 		
 	assert_last is
@@ -357,7 +357,7 @@ feature {NONE} -- Walk assertions
 		do
 			node.process (typer)
 			assert ("text node expected", typer.is_character_data)
-			assert_equal ("text", a, typer.character_data.content)
+			assert_strings_equal ("text", a, typer.character_data.content)
 		end
 		
 	assert_text_space is
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 		do
 			assert ("has element", a.has_element_by_name (a_name))
 			if a.has_element_by_name (a_name) then
-				assert_equal ("element name", a.element_by_name (a_name).name, a_name)
+				assert_strings_equal ("element name", a.element_by_name (a_name).name, a_name)
 			end
 		end
 
@@ -410,8 +410,8 @@ feature {NONE} -- Implementation
 		do
 			assert ("has element", a.has_element_by_qualified_name (a_uri, a_name))
 			if a.has_element_by_name (a_name) then
-				assert_equal ("element namespace", a.element_by_qualified_name (a_uri, a_name).namespace.uri, a_uri)
-				assert_equal ("element name", a.element_by_qualified_name (a_uri, a_name).name, a_name)
+				assert_strings_equal ("element namespace", a.element_by_qualified_name (a_uri, a_name).namespace.uri, a_uri)
+				assert_strings_equal ("element name", a.element_by_qualified_name (a_uri, a_name).name, a_name)
 			end
 		end
 

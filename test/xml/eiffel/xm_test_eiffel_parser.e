@@ -26,7 +26,7 @@ feature -- Test
 			create a_parser.make
 			a_parser.parse_from_string ("")
 			assert ("not_correct", not a_parser.is_correct)
-			assert_equal ("no_element", "parse error ( ln: 1 cl: 1 byte: 1 -> STRING)", a_parser.last_error_extended_description)
+			assert_strings_equal ("no_element", "parse error ( ln: 1 cl: 1 byte: 1 -> STRING)", a_parser.last_error_extended_description)
 		end
 
 	test_position is
@@ -39,9 +39,9 @@ feature -- Test
 			a_parser.parse_from_string ("%N%N  <a?>")
 			a_position ?= a_parser.position
 			assert_not_equal ("position_exists", Void, a_position)
-			assert_equal ("row_correct", 3, a_position.row)
-			assert_equal ("column_correct", 5, a_position.column)
-			assert_equal ("byte_index_correct", 7, a_position.byte_index)
+			assert_integers_equal ("row_correct", 3, a_position.row)
+			assert_integers_equal ("column_correct", 5, a_position.column)
+			assert_integers_equal ("byte_index_correct", 7, a_position.byte_index)
 		end
 
 	test_end_tag is

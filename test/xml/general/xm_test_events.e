@@ -40,12 +40,12 @@ feature -- Test
 			counter.on_comment ("com2")
 			counter.on_finish
 			
-			assert_equal ("pi", counter.processing_instructions, 1)
-			assert_equal ("com", counter.comments, 2)
-			assert_equal ("tag", counter.start_tags, 2)
-			assert_equal ("content", counter.contents, 3)
-			assert_equal ("end tag", counter.start_tags, counter.end_tags)
-			assert_equal ("attr", counter.attributes, 1)
+			assert_integers_equal ("pi", counter.processing_instructions, 1)
+			assert_integers_equal ("com", counter.comments, 2)
+			assert_integers_equal ("tag", counter.start_tags, 2)
+			assert_integers_equal ("content", counter.contents, 3)
+			assert_integers_equal ("end tag", counter.start_tags, counter.end_tags)
+			assert_integers_equal ("attr", counter.attributes, 1)
 		end
 		
 	test_concatenator is
@@ -80,8 +80,8 @@ feature -- Test
 			concat.on_comment ("com2")
 			concat.on_finish
 			
-			assert_equal ("content concatenated", counter.contents, 5)
-			assert_equal ("pretty", pretty.last_output, "<doc>doc1<?nm val?>doc2.1<!--com in content-->doc2.2<zoo attr1=%"val1%">zoo.1zoo.2</zoo>doc3</doc><!--com2-->")
+			assert_integers_equal ("content concatenated", counter.contents, 5)
+			assert_strings_equal ("pretty", pretty.last_output, "<doc>doc1<?nm val?>doc2.1<!--com in content-->doc2.2<zoo attr1=%"val1%">zoo.1zoo.2</zoo>doc3</doc><!--com2-->")
 		end
 	
 	test_no_comment is
@@ -104,6 +104,6 @@ feature -- Test
 			tested.on_comment ("c3")
 			tested.on_finish
 			
-			assert_equal ("no comment", counter.comments, 0)
+			assert_integers_equal ("no comment", counter.comments, 0)
 		end
 end

@@ -39,12 +39,12 @@ feature -- Tests
 			parser.parse_from_string (Ascii_content)
 			assert ("ascii ok", parser.is_correct)
 			assert_content_string_static
-			assert_equal ("ascii output", Ascii_char, content.content.item (1))
+			assert_integers_equal ("ascii output", Ascii_char.code, content.content.item (1).code)
 			
 			parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_latin1_content))
 			assert ("latin1 ok", parser.is_correct)
 			assert_content_string_static
-			assert_equal ("latin1 output", Latin1_char, content.content.item_code (1))
+			assert_integers_equal ("latin1 output", Latin1_char, content.content.item_code (1))
 			
 			parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_large_content))
 			assert ("latin1 fail", not parser.is_correct)
@@ -59,7 +59,7 @@ feature -- Tests
 			parser.parse_from_string (Ascii_content)
 			assert ("ascii ok", parser.is_correct)
 			assert_content_string_static
-			assert_equal ("ascii output", Ascii_char, content.content.item (1))
+			assert_integers_equal ("ascii output", Ascii_char.code, content.content.item (1).code)
 
 			parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_latin1_content))
 			assert ("latin1 fail", not parser.is_correct)
@@ -76,17 +76,18 @@ feature -- Tests
 			
 			parser.parse_from_string (Ascii_content)
 			assert ("ascii ok", parser.is_correct)
-			assert_equal ("ascii output", Ascii_char, content.content.item (1))
+			assert_integers_equal ("ascii output", Ascii_char.code, content.content.item (1).code)
 			assert_content_string_static
 			
 			parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_latin1_content))
 			assert ("latin1 ok", parser.is_correct)
-			assert_equal ("latin1 output", Latin1_char, content.content.item_code (1))
+			assert_integers_equal ("latin1 output", Latin1_char, content.content.item_code (1))
 			assert_string_type (content.content, False)
 			
 			parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_large_content))
 			assert ("large ok", parser.is_correct)
-			assert_equal ("large output", Large_char, content.content.item_code (1))
+			assert_integers_equal ("large output", Large_char, content.content.item_code (1))
+			
 			assert_string_type (content.content, False)
 		end
 

@@ -35,12 +35,12 @@ feature
 
 			parser.parse_from_system ("doc")
 			assert ("parsed", parser.is_correct)
-			assert_equal ("balanced resolver", 0, string_resolver.depth)
+			assert_integers_equal ("balanced resolver", 0, string_resolver.depth)
 		
 				-- Second time to check resolver left in a good state.
 			parser.parse_from_system ("doc")
 			assert ("parsed second time", parser.is_correct)
-			assert_equal ("balanced second time",  0, string_resolver.depth)
+			assert_integers_equal ("balanced second time",  0, string_resolver.depth)
 		end
 
 	test_file is
@@ -80,7 +80,7 @@ feature
 				-- Parse broken file
 			parser.parse_from_system (Brokensub_data)
 			assert ("not parsed", not parser.is_correct)
-			assert_equal ("position count", 2, parser.positions.count)
+			assert_integers_equal ("position count", 2, parser.positions.count)
 			assert_position ("top", parser.position, 1, 8)
 			assert_position ("parent ", parser.positions.item (2), 6, 1)
 			
@@ -116,8 +116,8 @@ feature {NONE} -- Implementation
 			a_prefix_not_void: a_prefix /= Void
 			a_position_not_void: a_position /= Void
 		do
-			assert_equal (a_prefix + " row", a_row, a_position.row)
-			assert_equal (a_prefix + " column", a_column, a_position.column)
+			assert_integers_equal (a_prefix + " row", a_row, a_position.row)
+			assert_integers_equal (a_prefix + " column", a_column, a_position.column)
 		end
 		
 feature {NONE} -- Implementation

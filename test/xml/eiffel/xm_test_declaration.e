@@ -88,7 +88,7 @@ feature {NONE} -- Assert
 			assert ("parsing ok", a_parser.is_correct)
 			assert ("version", STRING_.same_string ("1.0", a_filter.version))
 			assert ("encoding", STRING_.same_string (expected_encoding, a_filter.encoding))
-			assert_equal ("standalone", expected_standalone, a_filter.standalone)
+			assert ("standalone", expected_standalone = a_filter.standalone)
 		end
 		
 	assert_invalid (a_in: STRING) is
