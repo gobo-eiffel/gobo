@@ -1,3 +1,8 @@
+Note: If you downloaded this package from CVS on SourceForge,
+please read $GOBO/work/bootstrap/Readme.txt.
+
+
+
 Gobo Eiffel, version 2.0
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
