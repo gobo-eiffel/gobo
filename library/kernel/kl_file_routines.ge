@@ -1,0 +1,59 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class FILE";
+
+	library:    "Gobo Eiffel Utility Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+class UT_FILE_ROUTINES
+
+feature -- Element change
+
+	file_open_read (a_file: FILE) is
+			-- Open `a_file' in read-only mode.
+			-- `a_file.is_open_read' is set to True
+			-- if operation was successful.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_closed: a_file.is_closed
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				a_file.open_read
+			end
+		rescue
+			rescued := True
+			if not a_file.is_closed then
+				a_file.close
+			end
+			retry
+		end
+
+	file_open_write (a_file: FILE) is
+			-- Open `a_file' in write-only mode.
+			-- `a_file.is_open_write' is set to True
+			-- if operation was successful.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_closed: a_file.is_closed
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				a_file.open_write
+			end
+		rescue
+			rescued := True
+			if not a_file.is_closed then
+				a_file.close
+			end
+			retry
+		end
+
+end -- class UT_FILE_ROUTINES
