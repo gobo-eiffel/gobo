@@ -28,9 +28,9 @@ feature -- Test
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log", True)
 			else
-				assert_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
 			end
-			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff1", testoutput1_filename, "out1")
 			assert_files_equal ("diff2", testoutput2_filename, "out2")
 			assert_files_equal ("diff3", testoutput3_filename, "out3")

@@ -31,7 +31,7 @@ feature -- Test Input 1
 				-- Match first subject.
 			a_regexp.match ("the quick brown fox")
 			assert ("has_matched1", a_regexp.has_matched)
-			assert_equal ("match_count1", 1, a_regexp.match_count)
+			assert_integers_equal ("match_count1", 1, a_regexp.match_count)
 			assert_equal ("captured_substring0_1", "the quick brown fox", a_regexp.captured_substring (0))
 				-- Match second subject.
 			a_regexp.match ("The quick brown FOX")
@@ -39,7 +39,7 @@ feature -- Test Input 1
 				-- Match third subject.
 			a_regexp.match ("What do you know about the quick brown fox?")
 			assert ("has_matched3", a_regexp.has_matched)
-			assert_equal ("match_count3", 1, a_regexp.match_count)
+			assert_integers_equal ("match_count3", 1, a_regexp.match_count)
 			assert_equal ("captured_substring0_3", "the quick brown fox", a_regexp.captured_substring (0))
 				-- Match forth subject.
 			a_regexp.match ("What do you know about THE QUICK BROWN FOX?")
@@ -61,7 +61,7 @@ feature -- Test replacement
 			a_regexp.optimize
 			a_regexp.match ("abc8#8def")
 			assert ("has_matched1", a_regexp.has_matched)
-			assert_equal ("match_count1", 2, a_regexp.match_count)
+			assert_integers_equal ("match_count1", 2, a_regexp.match_count)
 				-- Matched substring:
 			assert_equal ("captured_substring0_1", "8#8", a_regexp.captured_substring (0))
 				-- Matched part in the first parentheses:
