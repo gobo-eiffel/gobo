@@ -108,6 +108,12 @@ make parser
 echo ''; echo "#### Generate files in \$GOBO/example/time/system_clock"
 cd $GOBO/example/time/system_clock
 make depend ise.ace hact.ace
+echo ''; echo "#### Generate files in \$GOBO/example/test/concat1"
+cd $GOBO/example/test/concat1
+make depend ise.ace hact.ace
+echo ''; echo "#### Generate files in \$GOBO/example/test/concat2"
+cd $GOBO/example/test/concat2
+make depend ise.ace hact.ace
 
 # Generate files in $GOBO/test.
 echo ''; echo "#### Generate files in \$GOBO/test/structure"

@@ -1,0 +1,32 @@
+-- system:     "concat2 getest example"
+-- compiler:   "Visual Eiffel 3.3"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 2001, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	xconcat2
+
+root
+
+	XCONCAT2
+
+creation
+
+	make
+
+cluster
+
+	[concat2	"."] end
+
+		-- Gobo Eiffel Library
+	[Gobo		"$GOBO/library"] end
+
+option
+
+	target exe console
+
+end

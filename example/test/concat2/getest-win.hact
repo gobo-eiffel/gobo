@@ -1,0 +1,18 @@
+test
+
+	xconcat2
+
+default
+
+	class ("TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("X")
+	testgen (".")
+	compile ("(ibcomp -executable -new -ace hact.ace -project xconcat2.eif & cd xconcat2_gen\W_code & fish) > xcompile.log 2>&1")
+	execute ("cd xconcat2_gen\W_code & xconcat2")
+
+cluster
+
+	concat2: "$GOBO/example/test/concat2"
+
+end
