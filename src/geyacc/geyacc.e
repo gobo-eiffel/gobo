@@ -38,65 +38,89 @@ feature -- Processing
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 			tokens_needed: BOOLEAN
 			verbose_file: KL_TEXT_OUTPUT_FILE
+			doc_generator: PR_DOC_GENERATOR
 		do
 			if False then resurrect_code end
 
 			Arguments.set_program_name ("geyacc")
 			create error_handler.make_standard
-			old_typing := True
+			old_typing := False
 			line_pragma := True
 			read_command_line
 			parse_input_file
 			if grammar /= Void then
-				if verbose_filename /= Void then
-						-- Verbose mode.
-					create verbose_file.make (verbose_filename)
-					verbose_file.open_write
-					if verbose_file.is_open_write then
-						create fsm.make_verbose (grammar, error_handler, verbose_file)
-						verbose_file.close
+				if doc_format /= Void then
+					if doc_format.is_equal ("xml") then
+						create {PR_XML_DOC_GENERATOR} doc_generator.make (grammar)
 					else
-						create cannot_write.make (verbose_filename)
-						error_handler.report_error (cannot_write)
-						Exceptions.die (1)
+						create {PR_HTML_DOC_GENERATOR} doc_generator.make (grammar)
+						doc_generator.set_lhs_shared (True)
+					end
+					if output_filename /= Void then
+						create out_file.make (output_filename)
+						out_file.open_write
+						if out_file.is_open_write then
+							doc_generator.print_grammar (out_file)
+							out_file.close
+						else
+							create cannot_write.make (output_filename)
+							error_handler.report_error (cannot_write)
+							Exceptions.die (1)
+						end
+					else
+						doc_generator.print_grammar (std.output)
 					end
 				else
-					create fsm.make (grammar, error_handler)
-				end
-				create parser_generator.make (fsm)
-				parser_generator.set_old_typing (old_typing)
-				parser_generator.set_line_pragma (line_pragma)
-				if input_filename /= Void then
-					parser_generator.set_input_filename (input_filename)
-				end
-				if token_classname /= Void then
-						-- Print class text with token code constants.
-					create token_file.make (token_filename)
-					token_file.open_write
-					if token_file.is_open_write then
-						parser_generator.print_token_class (token_classname, Version_number, token_file)
-						token_file.close
+					if verbose_filename /= Void then
+							-- Verbose mode.
+						create verbose_file.make (verbose_filename)
+						verbose_file.open_write
+						if verbose_file.is_open_write then
+							create fsm.make_verbose (grammar, error_handler, verbose_file)
+							verbose_file.close
+						else
+							create cannot_write.make (verbose_filename)
+							error_handler.report_error (cannot_write)
+							Exceptions.die (1)
+						end
 					else
-						create cannot_write.make (token_filename)
-						error_handler.report_error (cannot_write)
-						Exceptions.die (1)
+						create fsm.make (grammar, error_handler)
 					end
-				else
-					tokens_needed := True
-				end
-				if output_filename /= Void then
-					create out_file.make (output_filename)
-					out_file.open_write
-					if out_file.is_open_write then
-						parser_generator.print_parser (tokens_needed, actions_separated, out_file)
-						out_file.close
+					create parser_generator.make (fsm)
+					parser_generator.set_old_typing (old_typing)
+					parser_generator.set_line_pragma (line_pragma)
+					if input_filename /= Void then
+						parser_generator.set_input_filename (input_filename)
+					end
+					if token_classname /= Void then
+							-- Print class text with token code constants.
+						create token_file.make (token_filename)
+						token_file.open_write
+						if token_file.is_open_write then
+							parser_generator.print_token_class (token_classname, Version_number, token_file)
+							token_file.close
+						else
+							create cannot_write.make (token_filename)
+							error_handler.report_error (cannot_write)
+							Exceptions.die (1)
+						end
 					else
-						create cannot_write.make (output_filename)
-						error_handler.report_error (cannot_write)
-						Exceptions.die (1)
+						tokens_needed := True
 					end
-				else
-					parser_generator.print_parser (tokens_needed, actions_separated, std.output)
+					if output_filename /= Void then
+						create out_file.make (output_filename)
+						out_file.open_write
+						if out_file.is_open_write then
+							parser_generator.print_parser (tokens_needed, actions_separated, out_file)
+							out_file.close
+						else
+							create cannot_write.make (output_filename)
+							error_handler.report_error (cannot_write)
+							Exceptions.die (1)
+						end
+					else
+						parser_generator.print_parser (tokens_needed, actions_separated, std.output)
+					end
 				end
 			end
 		end
@@ -201,6 +225,12 @@ feature -- Processing
 					old_typing := True
 				elseif arg.is_equal ("--new_typing") then
 					old_typing := False
+				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--doc=") then
+					doc_format := arg.substring (7, arg.count)
+					if not doc_format.is_equal ("html") and not doc_format.is_equal ("xml") then
+							-- Doc format not supported.
+						report_usage_error
+					end
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--pragma=") then
 					a_pragma := arg.substring (10, arg.count)
 					if a_pragma.is_equal ("line") then
@@ -231,6 +261,7 @@ feature -- Access
 	verbose_filename: STRING
 	actions_separated: BOOLEAN
 	old_typing: BOOLEAN
+	doc_format: STRING
 			-- Command line arguments
 
 	line_pragma: BOOLEAN
@@ -276,7 +307,9 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geyacc usage message
 		once
-			create Result.make ("[-hxV?][--(new|old)_typing][--pragma=[no]line][-t classname][-k filename][-v filename][-o filename] filename")
+			create Result.make ("[--version][--help][-hxV?][--(new|old)_typing]%N%
+				%%T[--pragma=[no]line][--doc=(html|xml)][-t classname]%N%
+				%%T[-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
