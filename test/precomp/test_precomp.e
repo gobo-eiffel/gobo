@@ -105,7 +105,7 @@ feature {NONE} -- Precompilation
 			else
 				define_base := ""
 			end
-			assert_execute ("gexace " + define_base + "--cluster=ise " + xace_filename + output_log)
+			assert_execute ("gexace " + define_base + "--library=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			assert_execute ("ec -precompile -batch -ace ise.ace" + output_log)
 				-- C compilation.
@@ -131,7 +131,7 @@ feature {NONE} -- Precompilation
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate Ace file.
-			assert_execute ("gexace --cluster=hact " + xace_filename + output_log)
+			assert_execute ("gexace --library=hact " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			assert_execute ("ibcomp -precompile -new -stop -ace hact.ace -project gobo.eif" + output_log)
 				-- C compilation.
@@ -149,7 +149,7 @@ feature {NONE} -- Precompilation
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate ELD file.
-			assert_execute ("gexace --cluster=ve " + xace_filename + output_log)
+			assert_execute ("gexace --library=ve " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			assert_execute ("vec -no -p:ve.eld" + output_log)
 			assert ("no_output", not file_system.file_exists ("Result.out"))
@@ -169,7 +169,7 @@ feature {NONE} -- Precompilation
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate loadpath file.
-			assert_execute ("gexace --cluster=se " + xace_filename + output_log)
+			assert_execute ("gexace --library=se " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			!! a_file.make ("loadpath.se")
 			a_file.open_read
