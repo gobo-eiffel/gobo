@@ -21,12 +21,14 @@ inherit
 		undefine
 			root_node
 		redefine
-			make_from_implementation, implementation, remove_namespace_declarations_from_attributes_recursive, resolve_namespaces_start
+			implementation, remove_namespace_declarations_from_attributes_recursive, resolve_namespaces_start
 		end
 
 	XM_NAMED_NODE
+		undefine
+			make_from_implementation
 		redefine
-			implementation, make_from_implementation, apply_namespace_declarations
+			implementation, apply_namespace_declarations
 		end
 
 creation
@@ -34,11 +36,6 @@ creation
 	make_from_implementation
 
 feature {NONE} -- Initialisation
-
-	make_from_implementation (imp: like implementation) is
-		do
-			{XM_COMPOSITE} precursor (imp)
-		end
 
 	make_default is
 		do
