@@ -1,2 +1,2 @@
-${GOBO}/example/time/system_clock/
+${GOBO}/example/time/clock/
 ${GOBO}/library/loadpath.se

@@ -26,7 +26,7 @@ default
 
 cluster
 
-	clock:				"$GOBO/example/time/system_clock";
+	clock:				"$GOBO/example/time/clock";
 
 #include "${GOBO}/library/kernel/hact.ace"
 

@@ -9,7 +9,7 @@
 TARGET=clock
 ROOT_CLASS=CLOCK
 CREATION_ROUTINE=execute
-ROOT_DIR=${GOBO}/example/time/system_clock
+ROOT_DIR=${GOBO}/example/time/clock
 
 include ${GOBO}/misc/platform.mk
 include ${GOBO}/misc/eiffel.mk

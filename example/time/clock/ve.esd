@@ -21,7 +21,7 @@ creation
 cluster
 
 	[clock_project		"."] end
-	[clock				"$GOBO/example/time/system_clock"] end
+	[clock				"$GOBO/example/time/clock"] end
 
 		-- Gobo Eiffel Library
 	[Gobo				"$GOBO/library"] end
