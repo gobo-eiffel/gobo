@@ -150,11 +150,12 @@ entities:</p>
 inlining the call to <font color="#008080"><em><tt>to_character</tt></em></font>
 and hence avoiding the (implicit) creation of the expanded
 object. Unfortunately, <em>expanded types</em> are not properly
-supported by all Eiffel compilers, making it impossible to used
-mechanism in portable code. To work around this problem and to
-avoid having to create an instance of these <font color="#008080"><em><tt>_ROUTINES</tt></em></font>
-classes &quot;by hand&quot; each time they are used, they can be
-accessed through once functions. For example, for class <font
+supported by all Eiffel compilers, making it impossible to use
+this mechanism in portable code. To work around this problem and
+to avoid having to create an instance of these <font
+color="#008080"><em><tt>_ROUTINES</tt></em></font> classes
+&quot;by hand&quot; each time they are used, they can be accessed
+through once functions. For example, for class <font
 color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, the
 following class will be provided:</p>
 
@@ -212,12 +213,12 @@ really ought to be implemented in class <font color="#008080"><em><tt>INTEGER
 compilation problems since <font color="#008080"><em><tt>INTEGER </tt></em></font>is,
 with no good reasons in my opinion, one of Eiffel's reserved
 words. (Note that if you are using SmallEiffel, you will have to
-specify the command line option <tt>-no_warning </tt>if you don't
-want to be overwhelmed by hundreds of warnings telling you that <font
-color="#008080"><em><tt>INTEGER_ </tt></em></font>and the like
-are in uppercase. I still don't understand why SmallEiffel
-generates these warnings since the corresponding code is correct
-Eiffel!)</p>
+specify the command line option <tt>-no_style_warning </tt>if you
+don't want to be overwhelmed by hundreds of warnings telling you
+that <font color="#008080"><em><tt>INTEGER_ </tt></em></font>and
+the like are in uppercase. I still don't understand why
+SmallEiffel generates these warnings since the corresponding code
+is correct Eiffel!)</p>
 
 <h2>Caveats</h2>
 
