@@ -1,39 +1,39 @@
 indexing
 
-    description:
+	description:
 
-        "Objects representing a XML-attribute"
+		"Objects representing a XML-attribute"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_ATTRIBUTE
 
 inherit
 
-    XI_NAMED_NODE
+	XI_NAMED_NODE
 
 feature {ANY} -- Access
 
-    value: UC_STRING is
-            -- the value of the attribute.
-        deferred
-        end
+	value: UC_STRING is
+			-- the value of the attribute.
+		deferred
+		end
 
 feature {ANY} -- Basic routines
 
-    set_value (a_value: UC_STRING) is
-            -- Set `value' to `a_value'
-        require
-            a_value_not_void: a_value /= Void
-        deferred
-        ensure
-            value_set: value = a_value
-        end
+	set_value (a_value: UC_STRING) is
+			-- Set `value' to `a_value'
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		ensure
+			value_set: value = a_value
+		end
 
 invariant
 
-    value_not_void: value /= Void
+	value_not_void: value /= Void
 
 end -- class XI_ATTRIBUTE
 

@@ -1,39 +1,39 @@
 indexing
 
-    description:
+	description:
 
-        "class representing xml comment"
+		"class representing xml comment"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 class XT_COMMENT
 
 inherit
 
-    XI_COMMENT
+	XI_COMMENT
 
-    XT_NODE
+	XT_NODE
 
 creation
 
-    make
+	make
 
 feature {NONE} -- Initialisation
 
-    make (a_parent: XM_COMPOSITE; a_data: UC_STRING) is
-        require
-            a_data_not_void: a_data /= Void
-            a_parent_not_void: a_parent /= Void
-        do
-            data := a_data
-            parent := a_parent
-        end
+	make (a_parent: XM_COMPOSITE; a_data: UC_STRING) is
+		require
+			a_data_not_void: a_data /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			data := a_data
+			parent := a_parent
+		end
 
 feature {ANY} -- Access
 
-    data: UC_STRING
-            -- the actual character data of this comment.
+	data: UC_STRING
+			-- the actual character data of this comment.
 
 end -- XT_COMMENT
 

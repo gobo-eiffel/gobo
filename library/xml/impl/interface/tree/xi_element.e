@@ -1,32 +1,32 @@
 indexing
 
-    description:
+	description:
 
-        "objects representing a element"
+		"objects representing a element"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_ELEMENT
 
 inherit
 
-    XI_COMPOSITE
+	XI_COMPOSITE
 
-    XI_NAMED_NODE
+	XI_NAMED_NODE
 
 feature {ANY} -- Access
 
 feature {ANY} -- Element change
 
-    add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]; a_parent: XM_ELEMENT) is
-            -- Add `a_attributes' to this element.
-            -- `parent' is the parent of all attribute nodes added
-        require
-            a_attributes_not_void: a_attributes /= Void
-            a_parent_not_void: a_parent /= Void
-        deferred
-        end
+	add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]; a_parent: XM_ELEMENT) is
+			-- Add `a_attributes' to this element.
+			-- `parent' is the parent of all attribute nodes added
+		require
+			a_attributes_not_void: a_attributes /= Void
+			a_parent_not_void: a_parent /= Void
+		deferred
+		end
 
 end -- XI_ELEMENT
 

@@ -1,17 +1,17 @@
 indexing
 
-    description:
+	description:
 
-        "Objects representing a XML-end-tag"
+		"Objects representing a XML-end-tag"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_END_TAG
 
 inherit
 
-    XI_TAG
+	XI_TAG
 
 feature
 

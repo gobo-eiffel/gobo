@@ -1,44 +1,44 @@
 indexing
 
-    description:
+	description:
 
-        "common anchestor for xml-nodes"
+		"common anchestor for xml-nodes"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 class XT_NAMED_NODE
 
 inherit
 
-    XI_NODE
+	XI_NODE
 
-    XT_NODE
+	XT_NODE
 
 feature {ANY} -- Access
 
-    name: UC_STRING
+	name: UC_STRING
 
-    ns_prefix: UC_STRING
+	ns_prefix: UC_STRING
 
-    namespace: UC_STRING
+	namespace: UC_STRING
 
 feature {ANY} -- Element change
 
-    set_name (n: UC_STRING) is
-        do
-            name := n
-        end
+	set_name (n: UC_STRING) is
+		do
+			name := n
+		end
 
-    set_namespace (n: UC_STRING) is
-        do
-            namespace := n
-        end
+	set_namespace (n: UC_STRING) is
+		do
+			namespace := n
+		end
 
-    set_prefix (n: UC_STRING) is
-        do
-            ns_prefix := n
-        end
+	set_prefix (n: UC_STRING) is
+		do
+			ns_prefix := n
+		end
 
 end -- XT_NAMED_NODE
 

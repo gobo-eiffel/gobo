@@ -1,49 +1,49 @@
 indexing
 
-    description:
+	description:
 
-        "class representing xml comment"
+		"class representing xml comment"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 class XM_COMMENT
 
 inherit
 
-    XM_NODE
-        redefine
-            implementation
-        end
+	XM_NODE
+		redefine
+			implementation
+		end
 
 creation
 
-    make_from_implementation
+	make_from_implementation
 
 feature {ANY} -- Access
 
-    data: UC_STRING is
-            -- the actual character data of this comment.
-        do
-            Result := implementation.data
-        end
+	data: UC_STRING is
+			-- the actual character data of this comment.
+		do
+			Result := implementation.data
+		end
 
 feature {ANY} -- Basic routines
 
-    process (x: XM_NODE_PROCESSOR) is
-        do
-            x.process_comment (Current)
-        end
+	process (x: XM_NODE_PROCESSOR) is
+		do
+			x.process_comment (Current)
+		end
 
 feature {ANY} -- Element change
 
 feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
-    implementation: XI_COMMENT
+	implementation: XI_COMMENT
 
 invariant
 
-    data_not_void: data /= Void
+	data_not_void: data /= Void
 
 end -- XM_COMMENT
 

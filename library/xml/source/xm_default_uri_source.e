@@ -2,24 +2,24 @@ class XM_DEFAULT_URI_SOURCE
 
 inherit
 
-    XM_URI_SOURCE
+	XM_URI_SOURCE
 
 creation
 
-    make
+	make
 
 feature
 
-    make (a_uri: UC_STRING) is
-        do
-            uri := a_uri
-        ensure
-            uri_set: equal (uri, a_uri)
-        end
+	make (a_uri: UC_STRING) is
+		do
+			uri := a_uri
+		ensure
+			uri_set: equal (uri, a_uri)
+		end
 
 feature
 
-    uri: UC_STRING
+	uri: UC_STRING
 
 end -- class XM_DEFAULT_URI_SOURCE
 

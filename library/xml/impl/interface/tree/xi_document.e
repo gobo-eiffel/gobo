@@ -1,45 +1,45 @@
 indexing
 
-    description:
+	description:
 
-        "Root object for a XML Document"
+		"Root object for a XML Document"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_DOCUMENT
 
 inherit
 
-    XI_COMPOSITE
+	XI_COMPOSITE
 
 feature {ANY} -- Access
-        -- document_type: XM_DOCUMENT_TYPE
-        -- TODO: Implement!
+		-- document_type: XM_DOCUMENT_TYPE
+		-- TODO: Implement!
 
-    root_element: XM_ELEMENT is
-        do
-                -- Since a document must only have one child element it is
-                -- safe to take the first one.
-            Result := first_element
-        end
+	root_element: XM_ELEMENT is
+		do
+				-- Since a document must only have one child element it is
+				-- safe to take the first one.
+			Result := first_element
+		end
 
 feature {NONE} -- Implementation
 
-    first_element: XM_ELEMENT is
-        local
-            cs: like new_cursor
-        do
-            from
-                cs := new_cursor
-                cs.start
-            until
-                cs.off or Result /= Void
-            loop
-                Result ?= cs.item
-                cs.forth
-            end
-        end
+	first_element: XM_ELEMENT is
+		local
+			cs: like new_cursor
+		do
+			from
+				cs := new_cursor
+				cs.start
+			until
+				cs.off or Result /= Void
+			loop
+				Result ?= cs.item
+				cs.forth
+			end
+		end
 
 end -- XI_DOCUMENT
 

@@ -1,34 +1,34 @@
 indexing
 
-    description:
+	description:
 
-        "Objects representing a XML-tag"
+		"Objects representing a XML-tag"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_TAG
 
 inherit
 
-    DP_IMPLEMENTATION
+	DP_IMPLEMENTATION
 
 feature -- Access
 
-    name: UC_STRING is
-            -- stores the tag-name
-        deferred
-        end
+	name: UC_STRING is
+			-- stores the tag-name
+		deferred
+		end
 
-    position: XM_POSITION is
-            -- position of tag in xml-document
-            -- may be void if information is not available
-        deferred
-        end
+	position: XM_POSITION is
+			-- position of tag in xml-document
+			-- may be void if information is not available
+		deferred
+		end
 
 invariant
 
-    name_not_void: name /= Void
+	name_not_void: name /= Void
 
 end -- class XI_TAG
 --|-------------------------------------------------------------------------

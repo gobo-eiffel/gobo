@@ -1,38 +1,38 @@
 indexing
 
-    description:
+	description:
 
-        "common heir for xml-nodes that consist of character data"
+		"common heir for xml-nodes that consist of character data"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_CHARACTER_DATA
 
 inherit
 
-    XI_NODE
+	XI_NODE
 
 feature {ANY} -- Access
 
-    content: UC_STRING is
-            -- the actual character data of this node.
-        deferred
-        end
+	content: UC_STRING is
+			-- the actual character data of this node.
+		deferred
+		end
 
 feature {ANY} -- Element change
 
-    append_content (other: XM_CHARACTER_DATA) is
-            -- append the content of 'other' to
-            -- the content of Current
-        require
-            other /= Void
-        deferred
-        end
+	append_content (other: XM_CHARACTER_DATA) is
+			-- append the content of 'other' to
+			-- the content of Current
+		require
+			other /= Void
+		deferred
+		end
 
 invariant
 
-    content_not_void: content /= Void
+	content_not_void: content /= Void
 
 end -- XI_CHARACTER_DATA
 

@@ -1,38 +1,38 @@
 indexing
 
-    description:
+	description:
 
-        "common anchestor for xml-nodes"
+		"common anchestor for xml-nodes"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_NODE
 
 inherit
 
-    DP_IMPLEMENTATION
+	DP_IMPLEMENTATION
 
 feature {ANY} -- Access
 
-    parent: XM_COMPOSITE is
-            -- parent of this node. Only void
-            -- if this node is the root node
-        deferred
-        end
+	parent: XM_COMPOSITE is
+			-- parent of this node. Only void
+			-- if this node is the root node
+		deferred
+		end
 
 feature {ANY} -- Status
 
 feature {ANY} -- Element change
 
-    set_parent (a_parent: XM_COMPOSITE) is
-            -- make `a_parent' the new parent of this node.
-        require
-            a_parent_not_void: a_parent /= Void
-        deferred
-        ensure
-            parent_set: parent = a_parent
-        end
+	set_parent (a_parent: XM_COMPOSITE) is
+			-- make `a_parent' the new parent of this node.
+		require
+			a_parent_not_void: a_parent /= Void
+		deferred
+		ensure
+			parent_set: parent = a_parent
+		end
 
 end -- class XI_NODE
 

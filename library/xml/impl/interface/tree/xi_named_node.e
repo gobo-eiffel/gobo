@@ -1,52 +1,52 @@
 indexing
 
-    description:
+	description:
 
-        "common anchestor for xml-nodes"
+		"common anchestor for xml-nodes"
 
-    status:  "See notice at end of class."
-    author:  "Andreas Leitner"
+	status:  "See notice at end of class."
+	author:  "Andreas Leitner"
 
 deferred class XI_NAMED_NODE
 
 inherit
 
-    XI_NODE
+	XI_NODE
 
 feature {ANY} -- Access
 
-    name: UC_STRING is
-            -- name of node
-        deferred
-        end
+	name: UC_STRING is
+			-- name of node
+		deferred
+		end
 
-    ns_prefix: UC_STRING is
-        deferred
-        end
+	ns_prefix: UC_STRING is
+		deferred
+		end
 
-    namespace: UC_STRING is
-        deferred
-        end
+	namespace: UC_STRING is
+		deferred
+		end
 
 feature {ANY} -- Element change
 
-    set_name (n: UC_STRING) is
-        require
-            n_not_void: n /= Void
-        deferred
-        end
+	set_name (n: UC_STRING) is
+		require
+			n_not_void: n /= Void
+		deferred
+		end
 
-    set_namespace (n: UC_STRING) is
-        deferred
-        end
+	set_namespace (n: UC_STRING) is
+		deferred
+		end
 
-    set_prefix (n: UC_STRING) is
-        deferred
-        end
+	set_prefix (n: UC_STRING) is
+		deferred
+		end
 
 invariant
 
-    name_not_void: name /= Void
+	name_not_void: name /= Void
 
 end -- XI_NAMED_NODE
 
