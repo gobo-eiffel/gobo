@@ -30,9 +30,10 @@
 			<optimize enable="False"/>
 		</option>
 
-    <cluster name="regexp_example" location="${GOBO}/example/regexp/example"/>
+		<cluster name="regexp_example" location="${GOBO}/example/regexp/example"/>
 
+		<mount location="${GOBO}/library/kernel.xace"/>
 		<mount location="${GOBO}/library/regexp/cluster.xace"/>
-		<mount location="${GOBO}/library/kernel/cluster.xace"/>
+
 	</cluster>
 </system>
