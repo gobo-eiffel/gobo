@@ -126,7 +126,7 @@ feature -- Access
 			a_target: GEANT_TARGET
 			a_project: GEANT_PROJECT
 		do
-				-- Search "youngest" project in hirarchy:
+				-- Search "youngest" project in hierarchy:
 			from
 				a_project := Current
 			until
@@ -136,22 +136,21 @@ feature -- Access
 			end
 
 				-- Search target named `a_name' from "youngest" project
-				-- up to "oldest" project in hirarchy:
+				-- up to "oldest" project in hierarchy:
 			from
 			until
 				Result /= Void or else a_project = Void
 			loop
-				nb := a_project.targets.count
-				from i := 1 until i > nb or Result /= Void loop
-					a_target := a_project.targets.item (i)
-					if a_target.name.is_equal (a_name.out)
-					then
-						Result := a_target
+				if a_project.targets /= Void then
+					nb := a_project.targets.count
+					from i := 1 until i > nb or Result /= Void loop
+						a_target := a_project.targets.item (i)
+						if a_target.name.is_equal (a_name.out) then
+							Result := a_target
+						end
+						i := i + 1
 					end
-	
-					i := i + 1
 				end
-
 				a_project := a_project.parent_project
 			end
 
@@ -245,12 +244,15 @@ feature -- Processing
 					-- handle parent project if present:
 				if root_element.has_attribute (Inherit_attribute_name) then
 					a_parent_project_filename := root_element.attribute_value_by_name (Inherit_attribute_name)
+					!! a_parent_project_filename.make_from_string (variables.interpreted_string (a_parent_project_filename.out))
 					debug ("geant")
 						print ("inheriting from: " + a_parent_project_filename.out + "%N")
 					end
-					!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
-					parent_project.set_verbose (verbose)
-					parent_project.load (Void)
+					if not a_parent_project_filename.empty then
+						!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
+						parent_project.set_verbose (verbose)
+						parent_project.load (Void)
+					end
 				end
 
 					-- Find all target elements of current project:
