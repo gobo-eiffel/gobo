@@ -22,7 +22,7 @@ inherit
 
 creation
 
-	make, make_equal, make_from_linear
+	make, make_equal, make_from_linear, make_default
 
 feature {NONE} -- Initialization
 
@@ -77,6 +77,15 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			count_set: count = other.count
+			before: before
+		end
+
+	make_default is
+			-- Create an empty list.
+			-- Use `=' as comparison criterion.
+		do
+			make
+		ensure then
 			before: before
 		end
 

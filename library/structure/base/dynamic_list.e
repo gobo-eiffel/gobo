@@ -17,7 +17,7 @@ inherit
 
 	LIST [G]
 		undefine
-			has, copy, is_equal
+			has, copy, is_equal, make_default
 		end
 
 feature -- Status report

@@ -29,7 +29,7 @@ inherit
 
 creation
 
-	make, make_equal, make_from_linear
+	make, make_equal, make_from_linear, make_default
 
 feature {NONE} -- Initialization
 
@@ -94,6 +94,16 @@ feature {NONE} -- Initialization
 		ensure
 			count_set: count = other.count
 			capacity_set: capacity = count
+			before: before
+		end
+
+	make_default is
+			-- Create an empty list and allocate memory
+			-- space for at least `default_capacity' items.
+			-- Use `=' as comparison criterion.
+		do
+			make (default_capacity)
+		ensure then
 			before: before
 		end
 

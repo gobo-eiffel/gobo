@@ -16,6 +16,19 @@ deferred class DS_RESIZABLE [G]
 inherit
 
 	DS_CONTAINER [G]
+		redefine
+			make_default
+		end
+
+feature {NONE} -- Initialization
+
+	make_default is
+			-- Create an empty container and allocate memory
+			-- space for at least `default_capacity' items.
+		deferred
+		ensure then
+			capacity_set: capacity = default_capacity
+		end
 
 feature -- Measurement
 
@@ -56,6 +69,11 @@ feature {NONE} -- Configuration
 		ensure
 			definition: Result >= n
 		end
+
+feature {NONE} -- Constants
+
+	default_capacity: INTEGER is 10
+			-- Initial capacity in `make_default'
 
 invariant
 

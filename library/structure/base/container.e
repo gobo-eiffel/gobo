@@ -98,4 +98,11 @@ feature -- Element change
 		deferred
 		end
 
+feature {NONE} -- Inapplicable
+
+	make_default is
+			-- Create an empty container.
+		do
+		end
+
 end -- class CONTAINER

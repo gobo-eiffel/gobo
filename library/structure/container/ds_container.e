@@ -22,6 +22,15 @@ inherit
 			is_equal
 		end
 
+feature {NONE} -- Initialization
+
+	make_default is
+			-- Create an empty container.
+		deferred
+		ensure
+			empty: is_empty
+		end
+
 feature -- Measurement
 
 	count: INTEGER is

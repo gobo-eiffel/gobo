@@ -108,6 +108,16 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
+	make_default is
+			-- Create an empty table and allocate memory
+			-- space for at least `default_capacity' items.
+			-- Use `=' as comparison criterion.
+		do
+			make (default_capacity)
+		ensure then
+			before: before
+		end
+
 feature -- Access
 
 	infix "@", item (k: K): G is

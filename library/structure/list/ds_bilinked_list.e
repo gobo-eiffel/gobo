@@ -27,7 +27,7 @@ inherit
 
 creation
 
-	make, make_equal, make_from_linear
+	make, make_equal, make_from_linear, make_default
 
 feature -- Access
 

@@ -17,7 +17,7 @@ inherit
 
 	CONTAINER [G]
 		undefine
-			copy, is_equal
+			copy, is_equal, make_default
 		redefine
 			put
 		end

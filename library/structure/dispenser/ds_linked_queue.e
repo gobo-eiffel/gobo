@@ -19,7 +19,7 @@ inherit
 
 creation
 
-	make, make_equal
+	make, make_equal, make_default
 
 feature {NONE} -- Initialization
 
@@ -38,6 +38,13 @@ feature {NONE} -- Initialization
 			!! equality_tester
 		ensure
 			empty: is_empty
+		end
+
+	make_default is
+			-- Create an empty queue.
+			-- Use `=' as comparison criterion.
+		do
+			make
 		end
 
 feature -- Status report

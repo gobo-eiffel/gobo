@@ -26,7 +26,7 @@ inherit
 
 creation
 
-	make, make_equal
+	make, make_equal, make_default
 
 feature {NONE} -- Initialization
 
@@ -57,6 +57,14 @@ feature {NONE} -- Initialization
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
+		end
+
+	make_default is
+			-- Create an empty stack and allocate memory
+			-- space for at least `default_capacity' items.
+			-- Use `=' as comparison criterion.
+		do
+			make (default_capacity)
 		end
 
 feature -- Status report

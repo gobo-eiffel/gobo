@@ -21,7 +21,7 @@ inherit
 			wipe_out as clear_all,
 			put as bag_put
 		undefine
-			copy, is_equal
+			copy, is_equal, make_default
 		redefine
 			compare_objects, compare_references
 		end
