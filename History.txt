@@ -1,4 +1,4 @@
-Version 2.1 - ?
+Version 3.0 - 18 August 2002
 
 	gelex:
 
@@ -21,6 +21,10 @@ Version 2.1 - ?
 	  types. This caused Eiffel compilation errors when the
 	  generic parameter was a formal generic parameter
 	  (reported by Zoran Simic).
+	* Fixed bug in default rule when the declared type is a basic
+	  expanded type. For example when the declared type in the
+	  %type section was INTEGER, the default rule was trying to
+	  set $$ to Void instead of 0 (reported by Emmanuel Stapf).
 
 	getest:
 
@@ -48,6 +52,19 @@ Version 2.1 - ?
 	  the input file. That way line numbers are preserved.
 	  (suggested by Alexander Kogtenkov)
 
+	geant:
+
+	* First release (contributed by Sven Ehrke).
+
+	gexace:
+
+	* First release (contributed by Andreas Leitner, currently
+	  maintained by Eric Bezault).
+
+	gexmlsplit:
+
+	* First release (contributed by Andreas Leitner).
+
 	Gobo Eiffel Kernel Library:
 
 	* No need for 'include_path' in the Ace file anymore in
@@ -58,6 +75,8 @@ Version 2.1 - ?
 	  file and file-system functionalities.
 	* Added cluster $GOBO/library/kernel/misc with miscellaneous
 	  kernel classes.
+	* Added cluster $GOBO/library/kernel/unicode with Unicode
+	  support classes (based on the work from Majkel Kretschmar).
 
 	Gobo Eiffel Structure Library:
 
@@ -71,6 +90,7 @@ Version 2.1 - ?
 	* Fixed bug in HASH_TABLE related to the new implementation
 	  in ancestor class DS_SPARSE_TABLE (reported by Emmanuel
 	  Bouyer).
+	* Fixed bug in LINKED_LIST.cursor_back (reported by Paul Ford).
 
 	Gobo Eiffel Time Library:
 
@@ -95,6 +115,26 @@ Version 2.1 - ?
 	  $GOBO/library/pattern/command and change class
 	  name prefix from UT to DP.
 	* Added feature `exit_code' to class DP_SHELL_COMMAND.
+
+	Gobo Eiffel Regexp Library
+
+	* New library for regular expression handling. Contains a
+	  implementation based on the PCRE package (contributed
+	  by Harald Erdbruegger based on his ePCRE library).
+
+	Gobo Eiffel XML Library
+
+	* New library for XML parsing and XML tree handling
+	  (contributed by Andreas Leitner based on his eXML
+	  library, and by Franck Arnaud based on his NenieXML
+	  parser. The library has been redesigned and is
+	  currently maintained by Franck Arnaud).
+
+	Miscellaneous:
+
+	* The Gobo project is now taking full advantage of 'geant'
+	  and 'gexace' instead of Makefiles (which were not portable
+	  across platforms).
 
 Version 2.0 - 29 April 2001
 
