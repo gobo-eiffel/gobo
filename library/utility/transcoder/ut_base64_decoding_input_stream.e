@@ -18,7 +18,7 @@ inherit
 		redefine
 			make, end_of_input, read_string,
 			read_character, unread_character, last_character,
-			last_string, valid_unread_character
+			last_string, valid_unread_character, close, rewind
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -65,17 +65,13 @@ feature -- Input
 			end
 			end_of_input := (last_string.count = 0)
 		end
-	
+
 	read_character is
 			-- Read the next item in input stream.
 			-- Make the result available in `last_character'.
 		do
 			if triplet_position = 4 then
 				read_24_bits
-			end
-			check
-				triplet_position_in_range: triplet_position < 4
-				-- post-condition of read_24_bits
 			end
 			if not end_of_input then
 				last_character := decoded_triplet.item (triplet_position)
@@ -111,6 +107,29 @@ feature -- Status report
 			Result := False
 		end
 
+feature -- Basic operations
+
+	close is
+			-- Try to close input stream if it is closable. Set
+			-- `is_open_read' to false if operation was successful.
+		do
+			Precursor
+			if not is_open_read then
+				end_of_input := False
+				equal_sign_read := False
+				triplet_position := 4
+			end
+		end
+
+	rewind is
+			-- Move input position to the beginning of stream.
+		do
+			Precursor
+			end_of_input := False
+			equal_sign_read := False
+			triplet_position := 4
+		end
+
 feature {NONE} -- Implementation
 
 	decoded_triplet: STRING
@@ -118,6 +137,9 @@ feature {NONE} -- Implementation
 
 	triplet_position: INTEGER
 			-- Position in `decoded_triplet'
+
+	equal_sign_read: BOOLEAN
+			-- Has the equal sign '=' already been read?
 
 	codes: ARRAY [INTEGER]
 			-- Array of 4 6-bit codes
@@ -213,54 +235,89 @@ feature {NONE} -- Implementation
 			-- Set `end_of_input' if premature end of input reached.
 			-- Set `triplet_position' to the first character.
 			-- Ignore invalid characters.
+		require
+			not_end_of_input: not end_of_input
 		local
 			c: CHARACTER
 			i: INTEGER
 			a_code: INTEGER
 		do
-				-- Fill `codes' with four 6-bit values.
-			triplet_position := 1
-			from
-				i := 1
-				base_stream.read_character
-			until
-				i > 4 or base_stream.end_of_input
-			loop
-				c := base_stream.last_character
-				if c = '=' then
-					triplet_position := triplet_position + 1
-				end
-				a_code := decoded_character (c)
-				inspect a_code
-				when -1 then
-					-- White space, ignore.
-				when -2 then
-					-- Bad base64 stream.
-				else
-					codes.put (a_code, i)
-					i := i + 1
-				end
-				if i <= 4 then
+			if equal_sign_read then
+				end_of_input := True
+			else
+					-- Fill `codes' with four 6-bit values.
+				triplet_position := 1
+				from i := 1 until i > 4 loop
 					base_stream.read_character
-				end
-			end
-				-- Bit-shift `codes' into 3 characters.
-			if i > 4 and triplet_position <= 3 then
-				a_code := (codes.item (1) * shift_2_bits) + (codes.item (2) // shift_4_bits)
-				decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position)
-				if triplet_position < 3 then
-					a_code := (codes.item (2) * shift_4_bits) + (codes.item (3) // shift_2_bits)
-					a_code := a_code \\ 256
-					decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position + 1)
-					if triplet_position = 1 then
-						a_code := (codes.item (3) * shift_6_bits) + (codes.item (4))
-						a_code := a_code \\ 256
-						decoded_triplet.put (INTEGER_.to_character (a_code), 3)
+					if base_stream.end_of_input then
+						if i = 1 then
+							end_of_input := True
+							i := 5 -- Jump out of the loop.
+						else
+								-- Invalid base64 stream.
+							end_of_input := True
+							i := 5 -- Jump out of the loop.
+						end
+					else
+						c := base_stream.last_character
+						if c = '=' then
+								-- Note: RFC 2045 says "Because it is used only for padding
+								-- at the end of the data, the occurrence of any '=' characters
+								-- may be taken as evidence that the end of the data has
+								-- been reached (without truncation in transit)."
+							equal_sign_read := True
+							inspect i
+							when 1 then
+									-- Invalid base64 stream: =***.
+								end_of_input := True
+								i := 5 -- Jump out of the loop.
+							when 2 then
+									-- Invalid base64 stream: *=**
+								end_of_input := True
+								i := 5 -- Jump out of the loop.
+							when 3 then
+									-- Valid base64 stream: **==
+									-- Read second =.
+								base_stream.read_character
+								triplet_position := 3
+								i := 5 -- Jump out of the loop.
+							when 4 then
+									-- Valid base64 stream: ***=
+								triplet_position := 2
+								i := 5 -- Jump out of the loop.
+							end
+						else
+							a_code := decoded_character (c)
+							inspect a_code
+							when -1 then
+								-- White space, ignore.
+							when -2 then
+								-- Bad base64 stream.
+							else
+								codes.put (a_code, i)
+								i := i + 1
+							end
+						end
 					end
 				end
-			else
-				end_of_input := True
+				if not end_of_input then
+						-- Bit-shift `codes' into 3 characters.
+					a_code := (codes.item (1) * shift_2_bits) + (codes.item (2) // shift_4_bits)
+					decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position)
+					if triplet_position < 3 then
+						a_code := (codes.item (2) * shift_4_bits) + (codes.item (3) // shift_2_bits)
+						a_code := a_code \\ 256
+						decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position + 1)
+						if triplet_position = 1 then
+							a_code := (codes.item (3) * shift_6_bits) + (codes.item (4))
+							a_code := a_code \\ 256
+							decoded_triplet.put (INTEGER_.to_character (a_code), 3)
+						end
+					end
+				end
 			end
+		ensure
+			characters_read: not end_of_input implies triplet_position < 4
 		end
 
 feature {NONE} -- Constants
@@ -272,7 +329,7 @@ feature {NONE} -- Constants
 invariant
 
 	decoded_triplet_not_void: decoded_triplet /= Void
-	decoded_triplet_count: decoded_triplet.count = 3
+	decoded_triplet_capacity: decoded_triplet.count = 3
 	valid_triplet_position: triplet_position >= 1 and triplet_position <= 4
 
 end

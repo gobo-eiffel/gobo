@@ -19,7 +19,7 @@ inherit
 			make as make_base
 		redefine
 			put_character, put_string,
-			flush, close, is_closable
+			close, is_closable
 		end
 
 creation
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 		do
 			make_base (a_stream)
 			is_line_breaking := output_line_breaks
-			create triplet.make (1, 3)
-			triplet_position := 1
+			create triplet.make_filled (' ', 3)
+			triplet_count := 0
 		ensure
 			line_breaking: is_line_breaking = output_line_breaks
 			base_stream_set: base_stream = a_stream
@@ -92,17 +92,11 @@ feature -- Output
 
 feature -- Basic operations
 
-	flush is
-			-- Flush buffered data to disk.
-		do
-			-- No-op as we might not have a full quartet ready for output.
-		end
-
 	close is
 			-- Try to close output stream if it is closable. Set
 			-- `is_open_write' to false if operation was successful.
 		do
-			if triplet_position /= 1 then
+			if triplet_count /= 0 then
 					-- Padding will take place.
 				write_quartet
 			end
@@ -116,30 +110,34 @@ feature {NONE} -- Implementation
 	line_count: INTEGER
 			-- Number of characters output in current line
 
-	triplet: ARRAY [CHARACTER]
+	triplet: STRING
 			-- Three characters to be encoded
 
-	triplet_position: INTEGER
-			-- Position of next character in `triplet' to be filled
+	triplet_count: INTEGER
+			-- Number of characters in `triplet'
 
 	is_pending_line_break: BOOLEAN
 			-- Has the CR of a CRLF pair been written out?
 
 	buffer_character (c: CHARACTER) is
 			-- Write `c' to `triplet'.
+		require
+			not_full: triplet_count < 3
 		do
-			triplet.put (c, triplet_position)
-			triplet_position := triplet_position + 1
-			if triplet_position = 4 then
-				triplet_position := 1
+			triplet_count := triplet_count + 1
+			triplet.put (c, triplet_count)
+			if triplet_count = 3 then
 				write_quartet
 			end
+		ensure
+			not_full: triplet_count < 3
 		end
 
 	write_quartet is
 			-- Write a quartet (padded, if necessary) to `base_stream'.
 		require
 			is_open_write: is_open_write
+			triplet_not_empty: triplet_count /= 0
 		local
 			a_code, another_code, a_remainder: INTEGER
 		do
@@ -148,7 +146,7 @@ feature {NONE} -- Implementation
 			another_code := a_code // shift_2_bits
 			write_character (another_code)
 			another_code := a_remainder * shift_4_bits
-			if triplet_position = 2 then
+			if triplet_count = 1 then
 				write_character (another_code)
 				write_character (padding)
 				write_character (padding)
@@ -158,7 +156,7 @@ feature {NONE} -- Implementation
 				another_code := another_code + a_code // shift_4_bits
 				write_character (another_code)
 				another_code := a_remainder * shift_2_bits
-				if triplet_position = 3 then
+				if triplet_count = 2 then
 					write_character (another_code)
 					write_character (padding)
 				else
@@ -170,9 +168,9 @@ feature {NONE} -- Implementation
 					write_character (another_code)
 				end
 			end
-			triplet_position := 1
+			triplet_count := 0
 		ensure
-			empty_triplet: triplet_position = 1
+			triplet_empty: triplet_count = 0
 		end
 
 	write_character (c: INTEGER) is
@@ -274,7 +272,7 @@ feature -- Constants
 invariant
 
 	triplet_not_void: triplet /= Void
-	triplet_count: triplet.count = 3
-	triplet_position_in_range: triplet_position >= 1 and then triplet_position <= 3
+	triplet_capacity: triplet.count = 3
+	triplet_count: triplet_count >= 0 and then triplet_count <= 3
 
 end
