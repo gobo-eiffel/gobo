@@ -5,18 +5,19 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage 2.0">
-<title>Class DS_SPARSE_TABLE</title>
+<title>Class DS_ARRAYED_SPARSE_TABLE</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
 <table border="0" width="100%">
     <tr>
-        <td><font size="6"><strong>Class DS_SPARSE_TABLE</strong></font></td>
-        <td align="right"><a href="ds_sparse_set_cursor.html"><img
+        <td><font size="6"><strong>Class DS_ARRAYED_SPARSE_TABLE</strong></font></td>
+        <td align="right"><a
+        href="ds_arrayed_sparse_set_cursor.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a
-        href="ds_sparse_table_cursor.html"><img
+        href="ds_arrayed_sparse_table_cursor.html"><img
         src="../../image/next.gif" alt="Next" border="0"
         width="40" height="40"></a></td>
     </tr>
@@ -29,36 +30,37 @@ content="text/html; charset=iso-8859-1">
 <blockquote>
     <pre><em>description</em>:
 
-<font color="#800000"><em>    &quot;Sparse tables, implemented with arrays. Ancestor of hash tables %
-    %which should supply their hashing mechanisms.&quot;
+<font color="#800000"><em>    &quot;Sparse tables implemented with single arrays. Ancestor of %
+    %hash tables which should supply its hashing mechanism.&quot;
 
 </em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2000-2001, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2001, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>deferred class interface</strong></em></font></pre>
 
 <blockquote>
-    <pre><em>DS_SPARSE_TABLE </em>[<em>G</em>, <em>K</em>]</pre>
+    <pre><em>DS_ARRAYED_SPARSE_TABLE </em>[<em>G</em>, <em>K</em>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
 
 <blockquote>
-    <pre><a href="ds_table.html"><em>DS_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]
-    <a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
-<a href="ds_bilinear.html"><em>DS_BILINEAR</em></a><em> </em>[<em>G</em>]
-    <a href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>]
-        <a href="ds_traversable.html"><em>DS_TRAVERSABLE</em></a><em> </em>[<em>G</em>]<em>
-            </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
-<em>        </em><a href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]<em>
-            </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
-<a href="ds_resizable.html"><em>DS_RESIZABLE</em></a><em> </em>[<em>G</em>]
-    <a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]</pre>
+    <pre><a href="ds_sparse_table.html"><em>DS_SPARSE_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]
+    <a href="ds_table.html"><em>DS_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]
+        <a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
+<em>    </em><a href="ds_bilinear.html"><em>DS_BILINEAR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>]
+            <a href="ds_traversable.html"><em>DS_TRAVERSABLE</em></a><em> </em>[<em>G</em>]<em>
+                </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
+<em>            </em><a href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]<em>
+                </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
+<em>    </em><a href="ds_resizable.html"><em>DS_RESIZABLE</em></a><em> </em>[<em>G</em>]
+        <a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><em> </em>{<em>NONE</em>}<font
@@ -98,17 +100,26 @@ color="#008000">.)</font><em>
         valid_entry</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)</pre>
     <pre><a name="key"><em>key</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> K
         </em><font color="#008000">-- Key associated with </font><em>k
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#key"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         has_k</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)</pre>
     <pre><a name="found_item"><em>found_item</em></a>:<em> G
         </em><font color="#008000">-- Item found by last call to </font><a
 href="#search"><em>search</em></a><font color="#008000">
+        -- (From </font><a href="ds_sparse_table.html#found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
     </font><font color="#000080"><em><strong>require</strong></em></font><font
 color="#008000">
 </font><em>        item_found</em>:<em> </em><a href="#found"><em>found</em></a></pre>
     <pre><a name="found_key"><em>found_key</em></a>:<em> K
 </em><font color="#008000">        -- Key of item found by last call to </font><a
 href="#search"><em>search</em></a><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#found_key"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
 </em><font color="#008000">    </font><font color="#000080"><em><strong>require</strong></em></font><font
 color="#008000">
 </font><em>        key_found</em>:<em> </em><a href="#found"><em>found</em></a></pre>
@@ -123,6 +134,10 @@ color="#008000">.)</font><em>
 href="#off"><em>off</em></a></pre>
     <pre><a name="key_for_iteration"><em>key_for_iteration</em></a>:<em> K
         </em><font color="#008000">-- Key at internal cursor position</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#key_for_iteration"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
 href="#off"><em>off</em></a></pre>
@@ -149,7 +164,7 @@ href="#is_empty"><em>is_empty</em></a><em>
         has_last</em>: <a href="#has_item"><em>has_item</em></a><em> </em>(<font
 color="#008080"><em>Result</em></font>)</pre>
     <pre><a name="new_cursor"><em>new_cursor</em></a><em>: </em><a
-href="ds_sparse_table_cursor.html"><em>DS_SPARSE_TABLE_CURSOR</em></a><em> </em>[<em>G</em>, <em>K</em>]<em>
+href="ds_arrayed_sparse_table_cursor.html"><em>DS_ARRAYED_SPARSE_TABLE_CURSOR</em></a><em> </em>[<em>G</em>, <em>K</em>]<em>
         </em><font color="#008000">-- New external cursor for traversal</font><em>
         </em><font color="#008000">-- (From </font><a
 href="ds_traversable.html#new_cursor"><font color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
@@ -171,7 +186,11 @@ color="#008000">.)</font></pre>
 href="ds_equality_tester.html"><em>DS_EQUALITY_TESTER</em></a><em> </em>[<em>K</em>]<em>
 </em><font color="#008000">        -- Equality tester for keys;
         -- A void equality tester means that `='
-        -- will be used as comparison criterion.</font></pre>
+        -- will be used as comparison criterion.
+        -- (From </font><a
+href="ds_sparse_table.html#key_equality_tester"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -256,7 +275,10 @@ href="#is_empty"><em>is_empty</em></a></pre>
     <pre><a name="found"><em>found</em></a>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
        </em><font color="#008000"> -- Did last call to </font><a
-href="#search"><em>search</em></a><font color="#008000"> succeed?</font></pre>
+href="#search"><em>search</em></a><font color="#008000"> succeed?
+        -- (From </font><a href="ds_sparse_table.html#found"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font></pre>
     <pre><a name="is_empty"><em>is_empty</em></a>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
 color="#000080"><em><strong>
@@ -412,6 +434,9 @@ color="#008000"> to true, and set
         -- </font><a href="#found_item"><em>found_item</em></a><font
 color="#008000"> to item associated with </font><em>k</em><font
 color="#008000">.
+        -- (From </font><a href="ds_sparse_table.html#search"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
     </font><font color="#000080"><em><strong>ensure</strong></em></font><font
 color="#008000">
         </font><em>found_set</em>: <a href="#found"><em>found</em></a> =<em> </em><a
@@ -642,6 +667,10 @@ href="#count"><em>count</em></a></pre>
         -- the key of </font><a href="#found_item"><em>found_item</em></a><font
 color="#008000"> by </font><em>v</em><font color="#008000">.
         -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#replace_found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         item_found</em>:<em> </em><a href="#found"><em>found</em></a><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
@@ -653,6 +682,9 @@ href="#count"><em>count</em></a></pre>
         </em><font color="#008000">-- Associate </font><em>v</em><font
 color="#008000"> with key </font><em>k</em><font color="#008000">.</font><em>
 </em><font color="#008000">        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#put"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         not_full</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
 href="#is_full"><em>is_full</em></a><em>
@@ -678,6 +710,9 @@ color="#808000"><em>1</em></font>)</pre>
         <font color="#008000">-- Associate </font><em>v</em><font
 color="#008000"> with key </font><em>k</em><font color="#008000">.
         -- Do not move cursors.
+        -- (From </font><a href="ds_sparse_table.html#put_new"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
 </font><em>    </em><font color="#000080"><em><strong>require</strong></em></font><em>
         not_full</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
 href="#is_full"><em>is_full</em></a><em>
@@ -753,6 +788,9 @@ color="#008000">, or replace
         -- existing item otherwise.
         -- Resize table if necessary.
         -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#force_last"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
 </em><font color="#000080"><em><strong>    ensure</strong></em></font><em>
         same_count</em>:<em> </em>(<font color="#000080"><em><strong>old</strong></em></font><em> </em><a
 href="#has"><em>has</em></a><em> </em>(<em>k</em>)) <font
@@ -832,6 +870,10 @@ href="#has"><em>has</em></a><em> </em>(<em>k</em>)</pre>
 href="#search"><em>search</em></a><font color="#008000">.
         -- Move any cursors at this position </font><a
 href="#forth"><em>forth</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#remove_found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         item_found</em>:<em> </em><a href="#found"><em>found</em></a><em>
 </em><font color="#000080"><em><strong>    ensure</strong></em></font><em>
@@ -912,14 +954,14 @@ color="#008000">.)</font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>end</strong></em></font><font
-color="#008000"> -- class DS_SPARSE_TABLE</font></pre>
+color="#008000"> -- class DS_ARRAYED_SPARSE_TABLE</font></pre>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2001</b></font><font
+            <font size="2"><b>Copyright © 2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -933,8 +975,7 @@ color="#008000"> -- class DS_SPARSE_TABLE</font></pre>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$"
-            --> 
+$Revision$" --> 
         </address>
         </td>
         <td align="right" valign="top"><a
@@ -942,10 +983,11 @@ $Revision$"
         src="../../image/home.gif" alt="Home" border="0"
         width="40" height="40"></a><a href="index.html"><img
         src="../../image/toc.gif" alt="Toc" border="0" width="40"
-        height="40"></a><a href="ds_sparse_set_cursor.html"><img
+        height="40"></a><a
+        href="ds_arrayed_sparse_set_cursor.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a
-        href="ds_sparse_table_cursor.html"><img
+        href="ds_arrayed_sparse_table_cursor.html"><img
         src="../../image/next.gif" alt="Next" border="0"
         width="40" height="40"></a></td>
     </tr>

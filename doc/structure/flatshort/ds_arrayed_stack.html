@@ -13,7 +13,8 @@ content="text/html; charset=iso-8859-1">
 <table border="0" width="100%">
     <tr>
         <td><font size="6"><strong>Class DS_ARRAYED_STACK</strong></font></td>
-        <td align="right"><a href="ds_arrayed_list_cursor.html"><img
+        <td align="right"><a
+        href="ds_arrayed_sparse_table_cursor.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a href="ds_bilinear.html"><img
         src="../../image/next.gif" alt="Next" border="0"
@@ -34,7 +35,7 @@ content="text/html; charset=iso-8859-1">
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999-2001, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
@@ -84,6 +85,17 @@ color="#808000"><em>0</em></font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
         capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n</em></pre>
+    <pre><a name="make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- Create an empty stack and allocate memory
+        -- space for at least </font><a href="#default_capacity"><em>default_capacity</em></a><font
+color="#008000"> items.
+        -- Use `=' as comparison criterion.
+        -- (From </font><a href="ds_container.html#make_default"><font
+color="#008000">DS_CONTAINER</font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -125,6 +137,18 @@ href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em><
         -- (From </font><a href="ds_resizable.html#capacity"><font
 color="#008000"><em>DS_RESIZABLE</em></font></a><font
 color="#008000">.)</font></pre>
+    <pre><a name="default_capacity"><em>default_capacity</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Initial capacity in </font><a
+href="#make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- (Default value: 10)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_resizable.html#default_capacity"><font color="#008000"><em>DS_RESIZABLE</em></font></a><font
+color="#008000">.)
+</font><em>    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        default_capacity_positive</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font></pre>
     <pre><a name="occurrences"><em>occurrences</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
         </em><font color="#008000">-- Number of times </font><em>v</em><font
@@ -213,6 +237,20 @@ color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         other_not_void</em>:<em> other </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
+    <pre><a name="equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+</em><font color="#008000">        -- Can </font><a
+href="#set_equality_tester"><em>set_equality_tester</em></a><font
+color="#008000"> be called with </font><em>a_tester</em><font
+color="#008000">
+        -- as argument in current state of container?
+        -- (Default answer: True.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#equality_tester_settable"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -286,6 +324,9 @@ color="#008000"> to </font><em>a_tester</em><font color="#008000">.
 href="ds_searchable.html#set_equality_tester"><font
 color="#008000"><em>DS_SEARCHABLE</em></font></a><font
 color="#008000">.)</font><em>
+</em><font color="#000080"><em><strong>    require</strong></em></font><em>
+        equality_tester_settable</em>:<em> </em><a
+href="#equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>)<em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         equality_tester_set</em>:<em> </em><a
 href="#equality_tester"><em>equality_tester</em></a><em> </em>= <em>a_tester</em></pre>
@@ -503,7 +544,8 @@ $Revision$"
         src="../../image/home.gif" alt="Home" border="0"
         width="40" height="40"></a><a href="index.html"><img
         src="../../image/toc.gif" alt="Toc" border="0" width="40"
-        height="40"></a><a href="ds_arrayed_list_cursor.html"><img
+        height="40"></a><a
+        href="ds_arrayed_sparse_table_cursor.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a href="ds_bilinear.html"><img
         src="../../image/next.gif" alt="Next" border="0"

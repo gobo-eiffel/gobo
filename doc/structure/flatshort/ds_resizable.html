@@ -15,7 +15,8 @@ content="text/html; charset=iso-8859-1">
         <td><font size="6"><strong>Class DS_RESIZABLE</strong></font></td>
         <td align="right"><a href="ds_quick_sorter.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="ds_searchable.html"><img
+        width="40" height="40"></a><a
+        href="ds_reverse_comparable_comparator.html"><img
         src="../../image/next.gif" alt="Next" border="0"
         width="40" height="40"></a></td>
     </tr>
@@ -34,7 +35,7 @@ content="text/html; charset=iso-8859-1">
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999-2001, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
@@ -48,6 +49,23 @@ color="#800000"><em>&gt;&quot;
 
 <blockquote>
     <pre><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><em> </em>{<em>NONE</em>}<font
+color="#008000"> -- Initialization</font></pre>
+
+<blockquote>
+    <pre><a name="make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- Create an empty container and allocate memory
+        -- space for at least </font><a href="#default_capacity"><em>default_capacity</em></a><font
+color="#008000"> items.
+        -- (From </font><a href="ds_container.html#make_default"><font
+color="#008000">DS_CONTAINER</font></a><font color="#008000">.)</font><em>
+</em><font color="#000080"><em><strong>    deferred</strong></em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -66,6 +84,15 @@ color="#008000">.)</font><font color="#000080"><em><strong>
 href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
         </em><font color="#008000">-- Maximum number of items in container</font><em>
     </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+    <pre><a name="default_capacity"><em>default_capacity</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Initial capacity in </font><a
+href="#make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- (Default value: 10)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        default_capacity_positive</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -197,7 +224,7 @@ color="#008000"> -- class DS_RESIZABLE</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -207,7 +234,7 @@ color="#008000"> -- class DS_RESIZABLE</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 July 1999</font><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
@@ -222,7 +249,8 @@ $Revision$"
         src="../../image/toc.gif" alt="Toc" border="0" width="40"
         height="40"></a><a href="ds_quick_sorter.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="ds_searchable.html"><img
+        width="40" height="40"></a><a
+        href="ds_reverse_comparable_comparator.html"><img
         src="../../image/next.gif" alt="Next" border="0"
         width="40" height="40"></a></td>
     </tr>

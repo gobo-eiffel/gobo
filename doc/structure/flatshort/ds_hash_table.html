@@ -13,7 +13,7 @@ content="text/html; charset=iso-8859-1">
 <table border="0" width="100%">
     <tr>
         <td><font size="6"><strong>Class DS_HASH_TABLE</strong></font></td>
-        <td align="right"><a href="ds_equality_tester.html"><img
+        <td align="right"><a href="ds_hash_set_cursor.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a
         href="ds_hash_table_cursor.html"><img
@@ -29,15 +29,13 @@ content="text/html; charset=iso-8859-1">
 <blockquote>
     <pre><em>description</em>:
 
-<font color="#800000"><em>    &quot;Hash tables, implemented with arrays. Keys are hashed using %
-    %`</em></font><a
+<font color="#800000"><em>    &quot;Hash tables, implemented with arrays. %
+    %Keys are hashed using </em></font><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html#hash_code"><font
 color="#800000"><em>hash_code</em></font></a><font
-color="#800000"><em>' from </em></font><a
+color="#800000"><em> from </em></font><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><font
-color="#800000"><em>HASHABLE</em></font></a><font color="#800000"><em> and are compared using `</em></font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
-color="#800000"><em>is_equal</em></font></a><font color="#800000"><em>'&quot;
+color="#800000"><em>HASHABLE</em></font></a><font color="#800000"><em>.&quot;
 
 </em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
@@ -75,36 +73,132 @@ href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em
 <blockquote>
     <pre><a name="make"><em>make</em></a><em> </em>(<em>n</em>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
-        </em><font color="#008000">-- Create an empty hash table and allocate
-        -- memory space for at least </font><em>n</em><font
-color="#008000"> items.
-        -- Use `=' as comparison criterion.</font><em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items.
+        -- Use `=' as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
 color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
-        positive_n</em>:<em> n </em>&gt;= <font color="#808000"><em>0</em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
         capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_equal"><em>make_equal</em></a><em> </em>(<em>n</em>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
-        </em><font color="#008000">-- Create an empty hash table and allocate
-        -- memory space for at least </font><em>n</em><font
-color="#008000"> items.</font><em>
-        </em><font color="#008000">-- Use </font><a
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items.
+        -- Use </font><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
-color="#008000"> as comparison criterion.
-        -- (From </font><a href="ds_sparse_table.html"><font
-color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
-color="#008000">.)
-</font><font color="#000080"><em><strong>    require</strong></em></font><em>
-        positive_n</em>:<em> n </em>&gt;= <font color="#808000"><em>0</em></font><em>
+color="#008000"> as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
         capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><a href="#default_capacity"><em>default_capacity</em></a><font
+color="#008000"> items.
+        -- Use `=' as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_container.html#make_default"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map"><em>make_map</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items.
+        -- Use `=' as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map_equal"><em>make_map_equal</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map_default"><em>make_map_default</em></a><em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><a href="#default_capacity"><em>default_capacity</em></a><font
+color="#008000"> items.
+        -- Use `=' as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_with_equality_testers"><em>make_with_equality_testers</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
+    an_item_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>;<em>
+    a_key_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#key_equality_tester"><em>key_equality_tester</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space for at
+        -- least </font><em>n</em><font color="#008000"> items.
+        -- Use </font><em>an_item_tester</em><font
+color="#008000"> as comparison criterion for items.
+        -- Use </font><em>a_key_tester</em><font color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a><em>
+        equality_tester_set</em>:<em> </em><a
+href="#equality_tester"><em>equality_tester</em></a><em> </em>=<em> an_item_tester
+        key_equality_tester_set</em>:<em> </em><a
+href="#key_equality_tester"><em>key_equality_tester</em></a><em> </em>=<em> a_key_tester</em></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature </strong></em></font><font
@@ -911,7 +1005,7 @@ $Revision$"
         src="../../image/home.gif" alt="Home" border="0"
         width="40" height="40"></a><a href="index.html"><img
         src="../../image/toc.gif" alt="Toc" border="0" width="40"
-        height="40"></a><a href="ds_equality_tester.html"><img
+        height="40"></a><a href="ds_hash_set_cursor.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a
         href="ds_hash_table_cursor.html"><img

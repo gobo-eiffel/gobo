@@ -34,7 +34,7 @@ content="text/html; charset=iso-8859-1">
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999-2001, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
@@ -66,6 +66,14 @@ color="#800000"><em>&gt;&quot;
 </em><font color="#008000">        -- Use </font><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion.</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- Create an empty queue.</font><em>
+</em><font color="#008000">        -- Use `=' as comparison criterion.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_container.html#make_default"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
 </blockquote>
@@ -182,6 +190,20 @@ color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         other_not_void</em>:<em> other </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
+    <pre><a name="equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+</em><font color="#008000">        -- Can </font><a
+href="#set_equality_tester"><em>set_equality_tester</em></a><font
+color="#008000"> be called with </font><em>a_tester</em><font
+color="#008000">
+        -- as argument in current state of container?
+        -- (Default answer: True.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#equality_tester_settable"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -255,6 +277,9 @@ color="#008000"> to </font><em>a_tester</em><font color="#008000">.
 href="ds_searchable.html#set_equality_tester"><font
 color="#008000"><em>DS_SEARCHABLE</em></font></a><font
 color="#008000">.)</font><em>
+</em><font color="#000080"><em><strong>    require</strong></em></font><em>
+        equality_tester_settable</em>:<em> </em><a
+href="#equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>)<em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         equality_tester_set</em>:<em> </em><a
 href="#equality_tester"><em>equality_tester</em></a><em> </em>= <em>a_tester</em></pre>
@@ -405,7 +430,7 @@ color="#008000"> -- class DS_LINKED_QUEUE</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -415,7 +440,7 @@ color="#008000"> -- class DS_LINKED_QUEUE</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 September 1999</font><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

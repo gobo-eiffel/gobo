@@ -34,11 +34,11 @@ content="text/html; charset=iso-8859-1">
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999-2001, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
-<pre><font color="#000080"><em><strong>deferred class interface</strong></em></font></pre>
+<pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
 
 <blockquote>
     <pre><em>DS_SPARSE_TABLE_CURSOR </em>[<em>G</em>, <em>K</em>]</pre>
@@ -52,6 +52,22 @@ color="#800000"><em>&gt;&quot;
         <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
 <a href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>]
     <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>creation</strong></em></font></pre>
+
+<blockquote>
+    <pre><a name="make"><em>make</em></a><em> </em>(<em>a_table</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#container"><em>container</em></a>)<em>
+</em><font color="#008000">        -- Create a new cursor for </font><em>a_table</em><font
+color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_table_not_void</em>:<em> a_table </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        container_set</em>:<em> </em><a href="#container"><em>container</em></a><em> </em>= <em>a_table
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -77,8 +93,7 @@ href="ds_sparse_table.html"><em>DS_SPARSE_TABLE</em></a><em> </em>[<em>G</em>, <
 color="#000080"><em><strong>
 </strong></em></font><font color="#008000">        -- (From </font><a
 href="ds_cursor.html#container"><font color="#008000"><em>DS_CURSOR</em></font></a><font
-color="#008000">.)
-    </font><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+color="#008000">.)</font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature </strong></em></font><font
@@ -403,7 +418,7 @@ color="#008000"> -- class DS_SPARSE_TABLE_CURSOR</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -413,11 +428,12 @@ color="#008000"> -- class DS_SPARSE_TABLE_CURSOR</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 24 September 1999</font><br>
+            <strong>Last Updated:</strong> 2 April 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a

@@ -5,17 +5,20 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage 2.0">
-<title>Class DS_HASH_TABLE_CURSOR</title>
+<title>Class DS_MULTIARRAYED_SPARSE_SET_CURSOR</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
 <table border="0" width="100%">
     <tr>
-        <td><font size="6"><strong>Class DS_HASH_TABLE_CURSOR</strong></font></td>
-        <td align="right"><a href="ds_hash_table.html"><img
+        <td><font size="6"><strong>Class
+        DS_MULTIARRAYED_SPARSE_SET_CURSOR</strong></font></td>
+        <td align="right"><a
+        href="ds_multiarrayed_sparse_set.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="ds_indexable.html"><img
+        width="40" height="40"></a><a
+        href="ds_multiarrayed_sparse_table.html"><img
         src="../../image/next.gif" alt="Next" border="0"
         width="40" height="40"></a></td>
     </tr>
@@ -28,50 +31,47 @@ content="text/html; charset=iso-8859-1">
 <blockquote>
     <pre><em>description</em>:
 
-<font color="#800000"><em>    &quot;Cursors for hash table traversals&quot;
+<font color="#800000"><em>    &quot;Cursors for multi-arrayed sparse set traversals&quot;
 
 </em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2001, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
 
 <blockquote>
-    <pre><em>DS_HASH_TABLE_CURSOR </em>[<em>G</em>, <em>K</em> -&gt; <a
-href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a>]</pre>
+    <pre><em>DS_MULTIARRAYED_SPARSE_SET_CURSOR </em>[<em>G</em>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
 
 <blockquote>
-    <pre><a href="ds_sparse_table_cursor.html"><em>DS_SPARSE_TABLE_CURSOR</em></a><em> </em>[<em>G</em>, <em>K</em>]
-    <a href="ds_bilinear_cursor.html"><em>DS_BILINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
+    <pre><a href="ds_sparse_set_cursor.html"><em>DS_SPARSE_SET_CURSOR</em></a><em> </em>[<em>G</em>]
+    <a href="ds_set_cursor.html"><em>DS_SET_CURSOR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_linear_cursor.html"><em>DS_LINEAR_CURSOR</em></a><em> </em>[<em>G</em>]<em>
+            </em><a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
+<em>    </em><a href="ds_bilinear_cursor.html"><em>DS_BILINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
         <a href="ds_linear_cursor.html"><em>DS_LINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
-            <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
-<em>    </em><a href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>]
-        <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
+            <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>creation</strong></em></font></pre>
 
 <blockquote>
-    <pre><a name="make"><em>make</em></a><em> </em>(<em>a_table</em>:<em> </em><font
+    <pre><a name="make"><em>make</em></a><em> </em>(<em>a_set</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#container"><em>container</em></a>)<em>
-</em><font color="#008000">        -- Create a new cursor for </font><em>a_table</em><font
-color="#008000">.
-        -- (From </font><a
-href="ds_sparse_table_cursor.html#make"><font color="#008000"><em>DS_SPARSE_TABLE_CURSOR</em></font></a><font
-color="#008000">.)</font><em>
+</em><font color="#008000">        -- Create a new cursor for </font><em>a_set</em><font
+color="#008000">.</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
-        a_table_not_void</em>:<em> a_table </em>/=<em> </em><font
+        a_set_not_void</em>:<em> a_set </em>/=<em> </em><font
 color="#008080"><em>Void</em></font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
-        container_set</em>:<em> </em><a href="#container"><em>container</em></a><em> </em>= <em>a_table
+        container_set</em>:<em> </em><a href="#container"><em>container</em></a><em> </em>= <em>a_set
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
 </blockquote>
 
@@ -87,17 +87,9 @@ color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
 href="#off"><em>off</em></a></pre>
-    <pre><a name="key"><em>key</em></a>:<em> K
-        </em><font color="#008000">-- Key at cursor position</font><em>
-</em><font color="#008000">        -- (From </font><a
-href="ds_sparse_table_cursor.html#key"><font color="#008000"><em>DS_SPARSE_TABLE_CURSOR</em></font></a><font
-color="#008000">.)</font><em>
-    </em><font color="#000080"><em><strong>require</strong></em></font><em>
-        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
-href="#off"><em>off</em></a></pre>
     <pre><a name="container"><em>container</em></a>:<em> </em><a
-href="ds_hash_table.html"><em>DS_HASH_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]<em>
-       </em><font color="#008000"> -- Hash table traversed</font><font
+href="ds_multiarrayed_sparse_set.html"><em>DS_MULTIARRAYED_SPARSE_SET</em></a><em> </em>[<em>G</em>]<em>
+       </em><font color="#008000"> -- Set traversed</font><font
 color="#000080"><em><strong>
 </strong></em></font><font color="#008000">        -- (From </font><a
 href="ds_cursor.html#container"><font color="#008000"><em>DS_CURSOR</em></font></a><font
@@ -118,7 +110,7 @@ color="#008000">.)</font><em>
         not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
 color="#000080"><em><strong>implies not </strong></em></font><a
 href="#container"><em>container</em></a>.<a
-href="ds_sparse_table.html#is_empty"><em>is_empty</em></a><em>
+href="ds_linear.html#is_empty"><em>is_empty</em></a><em>
         not_off</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
 color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
 href="#off"><em>off</em></a><em>
@@ -126,7 +118,7 @@ href="#off"><em>off</em></a><em>
 color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
 href="#item"><em>item</em></a><em> </em>=<em> </em><a
 href="#container"><em>container</em></a>.<a
-href="ds_sparse_table.html#first"><em>first</em></a>)</pre>
+href="ds_linear.html#first"><em>first</em></a>)</pre>
     <pre><a name="is_last"><em>is_last</em></a>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is cursor on last item?</font><em>
@@ -189,12 +181,12 @@ href="ds_linear_cursor.html#start"><font color="#008000"><em>DS_LINEAR_CURSOR</e
 color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         empty_behavior</em>:<em> </em><a href="#container"><em>container</em></a>.<a
-href="ds_sparse_table.html#is_empty"><em>is_empty</em></a><em> </em><font
+href="ds_linear.html#is_empty"><em>is_empty</em></a><em> </em><font
 color="#000080"><em><strong>implies</strong></em></font><em> </em><a
 href="#after"><em>after</em></a><em>
         not_empty_behavior</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
 href="#container"><em>container</em></a>.<a
-href="ds_sparse_table.html#is_empty"><em>is_empty</em></a><em> </em><font
+href="ds_linear.html#is_empty"><em>is_empty</em></a><em> </em><font
 color="#000080"><em><strong>implies</strong></em></font><em> </em><a
 href="#is_first"><em>is_first</em></a></pre>
     <pre><a name="finish"><em>finish</em></a><em>
@@ -215,7 +207,7 @@ href="#is_last"><em>is_last</em></a></pre>
     <pre><a name="forth"><em>forth</em></a><em>
         </em><font color="#008000">-- Move cursor to next position.</font><em>
 </em><font color="#008000">        -- (From </font><a
-href="ds_linear_cursor.html#forth"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+href="ds_linear_cursor.html#start"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
 color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
@@ -232,8 +224,7 @@ href="#before"><em>before</em></a></pre>
         </em><font color="#008000">-- Move to first position at or after current
         -- position where </font><a href="#item"><em>item</em></a><font
 color="#008000"> and </font><em>v</em><font color="#008000"> are equal.
-        -- (Use </font><a
-href="ds_sparse_table.html#equality_tester"><em>equality_tester</em></a><font
+        -- (Use </font><a href="ds_linear.html#equality_tester"><em>equality_tester</em></a><font
 color="#008000">'s criterion from </font><a href="#container"><em>container</em></a><font
 color="#008000">
         -- if not void, use `=' criterion otherwise.)
@@ -266,11 +257,11 @@ href="#off"><em>off</em></a><em> </em><font color="#000080"><em><strong>or</stro
 href="#before"><em>before</em></a></pre>
     <pre><a name="go_after"><em>go_after</em></a><em>
         </em><font color="#008000">-- Move cursor to </font><a
-href="#after"><em>after</em></a><font color="#008000"> position.</font><em>
-</em><font color="#008000">        -- (From </font><a
-href="ds_linear_cursor.html#go_after"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
-color="#008000">.)</font><em>
-    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+href="#after"><em>after</em></a><font color="#008000"> position.
+        -- (From </font><a href="ds_linear_cursor.html#go_after"><font
+color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
         after</em>:<em> </em><a href="#after"><em>after</em></a></pre>
     <pre><a name="go_before"><em>go_before</em></a><em>
         </em><font color="#008000">-- Move cursor to </font><a
@@ -292,8 +283,9 @@ color="#008000">.)</font><em>
         other_not_void</em>:<em> other </em>/=<em> </em><font
 color="#008080"><em>Void</em></font><em>
         valid_cursor</em>:<em> </em><a href="#container"><em>container</em></a>.<a
-href="ds_sparse_table.html#valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>other</em>)<em>
-    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+href="ds_linear.html#valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>other</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
         same_position</em>:<em> </em><a href="#same_position"><em>same_position</em></a><em> </em>(<em>other</em>)</pre>
 </blockquote>
 
@@ -348,46 +340,6 @@ href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>sam
         is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
 </blockquote>
 
-<pre><font color="#000080"><em><strong>feature </strong></em></font><font
-color="#008000">-- Element change</font></pre>
-
-<blockquote>
-    <pre><a name="replace"><em>replace</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
-        </em><font color="#008000">-- Replace item at cursor position by </font><em>v</em><font
-color="#008000">.</font><em>
-</em><font color="#008000">        -- (From </font><a
-href="ds_dynamic_cursor.html#replace"><font color="#008000"><em>DS_DYNAMIC_CURSOR</em></font></a><font
-color="#008000">.)</font><em>
-    </em><font color="#000080"><em><strong>require</strong></em></font><em>
-        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
-href="#off"><em>off</em></a><em>
-    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
-        replaced</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>=<em> v</em></pre>
-    <pre><a name="swap"><em>swap</em></a><em> </em>(<em>other</em>:<em> </em><a
-href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>])<em>
-        </em><font color="#008000">-- Exchange items at current and </font><em>other</em><font
-color="#008000">'s positions.
-        -- Note: cursors may reference two different containers.</font><em>
-</em><font color="#008000">        -- (From </font><a
-href="ds_dynamic_cursor.html#swap"><font color="#008000"><em>DS_DYNAMIC_CURSOR</em></font></a><font
-color="#008000">.)</font><em>
-    </em><font color="#000080"><em><strong>require</strong></em></font><em>
-        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
-href="#off"><em>off</em></a><em>
-        other_not_void</em>:<em> other </em>/=<em> </em><font
-color="#008080"><em>Void</em></font><em>
-        other_not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> other</em>.<a
-href="ds_dynamic_cursor.html#off"><em>off</em></a><em>
-    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
-        new_item</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>=<em> </em><font
-color="#000080"><em><strong>old</strong></em></font><em> </em>(<em>other</em>.<a
-href="ds_dynamic_cursor.html#item"><em>item</em></a>)<em>
-        new_other</em>:<em> other</em>.<a
-href="ds_dynamic_cursor.html#item"><em>item</em></a><em> </em>=<em> </em><font
-color="#000080"><em><strong>old</strong></em></font><em> </em><a
-href="#item"><em>item</em></a></pre>
-</blockquote>
-
 <pre><a name="invariant"><font color="#000080"><em><strong>invariant</strong></em></font></a></pre>
 
 <blockquote>
@@ -395,7 +347,7 @@ href="#item"><em>item</em></a></pre>
 href="#container"><em>container</em></a><em> </em>/= <font
 color="#008080"><em>Void</em></font><em>
 empty_constraint</em>:<em> </em><a href="#container"><em>container</em></a>.<a
-href="ds_sparse_table.html#is_empty"><em>is_empty</em></a><em> </em><font
+href="ds_linear.html#is_empty"><em>is_empty</em></a><em> </em><font
 color="#000080"><em><strong>implies</strong></em></font><em> </em><a
 href="#off"><em>off</em></a><em>
 </em><font color="#008000">    -- (From </font><a
@@ -419,14 +371,14 @@ color="#008000">.)</font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>end</strong></em></font><font
-color="#008000"> -- class DS_HASH_TABLE_CURSOR</font></pre>
+color="#008000"> -- class DS_MULTIARRAYED_SPARSE_SET_CURSOR</font></pre>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999-2001</b></font><font
+            <font size="2"><b>Copyright © 2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -436,12 +388,11 @@ color="#008000"> -- class DS_HASH_TABLE_CURSOR</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 2 April 2001</font><br>
+            <strong>Last Updated:</strong> 6 April 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$"
-            --> 
+$Revision$" --> 
         </address>
         </td>
         <td align="right" valign="top"><a
@@ -449,9 +400,10 @@ $Revision$"
         src="../../image/home.gif" alt="Home" border="0"
         width="40" height="40"></a><a href="index.html"><img
         src="../../image/toc.gif" alt="Toc" border="0" width="40"
-        height="40"></a><a href="ds_hash_table.html"><img
+        height="40"></a><a href="ds_multiarrayed_sparse_set.html"><img
         src="../../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="ds_indexable.html"><img
+        width="40" height="40"></a><a
+        href="ds_multiarrayed_sparse_table.html"><img
         src="../../image/next.gif" alt="Next" border="0"
         width="40" height="40"></a></td>
     </tr>
