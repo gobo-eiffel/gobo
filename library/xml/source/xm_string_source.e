@@ -18,10 +18,10 @@ inherit
 
 feature -- Output
 
-	out: STRING is 
+	out: STRING is
 			-- Textual representation
 		once
-			Result := "STRING" 
+			Result := "STRING"
 		end
 	
 end
