@@ -13,10 +13,23 @@
 	xmlns="http://relaxng.org/ns/structure/1.0">
 
 <start>
-	<ref name="chapter"/>
+	<choice>
+		<ref name="chapter"/>
+		<ref name="book"/>
+	</choice>
 </start>
 
 <!-- Document structure -->
+
+<define name="book">
+	<element name="book">
+		<ref name="title"/>
+		<!-- bookinfo? -->
+		<oneOrMore>
+			<ref name="chapter"/>
+		</oneOrMore>
+	</element>
+</define>
 
 <define name="chapter">
 	<element name="chapter">
