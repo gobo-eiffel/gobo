@@ -6,8 +6,8 @@ indexing
 
 	note:
 
-		"Use the algorithm described by D. Knuth in "The Art of %
-		%Computer Programming", Vol.1 3rd ed. p.265. The detection %
+		"Use the algorithm described by D. Knuth in 'The Art of %
+		%Computer Programming', Vol.1 3rd ed. p.265. The detection %
 		%of cycles is described in exercise 23 p.271 and p.548."
 
 	library:    "Gobo Eiffel Structure Library"
@@ -21,19 +21,13 @@ class DS_TOPOLOGICAL_SORTER [G]
 
 creation
 
-	make, make_with_capacity, make_with_items
+	make, make_default
 
 feature {NONE} -- Initialization
 
-	make is
+	make (nb: INTEGER) is
 			-- Create a new topological sorter.
-		do
-			make_with_capacity (10)
-		end
-
-	make_with_capacity (nb: INTEGER) is
-			-- Create a new topological sorter.
-			-- Set initial capacity of `items' to `nb'.
+			-- Set initial capacity to `nb'.
 		require
 			nb_positive: nb >= 0
 		do
@@ -41,29 +35,29 @@ feature {NONE} -- Initialization
 			!! counts.make (nb)
 			!! successors.make (nb)
 		ensure
-			capacity_set: items.capacity = nb
+			capacity_set: capacity = nb
 		end
 
-	make_with_items (some_items: like items) is
-			-- Create a new topological sorter to
-			-- sort `some_items'.
-		require
-			some_items_not_void: some_items /= Void
-		local
-			nb: INTEGER
+	make_default is
+			-- Create a new topological sorter.
+			-- Set initial capacity to a default value.
 		do
-			items := some_items
-			nb := some_items.count
-			!! counts.make (nb)
-			!! successors.make (nb)
-		ensure
-			items_set: items = some_items
+			make (10)
 		end
 
 feature -- Access
 
-	items: DS_ARRAYED_LIST [G]
-			-- Items to be sorted
+	index_of (v: G): INTEGER is
+			-- Index of `v' in the list of items to be sorted;
+			-- Return 'count + 1' if `v' is not in the list yet
+		do
+			items.start
+			items.search_forth (v)
+			Result := items.index
+		ensure
+			index_large_enough: Result >= 1
+			index_small_enough: Result <= count + 1
+		end
 
 	sorted_items: DS_ARRAYED_LIST [G]
 			-- Sorted items
@@ -73,7 +67,31 @@ feature -- Access
 			-- (Note: the items in `cycle' are stored in reverse order
 			-- and the first item is repeated at the end of the list.)
 
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items to be sorted
+		do
+			Result := items.count
+		ensure
+			count_positive: Result >= 0
+		end
+
+	capacity: INTEGER is
+			-- Maximum number of items to be sorted
+		do
+			Result := items.capacity
+		ensure
+			capacity_large_enough: Result >= count
+		end
+
 feature -- Status report
+
+	has (v: G): BOOLEAN is
+			-- Is `v' included in the list of items to be sorted?
+		do
+			Result := items.has (v)
+		end
 
 	is_sorted: BOOLEAN is
 			-- Have items been sorted?
@@ -86,27 +104,96 @@ feature -- Status report
 	has_cycle: BOOLEAN is
 			-- Has a cycle been detected?
 		do
-			Result := (cycle /= Void)
+			Result := (cycle /= Void and then not cycle.is_empty)
 		ensure
-			definition: Result = (cycle /= Void)
+			definition: Result = (cycle /= Void and then not cycle.is_empty)
 		end
 
 feature -- Element change
 
+	put (v: G) is
+			-- Add `v' to the list of items to be sorted.
+		require
+			not_has: not has (v)
+			not_full: count < capacity
+		do
+			items.put_last (v)
+			counts.put_last (0)
+			successors.put_last (Void)
+		ensure
+			inserted: has (v)
+			last: index_of (v) = count
+		end
+
+	force (v: G) is
+			-- Add `v' to the list of items to be sorted.
+			-- Resize the list of items if needed.
+		require
+			not_has: not has (v)
+		local
+			nb: INTEGER
+		do
+			if count >= capacity then
+				nb := count + 10
+				items.resize (nb)
+				counts.resize (nb)
+				successors.resize (nb)
+			end
+			put (v)
+		ensure
+			inserted: has (v)
+			last: index_of (v) = count
+		end
+
+	put_relation (u, v: G) is
+			-- Specify that item `u' should appear
+			-- before item `v' in the sorted list.
+		require
+			has_u: has (u)
+			has_v: has (v)
+		do
+			put_indexed_relation (index_of (u), index_of (v))
+		end
+
 	force_relation (u, v: G) is
-			-- State that `u' should appear before `v'
-			-- in the sorted list.
+			-- Specify that item `u' should appear
+			-- before item `v' in the sorted list.
+			-- Insert `u' and `v' in the list of items
+			-- to be sorted if not already done.
 		local
 			iu, iv: INTEGER
-			succ: DS_LINKABLE [INTEGER]
+		do
+			iu := index_of (u)
+			if iu = count + 1 then
+				force (u)
+			end
+			iv := index_of (v)
+			if iv = count + 1 then
+				force (v)
+			end
+			put_indexed_relation (iu, iv)
+		end
+
+	put_indexed_relation (i, j: INTEGER) is
+			-- Specify that item at index `i' should
+			-- appear before item at index `j' in
+			-- the sorted list.
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+			j_large_enough: j >= 1
+			j_small_enough: j <= count
+		local
+			succ, succ2: DS_LINKABLE [INTEGER]
 		do
 			reset
-			iu := index_of (u)
-			iv := index_of (v)
-			counts.replace (counts.item (iv) + 1, iv)
-			!! succ.make (iv)
-			succ.put_right (successors.item (iu))
-			successors.replace (succ, iu)
+			counts.replace (counts.item (j) + 1, j)
+			succ2 := successors.item (i)
+			!! succ.make (j)
+			successors.replace (succ, i)
+			if succ2 /= Void then
+				succ.put_right (succ2)
+			end
 		end
 
 feature -- Removal
@@ -126,10 +213,12 @@ feature -- Removal
 		do
 			reset
 			items.wipe_out
+			counts.wipe_out
+			successors.wipe_out
 		ensure
 			not_sorted: not is_sorted
 			no_cycle: not has_cycle
-			empty: items.is_empty
+			empty: count = 0
 		end
 
 feature -- Sort
@@ -139,9 +228,9 @@ feature -- Sort
 			-- relations which have been recorded since last sort.
 		local
 			i, nb: INTEGER
-			front, rear: INTEGER
+			front, rear, old_front: INTEGER
 			qlinks: DS_ARRAYED_LIST [INTEGER]
-			succ: DS_LINKBALE [INTEGER]
+			succ: DS_LINKABLE [INTEGER]
 			marks: ARRAY [BOOLEAN]
 		do
 			-- See description of algorithm in "The Art of Computer
@@ -188,9 +277,10 @@ feature -- Sort
 					succ := succ.right
 				end
 				successors.replace (Void, front)
-				qlinks.replace (0, front)
 				sorted_items.put_last (items.item (front))
-				front := qlinks.item (front)
+				old_front := front
+				front := qlinks.item (old_front)
+				qlinks.replace (0, old_front)
 			end
 			nb := items.count - sorted_items.count
 			if nb /= 0 then
@@ -212,7 +302,7 @@ feature -- Sort
 						qlinks.replace (i, succ.item)
 						succ := succ.right
 					end
-					successors.put (Void, i)
+					successors.replace (Void, i)
 					i := i + 1
 				end
 					-- T11.
@@ -232,7 +322,7 @@ feature -- Sort
 					-- in `cycle' are stored in the reverse order.
 				from until marks.item (i) = True loop
 					cycle.put_last (items.item (i))
-					marks.put (False, i)
+					marks.put (True, i)
 					i := qlinks.item (i)
 				end
 				cycle.put_last (items.item (i))
@@ -247,10 +337,13 @@ feature -- Sort
 			end
 		ensure
 			sorted: is_sorted
-			cycle: (sorted_items.count /= items.count) implies has_cycle
+			cycle: (sorted_items.count /= count) implies has_cycle
 		end
 
 feature {NONE} -- Implementation
+
+	items: DS_ARRAYED_LIST [G]
+			-- Items to be sorted
 
 	counts: DS_ARRAYED_LIST [INTEGER]
 			-- Number of predecessors for each item
@@ -260,36 +353,14 @@ feature {NONE} -- Implementation
 			-- Successors for each item
 			-- (same indexing as in `items'.)
 
-	index_of (v: G): INTEGER is
-			-- Index of `v' in `items';
-			-- Side-effect: add `v' to the end of
-			-- `items' if it is not already included.
-		local
-			i, nb: INTEGER
-		do
-			nb := items.count
-			from i := 1 until i > nb loop
-				if items.item (i) = v then
-					Result := i
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-			if Result = 0 then
-				items.force_last (u)
-				counts.force_last (0)
-				successors.force_last (Void)
-				Result := nb + 1
-			end
-		end
-
 invariant
 
 	items_not_void: items /= Void
 	counts_not_void: counts /= Void
 	counts_count: counts.count = items.count
+	counts_capacity: counts.capacity = items.capacity
 	successors_not_void: successors = Void
 	successors_count: successors.count = items.count
+	successors_capacity: successors.capacity = items.capacity
 
 end -- class DS_TOPOLOGICAL_SORTER
