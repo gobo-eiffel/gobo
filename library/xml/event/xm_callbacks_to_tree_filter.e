@@ -70,7 +70,7 @@ feature -- Document
 			-- Reset.
 		do
 			create document.make
-			current_open_composite := document
+			current_element := Void
 			
 			create namespace_cache.make_equal (0)
 		end
@@ -79,26 +79,30 @@ feature -- Element
 
 	on_start_tag (namespace, ns_prefix, a_name: STRING) is
 			-- called whenever the parser findes a start element.
+		local
+			an_element: XM_ELEMENT
 		do
 			check
 				document_not_void: document /= Void
-				document_not_finished: current_open_composite /= Void
 			end
-			
-			create current_element.make (current_open_composite, a_name, new_namespace (namespace, ns_prefix))
-			
-			if document.root_element = Void then
+				
+			if current_element = Void then
 					-- This is the first element in the document.
-				document.set_root_element (current_element)
+				create an_element.make (document, a_name, new_namespace (namespace, ns_prefix))
+				document.set_root_element (an_element)
 			else
 					-- This is not the first element in the parent.
-				current_open_composite.force_last (current_element)
+				check
+					document_not_finished: current_element /= Void
+				end
+				create an_element.make (current_element, a_name, new_namespace (namespace, ns_prefix))
+				current_element.force_last (an_element)
 			end
+			current_element := an_element
 			handle_position (current_element)
 			check
 				element_not_void: current_element /= Void
 			end
-			current_open_composite := current_element
 		end
 
 	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING) is
@@ -111,7 +115,7 @@ feature -- Element
 			end
 			create xml.make (a_name, new_namespace (namespace, a_prefix), a_value, current_element)
 			handle_position (xml)
-			current_open_composite.force_last (xml)
+			current_element.force_last (xml)
 		end
 
 	on_content (a_data: STRING) is
@@ -120,10 +124,10 @@ feature -- Element
 			xml: XM_CHARACTER_DATA
 		do
 			check
-				not_finished: current_open_composite /= Void
+				not_finished: current_element /= Void
 			end
-			create xml.make (current_open_composite, a_data)
-			current_open_composite.force_last (xml)
+			create xml.make (current_element, a_data)
+			current_element.force_last (xml)
 			handle_position (xml)
 		end
 
@@ -131,9 +135,13 @@ feature -- Element
 			-- End tag
 		do
 			check
-				open_composite_exists: current_open_composite /= Void
+				open_composite_exists: current_element /= Void
 			end
-			current_open_composite := next_open_composite (current_open_composite)
+			if current_element.parent.is_root_node then
+				current_element := Void
+			else
+				current_element := current_element.parent_element
+			end
 		end
 
 	on_processing_instruction (target, data: STRING) is
@@ -141,11 +149,12 @@ feature -- Element
 		local
 			xml: XM_PROCESSING_INSTRUCTION
 		do
-			create xml.make (target, data)
-			if current_open_composite = Void then
+			if current_element = Void then
+				create xml.make (document, target, data)
 				document.force_last (xml)
 			else
-				current_open_composite.force_last (xml)
+				create xml.make (current_element, target, data)
+				current_element.force_last (xml)
 			end
 			handle_position (xml)
 		end
@@ -155,26 +164,20 @@ feature -- Element
 		local
 			xml: XM_COMMENT
 		do
-			create xml.make (current_open_composite, com)
-			current_open_composite.force_last (xml)
+			if current_element = Void then
+				create xml.make (document, com)
+				document.force_last (xml)
+			else
+				create xml.make (current_element, com)
+				current_element.force_last (xml)
+			end
 			handle_position (xml)
 		end
 
 feature {NONE} -- Implementation
 
-	current_open_composite: XM_COMPOSITE
-			-- Current composite node
-
 	current_element: XM_ELEMENT
 			-- Current element
-
-	next_open_composite (a_composite: XM_COMPOSITE): XM_COMPOSITE is
-			-- Parent composite of `a_composite'
-		require
-			a_composite_not_void: a_composite /= Void
-		do
-			Result := a_composite.parent
-		end
 
 feature {NONE} -- Implementation
 

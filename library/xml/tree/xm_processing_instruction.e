@@ -14,7 +14,7 @@ class XM_PROCESSING_INSTRUCTION
 
 inherit
 
-	XM_NODE
+	XM_DOCUMENT_NODE
 
 creation
 
@@ -22,12 +22,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_data: like data) is
+	make (a_parent: like parent; a_target: like target; a_data: like data) is
 			-- Create a new processing instruction node.
 		require
 			a_target_not_void: a_target /= Void
 			a_data_not_void: a_data /= Void
 		do
+			parent := a_parent
 			target := a_target
 			data := a_data
 		ensure

@@ -17,42 +17,23 @@ inherit
 	XM_NODE
 		undefine
 			is_equal, copy
-		redefine
-			root_node
 		end
 
-	DS_LINKED_LIST [XM_NODE]
+	DS_BILINEAR [XM_NODE]
 		rename
-			make as make_list,
 			is_first as list_is_first,
 			is_last as list_is_last
+		undefine
+			-- Descendants will bring in the DS_LINKED_LIST versions
+			has, search_forth, search_back, cursor_off, occurrences
 		end
-
+			
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			is_equal, copy
 		end
 
-feature {NONE} -- Initialization
-
-	make_composite is
-			-- Initialization specific to current node.
-		do
-			make_list
-		end
-
 feature -- Access
-
-	root_node: XM_COMPOSITE is
-			-- Root node of current node
-			-- (In most cases this will be of type XM_DOCUMENT)
-		do
-			if is_root_node then
-				Result := Current
-			else
-				Result := parent.root_node
-			end
-		end
 
 	element_by_name (a_name: STRING): XM_ELEMENT is
 			-- Direct child element with name `a_name';
@@ -60,28 +41,20 @@ feature -- Access
 			-- Return Void if no element with that name is a child of current node.
 		require
 			a_name_not_void: a_name /= Void
-		local
-			a_cursor: like new_cursor
-			typer: XM_NODE_TYPER
-		do
-			create typer
-			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.process (typer)
-				if typer.is_element and then 
-					named_same_name (typer.element, a_name)
-				then
-					Result := typer.element
-					a_cursor.go_after -- Jump out of the loop.
-				else
-					a_cursor.forth
-				end
-			end
+		deferred
 		ensure
 			element_not_void: has_element_by_name (a_name) = (Result /= Void)
 			--namespace: Result /= Void implies same_namespace (Result)
 		end
 
+	has_element_by_name (a_name: STRING): BOOLEAN is
+			-- Has current node at least one direct child
+			-- element with the name `a_name'?
+		require
+			a_name_not_void: a_name /= Void
+		deferred
+		end
+		
 	elements: DS_LIST [XM_ELEMENT] is
 			-- List of all direct child elements in current element
 			-- (Create a new list at each call.)
@@ -99,7 +72,11 @@ feature -- Access
 				end
 				a_cursor.forth
 			end
+		ensure
+			not_void: Result /= Void
 		end
+
+feature -- Text
 
 	text: STRING is
 			-- Concatenation of all texts directly found in
@@ -124,84 +101,9 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
-
-	has_element_by_name (a_name: STRING): BOOLEAN is
-			-- Has current node at least one direct child
-			-- element with the name `a_name'?
-		require
-			a_name_not_void: a_name /= Void
-		local
-			a_cursor: like new_cursor
-			typer: XM_NODE_TYPER
-		do
-			create typer
-			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.process (typer)
-				if typer.is_element and then 
-					named_same_name (typer.element, a_name)
-				then
-					Result := True
-					a_cursor.go_after -- Jump out of the loop.
-				else
-					a_cursor.forth
-				end
-			end
-		end
-
-feature {NONE} -- Name comparison with namespace.
-
-	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
-			-- Has 'a_named' same name as 'a_name' and 
-			-- same namespace as current node?
-		require
-			a_named_not_void: a_named /= Void
-			a_name_not_void: a_name /= Void
-		deferred
-		ensure
-			same_name: Result implies same_string (a_named.name, a_name)
-		end
-		
-feature -- Element change
-
 	join_text_nodes is
 			-- Join sequences of text nodes.
-		local
-			text_node: XM_CHARACTER_DATA
-			joint_text_node: XM_CHARACTER_DATA
-			a_cursor: like new_cursor
-			typer: XM_NODE_TYPER
-		do
-			create typer
-			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.process (typer)
-				if typer.is_character_data then
-					text_node := typer.character_data
-						-- Found a text node.
-						-- Now join all text-nodes that are following it
-						-- until there is a node that is no text-node.
-					joint_text_node := clone (text_node)
-					remove_at_cursor (a_cursor)
-					from
-					until
-						a_cursor.after or text_node = Void
-					loop
-						a_cursor.item.process (typer)
-						if typer.is_character_data then
-								-- Found another text-node -> join.
-							joint_text_node.append_content (typer.character_data)
-							remove_at_cursor (a_cursor)
-						else
-							a_cursor.forth
-						end
-					end
-					force_left_cursor (joint_text_node, a_cursor)
-				else
-					a_cursor.forth
-				end
-			end
+		deferred
 		end
 
 feature -- Namespaces
@@ -255,11 +157,11 @@ feature -- Processing
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (a_processor)
 				a_cursor.item.process (typer)
-				if typer.is_composite then
-					typer.composite.process_children_recursive (a_processor)
+				if typer.is_element then
+					typer.element.process_children_recursive (a_processor)
 				end
 				a_cursor.forth
 			end
 		end
-
+		
 end

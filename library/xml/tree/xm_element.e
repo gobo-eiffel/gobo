@@ -28,9 +28,22 @@ inherit
 			copy, is_equal
 		end
 
+	XM_DOCUMENT_NODE
+		undefine
+			copy, is_equal
+		end
+
+	DS_LINKED_LIST [XM_NODE]
+		rename
+			make as make_list,
+			is_first as list_is_first,
+			is_last as list_is_last
+		end
+				
 creation
 
-	make
+	make,
+	make_child
 
 feature {NONE} -- Initialization
 
@@ -42,28 +55,12 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			namespace := a_ns
-			make_composite
+			make_list
 			parent := a_parent
 		ensure
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 			parent_set: parent = a_parent
-		end
-
-	make_root (a_name: like name; a_ns: like namespace) is
-			-- Create a new root element.
-		obsolete
-			"Document is parent of root element"
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-		do
-			name := a_name
-			namespace := a_ns
-			make_composite
-		ensure
-			name_set: name = a_name
-			ns_prefix_set: namespace = a_ns
 		end
 		
 	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace) is
@@ -121,10 +118,62 @@ feature {NONE} -- Name comparison with namespace.
 	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
 			-- Has 'a_named' same name as 'a_name' and 
 			-- same namespace as current node?
+		require
+			a_named_not_void: a_named /= Void
+			a_name_not_void: a_name /= Void
 		do
 			Result := same_string (a_named.name, a_name) and same_namespace (a_named)
+		ensure
+			same_name: Result implies same_string (a_named.name, a_name)
 		end
 		
+feature -- Access (from XM_COMPOSITE)
+	
+	has_element_by_name (a_name: STRING): BOOLEAN is
+			-- Has current node at least one direct child
+			-- element with the name `a_name'?
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_element and then 
+					named_same_name (typer.element, a_name)
+				then
+					Result := True
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
+				end
+			end
+		end
+
+	element_by_name (a_name: STRING): XM_ELEMENT is
+			-- Direct child element with name `a_name';
+			-- If there are more than one element with that name, anyone may be returned.
+			-- Return Void if no element with that name is a child of current node.
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_element and then 
+					named_same_name (typer.element, a_name)
+				then
+					Result := typer.element
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
+				end
+			end
+		end
+	
 feature -- Access
 
 	attribute_by_name (a_name: STRING): XM_ATTRIBUTE is
@@ -245,6 +294,45 @@ feature -- Removal
 			end
 		end
 
+	join_text_nodes is
+			-- Join sequences of text nodes.
+		local
+			text_node: XM_CHARACTER_DATA
+			joint_text_node: XM_CHARACTER_DATA
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_character_data then
+					text_node := typer.character_data
+						-- Found a text node.
+						-- Now join all text-nodes that are following it
+						-- until there is a node that is no text-node.
+					joint_text_node := clone (text_node)
+					remove_at_cursor (a_cursor)
+					from
+					until
+						a_cursor.after or text_node = Void
+					loop
+						a_cursor.item.process (typer)
+						if typer.is_character_data then
+								-- Found another text-node -> join.
+							joint_text_node.append_content (typer.character_data)
+							remove_at_cursor (a_cursor)
+						else
+							a_cursor.forth
+						end
+					end
+					force_left_cursor (joint_text_node, a_cursor)
+				else
+					a_cursor.forth
+				end
+			end
+		end
+
 	remove_namespace_declarations_from_attributes_recursive is
 			-- Remove the namespace declarations from the attributes 
 			-- in current element and all child-elements recursively.
@@ -255,6 +343,7 @@ feature -- Removal
 
 	remove_namespace_declarations_from_attributes is
 			-- Remove all attributes that start with "xmlns:".
+		obsolete "xmlns attributes are not in the tree"
 		local
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER

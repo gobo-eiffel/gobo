@@ -14,7 +14,7 @@ class XM_COMMENT
 
 inherit
 
-	XM_NODE
+	XM_DOCUMENT_NODE
 
 creation
 
