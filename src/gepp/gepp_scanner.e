@@ -18,7 +18,7 @@ inherit
 			make as make_compressed_scanner_skeleton,
 			reset as reset_compressed_scanner_skeleton
 		redefine
-			wrap
+			wrap, output
 		end
 
 	GEPP_TOKENS
@@ -338,6 +338,7 @@ feature {NONE} -- Initialization
 			-- Create a new scanner.
 		do
 			make_compressed_scanner_skeleton
+			output_file := std.output
 			line_nb := 1
 		end
 
@@ -393,5 +394,31 @@ feature -- Element change
 				Result := True
 			end
 		end
+
+feature -- Output
+
+	output_file: like OUTPUT_STREAM_TYPE
+			-- Output file
+
+	set_output_file (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Set `output_file' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		do
+			output_file := a_file
+		ensure
+			output_file_set: output_file = a_file
+		end
+
+	output (a_text: like text) is
+			-- Output `a_text' to `output_file'.
+		do
+			output_file.put_string (a_text)
+		end
+invariant
+
+	output_not_void: output_file /= Void
+	output_open_write: OUTPUT_STREAM_.is_open_write (output_file)
 
 end -- class GEPP_SCANNER
