@@ -70,6 +70,7 @@ feature {NONE} -- Initialization
 				-- Resolvers
 			dtd_resolver := null_resolver
 			entity_resolver := null_resolver
+			use_namespaces := True
 		end
 
 	null_resolver: XM_NULL_EXTERNAL_RESOLVER is
@@ -130,6 +131,35 @@ feature -- Obsolete
 			parse_from_stream (a_stream)
 		end
 
+feature -- Namespace mode
+
+	disable_namespaces is
+			-- Disable namespace parsing and allow strict 
+			-- XML 1.0 names (eg ":" or ":a:b:c:"). 
+			-- Namespace field in events is always Void. 
+			
+		do
+			use_namespaces := False
+		end
+		
+	use_namespaces: BOOLEAN
+			-- Are namespaces parsed?
+			
+feature {NONE} -- Namespaces
+
+	namespace_force_last (a_name: XM_EIFFEL_PARSER_NAME; a_string: STRING) is
+			-- Force last namespace name component, or error.
+		require
+			a_name_not_void: a_name /= Void
+			a_string_not_void: a_string /= Void
+		do
+			if a_name.can_force_last (a_string) then
+				a_name.force_last (a_string)
+			else
+				force_error (Error_namespaces_name_misformed)
+			end
+		end
+		
 feature -- Error reporting
 
 	is_correct: BOOLEAN is
@@ -244,7 +274,11 @@ feature {NONE} -- Factory
 	new_namespace_name: XM_EIFFEL_PARSER_NAME is
 			-- New namespace name
 		do
-			create Result.make
+			if use_namespaces then
+				create Result.make_namespaces
+			else
+				create Result.make_no_namespaces
+			end
 		ensure
 			namespace_name_not_void: Result /= Void
 			namespace_name_empty: Result.is_empty

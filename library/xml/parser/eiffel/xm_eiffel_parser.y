@@ -133,22 +133,29 @@ document: prolog element misc_maybe
 namespace_name: tagname_first
 		{
 			$$ := new_namespace_name
-			$$.force_last ($1)
+			namespace_force_last ($$, $1)
 		}
 	| TAG_NAME_COLON
 		{
 			$$ := new_namespace_name
-			$$.force_last (shared_empty_string)
+			namespace_force_last ($$, shared_empty_string)
+			namespace_force_last ($$, shared_empty_string)
+		}
+	| TAG_NAME_COLON namespace_name_second
+		{ 
+			$$ := new_namespace_name
+			namespace_force_last ($$, shared_empty_string)
+			namespace_force_last ($$, $2)
 		}
 	| namespace_name TAG_NAME_COLON namespace_name_second
 		{ 
 			$$ := $1
-			$$.force_last ($3)
+			namespace_force_last ($$, $3)
 		}
 	| namespace_name TAG_NAME_COLON
 		{
 			$$ := $1
-			$$.force_last (shared_empty_string)
+			namespace_force_last ($$, shared_empty_string)
 		}
 	;
 

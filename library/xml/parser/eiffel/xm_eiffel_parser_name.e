@@ -44,19 +44,36 @@ inherit
 
 creation
 
-	make
+	make_namespaces, make_no_namespaces
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a new empty name.
+	make_namespaces is
+			-- Create a new empty name, that behaves with namespaces.
+		do
+			make_no_namespaces
+			use_namespaces := True
+		ensure
+			use_namespaces: use_namespaces
+		end
+
+	make_no_namespaces is
+			--
 		do
 			count := 0
 			first := Void
 			second := Void
 			tail := Void
+		ensure
+			not_use_namespaces: not use_namespaces
+		
 		end
+		
+feature -- Status report
 
+	use_namespaces: BOOLEAN
+			-- Is namespace parsing enabled?
+			
 feature -- Status report
 
 	is_name: BOOLEAN is
@@ -101,11 +118,13 @@ feature -- Status report
 feature -- Access
 
 	ns_prefix: STRING is
-			-- Namesapce prefix
+			-- Namespace prefix
 		do
-			if is_namespace_name then
+			if use_namespaces and is_namespace_name then
 				Result := first
 			end
+		ensure
+			no_namespaces_void: not use_namespaces implies Result = Void
 		end
 
 	local_part: STRING is
@@ -114,14 +133,22 @@ feature -- Access
 		local
 			it: DS_LIST_CURSOR [STRING]
 		do
-			if count <= 2 then
+			if use_namespaces then
+				check count_for_namespaces: count <= 2 end
 				Result := last
 			else
-				Result := clone (second)
-				it := tail.new_cursor
-				from it.start until it.after loop
-					Result := STRING_.appended_string (Result, it.item)
-					it.forth
+				Result := clone (first)
+				if (count > 1) then
+					Result.append_character (':')
+					Result := STRING_.appended_string (Result, second)
+					if (count > 2) then
+						it := tail.new_cursor
+						from it.start until it.after loop
+							Result.append_character (':')
+							Result := STRING_.appended_string (Result, it.item)
+							it.forth
+						end
+					end
 				end
 			end
 		end
@@ -180,10 +207,25 @@ feature -- Measurement
 
 feature -- Element change
 
+	can_force_last (a_string: STRING): BOOLEAN is
+			-- Is it possible to add an element?
+		require
+			a_string_not_void: a_string /= Void
+		do
+			if use_namespaces then
+				Result := count < 2 and a_string.count > 0
+			else
+				Result := True
+			end
+		ensure
+			use_namespaces: not use_namespaces implies Result
+		end
+		
 	force_last (a_string: STRING) is
 			-- Add `a_string' at end.
 		require
 			a_string_not_void: a_string /= Void
+			allowed: can_force_last (a_string)
 		do
 			count := count + 1
 			if count = 1 then
@@ -200,7 +242,7 @@ feature -- Element change
 			one_more: count = old count + 1
 			at_last: last = a_string
 		end
-
+		
 feature -- Removal
 
 	wipe_out is
@@ -218,6 +260,8 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `Current' and `other' considered equal?
+		local
+			a_cursor, an_other_cursor: DS_LINEAR_CURSOR [STRING]
 		do
 			if count = other.count then
 				if count = 0 then
@@ -230,7 +274,19 @@ feature -- Comparison
 				else
 					Result := same_string (first, other.first)
 						and same_string (second, other.second)
-						and tail.is_equal (other.tail)
+					from
+						a_cursor := tail.new_cursor
+						a_cursor.start
+						an_other_cursor := other.tail.new_cursor
+						an_other_cursor.start
+					until
+						a_cursor.after or not Result
+					loop
+						Result := same_string (a_cursor.item, an_other_cursor.item)
+						a_cursor.forth
+						an_other_cursor.forth
+					end
+					check synch_from_count: a_cursor.after = an_other_cursor.after end
 				end
 			end
 		end
