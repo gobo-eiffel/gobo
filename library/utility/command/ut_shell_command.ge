@@ -46,24 +46,20 @@ feature -- Execution
 			-- Wait until termination.
 		local
 			retried: BOOLEAN
-#ifdef HACT || ISE
-			environment: expanded EXECUTION_ENVIRONMENT
-#else
 #ifdef VE
 			a_process: EXTERNAL_PROCESS
-#endif
 #endif
 		do
 			if not retried then
 #ifdef HACT || ISE
-				environment.system (command)
+				execution_environment.system (command)
 #else
 #ifdef VE
 				!! a_process.make (command)
 				a_process.execute
 #else
 #ifdef SE
-				system (command)
+				system_impl.execute_command_line (command)
 #endif
 #endif
 #endif
@@ -75,6 +71,25 @@ feature -- Execution
 			end
 		end
 
+#ifdef SE || HACT || ISE
+feature {NONE} -- Implementation
+
+#ifdef SE
+	system_impl: SYSTEM
+			-- Internal data
+
+#endif
+#ifdef HACT || ISE
+	execution_environment: EXECUTION_ENVIRONMENT is
+			-- Internal data
+		once
+			!! Result
+		ensure
+			execution_environment_not_void: Result /= Void
+		end
+
+#endif
+#endif
 invariant
 
 	command_not_void: command /= Void
