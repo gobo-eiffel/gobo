@@ -1,5 +1,8 @@
 TODO for Gobo XML
 
+Items prefixed with 'enhancement' are not release critical and are open to 
+discussion.
+
 EXPAT:
 
 - apply string modes (generating UC_STRING vs. STRING)
@@ -7,32 +10,32 @@ EXPAT:
 
 EIFFEL:
 
-- Test/finish ISO latin 1
 - xml declaration for entities event and parsing (rm special scanner?)
 - Better error message when failing to resolve DTD
 - Check that stand alone handling makes some sense
 - Parse ":" name in pedantic XML 1.0 mode for tests
-- Q: Do CRLF normalisation before parser instead of 
-  downstream mess?
-- Q: review XM_EIFFEL_PARSER_NAME
+- enhancement: Do CRLF normalisation before parser instead of downstream mess?
+- enhancement: review XM_EIFFEL_PARSER_NAME
 
 GENERAL:
 
-- Q: obsolete/hide nodes' `set_parent', ordinary `make'?
-- Q: actually checking tree nodes's parent /= Void (creation issue)
 - Tree attribute make require not duplicate attribute, or invariant
 - Tree pipe to include concatenation and comment filters
 - check XM_FORMATTER handling of namespaces
 - DTD model should contain attribute enumeration decls
-- Add some generic DTD filters, eg pretty print
-- Add some way to add before after root_element in XM_DOCUMENT
-- XM_EIFFEL_DECLARATION -> XM_DECLARATION
-- Q: Tree clipboard
-- Q: cache queries by name in tree?
-- Q: where does the end tag checker belong (filter or parser)?
+- actually checking tree nodes's parent /= Void (creation issue)
+- where does the end tag checker belong (filter or parser)?
+- enhancement: XM_DOCUMENT.make_root obsolete as before
+- enhancement: Add some generic DTD filters, eg pretty print
+- enhancement: XM_EIFFEL_DECLARATION -> XM_DECLARATION
+- enhancement: Obsolete/hide nodes' `set_parent', ordinary `make'?
+- enhancement: Tree clipboard
+- enhancement: Cache queries by name in tree?
+- enhancement: XM_ELEMENT.is_root_element
 
 TESTS:
 
+- more latin-1 tests
 - more extensive tree tests
 - full OASIS test suite to integrate
 - DTD events testing
