@@ -9,8 +9,10 @@ up of a number 'nb' followed by a filename. It creates a parser and parses
 'nb' times the file given as second argument.
 
 Note: This Eiffel parser is just a simple example. It is not intended
-to be perfect or to follow any Eiffel syntax standard. Moreover, it does
-not generate any abstract syntax tree and there is no output.
+to be perfect or to follow any Eiffel syntax standard. Moreover, it
+does not generate any abstract syntax tree and there is no output. A
+full-fledged Eiffel parser is provided in the Gobo Eiffel Tools Library
+in $Gobo/library/tools/eiffel/parser/.
 
 To compile this example:
 
@@ -22,11 +24,11 @@ To compile this example:
 
 3. Choose either `execute' or `benchmark' as the creation prodecure of
    the root class EIFFEL_PARSER in your Ace file (ISE Eiffel: ise.ace,
-   SmartEiffel: se.ace) or your ESD file (Visual Eiffel: ve.esd).
+   SmartEiffel: se.ace) or your Xace file (Visual Eiffel: ve.xace).
 
 4. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -45,4 +47,4 @@ To compile this example:
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Copyright (c) 1997-2001, Eric Bezault and others
+Copyright (c) 1997-2005, Eric Bezault and others
