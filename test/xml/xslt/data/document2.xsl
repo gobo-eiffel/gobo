@@ -12,7 +12,7 @@
 
   <output>
 
-    <xsl:value-of select="document('../../xpath/data/books.xml')/BOOKLIST/BOOKS/ITEM[1]/TITLE"/>
+    <xsl:value-of select="document('../../xpath/data/books.xml#element(/1/1/1/1)')"/>
 
   </output>
 

@@ -145,7 +145,7 @@ feature -- Access
 		end
 
 	default_media_type (a_uri: STRING): UT_MEDIA_TYPE is
-			-- Media-type assoicated with `a_uri' (only used when resolver returns no information)
+			-- Media-type associated with `a_uri' (only used when resolver returns no information)
 		require
 			uri_not_empty: a_uri /= Void and then a_uri.count > 0
 		once

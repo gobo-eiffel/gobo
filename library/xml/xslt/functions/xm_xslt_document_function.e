@@ -124,6 +124,8 @@ feature -- Evaluation
 			a_base_uri, a_uri: UT_URI
 			a_node: XM_XPATH_NODE
 			a_document: XM_XPATH_DOCUMENT
+			a_uri_reference: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_map_object ?= an_information_object
 			check
@@ -139,20 +141,32 @@ feature -- Evaluation
 					a_base_uri := a_map_object.stylesheet_base_uri
 				end
 			end
-			create a_uri.make_resolve (a_base_uri, an_item.string_value)
-			parse_document (an_item.string_value, a_base_uri, a_context)
-			if last_evaluated_document.is_error then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+			a_uri_reference := an_item.string_value
+			if uri_encoding.has_excluded_characters (a_uri_reference) then
+				create an_error.make_from_string ("Argument to fn:document is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
+				transformer.report_recoverable_error (an_error, Void)
+				if not transformer.is_error then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+				end		
 			else
-				a_document ?= last_evaluated_document
-				check
-					document: a_document /= Void
-					-- as `parse_document' only returns documents or invalid items
-				end
-				if a_uri.has_fragment then
-					Result := fragment (a_uri, a_document)
+				create a_uri.make_resolve (a_base_uri, a_uri_reference)
+				parse_document (an_item.string_value, a_base_uri, a_context)
+				if last_evaluated_document.is_error then
+					transformer.report_recoverable_error (last_evaluated_document.error_value, Void)
+					if not transformer.is_error then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+					end
 				else
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document)
+					a_document ?= last_evaluated_document
+					check
+						document: a_document /= Void
+						-- as `parse_document' only returns documents or invalid items
+					end
+					if a_uri.has_fragment then
+						Result := fragment (a_uri, a_document)
+					else
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document)
+					end
 				end
 			end
 		end
@@ -209,7 +223,6 @@ feature {NONE} -- Implementation
 			uri_has_fragment: a_uri /= Void and then a_uri.has_fragment
 			document_not_void: a_document /= Void
 			transformer_not_void: transformer /= Void
-			configuration_not_void: configuration /= Void
 		local
 			a_media_type: UT_MEDIA_TYPE
 			a_fragment_id: STRING
@@ -334,7 +347,7 @@ feature {NONE} -- Implementation
 						sequence_extent: a_sequence_extent /= Void
 						-- Only remaining possibility
 					end
-					if  a_sequence_extent.is_node_sequence then
+					if a_sequence_extent.is_node_sequence then
 						Result := a_sequence_extent.node_iterator
 					else
 						create an_error.make_from_string ("XPointer returned something other than a sequence of nodes", "", "XT1160", Dynamic_error)
@@ -345,6 +358,11 @@ feature {NONE} -- Implementation
 					end
 				else
 					a_node := a_node_value.node
+				end
+			end
+			if not transformer.is_error then
+				if Result = Void then
+					create  {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_node)
 				end
 			end
 		ensure

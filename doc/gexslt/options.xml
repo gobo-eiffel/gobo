@@ -420,6 +420,47 @@
       </para>
     </section>
   </section>
+    <section>
+      <title>Media types and URI fragment identifiers</title>
+      <para>The following options affect the mapping of URIs onto media-types, for interpretation of fragment identifies:
+      <variablelist>
+	<varlistentry>
+	  <term>--no-xpointer</term>
+	  <listitem>
+	    <para>
+	      Don't use XPointer for XML media types.
+	    </para>
+	    <para>
+	      In the case of application/xhtml+xml, this will result in fragment identifiers
+	      being interpreted as the value of any ID-valued attribute.
+	    </para>
+	    <para>
+	      For other XML media types, this will result in recoverable error XT1160, as RFC 2376
+	      does not assign a meaning to the fragment identifier.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--html-text-ok</term>
+	  <listitem>
+	    <para>
+	      By default, &program_name; assumes that a web server is serving up XHTML
+	      documents as media type text/html (to get round the fact that MSIE does not recognize 
+	      application/xhtml+xml). So if it sees a media type of text/html, it pretends that it is actually
+	      application/xhtml+xml. Using this option means it respects the media type is really text/html.
+	      The result is that this is a media type that the program chooses not to recognize, so you will
+	      get recoverable error XT1160.
+	    </para>
+	    <para>
+	      Without this option, it might be argued that &program_name; is non-compliant. Apart from that, 
+	      it doesn't serve any useful purpose.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </section>
+  </section>
   <section>
     <title>Extensions</title>
     <para>The following options control the availability of extensions:

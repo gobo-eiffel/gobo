@@ -243,8 +243,6 @@ feature {NONE} -- Implementation
 	pending_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes of namespaces defined on the current element
 
-			-- The next three lists together form a list of triples
-
 	pending_attributes: XM_XPATH_ATTRIBUTE_COLLECTION
 			-- Pending attributes
 

@@ -137,6 +137,7 @@ feature -- Access
 	Xml_base_type_code: INTEGER is 129
 	Xml_space_type_code: INTEGER is 130
 	Xml_lang_type_code: INTEGER is 131
+	Xml_id_type_code: INTEGER is 133
 
 			-- Codes in XML Schema namespace (`Xslt_uri_code' * 128 + 1..n)
 

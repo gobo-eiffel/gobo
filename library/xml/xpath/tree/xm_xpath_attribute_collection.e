@@ -138,7 +138,7 @@ feature -- Element change
 			if a_type_code = Id_type_code then
 				-- The attribute is marked as being an ID. But we don't trust it - it
 				-- might come from a non-validating parser. Before adding it to the index, we
-				-- check that it really is an ID.
+				-- check that it really is an ID, and there is not already an ID with that value
 				if is_ncname (a_value) then
 					attribute_ids.put_last (True)
 				else
@@ -147,7 +147,6 @@ feature -- Element change
 			else
 				attribute_ids.put_last (False)
 			end
-			
 		ensure
 			attribute_name_code_added: attribute_name_codes.has (a_name_code)
 			attribute_value_added: attribute_values.has (a_value)
@@ -199,7 +198,7 @@ invariant
 	attribute_name_codes_not_void: attribute_name_codes /= Void
 	attribute_type_codes_not_void: attribute_type_codes /= Void
 	attribute_values_not_void: attribute_values /= Void
-	same_length: attribute_name_codes.count = attribute_type_codes.count and attribute_type_codes.count = attribute_values.count
+	same_length: attribute_name_codes.count = attribute_type_codes.count and attribute_name_codes.count = attribute_values.count and attribute_name_codes.count = attribute_ids.count
 
 end
 	

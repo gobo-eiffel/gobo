@@ -632,6 +632,7 @@ feature {NONE} -- Implementation
 			bind_xml_name (Xml_base_type_code, "base")
 			bind_xml_name (Xml_space_type_code, "space")
 			bind_xml_name (Xml_lang_type_code, "lang")
+			bind_xml_name (Xml_id_type_code, "id")
 		end
 	
 	bind_xslt_names is

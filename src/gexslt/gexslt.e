@@ -412,6 +412,8 @@ feature -- Error handling
 									  "       --trace=local-file-name%N" +
 									  "       --timed-trace=local-file-name%N" +
 									  "       --tiny-tree%N" +
+									  "       --no-xpointer%N" +
+									  "       --html-text-ok%N" +
 									  "       --mode=[{namespace-uri}]local-name%N" +
 									  "       --template=[{namespace-uri}]local-name%N" +									  
 									  "       --param=name=string-value%N" +
@@ -463,6 +465,10 @@ feature {NONE} -- Implementation
 				collection_off
 			elseif an_option.is_equal ("secure") then
 				highly_secure := True
+			elseif an_option.is_equal ("html-text-ok") then
+				configuration.do_not_assume_xhtml
+			elseif an_option.is_equal ("no-xpointer") then
+				configuration.do_not_use_xpointer
 			elseif an_option.is_equal ("treat-warnings-as-errors") then
 				error_listener.treat_warnings_as_recoverable_errors
 			elseif an_option.is_equal ("do-not-recover") then

@@ -98,15 +98,18 @@ feature -- Parsers
 			function_library := environment.available_functions
 			create tokenizer.make
 			tokenizer.tokenize (an_expression_string, a_start, -1)
-			is_parse_error := False
-			parse_expression
-			
 			if	tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, "XP0003")
-			elseif tokenizer.last_token /= a_terminator then
-				s := STRING_.appended_string ("Unexpected token ", display_current_token)
-				s := STRING_.appended_string (s, " beyond end of expression")
-				report_parse_error (s, "XP0003")
+			else
+				is_parse_error := False
+				parse_expression			
+				if	tokenizer.is_lexical_error then
+					report_parse_error (tokenizer.last_lexical_error, "XP0003")
+				elseif tokenizer.last_token /= a_terminator then
+					s := STRING_.appended_string ("Unexpected token ", display_current_token)
+					s := STRING_.appended_string (s, " beyond end of expression")
+					report_parse_error (s, "XP0003")
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies last_parsed_expression /= Void

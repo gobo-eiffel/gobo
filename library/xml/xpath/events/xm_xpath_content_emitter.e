@@ -28,7 +28,9 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_STANDARD_NAMESPACES
-	
+
+	XM_XPATH_NAME_UTILITIES
+
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -453,7 +455,9 @@ feature {NONE} -- Implementation
 			a_type_code: INTEGER -- should be INTEGER_16
 			an_attribute_qname: STRING
 		do
-			if attribute_types.has (current_element_name) then
+			if fingerprint_from_name_code (a_name_code) = Xml_id_type_code then
+				a_type_code := Id_type_code
+			elseif attribute_types.has (current_element_name) then
 				an_attribute_table := attribute_types.item (current_element_name)
 				check
 					attribute_table_not_void: an_attribute_table /= Void

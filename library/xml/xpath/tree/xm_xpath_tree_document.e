@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 		require
 			system_id_not_void: a_system_id /= Void
 		do
+			cached_id_table := Void
 			document := Current
 			node_type := Document_node
 			create children.make (5)
@@ -49,6 +50,7 @@ feature {NONE} -- Initialization
 			shared_name_pool.allocate_document_number (Current)
 		ensure
 			base_uri_set: STRING_.same_string (base_uri, a_system_id)
+			cached_id_table_is_void: cached_id_table = Void
 		end
 
 feature -- Access
@@ -305,45 +307,53 @@ feature {NONE} -- Implementation
 
 	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
 		-- Maps unparsed entity names to their URI/PUBLIC-ID pairs
-		
+
+	cached_id_table: like id_table
+			-- Cache for `id_table'
+	
 	id_table: DS_HASH_TABLE [XM_XPATH_TREE_ELEMENT, STRING] is
 			-- Mapping of IDs to elements.
+			-- Implemented as a memo function
 		local
 			a_node: XM_XPATH_TREE_NODE
 			an_element: XM_XPATH_TREE_ELEMENT
 			an_index: INTEGER
 			a_value: STRING
-		once
-			create Result.make_with_equality_testers (10, Void, string_equality_tester)
-			from
-				a_node := Current
-			until
-				a_node = Void
-			loop
-				if a_node.node_type = Element_node then
-					an_element ?= a_node
-					from
-						an_index := 1
-					variant
-						an_element.number_of_attributes + 1 - an_index
-					until
-						an_index > an_element.number_of_attributes
-					loop
-						if an_element.is_id (an_index) then
-							a_value := an_element.attribute_value_by_index (an_index)
-							if is_ncname (a_value) then
-								if not Result.has (a_value) then
-									Result.put (an_element, a_value)
+		do
+			if cached_id_table = Void then
+				create cached_id_table.make_with_equality_testers (10, Void, string_equality_tester)
+				from
+					a_node := Current
+				until
+					a_node = Void
+				loop
+					if a_node.node_type = Element_node then
+						an_element ?= a_node
+						from
+							an_index := 1
+						variant
+							an_element.number_of_attributes + 1 - an_index
+						until
+							an_index > an_element.number_of_attributes
+						loop
+							if an_element.is_id (an_index) then
+								a_value := an_element.attribute_value_by_index (an_index)
+								if is_ncname (a_value) then
+									if not cached_id_table.has (a_value) then
+										cached_id_table.put (an_element, a_value)
+									end
 								end
 							end
+							an_index := an_index + 1
 						end
-						an_index := an_index + 1
 					end
+					a_node := a_node.next_node_in_document_order (Current)
 				end
-				a_node := a_node.next_node_in_document_order (Current)
 			end
+			Result := cached_id_table
 		ensure
 			id_table_not_void: Result /= Void
+			result_cached: Result = cached_id_table
 		end
 
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
