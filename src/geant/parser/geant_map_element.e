@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Map Element"
+		"Map Elements"
 
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2001, Sven Ehrke and others"
@@ -14,7 +14,7 @@ class GEANT_MAP_ELEMENT
 
 inherit
 
-	GEANT_ELEMENT
+	GEANT_INTERPRETING_ELEMENT
 		redefine
 			make
 		end

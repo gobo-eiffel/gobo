@@ -14,7 +14,7 @@ class GEANT_FILESET_ELEMENT
 
 inherit
 
-	GEANT_ELEMENT
+	GEANT_INTERPRETING_ELEMENT
 		redefine
 			make
 		end
