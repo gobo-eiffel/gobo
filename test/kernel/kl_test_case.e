@@ -16,6 +16,9 @@ deferred class KL_TEST_CASE
 inherit
 
 	TS_TEST_CASE
+		redefine
+			tear_down, set_up
+		end
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
@@ -109,7 +112,38 @@ feature -- Directory names
 			kernel_dirname_not_void: Result /= Void
 		end
 
+feature -- Execution
+
+	set_up is
+			-- Setup for a test.
+		local
+			a_testdir: STRING
+		do
+			a_testdir := testdir
+			-- assert (a_testdir + "_not_exists", not file_system.directory_exists (a_testdir))
+			old_cwd := file_system.cwd
+			file_system.create_directory (a_testdir)
+			assert (a_testdir + "_exists", file_system.directory_exists (a_testdir))
+			file_system.cd (a_testdir)
+		end
+
+	tear_down is
+			-- Tear down after a test.
+		do
+			if old_cwd /= Void then
+				file_system.cd (old_cwd)
+				-- file_system.recursive_delete_directory (testdir)
+				old_cwd := Void
+			end
+		end
+
+	old_cwd: STRING
+			-- Initial current working directory
+
 feature {NONE} -- Implementation
+
+	testdir: STRING is "Tkernel"
+			-- Name of temporary directory where to run the test
 
 	counter: KL_CELL [INTEGER] is
 			-- Filename counter

@@ -1119,13 +1119,13 @@ feature -- Working directory
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
-			old_cwd: STRING
+			cwd: STRING
 		do
 			!! a_file_system.make
 			if a_file_system.is_current_file_system then
 					-- The current working directory is a readable directory.
-				old_cwd := a_file_system.current_working_directory
-				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
+				cwd := a_file_system.current_working_directory
+				assert ("readable0", a_file_system.is_directory_readable (cwd))
 					-- Change directory to '$GOBO/test/kernel'.
 				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
@@ -1144,10 +1144,10 @@ feature -- Working directory
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable5", a_file_system.is_directory_readable (a_name))
 				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
-				assert ("readable6", a_file_system.is_directory_readable (old_cwd))
+				assert ("readable6", a_file_system.is_directory_readable (cwd))
 					-- Go back to old working directory.
-				a_file_system.set_current_working_directory (old_cwd)
-				assert_filenames_equal ("cwd3", old_cwd, a_file_system.current_working_directory)
+				a_file_system.set_current_working_directory (cwd)
+				assert_filenames_equal ("cwd3", cwd, a_file_system.current_working_directory)
 			end
 		end
 
@@ -1156,13 +1156,13 @@ feature -- Working directory
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
 			a_name: STRING
-			old_cwd: STRING
+			cwd: STRING
 		do
 			!! a_file_system.make
 			if a_file_system.is_current_file_system then
 					-- The current working directory is a readable directory.
-				old_cwd := a_file_system.cwd
-				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
+				cwd := a_file_system.cwd
+				assert ("readable0", a_file_system.is_directory_readable (cwd))
 					-- Change directory to '$GOBO/test/kernel'.
 				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
@@ -1181,10 +1181,10 @@ feature -- Working directory
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable5", a_file_system.is_directory_readable (a_name))
 				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
-				assert ("readable6", a_file_system.is_directory_readable (old_cwd))
+				assert ("readable6", a_file_system.is_directory_readable (cwd))
 					-- Go back to old working directory.
-				a_file_system.cd (old_cwd)
-				assert_filenames_equal ("cwd3", old_cwd, a_file_system.cwd)
+				a_file_system.cd (cwd)
+				assert_filenames_equal ("cwd3", cwd, a_file_system.cwd)
 			end
 		end
 
@@ -1193,13 +1193,13 @@ feature -- Working directory
 			-- Existing directory.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			old_cwd: STRING
+			cwd: STRING
 			a_name: STRING
 		do
 			!! a_file_system.make
 			if a_file_system.is_current_file_system then
-				old_cwd := a_file_system.current_working_directory
-				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
+				cwd := a_file_system.current_working_directory
+				assert ("readable0", a_file_system.is_directory_readable (cwd))
 					-- Change directory to '$GOBO/test/kernel'.
 				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
@@ -1244,9 +1244,9 @@ feature -- Working directory
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
 					-- Go back to old working directory.
-				assert ("readable10", a_file_system.is_directory_readable (old_cwd))
-				a_file_system.set_current_working_directory (old_cwd)
-				assert_filenames_equal ("cwd5", old_cwd, a_file_system.current_working_directory)
+				assert ("readable10", a_file_system.is_directory_readable (cwd))
+				a_file_system.set_current_working_directory (cwd)
+				assert_filenames_equal ("cwd5", cwd, a_file_system.current_working_directory)
 			end
 		end
 
@@ -1255,13 +1255,13 @@ feature -- Working directory
 			-- Existing directory.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			old_cwd: STRING
+			cwd: STRING
 			a_name: STRING
 		do
 			!! a_file_system.make
 			if a_file_system.is_current_file_system then
-				old_cwd := a_file_system.cwd
-				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
+				cwd := a_file_system.cwd
+				assert ("readable0", a_file_system.is_directory_readable (cwd))
 					-- Change directory to '$GOBO/test/kernel'.
 				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
@@ -1306,9 +1306,9 @@ feature -- Working directory
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
 					-- Go back to old working directory.
-				assert ("readable10", a_file_system.is_directory_readable (old_cwd))
-				a_file_system.cd (old_cwd)
-				assert_filenames_equal ("cwd5", old_cwd, a_file_system.cwd)
+				assert ("readable10", a_file_system.is_directory_readable (cwd))
+				a_file_system.cd (cwd)
+				assert_filenames_equal ("cwd5", cwd, a_file_system.cwd)
 			end
 		end
 
@@ -1317,13 +1317,13 @@ feature -- Working directory
 			-- Non-existing directory.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			old_cwd: STRING
+			cwd: STRING
 			a_name: STRING
 		do
 			!! a_file_system.make
 			if a_file_system.is_current_file_system then
-				old_cwd := a_file_system.current_working_directory
-				assert ("readable1", a_file_system.is_directory_readable (old_cwd))
+				cwd := a_file_system.current_working_directory
+				assert ("readable1", a_file_system.is_directory_readable (cwd))
 					-- Try to change to non-existing directory.
 				a_name := new_dirname ("gobo")
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
@@ -1331,7 +1331,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				assert ("readable1", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert_filenames_equal ("not_changed1", old_cwd, a_file_system.current_working_directory)
+				assert_filenames_equal ("not_changed1", cwd, a_file_system.current_working_directory)
 					-- Try to change to non-existing directory with empty pathname.
 				a_name := ""
 				assert ("not_readable3", not a_file_system.is_directory_readable (a_name))
@@ -1339,7 +1339,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
 				assert ("readable2", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert_filenames_equal ("not_changed2", old_cwd, a_file_system.current_working_directory)
+				assert_filenames_equal ("not_changed2", cwd, a_file_system.current_working_directory)
 			end
 		end
 
@@ -1348,13 +1348,13 @@ feature -- Working directory
 			-- Non-existing directory.
 		local
 			a_file_system: KL_UNIX_FILE_SYSTEM
-			old_cwd: STRING
+			cwd: STRING
 			a_name: STRING
 		do
 			!! a_file_system.make
 			if a_file_system.is_current_file_system then
-				old_cwd := a_file_system.cwd
-				assert ("readable1", a_file_system.is_directory_readable (old_cwd))
+				cwd := a_file_system.cwd
+				assert ("readable1", a_file_system.is_directory_readable (cwd))
 					-- Try to change to non-existing directory.
 				a_name := new_dirname ("gobo")
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
@@ -1362,7 +1362,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				assert ("readable1", a_file_system.is_directory_readable (a_file_system.cwd))
-				assert_filenames_equal ("not_changed1", old_cwd, a_file_system.cwd)
+				assert_filenames_equal ("not_changed1", cwd, a_file_system.cwd)
 					-- Try to change to non-existing directory with empty pathname.
 				a_name := ""
 				assert ("not_readable3", not a_file_system.is_directory_readable (a_name))
@@ -1370,7 +1370,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
 				assert ("readable2", a_file_system.is_directory_readable (a_file_system.cwd))
-				assert_filenames_equal ("not_changed2", old_cwd, a_file_system.cwd)
+				assert_filenames_equal ("not_changed2", cwd, a_file_system.cwd)
 			end
 		end
 

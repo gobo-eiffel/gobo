@@ -14,6 +14,14 @@
 
 <!-- Implementation -->
 
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tkernel"/>
+	</target>
+
 	<target name="init_system">
 		<set name="system" value="xkernel"/>
 		<set name="library" value="kernel"/>
