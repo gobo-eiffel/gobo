@@ -1,6 +1,7 @@
 ${GOBO}/library/kernel/loadpath.se
 ${GOBO}/library/lexical/loadpath.se
 ${GOBO}/library/parse/loadpath.se
+${GOBO}/library/pattern/loadpath.se
 ${GOBO}/library/structure/loadpath.se
 ${GOBO}/library/test/loadpath.se
 ${GOBO}/library/time/loadpath.se
