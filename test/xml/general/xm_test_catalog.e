@@ -23,6 +23,8 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
+	KL_SHARED_FILE_SYSTEM
+
 	XM_SHARED_CATALOG_MANAGER
 
 feature -- Tests
@@ -114,7 +116,7 @@ feature -- Setting
 
 	set_up is
 		do
-			Execution_environment.set_variable_value ("XML_CATALOG_FILES", "./data/test-catalog-1.xml")
+			Execution_environment.set_variable_value ("XML_CATALOG_FILES", file_system.pathname_from_file_system ("./data/test-catalog-1.xml", unix_file_system))
 			shared_catalog_manager.reinit
 		end
 		
