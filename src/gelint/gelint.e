@@ -60,8 +60,6 @@ feature -- Execution
 					is_flat := True
 				elseif equal (arg, "--compile") then
 					do_compile := True
-				elseif arg.count > 12 and then arg.substring (1, 11).is_equal ("--override=") then
-					overridden_classname := arg.substring (12, arg.count)
 				elseif i = nb then
 					a_filename := arg
 				else
@@ -139,7 +137,6 @@ feature -- Status report
 	is_forget: BOOLEAN
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
-	overridden_classname: STRING
 			-- Command-line options
 
 feature {NONE} -- Processing
@@ -150,10 +147,6 @@ feature {NONE} -- Processing
 			a_universe_not_void: a_universe /= Void
 		local
 			a_system: ET_SYSTEM
-			l_identifier: ET_IDENTIFIER
-			l_class: ET_CLASS
-			l_other_class: ET_CLASS
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
@@ -181,74 +174,6 @@ feature {NONE} -- Processing
 				debug ("stop")
 					std.error.put_line ("System built")
 					io.read_line
-				end
-			elseif overridden_classname /= Void then
-				a_universe.preparse_single
-				if overridden_classname.is_equal ("all") then
-					l_cursor := a_universe.classes.new_cursor
-					from l_cursor.start until l_cursor.after loop
-						l_class := l_cursor.item
-						if l_class.is_preparsed and then l_class.cluster.is_override then
-							l_other_class := l_class.overridden_class
-							if l_other_class /= Void and then l_other_class.is_preparsed then
-								std.output.put_string ("class ")
-								std.output.put_line (l_class.name.name)
-								std.output.put_string ("%Toverride cluster: ")
-								std.output.put_line (l_class.cluster.full_name ('.'))
-								std.output.put_string ("%Toverride filename: ")
-								std.output.put_line (l_class.filename)
-								std.output.put_string ("%Tcluster: ")
-								std.output.put_line (l_other_class.cluster.full_name ('.'))
-								std.output.put_string ("%Tfilename: ")
-								std.output.put_line (l_other_class.filename)
-							else
-								std.output.put_string ("class ")
-								std.output.put_line (l_class.name.name)
-								std.output.put_string ("%Toverride cluster: ")
-								std.output.put_line (l_class.cluster.full_name ('.'))
-								std.output.put_string ("%Toverride filename: ")
-								std.output.put_line (l_class.filename)
-								std.output.put_line ("%Tno other class with this name")
-							end
-						end
-						l_cursor.forth
-					end
-				else
-					create l_identifier.make (overridden_classname)
-					l_class := a_universe.eiffel_class (l_identifier)
-					if l_class.is_preparsed then
-						if l_class.cluster.is_override then
-							l_other_class := l_class.overridden_class
-							if l_other_class /= Void and then l_other_class.is_preparsed then
-								std.output.put_string ("class ")
-								std.output.put_line (l_class.name.name)
-								std.output.put_string ("%Toverride cluster: ")
-								std.output.put_line (l_class.cluster.full_name ('.'))
-								std.output.put_string ("%Toverride filename: ")
-								std.output.put_line (l_class.filename)
-								std.output.put_string ("%Tcluster: ")
-								std.output.put_line (l_other_class.cluster.full_name ('.'))
-								std.output.put_string ("%Tfilename: ")
-								std.output.put_line (l_other_class.filename)
-							else
-								std.output.put_string ("class ")
-								std.output.put_line (l_class.name.name)
-								std.output.put_string ("%Toverride cluster: ")
-								std.output.put_line (l_class.cluster.full_name ('.'))
-								std.output.put_string ("%Toverride filename: ")
-								std.output.put_line (l_class.filename)
-								std.output.put_line ("%Tno other class with this name")
-							end
-						else
-							std.output.put_string ("class ")
-							std.output.put_line (l_class.name.name)
-							std.output.put_string ("%Tcluster: ")
-							std.output.put_line (l_class.cluster.full_name ('.'))
-							std.output.put_string ("%Tfilename: ")
-							std.output.put_line (l_class.filename)
-							std.output.put_line ("%Tclass not overridden")
-						end
-					end
 				end
 			else
 				a_universe.compile (is_flat)
