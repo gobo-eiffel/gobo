@@ -70,9 +70,26 @@ feature -- Input
 
 feature -- Status report
 
+	is_closable: BOOLEAN is
+			-- Can current input stream be closed?
+		do
+			Result := False
+		ensure
+			is_open: Result implies is_open_read
+		end
+
 	is_open_read: BOOLEAN is
 			-- Can items be read from input stream?
 		deferred
+		end
+
+	is_rewindable: BOOLEAN is
+			-- Can current input stream be rewound to return input from
+			-- the beginning of the stream?
+		do
+			Result := False
+		ensure
+			rewind_implies_open: Result implies is_open_read
 		end
 
 	end_of_input: BOOLEAN is
@@ -85,14 +102,6 @@ feature -- Status report
 	valid_unread_item (an_item: G): BOOLEAN is
 			-- Can `an_item' be put back in input stream?
 		deferred
-		end
-
-	is_closable: BOOLEAN is
-			-- Can current input stream be closed?
-		do
-			Result := False
-		ensure
-			is_open: Result implies is_open_read
 		end
 
 feature -- Access
@@ -120,6 +129,17 @@ feature -- Basic operations
 		require
 			is_closable: is_closable
 		do
+			-- nothing
+		end
+
+	rewind is
+			-- Move input positionto the beginning of stream.
+		require
+			can_rewind: is_rewindable
+		do
+			-- nothing
+		ensure
+			not_end_of_input: not end_of_input
 		end
 
 end
