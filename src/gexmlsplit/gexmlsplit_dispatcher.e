@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Gobo Eiffel XML Spliter Dispatcher"
+		"Gobo Eiffel XML Splitter Dispatcher"
 
 	system: "Gobo Eiffel XML Splitter"
 	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
@@ -14,60 +14,84 @@ class GEXMLSPLIT_DISPATCHER
 
 inherit
 
-	KL_SHARED_FILE_SYSTEM
-
 	XM_PRETTY_PRINT_FILTER
 		redefine
 			output
 		end
 
+	KL_SHARED_STANDARD_FILES
+
 creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make is
-			-- create an instance of a xml dispatcher
+			-- Create a xml dispatcher.
 		do
 			make_null
 			!! output_files.make
 		end
 
-feature
+feature -- Element change
 
-	put (a_file: KL_TEXT_OUTPUT_FILE) is
-			-- add a new output file on top of the output file stack
+	put (a_filename: STRING) is
+			-- Add a new output file on top of the output file stack.
 		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
+			a_filename_not_void: a_filename /= Void
+		local
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if not a_file.is_open_write then
+					-- TODO: Use UT_ERROR_HANDLER.
+				std.error.put_string ("Unable to open output file: ")
+				std.error.put_line (a_filename)
+			end
 			output_files.put (a_file)
+		ensure
+			one_more: output_files.count = old output_files.count + 1
 		end
 
 	remove is
-			-- remove the top output file from the output file stack
+			-- Remove the top output file from the output file stack.
+		local
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			check
-				output_files_count_greater_zero: output_files.count > 0
+			if not output_files.is_empty then
+				a_file := output_files.item
+				if a_file.is_open_write then
+					a_file.close
+				end
+				output_files.remove
 			end
-			output_files.item.close
-			output_files.remove
 		end
 
-feature
+feature -- Output
 
 	output (s: UC_STRING) is
-			-- Output string to top element of file output stack
+			-- Output string to top element of file output stack.
+		local
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			if output_files.count > 0 then
-				output_files.item.put_string (s)
+			if not output_files.is_empty then
+				a_file := output_files.item
+				if a_file.is_open_write then
+					output_files.item.put_string (s)
+				end
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	output_files: DS_LINKED_STACK [KL_TEXT_OUTPUT_FILE]
-			-- file output stack
+			-- File output stack
+
+invariant
+
+	output_files_not_void: output_files /= Void
+	no_void_output_file: not output_files.has (Void)
 
 end

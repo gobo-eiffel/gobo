@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Gobo Eiffel XML Spliter"
+		"Gobo Eiffel XML Splitter"
 
 	system: "Gobo Eiffel XML Splitter"
 	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
@@ -15,13 +15,10 @@ class GEXMLSPLIT
 inherit
 
 	KL_SHARED_ARGUMENTS
-
-	KL_FILE_SYSTEM
-		rename
-			make as make_file_system
-		end
+	KL_SHARED_STANDARD_FILES
 
 	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
 
 creation
 
@@ -31,44 +28,37 @@ feature {NONE}
 
 	make is
 			-- Create and execute a new 'gexmlsplit'.
+		local
+			in_file: KL_TEXT_INPUT_FILE
 		do
-			make_file_system
 			read_arguments
-			if not has_error then
-				split
+			!! in_file.make (input_filename)
+			in_file.open_read
+			if in_file.is_open_read then
+				split (in_file)
+				in_file.close
+			else
+					-- TODO: Use UT_ERROR_HANDLER.
+				std.error.put_string ("Unable to open input file: ")
+				std.error.put_line (input_filename)
 			end
 		end
 
 	read_arguments is
-			-- parse command line arguments
-			-- and open input file
-			-- if input file cannot be opened or has not been
-			-- specified
-			-- set `has_error' to true.
-		local
-			a_in_file_name: STRING
+			-- Parse command line arguments.
 		do
 			if Arguments.argument_count /= 1 then
 				report_usage_error
-				has_error := True
+				input_filename := ""
 			else
-				a_in_file_name := Arguments.argument (1)
-				!! in_file.make (a_in_file_name)
-				in_file.open_read
-				if not in_file.is_open_read then
-					has_error := True
-					io.put_string ("Unable to open input file:")
-					io.put_string (a_in_file_name)
-					io.put_string ("%N")
-				end
+				input_filename := Arguments.argument (1)
 			end
 		ensure
-			in_file_open_write_or_error_occured: (in_file /= Void and then in_file.is_open_read) or has_error
+			input_filename_not_void: input_filename /= Void
 		end
 
-	split is
-			-- parse xml document stored in `in_file' and split
-			-- contents.
+	split (in_file: KI_TEXT_INPUT_FILE) is
+			-- Parse xml document stored in `in_file' and split contents.
 			-- Two filters are used for the job:
 			-- the first one (`a_gexmlsplit_parser') watches out for
 			-- "document" elements and gives notice to the second
@@ -83,7 +73,9 @@ feature {NONE}
 			a_gexmlsplit_dispatcher: GEXMLSPLIT_DISPATCHER
 			filters: ARRAY [XM_CALLBACKS_FILTER]
 		do
-			io.put_string ("parsing data...%N")
+			debug
+				std.output.put_line ("parsing data...")
+			end
 
 			!XM_EIFFEL_PARSER! a_xml_parser.make
 			!! a_gexmlsplit_dispatcher.make
@@ -92,41 +84,37 @@ feature {NONE}
 			!! filters.make (0, 1)
 			filters.put (a_gexmlsplit_parser, 0)
 			filters.put (a_gexmlsplit_dispatcher, 1)
-			a_xml_parser.set_callbacks (
-					standard_callbacks_pipe (filters))
+			a_xml_parser.set_callbacks (standard_callbacks_pipe (filters))
 			a_xml_parser.parse_from_stream (in_file)
 
-			if not a_xml_parser.is_correct then
-				io.put_string (a_xml_parser.last_error_extended_description)
-				io.put_new_line
-			else
-				io.put_string ("parsing ok.%N")
+			debug
+				if not a_xml_parser.is_correct then
+					std.output.put_line (a_xml_parser.last_error_extended_description)
+				else
+					std.output.put_line ("parsing ok.")
+				end
+				std.output.put_line ("exiting...")
 			end
-
-			in_file.close
-			io.put_string ("exiting...%N")
 		end
 
-feature {NONE}
+feature {NONE} -- Access
 
-	in_file: KL_TEXT_INPUT_FILE
-			-- file object for input xml document
-
-	has_error: BOOLEAN
-			-- error flag
+	input_filename: STRING
+			-- Name of file containing input XML document
 
 feature {NONE} -- Usage message
 
 	report_usage_error is
 			-- Report usage error.
 		do
-			print (Usage_message)
+				-- TODO: Use UT_ERROR_HANDLER.
+			std.output.put_line (Usage_message)
 		end
 
 	Usage_message: STRING is
 			-- Gexace usage message
 		once
-			Result := "gexmlsplit <intput_file_name>%N"
+			Result := "gexmlsplit <intput_file_name>"
 		ensure
 			usage_message_not_void: Result /= Void
 		end
