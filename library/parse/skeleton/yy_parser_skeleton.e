@@ -18,6 +18,8 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	KL_SHARED_ARRAY_ROUTINES
+
 feature {NONE} -- Initialization
 
 	make is
@@ -44,7 +46,6 @@ feature -- Parsing
 			yychar1: INTEGER
 			index, yyss_top: INTEGER
 			yy_goto: INTEGER
-			void_value: G
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -121,10 +122,7 @@ feature -- Parsing
 							debug ("GEYACC")
 								std.error.put_string ("Next token is ")
 								std.error.put_integer (last_token)
-								std.error.put_string (" (")
-								-- std.error.put_string (yytname.item (yychar1))
-								-- print_token (std.error, last_token, last_value)
-								std.error.put_string (")%N")
+								std.error.put_character ('%N')
 							end
 						end
 						yyn := yyn + yychar1
@@ -158,9 +156,7 @@ feature -- Parsing
 								debug ("GEYACC")
 									std.error.put_string ("Shifting token ")
 									std.error.put_integer (last_token)
-									std.error.put_string (" (")
-									-- std.error.put_string (yytname.item (yychar1))
-									std.error.put_string (")%N")
+									std.error.put_character ('%N')
 								end
 									-- Discard the token being shifted
 									-- unless it is eof.
@@ -197,15 +193,14 @@ feature -- Parsing
 						yyval := yyvs.item (yyvsp - yylen + 1)
 					end
 					debug ("GEYACC")
-						-- TO DO
+						std.error.put_string ("Reducing via rule #")
+						std.error.put_integer (yyn)
+						std.error.put_character ('%N')
 					end
 					yy_do_action (yyn)
 					inspect yy_parsing_status
 					when yyContinue then
 						yyssp := yyssp - yylen
-						debug ("GEYACC")
-								-- TO DO
-						end
 						yyvsp := yyvsp - yylen + 1
 						yyvs.put (yyval, yyvsp)
 							-- Now "shift" the result of the reduction.
@@ -244,9 +239,7 @@ feature -- Parsing
 							debug ("GEYACC")
 								std.error.put_string ("Discarding token ")
 								std.error.put_integer (last_token)
-								std.error.put_string (" (")
-								-- std.error.put_string (yytname.item (yychar1))
-								std.error.put_string (").%N")
+								std.error.put_character ('%N')
 							end
 							yy_lookahead_needed := True
 							yy_goto := yyErrhandle
@@ -297,24 +290,20 @@ feature -- Parsing
 				when yyErrpop then
 						-- Pop the current state because it cannot handle
 						-- the error token.
-					if yyssp = 0 then
+					if yyssp = 1 then
 						abort
 					else
 						yyvsp := yyvsp - 1
 						yyssp := yyssp - 1
 						yystate := yyss.item (yyssp)
 						yy_goto := yyErrhandle
-						debug ("GEYACC")
-							-- TO DO
-						end
 					end
 				end
 			end
-			yyval := void_value
-			--yyvs.clear_all
-			--yyss.clear_all
+			yy_clear_all
 		rescue
 			abort
+			yy_clear_all
 		end
 
 feature -- Status report
@@ -322,7 +311,7 @@ feature -- Status report
 	syntax_error: BOOLEAN is
 			-- Has last parsing been unsuccesful?
 		do
-			Result := yy_parsing_status = yyAccepted
+			Result := yy_parsing_status /= yyAccepted
 		end
 
 feature -- Access
@@ -370,6 +359,8 @@ feature {YY_PARSER_ACTION} -- Element change
 
 	report_error (a_message: STRING) is
 			-- Print error message.
+			-- (This routine is called by `parse' when it detects
+			-- a syntax error. It can be redefined in descendants.)
 		do
 			std.error.put_string (a_message)
 			std.error.put_character ('%N')
@@ -453,6 +444,20 @@ feature {NONE} -- Implementation
 
 	yy_parsing_status: INTEGER
 			-- Parsing status
+
+	yy_clear_all is
+			-- Clear temporary objects so that they can be collected
+			-- by the garbage collector. This routine is called by
+			-- `parse' before exiting.
+		local
+			default_value: G
+			array_routines: KL_ARRAY_ROUTINES [G]
+		do
+			clear_all
+			yyval := default_value
+			!! array_routines
+			array_routines.clear_all (yyvs)
+		end
 
 feature {NONE} -- Constants
 
