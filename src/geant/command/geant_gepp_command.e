@@ -242,13 +242,12 @@ feature -- Execution
 								execute_shell (cmd)
 							end
 						end
+						fileset.forth
 					end
 
 					if exit_code /= 0 then
 						project.log (<<"  [gepp] error: cannot gepp">>)
 					end
-
-					fileset.forth
 				end
 			end
 		end
