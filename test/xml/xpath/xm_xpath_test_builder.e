@@ -24,13 +24,13 @@ feature
 			parser.parse_from_string ("<doc><a/><b/></doc>")
 			assert ("parsing error", not tree_pipe.error.has_error)
 			
---			if not tree_pipe.error.has_error then
+			if not tree_pipe.error.has_error then
 --				assert_has_element (tree_pipe.document, "doc")
 --				a_root := tree_pipe.document.root_element
 --				assert_equal ("root name", a_root.name, "doc")
 --				assert_has_element (a_root, "a")
 --				assert_has_element (a_root, "b")
---			end
+			end
 		end
 		
 feature {NONE} -- Implementation
