@@ -552,6 +552,15 @@ feature {NONE} -- Element change
 				end
 				a_cursor.forth
 			end
+			if a_clusters /= Void then
+				if a_mounts = Void then
+					a_mounts := ast_factory.new_mounted_libraries
+				end
+				a_clusters.merge_libraries (a_mounts, error_handler)
+				if a_mounts.libraries.is_empty then
+					a_mounts := Void
+				end
+			end
 			if a_mounts /= Void then
 				a_mounts.set_root (True)
 				a_library_list := a_mounts.libraries
@@ -560,12 +569,6 @@ feature {NONE} -- Element change
 					a_library_list.item (i).library.merge_libraries (a_mounts, error_handler)
 					i := i + 1
 				end
-			end
-			if a_clusters /= Void then
-				if a_mounts = Void then
-					a_mounts := ast_factory.new_mounted_libraries
-				end
-				a_clusters.merge_libraries (a_mounts, error_handler)
 			end
 			if an_option = Void then
 					-- Make sure that default values are taken into account.
@@ -668,6 +671,15 @@ feature {NONE} -- Element change
 					a_cursor.forth
 				end
 			end
+			if a_clusters /= Void then
+				if a_mounts = Void then
+					a_mounts := ast_factory.new_mounted_libraries
+				end
+				a_clusters.merge_libraries (a_mounts, error_handler)
+				if a_mounts.libraries.is_empty then
+					a_mounts := Void
+				end
+			end
 			if a_mounts /= Void then
 				a_mounts.set_root (True)
 				a_library_list := a_mounts.libraries
@@ -676,12 +688,6 @@ feature {NONE} -- Element change
 					a_library_list.item (i).library.merge_libraries (a_mounts, error_handler)
 					i := i + 1
 				end
-			end
-			if a_clusters /= Void then
-				if a_mounts = Void then
-					a_mounts := ast_factory.new_mounted_libraries
-				end
-				a_clusters.merge_libraries (a_mounts, error_handler)
 			end
 			a_library.set_options (an_option)
 			a_library.set_clusters (a_clusters)
