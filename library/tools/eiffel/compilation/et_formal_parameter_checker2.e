@@ -148,7 +148,7 @@ feature {NONE} -- Constraint validity
 								-- The actual parameter does not conform to the
 								-- constraint of its corresponding formal parameter.
 							current_class.set_fatal_error
-							error_handler.report_vtcg0a_error (current_class, an_actual, a_constraint)
+							error_handler.report_vtcg3a_error (current_class, an_actual, a_constraint)
 						end
 						i := i + 1
 					end
