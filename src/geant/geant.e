@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Execute 'geant'.
 		local
-			a_project	: GEANT_PROJECT
-			ucs			: UC_STRING
+			a_project : GEANT_PROJECT
+			ucs : UC_STRING
 		do
 			Arguments.set_program_name ("geant")
 			!! error_handler.make_standard
@@ -78,11 +78,11 @@ feature -- Access
 	read_command_line is
 			-- Read command line arguments.
 		local
-			i, nb			: INTEGER
-			p				: INTEGER
-			arg				: STRING
-			a_variable_name	: STRING
-			a_variable_value	: STRING
+			i, nb : INTEGER
+			p : INTEGER
+			arg : STRING
+			a_variable_name : STRING
+			a_variable_value : STRING
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop

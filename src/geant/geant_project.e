@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			a_filename_not_empty: not a_filename.empty
 		do
 			build_filename := a_filename
-			!! Build_targets.make (10)
-			!! Executed_targets.make (10)
+			!! build_targets.make (10)
+			!! executed_targets.make (10)
 		ensure
 			build_filename_set: build_filename = a_filename
 		end
@@ -164,7 +164,7 @@ feature -- Processing
 					print ("geant error: unknown target%N")
 				else
 							-- put start target on the stack:
-					Build_targets.force (target_with_name (start_target_name))
+					build_targets.force (target_with_name (start_target_name))
 				end
 			else
 				reset
@@ -173,27 +173,26 @@ feature -- Processing
 	    end
 
 	calculate_build_order is
-			-- Setup `Build_targets' according to target dependencies
+			-- Setup `build_targets' according to target dependencies
 		require
 			loaded: targets /= Void
-			target_not_void: a_target /= Void
-			build_targets_not_void: Build_targets /= Void
-			build_targets_not_empty: Build_targets.count > 0
+			build_targets_not_void: build_targets /= Void
+			build_targets_not_empty: build_targets.count > 0
 		local
 			a_target: GEANT_TARGET
 			a_dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 		do
 				-- Get dependent targets:
-			a_target := Build_targets.item
+			a_target := build_targets.item
 			if verbose then
 				print("**pushing target : " + a_target.name + "%N")
 			end
 			a_dependent_targets := a_target.dependent_targets
 
 
-				-- Add all dependent targets to `Build_targets':
+				-- Add all dependent targets to `build_targets':
 			from until a_dependent_targets.count = 0 loop
-				Build_targets.force (a_dependent_targets.item)
+				build_targets.force (a_dependent_targets.item)
 				a_dependent_targets.remove
 					-- Recursive call of routine for dependent target:
 				calculate_build_order
@@ -214,19 +213,19 @@ feature -- Processing
 			calculate_build_order
 
 				-- Execute configured targets:
-			from until Build_targets.count = 0 loop
-				a_target := Build_targets.item
-				if not Executed_targets.has (a_target) then
-						-- Execute topmost target of `Build_targets':
+			from until build_targets.count = 0 loop
+				a_target := build_targets.item
+				if not executed_targets.has (a_target) then
+						-- Execute topmost target of `build_targets':
 					print("%N" + a_target.name)
 					if verbose then
-						print(" (stack item nr=" + Build_targets.count.out + ")")
+						print(" (stack item nr=" + build_targets.count.out + ")")
 					end
 					print(":%N%N")
 					a_target.execute
-					Executed_targets.force_last (a_target)
+					executed_targets.force_last (a_target)
 				end
-				Build_targets.remove
+				build_targets.remove
 			end
 		end
 
@@ -241,6 +240,9 @@ feature -- Processing
 			build_successful := True
 		end
 
+	build_targets: DS_ARRAYED_STACK [GEANT_TARGET]
+			-- Targets to be executed
+
 feature {NONE} -- Implementation
 
 	root_element: GEANT_ELEMENT
@@ -254,10 +256,7 @@ feature {NONE} -- Implementation
 			parser_factory_not_void: Result /= Void
 		end
 
-	Build_targets: DS_ARRAYED_STACK [GEANT_TARGET]
-			-- Targets to be executed
-
-	Executed_targets: DS_ARRAYED_LIST [GEANT_TARGET]
+	executed_targets: DS_ARRAYED_LIST [GEANT_TARGET]
 			-- Targets already executed
 
 invariant
@@ -265,7 +264,5 @@ invariant
 	build_filename_not_void: build_filename /= Void
 	build_filename_not_empty: not build_filename.empty
 	no_void_target: targets /= Void implies not targets.has (Void)
-	current_target_name_not_void: targets /= Void implies current_target_name /= Void
-	current_target_name_not_empty: targets /= Void implies not current_target_name.empty
 
 end -- class GEANT_PROJECT

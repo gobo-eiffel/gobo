@@ -80,8 +80,6 @@ feature -- Processing
 
 	execute  is
 			-- Execute all tasks of `a_target' in sequential order
-		require
-			target_not_void: a_target /= Void
 		local
 			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			i, nb: INTEGER
@@ -324,5 +322,5 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	target_element_not_void: element /= Void
+	target_element_not_void: target_element /= Void
 end -- class GEANT_TARGET
