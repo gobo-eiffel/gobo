@@ -54,38 +54,38 @@ feature -- Access
 	subtype: STRING
 			-- Subtype
 
-	value (a_parameter: STRING): STRING is
-			-- Value for `a_parameter'?
+	parameter (a_name: STRING): STRING is
+			-- Value of parameter named `a_name'.
 		require
-			a_parameter_not_void: a_parameter /= Void
-			a_paramater_string: ANY_.same_types (a_parameter, "")
-			valid_parameter_name: is_valid_parameter_name (a_parameter)
-			has_parameter: has (a_parameter)
+			a_name_not_void: a_name /= Void
+			a_name_string: ANY_.same_types (a_name, "")
+			valid_parameter_name: is_valid_parameter_name (a_name)
+			has_parameter: has_parameter (a_name)
 		do
-			Result := parameters.item (a_parameter.as_lower)
+			Result := parameters.item (a_name.as_lower)
 		ensure
-			value_not_void: Result /= Void
+			parameter_not_void: Result /= Void
 		end
 
 feature -- Status report
 
-	has (a_parameter: STRING): BOOLEAN is
-			-- Does `Current' have a parameter named `a_parameter'?
+	has_parameter (a_name: STRING): BOOLEAN is
+			-- Does `Current' have a parameter named `a_name'?
 		require
-			a_parameter_not_void: a_parameter /= Void
-			a_paramater_string: ANY_.same_types (a_parameter, "")
-			valid_parameter_name: is_valid_parameter_name (a_parameter)
+			a_name_not_void: a_name /= Void
+			a_name_string: ANY_.same_types (a_name, "")
+			valid_parameter_name: is_valid_parameter_name (a_name)
 		do
-			Result := parameters.has (a_parameter.as_lower)
+			Result := parameters.has (a_name.as_lower)
 		end
 
-	is_valid_parameter_name (a_parameter: STRING): BOOLEAN is
-			-- Is `a_parameter' a legitimate parameter name?
+	is_valid_parameter_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a legitimate parameter name?
 		require
-			a_parameter_not_void: a_parameter /= Void
-			a_paramater_string: ANY_.same_types (a_parameter, "")
+			a_name_not_void: a_name /= Void
+			a_name_string: ANY_.same_types (a_name, "")
 		do
-			Result := is_token (a_parameter, False)
+			Result := is_token (a_name, False)
 		end
 
 	is_token (a_string: STRING; allow_specials: BOOLEAN): BOOLEAN is
@@ -123,21 +123,21 @@ feature -- Status report
 
 feature -- Element change
 
-	add_parameter (a_parameter, a_value: STRING) is
-			-- Add new parameter `a_parameter' with value `a_value'.
+	add_parameter (a_name, a_value: STRING) is
+			-- Add new parameter `a_name' with value `a_value'.
 		require
-			a_parameter_not_void: a_parameter /= Void
-			a_paramater_string: ANY_.same_types (a_parameter, "")
-			valid_parameter_name: is_valid_parameter_name (a_parameter)
-			not_has_parameter: not has (a_parameter)
+			a_name_not_void: a_name /= Void
+			a_name_string: ANY_.same_types (a_name, "")
+			valid_parameter_name: is_valid_parameter_name (a_name)
+			not_has_parameter: not has_parameter (a_name)
 			a_value_not_void: a_value /= Void
 			a_value_string: ANY_.same_types (a_value, "")
 			valid_value: is_token (a_value, True)
 		do
-			parameters.force (a_value, a_parameter.as_lower)
+			parameters.force (a_value, a_name.as_lower)
 		ensure
-			has_parameter: has (a_parameter)
-			value_set: value (a_parameter) = a_value
+			has_parameter: has_parameter (a_name)
+			parameter_set: parameter (a_name) = a_value
 		end
 
 feature {NONE} -- Implementation
