@@ -29,9 +29,9 @@ feature -- Test
 			l_ai1: ARRAY [INTEGER]
 			l_ai2: ARRAY [INTEGER]
 		do
-			l_ai1 := <<1, 2, 3, 4, 5, 6>>
+			l_ai1 := <<INTEGER_.to_integer (1), 2, 3, 4, 5, 6>>
 			l_ai2 := l_ai1.subarray (3, 5)
-			assert_iarrays_same ("same_items", <<3, 4, 5>>, l_ai2)
+			assert_iarrays_same ("same_items", <<INTEGER_.to_integer (3), 4, 5>>, l_ai2)
 			assert_integers_equal ("lower_set", 3, l_ai2.lower)
 			assert_integers_equal ("upper_set", 5, l_ai2.upper)
 				-- Not allowed by ISE 5.4/5.5.
@@ -62,11 +62,11 @@ feature -- Test
 			l_ai.put (2, 5)
 			l_ai.put (3, 6)
 			l_ai.put (4, 7)
-			assert_iarrays_same ("ai_initialized", <<1, 2, 3, 4>>, l_ai)
+			assert_iarrays_same ("ai_initialized", <<INTEGER_.to_integer (1), 2, 3, 4>>, l_ai)
 			assert_integers_equal ("ai_lower_set", 4, l_ai.lower)
 			assert_integers_equal ("ai_upper_set", 7, l_ai.upper)
 			l_ai.clear_all
-			assert_iarrays_same ("ai_all_cleared", <<0, 0, 0, 0>>, l_ai)
+			assert_iarrays_same ("ai_all_cleared", <<INTEGER_.to_integer (0), 0, 0, 0>>, l_ai)
 			assert_integers_equal ("ai_same_lower", 4, l_ai.lower)
 			assert_integers_equal ("ai_same_upper", 7, l_ai.upper)
 			l_as := <<"1", "2", "3", "4">>

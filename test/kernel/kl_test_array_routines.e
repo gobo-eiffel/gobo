@@ -29,7 +29,7 @@ feature -- Test
 			l_s2: STRING
 		do
 			create l_ri
-			l_ai := <<1, 2, 3, 4>>
+			l_ai := <<INTEGER_.to_integer (1), 2, 3, 4>>
 			assert ("ai_has_one", l_ri.has (l_ai, 1))
 			assert ("ai_has_two", l_ri.has (l_ai, 2))
 			assert ("ai_has_three", l_ri.has (l_ai, 3))
@@ -52,9 +52,9 @@ feature -- Test
 			l_ai2: ARRAY [INTEGER]
 		do
 			create l_ri
-			l_ai1 := <<1, 2, 3, 4, 5, 6>>
+			l_ai1 := <<INTEGER_.to_integer (1), 2, 3, 4, 5, 6>>
 			l_ai2 := l_ri.subarray (l_ai1, 3, 5, 7)
-			assert_iarrays_same ("same_items", <<3, 4, 5>>, l_ai2)
+			assert_iarrays_same ("same_items", <<INTEGER_.to_integer (3), 4, 5>>, l_ai2)
 			assert_integers_equal ("lower_set", 7, l_ai2.lower)
 			assert_integers_equal ("upper_set", 9, l_ai2.upper)
 				-- Empty subarray.
@@ -89,11 +89,11 @@ feature -- Test
 			l_ai2.put (12, 12)
 			l_ai2.put (13, 13)
 			l_ri.subcopy (l_ai1, l_ai2, 11, 10, 6)
-			assert_iarrays_same ("l_ai1_subcopy1", <<1, 2, 3, 4, 5>>, l_ai1)
-			assert_iarrays_same ("l_ai2_same1", <<10, 11, 12, 13>>, l_ai2)
+			assert_iarrays_same ("l_ai1_subcopy1", <<INTEGER_.to_integer (1), 2, 3, 4, 5>>, l_ai1)
+			assert_iarrays_same ("l_ai2_same1", <<INTEGER_.to_integer (10), 11, 12, 13>>, l_ai2)
 			l_ri.subcopy (l_ai1, l_ai2, 11, 12, 4)
-			assert_iarrays_same ("l_ai1_subcopy2", <<1, 2, 11, 12, 5>>, l_ai1)
-			assert_iarrays_same ("l_ai2_same2", <<10, 11, 12, 13>>, l_ai2)
+			assert_iarrays_same ("l_ai1_subcopy2", <<INTEGER_.to_integer (1), 2, 11, 12, 5>>, l_ai1)
+			assert_iarrays_same ("l_ai2_same2", <<INTEGER_.to_integer (10), 11, 12, 13>>, l_ai2)
 		end
 
 end

@@ -22,6 +22,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	KL_INTEGER_ROUTINES
+		export {NONE} all end
+
 feature -- Filenames
 
 	new_filename (a_prefix, an_extension: STRING): STRING is
