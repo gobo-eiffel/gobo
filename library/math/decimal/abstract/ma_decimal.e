@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 	make_zero is
 			-- Make zero.
 		do
-			coefficient := Special_coefficient
+			coefficient := special_coefficient
 		ensure
 			zero: is_zero
 		end

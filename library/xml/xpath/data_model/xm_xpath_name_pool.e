@@ -1376,11 +1376,14 @@ feature -- Conversion
 			-- Namespace prefix from `namespace_code'
 		require
 			valid_code: is_valid_namespace_code (a_namespace_code)		
+		local
+			b16: INTEGER
 		do
 			-- Result := prefixes.item ((a_namespace_code |>> 16) + 1)
 			-- N.B. namespace codes consist of two positive 16-bit numbers,
 			--      so overflow does not arise
-			Result := prefixes.item ((a_namespace_code // bits_16) + 1)
+			b16 := bits_16
+			Result := prefixes.item ((a_namespace_code // b16) + 1)
 		end
 
 	expanded_name_from_name_code (a_name_code: INTEGER): STRING is

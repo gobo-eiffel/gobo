@@ -106,7 +106,7 @@ feature -- Tests
 		do
 			shared_catalog_manager.set_debug_level (0)
 			a_uri := shared_catalog_manager.resolved_uri ("http://www.colina.demon.co.uk/test/system-id-two")
-			assert ("URI reference resolved via delgation", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://colina.demon.co.uk/gobo/system-id-two"))
+			assert ("URI reference resolved via delegation", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://colina.demon.co.uk/gobo/system-id-two"))
 		end
 
 	
