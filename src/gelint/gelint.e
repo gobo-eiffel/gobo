@@ -57,6 +57,10 @@ feature -- Execution
 					is_flat := True
 				elseif equal (arg, "--compile") then
 					do_compile := True
+				elseif equal (arg, "--push") then
+					push_dynamic_type_sets := True
+				elseif equal (arg, "--pull") then
+					pull_dynamic_type_sets := True
 				elseif equal (arg, "--no_output") then
 					no_output := True
 				elseif equal (arg, "--void") then
@@ -122,6 +126,8 @@ feature -- Status report
 	is_forget: BOOLEAN
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
+	push_dynamic_type_sets: BOOLEAN
+	pull_dynamic_type_sets: BOOLEAN
 	no_output: BOOLEAN
 	void_feature: BOOLEAN
 			-- Command-line options
@@ -169,7 +175,13 @@ feature {NONE} -- Processing
 			end
 			a_universe.set_forget_enabled (is_forget)
 			if do_compile then
-				create a_system.make (a_universe)
+				if push_dynamic_type_sets then
+					create a_system.make_push (a_universe)
+				elseif pull_dynamic_type_sets then
+					create a_system.make_pull (a_universe)
+				else
+					create a_system.make (a_universe)
+				end
 				a_system.compile
 			else
 				a_universe.compile (is_flat)

@@ -12,6 +12,10 @@ indexing
 
 deferred class ET_DYNAMIC_TYPE_SET
 
+inherit
+
+	ET_DYNAMIC_TARGET
+
 feature -- Status report
 
 	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
@@ -71,17 +75,18 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
-			-- Add `a_type' to current set.
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
+			-- Add `a_target' to current set.
+			-- (Targets are supersets of current set.)
 		require
-			a_type_not_void: a_type /= Void
+			a_target_not_void: a_target /= Void
 			a_system_not_void: a_system /= Void
 		deferred
 		end
 
 	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
 			-- Add `a_source' to current set.
-			-- (Sources are sub-sets of current set.)
+			-- (Sources are subsets of current set.)
 		require
 			a_source_not_void: a_source /= Void
 			a_system_not_void: a_system /= Void

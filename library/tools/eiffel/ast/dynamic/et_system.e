@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make
+	make, make_pull, make_push
 
 feature {NONE} -- Initialization
 
@@ -38,6 +38,38 @@ feature {NONE} -- Initialization
 			universe_set: universe = a_universe
 		end
 
+	make_pull (a_universe: like universe) is
+			-- Create a new system.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			nb: INTEGER
+		do
+			universe := a_universe
+			nb := a_universe.classes.capacity
+			create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
+			create dynamic_types.make (nb)
+			make_basic_types
+		ensure
+			universe_set: universe = a_universe
+		end
+
+	make_push (a_universe: like universe) is
+			-- Create a new system.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			nb: INTEGER
+		do
+			universe := a_universe
+			nb := a_universe.classes.capacity
+			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
+			create dynamic_types.make (nb)
+			make_basic_types
+		ensure
+			universe_set: universe = a_universe
+		end
+
 	make_basic_types is
 			-- Create basic types.
 		local
@@ -45,35 +77,28 @@ feature {NONE} -- Initialization
 		do
 			l_any := universe.any_class
 			character_type := dynamic_type (universe.character_class, l_any)
-			character_type.set_alive (True)
+			character_type.set_alive
 			boolean_type := dynamic_type (universe.boolean_class, l_any)
-			boolean_type.set_alive (True)
+			boolean_type.set_alive
 			wide_character_type := dynamic_type (universe.wide_character_class, l_any)
-			wide_character_type.set_alive (True)
+			wide_character_type.set_alive
 			integer_type := dynamic_type (universe.integer_class, l_any)
-			integer_type.set_alive (True)
+			integer_type.set_alive
 			integer_8_type := dynamic_type (universe.integer_8_class, l_any)
-			integer_8_type.set_alive (True)
+			integer_8_type.set_alive
 			integer_16_type := dynamic_type (universe.integer_16_class, l_any)
-			integer_16_type.set_alive (True)
+			integer_16_type.set_alive
 			integer_64_type := dynamic_type (universe.integer_64_class, l_any)
-			integer_64_type.set_alive (True)
+			integer_64_type.set_alive
 			real_type := dynamic_type (universe.real_class, l_any)
-			real_type.set_alive (True)
+			real_type.set_alive
 			double_type := dynamic_type (universe.double_class, l_any)
-			double_type.set_alive (True)
+			double_type.set_alive
 			pointer_type := dynamic_type (universe.pointer_class, l_any)
-			pointer_type.set_alive (True)
+			pointer_type.set_alive
 			string_type := dynamic_type (universe.string_class, l_any)
-			string_type.set_alive (True)
-			procedure_type := dynamic_type (universe.procedure_class, l_any)
-			procedure_type.set_alive (True)
-			predicate_type := dynamic_type (universe.predicate_class, l_any)
-			predicate_type.set_alive (True)
-			function_type := dynamic_type (universe.function_class, l_any)
-			function_type.set_alive (True)
+			string_type.set_alive
 			none_type := dynamic_type (universe.none_class, l_any)
-			none_type.set_none
 		ensure
 			none_type_not_void: none_type /= Void
 			character_type_not_void: character_type /= Void
@@ -87,9 +112,6 @@ feature {NONE} -- Initialization
 			real_type_not_void: real_type /= Void
 			double_type_not_void: double_type /= Void
 			pointer_type_not_void: pointer_type /= Void
-			procedure_type_not_void: procedure_type /= Void
-			predicate_type_not_void: predicate_type /= Void
-			function_type_not_void: function_type /= Void
 		end
 
 feature -- Access
@@ -137,15 +159,6 @@ feature -- Types
 
 	pointer_type: ET_DYNAMIC_TYPE
 			-- Type "POINTER"
-
-	procedure_type: ET_DYNAMIC_TYPE
-			-- Type "PROCEDURE"
-
-	predicate_type: ET_DYNAMIC_TYPE
-			-- Type "PREDICATE"
-
-	function_type: ET_DYNAMIC_TYPE
-			-- Type "FUNCTION"
 
 	none_type: ET_DYNAMIC_TYPE
 			-- Type "NONE"
@@ -242,7 +255,7 @@ feature -- Compilation
 			-- Compile current system.
 		local
 			l_class: ET_CLASS
-			l_eiffel_parser: ET_EIFFEL_PARSER
+			l_interface_checker: ET_AST_PROCESSOR
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
 		do
@@ -256,62 +269,50 @@ feature -- Compilation
 			debug ("ericb")
 				universe.print_time (dt1, "Degree 6")
 			end
-			l_eiffel_parser := universe.eiffel_parser
+			l_interface_checker := universe.interface_checker
 			l_class := character_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := string_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := boolean_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := wide_character_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := integer_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := integer_8_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := integer_16_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := integer_64_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := real_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := double_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := pointer_type.base_class
 			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
-			end
-			l_class := procedure_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
-			end
-			l_class := predicate_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
-			end
-			l_class := function_type.base_class
-			if l_class.is_preparsed then
-				l_class.process (l_eiffel_parser)
+				l_class.process (l_interface_checker)
 			end
 			l_class := universe.root_class
 			if l_class = universe.none_class then
@@ -348,7 +349,7 @@ feature -- Compilation
 				else
 					root_creation_procedure := root_type.dynamic_feature (l_feature, Current)
 					root_creation_procedure.set_creation (True)
-					root_type.set_alive (True)
+					root_type.set_alive
 					build_dynamic_type_sets
 					generate_ids
 					generate_c_code
@@ -541,9 +542,6 @@ invariant
 	real_type_not_void: real_type /= Void
 	double_type_not_void: double_type /= Void
 	pointer_type_not_void: pointer_type /= Void
-	procedure_type_not_void: procedure_type /= Void
-	predicate_type_not_void: predicate_type /= Void
-	function_type_not_void: function_type /= Void
 	root_creation_procedure: root_creation_procedure /= Void implies root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
 

@@ -14,7 +14,7 @@ class ET_DYNAMIC_TYPE_LIST
 
 inherit
 
-	ET_HEAD_LIST [ET_DYNAMIC_TYPE]
+	ET_TAIL_LIST [ET_DYNAMIC_TYPE]
 
 creation
 

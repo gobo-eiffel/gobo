@@ -1649,12 +1649,17 @@ feature {NONE} -- Instruction validity
 				a_target_context.wipe_out
 				a_target_context.force_first (universe.any_type)
 			elseif not a_target_context.is_type_reference (universe) then
-				set_fatal_error
-				a_target_named_type := a_target_context.named_type (universe)
 				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
+					set_fatal_error
+					a_target_named_type := a_target_context.named_type (universe)
 					error_handler.report_vjrv0a_error (current_class, a_target, a_target_named_type)
-				else
+				elseif a_class_impl /= universe.any_class or else not error_handler.is_ise then
+						-- Note: Do not report this error if the assignment
+						-- attempt appears in class ANY because of a design
+						-- bug in ISE's class ANY.
+					set_fatal_error
+					a_target_named_type := a_target_context.named_type (universe)
 					error_handler.report_vjrv0b_error (current_class, a_class_impl, a_target, a_target_named_type)
 				end
 			end

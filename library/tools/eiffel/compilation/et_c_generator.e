@@ -751,6 +751,7 @@ feature {NONE} -- Feature generation
 			elseif l_result_type_set /= Void then
 				print_indentation
 				current_file.put_string (c_return)
+				current_file.put_character (' ')
 				current_file.put_character ('R')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -1042,9 +1043,9 @@ feature {NONE} -- Instruction generation
 				l_source_type := l_source_type_set.first_type
 				if l_source_type /= Void then
 					if l_source_type.conforms_to_type (l_target_type, current_system) then
-						l_accepted_types.put_first (l_source_type)
+						l_accepted_types.put_last (l_source_type)
 					else
-						l_denied_types.put_first (l_source_type)
+						l_denied_types.put_last (l_source_type)
 					end
 					l_other_types := l_source_type_set.other_types
 					if l_other_types /= Void then
@@ -1052,9 +1053,9 @@ feature {NONE} -- Instruction generation
 						from i := 1 until i > nb loop
 							l_source_type := l_other_types.item (i)
 							if l_source_type.conforms_to_type (l_target_type, current_system) then
-								l_accepted_types.put_first (l_source_type)
+								l_accepted_types.put_last (l_source_type)
 							else
-								l_denied_types.put_first (l_source_type)
+								l_denied_types.put_last (l_source_type)
 							end
 							i := i + 1
 						end
