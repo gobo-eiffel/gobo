@@ -24,7 +24,7 @@ feature -- Defaults
 	default_character_case_mapping: RX_CASE_MAPPING is
 			-- Default character lower- and upper-case mapping
 		once
-			!! Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
+			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
 		ensure
 			default_character_case_mapping_not_void: Result /= Void
 		end
@@ -32,7 +32,7 @@ feature -- Defaults
 	default_word_set: RX_CHARACTER_SET is
 			-- Set of characters making up words
 		once
-			!! Result.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
+			create Result.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 		ensure
 			default_word_set_not_void: Result /= Void
 			default_word_set_not_empty: not Result.is_empty
@@ -43,7 +43,7 @@ feature -- Character sets
 	upper_set: RX_CHARACTER_SET is
 			-- Upper character set
 		once
-			!! Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 		ensure
 			upper_set_not_void: Result /= Void
 			upper_set_not_empty: not Result.is_empty
@@ -52,7 +52,7 @@ feature -- Character sets
 	lower_set: RX_CHARACTER_SET is
 			-- Lower character set
 		once
-			!! Result.make ("abcdefghijklmnopqrstuvwxyz")
+			create Result.make ("abcdefghijklmnopqrstuvwxyz")
 		ensure
 			lower_set_not_void: Result /= Void
 			lower_set_not_empty: not Result.is_empty
@@ -61,7 +61,7 @@ feature -- Character sets
 	alpha_set: RX_CHARACTER_SET is
 			-- Alphabetical character set
 		once
-			!! Result.make_empty
+			create Result.make_empty
 			Result.add_set (lower_set)
 			Result.add_set (upper_set)
 		ensure
@@ -72,7 +72,7 @@ feature -- Character sets
 	digit_set: RX_CHARACTER_SET is
 			-- Digit character set
 		once
-			!! Result.make ("0123456789")
+			create Result.make ("0123456789")
 		ensure
 			digit_set_not_void: Result /= Void
 			digit_set_not_empty: not Result.is_empty
@@ -81,7 +81,7 @@ feature -- Character sets
 	alnum_set: RX_CHARACTER_SET is
 			-- Alphanumeric character set
 		once
-			!! Result.make_empty
+			create Result.make_empty
 			Result.add_set (alpha_set)
 			Result.add_set (digit_set)
 		ensure
@@ -92,7 +92,7 @@ feature -- Character sets
 	xdigit_set: RX_CHARACTER_SET is
 			-- Hexadecimal digit character set
 		once
-			!! Result.make ("0123456789abcdefABCDEF")
+			create Result.make ("0123456789abcdefABCDEF")
 		ensure
 			xdigit_set_not_void: Result /= Void
 			xdigit_set_not_empty: not Result.is_empty
@@ -103,7 +103,7 @@ feature -- Character sets
 		local
 			i: INTEGER
 		once
-			!! Result.make_empty
+			create Result.make_empty
 			from i := 0 until i > 31 loop
 				Result.add_character (i)
 				i := i + 1
@@ -117,7 +117,7 @@ feature -- Character sets
 	graph_set: RX_CHARACTER_SET is
 			-- Graph character set
 		once
-			!! Result.make ("!%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+			create Result.make ("!%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 		ensure
 			graph_set_not_void: Result /= Void
 			graph_set_not_empty: not Result.is_empty
@@ -126,7 +126,7 @@ feature -- Character sets
 	print_set: RX_CHARACTER_SET is
 			-- Printable character set
 		once
-			!! Result.make (" !%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+			create Result.make (" !%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 		ensure
 			print_set_not_void: Result /= Void
 			print_set_not_empty: not Result.is_empty
@@ -135,7 +135,7 @@ feature -- Character sets
 	punct_set: RX_CHARACTER_SET is
 			-- Punctuation character set
 		once
-			!! Result.make ("!%"#$%%&%'()*+,-./:;<=>?@[\]^_`{|}~")
+			create Result.make ("!%"#$%%&%'()*+,-./:;<=>?@[\]^_`{|}~")
 		ensure
 			punct_set_not_void: Result /= Void
 			punct_set_not_empty: not Result.is_empty
@@ -146,7 +146,7 @@ feature -- Character sets
 		local
 			i: INTEGER
 		once
-			!!Result.make_empty
+			create Result.make_empty
 			from i := 0 until i > 127 loop
 				Result.add_character (i)
 				i := i + 1
@@ -159,7 +159,7 @@ feature -- Character sets
 	space_set: RX_CHARACTER_SET is
 			-- Space character set
 		once
-			!! Result.make("%T%N%F%R%/11/ ")
+			create Result.make("%T%N%F%R%/11/ ")
 		ensure
 			space_set_not_void: Result /= Void
 			space_set_not_empty: not Result.is_empty
@@ -168,7 +168,7 @@ feature -- Character sets
 	meta_set: RX_CHARACTER_SET is
 			-- Meta character set
 		once
-			!! Result.make ("*+?{^.$|()[")
+			create Result.make ("*+?{^.$|()[")
 		ensure
 			meta_set_not_void: Result /= Void
 			meta_set_not_empty: not Result.is_empty

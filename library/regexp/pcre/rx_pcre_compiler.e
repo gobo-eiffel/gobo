@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new regexp compiler.
 		do
-			!! byte_code.make (1024)
+			create byte_code.make (1024)
 			set_character_case_mapping (default_character_case_mapping)
 			set_word_set (default_word_set)
 			pattern := clone (empty_pattern)
@@ -475,7 +475,7 @@ feature -- Compilation
 				-- present.
 			if not is_anchored and then first_character < 0 and then not is_startline then
 				if internal_start_bits = Void then
-					!! internal_start_bits.make_empty
+					create internal_start_bits.make_empty
 				else
 					internal_start_bits.wipe_out
 				end
@@ -1114,7 +1114,7 @@ feature {NONE} -- Debug helpers
 			-- PCRE package (coded with bytes) and the Gobo version
 			-- (coded with int32)
 		do
-			!! Result.make_map (50)
+			create Result.make_map (50)
 		ensure
 			position_map_not_void: Result /= Void
 			position_map_empty: Result.is_empty
@@ -3345,7 +3345,7 @@ feature {NONE} -- Constants
 	actual_set: RX_CHARACTER_SET is
 			-- Shared buffer for charater set
 		once
-			!! Result.make_empty
+			create Result.make_empty
 		ensure
 			actual_set_not_void: Result /= Void
 		end
