@@ -15,9 +15,7 @@ class XM_OUTPUT
 inherit
 
 	KL_SHARED_STANDARD_FILES
-
-	UC_UNICODE_FACTORY
-		export {NONE} all end
+	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Output
 
@@ -60,10 +58,7 @@ feature -- Output, interface to descendants
 			s_not_void: s /= Void
 		do
 			if last_output /= Void then
-				if not is_unicode_string (last_output) and is_unicode_string (s) then
-					last_output := forced_unicode_string (last_output)
-				end
-				last_output.append_string (s)
+				last_output := STRING_.appended_string (last_output, s)
 			else
 				std.output.put_string (s)
 			end

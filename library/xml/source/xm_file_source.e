@@ -51,7 +51,7 @@ feature -- Output
 	out: STRING is
 			-- Filename.
 		do
-			Result := file_name.out
+			Result := file_name
 		end
 
 invariant

@@ -256,7 +256,7 @@ feature {NONE} -- Content implementation
 		do
 			if has_prefix (a_prefix) then
 				Result := STRING_.concat (a_prefix, Prefix_separator)
-				Result := STRING_.concat (Result, a_local)
+				Result := STRING_.appended_string (Result, a_local)
 			else
 				Result := a_local
 			end

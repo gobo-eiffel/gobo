@@ -15,7 +15,9 @@ class XM_CHARACTER_DATA
 inherit
 
 	XM_NODE
-	
+
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
@@ -55,10 +57,7 @@ feature {ANY} -- Element change
 		require
 			other /= Void
 		do
-			if not is_unicode_string (content) and then is_unicode_string (other.content) then
-				content := forced_unicode_string (content)
-			end
-			content.append_string (other.content)
+			content := STRING_.appended_string (content, other.content)
 		end
 
 invariant

@@ -75,14 +75,14 @@ feature -- Any
 			i: INTEGER
 		do
 			if i > 0 then
-				Result := item (1)
+				Result := clone (item (1))
 			end
 			from
 				i := 2
 			until
 				i > count
 			loop
-				Result := STRING_.concat (Result, item(i))
+				Result := STRING_.appended_string (Result, item (i))
 				i := i + 1
 			end
 		end

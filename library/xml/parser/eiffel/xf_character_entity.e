@@ -18,18 +18,9 @@ inherit
 
 	XF_UTF8_PRIVATE_ROUTINES
 
-	KL_INTEGER_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_IMPORTED_INTEGER_ROUTINES
 
-	KL_STRING_ROUTINES
-		rename
-			make as string_make
-		export
-			{NONE} all;
-			{ANY} is_integer, is_hexadecimal
-		end
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -48,7 +39,7 @@ feature -- Setting
 			-- Set entity from decimal representation.
 		require
 			not_void: a_string /= Void
-			decimal: is_integer (a_string)
+			decimal: STRING_.is_integer (a_string)
 		local
 			i, nb: INTEGER
 		do
@@ -84,9 +75,9 @@ feature -- Setting
 			-- Set entity from hexadecimal representation.
 		require
 			not_void: a_string /= Void
-			hexadecimal: is_hexadecimal (a_string)
+			hexadecimal: STRING_.is_hexadecimal (a_string)
 		do
-			code := hexadecimal_to_integer (a_string)
+			code := STRING_.hexadecimal_to_integer (a_string)
 		end
 
 	from_code (a_code: INTEGER) is
@@ -120,7 +111,7 @@ feature -- Access
 			is_valid: is_valid
 		do
 			-- problem: if CHARACTER is too small...
-			Result := to_character (code)
+			Result := INTEGER_.to_character (code)
 		ensure
 			code: Result.code = code
 		end

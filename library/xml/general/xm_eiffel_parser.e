@@ -56,9 +56,14 @@ feature -- Parsing
 			-- Parse from string.
 		local
 			a_stream: KL_STRING_INPUT_STREAM
+			uc_string: UC_STRING
 		do
 			!XM_STRING_SOURCE! source
-			!! a_stream.make (forced_unicode_string (a).to_utf8)
+			uc_string ?= a
+			if uc_string = Void then
+				!UC_UTF8_STRING! uc_string.make_from_string (a)
+			end
+			!! a_stream.make (uc_string.to_utf8)
 			parse_stream (a_stream)
 		end
 

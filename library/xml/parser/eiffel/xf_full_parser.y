@@ -1087,7 +1087,7 @@ feature {NONE} -- Entities
 				end
 			else
 				an_error := STRING_.concat (Error_cannot_read_file, ": ")
-				an_error := STRING_.concat (an_error, a_sys)
+				an_error := STRING_.appended_string (an_error, a_sys)
 				force_error (an_error)
 			end
 		end
@@ -1148,7 +1148,7 @@ feature {NONE} -- Scanner implementation
 	scanner: XF_FULL_SCANNER
 			-- Scanner for PE entity.
 
-	scanners: DS_LINKED_STACK[XF_FULL_SCANNER]
+	scanners: DS_LINKED_STACK [XF_FULL_SCANNER]
 			-- Scanner stack for entities etc.
 
 	last_token: INTEGER
@@ -1284,10 +1284,14 @@ feature -- Error diagnostic
 			-- Header for error message.
 			-- <filename>:<line>:<column>:
 		do
-			Result := STRING_.concat (filename,
-				":" + line.out + ":" + column.out + ":")
+			Result := clone (filename)
+			Result.append_character (':')
+			Result.append_string (line.out)
+			Result.append_character (':')
+			Result.append_string (column.out)
+			Result.append_character (':')
 		ensure
-			not_void: Result /= Void
+			error_header_not_void: Result /= Void
 		end
 
 feature {NONE} -- String

@@ -25,8 +25,7 @@ inherit
 			process_attribute
 		end
 
-	UC_UNICODE_FACTORY
-		export {NONE} all end
+	KL_IMPORTED_STRING_ROUTINES
 
 	XM_MARKUP_CONSTANTS
 	
@@ -244,10 +243,7 @@ feature {NONE} -- Implementation
 			str_not_void: str /= Void
 			last_string_not_void: last_string /= Void
 		do
-			if not is_unicode_string (last_string) and then is_unicode_string (str) then
-				last_string := forced_unicode_string (last_string)
-			end
-			last_string.append_string (str)
+			last_string := STRING_.appended_string (last_string, str)
 		end
 
 	position_table: XM_POSITION_TABLE

@@ -26,6 +26,11 @@ inherit
 			make as make_list
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		undefine
+			is_equal, copy
+		end
+
 feature {NONE} -- Access
 
 	make_composite is
@@ -275,10 +280,7 @@ feature {ANY} -- Element change
 			loop
 				text_node ?= cs.item
 				if text_node /= Void then
-					if not is_unicode_string (Result) and is_unicode_string (text_node.content) then
-						Result := forced_unicode_string (Result) 
-					end
-					Result.append_string (text_node.content)
+					Result := STRING_.appended_string (Result, text_node.content)
 				end
 				cs.forth
 			end
