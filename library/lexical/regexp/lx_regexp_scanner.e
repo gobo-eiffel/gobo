@@ -37,6 +37,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_STRING_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_from_description
@@ -60,35 +65,35 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 59
+--|#line 64
 
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				
 when 2 then
---|#line 63
+--|#line 68
 
 					less (0)
 					set_start_condition (REGEXP)
 				
 when 3 then
---|#line 70
+--|#line 75
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
 				
 when 4 then
 	yy_position := yy_position - 1
---|#line 74
+--|#line 79
 last_token := Dollar_code
 when 5 then
---|#line 75
+--|#line 80
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				
 when 6 then
---|#line 79
+--|#line 84
 
 					last_string := text
 					if character_classes.has (last_string) then
@@ -103,42 +108,42 @@ when 6 then
 					last_string := Void
 				
 when 7 then
---|#line 92
+--|#line 97
 last_token := text_item (1).code
 when 8 then
---|#line 93
+--|#line 98
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 when 9 then
---|#line 100
+--|#line 105
 -- Separator.
 when 10 then
---|#line 101
+--|#line 106
 
 					last_token := NUMBER
-					check is_integer: text.is_integer end
+					check is_integer: string__is_integer (text) end
 					last_value := text.to_integer
 				
 when 11 then
---|#line 106
+--|#line 111
 last_token := Comma_code
 when 12 then
---|#line 107
+--|#line 112
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 when 13 then
---|#line 111
+--|#line 116
 
 					error_handler.bad_character_in_brackets (filename, line_nb)
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 when 14 then
---|#line 116
+--|#line 121
 
 					error_handler.missing_bracket (filename, line_nb)
 					line_nb := line_nb + 1
@@ -146,19 +151,19 @@ when 14 then
 					set_start_condition (REGEXP)
 				
 when 15 then
---|#line 125
+--|#line 130
 
 					process_character (text_item (1).code)
 					last_token := CHAR
 				
 when 16 then
---|#line 129
+--|#line 134
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
 when 17 then
---|#line 133
+--|#line 138
 
 					error_handler.missing_quote (filename, line_nb)
 					line_nb := line_nb + 1
@@ -166,7 +171,7 @@ when 17 then
 					set_start_condition (REGEXP)
 				
 when 18 then
---|#line 141
+--|#line 146
 
 					last_token := CHAR
 					process_escaped_character
@@ -176,24 +181,24 @@ when 18 then
 				
 when 19 then
 	yy_position := yy_position - 1
---|#line 150
+--|#line 155
 
 					set_start_condition (CCL)
 					last_token := Caret_code
 				
 when 20 then
 	yy_position := yy_position - 1
---|#line 154
+--|#line 159
 last_token := Caret_code
 when 21 then
---|#line 155
+--|#line 160
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 					set_start_condition (CCL)
 				
 when 22 then
---|#line 160
+--|#line 165
 
 					error_handler.bad_character_class (filename, line_nb)
 					line_nb := line_nb + 1
@@ -202,22 +207,22 @@ when 22 then
 				
 when 23 then
 	yy_position := yy_position - 1
---|#line 169
+--|#line 174
 last_token := Minus_code
 when 24 then
---|#line 170
+--|#line 175
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 when 25 then
---|#line 174
+--|#line 179
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
 when 26 then
---|#line 178
+--|#line 183
 
 					error_handler.bad_character_class (filename, line_nb)
 					line_nb := line_nb + 1
@@ -225,7 +230,7 @@ when 26 then
 					set_start_condition (REGEXP)
 				
 when 27 then
---|#line 186
+--|#line 191
 
 					if text_item (1) = '%N' then
 						error_handler.bad_character ("%%N", filename, line_nb)
@@ -235,7 +240,7 @@ when 27 then
 					end
 				
 when 28 then
---|#line 195
+--|#line 200
 fatal_error ("scanner jammed")
 			else
 				fatal_error ("fatal scanner internal error: no action found")

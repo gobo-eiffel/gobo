@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_STRING_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_from_description
@@ -100,7 +105,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	{WS}			-- Separator.
 	[0-9]+		{
 					last_token := NUMBER
-					check is_integer: text.is_integer end
+					check is_integer: string__is_integer (text) end
 					last_value := text.to_integer
 				}
 	","				last_token := Comma_code
