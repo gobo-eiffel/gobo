@@ -162,6 +162,16 @@ feature -- Class names
 			unknown_class_name_not_void: Result /= Void
 		end
 
+feature -- Feature names
+
+	default_create_feature_name: ET_FEATURE_NAME is
+			-- 'default_create' feature name
+		once
+			create {ET_IDENTIFIER} Result.make ("default_create")
+		ensure
+			default_create_feature_name_not_void: Result /= Void
+		end
+
 feature -- Symbols
 
 	symbol: ET_SYMBOL is
