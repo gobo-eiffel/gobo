@@ -61,29 +61,30 @@ applications and libraries. But it would be a shame if the
 numerous third-party Eiffel libraries based on <em>EiffelBase</em>
 were not reusable with Eiffel compilers not supporting <em>EiffelBase</em>.
 To address this problem the <em>Gobo Eiffel Structure Library</em>
-has been extended with a new cluster <font color="#800000"><tt>base</tt></font>.
+has been extended with a new cluster <font color="#800000"><tt>EiffelBase</tt></font>
+in <font color="#800000"><tt>$GOBO/library/other</tt></font>.
 This cluster contains the main <em>EiffelBase</em> classes such
 as <font color="#008080"><em><tt>LINKED_LIST</tt></em></font>, <font
 color="#008080"><em><tt>ARRAYED_LIST</tt></em></font> or <font
 color="#008080"><em><tt>HASH_TABLE</tt></em></font>. Since the <em>EiffelBase</em>
 library, and therefore its interface, has been made open source,
-the classes in the <font color="#800000"><tt>base </tt></font>cluster
+the classes in the <font color="#800000"><tt>EiffelBase </tt></font>cluster
 have the same flat-short form as their original versions in <em>EiffelBase</em>,
 but their features have been implemented by inheriting from the <em>Gobo</em>
 container classes. But although it works with all Eiffel
-compilers supported by <em>Gobo</em>, the <font color="#800000"><tt>base
+compilers supported by <em>Gobo</em>, the <font color="#800000"><tt>EiffelBase
 </tt></font>cluster is not a port of <em>EiffelBase</em>. Only a
 small subset of <em>EiffelBase</em> classes is available and
 although the interface and semantics of the classes are the same
 as their original versions, the internal implementation and
 inheritance hierarchy are different. This means that the classes
-provided in the <font color="#800000"><tt>base </tt></font>cluster
+provided in the <font color="#800000"><tt>EiffelBase </tt></font>cluster
 can be used in place of the <em>EiffelBase</em> classes when used
 by client classes, but there is no guarantee that inheriting from
 these classes will work. Please keep in mind that it is not a
 port of <em>EiffelBase</em> but rather a temporary means to use
 legacy Eiffel libraries based on <em>EiffelBase</em>. In any
-case, the classes of the <font color="#800000"><tt>base </tt></font>cluster
+case, the classes of the <font color="#800000"><tt>EiffelBase </tt></font>cluster
 should be considered as obsolete (in the Eiffel terminology
 meaning), that is they are useful to make existing code still
 work with various Eiffel compilers but should not be used to
@@ -91,22 +92,23 @@ develop new Eiffel software. To develop new Eiffel software one
 should rather use the <em>Gobo Eiffel Structure Library</em>.</p>
 
 <p align="left">The classes that are part of the <font
-color="#800000"><tt>base </tt></font>cluster are represented in
-green in the above picture (note that the class <font
+color="#800000"><tt>EiffelBase </tt></font>cluster are
+represented in green in the above picture (note that the class <font
 color="#008080"><em><tt>CONTAINER</tt></em></font> appears
 several times to avoid cluttering too much the graph). The <font
-color="#800000"><tt>base </tt></font>cluster from the <em>Gobo
+color="#800000"><tt>EiffelBase </tt></font>cluster from the <em>Gobo
 Eiffel Structure Library </em>is supposed to replace the <font
-color="#800000"><tt>structure</tt></font> clusters of the <em>EiffelBase</em>
+color="#800000"><tt>structures</tt></font> clusters of the <em>EiffelBase</em>
 library. However some of the classes in the ISE's <font
 color="#800000"><tt>kernel</tt></font> and <font color="#800000"><tt>support</tt></font>
 clusters rely on some other classes from the <font
-color="#800000"><tt>structure</tt></font> clusters. These classes
-appear in white in the inheritance graph and are not part of the <font
-color="#800000"><tt>base </tt></font>cluster. In order to make
-these classes compile without the <font color="#800000"><tt>structure</tt></font>
-clusters of <em>EiffelBase</em>, new classes have been added to <em>Gobo</em>'s
-<font color="#800000"><tt>base </tt></font>cluster. They are
+color="#800000"><tt>structures</tt></font> clusters. These
+classes appear in white in the inheritance graph and are not part
+of the <font color="#800000"><tt>EiffelBase </tt></font>cluster.
+In order to make these classes compile without the <font
+color="#800000"><tt>structures</tt></font> clusters of <em>EiffelBase</em>,
+new classes have been added to <em>Gobo</em>'s <font
+color="#800000"><tt>EiffelBase </tt></font>cluster. They are
 represented in light-grey. These classes are not really part of
 abstraction but are only there to make it work with ISE's <font
 color="#800000"><tt>kernel</tt></font> and <font color="#800000"><tt>support</tt></font>
@@ -123,7 +125,7 @@ href="see_also.html#reusable_software"><em>Reusable Software</em></a><em>
 </em>directly.</p>
 
 <p align="left">In order to use <em>Gobo</em>'s <font
-color="#800000"><tt>base </tt></font>cluster instead of <em>EiffelBase</em>,
+color="#800000"><tt>EiffelBase </tt></font>cluster instead of <em>EiffelBase</em>,
 proceed as follows:</p>
 
 <ol>
@@ -131,15 +133,15 @@ proceed as follows:</p>
         your Ace file (ISE Eiffel, Halstenbach), your ESD file
         (Visual Eiffel) or your loadpath file (SmallEiffel)
         depending on the Eiffel compiler you are using:</p>
-        <div align="left"><pre><font color="#800000">    $EIFFEL4\library\base\structures\*</font></pre>
+        <div align="left"><pre><font color="#800000">    $EIFFEL4/library/base/structures/*</font></pre>
         </div></li>
     <li><p align="left">Keep the following clusters if you use
         ISE Eiffel or Halstenbach:</p>
-        <div align="left"><pre><font color="#800000">    $EIFFEL4\library\base\structures\kernel
-    $EIFFEL4\library\base\structures\support</font></pre>
+        <div align="left"><pre><font color="#800000">    $EIFFEL4/library/base/structures/kernel
+    $EIFFEL4/library/base/structures/support</font></pre>
         </div></li>
     <li><p align="left">Add the following line:</p>
-        <div align="left"><pre><font color="#800000">    $GOBO\library\structure\base</font></pre>
+        <div align="left"><pre><font color="#800000">    $GOBO/library/other/EiffelBase</font></pre>
         </div><p align="left">along with the other <em>Gobo
         Eiffel Structure Library </em>clusters.</p>
     </li>
@@ -154,8 +156,8 @@ classname clash with class <font color="#008080"><em><tt>LINKED_LIST</tt></em></
 If you don't use SmallEiffel's version of <font color="#008080"><em><tt>LINKED_LIST
 </tt></em></font>in your program, then this will not be a
 problem. You would just have to make sure that <em>Gobo</em>'s <font
-color="#800000"><tt>base</tt></font> cluster is listed before
-SmallEiffel's <font color="#800000"><tt>lib_std</tt></font>
+color="#800000"><tt>EiffelBase</tt></font> cluster is listed
+before SmallEiffel's <font color="#800000"><tt>lib_std</tt></font>
 cluster in your loadpath file.</p>
 
 <hr size="1">
@@ -163,7 +165,7 @@ cluster in your loadpath file.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -173,7 +175,7 @@ cluster in your loadpath file.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 30 August 1999</font><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
