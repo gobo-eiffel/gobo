@@ -52,19 +52,32 @@ feature -- Access
 	epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 			-- Epsilon out-transition
 
-	accepting_id: INTEGER
-			-- Identification number when the state
-			-- is accepting, 0 otherwise
+	accepted_rule: LX_RULE
+			-- Rule that current state is accepting,
+			-- Void otherwise
 
 feature -- Status report
 
 	in_trail_context: BOOLEAN
-			-- Is state part of a trailing context rule?
+			-- Is state part of a trailing context?
 
 	is_accepting: BOOLEAN is
 			-- Is current state an accepting state?
 		do
-			Result := accepting_id /= 0
+			Result := accepted_rule /= Void
+		ensure then
+			definition: Result = (accepted_rule /= Void)
+		end
+
+	is_accepting_head: BOOLEAN is
+			-- Is current state an accepting state for the
+			-- head part of a trailing context rule?
+		do
+			Result := is_accepting and
+				not in_trail_context and
+				has_transition
+		ensure
+			is_accepting: Result implies is_accepting
 		end
 
 	has_transition: BOOLEAN is
@@ -171,17 +184,17 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_accepting_id (acc_id: INTEGER) is
-			-- Set `accepting_id' to `acc_id'.
+	set_accepted_rule (a_rule: LX_RULE) is
+			-- Set `accepted_rule' to `a_rule'.
 		do
-			accepting_id := acc_id
+			accepted_rule := a_rule
 		ensure
-			accepting_id_set: accepting_id = acc_id
+			accepted_rule_set: accepted_rule = a_rule
 		end
 
 	set_beginning_as_normal is
 			-- Set each state of the epsilon closure as normal
-			-- (i.e not trailing context-associated).
+			-- (i.e not in trailing context).
 		local
 			epsilon_xtion: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
@@ -195,6 +208,8 @@ feature -- Status setting
 					epsilon_transition.target.set_beginning_as_normal
 				end
 			end
+		ensure
+			not_in_trail_context: not in_trail_context
 		end
 
 feature {NONE} -- Implementation

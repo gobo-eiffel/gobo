@@ -71,7 +71,8 @@ feature {NONE} -- Initialization
 			nb := nfa_states.count
 			make_arrayed_list (nb)
 			!! transitions.make (min, max)
-			!! accepting_ids.make (nb)
+			!! accepted_rules.make (nb)
+			!! accepted_head_rules.make (nb)
 			from i := 1 until i > nb loop
 				state := nfa_states.item (i)
 				if state.transition /= Void then
@@ -95,7 +96,11 @@ feature {NONE} -- Initialization
 					end
 				end	
 				if state.is_accepting then
-					accepting_ids.force_last (state.accepting_id)
+					if state.is_accepting_head then
+						accepted_head_rules.force_last (state.accepted_rule)
+					else
+						accepted_rules.force_last (state.accepted_rule)
+					end
 					if is_empty or else last /= state then
 						force_last (state)
 						hash_code := hash_code + state.id
@@ -107,12 +112,13 @@ feature {NONE} -- Initialization
 				-- states to other DFA states quickly. Bubble sort is used
 				-- because there probably aren't very many states.
 			sort (bubble_sorter)
-				-- The accepting id set is sorted in increasing order
+				-- The accepted rule sets are sorted in increasing order
 				-- so that the disambiguating rule (i.e. the first listed
 				-- is considered match in the event of ties) will work.
 				-- Bubble sort is used since the list is probably
 				-- quite small.
-			accepting_ids.sort (id_sorter)
+			accepted_rules.sort (rule_sorter)
+			accepted_head_rules.sort (rule_sorter)
 		ensure
 			sorted: sorted (bubble_sorter)
 			minimum_symbol_set: minimum_symbol = min
@@ -127,8 +133,12 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 
-	accepting_ids: DS_ARRAYED_LIST [INTEGER]
-			-- Accepting id set
+	accepted_rules: DS_ARRAYED_LIST [LX_RULE]
+			-- Accepted rule set
+
+	accepted_head_rules: DS_ARRAYED_LIST [LX_RULE]
+			-- Rules with trailing context whose head
+			-- part is accepted by current state
 
 	transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			-- Transition table to next DFA states in automaton,
@@ -169,22 +179,24 @@ feature -- Setting
 			id_set: id = i
 		end
 
-	set_accepting_ids (ids: like accepting_ids) is
-			-- Set `accepting_ids' to `ids'.
-		require
-			ids_not_void: ids /= Void
-		do
-			accepting_ids := ids
-		ensure
-			accepting_id_set: accepting_ids = ids
-		end
-
 feature -- Status report
 
 	is_accepting: BOOLEAN is
 			-- Is current state an accepting state?
 		do
-			Result := not accepting_ids.is_empty
+			Result := not accepted_rules.is_empty
+		ensure then
+			definition: Result = not accepted_rules.is_empty
+		end
+
+	is_accepting_head: BOOLEAN is
+			-- Does current state contain an accepting NFA
+			-- state for the head part of a trailing
+			-- context rule?
+		do
+			Result := not accepted_head_rules.is_empty
+		ensure
+			definition: Result = not accepted_head_rules.is_empty
 		end
 
 	valid_symbol (symbol: INTEGER): BOOLEAN is
@@ -263,8 +275,8 @@ feature {NONE} -- Sort
 			sorter_not_void: Result /= Void
 		end
 
-	id_sorter: DS_BUBBLE_SORTER [INTEGER] is
-			-- Id bubble sorter
+	rule_sorter: DS_BUBBLE_SORTER [LX_RULE] is
+			-- Rule bubble sorter
 		once
 			!! Result
 		ensure
@@ -274,6 +286,9 @@ feature {NONE} -- Sort
 invariant
 
 	transitions_not_void: transitions /= Void
-	accepting_ids_not_void: accepting_ids /= Void
+	accepted_rules_not_void: accepted_rules /= Void
+	no_void_accepted_rule: not accepted_rules.has (Void)
+	accepted_head_rules_not_void: accepted_head_rules /= Void
+	no_void_accepted_head_rule: not accepted_head_rules.has (Void)
 
 end -- class LX_DFA_STATE

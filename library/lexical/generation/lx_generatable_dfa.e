@@ -73,7 +73,8 @@ feature {NONE} -- Initialization
 			else
 				yyNull_equiv_class := max
 			end
-			yyEnd_of_buffer := yy_rules.upper + 1
+			yyNb_rules := yy_rules.upper
+			yyEnd_of_buffer := yyNb_rules + 1
 				-- Symbols start at 1 and NULL transitions
 				-- are indexed by `maximum_symbol'.
 			initialize_dfa (a_description.start_conditions, 1, max)
@@ -86,14 +87,13 @@ feature {NONE} -- Initialization
 			not_full: not is_full
 		local
 			eob_state: LX_DFA_STATE
-			accepting_ids: DS_ARRAYED_LIST [INTEGER]
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
+			a_rule: LX_RULE
 		do
 			!! nfa_states.make (0)
 			!! eob_state.make (nfa_states, minimum_symbol, maximum_symbol)
-			!! accepting_ids.make (1)
-			accepting_ids.put_first (yy_rules.upper + 1)
-			eob_state.set_accepting_ids (accepting_ids)
+			!! a_rule.make_default (yyEnd_of_buffer)
+			eob_state.accepted_rules.force_first (a_rule)
 			put_last (eob_state)
 			eob_state.set_id (count)
 		end
@@ -205,7 +205,6 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("%T%Tend%N")
 		end
-
 
 	print_inspect_actions (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for actions to `a_file'.
@@ -485,10 +484,12 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 		do
-			a_file.put_string ("%TyyEnd_of_buffer: INTEGER is ")
-			a_file.put_integer (yy_rules.upper + 1)
-			a_file.put_character ('%N')
-			a_file.put_string ("%T%T%T-- End of buffer rule code%N%N")
+			a_file.put_string ("%TyyNb_rules: INTEGER is ")
+			a_file.put_integer (yyNb_rules)
+			a_file.put_string ("%N%T%T%T-- Number of rules%N%N%
+					%%TyyEnd_of_buffer: INTEGER is ")
+			a_file.put_integer (yyEnd_of_buffer)
+			a_file.put_string ("%N%T%T%T-- End of buffer rule code%N%N")
 			nb := yy_start_conditions.upper
 			from i := yy_start_conditions.lower until i > nb loop
 				a_file.put_character ('%T')

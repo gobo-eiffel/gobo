@@ -82,6 +82,85 @@ feature -- Generation
 			a_file.put_string ("Compressed tables always back up.%N")
 		end
 
+feature -- Access
+
+	dangerous_variable_trail_rules: DS_ARRAYED_LIST [LX_RULE] is
+			-- Rules containing "dangerous" variable trailing context.
+			-- A trailing context is dangerous if both the head and the 
+			-- trailing part are of variable size and there is a DFA
+			-- state which contains both an accepting state for the 
+			-- rule and NFA states which occur after the beginning
+			-- of the trailing context.
+			-- When such a rule is matched, it is impossible to tell
+			-- if having been in the DFA state indicates the beginning
+			-- of the trailing context or further-along scanning of
+			-- the pattern.
+		local
+			i, j: INTEGER
+			yy_rules_upper: INTEGER
+			a_state: LX_DFA_STATE
+			a_nfa_state: LX_NFA_STATE
+			variable_rules: DS_BILINKED_LIST [LX_RULE]
+			a_cursor: DS_BILINKED_LIST_CURSOR [LX_RULE]
+			a_rule: LX_RULE
+			a_sorter: DS_BUBBLE_SORTER [LX_RULE]
+			acc_set: DS_ARRAYED_LIST [LX_RULE]
+		do
+			!! Result.make (yy_rules.count)
+			if yyVariable_trail_context then
+				from
+					i := yy_rules.lower
+					yy_rules_upper := yy_rules.upper
+					!! variable_rules.make
+				until
+					i > yy_rules_upper
+				loop
+					if yy_rules.item (i).variable_trail then
+						variable_rules.put_last (yy_rules.item (i))
+					end
+					i := i + 1
+				end
+				from
+					i := count
+				until
+					i < 1 or
+					variable_rules.is_empty
+				loop
+					a_state := item (i)
+					if a_state.is_accepting_head then
+						acc_set := a_state.accepted_head_rules
+						from j := a_state.count until j < 1 loop
+							a_nfa_state := a_state.item (j)
+							if a_nfa_state.in_trail_context then
+								from
+									a_cursor := variable_rules.new_cursor
+									a_cursor.start
+								until
+									a_cursor.after or else
+									acc_set.has (a_cursor.item) and then
+									a_cursor.item.pattern.has (a_nfa_state)
+								loop
+									a_cursor.forth
+								end
+								if not a_cursor.after then
+									a_rule := a_cursor.item
+									variable_rules.remove_at (a_cursor)
+									Result.put_last (a_rule)
+								end
+							end
+							j := j - 1
+						end
+					end
+					i := i - 1
+				end
+			end
+			!! a_sorter
+			Result.sort (a_sorter)
+		ensure
+			rules_not_void: Result /= Void
+			no_void_rule: not Result.has (Void)
+		end
+
 feature {NONE} -- Generation
 
 	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
@@ -297,10 +376,10 @@ feature {NONE} -- Building
 			-- Build `yy_accept' and `yy_acclist' tables.
 		local
 			i, j, nb: INTEGER
-			k, acc_nb, acc_id: INTEGER
-			acc_set: DS_ARRAYED_LIST [INTEGER]
+			k, acc_nb: INTEGER
+			acc_set: DS_ARRAYED_LIST [LX_RULE]
+			a_rule: LX_RULE
 			state: LX_DFA_STATE
-			variable_trail_context: BOOLEAN
 			yy_accept_, yy_acclist_: ARRAY [INTEGER]
 		do
 			nb := count
@@ -312,33 +391,46 @@ feature {NONE} -- Building
 					-- is by looking at where the list for the next
 					-- state starts. (Hence nb + 2)
 				!! yy_accept_.make (0, nb + 2)
-				variable_trail_context := yyVariable_trail_context
 					-- First generate the `yy_acclist' array. In the process,
 					-- we compute the indices that go into the `yy_accept'
 					-- array which will contain pointers into the
 					-- `yy_acclist' array.
 				from i := 1 until i > nb loop
-					j := j + item (i).accepting_ids.count
+					state := item (i)
+					j := j + state.accepted_rules.count
+					j := j + state.accepted_head_rules.count
 					i := i + 1
 				end
 				!! yy_acclist_.make (0, j.max (1))
 				j := 1
 				from i := 1 until i > nb loop
 					yy_accept_.put (j, i)
-					acc_set := item (i).accepting_ids
+					state := item (i)
+					acc_set := state.accepted_rules
 					acc_nb := acc_set.count
 					from k := 1 until k > acc_nb loop
-						acc_id := acc_set.item (k)
+						a_rule := acc_set.item (k)
 						if
-							variable_trail_context and
-							yy_rules.valid_index (acc_id) and then
-							yy_rules.item (acc_id).variable_trail
+							yyVariable_trail_context and
+							a_rule.variable_trail
 						then
 								-- Special hack to flag accepting id
 								-- as part of trailing context rule.
-							acc_id := acc_id + yyTrailing_mark
+							yy_acclist_.put (- a_rule.id, j)
+						else
+							yy_acclist_.put (a_rule.id, j)
 						end
-						yy_acclist_.put (acc_id, j)
+						j := j + 1
+						k := k + 1
+					end
+					acc_set := state.accepted_head_rules
+					acc_nb := acc_set.count
+					from k := 1 until k > acc_nb loop
+						a_rule := acc_set.item (k)
+							-- Special hack to flag accepting id
+							-- as head part of variable trailing
+							-- context rule.
+						yy_acclist_.put (- a_rule.id - yyNb_rules, j)
 						j := j + 1
 						k := k + 1
 					end
@@ -357,7 +449,7 @@ feature {NONE} -- Building
 				from i := 1 until i > nb loop
 					state := item (i)
 					if state.is_accepting then
-						yy_accept_.put (state.accepting_ids.first, i)
+						yy_accept_.put (state.accepted_rules.first.id, i)
 					else
 						yy_accept_.put (0, i)
 					end
@@ -954,9 +1046,6 @@ feature {NONE} -- Constants
 			-- a state must be of the number of total out-transitions
 			-- of the state in order to consider making a template from
 			-- the state
-
-	yyTrailing_mark: INTEGER is 10000
-			-- Watermark for trailing context accepting ids
 
 invariant
 

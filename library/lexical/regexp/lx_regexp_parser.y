@@ -18,6 +18,8 @@ inherit
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser_skeleton
+		redefine
+			report_error
 		end
 
 	LX_REGEXP_SCANNER
@@ -58,14 +60,13 @@ Init_pattern: -- /* empty */
 				!! transitions.make (Initial_max_transitions)
 			end
 				-- Initialize for a parse of one pattern.
-			has_trail_context := False
 			variable_trail_rule := False
 			variable_length := False
 			trail_count := 0
 			head_count := 0
 			rule_length := 0
 			in_trail_context := False
-			rule_id := 1
+			!! rule.make_default (1)
 		}
 	;
 
@@ -88,24 +89,21 @@ Rule: Regular_expression2 Regular_expression
 			$$ := append_trail_context_to_regexp
 				(dollar_nfa ($2), dollar_nfa ($1))
 		}
-	| Regular_expression2 Regular_expression '$'
-		{
-			error_handler.trailing_context_used_twice (filename, line_nb)
-		}
 	| Regular_expression '$'
 		{
 			$$ := append_eol_to_regexp (dollar_nfa ($1))
 		}
 	| Regular_expression
 		{
-			if has_trail_context then
-				if variable_length and head_count = 0 then
-						-- Both head and trail are variable-length.
-					variable_trail_rule := True
-				else
-					trail_count := rule_length
-				end
-			end
+			-- $$ := $1
+		}
+	| Regular_expression2 Regular_expression2
+		{
+			error_handler.trailing_context_used_twice (filename, line_nb)
+		}
+	| Regular_expression2 Regular_expression '$'
+		{
+			error_handler.trailing_context_used_twice (filename, line_nb)
 		}
 	;
 
@@ -121,11 +119,6 @@ Regular_expression2: Regular_expression '/'
 		{
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-			else
-				has_trail_context := True
-			end
 			if variable_length then
 					-- We hope the trailing context is fixed-length.
 				variable_length := False
@@ -328,15 +321,36 @@ feature -- Access
 
 feature -- Status report
 
-	has_trail_context: BOOLEAN
 	variable_trail_rule: BOOLEAN
-	variable_length: BOOLEAN
-	rule_length: INTEGER
-	head_count: INTEGER
-	trail_count: INTEGER
+			-- Does the rule being parsed have a variable
+			-- trailing context?
 
-	rule_id: INTEGER
-			-- Id of rule being parsed
+	variable_length: BOOLEAN
+			-- Does the regular expression being parsed
+			-- (either the head or trail of the rule)
+			-- have a variable length? (In other words,
+			-- may tokens recognized by that regexp have
+			-- different sizes?)
+
+	rule_length: INTEGER
+			-- Length of the tokens recognized by the
+			-- regexp being parsed when `variable_length'
+			-- is false; undefined otherwise
+
+	head_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the head part of the rule being parsed
+			-- when this rule has a triling context and
+			-- `variable_length' is false; 0 otherwise
+
+	trail_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the trail part of the rule being parsed
+			-- when this rule has a triling context and
+			-- `variable_length' is false; 0 otherwise
+
+	rule: LX_RULE
+			-- Rule being parsed
 
 	in_trail_context: BOOLEAN
 			-- Is a trailing context being parsed?
@@ -548,10 +562,11 @@ feature {NONE} -- Implementation
 			-- Process a rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
+			rule_not_void: rule /= Void
 		local
 			a_state: LX_NFA_STATE
 		do
-			a_nfa.set_accepting_id (rule_id)
+			a_nfa.set_accepted_rule (rule)
 			if variable_trail_rule then
 				variable_trail_context := True
 			end
@@ -565,10 +580,11 @@ feature {NONE} -- Implementation
 			-- Process a beginning-of-line rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
+			rule_not_void: rule /= Void
 		local
 			a_state: LX_NFA_STATE
 		do
-			a_nfa.set_accepting_id (rule_id)
+			a_nfa.set_accepted_rule (rule)
 			bol_needed := True
 			if variable_trail_rule then
 				variable_trail_context := True
@@ -719,11 +735,11 @@ feature {NONE} -- Implementation
 			in_trail_context := False
 			if variable_length and head_count = 0 then
 					-- Variable trailing context rule.
+				variable_trail_rule := True
 					-- Mark the first part of the rule as the accepting
 					-- "head" part of a trailing context rule.
-				a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
-				variable_trail_rule := True
-			else
+				a_regexp.set_accepted_rule (rule)
+			elseif not variable_length then
 				trail_count := rule_length
 			end
 			Result := a_regexp & a_trail
@@ -742,21 +758,8 @@ feature {NONE} -- Implementation
 			rule_length := 1
 			variable_length := False
 			in_trail_context := True
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-				Result := a_regexp
-			else
-				if variable_length then
-						-- Variable trailing context rule.
-						-- Mark the first part of the rule as the accepting
-						-- "head" part of a trailing context rule.
-					a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
-					variable_trail_rule := True
-				end
-				has_trail_context := True
-				Result := a_regexp & new_epsilon_nfa &
-						new_symbol_nfa (New_line_code)
-			end
+			Result := a_regexp & new_epsilon_nfa &
+					new_symbol_nfa (New_line_code)
 		ensure
 			regexp_set: Result = a_regexp
 		end
@@ -823,6 +826,12 @@ feature {NONE} -- Implementation
 					error_handler.full_and_variable_trail_context
 				end
 			end
+		end
+
+	report_error (a_message: STRING) is
+			-- Do nothing.
+			-- Syntax error are reported elsewhere.
+		do
 		end
 
 feature {NONE} -- Constants

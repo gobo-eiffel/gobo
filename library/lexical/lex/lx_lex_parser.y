@@ -18,6 +18,8 @@ inherit
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser_skeleton
+		redefine
+			report_error
 		end
 
 	LX_LEX_SCANNER
@@ -87,14 +89,13 @@ Action: -- /* empty */
 Init_rule: -- /* empty */
 		{
 				-- Initialize for a parse of one rule.
-			has_trail_context := False
 			variable_trail_rule := False
 			variable_length := False
 			trail_count := 0
 			head_count := 0
 			rule_length := 0
 			in_trail_context := False
-			rule_id := rules.count + 1
+			!! rule.make_default (rules.count + 1)
 		}
 	;
 
@@ -152,24 +153,21 @@ Rule: Regular_expression2 Regular_expression
 			$$ := append_trail_context_to_regexp
 				(dollar_nfa ($2), dollar_nfa ($1))
 		}
-	| Regular_expression2 Regular_expression '$'
-		{
-			error_handler.trailing_context_used_twice (filename, line_nb)
-		}
 	| Regular_expression '$'
 		{
 			$$ := append_eol_to_regexp (dollar_nfa ($1))
 		}
 	| Regular_expression
 		{
-			if has_trail_context then
-				if variable_length and head_count = 0 then
-						-- Both head and trail are variable-length.
-					variable_trail_rule := True
-				else
-					trail_count := rule_length
-				end
-			end
+			-- $$ := $1
+		}
+	| Regular_expression2 Regular_expression2
+		{
+			error_handler.trailing_context_used_twice (filename, line_nb)
+		}
+	| Regular_expression2 Regular_expression '$'
+		{
+			error_handler.trailing_context_used_twice (filename, line_nb)
 		}
 	;
 
@@ -185,11 +183,6 @@ Regular_expression2: Regular_expression '/'
 		{
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-			else
-				has_trail_context := True
-			end
 			if variable_length then
 					-- We hope the trailing context is fixed-length.
 				variable_length := False
@@ -431,15 +424,36 @@ feature -- Setting
 
 feature -- Status report
 
-	has_trail_context: BOOLEAN
 	variable_trail_rule: BOOLEAN
-	variable_length: BOOLEAN
-	rule_length: INTEGER
-	head_count: INTEGER
-	trail_count: INTEGER
+			-- Does the rule being parsed have a variable
+			-- trailing context?
 
-	rule_id: INTEGER
-			-- Id of rule being parsed
+	variable_length: BOOLEAN
+			-- Does the regular expression being parsed
+			-- (either the head or trail of the rule)
+			-- have a variable length? (In other words,
+			-- may tokens recognized by that regexp have
+			-- different sizes?)
+
+	rule_length: INTEGER
+			-- Length of the tokens recognized by the
+			-- regexp being parsed when `variable_length'
+			-- is false; undefined otherwise
+
+	head_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the head part of the rule being parsed
+			-- when this rule has a triling context and
+			-- `variable_length' is false; 0 otherwise
+
+	trail_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the trail part of the rule being parsed
+			-- when this rule has a triling context and
+			-- `variable_length' is false; 0 otherwise
+
+	rule: LX_RULE
+			-- Rule being parsed
 
 	in_trail_context: BOOLEAN
 			-- Is a trailing context being parsed?
@@ -671,39 +685,26 @@ feature {NONE} -- Implementation
 			-- Process a rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
+			rule_not_void: rule /= Void
 		local
-			a_rule: LX_RULE
 			a_state: LX_NFA_STATE
 		do
-			if rule_id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
+			a_nfa.set_accepted_rule (rule)
+			rule.set_pattern (a_nfa)
+			rules.force_last (rule)
+			pending_rules.force_last (rule)
+			rule.set_line_nb (rule_line_nb)
+			rule.set_trail_context (variable_trail_rule, head_count, trail_count)
+			if variable_trail_rule then
+				variable_trail_context := True
+			end
+			a_state := a_nfa.start_state
+			if start_condition_stack.is_empty then
+					-- Add `a_state' to all non-exclusive start condition,
+					-- including the default (INITIAL) start condition.
+				start_conditions.add_state_to_non_exclusive (a_state)
 			else
-				a_nfa.set_accepting_id (rule_id)
-				!! a_rule.make (rule_id, a_nfa, Dummy_action)
-				rules.force_last (a_rule)
-				pending_rules.force_last (a_rule)
-				a_rule.set_line_nb (rule_line_nb)
-				a_rule.set_trail_context
-					(variable_trail_rule, head_count, trail_count)
-				if variable_trail_rule then
-					variable_trail_context := True
-				end
-				a_state := a_nfa.start_state
-				if start_condition_stack.is_empty then
-						-- Add `a_state' to all non-exclusive start condition,
-						-- including the default (INITIAL) start condition.
-					start_conditions.add_state_to_non_exclusive (a_state)
-				else
-					start_condition_stack.add_state_to_all (a_state)
-				end
+				start_condition_stack.add_state_to_all (a_state)
 			end
 		end
 
@@ -711,40 +712,27 @@ feature {NONE} -- Implementation
 			-- Process a beginning-of-line rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
+			rule_not_void: rule /= Void
 		local
-			a_rule: LX_RULE
 			a_state: LX_NFA_STATE
 		do
-			if rule_id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
+			a_nfa.set_accepted_rule (rule)
+			rule.set_pattern (a_nfa)
+			rules.force_last (rule)
+			pending_rules.force_last (rule)
+			rule.set_line_nb (rule_line_nb)
+			rule.set_trail_context (variable_trail_rule, head_count, trail_count)
+			bol_needed := True
+			if variable_trail_rule then
+				variable_trail_context := True
+			end
+			a_state := a_nfa.start_state
+			if start_condition_stack.is_empty then
+					-- Add `a_state' to all non-exclusive start condition,
+					-- including the default (INITIAL) start condition.
+				start_conditions.add_bol_state_to_non_exclusive (a_state)
 			else
-				a_nfa.set_accepting_id (rule_id)
-				!! a_rule.make (rule_id, a_nfa, Dummy_action)
-				rules.force_last (a_rule)
-				pending_rules.force_last (a_rule)
-				a_rule.set_line_nb (rule_line_nb)
-				a_rule.set_trail_context
-					(variable_trail_rule, head_count, trail_count)
-				bol_needed := True
-				if variable_trail_rule then
-					variable_trail_context := True
-				end
-				a_state := a_nfa.start_state
-				if start_condition_stack.is_empty then
-						-- Add `a_state' to all non-exclusive start condition,
-						-- including the default (INITIAL) start condition.
-					start_conditions.add_bol_state_to_non_exclusive (a_state)
-				else
-					start_condition_stack.add_bol_state_to_all (a_state)
-				end
+				start_condition_stack.add_bol_state_to_all (a_state)
 			end
 		end
 
@@ -754,11 +742,9 @@ feature {NONE} -- Implementation
 			if start_condition_stack.is_empty then
 					-- This EOF applies to all start conditions
 					-- which don't already have EOF actions.
-				start_condition_stack.append_non_eof_start_conditions
-					(start_conditions)
+				start_condition_stack.append_non_eof_start_conditions (start_conditions)
 				if start_condition_stack.is_empty then
-					error_handler.all_start_conditions_have_EOF
-						(filename, line_nb)
+					error_handler.all_start_conditions_have_EOF (filename, line_nb)
 				else
 					build_eof_action (start_condition_stack)
 				end
@@ -790,10 +776,12 @@ feature {NONE} -- Implementation
 					error_handler.multiple_EOF_rules (sc, filename, line_nb)
 				else
 					a_start_condition.set_has_eof (True)
-					!! a_rule.make (a_start_condition.id, Eof_nfa, Dummy_action)
+					!! a_rule.make_default (a_start_condition.id)
+					a_rule.set_pattern (Eof_nfa)
 						-- Save `rule' as an end-of-file rule.
 					eof_rules.force_last (a_rule)
 					pending_rules.force_last (a_rule)
+					rule.set_line_nb (rule_line_nb)
 				end
 				i := i + 1
 			end
@@ -801,39 +789,28 @@ feature {NONE} -- Implementation
 
 	process_default_rule is
 			-- Process default rule.
+		require
+			rule_not_void: rule /= Void
 		local
-			a_rule: LX_RULE
 			a_character_class: LX_SYMBOL_CLASS
 			a_nfa: LX_NFA
 			a_state: LX_NFA_STATE
 		do
-			if rule_id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
+			!! a_character_class.make (0)
+			a_character_class.set_negated (True)
+			a_nfa := new_symbol_class_nfa (a_character_class)
+			a_nfa.set_accepted_rule (rule)
+			rule.set_pattern (a_nfa)
+			rules.force_last (rule)
+			pending_rules.force_last (rule)
+			rule.set_line_nb (0)
+			rule.set_trail_context (False, 0, 0)
+			a_state := a_nfa.start_state
+			start_conditions.add_state_to_all (a_state)
+			if no_default_rule then
+				set_action ("fatal_error (%"scanner jammed%")")
 			else
-				!! a_character_class.make (0)
-				a_character_class.set_negated (True)
-				a_nfa := new_symbol_class_nfa (a_character_class)
-				a_nfa.set_accepting_id (rule_id)
-				!! a_rule.make (rule_id, a_nfa, Dummy_action)
-				rules.force_last (a_rule)
-				pending_rules.force_last (a_rule)
-				a_rule.set_line_nb (0)
-				a_rule.set_trail_context (False, 0, 0)
-				a_state := a_nfa.start_state
-				start_conditions.add_state_to_all (a_state)
-				if no_default_rule then
-					set_action ("fatal_error (%"scanner jammed%")")
-				else
-					set_action ("echo")
-				end
+				set_action ("echo")
 			end
 		end
 
@@ -977,11 +954,11 @@ feature {NONE} -- Implementation
 			in_trail_context := False
 			if variable_length and head_count = 0 then
 					-- Variable trailing context rule.
+				variable_trail_rule := True
 					-- Mark the first part of the rule as the accepting
 					-- "head" part of a trailing context rule.
-				a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
-				variable_trail_rule := True
-			else
+				a_regexp.set_accepted_rule (rule)
+			elseif not variable_length then
 				trail_count := rule_length
 			end
 			Result := a_regexp & a_trail
@@ -1000,21 +977,8 @@ feature {NONE} -- Implementation
 			rule_length := 1
 			variable_length := False
 			in_trail_context := True
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-				Result := a_regexp
-			else
-				if variable_length then
-						-- Variable trailing context rule.
-						-- Mark the first part of the rule as the accepting
-						-- "head" part of a trailing context rule.
-					a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
-					variable_trail_rule := True
-				end
-				has_trail_context := True
-				Result := a_regexp & new_epsilon_nfa &
-						new_symbol_nfa (New_line_code)
-			end
+			Result := a_regexp & new_epsilon_nfa &
+					new_symbol_nfa (New_line_code)
 		ensure
 			regexp_set: Result = a_regexp
 		end
@@ -1100,6 +1064,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	report_error (a_message: STRING) is
+			-- Do nothing.
+			-- Syntax error are reported elsewhere.
+		do
+		end
+
 feature {NONE} -- Constants
 
 	Initial_max_pending_rules: INTEGER is 10
@@ -1107,14 +1077,6 @@ feature {NONE} -- Constants
 
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
-
-	Dummy_action: LX_ACTION is
-			-- Dummy action
-		once
-			!! Result.make ("fatal_error (%"Unknown action%")")
-		ensure
-			dummy_action_not_void: Result /= Void
-		end
 
 	Eof_nfa: LX_NFA is
 			-- End-of-file NFA
