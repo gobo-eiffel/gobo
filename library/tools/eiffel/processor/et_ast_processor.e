@@ -168,6 +168,13 @@ feature -- Processing
 		deferred
 		end
 
+	process_class (a_class: ET_CLASS) is
+			-- Process `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		deferred
+		end
+
 	process_class_name_comma (a_name: ET_CLASS_NAME_COMMA) is
 			-- Process `a_name'.
 		require
@@ -518,6 +525,13 @@ feature -- Processing
 		deferred
 		end
 
+	process_free_operator (an_operator: ET_FREE_OPERATOR) is
+			-- Process `an_operator'.
+		require
+			an_operator_not_void: an_operator /= Void
+		deferred
+		end
+
 	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
 			-- Process `a_type'.
 		require
@@ -532,10 +546,10 @@ feature -- Processing
 		deferred
 		end
 
-	process_free_operator (an_operator: ET_FREE_OPERATOR) is
-			-- Process `an_operator'.
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
 		require
-			an_operator_not_void: an_operator /= Void
+			a_constant_not_void: a_constant /= Void
 		deferred
 		end
 
