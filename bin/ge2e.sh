@@ -21,7 +21,8 @@ rm -f spec/se/*.e
 # if [ ! -d spec/tower ]; then mkdir spec/tower ; fi
 # rm -f spec/tower/*.e
 
-for file in `ls *.ge` ; do
+#for file in `ls *.ge` ; do
+for file in `find | grep \.ge$` ; do
 	echo $file
 	for compiler in ISE HACT VE SE ; do
 #	for compiler in ISE HACT VE SE TOWER ; do
