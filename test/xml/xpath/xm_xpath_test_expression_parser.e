@@ -38,7 +38,6 @@ feature -- Test
 			a_comparison: XM_XPATH_GENERAL_COMPARISON
 			sub_exprs, sub_exprs_2, sub_exprs_3, sub_exprs_4: DS_LIST [XM_XPATH_EXPRESSION]
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
-			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
 			a_base_uri: UT_URI
@@ -117,9 +116,7 @@ feature -- Test
 			a_last_function: XM_XPATH_LAST
 			sub_exprs, sub_exprs_2, sub_exprs_3, sub_exprs_4: DS_LIST [XM_XPATH_EXPRESSION]
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
-			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
 			a_base_uri: UT_URI
 		do
@@ -187,7 +184,6 @@ feature -- Test
 		local
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
 			a_string: STRING
-			an_expression: XM_XPATH_EXPRESSION
 			a_base_uri: UT_URI
 			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
 		do

@@ -27,6 +27,11 @@
   </chapterinfo>
   <title>Overview of the XSLT library</title>
   <para>
+    <warning>
+      The XPath and XSLT libraries are still under development. So please be aware that any interfaces
+      mentioned here are liable to change without notice. I <emphasis>shall</emphasis> try to keep
+      this documentation up to date.
+    </warning>
     This chapter gives Eiffel programmers an introduction to the Gobo Eiffel XSLT library, which
     implements the World Wide Web Consortium's 
     <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
@@ -48,11 +53,6 @@
 	  <para>
 	    The next step is to configure the processor, by creating an
 	    <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>
-	    The next step is <link linkend="stylesheet">Creating an executable Stylesheet</link>.
 	  </para>
 	</listitem>
 	<listitem>

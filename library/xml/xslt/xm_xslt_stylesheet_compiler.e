@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Compilation
 
-	prepare (a_source: XM_XSLT_URI_SOURCE) is
+	prepare (a_source: XM_XSLT_SOURCE) is
 			-- Prepare a stylesheet from a source document.
 		require
 			source_not_void: a_source /= Void
@@ -119,7 +119,7 @@ feature -- Compilation
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
 
-	load_principal_stylesheet_module (a_source: XM_XSLT_URI_SOURCE) is
+	load_principal_stylesheet_module (a_source: XM_XSLT_SOURCE) is
 			-- Create a tree-representation of principal stylesheet module
 		require
 			source_not_void: a_source /= Void
@@ -215,7 +215,7 @@ feature -- Creation
 		require
 			executable: executable /= Void
 		do
-			create Result.make (configuration, Current)
+			create Result.make (configuration, executable)
 		ensure
 			result_not_void: Result /= Void
 		end

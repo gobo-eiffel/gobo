@@ -44,18 +44,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XSLT_CONFIGURATION; a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER) is
+	make (a_configuration: XM_XSLT_CONFIGURATION; an_executable: XM_XSLT_EXECUTABLE) is
 			-- Establish invariant.
 		require
 			configuration_not_void: a_configuration /= Void
-			stylesheet_compiler_not_void: a_stylesheet_compiler /= Void
-			executable_compiled: a_stylesheet_compiler.executable /= Void
+			executable_not_void: an_executable /= Void
 		do
 			configuration := a_configuration
 			output_resolver := a_configuration.output_resolver
 			error_listener := configuration.error_listener
-			stylesheet_compiler := a_stylesheet_compiler
-			executable := stylesheet_compiler.executable
+			executable := an_executable
 			rule_manager := executable.rule_manager
 			decimal_format_manager := executable.decimal_format_manager
 			create document_pool.make
@@ -64,9 +62,10 @@ feature {NONE} -- Initialization
 			create parser_factory
 			create user_data_table.make_with_equality_testers (10, Void, string_equality_tester)
 			create current_date_time.make_from_epoch (0)
+			create transformer_factory.make (configuration)
 		ensure
 			configuration_set: configuration = a_configuration
-			stylesheet_compiler_set: stylesheet_compiler = a_stylesheet_compiler
+			executable_set: executable = an_executable
 		end
 			
 feature -- Access
@@ -76,6 +75,9 @@ feature -- Access
 
 	configuration: XM_XSLT_CONFIGURATION
 			-- User-selectable configuration parameters
+
+	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
+			-- Transformer factory
 
 	current_date_time: DT_DATE_TIME
 
@@ -122,9 +124,6 @@ feature -- Access
 
 	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
-
-	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			-- Stylesheet compiler
 
 	rule_manager: XM_XSLT_RULE_MANAGER
 			-- Manager of template-matching rules
@@ -187,7 +186,7 @@ feature -- Access
 				Result := user_data_table.item (a_key)
 			end
 		end
-
+	
 feature -- Status report
 
 	is_tracing: BOOLEAN is
@@ -469,7 +468,7 @@ feature -- Element change
 			end
 			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
 			create an_expression_factory
-			an_expression_factory.make_expression (a_parameter_value, executable.static_context, 1, 0)
+			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0)
 			if an_expression_factory.is_parse_error then
 				report_recoverable_error (an_expression_factory.parsed_error_value, Void)
 			else
@@ -589,6 +588,37 @@ feature -- Element change
 			current_template := Void
 			current_group_iterator := Void
 			current_regexp_iterator := Void
+		end
+	
+	resolve_next_destination (a_system_id, a_base_uri: STRING; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+			-- Resolve destination for transforming `a_result' via stylesheet `a_system_id'
+		require
+			system_id_not_void: a_system_id /= Void
+			base_uri_not_void: a_base_uri /= Void
+			initial_result_not_void: a_result /= Void
+			no_previous_error: not is_error
+		local
+			an_absolute_uri, a_uri: UT_URI
+			a_uri_source: XM_XSLT_URI_SOURCE
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_transformer_receiver: XM_XSLT_TRANSFORMER_RECEIVER
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			next_resolved_destination := Void
+			create a_uri.make (a_base_uri)
+			create an_absolute_uri.make_resolve (a_uri, a_system_id)
+			create a_uri_source.make (an_absolute_uri.full_reference)
+			transformer_factory.create_new_transformer (a_uri_source)
+			if transformer_factory.was_error then
+				create an_error.make_from_string (transformer_factory.last_error_message, Gexslt_eiffel_type_uri, "CREATE_TRANSFORMER", Dynamic_error)
+				report_fatal_error (an_error, Void)
+			else
+				a_transformer := transformer_factory.created_transformer
+				create a_transformer_receiver.make (a_transformer, principal_result_uri, a_result)
+				create next_resolved_destination.make_receiver (a_transformer_receiver)
+			end
+		ensure
+			error_or_destination_not_void: not is_error implies next_resolved_destination /= Void
 		end
 
 feature -- Transformation
@@ -839,7 +869,7 @@ feature -- Transformation
 			end
 		end
 
-feature {XM_XSLT_TRANSFORMER} -- Transformation internals
+feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation internals
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Transform document supplied as in-memory tree.
@@ -850,35 +880,47 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 			no_error_yet: not is_error
 		local
 			properties: XM_XSLT_OUTPUT_PROPERTIES
+			a_next_uri: STRING
+			a_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
 			initialize_transformer (a_start_node)
 			if not is_error then
 				properties := executable.default_output_properties
-				
+				a_transformation_result := a_result
 				-- TODO: overlay properties defined by API
-				-- TODO: stylesheet chaining
 				
-				change_output_destination (properties, a_result, True, Validation_preserve, Void)
-				
-				-- Process the source document using the handlers that have been set up.
-				
-				if initial_template = Void then
-					perform_transformation (a_start_node)
-				else
-					initial_template.process (Current)
+				-- Stylesheet chaining
+
+				a_next_uri := properties.next_in_chain
+				if a_next_uri /= Void then
+					resolve_next_destination (a_next_uri, properties.next_in_chain_base_uri, a_result)
+					if not is_error then a_transformation_result := next_resolved_destination end
 				end
-				
-				if is_tracing then
-					trace_listener.stop_tracing
+				if not is_error then
+					change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
+					
+					-- Process the source document using the handlers that have been set up.
+					
+					if initial_template = Void then
+						perform_transformation (a_start_node)
+					else
+						initial_template.process (Current)
+					end
+					
+					if is_tracing then
+						trace_listener.stop_tracing
+					end
+					
+					reset_output_destination (Void)
+					std.output.flush
 				end
-				
-				reset_output_destination (Void)
-				std.output.flush
 			end
 		end
-		
+
+feature {XM_XSLT_TRANSFORMER} -- Transformation internals
+
 	perform_transformation (a_start_node: XM_XPATH_NODE) is
 			--  Perform transformation.
 		require
@@ -932,6 +974,28 @@ feature -- Implementation
 
 	xpath_parameters: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER]
 			-- XPath-valued global parameters
+
+	next_resolved_destination: XM_XSLT_TRANSFORMATION_RESULT
+			-- Transformation result for next transformation in chain
+
+	cached_static_context: XM_XSLT_EXPRESSION_CONTEXT
+			-- Cached static context from `executable'
+
+	static_context: XM_XSLT_EXPRESSION_CONTEXT is
+			-- Static context from `executable'		
+		do
+
+			-- The purpose of the clone is to keep compiled stylesheets read-only,
+			--  so they can be safely cached
+
+			if cached_static_context = Void then
+				cached_static_context := clone (executable.static_context)
+			end
+			Result := cached_static_context
+		ensure
+			result_not_void: Result /= Void
+			cached: cached_static_context /= Void
+		end
 
 	perform_default_action (a_node: XM_XPATH_NODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
 			-- Perform default action for `a_node'.
@@ -1154,7 +1218,6 @@ invariant
 
 	parser_factory_not_void: parser_factory /= Void
 	configuration_not_void: configuration /= Void
-	stylesheet_compiler_not_void: stylesheet_compiler /= Void
 	document_pool_not_void: document_pool /= Void
 	executable_not_void: executable /= Void
 	rule_manager_not_void: rule_manager /= Void
@@ -1162,7 +1225,7 @@ invariant
 	positive_temporary_destination_depth: temporary_destination_depth >= 0
 	error_listener_not_void: error_listener /= Void
 	user_data_table_not_void: user_data_table /= Void
-	reporting_policy: -- TODO
+	transformer_factory_not_void: transformer_factory /= Void
 
 end
 	

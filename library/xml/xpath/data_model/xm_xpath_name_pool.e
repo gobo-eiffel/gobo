@@ -1098,16 +1098,24 @@ feature -- Element change
 		do
 			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 				a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
-				a_uri_code := type_factory.standard_uri_code (a_fingerprint)
-				a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
-				if a_prefix_index < 0 then
-					allocate_prefix (a_uri_code, an_xml_prefix)
+				if type_factory.is_built_in_fingerprint (a_fingerprint) then
+					a_uri_code := type_factory.standard_uri_code (a_fingerprint)
 					a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
+					if a_prefix_index < 0 then
+						allocate_prefix (a_uri_code, an_xml_prefix)
+						a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
+					end
+					check
+						prefix_allocated: a_prefix_index >= 0
+					end
+					last_name_code :=  (a_prefix_index * bits_20) + a_fingerprint
+				else
+					-- BUG: standard names are pre-allocated, so we have a problem, as
+					-- we can't fulfill the pre-condition.
+					-- This will happen, for instance if xsl prefix were bound by
+					-- mistake to the gexslt namespace, then xsl:transform will fail
+					-- What to do about this?
 				end
-				check
-					prefix_allocated: a_prefix_index >= 0
-				end
-				last_name_code :=  (a_prefix_index * bits_20) + a_fingerprint
 			else
 				if is_code_for_uri_allocated (a_uri) then
 					a_uri_code := code_for_uri (a_uri)

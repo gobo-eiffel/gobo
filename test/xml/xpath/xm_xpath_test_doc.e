@@ -55,7 +55,6 @@ feature
 			-- Test error fn:doc()
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii

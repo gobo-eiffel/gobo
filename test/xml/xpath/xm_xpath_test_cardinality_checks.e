@@ -55,8 +55,6 @@ feature -- Tests
 			-- Test fn:zero-or-one (('a', 'b')) is an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -91,8 +89,6 @@ feature -- Tests
 			-- Test fn:exactly-one (('a', 'b')) is an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -127,8 +123,6 @@ feature -- Tests
 			-- Test fn:one-or-more (()) is an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii

@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Objects that represent an XML document by it's URI"
+		"Objects that represent an XML document as an Eiffel STRING"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_URI_SOURCE
+class	XM_XSLT_STRING_SOURCE
 
 inherit
 
@@ -20,16 +20,21 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+		-- This class is NOT intended to be used for system-ids of the string: protocol
+		--  (for that, use an XM_XSLT_URI_SOURCE). Rather it is designed for creating
+		--  composite stylesheets (see XM_XSLT_TRANSFORMER_FACTORY)
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_system_id: STRING) is
+	make (a_system_id, a_source_text: STRING) is
 			-- Establish invariant.
 		require
 			system_id_not_void: a_system_id /= Void
+			source_text_not_void: a_source_text /= Void
 		local
 			a_uri: UT_URI
 		do
@@ -39,8 +44,10 @@ feature {NONE} -- Initialization
 			if a_uri.has_fragment then
 				fragment_identifier := a_uri.fragment_item.decoded_utf8
 			end
+			source_text := a_source_text
 		ensure
 			system_id_set: fragment_identifier = Void implies STRING_.same_string (system_id, a_system_id)
+			source_text_set: source_text = a_source_text
 		end
 
 feature -- Access
@@ -50,7 +57,7 @@ feature -- Access
 
 	fragment_identifier: STRING
 			-- Possible decoded fragment identifier
-
+	
 	default_media_type: UT_MEDIA_TYPE
 			-- Default media type for stylesheet processing
 
@@ -60,6 +67,8 @@ feature -- Events
 			-- Generate and send  events to `a_receiver'
 		local
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
+			a_resolver: XM_URI_EXTERNAL_RESOLVER
+			a_uri: UT_URI
 		do
 			shared_catalog_manager.reset_pi_catalogs
 			error := a_parser.new_stop_on_error_filter
@@ -80,50 +89,12 @@ feature -- Events
 			a_receiver.set_document_locator (a_locator)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (xpointer_filter)
-			a_parser.parse_from_system (system_id)
-		end
-
-	send_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
-			-- Generate and send  events to `a_receiver'
-		require
-			stream_is_open_read: a_stream /= Void and then a_stream.is_open_read
-			system_id_is_absolute: a_system_id /= Void and then a_system_id.is_absolute and then STRING_.same_string (system_id, a_system_id.full_uri)
-			parser_uses_uri_resolver: a_parser /= Void -- and then parser with an XM_URI_EXTERNAL_RESOLVER for it's entity resolver
-			receiver_not_void: a_receiver /= Void
-		local
-			an_entity_resolver: XM_URI_EXTERNAL_RESOLVER
-			a_locator: XM_XPATH_RESOLVER_LOCATOR
-			a_uri: UT_URI
-		do
-			shared_catalog_manager.reset_pi_catalogs
-			error := a_parser.new_stop_on_error_filter
-			create content_emitter.make (a_receiver, error)
-			create namespace_resolver.set_next (content_emitter)
-			namespace_resolver.set_forward_xmlns (True)
-			create attributes.set_next (namespace_resolver)
-			create content.set_next (attributes)
-			create oasis_xml_catalog_filter.set_next (content, content_emitter)
-			create xpointer_filter.make (" ", default_media_type, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
-			if fragment_identifier = Void or else not is_stylesheet then
-				xpointer_filter.set_no_filtering
-			else
-				xpointer_filter.set_xpointer (fragment_identifier)
+			a_resolver ?= a_parser.entity_resolver
+			if a_resolver /= Void then
+				create a_uri.make (system_id)
+				a_resolver.push_uri (a_uri)
 			end
-			create start.set_next (xpointer_filter)
-			create a_locator.make (a_parser)
-			a_receiver.set_document_locator (a_locator)
-			a_parser.set_callbacks (start)
-			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
-			an_entity_resolver ?= a_parser.entity_resolver
-			check
-				uri_entity_resolver: an_entity_resolver /= Void
-				-- from the pre-condition comment
-			end
-			create a_uri.make (system_id)
-			an_entity_resolver.push_uri (a_uri)
-			a_parser.parse_from_stream (a_stream)
-			a_parser.entity_resolver.resolve_finish
-			a_stream.close
+			a_parser.parse_from_string (source_text)
 		end
 
 feature -- Element change
@@ -135,6 +106,9 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	source_text: STRING
+			-- Text of XML document
 
 	xpointer_filter: XM_XPOINTER_EVENT_FILTER
 			-- Filter for fragment identifiers
@@ -159,10 +133,11 @@ feature {NONE} -- Implementation
 		
 	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
-
+	
 invariant
 
 	system_id_not_void: system_id /= Void
+	source_text_not_void: source_text /= Void
 	default_media_type_not_void: default_media_type /= Void
 
 end

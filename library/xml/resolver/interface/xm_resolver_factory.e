@@ -70,7 +70,7 @@ feature -- Access
 		end
 
 	new_resolver: XM_URI_EXTERNAL_RESOLVER is
-			-- Resolver for all schemes implemented within Gobo
+			-- Resolver for all schemes implemented within Gobo (other than string:)
 		local
 			a_file: XM_FILE_URI_RESOLVER
 			a_data: XM_DATA_URI_RESOLVER
@@ -87,7 +87,7 @@ feature -- Access
 		end
 		
 	new_resolver_with_uri (a_uri: UT_URI): XM_URI_EXTERNAL_RESOLVER is
-			-- Resolver for all schemes implemented within Gobo, with default URI
+			-- Resolver for all schemes implemented within Gobo (other than string:), with default URI
 		require
 			a_uri_not_void: a_uri /= Void
 		local
@@ -106,7 +106,7 @@ feature -- Access
 		end
 	
 	new_resolver_current_directory: XM_URI_EXTERNAL_RESOLVER is
-			--  Resolver for all schemes implemented within Gobo, with default set
+			--  Resolver for all schemes implemented within Gobo (other than string:), with default set
 			-- to the current directory
 		local
 			a_cwd: KI_PATHNAME

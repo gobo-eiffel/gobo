@@ -87,7 +87,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:NOTATION.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -102,7 +101,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:float.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -117,7 +115,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:double, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -149,7 +146,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:decimal, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -183,7 +179,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:integer, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -217,7 +212,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:boolean, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -249,7 +243,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:QName, with invalid value.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii

@@ -57,7 +57,6 @@ feature
 			a_tree_element: XM_XPATH_TREE_ELEMENT
 			an_element: XM_XPATH_TREE_ELEMENT
 			a_pi: XM_XPATH_PROCESSING_INSTRUCTION
-			a_node: XM_XPATH_NODE
 			a_base_uri: STRING
 			a_fingerprint, counter: INTEGER
 			tiny_descendants: XM_XPATH_TINY_DESCENDANT_ENUMERATION

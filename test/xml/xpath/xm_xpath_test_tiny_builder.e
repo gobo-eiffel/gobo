@@ -39,7 +39,6 @@ feature
 		local
 			document: XM_XPATH_TINY_DOCUMENT
 			document_element, an_element: XM_XPATH_TINY_ELEMENT
-			a_node: XM_XPATH_NODE
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
@@ -104,7 +103,6 @@ feature
 			preceding: XM_XPATH_TINY_PRECEDING_ENUMERATION
 			element_test, attribute_test: XM_XPATH_NAME_TEST
 			any_pi_test, any_element_test: XM_XPATH_NODE_KIND_TEST
-			found: BOOLEAN
 		do
 			conformance.set_basic_xslt_processor
 			system_id := "./data/books.xml"

@@ -142,6 +142,12 @@ feature -- Access
 	indent_spaces: INTEGER
 			-- Number of spaces to be used for indentation when `indent' is `True' (a gexslt extension)
 
+	next_in_chain: STRING
+			-- URI of next stylesheet to be applied to output
+
+	next_in_chain_base_uri: STRING
+			-- Base URI of xsl:output element
+
 	used_character_maps: DS_ARRAYED_LIST [STRING]
 			-- Expanded QNames of character maps that are to be used
 
@@ -405,6 +411,29 @@ feature -- Element change
 		ensure
 			import_precedence_set: precedence_property_map.has (Gexslt_indent_spaces_attribute) and then precedence_property_map.item (Gexslt_indent_spaces_attribute) = an_import_precedence
 			indent_spaces_set: indent_spaces = a_number
+		end
+
+	set_next_in_chain (a_uri: STRING; an_import_precedence: INTEGER) is
+			-- Set `next_in_chain'
+		require
+			next_in_chain_not_void: a_uri /= Void
+			higher_precedence: is_higher_precedence (an_import_precedence, Gexslt_next_in_chain_attribute)
+		do
+			precedence_property_map.force (an_import_precedence, Gexslt_next_in_chain_attribute)
+			next_in_chain := a_uri
+		ensure
+			import_precedence_set: precedence_property_map.has (Gexslt_next_in_chain_attribute) and then precedence_property_map.item (Gexslt_next_in_chain_attribute) = an_import_precedence
+			next_in_chain_set: 	next_in_chain = a_uri
+		end
+
+	set_next_in_chain_base_uri (a_uri: STRING) is
+			-- Set `next_in_chain_base_uri'
+		require
+			next_in_chain_base_uri_not_void: a_uri /= Void
+		do
+			next_in_chain_base_uri := a_uri
+		ensure
+			next_in_chain_set: 	next_in_chain_base_uri = a_uri
 		end
 
 	set_encoding (an_encoding: STRING; an_import_precedence: INTEGER) is
@@ -890,6 +919,8 @@ feature {NONE} -- Implementation
 				if is_valid_character_representation (a_value) then
 					set_character_representation (a_value, 1000000)
 				end
+			elseif STRING_.same_string (a_local_name, Gexslt_next_in_chain_name) then
+				set_next_in_chain (a_value, 1000000)
 			elseif STRING_.same_string (a_local_name, Gexslt_indent_spaces_name) then
 				if a_value.is_integer and then a_value.to_integer > 0 then
 					set_indent_spaces (a_value.to_integer, 1000000)

@@ -70,7 +70,7 @@ feature -- Access
 feature -- Element change
 
 	add (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING) is
-			-- Add document to `Current'.
+			-- Add `a_document' to `Current'.
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			not_mapped: not is_mapped (a_uri)
@@ -80,6 +80,22 @@ feature -- Element change
 			media_type_name_map.force (a_media_type, a_uri)
 		ensure
 			uri_mapped: is_mapped (a_uri)
+		end
+
+feature {XM_XPATH_PROXY_RECEIVER} -- Removal
+
+	remove (a_uri: STRING) is
+			-- Remove `a_document' from `Current'.
+			-- CAUTION: This breaks the guarentee of Unique URI to document mapping.
+			--          Hence the export restriction (designed for XM_XSLT_TRANSFORMER_RECEIVER}).		
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+			mapped: is_mapped (a_uri)
+		do
+			document_name_map.remove (a_uri)
+			media_type_name_map.remove (a_uri)
+		ensure
+			uri_not_mapped: not is_mapped (a_uri)
 		end
 
 feature {NONE} -- Implementation

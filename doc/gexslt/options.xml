@@ -34,9 +34,8 @@
       <listitem><para>&program_name; --version</para></listitem>
       <listitem><para>&program_name; [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
       <listitem><para>&program_name; stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
-      <listitem><para>&program_name; --use-pi [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; --use-pi [(--pi-options)*] [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
     </itemizedlist>
-    <warning>The last form is not yet supported.</warning>
     </para>
   </section>
   <section>
@@ -130,15 +129,45 @@
 	  <listitem>
 	    <para>
 	      Interpret the first file or URI argument as a source document, rather than a stylesheet.
-	      Search for an xml-stylesheet processing instruction within that source document, and use that to find
+	      Search for one or more xml-stylesheet processing instructions within that source document, and use them to find
 	      the stylesheet.
-	      <warning>Use of the xml-stylesheet processing instruction is not yet implemented</warning>
 	    </para>
 	    <para>
 	      &program_name_cased; has to parse the source document twice. Once to find the processing instructiuon, and again, 
 	      after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
 	      Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
 	      this does mean that a stream that can only be read once may not be used with this option.
+	    </para>
+	    <para>
+	      There are additional options that further control the interpretation of the xml-stylesheet processing
+	      instructions:
+	      <variablelist>
+		<varlistentry>
+		  <term>--medium={medium-name}</term>
+		  <listitem>
+		    <para>
+		      The target medium. This must be a single word, consisting solely of the characters [a-z][A-z][0-9][-].
+		      Only processing instructions that contain this medium name (or the special name "all") within
+		      their media pseudo-attribute will be selected. The default is "screen", both for this parameter and the processing instruction
+		      media pseudo-attribute. Case is significant. The word "all" is not permitted.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>--title={preference}</term>
+		  <listitem>
+		    <para>
+		      The preferred style. This may be any text string (leading and trailing double quotes will be removed, so you may
+		      include spaces).
+		      Only processing instructions that have this style name for
+		      their title pseudo-attribute will be selected, along with any persistent stylesheets (those that
+		      do not specify the title pseudo-attribute). If this parameter is omitted, then the first preferred
+		      stylesheet for the medium (that is, one that supplies the title pseudo-attribute and does not supply
+		      the alternate pseudo-attribute with a value of "yes") will also be selected. Case is significant.
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
 	    </para>
 	  </listitem>
 	</varlistentry>

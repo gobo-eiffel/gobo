@@ -211,7 +211,8 @@ feature -- Access
 	Byte_order_mark_type_code: INTEGER is 518
 	Gexslt_collation_type_code: INTEGER is 519
 	Memo_function_type_code: INTEGER is 520
-	
+	Next_in_chain_type_code: INTEGER is 521
+
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 128 + 0..n)
 
 	Xslt_analyze_string_type_code: INTEGER is 640
@@ -533,6 +534,12 @@ feature -- Access
 	Gexslt_character_representation_attribute: STRING is
 		once
 				Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_character_representation_name
+		end
+
+	Gexslt_next_in_chain_name: STRING is "next-in-chain"
+	Gexslt_next_in_chain_attribute: STRING is
+		once
+				Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_next_in_chain_name
 		end
 
 	Gexslt_memo_function_attribute: STRING is

@@ -116,6 +116,14 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<varlistentry>
+	  <term><exmlsyntax>next-in-chain</exmlsyntax></term>
+	  <listitem>
+	    <para>
+	      TODO
+	    </para>
+	  </listitem>
+	</varlistentry>
       </variablelist>
     </para>
   </section>

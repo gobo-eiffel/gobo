@@ -44,11 +44,9 @@ feature -- Test
 			a_filter: XM_XPATH_FILTER_EXPRESSION
 			a_root: XM_XPATH_ROOT_EXPRESSION
 			an_is_last: XM_XPATH_IS_LAST_EXPRESSION
-			sub_exprs, sub_exprs_2, sub_exprs_3, sub_exprs_4: DS_LIST [XM_XPATH_EXPRESSION]
+			sub_exprs, sub_exprs_2, sub_exprs_3: DS_LIST [XM_XPATH_EXPRESSION]
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
-			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_base_uri: UT_URI
 			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
 		do

@@ -215,9 +215,6 @@ feature -- Meta
 				std.error.put_string (a_content)
 				std.error.put_new_line
 			end
-			if before_dtd and STRING_.same_string (a_name, "xml-stylesheet") then
-				-- TODO `a_content' names the stylesheet to use in the href pseudo-attribute
-			end
 			receiver.notify_processing_instruction (a_name, a_content, 0)
 			Precursor (a_name, a_content)
 		end

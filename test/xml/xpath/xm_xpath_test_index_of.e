@@ -93,8 +93,6 @@ feature -- Tests
 			-- Test fn:index-of (("a", 7, "and", "a", "pastime"), "a") returns an error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -109,8 +107,6 @@ feature -- Tests
 			-- Test fn:index-of with a node is error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii

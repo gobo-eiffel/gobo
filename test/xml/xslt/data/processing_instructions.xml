@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml-stylesheet href="#style1" type = "application/xslt+xml" media="all" charset="UTF-8" ?>
+<?xml-stylesheet href="#style2" alternate =  "no" type = "applica&#116;ion/xslt+xml" media="screen" charset="UTF-8" ?>
+<?xml-stylesheet href="#rubbish" type = "text/ignored" media="screen" charset="UTF-8" ?>
+<?xml-stylesheet href="#style3s" type = "application/xslt+xml" media="screen" charset="UTF-8" title="Preferred" ?>
+<?xml-stylesheet href="#style3p" alternate="no" type = "application/xslt+xml" media="print" charset="UTF-8" title="Preferred" ?>
+<?xml-stylesheet href="#style4s" alternate="yes" type = "application/xslt+xml" media="screen" charset="UTF-8" title="Alternate" ?>
+<?xml-stylesheet href="#style4p" alternate="yes" type = "application/xslt+xml" media="print" charset="UTF-8" title="Alternate" ?>
+<?xml-stylesheet href="#style5" alternate="yes" type = "application/xslt+xml" media="all" charset="UTF-8" title="Weird &gt; preferred" ?>
+<?xml-stylesheet href="#style-screen" type = "application/xslt+xml" charset="UTF-8" ?>
+<?xml-stylesheet href="#style-print" type = "text/xsl" media="print" charset="UTF-8" ?>
+<!-- Yes, I KNOW the <p> elements should have the xhtml namespace on them! -->
+<data>
+  <a/>
+  <stylesheets>
+    <xsl:transform xml:id="style1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="stylesheets" />
+    </xsl:transform>
+    <xsl:transform xml:id="style2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="/" >
+	<p>This will not be seen</p>
+      </xsl:template>
+      <xsl:template match="xsl:transform" />
+    </xsl:transform>
+    <xsl:transform xml:id="style3s" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="a" >
+	<p>Preferred stylesheet for screen</p>
+      </xsl:template>
+      <xsl:template match="xsl:transform" />
+    </xsl:transform>
+    <xsl:transform xml:id="style3p" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="a" >
+	<p>Preferred stylesheet for print</p>
+      </xsl:template>
+      <xsl:template match="xsl:transform" />
+    </xsl:transform>
+    <xsl:transform xml:id="style4s" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="a" >
+	<p>Alternate stylesheet for screen</p>
+      </xsl:template>
+      <xsl:template match="xsl:transform" />
+    </xsl:transform>
+    <xsl:transform xml:id="style4p" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="a" >
+	<p>Alternate stylesheet for print</p>
+      </xsl:template>
+      <xsl:template match="xsl:transform" />
+    </xsl:transform>
+    <xsl:transform xml:id="style5" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+      <xsl:template match="a" >
+	<p>Weird alternative</p>
+      </xsl:template>
+    </xsl:transform>
+    <xsl:transform xml:id="style-screen" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xhtml="http://www.w3.org/1999/xhtml" version="2.0">
+      <xsl:template match="/" >
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	  <body>
+	    <h1>Screen version</h1>
+	    <div>
+	      <xsl:apply-templates />
+	    </div>
+	  </body>
+	</html>
+      </xsl:template>
+    </xsl:transform>
+    <xsl:transform xml:id="style-print" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xhtml="http://www.w3.org/1999/xhtml" version="2.0">
+      <xsl:template match="/" >
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	  <body>
+	    <h1>Print version (uses text/xsl)</h1>
+	    <div>
+	      <xsl:apply-templates />
+	    </div>
+	  </body>
+	</html>
+	</xsl:template>
+    </xsl:transform>
+  </stylesheets>
+</data>

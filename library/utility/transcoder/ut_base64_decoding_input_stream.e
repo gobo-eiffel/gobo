@@ -23,6 +23,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 creation
 
 	make
@@ -253,15 +255,15 @@ feature {NONE} -- Implementation
 			-- Bit-shift `codes' into 3 characters
 			if i = 5 and then triplet_position <= 3 then
 				a_code := (codes.item (1) * shift_2_bits) + (codes.item (2) // shift_4_bits)
-				decoded_triplet.put (a_code.to_character, triplet_position)
+				decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position)
 				if triplet_position < 3 then
 					a_code := (codes.item (2) * shift_4_bits) + (codes.item (3) // shift_2_bits)
 					a_code := a_code \\ 256
-					decoded_triplet.put (a_code.to_character, triplet_position + 1)
+					decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position + 1)
 					if triplet_position = 1 then
 						a_code := (codes.item (3) * shift_6_bits) + (codes.item (4))
 						a_code := a_code \\ 256
-						decoded_triplet.put (a_code.to_character, 3)
+						decoded_triplet.put (INTEGER_.to_character (a_code), 3)
 					end
 				end
 			else

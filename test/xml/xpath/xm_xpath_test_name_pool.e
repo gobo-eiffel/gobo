@@ -118,7 +118,7 @@ feature -- Test
 	test_miscellaneous is
 		local
 			suggestion: STRING
-			name_code, fingerprint, fingerprint2: INTEGER
+			fingerprint, fingerprint2: INTEGER
 		do
 			suggestion := shared_name_pool.suggested_prefix_for_uri (Xslt_uri)
 			assert ("Suggestion", STRING_.same_string (suggestion, "xsl"))

@@ -57,43 +57,37 @@ feature -- Access
 				a_uri_resolver := a_configuration.uri_resolver
 				create a_base_uri.make (base_uri)
 				create a_uri.make_resolve (a_base_uri, href)
-				if a_uri.has_fragment then
-					-- TODO add an ID filter to support fragment identifiers
-					create an_error.make_from_string ("Fragment identifier not supported", Gexslt_eiffel_type_uri, "NO_FRAGMENT_ID", Static_error)
+				a_uri_resolver.resolve_uri (a_uri.full_reference)
+				if a_uri_resolver.has_uri_reference_error then
+					create an_error.make_from_string (a_uri_resolver.last_uri_reference_error, "", "XT0165", Static_error)
 					report_compile_error (an_error)
 				else
-					a_uri_resolver.resolve_uri (a_uri.full_reference)
-					if a_uri_resolver.has_uri_reference_error then
-						create an_error.make_from_string (a_uri_resolver.last_uri_reference_error, "", "XT0165", Static_error)
+					create a_source.make (a_uri_resolver.last_system_id.full_reference)
+					create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
+					a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
+					if a_stylesheet_compiler.load_stylesheet_module_failed then
+						create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XT0165", Static_error)
 						report_compile_error (an_error)
 					else
-						create a_source.make (a_uri_resolver.last_system_id.full_reference)
-						create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
-						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
-						if a_stylesheet_compiler.load_stylesheet_module_failed then
-							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XT0165", Static_error)
+						included_document := a_stylesheet_compiler.last_loaded_module
+						-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
+						Result ?= included_document.document_element
+						if Result = Void then
+							a_message := STRING_.concat ("Included document ", href)
+							a_message := STRING_.appended_string (a_message, " is not a stylesheet")
+							create an_error.make_from_string (a_message, "", "XT0165", Static_error)
 							report_compile_error (an_error)
 						else
-							included_document := a_stylesheet_compiler.last_loaded_module
-							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
-							Result ?= included_document.document_element
-							if Result = Void then
-								a_message := STRING_.concat ("Included document ", href)
-								a_message := STRING_.appended_string (a_message, " is not a stylesheet")
-								create an_error.make_from_string (a_message, "", "XT0165", Static_error)
-								report_compile_error (an_error)
-							else
-								if Result.validation_error /= Void then
-									if reporting_circumstances = Report_always then
-										Result.report_compile_error (Result.validation_error)
-									elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
-										Result.report_compile_error (Result.validation_error)
-									end
+							if Result.validation_error /= Void then
+								if reporting_circumstances = Report_always then
+									Result.report_compile_error (Result.validation_error)
+								elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
+									Result.report_compile_error (Result.validation_error)
 								end
-								Result.set_import_precedence (a_precedence)
-								Result.set_importer (an_importer)
-								Result.splice_includes
 							end
+							Result.set_import_precedence (a_precedence)
+							Result.set_importer (an_importer)
+							Result.splice_includes
 						end
 					end
 				end

@@ -94,13 +94,7 @@ feature -- Execution
 			end
 			if uris.count = 1 then
 				if use_processing_instruction then
-					-- TODO
-					check
-						False
-						-- This can't happen at the moment.
-					end
-					report_usage_message
-					Exceptions.die (1)
+						-- This is dealt with in `process_uris'.
 				else
 					if initial_template_name = Void then
 						report_general_message ("An initial template must be named when the source document is omitted")
@@ -436,6 +430,12 @@ feature {NONE} -- Implementation
 	suppress_network_protocols: BOOLEAN
 			-- Suppress URI schemes that access the network.
 
+	medium: STRING
+			-- Target medium (for use with  xml-stylesheet PIs)
+
+	title: STRING
+			-- Target style (for use with  xml-stylesheet PIs)
+	
 	process_option (an_option: STRING) is
 			-- Process `an_option'.
 		require
@@ -455,8 +455,12 @@ feature {NONE} -- Implementation
 					report_usage_message
 					Exceptions.die (1)
 				end
-			elseif an_option.substring_index ("use-pi", 1) = 1 then
-				report_not_yet_implemented ("Xml-stylesheet processing instruction")					
+			elseif an_option.is_equal ("use-pi") then
+				use_processing_instruction := True
+			elseif an_option.substring_index ("medium=", 1) = 1 and then an_option.count > 7 then
+				medium := an_option.substring (8, an_option.count)
+			elseif an_option.substring_index ("title=", 1) = 1 and then an_option.count > 6 then
+				title := an_option.substring (7, an_option.count)
 			elseif an_option.substring_index ("template=", 1) = 1 and then an_option.count > 9 then
 				initial_template_name := an_option.substring (10, an_option.count)
 			elseif an_option.substring_index ("mode=", 1) = 1 and then an_option.count > 5 then
@@ -607,11 +611,11 @@ feature {NONE} -- Implementation
 		require
 			uri_list_valid: uris /= Void
 				and then uris.count = 2 or else  uris.count = 1
-			xml_stylesheet_pi_not_yet_supported: not use_processing_instruction
 		local
-			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE
+			a_source: XM_XSLT_URI_SOURCE
+			a_stylesheet_source: XM_XSLT_SOURCE
 			a_destination: XM_OUTPUT
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+			a_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_stream: KL_TEXT_OUTPUT_FILE
@@ -633,17 +637,37 @@ feature {NONE} -- Implementation
 				register_network_protocols
 			end
 			register_non_network_protocols
-			create a_stylesheet_uri.make (uris.item (1))
-			create a_stylesheet_compiler.make (configuration)
-			a_stylesheet_compiler.prepare (a_stylesheet_uri)
-			if a_stylesheet_compiler.load_stylesheet_module_failed then
-				report_processing_error ("Could not compile stylesheet", a_stylesheet_compiler.load_stylesheet_module_error)
+			create a_transformer_factory.make (configuration)
+			if use_processing_instruction then
+				create a_source.make (uris.item (1))
+				if medium = Void then
+					medium := "screen"
+				elseif medium.is_equal ("all") then
+					report_processing_error ("Forbidden option value", "Medium must not be 'all'") 
+					Exceptions.die (1)
+				end
+				if title /= Void and then title.count > 1 then
+					if title.item (1) = '"' and then title.item (title.count) = '"' then
+						title := title.substring (2, title.count - 1)
+					end
+				end
+				a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_source.system_id, medium, title)
+				if a_stylesheet_source = Void then
+					report_processing_error ("Unable to compile stylesheet",  "Xml-stylesheet processing instuction(s) did not lead to a stylesheet being compiled sucessfully..")
+					Exceptions.die (2)
+				end
+			else
+				create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make (uris.item (1))
+			end
+			a_transformer_factory.create_new_transformer (a_stylesheet_source)
+			if a_transformer_factory.was_error then
+				report_processing_error ("Could not compile stylesheet", a_transformer_factory.last_error_message)
 				Exceptions.die (2)
 			else
-				a_transformer := a_stylesheet_compiler.new_transformer
+				a_transformer := a_transformer_factory.created_transformer
 				process_parameters (a_transformer)
 				if uris.count = 2 then
-					create a_source_uri.make (uris.item (2))
+					create a_source.make (uris.item (2))
 				end
 				if initial_template_name /= Void then
 					a_transformer.set_initial_template (initial_template_name)
@@ -675,7 +699,7 @@ feature {NONE} -- Implementation
 				end
 				create a_result.make (a_destination, a_destination_system_id)
 				if not a_transformer.is_error then
-					a_transformer.transform (a_source_uri, a_result)
+					a_transformer.transform (a_source, a_result)
 				end
 				if a_stream /= Void then
 					a_stream.close

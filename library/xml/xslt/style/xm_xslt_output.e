@@ -98,6 +98,8 @@ feature -- Element change
 					character_representation := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
 					indent_spaces := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (indent_spaces); STRING_.right_adjust (indent_spaces)
+				elseif STRING_.same_string (an_expanded_name, Gexslt_next_in_chain_attribute) then
+					next_in_chain := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (next_in_chain); STRING_.right_adjust (next_in_chain)
 				elseif STRING_.same_string (an_expanded_name, Byte_order_mark_attribute) then
 					byte_order_mark := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
 				else
@@ -328,6 +330,14 @@ feature -- Element change
 					a_property_set.set_duplication_error (Gexslt_indent_spaces_attribute)
 				end	
 			end
+			if next_in_chain /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_next_in_chain_attribute) then
+					a_property_set.set_next_in_chain (next_in_chain, an_import_precedence)
+					a_property_set.set_next_in_chain_base_uri (system_id)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) then
+					a_property_set.set_duplication_error (Gexslt_next_in_chain_attribute)
+				end	
+			end
 			if encoding /= Void and then not a_property_set.is_error then
 				if a_property_set.is_higher_precedence (an_import_precedence, Encoding_attribute) then
 					a_property_set.set_encoding (encoding, an_import_precedence)
@@ -544,6 +554,9 @@ feature {NONE} -- Implementation
 
 	indent_spaces: STRING
 			-- Extension attribute - number of spaces to use when indent="yes"
+
+	next_in_chain: STRING
+			-- URI of next stylesheet to be applied to output
 
 	byte_order_mark: STRING
 			-- Do we write a byte order mark?
