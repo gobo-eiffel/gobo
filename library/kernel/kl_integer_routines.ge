@@ -4,12 +4,12 @@ indexing
 
 		"Routines that ought to be in class INTEGER"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel Kernel Library"
+	author:		"Eric Bezault <ericb@gobosoft.com>"
+	copyright:	"Copyright (c) 1999, Eric Bezault and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class KL_INTEGER_ROUTINES
 
@@ -43,8 +43,8 @@ feature -- Conversion
 			-- Hexadecimal representation of `an_int' to `a_string'.
 			-- Return a new string at each call.
 			-- Regexp:
-			--    uppercase:      0|[1-9A-F][0-9A-F]*
-			--    not uppercase:  0|[1-9a-f][0-9a-f]*
+			--		uppercase:		0|[1-9A-F][0-9A-F]*
+			--		not uppercase:	0|[1-9a-f][0-9a-f]*
 		require
 			an_int_positive: an_int >= 0
 		do
@@ -59,8 +59,8 @@ feature -- Output
 	append_hexadecimal_integer (a_string: STRING; an_int: INTEGER; uppercase: BOOLEAN) is
 			-- Append a hexadecimal representation of `an_int' to `a_string'.
 			-- Regexp:
-			--    uppercase:      0|[1-9A-F][0-9A-F]*
-			--    not uppercase:  0|[1-9a-f][0-9a-f]*
+			--		uppercase:		0|[1-9A-F][0-9A-F]*
+			--		not uppercase:	0|[1-9a-f][0-9a-f]*
 		require
 			a_string_not_void: a_string /= Void
 			an_int_positive: an_int >= 0
@@ -146,6 +146,16 @@ feature -- Output
 					j := j - 1
 				end
 			end
+		end
+
+feature -- Tests
+
+	even (an_int: INTEGER): BOOLEAN is
+		do
+#ifdef SE
+			Result := an_int.even
+			Result := an_int \\ 2 = 0
+#endif
 		end
 
 end -- class KL_INTEGER_ROUTINES

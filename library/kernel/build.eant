@@ -54,6 +54,8 @@
 		<set name="spec_dir" value="spec"/>
 		<set name="gepp_file" value="kl_array_routines"/>
 		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_character_routines"/>
+		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_execution_environment"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_fixed_array_routines"/>
