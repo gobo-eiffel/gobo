@@ -137,10 +137,8 @@ feature -- Standard processor routines
 		do
 			a_cursor := e.attributes.new_cursor
 			from a_cursor.start until a_cursor.after loop
+				append (Space_s)
 				process_attribute_in_start_tag (a_cursor.item)
-				if not a_cursor.is_last then
-					append (Space_s)
-				end
 				a_cursor.forth
 			end
 		end
@@ -185,7 +183,6 @@ feature -- Non standard processor routines
 		do
 			append (Stag_start)
 			process_named (el)
-			append (Space_s)
 			process_attributes (el)
 			append (Stag_end)
 		end
@@ -247,7 +244,7 @@ feature -- Non standard processor routines
 		require
 			a_node_not_void: a_node /= Void
 		do
-			if a_node.has_namespace then
+			if not a_node.namespace.is_default then
 				append (a_node.namespace.uri)
 				append (Eq_s)
 			end
