@@ -18,7 +18,7 @@ inherit
 		rename
 			name as test_name
 		redefine
-			set_up
+			make, set_up
 		end
 
 	XM_EXPAT_PARSER
@@ -44,6 +44,15 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_OPERATING_SYSTEM
+
+feature {NONE} -- Initialization
+
+	make (an_id: INTEGER; a_variables: like variables) is
+			-- Create a new test case with id `an_id'.
+		do
+			precursor (an_id, a_variables)
+			make_expat
+		end
 
 feature -- Execution
 
