@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	strip_keyword: ET_TOKEN
+	strip_keyword: ET_KEYWORD
 			-- 'strip' keyword
 
 	left_parenthesis: ET_SYMBOL

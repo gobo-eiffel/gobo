@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	export_keyword: ET_TOKEN
+	export_keyword: ET_KEYWORD
 			-- 'export' keyword
 
 	position: ET_POSITION is

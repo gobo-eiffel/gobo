@@ -16,7 +16,7 @@ inherit
 
 	ET_EXPRESSION
 
-	ET_TOKEN
+	ET_KEYWORD
 		redefine
 			process
 		end

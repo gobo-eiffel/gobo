@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	precursor_keyword: ET_TOKEN
+	precursor_keyword: ET_KEYWORD
 			-- Precursor keyword
 
 	parent: ET_CLASS_NAME is

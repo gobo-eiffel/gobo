@@ -61,10 +61,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	create_keyword: ET_TOKEN
+	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	position: ET_POSITION is

@@ -133,7 +133,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New Eiffel keyword
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)

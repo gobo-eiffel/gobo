@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	obsolete_keyword: ET_TOKEN
+	obsolete_keyword: ET_KEYWORD
 			-- 'obsolete' keyword
 
 	message: ET_MANIFEST_STRING

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	keyword: ET_TOKEN
+	keyword: ET_KEYWORD
 			-- Keyword
 
 	manifest_string: ET_MANIFEST_STRING

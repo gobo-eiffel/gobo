@@ -103,10 +103,10 @@ feature -- Access
 	invariants: ET_INVARIANTS
 			-- Invariants
 
-	class_keyword: ET_TOKEN
+	class_keyword: ET_KEYWORD
 			-- 'class' keyword
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	class_mark: ET_CLASS_MARK

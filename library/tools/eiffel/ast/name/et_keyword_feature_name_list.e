@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	keyword: ET_TOKEN
+	keyword: ET_KEYWORD
 			-- Keyword preceding the list of feature names
 
 	position: ET_POSITION is

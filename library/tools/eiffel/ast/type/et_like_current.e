@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	like_keyword: ET_TOKEN
+	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 
-	current_keyword: ET_TOKEN
+	current_keyword: ET_CURRENT
 			-- 'current' keyword
 
 	position: ET_POSITION is

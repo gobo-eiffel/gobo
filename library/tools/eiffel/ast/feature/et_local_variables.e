@@ -68,7 +68,7 @@ feature -- Access
 			local_variable_not_void: Result /= Void
 		end
 
-	local_keyword: ET_TOKEN
+	local_keyword: ET_KEYWORD
 			-- 'local' keyword
 
 	position: ET_POSITION is

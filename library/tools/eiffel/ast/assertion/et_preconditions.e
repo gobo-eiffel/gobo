@@ -51,10 +51,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	require_keyword: ET_TOKEN
+	require_keyword: ET_KEYWORD
 			-- 'require' keyword
 
-	else_keyword: ET_TOKEN
+	else_keyword: ET_KEYWORD
 			-- 'else' keyword
 
 	position: ET_POSITION is

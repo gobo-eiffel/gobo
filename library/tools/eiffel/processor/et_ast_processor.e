@@ -889,6 +889,13 @@ feature -- Processing
 		deferred
 		end
 
+	process_keyword (a_keyword: ET_KEYWORD) is
+			-- Process `a_keyword'.
+		require
+			a_keyword_not_void: a_keyword /= Void
+		deferred
+		end
+
 	process_keyword_feature_name_list (a_list: ET_KEYWORD_FEATURE_NAME_LIST) is
 			-- Process `a_list'.
 		require

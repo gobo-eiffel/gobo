@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Eiffel keywords
 
-	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'agent' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -36,7 +36,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'alias' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -47,7 +47,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'all' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -69,7 +69,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_as_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_as_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'as' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -80,7 +80,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'check' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -91,7 +91,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'class' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -102,7 +102,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'create' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -113,7 +113,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'creation' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -135,7 +135,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_debug_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_debug_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'debug' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -157,7 +157,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'do' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -168,7 +168,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'else' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -179,7 +179,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'elseif' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -190,7 +190,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'end' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -201,7 +201,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'ensure' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -223,7 +223,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_export_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_export_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'export' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -234,7 +234,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'external' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -256,7 +256,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_feature_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_feature_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'feature' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -267,7 +267,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'from' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -278,7 +278,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'frozen' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -289,7 +289,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_if_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_if_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'if' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -311,7 +311,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_indexing_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_indexing_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'indexing' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -322,7 +322,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'infix' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -333,7 +333,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'inherit' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -344,7 +344,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'inspect' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -355,7 +355,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'invariant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -366,7 +366,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'is' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -377,7 +377,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New Eiffel keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -388,7 +388,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'like' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -399,7 +399,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_local_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_local_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'local' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -410,7 +410,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'loop' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -432,7 +432,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'obsolete' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -443,7 +443,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'old' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -454,7 +454,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_once_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_once_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'once' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -476,7 +476,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'precursor' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -487,7 +487,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'prefix' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -498,7 +498,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'redefine' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -520,7 +520,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_rename_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_rename_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'rename' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -531,7 +531,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'require' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -542,7 +542,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_rescue_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_rescue_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'rescue' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -575,7 +575,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_select_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_select_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'select' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -597,7 +597,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'strip' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -608,7 +608,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_then_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_then_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'then' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -630,7 +630,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_undefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_undefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'undefine' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -641,7 +641,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'unique' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -652,7 +652,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_until_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_until_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'until' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -663,7 +663,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'variant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -674,7 +674,7 @@ feature -- Eiffel keywords
 			keyword_not_void: Result /= Void
 		end
 
-	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TOKEN is
+	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'when' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -1088,6 +1088,7 @@ feature -- AST leaves
 			-- New free operator
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1244,7 +1245,7 @@ feature -- AST factory
 			actual_generics_not_void: Result /= Void
 		end
 
-	new_all_export (a_clients: ET_CLIENTS; an_all: ET_TOKEN): ET_ALL_EXPORT is
+	new_all_export (a_clients: ET_CLIENTS; an_all: ET_KEYWORD): ET_ALL_EXPORT is
 			-- New 'all' export clause
 		require
 			a_clients_not_void: a_clients /= Void
@@ -1351,7 +1352,7 @@ feature -- AST factory
 			break_not_void: Result /= Void
 		end
 
-	new_call_agent (an_agent: ET_TOKEN): ET_CALL_AGENT is
+	new_call_agent (an_agent: ET_KEYWORD): ET_CALL_AGENT is
 			-- New call agent
 		require
 			an_agent_not_void: an_agent /= Void
@@ -1381,7 +1382,7 @@ feature -- AST factory
 			call_instruction_not_void: Result /= Void
 		end
 
-	new_check_instruction (a_check: ET_TOKEN; an_end: ET_TOKEN): ET_CHECK_INSTRUCTION is
+	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION is
 			-- New check instruction
 		require
 			a_check_not_void: a_check /= Void
@@ -1392,7 +1393,7 @@ feature -- AST factory
 			check_instruction_not_void: Result /= Void
 		end
 
-	new_check_instruction_with_capacity (a_check: ET_TOKEN; an_end: ET_TOKEN; nb: INTEGER): ET_CHECK_INSTRUCTION is
+	new_check_instruction_with_capacity (a_check: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CHECK_INSTRUCTION is
 			-- New check instruction with given capacity
 		require
 			a_check_not_void: a_check /= Void
@@ -1592,7 +1593,7 @@ feature -- AST factory
 			comment_not_void: Result /= Void
 		end
 
-	new_compound (a_keyword: ET_TOKEN): ET_COMPOUND is
+	new_compound (a_keyword: ET_KEYWORD): ET_COMPOUND is
 			-- New instruction compound
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -1602,7 +1603,7 @@ feature -- AST factory
 			compound_not_void: Result /= Void
 		end
 
-	new_compound_with_capacity (a_keyword: ET_TOKEN; nb: INTEGER): ET_COMPOUND is
+	new_compound_with_capacity (a_keyword: ET_KEYWORD; nb: INTEGER): ET_COMPOUND is
 			-- New instruction compound with given capacity
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -1643,7 +1644,7 @@ feature -- AST factory
 			constrained_formal_generic_not_void: Result /= Void
 		end
 
-	new_constraint_creator (a_create: ET_TOKEN; an_end: ET_TOKEN): ET_CONSTRAINT_CREATOR is
+	new_constraint_creator (a_create: ET_KEYWORD; an_end: ET_KEYWORD): ET_CONSTRAINT_CREATOR is
 			-- New constraint creation clause
 		require
 			a_create_not_void: a_create /= Void
@@ -1654,7 +1655,7 @@ feature -- AST factory
 			constraint_creator_not_void: Result /= Void
 		end
 
-	new_constraint_creator_with_capacity (a_create: ET_TOKEN; an_end: ET_TOKEN; nb: INTEGER): ET_CONSTRAINT_CREATOR is
+	new_constraint_creator_with_capacity (a_create: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CONSTRAINT_CREATOR is
 			-- New constraint creation clause with given capacity
 		require
 			a_create_not_void: a_create /= Void
@@ -1666,7 +1667,7 @@ feature -- AST factory
 			constraint_creator_not_void: Result /= Void
 		end
 
-	new_create_expression (a_create: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+	new_create_expression (a_create: ET_KEYWORD; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL): ET_CREATE_EXPRESSION is
 			-- New create expression
 		require
@@ -1680,7 +1681,7 @@ feature -- AST factory
 			create_expression_not_void: Result /= Void
 		end
 
-	new_create_instruction (a_create: ET_TOKEN; a_target: ET_WRITABLE): ET_CREATE_INSTRUCTION is
+	new_create_instruction (a_create: ET_KEYWORD; a_target: ET_WRITABLE): ET_CREATE_INSTRUCTION is
 			-- New create instruction
 		require
 			a_create_not_void: a_create /= Void
@@ -1691,7 +1692,7 @@ feature -- AST factory
 			create_instruction_not_void: Result /= Void
 		end
 
-	new_creator (a_creation: ET_TOKEN; a_clients: ET_CLASS_NAME_LIST): ET_CREATOR is
+	new_creator (a_creation: ET_KEYWORD; a_clients: ET_CLASS_NAME_LIST): ET_CREATOR is
 			-- New creation clause
 		require
 			a_creation_not_void: a_creation /= Void
@@ -1702,7 +1703,7 @@ feature -- AST factory
 			creator_not_void: Result /= Void
 		end
 
-	new_creator_with_capacity (a_creation: ET_TOKEN; a_clients: ET_CLASS_NAME_LIST; nb: INTEGER): ET_CREATOR is
+	new_creator_with_capacity (a_creation: ET_KEYWORD; a_clients: ET_CLASS_NAME_LIST; nb: INTEGER): ET_CREATOR is
 			-- New creation clause with given capacity
 		require
 			a_creation_not_void: a_creation /= Void
@@ -1746,7 +1747,7 @@ feature -- AST factory
 			current_address_not_void: Result /= Void
 		end
 
-	new_debug_instruction (a_debug: ET_TOKEN; a_keys: ET_DEBUG_KEYS; an_end: ET_TOKEN): ET_DEBUG_INSTRUCTION is
+	new_debug_instruction (a_debug: ET_KEYWORD; a_keys: ET_DEBUG_KEYS; an_end: ET_KEYWORD): ET_DEBUG_INSTRUCTION is
 			-- New debug instruction
 		require
 			a_debug_not_void: a_debug /= Void
@@ -1757,8 +1758,8 @@ feature -- AST factory
 			debug_instruction_not_void: Result /= Void
 		end
 
-	new_debug_instruction_with_capacity (a_debug: ET_TOKEN; a_keys: ET_DEBUG_KEYS;
-		an_end: ET_TOKEN; nb: INTEGER): ET_DEBUG_INSTRUCTION is
+	new_debug_instruction_with_capacity (a_debug: ET_KEYWORD; a_keys: ET_DEBUG_KEYS;
+		an_end: ET_KEYWORD; nb: INTEGER): ET_DEBUG_INSTRUCTION is
 			-- New debug instruction with given capacity
 		require
 			a_debug_not_void: a_debug /= Void
@@ -1867,7 +1868,7 @@ feature -- AST factory
 			do_procedure_not_void: Result /= Void
 		end
 
-	new_elseif_part (an_elseif: ET_TOKEN; an_expression: ET_EXPRESSION;
+	new_elseif_part (an_elseif: ET_KEYWORD; an_expression: ET_EXPRESSION;
 		a_then_compound: ET_COMPOUND): ET_ELSEIF_PART is
 			-- New elseif part
 		require
@@ -1913,7 +1914,7 @@ feature -- AST factory
 			equality_expression_not_void: Result /= Void
 		end
 
-	new_exports (an_export: ET_TOKEN): ET_EXPORTS is
+	new_exports (an_export: ET_KEYWORD): ET_EXPORTS is
 			-- New export clause
 		require
 			an_export_not_void: an_export /= Void
@@ -1923,7 +1924,7 @@ feature -- AST factory
 			exports_not_void: Result /= Void
 		end
 
-	new_exports_with_capacity (an_export: ET_TOKEN; nb: INTEGER): ET_EXPORTS is
+	new_exports_with_capacity (an_export: ET_KEYWORD; nb: INTEGER): ET_EXPORTS is
 			-- New export clause with given capacity
 		require
 			an_export_not_void: an_export /= Void
@@ -1956,7 +1957,7 @@ feature -- AST factory
 			expression_comma_not_void: Result /= Void
 		end
 
-	new_expression_variant (a_variant: ET_TOKEN; an_expression: ET_EXPRESSION): ET_EXPRESSION_VARIANT is
+	new_expression_variant (a_variant: ET_KEYWORD; an_expression: ET_EXPRESSION): ET_EXPRESSION_VARIANT is
 			-- New loop expression variant
 		require
 			a_variant_not_void: a_variant /= Void
@@ -2019,7 +2020,7 @@ feature -- AST factory
 			feature_address_not_void: Result /= Void
 		end
 
-	new_feature_clause (a_fetaure: ET_TOKEN; a_clients: ET_CLASS_NAME_LIST): ET_FEATURE_CLAUSE is
+	new_feature_clause (a_fetaure: ET_KEYWORD; a_clients: ET_CLASS_NAME_LIST): ET_FEATURE_CLAUSE is
 			-- New fetaure clause
 		require
 			a_feature_not_void: a_fetaure /= Void
@@ -2030,7 +2031,7 @@ feature -- AST factory
 			feature_clause_not_void: Result /= Void
 		end
 
-	new_feature_clause_with_capacity (a_feature: ET_TOKEN; a_clients: ET_CLASS_NAME_LIST; nb: INTEGER): ET_FEATURE_CLAUSE is
+	new_feature_clause_with_capacity (a_feature: ET_KEYWORD; a_clients: ET_CLASS_NAME_LIST; nb: INTEGER): ET_FEATURE_CLAUSE is
 			-- New feature clause with given capacity
 		require
 			a_feature_not_void: a_feature /= Void
@@ -2241,8 +2242,8 @@ feature -- AST factory
 			identifier_comma_not_void: Result /= Void
 		end
 
-	new_if_instruction (an_if: ET_TOKEN; an_expression: ET_EXPRESSION;
-		a_then_compound: ET_COMPOUND; an_end: ET_TOKEN): ET_IF_INSTRUCTION is
+	new_if_instruction (an_if: ET_KEYWORD; an_expression: ET_EXPRESSION;
+		a_then_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_IF_INSTRUCTION is
 			-- New if instruction
 		require
 			an_if_not_void: an_if /= Void
@@ -2308,7 +2309,7 @@ feature -- AST factory
 			indexing_terms_not_void: Result /= Void
 		end
 
-	new_indexings (an_indexing: ET_TOKEN): ET_INDEXINGS is
+	new_indexings (an_indexing: ET_KEYWORD): ET_INDEXINGS is
 			-- New indexing clause
 		require
 			an_indexing_not_void: an_indexing /= Void
@@ -2318,7 +2319,7 @@ feature -- AST factory
 			indexings_not_void: Result /= Void
 		end
 
-	new_indexings_with_capacity (an_indexing: ET_TOKEN; nb: INTEGER): ET_INDEXINGS is
+	new_indexings_with_capacity (an_indexing: ET_KEYWORD; nb: INTEGER): ET_INDEXINGS is
 			-- New indexing clause with given capacity
 		require
 			an_indexing_not_void: an_indexing /= Void
@@ -2329,7 +2330,7 @@ feature -- AST factory
 			indexings_not_void: Result /= Void
 		end
 
-	new_infix_and_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_AND_NAME is
+	new_infix_and_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_AND_NAME is
 			-- New infix "and" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2340,7 +2341,7 @@ feature -- AST factory
 			infix_and_name_not_void: Result /= Void
 		end
 
-	new_infix_and_then_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_AND_THEN_NAME is
+	new_infix_and_then_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_AND_THEN_NAME is
 			-- New infix "and then" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2351,7 +2352,7 @@ feature -- AST factory
 			infix_and_then_name_not_void: Result /= Void
 		end
 
-	new_infix_and_then_operator (an_and: ET_TOKEN; a_then: ET_TOKEN): ET_INFIX_AND_THEN_OPERATOR is
+	new_infix_and_then_operator (an_and: ET_KEYWORD; a_then: ET_KEYWORD): ET_INFIX_AND_THEN_OPERATOR is
 			-- New binary "and then" operator
 		require
 			an_and_not_void: an_and /= Void
@@ -2362,7 +2363,7 @@ feature -- AST factory
 			infix_and_then_operator_not_void: Result /= Void
 		end
 
-	new_infix_div_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_DIV_NAME is
+	new_infix_div_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_DIV_NAME is
 			-- New infix "//" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2373,7 +2374,7 @@ feature -- AST factory
 			infix_div_name_not_void: Result /= Void
 		end
 
-	new_infix_divide_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_DIVIDE_NAME is
+	new_infix_divide_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_DIVIDE_NAME is
 			-- New infix "//" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2397,7 +2398,7 @@ feature -- AST factory
 			infix_expression_not_void: Result /= Void
 		end
 
-	new_infix_free_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
+	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
 			-- New infix free feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2410,7 +2411,7 @@ feature -- AST factory
 			infix_free_name_not_void: Result /= Void
 		end
 
-	new_infix_ge_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_GE_NAME is
+	new_infix_ge_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_GE_NAME is
 			-- New infix ">=" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2421,7 +2422,7 @@ feature -- AST factory
 			infix_ge_name_not_void: Result /= Void
 		end
 
-	new_infix_gt_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_GT_NAME is
+	new_infix_gt_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_GT_NAME is
 			-- New infix ">" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2432,7 +2433,7 @@ feature -- AST factory
 			infix_gt_name_not_void: Result /= Void
 		end
 
-	new_infix_implies_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_IMPLIES_NAME is
+	new_infix_implies_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_IMPLIES_NAME is
 			-- New infix "implies" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2443,7 +2444,7 @@ feature -- AST factory
 			infix_implies_name_not_void: Result /= Void
 		end
 
-	new_infix_le_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_LE_NAME is
+	new_infix_le_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_LE_NAME is
 			-- New infix "<=" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2454,7 +2455,7 @@ feature -- AST factory
 			infix_le_name_not_void: Result /= Void
 		end
 
-	new_infix_lt_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_LT_NAME is
+	new_infix_lt_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_LT_NAME is
 			-- New infix "<" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2465,7 +2466,7 @@ feature -- AST factory
 			infix_lt_name_not_void: Result /= Void
 		end
 
-	new_infix_minus_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_MINUS_NAME is
+	new_infix_minus_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_MINUS_NAME is
 			-- New infix "-" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2476,7 +2477,7 @@ feature -- AST factory
 			infix_minus_name_not_void: Result /= Void
 		end
 
-	new_infix_mod_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_MOD_NAME is
+	new_infix_mod_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_MOD_NAME is
 			-- New infix "\\" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2487,7 +2488,7 @@ feature -- AST factory
 			infix_mod_name_not_void: Result /= Void
 		end
 
-	new_infix_or_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_OR_NAME is
+	new_infix_or_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_OR_NAME is
 			-- New infix "or" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2498,7 +2499,7 @@ feature -- AST factory
 			infix_or_name_not_void: Result /= Void
 		end
 
-	new_infix_or_else_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_OR_ELSE_NAME is
+	new_infix_or_else_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_OR_ELSE_NAME is
 			-- New infix "or else" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2509,7 +2510,7 @@ feature -- AST factory
 			infix_or_else_name_not_void: Result /= Void
 		end
 
-	new_infix_or_else_operator (an_or: ET_TOKEN; an_else: ET_TOKEN): ET_INFIX_OR_ELSE_OPERATOR is
+	new_infix_or_else_operator (an_or: ET_KEYWORD; an_else: ET_KEYWORD): ET_INFIX_OR_ELSE_OPERATOR is
 			-- New binary "or else" operator
 		require
 			an_or_not_void: an_or /= Void
@@ -2520,7 +2521,7 @@ feature -- AST factory
 			infix_or_else_operator_not_void: Result /= Void
 		end
 
-	new_infix_plus_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_PLUS_NAME is
+	new_infix_plus_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_PLUS_NAME is
 			-- New infix "+" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2531,7 +2532,7 @@ feature -- AST factory
 			infix_plus_name_not_void: Result /= Void
 		end
 
-	new_infix_power_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_POWER_NAME is
+	new_infix_power_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_POWER_NAME is
 			-- New infix "^" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2542,7 +2543,7 @@ feature -- AST factory
 			infix_power_name_not_void: Result /= Void
 		end
 
-	new_infix_times_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_TIMES_NAME is
+	new_infix_times_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_TIMES_NAME is
 			-- New infix "*" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2553,7 +2554,7 @@ feature -- AST factory
 			infix_times_name_not_void: Result /= Void
 		end
 
-	new_infix_xor_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_XOR_NAME is
+	new_infix_xor_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_XOR_NAME is
 			-- New infix "xor" feature name
 		require
 			an_infix_not_void: an_infix /= Void
@@ -2564,8 +2565,8 @@ feature -- AST factory
 			infix_xor_name_not_void: Result /= Void
 		end
 
-	new_inspect_instruction (an_inspect: ET_TOKEN; an_expression: ET_EXPRESSION;
-		an_end: ET_TOKEN): ET_INSPECT_INSTRUCTION is
+	new_inspect_instruction (an_inspect: ET_KEYWORD; an_expression: ET_EXPRESSION;
+		an_end: ET_KEYWORD): ET_INSPECT_INSTRUCTION is
 			-- New inspect instruction
 		require
 			an_inspect_not_void: an_inspect /= Void
@@ -2577,7 +2578,7 @@ feature -- AST factory
 			inspect_instruction_not_void: Result /= Void
 		end
 
-	new_invariants (an_invariant: ET_TOKEN): ET_INVARIANTS is
+	new_invariants (an_invariant: ET_KEYWORD): ET_INVARIANTS is
 			-- New invariants
 		require
 			an_invariant_not_void: an_invariant /= Void
@@ -2587,7 +2588,7 @@ feature -- AST factory
 			invariants_not_void: Result /= Void
 		end
 
-	new_invariants_with_capacity (an_invariant: ET_TOKEN; nb: INTEGER): ET_INVARIANTS is
+	new_invariants_with_capacity (an_invariant: ET_KEYWORD; nb: INTEGER): ET_INVARIANTS is
 			-- New invariants with given capacity
 		require
 			an_invariant_not_void: an_invariant /= Void
@@ -2598,7 +2599,7 @@ feature -- AST factory
 			invariants_not_void: Result /= Void
 		end
 
-	new_keyword_feature_name_list (a_keyword: ET_TOKEN): ET_KEYWORD_FEATURE_NAME_LIST is
+	new_keyword_feature_name_list (a_keyword: ET_KEYWORD): ET_KEYWORD_FEATURE_NAME_LIST is
 			-- New feature name list preceded by a keyword
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -2608,7 +2609,7 @@ feature -- AST factory
 			keyword_feature_name_list_not_void: Result /= Void
 		end
 
-	new_keyword_feature_name_list_with_capacity (a_keyword: ET_TOKEN; nb: INTEGER): ET_KEYWORD_FEATURE_NAME_LIST is
+	new_keyword_feature_name_list_with_capacity (a_keyword: ET_KEYWORD; nb: INTEGER): ET_KEYWORD_FEATURE_NAME_LIST is
 			-- New feature name list, with a given capacity, preceded by a keyword
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -2619,7 +2620,7 @@ feature -- AST factory
 			keyword_feature_name_list_not_void: Result /= Void
 		end
 
-	new_keyword_manifest_string (a_keyword: ET_TOKEN; a_string: ET_MANIFEST_STRING): ET_KEYWORD_MANIFEST_STRING is
+	new_keyword_manifest_string (a_keyword: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_KEYWORD_MANIFEST_STRING is
 			-- New manifest string predeced by a keyword
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -2630,7 +2631,7 @@ feature -- AST factory
 			keyword_manifest_string_not_void: Result /= Void
 		end
 
-	new_like_current (a_like: ET_TOKEN; a_current: ET_TOKEN): ET_LIKE_CURRENT is
+	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
 			-- New 'like Current' type
 		require
 			a_like_not_void: a_like /= Void
@@ -2641,7 +2642,7 @@ feature -- AST factory
 			type_not_void: Result /= Void
 		end
 
-	new_like_identifier (a_like: ET_TOKEN; a_name: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
+	new_like_identifier (a_like: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
 			-- New 'like Identifier' type
 		require
 			a_like_not_void: a_like /= Void
@@ -2663,7 +2664,7 @@ feature -- AST factory
 			local_variable_semicolon_not_void: Result /= Void
 		end
 
-	new_local_variables (a_local: ET_TOKEN): ET_LOCAL_VARIABLES is
+	new_local_variables (a_local: ET_KEYWORD): ET_LOCAL_VARIABLES is
 			-- New local variable list
 		require
 			a_local_not_void: a_local /= Void
@@ -2673,7 +2674,7 @@ feature -- AST factory
 			local_variables_not_void: Result /= Void
 		end
 
-	new_local_variables_with_capacity (a_local: ET_TOKEN; nb: INTEGER): ET_LOCAL_VARIABLES is
+	new_local_variables_with_capacity (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLES is
 			-- New local variable list with given capacity
 		require
 			a_local_not_void: a_local /= Void
@@ -2686,9 +2687,9 @@ feature -- AST factory
 
 	new_loop_instruction (a_from_compound: ET_COMPOUND;
 		an_invariant: ET_INVARIANTS; a_variant: ET_VARIANT;
-		an_until: ET_TOKEN; an_until_expression: ET_EXPRESSION;
+		an_until: ET_KEYWORD; an_until_expression: ET_EXPRESSION;
 		a_loop_compound: ET_COMPOUND;
-		an_end: ET_TOKEN): ET_LOOP_INSTRUCTION is
+		an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION is
 			-- New loop instruction
 		require
 			a_from_compound_not_void: a_from_compound /= Void
@@ -2781,7 +2782,7 @@ feature -- AST factory
 			none_clients_not_void: Result /= Void
 		end
 
-	new_obsolete (an_obsolete: ET_TOKEN; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
+	new_obsolete (an_obsolete: ET_KEYWORD; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
 			-- New obsolete clause.
 		require
 			an_obsolete_not_void: an_obsolete /= Void
@@ -2792,7 +2793,7 @@ feature -- AST factory
 			obsolete_not_void: Result /= Void
 		end
 
-	new_old_expression (an_old: ET_TOKEN; e: ET_EXPRESSION): ET_OLD_EXPRESSION is
+	new_old_expression (an_old: ET_KEYWORD; e: ET_EXPRESSION): ET_OLD_EXPRESSION is
 			-- New old expression
 		require
 			an_old_not_void: an_old /= Void
@@ -2823,7 +2824,7 @@ feature -- AST factory
 			once_function_not_void: Result /= Void
 		end
 
-	new_once_manifest_string (a_once: ET_TOKEN; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
+	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
 			-- New once manifest string
 		require
 			a_once_not_void: a_once /= Void
@@ -2854,7 +2855,7 @@ feature -- AST factory
 		end
 
 	new_parent (a_type: ET_CLASS_TYPE; a_renames: ET_RENAMES; an_exports: ET_EXPORTS;
-		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_TOKEN): ET_PARENT is
+		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_KEYWORD): ET_PARENT is
 			-- New parent
 		require
 			a_type_not_void: a_type /= Void
@@ -2892,7 +2893,7 @@ feature -- AST factory
 			parenthesized_expression_not_void: Result /= Void
 		end
 
-	new_parents (an_inherit: ET_TOKEN): ET_PARENTS is
+	new_parents (an_inherit: ET_KEYWORD): ET_PARENTS is
 			-- New class parent list
 		require
 			an_inherit_not_void: an_inherit /= Void
@@ -2902,7 +2903,7 @@ feature -- AST factory
 			parents_not_void: Result /= Void
 		end
 
-	new_parents_with_capacity (an_inherit: ET_TOKEN; nb: INTEGER): ET_PARENTS is
+	new_parents_with_capacity (an_inherit: ET_KEYWORD; nb: INTEGER): ET_PARENTS is
 			-- New class parent list with given capacity
 		require
 			an_inherit_not_void: an_inherit /= Void
@@ -2913,7 +2914,7 @@ feature -- AST factory
 			parents_not_void: Result /= Void
 		end
 
-	new_postconditions (an_ensure: ET_TOKEN): ET_POSTCONDITIONS is
+	new_postconditions (an_ensure: ET_KEYWORD): ET_POSTCONDITIONS is
 			-- New postconditions
 		require
 			an_ensure_not_void: an_ensure /= Void
@@ -2923,7 +2924,7 @@ feature -- AST factory
 			postconditions_not_void: Result /= Void
 		end
 
-	new_postconditions_with_capacity (an_ensure: ET_TOKEN; nb: INTEGER): ET_POSTCONDITIONS is
+	new_postconditions_with_capacity (an_ensure: ET_KEYWORD; nb: INTEGER): ET_POSTCONDITIONS is
 			-- New postconditions with given capacity
 		require
 			an_ensure_not_void: an_ensure /= Void
@@ -2934,7 +2935,7 @@ feature -- AST factory
 			postconditions_not_void: Result /= Void
 		end
 
-	new_preconditions (a_require: ET_TOKEN): ET_PRECONDITIONS is
+	new_preconditions (a_require: ET_KEYWORD): ET_PRECONDITIONS is
 			-- New preconditions
 		require
 			a_require_not_void: a_require /= Void
@@ -2944,7 +2945,7 @@ feature -- AST factory
 			preconditions_not_void: Result /= Void
 		end
 
-	new_preconditions_with_capacity (a_require: ET_TOKEN; nb: INTEGER): ET_PRECONDITIONS is
+	new_preconditions_with_capacity (a_require: ET_KEYWORD; nb: INTEGER): ET_PRECONDITIONS is
 			-- New preconditions with given capacity
 		require
 			a_require_not_void: a_require /= Void
@@ -2955,7 +2956,7 @@ feature -- AST factory
 			preconditions_not_void: Result /= Void
 		end
 
-	new_precursor_expression (a_keyword: ET_TOKEN; args: ET_ACTUAL_ARGUMENTS): ET_PRECURSOR_EXPRESSION is
+	new_precursor_expression (a_keyword: ET_KEYWORD; args: ET_ACTUAL_ARGUMENTS): ET_PRECURSOR_EXPRESSION is
 			-- New precursor expression
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -2965,7 +2966,7 @@ feature -- AST factory
 			precursor_expression_not_void: Result /= Void
 		end
 
-	new_precursor_instruction (a_keyword: ET_TOKEN; args: ET_ACTUAL_ARGUMENTS): ET_PRECURSOR_INSTRUCTION is
+	new_precursor_instruction (a_keyword: ET_KEYWORD; args: ET_ACTUAL_ARGUMENTS): ET_PRECURSOR_INSTRUCTION is
 			-- New precursor instruction
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -2986,7 +2987,7 @@ feature -- AST factory
 			prefix_expression_not_void: Result /= Void
 		end
 
-	new_prefix_free_name (a_prefix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME is
+	new_prefix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME is
 			-- New prefix free feature name
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -2999,7 +3000,7 @@ feature -- AST factory
 			prefix_free_name_not_void: Result /= Void
 		end
 
-	new_prefix_minus_name (a_prefix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_PREFIX_MINUS_NAME is
+	new_prefix_minus_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_MINUS_NAME is
 			-- New prefix "-" feature name
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -3010,7 +3011,7 @@ feature -- AST factory
 			prefix_minus_name_not_void: Result /= Void
 		end
 
-	new_prefix_not_name (a_prefix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_PREFIX_NOT_NAME is
+	new_prefix_not_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_NOT_NAME is
 			-- New prefix "not" feature name
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -3021,7 +3022,7 @@ feature -- AST factory
 			prefix_not_name_not_void: Result /= Void
 		end
 
-	new_prefix_plus_name (a_prefix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_PREFIX_PLUS_NAME is
+	new_prefix_plus_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_PLUS_NAME is
 			-- New prefix "+" feature name
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -3070,7 +3071,7 @@ feature -- AST factory
 			qualified_call_instruction_not_void: Result /= Void
 		end
 
-	new_qualified_create_expression (a_create: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+	new_qualified_create_expression (a_create: ET_KEYWORD; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL; a_dot: ET_SYMBOL; a_name: ET_FEATURE_NAME;
 		args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_CREATE_EXPRESSION is
 			-- New qualified create expression
@@ -3087,7 +3088,7 @@ feature -- AST factory
 			qualified_create_expression_not_void: Result /= Void
 		end
 
-	new_qualified_create_instruction (a_create: ET_TOKEN; a_target: ET_WRITABLE; a_dot: ET_SYMBOL;
+	new_qualified_create_instruction (a_create: ET_KEYWORD; a_target: ET_WRITABLE; a_dot: ET_SYMBOL;
 		a_name: ET_FEATURE_NAME; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_CREATE_INSTRUCTION is
 			-- New qualified create instruction
 		require
@@ -3102,7 +3103,7 @@ feature -- AST factory
 		end
 
 	new_qualified_precursor_expression (l: ET_SYMBOL; a_parent: ET_CLASS_NAME; r: ET_SYMBOL;
-		a_keyword: ET_TOKEN; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_PRECURSOR_EXPRESSION is
+		a_keyword: ET_KEYWORD; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_PRECURSOR_EXPRESSION is
 			-- New qualified precursor expression
 		require
 			l_not_void: l /= Void
@@ -3116,7 +3117,7 @@ feature -- AST factory
 		end
 
 	new_qualified_precursor_instruction (l: ET_SYMBOL; a_parent: ET_CLASS_NAME; r: ET_SYMBOL;
-		a_keyword: ET_TOKEN; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_PRECURSOR_INSTRUCTION is
+		a_keyword: ET_KEYWORD; args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_PRECURSOR_INSTRUCTION is
 			-- New qualified precursor instruction
 		require
 			l_not_void: l /= Void
@@ -3146,7 +3147,7 @@ feature -- AST factory
 			qualified_typed_bang_instruction_not_void: Result /= Void
 		end
 
-	new_qualified_typed_create_instruction (a_create: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+	new_qualified_typed_create_instruction (a_create: ET_KEYWORD; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL; a_target: ET_WRITABLE; a_dot: ET_SYMBOL; a_name: ET_FEATURE_NAME;
 		args: ET_ACTUAL_ARGUMENTS): ET_QUALIFIED_TYPED_CREATE_INSTRUCTION is
 			-- New qualified typed create instruction
@@ -3164,7 +3165,7 @@ feature -- AST factory
 			qualified_typed_create_instruction_not_void: Result /= Void
 		end
 
-	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_TOKEN; new_name: ET_FEATURE_NAME): ET_RENAME is
+	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_FEATURE_NAME): ET_RENAME is
 			-- New rename pair
 		require
 			old_name_not_void: old_name /= Void
@@ -3176,7 +3177,7 @@ feature -- AST factory
 			rename_not_void: Result /= Void
 		end
 
-	new_rename_comma (old_name: ET_FEATURE_NAME; an_as: ET_TOKEN;
+	new_rename_comma (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD;
 		new_name: ET_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME_COMMA is
 			-- New rename pair followed by a comma
 		require
@@ -3190,7 +3191,7 @@ feature -- AST factory
 			rename_comma_not_void: Result /= Void
 		end
 
-	new_renames (a_rename: ET_TOKEN): ET_RENAMES is
+	new_renames (a_rename: ET_KEYWORD): ET_RENAMES is
 			-- New rename clause
 		require
 			a_rename_not_void: a_rename /= Void
@@ -3200,7 +3201,7 @@ feature -- AST factory
 			renames_not_void: Result /= Void
 		end
 
-	new_renames_with_capacity (a_rename: ET_TOKEN; nb: INTEGER): ET_RENAMES is
+	new_renames_with_capacity (a_rename: ET_KEYWORD; nb: INTEGER): ET_RENAMES is
 			-- New rename clause with given capacity
 		require
 			a_rename_not_void: a_rename /= Void
@@ -3222,7 +3223,7 @@ feature -- AST factory
 			result_address_not_void: Result /= Void
 		end
 
-	new_static_call_expression (a_feature: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+	new_static_call_expression (a_feature: ET_KEYWORD; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL; a_dot: ET_SYMBOL; a_name: ET_IDENTIFIER;
 		args: ET_ACTUAL_ARGUMENTS): ET_STATIC_CALL_EXPRESSION is
 			-- New static call expression
@@ -3239,7 +3240,7 @@ feature -- AST factory
 			static_call_expression_not_void: Result /= Void
 		end
 
-	new_static_call_instruction (a_feature: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+	new_static_call_instruction (a_feature: ET_KEYWORD; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL; a_dot: ET_SYMBOL; a_name: ET_IDENTIFIER;
 		args: ET_ACTUAL_ARGUMENTS): ET_STATIC_CALL_INSTRUCTION is
 			-- New static call instruction
@@ -3256,7 +3257,7 @@ feature -- AST factory
 			static_call_instruction_not_void: Result /= Void
 		end
 
-	new_strip_expression (a_strip: ET_TOKEN; l: ET_SYMBOL; r: ET_SYMBOL): ET_STRIP_EXPRESSION is
+	new_strip_expression (a_strip: ET_KEYWORD; l: ET_SYMBOL; r: ET_SYMBOL): ET_STRIP_EXPRESSION is
 			-- New strip expression
 		require
 			a_strip_not_void: a_strip /= Void
@@ -3268,7 +3269,7 @@ feature -- AST factory
 			strip_expression_not_void: Result /= Void
 		end
 
-	new_strip_expression_with_capacity (a_strip: ET_TOKEN; l: ET_SYMBOL;
+	new_strip_expression_with_capacity (a_strip: ET_KEYWORD; l: ET_SYMBOL;
 		r: ET_SYMBOL; nb: INTEGER): ET_STRIP_EXPRESSION is
 			-- New strip expression with given capacity
 		require
@@ -3292,7 +3293,7 @@ feature -- AST factory
 			tagged_assertion_not_void: Result /= Void
 		end
 
-	new_tagged_expression_variant (a_variant: ET_TOKEN; a_tag: ET_TAG;
+	new_tagged_expression_variant (a_variant: ET_KEYWORD; a_tag: ET_TAG;
 		an_expression: ET_EXPRESSION): ET_TAGGED_EXPRESSION_VARIANT is
 			-- New loop tagged expression variant
 		require
@@ -3354,7 +3355,7 @@ feature -- AST factory
 			typed_bang_instruction_not_void: Result /= Void
 		end
 
-	new_typed_create_instruction (a_create: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+	new_typed_create_instruction (a_create: ET_KEYWORD; l: ET_SYMBOL; a_type: ET_TYPE;
 		r: ET_SYMBOL; a_target: ET_WRITABLE): ET_TYPED_CREATE_INSTRUCTION is
 			-- New typed create instruction
 		require
@@ -3384,7 +3385,7 @@ feature -- AST factory
 			unique_attribute_not_void: Result /= Void
 		end
 
-	new_variant (a_variant: ET_TOKEN): ET_VARIANT is
+	new_variant (a_variant: ET_KEYWORD): ET_VARIANT is
 			-- New empty loop variant
 		require
 			a_variant_not_void: a_variant /= Void
@@ -3394,7 +3395,7 @@ feature -- AST factory
 			variant_not_void: Result /= Void
 		end
 
-	new_when_part (a_when: ET_TOKEN; a_choices: ET_CHOICE_LIST;
+	new_when_part (a_when: ET_KEYWORD; a_choices: ET_CHOICE_LIST;
 		a_then_compound: ET_COMPOUND): ET_WHEN_PART is
 			-- New when part
 		require

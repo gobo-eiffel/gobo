@@ -70,10 +70,10 @@ feature -- Status report
 
 feature -- Access
 
-	is_keyword: ET_TOKEN
+	is_keyword: ET_KEYWORD
 			-- 'is' keyword
 
-	unique_keyword: ET_TOKEN
+	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
 
 	break: ET_BREAK is

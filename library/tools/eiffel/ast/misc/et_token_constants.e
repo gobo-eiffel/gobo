@@ -24,7 +24,7 @@ feature -- Symbols
 
 feature -- Keywords
 
-	keyword: ET_TOKEN is
+	keyword: ET_KEYWORD is
 			-- Dummy keyword
 		once
 			Result := strip_keyword
@@ -32,7 +32,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	class_keyword: ET_TOKEN is
+	class_keyword: ET_KEYWORD is
 			-- 'class' keyword
 		once
 			!! Result.make (class_keyword_name)
@@ -40,7 +40,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	create_keyword: ET_TOKEN is
+	create_keyword: ET_KEYWORD is
 			-- 'create' keyword
 		once
 			!! Result.make (create_keyword_name)
@@ -48,7 +48,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	creation_keyword: ET_TOKEN is
+	creation_keyword: ET_KEYWORD is
 			-- 'creation' keyword
 		once
 			!! Result.make (creation_keyword_name)
@@ -56,7 +56,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	debug_keyword: ET_TOKEN is
+	debug_keyword: ET_KEYWORD is
 			-- 'debug' keyword
 		once
 			!! Result.make (debug_keyword_name)
@@ -72,7 +72,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	end_keyword: ET_TOKEN is
+	end_keyword: ET_KEYWORD is
 			-- 'end' keyword
 		once
 			!! Result.make (end_keyword_name)
@@ -80,7 +80,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	export_keyword: ET_TOKEN is
+	export_keyword: ET_KEYWORD is
 			-- 'export' keyword
 		once
 			!! Result.make (export_keyword_name)
@@ -88,7 +88,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	feature_keyword: ET_TOKEN is
+	feature_keyword: ET_KEYWORD is
 			-- 'feature' keyword
 		once
 			!! Result.make (feature_keyword_name)
@@ -96,7 +96,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	indexing_keyword: ET_TOKEN is
+	indexing_keyword: ET_KEYWORD is
 			-- 'indexing' keyword
 		once
 			!! Result.make (indexing_keyword_name)
@@ -104,7 +104,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	inherit_keyword: ET_TOKEN is
+	inherit_keyword: ET_KEYWORD is
 			-- 'inherit' keyword
 		once
 			!! Result.make (inherit_keyword_name)
@@ -112,7 +112,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	is_keyword: ET_TOKEN is
+	is_keyword: ET_KEYWORD is
 			-- 'is' keyword
 		once
 			!! Result.make (is_keyword_name)
@@ -120,7 +120,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	local_keyword: ET_TOKEN is
+	local_keyword: ET_KEYWORD is
 			-- 'local' keyword
 		once
 			!! Result.make (local_keyword_name)
@@ -128,7 +128,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	rename_keyword: ET_TOKEN is
+	rename_keyword: ET_KEYWORD is
 			-- 'rename' keyword
 		once
 			!! Result.make (rename_keyword_name)
@@ -136,7 +136,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	strip_keyword: ET_TOKEN is
+	strip_keyword: ET_KEYWORD is
 			-- 'strip' keyword
 		once
 			!! Result.make (strip_keyword_name)
@@ -144,7 +144,7 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	unique_keyword: ET_TOKEN is
+	unique_keyword: ET_KEYWORD is
 			-- 'unique' keyword
 		once
 			!! Result.make (unique_keyword_name)
@@ -152,17 +152,17 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-feature -- Keyword names
+feature -- Keyword and symbol names
 
 	capitalized_current_keyword_name: STRING is "Current"
 	capitalized_false_keyword_name: STRING is "False"
 	capitalized_precursor_keyword_name: STRING is "Precursor"
 	capitalized_result_keyword_name: STRING is "Result"
 	capitalized_true_keyword_name: STRING is "True"
-	capitalized_unique_keyword: STRING is "Unique"
+	capitalized_unique_keyword_name: STRING is "Unique"
 			-- Eiffel keyword names with first letter in upper-case
 
-	agent_keyword: STRING is "agent"
+	agent_keyword_name: STRING is "agent"
 	alias_keyword_name: STRING is "alias"
 	all_keyword_name: STRING is "all"
 	and_keyword_name: STRING is "and"
@@ -224,40 +224,40 @@ feature -- Keyword names
 	xor_keyword_name: STRING is "xor"
 			-- Eiffel keyword names
 
-	arrow_symbol: STRING is "->"
-	assign_symbol: STRING is ":="
-	assign_attempt_symbol: STRING is "?="
-	bang_symbol: STRING is "!"
-	bangbang_symbol: STRING is "!!"
-	colon_symbol: STRING is ":"
-	comma_symbol: STRING is ","
-	div_symbol: STRING is "//"
-	divide_symbol: STRING is "/"
-	dollar_symbol: STRING is "$"
-	dot_symbol: STRING is "."
-	dotdot_symbol: STRING is ".."
-	equal_symbol: STRING is "="
-	ge_symbol: STRING is ">="
-	gt_symbol: STRING is ">"
-	le_symbol: STRING is "<="
-	left_array_symbol: STRING is "<<"
-	left_brace_symbol: STRING is "{"
-	left_bracket_symbol: STRING is "["
-	left_parenthesis_symbol: STRING is "("
-	lt_symbol: STRING is "<"
-	minus_symbol: STRING is "-"
-	mod_symbol: STRING is "\\"
-	not_equal_symbol: STRING is "/="
-	plus_symbol: STRING is "+"
-	power_symbol: STRING is "^"
-	question_mark_symbol: STRING is "?"
-	right_array_symbol: STRING is ">>"
-	right_brace_symbol: STRING is "}"
-	right_bracket_symbol: STRING is "]"
-	right_parenthesis_symbol: STRING is ")"
-	semicolon_symbol: STRING is ";"
-	times_symbol: STRING is "*"
-			-- Eiffel symbols
+	arrow_symbol_name: STRING is "->"
+	assign_symbol_name: STRING is ":="
+	assign_attempt_symbol_name: STRING is "?="
+	bang_symbol_name: STRING is "!"
+	bangbang_symbol_name: STRING is "!!"
+	colon_symbol_name: STRING is ":"
+	comma_symbol_name: STRING is ","
+	div_symbol_name: STRING is "//"
+	divide_symbol_name: STRING is "/"
+	dollar_symbol_name: STRING is "$"
+	dot_symbol_name: STRING is "."
+	dotdot_symbol_name: STRING is ".."
+	equal_symbol_name: STRING is "="
+	ge_symbol_name: STRING is ">="
+	gt_symbol_name: STRING is ">"
+	le_symbol_name: STRING is "<="
+	left_array_symbol_name: STRING is "<<"
+	left_brace_symbol_name: STRING is "{"
+	left_bracket_symbol_name: STRING is "["
+	left_parenthesis_symbol_name: STRING is "("
+	lt_symbol_name: STRING is "<"
+	minus_symbol_name: STRING is "-"
+	mod_symbol_name: STRING is "\\"
+	not_equal_symbol_name: STRING is "/="
+	plus_symbol_name: STRING is "+"
+	power_symbol_name: STRING is "^"
+	question_mark_symbol_name: STRING is "?"
+	right_array_symbol_name: STRING is ">>"
+	right_brace_symbol_name: STRING is "}"
+	right_bracket_symbol_name: STRING is "]"
+	right_parenthesis_symbol_name: STRING is ")"
+	semicolon_symbol_name: STRING is ";"
+	times_symbol_name: STRING is "*"
+			-- Eiffel symbol names
 
 feature -- Nodes
 

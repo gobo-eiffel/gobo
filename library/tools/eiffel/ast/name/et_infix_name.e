@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	infix_keyword: ET_TOKEN
+	infix_keyword: ET_KEYWORD
 			-- Infix keyword
 
 	operator_name: ET_MANIFEST_STRING

@@ -51,10 +51,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ensure_keyword: ET_TOKEN
+	ensure_keyword: ET_KEYWORD
 			-- 'ensure' keyword
 
-	then_keyword: ET_TOKEN
+	then_keyword: ET_KEYWORD
 			-- 'then' keyword
 
 	position: ET_POSITION is

@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keywords
 
 	keys: ET_DEBUG_KEYS

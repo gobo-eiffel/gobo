@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	variant_keyword: ET_TOKEN
+	variant_keyword: ET_KEYWORD
 			-- 'variant' keyword
 
 	position: ET_POSITION is

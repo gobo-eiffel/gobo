@@ -108,7 +108,7 @@ feature -- Access
 	name_item: ET_FEATURE_NAME_ITEM
 			-- Feature name (possibly followed by comma for synomyms)
 
-	frozen_keyword: ET_TOKEN
+	frozen_keyword: ET_KEYWORD
 			-- 'frozen' keyword
 
 	synonym: ET_FEATURE

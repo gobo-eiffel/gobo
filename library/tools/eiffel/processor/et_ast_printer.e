@@ -1602,6 +1602,12 @@ feature -- Processing
 			end
 		end
 
+	process_keyword (a_keyword: ET_KEYWORD) is
+			-- Process `a_keyword'.
+		do
+			process_token (a_keyword)
+		end
+
 	process_keyword_feature_name_list (a_list: ET_KEYWORD_FEATURE_NAME_LIST) is
 			-- Process `a_list'.
 		local

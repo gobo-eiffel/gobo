@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	once_keyword: ET_TOKEN
+	once_keyword: ET_KEYWORD
 			-- 'once' keyword
 
 	manifest_string: ET_MANIFEST_STRING

@@ -58,10 +58,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	check_keyword: ET_TOKEN
+	check_keyword: ET_KEYWORD
 			-- 'check' keyword
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	position: ET_POSITION is

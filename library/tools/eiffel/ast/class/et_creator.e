@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	creation_keyword: ET_TOKEN
+	creation_keyword: ET_KEYWORD
 			-- 'creation' keyword
 
 	clients: ET_CLASS_NAME_LIST

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	if_keyword: ET_TOKEN
+	if_keyword: ET_KEYWORD
 			-- 'if' keyword
 
 	expression: ET_EXPRESSION
@@ -59,7 +59,7 @@ feature -- Access
 	else_compound: ET_COMPOUND
 			-- Else part
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	position: ET_POSITION is

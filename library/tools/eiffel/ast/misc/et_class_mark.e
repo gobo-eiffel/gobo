@@ -14,7 +14,7 @@ deferred class ET_CLASS_MARK
 
 inherit
 
-	ET_TOKEN
+	ET_KEYWORD
 		undefine
 			process
 		end

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	invariant_keyword: ET_TOKEN
+	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
 
 	position: ET_POSITION is

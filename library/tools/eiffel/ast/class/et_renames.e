@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	rename_keyword: ET_TOKEN
+	rename_keyword: ET_KEYWORD
 			-- 'rename' keyword
 
 	position: ET_POSITION is

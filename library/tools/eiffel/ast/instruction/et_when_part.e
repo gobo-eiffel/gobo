@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	when_keyword: ET_TOKEN
+	when_keyword: ET_KEYWORD
 			-- 'when' keyword
 
 	choices: ET_CHOICE_LIST

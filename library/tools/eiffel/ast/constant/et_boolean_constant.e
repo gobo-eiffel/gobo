@@ -18,7 +18,7 @@ inherit
 
 	ET_INDEXING_TERM
 
-	ET_TOKEN
+	ET_KEYWORD
 		undefine
 			process
 		end

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	like_keyword: ET_TOKEN
+	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 
 	name: ET_IDENTIFIER

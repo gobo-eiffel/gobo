@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	inspect_keyword: ET_TOKEN
+	inspect_keyword: ET_KEYWORD
 			-- 'inspect' keyword
 
 	expression: ET_EXPRESSION
@@ -52,7 +52,7 @@ feature -- Access
 	else_compound: ET_COMPOUND
 			-- Else part
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	position: ET_POSITION is

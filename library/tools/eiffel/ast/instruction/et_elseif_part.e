@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	elseif_keyword: ET_TOKEN
+	elseif_keyword: ET_KEYWORD
 			-- 'elseif' keyword
 
 	expression: ET_EXPRESSION

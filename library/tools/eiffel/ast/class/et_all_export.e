@@ -46,7 +46,7 @@ feature -- Access
 	clients_clause: ET_CLIENTS
 			-- Clients clause
 
-	all_keyword: ET_TOKEN
+	all_keyword: ET_KEYWORD
 			-- 'all' keyword
 
 	position: ET_POSITION is

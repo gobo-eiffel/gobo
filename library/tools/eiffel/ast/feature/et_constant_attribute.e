@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_keyword: ET_TOKEN
+	is_keyword: ET_KEYWORD
 			-- 'is' keyword
 
 	constant: ET_CONSTANT

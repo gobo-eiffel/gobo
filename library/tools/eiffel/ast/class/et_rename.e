@@ -46,7 +46,7 @@ feature -- Access
 	new_name: ET_FEATURE_NAME
 			-- New name
 
-	as_keyword: ET_TOKEN
+	as_keyword: ET_KEYWORD
 			-- 'as' keyword
 
 	position: ET_POSITION is

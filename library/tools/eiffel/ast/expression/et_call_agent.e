@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	agent_keyword: ET_TOKEN
+	agent_keyword: ET_KEYWORD
 			-- 'agent' keyword
 
 	position: ET_POSITION is

@@ -71,7 +71,7 @@ feature -- Access
 	selects: ET_KEYWORD_FEATURE_NAME_LIST
 			-- Select clause
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	parent: ET_PARENT is

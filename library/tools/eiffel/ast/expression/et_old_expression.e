@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	old_keyword: ET_TOKEN
+	old_keyword: ET_KEYWORD
 			-- "old" keyword
 
 	position: ET_POSITION is

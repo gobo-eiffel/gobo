@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	indexing_keyword: ET_TOKEN
+	indexing_keyword: ET_KEYWORD
 			-- 'indexing' keyword
 
 	position: ET_POSITION is

@@ -31,16 +31,16 @@ creation
 
 %}
 
-%token <ET_TOKEN>              E_AGENT E_ALIAS E_ALL E_AS E_CHECK
-%token <ET_TOKEN>              E_CLASS E_CREATE E_CREATION E_DEBUG
-%token <ET_TOKEN>              E_DO E_ELSE E_ELSEIF E_END E_ENSURE
-%token <ET_TOKEN>              E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
-%token <ET_TOKEN>              E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
-%token <ET_TOKEN>              E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_OBSOLETE
-%token <ET_TOKEN>              E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
-%token <ET_TOKEN>              E_RESCUE E_SELECT E_STRIP
-%token <ET_TOKEN>              E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
-%token <ET_TOKEN>              E_WHEN E_PRECURSOR
+%token <ET_KEYWORD>            E_AGENT E_ALIAS E_ALL E_AS E_CHECK
+%token <ET_KEYWORD>            E_CLASS E_CREATE E_CREATION E_DEBUG
+%token <ET_KEYWORD>            E_DO E_ELSE E_ELSEIF E_END E_ENSURE
+%token <ET_KEYWORD>            E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
+%token <ET_KEYWORD>            E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
+%token <ET_KEYWORD>            E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_OBSOLETE
+%token <ET_KEYWORD>            E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
+%token <ET_KEYWORD>            E_RESCUE E_SELECT E_STRIP
+%token <ET_KEYWORD>            E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
+%token <ET_KEYWORD>            E_WHEN E_PRECURSOR
 
 %token <ET_SYMBOL>             E_BANGBANG E_ARROW E_DOTDOT E_LARRAY E_RARRAY
 %token <ET_SYMBOL>             E_ASSIGN E_REVERSE
@@ -82,7 +82,7 @@ creation
 
 %token E_CHARERR E_STRERR E_INTERR
 
-%token <ET_TOKEN>              E_OLD
+%token <ET_KEYWORD>            E_OLD
 %token <ET_SYMBOL>             '{' '}'
 %token <ET_SYMBOL>             '(' ')' ':' ',' '[' ']' '$' '.' '!' '?'
 %token <ET_MINUS_SYMBOL>       '-'

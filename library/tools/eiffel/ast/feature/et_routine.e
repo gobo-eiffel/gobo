@@ -23,7 +23,7 @@ feature -- Access
 	arguments: ET_FORMAL_ARGUMENTS
 			-- Formal arguments
 
-	is_keyword: ET_TOKEN
+	is_keyword: ET_KEYWORD
 			-- 'is' keyword
 
 	obsolete_message: ET_OBSOLETE
@@ -35,7 +35,7 @@ feature -- Access
 	postconditions: ET_POSTCONDITIONS
 			-- Postconditions
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	break: ET_BREAK is

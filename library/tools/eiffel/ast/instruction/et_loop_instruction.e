@@ -63,7 +63,7 @@ feature -- Access
 	variant_part: ET_VARIANT
 			-- Variant part
 
-	until_keyword: ET_TOKEN
+	until_keyword: ET_KEYWORD
 			-- 'until' keyword
 
 	until_expression: ET_EXPRESSION
@@ -72,7 +72,7 @@ feature -- Access
 	loop_compound: ET_COMPOUND
 			-- Loop compound
 
-	end_keyword: ET_TOKEN
+	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
 	position: ET_POSITION is

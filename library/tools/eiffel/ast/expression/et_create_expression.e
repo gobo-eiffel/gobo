@@ -46,7 +46,7 @@ feature -- Access
 	type: ET_TYPE
 			-- Type of object being created
 
-	create_keyword: ET_TOKEN
+	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
 	left_brace: ET_SYMBOL

@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	feature_keyword: ET_TOKEN
+	feature_keyword: ET_KEYWORD
 			-- 'feature' keyword
 
 	type: ET_TYPE

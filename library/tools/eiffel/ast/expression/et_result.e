@@ -18,7 +18,7 @@ inherit
 
 	ET_WRITABLE
 
-	ET_TOKEN
+	ET_KEYWORD
 		redefine
 			process
 		end

@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	create_keyword: ET_TOKEN
+	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
 	position: ET_POSITION is

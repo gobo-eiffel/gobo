@@ -68,7 +68,7 @@ feature -- Access
 			parent_not_void: Result /= Void
 		end
 
-	inherit_keyword: ET_TOKEN
+	inherit_keyword: ET_KEYWORD
 			-- 'inherit' keyword
 
 	position: ET_POSITION is

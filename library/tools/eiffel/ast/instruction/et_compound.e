@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	keyword: ET_TOKEN
+	keyword: ET_KEYWORD
 			-- Keyword preceding the list of instructions
 
 	position: ET_POSITION is
