@@ -1,0 +1,24 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Geant's builtin variables"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2003, Sven Ehrke and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="geant_builtin_variables">
+	<title>Geant's built-in variables</title>
+
+	<sect1 id="abstract">
+		<para>
+			To be done.
+		</para>
+	</sect1>
+
+</chapter>
