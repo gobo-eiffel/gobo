@@ -166,6 +166,7 @@ feature -- Output
 		do
 			if is_name then
 				Result := name
+				Result.append_character (repetition)
 			elseif is_content_any then
 				Result := "ANY"
 			elseif is_content_empty then
