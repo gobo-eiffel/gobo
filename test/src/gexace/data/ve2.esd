@@ -13,10 +13,6 @@ creation
 cluster
 
 	[gefoo "$GOBO/test/src/gexace/data"] end
-	[Kernel "$VE_Lib\Kernel"] end
-	[Pool "$VE_Lib\Misc\Pool"] end
-	[gArgs "$VE_Lib\Tools\gArgs"] end
-	[TimeDate "$VE_Lib\TimeDate"] end
 
 option
 

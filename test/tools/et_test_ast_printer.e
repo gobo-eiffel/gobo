@@ -51,6 +51,8 @@ feature -- Test
 			old_count, new_count: INTEGER
 			a_prefixed_name: STRING
 			a_full_test: BOOLEAN
+			ve_os: STRING
+			ve_4_1: STRING
 		do
 			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
@@ -59,6 +61,20 @@ feature -- Test
 			create an_xace_variables.make_map (100)
 			an_xace_variables.set_key_equality_tester (string_equality_tester)
 			an_xace_variables.force_last (eiffel_compiler.vendor, "GOBO_EIFFEL")
+			if eiffel_compiler.is_ve then
+				ve_os := Execution_environment.variable_value ("VE_OS")
+				if ve_os /= Void and then ve_os.count > 0 then
+					an_xace_variables.force_last (ve_os, "VE_OS")
+				elseif operating_system.is_windows then
+					an_xace_variables.force_last ("Win32", "VE_OS")
+				else
+					an_xace_variables.force_last ("Linux", "VE_OS")
+				end
+				ve_4_1 := Execution_environment.variable_value ("VE_4_1")
+				if ve_4_1 /= Void and then ve_4_1.count > 0 then
+					an_xace_variables.force_last (ve_4_1, "VE_4_1")
+				end
+			end
 			create an_xace_ast_factory.make
 			create an_eiffel_ast_factory.make
 			an_eiffel_ast_factory.set_keep_all_breaks (True)
