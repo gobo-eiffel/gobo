@@ -82,13 +82,19 @@ Mask=utility/spec/ve/*.e
 
 
 [Gobo.Bindings]
-Clusters=Gobo.Clusters
+Clusters=Gobo.Clusters.$VE_OS
 
-[Gobo.Clusters]
+[Gobo.Clusters.Win32]
 VE.Kernel=
 VE.Pool=
 VE.gArgs=
 VE.WinLib=
+VE.TimeDate=
+
+[Gobo.Clusters.Linux]
+VE.Kernel=
+VE.Pool=
+VE.gArgs=
 VE.TimeDate=
 
 [VE.Kernel]
