@@ -68,9 +68,10 @@ feature -- Status report
 			from cursor.start until cursor.after loop
 				if cursor.item.source = a_state then
 					Result := True
-					cursor.finish -- Jump out of the loop.
+					cursor.go_after -- Jump out of the loop.
+				else
+					cursor.forth
 				end
-				cursor.forth
 			end
 		end
 
@@ -112,9 +113,10 @@ feature -- Access
 			from cursor.start until cursor.after loop
 				Result := cursor.item
 				if Result.source = a_state then
-					cursor.finish -- Jump out of the loop.
+					cursor.go_after -- Jump out of the loop.
+				else
+					cursor.forth
 				end
-				cursor.forth
 			end
 		ensure
 			transition_not_void: Result /= Void

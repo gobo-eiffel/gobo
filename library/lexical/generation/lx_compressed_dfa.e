@@ -40,7 +40,7 @@ inherit
 
 	LX_COMPRESSED_TABLES
 		export
-			{LX_COMPRESSED_TABLES} all
+			{LX_COMPRESSED_TABLES} all;
 			{ANY} to_tables
 		undefine
 			is_equal, copy
@@ -504,6 +504,7 @@ feature {NONE} -- Compression
 					end
 					i := i + 1
 				end
+				st_cursor.go_after -- Release cursor to GC.
 				nb := states.count
 				from i := 1 until i > nb loop
 					if common_freq < frequencies.item (i) then
@@ -512,9 +513,9 @@ feature {NONE} -- Compression
 					end
 					i := i + 1
 				end
+				proto_cursor := protos.new_cursor
 				if not protos.is_empty then
 					proto := protos.first
-					proto_cursor := protos.new_cursor
 					proto_cursor.start
 				end
 				min_diff := trans_nb
@@ -530,7 +531,7 @@ feature {NONE} -- Compression
 					end
 					if not cursor.after then
 						proto := cursor.item
-						proto_cursor := clone (cursor)
+						proto_cursor.go_to (cursor)
 						difference := transitions.difference
 							(proto.transitions, null_state)
 						min_diff := difference.count
@@ -545,7 +546,7 @@ feature {NONE} -- Compression
 					common_state := null_state
 					if not protos.is_empty then
 						proto := protos.first
-						proto_cursor := clone (cursor)
+						proto_cursor.go_to (cursor)
 						difference := transitions.difference
 							(proto.transitions, null_state)
 						min_diff := difference.count
@@ -564,12 +565,14 @@ feature {NONE} -- Compression
 							(new_proto.transitions, null_state)
 						if new_diff.count < min_diff then
 							proto := new_proto
-							proto_cursor := clone (cursor)
+							proto_cursor.go_to (cursor)
 							difference := new_diff
 							min_diff := difference.count
 						end
 						cursor.forth
 					end
+				else
+					cursor.go_after -- Release cursor to GC.
 				end
 					-- Check if the proto we've decided on as our best bet
 					-- is close enough to the state we want to match to
@@ -600,6 +603,7 @@ feature {NONE} -- Compression
 						protos.put (state.id, clone (transitions), common_state)
 					end
 				end
+				proto_cursor.go_after -- Release cursor to GC.
 			end
 		end
 
