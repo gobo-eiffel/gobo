@@ -1,0 +1,32 @@
+<!-- Partial geant DTD -->
+<!-- $Id$ -->
+
+<!ELEMENT project (description, target)>
+<!ATTLIST project
+  name CDATA #IMPLIED
+  default CDATA #REQUIRED
+  inherit CDATA #IMPLIED
+  basedir CDATA #IMPLIED>
+
+<!ELEMENT target (set|unset|echo)*>
+<!ATTLIST target
+  name CDATA #REQUIRED
+  depends CDATA #IMPLIED
+  if CDATA #IMPLIED
+  unless CDATA #IMPLIED
+  description CDATA #IMPLIED>
+
+<!ELEMENT set EMPTY>
+<!ATTLIST set
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED>
+
+<!ELEMENT unset EMPTY>
+<!ATTLIST unset
+  name CDATA #REQUIRED>
+
+<!ELEMENT echo EMPTY>
+<!ATTLIST echo
+  message CDATA #REQUIRED>
+
+<!ELEMENT description (#PCDATA)>
