@@ -61,7 +61,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			log("  [echo] " + interpreted_string (message) + "%N")
+			log("  [echo] " + message + "%N")
 		end
 
 end -- class GEANT_ECHO_COMMAND

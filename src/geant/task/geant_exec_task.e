@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_value: STRING
 		do
 			if an_element.has_attribute (Executable_attribute_name) then
-				a_value := an_element.attribute_value_by_name (Executable_attribute_name).out
+				a_value := attribute_value (an_element, Executable_attribute_name.out)
 				if a_value.count > 0 then
 					set_command_line (a_value.out)
 				end

@@ -28,11 +28,11 @@ feature {NONE} -- Initialization
 	make_from_element (an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
-			a_value: UC_STRING
+			a_value: STRING
 		do
 			if an_element.has_attribute (Message_attribute_name) then
-				a_value := an_element.attribute_value_by_name (Message_attribute_name)
-				set_message (a_value.out)
+				a_value := attribute_value (an_element, Message_attribute_name.out)
+				set_message (a_value)
 			end
 		end
 

@@ -32,14 +32,14 @@ feature {NONE} -- Initialization
 		do
 				-- filename:
 			if an_element.has_attribute (Filename_attribute_name) then
-				a_value := an_element.attribute_value_by_name (Filename_attribute_name).out
+				a_value := attribute_value (an_element, Filename_attribute_name.out)
 				if a_value.count > 0 then
 					set_filename (a_value.out)
 				end
 			end
 				-- start target:
 			if an_element.has_attribute (Start_target_attribute_name) then
-				a_value := an_element.attribute_value_by_name (Start_target_attribute_name).out
+				a_value := attribute_value (an_element, Start_target_attribute_name.out)
 				if a_value.count > 0 then
 					set_start_target_name (a_value.out)
 				end

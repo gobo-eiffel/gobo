@@ -60,9 +60,11 @@ feature {NONE} -- Implementation
 			has_attribute: has_attribute (an_element, an_attr_name)
 		local
 			uc_name: UC_STRING
+			s: STRING
 		do
 			!! uc_name.make_from_string(an_attr_name)
-			Result := an_element.attribute_value_by_name (uc_name).out
+			s := (an_element.attribute_value_by_name (uc_name)).out
+			Result := interpreted_string (s)
 		end
 
 	boolean_value_or_default (an_element: GEANT_ELEMENT;
@@ -119,9 +121,12 @@ feature {NONE} -- Unicode implementation
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: not an_attr_name.empty
 			a_default_value_not_void: a_default_value /= Void
+		local
+			s: STRING
 		do
 			if an_element.has_attribute (an_attr_name) then
-				Result := an_element.attribute_value_by_name (an_attr_name)
+				s := interpreted_string (an_element.attribute_value_by_name (an_attr_name).out)
+				!! Result.make_from_string (s)
 			else
 				Result := a_default_value
 			end
@@ -136,8 +141,11 @@ feature {NONE} -- Unicode implementation
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: not an_attr_name.empty
 			has_attribute: has_uc_attribute (an_element, an_attr_name)
+		local
+			s: STRING
 		do
-			Result := an_element.attribute_value_by_name (an_attr_name)
+			s := interpreted_string (an_element.attribute_value_by_name (an_attr_name).out)
+			!! Result.make_from_string (s)
 		ensure
 			value_not_void: Result /= Void
 		end

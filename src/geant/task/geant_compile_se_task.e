@@ -39,21 +39,21 @@ feature {NONE} -- Initialization
 			else
 					-- root_class:
 				if has_uc_attribute (an_element, Root_class_attribute_name) then
-					a_value := uc_attribute_value (an_element, Root_class_attribute_name).out
+					a_value := attribute_value (an_element, Root_class_attribute_name.out)
 					if a_value.count > 0 then
 						set_root_class (a_value)
 					end
 				end
 					-- creation_procedure:
 				if has_uc_attribute (an_element, Creation_procedure_attribute_name) then
-					a_value := uc_attribute_value (an_element, Creation_procedure_attribute_name).out
+					a_value := attribute_value (an_element, Creation_procedure_attribute_name.out)
 					if a_value.count > 0 then
 						set_creation_procedure (a_value)
 					end
 				end
 					-- executable:
 				if has_uc_attribute (an_element, Executable_attribute_name) then
-					a_value := uc_attribute_value (an_element, Executable_attribute_name).out
+					a_value := attribute_value (an_element, Executable_attribute_name.out)
 					if a_value.count > 0 then
 						set_executable (a_value)
 					end
