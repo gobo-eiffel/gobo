@@ -34,7 +34,7 @@ creation
 -- getting error messages from scanner
 -- check no external entity or DTD for standalone docs
 -- xml declaration in external entities
--- DTD external id lacks base, public name
+-- DTD external id lacks base
 
 %type <XM_EIFFEL_PARSER_NAME> namespace_name s_tag_name s_tag e_tag attribute
 %type <DS_HASH_SET [XM_EIFFEL_PARSER_NAME]> s_tag_trail
@@ -896,14 +896,9 @@ pe_decl: DOCTYPE_ENTITY req_space DOCTYPE_PERCENT req_space doctype_name req_spa
 
 external_id: doctype_system_token
 		{ $$ := new_dtd_external_id; $$.set_system ($1) }
+	| DOCTYPE_PUBLIC doctype_system_token
+		{ $$ := new_dtd_external_id; $$.set_public ($1); $$.set_system ($2) }
 	;
-
--- See problem in scanner
---external_id: doctype_system_token
---		{ $$ := new_dtd_external_id; $$.set_system ($1) }
---	| DOCTYPE_PUBLIC doctype_system_token
---		{ $$ := new_dtd_external_id; $$.set_public ($1); $$.set_system ($2) }
---	;
 
 ndata_decl: req_space DOCTYPE_NDATA req_space doctype_name -- $2 is 'NDATA'
 	{ $$ := $4 }

@@ -108,6 +108,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 %x entity_value_single
 %x entity_value_double
 %x doctype
+%x public_system
 %x dtd_in
 %x dtd_element
 %x dtd_attlist
@@ -494,28 +495,48 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		-- Problem: if declaration merged from processing entity 
 		-- (PE cuts on space token boundaries).
 
-		("SYSTEM"|("PUBLIC"{SPACECHAR}+{PUBIDLITERAL})){SPACECHAR}+(([']{NOAPOSSYSLITCHAR}*['])|(["]{NOQUOTSYSLITCHAR}*["])) {
+		"SYSTEM"{SPACECHAR}+(([']{NOAPOSSYSLITCHAR}*['])|(["]{NOQUOTSYSLITCHAR}*["])) {
 			set_last_token (DOCTYPE_SYSTEM)
 			last_value := system_literal_text
 		}
 
-		("SYSTEM"|("PUBLIC"{SPACECHAR}+{PUBIDLITERAL})){SPACECHAR}+[']({NOAPOSSYSLITCHAR}|{UTF8CHAR})*['] {
+		"SYSTEM"{SPACECHAR}+(([']({NOAPOSSYSLITCHAR}|{UTF8CHAR})*['])|(["]({NOQUOTSYSLITCHAR}|{UTF8CHAR})*["])) {
 			set_last_token (DOCTYPE_SYSTEM_UTF8)
 			last_value := system_literal_text
 		}
 		
-		("SYSTEM"|("PUBLIC"{SPACECHAR}+{PUBIDLITERAL})){SPACECHAR}+["]({NOQUOTSYSLITCHAR}|{UTF8CHAR})*["] {
-			set_last_token (DOCTYPE_SYSTEM_UTF8)
-			last_value := system_literal_text
-		}
-
 		"PUBLIC"{SPACECHAR}+{PUBIDLITERAL} {
 			set_last_token (DOCTYPE_PUBLIC)
 			last_value := system_literal_text
+			push_start_condition (public_system)
 		}
-		
 	}
 
+<public_system> {
+		{SPACECHAR}+(([']{NOAPOSSYSLITCHAR}*['])|(["]{NOQUOTSYSLITCHAR}*["])) {
+				set_last_token (DOCTYPE_SYSTEM)
+				last_value := system_literal_text
+				pop_start_condition
+			}
+		
+		{SPACECHAR}+(([']({NOAPOSSYSLITCHAR}|{UTF8CHAR})*['])|(["]({NOQUOTSYSLITCHAR}|{UTF8CHAR})*["])) {
+				set_last_token (DOCTYPE_SYSTEM_UTF8)
+				last_value := system_literal_text
+				pop_start_condition
+			}
+
+		-- this covers the case of dtd_notation, which allows a PUBLIC id with or without 
+		-- a system part. When there is no system part, DOCTYPE_END is the only valid token.
+		-- If there is a system part, the next token is handled by the regular 
+		-- DTD notation.
+		{SPACECHAR}*">" {
+				set_last_token (DOCTYPE_END)
+				pop_start_condition
+				pop_start_condition -- go out of dtd_notation
+			}
+		
+	}
+	
 <dtd_element, dtd_attlist>
 	{
 		"|" { set_last_token (DOCTYPE_GROUP_OR) }
