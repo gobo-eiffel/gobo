@@ -1,0 +1,63 @@
+-- system:     "Calculator with memory"
+-- compiler:   "ISE Eiffel 4.3"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	mcalc
+
+root
+
+	MCALC: "execute"
+
+default
+
+	--debug (yes);
+	--assertion (all);
+	--precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+
+cluster
+
+	mcalc:				"$GOBO\example\parse\mcalc";
+
+		-- Gobo Eiffel Parse Library
+	pr_skeleton:		"$GOBO\library\parse\skeleton";
+
+		-- Gobo Eiffel Structure Library
+	ds_container:		"$GOBO\library\structure\container";
+	ds_cursor:			"$GOBO\library\structure\cursor";
+	ds_list:			"$GOBO\library\structure\list";
+	ds_search:			"$GOBO\library\structure\search";
+	ds_sort:			"$GOBO\library\structure\sort";
+	ds_stack:			"$GOBO\library\structure\stack";
+	ds_support:			"$GOBO\library\structure\support";
+	ds_table:			"$GOBO\library\structure\table";
+
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$GOBO\library\kernel";
+	kl_kernel_spec:		"$GOBO\library\kernel\spec\ise";
+
+		-- EiffelBase
+	kernel:				"$EIFFEL4\library\base\kernel";
+	support:			"$EIFFEL4\library\base\support";
+	access:				"$EIFFEL4\library\base\structures\access";
+	cursors:			"$EIFFEL4\library\base\structures\cursors";
+	cursor_trees:		"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:			"$EIFFEL4\library\base\structures\dispenser";
+	iteration:			"$EIFFEL4\library\base\structures\iteration";
+	list:				"$EIFFEL4\library\base\structures\list";
+	set:				"$EIFFEL4\library\base\structures\set";
+	sort:				"$EIFFEL4\library\base\structures\sort";
+	storage:			"$EIFFEL4\library\base\structures\storage";
+	table:				"$EIFFEL4\library\base\structures\table";
+	traversing:			"$EIFFEL4\library\base\structures\traversing";
+	tree:				"$EIFFEL4\library\base\structures\tree";
+
+external
+
+	include_path: "$(GOBO)\library\kernel\include"
+
+end

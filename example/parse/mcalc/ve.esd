@@ -1,0 +1,50 @@
+-- system:     "Calculator with memory"
+-- compiler:   "Visual Eiffel 3.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	mcalc
+
+root
+
+	MCALC
+
+creation
+
+	execute
+
+cluster
+
+	[mcalc_project			"."] end
+	[mcalc					"$GOBO\example\parse\mcalc"] end
+
+		-- Gobo Eiffel Parse Library
+	[pr_skeleton			"$GOBO\library\parse\skeleton"] end
+
+		-- Gobo Eiffel Structure Library
+	[ds_container			"$GOBO\library\structure\container"] end
+	[ds_cursor				"$GOBO\library\structure\cursor"] end
+	[ds_list				"$GOBO\library\structure\list"] end
+	[ds_search				"$GOBO\library\structure\search"] end
+	[ds_sort				"$GOBO\library\structure\sort"] end
+	[ds_stack				"$GOBO\library\structure\stack"] end
+	[ds_support				"$GOBO\library\structure\support"] end
+	[ds_table				"$GOBO\library\structure\table"] end
+
+		-- Gobo Eiffel Kernel Library
+	[kl_kernel				"$GOBO\library\kernel"] end
+	[kl_kernel_spec			"$GOBO\library\kernel\spec\ve"] end
+
+		-- Kernel
+	[Kernel					"$VE_LIB\kernel"] end
+
+option
+
+	target exe console
+	code native
+
+end

@@ -1,0 +1,48 @@
+-- system:     "Calculator with memory"
+-- compiler:   "Halstenbach ISS-BASE 3.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	mcalc
+
+root
+
+	MCALC: "execute"
+
+default
+
+	--debug (yes);
+	--assertion (all);
+	--precompiled ("$ISS_BASE\spec\$PLATFORM\precomp\base")
+
+cluster
+
+	mcalc:				"$GOBO\example\parse\mcalc";
+
+		-- Gobo Eiffel Parse Library
+	pr_skeleton:		"$GOBO\library\parse\skeleton";
+
+		-- Gobo Eiffel Structure Library
+	ds_container:		"$GOBO\library\structure\container";
+	ds_cursor:			"$GOBO\library\structure\cursor";
+	ds_list:			"$GOBO\library\structure\list";
+	ds_search:			"$GOBO\library\structure\search";
+	ds_sort:			"$GOBO\library\structure\sort";
+	ds_stack:			"$GOBO\library\structure\stack";
+	ds_support:			"$GOBO\library\structure\support";
+	ds_table:			"$GOBO\library\structure\table";
+
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$GOBO\library\kernel";
+	kl_kernel_spec:		"$GOBO\library\kernel\spec\hact";
+
+component
+
+		-- ISS-Baselib
+	base: "$ISS_BASE\spec\$PLATFORM\component\base.cl"
+
+end
