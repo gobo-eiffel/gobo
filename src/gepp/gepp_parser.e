@@ -398,7 +398,7 @@ feature -- Processing
 			-- Do not allow more than 10 nested include files.
 		require
 			a_filname_not_void: a_filename /= Void
-			a_filename_not_empty: not a_filename.empty
+			a_filename_not_empty: a_filename.count > 0
 		local
 			a_file: like INPUT_STREAM_TYPE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
