@@ -26,4 +26,4 @@ test-calculator:
 	${CP} -f ${GOBO}/example/lexical/calculator/Makefile calculator-lexical
 	${ECHO} 'Compiling Test Cases'
 	cd calculator-lexical ; ${MAKE} ${ECOMPILER}${DEBUG} > tmp_compile.txt 2>&1
-	cd calculator-lexical ; ${GOBO}/test/all/common/test_exe.sh ${ECOMPILER} calculator
+	cd calculator-lexical ; ${GOBO}/test/all/common/test_harness.sh ${ECOMPILER} calculator
