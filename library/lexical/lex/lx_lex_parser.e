@@ -16,7 +16,7 @@ inherit
 
 	YY_PARSER_SKELETON [ANY]
 		rename
-			reset as reset_parser_skeleton
+			make as make_parser_skeleton
 		end
 
 	LX_LEX_SCANNER
@@ -32,263 +32,162 @@ creation
 
 	make, make_from_description
 
-feature
--- Created by ibyacc V1.6 from "lx_lex_parser.y"
 
-	Token_CHAR: INTEGER is 257
-		-- id of token CHAR
+feature {NONE} -- Tables
 
-	Token_NUMBER: INTEGER is 258
-		-- id of token NUMBER
-
-	Token_ENDSECT: INTEGER is 259
-		-- id of token ENDSECT
-
-	Token_NAME: INTEGER is 260
-		-- id of token NAME
-
-	Token_EOF_OP: INTEGER is 261
-		-- id of token EOF_OP
-
-	Token_CCL_OP: INTEGER is 262
-		-- id of token CCL_OP
-
-	Token_EIF_CODE: INTEGER is 263
-		-- id of token EIF_CODE
-
-	Token_PIPED: INTEGER is 264
-		-- id of token PIPED
-
-	Token_EMPTY: INTEGER is 265
-		-- id of token EMPTY
-
-feature {NONE}
-
-	yyreds: ARRAY[STRING] is
-		once
-			Result := <<
-				"Scanner_description : Section1 Section2 Init_rule Section3",
-				"Section1 : ENDSECT",
-				"Section2 :",
-				"Section2 : Section2 Start_condition Init_rule Pattern Action",
-				"Section2 : Section2 Start_condition { Section2 }",
-				"Action :",
-				"Action : EIF_CODE",
-				"Action : PIPED",
-				"Action : EMPTY",
-				"Init_rule :",
-				"Start_condition :",
-				"Start_condition : Less_than * >",
-				"Start_condition : Less_than Name_list >",
-				"Less_than : <",
-				"Name_list : NAME",
-				"Name_list : Name_list , NAME",
-				"Name_list : error",
-				"Pattern : ^ Rule",
-				"Pattern : Rule",
-				"Pattern : EOF_OP",
-				"Pattern : error",
-				"Rule : Regular_expression2 Regular_expression",
-				"Rule : Regular_expression2 Regular_expression $",
-				"Rule : Regular_expression $",
-				"Rule : Regular_expression",
-				"Regular_expression : Series",
-				"Regular_expression : Regular_expression | Series",
-				"Regular_expression2 : Regular_expression /",
-				"Series : Singleton",
-				"Series : Series Singleton",
-				"Singleton : CHAR",
-				"Singleton : Singleton *",
-				"Singleton : Singleton +",
-				"Singleton : Singleton ?",
-				"Singleton : Singleton { NUMBER , NUMBER }",
-				"Singleton : Singleton { NUMBER , }",
-				"Singleton : Singleton { NUMBER }",
-				"Singleton : .",
-				"Singleton : CCL_OP",
-				"Singleton : Full_CCl",
-				"Singleton : %" String %"",
-				"Singleton : ( Regular_expression )",
-				"Full_CCl : [ CCl ]",
-				"Full_CCl : [ ^ CCl ]",
-				"CCl : CHAR",
-				"CCl : CCl CHAR",
-				"CCl : CHAR - CHAR",
-				"CCl : CCl CHAR - CHAR",
-				"String :",
-				"String : String CHAR",
-				"Section3 :",
-				"Section3 : ENDSECT",
-				"Section3 : ENDSECT EIF_CODE" >>
-		end -- yyreds
-
-	yytoks: ARRAY[STRING] is
-		once
-			Result := <<
-				"$end",
-				"error",
-				"CHAR",
-				"NUMBER",
-				"ENDSECT",
-				"NAME",
-				"EOF_OP",
-				"CCL_OP",
-				"EIF_CODE",
-				"PIPED",
-				"EMPTY",
-				"{",
-				"}",
-				"*",
-				">",
-				"<",
-				",",
-				"^",
-				"$",
-				"|",
-				"/",
-				"+",
-				"?",
-				".",
-				"%"",
-				"(",
-				")",
-				"[",
-				"]",
-				"-",
-				"-unknown-" >>
-		end -- yytoks
-
-	yytokv: ARRAY[INTEGER] is
-		once
-			Result := <<
-				0,256,257,258,259,260,261,262,263,264,
-				265,123,125,42,62,60,44,94,36,124,
-				47,43,63,46,34,40,41,91,93,45,-1 >>
-		end -- yytokv
-
-	yyexca_m: ARRAY[INTEGER] is
-		once
-			Result := <<
-				-1, 1,
-					0, -1,
-					-2, 0,
-				-1, 4,
-					0, 10,
-					259, 10,
-					-2, 11,
-				0 >>
-		end -- yyexca_m
-
-	yylast: INTEGER is 241
-
-	yyact_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				  31,  31,  39,  40,  41,  17,  32,  32,  58,  75,
-				  10,   3,  28,  28,  72,  65,  13,  62,  61,  55,
-				  76,  73,  56,  69,  48,  49,  44,  77,   8,  64,
-				  59,  12,  35,  37,  54,  26,   8,  46,  25,  24,
-				  71,  68,  20,   4,  52,  50,   5,  30,  23,  14,
-				   7,  36,  38,  11,  18,   6,  34,  33,  33,   9,
-				  19,  47,  42,  43,   2,   1,   0,   0,   0,   0,
-				   0,   0,  53,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,  60,   0,   0,   0,   0,   0,
-				  67,   0,   0,  57,   0,   0,  47,   0,   0,   0,
-				   0,   0,   0,   0,  70,  51,   0,   0,   0,   0,
-				   0,   0,  45,   0,  45,   0,   0,   0,  45,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,  74,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,  66,  66,
-				   0,   0,  56,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,  22,  27,  27,   0,   0,  21,  29,  29,
-				  16,   0,   0,   0,  15,   0,   0,   0,   0,   0,
-				  63 >>
-		end -- yyact_m
-
-	yypact_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				-248,-1000,-1000,-1000, -24,-249, -92, -26,-1000,-1000,
-				-258, -34,-1000, -30, -11,-1000,-1000,-1000,-261, -33,
-				-1000,-1000,-1000, -33, -10, -33, -18,-1000,-1000,-1000,
-				-1000,-1000, -33, -75, -32,-1000,-1000,-252,-1000,-1000,
-				-1000,-1000,-1000,  -6,-1000, -33,-1000, -18,-1000,-1000,
-				-1000,-240, -17, -12, -78,-235,  -4,-1000,-1000,-1000,
-				 -33, -21,-1000,-1000,-1000,-1000,  -5, -79,-236,-116,
-				-1000,-237,-1000,-1000, -98,-1000,-1000,-1000 >>
-		end -- yypact_m
-
-	yypgo_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,  65,  64,  43,  46,  59,  55,  54,  52,  50,
-				  49,  42,  48,  39,  38,  35,  47,  44,  34 >>
-		end -- yypgo_m
-
-	yyr1_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,   1,   2,   3,   3,   3,   8,   8,   8,   8,
-				   4,   6,   6,   6,   9,  10,  10,  10,   7,   7,
-				   7,   7,  11,  11,  11,  11,  13,  13,  12,  14,
-				  14,  15,  15,  15,  15,  15,  15,  15,  15,  15,
-				  15,  15,  15,  16,  16,  18,  18,  18,  18,  17,
-				  17,   5,   5,   5 >>
-		end -- yyr1_m
-
-	yyr2_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,   9,   3,   0,  11,  11,   0,   3,   2,   3,
-				   1,   1,   7,   6,   3,   3,   7,   3,   5,   3,
-				   3,   3,   5,   7,   5,   3,   2,   7,   5,   2,
-				   5,   3,   5,   5,   5,  13,  11,   9,   3,   3,
-				   3,   7,   7,   7,   9,   3,   5,   7,   9,   1,
-				   5,   0,   2,   5 >>
-		end -- yyr2_m
-
-	yychk_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				-1000,  -1,  -2, 259,  -3,  -4,  -6,  -9,  60,  -5,
-				 259,  -4, 123,  42, -10, 260, 256, 263,  -7,  94,
-				 -11, 261, 256, -12, -13, -14, -15, 257,  46, 262,
-				 -16,  34,  40,  91,  -3,  62,  62,  44,  -8, 263,
-				 264, 265, -11, -13,  36, 124,  47, -15,  42,  43,
-				  63, 123, -17, -13, -18,  94, 257, 125, 260,  36,
-				 -14, 258,  34, 257,  41,  93, 257, -18,  45,  44,
-				 125,  45,  93, 257, 258, 125, 257, 125 >>
-		end -- yychk_m
-
-	yydef_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,  -2,   3,   2,  -2,  51,  10,   0,  14,   1,
-				  52,   0,   3,   0,   0,  15,  17,  53,   6,   0,
-				  19,  20,  21,   0,  25,  26,  29,  31,  38,  39,
-				  40,  49,   0,   0,  11,  12,  13,   0,   4,   7,
-				   8,   9,  18,  22,  24,   0,  28,  30,  32,  33,
-				  34,   0,   0,   0,   0,   0,  45,   5,  16,  23,
-				  27,   0,  41,  50,  42,  43,  46,   0,   0,   0,
-				  37,   0,  44,  47,   0,  36,  48,  35 >>
-		end -- yydef_m
-
-	yy_do_action (yy_a, yy_n: INTEGER) is
-			-- execute user action 'yy_a'
+	yy_build_parser_tables is
+			-- Build parser tables.
 		do
-			inspect
-				yy_a
+			yytranslate := yytranslate_
+			yyr1 := yyr1_
+			yyr2 := yyr2_
+			yydefact := yydefact_
+			yydefgoto := yydefgoto_
+			yypact := yypact_
+			yypgoto := yypgoto_
+			yytable := yytable_
+			yycheck := yycheck_
+		end
 
-			when 1 then
-				yy_do_default_action(yy_n)
+	yyFinal: INTEGER is 79
 
--- line 47
+	yyFlag: INTEGER is -32768
+
+	yyNtbase: INTEGER is 31
+
+	yyMax_token: INTEGER is 266
+	yyNsyms: INTEGER is 49
+
+	yytranslate_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<0,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,    25,     2,    19,     2,     2,     2,    26,
+    27,    14,    22,    17,    30,    24,    21,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,    16,
+     2,    15,    23,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+    28,     2,    29,    18,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,    12,    20,    13,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     1,     2,     3,     4,     5,
+     6,     7,     8,     9,    10,    11>>, 0)
+		end
+
+	yyr1_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<0,
+    31,    32,    33,    33,    33,    34,    34,    34,    34,    35,
+    36,    36,    36,    37,    38,    38,    38,    39,    39,    39,
+    39,    40,    40,    40,    40,    41,    41,    42,    43,    43,
+    44,    44,    44,    44,    44,    44,    44,    44,    44,    44,
+    44,    44,    45,    45,    46,    46,    46,    46,    47,    47,
+    48,    48,    48>>, 0)
+		end
+
+	yyr2_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<0,
+     4,     1,     0,     5,     5,     0,     1,     1,     1,     0,
+     0,     3,     3,     1,     1,     3,     1,     2,     1,     1,
+     1,     2,     3,     2,     1,     1,     3,     2,     1,     2,
+     1,     2,     2,     2,     6,     5,     4,     1,     1,     1,
+     3,     3,     3,     4,     1,     2,     3,     4,     0,     2,
+     0,     1,     2>>, 0)
+		end
+
+	yydefact_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<     0,
+     2,     3,    11,    14,    51,    10,     0,    52,     1,     3,
+     0,    17,    15,     0,     0,    53,    11,    21,    31,    20,
+    39,     0,    38,    49,     0,     0,     6,    19,    25,     0,
+    26,    29,    40,    12,    13,     0,     5,    18,     0,     0,
+    45,     0,     0,     7,     8,     9,     4,    24,     0,    28,
+    22,    30,     0,    32,    33,    34,    16,    50,    41,    42,
+     0,     0,    46,    43,    27,    23,     0,    47,    44,     0,
+    37,     0,    48,     0,    36,    35,     0,     0,     0>>, 0)
+		end
+
+	yydefgoto_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<    77,
+     2,     3,    47,     5,     6,     7,    15,    27,    28,    29,
+    30,    31,    32,    33,    43,    39,     9>>, 0)
+		end
+
+	yypact_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<    42,
+-32768,-32768,     6,-32768,    49,     3,    15,    50,-32768,-32768,
+     0,-32768,-32768,    43,    38,-32768,    -4,-32768,-32768,-32768,
+-32768,    11,-32768,-32768,    11,    -1,    34,-32768,    31,    11,
+    11,    26,-32768,-32768,-32768,    54,-32768,-32768,     7,    -7,
+    32,    58,     1,-32768,-32768,-32768,-32768,-32768,    11,-32768,
+    37,    26,    59,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
+    61,     2,    35,-32768,    11,-32768,    10,-32768,-32768,    63,
+-32768,    29,-32768,    55,-32768,-32768,    67,    69,-32768>>, 0)
+		end
+
+	yypgoto_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<-32768,
+-32768,    60,-32768,    65,-32768,-32768,-32768,-32768,    51,    16,
+-32768,    23,   -31,-32768,    33,-32768,-32768>>, 0)
+		end
+
+	yyLast: INTEGER is 75
+
+	yytable_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<    52,
+    18,    41,    19,    63,    63,   -10,    20,    21,    37,    58,
+   -10,     4,    49,    19,    10,    12,    42,    22,    21,    60,
+    13,     4,    71,    23,    24,    25,    72,    26,    14,    64,
+    69,    59,    74,    52,    23,    24,    25,    53,    26,    54,
+    40,    75,    44,    45,    46,    51,     1,    55,    56,    48,
+    49,    50,    35,     8,    36,    66,    49,    34,    16,    57,
+    41,    61,    67,    68,    70,    73,    78,    76,    79,    17,
+    11,    65,    38,     0,    62>>, 0)
+		end
+
+	yycheck_: ARRAY [INTEGER] is
+		once
+			Result := integer_array_.make_from_array (<<    31,
+     1,     3,     3,     3,     3,     0,     7,     8,    13,     3,
+     5,    16,    20,     3,    12,     1,    18,    18,     8,    27,
+     6,    16,    13,    24,    25,    26,    17,    28,    14,    29,
+    29,    25,     4,    65,    24,    25,    26,    12,    28,    14,
+    25,    13,     9,    10,    11,    30,     5,    22,    23,    19,
+    20,    21,    15,     5,    17,    19,    20,    15,     9,     6,
+     3,    30,     4,     3,    30,     3,     0,    13,     0,    10,
+     6,    49,    22,    -1,    42>>, 0)
+		end
+
+feature {NONE} -- Semantic actions
+
+	yy_do_action (yy_act: INTEGER) is
+		do
+			inspect yy_act
+
+when 1 then
+--#line 46 "lx_lex_parser.y"
 
 			process_default_rule
 			if equiv_classes /= Void then
@@ -296,51 +195,44 @@ feature {NONE}
 			end
 			check_options
 		
-			when 2 then
-				yy_do_default_action(yy_n)
 
--- line 57
+when 2 then
+--#line 56 "lx_lex_parser.y"
 
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
 				!! transitions.make (Initial_max_transitions)
 			end
 		
-			when 4 then
-				yy_do_default_action(yy_n)
 
--- line 67
+when 4 then
+--#line 66 "lx_lex_parser.y"
 
-			start_condition_stack.keep_first (dollar_integer (yyvstack.item(-3)))
+			start_condition_stack.keep_first (dollar_integer (yyvs.item (yyvsp - 3)))
 		
-			when 5 then
-				yy_do_default_action(yy_n)
 
--- line 71
+when 5 then
+--#line 70 "lx_lex_parser.y"
 
-			start_condition_stack.keep_first (dollar_integer (yyvstack.item(-3)))
+			start_condition_stack.keep_first (dollar_integer (yyvs.item (yyvsp - 3)))
 		
-			when 7 then
-				yy_do_default_action(yy_n)
 
--- line 78
+when 7 then
+--#line 77 "lx_lex_parser.y"
 
-			set_action (dollar_string (yyvstack.item(-0)))
+			set_action (dollar_string (yyvs.item (yyvsp)))
 		
-			when 9 then
-				yy_do_default_action(yy_n)
 
--- line 83
+when 9 then
+--#line 82 "lx_lex_parser.y"
 
 			set_action ("")
 		
-			when 10 then
-				yy_do_default_action(yy_n)
 
--- line 89
+when 10 then
+--#line 88 "lx_lex_parser.y"
 
 				-- Initialize for a parse of one rule.
-
 			has_trail_context := False
 			variable_trail_rule := False
 			variable_length := False
@@ -350,130 +242,111 @@ feature {NONE}
 			in_trail_context := False
 			rule_id := rules.count + 1
 		
-			when 11 then
-				yy_do_default_action(yy_n)
 
--- line 103
+when 11 then
+--#line 102 "lx_lex_parser.y"
 
 			yyval := start_condition_stack.count
 		
-			when 12 then
-				yy_do_default_action(yy_n)
 
--- line 107
+when 12 then
+--#line 106 "lx_lex_parser.y"
 
 			start_condition_stack.append_start_conditions (start_conditions)
 		
-			when 14 then
-				yy_do_default_action(yy_n)
 
--- line 114
+when 14 then
+--#line 113 "lx_lex_parser.y"
 
 			yyval := start_condition_stack.count
 		
-			when 15 then
-				yy_do_default_action(yy_n)
 
--- line 120
+when 15 then
+--#line 119 "lx_lex_parser.y"
 
-			push_start_condition (dollar_string (yyvstack.item(-0)), start_condition_stack)
+			push_start_condition (dollar_string (yyvs.item (yyvsp)), start_condition_stack)
 		
-			when 16 then
-				yy_do_default_action(yy_n)
 
--- line 124
+when 16 then
+--#line 123 "lx_lex_parser.y"
 
-			push_start_condition (dollar_string (yyvstack.item(-0)), start_condition_stack)
+			push_start_condition (dollar_string (yyvs.item (yyvsp)), start_condition_stack)
 		
-			when 17 then
-				yy_do_default_action(yy_n)
 
--- line 128
+when 17 then
+--#line 127 "lx_lex_parser.y"
 
 			error_handler.bad_start_condition_list (filename, line_nb)
 		
-			when 18 then
-				yy_do_default_action(yy_n)
 
--- line 134
+when 18 then
+--#line 133 "lx_lex_parser.y"
 
-			process_bol_rule (dollar_nfa (yyvstack.item(-0)))
+			process_bol_rule (dollar_nfa (yyvs.item (yyvsp)))
 		
-			when 19 then
-				yy_do_default_action(yy_n)
 
--- line 138
+when 19 then
+--#line 137 "lx_lex_parser.y"
 
-			process_rule (dollar_nfa (yyvstack.item(-0)))
+			process_rule (dollar_nfa (yyvs.item (yyvsp)))
 		
-			when 20 then
-				yy_do_default_action(yy_n)
 
--- line 142
+when 20 then
+--#line 141 "lx_lex_parser.y"
 
 			process_eof_rule
 		
-			when 21 then
-				yy_do_default_action(yy_n)
 
--- line 146
+when 21 then
+--#line 145 "lx_lex_parser.y"
 
 			error_handler.unrecognized_rule (filename, line_nb)
 		
-			when 22 then
-				yy_do_default_action(yy_n)
 
--- line 152
+when 22 then
+--#line 151 "lx_lex_parser.y"
 
 			yyval := append_trail_context_to_regexp
-				(dollar_nfa (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
+				(dollar_nfa (yyvs.item (yyvsp)), dollar_nfa (yyvs.item (yyvsp - 1)))
 		
-			when 23 then
-				yy_do_default_action(yy_n)
 
--- line 157
+when 23 then
+--#line 156 "lx_lex_parser.y"
 
 			error_handler.trailing_context_used_twice (filename, line_nb)
 		
-			when 24 then
-				yy_do_default_action(yy_n)
 
--- line 161
+when 24 then
+--#line 160 "lx_lex_parser.y"
 
-			yyval := append_eol_to_regexp (dollar_nfa (yyvstack.item(-1)))
+			yyval := append_eol_to_regexp (dollar_nfa (yyvs.item (yyvsp - 1)))
 		
-			when 25 then
-				yy_do_default_action(yy_n)
 
--- line 165
+when 25 then
+--#line 164 "lx_lex_parser.y"
 
 			if has_trail_context then
 				if variable_length and head_count = 0 then
 						-- Both head and trail are variable-length.
-
 					variable_trail_rule := True
 				else
 					trail_count := rule_length
 				end
 			end
 		
-			when 27 then
-				yy_do_default_action(yy_n)
 
--- line 179
+when 27 then
+--#line 178 "lx_lex_parser.y"
 
 			variable_length := True
-			yyval := dollar_nfa (yyvstack.item(-2)) | dollar_nfa (yyvstack.item(-0))
+			yyval := dollar_nfa (yyvs.item (yyvsp - 2)) | dollar_nfa (yyvs.item (yyvsp))
 		
-			when 28 then
-				yy_do_default_action(yy_n)
 
--- line 186
+when 28 then
+--#line 185 "lx_lex_parser.y"
 
 				-- This rule is written separately so the reduction
-
 				-- will occur before the trailing series is parsed.
-
 			if has_trail_context then
 				error_handler.trailing_context_used_twice (filename, line_nb)
 			else
@@ -481,7 +354,6 @@ feature {NONE}
 			end
 			if variable_length then
 					-- We hope the trailing context is fixed-length.
-
 				variable_length := False
 			else
 				head_count := rule_length
@@ -489,197 +361,172 @@ feature {NONE}
 			rule_length := 0
 			in_trail_context := True
 		
-			when 30 then
-				yy_do_default_action(yy_n)
 
--- line 207
+when 30 then
+--#line 206 "lx_lex_parser.y"
 
-			yyval := dollar_nfa (yyvstack.item(-1)) & dollar_nfa (yyvstack.item(-0))
+			yyval := dollar_nfa (yyvs.item (yyvsp - 1)) & dollar_nfa (yyvs.item (yyvsp))
 		
-			when 31 then
-				yy_do_default_action(yy_n)
 
--- line 213
+when 31 then
+--#line 212 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
-			yyval := new_nfa_from_character (dollar_integer (yyvstack.item(-0)))
+			yyval := new_nfa_from_character (dollar_integer (yyvs.item (yyvsp)))
 		
-			when 32 then
-				yy_do_default_action(yy_n)
 
--- line 218
+when 32 then
+--#line 217 "lx_lex_parser.y"
 
 			variable_length := True
-			yyval := |*| dollar_nfa (yyvstack.item(-1))
+			yyval := |*| dollar_nfa (yyvs.item (yyvsp - 1))
 		
-			when 33 then
-				yy_do_default_action(yy_n)
 
--- line 223
+when 33 then
+--#line 222 "lx_lex_parser.y"
 
 			variable_length := True
-			yyval := |+| dollar_nfa (yyvstack.item(-1))
+			yyval := |+| dollar_nfa (yyvs.item (yyvsp - 1))
 		
-			when 34 then
-				yy_do_default_action(yy_n)
 
--- line 228
+when 34 then
+--#line 227 "lx_lex_parser.y"
 
 			variable_length := True
-			yyval := |?| dollar_nfa (yyvstack.item(-1))
+			yyval := |?| dollar_nfa (yyvs.item (yyvsp - 1))
 		
-			when 35 then
-				yy_do_default_action(yy_n)
 
--- line 233
+when 35 then
+--#line 232 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := new_bounded_iteration_nfa
-				(dollar_nfa (yyvstack.item(-5)), dollar_integer (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
+				(dollar_nfa (yyvs.item (yyvsp - 5)), dollar_integer (yyvs.item (yyvsp - 3)), dollar_integer (yyvs.item (yyvsp - 1)))
 		
-			when 36 then
-				yy_do_default_action(yy_n)
 
--- line 239
+when 36 then
+--#line 238 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := new_unbounded_iteration_nfa
-				(dollar_nfa (yyvstack.item(-4)), dollar_integer (yyvstack.item(-2)))
+				(dollar_nfa (yyvs.item (yyvsp - 4)), dollar_integer (yyvs.item (yyvsp - 2)))
 		
-			when 37 then
-				yy_do_default_action(yy_n)
 
--- line 245
+when 37 then
+--#line 244 "lx_lex_parser.y"
 
 				-- The singleton could be something like "(foo)",
-
 				-- in which case we have no idea what its length
-
 				-- is, so we punt here.
-
 			variable_length := True
-			yyval := new_iteration_nfa (dollar_nfa (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
+			yyval := new_iteration_nfa (dollar_nfa (yyvs.item (yyvsp - 3)), dollar_integer (yyvs.item (yyvsp - 1)))
 		
-			when 38 then
-				yy_do_default_action(yy_n)
 
--- line 253
+when 38 then
+--#line 252 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := new_symbol_class_nfa (dot_character_class)
 		
-			when 39 then
-				yy_do_default_action(yy_n)
 
--- line 258
-
-			rule_length := rule_length + 1
-			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvstack.item(-0)))
-		
-			when 40 then
-				yy_do_default_action(yy_n)
-
--- line 263
+when 39 then
+--#line 257 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
-			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvstack.item(-0)))
+			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvs.item (yyvsp)))
 		
-			when 41 then
-				yy_do_default_action(yy_n)
 
--- line 268
+when 40 then
+--#line 262 "lx_lex_parser.y"
 
-			yyval := yyvstack.item(-1)
+			rule_length := rule_length + 1
+			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvs.item (yyvsp)))
 		
-			when 42 then
-				yy_do_default_action(yy_n)
 
--- line 272
+when 41 then
+--#line 267 "lx_lex_parser.y"
 
-			yyval := yyvstack.item(-1)
+			yyval := yyvs.item (yyvsp - 1)
 		
-			when 43 then
-				yy_do_default_action(yy_n)
 
--- line 278
+when 42 then
+--#line 271 "lx_lex_parser.y"
+
+			yyval := yyvs.item (yyvsp - 1)
+		
+
+when 43 then
+--#line 277 "lx_lex_parser.y"
 
 			character_classes.force
-				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-2)))
-			yyval := yyvstack.item(-1)
+				(dollar_symbol_class (yyvs.item (yyvsp - 1)), dollar_string (yyvs.item (yyvsp - 2)))
+			yyval := yyvs.item (yyvsp - 1)
 		
-			when 44 then
-				yy_do_default_action(yy_n)
 
--- line 284
+when 44 then
+--#line 283 "lx_lex_parser.y"
 
-			dollar_symbol_class (yyvstack.item(-1)).set_negated (True)
+			dollar_symbol_class (yyvs.item (yyvsp - 1)).set_negated (True)
 			character_classes.force
-				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-3)))
-			yyval := yyvstack.item(-1)
+				(dollar_symbol_class (yyvs.item (yyvsp - 1)), dollar_string (yyvs.item (yyvsp - 3)))
+			yyval := yyvs.item (yyvsp - 1)
 		
-			when 45 then
-				yy_do_default_action(yy_n)
 
--- line 293
+when 45 then
+--#line 292 "lx_lex_parser.y"
 
 			yyval := append_character_to_character_class
-				(dollar_integer (yyvstack.item(-0)), new_character_class)
+				(dollar_integer (yyvs.item (yyvsp)), new_character_class)
 		
-			when 46 then
-				yy_do_default_action(yy_n)
 
--- line 298
+when 46 then
+--#line 297 "lx_lex_parser.y"
 
 			yyval := append_character_to_character_class
-				(dollar_integer (yyvstack.item(-0)), dollar_symbol_class (yyvstack.item(-1)))
+				(dollar_integer (yyvs.item (yyvsp)), dollar_symbol_class (yyvs.item (yyvsp - 1)))
 		
-			when 47 then
-				yy_do_default_action(yy_n)
 
--- line 303
+when 47 then
+--#line 302 "lx_lex_parser.y"
 
 			yyval := append_character_set_to_character_class
-				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
+				(dollar_integer (yyvs.item (yyvsp - 2)), dollar_integer (yyvs.item (yyvsp)),
 				new_character_class)
 		
-			when 48 then
-				yy_do_default_action(yy_n)
 
--- line 309
+when 48 then
+--#line 308 "lx_lex_parser.y"
 
 			yyval := append_character_set_to_character_class
-				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
-				dollar_symbol_class (yyvstack.item(-3)))
+				(dollar_integer (yyvs.item (yyvsp - 2)), dollar_integer (yyvs.item (yyvsp)),
+				dollar_symbol_class (yyvs.item (yyvsp - 3)))
 		
-			when 49 then
-				yy_do_default_action(yy_n)
 
--- line 317
+when 49 then
+--#line 316 "lx_lex_parser.y"
 
 			yyval := new_epsilon_nfa
 		
-			when 50 then
-				yy_do_default_action(yy_n)
 
--- line 321
+when 50 then
+--#line 320 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := append_character_to_string
-				(dollar_integer (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
+				(dollar_integer (yyvs.item (yyvsp)), dollar_nfa (yyvs.item (yyvsp - 1)))
 		
-			when 53 then
-				yy_do_default_action(yy_n)
 
--- line 331
+when 53 then
+--#line 330 "lx_lex_parser.y"
 
-			eiffel_code := dollar_string (yyvstack.item(-0))
+			eiffel_code := dollar_string (yyvs.item (yyvsp))
 		
+
 			else
-			-- empty action
-			end -- inspect action
-		end -- yy_do_action
+				-- No action
+			end
+		end
 
--- line 336
 
 
 feature {NONE} -- Initialization
@@ -716,19 +563,12 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_parser_skeleton is
-			-- Create a new parser skeleton.
-		do
-			reset_parser_skeleton
-		end
-
 feature -- Initialization
 
 	reset is
 			-- Reset parser before parsing next input.
 		do
 			reset_lex_scanner
-			reset_parser_skeleton
 			pending_rules.wipe_out
 			start_condition_stack.wipe_out
 			equiv_classes := Void
@@ -1479,16 +1319,7 @@ feature {NONE} -- Constants
 			nfa_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	clear_input is
-			-- Set current input to undefined value.
-		do
-			last_token := Token_undefined
-			last_value := void_value
-		end
-
- invariant
+invariant
 
 	pending_rules_not_void: pending_rules /= Void
 	no_void_pending_rule: not pending_rules.has (Void)

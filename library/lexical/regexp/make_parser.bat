@@ -1,2 +1,2 @@
 
-ibyacc -olx_regexp_parser.e lx_regexp_parser.y
+geyacc -d LX_REGEXP_TOKENS -o lx_regexp_parser.e lx_regexp_parser.y

@@ -17,7 +17,7 @@ inherit
 
 	YY_PARSER_SKELETON [ANY]
 		rename
-			reset as reset_parser_skeleton
+			make as make_parser_skeleton
 		end
 
 	LX_LEX_SCANNER
@@ -33,7 +33,6 @@ creation
 
 	make, make_from_description
 
-feature
 %}
 
 %token CHAR NUMBER ENDSECT NAME EOF_OP CCL_OP
@@ -369,19 +368,12 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_parser_skeleton is
-			-- Create a new parser skeleton.
-		do
-			reset_parser_skeleton
-		end
-
 feature -- Initialization
 
 	reset is
 			-- Reset parser before parsing next input.
 		do
 			reset_lex_scanner
-			reset_parser_skeleton
 			pending_rules.wipe_out
 			start_condition_stack.wipe_out
 			equiv_classes := Void
@@ -1132,16 +1124,7 @@ feature {NONE} -- Constants
 			nfa_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	clear_input is
-			-- Set current input to undefined value.
-		do
-			last_token := Token_undefined
-			last_value := void_value
-		end
-
- invariant
+invariant
 
 	pending_rules_not_void: pending_rules /= Void
 	no_void_pending_rule: not pending_rules.has (Void)

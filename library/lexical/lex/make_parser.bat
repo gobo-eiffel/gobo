@@ -1,2 +1,2 @@
 
-ibyacc -olx_lex_parser.e lx_lex_parser.y
+geyacc -d LX_LEX_TOKENS -o lx_lex_parser.e lx_lex_parser.y

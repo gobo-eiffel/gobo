@@ -17,7 +17,7 @@ inherit
 
 	YY_PARSER_SKELETON [ANY]
 		rename
-			reset as reset_parser_skeleton
+			make as make_parser_skeleton
 		end
 
 	LX_REGEXP_SCANNER
@@ -289,19 +289,12 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_parser_skeleton is
-			-- Create a new parser skeleton.
-		do
-			reset_parser_skeleton
-		end
-
 feature -- Initialization
 
 	reset is
 			-- Reset parser before parsing next input.
 		do
 			reset_regexp_scanner
-			reset_parser_skeleton
 			equiv_classes := Void
 			transitions := Void
 		end
@@ -836,15 +829,6 @@ feature {NONE} -- Constants
 
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
-
-feature {NONE} -- Implementation
-
-	clear_input is
-			-- Set current input to undefined value.
-		do
-			last_token := Token_undefined
-			last_value := void_value
-		end
 
 invariant
 
