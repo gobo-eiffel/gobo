@@ -41,6 +41,74 @@ feature -- Test
 			assert ("is_closed", a_directory.is_closed)
 		end
 
+	test_exists1 is
+			-- Test feature `exists'.
+		local
+			a_directory: KL_DIRECTORY
+			a_name: STRING
+		do
+			a_name := new_dirname ("gobo")
+			!! a_directory.make (a_name)
+			assert ("not_exists1", not a_directory.exists)
+			a_directory.create_directory
+			assert ("exists1", a_directory.exists)
+			a_directory.delete
+			assert ("not_exists2", not a_directory.exists)
+		end
+
+	test_exists2 is
+			-- Test feature `exists'.
+		local
+			a_directory: KL_DIRECTORY
+			a_file: KL_TEXT_INPUT_FILE
+			a_name: STRING
+		do
+				-- The following directory, whose pathname has a non-empty
+				-- dirname, does exist.
+			a_name := data_dirname
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("exists1", a_directory.exists)
+				-- The current directory exists.
+			a_name := file_system.relative_current_directory
+			!! a_directory.make (a_name)
+			assert ("exists2", a_directory.exists)
+				-- The following directory, whose pathname has a non-empty
+				-- dirname, does not exist.
+			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "dataoops">>)
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("not_exists1", not a_directory.exists)
+				-- The following directory, whose pathname has a non-empty
+				-- dirname and a basename containing a space, does not exist.
+			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "data oops">>)
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("not_exists2", not a_directory.exists)
+				-- A directory with an empty name does not exist.
+			!! a_directory.make ("")
+			assert ("not_exists3", not a_directory.exists)
+				-- The following pathname exists, but it is a
+				-- file and hence is not an existing directory.
+			a_name := gobo_filename
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("file_exists", a_file.exists)
+			!! a_directory.make (a_name)
+			assert ("not_exists4", not a_directory.exists)
+				-- Create an empty directory in the current directory and then
+				-- check that this directory, whose pathname has an empty
+				-- dirname, does exist. Then delete this newly created
+				-- directory and check than it does not exist anymore.
+			a_name := new_dirname ("gobo")
+			!! a_directory.make (a_name)
+			assert ("not_exists5", not a_directory.exists)
+			a_directory.create_directory
+			assert ("exists3", a_directory.exists)
+			a_directory.delete
+			assert ("not_exists6", not a_directory.exists)
+		end
+
 	test_is_readable1 is
 			-- Test feature `is_readable'.
 		local
