@@ -89,15 +89,27 @@ feature -- Result
 			not_void_result: Result /= Void
 		end
 	
+	has_namespace (a_ns: XM_NAMESPACE): BOOLEAN is
+			-- Is this namespace known (has an allocated prefix)?
+		require
+			a_ns_not_void: a_ns /= Void
+		do
+			Result := namespaces /= Void 
+				and then (namespaces.has (a_ns.uri) or implicit_namespaces.has (a_ns.uri))
+		end
+		
 	ns_prefix (a_ns: XM_NAMESPACE): STRING is
 			-- Prefix for a non default NS.
 		require
 			a_ns_not_void: a_ns /= Void
-			namespaces_not_void: namespaces /= Void
-			has: namespaces.has (a_ns.uri)
-			item_has_prefix: namespaces.item (a_ns.uri).has_prefix
+			has: has_namespace (a_ns)
+			item_has_prefix: namespaces.has (a_ns.uri) implies namespaces.item (a_ns.uri).has_prefix
 		do
-			Result := namespaces.item (a_ns.uri).ns_prefix
+			if namespaces.has (a_ns.uri) then
+				Result := namespaces.item (a_ns.uri).ns_prefix
+			else
+				Result := implicit_namespaces.item (a_ns.uri).ns_prefix
+			end
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: Result.count > 0
@@ -133,7 +145,7 @@ feature {NONE} -- Implementation
 				-- not a defined namespace
 			else
 				-- the namespace is a defined URI
-				if not namespaces.has (a_namespace.uri) then
+				if not namespaces.has (a_namespace.uri) and not implicit_namespaces.has (a_namespace.uri) then
 					-- The namespace is not known, we need
 					-- to register it.
 					if a_namespace.has_prefix
@@ -148,7 +160,10 @@ feature {NONE} -- Implementation
 						register_namespace (a_candidate_namespace)
 					end
 				else
-					check has: namespaces.has (a_namespace.uri) end
+					check 
+						has_or_implicit: namespaces.has (a_namespace.uri)
+							or implicit_namespaces.has (a_namespace.uri)
+					end
 					-- The namespace is known, this may be with another
 					-- prefix, in which case the first prefix will be
 					-- used everywhere.
@@ -209,7 +224,22 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			new_prefix: not prefixes.has (Result)
 		end
-
+		
+	implicit_namespaces: DS_HASH_TABLE [XM_NAMESPACE, STRING] is
+			-- Implicit namespaces defined in standards that must 
+			-- not be declared.
+		local
+			a_namespace: XM_NAMESPACE
+		once
+			create Result.make_default
+			create a_namespace.make (Xml_prefix, Xml_prefix_namespace)
+			Result.force_new (a_namespace, a_namespace.uri)
+			create a_namespace.make (Xmlns, Xmlns_namespace)
+			Result.force_new (a_namespace, a_namespace.uri)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 invariant
 	
 	namespaces_with_prefixes: namespaces /= Void implies prefixes /= Void

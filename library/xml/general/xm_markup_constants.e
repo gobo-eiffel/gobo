@@ -27,6 +27,7 @@ feature -- Constants
 	Space_s: STRING is once Result := " " end
 	Eq_s: STRING is once Result := "=" end
 	Quot_s: STRING is once Result := "%"" end
+	Lf_s: STRING is once Result := "%N" end
 	Prefix_separator: STRING is once Result := ":" end
 
 	Lt_char: CHARACTER is '<'
@@ -52,5 +53,13 @@ feature -- Constants
 
 	Default_namespace: STRING is once Result := "" end
 	Xmlns: STRING is once Result := "xmlns" end
+	
+	Xml_prefix: STRING is once Result := "xml" end
+	Xml_space: STRING is once Result := "space" end
+	
+	Xml_space_preserve: STRING is once Result := "preserve" end
+	
+	Xml_prefix_namespace: STRING is once Result := "http://www.w3.org/XML/1998/namespace" end
+	Xmlns_namespace: STRING is once Result := "http://www.w3.org/2000/xmlns/" end
 
 end
