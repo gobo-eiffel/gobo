@@ -128,6 +128,14 @@ feature -- Filters
 			tree_builder_not_void: Result /= Void
 		end
 
+	new_xpath_tinytree_builder: XM_XPATH_TINY_BUILDER is
+			-- New XPath tiny-tree construction filter
+		do
+			create Result.make_null
+		ensure
+			tree_builder_not_void: Result /= Void
+		end
+
 feature -- Pipes
 
 	callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS is
