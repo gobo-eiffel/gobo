@@ -179,6 +179,8 @@
 		<geant file="build.eant" target="clean" dir="structure" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="time"/>
 		<geant file="build.eant" target="clean" dir="time" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="xml"/>
+		<geant file="build.eant" target="clean" dir="xml" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="example"/>
 		<geant file="build.eant" target="clean" dir="example" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="src"/>
