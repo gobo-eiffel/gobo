@@ -21,6 +21,9 @@ inherit
 		end
 
 	KI_CHARACTER_OUTPUT_STREAM
+		undefine
+			is_closable, close
+		end
 
 feature -- Basic operations
 

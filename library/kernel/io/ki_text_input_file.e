@@ -18,6 +18,7 @@ inherit
 
 	KI_TEXT_INPUT_STREAM
 		undefine
+			is_closable, close,
 			read_to_string
 		end
 

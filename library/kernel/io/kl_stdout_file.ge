@@ -43,7 +43,8 @@ inherit
 			put_new_line as old_put_new_line,
 			is_open_write as old_is_open_write,
 			flush as old_flush,
-			append as old_append
+			append as old_append,
+			close as old_close
 		export
 			{NONE} all
 		end
@@ -71,7 +72,8 @@ inherit
 			put_string as old_put_string,
 			put_boolean as old_put_boolean,
 			put_integer as old_put_integer,
-			is_open_write as old_is_open_write
+			is_open_write as old_is_open_write,
+			close as old_close
 		export
 			{NONE} all
 		redefine

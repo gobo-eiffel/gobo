@@ -87,6 +87,12 @@ feature -- Status report
 		deferred
 		end
 
+	is_closable: BOOLEAN is
+			-- Can current input stream be closed?
+		do
+			Result := False
+		end
+
 feature -- Access
 
 	name: STRING is
@@ -102,6 +108,17 @@ feature -- Access
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
+		end
+
+feature -- Basic operations
+
+	close is
+			-- Try to close input stream if it is closable. Set
+			-- `is_open_read' to false if operation was successful.
+		require
+			is_open: is_open_read
+			is_closable: is_closable
+		do
 		end
 
 end

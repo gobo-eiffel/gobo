@@ -23,6 +23,9 @@ inherit
 		end
 
 	KI_CHARACTER_INPUT_STREAM
+		undefine
+			is_closable, close
+		end
 
 feature -- Status report
 

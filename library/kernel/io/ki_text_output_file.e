@@ -17,5 +17,8 @@ inherit
 	KI_OUTPUT_FILE
 
 	KI_TEXT_OUTPUT_STREAM
+		undefine
+			is_closable, close
+		end
 
 end

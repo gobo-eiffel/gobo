@@ -51,6 +51,12 @@ feature -- Status report
 		deferred
 		end
 
+	is_closable: BOOLEAN is
+			-- Can current output stream be closed?
+		do
+			Result := False
+		end
+
 feature -- Access
 
 	name: STRING is
@@ -58,6 +64,17 @@ feature -- Access
 		deferred
 		ensure
 			name_not_void: Result /= Void
+		end
+
+feature -- Basic operations
+
+	close is
+			-- Try to close output stream if it is closable. Set
+			-- `is_open_write' to false if operation was successful.
+		require
+			is_open: is_open_write
+			is_closable: is_closable
+		do
 		end
 
 end
