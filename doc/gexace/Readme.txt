@@ -1,3 +1,9 @@
+Note: Some parts of this file are rather old (especially the
+beginning of the file) and might be out of date. Information
+found in the file options.txt is more uptodate even if it
+only covers the <option> elements.
+
+==========================================================
 
 *) Specification of XACE
 
