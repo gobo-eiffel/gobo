@@ -1,10 +1,22 @@
-Version 1.3 -
+Version 1.3 - 23 May 1998
 
+	* Geyacc has been totally rewritten in Eiffel.
+	* Replaced attribute `output_file' by procedure
+	  `output' in class YY_SCANNER to avoid unnecessary
+	  console creation in Windows mode with Visual Eiffel.
+	* Fixed bug in gelex in "equivalence class" mode when
+	  dealing with regular expressions of the form x{4}.
 	* Added warnings in gelex when a rule cannot be
 	  matched and when the default rule can be matched
 	  despite the %option nodefault or -s option.
 	* Renamed classes KL_SHARED_*_ROUTINES as 
-	  KL_IMPORTED_*_ROUTINES.
+	  KL_IMPORTED_*_ROUTINES. (The old class names are
+	  still temporarily valid using the classes in cluster
+	  "$GOBO\library\kernel\obsolete".)
+	* Gepp now supports #include "filename" instructions.
+	* The second generic parameter of DS_HASH_TABLE is now
+	  constrained to HASHABLE (HASHABLE was not part of 
+	  SmallEiffel in previous releases).
 
 Version 1.2 - 17 December 1997
 
