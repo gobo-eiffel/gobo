@@ -46,4 +46,6 @@ When several filenames are given as argument, the matched lines are
 prefixed by their enclosing filename, just as 'grep' does.
 
 --
-Eric Bezault <ericb@gobo.demon.co.uk>
+Copyright (c) 1998, Eric Bezault
+mailto:ericb@gobo.demon.co.uk
+http://www.gobo.demon.co.uk
