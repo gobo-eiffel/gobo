@@ -620,9 +620,6 @@ feature {ET_AST_NODE} -- Processing
 	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
 			-- Process `a_type'.
 		do
-			a_type.like_keyword.process (Current)
-			a_type.braced_type.process (Current)
-			a_type.qualified_name.process (Current)
 		end
 
 	process_qualified_call (a_call: ET_QUALIFIED_CALL) is
@@ -633,22 +630,16 @@ feature {ET_AST_NODE} -- Processing
 	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
 			-- Process `a_type'.
 		do
-			a_type.target_type.process (Current)
-			a_type.qualified_name.process (Current)
 		end
 
 	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
 			-- Process `a_type'.
 		do
-			a_type.target_type.process (Current)
-			a_type.qualified_name.process (Current)
 		end
 
 	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
 			-- Process `a_type'.
 		do
-			a_type.target_type.process (Current)
-			a_type.qualified_name.process (Current)
 		end
 
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL) is
