@@ -56,12 +56,16 @@ feature {YY_PARSER_ACTION} -- Basic operations
 	accept is
 			-- Stop parsing successfully.
 		deferred
+		ensure
+			accepted: not syntax_error
 		end
 
 	abort is
 			-- Abort parsing.
 			-- Do not print error message.
 		deferred
+		ensure
+			aborted: syntax_error
 		end
 
 	raise_error is
@@ -78,6 +82,8 @@ feature {YY_PARSER_ACTION} -- Basic operations
 
 	report_error (a_message: STRING) is
 			-- Print error message.
+			-- (This routine is called by `parse' when it detects
+			-- a syntax error. It can be redefined in descendants.)
 		require
 			a_message_not_void: a_message /= Void
 		deferred
@@ -89,11 +95,20 @@ feature {YY_PARSER_ACTION} -- Basic operations
 		deferred
 		end
 
-feature {NONE} -- Scanning
+	clear_all is
+			-- Clear temporary objects so that they can be collected
+			-- by the garbage collector. (This routine is called by
+			-- `parse' before exiting. It can be redefined in descendants.)
+		do
+		end
+
+feature {YY_PARSER_ACTION} -- Scanning
 
 	read_token is
 			-- Read a token from input stream.
 			-- Make result available in `last_token'.
+			-- (This routine is called by `parse' when it needs a
+			-- new token from the input stream.)
 		deferred
 		end
 
