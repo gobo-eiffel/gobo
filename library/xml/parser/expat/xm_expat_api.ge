@@ -1568,7 +1568,7 @@ feature -- XML_cp members
 
 	exml_XML_cp_type (cp: POINTER): INTEGER is
 		require
-			have_struct_pointer: cp /= Void
+			have_struct_pointer: cp /= default_pointer
 #ifdef VE
 		local
 			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
@@ -1590,7 +1590,7 @@ feature -- XML_cp members
 
 	exml_XML_cp_quant (cp: POINTER): INTEGER is
 		require
-			have_struct_pointer: cp /= Void
+			have_struct_pointer: cp /= default_pointer
 #ifdef VE
 		local
 			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
@@ -1612,7 +1612,7 @@ feature -- XML_cp members
 
 	exml_XML_cp_name (cp: POINTER): POINTER is
 		require
-			have_struct_pointer: cp /= Void
+			have_struct_pointer: cp /= default_pointer
 #ifdef VE
 		local
 			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
@@ -1634,7 +1634,7 @@ feature -- XML_cp members
 
 	exml_XML_cp_numchildren (cp: POINTER): INTEGER is
 		require
-			have_struct_pointer: cp /= Void
+			have_struct_pointer: cp /= default_pointer
 #ifdef VE
 		local
 			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
@@ -1665,12 +1665,11 @@ feature -- XML_cp members
 
 	exml_XML_cp_children (cp: POINTER; index: INTEGER): POINTER is
 		require
-			have_struct_pointer: cp /= Void
+			have_struct_pointer: cp /= default_pointer
 			valid_index: index >= 0 and index < exml_XML_cp_numchildren (cp)
 #ifdef VE
 		local
-			m_cp,
-			m_cp_array: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
+			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
 		do
 			create m_cp.make (cp, exml_XML_cp_size + (exml_XML_cp_numchildren (cp) * exml_XML_cp_size))
 			Result := m_cp.item (5) + (index * exml_XML_cp_size)

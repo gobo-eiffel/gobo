@@ -725,7 +725,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		local
 			data: STRING
 		do
-			if data_ptr = Void then
+			if data_ptr = default_pointer then
 				data := new_unicode_string_empty
 			else
 				data := new_uc_string_from_c_utf8_zero_terminated_string (data_ptr)
