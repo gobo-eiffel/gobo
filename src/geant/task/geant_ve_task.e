@@ -48,6 +48,10 @@ feature {NONE} -- Initialization
 				if a_value.count > 0 then
 					set_clean (a_value)
 				end
+					-- recursive:
+				if has_uc_attribute (an_element, Recursive_attribute_name) then
+					set_recursive_clean (uc_boolean_value (an_element, Recursive_attribute_name))
+				end
 			end
 		end
 
@@ -66,6 +70,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "clean"
 		once
 			!! Result.make_from_string ("clean")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+	Recursive_attribute_name: UC_STRING is
+			-- Name of xml attribute for "recursive"
+		once
+			!! Result.make_from_string ("recursive")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
