@@ -142,7 +142,11 @@ feature -- Optimization
 					until
 						a_cursor.after
 					loop
-						a_filter_expression := a_cursor.item.simplified_expression -- TODO - error may get lost
+						a_filter_expression := a_cursor.item
+						a_filter_expression.simplify
+						if a_filter_expression.was_expression_replaced then
+							a_filter_expression := a_filter_expression.replacement_expression
+						end
 						a_cursor.replace (a_filter_expression)
 						if a_filter_expression.depends_upon_current_item then
 							a_result_pattern.set_uses_current (True)

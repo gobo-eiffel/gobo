@@ -135,11 +135,10 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-			-- This default implementation does nothing.
+	simplify is
+			-- Preform context-independent static optimizations
 		do
-			Result := Current
+			-- do_nothing
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is

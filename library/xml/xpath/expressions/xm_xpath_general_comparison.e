@@ -264,8 +264,11 @@ feature {NONE} -- Implementation
 			end
 			
 			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
-			an_expression := an_expression.simplified_expression
+			an_expression.simplify
 			if not an_expression.is_error then
+				if an_expression.was_expression_replaced then
+					an_expression := an_expression.replacement_expression
+				end
 				an_expression.analyze (a_context)
 				if an_expression.was_expression_replaced then
 					set_replacement (an_expression.replacement_expression)

@@ -94,6 +94,7 @@ feature -- Events
 			an_entity_resolver.push_uri (a_system_id)
 			a_parser.parse_from_stream (a_stream)
 			a_parser.entity_resolver.resolve_finish
+			a_stream.close
 		end
 
 feature -- Element change

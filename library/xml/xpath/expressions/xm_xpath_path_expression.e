@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promote, compute_dependencies, compute_special_properties, sub_expressions, same_expression, iterator
+			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions, same_expression, iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -179,63 +179,65 @@ feature -- Status setting
 	
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations.
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
 			a_root: XM_XPATH_ROOT_EXPRESSION
 			a_parent_step: XM_XPATH_PARENT_NODE_EXPRESSION
-			a_result_expression, a_step_path, a_start_path, a_path: XM_XPATH_PATH_EXPRESSION
+			a_step_path, a_start_path, a_path: XM_XPATH_PATH_EXPRESSION
 		do
-			a_result_expression := clone (Current)
-			an_expression := start.simplified_expression
-			if not an_expression.is_error then
-				a_result_expression.set_start (an_expression)
-				an_expression := step.simplified_expression
-				if not an_expression.is_error then
-					a_result_expression.set_step (an_expression)
-				
-					an_empty_sequence ?= a_result_expression.start
+			start.simplify
+			if not start.is_error then
+				if start.was_expression_replaced then
+					set_start (start.replacement_expression)
+				end
+				step.simplify
+				if not step.is_error then
+					if step.was_expression_replaced then
+						set_step (step.replacement_expression)
+					end
+					an_empty_sequence ?= start
 					if an_empty_sequence /= Void then
 						
 						-- if the start expression is an empty node-set, then the whole path-expression is empty
 						
-						Result := an_empty_sequence
+						set_replacement (an_empty_sequence)
 					else
 						
 						-- Remove a redundant "." from the path.
 						-- Note: we are careful not to do this unless the other operand is naturally sorted.
 						-- In other cases, ./E (or E/.) is not a no-op, because it forces sorting.
 						
-						a_context_item ?= a_result_expression.start
-						a_step_path ?= a_result_expression.step
+						a_context_item ?= start
+						a_step_path ?= step
 						if a_context_item /= Void and then a_step_path /= Void and then a_step_path.ordered_nodeset then
-							a_result_expression := a_step_path
+							set_replacement (a_step_path)
 						else
-							a_context_item ?= a_result_expression.step
-							a_start_path ?= a_result_expression.start
+							a_context_item ?= step
+							a_start_path ?= start
 							if a_context_item /= Void and then a_start_path /= Void and then a_start_path.ordered_nodeset then
-								a_result_expression := a_start_path
+								set_replacement (a_start_path)
 							else
 								
 								-- the expression /.. is sometimes used to represent the empty node-set
 								
-								a_root ?= a_result_expression.start
-								a_parent_step ?= a_result_expression.step
+								a_root ?= start
+								a_parent_step ?= step
 								if a_root /= Void and then a_parent_step /= Void then
-									create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+									create an_empty_sequence.make
+									set_replacement (an_empty_sequence)
 								end
 							end
 						end
-						if Result = Void then Result := a_result_expression end
 					end
 				else
-					a_result_expression.set_last_error (an_expression.error_value)
+					set_last_error (step.error_value)
 				end
 			else
-				a_result_expression.set_last_error (an_expression.error_value)
+				set_last_error (start.error_value)
 			end
 		end
 
@@ -685,7 +687,12 @@ feature {NONE} -- Implementation
 				
 				-- Descendant expressions such as a//b were simplified
 				
-				an_expression := a_path.simplified_expression
+				a_path.simplify
+				if a_path.was_expression_replaced then
+					an_expression := a_path.replacement_expression
+				else
+					an_expression := a_path
+				end
 				if not an_expression.is_error then
 					a_path ?= an_expression
 						check

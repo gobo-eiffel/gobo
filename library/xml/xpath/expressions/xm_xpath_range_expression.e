@@ -92,7 +92,7 @@ feature -- Optimization
 							set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
-							set_replacement (simplified_expression)
+							simplify
 						end
 					end
 				end

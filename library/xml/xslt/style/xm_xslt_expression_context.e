@@ -248,10 +248,9 @@ feature -- Element change
 							an_atomic_type ?= built_in_item_type (a_uri, a_local_name)
 							if an_atomic_type = Void then
 								a_message := STRING_.concat ("Unknown constructor function: ", a_qname)
-								create an_error_value.make_from_string (a_message, 1410, Dynamic_error)
-								create an_error_expression.make (an_error_value)
-								set_last_bound_function (an_error_expression)
+								set_bind_function_failure_message (a_message)
 							else
+								set_bind_function_failure_message ("Constructor functions not yet implemented")
 								todo ("bind_function", True)
 							end
 						end
@@ -280,13 +279,10 @@ feature -- Element change
 							a_message := STRING_.concat ("No function found matching ", a_qname)
 							a_message := STRING_.appended_string (a_message, " with ")
 							a_message := STRING_.appended_string (a_message, displayed_argument_count (arguments.count))
-							create an_error_value.make_from_string (a_message, 1410, Dynamic_error)
-							create an_error_expression.make (an_error_value)
-							set_last_bound_function (an_error_expression)
+							set_bind_function_failure_message (a_message)
 						end
 					end
 				end
-				was_last_function_bound := True
 			end
 		end
 

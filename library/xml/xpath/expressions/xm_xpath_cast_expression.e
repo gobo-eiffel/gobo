@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, sub_expressions, promote, evaluate_item
+			simplify, sub_expressions, promote, evaluate_item
 		end
 
 	XM_XPATH_ROLE
@@ -93,24 +93,21 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations.
 		local
-			a_result_expression: XM_XPATH_CAST_EXPRESSION
-			a_source: XM_XPATH_EXPRESSION
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			a_source := source.simplified_expression
-			if a_source.is_error then
-				Result := a_source
+			source.simplify
+			if source.is_error then
+				set_last_error (source.error_value)
 			else
-				an_atomic_value ?= a_source
+				if source.was_expression_replaced then
+					set_source (source.replacement_expression)
+				end
+				an_atomic_value ?= source
 				if	an_atomic_value /= Void then
-					Result := an_atomic_value.convert_to_type (target_type)
-				else
-					a_result_expression := clone (Current)
-					a_result_expression.set_source (a_source)
-					Result := a_result_expression
+					set_replacement (an_atomic_value.convert_to_type (target_type))
 				end
 			end
 		end

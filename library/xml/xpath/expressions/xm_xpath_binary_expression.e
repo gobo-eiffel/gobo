@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, simplified_expression, sub_expressions, same_expression
+			promote, simplify, sub_expressions, same_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -119,24 +119,24 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_binary_expression: XM_XPATH_BINARY_EXPRESSION
+	simplify is
+			-- Perform context-independent static optimizations
 		do
-			a_binary_expression := clone (Current)
-			a_binary_expression.set_first_operand (first_operand.simplified_expression)
-			if a_binary_expression.first_operand.is_error then
-				a_binary_expression.set_last_error (a_binary_expression.first_operand.error_value)
+			first_operand.simplify
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			elseif first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
 			end
 
-			if not a_binary_expression.is_error then
-				a_binary_expression.set_second_operand (second_operand.simplified_expression)
-				if a_binary_expression.second_operand.is_error then
-					a_binary_expression.set_last_error (a_binary_expression.second_operand.error_value)
+			if not is_error then
+				second_operand.simplify
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				elseif second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
 				end
 			end
-			Result := a_binary_expression
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -329,7 +329,7 @@ feature -- Evaluation
 				a_slot_number := Frame_parameters_slot
 			end
 			a_stack_entry := current_stack_frame.item (a_slot_number)
-			a_parameter_set := current_stack_frame.item (a_slot_number).parameter_set
+			--a_parameter_set := current_stack_frame.item (a_slot_number).parameter_set
 			check
 				parameter_set: a_stack_entry.is_parameter_set
 				-- from pre-condition

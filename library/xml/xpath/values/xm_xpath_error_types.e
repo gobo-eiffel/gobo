@@ -21,19 +21,7 @@ feature -- Status report
 	is_valid_error_code (an_error_code: INTEGER): BOOLEAN is
 			-- Is `an_error_code' valid?
 		do
-			if an_error_code >= 0 and then an_error_code < 9 then
-				Result := True
-			elseif an_error_code > 16 and then an_error_code < 22 then
-				Result := True
-			elseif an_error_code = 29 then
-				Result := True
-			elseif an_error_code = 50 then
-				Result := True
-			elseif an_error_code = 51 then
-				Result := True
-			elseif an_error_code = 55 then
-				Result := True
-			end
+			Result := an_error_code >= 0
 		end
 	
 end

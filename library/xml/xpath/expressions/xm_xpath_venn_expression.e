@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			compute_cardinality, compute_special_properties, simplified_expression, analyze, iterator, effective_boolean_value
+			compute_cardinality, compute_special_properties, simplify, analyze, iterator, effective_boolean_value
 		end
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
@@ -43,25 +43,27 @@ feature -- Access
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_venn_expression: XM_XPATH_VENN_EXPRESSION
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			a_venn_expression := clone (Current)
-			a_venn_expression.set_first_operand (first_operand.simplified_expression)
-			if a_venn_expression.first_operand.is_error then
-				a_venn_expression.set_last_error (a_venn_expression.first_operand.error_value)
+			first_operand.simplify
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			elseif first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
 			end
 
-			if not a_venn_expression.is_error then
-				a_venn_expression.set_second_operand (second_operand.simplified_expression)
-				if a_venn_expression.second_operand.is_error then
-					a_venn_expression.set_last_error (a_venn_expression.second_operand.error_value)
+			if not is_error then
+				second_operand.simplify
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				elseif second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
 				end
 			end
-			
-			Result := a_venn_expression.simplified_empty_expression
+			if not is_error then
+				simplify_empty_expression
+			end
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -201,47 +203,54 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_VENN_EXPRESSION} -- Local
 
-	simplified_empty_expression: XM_XPATH_EXPRESSION is
-			-- Further simplified expression when either operand is an empty sequence;
+	simplify_empty_expression is
+			-- Further simplification when either operand is an empty sequence;
 			-- This can happen after reduction with constructs of the form //a[condition] | //b[not(condition)]
 			-- (common in XPath 1.0 because there were no conditional expressions)
 		local
-			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			finished: BOOLEAN
 		do
 			inspect
 				operator
 			when Union_token then
 				an_empty_sequence ?= first_operand
 				if an_empty_sequence /= Void and then second_operand.ordered_nodeset then
-					an_expression := second_operand
+					set_replacement (second_operand)
+					finished := True
 				else
 					an_empty_sequence ?= second_operand
 					if an_empty_sequence /= Void and then first_operand.ordered_nodeset then
-						an_expression := first_operand
+						set_replacement (first_operand)
+						finished := True
 					end
 				end
 			when Intersect_token then
 				an_empty_sequence ?= first_operand
 				if an_empty_sequence /= Void then
-					an_expression := an_empty_sequence
+					set_replacement (an_empty_sequence)
+					finished := True
 				else
 					an_empty_sequence ?= second_operand
-					if an_empty_sequence /= Void then an_expression := an_empty_sequence end
+					if an_empty_sequence /= Void then
+						set_replacement (an_empty_sequence)
+						finished := True
+					end
 				end
 			when Except_token then
 				an_empty_sequence ?= first_operand
 				if an_empty_sequence /= Void then
-					an_expression := an_empty_sequence
+					set_replacement (an_empty_sequence)
+					finished := True
 				else
 					an_empty_sequence ?= second_operand
-					if an_empty_sequence /= Void and then first_operand.ordered_nodeset then an_expression := first_operand end
+					if an_empty_sequence /= Void and then first_operand.ordered_nodeset then
+						set_replacement (first_operand)
+						finished := True
+					end
 				end				
-			end
-			
-			if an_expression /= Void then	Result := an_expression	else Result := merged_axis_expression end
-		ensure
-			simplified_empty_expression_not_void: Result /= Void
+			end			
+			if not finished then	merge_axis_expression end
 		end
 		
 feature {NONE} -- Implementation
@@ -343,8 +352,8 @@ feature {NONE} -- Implementation
 			end				
 		end
 
-	merged_axis_expression: XM_XPATH_EXPRESSION is
-			-- Merged expression when both operands are axis expressions on the same axis;
+	merge_axis_expression is
+			-- Merge expressions when both operands are axis expressions on the same axis;
 			--  ie. rewrite (axis::test1 | axis::test2) as axis::(test1 | test2)
 		local
 			an_axis_expression, another_axis_expression: XM_XPATH_AXIS_EXPRESSION
@@ -354,16 +363,15 @@ feature {NONE} -- Implementation
 			if an_axis_expression /= Void and then another_axis_expression /= Void and then
 				an_axis_expression.axis = another_axis_expression.axis then
 				create a_combined_node_test.make (an_axis_expression.node_test, operator, another_axis_expression.node_test)
-				create {XM_XPATH_AXIS_EXPRESSION} Result.make (an_axis_expression.axis, a_combined_node_test)
+				create another_axis_expression.make (an_axis_expression.axis, a_combined_node_test)
+				set_replacement (another_axis_expression)
 			else
-				Result := merged_common_start_expression
+				merge_common_start_expression
 			end
-		ensure
-			merged_axis_expression_not_void: Result /= Void
 		end
 
-	merged_common_start_expression: XM_XPATH_EXPRESSION is
-			-- Merged common start path expressions;
+	merge_common_start_expression is
+			-- Merge common start path expressions;
 			--  i.e. rewrite (/X | /Y) as /(X|Y).
 			--  This applies recursively, so that /A/B/C | /A/B/D becomes /A/B/child::(C|D)
 		local
@@ -374,18 +382,21 @@ feature {NONE} -- Implementation
 			if a_path_expression /= Void and then another_path_expression /= Void and then
 				a_path_expression.first_step.same_expression (another_path_expression.first_step) then
 				create a_venn_expression.make (a_path_expression.remaining_steps, operator, another_path_expression.remaining_steps)
-				create {XM_XPATH_PATH_EXPRESSION} Result.make (a_path_expression.first_step, a_venn_expression)
-				Result := Result.simplified_expression
+				create another_path_expression.make (a_path_expression.first_step, a_venn_expression)
+				another_path_expression.simplify
+				if another_path_expression.was_expression_replaced then
+					set_replacement (another_path_expression.replacement_expression)
+				else
+					set_replacement (another_path_expression)
+				end
 				-- TODO: copy location information
 			else
-				Result := merged_non_positional_filter_expression
+				merge_non_positional_filter_expression
 			end
-		ensure
-			merged_common_start_expression_not_void: Result /= Void
 		end
 
-	merged_non_positional_filter_expression: XM_XPATH_EXPRESSION is
-			-- Merged non-positional filter expressions;
+	merge_non_positional_filter_expression is
+			-- Merge non-positional filter expressions;
 			-- A[exp0] | A[exp1] becomes A[exp0 | exp1]
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -409,13 +420,10 @@ feature {NONE} -- Implementation
 					a_not_function.set_arguments (arguments)
 					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, a_not_function)
 				end
-				create {XM_XPATH_FILTER_EXPRESSION} Result.make (a_filter_expression.base_expression, an_expression)
+				create another_filter_expression.make (a_filter_expression.base_expression, an_expression)
+				set_replacement (another_filter_expression)
 				-- TODO copy location information
-			else
-				Result := Current
 			end
-		ensure
-			merged_non_positional_filter_expression_not_void: Result /= Void
 		end
 
 invariant

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
+			simplify, iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
 		end
 
 	XM_XPATH_AXIS
@@ -130,18 +130,20 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		local
 			a_name_test: XM_XPATH_NAME_TEST
+			an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
+			a_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
 			a_name_test ?= node_test
-			if axis = Attribute_axis and then a_name_test /= void then
-				create {XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION} Result.make (a_name_test.fingerprint)
+			if axis = Attribute_axis and then a_name_test /= Void then
+				create an_attribute_reference.make (a_name_test.fingerprint)
+				set_replacement (an_attribute_reference)
 			elseif axis = Parent_axis and then (node_test = Void or else node_test = any_node_test) then
-				create {XM_XPATH_PARENT_NODE_EXPRESSION} Result.make
-			else
-				Result := Current
+				create  a_parent_node.make
+				set_replacement (a_parent_node)
 			end
 		end
 

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplified_expression, compute_special_properties, iterator, pre_evaluate, check_arguments
+			simplify, compute_special_properties, iterator, pre_evaluate, check_arguments
 		end
 
 	XM_XPATH_NODE_MAPPING_FUNCTION
@@ -73,15 +73,20 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations.
 		local
-			result_expression: XM_XSLT_KEY_FUNCTION
-			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
+			a_function:XM_XSLT_KEY_FUNCTION
 		do
-			result_expression ?= Precursor
-			result_expression.add_context_document_argument (2, "key+")
-			Result := result_expression
+			Precursor
+			if was_expression_replaced then
+				a_function ?= replacement_expression
+				if a_function /= Void then
+					a_function.add_context_document_argument (2, "key+")
+				end
+			else
+				add_context_document_argument (2, "key+")
+			end
 		end
 
 feature -- Evaluation
@@ -162,6 +167,7 @@ feature -- Evaluation
 			a_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
 			a_key_manager: XM_XSLT_KEY_MANAGER
 			a_key_value: XM_XPATH_ATOMIC_VALUE
+			a_node: XM_XPATH_NODE
 		do
 			a_key_context_information ?= an_information_object
 			check
@@ -170,9 +176,13 @@ feature -- Evaluation
 			end
 			a_key_manager := a_key_context_information.transformer.key_manager
 			a_key_value ?= an_item
-			check
-				key_value_is_atomic: a_key_value /= Void
-				-- By definition.
+			if a_key_value = Void then
+				a_node ?= an_item
+				check
+					item_is_node: a_node /= Void
+					-- as it is not atomic
+				end
+				create {XM_XPATH_STRING_VALUE} a_key_value.make (a_node.string_value)
 			end
 			Result := a_key_manager.sequence_by_key (a_key_context_information.key_fingerprint,
 																			a_key_context_information.document, a_key_value,

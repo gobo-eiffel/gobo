@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, iterator, compute_special_properties
+			simplify, iterator, compute_special_properties
 		end
 
 creation
@@ -98,17 +98,15 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_result_expression: XM_XSLT_SORT_EXPRESSION
+	simplify is
+			-- Perform of context-independent static optimizations.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.set_select_expression (select_expression.simplified_expression)
+			select_expression.simplify
+			if select_expression.was_expression_replaced then
+				set_select_expression (select_expression.replacement_expression)
+			end
 			if select_expression.is_error then
-				Result := select_expression
-			else
-				Result := a_result_expression
+				set_last_error (select_expression.error_value)
 			end
 		end
 

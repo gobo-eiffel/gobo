@@ -813,6 +813,7 @@ feature -- Creation
 			a_left_double_curly_brace, a_right_double_curly_brace: BOOLEAN
 			a_parser: XM_XSLT_PATTERN_PARSER
 			a_concat_function: XM_XPATH_CONCAT
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			create components.make (5)
 			components.set_equality_tester (expression_tester)
@@ -858,7 +859,13 @@ feature -- Creation
 					create a_parser.make
 					a_parser.parse (an_avt_expression, a_static_context, a_left_curly_brace + 1, Right_curly_token)
 					if not a_parser.is_parse_error then
-						append_parsed_expression (components, a_parser.last_parsed_expression.simplified_expression)
+						a_parser.last_parsed_expression.simplify
+						if a_parser.last_parsed_expression.was_expression_replaced then
+							an_expression := a_parser.last_parsed_expression.replacement_expression
+						else
+							an_expression := a_parser.last_parsed_expression
+						end
+						append_parsed_expression (components, an_expression)
 					else
 						todo ("generate_attribute_value_template - error expression", True)
 					end

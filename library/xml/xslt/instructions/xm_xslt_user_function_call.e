@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_FUNCTION_CALL
 		redefine
-			pre_evaluate, simplified_expression,
+			pre_evaluate, simplify,
 			evaluate_item, iterator, display, mark_tail_function_calls
 		end
 
@@ -113,11 +113,10 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		do
-			-- TODO: Should simplify arguments, but then we lose the reference to `function'
-			Result := Current
+			simplify_arguments
 		end	
 feature -- Evaluation
 

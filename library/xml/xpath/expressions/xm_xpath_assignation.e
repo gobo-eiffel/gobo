@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, sub_expressions, allocate_slots, promote
+			simplify, sub_expressions, allocate_slots, promote
 		end
 	
 	XM_XPATH_BINDING
@@ -52,25 +52,25 @@ feature -- Access
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_simplified_assignation: XM_XPATH_ASSIGNATION
-			an_expression: XM_XPATH_EXPRESSION
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			a_simplified_assignation := clone (Current)
-			an_expression := sequence.simplified_expression
-			a_simplified_assignation.set_sequence (an_expression)
-			if an_expression.is_error then
-				a_simplified_assignation.set_last_error (an_expression.error_value)
+			sequence.simplify
+			if sequence.is_error then
+				set_last_error (sequence.error_value)
 			else
-				an_expression := action.simplified_expression
-				a_simplified_assignation.set_action (an_expression)
-				if an_expression.is_error then
-					a_simplified_assignation.set_last_error (an_expression.error_value)
+				if sequence.was_expression_replaced then
+					set_sequence (sequence.replacement_expression)
+				end
+				action.simplify
+				if action.is_error then
+					set_last_error (action.error_value)
+				elseif action.was_expression_replaced then
+					set_action (action.replacement_expression)
+				else
+					set_action (action) -- this fixes up references on the declaration
 				end
 			end
-			Result := a_simplified_assignation
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is

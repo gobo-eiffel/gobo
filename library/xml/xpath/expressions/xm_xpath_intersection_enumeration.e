@@ -24,32 +24,77 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
+		require
+			first_iterator_not_void: an_iterator /= Void
+			second_iterator_not_void: another_iterator /= Void
+			comparer_not_void: a_comparer /= Void
 		do
-			todo ("make", False)
+			second_iterator := another_iterator
+			first_iterator := an_iterator
+			comparer := a_comparer
+
 		end
 
 feature -- Access
 	
-	item: XM_XPATH_ITEM is
+	item: XM_XPATH_ITEM
 			-- Value or node at the current position
-		do
-			todo ("item", False)
-		end
 
 feature -- Status report
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			todo ("after", False)
+			Result := first_iterator.after or else second_iterator.after
 		end
 
 feature -- Cursor movement
 
 	forth is
 			-- Move to next position
+		local
+			a_first_node, a_second_node: XM_XPATH_NODE
+			a_comparison: INTEGER
 		do
-			todo ("forth", False)
+			index := index + 1
+			first_iterator.forth
+			second_iterator.forth
+			if not after then
+				a_first_node ?= first_iterator.item
+				a_second_node ?= second_iterator.item
+				a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
+				if a_comparison = 0 then
+					item := a_first_node
+				elseif a_comparison = -1 then
+					from
+					until
+						a_comparison = 0 or else after
+					loop
+						first_iterator.forth
+						if not first_iterator.after then
+							a_first_node ?= first_iterator.item
+							a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
+							if a_comparison = 0 then
+								item := a_first_node
+							end
+						end
+					end
+				else
+					from
+					until
+						a_comparison = 0 or else after
+					loop
+						second_iterator.forth
+						if not second_iterator.after then
+							a_second_node ?= second_iterator.item
+							a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
+							if a_comparison = 0 then
+								item := a_first_node
+							end
+						end
+					end
+				end
+			end
 		end
 
 feature -- Duplication
@@ -62,8 +107,19 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
+	first_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- First sequence
+
+	second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Second sequence
+
+	comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
+			-- Comparer
 
 invariant
 
+	first_iterator_not_void: first_iterator /= Void
+	second_iterator_not_void: second_iterator /= Void
+	comparer_not_void: comparer /= Void
 
 end

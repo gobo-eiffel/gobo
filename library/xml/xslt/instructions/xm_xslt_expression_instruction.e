@@ -78,31 +78,27 @@ feature -- Access
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations.
 		local
-			an_expression_instruction: XM_XSLT_EXPRESSION_INSTRUCTION
 			an_instruction: XM_XSLT_INSTRUCTION
 			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
 			an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
 		do
-			if children.count = 0 then
-				Result := Current
-			else
-				an_expression_instruction := clone (Current)
-				an_expression_instruction.clone_children (Current)
+			if children.count /= 0 then
 				from
-					a_cursor := an_expression_instruction.children.new_cursor
+					a_cursor := children.new_cursor
 					a_cursor.start
 				variant
-					an_expression_instruction.children.count + 1 - a_cursor.index
+					children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
 					an_expression ?= a_cursor.item
 					if an_expression /= Void then
-						an_expression := an_expression.simplified_expression
+						an_expression.simplify
+						if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 						an_instruction ?= an_expression
 						if an_instruction /= Void then
 							a_cursor.replace (an_instruction)
@@ -113,7 +109,6 @@ feature -- Optimization
 					end
 					a_cursor.forth
 				end
-				Result := an_expression_instruction
 			end
 		end
 

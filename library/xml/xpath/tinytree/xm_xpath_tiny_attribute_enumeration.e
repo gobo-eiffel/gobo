@@ -53,6 +53,7 @@ feature -- Cursor movement
 		do
 			if attribute_index = -1 then
 				current_item := Void
+				index := index + 1
 			else
 				advance
 				index := index + 1

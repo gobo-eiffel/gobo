@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
+			simplify, promote, sub_expressions, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -98,19 +98,14 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_result_expression: XM_XPATH_CARDINALITY_CHECKER
-			an_expression: XM_XPATH_EXPRESSION
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			an_expression := sequence.simplified_expression
-			if an_expression.is_error then
-				Result := an_expression
-			else
-				a_result_expression := clone (Current)
-				a_result_expression.set_sequence (an_expression)
-				Result := a_result_expression
+			sequence.simplify
+			if sequence.is_error then
+				set_last_error (sequence.error_value)
+			elseif sequence.was_expression_replaced then
+				set_sequence (sequence.replacement_expression)
 			end
 		end
 

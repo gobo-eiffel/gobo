@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, promote, sub_expressions
+			simplify, promote, sub_expressions
 		end
 
 feature -- Access
@@ -88,22 +88,37 @@ feature -- Status setting
 	
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			result_expression: XM_XPATH_FUNCTION_CALL
-			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			result_expression := clone (Current)
+			simplify_arguments
+		end
 
-			create a_simplifier
-			a_simplifier.simplify_arguments (arguments)
-			if not a_simplifier.is_error then
-				result_expression.set_arguments (a_simplifier.simplified_arguments)
-			else
-				result_expression.set_last_error (a_simplifier.error_value)
+	simplify_arguments is
+			-- Simplify `arguments'
+		require
+			no_previous_error: not is_error
+		local
+			an_argument: XM_XPATH_EXPRESSION
+			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			from
+				arguments_cursor := arguments.new_cursor
+				arguments_cursor.start
+			variant
+				arguments.count + 1 - arguments_cursor.index
+			until
+				is_error or else arguments_cursor.after
+			loop
+				an_argument := arguments_cursor.item
+				an_argument.simplify
+				if an_argument.is_error then
+					set_last_error (an_argument.error_value)
+				elseif an_argument.was_expression_replaced then
+					arguments_cursor.replace (an_argument.replacement_expression)
+				end
+				arguments_cursor.forth
 			end
-			Result := result_expression
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

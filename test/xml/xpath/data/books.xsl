@@ -2,7 +2,7 @@
 
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 
- xmlns:gexslt="http://www.gobosoft.com/gexslt/eiffel-type"
+ xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
 
  gexslt:explain="no"
 

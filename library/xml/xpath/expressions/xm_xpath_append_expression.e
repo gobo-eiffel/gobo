@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			compute_cardinality, simplified_expression, iterator
+			compute_cardinality, simplify, iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -39,41 +39,46 @@ feature -- Access
 
 feature -- Optimization	
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations.
 		local
 			an_append_expression, another_append_expression, a_third_append_expression: XM_XPATH_APPEND_EXPRESSION
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_value, another_value: XM_XPATH_VALUE
 		do
-			an_append_expression := clone (Current)
-			an_append_expression.set_first_operand (first_operand.simplified_expression)
-			if an_append_expression.first_operand.is_error then
-				an_append_expression.set_last_error (an_append_expression.first_operand.error_value)
+			first_operand.simplify
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			elseif first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
 			end
 
-			if not an_append_expression.is_error then
-				an_append_expression.set_second_operand (second_operand.simplified_expression)
-				if an_append_expression.second_operand.is_error then
-					an_append_expression.set_last_error (an_append_expression.second_operand.error_value)
+			if is_error then
+				second_operand.simplify
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				elseif second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
 				end
 			end
 
 			if not is_error then
 				an_empty_sequence ?= first_operand
 				if an_empty_sequence /= Void then
-					Result := second_operand
+					 set_replacement (second_operand)
 				else
 					an_empty_sequence ?= second_operand
 					if an_empty_sequence /= Void then
-						Result := first_operand
+						set_replacement (first_operand)
 					else
 
-						-- For lists consisting entirely of constant atomic values, build a SequenceExtent at compile time
+						-- For lists consisting entirely of constant atomic values, build a sequence extent at compile time
 
 						if is_atomic_sequence then
-							create {XM_XPATH_SEQUENCE_EXTENT} Result.make (iterator (Void))
+							create a_sequence_extent.make (iterator (Void))
+							set_replacement (a_sequence_extent)
 						else
 
 							-- An expression such as (1,2,$x) will be parsed as (1, (2, $x)). This can be
@@ -84,16 +89,21 @@ feature -- Optimization
 							if a_value /= Void and then another_append_expression /= Void then
 								another_value ?= another_append_expression.first_operand
 								if another_value /= Void then
-									an_expression := another_append_expression.first_operand.simplified_expression
+									an_expression := another_append_expression.first_operand; an_expression.simplify
 									if an_expression.is_error then
-										Result := an_expression
+										set_replacement (an_expression)
+									elseif an_expression.was_expression_replaced then
+										an_expression := an_expression.replacement_expression
 									else
 										create a_third_append_expression.make (first_operand, operator, an_expression)
-										an_expression := another_append_expression.second_operand.simplified_expression
+										an_expression := another_append_expression.second_operand; an_expression.simplify
 										if an_expression.is_error then
-											Result := an_expression
+											set_replacement (an_expression)
+										elseif an_expression.was_expression_replaced then
+											an_expression := an_expression.replacement_expression											
 										else
-											create {XM_XPATH_APPEND_EXPRESSION} Result.make (a_third_append_expression, operator, an_expression)
+											create {XM_XPATH_APPEND_EXPRESSION} an_append_expression.make (a_third_append_expression, operator, an_expression)
+											set_replacement (an_append_expression)
 										end
 									end
 								end
@@ -102,7 +112,6 @@ feature -- Optimization
 					end
 				end
 			end
-			if Result = Void then Result := an_append_expression end
 		end
 
 feature -- Evaluation

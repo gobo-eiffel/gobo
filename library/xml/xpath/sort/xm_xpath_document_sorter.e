@@ -16,7 +16,7 @@ inherit
 
 		XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, compute_special_properties, sub_expressions, promote, iterator, effective_boolean_value
+			simplify, compute_special_properties, sub_expressions, promote, iterator, effective_boolean_value
 		end
 
 creation
@@ -82,21 +82,13 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_result_expression: XM_XPATH_DOCUMENT_SORTER
-			an_expression: XM_XPATH_EXPRESSION
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			a_result_expression := clone (Current)
-			an_expression := base_expression.simplified_expression
-			if not an_expression.is_error then
-				a_result_expression.set_base_expression (an_expression)
-			else
-				a_result_expression.set_last_error (an_expression.error_value)
+			base_expression.simplify
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
 			end			
-			
-			Result := a_result_expression
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

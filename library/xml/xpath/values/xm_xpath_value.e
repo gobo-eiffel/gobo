@@ -48,10 +48,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			Result := Current
+			-- do_nothing
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

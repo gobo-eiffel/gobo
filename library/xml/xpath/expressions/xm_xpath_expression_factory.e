@@ -60,20 +60,26 @@ feature -- Creation
 			a_parser.parse (an_expression, a_context, a_start, a_terminator)
 			if not a_parser.is_parse_error then
 				internal_parsed_expression := a_parser.last_parsed_expression
+				check
+					no_error: not internal_parsed_expression.is_error
+				end
 				debug ("XPath expression factory")
 					std.error.put_string ("After parsing:%N%N")
 					internal_parsed_expression.display (1)
 					std.error.put_new_line
 				end
-				internal_parsed_expression := internal_parsed_expression.simplified_expression
+				internal_parsed_expression.simplify
 				if internal_parsed_expression.is_error then
 					is_parse_error := True
 					parsed_error_value := internal_parsed_expression.error_value
 					internal_parsed_expression := Void
 					debug ("XPath expression factory")
 						std.error.put_string ("Simplification failed!%N")
-					end					
+					end
 				else
+					if internal_parsed_expression.was_expression_replaced then
+						internal_parsed_expression := internal_parsed_expression.replacement_expression
+					end
 					debug ("XPath expression factory")
 						std.error.put_string ("After simplication:%N%N")
 						internal_parsed_expression.display (1)

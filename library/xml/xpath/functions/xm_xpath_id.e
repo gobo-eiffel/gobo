@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplified_expression, pre_evaluate, check_arguments,
+			simplify, pre_evaluate, check_arguments,
 			compute_special_properties, iterator
 		end
 
@@ -69,14 +69,11 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			result_expression: XM_XPATH_ID
+	simplify is
+			-- Perform context-independent static optimizations
 		do
-			result_expression ?= Precursor
-			result_expression.add_context_document_argument (1, "id+")
-			Result := result_expression
+			Precursor
+			add_context_document_argument (1, "id+")
 		end
 
 feature -- Evaluation

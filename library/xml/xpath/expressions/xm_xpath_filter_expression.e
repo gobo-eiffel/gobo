@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			compute_dependencies, compute_special_properties, simplified_expression, promote, sub_expressions, same_expression, iterator
+			compute_dependencies, compute_special_properties, simplify, promote, sub_expressions, same_expression, iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			start_not_void: a_start /= Void
 			filter_not_void: a_filter /= Void
 		local
-			a_simplified_filter: XM_XPATH_EXPRESSION
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			are_void: BOOLEAN
 		do
@@ -50,16 +49,16 @@ feature {NONE} -- Initialization
 			-- is to ensure that functions like name() are expanded to use the
 			-- context node as an implicit argument, before checking its dependencies.
 
-			a_simplified_filter := a_filter.simplified_expression
-			if a_simplified_filter.is_error then
-				if not a_filter.are_dependencies_computed then
-					a_computed_expression ?= a_filter
+			filter.simplify
+			if filter.is_error then
+				if not filter.are_dependencies_computed then
+					a_computed_expression ?= filter
 						check
 							computed_expression_not_void: a_computed_expression /= Void
 						end
 					a_computed_expression.compute_dependencies
 				end
-				filter_dependencies := a_filter.dependencies
+				filter_dependencies := filter.dependencies
 				debug ("XPath expressions")
 					std.error.put_string ("Filter failed to simplified_expression. Are dependencies Void? ")
 					are_void := filter_dependencies = Void
@@ -67,14 +66,17 @@ feature {NONE} -- Initialization
 					std.error.put_new_line
 				end
 			else
-				if not a_simplified_filter.are_dependencies_computed then
-					a_computed_expression ?= a_simplified_filter
+				if filter.was_expression_replaced then
+					set_filter (filter.replacement_expression)
+				end
+				if not filter.are_dependencies_computed then
+					a_computed_expression ?= filter
 						check
 							computed_expression_not_void: a_computed_expression /= Void
 						end
 					a_computed_expression.compute_dependencies
 				end
-				filter_dependencies := a_simplified_filter.dependencies
+				filter_dependencies := filter.dependencies
 				debug ("XPath expressions")
 					std.error.put_string ("Filter simplified. Are dependencies Void? ")
 					are_void := filter_dependencies = Void
@@ -87,7 +89,6 @@ feature {NONE} -- Initialization
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_start
-			filter_set: filter = a_filter
 		end
 
 feature -- Access
@@ -188,11 +189,9 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_result_expression: XM_XPATH_FILTER_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -200,50 +199,53 @@ feature -- Optimization
 			a_last_function: XM_XPATH_LAST
 			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
-			a_result_expression := clone (Current)
-			an_expression := base_expression.simplified_expression
-			a_result_expression.set_base_expression (an_expression)
-			if an_expression.is_error then
-				a_result_expression.set_last_error (an_expression.error_value)
+			base_expression.simplify
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			else
-				an_expression := filter.simplified_expression
-				a_result_expression.set_filter (an_expression)
-				if an_expression.is_error then
-					a_result_expression.set_last_error (an_expression.error_value)
+				if base_expression.was_expression_replaced then
+					set_base_expression (base_expression.replacement_expression)
+				end
+				filter.simplify
+				if filter.is_error then
+					set_last_error (filter.error_value)
 				else
+					if filter.was_expression_replaced then
+						set_filter (filter.replacement_expression)
+					end
+
 					-- Ignore the filter if `base_expression' is an empty sequence.
 					
-					an_empty_sequence ?= a_result_expression.base_expression
+					an_empty_sequence ?= base_expression
 					if an_empty_sequence /= Void then
-						Result := an_empty_sequence
+						set_replacement (an_empty_sequence)
 					else
 						
 						-- Check whether the filter is a constant true() or false().
 						
-						a_value ?= a_result_expression.filter
-						a_number ?= a_result_expression.filter
+						a_value ?= filter
+						a_number ?= filter
 						
 						if a_value /= Void and then a_number = Void then
-							a_boolean_value := a_result_expression.filter.effective_boolean_value (Void)
+							a_boolean_value := filter.effective_boolean_value (Void)
 							if a_boolean_value.is_error then
-								Result := a_result_expression
-								Result.set_last_error (a_boolean_value.error_value)
+								set_last_error (a_boolean_value.error_value)
 							elseif  a_boolean_value.value then
-								Result := a_result_expression.base_expression
+								set_replacement (base_expression)
 							else
-								create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+								create an_empty_sequence.make
+								set_replacement (an_empty_sequence)
 							end
 						else
 							
 							-- Check whether the filter is [last()].
 							-- (note, position()=last() is handled during analysis)
 							
-							a_last_function ?= a_result_expression.filter
+							a_last_function ?= filter
 							if a_last_function /= Void then
 								create an_is_last_expression.make (True)
-								a_result_expression.set_filter (an_is_last_expression)
+								set_filter (an_is_last_expression)
 							end
-							Result := a_result_expression
 						end
 					end
 				end

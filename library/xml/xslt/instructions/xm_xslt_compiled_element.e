@@ -15,7 +15,7 @@ inherit
 
 	XM_XSLT_ELEMENT_CONSTRUCTOR
 		redefine
-			simplified_expression, analyze, xpath_expressions, promote_instruction
+			simplify, analyze, xpath_expressions, promote_instruction
 		end
 
 creation
@@ -91,10 +91,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		do
-			todo ("simplified_expression", False)
+			todo ("simplify", False)
 		end
 
 		analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

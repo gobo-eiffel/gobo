@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplified_expression, analyze, evaluate_item
+			simplify, analyze, evaluate_item
 		end
 
 creation
@@ -58,22 +58,11 @@ feature -- Status report
 
 feature -- Optimization
 
-		simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_result_expression: XM_XPATH_STRING
-			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
+		simplify is
+			-- Perform context-independent static optimizations.
 		do
-			a_result_expression := clone (Current)
-			a_result_expression.use_context_item_as_default
-			create a_simplifier
-			a_simplifier.simplify_arguments (arguments)
-			if not a_simplifier.is_error then
-				a_result_expression.set_arguments (a_simplifier.simplified_arguments)
-			else
-				a_result_expression.set_last_error (a_simplifier.error_value)
-			end
-			Result := a_result_expression
+			use_context_item_as_default
+			simplify_arguments
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

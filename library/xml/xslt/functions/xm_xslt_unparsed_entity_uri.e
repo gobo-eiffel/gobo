@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplified_expression, pre_evaluate, evaluate_item
+			simplify, pre_evaluate, evaluate_item
 		end
 
 creation
@@ -58,18 +58,20 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		local
-			a_function: XM_XPATH_SYSTEM_FUNCTION
+			a_function: XM_XSLT_UNPARSED_ENTITY_URI
 		do
-			a_function ?= Precursor
-			check
-				still_a_function: a_function /= Void
-				-- as Precursor returns the same function call with simplifed arguments
+			Precursor
+			if was_expression_replaced then
+				a_function ?= replacement_expression
+				if a_function /= Void then
+					a_function.add_context_document_argument (1, "unparsed-entity-uri+")
+				end
+			else
+				add_context_document_argument (1, "unparsed-entity-uri+")
 			end
-			a_function.add_context_document_argument (1, "unparsed-entity-uri+")
-			Result := a_function
 		end
 
 feature -- Evaluation

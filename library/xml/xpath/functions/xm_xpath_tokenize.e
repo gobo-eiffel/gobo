@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplified_expression, iterator
+			simplify, iterator
 		end
 
 creation
@@ -66,24 +66,14 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		local
-			a_result_expression: XM_XPATH_TOKENIZE
-			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
 			n: INTEGER
 		do
-			a_result_expression := clone (Current)
-			create a_simplifier
-			a_simplifier.simplify_arguments (arguments)
-			if not a_simplifier.is_error then
-				a_result_expression.set_arguments (a_simplifier.simplified_arguments)
-				if arguments.count = 3 then n := 3 end
-				try_to_compile (n)
-			else
-				a_result_expression.set_last_error (a_simplifier.error_value)
-			end
-			Result := a_result_expression
+			simplify_arguments
+			if arguments.count = 3 then n := 3 end
+			try_to_compile (n)
 		end
 		
 feature -- Evaluation

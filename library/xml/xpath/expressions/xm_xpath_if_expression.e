@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, evaluate_item, promote, iterator,
+			simplify, evaluate_item, promote, iterator,
 			sub_expressions, mark_tail_function_calls
 		end
 
@@ -113,42 +113,48 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		local
 			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_if_expression: XM_XPATH_IF_EXPRESSION
-			an_expression: XM_XPATH_EXPRESSION
 		do
-			an_if_expression := clone (Current)
-			an_expression := condition.simplified_expression
-			an_if_expression.set_condition (an_expression)
-			if an_expression.is_error then
-				an_if_expression.set_last_error (an_expression.error_value)
+			condition.simplify
+			if condition.is_error then
+				set_last_error (condition.error_value)
 			else
+				if condition.was_expression_replaced then
+					set_condition (condition.replacement_expression)
+				end
 				a_value ?= condition
 				if a_value /= Void then
 					a_boolean_value := condition.effective_boolean_value (Void)
 					if not a_boolean_value.is_error and then a_boolean_value.value then
-						an_expression := then_expression.simplified_expression
-						an_if_expression.set_then_expression (an_expression)
-						if an_expression.is_error then
-							an_if_expression.set_last_error (an_expression.error_value)
+						then_expression.simplify
+						if then_expression.is_error then
+							set_last_error (then_expression.error_value)
+						elseif then_expression.was_expression_replaced then
+							set_then_expression (then_expression.replacement_expression)
 						end
 					else
-						an_expression := else_expression.simplified_expression
-						an_if_expression.set_else_expression (an_expression)
-						if an_expression.is_error then
-							an_if_expression.set_last_error (an_expression.error_value)
+						else_expression.simplify
+						if else_expression.is_error then
+							set_last_error (else_expression.error_value)
+						elseif else_expression.was_expression_replaced then
+							set_else_expression (else_expression.replacement_expression)
 						end						
 					end
 				else
-					an_if_expression.set_then_expression (then_expression.simplified_expression)
-					an_if_expression.set_else_expression (else_expression.simplified_expression)
+					then_expression.simplify
+					if then_expression.was_expression_replaced then
+						set_then_expression (then_expression.replacement_expression)
+					end
+					else_expression.simplify
+					if else_expression.was_expression_replaced then
+						set_else_expression (else_expression.replacement_expression)
+					end
 				end
 			end
-			Result := an_if_expression
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -178,7 +184,7 @@ feature -- Optimization
 					end
 				end
 				if not is_error then
-					set_replacement (simplified_expression)
+					simplify
 				end
 			end
 		end

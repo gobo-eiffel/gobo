@@ -185,13 +185,13 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
+	simplify is
+			-- Perform context-independent static optimizations
 		require
 			no_previous_error: not is_error
 		deferred
 		ensure
-			simplified_expression_not_void: Result /= Void
+			simplified_expression_not_void: was_expression_replaced implies replacement_expression /= Void
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

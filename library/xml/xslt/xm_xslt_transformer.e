@@ -595,9 +595,6 @@ feature -- Transformation
 			end
 
 			reset_output_destination (Void)
-
-			-- close output stream? - it doesn't seem to be necesary, and XM_OUTPUT doesn't support it anyway
-			-- hm. ?? Probably is necessary for a file stream
 		end
 		
 	perform_transformation (a_start_node: XM_XPATH_NODE) is

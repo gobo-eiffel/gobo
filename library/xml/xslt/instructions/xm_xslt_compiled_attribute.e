@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			simplified_expression, xpath_expressions, promote_instruction, display
+			simplify, xpath_expressions, promote_instruction, display
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -111,11 +111,10 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-			-- This default implementation does nothing.
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
-			todo ("simplified_expression", False)
+			todo ("simplify", False)
 		end
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 		do
 			operator := an_operator
 			set_declaration (a_range_variable)
+			check
+				declaration_not_void: declaration /= Void
+			end
 			sequence := a_sequence_expression
 			action := an_action
 			compute_static_properties
@@ -108,44 +111,48 @@ feature -- Optimization
 			actual_item_type: XM_XPATH_ITEM_TYPE
 		do
 			mark_unreplaced
+			if	declaration = Void then
+				do_nothing
+			else
 
-			-- The order of events is critical here. First we ensure that the type of the
-			-- sequence expression is established. This is used to establish the type of the variable,
-			-- which in turn is required when type-checking the action part.
-			
-			sequence.analyze (a_context)
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
-			end
-			if sequence.is_error then
-				set_last_error (sequence.error_value)
-			end
-
-			if not is_error then
+				-- The order of events is critical here. First we ensure that the type of the
+				-- sequence expression is established. This is used to establish the type of the variable,
+				-- which in turn is required when type-checking the action part.
 				
-				-- "some" and "every" have no ordering constraints
-
-				sequence.set_unsorted (False)
-				a_declaration_type := declaration.required_type
-				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
-				create a_role.make (Variable_role, declaration.variable_name, 1)
-				create a_type_checker
-				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
-				else
-					set_sequence (a_type_checker.checked_expression)
-					actual_item_type := sequence.item_type
-					declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
-					set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
-					action.analyze (a_context)
-					if action.was_expression_replaced then
-						replace_action (action.replacement_expression)
+				sequence.analyze (a_context)
+				if sequence.was_expression_replaced then
+					set_sequence (sequence.replacement_expression)
+				end
+				if sequence.is_error then
+					set_last_error (sequence.error_value)
+				end
+				
+				if not is_error then
+					
+					-- "some" and "every" have no ordering constraints
+					
+					sequence.set_unsorted (False)
+					a_declaration_type := declaration.required_type
+					create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
+					create a_role.make (Variable_role, declaration.variable_name, 1)
+					create a_type_checker
+					a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
+					if a_type_checker.is_static_type_check_error then
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					else
+						set_sequence (a_type_checker.checked_expression)
+						actual_item_type := sequence.item_type
+						declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
+						set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
+						action.analyze (a_context)
+						if action.was_expression_replaced then
+							replace_action (action.replacement_expression)
+						end
+						if action.is_error then
+							set_last_error (action.error_value)
+						end
+						promote_subexpressions (a_context)
 					end
-					if action.is_error then
-						set_last_error (action.error_value)
-					end
-					promote_subexpressions (a_context)
 				end
 			end
 		end

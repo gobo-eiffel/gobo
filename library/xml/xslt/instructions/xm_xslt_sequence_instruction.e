@@ -17,7 +17,7 @@ inherit
 	
 	XM_XSLT_EXPRESSION_INSTRUCTION
 		redefine
-			simplified_expression, analyze, iterator
+			simplify, analyze, iterator
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -127,18 +127,17 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplified_expression: XM_XPATH_EXPRESSION is
-			-- Simplified expression as a result of context-independent static optimizations
-		local
-			a_sequence_expression: XM_XSLT_SEQUENCE_INSTRUCTION
+	simplify is
+			-- Perform context-independent static optimizations.
 		do
 			if select_expression /= Void and not simplified then
-				a_sequence_expression := clone (Current)
-				a_sequence_expression.set_select_expression (select_expression.simplified_expression)
-				a_sequence_expression.set_simplified
-				Result := a_sequence_expression.simplified_expression
+				select_expression.simplify
+				if select_expression.was_expression_replaced then
+					set_select_expression (select_expression.replacement_expression)
+				end
+				set_simplified
 			else
-				Result := Precursor
+				Precursor
 			end
 		end
 
