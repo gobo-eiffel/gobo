@@ -1110,11 +1110,11 @@ feature -- Suppliers/Providers
 	set_providers (a_providers: like providers) is
 			-- Set `providers' to `a_providers'.
 		require
-			no_void_provider: a_providers /= Void implies not providers.has (Void)
+			no_void_provider: a_providers /= Void implies not a_providers.has (Void)
 		do
-			providers := providers
+			providers := a_providers
 		ensure
-			providers_set: providers = providers
+			providers_set: providers = a_providers
 		end
 
 feature -- Implementation checking status
