@@ -281,7 +281,7 @@ feature -- Reporting warnings
 		end
 
 	report_unknown_option_warning (an_element: XM_ELEMENT; a_position: XM_POSITION) is
-			-- Report that  the value of the attribute "name"
+			-- Report that the value of the attribute "name"
 			-- in the "option" elment `an_element' is unknown.
 		local
 			a_warning: ET_XACE_UNKNOWN_OPTION_NAME_WARNING
