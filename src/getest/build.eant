@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="geant" default="help">
+<project name="getest" default="help">
 
 	<description>
-		description: "Eiffel Ant file for 'geant'"
-		system:      "Gobo Eiffel Ant"
+		description: "Eiffel Ant file for 'getest'"
+		system:      "Gobo Eiffel Test"
 		author:      "Eric Bezault [ericb@gobosoft.com]"
 		copyright:   "Copyright (c) 2001, Eric Bezault and others"
 		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
@@ -88,7 +88,7 @@
 		<delete file="hact.ace"/>
 		<se clean="${system}"/>
 		<delete file="se.ace"/>
-		<ve clean="${system}" recursive="true"/>
+		<ve clean="${system}"/>
 		<delete file="ve.esd"/>
 	</target>
 
@@ -105,7 +105,7 @@
 <!-- Implementation -->
 
 	<target name="init">
-		<set name="system" value="geant"/>
+		<set name="system" value="getest"/>
 		<set name="eiffel" value="se"/>
 		<geant target="init_eiffel"/>
 		<geant target="init_os"/>

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="geant" default="help">
+<project name="gepp" default="help">
 
 	<description>
-		description: "Eiffel Ant file for 'geant'"
-		system:      "Gobo Eiffel Ant"
+		description: "Eiffel Ant file for 'gepp'"
+		system:      "Gobo Eiffel Preprocessor"
 		author:      "Eric Bezault [ericb@gobosoft.com]"
 		copyright:   "Copyright (c) 2001, Eric Bezault and others"
 		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
@@ -28,7 +28,9 @@
 		<description>
 			Install ${system} directory.
 		</description>
-		<!-- do nothing -->
+
+		<geant target="gepp_scanner"/>
+		<geant target="gepp_parser"/>
 	</target>
 
 	<target name="compile" depend="init">
@@ -88,7 +90,7 @@
 		<delete file="hact.ace"/>
 		<se clean="${system}"/>
 		<delete file="se.ace"/>
-		<ve clean="${system}" recursive="true"/>
+		<ve clean="${system}"/>
 		<delete file="ve.esd"/>
 	</target>
 
@@ -98,14 +100,25 @@
 		</description>
 
 		<geant target="clean"/>
+		<delete file="gepp_scanner.e"/>
+		<delete file="gepp_parser.e"/>
+		<delete file="gepp_tokens.e"/>
 		<delete file="${system}${exe}"/>
 	</target>
 
 
 <!-- Implementation -->
 
+	<target name="gepp_scanner">
+		<gelex input="gepp_scanner.l"/>
+	</target>
+
+	<target name="gepp_parser">
+		<geyacc input="gepp_parser.y" tokens="GEPP_TOKENS" output="gepp_parser.e"/>
+	</target>
+
 	<target name="init">
-		<set name="system" value="geant"/>
+		<set name="system" value="gepp"/>
 		<set name="eiffel" value="se"/>
 		<geant target="init_eiffel"/>
 		<geant target="init_os"/>
