@@ -124,7 +124,7 @@
 	<xsd:sequence>
 		<xsd:element name="target" type="target-type" minOccurs="0"/>
 		<xsd:element name="featurename" type="featurename-type"/>
-		<xsd:element name="arguments" type="arguments-type minOccurs="0"/>
+		<xsd:element name="arguments" type="arguments-type" minOccurs="0"/>
 	</xsd:sequence>
 </xsd:complexType>
 
