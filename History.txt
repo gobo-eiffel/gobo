@@ -5,6 +5,25 @@ Version 1.6 -
 	* One can now use manifest strings (e.g. "<=" or "..")
 	  in place of identifiers (e.g. LE or DOTDOT) in grammar
 	  rules (suggested by Berend de Boer).
+	* Anchored types are now accepted in %type declarations.
+
+	gelex:
+
+	Gobo Eiffel Structure Library:
+
+	* DS_TRAVERSABLE: removed postcondition from routine
+	  `valid_cursor' and made `internal_cursor' deferred
+	  (suggested by Andreas Leitner).
+	* DS_SEARCHABLE: added features `same_items' and
+	  `same_equality_tester'.
+	* DS_ARRAYED_LIST, DS_ARRAYED_STACK: get rid of garbage
+	  (i.e. old items at indexes count+1..capacity) when
+	  removing items.
+	* DS_SPARSE_TABLE: added feature `key'; optimization
+	  of feature `force' (avoid unnecessary resizing).
+	* DS_HASH_TABLE: fixed precondition in `hash_code'.
+	* HASH_TABLE: optimization of features `put' and
+	  `force' (avoid unnecessary resizing).
 
 Version 1.5 - 2 October 1999
 
