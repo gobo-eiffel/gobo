@@ -1025,7 +1025,6 @@ feature -- Element change
 		local
 			a_text_count: INTEGER
 			a_old_count: INTEGER
-			l_start: INTEGER
 			a_end: INTEGER
 		do
 			a_end := substring_index (a_text, a_old, 1)
