@@ -79,8 +79,9 @@ feature {NONE} -- Initialization
 			nb := define_elements.count
 			from i := 1 until i > nb loop
 				define_element := define_elements.item (i)
-				if has_uc_attribute (define_element, Name_attribute_name) and
-					has_uc_attribute (define_element, Value_attribute_name) 
+				if is_element_enabled (define_element) and then
+					has_uc_attribute (define_element, Name_attribute_name) and then
+					has_uc_attribute (define_element, Value_attribute_name)
 				then
 					a_name := uc_attribute_value (define_element, Name_attribute_name).out
 					a_value := uc_attribute_value (define_element, Value_attribute_name).out
