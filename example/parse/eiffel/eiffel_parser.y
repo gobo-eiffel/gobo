@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -17,6 +17,8 @@ inherit
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser_skeleton
+		redefine
+			report_error
 		end
 
 	EIFFEL_SCANNER
@@ -35,7 +37,6 @@ creation
 %}
 
 %token E_CHARACTER E_INTEGER E_REAL E_IDENTIFIER E_STRING E_BIT E_BITTYPE
-%token E_CHARERR E_INTERR E_REALERR E_STRERR E_UNKNOWN E_NOMEMORY
 %token E_BANGBANG E_ARROW E_DOTDOT E_LARRAY E_RARRAY E_ASSIGN E_REVERSE
 %token E_ALIAS E_ALL E_AS E_CHECK E_CLASS E_CREATION E_DEBUG E_DEFERRED
 %token E_DO E_ELSE E_ELSEIF E_END E_ENSURE E_EXPANDED E_EXPORT
@@ -44,10 +45,13 @@ creation
 %token E_LOOP E_OBSOLETE E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
 %token E_RESCUE E_RETRY E_SELECT E_SEPARATE E_STRIP E_THEN E_TRUE
 %token E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT E_WHEN E_CURRENT E_RESULT
-%token E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV E_STRMOD
-%token E_STRPOWER E_STRLT E_STRLE E_STRGT E_STRGE E_STRAND E_STROR
-%token E_STRXOR E_STRANDTHEN E_STRORELSE E_STRIMPLIES E_STRFREEOP
-%token E_STRNOT
+%token E_PRECURSOR
+
+%token E_CHARERR E_INTERR E_REALERR E_STRERR E_UNKNOWN E_NOMEMORY
+%token E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
+%token E_STRMOD E_STRPOWER E_STRLT E_STRLE E_STRGT E_STRGE
+%token E_STRAND E_STROR E_STRXOR E_STRANDTHEN E_STRORELSE
+%token E_STRIMPLIES E_STRFREEOP E_STRNOT
 
 %left E_IMPLIES
 %left E_OR E_XOR
@@ -59,553 +63,684 @@ creation
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%start Class_declaration
+%expect 244
+%start Class_declarations
 
 %%
+--------------------------------------------------------------------------------
 
-Class_declaration: Indexing Class_header Formal_generics Obsolete
-			Inheritance Creators Features Invariant E_END
-		;
+Class_declarations: Class_declaration
+	| Class_declarations Class_declaration
+	;
 
-Class_header: E_CLASS E_IDENTIFIER
-		| E_DEFERRED E_CLASS E_IDENTIFIER
-		| E_EXPANDED E_CLASS E_IDENTIFIER
-		;
+Class_declaration: Indexing_opt Class_header Formal_generics_opt Obsolete_opt
+		Creators_opt Features_opt Invariant_opt E_END
+	| Indexing_opt Class_header Formal_generics_opt Obsolete_opt Inheritance_to_end
+	;
 
-Indexing: -- /* empty */
-		| E_INDEXING Index_list
-		;
+Creators_features_invariant_opt: Creators_opt Features_opt Invariant_opt
+	;
+
+--------------------------------------------------------------------------------
+
+Indexing_opt: -- /* empty */
+	| E_INDEXING Index_list
+	;
 
 Index_list: -- /* empty */
-		| Index_clause
-		| Index_list Index_clause
-		;
+	| Index_list_with_no_terminator
+	| Index_list_with_no_terminator S
+	;
+
+Index_list_with_no_terminator: Index_clause
+	| Index_list_with_no_terminator Index_clause
+	| Index_list_with_no_terminator ';' Index_clause
+	| Index_list_with_no_terminator ';' S Index_clause
+	;
 
 Index_clause: Index_terms
-		| E_IDENTIFIER ':' Index_terms
-		| ';'
-		;
+	| Identifier ':' Index_terms
+		-- Note: Eiffel says that the Index_terms list 
+		-- should not be empty, but VE allows that!
+	| Identifier ':'
+	;
 
 Index_terms: Index_value
-		| Index_terms ',' Index_value
-		;
+	| Index_terms ',' Index_value
+	;
 
-Index_value: E_IDENTIFIER
-		| Manifest_constant
-		;
+Index_value: Identifier
+	| Manifest_constant
+	;
 
-Formal_generics: -- /* empty */
-		| '[' ']'
-		| '[' Formal_generic_list ']'
-		;
+S: ';'
+	| S ';'
+	;
 
-Formal_generic_list: E_IDENTIFIER Constraint
-		| Formal_generic_list ',' E_IDENTIFIER Constraint
-		;
+--------------------------------------------------------------------------------
 
-Constraint: -- /* empty */
-		| E_ARROW Class_type
-		;
+Class_header: Header_mark_opt E_CLASS Identifier
+	;
 
-Obsolete: -- /* empty */
-		| E_OBSOLETE Manifest_string
-		;
+Header_mark_opt: -- /* empty */
+	| E_DEFERRED
+	| E_EXPANDED
+	| E_SEPARATE
+	;
 
-Inheritance: -- /* empty */
-		| E_INHERIT Parent_list
-		;
+--------------------------------------------------------------------------------
 
-Parent_list: -- /* empty */
-		| Parent
-		| Parent_list Parent
-		;
+Formal_generics_opt: -- /* empty */
+	| '[' Formal_generic_list ']'
+	;
 
-Parent: Class_type Feature_adaptation
-		| ';'
-		;
+Formal_generic_list: -- /* empty */
+	| Identifier Constraint_opt
+	| Formal_generic_list ',' Identifier Constraint_opt
+	;
 
-Feature_adaptation: -- /* empty */
-		| Feature_adaptation1
-		| Feature_adaptation2
-		| Feature_adaptation3
-		| Feature_adaptation4
-		| Feature_adaptation5
-		;
+Constraint_opt: -- /* empty */
+	| E_ARROW Class_type
+	;
 
-Feature_adaptation1: Rename New_export_opt Undefine_opt Redefine_opt
-			Select_opt E_END
-		;
+--------------------------------------------------------------------------------
 
-Feature_adaptation2: New_export Undefine_opt Redefine_opt
-			Select_opt E_END
-		;
+Obsolete_opt: -- /* empty */
+	| E_OBSOLETE E_STRING
+	;
+
+--------------------------------------------------------------------------------
+
+Inheritance_to_end: E_INHERIT Parent_list_to_end
+	;
+	
+Parent_list_to_end: Creators_features_invariant_opt E_END
+	| Parents Feature_adaptation_opt Creators_features_invariant_opt E_END
+	| Parents E_END Creators_features_invariant_opt E_END
+	| Parents E_END
+
+	| Parents Feature_adaptation_opt ';' Creators_features_invariant_opt E_END
+	| Parents E_END ';' Creators_features_invariant_opt E_END
+	;
+
+		-- Note: The two constructs above are a workaround to solve
+		-- the following grammar ambiguity:
+		--		class FOO inherit BAR end
+		-- where, through shift/reduce conflicts, would habe
+		-- been parsed with 'end' being recognized as the
+		-- end of the feature adaptation of BAR instead of
+		-- as the end of the class FOO.
+
+Parents: Class_type
+	| Parents Feature_adaptation_opt Class_type
+	| Parents Feature_adaptation_opt ';' Class_type
+	| Parents E_END Class_type
+	| Parents E_END ';' Class_type
+	;
+
+Feature_adaptation_opt: -- /* empty */
+	| Feature_adaptation
+	;
+
+Feature_adaptation:
+	 Feature_adaptation1
+	| Feature_adaptation2
+	| Feature_adaptation3
+	| Feature_adaptation4
+	| Feature_adaptation5
+	;
+
+		-- Note: This is not standard Eiffel but it has
+		-- the advantage of making the grammar LR (1).
+
+Feature_adaptation1: Rename New_exports_opt Undefine_opt Redefine_opt
+		Select_opt E_END
+	;
+
+Feature_adaptation2: New_exports Undefine_opt Redefine_opt
+		Select_opt E_END
+	;
 
 Feature_adaptation3: Undefine Redefine_opt Select_opt E_END
-		;
+	;
 
 Feature_adaptation4: Redefine Select_opt E_END
-		;
+	;
 
 Feature_adaptation5: Select E_END
-		;
+	;
 
-Rename: E_RENAME
-		| E_RENAME Rename_list
-		;
+--------------------------------------------------------------------------------
 
-Rename_list: Feature_name E_AS Feature_name
-		| Rename_list ',' Feature_name E_AS Feature_name
-		;
+Rename: E_RENAME Rename_list
+	;
 
-New_export: E_EXPORT New_export_list
-		;
+Rename_list: -- /* empty */
+	| Feature_name E_AS Feature_name
+	| Rename_list ',' Feature_name E_AS Feature_name
+	;
 
-New_export_opt: -- /* empty */
-		| New_export
-		;
+--------------------------------------------------------------------------------
+
+New_exports: E_EXPORT New_export_list
+	;
+
+New_exports_opt: -- /* empty */
+	| New_exports
+	;
 
 New_export_list: -- /* empty */
-		| New_export_item
-		| New_export_list New_export_item
-		;
+	| New_export_list_with_no_terminator
+	| New_export_list_with_no_terminator ';'
+	;
+
+New_export_list_with_no_terminator: New_export_item
+	| New_export_list_with_no_terminator New_export_item
+	| New_export_list_with_no_terminator ';' New_export_item
+	;
 
 New_export_item: Clients Feature_set
-		| ';'
-		;
+	;
 
-Feature_set: -- /* empty */
-		| Feature_list
-		| E_ALL
-		;
+Feature_set: Feature_list
+	| E_ALL
+	;
 
-Feature_list: Feature_name
-		| Feature_list ',' Feature_name
-		;
+Feature_list: -- /* empty */
+	| Feature_name
+	| Feature_list ',' Feature_name
+	;
 
-Clients: '{' '}'
-		| '{' Class_list '}'
-		;
+--------------------------------------------------------------------------------
 
-Class_list: E_IDENTIFIER
-		| Class_list ',' E_IDENTIFIER
-		;
-
-Redefine: E_REDEFINE
-		| E_REDEFINE Feature_list
-		;
-
-Redefine_opt: -- /* empty */
-		| Redefine
-		;
-
-Undefine: E_UNDEFINE
-		| E_UNDEFINE Feature_list
-		;
-
-Undefine_opt: -- /* empty */
-		| Undefine
-		;
-
-Select: E_SELECT
-		| E_SELECT Feature_list
-		;
-
-Select_opt: -- /* empty */
-		| Select
-		;
-
-Creators: -- /* empty */
-		| Creation_clause
-		| Creators Creation_clause
-		;
-
-Creation_clause: E_CREATION Clients_opt Feature_list_opt
-		;
+Clients: '{' Class_list '}'
+	;
 
 Clients_opt: -- /* empty */
-		| Clients
-		;
+	| Clients
+	;
 
-Feature_list_opt: -- /* empty */
-		| Feature_list
-		;
+Class_list: -- /* empty */
+	| Identifier
+	| Class_list ',' Identifier
+	;
 
-Features: -- /* empty */
-		| Feature_clause
-		| Features Feature_clause
-		;
+--------------------------------------------------------------------------------
+
+Redefine: E_REDEFINE Feature_list
+	;
+
+Redefine_opt: -- /* empty */
+	| Redefine
+	;
+
+Undefine: E_UNDEFINE Feature_list
+	;
+
+Undefine_opt: -- /* empty */
+	| Undefine
+	;
+
+Select: E_SELECT Feature_list
+	;
+
+Select_opt: -- /* empty */
+	| Select
+	;
+
+--------------------------------------------------------------------------------
+
+Creators_opt: -- /* empty */
+	| Creation_clause
+	| Creators_opt Creation_clause
+	;
+
+Creation_clause: E_CREATION Clients_opt Procedure_list
+	;
+
+		-- Note: Does not support 'Header_comment'.
+
+Procedure_list: -- /* empty */
+	| Identifier
+	| Procedure_list ',' Identifier
+	;
+
+--------------------------------------------------------------------------------
+
+Features_opt: -- /* empty */
+	| Feature_clause
+	| Features_opt Feature_clause
+	;
 
 Feature_clause: E_FEATURE Clients_opt Feature_declaration_list
-		;
+	;
+
+		-- Note: Does not support 'Header_comment'.
 
 Feature_declaration_list: -- /* empty */
-		| Feature_declaration
-		| Feature_declaration_list Feature_declaration
-		;
+	| Feature_declaration_list_with_no_terminator
+	| Feature_declaration_list_with_no_terminator ';'
+	;
+
+Feature_declaration_list_with_no_terminator: Feature_declaration
+	| Feature_declaration_list_with_no_terminator Feature_declaration
+	| Feature_declaration_list_with_no_terminator ';' Feature_declaration
+	;
+
+--------------------------------------------------------------------------------
 
 Feature_declaration: New_feature_list Declaration_body
-		| ';'
-		;
+	;
 
-New_feature_list: New_feature
-		| New_feature_list ',' New_feature
-		;
+Declaration_body: Formal_arguments_opt Type_mark_opt Constant_or_routine_opt
+	;
 
-New_feature: Feature_name
-		| E_FROZEN Feature_name
-		;
-
-Declaration_body: Formal_arguments Type_mark Constant_or_routine
-		;
-
-Constant_or_routine: -- /* empty */
-		| E_IS Feature_value
-		;
+Constant_or_routine_opt: -- /* empty */
+	| E_IS Feature_value
+	;
 
 Feature_value: Manifest_constant
-		| E_UNIQUE
-		| Routine
-		;
+	| E_UNIQUE
+	| Routine
+	;
 
-Type_mark: -- /* empty */
-		| ':' Type
-		;
+--------------------------------------------------------------------------------
 
-Formal_arguments: -- /* empty */
-		| '(' Entity_declaration_list ')'
-		;
+New_feature_list: New_feature
+	| New_feature_list ',' New_feature
+	;
 
-Entity_declaration_list: -- /* empty */
-		| Entity_declaration_group
-		| Entity_declaration_list Entity_declaration_group
-		;
+New_feature: Feature_name
+	| E_FROZEN Feature_name
+	;
 
-Entity_declaration_group: Identifier_list ':' Type
-		| ';'
-		;
+--------------------------------------------------------------------------------
 
-Feature_name: E_IDENTIFIER
-		| Prefix_keyword Prefix_operator
-		| Infix_keyword Infix_operator
-		;
-
-Prefix_keyword: E_PREFIX
-		;
+Feature_name: Identifier
+	| E_PREFIX Prefix_operator
+	| E_INFIX Infix_operator
+	;
 
 Prefix_operator: E_STRNOT
-		| E_STRPLUS
-		| E_STRMINUS
-		| E_STRFREEOP
-		;
-
-Infix_keyword: E_INFIX
-		;
+	| E_STRPLUS
+	| E_STRMINUS
+	| E_STRFREEOP
+	;
 
 Infix_operator: E_STRPLUS
-		| E_STRMINUS
-		| E_STRSTAR
-		| E_STRSLASH
-		| E_STRDIV
-		| E_STRMOD
-		| E_STRPOWER
-		| E_STRLT
-		| E_STRLE
-		| E_STRGT
-		| E_STRGE
-		| E_STRAND
-		| E_STRANDTHEN
-		| E_STROR
-		| E_STRORELSE
-		| E_STRIMPLIES
-		| E_STRXOR
-		| E_STRFREEOP
-		;
+	| E_STRMINUS
+	| E_STRSTAR
+	| E_STRSLASH
+	| E_STRDIV
+	| E_STRMOD
+	| E_STRPOWER
+	| E_STRLT
+	| E_STRLE
+	| E_STRGT
+	| E_STRGE
+	| E_STRAND
+	| E_STRANDTHEN
+	| E_STROR
+	| E_STRORELSE
+	| E_STRIMPLIES
+	| E_STRXOR
+	| E_STRFREEOP
+	;
 
-Routine: Obsolete Precondition Local_declarations
-			Routine_body Postcondition Rescue E_END
-		;
+--------------------------------------------------------------------------------
 
-Local_declarations: -- /* empty */
-		| E_LOCAL Entity_declaration_list
-		;
+Formal_arguments_opt: -- /* empty */
+	| '(' Entity_declaration_list ')'
+	;
+
+Entity_declaration_list: -- /* empty */
+	| Entity_declaration_list_with_no_terminator
+	| Entity_declaration_list_with_no_terminator ';'
+	;
+
+Entity_declaration_list_with_no_terminator: Entity_declaration_group
+	| Entity_declaration_list_with_no_terminator Entity_declaration_group
+	| Entity_declaration_list_with_no_terminator ';' Entity_declaration_group
+	;
+
+Entity_declaration_group: Identifier_list ':' Type
+	;
+
+Identifier_list: Identifier
+	| Identifier_list ',' Identifier
+	;
+
+Type_mark_opt: -- /* empty */
+	| ':' Type
+	;
+
+--------------------------------------------------------------------------------
+
+Routine: Obsolete_opt Precondition_opt Local_declarations_opt
+		Routine_body Postcondition_opt Rescue_opt E_END
+	;
+
+		-- Note: Does not support 'Header_comment'.
+
+--------------------------------------------------------------------------------
 
 Routine_body: E_DEFERRED
-		| E_DO Compound
-		| E_ONCE Compound
-		| E_EXTERNAL Manifest_string External_name
-		;
+	| E_DO Compound
+	| E_ONCE Compound
+	| E_EXTERNAL E_STRING External_name_opt
+	;
 
-External_name: -- /* empty */
-		| E_ALIAS Manifest_string
-		;
+External_name_opt: -- /* empty */
+	| E_ALIAS E_STRING
+	;
 
-Type: Class_type
-		| E_EXPANDED Class_type
-		| E_LIKE E_CURRENT
-		| E_LIKE E_IDENTIFIER
-		| E_BITTYPE
-		;
+--------------------------------------------------------------------------------
 
-Class_type: E_IDENTIFIER Actual_generics
-		;
+Local_declarations_opt: -- /* empty */
+	| E_LOCAL Entity_declaration_list
+	;
 
-Actual_generics: -- /* empty */
-		| '[' ']'
-		| '[' Type_list ']'
-		;
+--------------------------------------------------------------------------------
 
-Type_list: Type
-		| Type_list ',' Type
-		;
+Precondition_opt: -- /* empty */
+	| E_REQUIRE Assertion
+	| E_REQUIRE E_ELSE Assertion
+	;
 
-Instruction: Creation
-		| Call_instruction
-		| Assignment
-		| Conditional
-		| Multi_branch
-		| Loop
-		| Debug
-		| Check
-		| E_RETRY
-		| ';'
-		;
+Postcondition_opt: -- /* empty */
+	| E_ENSURE Assertion
+	| E_ENSURE E_THEN Assertion
+	;
 
-Compound: -- /* empty */
-		| Instruction
-		| Compound Instruction
-		;
-
-Creation: '!' Type '!' Writable Creation_call
-		| E_BANGBANG Writable Creation_call
-		;
-
-Creation_call: -- /* empty */
-		| '.' E_IDENTIFIER Actuals
-		;
-
-Call_instruction: E_IDENTIFIER Actuals
-		| Call_expression '.' E_IDENTIFIER Actuals
-		| '(' Expression ')' '.' E_IDENTIFIER Actuals
-		;
-
-Actuals: -- /* empty */
-		| '(' ')'
-		| '(' Actual_list ')'
-		;
-
-Actual_list: Actual
-		| Actual_list ',' Actual
-		;
-
-Actual:	Expression
-		| '$' Feature_name
-		| '$' E_CURRENT
-		| '$' E_RESULT
-		;
-
-Assignment: Writable Assign_op Expression
-		;
-
-Assign_op: E_ASSIGN
-		| E_REVERSE
-		;
-
-Writable: E_IDENTIFIER
-		| E_RESULT
-		;
-
-Conditional: E_IF Expression E_THEN Compound Elseif_list Else_part E_END
-		;
-
-Else_part: -- /* empty */
-		| E_ELSE Compound
-		;
-
-Elseif_list: -- /* empty */
-		| E_ELSEIF Expression E_THEN Compound
-		| Elseif_list E_ELSEIF Expression E_THEN Compound
-		;
-
-Multi_branch: E_INSPECT Expression When_list Else_part E_END
-		;
-
-When_list: E_WHEN Choices E_THEN Compound
-		| When_list E_WHEN Choices E_THEN Compound
-		;
-
-Choices: -- /* empty */
-		| Choice_list
-		;
-
-Choice_list: Choice
-		| Choice_list ',' Choice
-		;
-
-Choice: E_IDENTIFIER
-		| Integer_constant
-		| Integer_constant E_DOTDOT Integer_constant
-		| Integer_constant E_DOTDOT E_IDENTIFIER
-		| E_IDENTIFIER E_DOTDOT Integer_constant
-		| Character_constant
-		| Character_constant E_DOTDOT Character_constant
-		| Character_constant E_DOTDOT E_IDENTIFIER
-		| E_IDENTIFIER E_DOTDOT Character_constant
-		| E_IDENTIFIER E_DOTDOT E_IDENTIFIER
-		;
-
-Loop: E_FROM Compound Invariant Variant E_UNTIL Expression
-			E_LOOP Compound E_END
-		;
-
-Variant: -- /* empty */
-		| E_VARIANT
-		| E_VARIANT Expression
-		| E_VARIANT E_IDENTIFIER ':' Expression
-		;
-
-Debug: E_DEBUG Debug_keys Compound E_END
-		;
-
-Debug_keys: -- /* empty */
-		| '(' ')'
-		| '(' Debug_key_list ')'
-		;
-
-Debug_key_list: Manifest_string
-		| Debug_key_list ',' Manifest_string
-		;
-
-Rescue: -- /* empty */
-		| E_RESCUE Compound
-		;
-
-Check: E_CHECK Assertion E_END
-		;
-
-Precondition: -- /* empty */
-		| E_REQUIRE Assertion
-		| E_REQUIRE E_ELSE Assertion
-		;
-
-Postcondition: -- /* empty */
-		| E_ENSURE Assertion
-		| E_ENSURE E_THEN Assertion
-		;
-
-Invariant: -- /* empty */
-		| E_INVARIANT Assertion
-		;
+Invariant_opt: -- /* empty */
+	| E_INVARIANT Assertion
+	;
 
 Assertion: -- /* empty */
-		| Assertion_clause
-		| Assertion Assertion_clause
-		;
+	| Assertion_with_no_terminator
+	| Assertion_with_no_terminator ';'
+	;
+
+Assertion_with_no_terminator: Assertion_clause
+	| Assertion_with_no_terminator Assertion_clause
+	| Assertion_with_no_terminator ';' Assertion_clause
+	;
 
 Assertion_clause: Expression
-		| E_IDENTIFIER ':' Expression
-		| ';'
-		;
+		-- Note: Does not support 'Comment' as assertion.
+		-- However, this is simulated by the following
+		-- production:
+	| Identifier ':'
+	-- | Identifier ':' Expression
+	;
 
-Expression: Call_expression
-		| '(' Expression ')'
-		| Boolean_constant
-		| Character_constant
-		| Number
-		| Manifest_string
-		| Bit_constant
-		| E_LARRAY Expression_list E_RARRAY
-		| E_LARRAY E_RARRAY
-		| '+' Expression %prec E_NOT
-		| '-' Expression %prec E_NOT
-		| E_NOT Expression
-		| E_FREEOP Expression %prec E_NOT
-		| E_OLD Expression
-		| Expression Binary_op Expression
-		| E_STRIP '(' Identifier_list ')'
-		| E_STRIP '(' ')'
-		;
+--------------------------------------------------------------------------------
 
-Identifier_list: E_IDENTIFIER
-		| Identifier_list ',' E_IDENTIFIER
-		;
+Rescue_opt: -- /* empty */
+	| E_RESCUE Compound
+	;
 
-Expression_list: Expression
-		| Expression_list ',' Expression
-		;
+--------------------------------------------------------------------------------
 
-Call_expression: E_IDENTIFIER Actuals
-		| E_RESULT
-		| E_CURRENT
-		| Call_expression '.' E_IDENTIFIER Actuals
-		| '(' Expression ')' '.' E_IDENTIFIER Actuals
-		;
+Type: Class_type
+	| E_EXPANDED Class_type
+	| E_SEPARATE Class_type
+	| E_LIKE E_CURRENT
+	| E_LIKE Identifier
+	| E_BITTYPE Integer_constant
+	| E_BITTYPE Identifier
+	;
+
+Class_type: Class_name Actual_generics_opt
+	;
+
+Class_name: E_IDENTIFIER
+	;
+
+Actual_generics_opt: -- /* empty */
+	| '[' Type_list ']'
+	;
+
+Type_list: -- /* empty */
+	| Type
+	| Type_list ',' Type
+	;
+
+--------------------------------------------------------------------------------
+
+Compound: -- /* empty */
+	| Instruction
+	| Compound Instruction
+	;
+
+Instruction: Creation
+	| Call
+	| Assignment
+	| Conditional
+	| Multi_branch
+	| Loop
+	| Debug
+	| Check
+	| E_RETRY
+	| ';'
+	;
+
+--------------------------------------------------------------------------------
+
+Creation: '!' Type '!' Writable Creation_call_opt
+	| E_BANGBANG Writable Creation_call_opt
+	;
+
+Creation_call_opt: -- /* empty */
+	| '.' Identifier Actuals_opt
+	;
+
+--------------------------------------------------------------------------------
+
+Assignment: Writable Assign_op Expression
+	;
+
+Assign_op: E_ASSIGN
+	| E_REVERSE
+	;
+
+--------------------------------------------------------------------------------
+
+Conditional: E_IF Expression E_THEN Compound Elseif_list Else_part E_END
+	;
+
+Else_part: -- /* empty */
+	| E_ELSE Compound
+	;
+
+Elseif_list: -- /* empty */
+	| E_ELSEIF Expression E_THEN Compound
+	| Elseif_list E_ELSEIF Expression E_THEN Compound
+	;
+
+--------------------------------------------------------------------------------
+
+Multi_branch: E_INSPECT Expression When_list Else_part E_END
+	;
+
+When_list: -- /* empty */
+	| E_WHEN Choices E_THEN Compound
+	| When_list E_WHEN Choices E_THEN Compound
+	;
+
+Choices: -- /* empty */
+	| Choice
+	| Choices ',' Choice
+	;
+
+Choice: Choice_constant
+	| Choice_constant E_DOTDOT Choice_constant
+	;
+
+Choice_constant: Integer_constant
+	| E_CHARACTER
+		-- For Visual Eiffel and TowerEiffel
+		-- (not standard Eiffel!):
+	| Call
+	-- | Identifier
+	;
+
+--------------------------------------------------------------------------------
+
+Loop: E_FROM Compound Invariant_opt Variant_opt E_UNTIL Expression
+		E_LOOP Compound E_END
+	;
+
+Variant_opt: -- /* empty */
+	| E_VARIANT			-- Not standard.
+	| E_VARIANT Expression
+	| E_VARIANT Identifier ':' Expression
+	;
+
+--------------------------------------------------------------------------------
+
+Debug: E_DEBUG Debug_keys_opt Compound E_END
+	;
+
+Debug_keys_opt: -- /* empty */
+	| '(' Debug_key_list ')'
+	;
+
+Debug_key_list: -- /* empty */
+	| E_STRING
+	| Debug_key_list ',' E_STRING
+	;
+
+--------------------------------------------------------------------------------
+
+Check: E_CHECK Assertion E_END
+	;
+
+--------------------------------------------------------------------------------
+
+Call: Call_chain
+	| E_RESULT '.' Call_chain
+	| E_CURRENT '.' Call_chain
+	| '(' Expression ')' '.' Call_chain
+	| E_PRECURSOR Actuals_opt
+	| E_PRECURSOR Actuals_opt '.' Call_chain
+	| '{' Identifier '}' E_PRECURSOR Actuals_opt
+	| '{' Identifier '}' E_PRECURSOR Actuals_opt '.' Call_chain
+	;
+
+Call_chain: Identifier Actuals_opt
+	| Call_chain '.' Identifier Actuals_opt
+	;
+
+--------------------------------------------------------------------------------
+
+Actuals_opt: -- /* empty */
+	| '(' Actual_list ')'
+	;
+
+Actual_list: -- /* empty */
+	| Actual
+	| Actual_list ',' Actual
+	;
+
+Actual:	Expression
+	| '$' Address_mark
+	;
+
+Address_mark: Feature_name
+	| E_CURRENT
+	| E_RESULT
+		-- Note: The following construct is an
+		-- extension of the Eiffel syntax provided
+		-- in ISE Eiffel 4 compiler.
+	| '(' Expression ')'
+	;
+
+Writable: Identifier
+	| E_RESULT
+	;
+
+--------------------------------------------------------------------------------
+
+Expression: Call
+	| E_RESULT
+	| E_CURRENT
+	| '(' Expression ')'
+	| Boolean_constant
+	| E_CHARACTER
+	| E_INTEGER
+	| E_REAL
+	| E_STRING
+	| E_BIT
+	| E_LARRAY Expression_list E_RARRAY
+	| '+' Expression %prec E_NOT
+	| '-' Expression %prec E_NOT
+	| E_NOT Expression
+	| E_FREEOP Expression %prec E_NOT
+	| Expression Binary_op Expression
+	| E_OLD Expression
+	| E_STRIP '(' Attribute_list ')'
+	;
+
+Attribute_list: -- /* empty */
+	| Identifier
+	| Attribute_list ',' Identifier
+	;
+
+Expression_list: -- /* empty */
+	| Expression
+	| Expression_list ',' Expression
+	;
 
 Binary_op: E_FREEOP
-		| '+'
-		| '-'
-		| '*'
-		| '/'
-		| '^'
-		| E_DIV
-		| E_MOD
-		| '='
-		| E_NE
-		| '<'
-		| '>'
-		| E_LE
-		| E_GE
-		| E_AND
-		| E_OR
-		| E_XOR
-		| E_AND E_THEN
-		| E_OR E_ELSE
-		| E_IMPLIES
-		;
+	| '+'
+	| '-'
+	| '*'
+	| '/'
+	| '^'
+	| E_DIV
+	| E_MOD
+	| '='
+	| E_NE
+	| '<'
+	| '>'
+	| E_LE
+	| E_GE
+	| E_AND
+	| E_OR
+	| E_XOR
+	| E_AND E_THEN
+	| E_OR E_ELSE
+	| E_IMPLIES
+	;
 
-Manifest_constant:	Boolean_constant
-		| Character_constant
-		| Integer_constant
-		| Real_constant
-		| Manifest_string
-		| Bit_constant
-		;
+Manifest_constant: Boolean_constant
+	| E_CHARACTER
+	| Integer_constant
+	| Real_constant
+	| E_STRING
+	| E_BIT
+	;
 
 Boolean_constant: E_TRUE
-		| E_FALSE
-		;
-
-Character_constant: E_CHARACTER
-		| E_CHARERR
-		;
-
-Manifest_string: E_STRING
-		| E_STRERR
-		;
-
-Bit_constant: E_BIT
-		;
+	| E_FALSE
+	;
 
 Integer_constant: E_INTEGER
-		| '-' Negative E_INTEGER
-		| '+' E_INTEGER
-		| E_INTERR
-		;
+	| '-' E_INTEGER
+	| '+' E_INTEGER
+	;
 
 Real_constant: E_REAL
-		| '-' Negative E_REAL
-		| '+' E_REAL
-		| E_REALERR
-		;
+	| '-' E_REAL
+	| '+' E_REAL
+	;
 
-Negative: -- /* empty */
-		;
+Identifier: E_IDENTIFIER
+	| E_BITTYPE
+	;
 
-Number: E_INTEGER
-		| E_INTERR
-		| E_REAL
-		| E_REALERR
-		;
-
+--------------------------------------------------------------------------------
 %%
 
 feature {NONE} -- Initialization
@@ -681,6 +816,26 @@ feature {NONE} -- Initialization
 					j := j + 1
 				end
 			end
+		end
+
+feature -- Error handling
+
+	report_error (a_message: STRING) is
+			-- Print error message.
+		local
+			f_buffer: YY_FILE_BUFFER
+		do
+			f_buffer ?= input_buffer
+			if f_buffer /= Void then
+				std.error.put_string (INPUT_STREAM_.name (f_buffer.file))
+				std.error.put_string (", line ")
+			else
+				std.error.put_string ("line ")
+			end
+			std.error.put_integer (eif_lineno)
+			std.error.put_string (": ")
+			std.error.put_string (a_message)
+			std.error.put_character ('%N')
 		end
 
 end -- class EIFFEL_PARSER
