@@ -159,8 +159,13 @@ feature {NONE} -- AST factory
 
 	new_universe (a_clusters: ET_LACE_CLUSTERS): ET_LACE_UNIVERSE is
 			-- New class universe
+		local
+			an_error_handler: ET_ERROR_HANDLER
+			a_factory: ET_AST_FACTORY
 		do
-			Result := ast_factory.new_universe (a_clusters)
+			an_error_handler := ast_factory.new_error_handler
+			a_factory := ast_factory.new_ast_factory
+			Result := ast_factory.new_universe (a_clusters, a_factory, an_error_handler)
 		ensure
 			universe_not_void: Result /= Void
 		end

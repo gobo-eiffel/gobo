@@ -6,7 +6,7 @@ indexing
 
 	library:	"Gobo Eiffel Tools Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	copyright:	"Copyright (c) 2001-2002, Andreas Leitner and others"
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:		"$Date$"
 	revision:	"$Revision$"
@@ -15,14 +15,16 @@ class ET_XACE_PARSER
 
 inherit
 
-	ANY
-
-	ET_XACE_ELEMENT_NAMES
-		export {NONE} all end
+	ET_XACE_PARSER_SKELETON
+		rename
+			make as make_skeleton,
+			make_with_factory as make_skeleton_with_factory
+		end
 
 creation
 
-	make, make_with_variables
+	make, make_with_factory, make_with_variables,
+	make_with_variables_and_factory
 
 feature {NONE} -- Initialization
 
@@ -32,31 +34,65 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_variables: ET_XACE_VARIABLES
+			a_factory: ET_XACE_AST_FACTORY
 		do
 			!! a_variables.make
-			make_with_variables (a_variables, an_error_handler)
+			!! a_factory.make
+			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_variables (a_variables: ET_XACE_VARIABLES; an_error_handler: like error_handler) is
-			-- Create a new Xace parser.
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+			-- Create a new Xace parser using `a_factory' as AST factory.
+		require
+			a_factory_not_void: a_factory /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		local
+			a_variables: ET_XACE_VARIABLES
+		do
+			!! a_variables.make
+			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+		ensure
+			ast_factory_set: ast_factory = a_factory
+			error_handler_set: error_handler = an_error_handler
+		end
+
+	make_with_variables (a_variables: ET_XACE_VARIABLES an_error_handler: like error_handler) is
+			-- Create a new Xace parser with variables defined in `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		local
+			a_factory: ET_XACE_AST_FACTORY
+		do
+			!! a_factory.make
+			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+		ensure
+			error_handler_set: error_handler = an_error_handler
+		end
+
+	make_with_variables_and_factory (a_variables: ET_XACE_VARIABLES;
+		a_factory: like ast_factory; an_error_handler: like error_handler) is
+			-- Create a new Xace parser with variables defined in `a_variables'
+			-- and using `a_factory' as AST factory.
+		require
+			a_variables_not_void: a_variables /= Void
+			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_cluster_parser: ET_XACE_CLUSTER_PARSER
 			a_parser_factory: XM_PARSER_FACTORY
 		do
 			error_handler := an_error_handler
+			ast_factory := a_factory
 			-- We must not create a new ET_XACE_CLUSTER_PARSER
 			-- object if `Current' is one already, or we will
 			-- recurse in this routine forever
-			a_cluster_parser ?= Current
-			if a_cluster_parser = Void then
-				!! a_cluster_parser.make_with_variables (a_variables, error_handler)
+			cluster_parser ?= Current
+			if cluster_parser = Void then
+				!! cluster_parser.make_with_variables (a_variables, error_handler)
 			end
-			!! ast_factory.make (a_cluster_parser, error_handler)
 			!! xml_preprocessor.make (a_variables, error_handler)
 			!! xml_validator.make (an_error_handler)
 			!! a_parser_factory.make
@@ -70,6 +106,7 @@ feature {NONE} -- Initialization
 				error_handler.report_no_parser_available_error
 			end
 		ensure
+			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
 
@@ -93,13 +130,13 @@ feature -- Parsing
 						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_system := ast_factory.new_universe (xml_parser.document.root_element)
+							a_system := new_universe (xml_parser.document.root_element)
 						end
 					elseif a_root_name.is_equal (uc_cluster) then
 						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_cluster := ast_factory.new_cluster (xml_parser.document.root_element)
+							a_cluster := new_cluster (xml_parser.document.root_element)
 						end
 					else
 						error_handler.report_not_xace_file_error (a_file.name)
@@ -114,11 +151,8 @@ feature -- Parsing
 
 feature -- Access
 
-	ast_factory: ET_XACE_AST_FACTORY
-			-- Abstract Syntax Tree factory
-
-	error_handler: ET_XACE_ERROR_HANDLER
-			-- Error handler
+	cluster_parser: ET_XACE_CLUSTER_PARSER
+			-- Cluster Parser
 
 feature {NONE} -- Implementation
 
@@ -133,8 +167,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	error_handler_not_void: error_handler /= Void
-	ast_factory_not_void: ast_factory /= Void
 	position_table_enabled: xml_parser /= Void implies xml_parser.is_position_table_enabled
 	xml_validator_not_void: xml_validator /= Void
 	xml_preprocessor_not_void: xml_preprocessor /= Void

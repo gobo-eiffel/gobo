@@ -6,7 +6,7 @@ indexing
 
 	library:	"Gobo Eiffel Tools Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	copyright:	"Copyright (c) 2001-2002, Andreas Leitner and others"
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:		"$Date$"
 	revision:	"$Revision$"
@@ -36,7 +36,7 @@ feature -- Parsing
 					xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 					if not xml_validator.has_error then
 						xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-						last_universe := ast_factory.new_universe (xml_parser.document.root_element)
+						last_universe := new_universe (xml_parser.document.root_element)
 					end
 				else
 					error_handler.report_parser_error (xml_parser.last_error_extended_description)
