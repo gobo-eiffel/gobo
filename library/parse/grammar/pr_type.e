@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Parse Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -14,6 +14,8 @@ indexing
 class PR_TYPE
 
 inherit
+
+	HASHABLE
 
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
@@ -94,6 +96,12 @@ feature -- Access
 
 	id: INTEGER
 			-- Internal type id
+
+	hash_code: INTEGER is
+			-- Hash value
+		do
+			Result := id
+		end
 
 feature -- Output
 

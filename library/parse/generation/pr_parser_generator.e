@@ -325,26 +325,48 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 			rules: DS_ARRAYED_LIST [PR_RULE]
-			types: DS_ARRAYED_LIST [PR_TYPE]
+			nb_types: INTEGER
+			types: DS_HASH_SET [PR_TYPE]
+			a_cursor: DS_HASH_SET_CURSOR [PR_TYPE]
 			a_rule: PR_RULE
 			an_action: STRING
 			a_type: PR_TYPE
+			no_type: PR_NO_TYPE
 		do
 			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
 				%%T%T%T-- Execute semantic action.%N")
-			types := machine.grammar.types
-			if not types.is_empty then
-				a_file.put_string ("%T%Tlocal%N")
-				nb := types.count
+			nb_types := machine.grammar.types.count
+			!! types.make (nb_types)
+			rules := machine.grammar.rules
+			nb := rules.count
+			if nb_types > 0 then
 				from i := 1 until i > nb loop
-					types.item (i).print_dollar_dollar_declaration (a_file)
-					a_file.put_character ('%N')
+					a_rule := rules.item (i)
+					an_action := a_rule.action.out
+					if an_action.count > 0 then
+						a_type := a_rule.lhs.type
+						no_type ?= a_type
+						if no_type = Void then
+							types.put (a_type)
+							if types.count = nb_types then
+									-- All types have already been registered.
+								i := nb + 1 -- Jump out of the loop.
+							end
+						end
+					end
 					i := i + 1
 				end
 			end
+			if not types.is_empty then
+				a_file.put_string ("%T%Tlocal%N")
+				a_cursor := types.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_cursor.item.print_dollar_dollar_declaration (a_file)
+					a_file.put_character ('%N')
+					a_cursor.forth
+				end
+			end
 			a_file.put_string ("%T%Tdo%N%T%T%Tinspect yy_act%N")
-			rules := machine.grammar.rules
-			nb := rules.count
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
