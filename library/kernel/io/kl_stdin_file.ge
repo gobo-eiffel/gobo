@@ -2,7 +2,10 @@ indexing
 
 	description:
 
-		"Standard input files"
+		"Standard input files. The line separtor of the underlying file system %
+		%is automatically converted to %N when read from the satndard input file. %
+		%However `read_line' and `read_new_line' are able to recognize %
+		%'%%N', '%%R%%N' and '%%R' as line separators."
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -15,7 +18,7 @@ class KL_STDIN_FILE
 
 inherit
 
-	KI_CHARACTER_INPUT_STREAM
+	KI_TEXT_INPUT_STREAM
 		rename
 			is_readable as is_open_read,
 			end_of_input as end_of_file
@@ -24,6 +27,15 @@ inherit
 			read_to_string,
 #endif
 			read_to_buffer
+		end
+
+	KL_OPERATING_SYSTEM
+#ifdef SE
+		rename
+			rename_file as se_rename_file
+#endif
+		export
+			{NONE} all
 		end
 
 #ifdef ISE
@@ -37,11 +49,6 @@ inherit
 			{NONE} all
 		redefine
 			file_readable
-		end
-
-	OPERATING_ENVIRONMENT
-		export
-			{NONE} all
 		end
 #endif
 #ifdef HACT
@@ -79,11 +86,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	FILE_SYSTEM_CONSTANTS
-		export
-			{NONE} all
-		end
 #endif
 
 creation
@@ -114,9 +116,12 @@ feature {NONE} -- Initialization
 			not_end_of_file: not end_of_file
 		end
 
-#ifdef SE
 feature -- Access
 
+	eol: STRING is "%N"
+			-- Line separator
+
+#ifdef SE
 	name: STRING
 			-- File name
 
@@ -132,10 +137,10 @@ feature -- Input
 
 #ifdef VE || ISE
 	read_character is
-			-- Read the next character in satndard input file.
+			-- Read the next character in standard input file.
 			-- Make the result available in `last_character'.
 		do
-			if directory_separator = '\' then
+			if is_windows then
 					-- Windows.
 				read_character_into_buffer
 				if has_buffered_character then
@@ -216,7 +221,7 @@ feature -- Input
 			c: CHARACTER
 			has_carriage: BOOLEAN
 		do
-			if directory_separator = '\' then
+			if is_windows then
 					-- Windows.
 				if last_string = Void then
 					!! last_string.make (0)
@@ -263,11 +268,12 @@ feature -- Input
 		end
 
 	read_line is
-			-- Read characters from standard input file until '%N',
-			-- '%R%N' or end of file is reached. Make the characters
-			-- that have been read available in `last_string' and
-			-- discard the characters '%N' or '%R%N' from the standard
-			-- input file.
+			-- Read characters from standard input file until a line separator
+			-- or end of file is reached. Make the characters that have
+			-- been read available in `last_string' and discard the line
+			-- separator characters from the standard input file.
+			-- Line separators recognized by current standard input
+			-- file are: '%N', '%R%N and '%R'.
 		local
 			done: BOOLEAN
 			a_target: STRING
@@ -308,11 +314,90 @@ feature -- Input
 						has_carriage := True
 					else
 						if has_carriage then
-							last_string.append_character ('%R')
-							has_carriage := False
+								-- Put character back to standard input file.
+#ifdef ISE || HACT
+							back
+#endif
+#ifdef SE
+							unread_character
+#endif
+#ifdef VE
+							has_buffered_character := True
+#endif
+							done := True
+						else
+							last_string.append_character (c)
 						end
-						last_string.append_character (c)
 					end
+				end
+			end
+		end
+
+	read_new_line is
+			-- Read a line separator from standard input file.
+			-- Make the characters making up the recognized
+			-- line separator available in `last_string',
+			-- or make `last_string' empty and leave the
+			-- standard input file unchanged if no line
+			-- separator was found.
+			-- Line separators recognized by current standard
+			-- input file are: '%N', '%R%N and '%R'.
+		do
+			if last_string = Void then
+#ifdef VE
+				!! last_string.make (0)
+#else
+				!! last_string.make (256)
+#endif
+			else
+#ifdef ISE
+				last_string.clear_all
+#endif
+#ifdef SE
+				last_string.clear
+#endif
+#ifdef HACT
+				last_string.set_count (0)
+#endif
+#ifdef VE
+				last_string.wipe_out
+#endif
+			end
+			read_character
+			if not end_of_file then
+				inspect last_character
+				when '%R' then
+					last_string.append_character ('%R')
+					read_character
+					if not end_of_file then
+						if last_character = '%N' then
+							last_string.append_character ('%N')
+						else
+								-- Put character back to standard input file.
+#ifdef ISE || HACT
+							back
+#endif
+#ifdef SE
+							unread_character
+#endif
+#ifdef VE
+							has_buffered_character := True
+#endif
+						end
+					end
+				when '%N' then
+					last_string.append_character ('%N')
+				else
+						-- Put character back to standard input file.
+#ifdef ISE || HACT
+					back
+#endif
+#ifdef SE
+					unread_character
+#endif
+#ifdef VE
+					has_buffered_character := True
+#endif
 				end
 			end
 		end
@@ -325,7 +410,7 @@ feature -- Input
 		local
 			str_area: ANY
 		do
-			if directory_separator = '\' then
+			if is_windows then
 					-- Windows.
 				Result := precursor (a_string, pos, nb)
 			else
