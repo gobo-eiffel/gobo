@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 mkdir eiffel_scanner
 cd eiffel_scanner

@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 mkdir precomp_base
 cd precomp_base

@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "List tester"
 # library:    "Gobo Eiffel Structure Library"

@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 mkdir gelex
 cd gelex

@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 echo "Testing precomp..."
 $GOBO/test/all/se/test_precomp.sh $1
