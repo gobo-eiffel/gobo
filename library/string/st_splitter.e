@@ -103,12 +103,79 @@ feature -- Setting
 		ensure
 			not_has_escape_character: not has_escape_character
 		end
+		
+feature -- Query
 
+	has_empty (a_linear: DS_LINEAR [STRING]): BOOLEAN is
+			-- Is there an empty string in this sequence?
+		require
+			a_linear_not_void: a_linear /= Void
+		local
+			a_cursor: DS_LINEAR_CURSOR [STRING]
+		do
+			from
+				a_cursor := a_linear.new_cursor
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if a_cursor.item.is_empty then
+					Result := True
+					a_cursor.go_after -- Exit loop
+				else
+					a_cursor.forth
+				end
+			end
+		ensure
+			definition_empty: a_linear.is_empty implies not Result
+			definition_for_first: a_linear.count > 0 
+				implies (a_linear.first.is_empty implies Result)
+		end
+		
 feature -- Operation(s)
 
 	split (a_string: STRING): DS_LIST [STRING] is
 			-- Split a string according to separator 
 			-- and escape character settings.
+			-- A sequence of separators is a single separator,
+			-- a separator at start/end of string is ignored.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := do_split (a_string, False)
+		ensure
+			separators_as_sequence: split (separators).is_empty
+			result_not_void: Result /= Void
+			count_ceiling: Result.count <= a_string.count // 2 + 1
+			last_escape_character_verbatim: (a_string.count >= 2
+				and then a_string.item (a_string.count) = escape_character 
+				and then a_string.item (a_string.count - 1) /= escape_character)
+					implies (Result.last.item (Result.last.count) = escape_character)
+		end
+
+	split_character (a_string: STRING): DS_LIST [STRING] is
+			-- Split a string according to separator 
+			-- and escape character settings.
+			-- Each separator character makes a separate separator
+			-- e.g. split ("/a//") = << "", "a", "", "" >>.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := do_split (a_string, True)
+		ensure
+			separators_as_character: split_character (separators).count = separators.count + 1
+			result_not_void: Result /= Void
+			count_ceiling: Result.count <= a_string.count + 1
+			last_escape_character_verbatim: (a_string.count >= 2
+				and then a_string.item (a_string.count) = escape_character 
+				and then a_string.item (a_string.count - 1) /= escape_character)
+					implies (Result.last.item (Result.last.count) = escape_character)
+		end
+
+feature {NONE} -- Implemenation
+
+	do_split (a_string: STRING; insert_between_separators: BOOLEAN): DS_LIST [STRING] is
+			-- Split implementation.
 		local
 			i: INTEGER
 			cnt: INTEGER
@@ -120,6 +187,7 @@ feature -- Operation(s)
 				i := 1
 				cnt := a_string.count
 				last_after_separator := 1
+				in_separator := True
 			invariant
 				last_after_separator_before_index: last_after_separator <= i
 			variant
@@ -129,12 +197,13 @@ feature -- Operation(s)
 			loop
 				if is_separator (a_string, i) then
 					if not in_separator then
-						if i > 1 then
-							Result.force_last (unescape (a_string.substring (last_after_separator, i - 1)))
-						else
-								-- First character is separator: no previous string.
-						end
+						check not_first: i > 1 end
+						Result.force_last (unescape (a_string.substring (last_after_separator, i - 1)))
 						in_separator := True
+					else
+						if insert_between_separators then
+							Result.force_last (STRING_.make_empty)
+						end
 					end
 					check in: in_separator end
 				else
@@ -146,17 +215,16 @@ feature -- Operation(s)
 				end
 				i := i + 1
 			end
-			if not in_separator and last_after_separator <= cnt then
+			if not in_separator then
+				check not_empty: last_after_separator <= cnt end
 				Result.force_last (unescape (a_string.substring (last_after_separator, cnt)))
 			end
-		ensure
-			result_not_void: Result /= Void
-			count_ceiling: Result.count <= a_string.count // 2 + 1
-			last_escape_character_verbatim: (a_string.count >= 2
-				and then a_string.item (a_string.count) = escape_character 
-				and then a_string.item (a_string.count - 1) /= escape_character)
-					implies (Result.last.item (Result.last.count) = escape_character)
+			if insert_between_separators and in_separator and cnt > 0 then
+				Result.force_last (STRING_.make_empty)
+			end
 		end
+		
+feature -- Operation(s)
 
 	join (a_linear: DS_LINEAR [STRING]): STRING is
 			-- Join sequence to a string using the first of 
@@ -165,6 +233,7 @@ feature -- Operation(s)
 		require
 			has_escape_character: has_escape_character
 			a_linear_not_void: a_linear /= Void
+			no_empty_items: not has_empty (a_linear)
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			a_separator: STRING
@@ -188,6 +257,35 @@ feature -- Operation(s)
 			result_not_void: Result /= Void
 			same_count: split (Result).count = a_linear.count
 			stable_reversible: join (split (Result)).is_equal (Result)
+		end
+		
+	join_unescaped (a_linear: DS_LINEAR [STRING]): STRING is
+			-- Join sequence to a string using the first of
+			-- the separators. Separators within items are
+			-- NOT escaped, see `join' for escaping version.
+		require
+			a_linear_not_void: a_linear /= Void
+		local
+			a_cursor: DS_LINEAR_CURSOR [STRING]
+			a_separator: STRING
+		do
+			create Result.make_empty
+			from
+					-- Using a_string for separator is unicode compatible.
+				a_separator := separators.substring (1, 1)
+				a_cursor := a_linear.new_cursor
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
+				Result := STRING_.appended_string (Result, a_cursor.item)
+				a_cursor.forth
+				if not a_cursor.after then
+					Result := STRING_.appended_string (Result, a_separator)
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
