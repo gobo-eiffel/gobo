@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Gepp Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Execute gepp.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="gepp_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>input</term>
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>output</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>lines</term>
 				<listitem>
@@ -64,7 +64,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>to_directory</term>
 				<listitem>
@@ -77,13 +77,13 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="gepp_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="gepp">
     <element name="gepp">
@@ -113,9 +113,9 @@
   </define>
 ]]>
 	</programlisting>
-	
+
 	</sect1>
-	
+
 	<sect1 id="gepp_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
@@ -126,7 +126,7 @@
   />
     <define name="ISE" if="$ISE"/>
   </gepp>
-  
+
 ]]>
 	</programlisting>
 	</sect1>

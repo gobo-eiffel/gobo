@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Precursor Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -40,10 +40,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="precursor_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="precursor">
     <element name="precursor">
@@ -56,7 +56,7 @@
 
 	<sect1 id="precursor_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <precursor/>
 ]]>

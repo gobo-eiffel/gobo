@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Geant Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -27,7 +27,7 @@
 
 	<sect1 id="geant_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>file</term>
@@ -41,7 +41,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>target</term>
 				<listitem>
@@ -58,7 +58,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>reuse_variables</term>
 				<listitem>
@@ -78,10 +78,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="echo_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
 <define name="geant">
   <element name="geant">
@@ -131,14 +131,14 @@
 
 	<sect1 id="geant_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <geant file="build2.eant"/>
-  
+
   <geant file="build2.eant" target="compile"/>
-  
+
   <geant file="build2.eant" target="compile" reuse_variables="true"/>
-  
+
   <geant target="compile"/>
 ]]>
 		</programlisting>

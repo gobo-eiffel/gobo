@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Introduction to Gobo Eiffel Ant"
 
 	library: "Gobo Eiffel Ant"
@@ -27,7 +27,7 @@
 
 		<programlisting><![CDATA[
   <?xml version="1.0" ?>
-  <project name="hello" default="hello">	
+  <project name="hello" default="hello">
     <target name="hello">
       <echo message="Hello world"/>
     </target>

@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Exit Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -40,10 +40,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="exit_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="exit">
     <element name="exit">
@@ -59,7 +59,7 @@
 
 	<sect1 id="exit_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <exit code="1"/>
 ]]>

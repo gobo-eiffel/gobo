@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Target"
 
 	library: "Gobo Eiffel Ant"
@@ -31,7 +31,7 @@
 
 	<sect1 id="target_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>name</term>
@@ -126,7 +126,7 @@
 
 	<sect1 id="fileset_nested_parameters">
 		<title>Parameters specified as nested elements</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>obsolete</term>
@@ -165,7 +165,7 @@
 
 	<sect1 id="target_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="target">
     <element name="target">
@@ -223,7 +223,7 @@
 
 	<sect1 id="target_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <target name="t1">
     <echo message="This is target 't1'"/>

@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Getest Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Execute getest.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="getest_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>config</term>
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>compile</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>class</term>
 				<listitem>
@@ -68,7 +68,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>feature</term>
 				<listitem>
@@ -85,7 +85,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>generation</term>
 				<listitem>
@@ -140,10 +140,10 @@
 
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="getest_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="getest">
     <element name="getest">
@@ -177,9 +177,9 @@
   </define>
 ]]>
 	</programlisting>
-	
+
 	</sect1>
-	
+
 	<sect1 id="getest_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
@@ -189,7 +189,7 @@
   >
     <define name="debug" value="true" if="${debug}"/>
   </getest>
-  
+
 ]]>
 	</programlisting>
 	</sect1>

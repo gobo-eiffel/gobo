@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Echo Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -40,10 +40,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="echo_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
 <define name="echo">
   <element name="echo">
@@ -57,7 +57,7 @@
 
 	<sect1 id="echo_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <echo message="Hello world!"/>
 ]]>

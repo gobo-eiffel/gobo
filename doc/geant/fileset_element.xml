@@ -90,7 +90,7 @@ nested element.
 
 	<sect1 id="fileset_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>include</term>
@@ -104,7 +104,7 @@ nested element.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>exclude</term>
 				<listitem>
@@ -117,7 +117,7 @@ nested element.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>force</term>
 				<listitem>
@@ -134,7 +134,7 @@ nested element.
 					<para><emphasis>Default: </emphasis>true</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>filename_directory</term>
 				<listitem>
@@ -150,7 +150,7 @@ nested element.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>mapped_filename_directory</term>
 				<listitem>
@@ -166,13 +166,13 @@ nested element.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="fileset_nested_parameters">
 		<title>Parameters specified as nested elements</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>include</term>
@@ -186,7 +186,7 @@ nested element.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>exclude</term>
 				<listitem>
@@ -199,7 +199,7 @@ nested element.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>map</term>
 				<listitem>
@@ -216,10 +216,10 @@ nested element.
 			</varlistentry>
 		</variablelist>
 	</sect1>
-		
+
 	<sect1 id="fileset_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="fileset">
     <element name="fileset">
@@ -260,17 +260,17 @@ nested element.
     </element>
   </define>
 		        ]]>
-		
+
 	</programlisting>
 	</sect1>
-	
+
 	<sect1 id="fileset_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <fileset include="@(**/*.ge|**/*.?ace)"/>
-  
+
   <fileset dir="kernel" include="@(**/*.ge|**/*.?ace)"/>
-  
+
   <fileset include="@(**/*.ge|**/*.?ace)" mapped_filename_directory="kernel"/>
 
   <fileset include="@(**/*.ge)">
@@ -339,7 +339,7 @@ following list describes the old format.
 
 	<sect1 id="fileset_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>directory</term>
@@ -356,7 +356,7 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>include</term>
 				<listitem>
@@ -369,7 +369,7 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>exclude</term>
 				<listitem>
@@ -382,7 +382,7 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>force</term>
 				<listitem>
@@ -398,7 +398,7 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>true</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>concat</term>
 				<listitem>
@@ -411,13 +411,13 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
-		
+
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="fileset_nested_parameters">
 		<title>Parameters specified as nested elements</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>include</term>
@@ -431,7 +431,7 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>exclude</term>
 				<listitem>
@@ -444,7 +444,7 @@ following list describes the old format.
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>map</term>
 				<listitem>
@@ -461,10 +461,10 @@ following list describes the old format.
 			</varlistentry>
 		</variablelist>
 	</sect1>
-		
+
 	<sect1 id="fileset_specification">
 		<title>Obsolete (GOBO 3.1) RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="fileset">
     <element name="fileset">
@@ -505,7 +505,7 @@ following list describes the old format.
     </element>
   </define>
 		        ]]>
-		
+
 	</programlisting>
 	</sect1>
 </chapter>

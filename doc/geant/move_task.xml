@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Move Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Move a file or fileset to a new file or directory.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="move_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>file</term>
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>to_file</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>to_directory</term>
 				<listitem>
@@ -66,10 +66,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="move_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="move">
     <element name="move">
@@ -93,12 +93,12 @@
 ]]>
 	</programlisting>
 	</sect1>
-	
+
 	<sect1 id="move_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <move file="readme.txt" to_file="readme1.txt"/>
-  
+
   <move file="readme.txt" to_directory="/tmp"/>
 
   <move to_directory="/tmp">

@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Gobo Eiffel Ant overview"
 
 	library: "Gobo Eiffel Ant"
@@ -52,13 +52,13 @@
 			and that it includes commands (so called tasks) which are tailored specifically for
 			the usage with Eiffel. All available Eiffel compilers are supported.
 		</para>
-	
+
 		<para>
 			Reusability in build systems has always been an issue which wasn't addressed properly.
 			Therefore Geant's build scripts can be used as classes: build scripts can inherit
 			from other build scripts.
 		</para>
-	
+
 	</sect1>
 
 	<sect1>
@@ -68,13 +68,13 @@
 			optionally followed by a so called targetname. Here are some examples (the $ sign
 			represents the shell prompt):
 		</para>
-		
+
 		<programlisting>
 		  $ geant
 		  $ geant help
 		  $ geant compile
 		</programlisting>
-		
+
 		<para>
 			Geant then is looking for a file named 'build.eant' which contains the build instructions.
 			So far all this sounds familiar to anyone who has used <emphasis>make</emphasis>.
@@ -82,7 +82,7 @@
 			eant files is XML. If you know Jakarta's Java build tool Ant you will see that the
 			syntax is very similar.
 		</para>
-	
+
 	</sect1>
 
 	<sect1>

@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"ve Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>empty string</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>recursive</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>tune</term>
 				<listitem>
@@ -64,7 +64,7 @@
 					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>level</term>
 				<listitem>
@@ -77,7 +77,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>clean</term>
 				<listitem>
@@ -90,7 +90,7 @@
 					<para><emphasis>Default: </emphasis>empty string</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>exit_code_variable</term>
 				<listitem>
@@ -106,18 +106,18 @@
 			</varlistentry>
 
 		</variablelist>
-	
+
 		<para>
 			Note: In mode 'clean' the directory 'eCluster' and the files Result.out', 'vec.xcp' are
 			deleted as well if they exist. If 'recursive' is set to 'true' 'clean' is applied to each
 			subdirectory recursively. In mode tune the Eiffel System is tuned with Visual Eiffel's tuner.
 		</para>
-	
+
 	</sect1>
-	
+
 	<sect1 id="ve_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="ve">
     <element name="ve">
@@ -152,7 +152,7 @@
 
 	<sect1 id="ve_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <ve esd="compile_ve.esd"/>
 

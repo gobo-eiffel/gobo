@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
@@ -145,7 +145,7 @@
       <map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
     </fileset>
   </outofdate>
-		
+
   <outofdate variable="generate" dir="${GOBO}/library/kernel">
     <fileset directory=".">
     <include name="${gepp_in_dir}/${gepp_file}.ge"/>

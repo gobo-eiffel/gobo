@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Geyacc Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Execute geyacc.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="geyacc_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>input</term>
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>output</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>tokens</term>
 				<listitem>
@@ -64,7 +64,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>separate_actions</term>
 				<listitem>
@@ -77,7 +77,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>verbose</term>
 				<listitem>
@@ -90,13 +90,13 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="geyacc_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="geyacc">
     <element name="geyacc">
@@ -118,14 +118,14 @@
   </define>
 ]]>
 	</programlisting>
-	
+
 	</sect1>
-	
+
 	<sect1 id="geyacc_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <geyacc input="calc.y" output="calc.e"/>
-  
+
   <geyacc input="eiffel_parser.y" tokens="EIFFEL_TOKENS" output="eiffel_parser.e"/>
 ]]>
 	</programlisting>

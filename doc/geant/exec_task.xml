@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Exec Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -24,7 +24,7 @@
 
 	<sect1 id="exec_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>executable</term>
@@ -73,7 +73,7 @@
 
 	<sect1 id="exec_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="exec">
     <element name="exec">
@@ -135,7 +135,7 @@
   </exec>
 ]]>
 		</programlisting>
-	
+
 	<para>
 	Due to its general purpose 'exec', unlike  <link linkend="copy_task">copy</link>
 	cannot determine whether the sourcefile is newer than the target file.
@@ -149,7 +149,7 @@
 	to the filenames delivered by filesets. <link linkend="copy_task">copy</link> for example is doing this
 	with the attribute <emphasis>to_directory</emphasis>).
 	</para>
-	
+
 	<para>
 		By setting <emphasis>force</emphasis> to <emphasis>false</emphasis> the fileset itself determines
 		whether files are 'out of date' or not. This means of course that the fileset must have the complete
@@ -158,7 +158,7 @@
 		of the <link linkend="fileset_element">fileset</link>'s <link linkend="fileset_element">map</link>
 		element so that the fileset itself can determine which files to include and which not.
 	</para>
-	
+
 	<programlisting><![CDATA[
   <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
 	<fileset directory="." include="@(*.ge)" force="false">
@@ -167,13 +167,13 @@
   </exec>
 ]]>
 	</programlisting>
-	
+
 	<para>
 		Here is another example which uses SmallEiffel's 'short' command on a fileset.
 		The 'exec' command is executed for each entry in the fileset. By default only files which
 		are newer than their corresponding target files are included in the list.
 	</para>
-	
+
 	<programlisting><![CDATA[
   <exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
 	<fileset
@@ -188,7 +188,7 @@
   </exec>
 ]]>
 	</programlisting>
-	
+
 	</sect1>
 
 	<sect1 id="exec_with_fileset">
@@ -211,7 +211,7 @@
 
 	<para>
 	</para>
-	
+
 	</sect1>
 
 </chapter>

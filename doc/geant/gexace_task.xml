@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
@@ -175,7 +175,7 @@
   <gexace system="se" xace="${system}.xace"/>
 
   <gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
-  
+
   <gexace system="ise">
     <define name="DEBUG" value="true" if="$DEBUG"/>
   </gexace>

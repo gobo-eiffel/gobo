@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Geant's examples"
 
 	library: "Gobo Eiffel Ant"
@@ -246,7 +246,7 @@ dir.dir:
       <echo message="after call of ${buildfile}"/>
       <echo message="-------" />
       <echo message="before call of ${buildfile}"/>
-      <geant file="${buildfile}" reuse_variables="true" target="var"/> 
+      <geant file="${buildfile}" reuse_variables="true" target="var"/>
       <echo message="after call of ${buildfile}"/>
     </target>
   </project>

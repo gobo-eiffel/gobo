@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Gexmlsplit Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -40,10 +40,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="gexmlsplit_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="gexmlsplit">
     <element name="gexmlsplit">
@@ -57,7 +57,7 @@
 
 	<sect1 id="gexmlsplit_examples">
 		<title>Examples</title>
-		
+
 		<programlisting><![CDATA[
   <gexmlsplit input="input.xml"/>
 ]]>

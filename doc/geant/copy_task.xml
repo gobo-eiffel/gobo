@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Copy Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -22,10 +22,10 @@
 			is newer than the destination file, or when the destination file does not exist.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="copy_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>file</term>
@@ -39,7 +39,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>to_file</term>
 				<listitem>
@@ -52,7 +52,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>to_directory</term>
 				<listitem>
@@ -83,10 +83,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="copy_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="copy">
     <element name="copy">
@@ -120,12 +120,12 @@
 ]]>
 	</programlisting>
 	</sect1>
-	
+
 	<sect1 id="copy_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <copy file="readme.txt" to_file="readme1.txt"/>
-  
+
   <copy file="readme.txt" to_directory="/tmp"/>
 
   <copy to_directory="/tmp">

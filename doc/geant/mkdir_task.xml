@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Mkdir Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Create a directory.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="mkdir_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>directory</term>
@@ -40,10 +40,10 @@
 			</varlistentry>
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="mkdir_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="mkdir">
     <element name="mkdir">
@@ -54,7 +54,7 @@
 ]]>
 	</programlisting>
 	</sect1>
-	
+
 	<sect1 id="mkdir_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
