@@ -70,6 +70,7 @@ feature -- Element change
 		require
 			output_properties_not_void: some_output_properties /= Void
 		do
+			-- TODO: character set
 			output_properties := some_output_properties
 		ensure
 			output_properties_set: output_properties = some_output_properties
@@ -83,7 +84,6 @@ feature {NONE} -- Implementation
 invariant
 
 	system_id_not_void: system_id /= Void
-	name_pool_not_void: name_pool /= Void
 	output_properties_not_void: output_properties /= Void
 	transformer_not_void: transformer /= Void
 

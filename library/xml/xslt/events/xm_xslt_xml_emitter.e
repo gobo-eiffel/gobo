@@ -24,6 +24,8 @@ inherit
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 creation
 
 	make
@@ -38,18 +40,17 @@ feature {NONE} -- Initialization
 			output_properties_not_void: some_output_properties /= Void
 		do
 			transformer := a_transformer
-			name_pool := transformer.name_pool
 			raw_outputter := an_outputter
 			output_properties := some_output_properties
 			is_empty := True
 			create element_qname_stack.make_default
+			element_qname_stack.set_equality_tester (string_equality_tester)
 			create name_lookup_table.make (0, 1023)
 			make_specials
-			system_id := ""
+			system_id := "" -- TODO - set_system_id
 			encoder_factory := transformer.configuration.encoder_factory
 		ensure
 			transformer_set: transformer = a_transformer
-			name_pool_set: name_pool = transformer.name_pool
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
 		end
@@ -86,7 +87,7 @@ feature -- Events
 					a_display_name := name_lookup_table.item (a_name_code)
 				end
 				if a_display_name = Void then
-					a_display_name := name_pool.display_name_from_name_code (a_name_code)
+					a_display_name := shared_name_pool.display_name_from_name_code (a_name_code)
 					if a_name_code < 1024 then
 						name_lookup_table.put (a_display_name, a_name_code)
 					end
@@ -115,13 +116,14 @@ feature -- Events
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+			-- Notify a namespace declaration.
 		local
 			a_namespace_prefix, a_namespace_uri: STRING
 			a_bad_character: INTEGER
 		do
 			if is_open and then not is_error then
-				a_namespace_prefix := name_pool.prefix_from_namespace_code (a_namespace_code)
-				a_namespace_uri := name_pool.uri_from_namespace_code (a_namespace_code)
+				a_namespace_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
+				a_namespace_uri := shared_name_pool.uri_from_namespace_code (a_namespace_code)
 
 				if a_namespace_prefix.count = 0 then
 					output (" ")
@@ -142,7 +144,7 @@ feature -- Events
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
-			-- Notify an attribute;
+			-- Notify an attribute.
 		local
 			a_display_name: STRING
 			a_bad_character: INTEGER
@@ -155,7 +157,7 @@ feature -- Events
 					a_display_name := name_lookup_table.item (a_name_code)
 				end
 				if a_display_name = Void then
-					a_display_name := name_pool.display_name_from_name_code (a_name_code)
+					a_display_name := shared_name_pool.display_name_from_name_code (a_name_code)
 					if a_name_code < 1024 then
 						name_lookup_table.put (a_display_name, a_name_code)
 					end
@@ -187,7 +189,7 @@ feature -- Events
 				a_display_name := element_qname_stack.item
 				element_qname_stack.remove
 				if is_open_start_tag then
-					close_start_tag (a_display_name, False)
+					close_start_tag (a_display_name, True)
 				else
 					output ("</")
 					if not is_error then output (a_display_name) end
@@ -419,7 +421,7 @@ feature {NONE} -- Implementation
 					if are_no_special_characters (properties) then
 						output ("=")
 						if not is_error then output ("%"") end
-						if not is_error then output ("a_value") end
+						if not is_error then output (a_value) end
 						if not is_error then output ("%"") end
 					elseif are_null_markers_used (properties) then
 
@@ -584,13 +586,13 @@ feature {NONE} -- Implementation
 				write_declaration
 			
 				a_character_representation := output_properties.character_representation
-				if a_character_representation.is_equal ("hex") then
+				if STRING_.same_string (a_character_representation, "hex") then
 					is_hex_preferred := True
-				elseif not a_character_representation.is_equal ("decimal") then
+				elseif STRING_.same_string (a_character_representation, "decimal") then
 					on_error ("Illegal value for gexslt:character-representation: " + a_character_representation)
 				end
 			
-				if output_properties.version.is_equal ("1.1") then
+				if STRING_.same_string (output_properties.version, "1.1") then
 					allow_undeclare_namespaces := output_properties.undeclare_namespaces
 				end
 			end
@@ -679,7 +681,9 @@ feature {NONE} -- Implementation
 		require
 			name_not_void: a_name /= Void
 		do
-			output ("/>")
+			Result := "/>"
+		ensure
+			empty_element_tag_closer_not_void: Result /= Void
 		end
 
 invariant

@@ -76,7 +76,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_name_code := a_cursor.item
-				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
+				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					name := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Decimal_separator_attribute) then

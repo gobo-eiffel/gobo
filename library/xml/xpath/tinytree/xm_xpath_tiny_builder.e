@@ -30,16 +30,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool in which all name codes can be found
-		require
-			name_pool_not_void: a_name_pool /= Void
+	make is
+			-- Establish invariant.
 		do
-			name_pool := a_name_pool
 			system_id := ""
 			create {XM_XPATH_DEFAULT_LOCATOR} locator
-		ensure
-			name_pool_set: name_pool = a_name_pool
 		end
 	
 feature -- Access
@@ -66,9 +61,9 @@ feature -- Events
 
 			if system_id.count = 0 then system_id := locator.system_id end
 			if defaults_overridden then
-				create tiny_document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)
+				create tiny_document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, system_id)
 			else
-				create tiny_document.make_with_defaults (name_pool, system_id)
+				create tiny_document.make_with_defaults (system_id)
 			end
 			document := tiny_document
 			current_depth := 1
@@ -143,7 +138,9 @@ feature -- Events
 		do
 			a_new_type_code := a_type_code
 			if conformance.basic_xslt_processor then
-				a_new_type_code := Untyped_atomic_type_code
+				if a_type_code /= Id_type_code then
+					a_new_type_code := Untyped_atomic_type_code
+				end
 			else
 				check
 					Only_basic_xslt_processors_are_supported: False
@@ -196,14 +193,14 @@ feature -- Events
 		local
 			a_name_code, a_previous_sibling: INTEGER
 		do
-			if not name_pool.is_name_code_allocated ("", "", a_target) then
+			if not shared_name_pool.is_name_code_allocated ("", "", a_target) then
 
 				-- TODO need to check for resource exhaustion in name pool
 				
-				name_pool.allocate_name ("", "", a_target)
-				a_name_code := name_pool.last_name_code
+				shared_name_pool.allocate_name ("", "", a_target)
+				a_name_code := shared_name_pool.last_name_code
 			else
-				a_name_code := name_pool.name_code ("", "", a_target) 
+				a_name_code := shared_name_pool.name_code ("", "", a_target) 
 			end
 			tiny_document.store_comment (a_data_string)
 			tiny_document.add_node (Processing_instruction_node, current_depth, tiny_document.comment_buffer_length, a_data_string.count, a_name_code)
@@ -310,6 +307,5 @@ feature {NONE} -- Implementation
 
 invariant
 	positive_depth: current_depth >= 0
-	name_pool_not_void: name_pool /= Void
 
 end

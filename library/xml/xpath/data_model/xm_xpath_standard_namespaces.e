@@ -42,7 +42,10 @@ feature -- Access
 
 	Xml_schema_instance_prefix_index: INTEGER is 7
 			-- Numeric code representing the XML Schema instance namespace
-	
+
+	Xhtml_prefix_index: INTEGER is 8
+			-- Numeric code representing the XHTML namespace
+
 	namespace_index_to_uri_code (a_name_space_index: INTEGER): INTEGER is
 			-- Convert `a_name_space_index' to a uri code
 		require
@@ -96,6 +99,7 @@ feature -- Access
 	Gexslt_uri_code: INTEGER is 4
 	Xslt_uri_code: INTEGER is 5
 	Xml_schema_instance_uri_code: INTEGER is 6
+	Xhtml_uri_code: INTEGER is 7
 
 			-- The following codes are fingerprints
 
@@ -250,6 +254,8 @@ feature -- Access
 	Version_attribute: STRING is "version"
 	Xpath_default_namespace_attribute: STRING is "xpath-default-namespace"
 	Id_attribute: STRING is "id"
+	Validation_attribute: STRING is "validation"
+	Copy_namespaces_attribute: STRING is "copy-namespaces"
 	Default_validation_attribute: STRING is "default-validation"
 	Decimal_separator_attribute: STRING is "decimal-separator"
 	Pattern_separator_attribute: STRING is "pattern-separator"
@@ -273,6 +279,7 @@ feature -- Access
 	Case_order_attribute: STRING is "case-order"
 	Lang_attribute: STRING is "lang"
 	Data_type_attribute: STRING is "data-type"
+	Type_attribute: STRING is "type"
 	Group_by_attribute: STRING is "group-by"
 	Group_adjacent_attribute: STRING is "group-adjacent"
 	Group_starting_with_attribute: STRING is "group-starting-with"

@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			receiver_not_void: a_receiver /= Void
 			output_properties_not_void: some_output_properties /= Void
 		do
-			name_pool := a_transformer.name_pool
 			base_receiver := a_receiver
 			emitter ?= base_receiver
 			indent_spaces := some_output_properties.indent_spaces
@@ -47,7 +46,7 @@ feature -- Events
 		local
 			a_tag: STRING
 		do
-			a_tag := name_pool.display_name_from_name_code (a_name_code)
+			a_tag := shared_name_pool.display_name_from_name_code (a_name_code)
 			is_inline_tag := is_inline (a_tag)
 			in_formatted_tag := in_formatted_tag or else is_formatted (a_tag)
 			if not is_inline_tag and then not in_formatted_tag and then

@@ -125,7 +125,7 @@ feature -- Element change
 					-- because tree_pipe.document is a document node
 				end
 				document := a_context_node.document_root
-				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (document.name_pool, warnings, xpath_one_compatibility)
+				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility)
 			end
 		ensure
 			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
@@ -189,7 +189,7 @@ feature -- Evaluation
 						internal_error_value := an_expression.error_value
 					else
 						debug ("XPath evaluator")
-							an_expression.display (1, static_context.name_pool)
+							an_expression.display (1)
 						end
 						an_expression.allocate_slots (1)
 						evaluate_post_analysis (an_expression)

@@ -25,7 +25,7 @@ inherit
 
 creation
 
-	make
+	make, make_sorted_iterator
 
 feature {NONE} -- Initialization
 
@@ -55,8 +55,15 @@ feature -- Evaluation
 
 	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the members of the current group, in population order.
+		local
+			a_sort_record: XM_XSLT_GROUP_SORT_RECORD
 		do
-			todo ("current_group_iterator", False)
+			a_sort_record ?= node_keys.item (index)
+			check
+				group_sort_record: a_sort_record /= Void
+				-- `build_array' assures this
+			end
+			Result := a_sort_record.current_group_iterator.another
 		end
 
 feature {NONE} -- Implementation

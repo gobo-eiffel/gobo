@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -89,15 +89,15 @@ feature -- Status report
 				std.error.put_string (" in error%N")
 			else
 				std.error.put_new_line
-				condition.display (a_level + 1, a_pool)
+				condition.display (a_level + 1)
 				a_string := STRING_.appended_string (indentation (a_level), "then")
 				std.error.put_string (a_string)
 				std.error.put_new_line
-				then_expression.display (a_level + 1, a_pool)
+				then_expression.display (a_level + 1)
 					a_string := STRING_.appended_string (indentation (a_level), "else")
 					std.error.put_string (a_string)
 					std.error.put_new_line
-					else_expression.display (a_level + 1, a_pool)				
+					else_expression.display (a_level + 1)				
 				end
 			end
 

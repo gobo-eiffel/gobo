@@ -29,18 +29,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_factory: XM_XPATH_NODE_FACTORY) is
-			-- Set name pool and node factory..
+	make (a_node_factory: XM_XPATH_NODE_FACTORY) is
+			-- Establish invariant..
 		require
-			name_pool_not_void: a_name_pool /= Void
 			node_factory_not_void: a_node_factory /= Void
 		do
-			name_pool := a_name_pool
 			node_factory := a_node_factory
 			system_id := ""
 			create {XM_XPATH_DEFAULT_LOCATOR} locator
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			node_factory_set: node_factory = a_node_factory
 		end
 
@@ -67,7 +64,7 @@ feature -- Events
 			-- TODO add timing information
 
 			if system_id.count = 0 then system_id := locator.system_id end
-			create tree_document.make (name_pool, system_id)
+			create tree_document.make (system_id)
 			document := tree_document
 			current_depth := 1
 			next_node_number := 2
@@ -117,7 +114,9 @@ feature -- Events
 			if not has_error then
 				a_new_type_code := a_type_code
 				if conformance.basic_xslt_processor then
-					a_new_type_code := Untyped_atomic_type_code
+					if a_type_code /= Id_type_code then
+						a_new_type_code := Untyped_atomic_type_code
+					end
 				else
 					check
 						Only_basic_xslt_processors_are_supported: False
@@ -127,7 +126,7 @@ feature -- Events
 					on_error ("Cannot disable output escaping when writing to a tree")
 				else
 					if pending_attributes = Void then
-						create pending_attributes.make (name_pool)
+						create pending_attributes.make
 					end
 					pending_attributes.add_attribute (a_name_code, a_new_type_code, a_value)
 				end
@@ -197,14 +196,14 @@ feature -- Events
 			a_name_code: INTEGER
 		do
 			if not has_error then
-				if not name_pool.is_name_code_allocated ("", "", a_target) then
+				if not shared_name_pool.is_name_code_allocated ("", "", a_target) then
 					
 					-- TODO need to check for resource exhaustion in name pool
 					
-					name_pool.allocate_name ("", "", a_target)
-					a_name_code := name_pool.last_name_code
+					shared_name_pool.allocate_name ("", "", a_target)
+					a_name_code := shared_name_pool.last_name_code
 				else
-					a_name_code := name_pool.name_code ("", "", a_target) 
+					a_name_code := shared_name_pool.name_code ("", "", a_target) 
 				end
 				create a_processing_instruction.make (tree_document, a_name_code, a_data_string)
 				current_composite_node.add_child (a_processing_instruction)
@@ -232,7 +231,6 @@ feature -- Events
 			-- TODO add timing information
 
 			current_composite_node := Void
-			node_factory := Void
 		end
 
 feature {NONE} -- Implementation
@@ -263,6 +261,7 @@ feature {NONE} -- Implementation
 invariant
 
 	last_error_not_void: has_error implies last_error /= Void
+	node_factory_not_void: node_factory /= Void
 
 end
 	

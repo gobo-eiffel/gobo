@@ -15,6 +15,8 @@ class XM_XPATH_TOKENIZER
 
 inherit
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	XM_XPATH_TOKENS
 	
 	KL_IMPORTED_STRING_ROUTINES
@@ -938,7 +940,7 @@ feature {NONE} -- Implementation
 	double_keywords: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Lookup table for composite (two-keyword) tokens
 		once
-			create Result.make (30)
+			create Result.make_with_equality_testers (30, Void, string_equality_tester)
 			double_keywords.put (Instance_of_token, "instance of")
 			double_keywords.put (Cast_as_token, "cast as")
 			double_keywords.put (Treat_as_token, "treat as")

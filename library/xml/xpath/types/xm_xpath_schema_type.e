@@ -19,6 +19,8 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+	
+	XM_XPATH_SHARED_NAME_POOL
 
 feature -- Access
 
@@ -30,9 +32,6 @@ feature -- Access
 
 	namespace_uri: STRING
 			--Namespace uri
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- Name pool
 
 	base_type: XM_XPATH_SCHEMA_TYPE
 			-- Base type
@@ -62,8 +61,6 @@ feature -- Access
 invariant
 
 	base_type_may_be_void: True
-	well_known_type: fingerprint < 1024 implies name_pool = Void
-	user_defined_type: fingerprint >= 1024 implies name_pool /= Void
 	local_name_not_void: local_name /= Void and then local_name.count > 0
 	namespace_uri_not_void: namespace_uri /= Void
 

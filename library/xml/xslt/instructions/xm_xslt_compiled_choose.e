@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 	make (an_executable: XM_XSLT_EXECUTABLE; some_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; some_actions: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]) is
 			-- Establish invariant.
 		require
+			executable_not_void: an_executable /= Void
 			conditions: some_conditions /= Void and then some_conditions.count > 0
 			actions: some_actions /= Void and then some_actions.count = some_conditions.count
 		do

@@ -41,14 +41,15 @@ feature -- Access
 
 feature -- Events
 
-	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL; is_stylesheet: BOOLEAN) is
+	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
 		do
-			create content_emitter.make (a_receiver, a_name_pool)
+			create content_emitter.make (a_receiver)
 			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
-			create start.set_next (attributes)
+			create content.set_next (attributes)
+			create start.set_next (content)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (content_emitter)
 			a_parser.parse_from_system (system_id)
@@ -75,6 +76,9 @@ feature {NONE} -- Implementation
 
 	attributes: XM_ATTRIBUTE_DEFAULT_FILTER
 			-- Set attribute defaults from the DTD
+
+	content: XM_CONTENT_CONCATENATOR
+			-- Content concatenator
 
 end
 	

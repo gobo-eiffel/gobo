@@ -46,14 +46,14 @@ feature {NONE} -- Initialization
 			parent_node := an_element
 			child_index := an_index
 			namespace_code := a_namespace_code
-			if document.name_pool.is_name_code_allocated ("", "", local_part) then
-				name_code := document.name_pool.name_code  ("", "", local_part)
+			if shared_name_pool.is_name_code_allocated ("", "", local_part) then
+				name_code := shared_name_pool.name_code  ("", "", local_part)
 			else
 
 				-- TODO need to check for resource exhaustion in name pool
 				
-				document.name_pool.allocate_name  ("", "", local_part)
-				name_code := document.name_pool.last_name_code
+				shared_name_pool.allocate_name  ("", "", local_part)
+				name_code := shared_name_pool.last_name_code
 			end
 		ensure
 			parent_set: parent = an_element
@@ -89,7 +89,7 @@ feature -- Comparison
 	local_part: STRING is
 			-- Local name for this node. i.e. Namespace prefix
 		do
-			Result := document.name_pool.prefix_from_namespace_code (namespace_code)
+			Result := shared_name_pool.prefix_from_namespace_code (namespace_code)
 		end
 
 	name_code: INTEGER
@@ -98,7 +98,7 @@ feature -- Comparison
 	string_value: STRING is
 			-- String-value
 		do
-			Result := document.name_pool.uri_from_namespace_code (namespace_code)
+			Result := shared_name_pool.uri_from_namespace_code (namespace_code)
 		end
 
 feature -- Duplication

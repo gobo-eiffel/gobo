@@ -113,8 +113,12 @@ feature {NONE} -- Initialization
 			uris.put (Xml_schema_instance_uri, Xml_schema_instance_prefix_index)			
 			prefixes_for_uri.put ("xsi ", Xml_schema_instance_prefix_index)
 
-			prefixes_used := 7
-			uris_used := 7
+			prefixes.put ("xhtml", Xhtml_prefix_index)
+			uris.put (Xhtml_uri, Xhtml_prefix_index)			
+			prefixes_for_uri.put ("xhtml ", Xhtml_prefix_index)
+
+			prefixes_used := 8
+			uris_used := 8
 
 		end
 	

@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_TYPE
+
 	XM_XSLT_STRING_ROUTINES
 
 creation
@@ -40,13 +42,13 @@ feature {NONE} -- Initialization
 			strip_all := False
 			preserve_all := stripper_mode = Void
 			create strip_stack.make (100)
-			if transformer.name_pool.is_name_code_allocated ("xml", Xml_uri, "space") then
-				xml_space_code := transformer.name_pool.name_code ("xml", Xml_uri, "space")
+			if shared_name_pool.is_name_code_allocated ("xml", Xml_uri, "space") then
+				xml_space_code := shared_name_pool.name_code ("xml", Xml_uri, "space")
 			else
-				transformer.name_pool.allocate_name ("xml", Xml_uri, "space")
-				xml_space_code := transformer.name_pool.last_name_code
+				shared_name_pool.allocate_name ("xml", Xml_uri, "space")
+				xml_space_code := shared_name_pool.last_name_code
 			end
-			create element.make_dummy (transformer.name_pool)
+			create orphan.make (Element_node, "")
 			base_receiver := an_underlying_receiver
 		ensure
 			transformer_set: transformer = a_transformer
@@ -80,15 +82,19 @@ feature -- Access
 			elseif strip_all then
 				Result := Strip_default
 			else
-				element.set_name_code (a_name_code)
-				a_rule := stripper_mode.rule (element, transformer)
+				orphan.set_name_code (a_name_code)
+				a_rule := stripper_mode.rule (orphan, transformer)
+				if a_rule = Void then
+					Result := Always_preserve
+				else
 					check
 						boolean_rule: a_rule.is_boolean
 					end
-				if a_rule.as_boolean then
-					Result := Always_preserve
-				else
-					Result := Strip_default
+					if a_rule.as_boolean then
+						Result := Always_preserve
+					else
+						Result := Strip_default
+					end
 				end
 			end
 		ensure
@@ -131,6 +137,10 @@ feature -- Events
 				a_preservation_status := Strip_default
 			else
 				a_preservation_status := Preserve_parent
+			end
+
+			if space_preserving_mode (a_name_code) = Always_preserve then
+				a_preservation_status := a_preservation_status + Always_preserve
 			end
 			if not strip_stack.extendible (1) then
 				strip_stack.resize (2 * strip_stack.count)
@@ -218,7 +228,8 @@ feature {XM_XSLT_STRIPPER} -- Local
 	is_local_invariant_met: BOOLEAN is
 			-- is the invariant met?
 		do
-			Result := transformer /= Void and then strip_stack /= Void
+			Result := transformer /= Void and then strip_stack /= Void and then
+			(not preserve_all implies stripper_mode /= Void)
 		end
 
 feature {NONE} -- Implementation
@@ -235,11 +246,11 @@ feature {NONE} -- Implementation
 	xml_space_code: INTEGER
 			-- Name code for xml:space attribute
 
-	element: XM_XPATH_TREE_ELEMENT
+	orphan: XM_XPATH_ORPHAN
 			-- Dummy element for `{XM_XSLT_MODE}.rule'
 
 invariant
-	
+
 	local_invariant: is_local_invariant_met
 	
 end

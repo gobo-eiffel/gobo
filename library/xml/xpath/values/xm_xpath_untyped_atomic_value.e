@@ -87,7 +87,7 @@ feature -- Status report
 			end
 		end
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING

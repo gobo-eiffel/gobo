@@ -82,7 +82,7 @@ feature -- Status report
 			Result := True
 		end
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
 				std.error.put_string (indentation (a_level))

@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
 			entity_resolver := an_entity_resolver
-			name_pool := default_pool.default_pool
 			recovery_policy := Recover_with_warnings
 			error_listener := an_error_listener
 			shared_decimal_context.set_digits (18)
@@ -85,9 +84,6 @@ feature -- Access
 	entity_resolver: XM_URI_EXTERNAL_RESOLVER
 			-- Entity resolver
 
-	name_pool: XM_XPATH_NAME_POOL
-			-- Name pool
-
 	encoder_factory: XM_XSLT_ENCODER_FACTORY
 			-- Encoder factory
 
@@ -104,23 +100,37 @@ feature -- Access
 			-- Recovery policy when warnings or errors are encountered
 
 	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
-							 a_validation_action: INTEGER; a_validation_context: ANY; a_name_pool: XM_XPATH_NAME_POOL): XM_XPATH_RECEIVER is
+							 a_validation_action: INTEGER; a_validation_context: ANY): XM_XPATH_RECEIVER is
 			-- A receiver that can be used to validate an element,
 			--  and that passes the validated element on to a target receiver.
 			-- If validation is not supported, the returned receiver
 			--  will be the target receiver.
 		require
 			current_receiver_not_void: a_receiver /= Void
-			name_pool_not_void: a_name_pool /= Void
 			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
 			-- Not sure about the others - anyway, they are not used yet
 		do
 
-			-- Basix XSLT processor version
+			-- Basic XSLT processor version
 
 			Result := a_receiver
 		ensure
 			element_validator_not_void: Result /= Void
+		end
+
+	document_validator (a_receiver: XM_XPATH_RECEIVER; a_system_id: STRING; a_validation_action: INTEGER): XM_XPATH_RECEIVER is
+		-- A receiver that can be used to validate a document,
+			--  and that passes the validated element on to a target receiver.
+			-- If validation is not supported, the returned receiver
+			--  will be the target receiver.
+		require
+			current_receiver_not_void: a_receiver /= Void
+			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
+			system_id_not_void: a_system_id /= Void
+		do
+			Result := a_receiver
+		ensure
+			document_validator_not_void: Result /= Void
 		end
 
 feature -- Element change

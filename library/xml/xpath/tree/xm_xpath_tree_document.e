@@ -35,10 +35,9 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; a_system_id: STRING) is
+	make (a_system_id: STRING) is
 			-- Establish invariant.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			system_id_not_void: a_system_id /= Void
 		do
 			document := Current
@@ -46,11 +45,9 @@ feature {NONE} -- Initialization
 			create children.make (5)
 			create system_id_map.make
 			sequence_number_high_word := 1
-			name_pool := a_name_pool
 			set_system_id (a_system_id)
-			name_pool.allocate_document_number (Current)
+			shared_name_pool.allocate_document_number (Current)
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			base_uri_set: STRING_.same_string (base_uri, a_system_id)
 		end
 
@@ -193,9 +190,7 @@ feature -- Access
 	select_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		do
-			if id_table = Void then
-				Result := Void
-			elseif id_table.has (an_id) then
+			if id_table.has (an_id) then
 				Result := id_table.item (an_id)
 			else
 				Result := Void
@@ -311,8 +306,45 @@ feature {NONE} -- Implementation
 	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
 		-- Maps unparsed entity names to their URI/PUBLIC-ID pairs
 		
-	id_table: DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]
+	id_table: DS_HASH_TABLE [XM_XPATH_TREE_ELEMENT, STRING] is
 			-- Mapping of IDs to elements.
+		local
+			a_node: XM_XPATH_TREE_NODE
+			an_element: XM_XPATH_TREE_ELEMENT
+			an_index: INTEGER
+			a_value: STRING
+		once
+			create Result.make_with_equality_testers (10, Void, string_equality_tester)
+			from
+				a_node := Current
+			until
+				a_node = Void
+			loop
+				if a_node.node_type = Element_node then
+					an_element ?= a_node
+					from
+						an_index := 1
+					variant
+						an_element.number_of_attributes + 1 - an_index
+					until
+						an_index > an_element.number_of_attributes
+					loop
+						if an_element.attribute_type_code (an_index) = Id_type_code then
+							a_value := an_element.attribute_value_by_index (an_index)
+							if is_ncname (a_value) then
+								if not Result.has (a_value) then
+									Result.put (an_element, a_value)
+								end
+							end
+						end
+						an_index := an_index + 1
+					end
+				end
+				a_node := a_node.next_node_in_document_order (Current)
+			end
+		ensure
+			id_table_not_void: Result /= Void
+		end
 
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element or processing-instruction sequence numbers to system-ids

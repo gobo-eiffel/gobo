@@ -16,20 +16,16 @@ inherit
 
 	XM_XPATH_RECEIVER_OPTIONS
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	-- This is an interface to receive XML events.
 	-- It is based on XM_CALLBACKS, XM_DTD_CALLBACKS and XM_DTD_ATTRIBUTE_CONTENT,
-	-- but has additional events, and work with XM_XPATH_NAME_POOL.
+	-- but has additional events, and works with XM_XPATH_NAME_POOL.
 	-- Namespaces and attributes are handled by separate events, and Schema types
 	-- can be defined for elements and attributes.
 
 	-- XM_XPATH_CONTENT_EMITTER is available to mediate between XM_CALLBACKS etc.,
 	-- and implementations of this class.
-
-
-feature -- Access
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- The name pool in which all name codes can be found
 
 feature -- Events
 
@@ -142,10 +138,6 @@ feature -- Element change
 			locator_not_void: a_locator /= Void
 		deferred
 		end
-
-invariant
-
---	name_pool: name_pool /= Void
 
 end
 

@@ -63,7 +63,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_name_code := a_cursor.item
-				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
+				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				check_unknown_attribute (a_name_code)
 				a_cursor.forth
 			end

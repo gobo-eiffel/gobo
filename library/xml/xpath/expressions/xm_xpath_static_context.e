@@ -14,6 +14,8 @@ deferred class XM_XPATH_STATIC_CONTEXT
 
 inherit
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_UNICODE_CHARACTERS_1_1
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -24,9 +26,6 @@ inherit
 	-- The information is also sometimes needed at run-time.
 
 feature -- Access
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- The name pool used for compiling expressions
 
 	host_language: STRING is
 			-- Name of host language
@@ -64,7 +63,7 @@ feature -- Access
 		end
 		
 	default_element_namespace: INTEGER is
-			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
+			-- Default XPath namespace, as a namespace code that can be looked up in `shared_name_pool'
 		deferred
 		ensure
 			positive_namespace_code: Result >= 0
@@ -190,9 +189,6 @@ feature {NONE} -- Implementation
 	internal_last_function_binding_failure_message: STRING
 			-- Failure message from `bind_function'
 
-invariant
-
-	name_pool_not_void: name_pool /= Void
 
 end
 	

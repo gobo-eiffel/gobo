@@ -60,9 +60,8 @@ feature -- Access
 		local
 			a_collator: ST_COLLATOR
 		do
-			-- TODO: if zero-length string implement language and case-order
-			a_collator := a_context.collation (collation_name)
-			create Result.make (sort_key, order, data_type, case_order, language, a_collator)
+			if collation_name /= Void then a_collator := a_context.collation (collation_name) end
+			create Result.make (sort_key, order, data_type, case_order, language, a_collator, a_context)
 		ensure
 			reduced_definition_not_void: Result /= Void
 		end
@@ -72,8 +71,7 @@ feature -- Status_report
 	is_reducible: BOOLEAN is
 			-- May `reduced_definition' be called?
 		do
-			Result := collation_name /= Void and then
-			order /= Void and then
+			Result := order /= Void and then
 			case_order /= Void and then
 			language /= Void and then
 			data_type /= Void			
@@ -93,7 +91,6 @@ feature -- Element change
 			evaluate_data_type (a_context)
 			evaluate_collation_name (a_context)			
 		ensure
-			collation_name_not_void: collation_name /= Void
 			order_not_void: order /= Void
 			case_order_not_void: case_order /= Void
 			language_not_void: language /= Void
@@ -117,9 +114,6 @@ feature {NONE} -- Implementation
 	collation_name_expression: XM_XPATH_EXPRESSION
 			-- Name of collation (a URI) as an AVT
 
-	unicode_codepoint_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
-			-- Unicode code-point collator name
-
 	collation_name: STRING
 			-- Name of collation (a URI)
 
@@ -140,15 +134,10 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		do
-			if collation_name_expression = Void then
-				-- TODO - make it zero-length string and implement language and case-order
-				collation_name := unicode_codepoint_collation_name
-			else
+			if collation_name_expression /= Void then
 				collation_name_expression.evaluate_item (a_context)
 				collation_name := collation_name_expression.last_evaluated_item.string_value
 			end
-		ensure
-			collation_name_not_void: collation_name /= Void
 		end
 
 	evaluate_order (a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -172,7 +161,7 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 		do
 			if case_order_expression = Void then
-				case_order := ""
+				case_order := "#default"
 			else
 				case_order_expression.evaluate_item (a_context)
 				case_order := case_order_expression.last_evaluated_item.string_value

@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_SHARED_CONFORMANCE
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_RESOLVER_FACTORY
 
 	KL_SHARED_FILE_SYSTEM
@@ -107,9 +109,9 @@ feature
 			-- look for "ITEM" number 6 descendant of the document_element
 
 			if is_tiny then
-				a_fingerprint := tiny_document.name_pool.fingerprint ("", "ITEM")
+				a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
 			else
-				a_fingerprint := document.name_pool.fingerprint ("", "ITEM")
+				a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
 			end
 			create element_test.make (Element_node, a_fingerprint)
 			if is_tiny then

@@ -24,9 +24,11 @@ inherit
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_RESOLVER_FACTORY
 
-		-- These tests test the ability to build a tiny-tree,
+		-- These tests test the ability to build a standard tree,
 		-- and exercise the DOM-like navigation features,
 		-- and the XPath axes.
 
@@ -160,7 +162,7 @@ feature
 
 			-- Test descendant axis - look for "ITEM" descendants of the document_element
 
-			a_fingerprint := document.name_pool.fingerprint ("", "ITEM")
+			a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
 			create element_test.make (Element_node, a_fingerprint)
 			create descendants.make (document_element, element_test, False)
 
@@ -193,7 +195,7 @@ feature
 
 			-- Test all_elements
 
-			a_fingerprint := document.name_pool.fingerprint ("", "CATEGORY")
+			a_fingerprint := shared_name_pool.fingerprint ("", "CATEGORY")
 			element_list_1 := document.all_elements (a_fingerprint)
 			assert ("Element list not void", element_list_1 /= Void)
 			assert ("Five items", element_list_1.count = 5)
@@ -256,7 +258,7 @@ feature
 			
 			-- Test attributes axis - look for NOTE attribute on CATEGORY element
 
-			a_fingerprint := document.name_pool.fingerprint ("", "NOTE")
+			a_fingerprint := shared_name_pool.fingerprint ("", "NOTE")
 			an_element := element_list_1.item (2)
 					
 			create attribute_test.make (Attribute_node, a_fingerprint)
@@ -279,7 +281,7 @@ feature
 
 			-- Test all_elements - cached result
 
-			a_fingerprint := document.name_pool.fingerprint ("", "CATEGORY")
+			a_fingerprint := shared_name_pool.fingerprint ("", "CATEGORY")
 			element_list_2 := document.all_elements (a_fingerprint)
 			assert ("Element list 2 not void", element_list_2 /= Void)
 			assert_equal ("Cached list", element_list_1, element_list_2)

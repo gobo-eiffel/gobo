@@ -117,7 +117,7 @@ feature -- Access
 			if name_code = -1 then
 				Result := ""
 			else
-				Result := document.name_pool.namespace_uri_from_name_code (name_code)
+				Result := shared_name_pool.namespace_uri_from_name_code (name_code)
 			end
 		ensure
 			uri_not_void: Result /= Void
@@ -129,9 +129,9 @@ feature -- Access
 			inspect
 				node_type
 			when Attribute_node then
-				Result := document.name_pool.display_name_from_name_code (name_code)
+				Result := shared_name_pool.display_name_from_name_code (name_code)
 			when Element_node then
-				Result := document.name_pool.display_name_from_name_code (name_code)
+				Result := shared_name_pool.display_name_from_name_code (name_code)
 			when Namespace_node then
 				Result := local_part
 			when Processing_instruction_node then

@@ -118,9 +118,8 @@ feature -- Element change
 				attribute_collection.number_of_attributes + 1 - a_cursor.index				
 			until
 				a_cursor.after
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
+			loop a_name_code := a_cursor.item
+				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					a_name_attribute := attribute_value_by_index (a_cursor.index)
 					STRING_.left_adjust (a_name_attribute)
@@ -219,7 +218,7 @@ feature -- Element change
 					end
 					a_mode := a_rule_manager.mode (a_name_code)
 					if a_name_code /= Default_mode and then  a_name_code /= All_modes then
-						a_mode.set_name (target_name_pool.display_name_from_name_code (a_name_code))
+						a_mode.set_name (shared_name_pool.display_name_from_name_code (a_name_code))
 					end
 					create a_rule_value.make (compiled_template)
 					if is_priority_specified then

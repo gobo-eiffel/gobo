@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 			document := a_document
 			node_number := a_node_number
 			node_type := Namespace_node
-			if document.name_pool.is_name_code_allocated ("", "", local_part) then
-				name_code := document.name_pool.name_code  ("", "", local_part)
+			if shared_name_pool.is_name_code_allocated ("", "", local_part) then
+				name_code := shared_name_pool.name_code  ("", "", local_part)
 			else
 
 				-- TODO need to check for resource exhaustion in name pool
 				
-				document.name_pool.allocate_name  ("", "", local_part)
-				name_code := document.name_pool.last_name_code
+				shared_name_pool.allocate_name  ("", "", local_part)
+				name_code := shared_name_pool.last_name_code
 			end
 		ensure
 			document_set: document = a_document
@@ -67,7 +67,7 @@ feature -- Access
 	local_part: STRING is
 			-- Local name for this node. i.e. Namespace prefix
 		do
-			Result := document.name_pool.prefix_from_namespace_code (document.namespace_code_for_node (node_number))
+			Result := shared_name_pool.prefix_from_namespace_code (document.namespace_code_for_node (node_number))
 		end
 
 	parent: XM_XPATH_TINY_COMPOSITE_NODE is
@@ -82,7 +82,7 @@ feature -- Access
 	string_value: STRING is
 			-- String-value
 		do
-			Result := document.name_pool.uri_from_namespace_code (document.namespace_code_for_node (node_number))
+			Result := shared_name_pool.uri_from_namespace_code (document.namespace_code_for_node (node_number))
 		end
 
 	namespace_code: INTEGER is

@@ -99,79 +99,79 @@ feature -- Access
 	any_atomic_type: XM_XPATH_ATOMIC_TYPE is
 			-- xdt:anyAtomicType
 		once
-			create Result.make (Void, Xpath_defined_datatypes_uri,"anyAtomicType", any_simple_type, Any_atomic_type_code)
+			create Result.make (Xpath_defined_datatypes_uri,"anyAtomicType", any_simple_type, Any_atomic_type_code)
 		end
 
 	numeric_type: XM_XPATH_ATOMIC_TYPE is
 			-- Implementation convenience type: gexslt:numeric
 		once
-			create Result.make (Void, Gexslt_eiffel_type_uri, "numeric", any_atomic_type, Numeric_type_code)
+			create Result.make (Gexslt_eiffel_type_uri, "numeric", any_atomic_type, Numeric_type_code)
 		end
 
 	string_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:string
 		once
-			create Result.make (Void, Xml_schema_uri, "string", any_atomic_type, String_type_code)
+			create Result.make (Xml_schema_uri, "string", any_atomic_type, String_type_code)
 		end
 
 	boolean_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:boolean
 		once
-			create Result.make (Void,  Xml_schema_uri, "boolean", any_atomic_type, Boolean_type_code)
+			create Result.make (Xml_schema_uri, "boolean", any_atomic_type, Boolean_type_code)
 		end
 
 	date_time_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:dateTime
 		once
-			create Result.make (Void,  Xml_schema_uri, "dateTime", any_atomic_type, Date_time_type_code)
+			create Result.make (Xml_schema_uri, "dateTime", any_atomic_type, Date_time_type_code)
 		end
 
 	date_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:date
 		once
-			create Result.make (Void,  Xml_schema_uri, "date", any_atomic_type, Date_type_code)
+			create Result.make (Xml_schema_uri, "date", any_atomic_type, Date_type_code)
 		end
 
 	time_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:time
 		once
-			create Result.make (Void,  Xml_schema_uri, "time", any_atomic_type, Time_type_code)
+			create Result.make (Xml_schema_uri, "time", any_atomic_type, Time_type_code)
 		end
 
 	any_uri_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:anyURI
 		once
-			create Result.make (Void,  Xml_schema_uri, "anyURI", any_atomic_type, Any_uri_type_code)
+			create Result.make (Xml_schema_uri, "anyURI", any_atomic_type, Any_uri_type_code)
 		end
 
 	qname_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:QName
 		once
-			create Result.make (Void,  Xml_schema_uri, "QName", any_atomic_type, Qname_type_code)
+			create Result.make (Xml_schema_uri, "QName", any_atomic_type, Qname_type_code)
 		end
 
 	untyped_atomic_type: XM_XPATH_ATOMIC_TYPE is
 			-- xdt:untypedAtomic
 		once
-			create Result.make (Void, Xpath_defined_datatypes_uri, "untypedAtomic", any_atomic_type, Untyped_atomic_type_code)
+			create Result.make (Xpath_defined_datatypes_uri, "untypedAtomic", any_atomic_type, Untyped_atomic_type_code)
 		end
 
 	decimal_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:decimal
 		once
-			create Result.make (Void,  Xml_schema_uri, "decimal", numeric_type, Decimal_type_code)
+			create Result.make (Xml_schema_uri, "decimal", numeric_type, Decimal_type_code)
 		end
 
 	double_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:double
 		once
-			create Result.make (Void,  Xml_schema_uri, "double", numeric_type, Double_type_code)
+			create Result.make (Xml_schema_uri, "double", numeric_type, Double_type_code)
 		end
 
 	integer_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:integer
 		once
-			create Result.make (Void,  Xml_schema_uri, "integer", decimal_type, Integer_type_code)
+			create Result.make (Xml_schema_uri, "integer", decimal_type, Integer_type_code)
 		end
 
 	any_type: XM_XPATH_ANY_TYPE is

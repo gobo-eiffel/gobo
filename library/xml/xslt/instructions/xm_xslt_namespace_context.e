@@ -27,17 +27,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]) is
 			-- Establish invariant.
 		require
 			namespace_code_list_not_void: a_namespace_code_list /= Void
-			name_pool_not_void: a_name_pool /= Void
 		do
 			namespace_code_list := a_namespace_code_list
-			name_pool := a_name_pool
 		ensure
 			namespace_code_list_set: namespace_code_list = a_namespace_code_list
-			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
@@ -61,8 +58,8 @@ feature -- Access
 				until
 					a_cursor.before
 				loop
-					if STRING_.same_string (name_pool.prefix_from_namespace_code (a_cursor.item), a_prefix) then
-						Result := name_pool.uri_from_namespace_code (a_cursor.item)
+					if STRING_.same_string (shared_name_pool.prefix_from_namespace_code (a_cursor.item), a_prefix) then
+						Result := shared_name_pool.uri_from_namespace_code (a_cursor.item)
 						a_cursor.go_before
 					else
 						a_cursor.back
@@ -80,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN; a_name_pool: XM_XPATH_NAME_POOL): INTEGER is
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint of `a_qname'
 		local
 			a_string_splitter: ST_SPLITTER
@@ -92,22 +89,16 @@ feature -- Access
 			qname_parts := a_string_splitter.split (a_qname)
 			if qname_parts.count = 1 then
 				a_uri := uri_for_prefix ("", use_default_namespace)
-				Result := name_pool.fingerprint (a_uri, qname_parts.item (1))
+				Result := shared_name_pool.fingerprint (a_uri, qname_parts.item (1))
 			else
 				a_uri := uri_for_prefix (qname_parts.item (1), use_default_namespace)
-				Result := name_pool.fingerprint (a_uri, qname_parts.item (2))
+				Result := shared_name_pool.fingerprint (a_uri, qname_parts.item (2))
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- Name pool
 
 invariant
 
 	namespace_code_list_not_void: namespace_code_list /= Void
-	name_pool_not_void: name_pool /= Void
 	
 end
 

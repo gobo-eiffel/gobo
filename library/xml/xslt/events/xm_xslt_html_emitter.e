@@ -47,7 +47,6 @@ feature {NONE} -- Initialization
 			make_entities
 		ensure
 			transformer_set: transformer = a_transformer
-			name_pool_set: name_pool = transformer.name_pool
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
 		end
@@ -72,7 +71,7 @@ feature -- Events
 		do
 			Precursor (a_name_code, a_type_code, properties)
 			element_name := STRING_.to_lower (element_qname_stack.item)
-			element_uri_code := name_pool.uri_code_from_name_code (a_name_code)
+			element_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 			if element_uri_code = Default_uri_code and then
 				(STRING_.same_string (element_name, "script") or else
 				 STRING_.same_string (element_name, "style")) then
@@ -106,6 +105,7 @@ feature -- Events
 
 			if is_empty_tag (element_name) and then element_uri_code = Default_uri_code then
 				element_qname_stack.remove
+				element_name := STRING_.to_lower (element_qname_stack.item)
 			else
 				Precursor
 			end
@@ -142,20 +142,41 @@ feature -- Events
 	
 feature {NONE} -- Implementation
 
-	empty_tags_set: DS_HASH_SET [STRING]
+	empty_tags_set: DS_HASH_SET [STRING] is
 			-- Names of tags that should not be closed
-
-	boolean_attributes_set: DS_HASH_SET [STRING]
+		once
+			create Result.make (13)
+			Result.set_equality_tester (string_equality_tester)
+		end
+		
+	boolean_attributes_set: DS_HASH_SET [STRING] is
 			-- Names of attributes that are sometimes boolean valued
 
-	boolean_combinations_set: DS_HASH_SET [STRING]
+		once
+			create Result.make (17)
+			Result.set_equality_tester (string_equality_tester)
+		end
+
+	boolean_combinations_set: DS_HASH_SET [STRING] is
 		-- Names of elements-attribute pairs that are boolean valued
+		once
+			create Result.make (24)
+			Result.set_equality_tester (string_equality_tester)
+		end
 
-	url_attributes_set: DS_HASH_SET [STRING]
+	url_attributes_set: DS_HASH_SET [STRING] is
 			-- Names of attributes that are sometimes URL valued
+		once
+			create Result.make (12)
+			Result.set_equality_tester (string_equality_tester)
+		end
 
-	url_combinations_set: DS_HASH_SET [STRING]
+	url_combinations_set: DS_HASH_SET [STRING] is
 		-- Names of elements-attribute pairs that are URL valued
+		once
+			create Result.make (27)
+			Result.set_equality_tester (string_equality_tester)
+		end
 
 	media_type: STRING
 			-- Mime type
@@ -181,27 +202,30 @@ feature {NONE} -- Implementation
 	element_uri_code: INTEGER -- _16
 			-- Namespace URI of current element
 
-	latin1_entities: ARRAY [STRING]
+	latin1_entities: ARRAY [STRING] is
 			-- latin-1 entity names
+		once
+			create Result.make (161, 255)
+		end
 
 	make_empty_tags_set is
 			-- Build `empty_tags_set'.
 		once
-			create empty_tags_set.make (13)
-			empty_tags_set.set_equality_tester (string_equality_tester)
-			empty_tags_set.put ("area")
-			empty_tags_set.put ("base")
-			empty_tags_set.put ("basefont")
-			empty_tags_set.put ("br")
-			empty_tags_set.put ("col")
-			empty_tags_set.put ("frame")
-			empty_tags_set.put ("hr")
-			empty_tags_set.put ("img")
-			empty_tags_set.put ("input")
-			empty_tags_set.put ("isindex")
-			empty_tags_set.put ("link")
-			empty_tags_set.put ("meta")
-			empty_tags_set.put ("param")
+			if empty_tags_set.count = 0 then
+				empty_tags_set.put ("area")
+				empty_tags_set.put ("base")
+				empty_tags_set.put ("basefont")
+				empty_tags_set.put ("br")
+				empty_tags_set.put ("col")
+				empty_tags_set.put ("frame")
+				empty_tags_set.put ("hr")
+				empty_tags_set.put ("img")
+				empty_tags_set.put ("input")
+				empty_tags_set.put ("isindex")
+				empty_tags_set.put ("link")
+				empty_tags_set.put ("meta")
+				empty_tags_set.put ("param")
+			end
 		end
 
 	is_empty_tag (a_tag: STRING): BOOLEAN is
@@ -215,34 +239,32 @@ feature {NONE} -- Implementation
 	make_boolean_attributes_sets is
 			-- Build sets for determinging boolean-valued attributes
 		once
-			create boolean_attributes_set.make (17)
-			boolean_attributes_set.set_equality_tester (string_equality_tester)
-			create boolean_combinations_set.make (24)
-			boolean_combinations_set.set_equality_tester (string_equality_tester)
-			set_boolean_attribute ("area", "nohref")
-			set_boolean_attribute ("button", "disabled")
-			set_boolean_attribute ("dir", "compact")
-			set_boolean_attribute ("dl", "compact")
-			set_boolean_attribute ("frame", "noresize")
-			set_boolean_attribute ("hr", "noshade")
-			set_boolean_attribute ("img", "ismap")
-			set_boolean_attribute ("input", "checked")
-			set_boolean_attribute ("input", "disabled")
-			set_boolean_attribute ("input", "readonly")
-			set_boolean_attribute ("menu", "compact")
-			set_boolean_attribute ("object", "declare")
-			set_boolean_attribute ("ol", "compact")
-			set_boolean_attribute ("optgroup", "disabled")
-			set_boolean_attribute ("option", "selected")
-			set_boolean_attribute ("option", "disabled")
-			set_boolean_attribute ("script", "defer")
-			set_boolean_attribute ("select", "multiple")
-			set_boolean_attribute ("select", "disabled")
-			set_boolean_attribute ("td", "nowrap")
-			set_boolean_attribute ("textarea", "disabled")
-			set_boolean_attribute ("textarea", "readonly")
-			set_boolean_attribute ("th", "nowrap")
-			set_boolean_attribute ("ul", "compact")
+			if boolean_attributes_set.count = 0 then
+				set_boolean_attribute ("area", "nohref")
+				set_boolean_attribute ("button", "disabled")
+				set_boolean_attribute ("dir", "compact")
+				set_boolean_attribute ("dl", "compact")
+				set_boolean_attribute ("frame", "noresize")
+				set_boolean_attribute ("hr", "noshade")
+				set_boolean_attribute ("img", "ismap")
+				set_boolean_attribute ("input", "checked")
+				set_boolean_attribute ("input", "disabled")
+				set_boolean_attribute ("input", "readonly")
+				set_boolean_attribute ("menu", "compact")
+				set_boolean_attribute ("object", "declare")
+				set_boolean_attribute ("ol", "compact")
+				set_boolean_attribute ("optgroup", "disabled")
+				set_boolean_attribute ("option", "selected")
+				set_boolean_attribute ("option", "disabled")
+				set_boolean_attribute ("script", "defer")
+				set_boolean_attribute ("select", "multiple")
+				set_boolean_attribute ("select", "disabled")
+				set_boolean_attribute ("td", "nowrap")
+				set_boolean_attribute ("textarea", "disabled")
+				set_boolean_attribute ("textarea", "readonly")
+				set_boolean_attribute ("th", "nowrap")
+				set_boolean_attribute ("ul", "compact")
+				end
 		end
 
 	set_boolean_attribute (an_element, an_attribute: STRING) is
@@ -274,37 +296,35 @@ feature {NONE} -- Implementation
 	make_url_attributes is
 			-- Build sets for determinging URL-valued attributes
 		once
-			create url_attributes_set.make (12)
-			url_attributes_set.set_equality_tester (string_equality_tester)
-			create url_combinations_set.make (27)
-			url_combinations_set.set_equality_tester (string_equality_tester)
-			set_url_attribute ("form", "action")
-			set_url_attribute ("body", "background")
-			set_url_attribute ("q", "cite")
-			set_url_attribute ("blockquote", "cite")
-			set_url_attribute ("del", "cite")
-			set_url_attribute ("ins", "cite")
-			set_url_attribute ("object", "classid")
-			set_url_attribute ("object", "codebase")
-			set_url_attribute ("applet", "codebase")
-			set_url_attribute ("object", "data")
-			set_url_attribute ("a", "href")
-			set_url_attribute ("a", "name")       -- see second note in section B.2.1 of HTML 4 specification
-			set_url_attribute ("area", "href")
-			set_url_attribute ("link", "href")
-			set_url_attribute ("base", "href")
-			set_url_attribute ("img", "longdesc")
-			set_url_attribute ("frame", "longdesc")
-			set_url_attribute ("iframe", "longdesc")
-			set_url_attribute ("head", "profile")
-			set_url_attribute ("script", "src")
-			set_url_attribute ("input", "src")
-			set_url_attribute ("frame", "src")
-			set_url_attribute ("iframe", "src")
-			set_url_attribute ("img", "src")
-			set_url_attribute ("img", "usemap")
-			set_url_attribute ("input", "usemap")
-			set_url_attribute ("object", "usemap")
+			if url_attributes_set.count = 0 then
+				set_url_attribute ("form", "action")
+				set_url_attribute ("body", "background")
+				set_url_attribute ("q", "cite")
+				set_url_attribute ("blockquote", "cite")
+				set_url_attribute ("del", "cite")
+				set_url_attribute ("ins", "cite")
+				set_url_attribute ("object", "classid")
+				set_url_attribute ("object", "codebase")
+				set_url_attribute ("applet", "codebase")
+				set_url_attribute ("object", "data")
+				set_url_attribute ("a", "href")
+				set_url_attribute ("a", "name")       -- see second note in section B.2.1 of HTML 4 specification
+				set_url_attribute ("area", "href")
+				set_url_attribute ("link", "href")
+				set_url_attribute ("base", "href")
+				set_url_attribute ("img", "longdesc")
+				set_url_attribute ("frame", "longdesc")
+				set_url_attribute ("iframe", "longdesc")
+				set_url_attribute ("head", "profile")
+				set_url_attribute ("script", "src")
+				set_url_attribute ("input", "src")
+				set_url_attribute ("frame", "src")
+				set_url_attribute ("iframe", "src")
+				set_url_attribute ("img", "src")
+				set_url_attribute ("img", "usemap")
+				set_url_attribute ("input", "usemap")
+				set_url_attribute ("object", "usemap")
+			end
 		end
 
 	set_url_attribute (an_element, an_attribute: STRING) is
@@ -377,13 +397,13 @@ feature {NONE} -- Implementation
 		require
 			representation_string_not_void: a_representation /= Void
 		do
-			if a_representation.is_equal ("decimal") then
+			if STRING_.same_string (a_representation, "decimal") then
 				Result := Decimal_representation
-			elseif a_representation.is_equal ("hex") then
+			elseif STRING_.same_string (a_representation, "hex") then
 				Result := Hexadecimal_representation
-			elseif a_representation.is_equal ("native") and then not for_excluded then
+			elseif STRING_.same_string (a_representation, "native") and then not for_excluded then
 				Result := Native_representation
-			elseif a_representation.is_equal ("entity") and then not for_excluded then
+			elseif STRING_.same_string (a_representation, "entity") and then not for_excluded then
 				Result := Entity_representation
 			else
 				on_error ("Illegal value for gexslt:character-representation: " + a_representation)
@@ -594,102 +614,103 @@ feature {NONE} -- Implementation
 	make_entities is
 			-- Create Latin-1 entity array.
 		once
-			create latin1_entities.make (161, 255)
-			latin1_entities.put ("iexcl", 161)
-			latin1_entities.put ("cent", 162)
-			latin1_entities.put ("pound", 163)
-			latin1_entities.put ("curren", 164)
-			latin1_entities.put ("yen", 165)
-			latin1_entities.put ("brvbar", 166)
-			latin1_entities.put ("sect", 167)
-			latin1_entities.put ("uml", 168)
-			latin1_entities.put ("copy", 169)
-			latin1_entities.put ("ordf", 170)
-			latin1_entities.put ("laquo", 171)
-			latin1_entities.put ("not", 172)
-			latin1_entities.put ("shy", 173)
-			latin1_entities.put ("reg", 174)
-			latin1_entities.put ("macr", 175)
-			latin1_entities.put ("deg", 176)
-			latin1_entities.put ("plusmn", 177)
-			latin1_entities.put ("sup2", 178)
-			latin1_entities.put ("sup3", 179)
-			latin1_entities.put ("acute", 180)
-			latin1_entities.put ("micro", 181)
-			latin1_entities.put ("para", 182)
-			latin1_entities.put ("middot", 183)
-			latin1_entities.put ("cedil", 184)
-			latin1_entities.put ("sup1", 185)
-			latin1_entities.put ("ordm", 186)
-			latin1_entities.put ("raquo", 187)
-			latin1_entities.put ("frac14", 188)
-			latin1_entities.put ("frac12", 189)
-			latin1_entities.put ("frac34", 190)
-			latin1_entities.put ("iquest", 191)
-			latin1_entities.put ("Agrave", 192)
-			latin1_entities.put ("Aacute", 193)
-			latin1_entities.put ("Acirc", 194)
-			latin1_entities.put ("Atilde", 195)
-			latin1_entities.put ("Auml", 196)
-			latin1_entities.put ("Aring", 197)
-			latin1_entities.put ("AElig", 198)
-			latin1_entities.put ("Ccedil", 199)
-			latin1_entities.put ("Egrave", 200)
-			latin1_entities.put ("Eacute", 201)
-			latin1_entities.put ("Ecirc", 202)
-			latin1_entities.put ("Euml", 203)
-			latin1_entities.put ("Igrave", 204)
-			latin1_entities.put ("Iacute", 205)
-			latin1_entities.put ("Icirc", 206)
-			latin1_entities.put ("Iuml", 207)
-			latin1_entities.put ("ETH", 208)
-			latin1_entities.put ("Ntilde", 209)
-			latin1_entities.put ("Ograve", 210)
-			latin1_entities.put ("Oacute", 211)
-			latin1_entities.put ("Ocirc", 212)
-			latin1_entities.put ("Otilde", 213)
-			latin1_entities.put ("Ouml", 214)
-			latin1_entities.put ("times", 215)
-			latin1_entities.put ("Oslash", 216)
-			latin1_entities.put ("Ugrave", 217)
-			latin1_entities.put ("Uacute", 218)
-			latin1_entities.put ("Ucirc", 219)
-			latin1_entities.put ("Uuml", 220)
-			latin1_entities.put ("Yacute", 221)
-			latin1_entities.put ("THORN", 222)
-			latin1_entities.put ("szlig", 223)
-			latin1_entities.put ("agrave", 224)
-			latin1_entities.put ("aacute", 225)
-			latin1_entities.put ("acirc", 226)
-			latin1_entities.put ("atilde", 227)
-			latin1_entities.put ("auml", 228)
-			latin1_entities.put ("aring", 229)
-			latin1_entities.put ("aelig", 230)
-			latin1_entities.put ("ccedil", 231)
-			latin1_entities.put ("egrave", 232)
-			latin1_entities.put ("eacute", 233)
-			latin1_entities.put ("ecirc", 234)
-			latin1_entities.put ("euml", 235)
-			latin1_entities.put ("igrave", 236)
-			latin1_entities.put ("iacute", 237)
-			latin1_entities.put ("icirc", 238)
-			latin1_entities.put ("iuml", 239)
-			latin1_entities.put ("eth", 240)
-			latin1_entities.put ("ntilde", 241)
-			latin1_entities.put ("ograve", 242)
-			latin1_entities.put ("oacute", 243)
-			latin1_entities.put ("ocirc", 244)
-			latin1_entities.put ("otilde", 245)
-			latin1_entities.put ("ouml", 246)
-			latin1_entities.put ("divide", 247)
-			latin1_entities.put ("oslash", 248)
-			latin1_entities.put ("ugrave", 249)
-			latin1_entities.put ("uacute", 250)
-			latin1_entities.put ("ucirc", 251)
-			latin1_entities.put ("uuml", 252)
-			latin1_entities.put ("yacute", 253)
-			latin1_entities.put ("thorn", 254)
-			latin1_entities.put ("yuml", 255)
+			if latin1_entities.count = 0 then
+				latin1_entities.put ("iexcl", 161)
+				latin1_entities.put ("cent", 162)
+				latin1_entities.put ("pound", 163)
+				latin1_entities.put ("curren", 164)
+				latin1_entities.put ("yen", 165)
+				latin1_entities.put ("brvbar", 166)
+				latin1_entities.put ("sect", 167)
+				latin1_entities.put ("uml", 168)
+				latin1_entities.put ("copy", 169)
+				latin1_entities.put ("ordf", 170)
+				latin1_entities.put ("laquo", 171)
+				latin1_entities.put ("not", 172)
+				latin1_entities.put ("shy", 173)
+				latin1_entities.put ("reg", 174)
+				latin1_entities.put ("macr", 175)
+				latin1_entities.put ("deg", 176)
+				latin1_entities.put ("plusmn", 177)
+				latin1_entities.put ("sup2", 178)
+				latin1_entities.put ("sup3", 179)
+				latin1_entities.put ("acute", 180)
+				latin1_entities.put ("micro", 181)
+				latin1_entities.put ("para", 182)
+				latin1_entities.put ("middot", 183)
+				latin1_entities.put ("cedil", 184)
+				latin1_entities.put ("sup1", 185)
+				latin1_entities.put ("ordm", 186)
+				latin1_entities.put ("raquo", 187)
+				latin1_entities.put ("frac14", 188)
+				latin1_entities.put ("frac12", 189)
+				latin1_entities.put ("frac34", 190)
+				latin1_entities.put ("iquest", 191)
+				latin1_entities.put ("Agrave", 192)
+				latin1_entities.put ("Aacute", 193)
+				latin1_entities.put ("Acirc", 194)
+				latin1_entities.put ("Atilde", 195)
+				latin1_entities.put ("Auml", 196)
+				latin1_entities.put ("Aring", 197)
+				latin1_entities.put ("AElig", 198)
+				latin1_entities.put ("Ccedil", 199)
+				latin1_entities.put ("Egrave", 200)
+				latin1_entities.put ("Eacute", 201)
+				latin1_entities.put ("Ecirc", 202)
+				latin1_entities.put ("Euml", 203)
+				latin1_entities.put ("Igrave", 204)
+				latin1_entities.put ("Iacute", 205)
+				latin1_entities.put ("Icirc", 206)
+				latin1_entities.put ("Iuml", 207)
+				latin1_entities.put ("ETH", 208)
+				latin1_entities.put ("Ntilde", 209)
+				latin1_entities.put ("Ograve", 210)
+				latin1_entities.put ("Oacute", 211)
+				latin1_entities.put ("Ocirc", 212)
+				latin1_entities.put ("Otilde", 213)
+				latin1_entities.put ("Ouml", 214)
+				latin1_entities.put ("times", 215)
+				latin1_entities.put ("Oslash", 216)
+				latin1_entities.put ("Ugrave", 217)
+				latin1_entities.put ("Uacute", 218)
+				latin1_entities.put ("Ucirc", 219)
+				latin1_entities.put ("Uuml", 220)
+				latin1_entities.put ("Yacute", 221)
+				latin1_entities.put ("THORN", 222)
+				latin1_entities.put ("szlig", 223)
+				latin1_entities.put ("agrave", 224)
+				latin1_entities.put ("aacute", 225)
+				latin1_entities.put ("acirc", 226)
+				latin1_entities.put ("atilde", 227)
+				latin1_entities.put ("auml", 228)
+				latin1_entities.put ("aring", 229)
+				latin1_entities.put ("aelig", 230)
+				latin1_entities.put ("ccedil", 231)
+				latin1_entities.put ("egrave", 232)
+				latin1_entities.put ("eacute", 233)
+				latin1_entities.put ("ecirc", 234)
+				latin1_entities.put ("euml", 235)
+				latin1_entities.put ("igrave", 236)
+				latin1_entities.put ("iacute", 237)
+				latin1_entities.put ("icirc", 238)
+				latin1_entities.put ("iuml", 239)
+				latin1_entities.put ("eth", 240)
+				latin1_entities.put ("ntilde", 241)
+				latin1_entities.put ("ograve", 242)
+				latin1_entities.put ("oacute", 243)
+				latin1_entities.put ("ocirc", 244)
+				latin1_entities.put ("otilde", 245)
+				latin1_entities.put ("ouml", 246)
+				latin1_entities.put ("divide", 247)
+				latin1_entities.put ("oslash", 248)
+				latin1_entities.put ("ugrave", 249)
+				latin1_entities.put ("uacute", 250)
+				latin1_entities.put ("ucirc", 251)
+				latin1_entities.put ("uuml", 252)
+				latin1_entities.put ("yacute", 253)
+				latin1_entities.put ("thorn", 254)
+				latin1_entities.put ("yuml", 255)
+			end
 		end
 
 invariant

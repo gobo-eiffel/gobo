@@ -97,10 +97,10 @@ feature -- Access
 					a_style_element ?= a_style_element.parent_node
 				else
 					check
-						code_allocated: target_name_pool.is_code_for_uri_allocated (a_namespace)
+						code_allocated: shared_name_pool.is_code_for_uri_allocated (a_namespace)
 						-- TODO: We must allocate it somewhere, when `default_xpath_namespace' is first set
 					end
-					Result := target_name_pool.code_for_uri (a_namespace)
+					Result := shared_name_pool.code_for_uri (a_namespace)
 					finished := True
 				end
 			end
@@ -171,16 +171,6 @@ feature -- Access
 			end
 		end
 
-	target_name_pool: XM_XPATH_NAME_POOL is
-			-- Name pool to be used at run-time;
-			-- This namepool holds the names used in
-			--  all XPath expressions and patterns.
-		do
-			Result := principal_stylesheet.target_name_pool
-		ensure
-			target_name_pool_not_void: Result /= Void
-		end
-
 	attribute_value_by_expanded_name (an_attribute_name: STRING): STRING is
 			-- Value of `an_attribute_name'
 		require
@@ -188,10 +178,10 @@ feature -- Access
 				and then	is_valid_expanded_name (an_attribute_name)
 		local
 		do
-			if not document.name_pool.is_expanded_name_allocated (an_attribute_name) then
-				document.name_pool.allocate_expanded_name (an_attribute_name)
+			if not shared_name_pool.is_expanded_name_allocated (an_attribute_name) then
+				shared_name_pool.allocate_expanded_name (an_attribute_name)
 			end
-			Result := attribute_value (document.name_pool.fingerprint_from_expanded_name (an_attribute_name))
+			Result := attribute_value (shared_name_pool.fingerprint_from_expanded_name (an_attribute_name))
 		end
 
 	precedence: INTEGER is
@@ -211,7 +201,7 @@ feature -- Access
 				Result := ""
 			else
 				a_uri_code := uri_code_for_prefix (an_xml_prefix)
-				Result := document.name_pool.uri_from_uri_code (a_uri_code)
+				Result := shared_name_pool.uri_from_uri_code (a_uri_code)
 			end
 		ensure
 			uri_not_void: Result /= Void
@@ -244,7 +234,7 @@ feature -- Access
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
 			-- Namespace context
 		do
-			create Result.make (namespace_codes_in_scope, target_name_pool)
+			create Result.make (namespace_codes_in_scope)
 		end
 
 	with_param_instructions (an_executable: XM_XSLT_EXECUTABLE; is_tunnel: BOOLEAN): DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM] is
@@ -579,9 +569,9 @@ feature -- Status setting
 			an_attribute_uri, an_element_uri, a_local_name, a_message: STRING
 		do
 			if not is_forwards_compatible_processing_enabled then
-				an_attribute_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
+				an_attribute_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
 				an_element_uri := uri	
-				a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
+				a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
 
 				-- Allow xsl:extension-element-prefixes etc on an extension element.
 
@@ -609,7 +599,7 @@ feature -- Status setting
 					do_nothing
 				elseif STRING_.same_string (an_attribute_uri, "") or else
 					STRING_.same_string (an_attribute_uri, Xslt_uri) then
-					a_message := STRING_.appended_string ("Attribute ", document.name_pool.display_name_from_name_code (a_name_code))
+					a_message := STRING_.appended_string ("Attribute ", shared_name_pool.display_name_from_name_code (a_name_code))
 					a_message := STRING_.appended_string (a_message, " is not allowed on this element")
 					report_compile_error (a_message)
 				end
@@ -686,7 +676,7 @@ feature -- Status setting
 					std.error.put_string (an_expression.occurence_indicator)
 					std.error.put_new_line
 					std.error.put_string ("Optimized expression tree:%N")
-					an_expression.display (10, static_context.name_pool)
+					an_expression.display (10)
 				else
 					std.error.put_string ("Expression is in error%N")
 					std.error.put_string (an_expression.error_value.error_message)
@@ -849,21 +839,19 @@ feature -- Creation
 			qname_parts: DS_LIST [STRING]
 			an_xml_prefix, a_uri, a_local_name: STRING
 			a_uri_code: INTEGER			
-			a_name_pool: XM_XPATH_NAME_POOL
 		do
 			last_generated_name_code := -1
-			a_name_pool := target_name_pool
 			create a_string_splitter.make
 			a_string_splitter.set_separators (":")
 			qname_parts := a_string_splitter.split (a_qname)
 			if qname_parts.count = 1 then
 				an_xml_prefix := ""
-				if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
-					last_generated_name_code := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_qname)
+				if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
+					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_qname)
 				else
-					if not a_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
-						a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
-						last_generated_name_code := a_name_pool.last_name_code
+					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
+						shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
+						last_generated_name_code := shared_name_pool.last_name_code
 					else
 						error_message := STRING_.appended_string ("Name pool has no room to allocate ", a_qname)
 						last_generated_name_code := -1
@@ -881,12 +869,12 @@ feature -- Creation
 					error_message := STRING_.appended_string (error_message, " refers to a reserved namespace")
 					last_generated_name_code := -1
 				else
-					if a_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						last_generated_name_code := a_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+						last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 					else
-						if not a_name_pool.is_name_pool_full (a_uri, a_local_name) then
-							a_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-							last_generated_name_code := a_name_pool.last_name_code
+						if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
+							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+							last_generated_name_code := shared_name_pool.last_name_code
 						else
 							error_message := STRING_.appended_string ("Name pool has no room to allocate {", a_uri)
 							error_message := STRING_.appended_string (error_message, "}")

@@ -27,24 +27,23 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Build stylesheet rules.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
-			xsl_text_fingerprint := a_name_pool.fingerprint (Xslt_uri, "text")
+			xsl_text_fingerprint := shared_name_pool.fingerprint (Xslt_uri, "text")
 			create specials.make (1, 10)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "analyze-string"), 1)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "apply-imports"), 2)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "apply-templates"), 3)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "attribute-set"), 4)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "call-template"), 5)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "character-map"), 6)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "choose"), 7)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "next-match"), 8)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "stylesheet"), 9)
-			specials.put (a_name_pool.fingerprint (Xslt_uri, "transform"), 10)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "analyze-string"), 1)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "apply-imports"), 2)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "apply-templates"), 3)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "attribute-set"), 4)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "call-template"), 5)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "character-map"), 6)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "choose"), 7)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "next-match"), 8)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "stylesheet"), 9)
+			specials.put (shared_name_pool.fingerprint (Xslt_uri, "transform"), 10)
 			base_receiver := an_underlying_receiver
 			create strip_stack.make (100)
 		ensure

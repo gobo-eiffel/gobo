@@ -25,21 +25,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_value, a_system_id: STRING; a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_value, a_system_id: STRING) is
 			-- Establish invariant.
 		require
 			value_not_void: a_value /= Void
 			system_id_not_void: a_system_id /= Void
-			name_pool_not_void: a_name_pool /= Void
 		do
 			text := a_value
 			system_id := a_system_id
-			name_pool := a_name_pool
-			name_pool.allocate_document_number (Current)
+			shared_name_pool.allocate_document_number (Current)
 		ensure
 			text_set: text = a_value
 			system_id_set: system_id = a_system_id
-			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access

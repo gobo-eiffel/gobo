@@ -25,32 +25,27 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_type: INTEGER; a_string_value: STRING) is
+	make (a_node_type: INTEGER; a_string_value: STRING) is
 			-- Establsh invariant.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			valid_node_kind: a_node_type = Attribute_node or else
+			a_node_type = Element_node or else
 			a_node_type = Namespace_node or else
 			a_node_type = Text_node or else
 			a_node_type = Comment_node or else
 			a_node_type = Processing_instruction_node
 			string_value_not_void: a_string_value /= Void
 		do
-			name_pool := a_name_pool
 			node_type := a_node_type
 			string_value := a_string_value
 			system_id := ""
 			name_code := -1
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			node_type_set: node_type = a_node_type
 			string_value_set: string_value = a_string_value
 		end
 
 feature -- Access
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- Name pool
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
@@ -84,12 +79,14 @@ feature -- Access
 
 
 	node_kind: STRING is
-			-- "attribute",
+			-- "attribute", "element",
 			-- "namespace", "processing-instruction",
 			-- "comment", or "text".
 		do
 			inspect
 				node_type
+			when Element_node then
+				Result := "element"
 			when Attribute_node then
 				Result := "attribute"
 			when Namespace_node then
@@ -121,7 +118,7 @@ feature -- Access
 			if name_code = -1 then
 				Result := ""
 			else
-				Result := name_pool.display_name_from_name_code (name_code)
+				Result := shared_name_pool.display_name_from_name_code (name_code)
 			end
 		end
 
@@ -162,6 +159,18 @@ feature -- Comparison
 			Result := Current = other
 		end
 
+feature -- Element change
+
+	set_name_code (a_name_code: INTEGER) is
+			-- Set name code.
+		require
+			positive_name_code: a_name_code >= 0
+		do
+			name_code := a_name_code
+		ensure
+			name_code_set: name_code = a_name_code
+		end
+
 feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
@@ -178,6 +187,7 @@ invariant
 
 	no_document: document = Void
 	valid_node_type: node_type = Attribute_node or else
+	node_type = Element_node or else
 	node_type = Namespace_node or else
 	node_type = Text_node or else
 	node_type = Comment_node or else

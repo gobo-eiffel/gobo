@@ -56,15 +56,13 @@ feature {NONE} -- Initialization
 
 	make (an_estimated_node_count: INTEGER;
 			an_estimated_attribute_count: INTEGER; an_estimated_namespace_count:
-			INTEGER; an_estimated_character_count: INTEGER; a_name_pool:
-			XM_XPATH_NAME_POOL; a_system_id: STRING) is
+			INTEGER; an_estimated_character_count: INTEGER; a_system_id: STRING) is
 			-- Establish invariant
 		require
 			positive_node_count: an_estimated_node_count > 0
 			attribute_count: an_estimated_attribute_count >= 0
 			namespace_count: an_estimated_namespace_count >= 0
 			character_count: an_estimated_character_count >= 0
-			name_pool_not_void: a_name_pool /= Void
 			system_id_not_void: a_system_id /= Void
 		do
 			root_node := 1
@@ -88,23 +86,16 @@ feature {NONE} -- Initialization
 			create namespace_parents.make (an_estimated_namespace_count)
 			create namespace_codes.make (an_estimated_namespace_count)
 
-			name_pool := a_name_pool
 			set_system_id (a_system_id)
-			name_pool.allocate_document_number (Current)
-		ensure
-			name_pool_set: name_pool = a_name_pool
-			--base_uri_set: STRING_.same_string (base_uri, a_system_id)
+			shared_name_pool.allocate_document_number (Current)
 		end
 
-	make_with_defaults (a_name_pool: XM_XPATH_NAME_POOL; a_system_id: STRING) is
+	make_with_defaults (a_system_id: STRING) is
 			-- Create with default parameter settings
 		require
-			name_pool_not_void: a_name_pool /= Void
+			system_id_not_void: a_system_id /= Void
 		do
-			make (4000, 100, 20, 4000, a_name_pool, a_system_id)
-		ensure
-			name_pool_set: name_pool = a_name_pool
-			--base_uri_set: STRING_.same_string (base_uri, a_system_id)
+			make (4000, 100, 20, 4000, a_system_id)
 		end
 
 feature -- Access
@@ -565,7 +556,7 @@ feature -- Status report
 			loop
 				std.error.put_string (left_padded_string_out (an_index.out, 8, ' '))
 				std.error.put_string (left_padded_string_out (attribute_parents.item (an_index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (name_pool.display_name_from_name_code (attribute_name_code (an_index)), 8, ' ').substring (1,8))
+				std.error.put_string (left_padded_string_out (shared_name_pool.display_name_from_name_code (attribute_name_code (an_index)), 8, ' ').substring (1,8))
 				std.error.put_string ("    ")
 				std.error.put_string (attribute_value (an_index))
 				std.error.put_new_line
@@ -583,9 +574,9 @@ feature -- Status report
 			loop
 				std.error.put_string (left_padded_string_out (an_index.out, 8, ' '))
 				std.error.put_string (left_padded_string_out (namespace_parents.item (an_index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (name_pool.prefix_from_namespace_code (namespace_codes.item (an_index)), 8, ' '))
+				std.error.put_string (left_padded_string_out (shared_name_pool.prefix_from_namespace_code (namespace_codes.item (an_index)), 8, ' '))
 				std.error.put_string ("    ")
-				std.error.put_string (name_pool.uri_from_namespace_code (namespace_codes.item (an_index)))
+				std.error.put_string (shared_name_pool.uri_from_namespace_code (namespace_codes.item (an_index)))
 				std.error.put_new_line
 				an_index := an_index + 1
 			end				
@@ -599,7 +590,7 @@ feature -- Status setting
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		require
 			node_number_in_range: is_node_number_valid (a_node_number)
-			valid_name_code: name_pool.is_valid_name_code (a_name_code)
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 		do
 			name_codes.put (a_name_code, a_node_number)
 		ensure
@@ -658,7 +649,7 @@ feature -- Element change
 			strictly_positive_depth: a_depth_value > 0
 			valid_alpha: an_alpha_value >= -1
 			valid_beta: a_beta_value >= -1
-			valid_name_code: a_new_name_code = -1 or else name_pool.is_valid_name_code (a_new_name_code)
+			valid_name_code: a_new_name_code = -1 or else shared_name_pool.is_valid_name_code (a_new_name_code)
 		local
 			a_new_size: INTEGER
 		do
@@ -682,7 +673,7 @@ feature -- Element change
 				std.error.put_string ("Add_node: Node  ")
 				std.error.put_string (last_node_added.out)
 				std.error.put_string (" of type  ")
-				std.error.put_string (name_pool.display_name_from_name_code (a_new_node_type))
+				std.error.put_string (shared_name_pool.display_name_from_name_code (a_new_node_type))
 				std.error.put_new_line
 			end
 		ensure
@@ -800,7 +791,7 @@ feature -- Element change
 			namespace_codes.put_last (a_namespace_code)
 			debug ("XPath tiny document")
 				std.error.put_string ("Namespace added: ")
-				std.error.put_string (name_pool.uri_from_namespace_code (a_namespace_code))
+				std.error.put_string (shared_name_pool.uri_from_namespace_code (a_namespace_code))
 				std.error.put_string (" for parent:")
 				std.error.put_string (a_parent.out)
 				std.error.put_new_line
@@ -811,6 +802,7 @@ feature -- Element change
 			-- Add an attribute
 		local
 			a_new_size, an_index, another_type_code: INTEGER
+			an_element: XM_XPATH_TINY_ELEMENT
 		do
 			if attribute_parents.capacity < a_parent  then
 				a_new_size := last_node_added.max (attribute_parents.count * 2)
@@ -835,11 +827,11 @@ feature -- Element change
 				std.error.put_new_line
 			end
 			
-			if a_type_code = 0 then
+			--if a_type_code = 0 then
 				another_type_code := Untyped_atomic_type_code
-			else
-				another_type_code := a_type_code
-			end
+			--else
+			--	another_type_code := a_type_code
+			--end
 			if another_type_code /= Untyped_atomic_type_code then
 				if attribute_type_codes = Void then
 					create attribute_type_codes.make (1, attribute_parents.count)
@@ -864,12 +856,31 @@ feature -- Element change
 			
 			if alpha.item (a_parent) = -1 then alpha.put (attribute_values.count, a_parent) end
 
-			if another_type_code = Id_type_code then
+			if a_type_code = Id_type_code then
 				-- The attribute is marked as being an ID. But we don't trust it - it
 				-- might come from a non-validating parser. Before adding it to the index, we
 				-- check that it really is an ID.
+				if is_ncname (a_value) then
+					if id_table = Void then
+						create id_table.make_with_equality_testers (10, Void, string_equality_tester)
+					end
+					an_element ?= retrieve_node (a_parent)
+					check
+						is_an_element: an_element /= Void
+					end
+					register_id (an_element, a_value)
+				end
+			end
+		end
 
-				--  TODO
+	register_id (an_element: XM_XPATH_TINY_ELEMENT; a_value: STRING) is
+			-- Register an ID value.
+		require
+			element_not_void: an_element /= Void
+			id_not_void: a_value /= Void
+		do
+			if not id_table.has (a_value) then
+				id_table.put (an_element, a_value)
 			end
 		end
 

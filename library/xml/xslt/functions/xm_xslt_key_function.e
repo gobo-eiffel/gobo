@@ -116,7 +116,7 @@ feature -- Evaluation
 				if a_fingerprint = -1 then
 					arguments.item (1).evaluate_item (an_evaluation_context)
 					a_given_key_name := arguments.item (1).last_evaluated_item.string_value
-					a_fingerprint := namespace_context.fingerprint (a_given_key_name, False, a_transformer.name_pool)
+					a_fingerprint := namespace_context.fingerprint (a_given_key_name, False)
 					if a_fingerprint = -1 then
 						a_message := STRING_.concat ("Key '", a_given_key_name)
 						a_message := STRING_.appended_string (a_message, "' has not been defined")

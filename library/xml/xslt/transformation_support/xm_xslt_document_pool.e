@@ -12,6 +12,10 @@ indexing
 
 class	XM_XSLT_DOCUMENT_POOL
 
+inherit
+
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	-- The document pool ensures that the document() function,
 	--  when called twice with the same URI, returns the same document each time.
 	-- For this purpose we use a hash table from URI to Document object.
@@ -25,7 +29,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant.
 		do
-			create document_name_map.make (5)
+			create document_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 		end
 
 feature -- Access

@@ -22,6 +22,8 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	XM_XPATH_SHARED_NAME_POOL
+
 feature -- Access
 
 	string_value: STRING is

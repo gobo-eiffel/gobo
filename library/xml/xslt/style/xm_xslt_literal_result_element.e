@@ -37,14 +37,12 @@ feature -- Element change
 			-- Set the attribute list for the element.
 		local
 			an_index, a_name_code, a_uri_code, a_fingerprint: INTEGER
-			a_name_pool: XM_XPATH_NAME_POOL
 		do
 			create attribute_name_codes.make (number_of_attributes)
 			create attribute_values.make (number_of_attributes)
 			attribute_values.set_equality_tester (expression_tester)
 			create attribute_clean_flags.make (number_of_attributes)
 			if number_of_attributes > 0 then
-				a_name_pool := document.name_pool
 				from
 					an_index := 1
 				variant
@@ -53,9 +51,9 @@ feature -- Element change
 					any_compile_errors or else an_index > number_of_attributes
 				loop
 					a_name_code := attribute_name_code (an_index)
-					a_uri_code := a_name_pool.uri_code_from_name_code (a_name_code)
+					a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 					if a_uri_code = Xslt_uri_code then
-						a_fingerprint := a_name_pool.fingerprint_from_name_code (a_name_code)
+						a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_name_code)
 						if a_fingerprint = Xslt_use_attribute_sets_type_code then -- deal with this later
 						elseif a_fingerprint = Xslt_extension_element_prefixes_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_exclude_result_prefixes_type_code then -- already dealt with
@@ -64,7 +62,7 @@ feature -- Element change
 						elseif a_fingerprint = Xslt_type_type_code then -- deal with this later
 						elseif a_fingerprint = Xslt_validation_type_code then -- deal with this later
 						else
-							report_compile_error (STRING_.appended_string ("Unknown XSL attribute ", a_name_pool.display_name_from_name_code (a_name_code)))
+							report_compile_error (STRING_.appended_string ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)))
 						end
 					else
 						attribute_name_codes.put_last (a_name_code)
@@ -81,7 +79,6 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_name_pool: XM_XPATH_NAME_POOL
 			an_element_uri_code, a_namespace_code: INTEGER
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -89,8 +86,7 @@ feature -- Element change
 			a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 		do
 			result_name_code := name_code
-			a_name_pool := document.name_pool
-			an_element_uri_code := a_name_pool.uri_code_from_name_code (result_name_code)
+			an_element_uri_code := shared_name_pool.uri_code_from_name_code (result_name_code)
 			if is_top_level then
 				validate_top_level_element (an_element_uri_code)
 			else
@@ -98,19 +94,17 @@ feature -- Element change
 				
 				-- Build the list of output namespace nodes
 				
-				if should_namespaces_be_omitted (an_element_uri_code, a_name_pool) then
+				if should_namespaces_be_omitted (an_element_uri_code) then
 					create namespace_codes.make (0)
 				else
 					create accumulated_namespace_nodes.make_default
 					accumulate_namespace_nodes (Current, accumulated_namespace_nodes, True)
 					namespace_codes := namespace_codes_in_scope
-					apply_namespace_aliases (an_element_uri_code, a_name_pool, a_stylesheet)
+					apply_namespace_aliases (an_element_uri_code, a_stylesheet)
 				end
 				validate_special_attributes
-				establish_attribute_names (a_name_pool, a_stylesheet)
+				establish_attribute_names (a_stylesheet)
 				remove_excluded_namespaces (a_stylesheet)
-				
-				-- Now translate the list of namespace codes to use `target_name_pool' -- commented out, as the two pools should be the same
 				
 				create a_namespace_code_list.make (namespace_codes.count - excluded_namespace_count)
 				if namespace_codes.count  > 0 then
@@ -124,14 +118,6 @@ feature -- Element change
 					loop
 						a_namespace_code := a_cursor.item
 						if a_namespace_code /= -1 then
---							an_xml_prefix := document.name_pool.prefix_from_namespace_code (a_namespace_code)
---							a_uri := document.name_pool.uri_from_namespace_code (a_namespace_code)
---							if target_name_pool.is_namespace_code_allocated (an_xml_prefix, a_uri) then
---								a_namespace_code := target_name_pool.namespace_code (an_xml_prefix, a_uri)
---							else
---								target_name_pool.allocate_namespace_code (an_xml_prefix, a_uri)
---								a_namespace_code := target_name_pool.last_namespace_code
---							end
 							a_namespace_code_list.put_last (a_namespace_code)
 						end
 						a_cursor.forth
@@ -274,12 +260,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	should_namespaces_be_omitted (an_element_uri_code: INTEGER; a_name_pool: XM_XPATH_NAME_POOL): BOOLEAN is
+	should_namespaces_be_omitted (an_element_uri_code: INTEGER): BOOLEAN is
 			-- Should namespaces be omitted on output?
 		require
 			not_top_level: not is_top_level
 			positive_uri_code: an_element_uri_code >= 0
-			name_pool_not_void: a_name_pool /= Void
 		local
 			a_literal_result_element: XM_XSLT_LITERAL_RESULT_ELEMENT
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -294,7 +279,7 @@ feature {NONE} -- Implementation
 			a_literal_result_element ?= parent
 			if a_literal_result_element /= Void and then
 				namespace_code_list.count = 0 and then
-				an_element_uri_code = a_name_pool.uri_code_from_name_code (parent.fingerprint) then
+				an_element_uri_code = shared_name_pool.uri_code_from_name_code (parent.fingerprint) then
 				Result := True
 			end
 
@@ -307,7 +292,7 @@ feature {NONE} -- Implementation
 				until
 					a_cursor.after
 				loop
-					if a_name_pool.prefix_from_name_code (a_cursor.item).count > 0 then
+					if shared_name_pool.prefix_from_name_code (a_cursor.item).count > 0 then
 						Result := False
 						a_cursor.go_after
 					else
@@ -317,12 +302,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	apply_namespace_aliases (an_element_uri_code: INTEGER; a_name_pool: XM_XPATH_NAME_POOL; a_stylesheet: XM_XSLT_STYLESHEET) is
+	apply_namespace_aliases (an_element_uri_code: INTEGER; a_stylesheet: XM_XSLT_STYLESHEET) is
 			-- Apply any aliases required to create the list of output namespaces.
 		require
 			not_top_level: not is_top_level
 			positive_uri_code: an_element_uri_code >= 0
-			name_pool_not_void: a_name_pool /= Void
 			stylesheet_not_void: a_stylesheet /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -352,13 +336,13 @@ feature {NONE} -- Implementation
 				a_namespace_alias_code := a_stylesheet.namespace_alias (an_element_uri_code)
 				if a_namespace_alias_code /= -1 then
 					a_uri_code := uri_code_from_namespace_code (a_namespace_alias_code)
-					an_xml_prefix := a_name_pool.prefix_from_namespace_code (a_namespace_alias_code)
+					an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_alias_code)
 					if a_uri_code /= an_element_uri_code then
-						if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, local_part) then
-							result_name_code := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), local_part)
+						if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, local_part) then
+							result_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), local_part)
 						else
-							a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, local_part)
-							result_name_code := a_name_pool.last_name_code
+							shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, local_part)
+							result_name_code := shared_name_pool.last_name_code
 						end
 					end
 				end
@@ -389,11 +373,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	establish_attribute_names (a_name_pool: XM_XPATH_NAME_POOL; a_stylesheet: XM_XSLT_STYLESHEET) is
+	establish_attribute_names (a_stylesheet: XM_XSLT_STYLESHEET) is
 			-- Establish the names to be used for all the output attributes.
 			-- Also type-check the AVT expressions
 		require
-			name_pool_not_void: a_name_pool /= Void
 			stylesheet_not_void: a_stylesheet /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -410,56 +393,32 @@ feature {NONE} -- Implementation
 				a_cursor.after
 			loop
 				an_alias := a_cursor.item
-				a_uri_code := a_name_pool.uri_code_from_name_code (an_alias)
+				a_uri_code := shared_name_pool.uri_code_from_name_code (an_alias)
 				if a_uri_code /= 0 then -- attribute has a namespace prefix
 					a_namespace_code := a_stylesheet.namespace_alias (a_uri_code)
 					another_uri_code := uri_code_from_namespace_code (a_namespace_code)
 					if a_namespace_code /= -1 and then another_uri_code /= a_uri_code then
 						a_uri_code := another_uri_code
-						an_xml_prefix := a_name_pool.prefix_from_namespace_code (a_namespace_code)
-						a_local_name := a_name_pool.local_name_from_name_code (a_cursor.item)
-						if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name) then
-							an_alias := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_local_name)
+						an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
+						a_local_name := shared_name_pool.local_name_from_name_code (a_cursor.item)
+						if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name) then
+							an_alias := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_local_name)
 						else
-							a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
-							an_alias := a_name_pool.last_name_code
+							shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+							an_alias := shared_name_pool.last_name_code
 						end
 					end
 				end
 				--translate (an_alias)
 				--a_cursor.replace (last_translated_name_code)
 				an_expression := attribute_values.item (a_cursor.index)
-				type_check_expression (a_name_pool.display_name_from_name_code (an_alias), an_expression)
+				type_check_expression (shared_name_pool.display_name_from_name_code (an_alias), an_expression)
 				if an_expression.was_expression_replaced then
 					attribute_values.replace (an_expression.replacement_expression, a_cursor.index)
 				end
 				a_cursor.forth
 			end
 		end
-
-	-- These next two features commented out, as the two pools should be the same
---	last_translated_name_code: INTEGER
---			-- Last name-code translated by `translate'
---
---	translate (a_name_code: INTEGER) is
---			-- Translate a namecode in the stylesheet namepool to a namecode in the target namepool.
---		require
---			valid_name_code: document.name_pool.is_valid_name_code (a_name_code)
---		local
---			an_xml_prefix, a_uri, a_local_name: STRING
---		do
---			an_xml_prefix := document.name_pool.prefix_from_name_code (a_name_code)
---			a_uri := document.name_pool.namespace_uri_from_name_code (a_name_code)
---			a_local_name := document.name_pool.local_name_from_name_code (a_name_code)
---			if target_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
---				last_translated_name_code := target_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
---			else
---				target_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
---				last_translated_name_code := target_name_pool.last_name_code
---			end
---		ensure
---			last_translated_name_code_is_valid: target_name_pool.is_valid_name_code (last_translated_name_code)
---		end
 
 	excluded_namespace_count: INTEGER
 			-- Number of namespaces excluded

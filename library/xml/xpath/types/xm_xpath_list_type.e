@@ -70,7 +70,6 @@ feature -- Conversion
 
 invariant
 
-	name_pool_not_void: name_pool /= Void
 	base_type_not_void: base_type /= Void
 
 end

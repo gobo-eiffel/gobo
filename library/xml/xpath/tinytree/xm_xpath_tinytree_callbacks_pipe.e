@@ -21,8 +21,6 @@ inherit
 			all
 		end
 
-	XM_XPATH_SHARED_NAME_POOL
-		
 		-- This pipeline is suitable for use by a stand-alone XPath evaluator.
 		-- It is not particularly suitable for use by documents to be used as input to
 		-- XSLT, as XSLT has more stringent white-space stripping rules, and
@@ -43,12 +41,11 @@ feature {NONE} -- Initialization
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
-			shared_pool := default_pool.default_pool
-			create tree.make (shared_pool)
+			create tree.make
 			create a_locator.make (a_parser)
 			tree.set_document_locator (a_locator)
 			tree.set_line_numbering (is_line_numbering)
-			create emitter.make (tree, shared_pool)
+			create emitter.make (tree)
 			create error.set_next (emitter)
 			create namespace_resolver.set_next (error)
 			namespace_resolver.set_forward_xmlns (True)
@@ -59,9 +56,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	shared_pool: XM_XPATH_NAME_POOL
-			-- The default name pool
 
 	start: XM_UNICODE_VALIDATION_FILTER
 			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)

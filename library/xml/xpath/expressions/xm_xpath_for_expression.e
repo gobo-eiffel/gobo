@@ -69,7 +69,7 @@ feature -- Access
 	
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -81,10 +81,10 @@ feature -- Status report
 			else
 				std.error.put_string (" in")
 				std.error.put_new_line
-				sequence.display (a_level + 1, a_pool)
+				sequence.display (a_level + 1)
 				std.error.put_string (STRING_.appended_string (indentation (a_level), "return"))
 				std.error.put_new_line
-				action.display (a_level + 1, a_pool)
+				action.display (a_level + 1)
 			end
 		end
 

@@ -26,6 +26,8 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_NAME_POOL
+	
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
@@ -119,7 +121,6 @@ feature -- Creation
 			qname_parts: DS_LIST [STRING]
 			an_xml_prefix, a_uri, a_local_name, a_message: STRING
 			a_uri_code: INTEGER
-			a_name_pool: XM_XPATH_NAME_POOL
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Making name code for name ")
@@ -129,18 +130,17 @@ feature -- Creation
 			create a_string_splitter.make
 			a_string_splitter.set_separators (":")
 			qname_parts := a_string_splitter.split (a_qname)
-			a_name_pool := environment.name_pool
 			if qname_parts.count = 1 then
 				an_xml_prefix := ""
 				if use_default_namespace then
 					a_uri_code := environment.default_element_namespace
 				end
-				if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
-					last_generated_name_code := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_qname)
+				if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
+					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_qname)
 				else
-					if not a_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
-						a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
-						last_generated_name_code := a_name_pool.last_name_code
+					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
+						shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
+						last_generated_name_code := shared_name_pool.last_name_code
 					else
 						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_qname)
 						report_parse_error (a_message, 0)
@@ -154,12 +154,12 @@ feature -- Creation
 				an_xml_prefix := qname_parts.item (1)
 				a_local_name := qname_parts.item (2)
 				a_uri := environment.uri_for_prefix (an_xml_prefix)
-				if a_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-					last_generated_name_code := a_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+				if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 				else
-					if not a_name_pool.is_name_pool_full (a_uri, a_local_name) then
-						a_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-						last_generated_name_code := a_name_pool.last_name_code
+					if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
+						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+						last_generated_name_code := shared_name_pool.last_name_code
 					else
 						a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_uri)
 						a_message := STRING_.appended_string (a_message, "}")
@@ -193,7 +193,7 @@ feature -- Creation
 			if not is_ncname (a_local_name) then
 				report_parse_error (STRING_.appended_string (a_local_name, " is not a valid XML NCName"), 3)
 			else
-				create Result.make (environment.name_pool, a_node_type, a_local_name)
+				create Result.make (a_node_type, a_local_name)
 			end
 		ensure
 			Name_test_not_void_unless_parse_error: not is_parse_error implies Result /= Void
@@ -205,7 +205,7 @@ feature -- Creation
 			valid_node_type: is_node_type (a_node_type)
 			valid_prefix: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		do
-			create Result.make (environment.name_pool, a_node_type, environment.uri_for_prefix (an_xml_prefix))
+			create Result.make (a_node_type, environment.uri_for_prefix (an_xml_prefix))
 			Result.set_original_text (STRING_.appended_string (an_xml_prefix, ":*"))
 		ensure
 			namespace_test_not_void: Result /= Void

@@ -19,28 +19,27 @@ inherit
 			node_kind
 		end
 
+	XM_XPATH_SHARED_NAME_POOL
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_type: INTEGER; a_uri: STRING) is
+	make (a_node_type: INTEGER; a_uri: STRING) is
 		require
-			name_pool_not_void: a_name_pool /= Void
 			uri_not_void: a_uri /= Void
 		do
-			name_pool := a_name_pool
 			node_kind := a_node_type
-			if name_pool.is_code_for_uri_allocated (a_uri) then
-				uri_code := name_pool.code_for_uri (a_uri)
+			if shared_name_pool.is_code_for_uri_allocated (a_uri) then
+				uri_code := shared_name_pool.code_for_uri (a_uri)
 			else
-				name_pool.allocate_code_for_uri (a_uri)
-				uri_code := name_pool.code_for_uri (a_uri)
+				shared_name_pool.allocate_code_for_uri (a_uri)
+				uri_code := shared_name_pool.code_for_uri (a_uri)
 			end
 		ensure
 			node_kind_set: node_kind = a_node_type
-			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
@@ -67,20 +66,13 @@ feature -- Matching
 			elseif a_node_kind /= node_kind then
 				Result := False
 			else
-				Result := uri_code = name_pool.uri_code_from_name_code (a_name_code)
+				Result := uri_code = shared_name_pool.uri_code_from_name_code (a_name_code)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	name_pool: XM_XPATH_NAME_POOL
-			-- The name pool
-
 	uri_code: INTEGER
 			-- The uri code
 	
-invariant
-
-	name_pool_not_void: name_pool /= Void
-
 end

@@ -83,9 +83,6 @@ feature -- Access
 		deferred
 		end
 
-	name_pool: XM_XPATH_NAME_POOL
-			-- The name pool used to build `Current'
-
 feature {XM_XPATH_NAME_POOL} -- Restricted
 
 	set_document_number (a_number: INTEGER) is
@@ -95,9 +92,5 @@ feature {XM_XPATH_NAME_POOL} -- Restricted
 		ensure
 			document_number_set: document_number = a_number
 		end
-
-invariant
-
-	name_pool_not_void: name_pool /= Void
 
 end

@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			style_element_not_void:	a_style_element /= Void
 		do
 			style_element := a_style_element
-			name_pool := style_element.target_name_pool
 			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
 		ensure
 			style_element_set: style_element = a_style_element
@@ -115,7 +114,7 @@ feature -- Access
 				an_xml_prefix := qname_parts.item (1)
 				a_uri := uri_for_prefix (an_xml_prefix)
 			end
-			Result := name_pool.fingerprint (a_uri, a_local_name)
+			Result := shared_name_pool.fingerprint (a_uri, a_local_name)
 		ensure
 			nearly_positive_result: Result > -2
 		end

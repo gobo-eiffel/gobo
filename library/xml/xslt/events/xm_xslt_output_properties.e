@@ -27,16 +27,22 @@ feature {NONE} -- Initialization
 	make is
 			-- Make with defaults for XML method (apart from method itself).
 		do
+			initialize
+			set_xml_defaults
+			method := ""
+		end
+
+	initialize is
+			-- Initialize.
+		do
 			create string_property_map.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
 			create boolean_property_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create cdata_section_elements.make_default
-			create use_character_maps.make_default
-			cdata_section_elements.set_equality_tester (string_equality_tester)
+			cdata_section_elements.set_equality_tester (string_equality_tester)			
+			create used_character_maps.make_default
+			used_character_maps.set_equality_tester (string_equality_tester)
 			indent_spaces := 3            -- this is not specified in any way by the spec
 			encoding := "UTF-8"
-			default_version := "1.0"
-			default_media_type := "text/xml"
-			default_character_representation := "hex"
 			
 			escape_uri_attributes := True
 			include_content_type := True
@@ -45,36 +51,29 @@ feature {NONE} -- Initialization
 	make_xml is
 			-- Make with defaults for XML method.
 		do
-			method := "xml"
-			make
+			initialize
+			set_xml_defaults
 		end
 
 	make_html is
 			-- Make with defaults for HTML method.
 		do
-			method := "html"
-			make
-			default_indent := True
-			default_version := "4.01"
-			default_media_type := "text/html"
-			default_character_representation := "entity;decimal"
-			include_content_type := True
+			initialize
+			set_html_defaults
 		end
 
 	make_xhtml is
 			-- Make with defaults for HTML method.
 		do
-			make_html
-			method := "xhtml"
-			default_version := "1.0"
+			initialize
+			set_xhtml_defaults
 		end
 
 	make_text is
 			-- make with defaults for the TEXT method
 		do
-			method := "text"
-			make
-			default_media_type := "text/plain"
+			initialize
+			set_text_defaults
 		end
 
 feature -- Access
@@ -137,11 +136,11 @@ feature -- Access
 	indent_spaces: INTEGER
 			-- Number of spaces to be used for indentation when `indent' is `True' (a gexslt extension)
 
-	use_character_maps: DS_ARRAYED_LIST [STRING]
+	used_character_maps: DS_ARRAYED_LIST [STRING]
 			-- Expanded QNames of character maps that are to be used
 
 	include_content_type: BOOLEAN
-			-- Should the html/xhtml methods write a Contet-type meta element within the head element?
+			-- Should the html/xhtml methods write a Content-type meta element within the head element?
 
 	undeclare_namespaces: BOOLEAN
 			-- Should the xml method (for version 1.1) write namespace undeclarations?
@@ -166,6 +165,40 @@ feature -- Access
 
 feature -- Element change
 
+	set_xml_defaults is
+			-- Set defaults suitable for xml method.
+		do
+			method := "xml"
+			default_indent := False
+			default_version := "1.0"
+			default_media_type := "text/xml"
+			default_character_representation := "hex"
+		end
+
+	set_html_defaults is
+			-- Set defaults suitable for html method.
+		do
+			method := "html"
+			default_indent := True
+			default_version := "4.01"
+			default_media_type := "text/html"
+			default_character_representation := "entity;decimal"
+		end
+
+	set_xhtml_defaults is
+			-- Set defaults suitable for xhtml method.
+		do
+			set_html_defaults
+			method := "xhtml"
+			default_version := "1.0"
+		end
+
+	set_text_defaults is
+			-- Set defaults suitable for text method.
+		do
+			method := "text"
+			default_media_type := "text/plain"
+		end
 
 feature {NONE} -- Implementation
 
@@ -194,10 +227,11 @@ invariant
 	cdata_section_elements_not_void: cdata_section_elements /= Void
 	standalone_valid: standalone /= Void implies standalone.is_equal ("yes") or else standalone.is_equal ("no")
 	default_media_type_not_void: default_media_type /= Void
-	use_character_maps_not_void: use_character_maps /= Void
+	used_character_maps_not_void: used_character_maps /= Void
 	default_version_not_void: default_version /= Void
 	encoding_not_void: encoding /= Void
 	default_character_representation: default_character_representation /= Void
-	
+	method_not_void: method /= Void
+
 end
 

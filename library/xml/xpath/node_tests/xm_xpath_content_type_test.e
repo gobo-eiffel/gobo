@@ -32,11 +32,9 @@ feature {NONE} -- Initialization
 		do
 			node_kind := a_node_kind
 			content_type := a_type.fingerprint
-			name_pool := a_type.name_pool
 			original_text := a_type.description
 		ensure
 			node_kind_set: node_kind = a_node_kind
-			node_pool_set: name_pool = a_type.name_pool
 			content_type_set: content_type = a_type.fingerprint
 			original_text_set: original_text = a_type.description
 		end
@@ -73,10 +71,5 @@ feature {NONE} -- Implementation
 	content_type: INTEGER
 			-- Required content type
 
-	name_pool: XM_XPATH_NAME_POOL
-
-invariant
-
-	name_pool_not_void: name_pool /= Void
 
 end

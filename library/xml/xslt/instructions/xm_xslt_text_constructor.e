@@ -50,7 +50,7 @@ feature -- Access
 				end
 			else
 				a_sequence_receiver := a_transformer.current_receiver
-				create a_sequence_outputter.make (a_transformer.name_pool)
+				create a_sequence_outputter.make
 				a_transformer.change_to_sequence_output_destination (a_sequence_outputter)
 				process_children (a_context)
 				a_transformer.reset_output_destination (a_sequence_receiver)
@@ -62,19 +62,19 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
 			if select_expression /= Void then
-				select_expression.display (a_level, a_pool)
+				select_expression.display (a_level)
 			elseif children.count = 0 then
 				a_string := STRING_.appended_string (indentation (a_level), "empty content")
 				std.error.put_string (a_string)
 				std.error.put_new_line
 			else
-				display_children (a_level + 1, a_pool)
+				display_children (a_level + 1)
 			end
 		end
 
@@ -233,6 +233,7 @@ feature {NONE} -- Implementation
 		local
 			first: BOOLEAN
 		do
+			first := True
 			create Result.make (0)
 			if not an_iterator.is_error then
 				from

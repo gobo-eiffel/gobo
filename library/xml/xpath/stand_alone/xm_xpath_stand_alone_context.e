@@ -14,6 +14,8 @@ class XM_XPATH_STAND_ALONE_CONTEXT
 
 inherit
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	XM_XPATH_STATIC_CONTEXT
 
 	XM_XPATH_CONFORMANCE
@@ -32,16 +34,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; warnings: BOOLEAN; backwards: BOOLEAN) is
+	make (warnings: BOOLEAN; backwards: BOOLEAN) is
 			-- Establish invariant.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			warnings_implies_backwards_compatibility: warnings implies backwards
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
-			name_pool := a_name_pool
-			create collations.make (10)
+			create collations.make_with_equality_testers (10, Void, string_equality_tester)
 			create variables.make (10)
 			create a_code_point_collator
 			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator, True)
@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 			warnings_to_std_error := warnings
 			is_backwards_compatible_mode := backwards
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			warnings_set: warnings_to_std_error = warnings
 			backward_compatibility: is_backwards_compatible_mode = backwards
 		end
@@ -212,7 +211,7 @@ feature -- Element change
 	clear_namespaces is
 			-- Clear all the declared namespaces, except for the standard ones.
 		do
-			create namespaces.make (10)
+			create namespaces.make_with_equality_testers (10, string_equality_tester, string_equality_tester)
 			declare_namespace ("xml", Xml_uri)
 			declare_namespace ("xsl", Xslt_uri)
 			declare_namespace ("xs", Xml_schema_uri)
@@ -259,12 +258,12 @@ feature -- Element change
 				a_local_name := name_parts.item (2)
 				if is_prefix_declared (an_xml_prefix) then
 					a_uri := uri_for_prefix (an_xml_prefix)
-					if name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						a_name_code := name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+						a_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 					else
-						if not name_pool.is_name_pool_full (a_uri, a_local_name) then
-							name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-							a_name_code := name_pool.last_name_code
+						if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
+							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+							a_name_code := shared_name_pool.last_name_code
 						else
 							was_last_function_bound := False
 							set_bind_function_failure_message (STRING_.appended_string ("Name pool has no room to allocate ", a_qname))
@@ -356,12 +355,12 @@ feature {NONE} -- Implementation
 				a_local_name := parts.item (2)
 				a_uri := uri_for_prefix (an_xml_prefix)
 			end
-			if name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-				a_name_code := name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+			if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+				a_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
 			else
-				if not name_pool.is_name_pool_full (a_uri, a_local_name) then
-					name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-					a_name_code := name_pool.last_name_code
+				if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
+					shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+					a_name_code := shared_name_pool.last_name_code
 				else
 					Result := -1
 				end

@@ -67,7 +67,7 @@ feature -- Access
 			
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -75,7 +75,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "convert items to ")
 			a_string := STRING_.appended_string (a_string, required_type.conventional_name)
 			std.error.put_string (a_string)
-			sequence.display (a_level + 1, a_pool)
+			sequence.display (a_level + 1)
 		end
 
 feature -- Optimization	

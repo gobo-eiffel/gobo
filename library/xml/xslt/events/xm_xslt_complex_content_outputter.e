@@ -13,6 +13,8 @@ class XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
 
 inherit
 	
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	XM_XSLT_OUTPUTTER	
 		redefine
 			start_document
@@ -39,17 +41,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Establish invariant.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
-			name_pool := a_name_pool
 			next_receiver := an_underlying_receiver
 			pending_start_tag := -1
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			next_receiver_set: next_receiver = an_underlying_receiver
 			no_pending_start_tag: pending_start_tag = -1
 		end
@@ -94,6 +93,7 @@ feature -- Events
 				create pending_attribute_name_codes.make_default
 				create pending_attribute_type_codes.make_default
 				create pending_attribute_values.make_default
+				pending_attribute_values.set_equality_tester (string_equality_tester)
 				create pending_attribute_properties.make_default
 				create pending_namespaces.make_default
 				pending_start_tag := a_name_code
@@ -155,7 +155,7 @@ feature -- Events
 						--  itself is in the null namespace, as the resulting element could not be serialized
 
 						if a_prefix_code = 0 and then a_uri_code /= 0 then
-							another_namespace_code := name_pool.namespace_code_from_name_code (pending_start_tag)
+							another_namespace_code := shared_name_pool.namespace_code_from_name_code (pending_start_tag)
 							if another_namespace_code = 0 then
 								on_error ("Cannot output a namespace node for the default namespace when the element is in no namespace")
 								reject := True
@@ -196,7 +196,7 @@ feature -- Events
 					loop
 						if a_cursor.item = a_name_code then
 							if are_duplicates_rejected (properties) then
-								on_error (STRING_.concat ("Duplicate attribute: ", name_pool.display_name_from_name_code (a_name_code)))
+								on_error (STRING_.concat ("Duplicate attribute: ", shared_name_pool.display_name_from_name_code (a_name_code)))
 							else
 								pending_attribute_type_codes.put (a_type_code, a_cursor.index)
 								pending_attribute_values.put (a_value, a_cursor.index)
@@ -421,10 +421,10 @@ feature {NONE} -- Implementation
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			last_checked_namecode := a_name_code
-			if not name_pool.is_namespace_code_allocated_for_name_code (a_name_code) then
-				name_pool.allocate_namespace_code_for_name_code (a_name_code)
+			if not shared_name_pool.is_namespace_code_allocated_for_name_code (a_name_code) then
+				shared_name_pool.allocate_namespace_code_for_name_code (a_name_code)
 			end
-			a_namespace_code := name_pool.namespace_code_from_name_code (a_name_code)
+			a_namespace_code := shared_name_pool.namespace_code_from_name_code (a_name_code)
 			a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
 			a_uri_code := uri_code_from_namespace_code (a_namespace_code)
 			from
@@ -441,14 +441,14 @@ feature {NONE} -- Implementation
 						a_cursor.go_after
 					else
 						a_prefix := substituted_prefix (a_name_code, a_sequence_number)
-						name_pool.allocate_name_using_uri_code (a_prefix,
-																			name_pool.uri_code_from_name_code (a_name_code),
-																			name_pool.local_name_from_name_code (a_name_code))
-						last_checked_namecode := name_pool.last_name_code
-						if not name_pool.is_namespace_code_allocated_for_name_code (last_checked_namecode) then
-							name_pool.allocate_namespace_code_for_name_code (last_checked_namecode)
+						shared_name_pool.allocate_name_using_uri_code (a_prefix,
+																					  shared_name_pool.uri_code_from_name_code (a_name_code),
+																					  shared_name_pool.local_name_from_name_code (a_name_code))
+						last_checked_namecode := shared_name_pool.last_name_code
+						if not shared_name_pool.is_namespace_code_allocated_for_name_code (last_checked_namecode) then
+							shared_name_pool.allocate_namespace_code_for_name_code (last_checked_namecode)
 						end
-						notify_namespace (name_pool.namespace_code_from_name_code (last_checked_namecode), 0)
+						notify_namespace (shared_name_pool.namespace_code_from_name_code (last_checked_namecode), 0)
 						finished := True
 						a_cursor.go_after
 					end
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 	substituted_prefix (a_namespace_code: INTEGER; a_sequence_number: INTEGER): STRING is
 			-- Substituted prefix for `a_name_code'
 		require
-			valid_namespace_code: name_pool.is_valid_namespace_code (a_namespace_code)
+			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)
 			positive_sequence_number: a_sequence_number >= 0
 		local
 			an_xml_prefix: STRING
@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 			-- This routine substitutes an alternative prefix by appending an undersocre followed
 			--  by the supplied sequence number to the existing prefix name
 
-			an_xml_prefix := name_pool.prefix_from_namespace_code (a_namespace_code)
+			an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
 			Result := STRING_.concat (an_xml_prefix, "_")
 			Result := STRING_.appended_string (Result, a_sequence_number.out)
 		ensure
@@ -484,7 +484,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	name_pool_not_void: name_pool /= Void
 	next_receiver_not_void: next_receiver /= Void
 	attribute_lists: pending_attribute_name_codes /= Void implies
 		pending_attribute_type_codes /= Void and then

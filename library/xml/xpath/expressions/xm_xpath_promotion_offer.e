@@ -119,7 +119,7 @@ feature -- Optimization
 				end
 			when Inline_variable_references then
 				variable_reference ?= a_child_expression
-				if variable_reference /= Void and then variable_reference.binding.is_equal (binding_expression) then
+				if variable_reference /= Void and then variable_reference.binding = binding_expression then
 					accepted_expression := containing_expression
 				else
 					accepted_expression := Void
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 		do
 			a_variable ?= a_child_expression
 			if a_variable /= Void then
-				Result := a_variable.binding.is_equal (a_binding)
+				Result := a_variable.binding = a_binding
 			else
 				from
 					children := a_child_expression.sub_expressions

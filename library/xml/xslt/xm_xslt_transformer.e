@@ -47,7 +47,6 @@ feature {NONE} -- Initialization
 			executable := prepared_stylesheet.executable
 			rule_manager := executable.rule_manager
 			decimal_format_manager := executable.decimal_format_manager
-			name_pool := default_pool.default_pool
 			create document_pool.make
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
@@ -95,9 +94,6 @@ feature -- Access
 		ensure
 			current_item_not_void: Result /= Void
 		end
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- Name pool
 
 	document_pool: XM_XSLT_DOCUMENT_POOL
 			-- Document pool
@@ -256,10 +252,10 @@ feature -- Creation
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			if configuration.is_tiny_tree_model then
-				create {XM_XPATH_TINY_BUILDER} Result.make (name_pool)
+				create {XM_XPATH_TINY_BUILDER} Result.make
 			else
 				create a_node_factory
-				create {XM_XPATH_TREE_BUILDER} Result.make (name_pool, a_node_factory)
+				create {XM_XPATH_TREE_BUILDER} Result.make (a_node_factory)
 			end
 			create a_locator.make (a_parser)
 			Result.set_document_locator (a_locator)
@@ -329,12 +325,12 @@ feature -- Element change
 			document_not_registered: not document_pool.is_mapped (a_uri)
 		do
 			document_pool.add (a_document, a_uri)
-			if not name_pool.is_document_allocated (a_document) then
-				name_pool.allocate_document_number (a_document)
+			if not shared_name_pool.is_document_allocated (a_document) then
+				shared_name_pool.allocate_document_number (a_document)
 			end
 		ensure
 			document_mapped: document_pool.is_mapped (a_uri)
-			document_allocated: name_pool.is_document_allocated (a_document)
+			document_allocated: shared_name_pool.is_document_allocated (a_document)
 		end
 
 	set_receiver (a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
@@ -382,11 +378,11 @@ feature -- Element change
 			temporary_destination_depth_increased_by_one: temporary_destination_depth = old temporary_destination_depth + 1
 		end
 
-	change_output_destination (properties: XM_XSLT_OUTPUT_PROPERTIES; an_outputter: XM_OUTPUT; -- TODO: change this last parameter
+	change_output_destination (properties: XM_XSLT_OUTPUT_PROPERTIES; a_result: XM_XSLT_TRANSFORMATION_RESULT
 										is_final: BOOLEAN; validation: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE) is
 			-- Set a new output destination, supplying the output format details.
 		require
-			outputter_not_void: an_outputter /= void
+			result_not_void: a_result /= void
 			schema_type_not_yet_supported: a_schema_type = Void
 		local
 			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
@@ -403,15 +399,15 @@ feature -- Element change
 				else
 					some_properties := properties
 				end
-				-- set_output_properties?? TODO
-				a_receiver := selected_receiver (an_outputter, some_properties)
+				-- set_output_properties TODO
+				a_receiver := selected_receiver (a_result, some_properties)
 
 				-- TODO: add a validator to the pipeline if required
 
 				-- Add a filter to remove duplicate namespaces
 
-				create a_namespace_reducer.make (name_pool, a_receiver)
-				create a_complex_outputter.make (name_pool, a_namespace_reducer)
+				create a_namespace_reducer.make (a_receiver)
+				create a_complex_outputter.make (a_namespace_reducer)
 				a_complex_outputter.start_document
 				current_receiver := a_complex_outputter
 			end
@@ -433,13 +429,12 @@ feature -- Element change
 
 feature -- Transformation
 
-	transform_document (a_start_node: XM_XPATH_NODE; an_outputter: XM_OUTPUT -- this last will change
-							  ) is
+	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Transform document supplied as in-memory tree.
 		require
 			executable_not_void: executable /= Void
 			start_node_not_void: a_start_node /= Void
-			destination_stream_not_void: an_outputter /= Void
+			destination_result_not_void: a_result /= Void
 		local
 			properties: XM_XSLT_OUTPUT_PROPERTIES
 		do
@@ -449,7 +444,7 @@ feature -- Transformation
 			-- TODO: overlay properties defined by API
 			-- TODO: stylesheet chaining
 
-			change_output_destination (properties, an_outputter, True, Validation_preserve, Void)
+			change_output_destination (properties, a_result, True, Validation_preserve, Void)
 
 			-- Process the source document using the handlers that have been set up.
 
@@ -601,54 +596,68 @@ feature -- Implementation
 			end
 		end
 
-	selected_receiver (an_outputter: XM_OUTPUT; -- this will change
-							 some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+	selected_receiver (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
 			-- Receiver selected according to inputs
 		require
-			outputter_not_void: an_outputter /= Void
+			result_not_void: a_result /= Void
 			properties_not_void: some_properties /= Void
 		local
 			a_target: XM_XPATH_RECEIVER
 			an_emitter: XM_XSLT_EMITTER
 			an_html_emitter: XM_XSLT_HTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
+			an_uncommitted_emitter: XM_XSLT_UNCOMMITTED_EMITTER
 			a_method: STRING
 		do
-
-			-- `a_target is the start of the output pipeline, the receiver that
-			--  instructions will actually write to (except that other things like a
-			--  namespace reducer may get added in front of it).
-			-- `an_emitter' is the last thing in the output pipeline, the receiver
-			--  that actually generates characters or bytes that are written to `an_outputter'
-
-			a_method := some_properties.method
-
-			-- TODO: add character map stuff
-
-			if a_method = Void then
-				todo ("selected_receiver - void method", True)
-			elseif STRING_.same_string (a_method, "html") then
-				create an_html_emitter.make (Current, an_outputter, some_properties)
-				a_target := an_html_emitter
-				if some_properties.indent then
-					create an_html_indenter.make (Current, an_html_emitter, some_properties)
-					a_target := an_html_indenter
-				end
-				-- TODO - character map stuff
-			elseif STRING_.same_string (a_method, "xml") then
-				create {XM_XSLT_XML_EMITTER} an_emitter.make (Current, an_outputter, some_properties)
-				a_target := an_emitter
-
-				-- TODO: indenter and character map stuff
-				
-			elseif STRING_.same_string (a_method, "xhtml") then
-				todo ("selected_receiver - xhtml method", True)
-			elseif STRING_.same_string (a_method, "text") then
-				todo ("selected_receiver - text method", True)
+			if a_result.is_emitter then
+				an_emitter := a_result.emitter
+				an_emitter.set_output_properties (some_properties)
+				Result := an_emitter
+			elseif a_result.is_receiver then
+				Result := a_result.receiver
 			else
-				todo ("selected_receiver - QName method", True)
+				check
+					stream: a_result.is_stream
+				end
+
+				-- `a_target' is the start of the output pipeline, the receiver that
+				--  instructions will actually write to (except that other things like a
+				--  namespace reducer may get added in front of it).
+				-- `an_emitter' is the last thing in the output pipeline, the receiver
+				--  that actually generates characters or bytes that are written to `a_result.stream'
+				
+				a_method := some_properties.method
+
+				-- TODO: add character map stuff
+
+				if a_method.count = 0 then
+					create an_uncommitted_emitter.make (Current, a_result.stream, some_properties)
+					a_target := an_uncommitted_emitter
+
+					-- TODO character map expander
+				elseif STRING_.same_string (a_method, "html") then
+					create an_html_emitter.make (Current, a_result.stream, some_properties)
+					a_target := an_html_emitter
+					if some_properties.indent then
+						create an_html_indenter.make (Current, an_html_emitter, some_properties)
+						a_target := an_html_indenter
+					end
+					-- TODO - character map expander stuff
+				elseif STRING_.same_string (a_method, "xml") then
+					create {XM_XSLT_XML_EMITTER} an_emitter.make (Current, a_result.stream, some_properties)
+					a_target := an_emitter
+					
+					-- TODO: indenter, character map expander stuff and CDATA filter
+					
+				elseif STRING_.same_string (a_method, "xhtml") then
+					todo ("selected_receiver - xhtml method", True)
+				elseif STRING_.same_string (a_method, "text") then
+					todo ("selected_receiver - text method", True)
+				else
+					todo ("selected_receiver - QName method", True)
+				end
+				Result := a_target
 			end
-			Result := a_target
 		ensure
 			selected_receiver_not_void: Result /= Void			
 		end
@@ -674,7 +683,6 @@ invariant
 	configuration_not_void: configuration /= Void
 	stylesheet_not_void: prepared_stylesheet /= Void
 	document_pool_not_void: document_pool /= Void
-	name_pool_not_void: name_pool /= Void
 	executable_not_void: executable /= Void
 	rule_manager_not_void: rule_manager /= Void
 	decimal_format_manager_not_void: decimal_format_manager /= Void

@@ -43,15 +43,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL) is
+	make is
 			-- Establish invariant.
-		require
-			name_pool_not_void: a_name_pool /= Void
 		do
 			create output_list.make_default
-			name_pool := a_name_pool
-		ensure
-			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
@@ -109,10 +104,10 @@ feature -- Events
 				start_content
 			end
 			if tree = Void then
-				create builder.make (name_pool)
+				create builder.make
 				builder.set_defaults (50, 10, 5, 200)
-				create a_reducer.make (name_pool, builder)
-				create a_complex_outputter.make (name_pool, a_reducer)
+				create a_reducer.make (builder)
+				create a_complex_outputter.make (a_reducer)
 				tree := a_complex_outputter
 				tree.set_system_id (system_id)
 				tree.start_document
@@ -195,7 +190,7 @@ feature -- Events
 			if chars.count /= 0 then
 				if in_start_tag then start_content end
 				if tree = Void then
-					create an_orphan.make (name_pool, Text_node, chars)
+					create an_orphan.make (Text_node, chars)
 					append_item (an_orphan)
 				else
 					tree.notify_characters (chars, properties)
@@ -301,7 +296,6 @@ feature {NONE} -- Implementation
 invariant
 
 	output_list_not_void: output_list /= Void
-	name_pool_not_void: name_pool /= Void
 
 end
 	

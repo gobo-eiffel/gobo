@@ -14,6 +14,8 @@ class XM_XPATH_CONTENT_EMITTER
 
 inherit
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	XM_CALLBACKS
 
 	XM_DTD_CALLBACKS
@@ -25,6 +27,8 @@ inherit
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
+
+	XM_XPATH_SHARED_NAME_POOL
 
 		-- XM_XPATH_CONTENT_EMITTER should come at the end of the event
 		--  filter and dtd event filter chains.
@@ -49,19 +53,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_receiver: XM_XPATH_RECEIVER) is
 		-- Establish invariant
 		require
 				receiver_not_void: a_receiver /= Void
-				name_pool_not_void: a_name_pool /= Void
 		do
 			before_dtd := True
-			create attribute_types.make (7)
+			create attribute_types.make_with_equality_testers (7, Void, string_equality_tester)
 			receiver := a_receiver
-			name_pool := a_name_pool
 		ensure
 			receiver_set: receiver = a_receiver
-			name_pool_set: name_pool = a_name_pool
 		end
 
 
@@ -84,7 +85,7 @@ feature -- Document type definition callbacks
 				a_message.append_string (a_name)
 				on_error (a_message)
 			end	
-			create an_attribute_table.make_equal (7)
+			create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
 			if attribute_types.is_full then
 				attribute_types.resize (attribute_types.count * 2)
 			end
@@ -227,10 +228,10 @@ feature -- Tag
 			else
 				a_prefix := an_ns_prefix
 			end
-			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
-				if not name_pool.is_name_pool_full (a_namespace, a_local_part) then
-					name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-					a_name_code := name_pool.last_name_code
+			if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
+				if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
+					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
+					a_name_code := shared_name_pool.last_name_code
 				else
 					a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_namespace)
 					a_message := STRING_.appended_string (a_message, "}")
@@ -238,7 +239,7 @@ feature -- Tag
 					on_error (a_message)
 				end
 			else
-				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part)
+				a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part)
 			end
 
 			-- Element typing is not yet supported
@@ -279,10 +280,10 @@ feature -- Tag
 				a_prefix := an_ns_prefix
 			end
 			
-			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
-				if not name_pool.is_name_pool_full (a_namespace, a_local_part) then
-					name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-					a_name_code := name_pool.last_name_code
+			if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
+				if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
+					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
+					a_name_code := shared_name_pool.last_name_code
 				else
 					a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_namespace)
 					a_message := STRING_.appended_string (a_message, "}")
@@ -290,7 +291,7 @@ feature -- Tag
 					on_error (a_message)
 				end
 			else
-				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
+				a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
 
@@ -301,11 +302,11 @@ feature -- Tag
 				else
 					a_namespace_prefix := a_local_part
 				end
-				if name_pool.is_namespace_code_allocated (a_namespace_prefix, a_value) then
-					a_namespace_code := name_pool.namespace_code (a_namespace_prefix, a_value)
+				if shared_name_pool.is_namespace_code_allocated (a_namespace_prefix, a_value) then
+					a_namespace_code := shared_name_pool.namespace_code (a_namespace_prefix, a_value)
 				else
-					name_pool.allocate_namespace_code (a_namespace_prefix, a_value)
-					a_namespace_code := name_pool.last_namespace_code
+					shared_name_pool.allocate_namespace_code (a_namespace_prefix, a_value)
+					a_namespace_code := shared_name_pool.last_namespace_code
 				end
 				receiver.notify_namespace (a_namespace_code, 0)
 			else
@@ -345,9 +346,6 @@ feature {NONE} -- Implementation
 
 	receiver: XM_XPATH_RECEIVER
 			-- The receiver to which we forward events
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- The name pool
 
 	current_element_name: STRING
 			-- QName of the current element;
@@ -438,7 +436,6 @@ feature {NONE} -- Implementation
 invariant
 
 	receiver_not_void: receiver /= Void
-	name_pool_not_void: name_pool /= Void
 	attribute_types_not_void: attribute_types /= Void
 
 end

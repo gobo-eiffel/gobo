@@ -12,6 +12,10 @@ indexing
 
 class XM_XPATH_ATTRIBUTE_COLLECTION
 
+inherit
+	
+	XM_XPATH_SHARED_NAME_POOL
+
 creation
 
 	make
@@ -19,23 +23,15 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL) is
+	make is
 			-- Establish invariant.
-		require
-			name_pool_not_void: a_name_pool /= Void
 		do
-			name_pool := a_name_pool
 			create attribute_name_codes.make (5)
 			create attribute_type_codes.make (5)
 			create attribute_values.make (5)
-		ensure
-			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
-
-	name_pool: XM_XPATH_NAME_POOL
-			--Name pool in which the attribute names are defined
 
 	attribute_value (a_fingerprint: INTEGER): STRING is
 			-- Value of attribute identified by `a_fingerprint'
@@ -53,7 +49,7 @@ feature -- Access
 		local
 			a_fingerprint: INTEGER
 		do
-			a_fingerprint := name_pool.fingerprint (a_uri, a_local_name)
+			a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
 			if a_fingerprint /= -1 then
 				Result := attribute_value (a_fingerprint)
 			end
@@ -110,7 +106,7 @@ feature -- Element change
 	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING) is
 			-- Add an attribute.
 		require
-			valid_name_code: name_pool.is_valid_name_code (a_name_code)
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		local
 			new_size: INTEGER
@@ -132,7 +128,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	-- The next three lists are triples - i.e. item number n in all three lists forms a triple
+	-- The next four lists are quaruples - i.e. item number n in all three lists forms a triple
+
+	attribute_ids: DS_ARRAYED_LIST [BOOLEAN]
+			-- Are these ID attributes?
 	
 	attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes of attributes
@@ -157,7 +156,7 @@ feature {NONE} -- Implementation
 			until
 				found or else a_cursor.after
 			loop
-				if name_pool.fingerprint_from_name_code (a_cursor.item) = a_fingerprint then
+				if shared_name_pool.fingerprint_from_name_code (a_cursor.item) = a_fingerprint then
 					found := true
 					Result := a_cursor.index
 				end
@@ -170,7 +169,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	name_pool_not_void: name_pool /= Void
 	attribute_name_codes_not_void: attribute_name_codes /= Void
 	attribute_type_codes_not_void: attribute_type_codes /= Void
 	attribute_values_not_void: attribute_values /= Void

@@ -23,7 +23,7 @@ creation {XM_XSLT_NODE_FACTORY}
 
 invariant
 
-	namespace_uri_not_null: document.name_pool.namespace_uri_from_name_code (fingerprint).count > 0
+	namespace_uri_not_null: shared_name_pool.namespace_uri_from_name_code (fingerprint).count > 0
 
 end
 	

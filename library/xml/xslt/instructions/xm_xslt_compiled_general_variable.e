@@ -105,7 +105,7 @@ feature -- Evaluation
 			a_transformer := a_context.transformer
 			if select_expression = Void then
 				a_saved_receiver := a_transformer.current_receiver
-				create a_receiver.make (a_transformer.name_pool)
+				create a_receiver.make
 				a_sequence_receiver := a_receiver
 				a_transformer.change_to_sequence_output_destination (a_receiver)
 				if required_type /= Void then

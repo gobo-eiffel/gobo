@@ -12,6 +12,8 @@ class XM_XSLT_NUMBER_FORMATTER
 
 inherit
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	KL_IMPORTED_STRING_ROUTINES
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -39,7 +41,9 @@ feature {NONE} -- Initialization
 				a_format_string := a_format
 			end
 			create formatting_tokens.make_default
+			formatting_tokens.set_equality_tester (string_equality_tester)
 			create formatting_separators.make_default
+			formatting_separators.set_equality_tester (string_equality_tester)
 			from
 				a_length := a_format_string.count
 				an_index := 1

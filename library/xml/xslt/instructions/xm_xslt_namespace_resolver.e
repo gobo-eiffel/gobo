@@ -14,6 +14,8 @@ deferred class XM_XSLT_NAMESPACE_RESOLVER
 
 inherit
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_UNICODE_CHARACTERS_1_1
 
 feature -- Access
@@ -27,12 +29,11 @@ feature -- Access
 			void_if_prefix_not_in_scope: True
 		end
 
-	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN; a_name_pool: XM_XPATH_NAME_POOL): INTEGER is
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint of `a_qname'
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
-			name_pool_not_void: a_name_pool /= Void
-			namespace_prefix_declared: a_name_pool.is_prefix_declared (a_qname)
+			namespace_prefix_declared: shared_name_pool.is_prefix_declared (a_qname)
 		deferred
 		end
 

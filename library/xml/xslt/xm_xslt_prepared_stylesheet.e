@@ -46,10 +46,6 @@ feature -- Access
 	node_factory: XM_XSLT_NODE_FACTORY
 			-- Node factory used to compile the stylesheet
 
-	target_name_pool: XM_XPATH_NAME_POOL
-			-- This is the name pool used for names that need to be accessible
-			--   at runtime, notably the names used in XPath expressions in the stylesheet.
-
 	last_loaded_module: XM_XPATH_TREE_DOCUMENT
 			-- Last stylesheet module sucessfully loaded
 
@@ -64,7 +60,6 @@ feature -- Status report
 	load_stylesheet_module_failed: BOOLEAN
 			-- did last call to `load_stylesheet_module' fail?
 
-	
 	load_stylesheet_module_error: STRING
 			-- Error reported by last call to `load_stylesheet_module'
 
@@ -81,22 +76,20 @@ feature -- Compilation
 			if error_listener = Void then
 				create {XM_XSLT_DEFAULT_ERROR_LISTENER} error_listener.make
 			end
-			create a_node_factory.make (default_pool.default_pool, error_listener, configuration.are_external_functions_allowed)
-			load_stylesheet_module (a_source, configuration, default_pool.default_pool, a_node_factory)
-			if load_stylesheet_module_failed then
-				todo ("prepare - deal with compile errors", True)
-			else
+			create a_node_factory.make (error_listener, configuration.are_external_functions_allowed)
+			load_stylesheet_module (a_source, configuration, a_node_factory)
+			if not load_stylesheet_module_failed then
 				create_style_sheet_executable (last_loaded_module, a_node_factory)
 			end
 		end
 
-	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_configuration: XM_XSLT_CONFIGURATION; a_name_pool: XM_XPATH_NAME_POOL; a_node_factory: XM_XSLT_NODE_FACTORY) is
+	load_stylesheet_module (a_source: XM_XSLT_URI_SOURCE; a_configuration: XM_XSLT_CONFIGURATION; a_node_factory: XM_XSLT_NODE_FACTORY) is
 			-- Create a tree-representation of a sylesheet module
 		require
 			source_not_void: a_source /= Void
 			configuration_not_void: a_configuration /= Void
-			name_pool_not_void: a_name_pool /= Void
 			node_factory_not_void: a_node_factory /= Void
+			no_error_loading_previous_stylesheet_modules: not load_stylesheet_module_failed
 		local
 			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
 			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
@@ -104,20 +97,19 @@ feature -- Compilation
 			a_parser: XM_EIFFEL_PARSER
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
-			load_stylesheet_module_failed := False
 			load_stylesheet_module_error := Void
 			last_loaded_module := Void
 			create a_parser.make
 			a_parser.set_resolver (a_configuration.entity_resolver)
 			a_parser.copy_string_mode (a_configuration)
 
-			create a_tree_builder.make (a_name_pool, a_node_factory)
+			create a_tree_builder.make (a_node_factory)
 			create a_locator.make (a_parser)
 			a_tree_builder.set_document_locator (a_locator)
 			a_tree_builder.set_line_numbering (a_configuration.is_line_numbering)
-			create a_stylesheet_stripper.make (a_name_pool, a_tree_builder)
+			create a_stylesheet_stripper.make (a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)
-			a_source.send (a_parser, a_comment_stripper, a_name_pool, True)
+			a_source.send (a_parser, a_comment_stripper, True)
 			if a_tree_builder.has_error then
 				load_stylesheet_module_failed := True
 				load_stylesheet_module_error := a_tree_builder.last_error
@@ -133,6 +125,7 @@ feature -- Compilation
 		require
 			document_not_void: a_document /= Void
 			node_factory_not_void: a_node_factory /= Void
+			no_error_loading_stylesheet_modules: not load_stylesheet_module_failed
 		local
 			a_stylesheet_document: XM_XPATH_TREE_DOCUMENT
 			a_stylesheet: XM_XSLT_STYLESHEET
@@ -140,9 +133,6 @@ feature -- Compilation
 		do
 			a_stylesheet_document := a_document
 			node_factory := a_node_factory
-			if target_name_pool = Void then
-				target_name_pool := default_pool.default_pool
-			end
 
 			-- If top-level node is a literal result element, stitch it into a skeleton stylesheet
 

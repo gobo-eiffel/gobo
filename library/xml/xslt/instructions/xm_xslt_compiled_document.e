@@ -79,7 +79,7 @@ feature -- Status report
 	base_uri: STRING
 			-- Base URI
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -92,7 +92,7 @@ feature -- Status report
 				std.error.put_string (a_string)
 				std.error.put_new_line
 			else
-				display_children (a_level + 1, a_pool)
+				display_children (a_level + 1)
 			end
 		end
 
@@ -189,7 +189,7 @@ feature -- Evaluation
 					process_children (an_evaluation_context)
 					a_transformer.reset_output_destination (a_saved_receiver)
 				end
-				create {XM_XPATH_TEXT_FRAGMENT_VALUE} a_root.make (a_text_value, base_uri, a_transformer.name_pool)
+				create {XM_XPATH_TEXT_FRAGMENT_VALUE} a_root.make (a_text_value, base_uri)
 			else
 				todo ("evaluate_item", true)
 			end

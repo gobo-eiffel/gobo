@@ -40,10 +40,12 @@ feature
 			a_document: XM_XPATH_DOCUMENT
 			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
+			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
+			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet.make (a_configuration)
 			create a_uri_source.make ("../xpath/data/books.xsl")
 			a_stylesheet.prepare (a_uri_source)
@@ -55,7 +57,7 @@ feature
 			create another_uri_source.make ("../xpath/data/books.xml")
 			a_parser := a_transformer.new_parser
 			a_builder := a_transformer.new_builder (a_parser)
-			another_uri_source.send (a_parser, a_transformer.new_stripper (a_builder), a_configuration.name_pool, False)
+			another_uri_source.send (a_parser, a_transformer.new_stripper (a_builder), False)
 			a_document := a_builder.document
 			assert ("No error", not a_builder.has_error)
 			assert ("Document", a_document /= Void)
@@ -63,7 +65,8 @@ feature
 			--a_transformer.create_new_context (a_document)
 			--a_transformer.perform_transformation (a_document)
 			create an_output
-			a_transformer.transform_document (a_document, an_output)
+			create a_result.make (an_output)
+			a_transformer.transform_document (a_document, a_result)
 		end
 
 end

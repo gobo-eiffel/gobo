@@ -36,21 +36,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Establish invariant.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
-			name_pool := a_name_pool
 			base_receiver := an_underlying_receiver
 			create namespaces_in_scope.make (50)
 			create count_stack.make (50)
-			xml_namespace_code := name_pool.namespace_code ("xml", Xml_uri)
-			null_namespace_code := name_pool.namespace_code ("", Null_uri)
+			xml_namespace_code := shared_name_pool.namespace_code ("xml", Xml_uri)
+			null_namespace_code := shared_name_pool.namespace_code ("", Null_uri)
 
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
 		
@@ -77,10 +74,10 @@ feature -- Events
 			--  for a literal result element).
 
 			if not is_namespace_declared (properties) then
-				if not name_pool.is_namespace_code_allocated_for_name_code (a_name_code) then
-					name_pool.allocate_namespace_code_for_name_code (a_name_code)
+				if not shared_name_pool.is_namespace_code_allocated_for_name_code (a_name_code) then
+					shared_name_pool.allocate_namespace_code_for_name_code (a_name_code)
 				end
-				notify_namespace (name_pool.namespace_code_from_name_code (a_name_code), 0)
+				notify_namespace (shared_name_pool.namespace_code_from_name_code (a_name_code), 0)
 			end
 		end
 
@@ -263,7 +260,7 @@ feature {NONE} -- Implementation
 			a_splitter.set_separators (":")
 			parts := a_splitter.split (a_qname)
 			if parts.count = 2 then
-				a_prefix_code := name_pool.code_for_prefix (parts.item (1))
+				a_prefix_code := shared_name_pool.code_for_prefix (parts.item (1))
 				if a_prefix_code = -1 then
 					on_error (STRING_.concat ("Unknown prefix in QName content: ", a_qname))
 				else
@@ -299,7 +296,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	name_pool_not_void: name_pool /= Void
 	namespaces_in_scope_not_void: namespaces_in_scope /= Void
 	count_stack_not_void: count_stack /= Void
 

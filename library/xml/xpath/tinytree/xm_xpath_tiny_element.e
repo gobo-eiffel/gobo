@@ -52,7 +52,7 @@ feature -- Access
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
 		do
-			Result := attribute_value (document.name_pool.fingerprint (a_uri, a_local_name))
+			Result := attribute_value (shared_name_pool.fingerprint (a_uri, a_local_name))
 		end
 
 	attribute_value (a_fingerprint: INTEGER): STRING is

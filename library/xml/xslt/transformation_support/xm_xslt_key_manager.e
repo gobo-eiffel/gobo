@@ -26,6 +26,8 @@ inherit
 
 	XM_XPATH_SHARED_64BIT_TESTER
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -218,7 +220,7 @@ feature {NONE} -- Implementation
 				end
 				if not a_transformer.is_error then create last_built_index.make (a_map) end
 			else
-				a_message := STRING_.concat ("Key ", a_transformer.name_pool.display_name_from_name_code (a_key_fingerprint))
+				a_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
 				a_message := STRING_.appended_string (a_message, " has not been defined")
 				a_transformer.report_fatal_error (a_message, Void)
 			end

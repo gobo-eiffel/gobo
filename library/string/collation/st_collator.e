@@ -19,6 +19,20 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+feature -- Access
+
+	collation_key (a_string: STRING): ST_COLLATION_KEY is
+			-- Collation key for `a_string';
+			-- Collation keys provide better performance for multiple
+			--  comparisons involving the same source strings.
+		require
+			string_not_void: a_string /= Void
+		do
+			create {ST_UNICODE_CODEPOINT_COLLATION_KEY} Result.make (a_string)
+		ensure
+			collation_key_not_void: Result /= Void
+		end
+
 feature -- Comparison
 
 	three_way_comparison (a_string, another_string: STRING): INTEGER is

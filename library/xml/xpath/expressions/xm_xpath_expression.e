@@ -32,6 +32,8 @@ inherit
 	
 	XM_XPATH_SHARED_NO_NODE_TEST
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -100,11 +102,10 @@ feature -- Status report
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		require
 			no_error: not is_error
-			name_pool_not_void: a_pool /= Void
 		deferred
 		end
 

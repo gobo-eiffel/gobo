@@ -119,7 +119,7 @@ feature -- Status report
 	last_tail_call: XM_XSLT_TAIL_CALL
 			-- Residue from last call to `process_leaving_tail'
 
-	display_children (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display_children (a_level: INTEGER) is
 			-- Diagnostic print of children to `std.error'
 		local
 			a_message: STRING
@@ -139,12 +139,12 @@ feature -- Status report
 			loop
 				an_expression ?= a_cursor.item
 				if an_expression /= Void then
-					an_expression.display (a_level + 1, a_pool)
+					an_expression.display (a_level + 1)
 				else
 					a_message := STRING_.appended_string (instruction_indentation (a_level + 1), a_cursor.item.instruction_name)
 					std.error.put_string (a_message)
 					std.error.put_new_line
-					a_cursor.item.display_children (a_level + 2, a_pool)
+					a_cursor.item.display_children (a_level + 2)
 				end
 				a_cursor.forth
 			end

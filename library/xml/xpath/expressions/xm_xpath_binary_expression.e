@@ -100,7 +100,7 @@ feature -- Status report
 				or else an_operator = Fortran_not_equal_token
 		end
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -112,8 +112,8 @@ feature -- Status report
 				std.error.put_string (" in error%N")
 			else
 				std.error.put_new_line
-				first_operand.display (a_level + 1, a_pool)
-				second_operand.display (a_level + 1, a_pool)
+				first_operand.display (a_level + 1)
+				second_operand.display (a_level + 1)
 			end
 		end
 

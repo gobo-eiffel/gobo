@@ -159,7 +159,7 @@ feature -- Access
 			if name_code < 0 then
 				Result := ""
 			else
-				Result := document.name_pool.local_name_from_name_code (name_code)
+				Result := shared_name_pool.local_name_from_name_code (name_code)
 			end
 		end
 

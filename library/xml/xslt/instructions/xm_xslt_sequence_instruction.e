@@ -72,7 +72,7 @@ feature -- Status report
 	simplified: BOOLEAN
 			-- Has `Current' already been simplified?
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -81,9 +81,9 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			if select_expression /= Void then
-				select_expression.display (a_level + 1, a_pool)
+				select_expression.display (a_level + 1)
 			else
-				display_children (a_level + 1, a_pool)
+				display_children (a_level + 1)
 			end
 		end
 

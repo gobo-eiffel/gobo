@@ -76,13 +76,13 @@ feature -- Status report
 			Result := a_context /= Void and then a_context.context_item /= Void
 		end
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "@")
-			a_string := STRING_.appended_string (a_string, a_pool.display_name_from_name_code (fingerprint))
+			a_string := STRING_.appended_string (a_string, shared_name_pool.display_name_from_name_code (fingerprint))
 			if is_error then
 				std.error.put_string (" in error%N")
 			else

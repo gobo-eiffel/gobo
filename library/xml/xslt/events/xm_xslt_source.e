@@ -12,6 +12,10 @@ indexing
 
 deferred class	XM_XSLT_SOURCE
 
+inherit
+
+	XM_XPATH_SHARED_NAME_POOL
+
 feature -- Access
 
 	system_id: STRING is
@@ -23,12 +27,11 @@ feature -- Access
 
 feature -- Events
 
-	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL; is_stylesheet: BOOLEAN) is
+	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
 		require
 			parser_not_void: a_parser /= Void
 			receiver_not_void: a_receiver /= Void
-			name_pool_not_void: a_name_pool /= Void
 		deferred
 
 			-- User requests (such as type of validation) are available in `a_configuration'.

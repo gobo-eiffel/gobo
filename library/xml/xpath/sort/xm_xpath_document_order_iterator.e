@@ -17,7 +17,9 @@ class XM_XPATH_DOCUMENT_ORDER_ITERATOR
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-
+		redefine
+			start
+		end
 
 creation
 
@@ -34,10 +36,19 @@ feature {NONE} -- Initialization
 			a_sorter: DS_QUICK_SORTER [XM_XPATH_NODE]
 		do
 			comparer := a_comparer
-			create sequence.make (an_iterator)
+			create sequence.make_default
+			-- TODO: do I need a node equality tester? I think so
+			from
+				an_iterator.start
+			until
+				an_iterator.after
+			loop
+				sequence.force_last (an_iterator.item)
+				an_iterator.forth
+			end
 			create a_sorter.make (a_comparer)
 			sequence.sort (a_sorter)
-			sequence_iterator := sequence.iterator (Void)
+--			sequence_iterator := sequence.iterator (Void)
 		ensure
 			comparer_set: comparer = a_comparer
 		end
@@ -50,12 +61,25 @@ feature -- Access
 			Result := current_node
 		end
 
+
 feature -- Status report
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := sequence_iterator.after
+			Result := sequence.after
+		end
+
+feature -- Cursor movement
+
+	start is
+			-- Move to first position
+		do
+			sequence.start
+			index := 1
+			if not sequence.after then
+				current_node := sequence.item (1)
+			end
 		end
 
 feature -- Cursor movement
@@ -63,40 +87,25 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position, skipping over duplicates
 		local
-			a_node: XM_XPATH_NODE
 			finished: BOOLEAN
+			a_node: XM_XPATH_NODE
 		do
-			if before then
-				if sequence_iterator.before then
-					sequence_iterator.start
-				else
-					sequence_iterator.forth
-				end
-				current_node ?= sequence_iterator.item
-				check
-					is_a_node: current_node /= Void
-				end
-			else
-				from
-				until
-					finished
-				loop
-					a_node := item
-					sequence_iterator.forth
-					if not sequence_iterator.after then
-						current_node ?= sequence_iterator.item
-						check
-							is_a_node: current_node /= Void
-						end
-						if not a_node.is_same_node (current_node) then
-							finished := True
-						end
-					else
+			from
+			until
+				finished
+			loop
+				a_node := sequence.item_for_iteration
+				sequence.forth
+				if not sequence.after then
+					current_node := sequence.item_for_iteration
+					if not a_node.is_same_node (current_node) then
 						finished := True
 					end
+				else
+					finished := True
 				end
 			end
-			index := index + 1
+			index := index + 1 -- to satisfy the interface
 		end
 
 feature -- Duplication
@@ -112,18 +121,21 @@ feature {NONE} -- Implementation
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Comparer
 
-	sequence: XM_XPATH_SEQUENCE_EXTENT
+--	sequence: XM_XPATH_NODE_SEQUENCE_EXTENT
 		-- Base sequence
 
-	sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+--	sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Sequence extent iterator
 
 	current_node: XM_XPATH_NODE
 			-- used by `forth' and `item'
 
+	sequence: DS_ARRAYED_LIST [XM_XPATH_NODE]
+			-- Sequence of nodes to be sorted
+
 invariant
 
 	comparer_not_void: comparer /= Void
 	sequence_extent_not_void: sequence /= Void
-	iterator_not_void: sequence_iterator /= Void
+
 end

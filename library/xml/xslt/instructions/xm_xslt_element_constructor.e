@@ -90,7 +90,7 @@ feature -- Evaluation
 			else
 				a_transformer := a_context.transformer
 				a_receiver := a_transformer.current_receiver
-				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action, Void, a_transformer.name_pool)
+				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action, Void)
 				if a_validator /= a_receiver then
 					check
 						schema_aware: False

@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -67,7 +67,7 @@ feature -- Status report
 				until
 					a_cursor.after
 				loop
-					a_cursor.item.display (a_level + 1, a_pool)
+					a_cursor.item.display (a_level + 1)
 					a_cursor.forth
 				end
 			end

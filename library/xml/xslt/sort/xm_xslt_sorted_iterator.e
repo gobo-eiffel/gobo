@@ -18,8 +18,6 @@ inherit
 
 	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_ITEM]
 
-	DS_SORTABLE [XM_XSLT_SORT_RECORD]
-
 	KL_COMPARATOR [XM_XSLT_SORT_RECORD]
 
 creation
@@ -53,7 +51,7 @@ feature {NONE} -- Initialization
 				key_comparers.put_last (a_cursor.item.comparer)
 				a_cursor.forth
 			end
-			
+
 			-- Avoid doing the sort until the user wants the first item. This is because
 			--  sometimes the user only wants to know whether the collection is empty.
 
@@ -105,7 +103,7 @@ feature -- Status report
 			an_index: INTEGER
 			finished: BOOLEAN
 			a_comparison: INTEGER
-			a_comparator: KL_COMPARATOR [STRING]
+			a_comparator: KL_COMPARATOR [XM_XPATH_ITEM]
 		do
 			from
 				an_index := 1
@@ -127,9 +125,9 @@ feature -- Status report
 
 					-- Neither key is the empty sequence
 
-					if a_comparator.less_than (a_sort_key.string_value, another_sort_key.string_value) then
+					if a_comparator.less_than (a_sort_key, another_sort_key) then
 						a_comparison := -1
-					elseif a_comparator.greater_than (a_sort_key.string_value, another_sort_key.string_value) then
+					elseif a_comparator.greater_than (a_sort_key, another_sort_key) then
 						a_comparison := +1
 					else
 						a_comparison := 0
@@ -183,13 +181,6 @@ feature -- Duplication
 			count_determined
 		end
 
-feature -- Removal
-
-	wipe_out is
-        -- Remove all items from container.
-		do
-			count := 0; node_keys.wipe_out
-		end
 
 feature {XM_XSLT_SORTED_ITERATOR} -- Local
 
@@ -224,7 +215,7 @@ feature {NONE} -- Implementation
 	context: XM_XSLT_EVALUATION_CONTEXT
 			-- Evaluation context
 
-	key_comparers: DS_ARRAYED_LIST [KL_COMPARATOR [STRING]]
+	key_comparers: DS_ARRAYED_LIST [KL_COMPARATOR [XM_XPATH_ITEM]]
 			-- Comparers
 
 	node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]

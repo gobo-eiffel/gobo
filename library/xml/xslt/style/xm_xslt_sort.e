@@ -49,7 +49,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_name_code := a_cursor.item
-				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
+				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)
 					STRING_.left_adjust (a_select_attribute)
@@ -94,7 +94,7 @@ feature -- Element change
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
-					report_compile_error ("xsl:sort must be empty when a 'select' attribute is uspplied")
+					report_compile_error ("xsl:sort must be empty when a 'select' attribute is supplied")
 				else
 					an_apply_templates ?= parent
 					a_for_each ?= parent
@@ -180,8 +180,6 @@ feature {NONE} -- Implementation
 			if a_collation_attribute /= Void then
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
-			else
-				create {XM_XPATH_STRING_VALUE} collation_name.make (static_context.default_collation_name)
 			end
 		end
 

@@ -26,24 +26,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; a_namespace_uri, a_local_name: STRING; a_base_type: XM_XPATH_SCHEMA_TYPE; a_fingerprint: INTEGER) is
+	make (a_namespace_uri, a_local_name: STRING; a_base_type: XM_XPATH_SCHEMA_TYPE; a_fingerprint: INTEGER) is
 			-- Create a built-in type.
 		require
-			well_known_type: a_fingerprint < 1024 implies a_name_pool = Void
-			user_defined_type: a_fingerprint >= 1024 implies a_name_pool /= Void
 			base_type_not_void: a_base_type /= Void
 			local_name_not_void: a_local_name /= Void and then a_local_name.count > 0
 			namespace_uri_not_void: a_namespace_uri /= Void
 		do
 			fingerprint := a_fingerprint
-			name_pool := a_name_pool
 			base_type := a_base_type
 			local_name := a_local_name
 			namespace_uri := a_namespace_uri
-			is_built_in := name_pool = Void
+			is_built_in := a_fingerprint < 1024
 		ensure
 			fingerprint_set: fingerprint = a_fingerprint
-			name_pool_set: name_pool = a_name_pool
 			base_type_set: base_type = a_base_type
 			local_name_set: STRING_.same_string (local_name, a_local_name)
 			namespace_uri_set: STRING_.same_string (namespace_uri, a_namespace_uri)
@@ -130,7 +126,7 @@ feature -- Conversion
 			elseif fingerprint < 1024 then
 				Result := standard_display_name
 			else
-				Result := name_pool.display_name_from_name_code (fingerprint)
+				Result := shared_name_pool.display_name_from_name_code (fingerprint)
 			end
 		end
 

@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -74,9 +74,9 @@ feature -- Status report
 				std.error.put_string (" in error%N")
 			else
 				std.error.put_new_line
-				minimum_bound.display (a_level + 1, a_pool)
-				value.display (a_level + 1, a_pool)
-				maximum_bound.display (a_level + 1, a_pool)
+				minimum_bound.display (a_level + 1)
+				value.display (a_level + 1)
+				maximum_bound.display (a_level + 1)
 			end
 		end
 

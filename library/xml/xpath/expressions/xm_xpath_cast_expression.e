@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -83,7 +83,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, target_type.conventional_name)
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			source.display (a_level + 1, a_pool)
+			source.display (a_level + 1)
 		end
 
 feature -- Optimization	

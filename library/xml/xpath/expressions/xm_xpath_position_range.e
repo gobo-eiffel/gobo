@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING

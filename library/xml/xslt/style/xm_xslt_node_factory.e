@@ -19,6 +19,8 @@ inherit
 			new_element_node
 		end
 
+	XM_XPATH_SHARED_NAME_POOL
+
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XSLT_VALIDATION
@@ -29,17 +31,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; an_error_listener: XM_XSLT_ERROR_LISTENER; extensions_allowed: BOOLEAN) is
+	make (an_error_listener: XM_XSLT_ERROR_LISTENER; extensions_allowed: BOOLEAN) is
 			-- Establish invariant.
 		require
-			name_pool_not_void: a_name_pool /= Void
 			error_listener_not_void: an_error_listener /= Void
 		do
 			are_extensions_allowed := extensions_allowed
-			name_pool := a_name_pool
 			error_listener := an_error_listener
 		ensure
-			name_pool_set: name_pool = a_name_pool
 			are_extensions_allowed_set: are_extensions_allowed = extensions_allowed
 			error_listener_set: error_listener = an_error_listener
 		end
@@ -77,8 +76,8 @@ feature -- Creation
 
 					-- not recognized as an XSLT element
 					
-					a_local_name := name_pool.local_name_from_name_code (a_name_code)
-					a_uri_code := name_pool.uri_code_from_name_code (a_name_code)
+					a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
+					a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 					if a_uri_code = Xslt_uri_code then
 						create Result.make_in_error_state (a_document, STRING_.appended_string ("Unknown XSLT element: ", a_local_name))
 					else
@@ -104,9 +103,6 @@ feature -- Creation
 
 feature {NONE} -- Implementation
 
-	name_pool: XM_XPATH_NAME_POOL
-			-- Name pool
-
 	are_extensions_allowed: BOOLEAN
 			-- Are extensions allowed?
 
@@ -119,7 +115,7 @@ feature {NONE} -- Implementation
 		local
 			a_fingerprint: INTEGER
 		do
-			a_fingerprint := name_pool.fingerprint_from_name_code (a_name_code)
+			a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_name_code)
 			
 			inspect
 				a_fingerprint
@@ -140,7 +136,9 @@ feature {NONE} -- Implementation
 			when Xslt_comment_type_code then
 				create {XM_XSLT_COMMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_value_of_type_code then
-				create {XM_XSLT_VALUE_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+				create {XM_XSLT_VALUE_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_copy_of_type_code then
+				create {XM_XSLT_COPY_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
 			when Xslt_call_template_type_code then
 				create {XM_XSLT_CALL_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_apply_templates_type_code then
@@ -192,7 +190,6 @@ feature {NONE} -- Implementation
 
 invariant
 	
-	name_pool_not_void: name_pool /= Void
 	error_listener_not_void: error_listener /= Void
 
 end

@@ -62,7 +62,7 @@ feature -- Creation
 				internal_parsed_expression := a_parser.last_parsed_expression
 				debug ("XPath expression factory")
 					std.error.put_string ("After parsing:%N%N")
-					internal_parsed_expression.display (1, a_context.name_pool)
+					internal_parsed_expression.display (1)
 					std.error.put_new_line
 				end
 				internal_parsed_expression := internal_parsed_expression.simplified_expression
@@ -76,7 +76,7 @@ feature -- Creation
 				else
 					debug ("XPath expression factory")
 						std.error.put_string ("After simplication:%N%N")
-						internal_parsed_expression.display (1, a_context.name_pool)
+						internal_parsed_expression.display (1)
 						std.error.put_new_line
 					end					
 				end

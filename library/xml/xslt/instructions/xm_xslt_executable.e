@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 			stripper_rules := a_mode
 			is_strips_whitespace := strips_whitespace
 			module_list := a_module_list
-			create default_output_properties.make_html  -- TODO: bodge - change this back to make
 		ensure
 			configuration_set: configuration = a_configuration
 			rule_manager_set: rule_manager = a_rule_manager
@@ -177,7 +176,6 @@ invariant
 	default_collation_name: default_collation_name /= Void
 	collation_map: collation_map /= Void
 	module_list_not_void: module_list /= Void
-	default_output_properties_not_void: default_output_properties /= Void -- ??
 
 end
 	

@@ -46,6 +46,16 @@ feature -- Access
 			Result := item_type.conventional_name
 		end
 
+	primitive_value: XM_XPATH_ATOMIC_VALUE is
+			-- Primitive value;
+			-- For built-in types, this is the type itself.
+			-- For user-defined types, this is the type minus it's type annotation.
+		do
+			Result := Current
+		ensure
+			primitive_value_not_void: Result /= Void
+		end
+
 feature -- Comparison
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is

@@ -30,10 +30,6 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-creation {XM_XSLT_STRIPPER}
-
-	make_dummy
-
 creation {XM_XPATH_NODE_FACTORY}
 
 	make, make_in_error_state
@@ -55,7 +51,7 @@ feature {NONE} -- Initialization
 			name_code := a_name_code
 			create children.make (5)
 			if an_attribute_collection = Void then
-				create attribute_collection.make (document.name_pool)
+				create attribute_collection.make
 			else
 				attribute_collection := an_attribute_collection
 			end
@@ -69,20 +65,6 @@ feature {NONE} -- Initialization
 			name_code_set: name_code = a_name_code
 		end
 
-	make_dummy (a_name_pool: XM_XPATH_NAME_POOL) is
-			-- Create a dummy element
-		require
-			name_pool_not_void: a_name_pool /= Void
-		do
-			node_type := Element_node
-			name_code := -1
-			create children.make (5)
-			create attribute_collection.make (a_name_pool)
-			create namespace_code_list.make (5)
-			sequence_number_high_word := 50000
-			create {XM_XPATH_TREE_DOCUMENT} document.make (a_name_pool, "") -- dummy document, to preserve invariant
-		end
-
 	make_in_error_state (a_document: XM_XPATH_TREE_DOCUMENT; a_message: STRING) is
 			-- Create an element in an error state (used for reporting errors by the node factory).
 		require
@@ -93,7 +75,7 @@ feature {NONE} -- Initialization
 			node_type := Element_node
 			name_code := -1
 			create children.make (0)
-			create attribute_collection.make (document.name_pool)
+			create attribute_collection.make
 			create namespace_code_list.make (0)
 			sequence_number_high_word := 50000
 			set_last_error_from_string (a_message, 0, Static_error)
@@ -135,7 +117,7 @@ feature -- Access
 		local
 			a_prefix_code: INTEGER
 		do
-			a_prefix_code := document.name_pool.code_for_prefix (an_xml_prefix)
+			a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
 			if a_prefix_code = -1 then
 				Result := -1
 			else
@@ -311,7 +293,7 @@ feature -- Element change
 	add_namespace (a_namespace_code: INTEGER) is
 			-- Add a namespace definition.
 		require
-			valid_namespace_code: document.name_pool.is_valid_namespace_code (a_namespace_code)
+			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)
 		do
 			if not namespace_code_list.extendible (1) then
 				namespace_code_list.resize (2 * namespace_code_list.count)
@@ -324,7 +306,7 @@ feature -- Element change
 	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING) is
 			-- Add an attribute.
 		require
-			valid_name_code: document.name_pool.is_valid_name_code (a_name_code)
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		do
 			attribute_collection.add_attribute (a_name_code, a_type_code, a_value)
@@ -405,7 +387,7 @@ feature {XM_XPATH_NODE} -- Restricted
 			Result := True
 		end
 
-feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION} -- Restricted
+feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_TREE_DOCUMENT} -- Restricted
 
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
 		do

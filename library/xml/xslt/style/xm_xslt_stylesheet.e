@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, target_name_pool, precedence, process_all_attributes, validate, is_global_variable_declared
+			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared
 		end
 
 	XM_XSLT_PROCEDURE
@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
-			target_name_pool := a_document.name_pool
 			create named_templates_index.make_map (5)
 			create variables_index.make_map (5)
 			create namespace_alias_list.make (5)
@@ -50,7 +49,6 @@ feature {NONE} -- Initialization
 			create a_code_point_collator
 			declare_collation (default_collation_name, a_code_point_collator)
 			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
-			create stripper_rules.make
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -62,11 +60,6 @@ feature -- Access
 	importer: like Current
 			-- The stylesheet that imported or included `Current';
 			-- `Void' for the prinicpal stylesheet.
-
-	target_name_pool: XM_XPATH_NAME_POOL
-			-- Name pool to be used at run-time;
-			-- This namepool holds the names used in
-			--  all XPath expressions and patterns.
 
 	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			-- Prepared stylesheet object used to load `Current'
@@ -234,6 +227,14 @@ feature -- Status report
 
 feature -- Element change
 
+		set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE) is
+			-- Set strip/preserve whitespace rules
+		do
+			stripper_rules := a_stripper_rules_set
+		ensure
+			stripper_rules_set: stripper_rules = a_stripper_rules_set
+		end
+		
 	register_module (a_system_id: STRING) is
 			-- Register `a_system_id' as a stylesheet module.
 		require
@@ -293,7 +294,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_name_code := a_cursor.item
-				an_expanded_name := document.name_pool.expanded_name_from_name_code (a_name_code)
+				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Version_attribute) then
 					do_nothing
 				elseif STRING_.same_string (an_expanded_name, Extension_element_prefixes_attribute) then
@@ -326,7 +327,6 @@ feature -- Element change
 			prepared_stylesheet_not_void: a_prepared_stylesheet /= Void
 		do
 			prepared_stylesheet := a_prepared_stylesheet
-			target_name_pool := a_prepared_stylesheet.target_name_pool
 			create rule_manager.make
 		ensure
 			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
@@ -616,6 +616,7 @@ feature {NONE} -- Implementation
 		once
 			from
 				create Result.make (stylesheet_module_map.count)
+				Result.set_equality_tester (string_equality_tester)
 				stylesheet_module_map.start
 			until
 				stylesheet_module_map.after
@@ -824,7 +825,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	target_name_pool_not_void: target_name_pool /= Void
 	named_templates_index_not_void: named_templates_index /= Void
 	variables_index_not_void: variables_index /= Void
 	positive_largest_stack_frame: largest_stack_frame >= 0
