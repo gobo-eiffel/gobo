@@ -529,3 +529,190 @@ advantage of it.
 Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com
+
+=====================================================
+
+Subject: Re: [gobo-eiffel-develop] Xace class' <option> and cluster's <external>
+Date: Thu, 23 May 2002 18:56:05 +0200
+From: Eric Bezault <gobosoft@ifrance.com>
+Reply-To: ericb@gobosoft.com
+Organization: Gobo
+To: gobodev <gobo-eiffel-develop@lists.sourceforge.net>
+
+
+Eric Bezault wrote:
+>
+> Following the modifications in 'gexace' that I committed to CVS
+> yesterday, we can now set options to the whole system or to all
+> classes of a cluster. But in Ace files we can also set options
+> on a per class basis:
+> 
+>   my_cluster: "pathname"
+>       default
+>            assertion (require)
+>       option
+>            assertion (ensure): FOO, BAR
+>       end
+> 
+> The 'default' section contains cluster-level options and the 'option'
+> section contains class-level options. In the same way we have elements
+> <system> and <cluster> in Xace, I suggest to add the element <class>
+> to support this new kind of options:
+> 
+>   <cluster name="my_cluster" location="pathname">
+>       <option name="assertion" value="require"/>
+>       <class name="FOO">
+>           <option name="assertion" value="ensure"/>
+>       </class>
+>       <class name="BAR">
+>           <option name="assertion" value="ensure"/>
+>       </class>
+>   </cluster>
+> 
+> Now, I looked at the different clauses of the <external> section
+> and considering that we already put many things in <option>, I
+> don't see why we should have these specific elements anymore.
+> For example:
+> 
+>   <include_dir location="pathname"/>
+> 
+> could just be:
+> 
+>   <option name="include" value="pathname"/>
+> 
+> and:
+> 
+>   <link_library location="pathname"/>
+> 
+> could be:
+> 
+>   <option name="link" value="pathname"/>
+> 
+> (Note that "linker" is already used as a system-level options.)
+> 
+> It is a little bit more complicated for:
+> 
+>  <export class="FOO">
+>      <feature name="eiffel_feature1" alias="external_feature1"/>
+>      <feature name="eiffel_feature2" alias="external_feature2"/>
+>  </export>
+> 
+> but now that we have <class>, we could also have <feature> to
+> be more complete, and write:
+> 
+>   <cluster name="my_cluster" location="pathname">
+>       <option name="assertion" value="require"/>
+>       <option name="include" value="/usr/include"/>
+>       <option name="link" value="libfoo.a"/>
+>       <class name="FOO">
+>           <option name="assertion" value="ensure"/>
+>           <feature name="eiffel_feature1">
+>               <option name="export" value="external_feature1"/>
+>           </feature>
+>           <feature name="eiffel_feature2">
+>               <option name="export" value="external_feature2"/>
+>           </feature>
+>       </class>
+>       <class name="BAR">
+>           <option name="assertion" value="ensure"/>
+>       </class>
+>   </cluster>
+> 
+> According to LACE described in ETL2 page 530-531, the code above
+> would generate:
+> 
+>    visible
+>       FOO
+>           export
+>                eiffel_feature1, eiffel_feature2
+>           rename
+>                eiffel_feature1 as external_feature1,
+>                eiffel_feature2 as external_feature2
+>           end
+>    end
+> 
+> whereas the following:
+> 
+>       <class name="FOO">
+>           <feature name="eiffel_feature1">
+>               <option name="export" value="eiffel_feature1"/>
+>           </feature>
+>       </class>
+> 
+> would generate only:
+> 
+>    visible
+>       FOO
+>           export
+>                eiffel_feature1
+>           end
+>    end
+> 
+> Likewise, "export" could be an option of <class> and
+> the following:
+> 
+>    <class name="FOO">
+>        <option name="export" value="FOO"/>
+>    </class>
+> 
+> would generate:
+> 
+>   visible
+>      FOO
+>   end
+> 
+> and the following:
+> 
+>    <class name="FOO">
+>        <option name="export" value="BAR"/>
+>    </class>
+> 
+> would generate:
+> 
+>   visible
+>      FOO as BAR
+>   end
+> 
+> And we could also combine the option "export" of <class>
+> and <feature>.
+> 
+> With this new scheme, we have:
+> 
+>   <system>
+>       <cluster>
+>           <class>
+>               <feature>
+> 
+> and everything else is an <option> at the different levels.
+> With "export", not all compilers will support external class
+> or feature renaming, I'm not even sure the VE can support
+> "export" at all. So this fits well into the <option> policy.
+
+All the above is now available in CVS. You'll need to run
+the bootstrap because of this change of syntax in Xace.
+As usual the old syntax will still be accepted for some
+time with some warning messages.
+
+Contrary to what is said above, the following element:
+
+  <option name="include" value="pathname"/>
+
+has been replaced by:
+
+  <option name="header" value="pathname"/>
+
+because "include" has another meaning in LACE (the
+counterpart of "exclude").
+
+I have also added more options at different levels. To have
+details/explanations about the new options, please have a look
+at $GOBO/doc/gexace/options.txt. This file have been updated
+with new options, and it also has two new sections: CLASS
+OPTIONS and FEATURE OPTIONS.
+
+-- 
+Eric Bezault
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com
+
+
