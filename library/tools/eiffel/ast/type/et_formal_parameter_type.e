@@ -111,14 +111,14 @@ feature -- Access
 							Result := a_universe.any_class
 						end
 					else
-							-- Error: formal parameter not matched.
+							-- Internal error: formal parameter not matched.
 						Result := a_universe.unknown_class
 					end
 				else
 					Result := an_actual.base_class (a_context.context, a_universe)
 				end
 			else
-					-- Error: formal parameter not matched.
+					-- Internal error: formal parameter not matched.
 				Result := a_universe.unknown_class
 			end
 		end
