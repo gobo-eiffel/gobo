@@ -35,7 +35,7 @@ feature -- Status report
 		end
 
 	has_c_compiler_options: BOOLEAN is
-			-- Are there some c compiler options?
+			-- Are there some C compiler options?
 		do
 			Result := not c_compiler_options.is_empty
 		end
@@ -66,7 +66,7 @@ feature -- Access
 feature -- Element change
 
 	put_c_compiler_options (a_c_compiler_options: STRING) is
-			-- Add an 'c_compiler_options' value to current external clause.
+			-- Add a 'c_compiler_options' value to current external clause.
 		require
 			a_c_compiler_options_not_void: a_c_compiler_options /= Void
 		do
@@ -92,7 +92,7 @@ feature -- Element change
 invariant
 
 	c_compiler_options_not_void: c_compiler_options /= Void
-	no_void_c_compiler_options: not c_compiler_options.has (Void)
+	no_void_c_compiler_option: not c_compiler_options.has (Void)
 	include_directories_not_void: include_directories /= Void
 	no_void_include_directory: not include_directories.has (Void)
 	link_libraries_not_void: link_libraries /= Void

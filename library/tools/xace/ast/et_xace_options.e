@@ -2541,7 +2541,7 @@ feature -- Declared values
 			-- Declared value for 'culture' option
 
 	declared_c_compiler_options: DS_HASH_SET [STRING]
-			-- Declared values for 'c_compiler_option' option
+			-- Declared values for 'c_compiler_options' option
 
 	declared_dead_code_removal: DS_HASH_SET [STRING]
 			-- Declared values for 'dead_code_removal' option
@@ -2786,7 +2786,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_c_compiler_options_not_void: Result /= Void
-			no_void_c_compiler_options: not Result.has (Void)
+			no_void_c_compiler_option: not Result.has (Void)
 		end
 
 	default_dead_code_removal: DS_HASH_SET [STRING] is

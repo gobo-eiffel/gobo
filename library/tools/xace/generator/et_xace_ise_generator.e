@@ -135,8 +135,7 @@ feature {NONE} -- Output
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_c_compiler_options_and_include_directories (an_external.c_compiler_options,
-																  an_external.include_directories,
-																  a_file)
+					an_external.include_directories, a_file)
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
@@ -192,8 +191,7 @@ feature {NONE} -- Output
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_c_compiler_options_and_include_directories (an_external.c_compiler_options,
-																  an_external.include_directories,
-																  a_file)
+					an_external.include_directories, a_file)
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
@@ -950,13 +948,12 @@ feature {NONE} -- Output
 		end
 
 	print_c_compiler_options_and_include_directories (a_c_compiler_options: DS_LINKED_LIST [STRING];
-													  a_directories: DS_LINKED_LIST [STRING];
-													  a_file: KI_TEXT_OUTPUT_STREAM) is
+		a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_c_compiler_options' and
 			-- `a_directories' to `a_file'.
 		require
 			a_c_compiler_options_not_void: a_c_compiler_options /= Void
-			no_void_c_compiler_options: not a_c_compiler_options.has (Void)
+			no_void_c_compiler_option: not a_c_compiler_options.has (Void)
 			a_directories_not_void: a_directories /= Void
 			no_void_directory: not a_directories.has (Void)
 			a_file_not_void: a_file /= Void
@@ -965,9 +962,7 @@ feature {NONE} -- Output
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			a_pathname: STRING
 		do
-			if not a_c_compiler_options.is_empty or
-				not a_directories.is_empty
-			then
+			if not a_c_compiler_options.is_empty or not a_directories.is_empty then
 				print_indentation (1, a_file)
 				a_file.put_line ("include_path:")
 				a_cursor := a_c_compiler_options.new_cursor
@@ -977,12 +972,9 @@ feature {NONE} -- Output
 					a_file.put_string ("some123/fake432/path567 ")
 					a_file.put_string (a_cursor.item)
 					a_file.put_character ('%"')
-					if not a_cursor.is_last then
-						a_file.put_line (",")
-					else
-						if not a_directories.is_empty then
-							a_file.put_line (",")
-						end
+					if not a_cursor.is_last or not a_directories.is_empty then
+						a_file.put_character (',')
+						a_file.put_new_line
 					end
 					a_cursor.forth
 				end
@@ -998,11 +990,13 @@ feature {NONE} -- Output
 					a_file.put_string (a_pathname)
 					a_file.put_character ('%"')
 					if not a_cursor.is_last then
-						a_file.put_line (",")
+						a_file.put_character (',')
+						a_file.put_new_line
 					end
 					a_cursor.forth
 				end
-				a_file.put_line (";")
+				a_file.put_character (';')
+				a_file.put_new_line
 				a_file.put_new_line
 			end
 		end

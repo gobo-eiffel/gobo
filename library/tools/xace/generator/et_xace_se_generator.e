@@ -628,7 +628,7 @@ feature {NONE} -- Output
 			-- Makes sure the C compiler has the specified options set.
 		require
 			a_c_compiler_optionsnot_void: a_c_compiler_options /= Void
-			no_void_c_compiler_options: not a_c_compiler_options.has (Void)
+			no_void_c_compiler_option: not a_c_compiler_options.has (Void)
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
