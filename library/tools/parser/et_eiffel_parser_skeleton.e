@@ -25,6 +25,8 @@ inherit
 	ET_EIFFEL_SCANNER_SKELETON
 		rename
 			make as make_eiffel_scanner
+		redefine
+			reset
 		end
 
 feature {NONE} -- Initialization
@@ -62,10 +64,25 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset parser before parsing next input.
+		do
+			precursor
+			feature_list_count := 0
+			rename_list_count := 0
+			last_clients := Void
+			cluster := Void
+		end
+
 feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Eiffel class universe
+
+	cluster: ET_CLUSTER
+			-- Cluster containing the class being parsed
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
@@ -84,9 +101,8 @@ feature -- Parsing
 			a_cluster_not_void: a_cluster /= Void
 		do
 			reset
-			feature_list_count := 0
-			rename_list_count := 0
 			filename := a_filename
+			cluster := a_cluster
 			input_buffer := Eiffel_buffer
 			Eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
@@ -261,9 +277,11 @@ feature -- AST factory
 			-- New Eiffel class
 		require
 			a_name_not_void: a_name /= Void
+			cluster_not_void: cluster /= Void
 		do
 			Result := universe.eiffel_class (a_name)
 			Result.set_filename (filename)
+			Result.set_cluster (cluster)
 
 			debug ("GELINT")
 				std.error.put_string ("Parse class `")
@@ -386,6 +404,7 @@ feature -- AST factory
 			-- New deferred class
 		require
 			a_name_not_void: a_name /= Void
+			cluster_not_void: cluster /= Void
 		do
 			Result := new_class (a_name)
 			Result.set_deferred
@@ -490,6 +509,7 @@ feature -- AST factory
 			-- New expanded class
 		require
 			a_name_not_void: a_name /= Void
+			cluster_not_void: cluster /= Void
 		do
 			Result := new_class (a_name)
 			Result.set_expanded
@@ -1488,6 +1508,7 @@ feature -- AST factory
 			-- New separate class
 		require
 			a_name_not_void: a_name /= Void
+			cluster_not_void: cluster /= Void
 		do
 			Result := new_class (a_name)
 			Result.set_separate
