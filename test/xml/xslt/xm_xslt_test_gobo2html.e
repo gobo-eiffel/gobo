@@ -84,7 +84,7 @@ feature
 			an_output: XM_OUTPUT
 			a_test_string: STRING
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_test_file: KL_BINARY_INPUT_FILE
+			a_test_file: KL_TEXT_INPUT_FILE
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -117,10 +117,10 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
-			print ("Test file is:%N")
-			print (hexadecimal_string (a_test_string))
-			print ("%NResults are:%N")
-			print (hexadecimal_string (an_output.last_output))
+			--print ("Test file is:%N")
+			--print (hexadecimal_string (a_test_string))
+			--print ("%NResults are:%N")
+			--print (hexadecimal_string (an_output.last_output))
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
@@ -134,7 +134,7 @@ feature
 			an_output: XM_OUTPUT
 			a_test_string: STRING
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_test_file: KL_BINARY_INPUT_FILE
+			a_test_file: KL_TEXT_INPUT_FILE
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -167,10 +167,10 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
-			print ("Test file is:%N")
-			print (hexadecimal_string (a_test_string))
-			print ("%NResults are:%N")
-			print (hexadecimal_string (an_output.last_output))
+			--print ("Test file is:%N")
+			--print (hexadecimal_string (a_test_string))
+			--print ("%NResults are:%N")
+			--print (hexadecimal_string (an_output.last_output))
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
