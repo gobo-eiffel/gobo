@@ -63,8 +63,7 @@ color="#008080"><em>Void</em></font><em>
 color="#008080"><em>Void</em></font><em>
 </em><font color="#000080"><em><strong>        end</strong></em></font><em>
 
-</em><font color="#000080"><em><strong>end</strong></em></font><em> </em><font
-color="#008000"></font></pre>
+</em><font color="#000080"><em><strong>end</strong></em></font><em> </em></pre>
 </blockquote>
 
 <p>In order to test this class, one just has to write a simple
@@ -96,19 +95,18 @@ color="#008000">.</font><em>
         </em><font color="#000080"><em><strong>local</strong></em></font><em>
             c</em>:<em> CONCAT1
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
-            </em><font color="#000080"><em><strong>create</strong></font> c</em>.<em>make
-            assert_equal </em>(<font color="#800000"><em>&quot;to+to&quot;</em></font>,<em> </em><font
+            </em><font color="#000080"><em><strong>create</strong></em></font><em> c</em>.<em>make
+            assert_equal </em>(<font color="#800000"><em>&quot;toto&quot;</em></font>,<em> </em><font
 color="#800000"><em>&quot;toto&quot;</em></font>,<em> c</em>.<em>concat </em>(<font
 color="#800000"><em>&quot;to&quot;</em></font>,<em> </em><font
 color="#800000"><em>&quot;to&quot;</em></font>))<em>
-            assert_equal </em>(<font color="#800000"><em>&quot;foo+bar&quot;</em></font>,<em> </em><font
+            assert_equal </em>(<font color="#800000"><em>&quot;foobar&quot;</em></font>,<em> </em><font
 color="#800000"><em>&quot;foobar&quot;</em></font>,<em> c</em>.<em>concat </em>(<font
 color="#800000"><em>&quot;foo&quot;</em></font>,<em> </em><font
 color="#800000"><em>&quot;bar&quot;</em></font>))<em>
         </em><font color="#000080"><em><strong>end</strong></em></font><em>
 
-</em><font color="#000080"><em><strong>end</strong></em></font><em> </em><font
-color="#008000"></font></pre>
+</em><font color="#000080"><em><strong>end</strong></em></font><em> </em></pre>
 </blockquote>
 
 <p>The source code for this example can be found in <font
@@ -123,10 +121,9 @@ test suite as follows:</p>
 
 <p>where <font color="#800000"><tt>&lt;</tt><em><tt>compiler</tt></em><tt>&gt;</tt></font>
 is either <font color="#800000"><tt>ise</tt></font>, <font
-color="#800000"><tt>ve</tt></font>
-or <font color="#800000"><tt>se</tt></font> depending on the
-Eiffel compiler used to compile the test suite. Alternatively one
-can use the following shorthand:</p>
+color="#800000"><tt>ve</tt></font> or <font color="#800000"><tt>se</tt></font>
+depending on the Eiffel compiler used to compile the test suite.
+Alternatively one can use the following shorthand:</p>
 
 <blockquote>
     <pre><font color="#800000">getest --&lt;<em>compiler</em>&gt;</font></pre>
@@ -151,7 +148,7 @@ Test Summary for xconcat1
 # Total:      1 test (2 assertions)
 
 Test Results:
-FAIL:  [TEST_CONCAT1.test_concat] foo+bar
+FAIL:  [TEST_CONCAT1.test_concat] foobar
    expected: foobar
    but  got: foofoo</font></pre>
 </blockquote>
