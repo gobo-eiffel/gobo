@@ -147,7 +147,6 @@ feature -- Status report
 			-- Can the cursor be moved to position `p'?
 		local
 			a_cursor: HASH_TABLE_CURSOR
-			i: INTEGER
 		do
 			a_cursor ?= p
 			if a_cursor /= Void then
