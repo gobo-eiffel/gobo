@@ -135,9 +135,13 @@ feature -- Access
 			end
 
 			if Result = Void then
-				Result := clone("${")
-				Result.append_string(a_name)
-				Result.append_string("}")
+				if a_name.is_equal ("cwd") then
+					Result := file_system.cwd
+				else
+					Result := clone("${")
+					Result.append_string(a_name)
+					Result.append_string("}")
+				end
 			end
 
 		ensure
