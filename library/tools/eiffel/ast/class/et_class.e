@@ -795,26 +795,6 @@ feature -- Type context
 			Result := True
 		end
 
-feature -- Error handling
-
-	set_fatal_error is
-			-- Set a fatal error corresponding to
-			-- the current stage of compilation of
-			-- current class.
-		do
-			if interface_checked then
-				set_interface_error
-			elseif qualified_signatures_resolved then
-				set_qualified_signatures_error
-			elseif features_flattened then
-				set_flattening_error
-			elseif ancestors_built then
-				set_ancestors_error
-			elseif is_parsed then
-				set_syntax_error
-			end
-		end
-
 feature -- Output
 
 	append_to_string (a_string: STRING) is
