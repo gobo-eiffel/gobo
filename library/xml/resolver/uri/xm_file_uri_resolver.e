@@ -16,7 +16,7 @@ inherit
 
 	XM_URI_RESOLVER
 
-	KL_SHARED_OPERATING_SYSTEM
+	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -44,12 +44,7 @@ feature -- Action(s)
 		local
 			l_path: STRING
 		do
-			l_path := a_uri.path
-			if operating_system.is_windows and then l_path.count > 0 and then (l_path.item (1) = '/' and l_path.has (':')) then
-					-- Patch while waiting for UT_URI to be fixed.
-				l_path := clone (l_path)
-				l_path.keep_tail (l_path.count - 1)
-			end
+			l_path := File_uri.uri_to_filename (a_uri)
 			create {KL_TEXT_INPUT_FILE} last_stream.make (l_path)
 			last_stream.open_read
 			if last_stream.is_open_read then

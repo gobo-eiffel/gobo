@@ -19,13 +19,20 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
 	KL_SHARED_STANDARD_FILES
-
+		export {NONE} all end
+		
 	KL_SHARED_FILE_SYSTEM
-
+		export {NONE} all end
+		
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+		
 	KL_IMPORTED_STRING_ROUTINES
-
+		export {NONE} all end
+		
 	UC_SHARED_STRING_EQUALITY_TESTER
-
+		export {NONE} all end
+		
 	UT_URL_ENCODING
 
 creation
@@ -304,7 +311,7 @@ feature {TS_TEST_CASE} -- initialization
 			establish_system_catalog_files
 		end
 
-feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
+feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 	
 	retrieved_catalog (a_catalog_name: STRING): XM_CATALOG is
 			-- Parsed catalog named `a_catalog_name'
@@ -314,7 +321,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 			a_base_uri: UT_URI
 			a_system_id: STRING
 		do
-			create a_base_uri.make_resolve (current_directory_base, unix_file_system.pathname_from_file_system (a_catalog_name, file_system))
+			create a_base_uri.make_resolve (current_directory_base, a_catalog_name)
 			a_system_id := a_base_uri.full_reference
 			if all_known_catalogs.has (a_system_id) then
 				Result := all_known_catalogs.item (a_system_id)
@@ -326,6 +333,16 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 				parse_catalog_file (a_base_uri)
 				if all_known_catalogs.has (a_system_id) then
 					Result := all_known_catalogs.item (a_system_id)
+				else
+						-- Loading a_catalog_name failed as a URI, so let's 
+						-- try again assuming a_catalog_name is a local 
+						-- filesystem name.
+					create a_base_uri.make_resolve_uri (current_directory_base, File_uri.filename_to_uri (a_catalog_name))
+					a_system_id := a_base_uri.full_reference
+					parse_catalog_file (a_base_uri)
+					if all_known_catalogs.has (a_system_id) then
+						Result := all_known_catalogs.item (a_system_id)
+					end
 				end
 			end
 		ensure
@@ -552,23 +569,10 @@ feature {NONE} -- Implementation
 	current_directory_base: UT_URI is
 			-- URI of current directory
 		local
-			a_string: STRING
-			a_cwd: STRING
-			a_pathname: KI_PATHNAME
-			a_drive: STRING
+			a_cwd: KI_PATHNAME
 		once
-			a_cwd := file_system.current_working_directory
-			if file_system /= unix_file_system then
-				a_pathname := file_system.string_to_pathname (a_cwd)
-				a_cwd := unix_file_system.pathname_to_string (a_pathname)
-				a_drive := a_pathname.drive
-				if a_drive /= Void then
-					a_cwd := STRING_.concat (a_drive, a_cwd)
-					a_cwd := STRING_.concat ("/", a_cwd)
-				end
-			end
-			a_string := STRING_.concat ("file://", a_cwd)
-			create Result.make (STRING_.concat (a_string, "/"))
+			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
+			Result := File_uri.pathname_to_uri (a_cwd)
 		end
 
 	establish_system_catalog_files is
