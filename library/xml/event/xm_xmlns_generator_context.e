@@ -35,7 +35,8 @@ feature {NONE} -- Creation
 			-- Reset.
 		do
 			create prefixes.make_default
-			create element_prefixes.make_equal (10)
+			create element_prefixes.make (10)
+			element_prefixes.set_equality_tester (string_equality_tester)
 			last_item := Void
 			create default_namespaces.make_default
 			default_namespaces.force (Default_namespace)
