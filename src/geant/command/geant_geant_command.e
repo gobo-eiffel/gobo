@@ -99,7 +99,6 @@ feature -- Execution
 			-- Execute command.
 		local
 			a_project: GEANT_PROJECT
-			ucs: UC_STRING
 			a_variables: GEANT_VARIABLES
 			a_target: GEANT_TARGET
 			a_filename: STRING
@@ -114,9 +113,8 @@ feature -- Execution
 					create a_variables.make
 				end
 				a_filename := file_system.pathname_from_file_system (filename, unix_file_system)
-				ucs := new_unicode_string (a_filename)
 
-				create a_project_loader.make (ucs)
+				create a_project_loader.make (a_filename)
 				a_project_loader.load (a_variables, project.options)
 				a_project := a_project_loader.project_element.project
 				a_project.merge_in_parent_projects

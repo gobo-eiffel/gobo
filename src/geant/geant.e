@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	UC_UNICODE_FACTORY
-		export
-			{NONE} all
-		end
-
 creation
 
 	make
@@ -50,7 +45,6 @@ feature {NONE} -- Initialization
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_project_options: GEANT_PROJECT_OPTIONS
 			a_variables: GEANT_VARIABLES
-			ucs: UC_STRING
 		do
 			Arguments.set_program_name ("geant")
 			!! error_handler.make_standard
@@ -65,8 +59,7 @@ feature {NONE} -- Initialization
 			if build_filename = Void then
 				build_filename := Default_build_filename
 			end
-			ucs := new_unicode_string (build_filename)
-			create a_project_loader.make (ucs)
+			create a_project_loader.make (build_filename)
 
 			a_project_loader.load (a_variables, a_project_options)
 			a_project := a_project_loader.project_element.project

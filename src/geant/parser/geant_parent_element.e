@@ -42,7 +42,7 @@ feature -- Initialization
 			a_rename_element: GEANT_RENAME_ELEMENT
 			a_redefine_element: GEANT_REDEFINE_ELEMENT
 			a_select_element: GEANT_SELECT_ELEMENT
-			ucs: UC_STRING
+			a_string: STRING
 			msg: STRING
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_parent_project: GEANT_PROJECT
@@ -52,9 +52,9 @@ feature -- Initialization
 			create parent.make (a_project)
 
 			if has_uc_attribute (Location_attribute_name) then
-				ucs := uc_attribute_value (Location_attribute_name)
-				if ucs.count > 0 then
-					create a_project_loader.make (ucs)
+				a_string := uc_attribute_value (Location_attribute_name)
+				if a_string.count > 0 then
+					create a_project_loader.make (a_string)
 					a_project_loader.load (a_project.variables, a_project.options)
 					a_parent_project := a_project_loader.project_element.project
 					parent.set_parent_project (a_parent_project)
@@ -131,7 +131,7 @@ feature -- Initialization
 --			has_inherit_attribute: has_uc_attribute (Inherit_attribute_name)
 			project_in_old_inherit_form: a_project.old_inherit
 		local
-			ucs: UC_STRING
+			a_string: STRING
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_parent_project: GEANT_PROJECT
 			msg: STRING
@@ -139,9 +139,9 @@ feature -- Initialization
 			interpreting_element_make (a_project, a_xml_element)
 
 			create parent.make (a_project)
-			ucs := uc_attribute_value (Inherit_attribute_name)
-			if ucs.count > 0 then
-				create a_project_loader.make (ucs)
+			a_string := uc_attribute_value (Inherit_attribute_name)
+			if a_string.count > 0 then
+				create a_project_loader.make (a_string)
 				a_project_loader.load (a_project.variables, a_project.options)
 				a_parent_project := a_project_loader.project_element.project
 				parent.set_parent_project (a_parent_project)
@@ -163,47 +163,47 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Location_attribute_name: UC_STRING is
+	Location_attribute_name: STRING is
 			-- "location" attribute name
 		once
-			Result := new_unicode_string ("location")
+			Result := "location"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Inherit_attribute_name: UC_STRING is
+	Inherit_attribute_name: STRING is
 			-- "inherit" attribute name (only to suppport old form of inheritance)
 			-- TODO: remove after obsolete period
 		once
-			Result := new_unicode_string ("inherit")
+			Result := "inherit"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Rename_element_name: UC_STRING is
+	Rename_element_name: STRING is
 			-- "rename" element name
 		once
-			Result := new_unicode_string ("rename")
+			Result := "rename"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
 		end
 
-	Redefine_element_name: UC_STRING is
+	Redefine_element_name: STRING is
 			-- "redefine" element name
 		once
-			Result := new_unicode_string ("redefine")
+			Result := "redefine"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
 		end
 
-	Select_element_name: UC_STRING is
+	Select_element_name: STRING is
 			-- "select" element name
 		once
-			Result := new_unicode_string ("select")
+			Result := "select"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

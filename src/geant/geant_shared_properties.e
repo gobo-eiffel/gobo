@@ -23,11 +23,6 @@ inherit
 			{NONE} all
 		end
 
-	UC_UNICODE_FACTORY
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
@@ -115,14 +110,14 @@ feature -- Processing
 			Exceptions.die (a_code)
 		end
 
-	string_tokens (a_string: UC_STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [UC_STRING] is
+	string_tokens (a_string: STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [STRING] is
 			-- Strings delimited by `a_delimiter' in `a_string';
 			-- Candidate for STRING_ROUTINES
 		require
 			string_not_void: a_string /= Void
 		local
-			s: UC_STRING
-			ucs: UC_STRING
+			s: STRING
+			an_item: STRING
 			p_start: INTEGER
 			p_end: INTEGER
 			nice_string: BOOLEAN
@@ -144,7 +139,7 @@ feature -- Processing
 				end
 			end
 			if not stop then
-				s := new_unicode_string ("")
+				s := clone ("")
 			else
 				from
 					stop := False
@@ -209,7 +204,7 @@ feature -- Processing
 					end
 				end
 				if not stop then
-					ucs := new_unicode_string ("")
+					an_item := ""
 				else
 					from
 						stop := False
@@ -225,10 +220,10 @@ feature -- Processing
 							stop := True
 						end
 					end
-					ucs := s.substring (i, j)
+					an_item := s.substring (i, j)
 				end
-				if ucs.count > 0 then
-					Result.force_last (ucs)
+				if an_item.count > 0 then
+					Result.force_last (an_item)
 				end
 				p_start := p_end + 1
 
@@ -255,7 +250,7 @@ feature -- Processing
 					end
 				end
 				if not stop then
-					ucs := new_unicode_string ("")
+					an_item := ""
 				else
 					from
 						stop := False
@@ -271,10 +266,10 @@ feature -- Processing
 							stop := True
 						end
 					end
-					ucs := s.substring (i, j)
+					an_item := s.substring (i, j)
 				end
-				if ucs.count > 0 then
-					Result.force_last (ucs)
+				if an_item.count > 0 then
+					Result.force_last (an_item)
 				end
 			end
 		ensure

@@ -31,7 +31,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_build_filename: UC_STRING) is
+	make (a_build_filename: STRING) is
 			-- Initialize project loader.
 		require
 			a_build_filename_not_void: a_build_filename /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	build_filename: UC_STRING
+	build_filename: STRING
 			-- Name of the file containing the configuration
 			-- information to build a project
 

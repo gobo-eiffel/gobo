@@ -303,13 +303,11 @@ feature -- Access
 		require
 			condition_not_void: a_condition /= Void
 		local
-			a_tokens: DS_ARRAYED_LIST [UC_STRING]
+			a_tokens: DS_ARRAYED_LIST [STRING]
 			s: STRING
 			s2: STRING
-			ucs: UC_STRING
 		do
-			ucs := new_unicode_string (a_condition)
-			a_tokens := string_tokens (ucs, '=')
+			a_tokens := string_tokens (a_condition, '=')
 			if a_tokens.count = 1 then
 					-- a_condition should be in form "$foo";
 					-- check if $foo is defined

@@ -23,9 +23,6 @@ inherit
 			uc_attribute_value
 		end
 
-	UC_UNICODE_FACTORY
-		export {NONE} all end
-
 creation
 
 	make
@@ -64,7 +61,7 @@ feature -- Status report
 		local
 			if_condition: BOOLEAN
 			unless_condition: BOOLEAN
-			ucs: UC_STRING
+			a_string: STRING
 		do
 				-- Set default execution conditions:
 			if_condition := true
@@ -72,16 +69,16 @@ feature -- Status report
 
 				-- Look for an 'if' XML attribute
 			if has_uc_attribute (If_attribute_name) then
-				ucs := xml_element.attribute_by_name (If_attribute_name).value
-				if_condition := project.variables.boolean_condition_value (ucs.out)
-				project.trace_debug (" if: '" + ucs.out + "': " + if_condition.out + "%N")
+				a_string := xml_element.attribute_by_name (If_attribute_name).value
+				if_condition := project.variables.boolean_condition_value (a_string)
+				project.trace_debug (" if: '" + a_string + "': " + if_condition.out + "%N")
 			end
 
 				-- Look for an 'unless' XML attribute
 			if has_uc_attribute (Unless_attribute_name) then
-				ucs := xml_element.attribute_by_name (Unless_attribute_name).value
-				unless_condition := project.variables.boolean_condition_value (ucs.out)
-				project.trace_debug (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
+				a_string := xml_element.attribute_by_name (Unless_attribute_name).value
+				unless_condition := project.variables.boolean_condition_value (a_string)
+				project.trace_debug (" unless: '" + a_string + "'=" + unless_condition.out + "%N")
 			end
 
 			Result := if_condition and not unless_condition
@@ -103,65 +100,56 @@ feature -- Access/XML attribute values
 
 	attribute_value (an_attr_name: STRING): STRING is
 			-- Value of attribue `an_attr_name'
-		local
-			uc_name: UC_STRING
 		do
-			uc_name := new_unicode_string (an_attr_name)
-			Result := xml_element.attribute_by_name (uc_name).value.out
+			Result := xml_element.attribute_by_name (an_attr_name).value
 			Result := project.variables.interpreted_string (Result)
 		end
 
 feature -- Access/XML attribute values (unicode)
 
-	uc_attribute_value_or_default (an_attr_name: UC_STRING; a_default_value: UC_STRING): UC_STRING is
+	uc_attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
-		local
-			s: STRING
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
-				s := project.variables.interpreted_string (
+				Result := project.variables.interpreted_string (
 					xml_element.attribute_by_name (an_attr_name).value.out)
-				Result := new_unicode_string (s)
 			else
 				Result := a_default_value
 			end
 		end
 
-	uc_attribute_value (an_attr_name: UC_STRING): UC_STRING is
+	uc_attribute_value (an_attr_name: STRING): STRING is
 			-- Value of attribue `an_attr_name'
-		local
-			s: STRING
 		do
-			s := xml_element.attribute_by_name (an_attr_name).value.out
-			s := project.variables.interpreted_string (s)
-			Result := new_unicode_string (s)
+			Result := xml_element.attribute_by_name (an_attr_name).value
+			Result := project.variables.interpreted_string (Result)
 		end
 
 feature {NONE} -- Constants
 
-	Dir_attribute_name: UC_STRING is
+	Dir_attribute_name: STRING is
 			-- "dir" attribute name
 		once
-			Result := new_unicode_string ("dir")
+			Result := "dir"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	If_attribute_name: UC_STRING is
+	If_attribute_name: STRING is
 			-- "if" attribute name
 		once
-			Result := new_unicode_string ("if")
+			Result := "if"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Unless_attribute_name: UC_STRING is
+	Unless_attribute_name: STRING is
 			-- "unless" attribute name
 		once
-			Result := new_unicode_string ("unless")
+			Result := "unless"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0

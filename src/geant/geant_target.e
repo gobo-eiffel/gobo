@@ -55,9 +55,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dependencies: UC_STRING is
-			-- UC_STRING representation of dependencies
-		require
+	dependencies: STRING is
+			-- STRING representation of dependencies
+		require	
 			has_dependencies: has_dependencies
 		do
 			Result := xml_element.attribute_by_name (Depend_attribute_name).value
@@ -425,16 +425,14 @@ feature -- Processing
 			-- All dependent targets
 		local
 			a_dependent_target: GEANT_TARGET
-			a_value: UC_STRING
-			a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]
+			a_value: STRING
+			a_dependent_targets: DS_ARRAYED_LIST [STRING]
 			i: INTEGER
 		do
 			!! Result.make (10)
 			if has_dependencies then
-				a_value := dependencies
-
 					-- Check for targets separated by commas:
-				a_dependent_targets := string_tokens (a_value, ',')
+				a_dependent_targets := string_tokens (dependencies, ',')
 
 				if project.options.debug_mode then
 					show_dependent_targets (a_dependent_targets)
@@ -443,8 +441,8 @@ feature -- Processing
 					-- Find all targets
 				from i := 1 until i > a_dependent_targets.count loop
 					a_value := a_dependent_targets.item (i)
-					if project.targets.has (a_value.out) then
-						a_dependent_target := project.targets.item (a_value.out)
+					if project.targets.has (a_value) then
+						a_dependent_target := project.targets.item (a_value)
 						Result.force (a_dependent_target)
 					else
 						exit_application (1, "geant error: unknown dependent target '" + a_value.out + "'%N")
@@ -456,7 +454,7 @@ feature -- Processing
 			dependent_targets_not_void: Result /= Void
 		end
 
-	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]) is
+	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [STRING]) is
 		local
 			i: INTEGER
 		do
@@ -471,19 +469,19 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
-	Name_attribute_name: UC_STRING is
+	Name_attribute_name:  STRING is
 			-- "name" attribute name
 		once
-			Result := new_unicode_string ("name")
+			Result := "name"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Depend_attribute_name: UC_STRING is
+	Depend_attribute_name:  STRING is
 			-- "depend" attribute name
 		once
-			Result := new_unicode_string ("depend")
+			Result := "depend"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0

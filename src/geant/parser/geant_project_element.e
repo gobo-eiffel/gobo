@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		a_xml_element: XM_ELEMENT;
 		a_variables: GEANT_VARIABLES;
 		a_options: GEANT_PROJECT_OPTIONS;
-		a_build_filename: UC_STRING
+		a_build_filename: STRING
 		) is
 			-- Create element with information held in `a_xml_element'.
 		require
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			if not has_uc_attribute (Name_attribute_name) then
 				msg := clone ("%NLOAD ERROR:%N")
 				msg.append_string ("  Project in file '")
-				msg.append_string (a_build_filename.out)
+				msg.append_string (a_build_filename)
 				msg.append_string ("' does not have a name.%N")
 				msg.append_string ("  Please specify a name for this project.")
 				exit_application (1, msg)
@@ -182,55 +182,55 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Name_attribute_name: UC_STRING is
+	Name_attribute_name: STRING is
 			-- "name" attribute name
 		once
-			Result := new_unicode_string ("name")
+			Result := "name"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Default_attribute_name: UC_STRING is
+	Default_attribute_name: STRING is
 			-- "default" attribute name
 		once
-			Result := new_unicode_string ("default")
+			Result := "default"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Inherit_attribute_name: UC_STRING is
+	Inherit_attribute_name: STRING is
 			-- "inherit" attribute name
 		once
-			Result := new_unicode_string ("inherit")
+			Result := "inherit"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Inherit_element_name: UC_STRING is
+	Inherit_element_name: STRING is
 			-- "inherit" element name
 		once
-			Result := new_unicode_string ("inherit")
+			Result := "inherit"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
 		end
 
-	Project_element_name: UC_STRING is
+	Project_element_name: STRING is
 			-- "project" element name
 		once
-			Result := new_unicode_string ("project")
+			Result := "project"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
 		end
 
-	Target_element_name: UC_STRING is
+	Target_element_name: STRING is
 			-- "target" element name
 		once
-			Result := new_unicode_string ("target")
+			Result := "target"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0

@@ -16,14 +16,12 @@ inherit
 
 	ANY
 
-	UC_UNICODE_FACTORY
+	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 
-	KL_SHARED_STANDARD_FILES
-		export
-			{NONE} all
-		end
-
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+	
 creation
 
 	make
@@ -46,7 +44,7 @@ feature -- Access
 	xml_element: XM_ELEMENT
 			-- XML Element defining current element
 
-	elements_by_name (a_name: UC_STRING): DS_LINKED_LIST [XM_ELEMENT] is
+	elements_by_name (a_name: STRING): DS_LINKED_LIST [XM_ELEMENT] is
 			-- Direct children elements with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -63,7 +61,7 @@ feature -- Access
 				cs.off
 			loop
 				e ?= cs.item
-				if e /= Void and then equal (e.name, a_name) then
+				if e /= Void and then STRING_.same_unicode_string (e.name, a_name) then
 					Result.force_last (e)
 				end
 				cs.forth
@@ -105,13 +103,8 @@ feature -- Access/XML attribute values
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			a_default_value_not_void: a_default_value /= Void
-		local
-			uc_name: UC_STRING
-			uc_value: UC_STRING
 		do
-			uc_name := new_unicode_string (an_attr_name)
-			uc_value := new_unicode_string (a_default_value)
-			Result := uc_attribute_value_or_default (uc_name, uc_value).out
+			Result := uc_attribute_value_or_default (an_attr_name, a_default_value)
 		end
 
 	attribute_value (an_attr_name: STRING): STRING is
@@ -120,11 +113,8 @@ feature -- Access/XML attribute values
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_attribute (an_attr_name)
-		local
-			uc_name: UC_STRING
 		do
-			uc_name := new_unicode_string (an_attr_name)
-			Result := xml_element.attribute_by_name (uc_name).value.out
+			Result := xml_element.attribute_by_name (an_attr_name).value
 		end
 
 	boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
@@ -133,11 +123,8 @@ feature -- Access/XML attribute values
 		require
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
-		local
-			uc_name: UC_STRING
 		do
-			uc_name := new_unicode_string (an_attr_name)
-			Result := uc_boolean_value_or_default (uc_name, a_default_value)
+			Result := uc_boolean_value_or_default (an_attr_name, a_default_value)
 		end
 
 	boolean_value (an_attr_name: STRING): BOOLEAN is
@@ -146,11 +133,8 @@ feature -- Access/XML attribute values
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_attribute (an_attr_name)
-		local
-			uc_name: UC_STRING
 		do
-			uc_name := new_unicode_string (an_attr_name)
-			Result := uc_boolean_value (uc_name)
+			Result := uc_boolean_value (an_attr_name)
 		end
 
 	has_attribute (an_attr_name: STRING): BOOLEAN is
@@ -158,16 +142,13 @@ feature -- Access/XML attribute values
 		require
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
-		local
-			uc_name: UC_STRING
 		do
-			uc_name := new_unicode_string (an_attr_name)
-			Result := has_uc_attribute (uc_name)
+			Result := has_uc_attribute (an_attr_name)
 		end
 
 feature -- Access/XML attribute values (unicode)
 
-	uc_attribute_value_or_default (an_attr_name: UC_STRING; a_default_value: UC_STRING): UC_STRING is
+	uc_attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
 		require
@@ -184,7 +165,7 @@ feature -- Access/XML attribute values (unicode)
 			value_not_void: Result /= Void
 		end
 
-	uc_attribute_value (an_attr_name: UC_STRING): UC_STRING is
+	uc_attribute_value (an_attr_name: STRING): STRING is
 			-- Value of attribue `an_attr_name'
 		require
 			an_attr_name_not_void: an_attr_name /= Void
@@ -196,7 +177,7 @@ feature -- Access/XML attribute values (unicode)
 			value_not_void: Result /= Void
 		end
 
-	uc_boolean_value_or_default (an_attr_name: UC_STRING; a_default_value: BOOLEAN): BOOLEAN is
+	uc_boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
 		require
@@ -210,27 +191,27 @@ feature -- Access/XML attribute values (unicode)
 			end
 		end
 
-	uc_boolean_value (an_attr_name: UC_STRING): BOOLEAN is
+	uc_boolean_value (an_attr_name: STRING): BOOLEAN is
 			-- Value of attribue `an_attr_name'
 		require
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_uc_attribute (an_attr_name)
 		local
-			uc_value: UC_STRING
+			a_value: STRING
 		do
-			uc_value := uc_attribute_value (an_attr_name)
-			if True_attribute_value.is_equal (uc_value) then
+			a_value := uc_attribute_value (an_attr_name)
+			if STRING_.same_unicode_string (True_attribute_value, a_value) then
 				Result := True
-			elseif False_attribute_value.is_equal (uc_value) then
+			elseif STRING_.same_unicode_string (False_attribute_value, a_value) then
 				Result := False
 			else
-				std.error.put_string ("WARNING: wrong value '" + uc_value.out + "' for attribute '" + an_attr_name.out + "'. Valid values are `true' and `false'. Using `false'.%N")
+				std.error.put_string ("WARNING: wrong value '" + a_value + "' for attribute '" + an_attr_name.out + "'. Valid values are `true' and `false'. Using `false'.%N")
 				Result := False
 			end
 		end
 
-	has_uc_attribute (an_attr_name: UC_STRING): BOOLEAN is
+	has_uc_attribute (an_attr_name: STRING): BOOLEAN is
 			-- Is `an_attr_name' an atttribute of Current element?
 		require
 			an_attr_name_not_void: an_attr_name /= Void
@@ -241,27 +222,27 @@ feature -- Access/XML attribute values (unicode)
 
 feature {NONE} -- Constants
 
-	Description_element_name: UC_STRING is
+	Description_element_name: STRING is
 			-- "description" element name
 		once
-			Result := new_unicode_string ("description")
+			Result := "description"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
 		end
 
-	True_attribute_value: UC_STRING is
+	True_attribute_value: STRING is
 			-- "true" attribute value
 		once
-			Result := new_unicode_string ("true")
+			Result := "true"
 		ensure
 			attribute_value_not_void: Result /= Void
 		end
 
-	False_attribute_value: UC_STRING is
+	False_attribute_value: STRING is
 			-- "false" attribute value
 		once
-			Result := new_unicode_string ("false")
+			Result := "false"
 		ensure
 			attribute_value_not_void: Result /= Void
 		end
