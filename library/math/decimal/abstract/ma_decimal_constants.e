@@ -125,13 +125,13 @@ feature -- Constants : defaults
 		once 
 			Result := <<
 				Signal_division_by_zero,
-				Signal_invalid_operation ,
+				Signal_invalid_operation,
 				Signal_overflow,
 				Signal_underflow >>
 		ensure
 			default_traps_not_void: Result /= Void
-			has_division_by_zero: Integer_array_.has (Result, Signal_division_by_zero)
-			has_invalid_operation: Integer_array_.has (Result, Signal_invalid_operation)
+			has_division_by_zero: INTEGER_ARRAY_.has (Result, Signal_division_by_zero)
+			has_invalid_operation: INTEGER_ARRAY_.has (Result, Signal_invalid_operation)
 			has_overflow: INTEGER_ARRAY_.has (Result, Signal_overflow)
 			has_underflow: INTEGER_ARRAY_.has (Result, Signal_underflow)
 		end
