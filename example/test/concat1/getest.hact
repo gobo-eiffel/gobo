@@ -7,7 +7,7 @@ default
 	class ("TEST_[A-Z0-9_]*")
 	feature ("test_[a-z0-9_]*")
 	prefix ("X")
-	testgen (".")
+	testgen ("TESTGEN")
 	compile ("geant compile_hact > xcompile.log 2>&1")
 	execute ("xconcat1")
 
