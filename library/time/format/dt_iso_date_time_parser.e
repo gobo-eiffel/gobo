@@ -18,7 +18,7 @@ inherit
 
 	DT_ISO_CONSTANTS
 
-	DT_SHARED_WEEK_DAYS_FROM_MONDAY
+	DT_WEEK_DAYS_FROM_MONDAY
 
 		-- See bottom of file for some notes
 
@@ -232,9 +232,9 @@ invariant
 		--  (in practice, that means the creation routine of a descendant of this class
 		--   will set `are_expanded_representations_used' to `True', and extra_year_digits
 		--   to the agreed number of extra numerals in the year field.)
-		-- Use of expnaded representations mean that that a fixed number of extra year digits
+		-- Use of expanded representations mean that that a fixed number of extra year digits
 		--  MUST be present, preceded by the sign, unless the value is positive and has no leading
-		--  zeros. Or else all extra digits must be omiited, along with the sign. (Should there be a flag to permit this?)
+		--  zeros. Or else all extra digits must be omitted, along with the sign. (Should there be a flag to permit this?)
 		-- Alternatively, truncated representations may be used by agreement of both parties.
 		--  (in practice, that means the creation routine of a descendant of this class
 		--   will set `are_truncated_representations_used' to `True', and at least one of
