@@ -57,7 +57,7 @@ feature -- Status report
 			-- Is feature inherited as deferred?
 		do
 			Result := precursor_feature.is_deferred or has_undefine
-		ensure then
+		ensure
 			definition: Result = (precursor_feature.is_deferred or has_undefine)
 		end
 
