@@ -106,7 +106,11 @@ feature -- Processing
 				end
 				create testcases.make (a_config.testgen, error_handler)
 				a_config.process (testcases, error_handler)
-				testcases.generate_test_classes
+				if testcases.has_testcases then
+					testcases.generate_test_classes
+				else
+					std.error.put_line ("No Test Cases found!")
+				end
 				testcases.generate_root_class (a_config.root_class)
 			end
 		end
