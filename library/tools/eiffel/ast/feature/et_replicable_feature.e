@@ -32,7 +32,7 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	first_feature: ET_FEATURE is
+	first_feature: ET_ADAPTED_FEATURE is
 			-- First feature with a given seed
 		deferred
 		ensure

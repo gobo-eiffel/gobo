@@ -404,7 +404,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcch1a_error (a_class: ET_CLASS; f: ET_FLATTENED_FEATURE) is
+	report_vcch1a_error (a_class: ET_CLASS; f: ET_FEATURE) is
 			-- Report VCCH-1 error: `a_class' has deferred features
 			-- but is not declared as deferred. `f' is one of these deferred
 			-- feature, written in `a_class'.
@@ -436,7 +436,7 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_class_not_deferred: not a_class.has_deferred_mark
 			f_not_void: f /= Void
-			f_deferred: f.is_deferred
+			f_deferred: f.flattened_feature.is_deferred
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -766,7 +766,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr0a_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE) is
+	report_vdjr0a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
 			-- Report VDJR error: Features `f1' and `f2'
 			-- don't have the same number of arguments when
 			-- joining these two deferred features in `a_class'.
@@ -786,7 +786,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr0b_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE; arg: INTEGER) is
+	report_vdjr0b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE; arg: INTEGER) is
 			-- Report VDJR error: the type of the `arg'-th
 			-- argument is not identical in `f1' and `f2' when
 			-- joining these two deferred features in `a_class'.
@@ -806,7 +806,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdjr0c_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE) is
+	report_vdjr0c_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
 			-- Resport VDJR error: the type of the result is
 			-- not identical in `f1' and `f2' when joining these
 			-- two deferred features in `a_class'.
@@ -826,7 +826,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2a_error (a_class: ET_CLASS; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
+	report_vdrd2a_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
 			-- Report VDRD-2 error: the feature `f2' is redeclared
 			-- as `f1' in `a_class', but the signature of `f1' in `a_class'
 			-- does not conform to the signature of `f2' in its parent class.
@@ -847,7 +847,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2b_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE) is
+	report_vdrd2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
 			-- Report VDRD-2 error: the feature `f2' is redeclared
 			-- by being merged to `f1' in `a_class', but the signature of
 			-- `f1' in `a_class' does not conform to the signature of
@@ -869,7 +869,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2c_error (a_class: ET_CLASS; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
+	report_vdrd2c_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
 			-- Report VDRD-2 error: the inherited feature `f2', replicated
 			-- in `a_class', is implicitly redeclared to the selected redeclared
 			-- feature `f1' in `a_class', but the signature of `f1' in `a_class'
@@ -891,7 +891,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd2d_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE) is
+	report_vdrd2d_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
 			-- Report VDRD-2 error: the inherited feature `f2', replicated
 			-- in `a_class', is implicitly redeclared to the selected
 			-- inherited feature `f1' in `a_class', but the signature of
@@ -914,7 +914,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd3a_error (a_class: ET_CLASS; p: ET_PRECONDITIONS; f: ET_FLATTENED_FEATURE) is
+	report_vdrd3a_error (a_class: ET_CLASS; p: ET_PRECONDITIONS; f: ET_FEATURE) is
 			-- Report VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its preconditions do not begin with
 			-- 'require else'.
@@ -935,7 +935,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd3b_error (a_class: ET_CLASS; p: ET_POSTCONDITIONS; f: ET_FLATTENED_FEATURE) is
+	report_vdrd3b_error (a_class: ET_CLASS; p: ET_POSTCONDITIONS; f: ET_FEATURE) is
 			-- Report VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its postconditions do not begin with
 			-- 'ensure then'.
@@ -956,7 +956,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4a_error (a_class: ET_CLASS; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	report_vdrd4a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Report VDRD-4 error: the deferred feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
 			-- but is not listed in the Redefine subclause.
@@ -982,7 +982,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4b_error (a_class: ET_CLASS; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	report_vdrd4b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Report VDRD-4 error: the effective feature `f1'
 			-- is redefined into the effective feature `f2' in `a_class'
 			-- but is not listed in the Redefine subclause.
@@ -1008,7 +1008,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4c_error (a_class: ET_CLASS; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	report_vdrd4c_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Report VDRD-4 error: the effective feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
 			-- but is not listed in the Undefine and Redefine subclauses.
@@ -1034,7 +1034,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd5a_error (a_class: ET_CLASS; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	report_vdrd5a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Report VDRD-5 error: the effective feature `f1'
 			-- is redefined into the deferred feature `f2' in
 			-- `a_class'.
@@ -1144,7 +1144,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs4a_error (a_class: ET_CLASS; a_feature: ET_INHERITED_FEATURE) is
+	report_vdrs4a_error (a_class: ET_CLASS; a_feature: ET_PARENT_FEATURE) is
 			-- Report VDRS-4 error: `a_feature' is not redefined
 			-- in `a_class' and therefore should not be listed in
 			-- the Redefine subclause.
@@ -1165,7 +1165,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrs4b_error (a_class: ET_CLASS; a_deferred: ET_INHERITED_FEATURE; an_effective: ET_FLATTENED_FEATURE) is
+	report_vdrs4b_error (a_class: ET_CLASS; a_deferred: ET_PARENT_FEATURE; an_effective: ET_FEATURE) is
 			-- Report VDRS-4 error: deferred feature `a_deferred' should
 			-- not be listed in the Redefine subclause when being effected
 			-- to `an_effective' in `a_class'.
@@ -1477,7 +1477,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+	report_vgcc6a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE) is
 			-- Report VGCC-6 error: creation procedure name
 			-- `cp' is the final name of a once-procedure in `a_class'.
 			--
@@ -1800,7 +1800,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcp2b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+	report_vgcp2b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE) is
 			-- Report VGCP-2 error: creation procedure name
 			-- `cp' is not the final name of a procedure in `a_class'.
 			--
@@ -2008,7 +2008,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FLATTENED_FEATURE) is
+	report_vhrc4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Report VHRC-4 error: the Rename_pair
 			-- `a_rename' has a new_name of the Prefix form,
 			-- but the corresponding feature `f' is not an
@@ -2030,7 +2030,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc5a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FLATTENED_FEATURE) is
+	report_vhrc5a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Report VHRC-5 error: the Rename_pair `a_rename' has
 			-- a new_name of the Infix form, but the corresponding feature
 			-- `f' is not a function with one argument.
@@ -2323,7 +2323,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn0a_error (a_class: ET_CLASS; f1, f2: ET_FLATTENED_FEATURE) is
+	report_vmfn0a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE) is
 			-- Report VMFN error: `a_class' introduced two features
 			-- `f1' and `f2' with the same name.
 			--
@@ -2343,7 +2343,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn0b_error (a_class: ET_CLASS; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	report_vmfn0b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Report VMFN error: `a_class' introduces feature `f2'
 			-- but `f1' has the same name.
 			--
@@ -2370,7 +2370,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfn0c_error (a_class: ET_CLASS; f1, f2: ET_INHERITED_FEATURE) is
+	report_vmfn0c_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
 			-- Report VMFN error: `a_class' inherits two effective
 			-- features `f1' and `f2' with the same name.
 			--
@@ -2394,7 +2394,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmrc2a_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_INHERITED_FEATURE]) is
+	report_vmrc2a_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
 			-- Report VMRC-2 error: the replicated features in
 			-- `replicated_features' have not been selected in one of
 			-- the Parent clauses of `a_class'.
@@ -2417,7 +2417,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmrc2b_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_INHERITED_FEATURE]) is
+	report_vmrc2b_error (a_class: ET_CLASS; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
 			-- Report VMRC-2 error: the replicated features in
 			-- `replicated_features' have been selected in more than
 			-- one of the Parent clauses of `a_class'.
@@ -2478,7 +2478,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmss3a_error (a_class: ET_CLASS; a_feature: ET_INHERITED_FEATURE) is
+	report_vmss3a_error (a_class: ET_CLASS; a_feature: ET_PARENT_FEATURE) is
 			-- Report VMSS-3 error: the Select subclause
 			-- of a parent of `a_class' lists `a_feature' which
 			-- is not replicated.
@@ -2780,7 +2780,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FLATTENED_FEATURE) is
+	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
 			-- Report VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
 			--
@@ -2800,7 +2800,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vrfa0a_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FLATTENED_FEATURE) is
+	report_vrfa0a_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FEATURE) is
 			-- Report VRFA error: `arg' in feature `f1' has
 			-- the same name as feature `f2' in `a_class'.
 			--
@@ -3186,7 +3186,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtgc0b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE; a_constraint: ET_CLASS) is
+	report_vtgc0b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS) is
 			-- Report VTGC error: creation procedure name `cp'
 			-- is not the final name of a procedure in the base class
 			-- `a_constraint' of a generic constraint of `a_class'.

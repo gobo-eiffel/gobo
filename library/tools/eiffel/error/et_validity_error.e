@@ -255,7 +255,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 		end
 
-	make_vcch1a (a_class: like current_class; f: ET_FLATTENED_FEATURE) is
+	make_vcch1a (a_class: like current_class; f: ET_FEATURE) is
 			-- Create a new VCCH-1 error: `a_class' has deferred features
 			-- but is not declared as deferred. `f' is one of these deferred
 			-- feature, written in `a_class'.
@@ -314,10 +314,10 @@ feature {NONE} -- Initialization
 			default_template := vcch1a_default_template
 			current_class := a_class
 			class_impl := a_class
-			if f.has_undefine then
-				position := f.undefine_name.position
+			if f.parent_feature.has_undefine then
+				position := f.parent_feature.undefine_name.position
 			else
-				position := f.parent.type.name.position
+				position := f.parent_feature.parent.type.name.position
 			end
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -326,7 +326,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
 			parameters.put (f.name.name, 6)
-			parameters.put (f.parent.type.name.name, 7)
+			parameters.put (f.parent_feature.parent.type.name.name, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -821,7 +821,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = cycle
 		end
 
-	make_vdjr0a (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
+	make_vdjr0a (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
 			-- Create a new VDJR error: Features `f1' and `f2'
 			-- don't have the same number of arguments when
 			-- joining these two deferred features in `a_class'.
@@ -865,7 +865,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = second parent base class
 		end
 
-	make_vdjr0b (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE; arg: INTEGER) is
+	make_vdjr0b (a_class: like current_class; f1, f2: ET_PARENT_FEATURE; arg: INTEGER) is
 			-- Create a new VDJR error: the type of the `arg'-th
 			-- argument is not identical in `f1' and `f2' when
 			-- joining these two deferred features in `a_class'.
@@ -911,7 +911,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = argument index
 		end
 
-	make_vdjr0c (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
+	make_vdjr0c (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
 			-- Create a new VDJR error: the type of the result is
 			-- not identical in `f1' and `f2' when joining these
 			-- two deferred features in `a_class'.
@@ -955,7 +955,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = second parent base class
 		end
 
-	make_vdrd2a (a_class: like current_class; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
+	make_vdrd2a (a_class: like current_class; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
 			-- Create a new VDRD-2 error: the feature `f2' is redeclared
 			-- as `f1' in `a_class', but the signature of `f1' in `a_class'
 			-- does not conform to the signature of `f2' in its parent class.
@@ -1000,7 +1000,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent base class
 		end
 
-	make_vdrd2b (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
+	make_vdrd2b (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
 			-- Create a new VDRD-2 error: the feature `f2' is redeclared
 			-- by being merged to `f1' in `a_class', but the signature of
 			-- `f1' in `a_class' does not conform to the signature of
@@ -1048,7 +1048,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = parent base class of redeclared feature
 		end
 
-	make_vdrd2c (a_class: like current_class; f1: ET_FLATTENED_FEATURE; f2: ET_INHERITED_FEATURE) is
+	make_vdrd2c (a_class: like current_class; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
 			-- Create a new VDRD-2 error: the inherited feature `f2', replicated
 			-- in `a_class', is implicitly redeclared to the selected redeclared
 			-- feature `f1' in `a_class', but the signature of `f1' in `a_class'
@@ -1094,7 +1094,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent base class of replicated feature
 		end
 
-	make_vdrd2d (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
+	make_vdrd2d (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
 			-- Create a new VDRD-2 error: the inherited feature `f2', replicated
 			-- in `a_class', is implicitly redeclared to the selected
 			-- inherited feature `f1' in `a_class', but the signature of
@@ -1143,7 +1143,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = parent base class of replicated feature
 		end
 
-	make_vdrd3a (a_class: like current_class; p: ET_PRECONDITIONS; f: ET_FLATTENED_FEATURE) is
+	make_vdrd3a (a_class: like current_class; p: ET_PRECONDITIONS; f: ET_FEATURE) is
 			-- Create a new VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its preconditions do not begin with
 			-- 'require else'.
@@ -1184,7 +1184,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
-	make_vdrd3b (a_class: like current_class; p: ET_POSTCONDITIONS; f: ET_FLATTENED_FEATURE) is
+	make_vdrd3b (a_class: like current_class; p: ET_POSTCONDITIONS; f: ET_FEATURE) is
 			-- Create a new VDRD-3 error: the feature `f' is redeclared
 			-- in `a_class', but its postconditions do not begin with
 			-- 'ensure then'.
@@ -1225,7 +1225,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
-	make_vdrd4a (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	make_vdrd4a (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Create a new VDRD-4 error: the deferred feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
 			-- but is not listed in the Redefine subclause.
@@ -1271,7 +1271,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vdrd4b (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	make_vdrd4b (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Create a new VDRD-4 error: the effective feature `f1'
 			-- is redefined into the effective feature `f2' in `a_class'
 			-- but is not listed in the Redefine subclause.
@@ -1317,7 +1317,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vdrd4c (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	make_vdrd4c (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Create a new VDRD-4 error: the effective feature `f1'
 			-- is redefined into the deferred feature `f2' in `a_class'
 			-- but is not listed in the Undefine and Redefine subclauses.
@@ -1363,7 +1363,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vdrd5a (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	make_vdrd5a (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Create a new VDRD-5 error: the effective feature
 			-- `f1' is redefined into the deferred feature `f2'
 			-- in `a_class'.
@@ -1581,7 +1581,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vdrs4a (a_class: like current_class; a_feature: ET_INHERITED_FEATURE) is
+	make_vdrs4a (a_class: like current_class; a_feature: ET_PARENT_FEATURE) is
 			-- Create a new VDRS-4 error: `a_feature' is not redefined
 			-- in `a_class' and therefore should not be listed in the
 			-- Redefine subclause.
@@ -1624,7 +1624,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vdrs4b (a_class: like current_class; a_deferred: ET_INHERITED_FEATURE; an_effective: ET_FLATTENED_FEATURE) is
+	make_vdrs4b (a_class: like current_class; a_deferred: ET_PARENT_FEATURE; an_effective: ET_FEATURE) is
 			-- Create a new VDRS-4 error: deferred feature `a_deferred' should
 			-- not be listed in the Redefine subclause when being effected
 			-- to `an_effective' in `a_class'.
@@ -2236,7 +2236,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = creation type base class name
 		end
 
-	make_vgcc6a (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+	make_vgcc6a (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FEATURE) is
 			-- Create a new VGCC-6 error: creation procedure name
 			-- `cp' is the final name of a once-procedure in `a_class'.
 			--
@@ -2925,7 +2925,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = creation procedure name
 		end
 
-	make_vgcp2b (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+	make_vgcp2b (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FEATURE) is
 			-- Create a new VGCP-2 error: creation procedure name
 			-- `cp' is not the final name of a procedure in `a_class'.
 			--
@@ -3343,7 +3343,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vhrc4a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FLATTENED_FEATURE) is
+	make_vhrc4a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Create a new VHRC-4 error: the Rename_pair
 			-- `a_rename' has a new_name of the Prefix form,
 			-- but the corresponding feature `f' is not an
@@ -3389,7 +3389,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent base class
 		end
 
-	make_vhrc5a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FLATTENED_FEATURE) is
+	make_vhrc5a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Create a new VHRC-5 error: the Rename_pair `a_rename' has
 			-- a new_name of the Infix form, but the corresponding feature
 			-- `f' is not a function with one argument.
@@ -4052,7 +4052,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
-	make_vmfn0b (a_class: like current_class; f1: ET_INHERITED_FEATURE; f2: ET_FLATTENED_FEATURE) is
+	make_vmfn0b (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
 			-- Create a new VMFN error: `a_class' introduces feature `f2'
 			-- but `f1' has the same name.
 			--
@@ -4098,7 +4098,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent base class
 		end
 
-	make_vmfn0c (a_class: like current_class; f1, f2: ET_INHERITED_FEATURE) is
+	make_vmfn0c (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
 			-- Create a new VMFN error: `a_class' inherits two effective
 			-- features `f1' and `f2' with the same name.
 			--
@@ -4148,7 +4148,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = second parent base class
 		end
 
-	make_vmrc2a (a_class: like current_class; replicated_features: DS_LIST [ET_INHERITED_FEATURE]) is
+	make_vmrc2a (a_class: like current_class; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
 			-- Create a new VMRC-2 error: the replicated features in
 			-- `replicated_features' have not been selected in one of
 			-- the Parent clauses of `a_class'.
@@ -4162,8 +4162,8 @@ feature {NONE} -- Initialization
 			no_void_feature: not replicated_features.has (Void)
 			replicated: replicated_features.count >= 2
 		local
-			a_cursor: DS_LIST_CURSOR [ET_INHERITED_FEATURE]
-			a_feature: ET_INHERITED_FEATURE
+			a_cursor: DS_LIST_CURSOR [ET_PARENT_FEATURE]
+			a_feature: ET_PARENT_FEATURE
 			a_string: STRING
 		do
 			code := vmrc2a_template_code
@@ -4214,7 +4214,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = replicated features
 		end
 
-	make_vmrc2b (a_class: like current_class; replicated_features: DS_LIST [ET_INHERITED_FEATURE]) is
+	make_vmrc2b (a_class: like current_class; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
 			-- Create a new VMRC-2 error: the replicated features in
 			-- `replicated_features' have been selected in more than
 			-- one of the Parent clauses of `a_class'.
@@ -4229,8 +4229,8 @@ feature {NONE} -- Initialization
 			-- all_selected: forall f in replicated_features, f.has_select
 			replicated: replicated_features.count >= 2
 		local
-			a_cursor: DS_LIST_CURSOR [ET_INHERITED_FEATURE]
-			a_feature: ET_INHERITED_FEATURE
+			a_cursor: DS_LIST_CURSOR [ET_PARENT_FEATURE]
+			a_feature: ET_PARENT_FEATURE
 			a_string: STRING
 		do
 			code := vmrc2a_template_code
@@ -4367,7 +4367,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vmss3a (a_class: like current_class; a_feature: ET_INHERITED_FEATURE) is
+	make_vmss3a (a_class: like current_class; a_feature: ET_PARENT_FEATURE) is
 			-- Create a new VMSS-3 error: the Select subclause
 			-- of a parent of `a_class' lists `a_feature' which
 			-- is not replicated.
@@ -5009,7 +5009,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = type
 		end
 
-	make_vreg0a (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FLATTENED_FEATURE) is
+	make_vreg0a (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FEATURE) is
 			-- Create a new VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
 			--
@@ -5051,7 +5051,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_vrfa0a (a_class: like current_class; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FLATTENED_FEATURE) is
+	make_vrfa0a (a_class: like current_class; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FEATURE) is
 			-- Create a new VRFA error: `arg' in feature `f1' has
 			-- the same name as feature `f2' in `a_class'.
 			--
@@ -5996,7 +5996,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = constraint base class name
 		end
 
-	make_vtgc0b (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE; a_constraint: ET_CLASS) is
+	make_vtgc0b (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS) is
 			-- Create a new VTGC error: creation procedure name `cp'
 			-- is not the final name of a procedure in the base class
 			-- `a_constraint' of a generic constraint of `a_class'.
@@ -7497,7 +7497,7 @@ feature {NONE} -- Implementation
 	vmrc2b_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have been selected more than once."
 	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vmss2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
-	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): class name clash: first file '$7', second file '$9'."
+	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears in the Select subclause of parent $7 but is not replicated."
 	vqmc1a_default_template: STRING is "[$1] class $5 ($3,$4): boolean constant attribute `$6' is not declared of type BOOLEAN."
 	vqmc1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING is "[$1] class $5 ($3,$4): character constant attribute `$6' is not declared of type CHARACTER."

@@ -162,12 +162,10 @@ feature {NONE} -- Processing
 							end
 						end
 						flatten_features
-						if a_parents /= Void then
-							from i := 1 until i > nb loop
-								cleanup_inherited_features (a_parents.parent (i))
-								i := i + 1
-							end
-						end
+							-- Clean up.
+						free_parent_feature := parent_feature_list
+						free_inherited_feature := inherited_feature_list
+						free_redeclared_feature := redeclared_feature_list
 					end
 				else
 					set_fatal_error (current_class)
@@ -180,17 +178,18 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Feature recording
 
-	named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
+	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
-	new_features_count: INTEGER
+	declared_feature_count: INTEGER
 			-- Number of features which appear in one
 			-- of the feature clauses of `current_class'
 
 	add_current_features is
 			-- Add to `named_features' features declared in `current_class'.
 		local
-			a_feature, other_feature: ET_FEATURE
+			a_feature: ET_FEATURE
+			other_feature: ET_FLATTENED_FEATURE
 			a_name: ET_FEATURE_NAME
 			class_features: ET_FEATURE_LIST
 			i, nb: INTEGER
@@ -207,13 +206,13 @@ feature {NONE} -- Feature recording
 				if named_features.found then
 					other_feature := named_features.found_item
 					set_fatal_error (current_class)
-					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature.flattened_feature)
+					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature)
 				else
 					named_features.put_last (a_feature, a_name)
 				end
 				i := i + 1
 			end
-			new_features_count := named_features.count
+			declared_feature_count := named_features.count
 		end
 
 	add_inherited_features (a_parent: ET_PARENT) is
@@ -231,10 +230,10 @@ feature {NONE} -- Feature recording
 			has_select: BOOLEAN
 			class_features: ET_FEATURE_LIST
 			a_feature: ET_FEATURE
-			a_flattened_feature: ET_FLATTENED_FEATURE
-			a_named_feature: ET_FEATURE
+			a_named_feature: ET_FLATTENED_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
 			an_inherited_feature: ET_INHERITED_FEATURE
+			a_parent_feature: ET_PARENT_FEATURE
 			a_name: ET_FEATURE_NAME
 			a_rename: ET_RENAME
 			i, nb: INTEGER
@@ -263,85 +262,55 @@ feature {NONE} -- Feature recording
 			end
 			nb := class_features.count
 			from i := 1 until i > nb loop
-				an_inherited_feature := Void
-					-- Call `flattened_feature' because some inherited features
-					-- may still not be fully processed yet (if they contain
-					-- qualified type "like a.b" for example).
-				a_flattened_feature := class_features.item (i).flattened_feature
-				a_name := a_flattened_feature.name
+				a_feature := class_features.item (i)
+				a_parent_feature := new_parent_feature (a_feature, a_parent)
+				a_name := a_feature.name
 				if has_rename then
 					rename_table.search (a_name)
 					if rename_table.found then
 						a_rename := rename_table.found_item
 						rename_table.remove_found_item
-						if an_inherited_feature = Void then
-							create an_inherited_feature.make (a_flattened_feature, a_parent)
-						end
-						an_inherited_feature.set_new_name (a_rename)
+						a_parent_feature.set_new_name (a_rename)
 						a_name := a_rename.new_name
 					end
 				end
 				if has_undefine then
 					undefine_table.search (a_name)
 					if undefine_table.found then
-						if an_inherited_feature = Void then
-							create an_inherited_feature.make (a_flattened_feature, a_parent)
-						end
-						an_inherited_feature.set_undefine_name (undefine_table.found_item)
+						a_parent_feature.set_undefine_name (undefine_table.found_item)
 						undefine_table.remove_found_item
 					end
 				end
 				if has_redefine then
 					redefine_table.search (a_name)
 					if redefine_table.found then
-						if an_inherited_feature = Void then
-							create an_inherited_feature.make (a_flattened_feature, a_parent)
-						end
-						an_inherited_feature.set_redefine_name (redefine_table.found_item)
+						a_parent_feature.set_redefine_name (redefine_table.found_item)
 						redefine_table.remove_found_item
 					end
 				end
 				if has_select then
 					select_table.search (a_name)
 					if select_table.found then
-						if an_inherited_feature = Void then
-							create an_inherited_feature.make (a_flattened_feature, a_parent)
-						end
-						an_inherited_feature.set_select_name (select_table.found_item)
+						a_parent_feature.set_select_name (select_table.found_item)
 						select_table.remove_found_item
 					end
-				end
-				if an_inherited_feature /= Void then
-					a_feature := an_inherited_feature
-				elseif not a_flattened_feature.is_inherited then
-					a_flattened_feature.set_parent (a_parent)
-					a_feature := a_flattened_feature
-				else
-						-- TODO: try to avoid creating this object
-						-- when the inherited feature is actually
-						-- shared. In that case we don't care if the
-						-- feature comes from one parent or another.
-					create an_inherited_feature.make (a_flattened_feature, a_parent)
-					a_feature := an_inherited_feature
 				end
 				named_features.search (a_name)
 				if named_features.found then
 					a_named_feature := named_features.found_item
-					if not a_named_feature.is_inherited then
-						create a_redeclared_feature.make (a_named_feature.flattened_feature, a_feature)
+					if a_named_feature.is_immediate then
+						a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
 						named_features.replace_found_item (a_redeclared_feature)
 					elseif a_named_feature.is_redeclared then
 						a_redeclared_feature := a_named_feature.redeclared_feature
-						a_redeclared_feature.put_inherited_feature (a_feature)
-					else
+						a_redeclared_feature.put_parent_feature (a_parent_feature)
+					elseif a_named_feature.is_inherited then
 						an_inherited_feature := a_named_feature.inherited_feature
-						an_inherited_feature.put_inherited_feature (a_feature)
-						if an_inherited_feature /= a_named_feature then
-							named_features.replace_found_item (an_inherited_feature)
-						end
+						an_inherited_feature.put_parent_feature (a_parent_feature)
 					end
 				else
-					named_features.put_last (a_feature, a_name)
+					an_inherited_feature := new_inherited_feature (a_parent_feature)
+					named_features.put_last (an_inherited_feature, a_name)
 				end
 				i := i + 1
 			end
@@ -380,28 +349,6 @@ feature {NONE} -- Feature recording
 					select_table.forth
 				end
 				select_table.wipe_out
-			end
-		end
-
-	cleanup_inherited_features (a_parent: ET_PARENT) is
-			-- Unset `parent' in the features inherited from `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-		local
-			a_class: ET_CLASS
-			class_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
-			i, nb: INTEGER
-		do
-			a_class := a_parent.type.direct_base_class (universe)
-			class_features := a_class.features
-			nb := class_features.count
-			from i := 1 until i > nb loop
-				a_feature := class_features.item (i)
-				if a_feature.is_inherited and a_feature.is_flattened then
-					a_feature.unset_parent
-				end
-				i := i + 1
 			end
 		end
 
@@ -553,8 +500,9 @@ feature {NONE} -- Feature flattening
 			-- Flatten inherited features into `current_class'.
 		local
 			class_features: ET_FEATURE_LIST
+			a_named_feature: ET_FLATTENED_FEATURE
 			a_feature: ET_FEATURE
-			a_deferred_feature: ET_FEATURE
+			a_deferred_feature: ET_FLATTENED_FEATURE
 			i, nb: INTEGER
 		do
 			process_replication
@@ -562,13 +510,13 @@ feature {NONE} -- Feature flattening
 				nb := named_features.count
 				create class_features.make_with_capacity (nb)
 				from named_features.finish until named_features.before loop
-					a_feature := named_features.item_for_iteration
-					a_feature := flattened_feature (a_feature)
-					class_features.put_first (a_feature)
+					a_named_feature := named_features.item_for_iteration
+					flatten_feature (a_named_feature)
+					class_features.put_first (a_named_feature.flattened_feature)
 					named_features.back
 				end
-				current_class.set_features (class_features, new_features_count)
-				nb := new_features_count
+				current_class.set_features (class_features, declared_feature_count)
+				nb := declared_feature_count
 				from i := 1 until i > nb loop
 					a_feature := class_features.item (i)
 						-- Resolve identifier types and check argument
@@ -577,41 +525,27 @@ feature {NONE} -- Feature flattening
 						-- without being redeclared in `current_class'
 						-- have already had their signature resolved
 						-- when processing the parents of `current_class'.
-					resolve_identifier_signature (a_feature.flattened_feature)
+					resolve_identifier_signature (a_feature)
 					i := i + 1
 				end
 				check_anchored_signatures
-				nb := class_features.count
-				from i := 1 until i > nb loop
-					a_feature := class_features.item (i)
+				from named_features.start until named_features.after loop
+					a_named_feature := named_features.item_for_iteration
 					if a_deferred_feature = Void then
-						if a_feature.flattened_feature.is_deferred then
-							a_deferred_feature := a_feature
+						if a_named_feature.flattened_feature.is_deferred then
+							a_deferred_feature := a_named_feature
 						end
 					end
 					has_qualified_type := False
-					check_signature_validity (a_feature)
+					check_signature_validity (a_named_feature)
 					if has_qualified_type and not current_class.has_flattening_error then
 							-- There is a qualified anchored type in (or reachable
 							-- from) the signature of `a_feature'. We will have to
 							-- check the signature of this feature again after the
 							-- features of the corresponding classes have been
 							-- flattened.
-							-- Make sure that `class_features' does not contain
-							-- inherited features that are also flattened, as
-							-- these kind of features are cleaned up before leaving
-							-- the feature flattener in `cleanup_inherited_features'.
-						if a_feature.is_inherited then
-							class_features.put (a_feature.adapted_feature, i)
-						else
-							-- If the feature is not inherited, then it
-							-- is already flattened (see postcondition of
-							-- ET_FEATURE.is_flattened).
-						end
-					else
-						class_features.put (a_feature.flattened_feature, i)
 					end
-					i := i + 1
+					named_features.forth
 				end
 				if a_deferred_feature /= Void then
 					current_class.set_has_deferred_features (True)
@@ -621,7 +555,7 @@ feature {NONE} -- Feature flattening
 							-- not considered as a fatal error here.
 							-- We just consider the class as deferred
 							-- from now on.
-						if a_deferred_feature.is_inherited and not a_deferred_feature.is_redeclared then
+						if a_deferred_feature.is_inherited then
 							error_handler.report_vcch1b_error (current_class, a_deferred_feature.inherited_feature)
 						else
 							error_handler.report_vcch1a_error (current_class, a_deferred_feature.flattened_feature)
@@ -639,7 +573,7 @@ feature {NONE} -- Feature flattening
 				end
 				check_creators_validity
 			end
-			new_features_count := 0
+			declared_feature_count := 0
 			named_features.wipe_out
 		ensure
 			named_features_wiped_out: named_features.is_empty
@@ -647,50 +581,47 @@ feature {NONE} -- Feature flattening
 
 feature {NONE} -- Feature processing
 
-	flattened_feature (a_feature: ET_FEATURE): ET_FEATURE is
-			-- Version of `a_feature' after its feature adaptation
-			-- has been processed
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			if not a_feature.is_inherited then
-				Result := immediate_flattened_feature (a_feature.flattened_feature)
-			else
-				if a_feature.has_selected_feature and not a_feature.is_selected then
-						-- This is not a fatal error for gelint.
-					error_handler.report_vmss3a_error (current_class, a_feature.selected_feature.inherited_feature)
-				end
-				if a_feature.is_redeclared then
-					Result := redeclared_flattened_feature (a_feature.redeclared_feature)
-				else
-					Result := inherited_flattened_feature (a_feature)
-				end
-			end
-		ensure
-			flattened_feature_not_void: Result /= Void
-		end
-
-	immediate_flattened_feature (a_feature: ET_FLATTENED_FEATURE): ET_FEATURE is
-			-- Version of `a_feature' after its feature adaptation
-			-- has been processed; `a_feature' has been introduced
-			-- in `current_class' (ETL2, p. 56).
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			Result := a_feature
-		ensure
-			flattened_feature_not_void: Result /= Void
-		end
-
-	redeclared_flattened_feature (a_feature: ET_REDECLARED_FEATURE): ET_FEATURE is
-			-- Version of `a_feature' after its feature adaptation
-			-- has been processed; `a_feature' is an inherited feature
-			-- which has been given a new declaration in `current_class'.
+	flatten_feature (a_feature: ET_FLATTENED_FEATURE) is
+			-- Flatten `a_feature' and process its feature adaptation clause.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_flattened_feature: ET_FLATTENED_FEATURE
-			l_inherited_feature: ET_FEATURE
+			an_adapted_feature: ET_ADAPTED_FEATURE
+		do
+			if a_feature.is_immediate then
+				flatten_immediate_feature (a_feature.immediate_feature)
+			else
+				an_adapted_feature := a_feature.adapted_feature
+				if an_adapted_feature.has_selected_feature and not an_adapted_feature.is_selected then
+						-- This is not a fatal error for gelint.
+					error_handler.report_vmss3a_error (current_class, an_adapted_feature.selected_feature)
+				end
+				if a_feature.is_redeclared then
+					flatten_redeclared_feature (a_feature.redeclared_feature)
+				elseif a_feature.is_inherited then
+					flatten_inherited_feature (a_feature.inherited_feature)
+				end
+			end
+		end
+
+	flatten_immediate_feature (a_feature: ET_FEATURE) is
+			-- Flatten `a_feature' and process its feature adaptation clause.
+			-- `a_feature' has been introduced in `current_class' (ETL2, p. 56).
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	flatten_redeclared_feature (a_feature: ET_REDECLARED_FEATURE) is
+			-- Flatten `a_feature' and process its feature adaptation clause.
+			-- `a_feature' is an inherited feature which has been given a new
+			-- declaration in `current_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_flattened_feature: ET_FEATURE
+			l_parent_feature: ET_PARENT_FEATURE
 			l_has_redefine: BOOLEAN
 			l_preconditions: ET_PRECONDITIONS
 			l_postconditions: ET_POSTCONDITIONS
@@ -703,11 +634,11 @@ feature {NONE} -- Feature processing
 			l_flattened_feature.set_other_seeds (a_feature.other_seeds)
 				-- Check Feature_adaptation clause.
 			from
-				l_inherited_feature := a_feature.parent_feature
+				l_parent_feature := a_feature.parent_feature
 			until
-				l_inherited_feature = Void
+				l_parent_feature = Void
 			loop
-				if l_inherited_feature.has_redefine then
+				if l_parent_feature.has_redefine then
 					if l_has_redefine then
 						-- Warning: feature redefined twice.
 						-- Could not find which validity rule was violated
@@ -715,15 +646,15 @@ feature {NONE} -- Feature processing
 					end
 					l_has_redefine := True
 				end
-				l_inherited_feature := l_inherited_feature.merged_feature
+				l_parent_feature := l_parent_feature.merged_feature
 			end
 			from
-				l_inherited_feature := a_feature.parent_feature
+				l_parent_feature := a_feature.parent_feature
 			until
-				l_inherited_feature = Void
+				l_parent_feature = Void
 			loop
-				check_redeclaration_validity (l_inherited_feature, l_flattened_feature, l_has_redefine)
-				l_inherited_feature := l_inherited_feature.merged_feature
+				check_redeclaration_validity (l_parent_feature, l_flattened_feature, l_has_redefine)
+				l_parent_feature := l_parent_feature.merged_feature
 			end
 			l_preconditions := l_flattened_feature.preconditions
 			if l_preconditions /= Void and then not l_preconditions.is_require_else then
@@ -735,24 +666,18 @@ feature {NONE} -- Feature processing
 					-- This is not a fatal error.
 				error_handler.report_vdrd3b_error (current_class, l_postconditions, l_flattened_feature)
 			end
-			Result := a_feature
-		ensure
-			flattened_feature_not_void: Result /= Void
 		end
 
-	inherited_flattened_feature (a_feature: ET_FEATURE): ET_FEATURE is
-			-- Version of `a_feature' after its feature adaptation
-			-- has been processed; `a_feature' is an inherited feature
-			-- which has not been given a new declaration in `current_class'.
+	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE) is
+			-- Flatten `a_feature' and process its feature adaptation clause.
+			-- `a_feature' is an inherited feature which has not been given
+			-- a new declaration in `current_class'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			no_redeclaration: not a_feature.is_redeclared
 		local
-			l_flattened_feature: ET_FLATTENED_FEATURE
-			l_inherited_feature: ET_FEATURE
-			l_effective, l_deferred: ET_FEATURE
-			l_named_feature: ET_INHERITED_FEATURE
+			l_flattened_feature: ET_FEATURE
+			l_parent_feature: ET_PARENT_FEATURE
+			l_effective, l_deferred: ET_PARENT_FEATURE
 			l_first_seed: INTEGER
 			l_other_seeds: ET_FEATURE_IDS
 			l_keep_same_version: BOOLEAN
@@ -770,78 +695,78 @@ feature {NONE} -- Feature processing
 			l_duplication_needed := a_feature.is_replicated
 				-- Check Feature_adaptation clause.
 			from
-				l_shared_feature := a_feature.precursor_feature
-				l_inherited_feature := a_feature
+				l_parent_feature := a_feature.parent_feature
+				l_shared_feature := l_parent_feature.precursor_feature
 			until
-				l_inherited_feature = Void
+				l_parent_feature = Void
 			loop
-				check_no_redeclaration_validity (l_inherited_feature)
-				if l_inherited_feature.precursor_feature /= l_shared_feature then
+				check_no_redeclaration_validity (l_parent_feature)
+				if l_parent_feature.precursor_feature /= l_shared_feature then
 					l_duplication_needed := True
 				end
-				if not l_inherited_feature.is_deferred then
-					if l_effective /= Void and then not l_inherited_feature.same_version (l_effective) then
+				if not l_parent_feature.is_deferred then
+					if l_effective /= Void and then not l_parent_feature.same_version (l_effective) then
 							-- Error: two effective features which are not shared.
 						set_fatal_error (current_class)
-						error_handler.report_vmfn0c_error (current_class, l_effective.inherited_feature, l_inherited_feature.inherited_feature)
+						error_handler.report_vmfn0c_error (current_class, l_effective, l_parent_feature)
 					end
 					if not l_feature_found then
-						l_effective := l_inherited_feature
+						l_effective := l_parent_feature
 						if not l_duplication_needed then
 								-- Trying to choose one which would avoid duplication.
 							if
 								not l_effective.has_rename and then
-								l_effective.precursor_feature.first_seed = l_first_seed and then
-								l_effective.precursor_feature.other_seeds = l_other_seeds and then
+								l_effective.first_seed = l_first_seed and then
+								l_effective.other_seeds = l_other_seeds and then
 								l_effective.parent.actual_parameters = Void and then
-								l_effective.precursor_feature.clients.same_class_names (l_clients)
+								l_effective.clients.same_class_names (l_clients)
 							then
 								l_feature_found := True
 							end
 						end
 					end
 				end
-				l_inherited_feature := l_inherited_feature.merged_feature
+				l_parent_feature := l_parent_feature.merged_feature
 			end
 			if l_effective /= Void then
-				l_inherited_feature := l_effective
+				l_parent_feature := l_effective
 				l_keep_same_version := True
 			else
 				l_keep_same_version := True
 				from
-					l_inherited_feature := a_feature
+					l_parent_feature := a_feature.parent_feature
 				until
-					l_inherited_feature = Void
+					l_parent_feature = Void
 				loop
-					if l_deferred /= Void and then not l_inherited_feature.same_version (l_deferred) then
+					if l_deferred /= Void and then not l_parent_feature.same_version (l_deferred) then
 							-- Not sharing.
 						l_keep_same_version := False
 						l_duplication_needed := True
 					end
 					if not l_feature_found then
-						l_deferred := l_inherited_feature
+						l_deferred := l_parent_feature
 						if not l_duplication_needed then
 								-- Trying to choose one which would avoid duplication.
 							if
 								not l_deferred.has_rename and then
 								not l_deferred.has_undefine and then
-								l_deferred.precursor_feature.first_seed = l_first_seed and then
-								l_deferred.precursor_feature.other_seeds = l_other_seeds and then
+								l_deferred.first_seed = l_first_seed and then
+								l_deferred.other_seeds = l_other_seeds and then
 								l_deferred.parent.actual_parameters = Void and then
-								l_deferred.precursor_feature.clients.same_class_names (l_clients)
+								l_deferred.clients.same_class_names (l_clients)
 							then
 								l_feature_found := True
 							end
 						end
 					end
-					l_inherited_feature := l_inherited_feature.merged_feature
+					l_parent_feature := l_parent_feature.merged_feature
 				end
-				l_inherited_feature := l_deferred
+				l_parent_feature := l_deferred
 			end
-			l_flattened_feature := l_inherited_feature.precursor_feature
-			l_name := l_inherited_feature.name
-			l_parent := l_inherited_feature.parent
-			if l_inherited_feature.has_undefine then
+			l_flattened_feature := l_parent_feature.precursor_feature
+			l_name := l_parent_feature.name
+			l_parent := l_parent_feature.parent
+			if l_parent_feature.has_undefine then
 				l_flattened_feature := l_flattened_feature.undefined_feature (l_name)
 				l_duplicated := True
 			elseif l_duplication_needed or not l_feature_found then
@@ -853,32 +778,15 @@ feature {NONE} -- Feature processing
 				if a_feature.is_replicated then
 					process_replicated_seeds (a_feature, l_flattened_feature.id)
 				elseif l_keep_same_version then
-					l_flattened_feature.set_version (l_inherited_feature.version)
+					l_flattened_feature.set_version (l_parent_feature.precursor_feature.version)
 				end
 				l_flattened_feature.resolve_inherited_signature (l_parent)
 				l_flattened_feature.set_clients (l_clients)
 				l_flattened_feature.set_first_seed (a_feature.first_seed)
 				l_flattened_feature.set_other_seeds (a_feature.other_seeds)
 			end
-			if a_feature.is_flattened then
-					-- Only one feature inherited (i.e. no merge or join).
-				if l_duplicated then
-					Result := l_flattened_feature
-				else
-					Result := a_feature
-				end
-			else
-				l_named_feature := a_feature.inherited_feature
-				if l_named_feature /= a_feature then
-					Result := l_named_feature
-				else
-					Result := a_feature
-				end
-				l_named_feature.set_flattened_feature (l_flattened_feature)
-				l_named_feature.set_inherited_flattened_feature (l_inherited_feature)
-			end
-		ensure
-			flattened_feature_not_void: Result /= Void
+			a_feature.set_flattened_feature (l_flattened_feature)
+			a_feature.set_flattened_parent (l_parent_feature)
 		end
 
 feature {NONE} -- Replication
@@ -889,7 +797,8 @@ feature {NONE} -- Replication
 	process_replication is
 			-- Take care of selected features and replication.
 		local
-			l_feature: ET_FEATURE
+			l_feature: ET_FLATTENED_FEATURE
+			l_adapted_feature: ET_ADAPTED_FEATURE
 			l_replicable_feature: ET_REPLICABLE_FEATURE
 			l_other_seeds: ET_FEATURE_IDS
 			l_seed: INTEGER
@@ -897,15 +806,16 @@ feature {NONE} -- Replication
 		do
 			from named_features.start until named_features.after loop
 				l_feature := named_features.item_for_iteration
-				if l_feature.is_inherited then
-					l_seed := l_feature.first_seed
-					record_replicable_feature (l_feature, l_seed)
-					l_other_seeds := l_feature.other_seeds
+				if l_feature.is_adapted then
+					l_adapted_feature := l_feature.adapted_feature
+					l_seed := l_adapted_feature.first_seed
+					record_replicable_feature (l_adapted_feature, l_seed)
+					l_other_seeds := l_adapted_feature.other_seeds
 					if l_other_seeds /= Void then
 						nb := l_other_seeds.count
 						from i := 1 until i > nb loop
 							l_seed := l_other_seeds.item (i)
-							record_replicable_feature (l_feature, l_seed)
+							record_replicable_feature (l_adapted_feature, l_seed)
 							i := i + 1
 						end
 					end
@@ -929,14 +839,13 @@ feature {NONE} -- Replication
 			replicable_features.wipe_out
 		end
 
-	record_replicable_feature (a_feature: ET_FEATURE; a_seed: INTEGER) is
+	record_replicable_feature (a_feature: ET_ADAPTED_FEATURE; a_seed: INTEGER) is
 			-- Record `a_feature' with seed `a_seed' in `replicable_features'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
 			valid_seed: a_feature.has_seed (a_seed)
 		local
-			other_feature: ET_FEATURE
+			other_feature: ET_ADAPTED_FEATURE
 			a_replicable_feature: ET_REPLICABLE_FEATURE
 			a_replicated_feature: ET_REPLICATED_FEATURE
 		do
@@ -948,13 +857,8 @@ feature {NONE} -- Replication
 					a_replicated_feature.put_feature (a_feature)
 				else
 					other_feature := a_replicable_feature.first_feature
-					if other_feature.is_inherited then
-						create a_replicated_feature.make (other_feature, a_feature)
-						replicable_features.replace_found_item (a_replicated_feature)
-					else
-							-- Should never happen.
-						replicable_features.replace_found_item (a_feature)
-					end
+					create a_replicated_feature.make (other_feature, a_feature)
+					replicable_features.replace_found_item (a_replicated_feature)
 				end
 			else
 				replicable_features.force_new (a_feature, a_seed)
@@ -966,116 +870,74 @@ feature {NONE} -- Replication
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			a_replicated_features: DS_LINKED_LIST [ET_FEATURE]
-			an_inherited_features: DS_ARRAYED_LIST [ET_INHERITED_FEATURE]
-			an_inherited_feature: ET_INHERITED_FEATURE
-			a_redeclared_feature: ET_REDECLARED_FEATURE
-			a_replicated_feature: ET_FEATURE
+			a_replicated_features: DS_LINKED_LIST [ET_ADAPTED_FEATURE]
+			a_parent_features: DS_ARRAYED_LIST [ET_PARENT_FEATURE]
+			a_parent_feature: ET_PARENT_FEATURE
+			a_replicated_feature: ET_ADAPTED_FEATURE
 			a_selected_feature: ET_ADAPTED_FEATURE
-			an_adapted_feature: ET_ADAPTED_FEATURE
-			a_parent_feature: ET_FEATURE
-			a_name: ET_FEATURE_NAME
 		do
 			a_replicated_features := a_feature.features
 			inspect a_feature.selected_count
 			when 0 then
-				create an_inherited_features.make (a_replicated_features.count)
+				create a_parent_features.make (a_replicated_features.count)
 				from a_replicated_features.start until a_replicated_features.after loop
 					a_replicated_feature := a_replicated_features.item_for_iteration
-					a_replicated_feature := a_replicated_feature.seeded_feature (a_seed)
-					an_inherited_features.put_last (a_replicated_feature.inherited_feature)
+					a_parent_feature := a_replicated_feature.seeded_feature (a_seed)
+					a_parent_features.put_last (a_parent_feature)
 					a_replicated_features.forth
 				end
 				set_fatal_error (current_class)
-				error_handler.report_vmrc2a_error (current_class, an_inherited_features)
+				error_handler.report_vmrc2a_error (current_class, a_parent_features)
 			when 1 then
 					-- OK.
 				from a_replicated_features.start until a_replicated_features.after loop
 					a_replicated_feature := a_replicated_features.item_for_iteration
-					if a_replicated_feature.is_redeclared then
-						a_redeclared_feature := a_replicated_feature.redeclared_feature
-						if not a_redeclared_feature.has_selected_feature then
-							a_redeclared_feature.set_replicated (a_seed)
-						else
-							a_redeclared_feature.set_selected
-							a_selected_feature := a_redeclared_feature
-						end
+					if not a_replicated_feature.has_selected_feature then
+						a_replicated_feature.set_replicated (a_seed)
 					else
-							-- Get the latest version of `a_replicated_feature'
-							-- from `named_features' in case we already updated it.
-						a_name := a_replicated_feature.name
-						a_replicated_feature := named_features.item (a_name)
-						an_inherited_feature := a_replicated_feature.inherited_feature
-						if an_inherited_feature /= a_replicated_feature then
-							named_features.replace (an_inherited_feature, a_name)
-						end
-						if not an_inherited_feature.has_selected_feature then
-							an_inherited_feature.set_replicated (a_seed)
-						else
-							an_inherited_feature.set_selected
-							a_selected_feature := an_inherited_feature
-						end
+						a_replicated_feature.set_selected
+						a_selected_feature := a_replicated_feature
 					end
 					a_replicated_features.forth
 				end
 				from a_replicated_features.start until a_replicated_features.after loop
 					a_replicated_feature := a_replicated_features.item_for_iteration
 					if not a_replicated_feature.has_selected_feature then
-						an_adapted_feature ?= a_replicated_feature
-						if an_adapted_feature /= Void then
-							from
-								a_parent_feature := an_adapted_feature.parent_feature
-							until
-								a_parent_feature = Void
-							loop
-								if a_parent_feature.precursor_feature.has_seed (a_seed) then
-									a_selected_feature.add_replicated_feature (a_parent_feature)
-								end
-								a_parent_feature := a_parent_feature.merged_feature
+						from
+							a_parent_feature := a_replicated_feature.parent_feature
+						until
+							a_parent_feature = Void
+						loop
+							if a_parent_feature.has_seed (a_seed) then
+								a_selected_feature.add_replicated_feature (a_parent_feature)
 							end
-						else
-							a_selected_feature.add_replicated_feature (a_replicated_feature)
+							a_parent_feature := a_parent_feature.merged_feature
 						end
 					end
 					a_replicated_features.forth
 				end
 			else
-				create an_inherited_features.make (a_replicated_features.count)
+				create a_parent_features.make (a_replicated_features.count)
 				from a_replicated_features.start until a_replicated_features.after loop
 					a_replicated_feature := a_replicated_features.item_for_iteration
 					if a_replicated_feature.has_selected_feature then
-						if a_replicated_feature.is_redeclared then
-							a_redeclared_feature := a_replicated_feature.redeclared_feature
-							a_redeclared_feature.set_selected
-							a_replicated_feature := a_redeclared_feature.selected_feature
-						else
-								-- Get the latest version of `a_replicated_feature'
-								-- from `named_features' in case we already updated it.
-							a_name := a_replicated_feature.name
-							a_replicated_feature := named_features.item (a_name)
-							an_inherited_feature := a_replicated_feature.inherited_feature
-							if an_inherited_feature /= a_replicated_feature then
-								named_features.replace (an_inherited_feature, a_name)
-							end
-							an_inherited_feature.set_selected
-							a_replicated_feature := an_inherited_feature.selected_feature
-						end
-						an_inherited_features.put_last (a_replicated_feature.inherited_feature)
+						a_replicated_feature.set_selected
+						a_parent_feature := a_replicated_feature.selected_feature
+						a_parent_features.put_last (a_parent_feature)
 					end
 					a_replicated_features.forth
 				end
 				set_fatal_error (current_class)
-				error_handler.report_vmrc2b_error (current_class, an_inherited_features)
+				error_handler.report_vmrc2b_error (current_class, a_parent_features)
 			end
 		end
 
-	process_replicated_seeds (a_feature: ET_FEATURE; a_new_seed: INTEGER) is
+	process_replicated_seeds (a_feature: ET_ADAPTED_FEATURE; a_new_seed: INTEGER) is
 			-- Process the seeds of replicated feature `a_feature'.
 			-- Remove seeds in `a_feature.replicated_seeds' and
 			-- add `a_new_seed'.
 		require
 			a_feature_not_void: a_feature /= Void
-			inherited_feature: a_feature.is_inherited
 			replicated_feature: a_feature.is_replicated
 			a_new_seed_positive: a_new_seed > 0
 		local
@@ -1160,14 +1022,12 @@ feature {NONE} -- Clients
 	client_names: DS_HASH_SET [ET_CLASS_NAME]
 			-- Client class names
 
-	inherited_clients (a_feature: ET_FEATURE): ET_CLASS_NAME_LIST is
+	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLASS_NAME_LIST is
 			-- Clients inherited by the not redeclared feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			no_redeclaration: not a_feature.is_redeclared
 		local
-			l_inherited_feature: ET_FEATURE
+			l_parent_feature: ET_PARENT_FEATURE
 			l_clients: ET_CLASS_NAME_LIST
 			l_parent: ET_PARENT
 			l_exports: ET_EXPORT_LIST
@@ -1178,13 +1038,13 @@ feature {NONE} -- Clients
 			j, nb2: INTEGER
 		do
 			from
-				l_inherited_feature := a_feature
+				l_parent_feature := a_feature.parent_feature
 			until
-				l_inherited_feature = Void
+				l_parent_feature = Void
 			loop
 				l_overridden := False
-				l_name := l_inherited_feature.name
-				l_parent := l_inherited_feature.parent
+				l_name := l_parent_feature.name
+				l_parent := l_parent_feature.parent
 				l_exports := l_parent.exports
 				if l_exports /= Void then
 					nb := l_exports.count
@@ -1198,9 +1058,9 @@ feature {NONE} -- Clients
 					end
 				end
 				if not l_overridden then
-					clients_list.force_last (l_inherited_feature.precursor_feature.clients)
+					clients_list.force_last (l_parent_feature.precursor_feature.clients)
 				end
-				l_inherited_feature := l_inherited_feature.merged_feature
+				l_parent_feature := l_parent_feature.merged_feature
 			end
 			Result := clients_list.first
 			nb := clients_list.count
@@ -1259,165 +1119,155 @@ feature {NONE} -- Clients
 
 feature {NONE} -- Feature adaptation validity
 
-	check_redeclaration_validity (an_inherited_feature: ET_FEATURE;
-		a_redeclared_feature: ET_FLATTENED_FEATURE; has_redefine: BOOLEAN) is
-			-- Check validity when `an_inherited_feature' has been
+	check_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE;
+		a_redeclared_feature: ET_FEATURE; has_redefine: BOOLEAN) is
+			-- Check validity when `a_parent_feature' has been
 			-- given a new declaration `a_redeclared_feature' in
 			-- `current_class'. `has_redefine' indicates whether the
 			-- feature has been listed in one of the Redefine clauses
 			-- or not.
 		require
-			an_inherited_feature_not_void: an_inherited_feature /= Void
-			an_inherited_feature_inherited: an_inherited_feature.is_inherited
-			an_inherited_feature_not_redeclared: not an_inherited_feature.is_redeclared
+			a_parent_feature_not_void: a_parent_feature /= Void
 			a_redeclared_feature_not_void: a_redeclared_feature /= Void
 		do
-			check_rename_clause_validity (an_inherited_feature)
-			check_undefine_clause_validity (an_inherited_feature)
-			check_redefine_clause_validity (an_inherited_feature)
-			if an_inherited_feature.has_redefine then
-				if a_redeclared_feature.is_deferred /= an_inherited_feature.is_deferred then
+			check_rename_clause_validity (a_parent_feature)
+			check_undefine_clause_validity (a_parent_feature)
+			check_redefine_clause_validity (a_parent_feature)
+			if a_parent_feature.has_redefine then
+				if a_redeclared_feature.is_deferred /= a_parent_feature.is_deferred then
 					if a_redeclared_feature.is_deferred then
 							-- Error: Used 'redefine' instead of 'undefine'.
 							-- Need to use 'undefine' to redeclare an
 							-- effective feature to a deferred feature.
 							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrd5a_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+						error_handler.report_vdrd5a_error (current_class, a_parent_feature, a_redeclared_feature)
 					else
 							-- Error: No need to 'redefine' to redeclare
 							-- a deferred feature to an effective feature.
 							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrs4b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+						error_handler.report_vdrs4b_error (current_class, a_parent_feature, a_redeclared_feature)
 					end
 				end
 			elseif a_redeclared_feature.is_deferred then
-				if an_inherited_feature.is_deferred then
+				if a_parent_feature.is_deferred then
 					if not has_redefine then
 							-- Error: Need 'redefine' to redeclare a
 							-- deferred feature to a deferred feature.
 							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrd4a_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+						error_handler.report_vdrd4a_error (current_class, a_parent_feature, a_redeclared_feature)
 					end
 				else
 						-- Error: need 'undefine' and 'redefine' to
 						-- redeclare an effective feature to a deferred
 						-- feature.
 					set_fatal_error (current_class)
-					error_handler.report_vmfn0b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
-					error_handler.report_vdrd4c_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+					error_handler.report_vmfn0b_error (current_class, a_parent_feature, a_redeclared_feature)
+					error_handler.report_vdrd4c_error (current_class, a_parent_feature, a_redeclared_feature)
 				end
-			elseif not an_inherited_feature.is_deferred then
+			elseif not a_parent_feature.is_deferred then
 					-- Error: need 'redefine' to redeclare an effective
 					-- feature to an effective feature.
 				set_fatal_error (current_class)
-				error_handler.report_vmfn0b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
-				error_handler.report_vdrd4b_error (current_class, an_inherited_feature.inherited_feature, a_redeclared_feature)
+				error_handler.report_vmfn0b_error (current_class, a_parent_feature, a_redeclared_feature)
+				error_handler.report_vdrd4b_error (current_class, a_parent_feature, a_redeclared_feature)
 			end
 		end
 
-	check_no_redeclaration_validity (a_feature: ET_FEATURE) is
-			-- Check validity when `a_feature' has not been given a new
+	check_no_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE) is
+			-- Check validity when `a_parent_feature' has not been given a new
 			-- declaration in `current_class'.
 		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			a_feature_not_redeclared: not a_feature.is_redeclared
+			a_parent_feature_not_void: a_parent_feature /= Void
 		do
-			check_rename_clause_validity (a_feature)
-			check_undefine_clause_validity (a_feature)
-			check_redefine_clause_validity (a_feature)
-			if a_feature.has_redefine then
+			check_rename_clause_validity (a_parent_feature)
+			check_undefine_clause_validity (a_parent_feature)
+			check_redefine_clause_validity (a_parent_feature)
+			if a_parent_feature.has_redefine then
 					-- Error: Not a redefinition.
 				set_fatal_error (current_class)
-				error_handler.report_vdrs4a_error (current_class, a_feature.inherited_feature)
+				error_handler.report_vdrs4a_error (current_class, a_parent_feature)
 			end
 		end
 
-	check_rename_clause_validity (a_feature: ET_FEATURE) is
-			-- Check validity of rename clause for `a_feature'.
+	check_rename_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+			-- Check validity of rename clause for `a_parent_feature'.
 		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			a_feature_not_redeclared: not a_feature.is_redeclared
+			a_parent_feature_not_void: a_parent_feature /= Void
 		local
-			l_inherited_feature: ET_FLATTENED_FEATURE
+			l_precursor_feature: ET_FEATURE
 			l_name: ET_FEATURE_NAME
 		do
-			if a_feature.has_rename then
-				l_inherited_feature := a_feature.precursor_feature
-				l_name := a_feature.new_name.new_name
+			if a_parent_feature.has_rename then
+				l_precursor_feature := a_parent_feature.precursor_feature
+				l_name := a_parent_feature.new_name.new_name
 				if l_name.is_infix then
-					if not l_inherited_feature.is_infixable then
+					if not l_precursor_feature.is_infixable then
 						set_fatal_error (current_class)
-						error_handler.report_vhrc5a_error (current_class, a_feature.parent, a_feature.new_name, l_inherited_feature)
+						error_handler.report_vhrc5a_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
 					end
 				elseif l_name.is_prefix then
-					if not l_inherited_feature.is_prefixable then
+					if not l_precursor_feature.is_prefixable then
 						set_fatal_error (current_class)
-						error_handler.report_vhrc4a_error (current_class, a_feature.parent, a_feature.new_name, l_inherited_feature)
+						error_handler.report_vhrc4a_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
 					end
 				end
 			end
 		end
 
-	check_undefine_clause_validity (a_feature: ET_FEATURE) is
-			-- Check validity of undefine clause for `a_feature'.
+	check_undefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+			-- Check validity of undefine clause for `a_parent_feature'.
 		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			a_feature_not_redeclared: not a_feature.is_redeclared
+			a_parent_feature_not_void: a_parent_feature /= Void
 		local
-			l_inherited_feature: ET_FEATURE
+			l_precursor_feature: ET_FEATURE
 		do
-			if a_feature.has_undefine then
-				l_inherited_feature := a_feature.precursor_feature
-				if l_inherited_feature.is_deferred then
+			if a_parent_feature.has_undefine then
+				l_precursor_feature := a_parent_feature.precursor_feature
+				if l_precursor_feature.is_deferred then
 						-- This is not a fatal error for gelint.
-					error_handler.report_vdus3a_error (current_class, a_feature.parent, a_feature.undefine_name)
+					error_handler.report_vdus3a_error (current_class, a_parent_feature.parent, a_parent_feature.undefine_name)
 				end
-				if l_inherited_feature.is_frozen then
+				if l_precursor_feature.is_frozen then
 					set_fatal_error (current_class)
-					error_handler.report_vdus2a_error (current_class, a_feature.parent, a_feature.undefine_name)
+					error_handler.report_vdus2a_error (current_class, a_parent_feature.parent, a_parent_feature.undefine_name)
 				end
 				if
-					l_inherited_feature.is_attribute or
-					l_inherited_feature.is_unique_attribute or
-					l_inherited_feature.is_constant_attribute
+					l_precursor_feature.is_attribute or
+					l_precursor_feature.is_unique_attribute or
+					l_precursor_feature.is_constant_attribute
 				then
 					set_fatal_error (current_class)
-					error_handler.report_vdus2b_error (current_class, a_feature.parent, a_feature.undefine_name)
+					error_handler.report_vdus2b_error (current_class, a_parent_feature.parent, a_parent_feature.undefine_name)
 				end
 			end
 		end
 
-	check_redefine_clause_validity (a_feature: ET_FEATURE) is
-			-- Check validity of redefine clause for `a_feature'.
+	check_redefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+			-- Check validity of redefine clause for `a_parent_feature'.
 		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			a_feature_not_redeclared: not a_feature.is_redeclared
+			a_parent_feature_not_void: a_parent_feature /= Void
 		local
-			l_inherited_feature: ET_FEATURE
+			l_precursor_feature: ET_FEATURE
 		do
-			if a_feature.has_redefine then
-				l_inherited_feature := a_feature.precursor_feature
-				if l_inherited_feature.is_frozen then
+			if a_parent_feature.has_redefine then
+				l_precursor_feature := a_parent_feature.precursor_feature
+				if l_precursor_feature.is_frozen then
 					set_fatal_error (current_class)
-					error_handler.report_vdrs2a_error (current_class, a_feature.parent, a_feature.redefine_name)
+					error_handler.report_vdrs2a_error (current_class, a_parent_feature.parent, a_parent_feature.redefine_name)
 				end
 				if
-					l_inherited_feature.is_unique_attribute or
-					l_inherited_feature.is_constant_attribute
+					l_precursor_feature.is_unique_attribute or
+					l_precursor_feature.is_constant_attribute
 				then
 					set_fatal_error (current_class)
-					error_handler.report_vdrs2b_error (current_class, a_feature.parent, a_feature.redefine_name)
+					error_handler.report_vdrs2b_error (current_class, a_parent_feature.parent, a_parent_feature.redefine_name)
 				end
 			end
 		end
 
 feature {NONE} -- Signature resolving
 
-	resolve_identifier_signature (a_feature: ET_FLATTENED_FEATURE) is
+	resolve_identifier_signature (a_feature: ET_FEATURE) is
 			-- Resolve identifier types (e.g. "like identifier"
 			-- or "BIT identifier") in signature of `a_feature'
 			-- in `current_class'. Do not try to resolve qualified
@@ -1434,7 +1284,7 @@ feature {NONE} -- Signature resolving
 			a_type, previous_type: ET_TYPE
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_arg, other_arg: ET_FORMAL_ARGUMENT
-			other_feature: ET_FLATTENED_FEATURE
+			other_feature: ET_FEATURE
 			a_name: ET_IDENTIFIER
 			i, j, nb: INTEGER
 		do
@@ -1505,78 +1355,79 @@ feature {NONE} -- Signature validity
 	anchored_type_checker: ET_ANCHORED_TYPE_CHECKER
 			-- Anchored type checker
 
-	check_signature_validity (a_feature: ET_FEATURE) is
+	check_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
 			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			a_flattened_feature: ET_FLATTENED_FEATURE
-			an_inherited_flattened_feature: ET_FEATURE
+			a_flattened_feature: ET_FEATURE
+			an_inherited_flattened_feature: ET_PARENT_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
-			an_inherited_feature: ET_FEATURE
-			a_replicated_features: DS_LINKED_LIST [ET_FEATURE]
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_FEATURE]
+			an_inherited_feature: ET_INHERITED_FEATURE
+			a_parent_feature: ET_PARENT_FEATURE
+			an_adapted_feature: ET_ADAPTED_FEATURE
+			a_replicated_features: DS_LINKED_LIST [ET_PARENT_FEATURE]
+			a_cursor: DS_LINKED_LIST_CURSOR [ET_PARENT_FEATURE]
 		do
 			if a_feature.is_redeclared then
 					-- Redeclaration.
 				a_redeclared_feature := a_feature.redeclared_feature
 				from
-					an_inherited_feature := a_redeclared_feature.parent_feature
+					a_parent_feature := a_redeclared_feature.parent_feature
 				until
-					an_inherited_feature = Void
+					a_parent_feature = Void
 				loop
-					check_redeclared_signature_validity (a_feature, an_inherited_feature)
-					an_inherited_feature := an_inherited_feature.merged_feature
+					check_redeclared_signature_validity (a_redeclared_feature, a_parent_feature)
+					a_parent_feature := a_parent_feature.merged_feature
 				end
 			elseif a_feature.is_inherited then
-				if a_feature.is_flattened then
-					-- Nothing to check. The feature has been inherited with
-					-- no joining nor merging, and it has not been redeclared.
+				an_inherited_feature := a_feature.inherited_feature
+				a_flattened_feature := an_inherited_feature.flattened_feature
+				an_inherited_flattened_feature := an_inherited_feature.flattened_parent
+				if a_flattened_feature.is_deferred then
+						-- Joining (merging deferred features together).
+					from
+						a_parent_feature := an_inherited_feature.parent_feature
+					until
+						a_parent_feature = Void
+					loop
+						if not a_parent_feature.same_version (an_inherited_flattened_feature) then
+							check_joined_signature_validity (an_inherited_feature, a_parent_feature)
+						end
+						a_parent_feature := a_parent_feature.merged_feature
+					end
 				else
-					a_flattened_feature := a_feature.flattened_feature
-					an_inherited_flattened_feature := a_feature.inherited_feature.inherited_flattened_feature
-					if a_flattened_feature.is_deferred then
-							-- Joining (merging deferred features together).
-						from
-							an_inherited_feature := a_feature
-						until
-							an_inherited_feature = Void
-						loop
-							if not an_inherited_feature.same_version (an_inherited_flattened_feature.precursor_feature) then
-								check_joined_signature_validity (an_inherited_flattened_feature, an_inherited_feature)
-							end
-							an_inherited_feature := an_inherited_feature.merged_feature
+						-- Redeclaration (merging deferred features into an effective one).
+					from
+						a_parent_feature := an_inherited_feature.parent_feature
+					until
+						a_parent_feature = Void
+					loop
+						if a_parent_feature.is_deferred then
+							check_redeclared_signature_validity (an_inherited_feature, a_parent_feature)
 						end
-					else
-							-- Redeclaration (merging deferred features into an effective one).
-						from
-							an_inherited_feature := a_feature
-						until
-							an_inherited_feature = Void
-						loop
-							if an_inherited_feature.is_deferred then
-								check_redeclared_signature_validity (a_feature, an_inherited_feature)
-							end
-							an_inherited_feature := an_inherited_feature.merged_feature
-						end
+						a_parent_feature := a_parent_feature.merged_feature
 					end
 				end
 			else
 				check_immediate_signature_validity (a_feature.flattened_feature)
 			end
-			if a_feature.is_inherited and then a_feature.is_selected then
-				a_replicated_features := a_feature.replicated_features
-				if a_replicated_features /= Void then
-					a_cursor := a_replicated_features.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						check_selected_signature_validity (a_feature, a_cursor.item)
-						a_cursor.forth
+			if a_feature.is_adapted then
+				an_adapted_feature := a_feature.adapted_feature
+				if an_adapted_feature.is_selected then
+					a_replicated_features := an_adapted_feature.replicated_features
+					if a_replicated_features /= Void then
+						a_cursor := a_replicated_features.new_cursor
+						from a_cursor.start until a_cursor.after loop
+							check_selected_signature_validity (an_adapted_feature, a_cursor.item)
+							a_cursor.forth
+						end
 					end
 				end
 			end
 		end
 
-	check_immediate_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
+	check_immediate_signature_validity (a_feature: ET_FEATURE) is
 			-- Check whether `a_feature' has correctly been declared
 			-- as having arguments which can possibly be redefined
 			-- covariantly in descendant classes?
@@ -1612,7 +1463,7 @@ feature {NONE} -- Signature validity
 			end
 		end
 
-	check_redeclared_signature_validity (a_feature, other: ET_FEATURE) is
+	check_redeclared_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
 			-- Check whether the signature of `a_feature' conforms
 			-- to the signature of `other'. This check has to be done
 			-- when `a_feature' is a redeclaration in `current_class'
@@ -1621,16 +1472,13 @@ feature {NONE} -- Signature validity
 			-- inherted feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
 			other_not_void: other /= Void
-			other_inherited: other.is_inherited
-			other_not_redeclared: not other.is_redeclared
 		local
 			a_type: ET_TYPE
 			other_type: ET_TYPE
-			other_precursor: ET_FLATTENED_FEATURE
-			a_flattened_feature: ET_FLATTENED_FEATURE
-			an_inherited_feature: ET_INHERITED_FEATURE
+			other_precursor: ET_FEATURE
+			a_flattened_feature: ET_FEATURE
+			a_parent_feature: ET_PARENT_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_resolver: ET_AST_PROCESSOR
@@ -1657,20 +1505,20 @@ feature {NONE} -- Signature validity
 			if a_type = Void then
 				if other_type /= Void then
 					set_fatal_error (current_class)
-					if a_feature.is_redeclared then
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+					if a_feature.is_inherited then
+						a_parent_feature := a_feature.inherited_feature.flattened_parent
+						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 					else
-						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-						error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 					end
 				end
 			elseif other_type = Void then
 				set_fatal_error (current_class)
-				if a_feature.is_redeclared then
-					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+				if a_feature.is_inherited then
+					a_parent_feature := a_feature.inherited_feature.flattened_parent
+					error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 				else
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 				end
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
@@ -1682,11 +1530,11 @@ feature {NONE} -- Signature validity
 					has_qualified_type := True
 				else
 					set_fatal_error (current_class)
-					if a_feature.is_redeclared then
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+					if a_feature.is_inherited then
+						a_parent_feature := a_feature.inherited_feature.flattened_parent
+						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 					else
-						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-						error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 					end
 				end
 			end
@@ -1695,16 +1543,16 @@ feature {NONE} -- Signature validity
 			if an_arguments = Void or else an_arguments.is_empty then
 				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
-					if a_feature.is_redeclared then
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+					if a_feature.is_inherited then
+						a_parent_feature := a_feature.inherited_feature.flattened_parent
+						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 					else
-						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-						error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 					end
 				end
 			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
 				set_fatal_error (current_class)
-				error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+				error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 			else
 				l_cat := universe.all_cat_features or a_flattened_feature.is_cat
 				l_other_cat := universe.all_cat_features or other_precursor.is_cat
@@ -1751,11 +1599,11 @@ feature {NONE} -- Signature validity
 									has_qualified_type := True
 								else
 									set_fatal_error (current_class)
-									if a_feature.is_redeclared then
-										error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+									if a_feature.is_inherited then
+										a_parent_feature := a_feature.inherited_feature.flattened_parent
+										error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 									else
-										an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-										error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+										error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 									end
 								end
 							end
@@ -1772,11 +1620,11 @@ feature {NONE} -- Signature validity
 								has_qualified_type := True
 							else
 								set_fatal_error (current_class)
-								if a_feature.is_redeclared then
-									error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other.inherited_feature)
+								if a_feature.is_inherited then
+									a_parent_feature := a_feature.inherited_feature.flattened_parent
+									error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 								else
-									an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-									error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
+									error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 								end
 							end
 						elseif universe.searching_dog_types then
@@ -1846,24 +1694,21 @@ feature {NONE} -- Signature validity
 			universe.set_qualified_signature_resolver (a_resolver)
 		end
 
-	check_selected_signature_validity (a_feature, other: ET_FEATURE) is
+	check_selected_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
 			-- Check whether the signature of `a_feature' conforms
 			-- to the signature of `other'. This check has to be done
 			-- when `a_feature' is the selected version in `current_class'
 			-- of the inherited replicated feature `other'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
 			a_feature_selected: a_feature.is_selected
 			other_not_void: other /= Void
-			other_inherited: other.is_inherited
-			other_not_redeclared: not other.is_redeclared
 		local
 			a_type: ET_TYPE
 			other_type: ET_TYPE
-			other_precursor: ET_FLATTENED_FEATURE
-			a_flattened_feature: ET_FLATTENED_FEATURE
-			an_inherited_feature: ET_INHERITED_FEATURE
+			other_precursor: ET_FEATURE
+			a_flattened_feature: ET_FEATURE
+			a_parent_feature: ET_PARENT_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_resolver: ET_AST_PROCESSOR
@@ -1890,20 +1735,20 @@ feature {NONE} -- Signature validity
 			if a_type = Void then
 				if other_type /= Void then
 					set_fatal_error (current_class)
-					if a_feature.is_redeclared then
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+					if a_feature.is_inherited then
+						a_parent_feature := a_feature.inherited_feature.flattened_parent
+						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 					else
-						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-						error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 					end
 				end
 			elseif other_type = Void then
 				set_fatal_error (current_class)
-				if a_feature.is_redeclared then
-					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+				if a_feature.is_inherited then
+					a_parent_feature := a_feature.inherited_feature.flattened_parent
+					error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 				else
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
 			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
@@ -1915,11 +1760,11 @@ feature {NONE} -- Signature validity
 					has_qualified_type := True
 				else
 					set_fatal_error (current_class)
-					if a_feature.is_redeclared then
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+					if a_feature.is_inherited then
+						a_parent_feature := a_feature.inherited_feature.flattened_parent
+						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 					else
-						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-						error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 					end
 				end
 			end
@@ -1928,20 +1773,20 @@ feature {NONE} -- Signature validity
 			if an_arguments = Void or else an_arguments.is_empty then
 				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
-					if a_feature.is_redeclared then
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+					if a_feature.is_inherited then
+						a_parent_feature := a_feature.inherited_feature.flattened_parent
+						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 					else
-						an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-						error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 					end
 				end
 			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
 				set_fatal_error (current_class)
-				if a_feature.is_redeclared then
-					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+				if a_feature.is_inherited then
+					a_parent_feature := a_feature.inherited_feature.flattened_parent
+					error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 				else
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
 			else
 				l_cat := universe.all_cat_features or a_flattened_feature.is_cat
@@ -1975,11 +1820,11 @@ feature {NONE} -- Signature validity
 									has_qualified_type := True
 								else
 									set_fatal_error (current_class)
-									if a_feature.is_redeclared then
-										error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+									if a_feature.is_inherited then
+										a_parent_feature := a_feature.inherited_feature.flattened_parent
+										error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 									else
-										an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-										error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+										error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 									end
 								end
 							end
@@ -1996,11 +1841,11 @@ feature {NONE} -- Signature validity
 								has_qualified_type := True
 							else
 								set_fatal_error (current_class)
-								if a_feature.is_redeclared then
-									error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other.inherited_feature)
+								if a_feature.is_inherited then
+									a_parent_feature := a_feature.inherited_feature.flattened_parent
+									error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 								else
-									an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-									error_handler.report_vdrd2d_error (current_class, an_inherited_feature, other.inherited_feature)
+									error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 								end
 							end
 						elseif universe.searching_dog_types then
@@ -2070,7 +1915,7 @@ feature {NONE} -- Signature validity
 			universe.set_qualified_signature_resolver (a_resolver)
 		end
 
-	check_joined_signature_validity (a_feature, other: ET_FEATURE) is
+	check_joined_signature_validity (a_feature: ET_INHERITED_FEATURE; other: ET_PARENT_FEATURE) is
 			-- Check that `a_feature' and `other' have the same signature
 			-- when viewed from `current_class'. This check has to be done
 			-- when joining two or more deferred features, the `a_feature'
@@ -2079,14 +1924,10 @@ feature {NONE} -- Signature validity
 			-- parent of `current_class'. (See ETL2 page 165 about Joining.)
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			a_feature_not_redeclared: not a_feature.is_redeclared
 			other_not_void: other /= Void
-			other_inherited: other.is_inherited
-			other_not_redeclared: not other.is_redeclared
 		local
-			a_joined_feature: ET_FLATTENED_FEATURE
-			other_precursor: ET_FLATTENED_FEATURE
+			a_joined_feature: ET_FEATURE
+			other_precursor: ET_FEATURE
 			an_arguments, other_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_type, other_type: ET_TYPE
 			i, nb: INTEGER
@@ -2099,11 +1940,11 @@ feature {NONE} -- Signature validity
 			if a_type = Void then
 				if other_type /= Void then
 					set_fatal_error (current_class)
-					error_handler.report_vdjr0c_error (current_class, a_feature.inherited_feature, other.inherited_feature)
+					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 				end
 			elseif other_type = Void then
 				set_fatal_error (current_class)
-				error_handler.report_vdjr0c_error (current_class, a_feature.inherited_feature, other.inherited_feature)
+				error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 			elseif not a_type.same_syntactical_type (other_type, parent_context, current_class, universe) then
 				if
 					a_type.has_qualified_type (current_class, universe) or
@@ -2114,7 +1955,7 @@ feature {NONE} -- Signature validity
 					has_qualified_type := True
 				else
 					set_fatal_error (current_class)
-					error_handler.report_vdjr0c_error (current_class, a_feature.inherited_feature, other.inherited_feature)
+					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 				end
 			end
 			an_arguments := a_joined_feature.arguments
@@ -2122,11 +1963,11 @@ feature {NONE} -- Signature validity
 			if an_arguments = Void or else an_arguments.is_empty then
 				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
-					error_handler.report_vdjr0a_error (current_class, a_feature.inherited_feature, other.inherited_feature)
+					error_handler.report_vdjr0a_error (current_class, a_feature.flattened_parent, other)
 				end
 			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
 				set_fatal_error (current_class)
-				error_handler.report_vdjr0a_error (current_class, a_feature.inherited_feature, other.inherited_feature)
+				error_handler.report_vdjr0a_error (current_class, a_feature.flattened_parent, other)
 			else
 -- TODO: if one of the joined features is not argument covariant, then the
 -- feature resulting of the join should be no argument covariant as well.
@@ -2142,7 +1983,7 @@ feature {NONE} -- Signature validity
 							has_qualified_type := True
 						else
 							set_fatal_error (current_class)
-							error_handler.report_vdjr0b_error (current_class, a_feature.inherited_feature, other.inherited_feature, i)
+							error_handler.report_vdjr0b_error (current_class, a_feature.flattened_parent, other, i)
 						end
 					end
 					i := i + 1
@@ -2198,7 +2039,7 @@ feature {NONE} -- Creators validity
 			a_name, other_name: ET_FEATURE_NAME
 			i, j, nb: INTEGER
 			k, h, nb2, nb3: INTEGER
-			a_feature: ET_FLATTENED_FEATURE
+			a_feature: ET_FEATURE
 		do
 			a_creators := current_class.creators
 			if a_creators /= Void and then not a_creators.is_empty then
@@ -2268,12 +2109,88 @@ feature {NONE} -- Creators validity
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE is
+			-- New parent feature
+		require
+			a_feature_not_void: a_feature /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			if free_parent_feature /= Void then
+				Result := free_parent_feature
+				Result.reset (a_feature, a_parent)
+				free_parent_feature := free_parent_feature.next
+			else
+				create Result.make (a_feature, a_parent)
+				Result.set_next (parent_feature_list)
+				parent_feature_list := Result
+			end
+		ensure
+			parent_feature_not_void: Result /= Void
+		end
+
+	new_inherited_feature (a_parent_feature: ET_PARENT_FEATURE): ET_INHERITED_FEATURE is
+			-- New inherited feature
+		require
+			a_parent_feature_not_void: a_parent_feature /= Void
+		do
+			if free_inherited_feature /= Void then
+				Result := free_inherited_feature
+				Result.reset (a_parent_feature)
+				free_inherited_feature := free_inherited_feature.next
+			else
+				create Result.make (a_parent_feature)
+				Result.set_next (inherited_feature_list)
+				inherited_feature_list := Result
+			end
+		ensure
+			inherited_feature_not_void: Result /= Void
+		end
+
+	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE is
+			-- Reset redeclared feature.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_parent_feature_not_void: a_parent_feature /= Void
+		do
+			if free_redeclared_feature /= Void then
+				Result := free_redeclared_feature
+				Result.reset (a_feature, a_parent_feature)
+				free_redeclared_feature := free_redeclared_feature.next
+			else
+				create Result.make (a_feature, a_parent_feature)
+				Result.set_next (redeclared_feature_list)
+				redeclared_feature_list := Result
+			end
+		ensure
+			redeclared_feature_not_void: Result /= Void
+		end
+
+	parent_feature_list: ET_PARENT_FEATURE
+			-- Parent feature free list
+
+	free_parent_feature: ET_PARENT_FEATURE
+			-- First available parent feature in free list
+
+	inherited_feature_list: ET_INHERITED_FEATURE
+			-- Inherited feature free list
+
+	free_inherited_feature: ET_INHERITED_FEATURE
+			-- First available inherited feature in free list
+
+	redeclared_feature_list: ET_REDECLARED_FEATURE
+			-- Redeclared feature free list
+
+	free_redeclared_feature: ET_REDECLARED_FEATURE
+			-- First available redeclared feature in free list
+
 invariant
 
 	named_features_not_void: named_features /= Void
 	no_void_named_feature: not named_features.has_item (Void)
-	new_features_count_positive: new_features_count >= 0
-	new_features_count_small_enough: new_features_count <= named_features.count
+	declared_feature_count_positive: declared_feature_count >= 0
+	declared_feature_count_small_enough: declared_feature_count <= named_features.count
 	rename_table_not_void: rename_table /= Void
 	no_void_rename: not rename_table.has_item (Void)
 	no_void_rename_old_name: not rename_table.has (Void)

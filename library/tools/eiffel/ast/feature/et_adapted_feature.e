@@ -14,26 +14,61 @@ deferred class ET_ADAPTED_FEATURE
 
 inherit
 
-	ET_FEATURE
+	ET_FLATTENED_FEATURE
 		redefine
-			type, arguments, is_inherited, is_selected,
-			replicated_seeds, seeded_feature,
-			selected_feature, replicated_features
+			is_immediate,
+			is_adapted,
+			adapted_feature
 		end
+
+	ET_REPLICABLE_FEATURE
 
 feature -- Status report
 
-	is_flattened: BOOLEAN is False
-			-- Is current feature flattened?
+	is_adapted: BOOLEAN is True
+			-- Is current feature being either inherited or redeclared?
 
-	is_inherited: BOOLEAN is True
-			-- Is current feature being inherited?
+	is_immediate: BOOLEAN is False
+			-- Is current feature immediate?
 
 	is_selected: BOOLEAN
 			-- Has an inherited feature been selected
 			-- to solve a replication conflict?
 
+	is_replicated: BOOLEAN is
+			-- Has current feature been replicated?
+		do
+			Result := replicated_seeds /= Void
+		ensure
+			definition: Result = (replicated_seeds /= Void)
+		end
+
+	has_selected_feature: BOOLEAN is
+			-- Does current inherited feature or one of its merged
+			-- or joined features appear in a Select clause?
+		do
+			Result := selected_feature /= Void
+		ensure
+			definition: Result = (selected_feature /= Void)
+		end
+
+	is_other_seeds_shared: BOOLEAN is
+			-- Is `other_seeds' object shared with one of
+			-- the precursors? (If shared, then we need to
+			-- clone it before modifying it.)
+		do
+			Result := (other_seeds = parent_feature.other_seeds)
+		end
+
 feature -- Access
+
+	name: ET_FEATURE_NAME is
+			-- Feature name
+		do
+			Result := parent_feature.name
+		ensure then
+			definition: Result = parent_feature.name
+		end
 
 	type: ET_TYPE is
 			-- Return type;
@@ -53,42 +88,50 @@ feature -- Access
 			definition: Result = flattened_feature.arguments
 		end
 
-	flattened_feature: ET_FLATTENED_FEATURE
+	first_seed: INTEGER
+			-- First seed
+
+	other_seeds: ET_FEATURE_IDS
+			-- Other seeds (feature IDs of first declarations
+			-- of current feature); May be Void if there
+			-- is only one seed (which is then accessible
+			-- through `first_seed')
+
+	flattened_feature: ET_FEATURE
 			-- Feature resulting after feature adaptation
 
-	parent_feature: ET_FEATURE is
+	parent_feature: ET_PARENT_FEATURE
 			-- Feature in `parent'
-		deferred
-		ensure
-			parent_feature_not_void: Result /= Void
-			parent_feature_inherited: Result.is_inherited
-			parent_feature_not_redeclared: not Result.is_redeclared
-		end
 
-	seeded_feature (a_seed: INTEGER): ET_FEATURE is
-			-- Either current feature or one of its merged or joined
+	seeded_feature (a_seed: INTEGER): ET_PARENT_FEATURE is
+			-- Either current parent feature or one of its merged or joined
 			-- features whose precursor feature has `a_seed' as seed
+		require
+			has_seed: has_seed (a_seed)
 		local
-			a_feature: ET_FEATURE
+			a_feature: ET_PARENT_FEATURE
 		do
 			from
 				a_feature := parent_feature
 			until
 				Result /= Void
 			loop
-				if a_feature.precursor_feature.has_seed (a_seed) then
+				if a_feature.has_seed (a_seed) then
 					Result := a_feature
 				else
 					a_feature := a_feature.merged_feature
 				end
 			end
+		ensure
+			seeded_feature_not_void: Result /= Void
+			has_seed: Result.has_seed (a_seed)
 		end
 
-	selected_feature: ET_FEATURE is
-			-- Either current feature or one of its merged or
+	selected_feature: ET_PARENT_FEATURE is
+			-- Either current parent feature or one of its merged or
 			-- joined features that appears in a Select clause?
 		local
-			a_feature: ET_FEATURE
+			a_feature: ET_PARENT_FEATURE
 		do
 			from
 				a_feature := parent_feature
@@ -102,6 +145,8 @@ feature -- Access
 					a_feature := a_feature.merged_feature
 				end
 			end
+		ensure
+			has_select: Result /= Void implies Result.has_select
 		end
 
 	adapted_feature: ET_ADAPTED_FEATURE is
@@ -109,22 +154,52 @@ feature -- Access
 			-- inherited components are flattened
 		do
 			Result := Current
+		end
+
+	first_feature: ET_ADAPTED_FEATURE is
+			-- First feature with a given seed
+		do
+			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+	selected_count: INTEGER is
+			-- Number of selected features
+		do
+			if has_selected_feature then
+				Result := 1
+			end
 		end
 
 	replicated_seeds: ET_FEATURE_IDS
 			-- Seeds involved when current feature has been replicated
 
-	replicated_features: DS_LINKED_LIST [ET_FEATURE]
+	replicated_features: DS_LINKED_LIST [ET_PARENT_FEATURE]
 			-- Features which had the same seed as current feature
 			-- in their parents but which have been replicated in
 			-- current class
+--		require
+--			is_selected: is_selected
 
-	break: ET_BREAK is
-			-- Break which appears just after current node
+feature -- Setting
+
+	set_first_seed (a_seed: INTEGER) is
+			-- Set `first_seed' to `a_seed'.
+		require
+			a_seed_positive: a_seed > 0
 		do
-			Result := flattened_feature.break
+			first_seed := a_seed
+		ensure
+			first_seed_set: first_seed = a_seed
+		end
+
+	set_other_seeds (a_seeds: like other_seeds) is
+			-- Set `other_seeds' to `a_seeds'.
+		do
+			other_seeds := a_seeds
+		ensure
+			other_seeds_set: other_seeds = a_seeds
 		end
 
 feature -- Status setting
@@ -154,14 +229,62 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_replicated_feature (a_feature: ET_FEATURE) is
+	put_parent_feature (a_feature: ET_PARENT_FEATURE) is
+			-- Add `a_feature' to the merged/joined features.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_merged: a_feature.merged_feature = Void
+			same_name: a_feature.name.same_feature_name (name)
+		local
+			a_seeds: like other_seeds
+			a_seed: INTEGER
+			i, nb: INTEGER
+			need_twin: BOOLEAN
+		do
+			a_feature.set_merged_feature (parent_feature.merged_feature)
+			parent_feature.set_merged_feature (a_feature)
+			need_twin := is_other_seeds_shared
+			a_seed := a_feature.first_seed
+			if not has_seed (a_seed) then
+				if other_seeds = Void then
+					create other_seeds.make (a_seed)
+					need_twin := False
+				else
+					if need_twin then
+						other_seeds := clone (other_seeds)
+						need_twin := False
+					end
+					other_seeds.put (a_seed)
+				end
+			end
+			a_seeds := a_feature.other_seeds
+			if a_seeds /= Void then
+				nb := a_seeds.count
+				from i := 1 until i > nb loop
+					a_seed := a_seeds.item (i)
+					if not has_seed (a_seed) then
+						if other_seeds = Void then
+							create other_seeds.make (a_seed)
+							need_twin := False
+						else
+							if need_twin then
+								other_seeds := clone (other_seeds)
+								need_twin := False
+							end
+							other_seeds.put (a_seed)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+
+	add_replicated_feature (a_feature: ET_PARENT_FEATURE) is
 			-- Add `a_feature' to `replicated_features'.
 		require
-			is_inherited: is_inherited
 			is_selected: is_selected
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
-			a_feature_not_redeclared: not a_feature.is_redeclared
 		do
 			if replicated_features = Void then
 				create replicated_features.make
@@ -169,37 +292,24 @@ feature -- Element change
 			replicated_features.force_last (a_feature)
 		end
 
-feature -- Type processing
+feature -- Link
 
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
+	next: like Current
+			-- Next linked feature if list of features
+
+	set_next (a_next: like Current) is
+			-- Set `next' to `a_next'.
 		do
-			flattened_feature.resolve_inherited_signature (a_parent)
-		end
-
-feature -- Conversion
-
-	undefined_feature (a_name: like name): ET_DEFERRED_ROUTINE is
-			-- Undefined version of current feature
-		do
-			Result := flattened_feature.undefined_feature (a_name)
-		end
-
-feature -- Processing
-
-	process (a_processor: ET_AST_PROCESSOR) is
-			-- Process current node.
-		do
-			flattened_feature.process (a_processor)
+			next := a_next
+		ensure
+			next_set: next = a_next
 		end
 
 invariant
 
-	not_flattened: not is_flattened
-	is_inherited: is_inherited
+	parent_feature_not_void: parent_feature /= Void
+	is_adapted: is_adapted
+	-- valid_replicated_seeds: replicated_seeds /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
+	no_void_replicated_features: replicated_features /= Void implies not replicated_features.has (Void)
 
 end

@@ -26,14 +26,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (f1, f2: ET_FEATURE) is
+	make (f1, f2: ET_ADAPTED_FEATURE) is
 			-- Create a new replicated feature, where
 			-- `f1' and `f2' have a common seed.
 		require
 			f1_not_void: f1 /= Void
-			f1_inherited: f1.is_inherited
 			f2_not_void: f2 /= Void
-			f2_inherited: f2.is_inherited
 		do
 			create features.make
 			put_feature (f1)
@@ -48,10 +46,10 @@ feature -- Access
 			Result := Current
 		end
 
-	features: DS_LINKED_LIST [ET_FEATURE]
+	features: DS_LINKED_LIST [ET_ADAPTED_FEATURE]
 			-- Inherited features with the same seed
 
-	first_feature: ET_FEATURE is
+	first_feature: ET_ADAPTED_FEATURE is
 			-- First inherited feature with the same seed
 		do
 			Result := features.first
@@ -69,11 +67,10 @@ feature -- Status report
 
 feature -- Element change
 
-	put_feature (a_feature: ET_FEATURE) is
+	put_feature (a_feature: ET_ADAPTED_FEATURE) is
 			-- Add `a_feature' to `features'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_inherited: a_feature.is_inherited
 		do
 			features.force_last (a_feature)
 			if a_feature.has_selected_feature then

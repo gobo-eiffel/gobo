@@ -16,7 +16,11 @@ inherit
 
 	ET_AST_NODE
 
-	ET_REPLICABLE_FEATURE
+	ET_FLATTENED_FEATURE
+		redefine
+			is_immediate,
+			immediate_feature
+		end
 
 	HASHABLE
 
@@ -26,8 +30,6 @@ feature -- Access
 			-- Feature name
 		do
 			Result := name_item.feature_name
-		ensure
-			name_not_void: Result /= Void
 		end
 
 	type: ET_TYPE is
@@ -201,17 +203,8 @@ feature -- Status report
 			-- Result := False
 		end
 
-	has_seed (a_seed: INTEGER): BOOLEAN is
-			-- Does current feature have `a_seed'?
-		do
-			if first_seed = a_seed then
-				Result := True
-			elseif other_seeds /= Void then
-				Result := other_seeds.has (a_seed)
-			end
-		ensure
-			definition: Result = (first_seed = a_seed or (other_seeds /= Void and then other_seeds.has (a_seed)))
-		end
+	is_immediate: BOOLEAN is True
+			-- Is current feature immediate?
 
 feature -- Export status
 
@@ -434,311 +427,20 @@ feature -- Type processing
 		deferred
 		end
 
-feature -- Inheritance / Feature adaptation
+feature -- Inheritance
 
-	is_inherited: BOOLEAN is
-			-- Is current feature being inherited?
-		do
-			Result := parent /= Void
-		ensure
-			definition: Result = (parent /= Void)
-		end
-
-	is_redeclared: BOOLEAN is
-			-- Is current feature being redeclared?
-		deferred
-		ensure
-			is_inherited: Result implies is_inherited
-		end
-
-	is_flattened: BOOLEAN is
-			-- Is current feature flattened?
-		deferred
-		ensure
-			definition: Result = (flattened_feature = Current)
-			not_inherited: not is_inherited implies Result
-		end
-
-	has_rename: BOOLEAN is
-			-- Does current feature appear in a Rename clause?
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			Result := new_name /= Void
-		ensure
-			definition: Result = (new_name /= Void)
-		end
-
-	has_redefine: BOOLEAN is
-			-- Does current feature appear in a Redefine clause?
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			Result := redefine_name /= Void
-		ensure
-			definition: Result = (redefine_name /= Void)
-		end
-
-	has_undefine: BOOLEAN is
-			-- Does current feature appear in an Undefine clause?
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			Result := undefine_name /= Void
-		ensure
-			definition: Result = (undefine_name /= Void)
-		end
-
-	has_select: BOOLEAN is
-			-- Does current feature appear in a Select clause?
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			Result := select_name /= Void
-		ensure
-			definition: Result = (select_name /= Void)
-		end
-
-	has_selected_feature: BOOLEAN is
-			-- Does current inherited feature or one of its merged
-			-- or joined features appear in a Select clause?
-		require
-			is_inherited: is_inherited
-		do
-			Result := selected_feature /= Void
-		ensure
-			definition: Result = (selected_feature /= Void)
-		end
-
-	is_other_seeds_shared: BOOLEAN is
-			-- Is `other_seeds' object shared with one of
-			-- the precursors? (If shared, then we need to
-			-- clone it before modifying it.)
-		require
-			is_inherited: is_inherited
-		do
-			Result := True
-		end
-
-	new_name: ET_RENAME is
-			-- New name when feature is renamed
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			-- Result := Void
-		end
-
-	undefine_name: ET_FEATURE_NAME is
-			-- Name listed in undefine clause
-			-- when feature is undefined
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			-- Result := Void
-		end
-
-	redefine_name: ET_FEATURE_NAME is
-			-- Name listed in redefine clause
-			-- when feature is redefined
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			-- Result := Void
-		end
-
-	select_name: ET_FEATURE_NAME is
-			-- Name listed in select clause
-			-- when feature is selected
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			-- Result := Void
-		end
-
-	selected_feature: ET_FEATURE is
-			-- Either current inherited feature or one of its merged
-			-- or joined features that appears in a Select clause?
-		require
-			is_inherited: is_inherited
-		do
-			-- Result := Void
-		ensure
-			is_inherited: Result /= Void implies Result.is_inherited
-			not_redeclared: Result /= Void implies not Result.is_redeclared
-			has_select: Result /= Void implies Result.has_select
-		end
-
-	precursor_feature: ET_FLATTENED_FEATURE is
-			-- Feature inherited from `parent'
-		require
-			is_inherited: is_inherited
-		deferred
-		ensure
-			precursor_feature_not_void: Result /= Void
-		end
-
-	inherited_feature: ET_INHERITED_FEATURE is
-			-- Current feature viewed as an inherited feature
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			create Result.make (precursor_feature, parent)
-		ensure
-			inherited_feature_not_void: Result /= Void
-			same_precursor_feature: Result.precursor_feature = precursor_feature
-			same_parent: Result.parent = parent
-		end
-
-	redeclared_feature: ET_REDECLARED_FEATURE is
-			-- Current feature viewed as a redeclared feature
-		require
-			is_redeclared: is_redeclared
-		do
-			check not_redeclared: not is_redeclared end
-		ensure
-			definition: Result = Current
-		end
-
-	merged_feature: ET_FEATURE is
-			-- Inherited feature being merged or joined
-			-- with current inherited feature
-		require
-			is_inherited: is_inherited
-			not_redeclared: not is_redeclared
-		do
-			-- Result := Void
-		ensure
-			void_if_shared: is_flattened implies Result = Void
-			is_inherited: Result /= Void implies Result.is_inherited
-			not_redeclared: Result /= Void implies not Result.is_redeclared
-		end
-
-	seeded_feature (a_seed: INTEGER): ET_FEATURE is
-			-- Either current inherited feature or one of its merged or
-			-- joined features whose precursor feature has `a_seed' as seed
-		require
-			is_inherited: is_inherited
-			has_seed: has_seed (a_seed)
-		do
-			Result := Current
-		ensure
-			seeded_feature_not_void: Result /= Void
-			seeded_feature_inherited: Result.is_inherited
-			seeded_feature_not_redeclared: not Result.is_redeclared
-			has_seed: Result.precursor_feature.has_seed (a_seed)
-		end
-
-	flattened_feature: ET_FLATTENED_FEATURE is
-			-- Feature resulting after feature adaptation
-		deferred
-		ensure
-			flattened_feature_not_void: Result /= Void
-		end
-
-	adapted_feature: ET_ADAPTED_FEATURE is
-			-- Version of current feature where none of its
-			-- inherited components are flattened
-		require
-			is_inherited: is_inherited
-		deferred
-		ensure
-			adapted_feature_not_void: Result /= Void
-		end
-
-	parent: ET_PARENT
-			-- Parent from which current feature is being inherited
-
-	set_parent (a_parent: like parent) is
-			-- Set `parent' to `a_parent'.
-		require
-			not_inherited: not is_inherited
-			a_parent_not_void: a_parent /= Void
-		do
-			parent := a_parent
-		ensure
-			parent_set: parent = a_parent
-		end
-
-	unset_parent is
-			-- Unset `parent'.
-		require
-			is_inherited: is_inherited
-			is_flattened: is_flattened
-		do
-			parent := Void
-		ensure
-			parent_unset: parent = Void
-		end
-
-feature -- Replication
-
-	is_selected: BOOLEAN is
-			-- Has an inherited feature been selected
-			-- to solve a replication conflict?
-		require
-			is_inherited: is_inherited
-		do
-			-- Result := False
-		end
-
-	is_replicated: BOOLEAN is
-			-- Has current feature been replicated?
-		require
-			is_inherited: is_inherited
-		do
-			Result := replicated_seeds /= Void
-		ensure
-			definition: Result = (replicated_seeds /= Void)
-		end
-
-	first_feature: ET_FEATURE is
-			-- First feature with a given seed
+	flattened_feature: ET_FEATURE is
+			-- Feature resulting after feature flattening
 		do
 			Result := Current
 		ensure then
 			definition: Result = Current
 		end
 
-	selected_count: INTEGER is
-			-- Number of selected features
+	immediate_feature: ET_FEATURE is
+			-- Current feature viewed as an immediate feature
 		do
-			if is_inherited and then has_selected_feature then
-				Result := 1
-			end
-		end
-
-	replicated_seeds: ET_FEATURE_IDS is
-			-- Seeds involved when current feature has been replicated
-		require
-			is_inherited: is_inherited
-		do
-			-- Result := Void
-		ensure
-			-- valid_seeds: Result /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
-		end
-
-	replicated_features: DS_LINKED_LIST [ET_FEATURE] is
-			-- Features which had the same seed as current feature
-			-- in their parents but which have been replicated in
-			-- current class
-		require
-			is_inherited: is_inherited
-			is_selected: is_selected
-		do
-			-- Result := Void
-		ensure
-			no_void_replicated_features: Result /= Void implies not Result.has (Void)
-			-- replicated_features_inherited: Result /= Void implies forall f in Result, f.is_inherited
-			-- replicated_features_not_redeclared: Result /= Void implies forall f in Result, not f.is_redeclared
+			Result := Current
 		end
 
 invariant
@@ -747,5 +449,6 @@ invariant
 	clients_not_void: clients /= Void
 	first_seed_positive: is_registered implies first_seed > 0
 	implementation_class_not_void: implementation_class /= Void
+	is_immediate: is_immediate
 
 end
