@@ -374,6 +374,9 @@ feature -- Processing
 				a_target := a_cursor.item
 				if a_target.is_exported_to_any then
 					output_file.put_line (a_target.full_name)
+					if a_target.obsolete_message /= Void then
+						output_file.put_line ("  obsolete. " + a_target.obsolete_message)
+					end
 					output_file.put_line ("  " + a_target.description)
 				end
 				a_cursor.forth

@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
 			a_description_element: XM_ELEMENT
+			a_obsolete_element: XM_ELEMENT
 			a_exports: DS_ARRAYED_LIST [STRING]
 			a_argument_elements: DS_LINKED_LIST [XM_ELEMENT]
 			a_argument_element: GEANT_ARGUMENT_ELEMENT
@@ -54,6 +55,12 @@ feature {NONE} -- Initialization
 
 				-- name:
 			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
+				-- obsolete:
+			a_obsolete_element := a_xml_element.element_by_name (Obsolete_element_name)
+			if a_obsolete_element /= Void then
+				set_obsolete_message (a_obsolete_element.text)
+			end
+				-- description:
 			a_description_element := a_xml_element.element_by_name (Description_element_name)
 			if a_description_element /= Void then
 				set_description (a_description_element.text)
@@ -110,6 +117,9 @@ feature -- Access
 
 	name: STRING
 			-- Name of target
+
+	obsolete_message: STRING
+			-- Obsolete message if any
 
 	description: STRING
 			-- Description of target
@@ -358,6 +368,17 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
+	set_obsolete_message (a_obsolete_message: STRING) is
+			-- Set `obsolete_message' to `a_obsolete_message'.
+		require
+			a_obsolete_message_not_void: a_obsolete_message /= Void
+			a_obsolete_message_not_empty: a_obsolete_message.count > 0
+		do
+			obsolete_message := a_obsolete_message
+		ensure
+			obsolete_message_set: obsolete_message = a_obsolete_message
+		end
+
 	set_description (a_description: STRING) is
 			-- Set `description' to `a_description'.
 		require
@@ -459,6 +480,9 @@ feature -- Processing
 						project.trace (<<project.name, ".", project.target_name (Current), ":">>)
 						project.trace (<<"">>)
 					end
+					if obsolete_message /= Void then
+						project.log (<<"target `", project.name, ".", project.target_name (Current), "' is obsolete. ", obsolete_message>>)
+					end
 						-- Change to the specified directory if "dir" attribute is provided:
 					if xml_element.has_attribute_by_name (Dir_attribute_name) then
 						a_new_target_cwd := project.variables.interpreted_string (
@@ -478,7 +502,8 @@ feature -- Processing
 						a_xml_element ?= cs.item
 						if a_xml_element /= Void then
 							if not STRING_.same_string (a_xml_element.name, Description_element_name) and then
-								not STRING_.same_string (a_xml_element.name, Argument_element_name) then
+								not STRING_.same_string (a_xml_element.name, Argument_element_name) and then
+								not STRING_.same_string (a_xml_element.name, Obsolete_element_name) then
 								execute_task (a_xml_element)
 							end
 						end
@@ -645,13 +670,22 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
+	Obsolete_element_name: STRING is
+			-- Name of xml subelement for obsolete
+		once
+			Result := "obsolete"
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: Result.count > 0
+		end
+
 	Argument_element_name: STRING is
 			-- Name of xml subelement for arguments
 		once
 			Result := "argument"
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Name_attribute_name: STRING is
