@@ -25,8 +25,6 @@ inherit
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
 
-	KL_IMPORTED_STRING_ROUTINES
-
 creation
 
 	make, make_with_size
