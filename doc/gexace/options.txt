@@ -304,7 +304,7 @@ SE:
 NAME: dead_code_removal
 
 VALUES: none | low_level | feature | class | all
-DEFAULT: feature
+DEFAULT: all
 DESCRIPTION: Do not include dead code in the generated application.
   'low_level' means that unreachable chuncks of code are not included,
   'feature' means that features which are never called are not
