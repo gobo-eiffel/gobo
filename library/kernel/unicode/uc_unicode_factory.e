@@ -12,6 +12,10 @@ indexing
 
 class UC_UNICODE_FACTORY
 
+inherit
+
+	UC_IMPORTED_UTF8_ROUTINES
+
 feature -- Access
 
 	new_unicode_string (a_string: STRING): UC_STRING is
@@ -19,7 +23,7 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 		do
-			!! Result.make_from_string (a_string)
+			!UC_UTF8_STRING! Result.make_from_string (a_string)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -29,9 +33,9 @@ feature -- Access
 			-- from `a_string' encoded in UTF-8
 		require
 			a_string_not_void: a_string /= Void
-			valid_utf8: valid_utf8 (a_string)
+			valid_utf8: utf8.valid_utf8 (a_string)
 		do
-			!! Result.make_from_utf8 (a_string)
+			!UC_UTF8_STRING! Result.make_from_utf8 (a_string)
 		ensure
 			new_string_not_void: Result /= Void
 		end
@@ -39,28 +43,10 @@ feature -- Access
 	new_unicode_character (a_char: CHARACTER): UC_CHARACTER is
 			-- New unicode character from Latin-1 character `a_char'
 		do
-			Result.make_from_character (a_char)
+			!! Result.make_from_character (a_char)
 		ensure
 			new_character_not_void: Result /= Void
 			code_set: Result.code = a_char.code
-		end
-
-feature -- Status report
-
-	valid_utf8 (s: STRING): BOOLEAN is
-			-- is `s' a valid UTF8-representation.
-			--| this will not check all errors!
-		require
-			string_exists: s /= void
-		do
-			Result := utf8utils.valid_utf8 (s, 1, s.count)
-		end
-
-feature {NONE} -- Implementation
-
-	utf8utils: UC_UTF8_UTILS is
-		once
-			!! Result
 		end
 
 end

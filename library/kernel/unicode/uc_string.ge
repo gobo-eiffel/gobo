@@ -1,0 +1,1448 @@
+indexing
+
+	description:
+
+		"Unicode strings"
+
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class UC_STRING
+
+inherit
+
+	KS_STRING
+		rename
+			item as latin1_item,
+			put as put_latin1,
+			has as has_latin1,
+			index_of as index_of_latin1,
+			occurrences as latin1_occurrences,
+			append_character as append_latin1,
+				-- Note: The postconditions of `infix "+"' in HACT 4.0.1
+				-- does not allow an ELKS compliant redefinition here.
+			infix "+" as old_infix_plus,
+				-- Note: The postconditions of `substring_index' in ISE 5.1
+				-- does not allow an ELKS compliant redefinition here.
+			substring_index as old_latin1_substring_index
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory
+#endif
+#ifdef HACT
+			setup, consistent
+#endif
+		redefine
+			latin1_item, substring, replace_substring,
+			put_latin1, append_latin1, is_equal, item_code
+		select
+#ifdef ISE || HACT
+				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
+				-- is not compliant with ELKS 2001 STRING and does not allow
+				-- a redefinition here. Redefine version from ANY instead.
+			out,
+#endif
+				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from ANY instead.
+			is_equal
+		end
+
+	STRING
+		rename
+#ifndef VE
+			capacity as byte_capacity,
+			set_count as old_set_count,
+#endif
+#ifdef ISE || HACT
+				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
+				-- is not compliant with ELKS 2001 STRING and does not allow
+				-- a redefinition here. Redefine version from ANY instead.
+			out as old_out,
+#endif
+#ifdef SE || VE
+			string as old_latin1_string,
+			same_string as old_same_latin1_string,
+			keep_head as old_keep_head,
+			keep_tail as old_keep_tail,
+			remove_head as old_remove_head,
+			remove_tail as old_remove_tail,
+			make_empty as old_make_empty,
+			make_filled as old_make_filled,
+			fill_with as old_fill_with,
+			insert_string as old_insert_string,
+			remove_substring as old_remove_substring,
+			as_lower as old_as_lower,
+			as_upper as old_as_upper,
+#endif
+#ifdef SE
+			prepend as old_prepend,
+			remove_prefix as old_remove_prefix,
+#endif
+#ifndef ISE
+			has_substring as old_has_latin1_substring,
+			insert_character as old_insert_character,
+#endif
+#ifndef HACT
+			is_empty as old_is_empty,
+#endif
+			make as old_make,
+			item as latin1_item,
+			put as put_latin1,
+			has as has_latin1,
+			index_of as index_of_latin1,
+			empty as old_empty,
+			occurrences as latin1_occurrences,
+			append_character as append_latin1,
+			make_from_string as old_make_from_string,
+				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from ANY instead.
+			is_equal as old_is_equal,
+				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from COMPARABLE instead.
+			infix "<" as old_infix_less,
+				-- Note: The postconditions of `infix "+"' in HACT 4.0.1
+				-- does not allow an ELKS compliant redefinition here.
+			infix "+" as old_infix_plus,
+				-- Note: The postconditions of `substring_index' in ISE 5.1
+				-- does not allow an ELKS compliant redefinition here.
+			substring_index as old_latin1_substring_index
+		export
+#ifdef SE
+			{UC_STRING_HANDLER} storage, compare;
+#endif
+			{NONE} all
+		undefine
+#ifdef VE
+			compare,
+#endif
+#ifndef ISE || HACT
+			out,
+#endif
+#ifdef SE
+			compare,
+#endif
+			put_latin1, append_latin1, latin1_item,
+			substring, append_string, replace_substring,
+			index_of_latin1, has_latin1, latin1_occurrences,
+			hash_code, head, tail, remove, to_lower, to_upper,
+			infix ">", infix "<=", infix ">=", max, min,
+			three_way_comparison, item_code
+		redefine
+#ifdef VE
+			latin1_item, substring, replace_substring,
+			put_latin1, append_latin1, item_code,
+#else
+			byte_capacity,
+#endif
+#ifdef SE || VE
+			old_latin1_string, old_same_latin1_string,
+			old_as_lower, old_as_upper,
+#endif
+#ifdef SE
+			old_prepend, old_remove_prefix,
+#endif
+			old_infix_plus, old_latin1_substring_index,
+			copy, infix "@", wipe_out
+		end
+
+	COMPARABLE
+		export
+			{NONE} all
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			three_way_comparison,
+			is_equal, copy, out
+#ifdef VE || SE
+		redefine
+#ifdef VE
+			is_equal
+#endif
+#endif
+		select
+				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from COMPARABLE instead.
+			infix "<"
+		end
+
+	UC_STRING_HANDLER
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+#ifdef VE
+		redefine
+			is_equal
+#endif
+		end
+
+	KL_SHARED_PLATFORM
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+#ifdef VE
+		redefine
+			is_equal
+#endif
+		end
+
+	UC_IMPORTED_UNICODE_ROUTINES
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+#ifdef VE
+		redefine
+			is_equal
+#endif
+		end
+
+	UC_IMPORTED_UTF8_ROUTINES
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+#ifdef VE
+		redefine
+			is_equal
+#endif
+		end
+
+	KL_IMPORTED_INTEGER_ROUTINES
+		export
+			{NONE} all
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+#ifdef VE
+		redefine
+			is_equal
+#endif
+		end
+
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+#ifdef VE
+		redefine
+			is_equal
+#endif
+		end
+
+feature -- Initialization
+
+	make (suggested_capacity: INTEGER) is
+			-- Create empty string, or remove all characters from
+			-- existing string.
+			-- (Extended from ELKS 2001 STRING)
+		require
+			non_negative_suggested_capacity: suggested_capacity >= 0
+		do
+#ifdef VE
+			!! storage.make_filled ('%U', suggested_capacity)
+			ve_make_byte_storage ('%U', 0)
+#else
+#ifdef HACT
+			count := 0
+#endif
+			old_make (suggested_capacity)
+#endif
+			byte_count := 0
+		ensure
+			empty_string: count = 0
+			byte_count_set: byte_count = 0
+			byte_capacity_set: byte_capacity >= suggested_capacity
+		end
+
+	make_from_string (s: STRING) is
+			-- Initialize from the character sequence of `s'.
+			-- (ELKS 2001 STRING)
+		require
+			s_not_void: s /= Void
+		deferred
+		ensure
+			initialized: same_string (s)
+		end
+
+feature {NONE} -- Initialization
+
+	make_empty is
+			-- Create empty string.
+			-- (ELKS 2001 STRING)
+		do
+			make (0)
+		ensure
+			empty: count = 0
+		end
+
+	make_from_substring (a_string: STRING; start_index, end_index: INTEGER) is
+			-- Initialize from the character sequence of `a_string'
+			-- between `start_index' and `end_index' inclusive.
+		require
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= a_string.count
+			meaningful_interval: start_index <= end_index + 1
+		deferred
+		ensure
+			-- Note: Too memory and time consumming with SmallEiffel:
+			--initialized: same_string (a_string.substring (start_index, end_index))
+		end
+
+	make_filled (c: UC_CHARACTER; n: INTEGER) is
+			-- Create string of length `n' filled with unicode character `c'.
+		require
+			c_not_void: c /= Void
+			valid_count: n >= 0
+		do
+			make_filled_code (c.code, n)
+		ensure
+			count_set: count = n
+			filled: occurrences (c) = count
+		end
+
+	make_filled_code (a_code: INTEGER; n: INTEGER) is
+			-- Create string of length `n' filled with unicode
+			-- character of code `a_code'.
+		require
+			valid_code: unicode.valid_code (a_code)
+			valid_count: n >= 0
+		deferred
+		ensure
+			count_set: count = n
+			filled: code_occurrences (a_code) = count
+		end
+
+	make_filled_latin1 (c: CHARACTER; n: INTEGER) is
+			-- Create string of length `n' filled with Latin-1 character `c'.
+			-- (`make_filled' in ELKS 2001 STRING)
+		require
+			valid_count: n >= 0
+		deferred
+		ensure
+			count_set: count = n
+			filled: latin1_occurrences (c) = count
+			all_latin1: code_occurrences (c.code) = count
+		end
+
+	make_from_utf8 (s: STRING) is
+			-- Initialize from the bytes sequence of `s' corresponding
+			-- to the UTF-8 representation of a string.
+		require
+			s_not_void: s /= Void
+			valid_utf8: utf8.valid_utf8 (s)
+		deferred
+		end
+
+feature -- Access
+
+	item (i: INTEGER): UC_CHARACTER is
+			-- Unicode character at index `i';
+			-- Return a new object at each call
+		require
+			valid_index: valid_index (i)
+		do
+			!! Result.make_from_code (item_code (i))
+		ensure
+			item_not_void: Result /= Void
+			code_set: Result.code = item_code (i)
+		end
+
+	item_code (i: INTEGER): INTEGER is
+			-- Code of character at index `i'
+		deferred
+		ensure then
+			valid_item_code: unicode.valid_code (Result)
+		end
+
+	latin1_item (i: INTEGER): CHARACTER is
+			-- Latin-1 character at index `i';
+			-- '%U' if the unicode character at index
+			-- `i' cannot fit into a CHARACTER
+			-- (Extended from `item' in ELKS 2001 STRING)
+		deferred
+		ensure then
+			latin1_code: item_code (i) <= Platform.Maximum_character_code implies Result.code = item_code (i)
+			overflow: item_code (i) > Platform.Maximum_character_code implies Result = '%U'
+		end
+
+	infix "@" (i: INTEGER): CHARACTER is
+			-- Character at index `i'
+			-- (ELKS 2001 STRING)
+		do
+			Result := latin1_item (i)
+		end
+
+	substring (start_index, end_index: INTEGER): like Current is
+			-- New object containing all characters
+			-- from `start_index' to `end_index' inclusive
+			-- (ELKS 2001 STRING)
+		require else
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningful_interval: start_index <= end_index + 1
+		deferred
+		ensure then
+			first_unicode_item: Result.count > 0 implies Result.item_code (1) = item_code (start_index)
+		end
+
+	substring_index (other: STRING; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of `other' at or after `start_index';
+			-- 0 if none
+		require
+			other_not_void: other /= Void
+			valid_start_index: start_index >= 1 and start_index <= count + 1
+		deferred
+		ensure
+			valid_result: Result = 0 or else (start_index <= Result and Result <= count - other.count + 1)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has_substring (other)
+			-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
+			--at_this_index: Result >= start_index implies other.same_string (substring (Result, Result + other.count - 1))
+			at_this_index: Result >= start_index implies substring (Result, Result + other.count - 1).same_string (other)
+			none_before: Result > start_index implies not substring (start_index, Result + other.count - 2).has_substring (other)
+		end
+
+	latin1_substring_index (other: STRING; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of `other' at or after `start_index';
+			-- 0 if none. `other' and `Current' are considered with their
+			-- characters which do not fit in a CHARACTER replaced by a '%U'
+			-- (`substring_index' in ELKS 2001 STRING)
+		require
+			other_not_void: other /= Void
+			valid_start_index: start_index >= 1 and start_index <= count + 1
+		deferred
+		ensure
+			valid_result: Result = 0 or else (start_index <= Result and Result <= count - other.count + 1)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has_latin1_substring (other)
+			-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
+			--at_this_index: Result >= start_index implies other.same_string (substring (Result, Result + other.count - 1))
+			at_this_index: Result >= start_index implies substring (Result, Result + other.count - 1).same_latin1_string (other)
+			none_before: Result > start_index implies not substring (start_index, Result + other.count - 2).has_latin1_substring (other)
+		end
+
+	latin1_string: STRING is
+			-- New STRING having the same Latin-1 character sequence as `Current'
+			-- (`string' in ELKS 2001 STRING)
+		deferred
+		ensure
+			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			first_item: count > 0 implies Result.item (1) = latin1_item (1)
+			recurse: count > 1 implies Result.substring (2, count).is_equal (substring (2, count).latin1_string)
+		end
+
+	infix "+" (other: STRING): like Current is
+			-- New object which is a clone of `Current' extended
+			-- by the characters of `other'
+			-- (ELKS 2001 STRING)
+		require
+			other_not_void: other /= Void
+		deferred
+		ensure
+			result_not_void: Result /= Void
+			result_count: Result.count = count + other.count
+			initial: Result.substring (1, count).is_equal (Current)
+			final: Result.substring (count + 1, count + other.count).same_string (other)
+		end
+
+	index_of (c: UC_CHARACTER; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of `c' at or after `start_index';
+			-- 0 if none
+		require
+			valid_start_index: start_index >= 1 and start_index <= count + 1
+		do
+			Result := index_of_code (c.code, start_index)
+		ensure
+			valid_result: Result = 0 or (start_index <= Result and Result <= count)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has (c)
+			found_if_present: substring (start_index, count).has (c) implies item_code (Result) = c.code
+			none_before: substring (start_index, count).has (c) implies not substring (start_index, Result - 1).has (c)
+		end
+
+	index_of_code (a_code: INTEGER; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of unicode character with
+			-- code `a_code' at or after `start_index'; 0 if none
+		require
+			valid_start_index: start_index >= 1 and start_index <= count + 1
+			valid_code: unicode.valid_code (a_code)
+		deferred
+		ensure
+			valid_result: Result = 0 or (start_index <= Result and Result <= count)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has_code (a_code)
+			found_if_present: substring (start_index, count).has_code (a_code) implies item_code (Result) = a_code
+			none_before: substring (start_index, count).has_code (a_code) implies not substring (start_index, Result - 1).has_code (a_code)
+		end
+
+feature -- Measurement
+
+	occurrences (c: UC_CHARACTER): INTEGER is
+			-- Number of times `c' appears in the string
+		require
+			c_not_void: c /= Void
+		do
+			Result := code_occurrences (c.code)
+		ensure
+			zero_if_empty: count = 0 implies Result = 0
+			recurse_if_not_found_at_first_position: (count > 0 and then item_code (1) /= c.code) implies
+				Result = substring (2, count).occurrences (c)
+			recurse_if_found_at_first_position: (count > 0 and then item_code (1) = c.code) implies
+				Result = 1 + substring (2, count).occurrences (c)
+		end
+
+	code_occurrences (a_code: INTEGER): INTEGER is
+			-- Number of times unicode character of code
+			-- `a_code' appears in the string
+		require
+			valid_code: unicode.valid_code (a_code)
+		deferred
+		ensure
+			zero_if_empty: count = 0 implies Result = 0
+			recurse_if_not_found_at_first_position: (count > 0 and then item_code (1) /= a_code) implies
+				Result = substring (2, count).code_occurrences (a_code)
+			recurse_if_found_at_first_position: (count > 0 and then item_code (1) = a_code) implies
+				Result = 1 + substring (2, count).code_occurrences (a_code)
+		end
+
+	byte_count: INTEGER
+			-- Number of bytes in internal storage
+
+#ifdef SE
+	byte_capacity: INTEGER
+#else
+	byte_capacity: INTEGER is
+#endif
+			-- Maximum number of bytes that can be put in
+			-- internal storage
+#ifndef SE
+		do
+#ifdef VE
+			Result := storage.count
+#else
+			Result := precursor
+#endif
+		end
+#endif
+
+feature -- Status report
+
+	has (c: UC_CHARACTER): BOOLEAN is
+			-- Does `Current' contain `c'?
+		require
+			c_not_void: c /= Void
+		do
+			Result := has_code (c.code)
+		ensure
+			false_if_empty: count = 0 implies not Result
+			true_if_first: count > 0 and then item_code (1) = c.code implies Result
+			recurse: (count > 0 and then item_code (1) /= c.code) implies (Result = substring (2, count).has (c))
+		end
+
+	has_code (a_code: INTEGER): BOOLEAN is
+			-- Does `Current' contain the unicode character of code `a_code'?
+		require
+			valid_code: unicode.valid_code (a_code)
+		deferred
+		ensure
+			false_if_empty: count = 0 implies not Result
+			true_if_first: count > 0 and then item_code (1) = a_code implies Result
+			recurse: (count > 0 and then item_code (1) /= a_code) implies (Result = substring (2, count).has_code (a_code))
+		end
+
+	has_substring (other: STRING): BOOLEAN is
+			-- Does `Current' contain `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := (substring_index (other, 1) /= 0)
+		ensure
+			false_if_too_small: count < other.count implies not Result
+			-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
+			--true_if_initial: (count >= other.count and then other.same_string (substring (1, other.count))) implies Result
+			--recurse: (count >= other.count and then not other.same_string (substring (1, other.count))) implies (Result = substring (2, count).has_substring (other))
+			true_if_initial: (count >= other.count and then substring (1, other.count).same_string (other)) implies Result
+			recurse: (count >= other.count and then not substring (1, other.count).same_string (other)) implies (Result = substring (2, count).has_substring (other))
+			has_latin1_substring: Result implies has_latin1_substring (other)
+		end
+
+	has_latin1_substring (other: STRING): BOOLEAN is
+			-- Does `Current' contain `other'?
+			-- `other' and `Current' are considered with their characters
+			-- which do not fit in a CHARACTER replaced by a '%U'.
+			-- (`has_substring' in ELKS 2001 STRING)
+		require
+			other_not_void: other /= Void
+		do
+			Result := (latin1_substring_index (other, 1) /= 0)
+		ensure
+			false_if_too_small: count < other.count implies not Result
+			-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
+			--true_if_initial: (count >= other.count and then other.same_string (substring (1, other.count))) implies Result
+			--recurse: (count >= other.count and then not other.same_string (substring (1, other.count))) implies (Result = substring (2, count).has_latin1_substring (other))
+			true_if_initial: (count >= other.count and then substring (1, other.count).same_latin1_string (other)) implies Result
+			recurse: (count >= other.count and then not substring (1, other.count).same_latin1_string (other)) implies (Result = substring (2, count).has_latin1_substring (other))
+		end
+
+	is_empty: BOOLEAN is
+			-- Is string empty?
+			-- (ELKS 2001 STRING)
+		do
+			Result := (count = 0)
+		ensure
+			definition: Result = (count = 0)
+		end
+
+	is_ascii: BOOLEAN is
+			-- Does string contain only ASCII characters?
+		deferred
+		ensure
+			empty: count = 0 implies Result
+			recurse: count > 0 implies Result = (item (1).is_ascii and substring (2, count).is_ascii)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered equal
+			-- to current object?
+			-- (Extended from ELKS 2001 STRING)
+		deferred
+		ensure then
+			unicode_definition:
+				Result = (same_type (other) and then count = other.count and then
+				(count > 0 implies (item_code (1) = other.item_code (1) and 
+				substring (2, count).is_equal (other.substring (2, count)))))
+		end
+
+	infix "<" (other: like Current): BOOLEAN is
+	--infix "<" (other: STRING): BOOLEAN is
+			-- Is string lexicographically lower than `other'?
+			-- (Extended from ELKS 2001 STRING, inherited from COMPARABLE)
+		do
+			Result := (three_way_comparison (other) = -1)
+		ensure then
+			unicode_definition: Result = (count = 0 and other.count > 0 or
+				count > 0 and then other.count > 0 and then (item_code (1) < other.item_code (1) or
+				item_code (1) = other.item_code (1) and substring (2, count) < other.substring (2, other.count)))
+		end
+
+	same_latin1_string (other: STRING): BOOLEAN is
+			-- Do `Current' and `other' have the same Latin-1 character sequence?
+			-- (ELKS 2001 STRING)
+		require
+			other_not_void: other /= Void
+		deferred
+		ensure
+			-- Note: Feature `string' (from ELKS 2001) is not supported by all compilers yet:
+			--definition: Result = latin1_string.is_equal (other.latin1_string)
+			definition: Result = (count = other.count and then
+				(count > 0 implies (latin1_item (1) = other.item (1) and 
+				substring (2, count).same_latin1_string (other.substring (2, count)))))
+		end
+
+	same_string (other: STRING): BOOLEAN is
+			-- Do `Current' and `other' have the same unicode character sequence?
+		require
+			other_not_void: other /= Void
+		deferred
+		ensure
+			definition: Result = (count = other.count and then
+				(count > 0 implies (item_code (1) = other.item_code (1) and 
+				substring (2, count).same_string (other.substring (2, count)))))
+			same_latin1_string: Result implies same_latin1_string (other)
+		end
+
+feature -- Element change
+
+	put (c: UC_CHARACTER; i: INTEGER) is
+			-- Replace unicode character at index `i' by `c'.
+		require
+			valid_index: valid_index (i)
+			c_not_void: c /= Void
+		do
+			put_code (c.code, i)
+		ensure
+			stable_count: count = old count
+			replaced: item_code (i) = c.code
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i + 1, count))
+		end
+
+	put_code (a_code: INTEGER; i: INTEGER) is
+			-- Replace unicode character at index `i'
+			-- by unicode character of code `a_code'.
+		require
+			valid_index: valid_index (i)
+			valid_item_code: unicode.valid_code (a_code)
+		deferred
+		ensure
+			stable_count: count = old count
+			replaced: item_code (i) = a_code
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i + 1, count))
+		end
+
+	put_latin1 (c: CHARACTER; i: INTEGER) is
+			-- Replace unicode character at index `i'
+			-- by Latin-1 character `c'.
+			-- (ELKS 2001 STRING)
+		deferred
+		ensure then
+			latin1_replaced: item_code (i) = c.code
+		end
+
+	append_character (c: UC_CHARACTER) is
+			-- Append unicode character `c' at end.
+		require
+			c_not_void: c /= Void
+		do
+			append_code (c.code)
+		ensure
+			new_count: count = old count + 1
+			appended: item_code (count) = c.code
+			stable_before: substring (1, count - 1).is_equal (old clone (Current))
+		end
+
+	append_code (a_code: INTEGER) is
+			-- Append unicode character of code `a_code' at end.
+		require
+			valid_item_code: unicode.valid_code (a_code)
+		deferred
+		ensure
+			new_count: count = old count + 1
+			appended: item_code (count) = a_code
+			stable_before: substring (1, count - 1).is_equal (old clone (Current))
+		end
+
+	append_latin1 (c: CHARACTER) is
+			-- Append Latin-1 character `c' at end.
+			-- (ELKS 2001 STRING)
+		deferred
+		ensure then
+			latin1_appended: item_code (count) = c.code
+		end
+
+	fill_with (c: UC_CHARACTER) is
+			-- Replace every character with unicode character `c'.
+		require
+			c_not_void: c /= Void
+		do
+			fill_with_code (c.code)
+		ensure
+			same_count: old count = count
+			filled: occurrences (c) = count
+		end
+
+	fill_with_code (a_code: INTEGER) is
+			-- Replace every character with unicode character of code `a_code'.
+		require
+			valid_code: unicode.valid_code (a_code)
+		deferred
+		ensure
+			same_count: old count = count
+			filled: code_occurrences (a_code) = count
+		end
+
+	fill_with_latin1 (c: CHARACTER) is
+			-- Replace every character with Latin-1 character `c'.
+			-- (ELKS 2001 STRING)
+		deferred
+		ensure
+			same_count: old count = count
+			filled: latin1_occurrences (c) = count
+			all_latin1: code_occurrences (c.code) = count
+		end
+
+	insert_character (c: UC_CHARACTER; i: INTEGER) is
+			-- Insert unicode character `c' at index `i', shifting
+			-- characters between ranks `i' and `count' rightwards.
+		require
+			c_not_void: c /= Void
+			valid_insertion_index: 1 <= i and i <= count + 1
+		do
+			insert_code (c.code, i)
+		ensure
+			one_more_character: count = old count + 1
+			inserted: item_code (i) = c.code
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
+		end
+
+	insert_code (a_code: INTEGER; i: INTEGER) is
+			-- Insert unicode character of code `a_code'
+			-- at index `i', shifting characters between
+			-- ranks `i' and `count' rightwards.
+		require
+			valid_code: unicode.valid_code (a_code)
+			valid_insertion_index: 1 <= i and i <= count + 1
+		deferred
+		ensure
+			one_more_character: count = old count + 1
+			inserted: item_code (i) = a_code
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
+		end
+
+	insert_latin1 (c: CHARACTER; i: INTEGER) is
+			-- Insert Latin-1 character `c' at index `i', shifting
+			-- characters between ranks `i' and `count' rightwards.
+			-- (ELKS 2001 STRING)
+		require
+			valid_insertion_index: 1 <= i and i <= count + 1
+		deferred
+		ensure
+			one_more_character: count = old count + 1
+			inserted: latin1_item (i) = c
+			latin1_inserted: item_code (i) = c.code
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
+		end
+
+	insert_string (s: STRING; i: INTEGER) is
+			-- Insert `s' at index `i', shifting characters between ranks
+			-- `i' and `count' rightwards.
+			-- (ELKS 2001 STRING)
+		require
+			string_not_void: s /= Void
+			valid_insertion_index: 1 <= i and i <= count + 1
+		deferred
+		ensure
+			inserted: is_equal (old substring (1, i - 1) + old clone (s) + old substring (i, count))
+		end
+
+	replace_substring (s: like Current; start_index, end_index: INTEGER) is
+	-- Note: VE 4.0, HACT 4.0.1 and ISE 5.1 have 'like Current' in their
+	-- signature instead of STRING as specified in ELKS 2001:
+	--replace_substring (s: STRING; start_index, end_index: INTEGER) is
+			-- Replace the substring from `start_index' to `end_index',
+			-- inclusive, with `s'.
+			-- (ELKS 2001 STRING)
+		require else
+			string_not_void: s /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningful_interval: start_index <= end_index + 1
+			-- Note: The postcondition inherited from ISE 5.1 and HACT 4.0.1
+			-- does not allow replacing a substring by itself:
+			not_current: s /= Current
+		deferred
+		ensure then
+			replaced: is_equal (old (substring (1, start_index - 1) + s + substring (end_index + 1, count)))
+		end
+
+feature -- Removal
+
+	keep_head (n: INTEGER) is
+			-- Remove all the characters except for the first `n';
+			-- if `n' > `count', do nothing.
+			-- (ELKS 2001 STRING)
+		require
+			n_non_negative: n >= 0
+		do
+			head (n)
+		ensure
+			kept: is_equal (old substring (1, n.min (count)))
+		end
+
+	keep_tail (n: INTEGER) is
+			-- Remove all the characters except for the last `n';
+			-- if `n' > `count', do nothing.
+			-- (ELKS 2001 STRING)
+		require
+			n_non_negative: n >= 0
+		do
+			tail (n)
+		ensure
+			kept: is_equal (old substring (count - n.min (count) + 1, count))
+		end
+
+	remove_head (n: INTEGER) is
+			-- Remove the first `n' characters;
+			-- if `n' > `count', remove all.
+			-- (ELKS 2001 STRING)
+		require
+			n_non_negative: n >= 0
+		do
+			if n >= count then
+				wipe_out
+			elseif n > 0 then
+				keep_tail (count - n)
+			end
+		ensure
+			removed: is_equal (old substring (n.min (count) + 1, count))
+		end
+
+	remove_tail (n: INTEGER) is
+			-- Remove the last `n' characters;
+			-- if `n' > `count', remove all.
+			-- (ELKS 2001 STRING)
+		require
+			n_non_negative: n >= 0
+		do
+			if n >= count then
+				wipe_out
+			elseif n > 0 then
+				keep_head (count - n)
+			end
+		ensure
+			removed: is_equal (old substring (1, count - n.min (count)))
+		end
+
+	remove_substring (start_index, end_index: INTEGER) is
+			-- Remove all characters from `start_index'
+			-- to `end_index' inclusive.
+			-- (ELKS 2001 STRING)
+		require
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningful_interval: start_index <= end_index + 1
+		deferred
+		ensure
+			removed: is_equal (old substring (1, start_index - 1) + old substring (end_index + 1, count))
+		end
+
+	wipe_out is
+			-- Remove all characters.
+			-- (ELKS 2001 STRING)
+		do
+#ifdef ISE || HACT
+				-- Preserve postcondition inherited from STRING.
+			precursor
+#endif
+			byte_count := 0
+			set_count (0)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Reinitialize by copying the characters of `other'.
+			-- (This is also used by clone.)
+			-- (ELKS 2001 STRING)
+#ifdef ISE || SE
+		local
+#ifdef ISE
+			old_area: like area
+#endif
+#ifdef SE
+			c: INTEGER
+#endif
+#endif
+		do
+			if other /= Current then
+#ifdef ISE
+				old_area := area
+				standard_copy (other)
+				if old_area = Void or else old_area.count < area.count then
+					area := standard_clone (area)
+				else
+					($old_area).memory_copy ($area, byte_count)
+					area := old_area
+				end
+#endif
+#ifdef VE
+				c_string_copy (other)
+				storage := clone (other.storage)
+				byte_count := other.byte_count
+#endif
+#ifdef HACT
+				byte_count := other.byte_count
+				precursor (other)
+#endif
+#ifdef SE
+				c := other.byte_count
+				if c > 0 then
+					if byte_capacity < c then
+						storage := storage.calloc (c)
+						byte_capacity := c
+					end
+					storage.copy_from (other.storage, c - 1)
+				end
+				count := other.count
+				byte_count := other.byte_count
+#endif
+			end
+		end
+
+feature -- Conversion
+
+	as_lower: like Current is
+			-- New object with all letters in lower case
+			-- (Extended from ELKS 2001 STRING)
+		deferred
+		ensure
+			as_lower_not_void: Result /= Void
+			length: Result.count = count
+			anchor: count > 0 implies Result.item (1).is_equal (item (1).as_lower)
+			recurse: count > 1 implies Result.substring (2, count).is_equal (substring (2, count).as_lower)
+		end
+
+	as_upper: like Current is
+			-- New object with all letters in upper case
+			-- (Extended from ELKS 2001 STRING)
+		deferred
+		ensure
+			as_upper_not_void: Result /= Void
+			length: Result.count = count
+			anchor: count > 0 implies Result.item (1).is_equal (item (1).as_upper)
+			recurse: count > 1 implies Result.substring (2, count).is_equal (substring (2, count).as_upper)
+		end
+
+	to_utf8: STRING is
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-8 representation of current string
+		deferred
+		ensure
+			to_utf8_not_void: Result /= Void
+			valid_utf8: utf8.valid_utf8 (Result)
+		end
+
+feature -- Traversal
+
+	item_code_at_byte_index (i: INTEGER): INTEGER is
+			-- Code of character at byte index `i'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+			is_encoded_first_byte: is_encoded_first_byte (i)
+		deferred
+		ensure
+			valid_item_code: unicode.valid_code (Result)
+		end
+
+	next_byte_index (i: INTEGER): INTEGER is
+			-- Byte index of unicode character after character
+			-- at byte index `i'; Return 'byte_count + 1' if
+			-- character at byte index `i' is the last character
+			-- in the string
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+			is_encoded_first_byte: is_encoded_first_byte (i)
+		deferred
+		ensure
+			next_byte_index_large_enough: Result > i
+			next_byte_index_small_enough: Result <= byte_count + 1
+		end
+
+	shifted_byte_index (i: INTEGER; n: INTEGER): INTEGER is
+			-- Byte index of unicode character `n' positions after
+			-- character at byte index `i'; Return 'byte_count + 1'
+			-- if no such character in the string
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+			is_encoded_first_byte: is_encoded_first_byte (i)
+			n_positive: n >= 0
+		deferred
+		ensure
+			next_byte_index_large_enough: Result >= i
+			next_byte_index_small_enough: Result <= byte_count + 1
+		end
+
+	byte_index (i: INTEGER): INTEGER is
+			-- Byte index of character at index `i'
+		require
+			valid_index: valid_index (i)
+		deferred
+		ensure
+			byte_index_large_enough: Result >= 1
+			byte_index_small_enough: Result <= byte_count
+			is_encoded_first_byte: is_encoded_first_byte (Result)
+		end
+
+	is_encoded_first_byte (i: INTEGER): BOOLEAN is
+			-- Is byte at index `i' the first byte of an encoded unicode character?
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+		deferred
+		end
+
+feature -- Obsolete
+
+	empty: BOOLEAN is
+			-- Is string empty?
+		obsolete
+			"[011225] Use `is_empty' instead."
+		do
+			Result := is_empty
+		end
+
+	append_uc_string (a_string: UC_STRING) is
+			-- Append a copy of `a_string' at end.
+		obsolete
+			"[011225] Use `append_string' instead."
+		require
+			a_string_not_void: a_string /= Void
+		do
+			append_string (a_string)
+		end
+
+	append_uc_character (c: UC_CHARACTER) is
+			-- Append unicode character `c' at end.
+		obsolete
+			"[020428] Use `append_character' instead."
+		require
+			c_not_void: c /= Void
+		do
+			append_character (c)
+		end
+
+feature {UC_STRING_HANDLER} -- Implementation
+
+#ifdef VE
+	storage: STRING
+			-- Internal byte storage
+
+#endif
+	byte_item (i: INTEGER): CHARACTER is
+			-- Byte at index `i'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+		do
+#ifdef VE
+			Result := storage.item (i)
+#endif
+#ifdef ISE || HACT
+			Result := area.item (i - 1)
+#endif
+#ifdef SE
+			Result := storage.item (i - 1)
+#endif
+		end
+
+	put_byte (c: CHARACTER; i: INTEGER) is
+			-- Replace byte at index `i' by `c'.
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+		do
+#ifdef VE
+			storage.put (c, i)
+#endif
+#ifdef ISE || HACT
+			area.put (c, i - 1)
+#endif
+#ifdef SE
+			storage.put (c, i - 1)
+#endif
+		end
+
+	resize_byte_storage (n: INTEGER) is
+			-- Resize space for `n' bytes.
+			-- Do not lose previously stored bytes.
+		require
+			n_large_enough: n >= byte_capacity
+		do
+			if n > byte_capacity then
+#ifdef HACT
+				area := str_resize ($area, n)
+#endif
+#ifdef ISE
+				if area.count = 1 then
+					make_area (n + 1)
+				else
+					area := str_resize ($area, n + 1)
+				end
+#endif
+#ifdef SE
+				if byte_capacity = 0 then
+					storage := storage.calloc (n)
+				else
+					storage := storage.realloc (byte_capacity, n)
+				end
+				byte_capacity := n
+#endif
+#ifdef VE
+				storage.resize (n)
+#endif
+			end
+		ensure
+			byte_capacity_set: byte_capacity = n
+		end
+
+	move_bytes_right (i, offset: INTEGER) is
+			-- Move bytes at and after position `i'
+			-- by `offset' positions to the right.
+		require
+			valid_index: 1 <= i and i <= byte_count + 1
+			positive_offset: offset >= 0
+			offset_small_enough: offset <= (byte_capacity - byte_count)
+		local
+			j, nb: INTEGER
+		do
+			from
+#ifdef VE
+				j := byte_count
+				nb := i
+#else
+				j := byte_count - 1
+				nb := i - 1
+#endif
+				byte_count := byte_count + offset
+			until
+				j < nb
+			loop
+#ifdef SE
+				storage.put (storage.item (j), j + offset)
+#endif
+#ifdef ISE || HACT
+				area.put (area.item (j), j + offset)
+#endif
+#ifdef VE
+				storage.put (storage.item (j), j + offset)
+#endif
+				j := j - 1
+			end
+		ensure
+			byte_count_set: byte_count = old byte_count + offset
+		end
+
+	move_bytes_left (i, offset: INTEGER) is
+			-- Move bytes at and after position `i'
+			-- by `offset' positions to the left.
+		require
+			valid_index: 1 <= i and i <= byte_count + 1
+			positive_offset: offset >= 0
+			constraint: offset < i
+		local
+			j, nb: INTEGER
+		do
+			from
+#ifdef VE
+				j := i
+				nb := byte_count
+#else
+				j := i - 1
+				nb := byte_count - 1
+#endif
+			until
+				j > nb
+			loop
+#ifdef SE
+				storage.put (storage.item (j), j - offset)
+#endif
+#ifdef ISE || HACT
+				area.put (area.item (j), j - offset)
+#endif
+#ifdef VE
+				storage.put (storage.item (j), j - offset)
+#endif
+				j := j + 1
+			end
+			byte_count := byte_count - offset
+		ensure
+			byte_count_set: byte_count = old byte_count - offset
+		end
+
+	set_byte_count (nb: INTEGER) is
+			-- Set `byte_count' to `nb'.
+		require
+			nb_large_enough: nb >= 0
+			nb_small_enough: nb <= byte_capacity
+		do
+			byte_count := nb
+		ensure
+			byte_count_set: byte_count = nb
+		end
+
+	set_count (nb: INTEGER) is
+			-- Set `count' to `nb'.
+		require
+			nb_positive: nb >= 0
+#ifdef VE
+		local
+			s: STRING
+#endif
+		do
+#ifdef VE
+			if nb > count then
+				!! s.make_filled ('%U', nb - count)
+				ve_append_string (s)
+			elseif nb < count then
+				ve_keep_head (nb)
+			end
+#else
+			count := nb
+#endif
+		ensure
+			count_set: count = nb
+		end
+
+feature {NONE} -- Implementation
+
+	dummy_latin1: STRING is ""
+			-- Latin-1 string
+
+#ifdef VE
+	ve_make_byte_storage (c: CHARACTER; n: INTEGER) is
+			-- Create storage of length `n' bytes filled with `c'.
+		require
+			valid_count: n >= 0
+		external
+			"CWC"
+		alias
+			"_STR_make_filled"
+		ensure
+			count_set: count = n
+		end
+
+	ve_append_string (s: STRING) is
+			-- Append a copy of `s' at end.
+		external
+			"CWC"
+		alias
+			"_STR_append_string"
+		end
+
+	ve_keep_head (n: INTEGER) is
+			-- Remove all the characters except for the first `n';
+			-- if `n' >= `count', do nothing.
+		require
+			n_non_negative: n >= 0
+		external
+			"CWC"
+		alias
+			"_STR_head"
+		end
+
+#endif
+feature {UC_STRING} -- Inapplicable
+
+	old_infix_plus (other: STRING): like Current is
+			-- New object which is a clone of `Current' extended
+			-- by the characters of `other'
+			-- (ELKS 2001 STRING)
+		do
+			Result := Current + other
+		end
+
+	old_latin1_substring_index (other: STRING; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of `other' at or after `start_index';
+			-- 0 if none
+			-- (ELKS 2001 STRING)
+		do
+			Result := latin1_substring_index (other, start_index)
+		end
+
+#ifdef SE || VE
+	old_latin1_string: STRING is
+			-- New STRING having the same Latin-1 character sequence as `Current'
+			-- (ELKS 2001 STRING)
+		do
+			Result := latin1_string
+		end
+
+	old_same_latin1_string (other: STRING): BOOLEAN is
+			-- Do `Current' and `other' have the same Latin-1 character sequence?
+			-- (ELKS 2001 STRING)
+		do
+			Result := same_latin1_string (other)
+		end
+
+	old_as_lower: like Current is
+			-- New object with all letters in lower case
+			-- (Extended from ELKS 2001 STRING)
+		do
+			Result := as_lower
+		end
+
+	old_as_upper: like Current is
+			-- New object with all letters in upper case
+			-- (Extended from ELKS 2001 STRING)
+		do
+			Result := as_upper
+		end
+
+#endif
+#ifdef SE
+feature {NONE} -- Inapplicable
+
+	old_prepend (other: like Current) is
+			-- Prepend `other' to `Current'.
+			-- (Changed the signature (`other' is declared of type
+			-- STRING in class STRING) so that the inherited
+			-- postcondition does not break the type system
+			-- in SmallEiffel -0.74b21 (otherwise the argument
+			-- of 'Current.is_equal' would be of type STRING,
+			-- which does not conform to 'like Current').)
+		local
+			a_string: UC_STRING
+		do
+			a_string := clone (Current)
+			wipe_out
+			append_string (other)
+			append_string (a_string)
+		end
+
+	old_remove_prefix (s: like Current) is
+			-- Remove the prefix `s' of current string.
+			-- (Changed the signature (`s' is declared of type
+			-- STRING in class STRING) so that the inherited
+			-- postcondition does not break the type system
+			-- in SmallEiffel -0.74b21 (otherwise the argument
+			-- of 'Current.is_equal' would be of type STRING,
+			-- which does not conform to 'like Current').)
+		do
+			remove_head (s.count)
+		end
+
+#endif
+invariant
+
+	non_negative_byte_count: byte_count >= 0
+	byte_count_small_enough: byte_count <= byte_capacity
+#ifdef VE
+	storage_not_void: storage /= Void
+#endif
+
+end
