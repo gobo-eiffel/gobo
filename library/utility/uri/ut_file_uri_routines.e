@@ -31,7 +31,9 @@ feature -- Filename
 			a_uri_not_void: a_uri /= Void
 		do
 			Result := file_system.pathname_to_string (uri_to_pathname (a_uri))
-			Result := file_system.pathname (Result, uri_component_to_pathname (a_uri.path_base_item))
+			if a_uri.has_path_base then
+				Result := file_system.pathname (Result, uri_component_to_pathname (a_uri.path_base_item))
+			end
 			debug ("file_uri")
 				std.output.put_string ("uri_to_filename: ")
 				std.output.put_string (a_uri.full_reference)
