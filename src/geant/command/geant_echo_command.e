@@ -64,10 +64,8 @@ feature -- Setting
 			to_file_set: to_file = a_to_file
 		end
 
-	set_append (a_append: like append) is
+	set_append (a_append: BOOLEAN) is
 			-- Set `append' to `a_append'.
-		require
-			a_append_not_void: a_append /= Void
 		do
 			append := a_append
 		ensure
