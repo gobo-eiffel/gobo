@@ -31,19 +31,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type: like base_type; a_class: like base_class; an_item_type: ET_DYNAMIC_TYPE) is
+	make (a_type: like base_type; a_class: like base_class; an_item_type_set: like item_type_set) is
 			-- Create a new type.
 		require
 			a_type_not_void: a_type /= Void
 			a_type_base_type: a_type.is_base_type
 			a_class_not_void: a_class /= Void
-			an_item_type_not_void: an_item_type /= Void
+			an_item_type_set_not_void: an_item_type_set /= Void
 		do
 			make_type (a_type, a_class)
-			create item_type_set.make (an_item_type)
+			item_type_set := an_item_type_set
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
+			item_type_set_set: item_type_set = an_item_type_set
 		end
 
 feature -- Status report
@@ -53,7 +54,7 @@ feature -- Status report
 
 feature -- Access
 
-	item_type_set: ET_NESTED_DYNAMIC_TYPE_SET
+	item_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type set of items
 
 feature {NONE} -- Implementation

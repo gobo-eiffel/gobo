@@ -31,17 +31,19 @@ feature {NONE} -- Initialization
 			a_target_type_not_void: a_target_type /= Void
 			a_system_not_void: a_system /= Void
 		local
+			l_dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_type_set: ET_NESTED_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 		do
+			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
 			l_type := a_feature.type
 			if l_type /= Void then
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-				create {ET_NESTED_DYNAMIC_TYPE_SET} result_type_set.make (l_dynamic_type)
+				result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 			end
 			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
@@ -52,7 +54,7 @@ feature {NONE} -- Initialization
 					from i := nb until i < 1 loop
 						l_type := args.formal_argument (i).type
 						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-						create l_dynamic_type_set.make (l_dynamic_type)
+						l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 						dynamic_type_sets.put_first (l_dynamic_type_set)
 						i := i - 1
 					end

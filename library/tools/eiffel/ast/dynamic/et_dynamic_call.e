@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 		local
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_type_set: ET_NESTED_DYNAMIC_TYPE_SET
 		do
 			target := a_target
 			target_type_set := a_target_type_set
@@ -43,8 +42,7 @@ feature {NONE} -- Initialization
 			argument_sources := empty_argument_sources
 			if l_type /= Void then
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type_set.static_type.base_type)
-				create l_dynamic_type_set.make (l_dynamic_type)
-				result_type_set := l_dynamic_type_set
+				result_type_set := a_system.dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 			end
 			current_feature := a_current_feature
 			current_type := a_current_type

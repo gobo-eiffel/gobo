@@ -147,6 +147,19 @@ feature -- Status setting
 			no_assertion_set: no_assertion = b
 		end
 
+feature -- Factory
+
+	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
+			-- New dynamic type set
+		require
+			a_type_not_void: a_type /= Void
+		do
+			create {ET_NESTED_DYNAMIC_TYPE_SET} Result.make (a_type)
+		ensure
+			dynamic_type_set_not_void: Result /= Void
+			static_type_set: Result.static_type = a_type
+		end
+
 feature -- Generation
 
 	build_dynamic_type_sets is
@@ -1232,7 +1245,7 @@ feature {NONE} -- Event handling
 			l_generic_class_type: ET_GENERIC_CLASS_TYPE
 			l_special_class: ET_CLASS
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
-			l_item_type_set: ET_NESTED_DYNAMIC_TYPE_SET
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_MANIFEST_ARRAY_ITEM

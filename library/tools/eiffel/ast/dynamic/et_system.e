@@ -161,6 +161,7 @@ feature -- Types
 			i: INTEGER
 			l_type: ET_DYNAMIC_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_any: ET_CLASS_TYPE
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
@@ -190,7 +191,8 @@ feature -- Types
 								if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 										-- Class SPECIAL should have exactly one generic parameter.
 									l_item_type := dynamic_type (l_actual_parameters.type (1), universe.any_class)
-									create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type)
+									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+									create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type_set)
 								else
 									create Result.make (l_base_type, l_base_class)
 								end
@@ -216,7 +218,8 @@ feature -- Types
 					if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 							-- Class SPECIAL should have exactly one generic parameter.
 						l_item_type := dynamic_type (l_actual_parameters.type (1), universe.any_class)
-						create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type)
+						l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
+						create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type_set)
 					else
 						create Result.make (l_base_type, l_base_class)
 					end
@@ -516,7 +519,7 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
-feature {NONE} -- Processors
+feature -- Processors
 
 	dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			-- Builder of dynamic type sets
