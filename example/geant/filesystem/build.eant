@@ -1,18 +1,41 @@
 <?xml version="1.0" ?>
 
-<project name="filesystem_examples" default="all">
+<project name="filesystem_examples" default="setup">
+
 	<description>demonstrates filesystem functionality</description>
-	<target name="mkdir1">
+
+	<target name="mkdir">
 		<description>creates a directory</description>
 		<mkdir directory="testdirectory"/>
 		<mkdir directory="testdirectory/subdirectory"/>
 	</target>
 
-	<target name="deldir1">
+	<target name="deldir">
 		<description>deletes a directory</description>
 		<delete directory="testdirectory"/>
 	</target>
 
-	<target name="all" depend="mkdir1,deldir1">
+	<target name="copyfile">
+		<description>copies the Readme from $GOBO to $GOBO/examples/geant/filesystem</description>
+		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
+		<copy file="build.eant" to_file="ttt2.txt"/>
 	</target>
+
+	<target name="copyfile2" dir="${GOBO}">
+		<description>copies the Readme from $GOBO to $GOBO/examples/geant/filesystem</description>
+		<copy file="Readme.txt" to_directory="examples/geant/filesystem"/>
+	</target>
+
+	<target name="delfile">
+		<description>deletes created files</description>
+		<delete file="ttt1.txt"/>
+		<delete file="ttt2.txt"/>
+	</target>
+
+	<target name="setup" depend="mkdir,copyfile">
+	</target>
+
+	<target name="clean" depend="delfile,deldir">
+	</target>
+
 </project>
