@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Callback interface for core content XML events"
 
@@ -55,7 +55,7 @@ feature -- Tag
 			-- Start of start tag.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
-			local_part: is_local_part (a_local_part)  
+			local_part: is_local_part (a_local_part)
 		deferred
 		end
 
@@ -63,7 +63,7 @@ feature -- Tag
 			-- Start of attribute.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
-			local_part: is_local_part (a_local_part) 
+			local_part: is_local_part (a_local_part)
 		deferred
 		end
 

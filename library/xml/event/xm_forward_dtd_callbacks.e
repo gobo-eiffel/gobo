@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Callbacks for DTD declaration"
 
@@ -58,9 +58,9 @@ feature {NONE} -- Document type definition callbacks
 			dtd_callbacks.on_attribute_declaration (an_element_name, a_name, a_model)
 		end
 
-	on_entity_declaration (entity_name: UC_STRING; is_parameter: BOOLEAN; value: UC_STRING; 
+	on_entity_declaration (entity_name: UC_STRING; is_parameter: BOOLEAN; value: UC_STRING;
 			an_id: XM_DTD_EXTERNAL_ID; notation_name: UC_STRING) is
-			 -- Entity declaration.
+			-- Entity declaration.
 		do
 			check_void
 			dtd_callbacks.on_entity_declaration (entity_name, is_parameter, value, an_id, notation_name)

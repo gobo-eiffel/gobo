@@ -2,8 +2,8 @@ indexing
 
 	description:
 
-		"Descendant of callbacks interface forwarding to a client interface"	
-	
+		"Descendant of callbacks interface forwarding to a client interface"
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -42,7 +42,7 @@ feature {NONE} -- Document
 		do
 			if callbacks = Void then
 				!XM_CALLBACKS_NULL! callbacks.make
-			end 
+			end
 			callbacks.on_start
 		end
 
