@@ -39,9 +39,17 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create a new target.
+		local
+			a_description_element: XM_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
 			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
+			a_description_element := a_xml_element.element_by_name (Description_element_name)
+			if a_description_element /= Void then
+				set_description (a_description_element.text)
+			else
+				set_description ("")
+			end
 		end
 
 feature -- Access
@@ -58,6 +66,9 @@ feature -- Access
 
 	name: STRING
 			-- Name of target
+
+	description: STRING
+			-- Description of target
 
 	origin: GEANT_PROJECT is
 			-- Origin of target (see ETL for definition)
@@ -198,6 +209,16 @@ feature -- Setting
 			name := a_name
 		ensure
 			name_set: name = a_name
+		end
+
+	set_description (a_description: STRING) is
+			-- Set `description' to `a_description'.
+		require
+			a_description_not_void: a_description /= Void
+		do
+			description := a_description
+		ensure
+			description_set: description = a_description
 		end
 
 	set_executed (a_is_executed: BOOLEAN) is
