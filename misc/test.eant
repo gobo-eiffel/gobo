@@ -59,7 +59,10 @@
 		<set name="gobo_os" value="-DGOBO_OS=windows" if="${GOBO_OS}=windows"/>
 		<echo message=""/>
 		<echo message="Testing ${system}..."/>
-		<getest config="${system_dir}/getest.cfg" compile="geant ${gobo_os} -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
+		<set name="abort_option" value="false"/>
+		<set name="abort_option" value="true" if="${abort}=True"/>
+		<set name="abort_option" value="true" if="${abort}=true"/>
+		<getest abort="${abort_option}" config="${system_dir}/getest.cfg" compile="geant ${gobo_os} -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
 			<define name="debug" value="true" if="${debug}"/>
 		</getest>
 	</target>
