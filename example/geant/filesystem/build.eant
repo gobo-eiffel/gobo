@@ -34,7 +34,6 @@
 	</target>
 
 	<target name="cpfs1" dir="${GOBO}/library">
-		<mkdir directory="${GOBO}/example/geant/tmp"/>
 		<copy to_directory="${GOBO}/example/geant/tmp">
 			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)"/>
 		</copy>

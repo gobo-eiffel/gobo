@@ -4,6 +4,7 @@
 
 	<target name="all">
 		<description>execute all examples</description>
+		<mkdir directory="${GOBO}/example/geant/tmp"/>
 		<geant target="hello"/>
 		<geant target="variables"/>
 		<geant target="filesystem"/>
@@ -15,6 +16,7 @@
 		<geant target="gexace"/>
 		<geant target="inherit"/>
 		<geant target="misc"/>
+		<delete directory="${GOBO}/example/geant/tmp"/>
 	</target>
 	
 	<target name="hello" dir="hello">
