@@ -1,0 +1,140 @@
+<chapter id="exec_task">
+	<title>exec</title>
+
+	<sect1 id="exec_description">
+		<title>Description</title>
+		<para>
+			Execute system command.
+		</para>
+	</sect1>
+
+	<sect1 id="exec_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>executable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Commandline to be executed</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid commandline</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+
+	<sect1 id="exec_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="exec">
+    <element name="exec">
+      <ref name="dir_if_unless"/>
+      <attribute name="executable"/>
+      <optional>
+        <ref name="fileset"/>
+      </optional>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="exec_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <exec executable="compile system.ace"/>
+
+  <exec executable="ls -l"/>
+
+  <exec executable="dir"/>
+
+  <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+    <fileset directory="." include="@(*.ge)">
+      <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+    </fileset>
+  </exec>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="exec_with_fileset">
+		<title>Using exec with a fileset</title>
+		<para>
+			It is possible to provide a nested <link linkend="fileset_element">fileset</link>
+			element. For each element the fileset contains the  commandline specified in
+			attribute <emphasis>commandline</emphasis> is executed and thus works like an iteration of loop
+			in a programming language. To use the current item of the iteration the this task provides the
+			built-in variables <emphasis>${fs.filename}</emphasis> and
+			<emphasis>${fs.mapped_filename}</emphasis>.
+		</para>
+		<programlisting><![CDATA[
+  <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+    <fileset directory="." include="@(*.ge)">
+      <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+    </fileset>
+  </exec>
+]]>
+		</programlisting>
+	
+	<para>
+	Due to its general purpose 'exec', unlike  <link linkend="copy_task">copy</link>
+	cannot determine whether the sourcefile is newer than the target file.
+	If we want to behave 'exec' a bit more intelligent we have to prepare the input in advance.
+	The element  <link linkend="fileset_element">fileset</link> has an attribute <emphasis>force</emphasis>.
+	By default it is set to 'true' so that all selected files are included. The reason for this default value
+	that tasks like <link linkend="copy_task">copy</link> using a
+	<link linkend="fileset_element">fileset</link> usually provide their own <emphasis>force</emphasis>
+	attribute. (Note that it is necessary for some tasks, like <link linkend="copy_task">copy</link>
+	for example, to define their own <emphasis>force</emphasis> attribute since they usually append paths
+	to the filenames delivered by filesets. <link linkend="copy_task">copy</link> for example is doing this
+	with the attribute <emphasis>to_directory</emphasis>).
+	</para>
+	
+	<para>
+		By setting <emphasis>force</emphasis> to <emphasis>false</emphasis> the fileset itself determines
+		whether files are 'out of date' or not. This means of course that the fileset must have the complete
+		paths to the files and not only parts of them. In the following example we use the path
+		<emphasis>${GOBO}/example/geant/tmp</emphasis> in the attribute <emphasis>to</emphasis>
+		of the <link linkend="fileset_element">fileset</link>'s <link linkend="fileset_element">map</link>
+		element so that the fileset itself can determine which files to include and which not.
+	</para>
+	
+	<programlisting><![CDATA[
+  <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+	<fileset directory="." include="@(*.ge)" force="false">
+	  <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+	</fileset>
+  </exec>
+]]>
+	</programlisting>
+	
+	<para>
+		Here is another example which uses SmallEiffel's 'short' command on a fileset.
+		The 'exec' command is executed for each entry in the fileset. By default only files which
+		are newer than their corresponding target files are included in the list.
+	</para>
+	
+	<programlisting><![CDATA[
+  <exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
+	<fileset
+	  directory="$GOBO/library/structure/set"
+	  include="@(**/*.e)"
+	  force="false"
+	>
+	  <map type="glob" from="*.e" to="${short_dir}/*.html">
+		<map type="flat"/>
+	  </map>
+	</fileset>
+  </exec>
+]]>
+	</programlisting>
+	
+	</sect1>
+
+</chapter>

@@ -1,0 +1,79 @@
+<chapter id="delete_task">
+	<title>delete</title>
+
+	<sect1 id="delete_description">
+		<title>Description</title>
+		<para>
+			Delete either a single file, all files in a specified directory and its sub-directories, or
+			a set of files specified by one or more nested <link linkend="fileset_element">fileset</link>
+			elements.
+		</para>
+	</sect1>
+
+	<sect1 id="delete_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to be deleted</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Directory to be deleted</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+
+	<sect1 id="delete_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="delete">
+    <element name="delete">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <attribute name="file"/>
+        <attribute name="directory"/>
+        <ref name="fileset"/>
+      </choice>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="copy_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <delete file="readme.txt"/>
+
+  <delete directory="tmp"/>
+
+  <delete>
+    <fileset directory="tmp" include="@(**/*.ge)"/>
+  </delete>
+]]>
+		</programlisting>
+
+	</sect1>
+
+</chapter>

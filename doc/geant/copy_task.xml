@@ -1,0 +1,108 @@
+<chapter id="copy_task">
+	<title>copy</title>
+
+	<sect1 id="copy_description">
+		<title>Description</title>
+		<para>
+			Copy a file or fileset to a new file or directory. Files are only copied if the source file
+			is newer than the destination file, or when the destination file does not exist.
+		</para>
+	</sect1>
+	
+	<sect1 id="copy_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to be copied</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>to_file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to copy to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>to_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Directory to which file(s) should be copied to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname pointing to existing directory</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="copy_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="copy">
+    <element name="copy">
+      <ref name="dir_if_unless"/>
+        <choice>
+          <group>
+            <attribute name="file"/>
+            <attribute name="to_file"/>
+          </group>
+          <group>
+            <attribute name="file"/>
+            <attribute name="to_directory"/>
+          </group>
+          <group>
+            <attribute name="to_directory"/>
+            <ref name="fileset"/>
+          </group>
+        </choice>
+      <optional>
+        <attribute name="force">
+          <!-- runtime evaluation
+          <choice>
+            <value>true</value>
+            <value>false</value>
+          </choice>
+          -->
+        </attribute>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	</sect1>
+	
+	<sect1 id="copy_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <copy file="readme.txt" to_file="readme1.txt"/>
+  
+  <copy file="readme.txt" to_directory="/tmp"/>
+
+  <copy to_directory="/tmp">
+    <fileset directory="kernel" include="@(**/*.ge)"/>
+  </copy>
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

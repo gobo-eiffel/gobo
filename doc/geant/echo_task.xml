@@ -1,0 +1,58 @@
+
+<chapter id="echo_task">
+<title>echo</title>
+
+<sect1 id="echo_description">
+<title>Description</title>
+<para>
+Echo a message to stdout.
+</para>
+</sect1>
+
+<sect1 id="echo_parameters">
+	<title>Parameters</title>
+
+	<sect1 id="copy_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>message</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Message to be echoed</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="echo_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+<define name="echo">
+  <element name="echo">
+    <ref name="dir_if_unless"/>
+    <attribute name="message"/>
+  </element>
+</define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="echo_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <echo message="Hello world!"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</sect1>
+</chapter>
