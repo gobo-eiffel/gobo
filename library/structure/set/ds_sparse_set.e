@@ -382,8 +382,6 @@ feature -- Removal
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move any cursors at this position `forth'.
-		local
-			dead_item: G
 		do
 			unset_found_item
 			search_position (v)
