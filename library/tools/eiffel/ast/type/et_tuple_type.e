@@ -95,17 +95,6 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `base_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters. Return "*UNKNOWN*" if current
-			-- type is an unresolved identifier type, an anchored type
-			-- involved in a cycle, or an unmatched formal generic parameter.
-		do
-			Result := Current
-		end
-
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code

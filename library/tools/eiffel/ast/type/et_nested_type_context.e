@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: ET_BASE_TYPE
-			-- Base type of current context
+	type: ET_TYPE
+			-- Type of current context
 
 	context: ET_TYPE_CONTEXT
 			-- Context in which `type' is viewed

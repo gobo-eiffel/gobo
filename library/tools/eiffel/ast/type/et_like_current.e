@@ -16,7 +16,7 @@ inherit
 
 	ET_LIKE_TYPE
 		redefine
-			named_type, shallow_named_type,
+			named_type,
 			has_qualified_type,
 			same_syntactical_like_current,
 			same_named_bit_type,
@@ -63,7 +63,7 @@ feature -- Access
 			-- anchored type involved in a cycle, or unmatched formal
 			-- generic parameter.
 		do
-			Result := a_context.type.direct_base_class (a_universe)
+			Result := a_context.base_class (a_universe)
 		end
 
 	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
@@ -75,26 +75,7 @@ feature -- Access
 			-- type, anchored type involved in a cycle, or unmatched formal
 			-- generic parameter if this parameter is current type.
 		do
-			if a_context.is_root_context then
-				Result := a_context.type
-			else
-				Result := a_context.type.base_type (a_context.context, a_universe)
-			end
-		end
-
-	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `base_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters. Return "*UNKNOWN*" if current
-			-- type is an unresolved identifier type, an anchored type
-			-- involved in a cycle, or an unmatched formal generic parameter.
-		do
-			if a_context.is_root_context then
-				Result := a_context.type
-			else
-				Result := a_context.type.shallow_base_type (a_context.context, a_universe)
-			end
+			Result := a_context.base_type (a_universe)
 		end
 
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
@@ -104,24 +85,7 @@ feature -- Access
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
 		do
-			if a_context.is_root_context then
-				Result := a_context.type
-			else
-				Result := a_context.type.named_type (a_context.context, a_universe)
-			end
-		end
-
-	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- Named type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `named_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters.
-		do
-			if a_context.is_root_context then
-				Result := a_context.type
-			else
-				Result := a_context.type.shallow_named_type (a_context.context, a_universe)
-			end
+			Result := a_context.type.named_type (a_context.context, a_universe)
 		end
 
 	hash_code: INTEGER is
@@ -375,7 +339,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.type, a_universe)
+			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.context, a_universe)
 		end
 
 feature -- Convertibility

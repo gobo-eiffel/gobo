@@ -27,8 +27,12 @@ inherit
 		end
 
 	ET_TYPE_CONTEXT
+		rename
+			base_class as context_base_class,
+			base_type as context_base_type
 		redefine
-			has_context, root_context, is_root_context
+			has_context, root_context, is_root_context,
+			context_base_class, context_base_type
 		end
 
 feature -- Access
@@ -98,7 +102,7 @@ feature {ET_TYPE} -- Conformance
 			any_type: ET_CLASS_TYPE
 		do
 			an_index := other.index
-			a_formals := other_context.type.direct_base_class (a_universe).formal_parameters
+			a_formals := other_context.base_class (a_universe).formal_parameters
 			if a_formals = Void or else an_index > a_formals.count then
 					-- Internal error: does `other' type really
 					-- appear in `other_context'?
@@ -160,7 +164,7 @@ feature -- Type processing
 feature -- Type context
 
 	type: ET_BASE_TYPE is
-			-- Base type of current context
+			-- Type of current context
 		do
 			Result := Current
 		ensure then
@@ -175,9 +179,25 @@ feature -- Type context
 			definition: Result = Current
 		end
 
-	root_context: ET_TYPE_CONTEXT is
+	context_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Base class of `type' when it appears in `context' in `a_universe'
+		do
+			Result := direct_base_class (a_universe)
+		ensure then
+			definition: Result = direct_base_class (a_universe)
+		end
+
+	context_base_type (a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of `type' when it appears in `context' in `a_universe'
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
+	root_context: ET_BASE_TYPE is
 			-- Context of `type', or recursively the context of
-			-- its context, such that its context is itself
+			-- its context, such that it is its own context
 		do
 			Result := Current
 		ensure then
@@ -197,11 +217,11 @@ feature -- Type context
 			Result := a_context = Current
 		end
 
-	is_valid_context_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_valid_context_type (a_root_context: ET_BASE_TYPE): BOOLEAN is
 			-- Is current type only made up of class names and
 			-- formal generic parameter names, and are the actual
 			-- parameters of these formal parameters themselves
-			-- in `a_context'?
+			-- in `a_root_context'?
 		local
 			a_parameters: like actual_parameters
 			i, nb: INTEGER
@@ -211,7 +231,7 @@ feature -- Type context
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					if not a_parameters.type (i).is_valid_context_type (a_context) then
+					if not a_parameters.type (i).is_valid_context_type (a_root_context) then
 						Result := False
 						i := nb + 1 -- Jump out of the look.
 					else

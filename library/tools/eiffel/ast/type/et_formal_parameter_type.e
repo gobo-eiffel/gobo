@@ -16,7 +16,7 @@ inherit
 
 	ET_NAMED_TYPE
 		redefine
-			named_type, shallow_named_type,
+			named_type,
 			name, is_formal_type,
 			has_qualified_type,
 			same_syntactical_formal_parameter_type,
@@ -92,17 +92,19 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			a_context_type: ET_BASE_TYPE
+			an_index: INTEGER
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals /= Void and then index <= an_actuals.count then
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
-					a_class := a_context_type.direct_base_class (a_universe)
+				if a_formal_type /= Void then
+					a_class := a_context.root_context.direct_base_class (a_universe)
 					a_formals := a_class.formal_parameters
-					if a_formals /= Void and then index <= a_formals.count then
-						a_formal := a_formals.formal_parameter (index)
+					an_index := a_formal_type.index
+					if a_formals /= Void and then an_index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (an_index)
 						a_base_type := a_formal.constraint_base_type
 						if a_base_type /= Void then
 							Result := a_base_type.direct_base_class (a_universe)
@@ -118,7 +120,7 @@ feature -- Access
 						Result := a_universe.unknown_class
 					end
 				else
-					Result := an_actual.base_class (a_context.context, a_universe)
+					Result := an_actual.base_class (a_context.root_context, a_universe)
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -143,17 +145,19 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			a_context_type: ET_BASE_TYPE
+			an_index: INTEGER
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals /= Void and then index <= an_actuals.count then
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
-					a_class := a_context_type.direct_base_class (a_universe)
+				if a_formal_type /= Void then
+					a_class := a_context.root_context.direct_base_class (a_universe)
 					a_formals := a_class.formal_parameters
-					if a_formals /= Void and then index <= a_formals.count then
-						a_formal := a_formals.formal_parameter (index)
+					an_index := a_formal_type.index
+					if a_formals /= Void and then an_index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (an_index)
 						a_base_type := a_formal.constraint_base_type
 						if a_base_type /= Void then
 							Result := a_base_type
@@ -169,57 +173,14 @@ feature -- Access
 						Result := a_universe.unknown_class
 					end
 				else
-					Result := an_actual.base_type (a_context.context, a_universe)
-				end
-			else
-					-- Error: formal parameter not matched.
-				Result := a_universe.unknown_class
-			end
-		end
-
-	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `base_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters. Return "*UNKNOWN*" if current
-			-- type is an unresolved identifier type, an anchored type
-			-- involved in a cycle, or an unmatched formal generic parameter.
-		local
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
-			an_actual: ET_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			a_class: ET_CLASS
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			a_formal: ET_FORMAL_PARAMETER
-			a_base_type: ET_BASE_TYPE
-			a_context_type: ET_BASE_TYPE
-		do
-			a_context_type := a_context.type
-			an_actuals := a_context_type.actual_parameters
-			if an_actuals /= Void and then index <= an_actuals.count then
-				an_actual := an_actuals.type (index)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
-					a_class := a_context_type.direct_base_class (a_universe)
-					a_formals := a_class.formal_parameters
-					if a_formals /= Void and then index <= a_formals.count then
-						a_formal := a_formals.formal_parameter (index)
-						a_base_type := a_formal.constraint_base_type
-						if a_base_type /= Void then
-							Result := a_base_type
-						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "ANY" in these two cases.
-							Result := a_universe.any_type
-						end
-					else
-							-- Error: formal parameter not matched.
-						Result := a_universe.unknown_class
+					Result ?= an_actual
+					if Result = Void then
+							 -- Should never happen: `a_context_type' is the
+							 -- result of call to `base_type'. So `an_actual'
+							 -- is either a formal generic parameter or a
+							 -- base type itself.
+						 Result := a_universe.unknown_class
 					end
-				else
-					Result := an_actual.shallow_base_type (a_context.context, a_universe)
 				end
 			else
 					-- Error: formal parameter not matched.
@@ -235,46 +196,17 @@ feature -- Access
 			-- type of its constraint.
 		local
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
-			an_actual: ET_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals /= Void and then index <= an_actuals.count then
-				an_actual := an_actuals.type (index)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
-					Result := a_formal_type
-				else
-					Result := an_actual.named_type (a_context.context, a_universe)
-				end
-			else
-					-- Error: formal parameter not matched.
-				Result := a_universe.unknown_class
-			end
-		end
-
-	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- Named type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `named_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters.
-		local
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
-			an_actual: ET_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			a_context_type: ET_BASE_TYPE
-		do
-			a_context_type := a_context.type
-			an_actuals := a_context_type.actual_parameters
-			if an_actuals /= Void and then index <= an_actuals.count then
-				an_actual := an_actuals.type (index)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
-					Result := a_formal_type
-				else
-					Result := an_actual.shallow_named_type (a_context.context, a_universe)
+				Result ?= an_actuals.type (index)
+				if Result = Void then
+						 -- Should never happen: `a_context_type' is the
+						 -- result of call to `base_type'. So its actual
+						 -- generic parameters are named types themselves.
+					 Result := a_universe.unknown_class
 				end
 			else
 					-- Error: formal parameter not matched.
@@ -307,7 +239,7 @@ feature -- Status report
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -316,12 +248,12 @@ feature -- Status report
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := True
 				else
-					Result := an_actual.is_formal_type (a_context.context, a_universe)
+					Result := an_actual.is_formal_type (a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -337,7 +269,7 @@ feature -- Status report
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -346,12 +278,12 @@ feature -- Status report
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.has_qualified_type (a_context.context, a_universe)
+					Result := an_actual.has_qualified_type (a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -373,7 +305,7 @@ feature -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -382,12 +314,12 @@ feature -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_syntactical_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+					Result := other.same_syntactical_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
 				else
-					Result := an_actual.same_syntactical_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_syntactical_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -402,7 +334,7 @@ feature -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -411,12 +343,12 @@ feature -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_named_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+					Result := other.same_named_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
 				else
-					Result := an_actual.same_named_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_named_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -431,7 +363,7 @@ feature -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -440,12 +372,12 @@ feature -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_base_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+					Result := other.same_base_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
 				else
-					Result := an_actual.same_base_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_base_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -468,7 +400,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -477,12 +409,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := a_formal_type.index = other.index
 				else
-					Result := an_actual.same_syntactical_formal_parameter_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_syntactical_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -497,7 +429,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -506,12 +438,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_bit_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_named_bit_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -526,7 +458,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -535,12 +467,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_class_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_named_class_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -556,7 +488,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -565,12 +497,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := a_formal_type.index = other.index
 				else
-					Result := an_actual.same_named_formal_parameter_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_named_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -585,7 +517,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -594,12 +526,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_tuple_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_named_tuple_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -614,7 +546,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -623,12 +555,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_bit_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_base_bit_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -643,7 +575,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -652,12 +584,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_class_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_base_class_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -673,7 +605,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -682,12 +614,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := a_formal_type.index = other.index
 				else
-					Result := an_actual.same_base_formal_parameter_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_base_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -702,7 +634,7 @@ feature {ET_TYPE} -- Comparison
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -711,12 +643,12 @@ feature {ET_TYPE} -- Comparison
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_tuple_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.same_base_tuple_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -738,7 +670,7 @@ feature -- Conformance
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -747,12 +679,12 @@ feature -- Conformance
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.conforms_from_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+					Result := other.conforms_from_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
 				else
-					Result := an_actual.conforms_to_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.conforms_to_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -774,7 +706,7 @@ feature {ET_TYPE} -- Conformance
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -783,12 +715,12 @@ feature {ET_TYPE} -- Conformance
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- No type other than itself conforms to
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_bit_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.conforms_from_bit_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -808,7 +740,7 @@ feature {ET_TYPE} -- Conformance
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -817,12 +749,12 @@ feature {ET_TYPE} -- Conformance
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- No type other than itself conforms to
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_class_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.conforms_from_class_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -850,7 +782,7 @@ feature {ET_TYPE} -- Conformance
 			a_base_type: ET_BASE_TYPE
 			visited: ARRAY [BOOLEAN]
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -859,7 +791,7 @@ feature {ET_TYPE} -- Conformance
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					an_index := a_formal_type.index
@@ -874,7 +806,7 @@ feature {ET_TYPE} -- Conformance
 							-- root contexts are the same, it does not matter
 							-- whether we operate in `a_context' or `other_context'
 							-- from now on.)
-						a_class := a_context_type.direct_base_class (a_universe)
+						a_class := a_context.root_context.direct_base_class (a_universe)
 						a_formals := a_class.formal_parameters
 						if a_formals /= Void and then other_index <= a_formals.count then
 							a_formal := a_formals.formal_parameter (other_index)
@@ -885,7 +817,7 @@ feature {ET_TYPE} -- Conformance
 								if a_base_type /= Void then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-									Result := a_constraint.conforms_to_type (Current, a_context, other_context, a_universe)
+									Result := a_constraint.conforms_to_type (Current, a_context.root_context, other_context, a_universe)
 								else
 										-- There is a cycle. If `other' is "G" and current
 										-- type is "K", we still want to return True when
@@ -936,7 +868,7 @@ feature {ET_TYPE} -- Conformance
 						end
 					end
 				else
-					Result := an_actual.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.conforms_from_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -956,7 +888,7 @@ feature {ET_TYPE} -- Conformance
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -965,12 +897,12 @@ feature {ET_TYPE} -- Conformance
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- No type other than itself conforms to
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -990,7 +922,7 @@ feature -- Convertibility
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -999,12 +931,12 @@ feature -- Convertibility
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.convertible_from_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+					Result := other.convertible_from_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
 				else
-					Result := an_actual.convertible_to_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.convertible_to_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -1024,7 +956,7 @@ feature {ET_TYPE} -- Convertibility
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -1033,12 +965,12 @@ feature {ET_TYPE} -- Convertibility
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- No type other than itself conforms to
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.convertible_from_class_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.convertible_from_class_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -1057,7 +989,7 @@ feature {ET_TYPE} -- Convertibility
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_context_type: ET_BASE_TYPE
 		do
-			a_context_type := a_context.type
+			a_context_type := a_context.base_type (a_universe)
 			an_actuals := a_context_type.actual_parameters
 			if an_actuals = Void or else index > an_actuals.count then
 					-- Internal error: does current type really
@@ -1066,12 +998,12 @@ feature {ET_TYPE} -- Convertibility
 			else
 				an_actual := an_actuals.type (index)
 				a_formal_type ?= an_actual
-				if a_formal_type /= Void and a_context.is_root_context then
+				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.convertible_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
+					Result := an_actual.convertible_from_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
 				end
 			end
 		end
@@ -1098,16 +1030,16 @@ feature -- Type processing
 
 feature -- Type context
 
-	is_valid_context_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_valid_context_type (a_root_context: ET_BASE_TYPE): BOOLEAN is
 			-- Is current type only made up of class names and
 			-- formal generic parameter names, and are the actual
 			-- parameters of these formal parameters themselves
-			-- in `a_context'?
+			-- in `a_root_context'?
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER_TYPE
 		do
-			a_parameters := a_context.type.actual_parameters
+			a_parameters := a_root_context.actual_parameters
 			if a_parameters /= Void and then index <= a_parameters.count then
 				a_formal ?= a_parameters.type (index)
 				Result := a_formal /= Void and then a_formal.index = index

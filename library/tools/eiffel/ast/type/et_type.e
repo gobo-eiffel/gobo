@@ -50,6 +50,7 @@ feature -- Access
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
 			base_class_not_void: Result /= Void
@@ -67,26 +68,11 @@ feature -- Access
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
 			base_type_not_void: Result /= Void
 			deep_base_type: Result.is_named_type
-		end
-
-	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `base_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters. Return "*UNKNOWN*" if current
-			-- type is an unresolved identifier type, an anchored type
-			-- involved in a cycle, or an unmatched formal generic parameter.
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-		deferred
-		ensure
-			base_type_not_void: Result /= Void
 		end
 
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
@@ -99,26 +85,12 @@ feature -- Access
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := base_type (a_context, a_universe)
 		ensure
 			named_type_not_void: Result /= Void
 			named_type_named: Result.is_named_type
-		end
-
-	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- Named type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `named_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters.
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-		do
-			Result := shallow_base_type (a_context, a_universe)
-		ensure
-			named_type_not_void: Result /= Void
 		end
 
 	type: ET_TYPE is
@@ -151,6 +123,7 @@ feature -- Status report
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -164,6 +137,7 @@ feature -- Status report
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -187,6 +161,7 @@ feature -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
 			symmetric: Result = other.same_syntactical_type (Current, a_context, other_context, a_universe)
@@ -204,6 +179,7 @@ feature -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
 			definition: Result = named_type (a_context, a_universe).same_syntactical_type (other.named_type (other_context, a_universe), other_context, a_context, a_universe)
@@ -222,6 +198,7 @@ feature -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
 			definition: Result = base_type (a_context, a_universe).same_syntactical_type (other.base_type (other_context, a_universe), other_context, a_context, a_universe)
@@ -247,6 +224,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -268,6 +246,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -290,6 +269,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -312,6 +292,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -334,6 +315,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -356,6 +338,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -377,6 +360,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -393,6 +377,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -409,6 +394,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -426,6 +412,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -442,6 +429,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -458,6 +446,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -474,6 +463,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -491,6 +481,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -507,6 +498,7 @@ feature {ET_TYPE} -- Comparison
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -530,6 +522,7 @@ feature -- Conformance
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 
@@ -552,6 +545,7 @@ feature {ET_TYPE} -- Conformance
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -573,6 +567,7 @@ feature {ET_TYPE} -- Conformance
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -596,6 +591,7 @@ feature {ET_TYPE} -- Conformance
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -617,6 +613,7 @@ feature {ET_TYPE} -- Conformance
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -638,6 +635,7 @@ feature -- Convertibility
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 
@@ -658,6 +656,7 @@ feature {ET_TYPE} -- Convertibility
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -677,6 +676,7 @@ feature {ET_TYPE} -- Convertibility
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -698,6 +698,7 @@ feature {ET_TYPE} -- Convertibility
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -717,6 +718,7 @@ feature {ET_TYPE} -- Convertibility
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -744,13 +746,13 @@ feature -- Type processing
 
 feature -- Type context
 
-	is_valid_context_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_valid_context_type (a_root_context: ET_BASE_TYPE): BOOLEAN is
 			-- Is current type only made up of class names and
 			-- formal generic parameter names, and are the actual
 			-- parameters of these formal parameters themselves
-			-- in `a_context'?
+			-- in `a_root_context'?
 		require
-			a_context_not_void: a_context /= Void
+			a_root_context_not_void: a_root_context /= Void
 		do
 			-- Result := False
 		end

@@ -16,7 +16,7 @@ inherit
 
 	ET_LIKE_IDENTIFIER
 		redefine
-			named_type, shallow_named_type,
+			named_type,
 			is_formal_type,
 			has_qualified_type,
 			same_syntactical_qualified_type,
@@ -75,34 +75,21 @@ feature -- Access
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
 			a_query_type: ET_TYPE
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := a_universe.unknown_class
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := a_universe.unknown_class
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.base_class (a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -130,88 +117,21 @@ feature -- Access
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
 			a_query_type: ET_TYPE
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := a_universe.unknown_class
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := a_universe.unknown_class
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.base_type (a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := a_universe.unknown_class
-				end
-			end
-		end
-
-	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `base_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters. Return "*UNKNOWN*" if current
-			-- type is an unresolved identifier type, an anchored type
-			-- involved in a cycle, or an unmatched formal generic parameter.
-		local
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-			a_base_type: ET_BASE_TYPE
-			a_target_context: ET_NESTED_TYPE_CONTEXT
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := a_universe.unknown_class
-			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
-						Result := a_query_type.shallow_base_type (a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -237,86 +157,21 @@ feature -- Access
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
 			a_query_type: ET_TYPE
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := a_universe.unknown_class
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := a_universe.unknown_class
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.named_type (a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := a_universe.unknown_class
-				end
-			end
-		end
-
-	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- Named type of current type, when it appears in `a_context'
-			-- in `a_universe', but contrary to `named_type' its generic
-			-- parameters can be made up of types other than class names
-			-- and generic formal parameters.
-		local
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-			a_base_type: ET_BASE_TYPE
-			a_target_context: ET_NESTED_TYPE_CONTEXT
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := a_universe.unknown_class
-			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
-						Result := a_query_type.shallow_named_type (a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -401,7 +256,7 @@ feature -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -412,28 +267,15 @@ feature -- Comparison
 			elseif seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_named_type (other, other_context, a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -454,7 +296,7 @@ feature -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -465,28 +307,15 @@ feature -- Comparison
 			elseif seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_base_type (other, other_context, a_target_context, a_universe)
-						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -548,7 +377,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -557,28 +386,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_named_bit_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -599,7 +415,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -608,28 +424,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_named_class_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -651,7 +454,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -660,28 +463,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_named_formal_parameter_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -702,7 +492,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -711,28 +501,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_named_tuple_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -753,7 +530,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -762,28 +539,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_base_bit_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -804,7 +568,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -813,28 +577,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_base_class_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -856,7 +607,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -865,28 +616,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_base_formal_parameter_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -907,7 +645,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -916,28 +654,15 @@ feature {ET_TYPE} -- Comparison
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-							-- Push `a_context' on stack `rhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if rhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-						else
-							rhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
+						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.same_base_tuple_type (other, other_context, a_target_context, a_universe)
-						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -965,7 +690,7 @@ feature -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -977,34 +702,21 @@ feature -- Conformance
 				if seed = 0 then
 						-- Qualified anchored type not resolved yet.
 						-- Try to resolve it now.
-					a_class := a_context.type.direct_base_class (a_universe)
+					a_class := a_context.base_class (a_universe)
 					a_class.process (a_universe.qualified_signature_resolver)
 				end
 				if seed = 0 then
 						-- Qualified anchored type still not resolved.
 					Result := False
-				elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-						-- A cycle in the anchored types has been introduced
-						-- in the AST since we checked for cycles.
-					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_target_type := target_type
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `lhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if lhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-							else
-								lhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.conforms_to_type (other, other_context, a_target_context, a_universe)
-							lhs_contexts := lhs_contexts.previous_stacked_context
 							if not Result then
 									-- Covers the case where only 'like {G}.a'
 									-- conforms to 'like {G}.a'.
@@ -1038,7 +750,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1047,39 +759,26 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 					-- Try to resolve it now.
-				a_class := a_context.type.direct_base_class (a_universe)
+				a_class := a_context.base_class (a_universe)
 				a_class.process (a_universe.qualified_signature_resolver)
 			end
 			if seed = 0 then
 					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				if target_type.is_formal_type (a_context, a_universe) then
+				a_target_type := target_type
+				if a_target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `rhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if rhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-							else
-								rhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.conforms_from_bit_type (other, other_context, a_target_context, a_universe)
-							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved
@@ -1106,7 +805,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1115,39 +814,26 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 					-- Try to resolve it now.
-				a_class := a_context.type.direct_base_class (a_universe)
+				a_class := a_context.base_class (a_universe)
 				a_class.process (a_universe.qualified_signature_resolver)
 			end
 			if seed = 0 then
 					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				if target_type.is_formal_type (a_context, a_universe) then
+				a_target_type := target_type
+				if a_target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `rhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if rhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-							else
-								rhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.conforms_from_class_type (other, other_context, a_target_context, a_universe)
-							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved
@@ -1175,7 +861,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1184,39 +870,26 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 					-- Try to resolve it now.
-				a_class := a_context.type.direct_base_class (a_universe)
+				a_class := a_context.base_class (a_universe)
 				a_class.process (a_universe.qualified_signature_resolver)
 			end
 			if seed = 0 then
 					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				if target_type.is_formal_type (a_context, a_universe) then
+				a_target_type := target_type
+				if a_target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `rhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if rhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-							else
-								rhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_target_context, a_universe)
-							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved
@@ -1243,7 +916,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1252,39 +925,26 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 					-- Try to resolve it now.
-				a_class := a_context.type.direct_base_class (a_universe)
+				a_class := a_context.base_class (a_universe)
 				a_class.process (a_universe.qualified_signature_resolver)
 			end
 			if seed = 0 then
 					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				if target_type.is_formal_type (a_context, a_universe) then
+				a_target_type := target_type
+				if a_target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `rhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if rhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-							else
-								rhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.conforms_from_tuple_type (other, other_context, a_target_context, a_universe)
-							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved
@@ -1301,14 +961,6 @@ feature {ET_TYPE} -- Conformance
 			end
 		end
 
-feature {NONE} -- Conformance
-
-	lhs_contexts: ET_TYPE_CONTEXT
-	rhs_contexts: ET_TYPE_CONTEXT
-			-- Stacks of type contexts to avoid infinite loop if the AST
-			-- has been externally changed since we checked for cycles in
-			-- anchored types (lhs: left-hand-side, rhs: right-hand-side)
-
 feature -- Convertibility
 
 	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -1319,7 +971,7 @@ feature -- Convertibility
 			-- used on classes whose qualified anchored types need
 			-- to be resolved in order to check convertibility.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1331,34 +983,21 @@ feature -- Convertibility
 				if seed = 0 then
 						-- Qualified anchored type not resolved yet.
 						-- Try to resolve it now.
-					a_class := a_context.type.direct_base_class (a_universe)
+					a_class := a_context.base_class (a_universe)
 					a_class.process (a_universe.qualified_signature_resolver)
 				end
 				if seed = 0 then
 						-- Qualified anchored type still not resolved.
 					Result := False
-				elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
-						-- A cycle in the anchored types has been introduced
-						-- in the AST since we checked for cycles.
-					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_target_type := target_type
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `lhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if lhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
-							else
-								lhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.convertible_to_type (other, other_context, a_target_context, a_universe)
-							lhs_contexts := lhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved
@@ -1385,7 +1024,7 @@ feature {ET_TYPE} -- Convertibility
 			-- used on classes whose qualified anchored types need
 			-- to be resolved in order to check convertibility.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1394,39 +1033,26 @@ feature {ET_TYPE} -- Convertibility
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 					-- Try to resolve it now.
-				a_class := a_context.type.direct_base_class (a_universe)
+				a_class := a_context.base_class (a_universe)
 				a_class.process (a_universe.qualified_signature_resolver)
 			end
 			if seed = 0 then
 					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				if target_type.is_formal_type (a_context, a_universe) then
+				a_target_type := target_type
+				if a_target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `rhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if rhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-							else
-								rhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.convertible_from_class_type (other, other_context, a_target_context, a_universe)
-							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved
@@ -1452,7 +1078,7 @@ feature {ET_TYPE} -- Convertibility
 			-- used on classes whose qualified anchored types need
 			-- to be resolved in order to check convertibility.)
 		local
-			a_base_type: ET_BASE_TYPE
+			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1461,39 +1087,26 @@ feature {ET_TYPE} -- Convertibility
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 					-- Try to resolve it now.
-				a_class := a_context.type.direct_base_class (a_universe)
+				a_class := a_context.base_class (a_universe)
 				a_class.process (a_universe.qualified_signature_resolver)
 			end
 			if seed = 0 then
 					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				if target_type.is_formal_type (a_context, a_universe) then
+				a_target_type := target_type
+				if a_target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
 				else
-					a_base_type := target_type.shallow_base_type (a_context, a_universe)
-					a_class := a_base_type.direct_base_class (a_universe)
+					a_class := a_target_type.base_class (a_context, a_universe)
 					seeded_feature := a_class.seeded_feature (seed)
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-								-- Push `a_context' on stack `rhs_contexts' to avoid
-								-- infinite loop if the AST has been externally changed
-								-- since we checked for cycles in anchored types.
-							if rhs_contexts /= Void then
-								create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
-							else
-								rhs_contexts := a_context
-							end
-							create a_target_context.make (a_base_type, a_context)
+							create a_target_context.make (a_target_type, a_context)
 							Result := a_query_type.convertible_from_formal_parameter_type (other, other_context, a_target_context, a_universe)
-							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved

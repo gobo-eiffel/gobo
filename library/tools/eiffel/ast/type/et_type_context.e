@@ -14,8 +14,8 @@ deferred class ET_TYPE_CONTEXT
 
 feature -- Access
 
-	type: ET_BASE_TYPE is
-			-- Base type of current context
+	type: ET_TYPE is
+			-- Type of current context
 		deferred
 		ensure
 			type_not_void: Result /= Void
@@ -30,9 +30,32 @@ feature -- Access
 			valid_context: is_valid_context implies Result.is_valid_context
 		end
 
-	root_context: ET_TYPE_CONTEXT is
+	base_class (a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Base class of `type' when it appears in `context' in `a_universe'
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := type.base_class (context, a_universe)
+		ensure
+			base_class_not_void: Result /= Void
+		end
+
+	base_type (a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of `type' when it appears in `context' in `a_universe'
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := type.base_type (context, a_universe)
+		ensure
+			base_type_not_void: Result /= Void
+			deep_base_type: Result.is_named_type
+		end
+
+	root_context: ET_BASE_TYPE is
 			-- Context of `type', or recursively the context of
-			-- its context, such that its context is itself
+			-- its context, such that it is its own context
 		do
 			Result := context.root_context
 		ensure
@@ -45,15 +68,15 @@ feature -- Access
 feature -- Status report
 
 	is_valid_context: BOOLEAN is
-			-- A context is valid if the `type' of its `root_context'
-			-- is only made up of class names and formal generic
-			-- parameter names, and if the actual parameters of these
-			-- formal parameters are themselves in current context
+			-- A context is valid if its `root_context' is only made up
+			-- of class names and formal generic parameter names, and if
+			-- the actual parameters of these formal parameters are
+			-- themselves
 		local
-			a_context: like root_context
+			a_root_context: like root_context
 		do
-			a_context := root_context
-			Result := a_context.type.is_valid_context_type (a_context)
+			a_root_context := root_context
+			Result := a_root_context.is_valid_context_type (a_root_context)
 		end
 
 	is_root_context: BOOLEAN is
@@ -77,22 +100,6 @@ feature -- Status report
 			end
 		end
 
-	same_context (other: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Are current context and `other' considered the same?
-		require
-			other_not_void: other /= Void
-			same_root: same_root_context (other)
-			a_universe_not_void: a_universe /= Void
-		do
-			if other = Current then
-				Result := True
-			else
-				Result := type.same_base_type (other.type, other.context, context, a_universe)
-			end
-		ensure
-			definition: Result = type.same_base_type (other.type, other.context, context, a_universe)
-		end
-
 	same_root_context (other: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' have the same root context?
 		require
@@ -101,29 +108,6 @@ feature -- Status report
 			Result := other.root_context = root_context
 		ensure
 			definition: Result = (other.root_context = root_context)
-		end
-
-feature -- Stacked contexts
-
-	previous_stacked_context: ET_TYPE_CONTEXT is
-			-- Previous context in a stack of contexts
-		do
-			-- Result := Void
-		end
-
-	has_stacked_context (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `a_context' the same context as current context,
-			-- or recursively the same context as the context of
-			-- `previous_stacked_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			if same_context (a_context, a_universe) then
-				Result := True
-			elseif previous_stacked_context /= Void then
-				Result := previous_stacked_context.has_stacked_context (a_context, a_universe)
-			end
 		end
 
 end
