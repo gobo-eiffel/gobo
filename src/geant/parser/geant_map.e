@@ -62,18 +62,40 @@ feature -- Status report
 				type.is_equal (Type_attribute_value_flat) or else
 				type.is_equal (Type_attribute_value_merge) or else
 				type.is_equal (Type_attribute_value_glob))
+			if not Result then
+				project.log ("  [map] error: value of attribute 'type' incorrect. Valid: {'flat', 'glob', 'identity', 'merge'}%N")
+			end
 			if Result then
 				if type.is_equal (Type_attribute_value_identity) then
-					Result := Result and source_pattern = Void
-					Result := Result and target_pattern = Void
+					Result := source_pattern = Void
+					if not Result then
+						project.log ("  [map] error: attribute 'from' must not be set when 'type' is 'identity'%N")
+					end
+					if Result then
+						Result := target_pattern = Void
+						if not Result then
+							project.log ("  [map] error: attribute 'to' must not be set when 'type' is 'identity'%N")
+						end
+					end
 				end
 				if type.is_equal (Type_attribute_value_glob) then
-					Result := Result and source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0
-					Result := Result and target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
+					Result := source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0
+					if not Result then
+						project.log ("  [map] error: in mode 'glob' attribute 'from' must be set and contain a '*' character%N")
+					end
+					if Result then
+						Result := target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
+						if not Result then
+							project.log ("  [map] error: in mode 'glob' attribute 'to' must be set and contain a '*' character%N")
+						end
+					end
 				end
 			end
-			if map /= Void then
-				Result := Result and map.is_executable
+			if Result and then map /= Void then
+				Result := map.is_executable
+				if not Result then
+					project.log ("  [map] error: nested element 'map' is not defined correctly%N")
+				end
 			end
 
 		ensure
