@@ -130,9 +130,13 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			-- TODO
-			todo ("evaluate-item", False)
+			an_iterator := iterator (a_context); an_iterator.start
+			if not an_iterator.after then
+				last_evaluated_item := an_iterator.item
+			end
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is

@@ -162,8 +162,6 @@ feature -- Element change
 				if not any_compile_errors then
 					required_type := last_generated_sequence_type
 				end
-			else
-				create required_type.make_any_sequence
 			end
 			attributes_prepared := True
 		end
@@ -393,6 +391,5 @@ feature {NONE} -- Implementation
 invariant
 
 	mode_name_codes_not_void: attributes_prepared and then not any_compile_errors implies mode_name_codes /= Void
-	required_type: attributes_prepared and then not any_compile_errors implies required_type /= Void
 
 end

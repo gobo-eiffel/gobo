@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_TYPE
+
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
 	KL_SHARED_STANDARD_FILES
@@ -232,10 +234,12 @@ feature -- Element change
 	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Identify a function appearing in an expression.
 		local
-			an_xml_prefix, a_uri, a_local_name: STRING
+			an_xml_prefix, a_uri, a_local_name, a_message: STRING
 			a_fingerprint, a_name_code: INTEGER
 			a_splitter: ST_SPLITTER
 			name_parts: DS_LIST [STRING]
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			a_cast_expression: XM_XPATH_CAST_EXPRESSION
 		do
 			debug ("XPath stand-alone context")
 				std.error.put_string ("Binding function: ")
@@ -274,12 +278,37 @@ feature -- Element change
 						bind_system_function (a_local_name, arguments)
 					else
 
-						-- A built-in extension function, or a contructor for a built-in type
+						-- Look for a constructor function for a built-in type
+						
+						if STRING_.same_string (a_uri, Xml_schema_uri) or else
+							STRING_.same_string (a_uri, Xml_schema_datatypes_uri) or else
+							STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
+							
+							-- it's a constructor function: treat it as shorthand for a cast expression
 
-						--	Now try for a constructor function for a built-in type
+							if arguments.count /= 1 then
+								set_bind_function_failure_message ("A constructor function must have exactly one argument")
+							else
+								an_atomic_type ?= built_in_item_type (a_uri, a_local_name)
+								if an_atomic_type = Void then
+									a_message := STRING_.concat ("Unknown constructor function: ", a_qname)
+									set_bind_function_failure_message (a_message)
+								else
+									create a_cast_expression.make (arguments.item (1), an_atomic_type, False)
+									set_last_bound_function (a_cast_expression)
+								end
+							end
+						end
+						
+						if not was_last_function_bound then
 
-						-- TODO
-
+							-- maybe it's a linked-in extension function
+							
+							if function_factory.is_extension_function (a_uri, a_local_name, arguments.count) then
+								set_last_bound_function (function_factory.extension_function (a_uri, a_local_name, arguments.count))
+							end
+						end
+						
 						was_last_function_bound := False
 						set_bind_function_failure_message ("Constructor functions not implemented yet.")
 					end

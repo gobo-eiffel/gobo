@@ -99,13 +99,14 @@ feature -- Events
 		local
 			a_reducer: XM_XSLT_NAMESPACE_REDUCER
 			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+			a_node_factory: XM_XPATH_NODE_FACTORY
 		do
 			if in_start_tag then
 				start_content
 			end
 			if tree = Void then
-				create builder.make
-				builder.set_defaults (50, 10, 5, 200)
+				create a_node_factory
+				create builder.make (a_node_factory)
 				create a_reducer.make (builder)
 				create a_complex_outputter.make (a_reducer)
 				tree := a_complex_outputter
@@ -123,10 +124,10 @@ feature -- Events
 		end_element is
 			-- Notify the end of an element.
 		local
-			a_document: XM_XPATH_TINY_DOCUMENT
+			a_document: XM_XPATH_TREE_DOCUMENT
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_element: XM_XPATH_NODE
-			a_tiny_element: XM_XPATH_TINY_ELEMENT
+			a_tiny_element: XM_XPATH_TREE_ELEMENT
 		do
 			if in_start_tag then
 				start_content
@@ -135,17 +136,21 @@ feature -- Events
 			if level = 0 then
 				tree.end_element
 				tree.end_document
-				a_document := builder.tiny_document
+				a_document := builder.tree_document
 				tree := Void
 				builder := Void
-				an_iterator := a_document.new_axis_iterator (Child_axis); an_iterator.start
-				an_element := an_iterator.item
-				a_tiny_element ?= an_element
-				check
-					tiny_element: a_tiny_element /= Void
-				end
-				a_document.set_root_node (a_tiny_element)
-				append_item (an_element)
+				--an_iterator := a_document.new_axis_iterator (Child_axis); an_iterator.start
+				--an_element := an_iterator.item
+				--a_tiny_element ?= an_element
+				--check
+				--	tiny_element: a_tiny_element /= Void
+				--end
+				--a_document.set_root_node (a_tiny_element)
+				append_item (a_document.document_element)
+
+				-- Now free the document from memory
+
+				shared_name_pool.remove_document_from_pool (a_document.document_number)
 			else
 				tree.end_element
 			end
@@ -287,7 +292,7 @@ feature {NONE} -- Implementation
 	tree: XM_XPATH_RECEIVER
 			-- Output tree
 
-	builder: XM_XPATH_TINY_BUILDER
+	builder: XM_XPATH_TREE_BUILDER
 			-- Tree builder
 
 	level: INTEGER

@@ -327,7 +327,7 @@ feature -- Events
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			an_atomic_value ?= an_item
-			if an_atomic_value /= void then
+			if an_atomic_value /= Void then
 				if previous_atomic then notify_characters (" ", 0) end
 				notify_characters (an_atomic_value.string_value, 0)
 				previous_atomic := True
@@ -342,6 +342,10 @@ feature -- Events
 						append_item (an_iterator.item)
 						an_iterator.forth
 					end
+
+					-- Now free the document from memory
+					
+					shared_name_pool.remove_document_from_pool (a_document.document_number)					
 				else
 					a_node ?= an_item
 					check
@@ -472,7 +476,7 @@ feature {NONE} -- Implementation
 			an_xml_prefix: STRING
 		do
 
-			-- This routine substitutes an alternative prefix by appending an undersocre followed
+			-- This routine substitutes an alternative prefix by appending an underscore followed
 			--  by the supplied sequence number to the existing prefix name
 
 			an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)

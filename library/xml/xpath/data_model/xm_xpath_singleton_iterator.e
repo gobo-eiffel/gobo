@@ -73,7 +73,9 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			if index > 1 then gone := True end
+			if index > 1 then
+				gone := True
+			end
 		end
 
 feature -- Duplication

@@ -139,6 +139,10 @@ feature -- Events
 						append_item (an_iterator.item)
 						an_iterator.forth
 					end
+
+					-- Now free the document from memory
+					
+					shared_name_pool.remove_document_from_pool (a_document.document_number)						
 				else
 					a_node ?= an_item
 					check

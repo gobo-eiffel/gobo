@@ -19,6 +19,10 @@ inherit
 			simplify, iterator
 		end
 
+	XM_XPATH_REGEXP_CACHE_ROUTINES
+
+	XM_XPATH_SHARED_REGEXP_CACHE
+
 creation
 
 	make
@@ -82,12 +86,12 @@ feature -- Evaluation
 			-- An iterator over the values of a sequence
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_input_string, a_pattern_string, a_flags_string: STRING
-
+			an_input_string, a_pattern_string, a_flags_string, a_key: STRING
+			a_regexp_cache_entry: like regexp_cache_entry
 		do
 			arguments.item (1).evaluate_item (a_context)
 			an_input_string := arguments.item (1).last_evaluated_item.string_value
-			if regexp = Void then
+			if regexp_cache_entry = Void then
 				arguments.item (2).evaluate_item (a_context)
 				an_atomic_value ?= arguments.item (2).last_evaluated_item
 				check
@@ -104,22 +108,31 @@ feature -- Evaluation
 						atomic_pattern: an_atomic_value /= Void
 						-- Statically typed as a single string
 					end
-					a_flags_string := an_atomic_value.string_value
+					a_flags_string := normalized_flags_string (an_atomic_value.string_value)
 				end
-				create regexp.make
-				set_flags (a_flags_string)
-				regexp.compile (a_pattern_string)
-				if regexp.is_compiled then
-					if regexp.matches ("") then
-						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", 3, Dynamic_error)
-					else
-						create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp)
-					end
+				if a_flags_string = Void then
+					set_last_error_from_string ("Unknown flags in regular expression", 1, Static_error)
 				else
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", 2, Dynamic_error)
+					a_key := composed_key (a_pattern_string, a_flags_string)
+					a_regexp_cache_entry := shared_regexp_cache.item (a_key)
+					if a_regexp_cache_entry = Void then
+						create a_regexp_cache_entry.make( a_pattern_string, a_flags_string)
+						if not a_regexp_cache_entry.is_error then
+							shared_regexp_cache.put (a_regexp_cache_entry, a_key)
+						end
+					end
+					if not a_regexp_cache_entry.is_error then
+						if a_regexp_cache_entry.regexp.matches ("") then
+							create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", 3, Dynamic_error)
+						else
+							create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, a_regexp_cache_entry)
+						end
+					else
+						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", 2, Dynamic_error)
+					end
 				end
 			else
-				create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp)
+				create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp_cache_entry)
 			end
 		end
 
@@ -133,7 +146,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	regexp: RX_PCRE_REGULAR_EXPRESSION
+	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
+			-- Cached regular expression
 
 	try_to_compile (a_flag_argument_position: INTEGER) is
 			-- Attempt to compile `regexp'.
@@ -141,66 +155,38 @@ feature {NONE} -- Implementation
 			flag_argument_number: a_flag_argument_position = 0
 				or else ( a_flag_argument_position > 2 and then a_flag_argument_position <= arguments.count)
 		local
-			a_flag_string: STRING
+			a_flags_string, a_key: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			if a_flag_argument_position = 0 then
-				a_flag_string := ""
+				a_flags_string := ""
 			else
 				a_string_value ?= arguments.item (a_flag_argument_position)
 				if a_string_value /= Void then
-					a_flag_string := a_string_value.string_value
+					a_flags_string := normalized_flags_string (a_string_value.string_value)
 				end
 			end
-			a_string_value ?= arguments.item (2) -- the pattern
-			if a_string_value /= Void and then a_flag_string /= Void then
-				create regexp.make
-				set_flags (a_flag_string)
-				if not is_error then
-					regexp.compile (a_string_value.string_value)
-					if not regexp.is_compiled then
-						regexp := Void
-					else
-						if regexp.matches ("") then
+			if a_flags_string = Void then
+				set_last_error_from_string ("Unknown flags in regular expression", 1, Static_error)
+			else
+				a_string_value ?= arguments.item (2) -- the pattern
+				if a_string_value /= Void then
+					a_key := composed_key (a_string_value.string_value, a_flags_string)
+					regexp_cache_entry :=  shared_regexp_cache.item (a_key)
+					if regexp_cache_entry = Void then
+						create regexp_cache_entry.make (a_string_value.string_value, a_flags_string)
+						if regexp_cache_entry.is_error then
+							regexp_cache_entry := Void
+						else
+							shared_regexp_cache.put (regexp_cache_entry, a_key)
+						end
+					end
+					if regexp_cache_entry /= Void then
+						if regexp_cache_entry.regexp.matches ("") then
 							set_last_error_from_string ("Regular expression matches zero-length string", 3, Static_error)
 						end
 					end
 				end
-			end
-		end
-
-	set_flags (a_flag_string: STRING) is
-			-- Set regular expression flags.
-		require
-			flag_string_not_void: a_flag_string /= Void
-		local
-			an_index: INTEGER
-		do
-			regexp.set_default_options
-			regexp.set_strict (True)
-			-- TODO regexp.set_unicode
-			from
-				an_index := 1
-			variant
-				a_flag_string.count + 1 - an_index
-			until
-				an_index > a_flag_string.count
-			loop
-				inspect
-					a_flag_string.item (an_index)
-				when 'm' then
-					regexp.set_multiline (True)
-				when 'i' then
-					regexp.set_caseless (True)
-				when 's' then
-					regexp.set_dotall (True)
-				when 'x' then
-					regexp.set_extended (True)
-				else
-					set_last_error_from_string ("Unknown flags in regular expression", 1, Static_error)
-					regexp := Void
-				end
-				an_index := an_index + 1
 			end
 		end
 	

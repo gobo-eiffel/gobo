@@ -465,6 +465,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_valid_document_number (a_document_number: INTEGER): BOOLEAN is
+			-- Does `a_dcument_number' represent a slot in `documents'?
+		do
+			Result := a_document_number > 0 and then a_document_number <= documents.count
+		end
+
 	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN is
 			-- Does `a_namespace_code' represent a URI in `Current'?
 		do
@@ -903,7 +909,7 @@ feature -- Element change
 		ensure
 			document_allocated: is_document_allocated (a_doc)
 		end
-	
+
 	allocate_namespace_code (an_xml_prefix: STRING; a_uri: STRING) is
 			--	Allocate the namespace code for a namespace prefix/URI pair;
 			-- WARNING - this code is not thread safe
@@ -1336,6 +1342,18 @@ feature -- Conversion
 					Result := STRING_.appended_string (Result, a_name_entry.local_name)
 				end
 			end
+		end
+
+feature -- Removal
+
+	remove_document_from_pool (a_document_number: INTEGER) is
+			-- Remove a document from the pool.
+		require
+			valid_document_number: is_valid_document_number (a_document_number)
+		do
+			documents.replace (Void, a_document_number)
+		ensure
+			removed: documents.item (a_document_number) = Void
 		end
 
 feature {NONE} -- Implementation

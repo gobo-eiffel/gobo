@@ -44,12 +44,30 @@ feature -- Status report
 			Result := a_code > 127
 		end
 
-feature {NONE} -- Implementation
+feature -- Element change
 
-	encoded_string (a_character_string: STRING): STRING is
-			-- Encoded version of `a_character_string'
+	output (a_character_string: STRING) is
+			-- Encode `a_character_string' and write it to `outputter'.
 		do
-			Result := a_character_string
+			if not is_error then
+				outputter.output (a_character_string)
+			end
+		rescue
+			is_error := True
+			retry
+		end
+
+	output_ignoring_error (a_character_string: STRING) is
+			-- Output `a_character_string', ignoring any error.
+		do
+			if is_error then
+				is_error := False
+			else
+				outputter.output (a_character_string)
+			end
+		rescue
+			is_error := True
+			retry
 		end
 
 end

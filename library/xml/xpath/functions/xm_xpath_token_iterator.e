@@ -22,16 +22,31 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_input: STRING; a_regexp: RX_PCRE_REGULAR_EXPRESSION) is
+	make (an_input: STRING; a_regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY) is
 			-- Establish invariant.
 		require
 				input_string: an_input /= Void and then an_input.count > 0
-				regular_expression_not_void: a_regexp /= Void
+				regular_expression_not_in_error: a_regexp_cache_entry /= Void and then not a_regexp_cache_entry.is_error
+		local
+			a_match_record: XM_XPATH_REGEXP_MATCH_RECORD
 		do
 			input := an_input
-			regexp := a_regexp
-			regexp.match (input)
-			tokens := regexp.split
+			regexp := a_regexp_cache_entry.regexp
+			a_match_record := a_regexp_cache_entry.match_record (input)
+			if a_match_record /= Void and then a_match_record.has_split then
+				tokens := a_match_record.tokens
+			else
+				regexp.match (input)
+				tokens := regexp.split
+				if a_match_record = Void then
+					a_regexp_cache_entry.add_splitting_match (input, tokens)
+				else
+					a_match_record.add_split (tokens)
+				end
+			end
+			check
+				tokens_not_void: tokens /= Void
+			end
 			token_count := tokens.count
 			if token_count > 0 and then tokens.item (token_count).count = 0 then
 
@@ -41,7 +56,7 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			input_string_set: input = an_input
-			regular_expression_set: regexp = a_regexp
+			regular_expression_set: regexp = a_regexp_cache_entry.regexp
 		end
 	
 feature -- Access
@@ -75,7 +90,8 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (input, regexp)
+			todo ("another", False)
+			-- create Result.make (input, regexp)
 		end
 	
 feature {NONE} -- Implementation

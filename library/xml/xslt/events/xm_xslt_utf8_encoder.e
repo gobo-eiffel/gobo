@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Unicode output encoders."
+		"UTF-8 output encoders."
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_UNICODE_ENCODER
+class XM_XSLT_UTF8_ENCODER
 
 inherit
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			outputter_not_void: a_raw_outputter /= Void
-			encoding_not_void: an_encoding /= Void and then an_encoding.count > 4
+			encoding_not_void: an_encoding /= Void
 		do
 			encoding := an_encoding
 			outputter := a_raw_outputter
@@ -45,16 +45,30 @@ feature -- Status report
 			-- All characters are valid
 		end
 
-feature {NONE} -- Implementation
+feature -- Element change
 
-	encoded_string (a_character_string: STRING): STRING is
-			-- Encoded version of `a_character_string'
+	output (a_character_string: STRING) is
+			-- Encode `a_character_string' and write it to `outputter'.
 		do
-			if STRING_.same_string (encoding, "UTF-8") then
-				Result := a_character_string
-			else
-				-- need support for at least UTF-16
+			if not is_error then
+				outputter.output (a_character_string)
 			end
+		rescue
+			is_error := True
+			retry
+		end
+
+	output_ignoring_error (a_character_string: STRING) is
+			-- Output `a_character_string', ignoring any error.
+		do
+			if is_error then
+				is_error := False
+			else
+				outputter.output (a_character_string)
+			end
+		rescue
+			is_error := True
+			retry
 		end
 
 end

@@ -191,6 +191,7 @@ feature -- Element change
 			an_error_value: XM_XPATH_ERROR_VALUE
 			a_user_function: XM_XSLT_USER_FUNCTION_CALL
 			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			a_cast_expression: XM_XPATH_CAST_EXPRESSION
 		do
 			was_last_function_bound := False
 			create a_splitter.make
@@ -250,8 +251,8 @@ feature -- Element change
 								a_message := STRING_.concat ("Unknown constructor function: ", a_qname)
 								set_bind_function_failure_message (a_message)
 							else
-								set_bind_function_failure_message ("Constructor functions not yet implemented")
-								todo ("bind_function", True)
+								create a_cast_expression.make (arguments.item (1), an_atomic_type, False)
+								set_last_bound_function (a_cast_expression)
 							end
 						end
 					end

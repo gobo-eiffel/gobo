@@ -40,7 +40,7 @@ feature -- Access
 		do
 			if STRING_.same_string (a_local_name, "date-time") then
 				if an_arity <= 0 then
-					create {XM_XPATH_EXSLT_DATE_DATE_TIME} Result.make
+					create {XM_XPATH_CURRENT_DATETIME} Result.make
 				end
 			elseif STRING_.same_string (a_local_name, "day-abbreviation") then
 				if an_arity <= 1 then

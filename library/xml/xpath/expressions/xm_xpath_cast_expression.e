@@ -139,7 +139,12 @@ feature -- Optimization
 				else
 					an_expression := a_type_checker.checked_expression
 					if is_sub_type (an_expression.item_type, target_type) then
-						set_replacement (an_expression) -- TODO: wrong, should change the type label?
+						set_replacement (an_expression)
+
+						-- It's not entirely clear that the spec permits this. Perhaps we should change the type label?
+						-- On the other hand, it's generally true that any expression defined to return an X
+						--  is allowed to return a subtype of X:
+
 					elseif is_sub_type (target_type, type_factory.qname_type) then
 						create a_qname_cast.make (an_expression)
 						a_qname_cast.analyze (a_context)

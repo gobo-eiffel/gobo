@@ -1034,7 +1034,10 @@ feature {NONE} -- Implementation
 			parse_multiplicative_expression
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
-				if tokenizer.last_token = Plus_token or else tokenizer.last_token = Minus_token then
+				from
+				until
+					tokenizer.last_token /= Plus_token and then tokenizer.last_token /= Minus_token
+				loop
 					an_operator := tokenizer.last_token
 					next_token ("In parse_additive_expression: current token is ")
 					if tokenizer.is_lexical_error then

@@ -28,10 +28,14 @@ feature -- Access
 		do
 			encoding := STRING_.to_upper (an_encoding)
 			if encoding.count > 3 and then encoding.substring (1,3).is_equal ("UTF") then
-				create {XM_XSLT_UNICODE_ENCODER} Result.make (encoding, a_raw_outputter)
+				create {XM_XSLT_UTF8_ENCODER} Result.make (encoding, a_raw_outputter)
 			elseif encoding.is_equal ("LATIN-1") or else encoding.is_equal ("ISO-8859-1") then
 				create {XM_XSLT_LATIN1_ENCODER} Result.make (encoding, a_raw_outputter)
 			elseif encoding.is_equal ("US-ASCII") then
+				create {XM_XSLT_ASCII_ENCODER} Result.make (a_raw_outputter)
+			elseif encoding.is_equal ("ISO646") then
+				create {XM_XSLT_ASCII_ENCODER} Result.make (a_raw_outputter)
+			elseif encoding.is_equal ("ISO-646") then
 				create {XM_XSLT_ASCII_ENCODER} Result.make (a_raw_outputter)
 			end
 		end

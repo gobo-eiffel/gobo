@@ -400,6 +400,10 @@
 	      the standard tree model. This saves on memory, but will usually result
 	      in slower execution, except for very simple tranformations, such as the 
 	      identity transform, where it may actually improve execution speed.
+	      <warning>
+		This seems to have a memory leak at the moment, so it is probably
+		best to avoid using it.
+	      </warning>
 	    </para>
 	  </listitem>
 	</varlistentry>

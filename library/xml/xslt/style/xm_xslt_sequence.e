@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, mark_tail_calls, may_contain_sequence_constructor
+			make_style_element, validate, returned_item_type, mark_tail_calls,
+			may_contain_sequence_constructor, may_contain_fallback
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -54,6 +55,12 @@ feature -- Status report
 
 	may_contain_sequence_constructor: BOOLEAN is
 			-- Is `Current' allowed to contain a sequence constructor?
+		do
+			Result := False
+		end
+
+	may_contain_fallback: BOOLEAN is
+			-- Is `Current' allowed to contain an xsl:fallback?
 		do
 			Result := True
 		end
@@ -99,17 +106,16 @@ feature -- Element change
 			an_xsl_choose: XM_XSLT_CHOOSE
 		do
 			check_within_template
+			if has_child_nodes then
+				-- TODO - xsl:fallback
+				report_compile_error ("If xsl:sequence  must not have child instructions (except xsl:fallback - TODO")
+			end
 			if select_expression /= Void then
-				if has_child_nodes then
-					-- TODO - xsl:fallback
-					report_compile_error ("If xsl:sequence has a select attribute, it must not have child instructions")
-				else
-					type_check_expression ("select", select_expression)
-					if select_expression.was_expression_replaced then
-						select_expression := select_expression.replacement_expression
-					end
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
 				end
-			end			
+			end
 			validated := True
 		end
 
@@ -117,7 +123,7 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		do
 			create {XM_XSLT_SEQUENCE_INSTRUCTION} last_generated_instruction.make (an_executable, select_expression, Void)
-			compile_children (an_executable, last_generated_instruction)
+			-- TODO - needed for fallback compile_children (an_executable, last_generated_instruction)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -127,8 +133,8 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 		do
 			if select_expression /= Void then
 				Result := select_expression.item_type
-				else
-					Result := common_child_item_type
+			else
+				Result := common_child_item_type
 			end
 		end
 

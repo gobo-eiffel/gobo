@@ -130,6 +130,10 @@ feature -- Events
 						append_item (an_iterator.item)
 						an_iterator.forth
 					end
+
+					-- Now free the document from memory
+					
+					shared_name_pool.remove_document_from_pool (a_document.document_number)						
 				else
 					from
 						an_iterator := an_item.typed_value; an_iterator.start

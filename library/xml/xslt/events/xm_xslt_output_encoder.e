@@ -57,47 +57,20 @@ feature -- Element change
 			-- Encode `a_character_string' and write it to `outputter'.
 		require
 			valid_character_string: is_valid_string (a_character_string)
-		do
-			if not is_error then
-				outputter.output (encoded_string (a_character_string))
-			end
-		rescue
-			is_error := True
-			retry
+		deferred
 		end
 
 	output_ignoring_error (a_character_string: STRING) is
 			-- Output `a_character_string', ignoring any error.
 		require
 			valid_string: is_valid_string (a_character_string)
-		do
-			if is_error then
-				is_error := False
-			else
-				outputter.output (encoded_string (a_character_string))
-			end
-		rescue
-			is_error := True
-			retry
+		deferred
 		end
 			
 feature {NONE} -- Implementation
 
 	outputter: XM_OUTPUT
 			-- Raw outputter
-
-	encoded_string (a_character_string: STRING): STRING is
-			-- Encoded version of `a_character_string';
-			--  `a_character_string' is a UTF-8 encoded string consisting
-			--  solely of code points for which `is_bad_character_code' returns `False'.
-			-- Implementing sub-classes must ensure that `Result' is a valid
-			--  representation of these code points in `encoding'.
-		require
-			valid_character_string: is_valid_string (a_character_string)
-		deferred
-		ensure
-			encoded_string_not_void: Result /= Void
-		end
 
 invariant
 

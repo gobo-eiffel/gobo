@@ -244,32 +244,33 @@ feature -- Evaluation
 					a_receiver.notify_characters ("", 0)
 				end
 			elseif required_type = Void then
-
+				
 				-- No type-check necessary, so write the values directly to the current output destination
-
+				
 				if children /= Void then
 					process_children_leaving_tail (a_context)
 				end
 			else
-
+				
 				-- Type check requested, so we need to create a type-checking filter
-
+				
 				create a_sequence_checker.make (required_type, a_receiver)
 				a_transformer.set_receiver (a_sequence_checker)
-				if select_expression /= Void then
-					from
-						an_iterator := select_expression.iterator (a_context); an_iterator.start
-					until
-						an_iterator.after
-					loop
-						an_item := an_iterator.item
-						append_item (an_item, a_context, a_receiver)
-						an_iterator.forth
-					end
-					if close_text_node then
-						a_receiver.notify_characters ("", 0)
-					end
-				end
+				--if select_expression /= Void then
+				--	print ("This can't happen%N")
+				--	from
+				--		an_iterator := select_expression.iterator (a_context); an_iterator.start
+				--	until
+				--		an_iterator.after
+				--	loop
+				--		an_item := an_iterator.item
+				--		append_item (an_item, a_context, a_receiver)
+				--		an_iterator.forth
+				--	end
+				--	if close_text_node then
+				--		a_receiver.notify_characters ("", 0)
+				--	end
+				--end
 				if children /= Void then
 					process_children (a_context)
 				end
