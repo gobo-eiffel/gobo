@@ -25,7 +25,7 @@ inherit
 
 	PLATFORM
 		rename
-#ifdef SE || VE
+#ifdef SE || VE || ISE_5_2
 			Minimum_character_code as old_minimum_character_code,
 			Maximum_character_code as old_maximum_character_code,
 			Minimum_integer as old_minimum_integer,
@@ -154,7 +154,7 @@ feature -- Bytes
 
 feature -- Values
 
-#ifdef ISE || HACT
+#ifdef HACT || (ISE && ! ISE_5_2)
 	Minimum_character_code: INTEGER is 0
 			-- Smallest supported code for CHARACTER values
 #else
@@ -167,18 +167,18 @@ feature -- Values
 
 	Maximum_character_code: INTEGER is
 			-- Largest supported code for CHARACTER values
-#ifdef ISE
+#ifdef ISE && ! ISE_5_2
 		local
 			c: CHARACTER
 #endif
 		once
-#ifdef ISE
+#ifdef ISE && ! ISE_5_2
 			Result := c.Max_value
 #endif
 #ifdef HACT
 			Result := Maximum_byte_code
 #endif
-#ifdef VE || SE
+#ifdef VE || SE || ISE_5_2
 			Result := old_maximum_character_code
 #endif
 		end
@@ -186,7 +186,7 @@ feature -- Values
 	Minimum_integer: INTEGER is
 			-- Smallest supported value of type INTEGER
 		once
-#ifdef ISE || HACT || VE
+#ifdef HACT || VE || (ISE && ! ISE_5_2)
 				-- Avoid overflow:
 			Result := (2 ^ (Integer_bits - 2)).truncated_to_integer * -2
 #else
@@ -197,7 +197,7 @@ feature -- Values
 	Maximum_integer: INTEGER is
 			-- Largest supported value of type INTEGER
 		once
-#ifdef ISE || HACT
+#ifdef HACT || (ISE && ! ISE_5_2)
 				-- Avoid overflow:
 			Result := - (Minimum_integer + 1)
 #else

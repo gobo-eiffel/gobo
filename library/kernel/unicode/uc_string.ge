@@ -64,7 +64,7 @@ inherit
 				-- a redefinition here. Redefine version from ANY instead.
 			out as old_out,
 #endif
-#ifdef SE || VE
+#ifdef SE || VE || ISE_5_2
 			string as old_latin1_string,
 			same_string as old_same_latin1_string,
 			keep_head as old_keep_head,
@@ -73,17 +73,19 @@ inherit
 			remove_tail as old_remove_tail,
 			make_empty as old_make_empty,
 			make_filled as old_make_filled,
-			fill_with as old_fill_with,
 			insert_string as old_insert_string,
 			remove_substring as old_remove_substring,
 			as_lower as old_as_lower,
 			as_upper as old_as_upper,
 #endif
+#ifdef SE || VE
+			fill_with as old_fill_with,
+#endif
 #ifdef SE
 			prepend as old_prepend,
 			remove_prefix as old_remove_prefix,
 #endif
-#ifndef ISE
+#ifdef SE || VE || HACT || ISE_5_2
 			has_substring as old_has_latin1_substring,
 			insert_character as old_insert_character,
 #endif

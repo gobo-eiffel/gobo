@@ -12,8 +12,14 @@
 
 	<cluster name="ise" location="${ISE_EIFFEL}/library" abstract="true" if="${GOBO_EIFFEL}=ise">
 		<cluster name="base" abstract="true">
-			<cluster name="kernel"/>
-			<cluster name="support"/>
+			<cluster name="kernel" unless="${ISE_5_2}"/>
+			<cluster name="kernel" abstract="true" if="${ISE_5_2}">
+				<cluster name="kernel_classic" location="classic" relative="true"/>
+			</cluster>
+			<cluster name="support" unless="${ISE_5_2}"/>
+			<cluster name="support" abstract="true" if="${ISE_5_2}">
+				<cluster name="support_classic" location="classic" relative="true"/>
+			</cluster>
 			<cluster name="structures" abstract="true" unless="${GOBO_EIFFELBASE}">
 				<cluster name="access"/>
 				<cluster name="cursors"/>

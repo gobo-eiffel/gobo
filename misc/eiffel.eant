@@ -226,6 +226,7 @@
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_OS" value="${GOBO_OS}"/>
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
+			<define name="ISE_5_2" value="true" if="${ISE_5_2}"/>
 		</gexace>
 	</target>
 
