@@ -14,35 +14,39 @@ class KL_STRING_OUTPUT_STREAM
 
 inherit
 
-	KI_CHARACTER_OUTPUT_STREAM
-	
+	KI_TEXT_OUTPUT_STREAM
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
-	make,
-	make_string
+	make, make_empty
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
-	make is
-			-- Create string for output.
-		do
-			string  := STRING_.make (0)
-		end
-
-	make_string (a_string: STRING) is
+	make (a_string: STRING) is
 			-- Create output to an existing string.
 		require
-			not_void: a_string /= Void
+			a_string_not_void: a_string /= Void
 		do
 			string := a_string
+		ensure
+			string_set: string = a_string
+		end
+
+	make_empty is
+			-- Create string for output.
+		do
+			string := STRING_.make (256)
+		ensure
+			empty: string.count = 0
 		end
 
 feature -- Access
 
 	string: STRING
 			-- String into which the output is stored. 
-			-- It is always the same object for each instance of this class,
-			-- but not shared between instances.
+			-- It is always the same object for each instance of
+			-- this class, but not shared between instances.
 
 	name: STRING is
 			-- Name of output stream
@@ -50,26 +54,31 @@ feature -- Access
 			Result := "STRING"
 		end
 
+	eol: STRING is "%N"
+			-- Line separator
+
 feature -- Status report
 
 	is_open_write: BOOLEAN is
-			-- Can items be written to output stream?
+			-- Can characters be written to output stream?
 		do
 			Result := True
 		end
 
 feature -- Output
 
-	put_character (v: CHARACTER) is
-			-- Write `v' to output stream.
+	put_character (c: CHARACTER) is
+			-- Write `c' to output stream.
 		do
-			string.append_character (v)
+			string.append_character (c)
 		end
 
 	put_string (a_string: STRING) is
 			-- Write `a_string' to output stream.
+			-- Note: If `a_string' is a UC_STRING or descendant, then
+			-- write the bytes of its associated UTF unicode encoding.
 		do
-			string.append_string (a_string)
+			string.append_string (STRING_.as_string (a_string))
 		end
 
 feature -- Basic operations
