@@ -17,6 +17,7 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_OPERATING_SYSTEM
+	KL_SHARED_FILE_SYSTEM
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Status report
@@ -125,10 +126,7 @@ feature -- Access
 				else
 					a_basename := name
 				end
-				Result := STRING_.new_empty_string (parent_pathname, parent_pathname.count + a_basename.count + 1)
-				Result.append_string (parent_pathname)
-				Result.append_character ('/')
-				Result := STRING_.appended_string (Result, a_basename)
+				Result := file_system.pathname (parent_pathname, a_basename)
 			elseif a_pathname /= Void and then a_pathname.count > 0 then
 				Result := a_pathname
 			else
@@ -267,45 +265,28 @@ feature -- Parsing
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) and has_eiffel_extension (s) then
+							a_filename := file_system.pathname (dir_name, s)
 							create a_classname.make (s.substring (1, s.count - 2))
 							a_class := a_universe.eiffel_class (a_classname)
 							if a_class.is_preparsed then
 								if is_override then
 									if a_class.cluster.is_override then
-										-- TODO: two classes with the same name in two override clusters.
-										print ("Class name clash: ")
-										print (a_class.name.name)
-										print ("%N")
-										print ("Cluster1: ")
-										print (a_class.cluster.full_pathname)
-										print ("%N")
-										print ("Cluster2: ")
-										print (full_pathname)
-										print ("%N")
+											-- Two classes with the same name in two override clusters.
+										a_class.set_parsed
+										a_class.set_syntax_error
+										a_universe.error_handler.report_vscn0a_error (a_class, Current, a_filename)
 									else
 											-- Override.
-										a_filename := clone (dir_name)
-										a_filename.append_character ('/')
-										a_filename := STRING_.appended_string (a_filename, s)
 										a_class.set_filename (a_filename)
 										a_class.set_cluster (Current)
 									end
 								elseif not a_class.cluster.is_override then
-									-- TODO: two classes with the same name in two non-override clusters.
-									print ("Class name clash: ")
-									print (a_class.name.name)
-									print ("%N")
-									print ("Cluster1: ")
-									print (a_class.cluster.full_pathname)
-									print ("%N")
-									print ("Cluster2: ")
-									print (full_pathname)
-									print ("%N")
+										-- Two classes with the same name in two non-override clusters.
+									a_class.set_parsed
+									a_class.set_syntax_error
+									a_universe.error_handler.report_vscn0a_error (a_class, Current, a_filename)
 								end
 							else
-								a_filename := clone (dir_name)
-								a_filename.append_character ('/')
-								a_filename := STRING_.appended_string (a_filename, s)
 								a_class.set_filename (a_filename)
 								a_class.set_cluster (Current)
 							end
@@ -317,7 +298,7 @@ feature -- Parsing
 					end
 					dir.close
 				else
-					-- TODO.
+					a_universe.error_handler.report_gcaaa_error (Current, dir_name)
 				end
 			end
 			if subclusters /= Void then
@@ -349,16 +330,14 @@ feature -- Parsing
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) then
-							a_filename := clone (dir_name)
-							a_filename.append_character ('/')
-							a_filename := STRING_.appended_string (a_filename, s)
+							a_filename := file_system.pathname (dir_name, s)
 							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.preparse_single_file (a_file, a_filename, Current)
 								a_file.close
 							else
-								-- TODO.
+								a_universe.error_handler.report_gcaab_error (Current, a_filename)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							a_cluster := new_recursive_cluster (s)
@@ -368,7 +347,7 @@ feature -- Parsing
 					end
 					dir.close
 				else
-					-- TODO.
+					a_universe.error_handler.report_gcaaa_error (Current, dir_name)
 				end
 			end
 			if subclusters /= Void then
@@ -399,16 +378,14 @@ feature -- Parsing
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) then
-							a_filename := clone (dir_name)
-							a_filename.append_character ('/')
-							a_filename := STRING_.appended_string (a_filename, s)
+							a_filename := file_system.pathname (dir_name, s)
 							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.preparse_multiple_file (a_file, a_filename, Current)
 								a_file.close
 							else
-								-- TODO.
+								a_universe.error_handler.report_gcaab_error (Current, a_filename)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							a_cluster := new_recursive_cluster (s)
@@ -418,7 +395,7 @@ feature -- Parsing
 					end
 					dir.close
 				else
-					-- TODO.
+					a_universe.error_handler.report_gcaaa_error (Current, dir_name)
 				end
 			end
 			if subclusters /= Void then
@@ -451,16 +428,14 @@ feature -- Parsing
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) then
-							a_filename := clone (dir_name)
-							a_filename.append_character ('/')
-							a_filename := STRING_.appended_string (a_filename, s)
+							a_filename := file_system.pathname (dir_name, s)
 							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.parse_file (a_file, a_filename, Current)
 								a_file.close
 							else
-								-- TODO.
+								a_universe.error_handler.report_gcaab_error (Current, a_filename)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							a_cluster := new_recursive_cluster (s)
@@ -470,7 +445,7 @@ feature -- Parsing
 					end
 					dir.close
 				else
-					-- TODO.
+					a_universe.error_handler.report_gcaaa_error (Current, dir_name)
 				end
 			end
 			if subclusters /= Void then
