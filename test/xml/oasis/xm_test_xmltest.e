@@ -380,7 +380,7 @@ feature -- Test
 			assert_output ("xmltest, valid, stand alone, 101", xmltest_valid_sa_101, xmltest_valid_sa_out_101)
 			assert_output ("xmltest, valid, stand alone, 102", xmltest_valid_sa_102, xmltest_valid_sa_out_102)
 			assert_output ("xmltest, valid, stand alone, 103", xmltest_valid_sa_103, xmltest_valid_sa_out_103)
-			--assert_output ("xmltest, valid, stand alone, 104", xmltest_valid_sa_104, xmltest_valid_sa_out_104)
+			assert_output ("xmltest, valid, stand alone, 104", xmltest_valid_sa_104, xmltest_valid_sa_out_104)
 			assert_output ("xmltest, valid, stand alone, 105", xmltest_valid_sa_105, xmltest_valid_sa_out_105)
 			assert_output ("xmltest, valid, stand alone, 106", xmltest_valid_sa_106, xmltest_valid_sa_out_106)
 			assert_output ("xmltest, valid, stand alone, 107", xmltest_valid_sa_107, xmltest_valid_sa_out_107)
