@@ -359,7 +359,7 @@ invariant
 	counts_not_void: counts /= Void
 	counts_count: counts.count = items.count
 	counts_capacity: counts.capacity = items.capacity
-	successors_not_void: successors = Void
+	successors_not_void: successors /= Void
 	successors_count: successors.count = items.count
 	successors_capacity: successors.capacity = items.capacity
 
