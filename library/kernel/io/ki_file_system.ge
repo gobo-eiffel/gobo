@@ -36,7 +36,6 @@ feature -- Status report
 			-- in read mode?
 		require
 			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: a_filename.count > 0
 		deferred
 		end
 
@@ -45,7 +44,6 @@ feature -- Status report
 			-- in read mode?
 		require
 			a_dirname_not_void: a_dirname /= Void
-			a_dirname_not_empty: a_dirname.count > 0
 		deferred
 		end
 
@@ -59,13 +57,19 @@ feature -- Access
 			eol_not_empty: Result.count > 0
 		end
 
+	exe_file_extension: STRING is
+			-- Executable file extension in current file system
+		deferred
+		ensure
+			exe_file_extension_not_void: Result /= Void
+		end
+
 feature -- File factory
 
 	new_input_file (a_name: STRING): KI_INPUT_FILE is
 			-- New input text file in current file system
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
 		deferred
 		ensure
 			input_file_not_void: Result /= Void
@@ -77,7 +81,6 @@ feature -- File factory
 			-- New output text file in current file system
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
 		deferred
 		ensure
 			output_file_not_void: Result /= Void
@@ -94,9 +97,18 @@ feature -- File operations
 			-- `new_name' if it existed.
 		require
 			old_name_not_void: old_name /= Void
-			old_name_not_empty: old_name.count > 0
 			new_name_not_void: new_name /= Void
-			new_name_not_empty: new_name.count > 0
+		deferred
+		end
+
+	copy_file (old_name, new_name: STRING) is
+			-- Copy file named `old_name' to `new_name'.
+			-- Do nothing if the file could not be copied
+			-- or if it did not exist. Overwrite file
+			-- `new_name' if it existed.
+		require
+			old_name_not_void: old_name /= Void
+			new_name_not_void: new_name /= Void
 		deferred
 		end
 
@@ -106,7 +118,6 @@ feature -- File operations
 			-- deleted or if it did not exist.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: a_filename.count > 0
 		deferred
 		end
 
@@ -120,7 +131,6 @@ feature -- Directory operations
 			-- and the parent directory does not exist.
 		require
 			a_dirname_not_void: a_dirname /= Void
-			a_dirname_not_empty: a_dirname.count > 0
 		deferred
 		end
 
@@ -131,7 +141,6 @@ feature -- Directory operations
 			-- it is not empty.
 		require
 			a_dirname_not_void: a_dirname /= Void
-			a_dirname_not_empty: a_dirname.count > 0
 		deferred
 		end
 
@@ -141,13 +150,12 @@ feature -- Directory operations
 			-- does not exist or if it is the root
 		require
 			a_dirname_not_void: a_dirname /= Void
-			a_dirname_not_empty: a_dirname.count > 0
 		deferred
 		end
 
 feature -- Working directory
 
-	current_working_directory: STRING is
+	pwd, current_working_directory: STRING is
 			-- Name of current working directory;
 			-- Return absolute pathname or an empty
 			-- string if it could not be computed
@@ -156,14 +164,13 @@ feature -- Working directory
 			current_working_directory_not_void: Result /= Void
 		end
 
-	set_current_working_directory (a_dirname: STRING) is
+	cd, set_current_working_directory (a_dirname: STRING) is
 			-- Set current working directory to `a_dirname'.
 			-- Do nothing if the current working directory
 			-- could not be changed or if directory
 			-- `a_dirname' did not exist.
 		require
 			a_dirname_not_void: a_dirname /= Void
-			a_dirname_not_empty: a_dirname.count > 0
 		deferred
 		end
 
