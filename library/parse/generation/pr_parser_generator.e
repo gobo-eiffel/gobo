@@ -384,30 +384,28 @@ feature {NONE} -- Generation
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
-				if an_action.count > 0 then
-					a_file.put_string ("when ")
-					a_file.put_integer (a_rule.id)
-					a_file.put_string (" then%N--|#line ")
-					a_file.put_integer (a_rule.line_nb)
-					a_file.put_string (" %"")
-					a_file.put_string (input_filename)
-					a_file.put_character ('%"')
-					a_file.put_new_line
-					a_file.put_line ("debug (%"GEYACC%")")
-					a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
-					a_file.put_string (input_filename)
-					a_file.put_string ("' at line ")
-					a_file.put_integer (a_rule.line_nb)
-					a_file.put_line ("%")")
-					a_file.put_line ("end")
-					a_type := a_rule.lhs.type
-					a_type.print_dollar_dollar_initialization (a_file)
-					a_file.put_character ('%N')
-					a_file.put_string (an_action)
-					a_file.put_character ('%N')
-					a_type.print_dollar_dollar_finalization (a_file)
-					a_file.put_character ('%N')
-				end
+				a_file.put_string ("when ")
+				a_file.put_integer (a_rule.id)
+				a_file.put_string (" then%N--|#line ")
+				a_file.put_integer (a_rule.line_nb)
+				a_file.put_string (" %"")
+				a_file.put_string (input_filename)
+				a_file.put_character ('%"')
+				a_file.put_new_line
+				a_file.put_line ("debug (%"GEYACC%")")
+				a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+				a_file.put_string (input_filename)
+				a_file.put_string ("' at line ")
+				a_file.put_integer (a_rule.line_nb)
+				a_file.put_line ("%")")
+				a_file.put_line ("end")
+				a_type := a_rule.lhs.type
+				a_type.print_dollar_dollar_initialization (a_file)
+				a_file.put_character ('%N')
+				a_file.put_string (an_action)
+				a_file.put_character ('%N')
+				a_type.print_dollar_dollar_finalization (a_file)
+				a_file.put_character ('%N')
 				i := i + 1
 			end
 			a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
@@ -447,19 +445,16 @@ feature {NONE} -- Generation
 				a_file.put_string ("inspect yy_act%N")
 				from i := 1 until i > nb loop
 					a_rule := rules.item (i)
-					an_action := a_rule.action.out
-					if an_action.count > 0 then
-						a_file.put_string ("when ")
-						a_file.put_integer (a_rule.id)
-						a_file.put_string (" then%N--|#line ")
-						a_file.put_integer (a_rule.line_nb)
-						a_file.put_string (" %"")
-						a_file.put_string (input_filename)
-						a_file.put_string ("%"%N%T")
-						a_file.put_string ("yy_do_action_")
-						a_file.put_integer (i)
-						a_file.put_character ('%N')
-					end
+					a_file.put_string ("when ")
+					a_file.put_integer (a_rule.id)
+					a_file.put_string (" then%N--|#line ")
+					a_file.put_integer (a_rule.line_nb)
+					a_file.put_string (" %"")
+					a_file.put_string (input_filename)
+					a_file.put_string ("%"%N%T")
+					a_file.put_string ("yy_do_action_")
+					a_file.put_integer (i)
+					a_file.put_character ('%N')
 					i := i + 1
 				end
 				a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
@@ -495,19 +490,16 @@ feature {NONE} -- Generation
 					k := k.min (nb)
 					from until j > k loop
 						a_rule := rules.item (j)
-						an_action := a_rule.action.out
-						if an_action.count > 0 then
-							a_file.put_string ("when ")
-							a_file.put_integer (a_rule.id)
-							a_file.put_string (" then%N--|#line ")
-							a_file.put_integer (a_rule.line_nb)
-							a_file.put_string (" %"")
-							a_file.put_string (input_filename)
-							a_file.put_string ("%"%N%T")
-							a_file.put_string ("yy_do_action_")
-							a_file.put_integer (j)
-							a_file.put_character ('%N')
-						end
+						a_file.put_string ("when ")
+						a_file.put_integer (a_rule.id)
+						a_file.put_string (" then%N--|#line ")
+						a_file.put_integer (a_rule.line_nb)
+						a_file.put_string (" %"")
+						a_file.put_string (input_filename)
+						a_file.put_string ("%"%N%T")
+						a_file.put_string ("yy_do_action_")
+						a_file.put_integer (j)
+						a_file.put_character ('%N')
 						j := j + 1
 					end
 					a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
@@ -519,32 +511,30 @@ feature {NONE} -- Generation
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
-				if an_action.count > 0 then
-					a_file.put_string ("%N%Tyy_do_action_")
-					a_file.put_integer (i)
-					a_file.put_string (" is%N%T%T%T--|#line ")
-					a_file.put_integer (a_rule.line_nb)
-					a_file.put_string (" %"")
-					a_file.put_string (input_filename)
-					a_file.put_character ('%"')
-					a_type := a_rule.lhs.type
-					a_file.put_string ("%N%T%Tlocal%N")
-					a_type.print_dollar_dollar_declaration (a_file)
-					a_file.put_string ("%N%T%Tdo%N")
-					a_file.put_line ("debug (%"GEYACC%")")
-					a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
-					a_file.put_string (input_filename)
-					a_file.put_string ("' at line ")
-					a_file.put_integer (a_rule.line_nb)
-					a_file.put_line ("%")")
-					a_file.put_line ("end")
-					a_type.print_dollar_dollar_initialization (a_file)
-					a_file.put_character ('%N')
-					a_file.put_string (an_action)
-					a_file.put_character ('%N')
-					a_type.print_dollar_dollar_finalization (a_file)
-					a_file.put_string ("%N%T%Tend%N")
-				end
+				a_file.put_string ("%N%Tyy_do_action_")
+				a_file.put_integer (i)
+				a_file.put_string (" is%N%T%T%T--|#line ")
+				a_file.put_integer (a_rule.line_nb)
+				a_file.put_string (" %"")
+				a_file.put_string (input_filename)
+				a_file.put_character ('%"')
+				a_type := a_rule.lhs.type
+				a_file.put_string ("%N%T%Tlocal%N")
+				a_type.print_dollar_dollar_declaration (a_file)
+				a_file.put_string ("%N%T%Tdo%N")
+				a_file.put_line ("debug (%"GEYACC%")")
+				a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+				a_file.put_string (input_filename)
+				a_file.put_string ("' at line ")
+				a_file.put_integer (a_rule.line_nb)
+				a_file.put_line ("%")")
+				a_file.put_line ("end")
+				a_type.print_dollar_dollar_initialization (a_file)
+				a_file.put_character ('%N')
+				a_file.put_string (an_action)
+				a_file.put_character ('%N')
+				a_type.print_dollar_dollar_finalization (a_file)
+				a_file.put_string ("%N%T%Tend%N")
 				i := i + 1
 			end
 		end
