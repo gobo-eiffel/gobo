@@ -86,6 +86,14 @@ feature -- Conversion
 			Result := a_base_type.actual_type (a_feature, a_base_type)
 		end
 
+feature -- Duplication
+
+	deep_cloned_type: like Current is
+			-- Recursively cloned type
+		do
+			!! Result.make (position)
+		end
+
 feature -- Output
 
 	append_to_string (a_string: STRING) is

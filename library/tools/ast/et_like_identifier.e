@@ -130,6 +130,14 @@ print ("'%N")
 			Result := Current
 		end
 
+feature -- Duplication
+
+	deep_cloned_type: like Current is
+			-- Recursively cloned type
+		do
+			!! Result.make (name, position)
+		end
+
 feature -- Output
 
 	append_to_string (a_string: STRING) is
