@@ -1,4 +1,4 @@
-All source code and binary programs included in this package
+All source code and binary programs included in Gobo Eiffel
 (except for geyacc which is distributed under the GPL license)
 are distributed under the following terms and conditions:
 
