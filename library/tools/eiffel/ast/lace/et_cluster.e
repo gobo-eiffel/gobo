@@ -19,6 +19,8 @@ inherit
 	KL_SHARED_OPERATING_SYSTEM
 	KL_SHARED_FILE_SYSTEM
 	KL_IMPORTED_STRING_ROUTINES
+	HASHABLE
+	DEBUG_OUTPUT
 
 feature -- Status report
 
@@ -64,6 +66,11 @@ feature -- Status report
 			-- In other words, do classes in this cluster and other override
 			-- clusters take precedence over classes with same names but in
 			-- non-override cluster? (see 'override_cluster' in ISE's LACE.)
+
+	is_implicit: BOOLEAN
+			-- Has current cluster not been explicitly declared
+			-- but is instead the result of the fact that its
+			-- parent is a recursive cluster?
 
 feature -- Access
 
@@ -159,6 +166,12 @@ feature -- Access
 			no_void_class: not Result.has (Void)
 		end
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := name.hash_code
+		end
+
 feature -- Nested
 
 	parent: ET_CLUSTER
@@ -201,6 +214,14 @@ feature -- Status setting
 			override_set: is_override = b
 		end
 
+	set_implicit (b: BOOLEAN) is
+			-- Set `is_implicit' to `b'.
+		do
+			is_implicit := b
+		ensure
+			implicit_set: is_implicit = b
+		end
+
 feature -- Setting
 
 	set_subclusters (a_subclusters: like subclusters) is
@@ -223,8 +244,13 @@ feature -- Element change
 			-- Add `a_cluster' to the list of subsclusters.
 		require
 			a_cluster_not_void: a_cluster /= Void
-			subclusters_not_void: subclusters /= Void
+		local
+			a_subclusters: like subclusters
 		do
+			if subclusters = Void then
+				create a_subclusters.make_empty
+				set_subclusters (a_subclusters)
+			end
 			subclusters.put_last (a_cluster)
 			a_cluster.set_parent (Current)
 		end
@@ -255,7 +281,7 @@ feature -- Parsing
 			s: STRING
 			a_classname: ET_IDENTIFIER
 			a_class: ET_CLASS
-			a_cluster: ET_CLUSTER
+			a_cluster: like Current
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
@@ -293,7 +319,7 @@ feature -- Parsing
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
 								a_cluster := new_recursive_cluster (s)
-								a_cluster.preparse_shallow (a_universe)
+								add_subcluster (a_cluster)
 							end
 						end
 						dir.read_entry
@@ -322,7 +348,7 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			a_cluster: ET_CLUSTER
+			a_cluster: like Current
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
@@ -344,7 +370,7 @@ feature -- Parsing
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
 								a_cluster := new_recursive_cluster (s)
-								a_cluster.preparse_single (a_universe)
+								add_subcluster (a_cluster)
 							end
 						end
 						dir.read_entry
@@ -372,7 +398,7 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			a_cluster: ET_CLUSTER
+			a_cluster: like Current
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
@@ -394,7 +420,7 @@ feature -- Parsing
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
 								a_cluster := new_recursive_cluster (s)
-								a_cluster.preparse_multiple (a_universe)
+								add_subcluster (a_cluster)
 							end
 						end
 						dir.read_entry
@@ -419,7 +445,7 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			a_cluster: ET_CLUSTER
+			a_cluster: like Current
 		do
 			debug ("GELINT")
 				std.error.put_string ("Parse cluster '")
@@ -446,7 +472,7 @@ feature -- Parsing
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
 								a_cluster := new_recursive_cluster (s)
-								a_cluster.parse_all (a_universe)
+								add_subcluster (a_cluster)
 							end
 						end
 						dir.read_entry
@@ -459,6 +485,14 @@ feature -- Parsing
 			if subclusters /= Void then
 				subclusters.parse_all (a_universe)
 			end
+		end
+
+feature -- Output
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'
+		do
+			Result := full_name ('.')
 		end
 
 feature {NONE} -- Implementation
@@ -474,6 +508,7 @@ feature {NONE} -- Implementation
 			name_set: Result.name = a_name
 			parent_set: Result.parent = Current
 			recursive: Result.is_recursive
+			implicit: Result.is_implicit
 		end
 
 	has_eiffel_extension (a_filename: STRING): BOOLEAN is
