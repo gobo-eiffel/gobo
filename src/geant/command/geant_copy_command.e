@@ -227,6 +227,8 @@ feature {NONE} -- Implementation
 							exit_code := 1
 						end
 					end
+				else
+					project.trace_debug (<<"  [*copy] not necessary to copy ", old_name, " to ", new_name>>)
 				end
 			end
 		end
