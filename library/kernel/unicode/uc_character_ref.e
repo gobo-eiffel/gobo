@@ -26,6 +26,16 @@ inherit
       redefine
 	 out, is_equal
       end
+
+	KL_SHARED_PLATFORM
+		undefine
+			out, is_equal
+		end
+
+	KL_IMPORTED_INTEGER_ROUTINES
+		undefine
+			out, is_equal
+		end
    
 creation
    make_from_integer, make_from_character
@@ -103,7 +113,7 @@ feature -- Output
    out: STRING is
       do
 	 !!Result.make(0)
-	 if code <= platform.Maximum_character_code then
+	 if code <= Platform.Maximum_character_code then
 	    Result.append_character(as_character)
 	 else
 	    Result.append_string("\u")
@@ -117,32 +127,17 @@ feature -- Conversion
    as_character: CHARACTER is
          -- Corresponding character representation
       require
-         code_large_enough: code >= platform.Minimum_character_code;
-         code_small_enough: code <= platform.Maximum_character_code;
+         code_large_enough: code >= Platform.Minimum_character_code;
+         code_small_enough: code <= Platform.Maximum_character_code;
       do
-	 Result := specific.to_character(code)
+	 Result := code_to_character(code)
       end
    
-   as_hexadecimal: STRING is
-         -- Hexadecimal representation of the character.
-      local
-	 cc: INTEGER
-      do
-	 !!Result.make(0)
-	 from
-	    cc := code
-	 until
-	    cc = 0
-	 loop
-	    Result.insert_character(hex_digit_string.item(cc\\16+1), 1)
-	    cc := cc // 16;
-	 end
-         
-         if Result.is_empty then
-            -- in case of code = 0, we have to insert at least one character
-            Result.append_character('0')
-         end
-      end
+	as_hexadecimal: STRING is
+			-- Hexadecimal representation of current character
+		do
+			Result := INTEGER_.to_hexadecimal (code, False)
+		end
    
    to_upper is
 	 -- convert to upper case
@@ -184,7 +179,7 @@ feature --
 	 Result := 2_147_483_647
       end
 
-feature {UCCHAR_REF} -- Implementation
+feature {UC_CHARACTER_REF} -- Implementation
 
    i_code: INTEGER
 
@@ -193,7 +188,7 @@ feature {UCCHAR_REF} -- Implementation
       local
 	 cc, i: INTEGER
       do
-	 !!Result.make_from_string("1234")
+	 Result := clone ("1234")
 	 from
 	    i := 4
 	    cc := c
@@ -208,7 +203,7 @@ feature {UCCHAR_REF} -- Implementation
 
    hex_digit_string: STRING is
       once
-	 !!Result.make_from_string("0123456789abcdef")
+	 Result := "0123456789abcdef"
       end
 
    ctype: UC_CTYPE is
@@ -220,22 +215,9 @@ feature {UCCHAR_REF} -- Implementation
    code_to_character (i: INTEGER): CHARACTER is
          -- convert code position `i' to `CHARACTER'
       do
-	 Result := specific.to_character(i)
+	 Result := INTEGER_.to_character (i)
       end
 
-   specific: KL_INTEGER_ROUTINES is
-         -- specific routines are now provided by GOBO.
-      once
-	 !!Result
-      end
-   
-feature   
-   
-   platform: PLATFORM is
-      once
-         !!Result
-      end
-   
 feature -- new features
 
    -- categories
