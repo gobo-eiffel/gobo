@@ -24,27 +24,32 @@ inherit
 			{NONE} all
 		end
 
-	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
-
-	UT_INTEGER_ROUTINES
-		export
-			{NONE} all
-		end
-
-	UT_FILE_ROUTINES
-		export
-			{NONE} all
-		end
-
 	EXCEPTIONS
 		export
 			{NONE} all
 		end
 
 	ARGUMENTS
+		export
+			{NONE} all
+		end
+
+	UT_CHARACTER_CODES
+		export
+			{NONE} all
+		end
+
+	KL_INTEGER_ROUTINES
+		export
+			{NONE} all
+		end
+
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
+	KL_STRING_ROUTINES
 		export
 			{NONE} all
 		end
@@ -72,429 +77,429 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 65
+--|#line 70
 eif_lineno := eif_lineno + text_count
 when 2 then
---|#line 66
+--|#line 71
 ;
 when 3 then
---|#line 72
+--|#line 77
 eif_lineno := eif_lineno + 1
 when 4 then
---|#line 73
+--|#line 78
 ;
 when 5 then
---|#line 79
+--|#line 84
 last_token := Plus_code
 when 6 then
---|#line 80
+--|#line 85
 last_token := Minus_code
 when 7 then
---|#line 81
+--|#line 86
 last_token := Star_code
 when 8 then
---|#line 82
+--|#line 87
 last_token := Slash_code
 when 9 then
---|#line 83
+--|#line 88
 last_token := Caret_code
 when 10 then
---|#line 84
+--|#line 89
 last_token := E_DIV
 when 11 then
---|#line 85
+--|#line 90
 last_token := E_MOD
 when 12 then
---|#line 86
+--|#line 91
 last_token := Equal_code
 when 13 then
---|#line 87
+--|#line 92
 last_token := E_NE
 when 14 then
---|#line 88
+--|#line 93
 last_token := Greater_than_code
 when 15 then
---|#line 89
+--|#line 94
 last_token := E_GE
 when 16 then
---|#line 90
+--|#line 95
 last_token := Less_than_code
 when 17 then
---|#line 91
+--|#line 96
 last_token := E_LE
 when 18 then
---|#line 92
+--|#line 97
 last_token := Dot_code
 when 19 then
---|#line 93
+--|#line 98
 last_token := Semicolon_code
 when 20 then
---|#line 94
+--|#line 99
 last_token := Comma_code
 when 21 then
---|#line 95
+--|#line 100
 last_token := Colon_code
 when 22 then
---|#line 96
+--|#line 101
 last_token := Exclamation_code
 when 23 then
---|#line 97
+--|#line 102
 last_token := E_BANGBANG
 when 24 then
---|#line 98
+--|#line 103
 last_token := E_ARROW
 when 25 then
---|#line 99
+--|#line 104
 last_token := E_DOTDOT
 when 26 then
---|#line 100
+--|#line 105
 last_token := Left_parenthesis_code
 when 27 then
---|#line 101
+--|#line 106
 last_token := Right_parenthesis_code
 when 28 then
---|#line 102
+--|#line 107
 last_token := Left_bracket_code
 when 29 then
---|#line 103
+--|#line 108
 last_token := Right_bracket_code
 when 30 then
---|#line 104
+--|#line 109
 last_token := Left_brace_code
 when 31 then
---|#line 105
+--|#line 110
 last_token := Right_brace_code
 when 32 then
---|#line 106
+--|#line 111
 last_token := E_LARRAY
 when 33 then
---|#line 107
+--|#line 112
 last_token := E_RARRAY
 when 34 then
---|#line 108
+--|#line 113
 last_token := E_ASSIGN
 when 35 then
---|#line 109
+--|#line 114
 last_token := E_REVERSE
 when 36 then
---|#line 110
+--|#line 115
 last_token := Dollar_code
 when 37 then
---|#line 116
+--|#line 121
 last_token := E_ALIAS
 when 38 then
---|#line 117
+--|#line 122
 last_token := E_ALL
 when 39 then
---|#line 118
+--|#line 123
 last_token := E_AND
 when 40 then
---|#line 119
+--|#line 124
 last_token := E_AS
 when 41 then
---|#line 120
+--|#line 125
 last_token := E_CHECK
 when 42 then
---|#line 121
+--|#line 126
 last_token := E_CLASS
 when 43 then
---|#line 122
+--|#line 127
 last_token := E_CREATION
 when 44 then
---|#line 123
+--|#line 128
 last_token := E_DEBUG
 when 45 then
---|#line 124
+--|#line 129
 last_token := E_DEFERRED
 when 46 then
---|#line 125
+--|#line 130
 last_token := E_DO
 when 47 then
---|#line 126
+--|#line 131
 last_token := E_ELSE
 when 48 then
---|#line 127
+--|#line 132
 last_token := E_ELSEIF
 when 49 then
---|#line 128
+--|#line 133
 last_token := E_END
 when 50 then
---|#line 129
+--|#line 134
 last_token := E_ENSURE
 when 51 then
---|#line 130
+--|#line 135
 last_token := E_EXPANDED
 when 52 then
---|#line 131
+--|#line 136
 last_token := E_EXPORT
 when 53 then
---|#line 132
+--|#line 137
 last_token := E_EXTERNAL
 when 54 then
---|#line 133
+--|#line 138
 last_token := E_FALSE
 when 55 then
---|#line 134
+--|#line 139
 last_token := E_FEATURE
 when 56 then
---|#line 135
+--|#line 140
 last_token := E_FROM
 when 57 then
---|#line 136
+--|#line 141
 last_token := E_FROZEN
 when 58 then
---|#line 137
+--|#line 142
 last_token := E_IF
 when 59 then
---|#line 138
+--|#line 143
 last_token := E_IMPLIES
 when 60 then
---|#line 139
+--|#line 144
 last_token := E_INDEXING
 when 61 then
---|#line 140
+--|#line 145
 last_token := E_INFIX
 when 62 then
---|#line 141
+--|#line 146
 last_token := E_INHERIT
 when 63 then
---|#line 142
+--|#line 147
 last_token := E_INSPECT
 when 64 then
---|#line 143
+--|#line 148
 last_token := E_INVARIANT
 when 65 then
---|#line 144
+--|#line 149
 last_token := E_IS
 when 66 then
---|#line 145
+--|#line 150
 last_token := E_LIKE
 when 67 then
---|#line 146
+--|#line 151
 last_token := E_LOCAL
 when 68 then
---|#line 147
+--|#line 152
 last_token := E_LOOP
 when 69 then
---|#line 148
+--|#line 153
 last_token := E_NOT
 when 70 then
---|#line 149
+--|#line 154
 last_token := E_OBSOLETE
 when 71 then
---|#line 150
+--|#line 155
 last_token := E_OLD
 when 72 then
---|#line 151
+--|#line 156
 last_token := E_ONCE
 when 73 then
---|#line 152
+--|#line 157
 last_token := E_OR
 when 74 then
---|#line 153
+--|#line 158
 last_token := E_PREFIX
 when 75 then
---|#line 154
+--|#line 159
 last_token := E_REDEFINE
 when 76 then
---|#line 155
+--|#line 160
 last_token := E_RENAME
 when 77 then
---|#line 156
+--|#line 161
 last_token := E_REQUIRE
 when 78 then
---|#line 157
+--|#line 162
 last_token := E_RESCUE
 when 79 then
---|#line 158
+--|#line 163
 last_token := E_RETRY
 when 80 then
---|#line 159
+--|#line 164
 last_token := E_SELECT
 when 81 then
---|#line 160
+--|#line 165
 last_token := E_SEPARATE
 when 82 then
---|#line 161
+--|#line 166
 last_token := E_STRIP
 when 83 then
---|#line 162
+--|#line 167
 last_token := E_THEN
 when 84 then
---|#line 163
+--|#line 168
 last_token := E_TRUE
 when 85 then
---|#line 164
+--|#line 169
 last_token := E_UNDEFINE
 when 86 then
---|#line 165
+--|#line 170
 last_token := E_UNIQUE
 when 87 then
---|#line 166
+--|#line 171
 last_token := E_UNTIL
 when 88 then
---|#line 167
+--|#line 172
 last_token := E_VARIANT
 when 89 then
---|#line 168
+--|#line 173
 last_token := E_WHEN
 when 90 then
---|#line 169
+--|#line 174
 last_token := E_XOR
 when 91 then
---|#line 170
+--|#line 175
 last_token := E_CURRENT
 when 92 then
---|#line 171
+--|#line 176
 last_token := E_RESULT
 when 93 then
---|#line 177
+--|#line 182
 
 							last_token := E_IDENTIFIER
 							last_value := text
 						
 when 94 then
---|#line 185
+--|#line 190
 
 							last_token := E_FREEOP
 							last_value := text
 						
 when 95 then
---|#line 193
+--|#line 198
 last_token := E_CHARACTER; last_value := text_item (2)
 when 96 then
---|#line 194
+--|#line 199
 last_token := E_CHARACTER; last_value := '%A'
 when 97 then
---|#line 195
+--|#line 200
 last_token := E_CHARACTER; last_value := '%B'
 when 98 then
---|#line 196
+--|#line 201
 last_token := E_CHARACTER; last_value := '%C'
 when 99 then
---|#line 197
+--|#line 202
 last_token := E_CHARACTER; last_value := '%D'
 when 100 then
---|#line 198
+--|#line 203
 last_token := E_CHARACTER; last_value := '%F'
 when 101 then
---|#line 199
+--|#line 204
 last_token := E_CHARACTER; last_value := '%H'
 when 102 then
---|#line 200
+--|#line 205
 last_token := E_CHARACTER; last_value := '%L'
 when 103 then
---|#line 201
+--|#line 206
 last_token := E_CHARACTER; last_value := '%N'
 when 104 then
---|#line 202
+--|#line 207
 last_token := E_CHARACTER; last_value := '%Q'
 when 105 then
---|#line 203
+--|#line 208
 last_token := E_CHARACTER; last_value := '%R'
 when 106 then
---|#line 204
+--|#line 209
 last_token := E_CHARACTER; last_value := '%S'
 when 107 then
---|#line 205
+--|#line 210
 last_token := E_CHARACTER; last_value := '%T'
 when 108 then
---|#line 206
+--|#line 211
 last_token := E_CHARACTER; last_value := '%U'
 when 109 then
---|#line 207
+--|#line 212
 last_token := E_CHARACTER; last_value := '%V'
 when 110 then
---|#line 208
+--|#line 213
 last_token := E_CHARACTER; last_value := '%%'
 when 111 then
---|#line 209
+--|#line 214
 last_token := E_CHARACTER; last_value := '%''
 when 112 then
---|#line 210
+--|#line 215
 last_token := E_CHARACTER; last_value := '%"'
 when 113 then
---|#line 211
+--|#line 216
 last_token := E_CHARACTER; last_value := '%('
 when 114 then
---|#line 212
+--|#line 217
 last_token := E_CHARACTER; last_value := '%)'
 when 115 then
---|#line 213
+--|#line 218
 last_token := E_CHARACTER; last_value := '%<'
 when 116 then
---|#line 214
+--|#line 219
 last_token := E_CHARACTER; last_value := '%>'
 when 117 then
---|#line 215
+--|#line 220
 
 						code_ := text_substring (4, text_count - 2).to_integer
 						if code_ > Maximum_character_code then
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
-							last_value := integer_to_character (code_)
+							last_value := integer__to_character (code_)
 						end
 					
 when 118, 119 then
---|#line 224
+--|#line 229
 last_token := E_CHARERR	-- Catch-all rules (no backing up)
 when 120 then
---|#line 231
+--|#line 236
 last_token := process_operator (E_STRPLUS)
 when 121 then
---|#line 232
+--|#line 237
 last_token := process_operator (E_STRMINUS)
 when 122 then
---|#line 233
+--|#line 238
 last_token := process_operator (E_STRSTAR)
 when 123 then
---|#line 234
+--|#line 239
 last_token := process_operator (E_STRSLASH)
 when 124 then
---|#line 235
+--|#line 240
 last_token := process_operator (E_STRDIV)
 when 125 then
---|#line 236
+--|#line 241
 last_token := process_operator (E_STRMOD)
 when 126 then
---|#line 237
+--|#line 242
 last_token := process_operator (E_STRPOWER)
 when 127 then
---|#line 238
+--|#line 243
 last_token := process_operator (E_STRLT)
 when 128 then
---|#line 239
+--|#line 244
 last_token := process_operator (E_STRLE)
 when 129 then
---|#line 240
+--|#line 245
 last_token := process_operator (E_STRGT)
 when 130 then
---|#line 241
+--|#line 246
 last_token := process_operator (E_STRGE)
 when 131 then
---|#line 242
+--|#line 247
 last_token := process_operator (E_STRNOT)
 when 132 then
---|#line 243
+--|#line 248
 last_token := process_operator (E_STRAND)
 when 133 then
---|#line 244
+--|#line 249
 last_token := process_operator (E_STROR)
 when 134 then
---|#line 245
+--|#line 250
 last_token := process_operator (E_STRXOR)
 when 135 then
---|#line 246
+--|#line 251
 last_token := process_operator (E_STRANDTHEN)
 when 136 then
---|#line 247
+--|#line 252
 last_token := process_operator (E_STRORELSE)
 when 137 then
---|#line 248
+--|#line 253
 last_token := process_operator (E_STRIMPLIES)
 when 138 then
---|#line 249
+--|#line 254
 
 			if is_operator then
 				last_token := E_STRFREEOP
@@ -504,13 +509,13 @@ when 138 then
 			last_value := text_substring (2, text_count - 1)
 		
 when 139 then
---|#line 257
+--|#line 262
 
 				last_token := E_STRING
 				last_value := text_substring (2, text_count - 1)
 			
 when 140 then
---|#line 261
+--|#line 266
 
 				if text_count > 1 then
 					eif_buffer.append_string (text_substring (2, text_count))
@@ -518,128 +523,124 @@ when 140 then
 				set_start_condition (IN_STR)
 			
 when 141 then
---|#line 267
+--|#line 272
 eif_buffer.append_string (text)
 when 142 then
---|#line 268
+--|#line 273
 eif_buffer.append_character ('%A')
 when 143 then
---|#line 269
+--|#line 274
 eif_buffer.append_character ('%B')
 when 144 then
---|#line 270
+--|#line 275
 eif_buffer.append_character ('%C')
 when 145 then
---|#line 271
+--|#line 276
 eif_buffer.append_character ('%D')
 when 146 then
---|#line 272
+--|#line 277
 eif_buffer.append_character ('%F')
 when 147 then
---|#line 273
+--|#line 278
 eif_buffer.append_character ('%H')
 when 148 then
---|#line 274
+--|#line 279
 eif_buffer.append_character ('%L')
 when 149 then
---|#line 275
+--|#line 280
 eif_buffer.append_character ('%N')
 when 150 then
---|#line 276
+--|#line 281
 eif_buffer.append_character ('%Q')
 when 151 then
---|#line 277
+--|#line 282
 eif_buffer.append_character ('%R')
 when 152 then
---|#line 278
+--|#line 283
 eif_buffer.append_character ('%S')
 when 153 then
---|#line 279
+--|#line 284
 eif_buffer.append_character ('%T')
 when 154 then
---|#line 280
+--|#line 285
 eif_buffer.append_character ('%U')
 when 155 then
---|#line 281
+--|#line 286
 eif_buffer.append_character ('%V')
 when 156 then
---|#line 282
+--|#line 287
 eif_buffer.append_character ('%%')
 when 157 then
---|#line 283
+--|#line 288
 eif_buffer.append_character ('%'')
 when 158 then
---|#line 284
+--|#line 289
 eif_buffer.append_character ('%"')
 when 159 then
---|#line 285
+--|#line 290
 eif_buffer.append_character ('%(')
 when 160 then
---|#line 286
+--|#line 291
 eif_buffer.append_character ('%)')
 when 161 then
---|#line 287
+--|#line 292
 eif_buffer.append_character ('%<')
 when 162 then
---|#line 288
+--|#line 293
 eif_buffer.append_character ('%>')
 when 163 then
---|#line 289
+--|#line 294
 
 			code_ := text_substring (3, text_count - 1).to_integer
 			if (code_ > Maximum_character_code) then
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			else
-				eif_buffer.append_character (integer_to_character (code_))
+				eif_buffer.append_character (integer__to_character (code_))
 			end
 		
 when 164 then
---|#line 298
+--|#line 303
 eif_lineno := eif_lineno + 1
 when 165 then
---|#line 299
+--|#line 304
 
 			last_token := E_STRING
 			if text_count > 1 then
 				eif_buffer.append_string (text_substring (1, text_count - 1))
 			end
-#ifdef VE
-			!! str_.make (0)
-#else
-			!! str_.make (eif_buffer.count)
-#endif
+			str_ := string__make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
 			last_value := str_
 			set_start_condition (INITIAL)
 		
 when 166, 167, 168 then
---|#line 314
+--|#line 315
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL)
 						
 when 169 then
---|#line 326
+--|#line 327
 last_token := E_BIT; last_value := text
 when 170 then
---|#line 327
+--|#line 328
 last_token := E_BITTYPE; last_value := text
 when 171 then
---|#line 328
+--|#line 329
 
 								last_token := E_IDENTIFIER
 								last_value := text_substring (1, 3)
 							
 when 172 then
---|#line 337
+--|#line 338
 
 						last_token := E_INTEGER
 						last_value := text.to_integer
 					
 when 173 then
---|#line 341
+--|#line 342
 
 						last_token := E_INTEGER
 						str_ := text
@@ -655,24 +656,24 @@ when 173 then
 						eif_buffer.wipe_out
 					
 when 174 then
---|#line 355
+--|#line 356
 last_token := E_INTERR	-- Catch-all rule (no backing up)
 when 175 then
 	yy_position := yy_position - 1
---|#line 361
+--|#line 362
 
 						last_token := E_REAL
 						last_value := text.to_double
 					
 when 176, 177 then
---|#line 362
+--|#line 363
 
 						last_token := E_REAL
 						last_value := text.to_double
 					
 when 178 then
 	yy_position := yy_position - 1
---|#line 367
+--|#line 368
 
 						last_token := E_REAL
 						str_ := text
@@ -688,7 +689,7 @@ when 178 then
 						eif_buffer.wipe_out
 					
 when 179, 180 then
---|#line 368
+--|#line 369
 
 						last_token := E_REAL
 						str_ := text
@@ -705,20 +706,20 @@ when 179, 180 then
 					
 when 181 then
 	yy_position := yy_position - 1
---|#line 383
-	-- Catch-all rules (no backing up)
-						last_token := E_REALERR
-					
-when 182, 183 then
 --|#line 384
 	-- Catch-all rules (no backing up)
 						last_token := E_REALERR
 					
+when 182, 183 then
+--|#line 385
+	-- Catch-all rules (no backing up)
+						last_token := E_REALERR
+					
 when 184 then
---|#line 392
+--|#line 393
 last_token := E_UNKNOWN
 when 185 then
---|#line 394
+--|#line 395
 fatal_error ("scanner jammed")
 			else
 				fatal_error ("fatal scanner internal error: no action found")
@@ -730,10 +731,10 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 391
+--|#line 392
 terminate
 when 1 then
---|#line 317
+--|#line 318
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL)
@@ -1370,11 +1371,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_compressed_scanner_skeleton
-#ifdef VE
-			!! eif_buffer.make (0)
-#else
-			!! eif_buffer.make (Init_buffer_size)
-#endif
+			eif_buffer := string__make (Init_buffer_size)
 			eif_lineno := 1
 		end
 
@@ -1384,18 +1381,14 @@ feature {NONE} -- Initialization
 			j, n: INTEGER
 			filename: STRING
 			buffer: YY_FILE_BUFFER
-#ifdef ISE || HACT
-			a_file: PLAIN_TEXT_FILE
-#else
-			a_file: FILE
-#endif
+			a_file: like FILE_type
 		do
 			make
 			n := argument_count
 			from j := 1 until j > n loop
 				filename := argument (j)
-				!! a_file.make (filename)
-				file_open_read (a_file)
+				a_file := file__make (filename)
+				file__open_read (a_file)
 				if a_file.is_open_read then
 					!! buffer.make (a_file)
 					set_input_buffer (buffer)
@@ -1416,26 +1409,21 @@ feature {NONE} -- Initialization
 			j, n: INTEGER
 			filename: STRING
 			buffer: YY_FILE_BUFFER
-#ifdef ISE || HACT
-			a_file: PLAIN_TEXT_FILE
-#else
-			a_file: FILE
-#endif
+			a_file: like FILE_type
 		do
 			make
-#ifdef ISE || HACT
-			if argument_count < 2 or else not argument (1).is_integer then
-#else
-			if argument_count < 2 then
-#endif
+			if
+				argument_count < 2 or else
+				not string__is_integer (argument (1))
+			then
 				io.error.put_string ("usage: eiffel_scanner nb filename%N")
 				die (1)
 			else
 				n := argument (1).to_integer
 				filename := argument (2)
 				from j := 1 until j > n loop
-					!! a_file.make (filename)
-					file_open_read (a_file)
+					a_file := file__make (filename)
+					file__open_read (a_file)
 					if a_file.is_open_read then
 						!! buffer.make (a_file)
 						set_input_buffer (buffer)

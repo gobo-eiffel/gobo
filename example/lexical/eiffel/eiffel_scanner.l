@@ -25,21 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	UT_CHARACTER_CODES
-		export
-			{NONE} all
-		end
-
-	UT_INTEGER_ROUTINES
-		export
-			{NONE} all
-		end
-
-	UT_FILE_ROUTINES
-		export
-			{NONE} all
-		end
-
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -50,13 +35,33 @@ inherit
 			{NONE} all
 		end
 
+	UT_CHARACTER_CODES
+		export
+			{NONE} all
+		end
+
+	KL_INTEGER_ROUTINES
+		export
+			{NONE} all
+		end
+
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
+	KL_STRING_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, execute, benchmark
 %}
 
 %x IN_STR
-%option nodefault outfile="eiffel_scanner.ge"
+%option nodefault outfile="eiffel_scanner.e"
 
 %%
 
@@ -218,7 +223,7 @@ creation
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
-							last_value := integer_to_character (code_)
+							last_value := integer__to_character (code_)
 						end
 					}
 \'.{1,2}			|
@@ -292,7 +297,7 @@ creation
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			else
-				eif_buffer.append_character (integer_to_character (code_))
+				eif_buffer.append_character (integer__to_character (code_))
 			end
 		}
 <IN_STR>%\n[ \t\r]*%	eif_lineno := eif_lineno + 1
@@ -301,11 +306,7 @@ creation
 			if text_count > 1 then
 				eif_buffer.append_string (text_substring (1, text_count - 1))
 			end
-#ifdef VE
-			!! str_.make (0)
-#else
-			!! str_.make (eif_buffer.count)
-#endif
+			str_ := string__make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
 			last_value := str_
@@ -406,11 +407,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_compressed_scanner_skeleton
-#ifdef VE
-			!! eif_buffer.make (0)
-#else
-			!! eif_buffer.make (Init_buffer_size)
-#endif
+			eif_buffer := string__make (Init_buffer_size)
 			eif_lineno := 1
 		end
 
@@ -420,18 +417,14 @@ feature {NONE} -- Initialization
 			j, n: INTEGER
 			filename: STRING
 			buffer: YY_FILE_BUFFER
-#ifdef ISE || HACT
-			a_file: PLAIN_TEXT_FILE
-#else
-			a_file: FILE
-#endif
+			a_file: like FILE_type
 		do
 			make
 			n := argument_count
 			from j := 1 until j > n loop
 				filename := argument (j)
-				!! a_file.make (filename)
-				file_open_read (a_file)
+				a_file := file__make (filename)
+				file__open_read (a_file)
 				if a_file.is_open_read then
 					!! buffer.make (a_file)
 					set_input_buffer (buffer)
@@ -452,26 +445,21 @@ feature {NONE} -- Initialization
 			j, n: INTEGER
 			filename: STRING
 			buffer: YY_FILE_BUFFER
-#ifdef ISE || HACT
-			a_file: PLAIN_TEXT_FILE
-#else
-			a_file: FILE
-#endif
+			a_file: like FILE_type
 		do
 			make
-#ifdef ISE || HACT
-			if argument_count < 2 or else not argument (1).is_integer then
-#else
-			if argument_count < 2 then
-#endif
+			if
+				argument_count < 2 or else
+				not string__is_integer (argument (1))
+			then
 				io.error.put_string ("usage: eiffel_scanner nb filename%N")
 				die (1)
 			else
 				n := argument (1).to_integer
 				filename := argument (2)
 				from j := 1 until j > n loop
-					!! a_file.make (filename)
-					file_open_read (a_file)
+					a_file := file__make (filename)
+					file__open_read (a_file)
 					if a_file.is_open_read then
 						!! buffer.make (a_file)
 						set_input_buffer (buffer)
