@@ -1,0 +1,142 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Geant Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="geant_task">
+	<title>geant</title>
+
+	<sect1 id="geant_description">
+		<title>Description</title>
+		<para>
+			Sometimes when projects get large it is useful to make build scripts more
+			modular. It would be useful for example to call subtargets in a procedural manner
+			and it would be useful to use more than one build script since the build script usually
+			grows with the size of the project. With the geant task you can accomplish this.
+		</para>
+	</sect1>
+
+	<sect1 id="geant_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of build file to invoke</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Name of existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>target</term>
+				<listitem>
+					<para>
+						<emphasis>Description: </emphasis>Name of target to invoke in current build file
+						respectively in buildfile specified through attribute <emphasis>file</emphasis>
+						if provided.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>existing target</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>reuse_variables</term>
+				<listitem>
+					<para>
+						<emphasis>Description: </emphasis>Should variables defined in current build file
+						be available in invoked build file?
+						Note: This attribute is only evaluated if attribute <emphasis>file</emphasis>
+						if provided.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>true|false</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="echo_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+<define name="geant">
+  <element name="geant">
+    <ref name="dir_if_unless"/>
+    <choice>
+      <attribute name="target"/>
+      <group>
+        <attribute name="file"/>
+          <optional>
+            <attribute name="reuse_variables">
+              <!-- runtime evaluation
+              <choice>
+                <value>true</value>
+                <value>false</value>
+              </choice>
+              -->
+            </attribute>
+          </optional>
+        </group>
+        <group>
+          <attribute name="file"/>
+          <attribute name="target"/>
+          <optional>
+            <attribute name="reuse_variables">
+              <!-- runtime evaluation
+              <choice>
+                <value>true</value>
+                <value>false</value>
+              </choice>
+              -->
+            </attribute>
+          </optional>
+        </group>
+      <ref name="fileset"/>
+      </choice>
+  </element>
+</define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="geant_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <geant file="build2.eant"/>
+  
+  <geant file="build2.eant" target="compile"/>
+  
+  <geant file="build2.eant" target="compile" reuse_variables="true"/>
+  
+  <geant target="compile"/>
+]]>
+		</programlisting>
+	</sect1>
+
+
+</chapter>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Exit Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="exit_task">
+	<title>exit</title>
+
+	<sect1 id="exit_description">
+		<title>Description</title>
+		<para>
+			Exit build process with specified exit code.
+		</para>
+	</sect1>
+
+	<sect1 id="exit_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>code</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Exit code with which build process is terminated</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>0</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="exit_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="exit">
+    <element name="exit">
+      <ref name="dir_if_unless"/>
+      <optional>
+        <attribute name="code"/>
+      </optional>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="exit_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <exit code="1"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>
