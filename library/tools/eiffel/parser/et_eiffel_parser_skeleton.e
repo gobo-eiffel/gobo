@@ -246,21 +246,22 @@ feature {NONE} -- Basic operations
 					class_features.put_first (features.item (i))
 					i := i - 1
 				end
-				a_class.set_features (class_features)
+				a_class.set_features (class_features, nb)
 			end
 			features.wipe_out
 		end
 
 	set_class_to_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST;
-		a_creators: ET_CREATOR_LIST; a_feature_clauses: ET_FEATURE_CLAUSE_LIST;
-		an_invariants: ET_INVARIANTS; a_second_indexing: ET_INDEXING_LIST;
-		an_end: ET_KEYWORD) is
+		a_creators: ET_CREATOR_LIST; a_convert_features: ET_CONVERT_FEATURE_LIST;
+		a_feature_clauses: ET_FEATURE_CLAUSE_LIST; an_invariants: ET_INVARIANTS;
+		a_second_indexing: ET_INDEXING_LIST; an_end: ET_KEYWORD) is
 			-- Set various elements to `a_class'.
 		do
 			if a_class /= Void then
 				a_class.set_obsolete_message (an_obsolete)
 				a_class.set_parents (a_parents)
 				a_class.set_creators (a_creators)
+				a_class.set_convert_features (a_convert_features)
 				a_class.set_feature_clauses (a_feature_clauses)
 				a_class.set_invariants (an_invariants)
 				a_class.set_second_indexing (a_second_indexing)
@@ -293,7 +294,7 @@ feature {NONE} -- Basic operations
 					end
 				end
 			end
-			set_class_to_end (a_class, an_obsolete, a_parents, Void, Void, Void, Void, an_end)
+			set_class_to_end (a_class, an_obsolete, a_parents, Void, Void, Void, Void, Void, an_end)
 		end
 
 	add_expression_assertion (an_expression: ET_EXPRESSION; a_semicolon: ET_SYMBOL) is
@@ -468,6 +469,7 @@ feature {NONE} -- AST factory
 			a_parameter: ET_FORMAL_PARAMETER
 			a_last_class: ET_CLASS
 			a_class: ET_CLASS
+			a_class_type: ET_CLASS_TYPE
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
@@ -484,10 +486,14 @@ feature {NONE} -- AST factory
 					a_class := universe.eiffel_class (a_name)
 					a_class.set_in_system (True)
 					if a_generics /= Void then
-						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
+						a_class_type := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
 					else
-						Result := ast_factory.new_class_type (a_type_mark, a_name, a_class)
+						a_class_type := ast_factory.new_class_type (a_type_mark, a_name, a_class)
 					end
+					if universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
+						a_class_type.set_cat_keyword (tokens.cat_keyword)
+					end
+					Result := a_class_type
 				end
 			end
 		end
@@ -512,6 +518,9 @@ feature {NONE} -- AST factory
 					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, a_class)
 				else
 					a_type := ast_factory.new_class_type (Void, a_name, a_class)
+				end
+				if a_type /= Void then
+					a_type.set_cat_keyword (Void)
 				end
 				Result := ast_factory.new_parent (a_type, a_renames, an_exports,
 					an_undefines, a_redefines, a_selects, an_end)
