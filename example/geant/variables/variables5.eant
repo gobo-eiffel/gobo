@@ -13,4 +13,12 @@
 		<echo message="MY_ENV=${MY_ENV}"/>
 	</target>
 
+	<target name="cwd" dir="..">
+		<description>
+			displays value of current working direcotry
+			using built-in variable ${cwd}
+		</description>
+		<echo message="current working directoy ${cwd}"/>
+	</target>
+
 </project>
