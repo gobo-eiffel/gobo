@@ -221,6 +221,9 @@ feature -- Access
 			Result := end_keyword.break
 		end
 
+	data: ANY
+			-- Arbitrary user data
+
 feature -- Setting
 
 	set_name (a_name: like name) is
@@ -294,6 +297,14 @@ feature -- Setting
 			index := i
 		ensure
 			index_set: index = i
+		end
+
+	set_data (a_data: like data) is
+			-- Set `data' to `a_data'.
+		do
+			data := a_data
+		ensure
+			data_set: data = a_data
 		end
 
 feature -- Preparsing

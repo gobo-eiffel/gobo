@@ -168,6 +168,9 @@ feature -- Access
 			Result := name.hash_code
 		end
 
+	data: ANY
+			-- Arbitrary user data
+
 feature -- Nested
 
 	parent: ET_CLUSTER
@@ -246,6 +249,14 @@ feature -- Setting
 			end
 		ensure
 			subclusters_set: subclusters = a_subclusters
+		end
+
+	set_data (a_data: like data) is
+			-- Set `data' to `a_data'.
+		do
+			data := a_data
+		ensure
+			data_set: data = a_data
 		end
 
 feature -- Element change
