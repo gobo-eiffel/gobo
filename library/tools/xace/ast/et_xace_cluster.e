@@ -316,6 +316,7 @@ feature {NONE} -- Implementation
 			Result.set_parent (Current)
 			Result.set_options (options)
 			Result.set_recursive (True)
+			Result.set_override (is_override)
 		end
 
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is

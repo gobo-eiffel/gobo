@@ -188,13 +188,19 @@ creation
 
 Class_declarations: Class_declaration
 	| E_BREAK Class_declaration
-		{ $2.set_leading_break ($1) }
+		{
+			if $2 /= Void then
+				$2.set_leading_break ($1)
+			end
+		}
 	;
 
 Class_declaration: Indexing_clause_opt Class_to_end
 		{
 			$$ := $2
-			$$.set_first_indexing ($1)
+			if $$ /= Void then
+				$$.set_first_indexing ($1)
+			end
 		}
 	;
 
@@ -230,7 +236,9 @@ Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Cr
 		{
 			$$ := $1
 			set_class_to_inheritance_end ($$, $3, $4)
-			$6.set_first_indexing ($5)
+			if $6 /= Void then
+				$6.set_first_indexing ($5)
+			end
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt E_END Class_declaration_opt
 		{
@@ -396,28 +404,36 @@ Index_value_comma: Index_value ','
 Class_header: E_CLASS Identifier
 		{
 			$$ := new_class ($2)
-			$$.set_class_keyword ($1)
+			if $$ /= Void then
+				$$.set_class_keyword ($1)
+			end
 			last_class := $$
 		}
 	| E_DEFERRED E_CLASS Identifier
 		{
 			$$ := new_class ($3)
-			$$.set_class_keyword ($2)
-			$$.set_class_mark ($1)
+			if $$ /= Void then
+				$$.set_class_keyword ($2)
+				$$.set_class_mark ($1)
+			end
 			last_class := $$
 		}
 	| E_EXPANDED E_CLASS Identifier
 		{
 			$$ := new_class ($3)
-			$$.set_class_keyword ($2)
-			$$.set_class_mark ($1)
+			if $$ /= Void then
+				$$.set_class_keyword ($2)
+				$$.set_class_mark ($1)
+			end
 			last_class := $$
 		}
 	| E_SEPARATE E_CLASS Identifier
 		{
 			$$ := new_class ($3)
-			$$.set_class_keyword ($2)
-			$$.set_class_mark ($1)
+			if $$ /= Void then
+				$$.set_class_keyword ($2)
+				$$.set_class_mark ($1)
+			end
 			last_class := $$
 		}
 	;

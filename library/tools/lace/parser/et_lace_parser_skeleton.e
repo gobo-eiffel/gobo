@@ -69,6 +69,7 @@ feature -- Parsing
 			named_clusters.wipe_out
 			set_input_buffer (new_file_buffer (a_file))
 			last_universe := Void
+			override_cluster_name := Void
 			named_clusters.wipe_out
 			yyparse
 		end
@@ -173,6 +174,12 @@ feature {NONE} -- AST factory
 			an_error_handler: ET_ERROR_HANDLER
 			a_factory: ET_AST_FACTORY
 		do
+			if override_cluster_name /= Void then
+				named_clusters.search (override_cluster_name)
+				if named_clusters.found then
+					named_clusters.found_item.set_override (True)
+				end
+			end
 			an_error_handler := ast_factory.new_error_handler
 			a_factory := ast_factory.new_ast_factory
 			Result := ast_factory.new_universe (a_clusters, a_factory, an_error_handler)
@@ -180,10 +187,34 @@ feature {NONE} -- AST factory
 			universe_not_void: Result /= Void
 		end
 
+	new_default_value (a_name, a_value: ET_IDENTIFIER): ANY is
+			-- New default value;
+			-- Void if not recognized
+		require
+			a_name_not_void: a_name /= Void
+			a_value_not_void: a_value /= Void
+		do
+			if a_name.same_identifier (override_cluster_option) then
+				override_cluster_name := a_value
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	named_clusters: DS_HASH_TABLE [ET_LACE_CLUSTER, ET_IDENTIFIER]
 			-- Named clusters
+
+	override_cluster_name: ET_IDENTIFIER
+			-- Override cluster name, if any;
+			-- Void if none specified
+
+	override_cluster_option: ET_IDENTIFIER is
+			-- 'override_cluster' default option name
+		once
+			Result := new_identifier ("override_cluster")
+		ensure
+			override_cluster_option_not_void: Result /= Void
+		end
 
 feature -- Error handling
 

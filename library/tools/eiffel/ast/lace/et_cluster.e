@@ -52,11 +52,17 @@ feature -- Status report
 	is_recursive: BOOLEAN
 			-- Is current cluster recursive, in other words
 			-- should subdirectories be considered as subclusters?
-			-- (i.e. 'all' keyword in ISE's LACE.)
+			-- (i.e. 'all' or 'library' keywords in ISE's LACE.)
 
 	is_relative: BOOLEAN
 			-- Is the pathname of current cluster relative to the
 			-- pathname of its parent cluster?
+
+	is_override: BOOLEAN
+			-- Is current cluster an override cluster?
+			-- In other words, do classes in this cluster and other override
+			-- clusters take precedence over classes with same names but in
+			-- non-override cluster? (see 'override_cluster' in ISE's LACE.)
 
 feature -- Access
 
@@ -189,6 +195,14 @@ feature -- Status setting
 			relative_set: is_relative = b
 		end
 
+	set_override (b: BOOLEAN) is
+			-- Set `is_override' to `b'.
+		do
+			is_override := b
+		ensure
+			override_set: is_override = b
+		end
+
 feature -- Setting
 
 	set_subclusters (a_subclusters: like subclusters) is
@@ -256,7 +270,38 @@ feature -- Parsing
 							create a_classname.make (s.substring (1, s.count - 2))
 							a_class := a_universe.eiffel_class (a_classname)
 							if a_class.is_preparsed then
-								-- TODO:
+								if is_override then
+									if a_class.cluster.is_override then
+										-- TODO: two classes with the same name in two override clusters.
+										print ("Class name clash: ")
+										print (a_class.name.name)
+										print ("%N")
+										print ("Cluster1: ")
+										print (a_class.cluster.full_pathname)
+										print ("%N")
+										print ("Cluster2: ")
+										print (full_pathname)
+										print ("%N")
+									else
+											-- Override.
+										a_filename := clone (dir_name)
+										a_filename.append_character ('/')
+										a_filename := STRING_.appended_string (a_filename, s)
+										a_class.set_filename (a_filename)
+										a_class.set_cluster (Current)
+									end
+								elseif not a_class.cluster.is_override then
+									-- TODO: two classes with the same name in two non-override clusters.
+									print ("Class name clash: ")
+									print (a_class.name.name)
+									print ("%N")
+									print ("Cluster1: ")
+									print (a_class.cluster.full_pathname)
+									print ("%N")
+									print ("Cluster2: ")
+									print (full_pathname)
+									print ("%N")
+								end
 							else
 								a_filename := clone (dir_name)
 								a_filename.append_character ('/')

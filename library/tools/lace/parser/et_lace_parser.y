@@ -73,6 +73,7 @@ Default_list: Default Default_terminator
 	;
 
 Default: Identifier '(' Identifier ')'
+		{ $$ := new_default_value ($1, $3) }
 	;
 
 Default_terminator: -- Empty

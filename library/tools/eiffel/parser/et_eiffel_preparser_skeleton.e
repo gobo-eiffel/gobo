@@ -99,7 +99,35 @@ feature -- Parsing
 			if last_classname /= Void then
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
-					-- TODO:
+					if a_cluster.is_override then
+						if a_class.cluster.is_override then
+							-- TODO: two classes with the same name in two override clusters.
+							print ("Class name clash: ")
+							print (a_class.name.name)
+							print ("%N")
+							print ("Cluster1: ")
+							print (a_class.cluster.full_pathname)
+							print ("%N")
+							print ("Cluster2: ")
+							print (a_cluster.full_pathname)
+							print ("%N")
+						else
+								-- Override.
+							a_class.set_filename (a_filename)
+							a_class.set_cluster (a_cluster)
+						end
+					elseif not a_class.cluster.is_override then
+						-- TODO: two classes with the same name in two non-override clusters.
+						print ("Class name clash: ")
+						print (a_class.name.name)
+						print ("%N")
+						print ("Cluster1: ")
+						print (a_class.cluster.full_pathname)
+						print ("%N")
+						print ("Cluster2: ")
+						print (a_cluster.full_pathname)
+						print ("%N")
+					end
 				else
 					a_class.set_filename (a_filename)
 					a_class.set_cluster (a_cluster)
@@ -138,7 +166,35 @@ feature -- Parsing
 			loop
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
-					-- TODO:
+					if a_cluster.is_override then
+						if a_class.cluster.is_override then
+							-- TODO: two classes with the same name in two override clusters.
+							print ("Class name clash: ")
+							print (a_class.name.name)
+							print ("%N")
+							print ("Cluster1: ")
+							print (a_class.cluster.full_pathname)
+							print ("%N")
+							print ("Cluster2: ")
+							print (a_cluster.full_pathname)
+							print ("%N")
+						else
+								-- Override.
+							a_class.set_filename (a_filename)
+							a_class.set_cluster (a_cluster)
+						end
+					elseif not a_class.cluster.is_override then
+						-- TODO: two classes with the same name in two non-override clusters.
+						print ("Class name clash: ")
+						print (a_class.name.name)
+						print ("%N")
+						print ("Cluster1: ")
+						print (a_class.cluster.full_pathname)
+						print ("%N")
+						print ("Cluster2: ")
+						print (a_cluster.full_pathname)
+						print ("%N")
+					end
 				else
 					a_class.set_filename (a_filename)
 					a_class.set_cluster (a_cluster)

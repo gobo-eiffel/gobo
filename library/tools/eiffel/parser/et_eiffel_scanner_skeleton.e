@@ -237,8 +237,6 @@ print ("INTERNAL ERROR%N")
 			elseif a_class /= unknown_class then
 				current_class := a_class
 				if not current_class.is_parsed then
-					current_class.set_parsed
-					current_class.set_syntax_error
 					if not current_class.is_preparsed then
 						universe.preparse
 					end
@@ -253,6 +251,9 @@ print ("INTERNAL ERROR%N")
 						else
 							-- TODO: report error
 						end
+					end
+					if not current_class.is_parsed then
+						set_fatal_error (current_class)
 					end
 				end
 				current_class := unknown_class

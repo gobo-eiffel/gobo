@@ -595,18 +595,58 @@ feature {NONE} -- AST factory
 			old_class: ET_CLASS
 		do
 			Result := universe.eiffel_class (a_name)
-			Result.set_filename (filename)
-			Result.set_cluster (cluster)
-			Result.set_name (a_name)
-			Result.set_parsed
-			Result.set_in_system (True)
-			old_class := current_class
-			current_class := Result
-			error_handler.report_compilation_status (Current)
-			current_class := old_class
-			features.wipe_out
-		ensure
-			class_not_void: Result /= Void
+			if Result.is_parsed and Result.is_preparsed then
+				if cluster.is_override then
+					if Result.cluster.is_override then
+						-- TODO: two classes with the same name in two override clusters.
+						print ("Class name clash: ")
+						print (Result.name.name)
+						print ("%N")
+						print ("Cluster1: ")
+						print (Result.cluster.full_pathname)
+						print ("%N")
+						print ("Cluster2: ")
+						print (cluster.full_pathname)
+						print ("%N")
+						Result := Void
+					else
+							-- Override.
+						Result.set_filename (filename)
+						Result.set_cluster (cluster)
+						Result.set_name (a_name)
+						Result.set_parsed
+						Result.set_in_system (True)
+						old_class := current_class
+						current_class := Result
+						error_handler.report_compilation_status (Current)
+						current_class := old_class
+						features.wipe_out
+					end
+				elseif not Result.cluster.is_override then
+					-- TODO: two classes with the same name in two non-override clusters.
+					print ("Class name clash: ")
+					print (Result.name.name)
+					print ("%N")
+					print ("Cluster1: ")
+					print (Result.cluster.full_pathname)
+					print ("%N")
+					print ("Cluster2: ")
+					print (cluster.full_pathname)
+					print ("%N")
+					Result := Void
+				end
+			else
+				Result.set_filename (filename)
+				Result.set_cluster (cluster)
+				Result.set_name (a_name)
+				Result.set_parsed
+				Result.set_in_system (True)
+				old_class := current_class
+				current_class := Result
+				error_handler.report_compilation_status (Current)
+				current_class := old_class
+				features.wipe_out
+			end
 		end
 
 	new_synonym_feature (a_name: ET_FEATURE_NAME_ITEM; a_feature: ET_FEATURE): ET_FEATURE is
