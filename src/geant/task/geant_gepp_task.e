@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 			a_bool: BOOLEAN
 			define_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
 			define_element: GEANT_DEFINE_ELEMENT
+			a_xml_subelement: GEANT_XML_ELEMENT
+			a_fs_element: GEANT_FILESET_ELEMENT
 			i, nb: INTEGER
 		do
 			!! command.make (a_project)
@@ -68,6 +70,20 @@ feature {NONE} -- Initialization
 
 				i := i + 1
 			end
+
+			if has_uc_attribute (To_directory_attribute_name) then
+				a_value := attribute_value (To_directory_attribute_name.out)
+				if a_value.count > 0 then
+					command.set_to_directory (a_value.out)
+				end
+			end
+
+			a_xml_subelement := xml_element.child_by_name (Fileset_element_name)
+			if a_xml_subelement /= Void then
+				!! a_fs_element.make (project, a_xml_subelement)
+				command.set_fileset (a_fs_element.fileset)
+			end
+
 		end
 
 feature -- Access
@@ -111,6 +127,24 @@ feature {NONE} -- Constants
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
+		end
+
+	To_directory_attribute_name: UC_STRING is
+			-- Name of xml attribute to_directory.
+		once
+			Result := new_unicode_string ("to_directory")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Fileset_element_name: UC_STRING is
+			-- Name of xml subelement for fileset
+		once
+			Result := new_unicode_string ("fileset")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_GEPP_TASK
