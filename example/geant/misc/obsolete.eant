@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+
+<project name="geant_obsolete" default="t1">
+	
+	<target name="t1">
+		<obsolete>Use target `t2' instead.</obsolete>
+		<description>Do something.</description>
+	</target>
+
+	<target name="t2">
+		<description>Do something in a better way.</description>
+		<echo message="Hello"/>
+	</target>
+
+</project>
+
