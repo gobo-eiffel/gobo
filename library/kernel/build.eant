@@ -27,7 +27,6 @@
 			Install the Gobo Eiffel Kernel Library.
 			Generate Eiffel files from .ge files.
 		</description>
-
 		<geant target="install_basic"/>
 		<geant target="install_io"/>
 		<geant target="install_misc"/>
@@ -38,7 +37,6 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-
 		<ve clean="kernel" recursive="true"/>
 	</target>
 
@@ -46,7 +44,6 @@
 		<description>
 			Remove all generated files.
 		</description>
-
 		<geant target="clean"/>
 		<delete directory="spec"/>
 	</target>

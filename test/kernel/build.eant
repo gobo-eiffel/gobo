@@ -17,7 +17,6 @@
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
 	<target name="other_clean" depend="init">
