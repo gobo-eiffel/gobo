@@ -28,6 +28,46 @@ feature {NONE} -- Initialization
 			an_element_not_void: an_element /= Void
 		do
 			make (a_project)
+			element := an_element
+		end
+
+feature -- Status report
+
+	is_enabled: BOOLEAN is
+			-- Do conditions allow to execute task?
+			-- conditions is boolean of the expression
+			-- "(xml attribute 'if') and not
+			-- (xml attribute 'unless')"
+			-- if xml attribute 'if' is missing it is assumed to be `True'
+			-- if xml attribute 'unless' is missing it is assumed to be `False'
+		local
+			if_condition: BOOLEAN
+			unless_condition: BOOLEAN
+			ucs: UC_STRING
+		do
+				-- Set default execution conditions:
+			if_condition := true
+			unless_condition := false
+
+				-- Look for an 'if' XML attribute
+			if element.has_attribute (If_attribute_name) then
+				ucs := element.attribute_value_by_name (If_attribute_name)
+				if_condition := project.variables.boolean_condition_value (ucs.out)
+				debug ("geant")
+					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
+				end
+			end
+
+				-- Look for an 'unless' XML attribute
+			if element.has_attribute (Unless_attribute_name) then
+				ucs := element.attribute_value_by_name (Unless_attribute_name)
+				unless_condition := project.variables.boolean_condition_value (ucs.out)
+				debug ("geant")
+					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
+				end
+			end
+
+			Result := if_condition and not unless_condition
 		end
 
 feature {NONE} -- Implementation
@@ -182,7 +222,7 @@ feature {NONE} -- Unicode implementation
 			elseif False_attribute_value.is_equal (uc_value) then
 				Result := False
 			else
-				print ("WARNING: wrong value (" + uc_value.out + ") for attribute " + an_attr_name.out + " Valid values are `true' and `false'. Using to `false' now.%N")
+				print ("WARNING: wrong value '" + uc_value.out + "' for attribute " + an_attr_name.out + " Valid values are `true' and `false'. Using `false'.%N")
 				Result := False
 			end
 		end
@@ -195,6 +235,38 @@ feature {NONE} -- Unicode implementation
 			an_attr_name_not_empty: not an_attr_name.empty
 		do
 			Result := an_element.has_attribute (an_attr_name)
+		end
+
+feature {GEANT_TASK, GEANT_TARGET} -- Constants
+
+	element: GEANT_ELEMENT
+		-- XML Element defining this task
+
+	If_attribute_name: UC_STRING is
+			-- "if" attribute name
+		once
+			!! Result.make_from_string ("if")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	Unless_attribute_name: UC_STRING is
+			-- "unless" attribute name
+		once
+			!! Result.make_from_string ("unless")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	Dir_attribute_name: UC_STRING is
+			-- "dir" attribute name
+		once
+			!! Result.make_from_string ("dir")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
 end -- class GEANT_TASK
