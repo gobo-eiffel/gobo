@@ -22,7 +22,9 @@ inherit
 			Wednesday as obsolete_wednesday,
 			Thursday as obsolete_thursday,
 			Friday as obsolete_friday,
-			Saturday as obsolete_saturday
+			Saturday as obsolete_saturday,
+			next_day as obsolete_next_day,
+			previous_day as obsolete_previous_day
 		end
 
 feature -- Access
