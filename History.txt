@@ -35,6 +35,7 @@ Version ?
 	* XM_DTD_CALLBACKS: on_doctype called first; on_dtd_end,
 	  on_dtd_comment, on_dtd_processing_instruction added.
 	* Parser defaults to new STRING-only latin-1 mode.
+	* Parser correctly outputs PUBLIC identifier in DOCTYPE.
 
 	Gobo Eiffel Kernel Library
 
