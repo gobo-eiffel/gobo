@@ -703,7 +703,6 @@ feature -- Output
 									defaulted := False
 								end
 								a_rule := a_reduction.rule
-								a_rule := default_reduction.rule
 								a_file.put_character ('%T')
 								a_file.put_string (a_token.name)
 								a_file.put_string ("%T[reduce using rule ")
