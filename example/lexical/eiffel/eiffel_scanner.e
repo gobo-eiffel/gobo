@@ -672,7 +672,7 @@ if yy_act = 120 then
 --|#line 215
 
 						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > Platform.maximum_character_code then
+						if code_ > Platform.Maximum_character_code then
 							last_token := E_CHARERR
 						else
 							last_token := E_CHARACTER
@@ -927,7 +927,7 @@ else
 --|#line 293
 
 			code_ := text_substring (3, text_count - 1).to_integer
-			if (code_ > Platform.maximum_character_code) then
+			if (code_ > Platform.Maximum_character_code) then
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			else
