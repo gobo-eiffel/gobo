@@ -1,4 +1,4 @@
--- system:     "'ascii2ps' pretty-printer"
+-- system:     "Infix Notation Calculator"
 -- compiler:   "Halstenbach ISS-BASE 3.0"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
 -- copyright:  "Copyright (c) 1997-2000, Eric Bezault and others"
@@ -8,7 +8,7 @@
 
 system
 
-	calc
+	calculator
 
 root
 

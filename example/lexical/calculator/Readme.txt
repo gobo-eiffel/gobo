@@ -9,7 +9,7 @@ To compile this example:
 2. Use your HACT Eiffel compiler to compile the Eiffel system using
    the provided Ace file (hact.ace).
 3. Run the calcultor:
-       calc
+       calculator
    and enter infix notation expressions to be evaluated, one per line.
 
 --
