@@ -24,9 +24,9 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
-	<cluster name="uri_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
-	<cluster name="uri_tester" location="${GOBO}/test/utility/transcoder"/>
-	<cluster name="uri_testgen" location="TESTGEN"/>
+	<cluster name="transcoder_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
+	<cluster name="transcoder_tester" location="${GOBO}/test/utility/transcoder"/>
+	<cluster name="transcoder_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/string/library.xace"/>
