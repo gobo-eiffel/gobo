@@ -24,12 +24,20 @@ creation
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
-	anchor: CHARACTER_REF is
+	anchor: DS_CELL [CHARACTER] is
 		once
-			create Result
-			Result.set_item ('%U')
+			create Result.make ('%U')
 		end
 
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' a character cell.
+		local
+			a_cell: DS_CELL [CHARACTER]
+		do
+			a_cell ?= a_value
+			Result := a_cell /= Void
+		end
+		
 feature -- Output
 
 	output: STRING is

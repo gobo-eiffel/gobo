@@ -40,12 +40,21 @@ feature {NONE} -- Initialization
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
-	anchor: INTEGER_REF is
+	anchor: DS_CELL [INTEGER] is
 			-- Class used for `conforms_to' checks;
 			-- To be implemented in descendent to appropriate type.
 			-- Should be initialized.
 		once
-			create Result
+			create Result.make (0)
+		end
+	
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' an integer cell?
+		local
+			a_cell: DS_CELL [INTEGER]
+		do
+			a_cell ?= a_value
+			Result := a_cell /= Void
 		end
 
 feature -- Access
@@ -116,6 +125,17 @@ feature -- Value
 			precursor (a_value)
 			-- reset alignment char
 			set_align_char (' ')
+		end
+
+	set_integer_value (an_integer: INTEGER) is
+			-- Set the typed value to be formatted.
+		local
+			a_value: DS_CELL [INTEGER]
+		do
+			create a_value.make (an_integer)
+			set_value (a_value)
+		ensure
+			value_set: value.item = an_integer
 		end
 
 feature -- Output

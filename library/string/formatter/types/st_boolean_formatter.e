@@ -42,10 +42,18 @@ feature {NONE} -- Initialization
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
-	anchor: BOOLEAN_REF is
+	anchor: DS_CELL [BOOLEAN] is
 		once
-			create Result
-			Result.set_item (True)
+			create Result.make (True)
+		end
+		
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' a boolean cell?
+		local
+			a_cell: DS_CELL [BOOLEAN]
+		do
+			a_cell ?= a_value
+			Result := a_cell /= Void
 		end
 
 feature -- Access

@@ -53,4 +53,40 @@ feature -- Access
 			format_not_void: Result /= Void
 		end
 
+	integer_cell (an_integer: INTEGER): DS_CELL [INTEGER] is
+			-- New DS_CELL [INTEGER] for use in input array
+		do
+			create Result.make (an_integer)
+		ensure
+			result_not_void: Result /= Void
+			item_set: Result.item = an_integer
+		end
+
+	double_cell (a_double: DOUBLE): DS_CELL [DOUBLE] is
+			-- New DS_CELL [DOUBLE] for use in input array
+		do
+			create Result.make (a_double)
+		ensure
+			result_not_void: Result /= Void
+			item_set: Result.item = a_double
+		end
+
+	character_cell (a_char: CHARACTER): DS_CELL [CHARACTER]  is
+			-- New DS_CELL [CHARACTER] for use in input array
+		do
+			create Result.make (a_char)
+		ensure
+			result_not_void: Result /= Void
+			item_set: Result.item = a_char
+		end
+	
+	boolean_cell (a_boolean: BOOLEAN): DS_CELL [BOOLEAN]  is
+			-- New DS_CELL [BOOLEAN] for use in input array
+		do
+			create Result.make (a_boolean)
+		ensure
+			result_not_void: Result /= Void
+			item_set: Result.item = a_boolean
+		end
+
 end

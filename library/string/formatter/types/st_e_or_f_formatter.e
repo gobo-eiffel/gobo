@@ -68,9 +68,18 @@ feature -- Set
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
-	anchor: DOUBLE_REF is
+	anchor: DS_CELL [DOUBLE] is
 		once
-			create Result
+			create Result.make (0.0)
+		end
+		
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' a DOUBLE cell?
+		local
+			a_cell: DS_CELL [DOUBLE]
+		do
+			a_cell ?= a_value
+			Result := a_cell /= Void
 		end
 
 feature -- Output
