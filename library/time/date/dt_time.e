@@ -448,6 +448,14 @@ feature -- Comparison
 			Result := storage < other.storage
 		end
 
+	same_time (other: DT_TIME): BOOLEAN is
+			-- Is `Current' time equal to `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := storage = other.storage
+		end
+
 feature -- Output
 
 	append_time_to_string (a_string: STRING) is
