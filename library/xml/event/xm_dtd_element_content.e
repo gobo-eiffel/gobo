@@ -20,7 +20,7 @@ inherit
 			out
 		end
 	
-	PLATFORM
+	KL_SHARED_PLATFORM
 		export
 			{NONE} all
 		undefine
@@ -263,7 +263,7 @@ feature -- Repetition (derived)
 			Result := 1
 			
 			if is_one_or_more or is_zero_or_more then
-				Result := Maximum_integer
+				Result := Platform.Maximum_integer
 			end
 		ensure
 			positive: Result >= 0
