@@ -201,11 +201,14 @@ feature -- Generation
 			l_root_creation := current_system.root_creation_procedure
 			if l_root_type = Void or l_root_creation = Void then
 				a_file.put_line ("main(char** argv, int argc)")
-				a_file.put_line ("{")
-				a_file.put_line ("}")
+				a_file.put_character ('{')
+				a_file.put_new_line
+				a_file.put_character ('}')
+				a_file.put_new_line
 			else
 				a_file.put_line ("main (char** argv, int argc)")
-				a_file.put_line ("{")
+				a_file.put_character ('{')
+				a_file.put_new_line
 				indent
 				print_indentation
 				print_type_declaration (l_root_type)
@@ -214,9 +217,11 @@ feature -- Generation
 				print_indentation
 				a_file.put_string ("l1 = ")
 				print_creation_expression (l_root_type, l_root_creation, Void)
-				a_file.put_line (";")
+				a_file.put_character (';')
+				a_file.put_new_line
 				dedent
-				a_file.put_line ("}")
+				a_file.put_character ('}')
+				a_file.put_new_line
 			end
 			current_file := old_file
 		end
@@ -237,7 +242,8 @@ feature {NONE} -- Feature generation
 		do
 			if a_feature.is_function then
 				if a_feature.is_regular then
-					current_file.put_string ("extern ")
+					current_file.put_string (c_extern)
+					current_file.put_character (' ')
 					print_type_declaration (a_feature.result_type.static_type)
 					current_file.put_character (' ')
 					print_routine_name (a_feature, a_type)
@@ -275,7 +281,8 @@ feature {NONE} -- Feature generation
 				 	current_file.put_new_line
 				end
 				if a_feature.is_static then
-					current_file.put_string ("extern ")
+					current_file.put_string (c_extern)
+					current_file.put_character (' ')
 					print_type_declaration (a_feature.result_type.static_type)
 					current_file.put_character (' ')
 					print_static_routine_name (a_feature, a_type)
@@ -313,7 +320,10 @@ feature {NONE} -- Feature generation
 				end
 			elseif a_feature.is_procedure then
 				if a_feature.is_regular then
-					current_file.put_string ("extern void ")
+					current_file.put_string (c_extern)
+					current_file.put_character (' ')
+					current_file.put_string (c_void)
+					current_file.put_character (' ')
 					print_routine_name (a_feature, a_type)
 					current_file.put_character ('(')
 					print_type_declaration (a_type)
@@ -349,7 +359,8 @@ feature {NONE} -- Feature generation
 					current_file.put_new_line
 				end
 				if a_feature.is_creation then
-					current_file.put_string ("extern ")
+					current_file.put_string (c_extern)
+					current_file.put_character (' ')
 					print_type_declaration (a_type)
 					current_file.put_character (' ')
 					print_creation_procedure_name (a_feature, a_type)
@@ -386,7 +397,10 @@ feature {NONE} -- Feature generation
 					current_file.put_new_line
 				end
 				if a_feature.is_static then
-					current_file.put_string ("extern void ")
+					current_file.put_string (c_extern)
+					current_file.put_character (' ')
+					current_file.put_string (c_void)
+					current_file.put_character (' ')
 					print_static_routine_name (a_feature, a_type)
 					current_file.put_character ('(')
 					l_arguments := a_feature.static_feature.arguments
@@ -589,10 +603,10 @@ feature {NONE} -- Feature generation
 			l_result_type := current_feature.result_type
 			if l_result_type /= Void then
 				print_type_declaration (l_result_type.static_type)
-				current_file.put_character (' ')
 			else
-				current_file.put_string ("void ")
+				current_file.put_string (c_void)
 			end
+			current_file.put_character (' ')
 			if a_static then
 				print_static_routine_name (current_feature, current_type)
 				current_file.put_character ('(')
@@ -655,7 +669,7 @@ feature {NONE} -- Feature generation
 			if not l_language_value.computed then
 				l_language_value.compute (error_handler)
 			end
-			if STRING_.same_case_insensitive (l_language_value.value, "C inline") then
+			if STRING_.same_case_insensitive (l_language_value.value, e_inline) then
 				l_alias := a_feature.alias_clause
 				if l_alias /= Void then
 					l_alias_value := l_alias.manifest_string
@@ -736,7 +750,10 @@ feature {NONE} -- Feature generation
 				end
 			elseif l_result_type /= Void then
 				print_indentation
-				current_file.put_line ("return R;")
+				current_file.put_string (c_return)
+				current_file.put_character ('R')
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 			dedent
 			current_file.put_character ('}')
@@ -806,13 +823,12 @@ feature {NONE} -- Feature generation
 			l_result_type := current_feature.result_type
 			if l_result_type /= Void then
 				print_type_declaration (l_result_type.static_type)
-				current_file.put_character (' ')
 			elseif a_creation then
 				print_type_declaration (current_type)
-				current_file.put_character (' ')
 			else
-				current_file.put_string ("void ")
+				current_file.put_string (c_void)
 			end
+			current_file.put_character (' ')
 			if a_static then
 				print_static_routine_name (current_feature, current_type)
 				current_file.put_character ('(')
@@ -907,11 +923,22 @@ feature {NONE} -- Feature generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("C = (")
+				current_file.put_character ('C')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
 				print_type_declaration (current_type)
-				current_file.put_string (")malloc(sizeof(")
+				current_file.put_character (')')
+				current_file.put_string (c_malloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
 				print_type_name (current_type)
-				current_file.put_line ("));")
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 -- TODO
 			if current_type = current_system.character_type then
@@ -931,10 +958,18 @@ feature {NONE} -- Feature generation
 			end
 			if l_result_type /= Void then
 				print_indentation
-				current_file.put_line ("return R;")
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('R')
+				current_file.put_character (';')
+				current_file.put_new_line
 			elseif a_creation then
 				print_indentation
-				current_file.put_line ("return C;")
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('C')
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 			dedent
 			current_file.put_character ('}')
@@ -1056,7 +1091,8 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_string ("EIF_VOID;")
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
 				elseif l_denied_types.count < l_accepted_types.count then
 					local_count := local_count + 1
 					l_local_index := local_count
@@ -1072,14 +1108,23 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
-					current_file.put_string ("switch (z")
+					current_file.put_string (c_switch)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('z')
 					current_file.put_integer (l_local_index)
-					current_file.put_line ("->id) {")
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_id)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
 					nb := l_denied_types.count
 					from i := 1 until i > nb loop
 						l_source_type := l_denied_types.item (i)
 						print_indentation
-						current_file.put_string ("case ")
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
 						current_file.put_integer (l_source_type.id)
 						current_file.put_character (':')
 						current_file.put_new_line
@@ -1091,14 +1136,17 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_string ("EIF_VOID;")
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
-					current_file.put_string ("break;")
+					current_file.put_string (c_break)
+					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
 					print_indentation
-					current_file.put_string ("default:")
+					current_file.put_string (c_default)
+					current_file.put_character (':')
 					current_file.put_new_line
 					indent
 					print_indentation
@@ -1128,14 +1176,23 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
-					current_file.put_string ("switch (z")
+					current_file.put_string (c_switch)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('z')
 					current_file.put_integer (l_local_index)
-					current_file.put_line ("->id) {")
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_id)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
 					nb := l_accepted_types.count
 					from i := 1 until i > nb loop
 						l_source_type := l_accepted_types.item (i)
 						print_indentation
-						current_file.put_string ("case ")
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
 						current_file.put_integer (l_source_type.id)
 						current_file.put_character (':')
 						current_file.put_new_line
@@ -1152,11 +1209,13 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
-					current_file.put_string ("break;")
+					current_file.put_string (c_break)
+					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
 					print_indentation
-					current_file.put_string ("default:")
+					current_file.put_string (c_default)
+					current_file.put_character (':')
 					current_file.put_new_line
 					indent
 					print_indentation
@@ -1164,7 +1223,8 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					current_file.put_string ("EIF_VOID;")
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
 					print_indentation
@@ -1316,8 +1376,7 @@ feature {NONE} -- Instruction generation
 			an_elseif: ET_ELSEIF_PART
 			i, nb: INTEGER
 		do
-			current_file.put_character ('i')
-			current_file.put_character ('f')
+			current_file.put_string (c_if)
 			current_file.put_character (' ')
 			current_file.put_character ('(')
 			print_expression (an_instruction.expression)
@@ -1339,13 +1398,9 @@ feature {NONE} -- Instruction generation
 				from i := 1 until i > nb loop
 					an_elseif := an_elseif_parts.item (i)
 					current_file.put_character (' ')
-					current_file.put_character ('e')
-					current_file.put_character ('l')
-					current_file.put_character ('s')
-					current_file.put_character ('e')
+					current_file.put_string (c_else)
 					current_file.put_character (' ')
-					current_file.put_character ('i')
-					current_file.put_character ('f')
+					current_file.put_string (c_if)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
 					print_expression (an_elseif.expression)
@@ -1367,10 +1422,7 @@ feature {NONE} -- Instruction generation
 			a_compound := an_instruction.else_compound
 			if a_compound /= Void then
 				current_file.put_character (' ')
-				current_file.put_character ('e')
-				current_file.put_character ('l')
-				current_file.put_character ('s')
-				current_file.put_character ('e')
+				current_file.put_string (c_else)
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
@@ -1399,10 +1451,15 @@ feature {NONE} -- Instruction generation
 			l_has_case: BOOLEAN
 		do
 -- TODO.
-			current_file.put_string ("switch (")
+			current_file.put_string (c_switch)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
 			an_expression := an_instruction.conditional.expression
 			print_expression (an_expression)
-			current_file.put_line (") {")
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
 			a_when_parts := an_instruction.when_parts
 			if a_when_parts /= Void then
 				nb := a_when_parts.count
@@ -1421,7 +1478,8 @@ feature {NONE} -- Instruction generation
 							else
 								l_has_case := True
 								print_indentation
-								current_file.put_string ("case ")
+								current_file.put_string (c_case)
+								current_file.put_character (' ')
 								print_expression (a_choice.lower.expression)
 								current_file.put_character (':')
 								current_file.put_new_line
@@ -1435,7 +1493,9 @@ feature {NONE} -- Instruction generation
 								print_compound (a_compound)
 							end
 							print_indentation
-							current_file.put_line ("break;")
+							current_file.put_string (c_break)
+							current_file.put_character (';')
+							current_file.put_new_line
 							dedent
 						end
 					end
@@ -1443,7 +1503,9 @@ feature {NONE} -- Instruction generation
 				end
 			end
 			print_indentation
-			current_file.put_line ("default:")
+			current_file.put_string (c_default)
+			current_file.put_character (':')
+			current_file.put_new_line
 			a_compound := an_instruction.else_compound
 			if a_compound /= Void then
 				indent
@@ -1458,7 +1520,8 @@ feature {NONE} -- Instruction generation
 				dedent
 			end
 			print_indentation
-			current_file.put_string ("};")
+			current_file.put_character ('}')
+			current_file.put_character (';')
 		end
 
 	print_instruction (an_instruction: ET_INSTRUCTION) is
@@ -1527,11 +1590,7 @@ feature {NONE} -- Instruction generation
 				print_compound (a_compound)
 				print_indentation
 			end
-			current_file.put_character ('w')
-			current_file.put_character ('h')
-			current_file.put_character ('i')
-			current_file.put_character ('l')
-			current_file.put_character ('e')
+			current_file.put_string (c_while)
 			current_file.put_character (' ')
 			current_file.put_character ('(')
 			print_expression (an_instruction.until_expression)
@@ -1865,7 +1924,7 @@ feature {NONE} -- Expression generation
 			an_expression_not_void: an_expression /= Void
 		do
 -- TODO.
-			current_file.put_string ("0")
+			current_file.put_character ('0')
 		end
 
 	print_false_constant (a_constant: ET_FALSE_CONSTANT) is
@@ -1873,7 +1932,7 @@ feature {NONE} -- Expression generation
 		require
 			a_constant_not_void: a_constant /= Void
 		do
-			current_file.put_string ("EIF_FALSE")
+			current_file.put_string (c_eif_false)
 		end
 
 	print_feature_address (an_expression: ET_FEATURE_ADDRESS) is
@@ -2007,7 +2066,7 @@ feature {NONE} -- Expression generation
 				current_file.put_character (',')
 				i := i + 1
 			end
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 			current_file.put_character (')')
 		end
 
@@ -2032,7 +2091,7 @@ feature {NONE} -- Expression generation
 				current_file.put_character (',')
 				i := i + 1
 			end
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 			current_file.put_character (')')
 		end
 
@@ -2051,7 +2110,7 @@ feature {NONE} -- Expression generation
 			an_expression_not_void: an_expression /= Void
 		do
 -- TODO.
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 		end
 
 	print_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
@@ -2235,7 +2294,7 @@ feature {NONE} -- Expression generation
 								i := i + 1
 							end
 						end
-						current_file.put_string ("EIF_VOID")
+						current_file.put_string (c_eif_void)
 						current_file.put_character (')')
 						current_file.put_character (';')
 					else
@@ -2255,7 +2314,7 @@ feature {NONE} -- Expression generation
 								i := i + 1
 							end
 						end
-						current_file.put_string ("0")
+						current_file.put_character ('0')
 						current_file.put_character (')')
 					end
 				elseif l_other_dynamic_types = Void then
@@ -2348,14 +2407,23 @@ feature {NONE} -- Expression generation
 							current_file.put_character (';')
 							current_file.put_new_line
 							print_indentation
-							current_file.put_string ("switch (z")
+							current_file.put_string (c_switch)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							current_file.put_character ('z')
 							current_file.put_integer (l_local_index)
-							current_file.put_line ("->id) {")
+							current_file.put_string (c_arrow)
+							current_file.put_string (c_id)
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_character ('{')
+							current_file.put_new_line
 						until
 							l_dynamic_type = Void
 						loop
 							print_indentation
-							current_file.put_string ("case ")
+							current_file.put_string (c_case)
+							current_file.put_character (' ')
 							current_file.put_integer (l_dynamic_type.id)
 							current_file.put_character (':')
 							current_file.put_new_line
@@ -2385,7 +2453,8 @@ feature {NONE} -- Expression generation
 								current_file.put_new_line
 							end
 							print_indentation
-							current_file.put_string ("break;")
+							current_file.put_string (c_break)
+							current_file.put_character (';')
 							current_file.put_new_line
 							dedent
 							if j > nb2 then
@@ -2423,9 +2492,13 @@ feature {NONE} -- Expression generation
 							l_dynamic_type = Void
 						loop
 							if j <= nb2 then
-								current_file.put_string ("(z")
+								current_file.put_character ('(')
+								current_file.put_character ('z')
 								current_file.put_integer (l_local_index)
-								current_file.put_string ("->id==")
+								current_file.put_string (c_arrow)
+								current_file.put_string (c_id)
+								current_file.put_character ('=')
+								current_file.put_character ('=')
 								current_file.put_integer (l_dynamic_type.id)
 								current_file.put_character (')')
 								current_file.put_character ('?')
@@ -2532,7 +2605,7 @@ feature {NONE} -- Expression generation
 			a_string_not_void: a_string /= Void
 		do
 -- TODO.
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 		end
 
 	print_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
@@ -2608,7 +2681,7 @@ feature {NONE} -- Expression generation
 			a_string_not_void: a_string /= Void
 		do
 -- TODO.
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 		end
 
 	print_static_call (a_call: ET_STATIC_FEATURE_CALL) is
@@ -2708,7 +2781,7 @@ feature {NONE} -- Expression generation
 			an_expression_not_void: an_expression /= Void
 		do
 -- TODO.
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 		end
 
 	print_true_constant (a_constant: ET_TRUE_CONSTANT) is
@@ -2716,7 +2789,7 @@ feature {NONE} -- Expression generation
 		require
 			a_constant_not_void: a_constant /= Void
 		do
-			current_file.put_string ("EIF_TRUE")
+			current_file.put_string (c_eif_true)
 		end
 
 	print_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
@@ -2871,7 +2944,7 @@ feature {NONE} -- Expression generation
 			a_string_not_void: a_string /= Void
 		do
 -- TODO.
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 		end
 
 	print_void (an_expression: ET_VOID) is
@@ -2879,7 +2952,7 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			current_file.put_string ("EIF_VOID")
+			current_file.put_string (c_eif_void)
 		end
 
 	print_writable (a_writable: ET_WRITABLE) is
@@ -3018,59 +3091,111 @@ feature {NONE} -- Type generation
 			l_feature: ET_DYNAMIC_FEATURE
 			j, nb2: INTEGER
 		do
-			current_file.put_line ("typedef struct {int id;} T0;")
+			current_file.put_string (c_typedef)
+			current_file.put_character (' ')
+			current_file.put_string (c_struct)
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_string (c_int)
+			current_file.put_character (' ')
+			current_file.put_string (c_id)
+			current_file.put_character (';')
+			current_file.put_character ('}')
+			current_file.put_character (' ')
+			current_file.put_character ('T')
+			current_file.put_character ('0')
+			current_file.put_character (';')
+			current_file.put_new_line
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
 				if l_type.is_alive then
 					if l_type = current_system.character_type then
-						current_file.put_string ("typedef unsigned char ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_unsigned)
+						current_file.put_character (' ')
+						current_file.put_string (c_char)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.boolean_type then
-						current_file.put_string ("typedef int ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_int)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.integer_8_type then
-						current_file.put_string ("typedef int8_t ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_int8_t)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.integer_16_type then
-						current_file.put_string ("typedef int16_t ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_int16_t)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.integer_type then
-						current_file.put_string ("typedef int32_t ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_int32_t)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.integer_64_type then
-						current_file.put_string ("typedef int64_t ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_int64_t)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.real_type then
-						current_file.put_string ("typedef float ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_float)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.double_type then
-						current_file.put_string ("typedef double ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_double)
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					elseif l_type = current_system.pointer_type then
-						current_file.put_string ("typedef void* ")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_void)
+						current_file.put_character ('*')
+						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 					else
-						current_file.put_string ("typedef struct {int id;")
+						current_file.put_string (c_typedef)
+						current_file.put_character (' ')
+						current_file.put_string (c_struct)
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_string (c_int)
+						current_file.put_character (' ')
+						current_file.put_string (c_id)
+						current_file.put_character (';')
 						l_features := l_type.features
 						if l_features /= Void then
 							nb2 := l_features.count
@@ -3252,11 +3377,16 @@ feature {NONE} -- Feature name generation
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 		do
-			current_file.put_string ("/* ")
+			current_file.put_character ('/')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
 			current_file.put_string (a_type.base_type.to_text)
 			current_file.put_character ('.')
 			current_file.put_string (a_feature.name.name)
-			current_file.put_line (" */")
+			current_file.put_character (' ')
+			current_file.put_character ('*')
+			current_file.put_character ('/')
+			current_file.put_new_line
 		end
 
 feature {NONE} -- Indentation
@@ -3759,6 +3889,39 @@ feature {NONE} -- Implementation
 		ensure
 			dummy_feature_not_void: Result /= Void
 		end
+
+feature {NONE} -- Constants
+
+	e_inline: STRING is "C inline"
+	c_arrow: STRING is "->"
+	c_break: STRING is "break"
+	c_case: STRING is "case"
+	c_char: STRING is "char"
+	c_default: STRING is "default"
+	c_double: STRING is "double"
+	c_eif_false: STRING is "EIF_FALSE"
+	c_eif_true: STRING is "EIF_TRUE"
+	c_eif_void: STRING is "EIF_VOID"
+	c_else: STRING is "else"
+	c_extern: STRING is "extern"
+	c_float: STRING is "float"
+	c_id: STRING is "id"
+	c_if: STRING is "if"
+	c_int: STRING is "int"
+	c_int8_t: STRING is "int8_t"
+	c_int16_t: STRING is "int16_t"
+	c_int32_t: STRING is "int32_t"
+	c_int64_t: STRING is "int64_t"
+	c_malloc: STRING is "malloc"
+	c_return: STRING is "return"
+	c_sizeof: STRING is "sizeof"
+	c_struct: STRING is "struct"
+	c_switch: STRING is "switch"
+	c_typedef: STRING is "typedef"
+	c_unsigned: STRING is "unsigned"
+	c_void: STRING is "void"
+	c_while: STRING is "while"
+			-- String constants
 
 invariant
 
