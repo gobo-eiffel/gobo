@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			build_yytranslate
 			build_yyr
 			build_action_tables
+			array_size := 3000
 		ensure
 			machine_set: machine = a_machine
 		end
@@ -218,15 +219,67 @@ feature {NONE} -- Generation
 			zero_based_table: a_table.lower = 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			i, j, k, nb: INTEGER
+			a_table_upper: INTEGER
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
 			a_file.put_string (": ANY is%N%
 				%%T%T%T-- This is supposed to be %"like FIXED_INTEGER_ARRAY_TYPE%",%N%
-				%%T%T%T-- but once functions cannot be declared with anchored types.%N%
-				%%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
-			ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
-			a_file.put_string (">>)%N%T%Tend%N")
+				%%T%T%T-- but once functions cannot be declared with anchored types.%N")
+			if array_size = 0 then
+				nb := 1
+			else
+				nb := a_table.count // array_size + 1
+			end
+			if nb = 1 then
+				a_file.put_string
+					("%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
+				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
+				a_file.put_string (">>)%N%T%Tend%N")
+			else
+				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
+					%%T%Tonce%N%T%T%T!! an_array.make (")
+				a_file.put_integer (a_table.lower)
+				a_file.put_string (", ")
+				a_file.put_integer (a_table.upper)
+				a_file.put_string (")%N")
+				from j := 1 until j > nb loop
+					a_file.put_string (Indentation)
+					a_file.put_string (a_name)
+					a_file.put_character ('_')
+					a_file.put_integer (j)
+					a_file.put_string (" (an_array)%N")
+					j := j + 1
+				end
+				a_file.put_string ("%T%T%TResult := yyfixed_array (an_array)%N%T%Tend%N")
+				from
+					j := 1
+					i := a_table.lower
+					a_table_upper := a_table.upper
+				until
+					j > nb
+				loop
+					a_file.put_string ("%N%T")
+					a_file.put_string (a_name)
+					a_file.put_character ('_')
+					a_file.put_integer (j)
+					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
+						%%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
+					k := a_table_upper.min (i + array_size - 1)
+					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
+					a_file.put_string (">>,%N%T%T%T")
+					a_file.put_integer (1)
+					a_file.put_string (", ")
+					a_file.put_integer (k - i + 1)
+					a_file.put_string (", ")
+					a_file.put_integer (i)
+					a_file.put_string (")%N%T%Tend%N")
+					i := k + 1
+					j := j + 1
+				end
+			end
 		end
 
 	print_actions (a_file: like OUTPUT_STREAM_TYPE) is
@@ -290,34 +343,95 @@ feature {NONE} -- Generation
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
+			j, k, nb2: INTEGER
+			inspect_size: INTEGER
 			rules: DS_ARRAYED_LIST [PR_RULE]
 			a_rule: PR_RULE
 			an_action: STRING
 			a_type: PR_TYPE
 		do
+				-- SmallEiffel generates C code which trigger a
+				-- stack overflow of the C compiler if there are
+				-- too many branches in an inspect instruction.
+				-- Therefore, split the inspect instruction into
+				-- several chunks which each have less than
+				-- `inspect_size' branches.
+			inspect_size := 200
 			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
 				%%T%T%T-- Execute semantic action.%N%
-				%%T%Tdo%N%T%T%Tinspect yy_act%N")
+				%%T%Tdo%N%T%T%T")
 			rules := machine.grammar.rules
 			nb := rules.count
-			from i := 1 until i > nb loop
-				a_rule := rules.item (i)
-				an_action := a_rule.action.out
-				if not an_action.empty then
-					a_file.put_string ("when ")
-					a_file.put_integer (a_rule.id)
-					a_file.put_string (" then%N--|#line ")
-					a_file.put_integer (a_rule.line_nb)
-					a_file.put_string ("%N%T")
-					a_file.put_string ("yy_do_action_")
-					a_file.put_integer (i)
-					a_file.put_character ('%N')
+			nb2 := nb // inspect_size + 1
+			if nb2 = 1 then
+				a_file.put_string ("inspect yy_act%N")
+				from i := 1 until i > nb loop
+					a_rule := rules.item (i)
+					an_action := a_rule.action.out
+					if not an_action.empty then
+						a_file.put_string ("when ")
+						a_file.put_integer (a_rule.id)
+						a_file.put_string (" then%N--|#line ")
+						a_file.put_integer (a_rule.line_nb)
+						a_file.put_string ("%N%T")
+						a_file.put_string ("yy_do_action_")
+						a_file.put_integer (i)
+						a_file.put_character ('%N')
+					end
+					i := i + 1
 				end
-				i := i + 1
+				a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
+					%%T%T%T%Tyyval := yyval_default%N%
+					%%T%T%Tend%N%T%Tend%N")
+			else
+				from i := 1 until i > nb2 loop
+					j := inspect_size * (i - 1) + 1
+					k := inspect_size * i
+					a_file.put_string ("if yy_act <= ")
+					a_file.put_integer (k)
+					a_file.put_string (" then%N%T%T%T%Tyy_do_action_")
+					a_file.put_integer (j)
+					a_file.put_character ('_')
+					a_file.put_integer (k)
+					a_file.put_string (" (yy_act)%N%T%T%Telse")
+					i := i + 1
+				end
+				a_file.put_string ("%N%T%T%T%T%T-- No action%N%
+					%%T%T%T%Tyyval := yyval_default%N%
+					%%T%T%Tend%N%T%Tend%N")
+				from i := 1 until i > nb2 loop
+					j := inspect_size * (i - 1) + 1
+					k := inspect_size * i
+					a_file.put_string ("%N%Tyy_do_action_")
+					a_file.put_integer (j)
+					a_file.put_character ('_')
+					a_file.put_integer (k)
+					a_file.put_string (" (yy_act: INTEGER) is%N%
+						%%T%T%T-- Execute semantic action.%N%
+						%%T%Tdo%N")
+					a_file.put_string ("%T%T%Tinspect yy_act%N")
+					k := k.min (nb)
+					from until j > k loop
+						a_rule := rules.item (j)
+						an_action := a_rule.action.out
+						if not an_action.empty then
+							a_file.put_string ("when ")
+							a_file.put_integer (a_rule.id)
+							a_file.put_string (" then%N--|#line ")
+							a_file.put_integer (a_rule.line_nb)
+							a_file.put_string ("%N%T")
+							a_file.put_string ("yy_do_action_")
+							a_file.put_integer (j)
+							a_file.put_character ('%N')
+						end
+						j := j + 1
+					end
+					a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
+						%%T%T%T%Tyyval := yyval_default%N%
+						%%T%T%Tend%N%T%Tend%N")
+					i := i + 1
+				end
 			end
-			a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
-				%%T%T%T%Tyyval := yyval_default%N%
-				%%T%T%Tend%N%T%Tend%N")
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
@@ -832,11 +946,18 @@ feature {NONE} -- Building
 			yydefgoto.put (default_state, a_variable.id)
 		end
 
+feature {NONE} -- Access
+
+	array_size: INTEGER
+			-- Maximum size supported for manifest arrays
+
 feature {NONE} -- Constants
 
 	Initial_max_table_size: INTEGER is 500
 	Max_table_size_increment: INTEGER is 500
 			-- Maximum number of items in `yytable' and `yycheck'
+
+	Indentation: STRING is "%T%T%T"
 
 	Portion_sorter: DS_BUBBLE_SORTER [PR_PORTION] is
 			-- Table portion sorter
