@@ -129,7 +129,7 @@ feature -- Cursor movement
 				loop
 					i := i + 1
 				end
-				if i > container.slots then
+				if i > a_table.slots then
 					position := After_position
 					if not was_off then
 						a_table.remove_traversing_cursor (Current)
