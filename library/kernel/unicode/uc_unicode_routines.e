@@ -21,6 +21,12 @@ inherit
 
 	UC_CTYPE_LOWERCASE
 		export {NONE} all end
+		
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
+	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 feature -- Status report
 
@@ -67,6 +73,30 @@ feature -- Status report
 					end
 				end
 			end
+		end
+
+	code_to_string (a_code: INTEGER): STRING is
+			-- Return a string with `a_code' as its single character.
+			-- (If the character code is bigger than the maximum for
+			-- CHARACTER, the dynamic type of the result will be UC_STRING
+			-- or a descendant.)
+		require
+			a_code_valid: valid_code (a_code)
+		local
+			a_unicode: UC_UTF8_STRING
+		do
+			if a_code <= Platform.Maximum_character_code then
+				create Result.make (1)
+				Result.append_character (INTEGER_.to_character (a_code))
+			else
+				create a_unicode.make (1)
+				a_unicode.append_code (a_code)
+				Result := a_unicode
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_count: Result.count = 1
+			result_code: Result.item_code (1) = a_code
 		end
 
 feature -- Access
