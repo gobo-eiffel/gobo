@@ -1,0 +1,68 @@
+#	description: "Eiffel Xace RelaxNG specification"
+#	system: "Gobo Eiffel Xace"
+#	copyright: "Copyright (c) 2003, Berend de Boer and others"
+#	license: "Eiffel Forum License v2 (see forum.txt)"
+#	date: "$Date$"
+#	revision: "$Revision$"
+
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+# An Xace file defines either a library or a system
+start = library | system
+# Definition for <library/> follows
+library =
+  element library {
+    attribute name { text },
+    attribute prefix { text }?,
+    description,
+    (cluster | mount)+
+  }
+# Definition for <system/> follows
+system =
+  element system {
+    attribute name { text },
+    description,
+    element root {
+      attribute name { text }
+    },
+    (option | cluster | mount)+
+  }
+# Elements used in both libraries and systems
+description = element description { text }
+cluster =
+  element cluster {
+    attribute name { text },
+    attribute prefix { text }?,
+    attribute relative { xsd:boolean }?,
+    attribute location { text }?,
+    ifUnless,
+    (option | cluster | class)*
+  }
+class =
+  element class {
+    attribute name { text },
+    ifUnless,
+    (option | feature)*
+  }
+feature =
+  element feature {
+    attribute name { text },
+    ifUnless,
+    option*
+  }
+mount =
+  element mount {
+    attribute location { text },
+    ifUnless
+  }
+option =
+  element option {
+    (attribute name { text },
+     attribute value { text })?,
+    ifUnless,
+    option*
+  }
+# if and unless attributes can be used on most elements
+ifUnless =
+  (attribute if { text }
+   | attribute unless { text })?

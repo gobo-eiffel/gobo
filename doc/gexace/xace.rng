@@ -9,7 +9,10 @@
 	revision: "$Revision$"
 -->
 
-<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<grammar
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
 	<!-- An Xace file defines either a library or a system -->
 	<start>
@@ -26,12 +29,15 @@
 	<define name="library">
 		<element name="library">
 			<attribute name="name"/>
+			<optional>
+				<attribute name="prefix"/>
+			</optional>
 			<ref name="description"/>
 			<oneOrMore>
-        <choice>
-  				<ref name="cluster"/>
+				<choice>
+					<ref name="cluster"/>
 					<ref name="mount"/>
-        </choice>
+				</choice>
 			</oneOrMore>
 		</element>
 	</define>
@@ -42,9 +48,9 @@
 		<element name="system">
 			<attribute name="name"/>
 			<ref name="description"/>
-      <element name="root">
-        <attribute name="name"/>
-      </element>
+			<element name="root">
+				<attribute name="name"/>
+			</element>
 			<oneOrMore>
 				<choice>
 					<ref name="option"/>
@@ -66,9 +72,15 @@
 	<define name="cluster">
 		<element name="cluster">
 			<attribute name="name"/>
-      <optional>
+			<optional>
+				<attribute name="prefix"/>
+			</optional>
+			<optional>
+				<attribute name="relative"><data type="boolean"/></attribute>
+			</optional>
+			<optional>
 				<attribute name="location"/>
-      </optional>
+			</optional>
 			<ref name="ifUnless"/>
 			<zeroOrMore>
 				<choice>
@@ -103,12 +115,12 @@
 		</element>
 	</define>
 
-  <define name="mount">
-    <element name="mount">
+	<define name="mount">
+		<element name="mount">
 			<attribute name="location"/>
 			<ref name="ifUnless"/>
-    </element>
-  </define>
+		</element>
+	</define>
 
 	<define name="option">
 		<element name="option">
@@ -117,9 +129,9 @@
 				<attribute name="value"/>
 			</optional>
 			<ref name="ifUnless"/>
-      <zeroOrMore>
-        <ref name="option"/>
-      </zeroOrMore>
+			<zeroOrMore>
+				<ref name="option"/>
+			</zeroOrMore>
 		</element>
 	</define>
 

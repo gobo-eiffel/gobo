@@ -15,7 +15,8 @@
 
 <!ELEMENT library (description,(cluster|mount)+)>
 <!ATTLIST library
-  name CDATA #REQUIRED>
+  name CDATA #REQUIRED
+  prefix CDATA #IMPLIED>
 
 <!-- Definition for <system/> follows -->
 
@@ -36,6 +37,8 @@
 <!ELEMENT cluster (option|cluster|class)*>
 <!ATTLIST cluster
   name CDATA #REQUIRED
+  prefix CDATA #IMPLIED
+  relative NMTOKEN #IMPLIED
   location CDATA #IMPLIED
   %ifUnless;>
 
