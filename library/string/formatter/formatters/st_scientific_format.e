@@ -24,6 +24,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -81,7 +84,7 @@ feature -- Resolve format specifiers and return a string
 		ensure
 			result_not_void: Result /= Void
 			all_parameters_seen: args.is_after
-			string_type_unchanged: a_format.same_type (Result)
+			string_type_unchanged: ANY_.same_types (a_format, Result)
 		end
 
 	is_correct_format_and_parameters (a_format: STRING; a_para: ARRAY [ANY]): BOOLEAN is
@@ -129,7 +132,7 @@ feature -- Resolve format specifiers and return a string
 			Result := do_sprintf (a_format, <<a_para>>)
 		ensure
 			result_not_void: Result /= Void
-			string_type_unchanged: a_format.same_type (Result)
+			string_type_unchanged: ANY_.same_types (a_format, Result)
 		end
 
 feature {NONE} -- Formatting implementation
@@ -184,7 +187,7 @@ feature {NONE} -- Formatting implementation
 			not_void: is_correct implies Result /= Void
 			looked_at_entire_string: is_correct implies is_finished
 			looked_at_all_arguments: is_correct implies args.is_after
-			string_type_unchanged: a_format.same_type (Result)
+			string_type_unchanged: ANY_.same_types (a_format, Result)
 		end
 
 	do_format (in: STRING; fmt_el: ST_TYPECHAR_FORMATTER; asterisk_allowed: BOOLEAN): STRING is
