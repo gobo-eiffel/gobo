@@ -15,7 +15,9 @@ class GEXMLSPLIT
 inherit
 
 	KL_SHARED_ARGUMENTS
+	KL_SHARED_EXCEPTIONS
 	KL_SHARED_STANDARD_FILES
+	KL_SHARED_STREAMS
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
@@ -24,13 +26,17 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make is
 			-- Create and execute a new 'gexmlsplit'.
 		local
 			in_file: KL_TEXT_INPUT_FILE
+			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
+			!! error_handler.make_standard
+				-- Set non-verbose mode.
+			error_handler.set_message_file (null_output_stream)
 			read_arguments
 			!! in_file.make (input_filename)
 			in_file.open_read
@@ -38,18 +44,21 @@ feature {NONE}
 				split (in_file)
 				in_file.close
 			else
-					-- TODO: Use UT_ERROR_HANDLER.
-				std.error.put_string ("Unable to open input file: ")
-				std.error.put_line (input_filename)
+				!! cannot_read.make (input_filename)
+				error_handler.report_error (cannot_read)
+				Exceptions.die (1)
 			end
 		end
+
+feature -- Processing
 
 	read_arguments is
 			-- Parse command line arguments.
 		do
 			if Arguments.argument_count /= 1 then
-				report_usage_error
 				input_filename := ""
+				report_usage_error
+				Exceptions.die (1)
 			else
 				input_filename := Arguments.argument (1)
 			end
@@ -72,51 +81,59 @@ feature {NONE}
 			a_gexmlsplit_parser: GEXMLSPLIT_PARSER
 			a_gexmlsplit_dispatcher: GEXMLSPLIT_DISPATCHER
 			filters: ARRAY [XM_CALLBACKS_FILTER]
+			a_message: UT_MESSAGE
 		do
-			debug
-				std.output.put_line ("parsing data...")
-			end
+			!! a_message.make ("parsing data...")
+			error_handler.report_message (a_message)
 
 			!XM_EIFFEL_PARSER! a_xml_parser.make
-			!! a_gexmlsplit_dispatcher.make
+			!! a_gexmlsplit_dispatcher.make (error_handler)
 			!! a_gexmlsplit_parser.make (a_gexmlsplit_dispatcher)
 
-			!! filters.make (0, 1)
-			filters.put (a_gexmlsplit_parser, 0)
-			filters.put (a_gexmlsplit_dispatcher, 1)
+			!! filters.make (1, 2)
+			filters.put (a_gexmlsplit_parser, 1)
+			filters.put (a_gexmlsplit_dispatcher, 2)
 			a_xml_parser.set_callbacks (standard_callbacks_pipe (filters))
 			a_xml_parser.parse_from_stream (in_file)
 
-			debug
-				if not a_xml_parser.is_correct then
-					std.output.put_line (a_xml_parser.last_error_extended_description)
-				else
-					std.output.put_line ("parsing ok.")
-				end
-				std.output.put_line ("exiting...")
+			if not a_xml_parser.is_correct then
+				!! a_message.make (a_xml_parser.last_error_extended_description)
+				error_handler.report_error (a_message)
+			else
+				!! a_message.make ("parsing ok.")
+				error_handler.report_message (a_message)
 			end
+			!! a_message.make ("exiting...")
+			error_handler.report_message (a_message)
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
 	input_filename: STRING
 			-- Name of file containing input XML document
 
-feature {NONE} -- Usage message
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
+
+feature -- Usage message
 
 	report_usage_error is
 			-- Report usage error.
 		do
-				-- TODO: Use UT_ERROR_HANDLER.
-			std.output.put_line (Usage_message)
+			error_handler.report_error (Usage_message)
 		end
 
-	Usage_message: STRING is
-			-- Gexace usage message
+	Usage_message: UT_USAGE_MESSAGE is
+			-- Gexmlsplit usage message
 		once
-			Result := "gexmlsplit <intput_file_name>"
+			!! Result.make ("<input_filename>")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
+
+invariant
+
+	error_handler_not_void: error_handler /= Void
+	input_filename_not_void: input_filename /= Void
 
 end

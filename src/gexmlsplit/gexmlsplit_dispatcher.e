@@ -19,20 +19,28 @@ inherit
 			output
 		end
 
-	KL_SHARED_STANDARD_FILES
-
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_error_handler: like error_handler) is
 			-- Create a xml dispatcher.
+		require
+			an_error_handler_not_void: an_error_handler /= Void
 		do
-			make_null
+			error_handler := an_error_handler
 			!! output_files.make
+			make_null
+		ensure
+			error_handler_set: error_handler = an_error_handler
 		end
+
+feature -- Access
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
 
 feature -- Element change
 
@@ -42,13 +50,13 @@ feature -- Element change
 			a_filename_not_void: a_filename /= Void
 		local
 			a_file: KL_TEXT_OUTPUT_FILE
+			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if not a_file.is_open_write then
-					-- TODO: Use UT_ERROR_HANDLER.
-				std.error.put_string ("Unable to open output file: ")
-				std.error.put_line (a_filename)
+				!! cannot_write.make (a_filename)
+				error_handler.report_error (cannot_write)
 			end
 			output_files.put (a_file)
 		ensure
@@ -91,6 +99,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	error_handler_not_void: error_handler /= Void
 	output_files_not_void: output_files /= Void
 	no_void_output_file: not output_files.has (Void)
 
