@@ -124,6 +124,7 @@
 			<cluster name="io"/>
 			<cluster name="iterator"/>
 			<cluster name="kernel"/>
+			<cluster name="misc"/>
 			<cluster name="number"/>
 			<cluster name="random"/>
 			<cluster name="sorting"/>
