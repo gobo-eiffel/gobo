@@ -33,6 +33,7 @@
 			Install ${system} directory.
 		</description>
 
+		<unset name="gexace_output"/>
 		<set name="eiffel" value="ise"/>
 		<geant target="xace"/>
 		<set name="eiffel" value="hact"/>
@@ -62,9 +63,10 @@
 		</description>
 
 		<set name="eiffel" value="ise"/>
+		<set name="gexace_output" value="compile_ise.ace"/>
 		<geant target="xace"/>
-		<ise ace="ise.ace" system="${system}" finalize="true" finish_freezing="true" unless="${debug}"/>
-		<ise ace="ise.ace" system="${system}" finalize="false" finish_freezing="true" if="${debug}"/>
+		<ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true" unless="${debug}"/>
+		<ise ace="compile_ise.ace" system="${system}" finalize="false" finish_freezing="true" if="${debug}"/>
 	</target>
 
 	<target name="compile_hact" depend="init">
@@ -74,9 +76,10 @@
 		</description>
 
 		<set name="eiffel" value="hact"/>
+		<set name="gexace_output" value="compile_hact.ace"/>
 		<geant target="xace"/>
-		<hact ace="hact.ace" system="${system}" finalize="true" fish="true" unless="${debug}"/>
-		<hact ace="hact.ace" system="${system}" finalize="false" fish="true" if="${debug}"/>
+		<hact ace="compile_hact.ace" system="${system}" finalize="true" fish="true" unless="${debug}"/>
+		<hact ace="compile_hact.ace" system="${system}" finalize="false" fish="true" if="${debug}"/>
 	</target>
 
 	<target name="compile_ve" depend="init">
@@ -86,8 +89,9 @@
 		</description>
 
 		<set name="eiffel" value="ve"/>
+		<set name="gexace_output" value="compile_ve.esd"/>
 		<geant target="xace"/>
-		<ve esd="ve.esd"/>
+		<ve esd="compile_ve.esd"/>
 	</target>
 
 	<target name="compile_se" depend="init">
@@ -97,8 +101,9 @@
 		</description>
 
 		<set name="eiffel" value="se"/>
+		<set name="gexace_output" value="compile_se.ace"/>
 		<geant target="xace"/>
-		<se ace="se.ace"/>
+		<se ace="compile_se.ace"/>
 	</target>
 
 	<target name="compile_debug" depend="init">
@@ -161,6 +166,10 @@
 		<hact clean="${system}"/>
 		<se clean="${system}"/>
 		<ve clean="${system}" recursive="true"/>
+		<delete file="compile_ise.ace"/>
+		<delete file="compile_hact.ace"/>
+		<delete file="compile_se.ace"/>
+		<delete file="compile_ve.esd"/>
 		<geant target="other_clean"/>
 	</target>
 
@@ -185,13 +194,17 @@
 
 	<target name="xace" depend="init">
 		<description>
-			Build Ace file of ESD file for Eiffel compiler ${eiffel}.
+			Build Ace file or ESD file for Eiffel compiler ${eiffel}.
+			Generate file in ${gexace_output} if specified.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
 
-		<gexace command="build" command_options="${eiffel}" xace_filename="${system_dir}/system.xace">
+		<gexace command="build" command_options="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace" if="${gexace_output}">
+			<define name="DEBUG" value="${debug}" if="${debug}"/>
+		</gexace>
+		<gexace command="build" command_options="${eiffel}" xace="${system_dir}/system.xace" unless="${gexace_output}">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 		</gexace>
 	</target>
