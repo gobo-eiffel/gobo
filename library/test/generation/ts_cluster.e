@@ -70,16 +70,16 @@ feature -- Processing
 			testcases_not_void: testcases /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_cluster: ET_CLUSTER
-			a_clusters: ET_CLUSTERS
+			a_cluster: ET_LACE_CLUSTER
+			a_clusters: ET_LACE_CLUSTERS
 			an_ast_factory: ET_AST_FACTORY
-			a_universe: ET_UNIVERSE
+			a_universe: ET_LACE_UNIVERSE
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
 		do
 			!! a_cluster.make (name, pathname)
 			!! a_clusters.make (a_cluster)
 			!! an_ast_factory.make
-			!! a_universe.make (a_clusters, an_ast_factory, an_error_handler)
+			!! a_universe.make_with_factory (a_clusters, an_ast_factory, an_error_handler)
 			a_universe.parse_all
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
