@@ -32,12 +32,12 @@ feature
 %}
 
 %token STAR_STAR_SLASH STAR_PAREN
-%token <INTEGER>				CHAR
-%token <LX_SYMBOL_CLASS>	CCL_OP
-%token <STRING>				'['
+%token <INTEGER> CHAR
+%token <LX_SYMBOL_CLASS> CCL_OP
+%token <STRING> '['
 
-%type <LX_NFA>			Rule Pattern_list Series Singleton String
-%type <LX_SYMBOL_CLASS>		CCl Full_CCl
+%type <LX_NFA> Rule Pattern_list Series Singleton String
+%type <LX_SYMBOL_CLASS> CCl Full_CCl
 
 %start Wildcard
 
@@ -90,7 +90,8 @@ Pattern_list: Series
 		}
 	| Pattern_list '|' Series
 		{
-			$$ := $1 | $3
+			$$ := $1
+			$$.build_union ($3)
 		}
 	;
 
@@ -100,7 +101,8 @@ Series: Singleton
 		}
 	| Series Singleton
 		{
-			$$ := $1 & $2
+			$$ := $1
+			$$.build_concatenation ($2)
 		}
 	;
 
@@ -110,15 +112,18 @@ Singleton: CHAR
 		}
 	| STAR_PAREN Pattern_list ')'
 		{
-			$$ := |*| $2
+			$$ := $2
+			$$.build_closure
 		}
 	| '+' '(' Pattern_list ')'
 		{
-			$$ := |+| $3
+			$$ := $3
+			$$.build_positive_closure
 		}
 	| '?' '(' Pattern_list ')'
 		{
-			$$ := |?| $3
+			$$ := $3
+			$$.build_optional
 		}
 	| '@' '(' Pattern_list ')'
 		{
@@ -126,7 +131,8 @@ Singleton: CHAR
 		}
 	| '*'
 		{
-			$$ := |*| new_symbol_class_nfa (question_character_class)
+			$$ := new_symbol_class_nfa (question_character_class)
+			$$.build_closure
 		}
 	| '?'
 		{
@@ -134,7 +140,10 @@ Singleton: CHAR
 		}
 	| STAR_STAR_SLASH
 		{
-			$$ := |*| ((|+| new_symbol_class_nfa (question_character_class)) & new_nfa_from_character (Slash_code))
+			$$ := new_symbol_class_nfa (question_character_class)
+			$$.build_positive_closure
+			$$.build_concatenation (new_nfa_from_character (Slash_code))
+			$$.build_closure
 		}
 	| CCL_OP
 		{

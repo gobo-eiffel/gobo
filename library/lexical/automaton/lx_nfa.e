@@ -181,12 +181,14 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current automaton equal to `other'?
 		do
-				-- This routine has been redefined to follow 
-				-- the redefinition of `copy'. The new implementation
-				-- is not really impressive but a better implementation
-				-- would take too much effort to write for little
-				-- benefits!
-			Result := states.count = other.states.count
+			if same_type (other) then
+					-- This routine has been redefined to follow 
+					-- the redefinition of `copy'. The new implementation
+					-- is not really impressive but a better implementation
+					-- would take too much effort to write for little
+					-- benefits!
+				Result := states.count = other.states.count
+			end
 		end
 
 feature -- Setting
@@ -208,14 +210,14 @@ feature -- Setting
 			start_state.set_beginning_as_normal
 		end
 
-feature -- Operation
+feature -- Operations
 
-	concatenation, infix "&" (other: like Current): like Current is
-			-- Concatenation of the current automaton with `other' to
-			-- produce an automaton which will pattern-match first the
+	build_concatenation (other: like Current) is
+			-- Produce automaton which will pattern-match first the
 			-- current automaton and then `other', and will fail if
 			-- either of the sub-patterns fails
 			-- (`other' might be altered!)
+			-- Regexp: Current other
 		require
 			other_not_void: other /= Void
 			not_current: other /= Current
@@ -225,14 +227,12 @@ feature -- Operation
 			!! a_transition.make (other.start_state)
 			final_state.set_transition (a_transition)
 			states.append_last (other.states)
-			Result := Current
-		ensure
-			automaton: Result = Current
 		end
-			
-	union, infix "|" (other: like Current): like Current is
-			-- Automaton which matches either current NFA or `other'
+
+	build_union (other: like Current) is
+			-- Produce automaton which matches either current NFA or `other'
 			-- (`other' might be altered!)
+			-- Regexp: Current | other
 		require
 			other_not_void: other /= Void
 			not_current: other /= Current
@@ -282,14 +282,12 @@ feature -- Operation
 				states.append_last (other.states)
 				states.force_last (state3)
 			end
-			Result := Current
-		ensure
-			automaton: Result = Current
 		end
 
-	optional, prefix "|?|": like Current is
-			-- Automaton which optionally matches wathever
+	build_optional is
+			-- Produce automaton which optionally matches wathever
 			-- current NFA matched
+			-- Regexp: Current ?
 		local
 			transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 			state1, state2, state3: like start_state
@@ -309,21 +307,19 @@ feature -- Operation
 				states.replace (state1, states.count)
 				states.force_last (state2)
 			end
-			Result := Current
-		ensure
-			automaton: Result = Current
 		end
 
-	closure, prefix "|*|": like Current is
-			-- Closure of current automaton
+	build_closure is
+			-- Produce closure of current automaton
+			-- Regexp: Current *
 		do
-			Result := |?| |+| Current
-		ensure
-			automaton: Result = Current
+			build_positive_closure
+			build_optional
 		end
 
-	positive_closure, prefix "|+|": like Current is
-			-- Positive closure of current automaton
+	build_positive_closure is
+			-- Produce positive closure of current automaton
+			-- Regexp: Current +
 		local
 			transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 			state1, state2, state3: like start_state
@@ -341,41 +337,157 @@ feature -- Operation
 			state2.set_epsilon_transition (transition)
 			states.force_last (state1)
 			states.force_last (state3)
+		end
+
+	build_iteration (nb: INTEGER) is
+			-- Produce automaton that matches whatever current
+			-- NFA matched `nb' number of times
+			-- Regexp: Current {nb}
+		require
+			nb_positive: nb > 0
+		local
+			i: INTEGER
+			a_nfa: like Current
+		do
+			if nb /= 1 then
+				a_nfa := clone (Current)
+				from i := 2 until i >= nb loop
+					a_nfa.build_concatenation (clone (Current))
+					i := i + 1
+				end
+				build_concatenation (a_nfa)
+			end
+		end
+
+	build_unbounded_iteration (nb: INTEGER) is
+			-- Produce automaton which matches `nb' or more
+			-- occurrences of current automaton
+			-- Regexp: Current {nb,}
+		require
+			nb_positive: nb > 0
+		local
+			a_nfa: like Current
+		do
+			a_nfa := clone (Current)
+			a_nfa.build_closure
+			build_iteration (nb)
+			build_concatenation (a_nfa)
+		end
+
+	build_bounded_iteration (lb, ub: INTEGER) is
+			-- Produce automaton that matches whatever matched current automaton
+			-- from `lb' number of times to `ub' number of times
+			-- Regexp: Current {lb,ub}
+		require
+			lb_positive: lb > 0
+			valid_ub: ub >= lb
+		local
+			i: INTEGER
+			a_nfa1, a_nfa2: like Current
+		do
+			if lb = ub then
+				build_iteration (lb)
+			else
+				a_nfa1 := clone (Current)
+				a_nfa1.build_optional
+				from i := lb + 1 until i >= ub loop
+					a_nfa2 := clone (Current)
+					a_nfa2.build_concatenation (a_nfa1)
+					a_nfa2.build_optional
+					a_nfa1 := a_nfa2
+					i := i + 1
+				end
+				build_iteration (lb)
+				build_concatenation (a_nfa1)
+			end
+		end
+
+feature -- Functions
+
+	concatenation (other: like Current): like Current is
+			-- Concatenation of the current automaton with `other' to
+			-- produce an automaton which will pattern-match first the
+			-- current automaton and then `other', and will fail if
+			-- either of the sub-patterns fails
+			-- (`other' might be altered!)
+			-- Regexp: Current other
+		require
+			other_not_void: other /= Void
+			not_current: other /= Current
+		do
+			build_concatenation (other)
 			Result := Current
 		ensure
 			automaton: Result = Current
 		end
 
-	iteration, infix "|{n}|" (nb: INTEGER): like Current is
-			-- Automaton that matches whatever current
-			-- NFA matched `nb' number of times
+	union (other: like Current): like Current is
+			-- Automaton which matches either current NFA or `other'
+			-- (`other' might be altered!)
+			-- Regexp: Current | other
 		require
-			nb_positive: nb > 0
-		local
-			i: INTEGER
+			other_not_void: other /= Void
+			not_current: other /= Current
 		do
-			if nb = 1 then
-				Result := Current
-			else
-				Result := clone (Current)
-				from i := 2 until i >= nb loop
-					Result := Result & clone (Current)
-					i := i + 1
-				end
-				Result := Current & Result
-			end
+			build_union (other)
+			Result := Current
 		ensure
 			automaton: Result = Current
 		end
 
-	unbounded_iteration, infix "|{n,}|"  (nb: INTEGER): like Current is
-			-- Automaton which matches `nb' or more
-			-- occurrences of current automaton
+	optional: like Current is
+			-- Automaton which optionally matches wathever
+			-- current NFA matched
+			-- Regexp: Current ?
+		do
+			build_optional
+			Result := Current
+		ensure
+			automaton: Result = Current
+		end
+
+	closure: like Current is
+			-- Closure of current automaton
+			-- Regexp: Current *
+		do
+			build_closure
+			Result := Current
+		ensure
+			automaton: Result = Current
+		end
+
+	positive_closure: like Current is
+			-- Positive closure of current automaton
+			-- Regexp: Current +
+		do
+			build_positive_closure
+			Result := Current
+		ensure
+			automaton: Result = Current
+		end
+
+	iteration (nb: INTEGER): like Current is
+			-- Automaton that matches whatever current
+			-- NFA matched `nb' number of times
+			-- Regexp: Current {nb}
 		require
 			nb_positive: nb > 0
 		do
-			Result := |*| clone (Current)
-			Result := (Current |{n}| nb) & Result
+			build_iteration (nb)
+			Result := Current
+		ensure
+			automaton: Result = Current
+		end
+
+	unbounded_iteration (nb: INTEGER): like Current is
+			-- Automaton which matches `nb' or more
+			-- occurrences of current automaton
+			-- Regexp: Current {nb,}
+		require
+			nb_positive: nb > 0
+		do
+			build_unbounded_iteration (nb)
+			Result := Current
 		ensure
 			automaton: Result = Current
 		end
@@ -383,22 +495,110 @@ feature -- Operation
 	bounded_iteration (lb, ub: INTEGER): like Current is
 			-- Automaton that matches whatever matched current automaton
 			-- from `lb' number of times to `ub' number of times
+			-- Regexp: Current {lb,ub}
 		require
 			lb_positive: lb > 0
 			valid_ub: ub >= lb
-		local
-			i: INTEGER
 		do
-			if lb = ub then
-				Result := Current |{n}| lb
-			else
-				Result := |?| clone (Current)
-				from i := lb + 1 until i >= ub loop
-					Result := |?| (clone (Current) & Result)
-					i := i + 1
-				end
-				Result := (Current |{n}| lb) & Result
-			end
+			build_bounded_iteration (lb, ub)
+			Result := Current
+		ensure
+			automaton: Result = Current
+		end
+
+feature -- Obsolete
+
+	infix "&" (other: like Current): like Current is
+			-- Concatenation of the current automaton with `other' to
+			-- produce an automaton which will pattern-match first the
+			-- current automaton and then `other', and will fail if
+			-- either of the sub-patterns fails
+			-- (`other' might be altered!)
+			-- Regexp: Current other
+		obsolete
+			"[021128] Use `concatenation' instead."
+		require
+			other_not_void: other /= Void
+			not_current: other /= Current
+		do
+			Result := concatenation (other)
+		ensure
+			automaton: Result = Current
+		end
+
+	infix "|" (other: like Current): like Current is
+			-- Automaton which matches either current NFA or `other'
+			-- (`other' might be altered!)
+			-- Regexp: Current | other
+		obsolete
+			"[021128] Use `union' instead."
+		require
+			other_not_void: other /= Void
+			not_current: other /= Current
+		do
+			Result := union (other)
+		ensure
+			automaton: Result = Current
+		end
+
+	prefix "|?|": like Current is
+			-- Automaton which optionally matches wathever
+			-- current NFA matched
+			-- Regexp: Current ?
+		obsolete
+			"[021128] Use `optional' instead."
+		do
+			Result := optional
+		ensure
+			automaton: Result = Current
+		end
+
+	prefix "|*|": like Current is
+			-- Closure of current automaton
+			-- Regexp: Current *
+		obsolete
+			"[021128] Use `closure' instead."
+		do
+			Result := closure
+		ensure
+			automaton: Result = Current
+		end
+
+	prefix "|+|": like Current is
+			-- Positive closure of current automaton
+			-- Regexp: Current +
+		obsolete
+			"[021128] Use `positive_closure' instead."
+		do
+			Result := positive_closure
+		ensure
+			automaton: Result = Current
+		end
+
+	infix "|{n}|" (nb: INTEGER): like Current is
+			-- Automaton that matches whatever current
+			-- NFA matched `nb' number of times
+			-- Regexp: Current {nb}
+		obsolete
+			"[021128] Use `iteration' instead."
+		require
+			nb_positive: nb > 0
+		do
+			Result := iteration (nb)
+		ensure
+			automaton: Result = Current
+		end
+
+	infix "|{ni}|" (nb: INTEGER): like Current is
+			-- Automaton which matches `nb' or more
+			-- occurrences of current automaton
+			-- Regexp: Current {nb,}
+		obsolete
+			"[021128] Use `unbounded_iteration' instead."
+		require
+			nb_positive: nb > 0
+		do
+			Result := unbounded_iteration (nb)
 		ensure
 			automaton: Result = Current
 		end

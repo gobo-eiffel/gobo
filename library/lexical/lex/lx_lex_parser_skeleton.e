@@ -504,8 +504,7 @@ feature {NONE} -- Factory
 					lower_char := a_char + Case_diff
 					a_name := lower_char.out
 					if character_classes.has (a_name) then
-						Result := new_symbol_class_nfa
-							(character_classes.item (a_name))
+						Result := new_symbol_class_nfa (character_classes.item (a_name))
 					else
 						!! a_character_class.make (2)
 						a_character_class.put (a_char)
@@ -519,8 +518,7 @@ feature {NONE} -- Factory
 				when Lower_a_code .. Lower_z_code then
 					a_name := a_char.out
 					if character_classes.has (a_name) then
-						Result := new_symbol_class_nfa
-							(character_classes.item (a_name))
+						Result := new_symbol_class_nfa (character_classes.item (a_name))
 					else
 						!! a_character_class.make (2)
 						a_character_class.put (a_char - Case_diff)
@@ -581,10 +579,13 @@ feature {NONE} -- Factory
 						report_bad_iteration_values_error
 						Result := new_epsilon_nfa
 					else
-						Result := |?| a_nfa.bounded_iteration (1, j)
+						Result := a_nfa
+						Result.build_bounded_iteration (1, j)
+						Result.build_optional
 					end
 				else
-					Result := a_nfa.bounded_iteration (i, j)
+					Result := a_nfa
+					Result.build_bounded_iteration (i, j)
 				end
 			end
 		ensure
@@ -600,7 +601,8 @@ feature {NONE} -- Factory
 				report_iteration_not_positive_error
 				Result := new_epsilon_nfa
 			else
-				Result := a_nfa |{n,}| i
+				Result := a_nfa
+				Result.build_unbounded_iteration (i)
 			end
 		ensure
 			nfa_not_void: Result /= Void
@@ -616,7 +618,8 @@ feature {NONE} -- Factory
 				report_iteration_not_positive_error
 				Result := new_epsilon_nfa
 			else
-				Result := a_nfa |{n}| i
+				Result := a_nfa
+				Result.build_iteration (i)
 			end
 		ensure
 			nfa_not_void: Result /= Void
@@ -796,8 +799,8 @@ feature {NONE} -- Implementation
 					lower_char := a_char + Case_diff
 					a_name := lower_char.out
 					if character_classes.has (a_name) then
-						Result := a_string & new_symbol_class_nfa
-							(character_classes.item (a_name))
+						Result := a_string
+						Result.build_concatenation (new_symbol_class_nfa (character_classes.item (a_name)))
 					else
 						!! a_character_class.make (2)
 						a_character_class.put (a_char)
@@ -806,14 +809,14 @@ feature {NONE} -- Implementation
 							equiv_classes.add (a_character_class)
 						end
 						character_classes.force (a_character_class, a_name)
-						Result := a_string & new_symbol_class_nfa
-							(a_character_class)
+						Result := a_string
+						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 					end
 				when Lower_a_code .. Lower_z_code then
 					a_name := a_char.out
 					if character_classes.has (a_name) then
-						Result := a_string & new_symbol_class_nfa
-							(character_classes.item (a_name))
+						Result := a_string
+						Result.build_concatenation (new_symbol_class_nfa (character_classes.item (a_name)))
 					else
 						!! a_character_class.make (2)
 						a_character_class.put (a_char - Case_diff)
@@ -822,18 +825,22 @@ feature {NONE} -- Implementation
 							equiv_classes.add (a_character_class)
 						end
 						character_classes.force (a_character_class, a_name)
-						Result := a_string & new_symbol_class_nfa
-							(a_character_class)
+						Result := a_string
+						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 					end
 				when 0 then
-					Result := a_string & new_symbol_nfa (description.characters_count)
+					Result := a_string
+					Result.build_concatenation (new_symbol_nfa (description.characters_count))
 				else
-					Result := a_string & new_symbol_nfa (a_char)
+					Result := a_string
+					Result.build_concatenation (new_symbol_nfa (a_char))
 				end
 			elseif a_char = 0 then
-				Result := a_string & new_symbol_nfa (description.characters_count)
+				Result := a_string
+				Result.build_concatenation (new_symbol_nfa (description.characters_count))
 			else
-				Result := a_string & new_symbol_nfa (a_char)
+				Result := a_string
+				Result.build_concatenation (new_symbol_nfa (a_char))
 			end
 		ensure
 			string_set: Result = a_string
@@ -923,7 +930,8 @@ feature {NONE} -- Implementation
 					-- "head" part of a trailing context rule.
 				a_regexp.set_accepted_rule (rule)
 			end
-			Result := a_regexp & a_trail
+			Result := a_regexp
+			Result.build_concatenation (a_trail)
 		ensure
 			regexp_set: Result = a_regexp
 		end
@@ -934,8 +942,9 @@ feature {NONE} -- Implementation
 		require
 			a_regexp_not_void: a_regexp /= Void
 		do
-			Result := a_regexp & new_epsilon_nfa &
-					new_symbol_nfa (New_line_code)
+			Result := a_regexp
+			Result.build_concatenation (new_epsilon_nfa)
+			Result.build_concatenation (new_symbol_nfa (New_line_code))
 		ensure
 			regexp_set: Result = a_regexp
 		end

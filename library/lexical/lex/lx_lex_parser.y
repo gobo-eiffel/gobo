@@ -32,14 +32,13 @@ creation
 
 %token ENDSECT EOF_OP PIPED EMPTY
 
-%token <STRING>				EIF_CODE NAME '['
-%token <INTEGER>			CHAR NUMBER
-%token <LX_SYMBOL_CLASS>	CCL_OP
+%token <STRING> EIF_CODE NAME '['
+%token <INTEGER> CHAR NUMBER
+%token <LX_SYMBOL_CLASS> CCL_OP
 
-%type <INTEGER>				Start_condition Less_than
-%type <LX_NFA>				Rule Regular_expression Regular_expression2
-							Series Singleton String
-%type <LX_SYMBOL_CLASS>		CCl Full_CCl
+%type <INTEGER> Start_condition Less_than
+%type <LX_NFA> Rule Regular_expression Regular_expression2 Series Singleton String
+%type <LX_SYMBOL_CLASS> CCl Full_CCl
 
 %start Scanner_description
 %expect 14
@@ -194,7 +193,8 @@ Regular_expression: Series
 		}
 	| Regular_expression '|' Series
 		{
-			$$ := $1 | $3
+			$$ := $1
+			$$.build_union ($3)
 			process_regexp_or_series
 		}
 	;
@@ -220,7 +220,8 @@ Series: Singleton
 		}
 	| Series Singleton
 		{
-			$$ := $1 & $2
+			$$ := $1
+			$$.build_concatenation ($2)
 			process_series_singleton
 		}
 	;
@@ -232,17 +233,20 @@ Singleton: CHAR
 		}
 	| Singleton '*'
 		{
-			$$ := |*| $1
+			$$ := $1
+			$$.build_closure
 			process_singleton_star
 		}
 	| Singleton '+'
 		{
-			$$ := |+| $1
+			$$ := $1
+			$$.build_positive_closure
 			process_singleton_plus
 		}
 	| Singleton '?'
 		{
-			$$ := |?| $1
+			$$ := $1
+			$$.build_optional
 			process_singleton_optional
 		}
 	| Singleton '{' NUMBER ',' NUMBER '}'
