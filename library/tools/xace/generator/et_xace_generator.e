@@ -27,8 +27,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	output_filename: STRING
+			-- Output filename
+
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
+
+feature -- Setting
+
+	set_output_filename (a_filename: like output_filename) is
+			-- Set `output_filename' to `a_filename'.
+		do
+			output_filename := a_filename
+		ensure
+			output_filename_set: output_filename = a_filename
+		end
 
 feature -- Output
 

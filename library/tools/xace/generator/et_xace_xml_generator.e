@@ -31,15 +31,21 @@ feature -- Output
 	generate (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new XML file from `a_system'.
 		local
+			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			!! a_file.make (xml_filename)
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := xml_filename
+			end
+			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				print_xml_file (a_system, a_file)
 				a_file.close
 			else
-				error_handler.report_cannot_write_file_error (xml_filename)
+				error_handler.report_cannot_write_file_error (a_filename)
 			end
 		end
 

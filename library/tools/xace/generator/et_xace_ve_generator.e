@@ -34,10 +34,16 @@ feature -- Output
 	generate (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new ESD file from `a_system'.
 		local
+			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
 			an_externals: ET_XACE_EXTERNALS
 		do
-			!! a_file.make (esd_filename)
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := esd_filename
+			end
+			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
 				an_externals := a_system.externals
@@ -49,7 +55,7 @@ feature -- Output
 				a_file.close
 				a_system.set_externals (an_externals)
 			else
-				error_handler.report_cannot_write_file_error (esd_filename)
+				error_handler.report_cannot_write_file_error (a_filename)
 			end
 		end
 
