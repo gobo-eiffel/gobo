@@ -213,33 +213,58 @@ feature {NONE} -- Validation
 			an_option_is_cluster: an_option.name.is_equal (uc_option)
 			a_position_table_not_void: a_position_table /= Void
 		local
+			has_name: BOOLEAN
+			has_value: BOOLEAN
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
+			a_child_name: UC_STRING
 		do
-			a_cursor := an_option.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_child ?= a_cursor.item
-				if a_child = Void then
-						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_require) then
-						-- OK.
-				elseif a_child.name.is_equal (uc_ensure) then
-						-- OK.
-				elseif a_child.name.is_equal (uc_invariant) then
-						-- OK.
-				elseif a_child.name.is_equal (uc_loop) then
-						-- OK.
-				elseif a_child.name.is_equal (uc_check) then
-						-- OK.
-				elseif a_child.name.is_equal (uc_debug) then
-						-- OK.
-				elseif a_child.name.is_equal (uc_optimize) then
-						-- OK.
+			has_name := an_option.has_attribute_by_name (uc_name)
+			if has_name and then an_option.attribute_by_name (uc_name) = Void then
+				has_error := True
+				error_handler.report_missing_attribute_error (an_option, uc_name, a_position_table.item (an_option))
+			end
+			has_value := an_option.has_attribute_by_name (uc_value)
+			if has_value and then an_option.attribute_by_name (uc_value) = Void then
+				has_error := True
+				error_handler.report_missing_attribute_error (an_option, uc_value, a_position_table.item (an_option))
+			end
+			if has_name /= has_value then
+				has_error := True
+				if has_name then
+					error_handler.report_missing_attribute_error (an_option, uc_value, a_position_table.item (an_option))
 				else
-					has_error := True
-					error_handler.report_unknown_element_error (an_option, a_child, a_position_table.item (a_child))
+					error_handler.report_missing_attribute_error (an_option, uc_name, a_position_table.item (an_option))
 				end
-				a_cursor.forth
+			else
+				a_cursor := an_option.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_child ?= a_cursor.item
+					if a_child = Void then
+							-- Not an element. Ignore.
+					else
+						a_child_name := a_child.name
+						if
+							a_child_name.is_equal (uc_option) or
+							a_child_name.is_equal (uc_require) or
+							a_child_name.is_equal (uc_ensure) or
+							a_child_name.is_equal (uc_invariant) or
+							a_child_name.is_equal (uc_loop) or
+							a_child_name.is_equal (uc_check) or
+							a_child_name.is_equal (uc_debug) or
+							a_child_name.is_equal (uc_optimize)
+						then
+							if has_name then
+								has_error := True
+								error_handler.report_unknown_element_error (an_option, a_child, a_position_table.item (a_child))
+							end
+						else
+							has_error := True
+							error_handler.report_unknown_element_error (an_option, a_child, a_position_table.item (a_child))
+						end
+					end
+					a_cursor.forth
+				end
 			end
 		end
 
@@ -261,14 +286,12 @@ feature {NONE} -- Validation
 						-- Not an element. Ignore.
 				elseif a_child.name.is_equal (uc_include_dir) then
 					if not a_child.has_attribute_by_name (uc_location) then
-						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
-					end
-				elseif a_child.name.is_equal (uc_link_library_dir) then
-					if not a_child.has_attribute_by_name (uc_location) then
+						has_error := True
 						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
 					end
 				elseif a_child.name.is_equal (uc_link_library) then
 					if not a_child.has_attribute_by_name (uc_location) then
+						has_error := True
 						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
 					end
 				elseif a_child.name.is_equal (uc_export) then
@@ -316,6 +339,7 @@ feature {NONE} -- Validation
 						-- Not an element. Ignore.
 				elseif a_child.name.is_equal (uc_feature) then
 					if not a_child.has_attribute_by_name (uc_name) then
+						has_error := True
 						error_handler.report_missing_attribute_error (a_child, uc_name, a_position_table.item (a_child))
 					end
 				else

@@ -135,70 +135,400 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [BOOLEAN, STRING]
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
 			print_indentation (indent, a_file)
 			a_file.put_line ("<option>")
-			if an_option.has_require.is_true then
+			if an_option.is_address_expression_declared then
 				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<require enable=%"True%"/>")
-			elseif an_option.has_require.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<require enable=%"False%"/>")
-			end
-			if an_option.has_ensure.is_true then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<ensure enable=%"True%"/>")
-			elseif an_option.has_ensure.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<ensure enable=%"False%"/>")
-			end
-			if an_option.has_invariant.is_true then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<invariant enable=%"True%"/>")
-			elseif an_option.has_invariant.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<invariant enable=%"False%"/>")
-			end
-			if an_option.has_loop.is_true then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<loop enable=%"True%"/>")
-			elseif an_option.has_loop.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<loop enable=%"False%"/>")
-			end
-			if an_option.has_check.is_true then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<check enable=%"True%"/>")
-			elseif an_option.has_check.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<check enable=%"False%"/>")
-			end
-			if an_option.has_optimize.is_true then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<optimize enable=%"True%"/>")
-			elseif an_option.has_optimize.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<optimize enable=%"False%"/>")
-			end
-			if an_option.has_debug.is_true then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<debug enable=%"True%"/>")
-			elseif an_option.has_debug.is_false then
-				print_indentation (indent + 1, a_file)
-				a_file.put_line ("<debug enable=%"False%"/>")
-			end
-			a_cursor := an_option.debug_keys.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				print_indentation (indent + 1, a_file)
-				a_file.put_string ("<debug name=%"")
-				a_file.put_string (a_cursor.key)
-				if a_cursor.item then
-					a_file.put_line ("%" enable=%"True%"/>")
+				if an_option.address_expression then
+					a_file.put_line ("<option name=%"address_expression%" value%"true%"/>")
 				else
-					a_file.put_line ("%" enable=%"False%"/>")
+					a_file.put_line ("<option name=%"address_expression%" value%"false%"/>")
 				end
-				a_cursor.forth
+			end
+			if an_option.is_arguments_declared then
+				a_cursor := an_option.arguments.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"arguments%" value%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+				end
+			end
+			if an_option.is_array_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.array_optimization then
+					a_file.put_line ("<option name=%"array_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"array_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_assertion_declared then
+				a_cursor := an_option.assertion.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"assertion%" value%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+				end
+			end
+			if an_option.is_case_insensitive_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.case_insensitive then
+					a_file.put_line ("<option name=%"case_insensitive%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"case_insensitive%" value%"false%"/>")
+				end
+			end
+			if an_option.is_check_vape_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.check_vape then
+					a_file.put_line ("<option name=%"check_vape%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"check_vape%" value%"false%"/>")
+				end
+			end
+			if an_option.is_clean_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.clean then
+					a_file.put_line ("<option name=%"clean%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"clean%" value%"false%"/>")
+				end
+			end
+			if an_option.is_component_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"component%" value%"")
+				a_file.put_string (an_option.component)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_console_application_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.console_application then
+					a_file.put_line ("<option name=%"console_application%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"console_application%" value%"false%"/>")
+				end
+			end
+			if an_option.is_create_keyword_extension_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.create_keyword_extension then
+					a_file.put_line ("<option name=%"create_keyword_extension%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"create_keyword_extension%" value%"false%"/>")
+				end
+			end
+			if an_option.is_dead_code_removal_declared then
+				a_cursor := an_option.dead_code_removal.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"dead_code_removal%" value%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+				end
+			end
+			if an_option.is_debug_option_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.debug_option then
+					a_file.put_line ("<option name=%"debug%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"debug%" value%"false%"/>")
+				end
+			end
+			if an_option.is_debug_tag_declared then
+				a_cursor := an_option.debug_tag.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"debug_tag%" value%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+				end
+			end
+			if an_option.is_debugger_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.debugger then
+					a_file.put_line ("<option name=%"debugger%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"debugger%" value%"false%"/>")
+				end
+			end
+			if an_option.is_document_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"document%" value%"")
+				a_file.put_string (an_option.document)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_dynamic_runtime_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.dynamic_runtime then
+					a_file.put_line ("<option name=%"dynamic_runtime%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"dynamic_runtime%" value%"false%"/>")
+				end
+			end
+			if an_option.is_exception_trace_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.exception_trace then
+					a_file.put_line ("<option name=%"exception_trace%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"exception_trace%" value%"false%"/>")
+				end
+			end
+			if an_option.is_finalize_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.finalize then
+					a_file.put_line ("<option name=%"finalize%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"finalize%" value%"false%"/>")
+				end
+			end
+			if an_option.is_flat_fst_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.flat_fst_optimization then
+					a_file.put_line ("<option name=%"flat_fst_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"flat_fst_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_fst_expansion_factor_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"fst_expansion_factor%" value%"")
+				a_file.put_integer (an_option.fst_expansion_factor)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_fst_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.fst_optimization then
+					a_file.put_line ("<option name=%"fst_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"fst_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_garbage_collector_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"garbage_collector%" value%"")
+				a_file.put_string (an_option.garbage_collector)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_gc_info_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.gc_info then
+					a_file.put_line ("<option name=%"gc_info%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"gc_info%" value%"false%"/>")
+				end
+			end
+			if an_option.is_heap_size_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"heap_size%" value%"")
+				a_file.put_integer (an_option.heap_size)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_inlining_declared then
+				a_cursor := an_option.inlining.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<option name=%"inlining%" value%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%"/>")
+				end
+			end
+			if an_option.is_inlining_size_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"inlining_size%" value%"")
+				a_file.put_integer (an_option.inlining_size)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_jumps_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.jumps_optimization then
+					a_file.put_line ("<option name=%"jumps_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"jumps_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_layout_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.layout_optimization then
+					a_file.put_line ("<option name=%"layout_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"layout_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_leaves_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.leaves_optimization then
+					a_file.put_line ("<option name=%"leaves_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"leaves_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_line_generation_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.line_generation then
+					a_file.put_line ("<option name=%"line_generation%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"line_generation%" value%"false%"/>")
+				end
+			end
+			if an_option.is_linker_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"linker%" value%"")
+				a_file.put_string (an_option.linker)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_linux_fpu_double_precision_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.linux_fpu_double_precision then
+					a_file.put_line ("<option name=%"linux_fpu_double_precision%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"linux_fpu_double_precision%" value%"false%"/>")
+				end
+			end
+			if an_option.is_manifest_string_trace_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.manifest_string_trace then
+					a_file.put_line ("<option name=%"manifest_string_trace%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"manifest_string_trace%" value%"false%"/>")
+				end
+			end
+			if an_option.is_map_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.map then
+					a_file.put_line ("<option name=%"map%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"map%" value%"false%"/>")
+				end
+			end
+			if an_option.is_multithreaded_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.multithreaded then
+					a_file.put_line ("<option name=%"multithreaded%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"multithreaded%" value%"false%"/>")
+				end
+			end
+			if an_option.is_no_default_lib_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.no_default_lib then
+					a_file.put_line ("<option name=%"no_default_lib%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"no_default_lib%" value%"false%"/>")
+				end
+			end
+			if an_option.is_override_cluster_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"override_cluster%" value%"")
+				a_file.put_string (an_option.override_cluster)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_portable_code_generation_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.portable_code_generation then
+					a_file.put_line ("<option name=%"portable_code_generation%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"portable_code_generation%" value%"false%"/>")
+				end
+			end
+			if an_option.is_precompiled_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"precompiled%" value%"")
+				a_file.put_string (an_option.precompiled)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_profile_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.profile then
+					a_file.put_line ("<option name=%"profile%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"profile%" value%"false%"/>")
+				end
+			end
+			if an_option.is_reloads_optimization_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.reloads_optimization then
+					a_file.put_line ("<option name=%"reloads_optimization%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"reloads_optimization%" value%"false%"/>")
+				end
+			end
+			if an_option.is_shared_library_definition_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"shared_library_definition%" value%"")
+				a_file.put_string (an_option.shared_library_definition)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_split_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.split then
+					a_file.put_line ("<option name=%"split%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"split%" value%"false%"/>")
+				end
+			end
+			if an_option.is_stack_size_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"stack_size%" value%"")
+				a_file.put_integer (an_option.stack_size)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_storable_filename_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"storable_filename%" value%"")
+				a_file.put_string (an_option.storable_filename)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_strip_option_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.strip_option then
+					a_file.put_line ("<option name=%"strip%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"strip%" value%"false%"/>")
+				end
+			end
+			if an_option.is_target_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"target%" value%"")
+				a_file.put_string (an_option.target)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_trace_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.trace then
+					a_file.put_line ("<option name=%"trace%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"trace%" value%"false%"/>")
+				end
+			end
+			if an_option.is_verbose_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.verbose then
+					a_file.put_line ("<option name=%"verbose%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"verbose%" value%"false%"/>")
+				end
+			end
+			if an_option.is_visible_filename_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"visible_filename%" value%"")
+				a_file.put_string (an_option.visible_filename)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_warning_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"warning%" value%"")
+				a_file.put_string (an_option.warning)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_wedit_declared then
+				print_indentation (indent + 1, a_file)
+				if an_option.wedit then
+					a_file.put_line ("<option name=%"wedit%" value%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"wedit%" value%"false%"/>")
+				end
 			end
 			print_indentation (indent, a_file)
 			a_file.put_line ("</option>")

@@ -75,6 +75,15 @@ feature -- Constants
 			uc_name_not_empty: Result.count > 0
 		end
 
+	uc_value: UC_STRING is
+			-- "value" attribute name
+		once
+			Result := new_unicode_string ("value")
+		ensure
+			uc_value_not_void: Result /= Void
+			uc_value_not_empty: Result.count > 0
+		end
+
 	uc_abstract: UC_STRING is
 			-- "abstract" attribute name
 		once
@@ -201,15 +210,6 @@ feature -- Constants
 			uc_optimize_not_empty: Result.count > 0
 		end
 
-	uc_link_dir: UC_STRING is
-			-- "link_dir" element name
-		once
-			Result := new_unicode_string ("link_dir")
-		ensure
-			uc_link_dir_not_void: Result /= Void
-			uc_link_dir_not_empty: Result.count > 0
-		end
-
 	uc_include_dir: UC_STRING is
 			-- "include_dir" element name
 		once
@@ -244,15 +244,6 @@ feature -- Constants
 		ensure
 			uc_feature_not_void: Result /= Void
 			uc_feature_not_empty: Result.count > 0
-		end
-
-	uc_link_library_dir: UC_STRING is
-			-- "link_library_dir" element name
-		once
-			Result := new_unicode_string ("link_library_dir")
-		ensure
-			uc_link_library_dir_not_void: Result /= Void
-			uc_link_library_dir_not_empty: Result.count > 0
 		end
 
 	uc_link_library: UC_STRING is

@@ -124,8 +124,10 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 				a_file.put_new_line
+				if print_components (a_clusters, False, a_file) then
+					a_file.put_new_line
+				end
 			end
-			print_component (a_file)
 			an_external := a_system.externals
 			if
 				an_external /= Void and then
@@ -134,7 +136,7 @@ feature {NONE} -- Output
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
-				print_link_libraries_and_link_libraries_directories (an_external.link_libraries, an_external.link_libraries_directories, a_file)
+				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
 		end
@@ -164,13 +166,15 @@ feature {NONE} -- Output
 				a_file.put_line ("default")
 				a_file.put_new_line
 				print_options (an_option, 1, a_file)
+				a_file.put_new_line
 			end
-			a_file.put_new_line
 			a_file.put_line ("cluster")
 			a_file.put_new_line
 			print_cluster (a_cluster, 1, a_file)
 			a_file.put_new_line
-			print_component (a_file)
+			if print_component (a_cluster, False, a_file) then
+				a_file.put_new_line
+			end
 			!! an_external.make
 			a_cluster.merge_externals (an_external)
 			if
@@ -180,27 +184,62 @@ feature {NONE} -- Output
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
-				print_link_libraries_and_link_libraries_directories (an_external.link_libraries, an_external.link_libraries_directories, a_file)
+				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("end")
 		end
 
-	print_component (a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print component clause to `a_file'.
+	print_components (a_clusters: ET_XACE_CLUSTERS; keyword_printed: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+			-- Print to `a_file' the component clause for
+			-- `a_clusters' and recursively their subclusters.
+			-- Return True if the keyword 'component' has been printed.
 		require
+			a_clusters_not_void: a_clusters /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
 		do
-			a_file.put_string ("component")
-			a_file.put_new_line
-			a_file.put_new_line
-			print_indentation (2, a_file)
-			a_file.put_string ("-- ISS-Baselib")
-			a_file.put_new_line
-			print_indentation (1, a_file)
-			a_file.put_string ("base: %"$ISS_BASE/spec/$PLATFORM/component/base.cl%"")
-			a_file.put_new_line
-			a_file.put_new_line
+			Result := keyword_printed
+			cluster_list := a_clusters.clusters
+			nb := cluster_list.count
+			from i := 1 until i > nb loop
+				Result := print_component (cluster_list.item (i), Result, a_file)
+				i := i + 1
+			end
+		end
+
+	print_component (a_cluster: ET_XACE_CLUSTER; keyword_printed: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+			-- Print to `a_file' the component clause for
+			-- `a_cluster' and recursively its subclusters.
+			-- Return True if the keyword 'component' has been printed.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_option: ET_XACE_OPTIONS
+			subclusters: ET_XACE_CLUSTERS
+		do
+			Result := keyword_printed
+			an_option := a_cluster.options
+			if an_option /= Void and then an_option.is_component_declared then
+				if not Result then
+					a_file.put_line ("component")
+					a_file.put_new_line
+					Result := True
+				end
+				print_indentation (1, a_file)
+				a_file.put_string (a_cluster.name)
+				a_file.put_string (": %"")
+				a_file.put_string (an_option.component)
+				a_file.put_line ("%";")
+			end
+			subclusters := a_cluster.subclusters
+			if subclusters /= Void then
+				Result := print_components (subclusters, Result, a_file)
+			end
 		end
 
 	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -210,41 +249,198 @@ feature {NONE} -- Output
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
+		local
+			an_assertion: DS_HASH_SET [STRING]
+			a_dead_code_removal: DS_HASH_SET [STRING]
+			a_dead_code_removal_yes: BOOLEAN
+			an_optimize_yes: BOOLEAN
+			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
+			an_inlining: DS_HASH_SET [STRING]
+			a_warning: STRING
 		do
-			if an_option.has_optimize.is_true then
+			if an_option.address_expression then
 				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (no)")
-				a_file.put_new_line
-			elseif an_option.has_optimize.is_false then
-				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (all)")
-				a_file.put_new_line
+				a_file.put_line ("address_expression (yes);")
 			else
-				if an_option.has_check.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (check)")
-					a_file.put_new_line
-				elseif an_option.has_loop.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (loop)")
-					a_file.put_new_line
-				elseif an_option.has_invariant.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (invariant)")
-					a_file.put_new_line
-				elseif an_option.has_ensure.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (ensure)")
-					a_file.put_new_line
-				elseif an_option.has_require.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (require)")
-					a_file.put_new_line
-				else
-					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (no)")
-					a_file.put_new_line
-				end
+				print_indentation (indent, a_file)
+				a_file.put_line ("address_expression (no);")
+			end
+			if an_option.array_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("array_optimization (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("array_optimization (no);")
+			end
+			an_assertion := an_option.assertion
+			if an_assertion.has (options.all_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (all);")
+			elseif an_assertion.has (options.check_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (check);")
+			elseif an_assertion.has (options.loop_variant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (loop);")
+			elseif an_assertion.has (options.loop_invariant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (loop);")
+			elseif an_assertion.has (options.invariant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (invariant);")
+			elseif an_assertion.has (options.ensure_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (ensure);")
+			elseif an_assertion.has (options.require_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (require);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (no);")
+			end
+			if an_option.check_vape then
+				print_indentation (indent, a_file)
+				a_file.put_line ("check_vape (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("check_vape (no);")
+			end
+			if an_option.console_application then
+				print_indentation (indent, a_file)
+				a_file.put_line ("console_application (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("console_application (no);")
+			end
+			if an_option.create_keyword_extension then
+				print_indentation (indent, a_file)
+				a_file.put_line ("create_keyword_extension (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("create_keyword_extension (no);")
+			end
+			a_dead_code_removal := an_option.dead_code_removal
+			if a_dead_code_removal.has (options.all_value) then
+				a_dead_code_removal_yes := True
+				an_optimize_yes := True
+			elseif a_dead_code_removal.has (options.feature_value) then
+				a_dead_code_removal_yes := True
+			elseif a_dead_code_removal.has (options.class_value) then
+				an_optimize_yes := True
+			end
+			if a_dead_code_removal_yes then
+				print_indentation (indent, a_file)
+				a_file.put_line ("dead_code_removal (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("dead_code_removal (no);")
+			end
+			if an_optimize_yes then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize (no);")
+			end
+			if an_option.debug_option then
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug (no);")
+			end
+			a_debug_tag_cursor := an_option.debug_tag.new_cursor
+			from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
+				print_indentation (indent, a_file)
+				a_file.put_string ("debug (%"")
+				a_file.put_string (a_debug_tag_cursor.item)
+				a_file.put_line ("%");")
+				a_debug_tag_cursor.forth
+			end
+			if an_option.dynamic_runtime then
+				print_indentation (indent, a_file)
+				a_file.put_line ("dynamic_runtime_library (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("dynamic_runtime_library (no);")
+			end
+			if an_option.exception_trace then
+				print_indentation (indent, a_file)
+				a_file.put_line ("exception_trace (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("exception_trace (no);")
+			end
+			if an_option.garbage_collector.is_equal (options.boehm_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("garbage_collector (%"boehm%");")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("garbage_collector (%"internal%");")
+			end
+			an_inlining := an_option.inlining
+			if an_inlining.has (options.all_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("inlining (yes);")
+			elseif an_inlining.has (options.array_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("inlining (yes);")
+			elseif an_inlining.has (options.constant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("inlining (yes);")
+			elseif an_inlining.has (options.once_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("inlining (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("inlining (no);")
+			end
+			print_indentation (indent, a_file)
+			a_file.put_string ("inlining_size (%"")
+			a_file.put_integer (an_option.inlining_size)
+			a_file.put_line ("%");")
+			if an_option.linux_fpu_double_precision then
+				print_indentation (indent, a_file)
+				a_file.put_line ("linux_fpu_double_precision (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("linux_fpu_double_precision (no);")
+			end
+			if an_option.portable_code_generation then
+				print_indentation (indent, a_file)
+				a_file.put_line ("portable_code_generation (yes);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("portable_code_generation (no);")
+			end
+			if an_option.is_precompiled_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("precompiled (%"")
+				a_file.put_string (an_option.precompiled)
+				a_file.put_line ("%");")
+			end
+			if an_option.is_storable_filename_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("storable_file_name (%"")
+				a_file.put_string (an_option.precompiled)
+				a_file.put_line ("%");")
+			end
+			if an_option.is_visible_filename_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("visible_file_name (%"")
+				a_file.put_string (an_option.precompiled)
+				a_file.put_line ("%");")
+			end
+			a_warning := an_option.warning
+			if a_warning.is_equal (options.default_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("warning_level (%"default%");")
+			elseif a_warning.is_equal (options.all_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("warning_level (all);")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("warning_level (no);")
 			end
 		end
 
@@ -410,66 +606,25 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_link_libraries_and_link_libraries_directories (link_libraries, link_libraries_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `link_libraries' and `link_libraries_directories' to
-			-- `a_file'.
+	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_libraries' to `a_file'.
 		require
-			link_libraries_not_void: link_libraries /= Void
-			no_void_library: not link_libraries.has (Void)
-			link_libraries_directories_not_void: link_libraries_directories /= Void
-			no_void_directory: not link_libraries_directories.has (Void)
+			a_libraries_not_void: a_libraries /= Void
+			no_void_library: not a_libraries.has (Void)
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			a_pathname: STRING
-			may_close_statement: BOOLEAN
-			lib_contains_path,
-			has_dot_lib_extension,
-			lib_needs_option: BOOLEAN
 		do
-			if
-				not link_libraries.is_empty or else
-				not link_libraries_directories.is_empty
-			then
+			if not a_libraries.is_empty then
 				print_indentation (1, a_file)
-				a_file.put_line ("object:")
-				may_close_statement := link_libraries_directories.is_empty
-				a_cursor := link_libraries.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_pathname := a_cursor.item
-					print_indentation (2, a_file)
-					lib_contains_path := a_pathname.has ('/') or a_pathname.has ('\')
-					if lib_contains_path then
-						lib_needs_option := False
-					else
-						has_dot_lib_extension := a_pathname.count > 4 and then a_pathname.substring (a_pathname.count - 3, a_pathname.count).is_equal (".lib")
-						lib_needs_option := not has_dot_lib_extension
-					end
-					if lib_needs_option then
-						a_file.put_string ("%"-l")
-					else
-						a_file.put_character ('%"')
-						if is_windows then
-							a_pathname := replace_all_characters (a_pathname, '{', '(')
-							a_pathname := replace_all_characters (a_pathname, '}', ')')
-						end
-					end
-					a_file.put_string (a_pathname)
-					if a_cursor.is_last and may_close_statement then
-						a_file.put_line ("%";")
-					else
-						a_file.put_line ("%",")
-					end
-					a_cursor.forth
-				end
-				-- employ trick to get linker paths to the C compiler.
-				-- Works on Unix, I'm doubtful about Windows with MSC.
-				-- Windows and bcc probably work fine.
-				a_cursor := link_libraries_directories.new_cursor
+				a_file.put_string ("object:")
+				a_file.put_new_line
+				a_cursor := a_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
-					a_file.put_string ("%"-L")
+					a_file.put_character ('%"')
 					a_pathname := a_cursor.item
 					if is_windows then
 						a_pathname := replace_all_characters (a_pathname, '{', '(')
@@ -477,10 +632,11 @@ feature {NONE} -- Output
 					end
 					a_file.put_string (a_pathname)
 					if a_cursor.is_last then
-						a_file.put_line ("%";")
+						a_file.put_string ("%";")
 					else
-						a_file.put_line ("%",")
+						a_file.put_string ("%",")
 					end
+					a_file.put_new_line
 					a_cursor.forth
 				end
 				a_file.put_new_line

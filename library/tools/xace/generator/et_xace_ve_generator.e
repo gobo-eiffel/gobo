@@ -126,17 +126,13 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
-			a_file.put_line ("option")
-			a_file.put_new_line
-			print_indentation (1, a_file)
-			a_file.put_line ("target exe console")
-			print_indentation (1, a_file)
-			a_file.put_line ("run_time_in_dll off")
 			an_option := a_system.options
 			if an_option /= Void then
+				a_file.put_line ("option")
+				a_file.put_new_line
 				print_options (an_option, 1, a_file)
+				a_file.put_new_line
 			end
-			a_file.put_new_line
 			a_file.put_line ("end")
 		end
 
@@ -162,7 +158,6 @@ feature {NONE} -- Output
 			if an_option /= Void then
 				a_file.put_line ("option")
 				a_file.put_new_line
-				print_indentation (1, a_file)
 				print_options (an_option, 1, a_file)
 				a_file.put_new_line
 			end
@@ -178,79 +173,319 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			assertions_on: BOOLEAN
-			assertions_off: BOOLEAN
+			require_on: BOOLEAN
+			ensure_on: BOOLEAN
+			class_invariant_on: BOOLEAN
+			loop_invariant_on: BOOLEAN
+			loop_variant_on: BOOLEAN
+			check_on: BOOLEAN
+			an_assertion: DS_HASH_SET [STRING]
+			optimize_dead_code_on: BOOLEAN
+			optimize_calls_on: BOOLEAN
+			optimize_dyn_type_on: BOOLEAN
+			a_dead_code_removal: DS_HASH_SET [STRING]
+			optimize_inline_on: BOOLEAN
+			optimize_constants_on: BOOLEAN
+			optimize_once_on: BOOLEAN
+			an_inlining: DS_HASH_SET [STRING]
+			a_target: STRING
 		do
-			if an_option.has_optimize.is_true then
-				-- Inlining should be disabled otherwise features
-				-- `put and `item' from STRING are not dynamically
-				-- bound when redefined:
-				-- print_indentation (indent, a_file)
-				-- a_file.put_line ("finalize on")
-				print_indentation (indent, a_file)
-				a_file.put_line ("optimize leaves on")
-				print_indentation (indent, a_file)
-				a_file.put_line ("optimize calls on")
-				assertions_off := True
-			elseif an_option.has_optimize.is_false then
-				assertions_on := True
+			an_assertion := an_option.assertion
+			if an_assertion.has (options.none_value) then
+				-- Do nothing.
 			end
-			if not assertions_off then
-				if an_option.has_check.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_line ("check on")
-					assertions_on := True
-				elseif an_option.has_check.is_false then
-					print_indentation (indent, a_file)
-					a_file.put_line ("check off")
-					assertions_off := True
-				end
-				if an_option.has_loop.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_line ("loop variant on")
-					print_indentation (indent, a_file)
-					a_file.put_line ("loop invariant on")
-					assertions_on := True
-				elseif an_option.has_loop.is_false then
-					print_indentation (indent, a_file)
-					a_file.put_line ("loop variant off")
-					print_indentation (indent, a_file)
-					a_file.put_line ("loop invariant off")
-					assertions_off := True
-				end
-				if an_option.has_invariant.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_line ("class invariant on")
-					assertions_on := True
-				elseif an_option.has_invariant.is_false then
-					print_indentation (indent, a_file)
-					a_file.put_line ("class invariant off")
-					assertions_off := True
-				end
-				if an_option.has_ensure.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_line ("ensure on")
-					assertions_on := True
-				elseif an_option.has_ensure.is_false then
-					print_indentation (indent, a_file)
-					a_file.put_line ("ensure off")
-					assertions_off := True
-				end
-				if an_option.has_require.is_true then
-					print_indentation (indent, a_file)
-					a_file.put_line ("require on")
-					assertions_on := True
-				elseif an_option.has_require.is_false then
-					print_indentation (indent, a_file)
-					a_file.put_line ("require off")
-					assertions_off := True
-				end
+			if an_assertion.has (options.require_value) then
+				assertions_on := True
+				require_on := True
+			end
+			if an_assertion.has (options.ensure_value) then
+				assertions_on := True
+				ensure_on := True
+			end
+			if an_assertion.has (options.invariant_value) then
+				assertions_on := True
+				class_invariant_on := True
+			end
+			if an_assertion.has (options.loop_invariant_value) then
+				assertions_on := True
+				loop_invariant_on := True
+			end
+			if an_assertion.has (options.loop_variant_value) then
+				assertions_on := True
+				loop_variant_on := True
+			end
+			if an_assertion.has (options.check_value) then
+				assertions_on := True
+				check_on := True
+			end
+			if an_assertion.has (options.all_value) then
+				assertions_on := True
+				require_on := True
+				ensure_on := True
+				class_invariant_on := True
+				loop_invariant_on := True
+				loop_variant_on := True
+				check_on := True
 			end
 			if assertions_on then
 				print_indentation (indent, a_file)
 				a_file.put_line ("assertions on")
-			elseif assertions_off then
+			else
 				print_indentation (indent, a_file)
 				a_file.put_line ("assertions off")
+			end
+			if require_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("require on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("require off")
+			end
+			if ensure_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("ensure on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("ensure off")
+			end
+			if class_invariant_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("class invariant on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("class invariant off")
+			end
+			if loop_invariant_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("loop invariant on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("loop invariant off")
+			end
+			if loop_variant_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("loop variant on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("loop variant off")
+			end
+			if check_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("check on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("check off")
+			end
+			a_dead_code_removal := an_option.dead_code_removal
+			if a_dead_code_removal.has (options.none_value) then
+				-- Do nothing.
+			end
+			if a_dead_code_removal.has (options.low_level_value) then
+				optimize_dead_code_on := True
+			end
+			if a_dead_code_removal.has (options.feature_value) then
+				optimize_calls_on := True
+			end
+			if a_dead_code_removal.has (options.class_value) then
+				optimize_dyn_type_on := True
+			end
+			if a_dead_code_removal.has (options.all_value) then
+				optimize_dead_code_on := True
+				optimize_calls_on := True
+				optimize_dyn_type_on := True
+			end
+			if optimize_dead_code_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize dead_code on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize dead_code off")
+			end
+			if optimize_calls_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize calls on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize calls off")
+			end
+			if optimize_dyn_type_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize dyn_type on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize dyn_type off")
+			end
+			if an_option.debug_option or an_option.is_debug_tag_declared then
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug instructions on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug instructions off")
+			end
+			if an_option.debugger then
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug off")
+			end
+			if an_option.dynamic_runtime then
+				print_indentation (indent, a_file)
+				a_file.put_line ("run_time_in_dll on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("run_time_in_dll off")
+			end
+			if an_option.finalize then
+				print_indentation (indent, a_file)
+				a_file.put_line ("finalize on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("finalize off")
+			end
+			if an_option.flat_fst_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize flat_fst on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize flat_fst off")
+			end
+			print_indentation (indent, a_file)
+			a_file.put_string ("FST_expansion_factor ")
+			a_file.put_integer (an_option.fst_expansion_factor)
+			a_file.put_new_line
+			if an_option.fst_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize FST on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize FST off")
+			end
+			if an_option.is_heap_size_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("heap_size ")
+				a_file.put_integer (an_option.heap_size)
+				a_file.put_new_line
+			end
+			an_inlining := an_option.inlining
+			if an_inlining.has (options.none_value) then
+				-- Do nothing.
+			end
+			if an_inlining.has (options.array_value) then
+				optimize_inline_on := True
+			end
+			if an_inlining.has (options.constant_value) then
+				optimize_constants_on := True
+			end
+			if an_inlining.has (options.once_value) then
+				optimize_once_on := True
+			end
+			if an_inlining.has (options.all_value) then
+				optimize_inline_on := True
+				optimize_constants_on := True
+				optimize_once_on := True
+			end
+			if optimize_inline_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize inline on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize inline off")
+			end
+			if optimize_constants_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize constants on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize constants off")
+			end
+			if optimize_once_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize once on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize once off")
+			end
+			if an_option.jumps_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize jumps on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize jumps off")
+			end
+			if an_option.layout_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize layout on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize layout off")
+			end
+			if an_option.leaves_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize leaves on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize leaves off")
+			end
+			if an_option.linker.is_equal (options.microsoft_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("linker microsoft")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("linker default")
+			end
+			if an_option.map then
+				print_indentation (indent, a_file)
+				a_file.put_line ("map on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("map off")
+			end
+			if an_option.multithreaded then
+				print_indentation (indent, a_file)
+				a_file.put_line ("multithreading on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("multithreading off")
+			end
+			if an_option.no_default_lib then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_default_lib on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_default_lib off")
+			end
+			if an_option.reloads_optimization then
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize reloads on")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize reloads off")
+			end
+			if an_option.is_stack_size_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("stack_size ")
+				a_file.put_integer (an_option.stack_size)
+				a_file.put_new_line
+			end
+			a_target := an_option.target
+			if a_target.is_equal (options.exe_value) then
+				print_indentation (indent, a_file)
+				a_file.put_string ("target exe ")
+			elseif a_target.is_equal (options.dll_value) then
+				print_indentation (indent, a_file)
+				a_file.put_string ("target dll ")
+			elseif a_target.is_equal (options.com_value) then
+				print_indentation (indent, a_file)
+				a_file.put_string ("target com ")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_string ("target dll ")
+			end
+			if an_option.console_application then
+				a_file.put_line ("console")
+			else
+				a_file.put_line ("windows")
 			end
 		end
 

@@ -117,24 +117,14 @@ feature {NONE} -- Output
 			a_file.put_string (a_system.creation_procedure_name)
 			a_file.put_new_line
 			a_file.put_new_line
-			a_file.put_string ("default")
-			a_file.put_new_line
-			a_file.put_new_line
-			print_indentation (1, a_file)
-			a_file.put_string ("no_style_warning (yes)")
-			a_file.put_new_line
-			print_indentation (1, a_file)
-			a_file.put_string ("collect (no)")
-			a_file.put_new_line
 			an_option := a_system.options
 			if an_option /= Void then
+				a_file.put_line ("default")
+				a_file.put_new_line
 				print_options (an_option, 1, a_file)
+				a_file.put_new_line
 			end
-			print_indentation (1, a_file)
-			a_file.put_string ("debug (no)")
-			a_file.put_new_line
-			a_file.put_string ("cluster")
-			a_file.put_new_line
+			a_file.put_line ("cluster")
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
@@ -143,8 +133,7 @@ feature {NONE} -- Output
 			end
 			an_external := a_system.externals
 			if an_external /= Void and then not an_external.is_empty then
-				a_file.put_string ("external")
-				a_file.put_new_line
+				a_file.put_line ("external")
 				a_file.put_new_line
 				if an_external.has_exported_features then
 					print_indentation (1, a_file)
@@ -154,55 +143,182 @@ feature {NONE} -- Output
 					a_file.put_new_line
 				end
 				print_include_directories (an_external.include_directories, a_file)
-				print_link_libraries_path (an_external.link_libraries_directories, a_file)
-
 				print_link_libraries (an_external.link_libraries, a_file)
 				a_file.put_new_line
 			end
-			a_file.put_line ("generate")
-			a_file.put_new_line
-			print_indentation (1, a_file)
-			a_file.put_line ("no_split (yes)")
-			a_file.put_new_line
+			if an_option /= Void then
+				a_file.put_line ("generate")
+				a_file.put_new_line
+				print_generate (an_option, 1, a_file)
+				a_file.put_new_line
+			end
 			a_file.put_line ("end")
 		end
 
 	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `an_option' to `a_file'.
+			-- Print to `a_file' the part of `an_option' which goes to the 'default' section.
+		require
+			an_option_not_void: an_option /= Void
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_assertion: DS_HASH_SET [STRING]
+			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
+			a_warning: STRING
+		do
+			an_assertion := an_option.assertion
+			if an_option.finalize then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (boost)")
+			elseif an_assertion.has (options.all_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (all)")
+			elseif an_assertion.has (options.check_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (check)")
+			elseif an_assertion.has (options.loop_variant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (loop)")
+			elseif an_assertion.has (options.loop_invariant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (loop)")
+			elseif an_assertion.has (options.invariant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (invariant)")
+			elseif an_assertion.has (options.ensure_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (ensure)")
+			elseif an_assertion.has (options.require_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (require)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (no)")
+			end
+			if an_option.case_insensitive then
+				print_indentation (indent, a_file)
+				a_file.put_line ("case_insensitive (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("case_insensitive (no)")
+			end
+			if an_option.debug_option then
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("debug (no)")
+			end
+			a_debug_tag_cursor := an_option.debug_tag.new_cursor
+			from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
+				print_indentation (indent, a_file)
+				a_file.put_string ("debug (%"")
+				a_file.put_string (a_debug_tag_cursor.item)
+				a_file.put_line ("%")")
+				a_debug_tag_cursor.forth
+			end
+			if an_option.garbage_collector.is_equal (options.internal_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("collect (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("collect (no)")
+			end
+			if an_option.manifest_string_trace then
+				print_indentation (indent, a_file)
+				a_file.put_line ("manifest_string_trace (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("manifest_string_trace (no)")
+			end
+			if an_option.trace then
+				print_indentation (indent, a_file)
+				a_file.put_line ("trace (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("trace (no)")
+			end
+			if an_option.verbose then
+				print_indentation (indent, a_file)
+				a_file.put_line ("verbose (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("verbose (no)")
+			end
+			a_warning := an_option.warning
+			if a_warning.is_equal (options.style_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_style_warning (no)")
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_warning (yes)")
+			elseif a_warning.is_equal (options.default_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_style_warning (yes)")
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_warning (no)")
+			elseif a_warning.is_equal (options.all_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_style_warning (no)")
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_warning (no)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_style_warning (yes)")
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_warning (yes)")
+			end
+		end
+
+	print_generate (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the part of `an_option' which goes to the 'generate' section.
 		require
 			an_option_not_void: an_option /= Void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if an_option.has_optimize.is_true then
+			if an_option.clean then
 				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (boost)")
-				a_file.put_new_line
-			elseif an_option.has_check.is_true then
-				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (check)")
-				a_file.put_new_line
-			elseif an_option.has_loop.is_true then
-				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (loop)")
-				a_file.put_new_line
-			elseif an_option.has_invariant.is_true then
-				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (invariant)")
-				a_file.put_new_line
-			elseif an_option.has_ensure.is_true then
-				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (ensure)")
-				a_file.put_new_line
-			elseif an_option.has_require.is_true then
-				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (require)")
-				a_file.put_new_line
+				a_file.put_line ("clean (yes)")
 			else
 				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (no)")
-				a_file.put_new_line
+				a_file.put_line ("clean (no)")
+			end
+			if an_option.gc_info then
+				print_indentation (indent, a_file)
+				a_file.put_line ("gc_info (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("gc_info (no)")
+			end
+			if an_option.split then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_split (no)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_split (yes)")
+			end
+			if an_option.strip_option then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_strip (no)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_strip (yes)")
+			end
+			if an_option.target.is_equal (options.exe_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_main (no)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("no_main (yes)")
+			end
+			if an_option.wedit then
+				print_indentation (indent, a_file)
+				a_file.put_line ("wedit (yes)")
+			else
+				print_indentation (indent, a_file)
+				a_file.put_line ("wedit (no)")
 			end
 		end
 
@@ -246,10 +362,8 @@ feature {NONE} -- Output
 				if an_option /= Void then
 					a_file.put_new_line
 					print_indentation (2, a_file)
-					a_file.put_string ("default")
-					a_file.put_new_line
+					a_file.put_line ("default")
 					print_options (an_option, 3, a_file)
-					a_file.put_new_line
 					print_indentation (2, a_file)
 					a_file.put_string ("end")
 				else
@@ -356,37 +470,6 @@ feature {NONE} -- Output
 				print_indentation (2, a_file)
 				a_file.put_character ('%"')
 				a_cursor := a_directories.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_pathname := a_cursor.item
-					a_file.put_string (a_pathname)
-					if not a_cursor.is_last then
-						a_file.put_character (' ')
-					end
-					a_cursor.forth
-				end
-				a_file.put_character ('%"')
-				a_file.put_new_line
-			end
-		end
-
-	print_link_libraries_path (library_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Makes sure any external libraries can be found by the linker.
-		require
-			library_directories_not_void: library_directories /= Void
-			no_void_directory: not library_directories.has (Void)
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			a_pathname: STRING
-		do
-			if not library_directories.is_empty then
-				print_indentation (1, a_file)
-				a_file.put_string ("external_lib_path:")
-				a_file.put_new_line
-				print_indentation (2, a_file)
-				a_file.put_character ('%"')
-				a_cursor := library_directories.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_pathname := a_cursor.item
 					a_file.put_string (a_pathname)
