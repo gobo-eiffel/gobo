@@ -477,7 +477,7 @@ feature {NONE} -- CAT-calls
 			l_type_set: ET_DYNAMIC_TYPE_SET
 			l_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
 			l_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
-			l_target: ET_OPERAND
+			l_target: ET_TARGET_OPERAND
 			l_position: ET_POSITION
 			i, j, nb: INTEGER
 		do
