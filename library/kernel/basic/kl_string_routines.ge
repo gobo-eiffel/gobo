@@ -32,7 +32,7 @@ feature -- Initialization
 			-- for at least `n' characters.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as VE implements is correctly, which is not the case
+			-- as VE implements it correctly, which is not the case
 			-- as of VE 4.0.
 		require
 			non_negative_n: n >= 0
@@ -53,11 +53,11 @@ feature -- Initialization
 			-- `s' is considered with its characters which do not fit
 			-- in a CHARACTER replaced by a '%U'.
 			-- (ELKS 2001 STRING)
-			-- Note: Use this routine instead of '!! Result.make (s)' when
-			-- `s' is of dynamic type other than STRING (e.g. UC_STRING)
+			-- Note: Use this routine instead of 'STRING.make_from_string (s)'
+			-- when `s' is of dynamic type other than STRING (e.g. UC_STRING)
 			-- because the class STRING provided with the Eiffel compilers
 			-- is not necessarily aware of the implementation of UC_STRING
-			-- and this may lead to run-time crashes.
+			-- and this may lead to run-time errors or crashes.
 		require
 			s_not_void: s /= Void
 		local
@@ -201,7 +201,7 @@ feature -- Status report
 			-- `other' of dynamic type other than STRING such as UC_STRING,
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
-			-- and this may lead to run-time crashes.
+			-- and this may lead to run-time errors or crashes.
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
@@ -386,7 +386,7 @@ feature -- Access
 			-- `other' of dynamic type other than STRING such as UC_STRING, because
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
-			-- run-time crashes.
+			-- run-time errors or crashes.
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
@@ -398,6 +398,7 @@ feature -- Access
 			k, end_index: INTEGER
 			found: BOOLEAN
 			uc_string: UC_STRING
+			max_code: INTEGER
 		do
 				-- Note: ISE Eiffel 5.1 is more constraining than ELKS 2001:
 				-- other_not_empty: other.count > 0
@@ -416,12 +417,13 @@ feature -- Access
 						other_unicode ?= other
 						if other_unicode /= Void then
 							nb := other_unicode.byte_count
+							max_code := Platform.Maximum_character_code
 							from k := start_index until k > end_index loop
 								j := k
 								found := True
 								from i := 1 until i > nb loop
 									a_code := other_unicode.item_code_at_byte_index (i)
-									if a_code > Platform.Maximum_character_code then
+									if a_code > max_code then
 										a_code := 0
 									end
 									if a_string.item_code (j) /= a_code then
@@ -531,12 +533,12 @@ feature -- Access
 			-- is the same as the dynamic type of `other'. Otherwise
 			-- the result is similar to 'a_string + other';
 			-- Note: Use this routine instead of 'a_string + other' or
-			-- 'a_string.append_string (other)' when when `a_string'
+			-- 'a_string.append_string (other)' when `a_string'
 			-- can be of dynamic type STRING and `other' of dynamic
 			-- type other than STRING such as UC_STRING, because class
 			-- STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may
-			-- lead to run-time crashes.
+			-- lead to run-time errors or crashes.
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
@@ -557,8 +559,8 @@ feature -- Access
 		ensure
 			concat_not_void: Result /= Void
 			concat_count: Result.count = a_string.count + other.count
-			initial: same_string (substring (Result, 1, a_string.count), a_string)
-			final: same_string (substring (Result, a_string.count + 1, Result.count), other)
+			initial: same_unicode_string (substring (Result, 1, a_string.count), a_string)
+			final: same_unicode_string (substring (Result, a_string.count + 1, Result.count), other)
 		end
 
 feature -- Comparison
@@ -573,7 +575,7 @@ feature -- Comparison
 			-- `other' of dynamic type other than STRING such as UC_STRING,
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
-			-- and this may lead to run-time crashes.
+			-- and this may lead to run-time errors or crashes.
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
@@ -592,7 +594,7 @@ feature -- Comparison
 			-- Note: the difference with `same_string' is that here the
 			-- implementation uses STRING.item_code instead of STRING.item
 			-- and hence characters which have different codes are not
-			-- considered equal even if they do not fit in a CHARACTER.
+			-- considered equal even if they do not fit into a CHARACTER.
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
@@ -689,6 +691,98 @@ feature -- Comparison
 
 feature -- Element change
 
+	appended_string (a_string, other: STRING): STRING is
+			-- If the dynamic type of `other' is UC_STRING or one of
+			-- its descendants and `a_string' is not, then return a
+			-- new object with the same dynamic type as `other' and
+			-- which contains the characters of `a_string' followed
+			-- by the characters of `other'. Otherwise append the
+			-- characters of `other' to `a_string' and return `a_string'.
+			-- Note: Use this routine instead of 'a_string.append_string (other)'
+			-- when `a_string' can be of dynamic type STRING and `other'
+			-- of dynamic type other than STRING such as UC_STRING, because
+			-- class STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may
+			-- lead to run-time errors or crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		local
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				uc_string.append_string (other)
+				Result := uc_string
+			else
+				uc_string ?= other
+				if uc_string /= Void then
+					Result := concat (a_string, other)
+				else
+					a_string.append_string (other)
+					Result := a_string
+				end
+			end
+		ensure
+			append_not_void: Result /= Void
+			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
+			new_count: Result.count = old a_string.count + old other.count
+			initial: same_unicode_string (substring (Result, 1, old a_string.count), old clone (a_string))
+			final: same_unicode_string (substring (Result, old a_string.count + 1, Result.count), old clone (other))
+		end
+
+	appended_substring (a_string, other: STRING; s, e: INTEGER): STRING is
+			-- If the dynamic type of `other' is UC_STRING or one of
+			-- its descendants and `a_string' is not, then return a
+			-- new object with the same dynamic type as `other' and
+			-- which contains the characters of `a_string' followed by
+			-- the characters of `other' between indexes `s' and `e'.
+			-- Otherwise append the characters of `other' between `s'
+			-- and `e' to `a_string' and return `a_string'.
+			-- Note: Use this routine instead of 'a_string.append_string
+			-- (other.substring (s, e)' when `a_string' can be of dynamic
+			-- type STRING and `other' of dynamic type other than STRING
+			-- such as UC_STRING, because class STRING provided by the
+			-- Eiffel compilers is not necessarily aware of the
+			-- implementation of UC_STRING and this may lead to run-time
+			-- errors or crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= other.count
+			valid_interval: s <= e + 1
+		local
+			uc_string: UC_STRING
+			i: INTEGER
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				uc_string.append_substring (other, s, e)
+				Result := uc_string
+			else
+				uc_string ?= other
+				if uc_string /= Void then
+					uc_string := uc_string.new_empty_string (a_string.count + e - s + 1)
+					uc_string.append_string (a_string)
+					uc_string.append_substring (other, s, e)
+					Result := uc_string
+				else
+					from i := s until i > e loop
+						a_string.append_character (other.item (i))
+						i := i + 1
+					end
+					Result := a_string
+				end
+			end
+		ensure
+			append_not_void: Result /= Void
+			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
+			new_count: Result.count = old a_string.count + e - s + 1
+			initial: same_unicode_string (substring (Result, 1, old a_string.count), old clone (a_string))
+			final: same_unicode_string (substring (Result, old a_string.count + 1, Result.count), old substring (other, s, e))
+		end
+
 	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER) is
 			-- Append substring of `other' between indexes
 			-- `s' and `e' at end of `a_string'.
@@ -782,6 +876,32 @@ feature -- Element change
 		end
 
 feature -- Conversion
+
+	as_string (a_string: STRING): STRING is
+			-- String version of `a_string';
+			-- Return `a_string' if it is of dynamic type STRING,
+			-- return the UTF encoding version if it is a descendant
+			-- of UC_STRING, return 'string (a_string)' otherwise.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			uc_string: UC_STRING
+		do
+			if a_string.same_type (dummy_string) then
+				Result := a_string
+			else
+				uc_string ?= a_string
+				if uc_string /= Void then
+					Result := uc_string.to_string
+				else
+					Result := string (a_string)
+				end
+			end
+		ensure
+			to_string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			aliasing: a_string.same_type ("") implies Result = a_string
+		end
 
 	to_lower (a_string: STRING): like a_string is
 			-- Lower case version of `a_string'
@@ -908,13 +1028,13 @@ feature -- Removal
 			-- if `n' > `a_string.count', do nothing.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT supports it, which is not yet the case
+			-- ISE and HACT support it, which is not yet the case
 			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
 		do
-#ifdef ISE || HACT
+#ifdef (ISE && ISE_5_1) || HACT
 			a_string.head (n)
 #else
 			a_string.keep_head (n)
@@ -928,13 +1048,13 @@ feature -- Removal
 			-- if `n' > `a_string.count', do nothing.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT supports it, which is not yet the case
+			-- ISE and HACT support it, which is not yet the case
 			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
 		do
-#ifdef ISE || HACT
+#ifdef (ISE && ISE_5_1) || HACT
 			a_string.tail (n)
 #else
 			a_string.keep_tail (n)
@@ -948,7 +1068,7 @@ feature -- Removal
 			-- if `n' > `a_string.count', remove all.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT supports it, which is not yet the case
+			-- ISE and HACT support it, which is not yet the case
 			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
@@ -971,7 +1091,7 @@ feature -- Removal
 			-- if `n' > `a_string.count', remove all.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT supports it, which is not yet the case
+			-- ISE and HACT support it, which is not yet the case
 			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
@@ -994,7 +1114,7 @@ feature -- Removal
 			-- to `end_index' inclusive.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT supports it, which is not yet the case
+			-- ISE and HACT support it, which is not yet the case
 			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
@@ -1046,7 +1166,7 @@ feature -- Resizing
 			-- Do not lose any previously entered characters.
 		require
 			a_string_not_void: a_string /= Void
-			is_string: a_string.same_type ("")
+			a_string_is_string: a_string.same_type ("")
 			n_large_enough: n >= a_string.count
 #ifndef VE
 		local
