@@ -80,6 +80,7 @@
 		<set name="system" value="eiffel_parser"/>
 		<set name="library" value="parse"/>
 		<set name="system_dir" value="${GOBO}/example/${library}/${system}"/>
+		<set name="vetuner" value="huge"/>
 	</target>
 
 </project>

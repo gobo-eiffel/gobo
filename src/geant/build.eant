@@ -18,6 +18,7 @@
 	<target name="init_system">
 		<set name="system" value="geant"/>
 		<set name="system_dir" value="${GOBO}/src/${system}"/>
+		<set name="vetuner" value="huge"/>
 	</target>
 
 </project>
