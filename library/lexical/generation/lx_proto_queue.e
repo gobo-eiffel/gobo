@@ -68,7 +68,7 @@ feature -- Element change
 			proto: LX_PROTO
 		do
 			proto := a_cursor.item
-			remove_at (a_cursor)
+			a_cursor.remove
 			put_first (proto)
 		ensure
 			moved: first = old (a_cursor.item)
