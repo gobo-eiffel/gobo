@@ -23,15 +23,24 @@
 			Install the Gobo Eiffel Ant Documentation.
 		</description>
 
+		<set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
+
 			<!-- Concepts: -->
 		<xslt input="introduction.xml" output="introduction.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="hello_world.xml" output="hello_world.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 
-		<xslt input="tasks.xml" output="tasks.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl">
-			<parameter name="previous" value="introduction.html"/>
-			<parameter name="next" value="copy_task.html"/>
-			<parameter name="toc" value="toc.html"/>
-		</xslt>
+		<set name="input" value="introduction"/>
+		<set name="next" value="introduction"/>
+
+		<set name="next_chapter" value="tasks"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="hello_world"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="copy_task"/>
+		<geant target="xslt"/>
+
 			<!-- Elements: -->
 <!-- TODO: finish the following:
 		<xslt input="fileset_element.xml" output="fileset_element.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
@@ -39,29 +48,72 @@
 -->
 
 			<!-- Tasks: -->
-		<xslt input="copy_task.xml" output="copy_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="delete_task.xml" output="delete_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="echo_task.xml" output="echo_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="exec_task.xml" output="exec_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="exit_task.xml" output="exit_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="geant_task.xml" output="geant_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="gelex_task.xml" output="gelex_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="geyacc_task.xml" output="geyacc_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="gepp_task.xml" output="gepp_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="getest_task.xml" output="getest_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="gexace_task.xml" output="gexace_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="gexmlsplit_task.xml" output="gexmlsplit_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="hact_task.xml" output="hact_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="ise_task.xml" output="ise_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="mkdir_task.xml" output="mkdir_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="outofdate_task.xml" output="outofdate_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="precursor_task.xml" output="precursor_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="se_task.xml" output="se_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="set_task.xml" output="set_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="setenv_task.xml" output="setenv_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="unset_task.xml" output="unset_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="ve_task.xml" output="ve_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="xslt_task.xml" output="xslt_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<set name="next_chapter" value="delete_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="echo_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="exec_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="exit_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="geant_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="gelex_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="geyacc_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="gepp_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="getest_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="gexace_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="gexmlsplit_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="hact_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="ise_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="mkdir_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="outofdate_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="precursor_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="se_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="set_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="setenv_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="unset_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="ve_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="xslt_task"/>
+		<geant target="xslt"/>
+
 	</target>
 
 	<target name="clean">
@@ -110,5 +162,30 @@
 		<delete file="ve_task.html"/>
 		<delete file="xslt_task.html"/>
 	</target>
+
+
+<!-- Implementation -->
+
+	<target name="xslt">
+		<description>
+			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+		</description>
+
+		<set name="previous" value="${input}"/>
+		<set name="input" value="${next}"/>
+		<set name="next" value="${next_chapter}"/>
+
+		<xslt
+			processor="${xslt_processor}"
+			input="${input}.xml"
+			output="${input}.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+		>
+			<parameter name="previous" value="${previous}.html"/>
+			<parameter name="next" value="${next}.html"/>
+			<parameter name="toc" value="toc.html"/>
+		</xslt>
+	</target>
+
 
 </project>
