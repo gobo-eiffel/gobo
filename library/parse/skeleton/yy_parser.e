@@ -1,18 +1,24 @@
 
 deferred class YY_PARSER [STACK_TYPE]
 
+inherit
+
+	KL_SHARED_ARRAY_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
+
 feature -- lexical analyser interface
 
    read_token is
          -- this feature is called when next token is needed.
       deferred
       ensure
-         valid_token: last_token >= token_eof
+         valid_token: last_token >= Token_eof
       end
 
-   last_token: INTEGER           -- last token read by `read_token'
+   last_token: INTEGER is deferred end           -- last token read by `read_token'
 
-   last_value: STACK_TYPE        -- last value read by `read_token'
+   last_value: STACK_TYPE is deferred end       -- last value read by `read_token'
 
    void_value: STACK_TYPE        -- the void value
 
@@ -30,14 +36,23 @@ feature -- Initialization
          -- reset parser to initial state.
       do
          if yyexca = Void then
-            !!yyexca.make_from_array(yyexca_m, 0)
-            !!yyact.make_from_array(yyact_m, 0)
-            !!yypact.make_from_array(yypact_m, 0)
-            !!yypgo.make_from_array(yypgo_m, 0)
-            !!yyr1.make_from_array(yyr1_m, 0)
-            !!yyr2.make_from_array(yyr2_m, 0)
-            !!yychk.make_from_array(yychk_m, 0)
-            !!yydef.make_from_array(yydef_m, 0)
+--            !!yyexca.make_from_array(yyexca_m, 0)
+--            !!yyact.make_from_array(yyact_m, 0)
+--            !!yypact.make_from_array(yypact_m, 0)
+--            !!yypgo.make_from_array(yypgo_m, 0)
+--            !!yyr1.make_from_array(yyr1_m, 0)
+--            !!yyr2.make_from_array(yyr2_m, 0)
+--            !!yychk.make_from_array(yychk_m, 0)
+--            !!yydef.make_from_array(yydef_m, 0)
+
+				yyexca := integer_array_.make_from_array (yyexca_m, 0)
+				yyact := integer_array_.make_from_array (yyact_m, 0)
+				yypact := integer_array_.make_from_array (yypact_m, 0)
+				yypgo := integer_array_.make_from_array (yypgo_m, 0)
+				yyr1 := integer_array_.make_from_array (yyr1_m, 0)
+				yyr2 := integer_array_.make_from_array (yyr2_m, 0)
+				yychk := integer_array_.make_from_array (yychk_m, 0)
+				yydef := integer_array_.make_from_array (yydef_m, 0)
          end
          yyaccept := 0
          yystate := 0
@@ -49,11 +64,11 @@ feature -- Initialization
          yyvstack.put(void_value)
 
          debug
-            io.put_string ("reset parser: push state ")
-            io.put_integer (yystate)
-            io.put_string (", value ")
+            std.output.put_string ("reset parser: push state ")
+            std.output.put_integer (yystate)
+            std.output.put_string (", value ")
             print_item (void_value)
-            io.put_character ('%N')
+            std.output.put_character ('%N')
          end
       ensure
          reset: is_reset
@@ -88,8 +103,8 @@ feature -- parse control
    clear_input is
          -- set current input to undefined value.
       do
-         last_token := token_undefined
-         last_value := void_value
+         --last_token := Token_undefined
+         --last_value := void_value
       end
 
    clear_error is
@@ -142,12 +157,12 @@ feature -- parse control
                      -- have an error
                   if yyerrflag = 3 then
                      debug
-                        io.put_string ("recovery discards token ")
+                        std.output.put_string ("recovery discards token ")
                         yy_print_token (last_token)
-                        io.put_character ('%N')
+                        std.output.put_character ('%N')
                      end
                                     -- no shift yet; eat a token
-                     if last_token = token_eof then
+                     if last_token = Token_eof then
                         set_rejected
                         abort
                      else
@@ -164,12 +179,12 @@ feature -- parse control
                   -- reduction by production 'action'
                   n := yyr2.item(action) // 2
                   debug
-                     io.put_string ("reduce by (")
-                     io.put_integer (action)
-                     io.put_string (") %"")
-                     io.put_string (yyreds.item(action))
-                     io.put_string ("%"")
-                     io.put_character ('%N')
+                     std.output.put_string ("reduce by (")
+                     std.output.put_integer (action)
+                     std.output.put_string (") %"")
+                     std.output.put_string (yyreds.item(action))
+                     std.output.put_string ("%"")
+                     std.output.put_character ('%N')
                      yy_print_vstack (n)
                   end
                   if (yyr2.item(action) \\ 2) = 1 then
@@ -184,11 +199,11 @@ feature -- parse control
                      yysstack.put(yystate)
                      yyvstack.put(yyval)
                      debug
-                        io.put_string ("push state ")
-                        io.put_integer (yystate)
-                        io.put_string (", value ")
+                        std.output.put_string ("push state ")
+                        std.output.put_integer (yystate)
+                        std.output.put_string (", value ")
                         print_item (yyval)
-                        io.put_character ('%N')
+                        std.output.put_character ('%N')
                      end
                   end
                end
@@ -196,9 +211,9 @@ feature -- parse control
          end -- loop
 
          debug
-            io.put_string ("maximum stack size reached: ")
-            io.put_integer (yysstack.max_count)
-            io.put_character ('%N')
+            std.output.put_string ("maximum stack size reached: ")
+            std.output.put_integer (yysstack.max_count)
+            std.output.put_character ('%N')
          end
       end -- parse
 
@@ -206,7 +221,7 @@ feature -- parse control
          -- this feature is called when a syntax_error is encountered.
          -- default print "syntax error"
       do
-         io.put_string ("%Nsyntax error%N")
+         std.output.put_string ("%Nsyntax error%N")
       end
 
    abort is
@@ -221,7 +236,7 @@ feature -- debuging
          -- print item 'v'.
       do
          -- default: output separator only
-         io.put_character (' ');
+         std.output.put_character (' ');
       end
 
 feature {NONE}
@@ -232,28 +247,28 @@ feature {NONE}
    yyerrflag: INTEGER
          -- actual error state
 
-   yyexca: YY_ARRAY [INTEGER]
+   yyexca: ARRAY [INTEGER]
          -- exception table
 
-   yyact: YY_ARRAY [INTEGER]
+   yyact: ARRAY [INTEGER]
          -- action table
 
-   yypact: YY_ARRAY [INTEGER]
+   yypact: ARRAY [INTEGER]
          -- state action table
 
-   yypgo: YY_ARRAY [INTEGER]
+   yypgo: ARRAY [INTEGER]
          -- state goto table
 
-   yyr1: YY_ARRAY [INTEGER]
+   yyr1: ARRAY [INTEGER]
          -- reduce table for next state
 
-   yyr2: YY_ARRAY [INTEGER]
+   yyr2: ARRAY [INTEGER]
          -- reduce table parameter count
 
-   yychk: YY_ARRAY [INTEGER]
+   yychk: ARRAY [INTEGER]
          -- check table
 
-   yydef: YY_ARRAY [INTEGER]
+   yydef: ARRAY [INTEGER]
          -- definition table
 
    yystate: INTEGER                 -- actual state
@@ -359,12 +374,12 @@ feature {NONE}
       do
          state := yypact.item(yystate)
          if state > -1000 then
-            if last_token = token_undefined then
+            if last_token = Token_undefined then
                read_token
                debug
-                  io.put_string("receive token ")
+                  std.output.put_string("receive token ")
                   yy_print_token(last_token)
-                  io.put_character ('%N')
+                  std.output.put_character ('%N')
                end
             end
             state := state + last_token
@@ -376,11 +391,11 @@ feature {NONE}
                   yysstack.put(state)
                   yyvstack.put(last_value)
                   debug
-                     io.put_string( "push state ")
-                     io.put_integer (state)
-                     io.put_string( ", value ")
+                     std.output.put_string( "push state ")
+                     std.output.put_integer (state)
+                     std.output.put_string( ", value ")
                      print_item( last_value)
-                     io.put_character ('%N')
+                     std.output.put_character ('%N')
                   end
                   clear_input
                   if yyerrflag > 0 then
@@ -400,12 +415,12 @@ feature {NONE}
             -- default state action
          Result := yydef.item(yystate)
          if Result = -2 then
-            if last_token = token_undefined then
+            if last_token = Token_undefined then
                read_token
                debug
-                  io.put_string ("receive token ")
+                  std.output.put_string ("receive token ")
                   yy_print_token (last_token)
-                  io.put_character ('%N')
+                  std.output.put_character ('%N')
                end
             end
                -- look through exception table
@@ -454,29 +469,29 @@ feature {NONE}
          until
             yysstack.empty or else Result
          loop
-            state := yypact.item(yysstack.item(0)) + token_error
+            state := yypact.item(yysstack.item(0)) + Token_error
             if state >= 0 and then state < yylast and then
-               yychk.item(yyact.item(state)) = token_error then
+               yychk.item(yyact.item(state)) = Token_error then
                yystate := yyact.item(state)
                   -- simulate shift of "error"
                yysstack.put(yystate)
                yyvstack.put(void_value)
                debug
-                  io.put_string ("push state ")
-                  io.put_integer (yystate)
-                  io.put_string (", value ")
+                  std.output.put_string ("push state ")
+                  std.output.put_integer (yystate)
+                  std.output.put_string (", value ")
                   print_item(void_value)
-                  io.put_character ('%N')
+                  std.output.put_character ('%N')
                end
                Result := true
             else
                   -- current state has no shift on "error", pop stack
                debug
-                  io.put_string ("recovery pops ")
-                  io.put_integer (yysstack.item(0))
-                  io.put_string (", value ")
+                  std.output.put_string ("recovery pops ")
+                  std.output.put_integer (yysstack.item(0))
+                  std.output.put_string (", value ")
                   print_item (yyvstack.item(0))
-                  io.put_character ('%N')
+                  std.output.put_character ('%N')
                end
                yysstack.remove(1)
                yyvstack.remove(1)
@@ -490,9 +505,9 @@ feature {NONE}
          i: INTEGER
       do
          if t = 0 then
-            io.put_string ("end-of-file")
+            std.output.put_string ("end-of-file")
          elseif t < 0 then
-            io.put_string ("-none-")
+            std.output.put_string ("-none-")
          else
             from
                i := 1
@@ -502,7 +517,7 @@ feature {NONE}
                i := i + 1
             end
             if yytokv.item(i) = t then
-               io.put_string (yytoks.item(i))
+               std.output.put_string (yytoks.item(i))
             end
          end
       end -- yy_print_token
@@ -517,13 +532,13 @@ feature {NONE}
          until
             i < 0
          loop
-            io.put_string ("item(")
-            io.put_integer (n - i)
-            io.put_string ("):")
+            std.output.put_string ("item(")
+            std.output.put_integer (n - i)
+            std.output.put_string ("):")
             print_item (yyvstack.item(-i))
             i := i - 1
          end
-         io.put_character ('%N')
+         std.output.put_character ('%N')
       end -- yy_print_vstack
 
 end -- class YY_PARSER
