@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Hash tables, implemented with arrays. %
+		"Hash tables, implemented with single arrays. %
 		%Keys are hashed using `hash_code' from HASHABLE."
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,7 +16,7 @@ class DS_HASH_TABLE [G, K -> HASHABLE]
 
 inherit
 
-	DS_SPARSE_TABLE [G, K]
+	DS_ARRAYED_SPARSE_TABLE [G, K]
 		redefine
 			new_cursor
 		end
