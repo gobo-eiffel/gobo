@@ -21,7 +21,10 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-	
+
+	ET_SHARED_XACE_OPTION_NAMES
+		export {NONE} all end
+
 creation
 
 	make
@@ -384,14 +387,21 @@ feature {NONE} -- Validation
 		local
 			has_name: BOOLEAN
 			has_value: BOOLEAN
+			a_name: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 			a_child_name: STRING
 		do
 			has_name := an_option.has_attribute_by_name (uc_name)
-			if has_name and then an_option.attribute_by_name (uc_name) = Void then
-				has_error := True
-				error_handler.report_missing_attribute_error (an_option, uc_name, a_position_table.item (an_option))
+			if has_name then
+				a_name := an_option.attribute_by_name (uc_name).value
+				if not options.option_codes.has (a_name) then
+					error_handler.report_unknown_option_warning (an_option, a_position_table.item (an_option))
+				end
+				if an_option.attribute_by_name (uc_name) = Void then
+					has_error := True
+					error_handler.report_missing_attribute_error (an_option, uc_name, a_position_table.item (an_option))
+				end
 			end
 			has_value := an_option.has_attribute_by_name (uc_value)
 			if has_value and then an_option.attribute_by_name (uc_value) = Void then
