@@ -61,8 +61,15 @@ feature {NONE} -- Initialization
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: a_filename.count > 0
+		local
+			a_parent_projects: DS_ARRAYED_LIST [like Current]
 		do
-			create {DS_ARRAYED_LIST [like Current]} parent_projects.make (5)
+				-- TODO: Note: There is a bug in ISE 5.1.14 which does not allow the
+				-- creation with an explicit creation type containing anchored types.
+				-- Use a local variable as a workaround.
+			create a_parent_projects.make (5)
+			parent_projects := a_parent_projects
+			-- create {DS_ARRAYED_LIST [like Current]} parent_projects.make (5)
 			build_filename := a_filename
 			if not file_system.is_file_readable (build_filename.out) then
 				exit_application (1, "cannot read build file '" + build_filename.out + "' (Current working directory: " + file_system.current_working_directory + ")")
@@ -115,13 +122,13 @@ feature -- Access
 			-- Do not execute commands (only show what they would do)?
 
 	parent_projects: DS_LIST [like Current]
-		-- Parent projects if set by xml attribute 'inherit';
-		-- or a nested 'inherit' element
-		-- Void otherwise
+			-- Parent projects if set by xml attribute 'inherit';
+			-- or a nested 'inherit' element
+			-- Void otherwise
 
 	child_project: like Current
-		-- Child project if Current was created through xml attribute 'inherit';
-		-- Void otherwise
+			-- Child project if Current was created through xml attribute 'inherit';
+			-- Void otherwise
 
 	target_with_name (a_name: UC_STRING): GEANT_TARGET is
 			-- Target with `name' `a_name'
