@@ -52,15 +52,15 @@ feature -- Processing
 					an_arg.is_equal ("-V") or
 					an_arg.is_equal ("--version")
 				then
-					std.out.put_string ("gepp version 1.2%N")
+					std.output.put_string ("gepp version 1.2%N")
 					exceptions_.die (0)
 				elseif
 					an_arg.is_equal ("-h") or
 					an_arg.is_equal ("-?") or
 					an_arg.is_equal ("--help")
 				then
-					std.out.put_string (Usage_message)
-					std.out.put_character ('%N')
+					std.output.put_string (Usage_message)
+					std.output.put_character ('%N')
 					exceptions_.die (0)
 				end
 			end
