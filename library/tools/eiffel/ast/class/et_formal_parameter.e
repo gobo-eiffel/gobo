@@ -56,6 +56,8 @@ feature -- Access
 			-- Creation procedures expected in `constraint'
 		do
 			-- Result := Void
+		ensure
+			constraint_not_void: Result /= Void implies constraint /= Void
 		end
 
 	constraint_base_type: ET_BASE_TYPE is

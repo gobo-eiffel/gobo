@@ -122,8 +122,7 @@ feature {NONE} -- Processing
 							-- generic parameters of `current_class'.
 						--check_formal_parameters_validity
 						--check_parents_validity
-					end
-					if not current_class.has_interface_error then
+						check_constraint_creations_validity
 						check_signatures_validity
 					end
 				else
@@ -133,6 +132,90 @@ feature {NONE} -- Processing
 			current_class := old_class
 		ensure
 			interface_checked: a_class.interface_checked
+		end
+
+feature {NONE} -- Constraint creation validity
+
+	check_constraint_creations_validity is
+			-- Check validity of the constraint creations
+			-- of `current_class' if any.
+		local
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			i, nb: INTEGER
+		do
+			a_formals := current_class.formal_parameters
+			if a_formals /= Void then
+				nb := a_formals.count
+				from i := 1 until i > nb loop
+					check_constraint_creation_validity (a_formals.formal_parameter (i))
+					i := i + 1
+				end
+			end
+		end
+
+	check_constraint_creation_validity (a_formal: ET_FORMAL_PARAMETER) is
+			-- Check validity of the constraint creation
+			-- of `a_formal' if any.
+		require
+			a_formal_not_void: a_formal /= Void
+		local
+			a_creator: ET_CONSTRAINT_CREATOR
+			a_name, other_name: ET_FEATURE_NAME
+			a_flattened_feature: ET_FLATTENED_FEATURE
+			a_base_type: ET_BASE_TYPE
+			a_feature: ET_FEATURE
+			a_class: ET_CLASS
+			i, j, nb: INTEGER
+		do
+			a_creator := a_formal.creation_procedures
+			if a_creator /= Void then
+				a_base_type := a_formal.constraint_base_type
+				if a_base_type /= Void then
+					a_class := a_base_type.direct_base_class (universe)
+				else
+						-- We know that the constraint is not
+						-- void since we have a creation clause.
+						-- So we must have something like that:
+						-- "[G -> H create make end, H -> G]".
+						-- We consider that the base class of the
+						-- constraint in ANY in that case.
+					a_class := universe.any_class
+				end
+					-- Build the feature table.
+				a_class.process (universe.feature_flattener)
+				nb := a_creator.count
+				from i := 1 until i > nb loop
+					a_name := a_creator.feature_name (i)
+					from j := 1 until j >= i loop
+						other_name := a_creator.feature_name (j)
+						if other_name.same_feature_name (a_name) then
+								-- Feature name appears twice in Creation clause.
+								-- This is not considered as a fatal error.
+							error_handler.report_vgcp3c_error (current_class, other_name, a_name)
+						end
+						j := j + 1
+					end
+					a_feature := a_class.named_feature (a_name)
+					if a_feature /= Void then
+						a_flattened_feature := a_feature.flattened_feature
+						if a_flattened_feature.is_procedure then
+								-- We finally got a valid creation
+								-- procedure. Record its seed.
+							a_name.set_seed (a_flattened_feature.first_seed)
+						else
+								-- This feature is not a procedure.
+							set_fatal_error (current_class)
+							error_handler.report_vtgc0b_error (current_class, a_name, a_flattened_feature, a_class)
+						end
+					else
+							-- This name is not the final name of
+							-- a feature on `current_class'.
+						set_fatal_error (current_class)
+						error_handler.report_vtgc0a_error (current_class, a_name, a_class)
+					end
+					i := i + 1
+				end
+			end
 		end
 
 feature {NONE} -- Signature validity

@@ -408,9 +408,11 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vcch2_error (a_class) then
-				create an_error.make_vcch2a (a_class)
-				report_validity_error (an_error)
+			if is_se or is_ve or is_ge then
+				if reportable_vcch2_error (a_class) then
+					create an_error.make_vcch2a (a_class)
+					report_validity_error (an_error)
+				end
 			end
 		end
 
@@ -1279,6 +1281,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_vgcp3c_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME) is
+			-- Report VGCP-3 error: procedure name
+			-- appears twice in creation Feature_list of
+			-- a generic constraint.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcp3_error (a_class) then
+				create an_error.make_vgcp3c (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vhpr1a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_CLASS]) is
 			-- Report VHPR-1 error: `a_class' is involved
 			-- in the inheritance cycle `a_cycle'.
@@ -1927,6 +1949,49 @@ feature -- Validity errors
 			end
 		end
 
+	report_vtgc0a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS) is
+			-- Report VTGC error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class
+			-- `a_constraint' of a generic constraint of `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.261 (CTGC)
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraint_not_void: a_constraint /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtgc_error (a_class) then
+				create an_error.make_vtgc0a (a_class, cp, a_constraint)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtgc0b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE; a_constraint: ET_CLASS) is
+			-- Report VTGC error: creation procedure name `cp'
+			-- is not the final name of a procedure in the base class
+			-- `a_constraint' of a generic constraint of `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.261 (CTGC)
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_name: f.name.same_feature_name (cp)
+			f_not_procedure: not f.is_procedure
+			a_constraint_not_void: a_constraint /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtgc_error (a_class) then
+				create an_error.make_vtgc0b (a_class, cp, f, a_constraint)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vtug1a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE) is
 			-- Report VTUG-1 error: `a_type', which appears in
 			-- source code of `a_class', has actual generic parameters
@@ -2411,6 +2476,16 @@ feature -- Validity error status
 
 	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VTCT error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTGC error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

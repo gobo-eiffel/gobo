@@ -58,6 +58,7 @@ creation
 	make_vgcp2b,
 	make_vgcp3a,
 	make_vgcp3b,
+	make_vgcp3c,
 	make_vhpr1a,
 	make_vhpr3a,
 	make_vhpr3b,
@@ -90,6 +91,8 @@ creation
 	make_vtct0a,
 	make_vtct0b,
 	make_vtct0c,
+	make_vtgc0a,
+	make_vtgc0b,
 	make_vtug1a,
 	make_vtug2a,
 	make_gvagp0a,
@@ -1743,6 +1746,44 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = procedure name
 		end
 
+	make_vgcp3c (a_class: like current_class; f1, f2: ET_FEATURE_NAME) is
+			-- Create a new VGCP-3 error: procedure name
+			-- appears twice in creation Feature_list of
+			-- a generic constraint.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vgcp3c_template_code
+			etl_code := vgcp3_etl_code
+			default_template := vgcp3c_default_template
+			current_class := a_class
+			position := f2.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = procedure name
+		end
+
 	make_vhpr1a (a_class: like current_class; a_cycle: DS_LIST [ET_CLASS]) is
 			-- Create a new VHPR-1 error: `a_class' is 
 			-- involved in the inheritance cycle `a_cycle'.
@@ -3174,6 +3215,89 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 		end
 
+	make_vtgc0a (a_class: like current_class; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS) is
+			-- Create a new VTGC error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class
+			-- `a_constraint' of a generic constraint of `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.261 (CTGC)
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraint_not_void: a_constraint /= Void
+		do
+			code := vtgc0a_template_code
+			etl_code := vtgc_etl_code
+			default_template := vtgc0a_default_template
+			current_class := a_class
+			position := cp.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (cp.name, 6)
+			parameters.put (a_constraint.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation procedure name
+			-- dollar7: $7 = constraint base class name
+		end
+
+	make_vtgc0b (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE; a_constraint: ET_CLASS) is
+			-- Create a new VTGC error: creation procedure name `cp'
+			-- is not the final name of a procedure in the base class
+			-- `a_constraint' of a generic constraint of `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.261 (CTGC)
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_name: f.name.same_feature_name (cp)
+			f_not_procedure: not f.is_procedure
+			a_constraint_not_void: a_constraint /= Void
+		do
+			code := vtgc0b_template_code
+			etl_code := vtgc_etl_code
+			default_template := vtgc0b_default_template
+			current_class := a_class
+			position := cp.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (cp.name, 6)
+			parameters.put (a_constraint.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation procedure name
+			-- dollar7: $7 = constraint base class name
+		end
+
 	make_vtug1a (a_class: like current_class; a_type: ET_CLASS_TYPE) is
 			-- Create a new VTUG-1 error: `a_type', which appears in
 			-- source code of `a_class', has actual generic parameters
@@ -3426,6 +3550,7 @@ feature {NONE} -- Implementation
 	vgcp2b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
 	vgcp3a_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears twice in creation clause."
 	vgcp3b_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears in two different creation clauses."
+	vgcp3c_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears twice in creation clause of constraint."
 	vhpr1a_default_template: STRING is "[$1] Class $5: inheritance cycle $6."
 	vhpr3a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
 	vhpr3b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
@@ -3458,6 +3583,8 @@ feature {NONE} -- Implementation
 	vtct0a_default_template: STRING is "[$1] Class $5 ($3,$4): type based on unknown class $6."
 	vtct0b_default_template: STRING is "[$1] Class $5 ($3,$4): type based on unknown class $6."
 	vtct0c_default_template: STRING is "[$1] Class $5: implicitly inherits from unknown class ANY."
+	vtgc0a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
+	vtgc0b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
 	vtug1a_default_template: STRING is "[$1] Class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
 	vtug2a_default_template: STRING is "[$1] Class $5 ($3,$4): type '$6' has wrong number of actual generic parameters."
 	gvagp0a_default_template: STRING is "[$1] Class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
@@ -3506,6 +3633,7 @@ feature {NONE} -- Implementation
 	vtbt_etl_code: STRING is "VTBT"
 	vtcg_etl_code: STRING is "VTCG"
 	vtct_etl_code: STRING is "VTCT"
+	vtgc_etl_code: STRING is "VTGC"
 	vtug1_etl_code: STRING is "VTUG-1"
 	vtug2_etl_code: STRING is "VTUG-2"
 	gvagp_etl_code: STRING is "GVAGP"
@@ -3553,6 +3681,7 @@ feature {NONE} -- Implementation
 	vgcp2b_template_code: STRING is "vgcp2b"
 	vgcp3a_template_code: STRING is "vgcp3a"
 	vgcp3b_template_code: STRING is "vgcp3b"
+	vgcp3c_template_code: STRING is "vgcp3c"
 	vhpr1a_template_code: STRING is "vhpr1a"
 	vhpr3a_template_code: STRING is "vhpr3a"
 	vhpr3b_template_code: STRING is "vhpr3b"
@@ -3585,6 +3714,8 @@ feature {NONE} -- Implementation
 	vtct0a_template_code: STRING is "vtct0a"
 	vtct0b_template_code: STRING is "vtct0b"
 	vtct0c_template_code: STRING is "vtct0c"
+	vtgc0a_template_code: STRING is "vtgc0a"
+	vtgc0b_template_code: STRING is "vtgc0b"
 	vtug1a_template_code: STRING is "vtug1a"
 	vtug2a_template_code: STRING is "vtug2a"
 	gvagp0a_template_code: STRING is "gvagp0a"
