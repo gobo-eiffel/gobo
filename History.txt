@@ -40,7 +40,10 @@ Version ?
 	  on_dtd_comment, on_dtd_processing_instruction added.
 	* Parser defaults to new STRING-only latin-1 mode.
 	* Parser correctly outputs PUBLIC identifier in DOCTYPE.
-
+	* Parser leaves XML resolver in correct state.
+	* XM_PARSER.positions contains full info to locate errors 
+	  in external entities.
+	
 	Gobo Eiffel Kernel Library
 
 	* KL_DOUBLE_ROUTINES.log2: new feature.
