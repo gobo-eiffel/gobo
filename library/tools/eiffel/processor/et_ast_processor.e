@@ -328,6 +328,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_convert_to_expression (a_convert_expression: ET_CONVERT_TO_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		require
+			a_convert_expression_not_void: a_convert_expression /= Void
+		deferred
+		end
+
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
 			-- Process `an_expression'.
 		require

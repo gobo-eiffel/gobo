@@ -553,6 +553,12 @@ feature {ET_AST_NODE} -- Processing
 			a_convert_procedure.right_parenthesis.process (Current)
 		end
 
+	process_convert_to_expression (a_convert_expression: ET_CONVERT_TO_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
 			-- Process `an_expression'.
 		local

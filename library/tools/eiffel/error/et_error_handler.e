@@ -1858,7 +1858,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_veen2c_error (a_class: ET_CLASS; a_local: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	report_veen2c_error (a_class: ET_CLASS; a_local: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Report VEEN-2 error: the local variable `a_local' appears in the precondition
 			-- or postcondition of `a_feature' in `a_class'.
 			--
@@ -1867,6 +1867,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
+			a_local_is_local: a_local.is_local
 			a_feature_not_void: a_feature /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -7924,9 +7925,14 @@ feature -- Internal errors
 --Error codes not used:
 
 -- report_gibdw_error
--- report_gibdx_error
--- report_gibdy_error
--- report_gibdz_error
-
+--						error_handler.report_gibck_error
+--								error_handler.report_gibcl_error
+--								error_handler.report_gibcm_error
+--									error_handler.report_gibcn_error
+--								error_handler.report_gibco_error
+--									error_handler.report_gibcp_error
+--							error_handler.report_gibcq_error
+--					error_handler.report_gibch_error
+--					error_handler.report_gibcf_error
 
 end

@@ -3296,7 +3296,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
-	make_veen2c (a_class: like current_class; a_local: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+	make_veen2c (a_class: like current_class; a_local: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Create a new VEEN-2 error: the local variable `a_local' appears in the precondition
 			-- or postcondition of `a_feature' in `a_class'.
 			--
@@ -3305,6 +3305,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
+			a_local_is_local: a_local.is_local
 			a_feature_not_void: a_feature /= Void
 		do
 			code := veen2c_template_code

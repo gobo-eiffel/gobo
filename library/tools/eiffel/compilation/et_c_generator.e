@@ -32,6 +32,7 @@ inherit
 			process_check_instruction,
 			process_constant_attribute,
 			process_convert_expression,
+			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
 			process_current,
@@ -140,7 +141,6 @@ feature -- Generation
 		local
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [ET_DYNAMIC_TYPE], ET_CLASS]
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			j, nb2: INTEGER
@@ -171,38 +171,29 @@ feature -- Generation
 			print_type_cast (current_system.boolean_type)
 			a_file.put_line ("0)")
 			a_file.put_new_line
-			l_cursor := current_system.dynamic_types.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				l_dynamic_types := l_cursor.item
-				nb := l_dynamic_types.count
-				from i := 1 until i > nb loop
-					l_type := l_dynamic_types.item (i)
-					if l_type.is_alive or l_type.has_static then
-						l_features := l_type.features
-						if l_features /= Void then
-							nb2 := l_features.count
-							from j := 1 until j > nb2 loop
-								print_feature_declaration (l_features.item (j), l_type)
-								j := j + 1
-							end
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive or l_type.has_static then
+					l_features := l_type.features
+					if l_features /= Void then
+						nb2 := l_features.count
+						from j := 1 until j > nb2 loop
+							print_feature_declaration (l_features.item (j), l_type)
+							j := j + 1
 						end
 					end
-					i := i + 1
 				end
-				l_cursor.forth
+				i := i + 1
 			end
 			a_file.put_new_line
-			from l_cursor.start until l_cursor.after loop
-				l_dynamic_types := l_cursor.item
-				nb := l_dynamic_types.count
-				from i := 1 until i > nb loop
-					l_type := l_dynamic_types.item (i)
-					if l_type.is_alive or l_type.has_static then
-						print_features (l_type)
-					end
-					i := i + 1
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive or l_type.has_static then
+					print_features (l_type)
 				end
-				l_cursor.forth
+				i := i + 1
 			end
 			l_root_type := current_system.root_type
 			l_root_creation := current_system.root_creation_procedure
@@ -237,7 +228,8 @@ feature {NONE} -- Feature generation
 			a_type_not_void: a_type /= Void
 		local
 			i, nb: INTEGER
-			l_arguments: ET_DYNAMIC_TYPE_SET_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_precursor: ET_DYNAMIC_PRECURSOR
 			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
 		do
@@ -251,17 +243,29 @@ feature {NONE} -- Feature generation
 					print_type_declaration (a_type)
 					current_file.put_character (' ')
 					current_file.put_character ('C')
-					l_arguments := a_feature.argument_types
+					l_arguments := a_feature.static_feature.arguments
 					if l_arguments /= Void then
 						nb := l_arguments.count
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_type_declaration (l_arguments.item (i).static_type)
-							current_file.put_character (' ')
-							current_file.put_character ('a')
-							current_file.put_integer (i)
-							i := i + 1
+						if nb > 0 then
+								-- Dynamic type sets for arguments are stored first
+								-- in `dynamic_type_sets'.
+							l_dynamic_type_sets := a_feature.dynamic_type_sets
+							if l_dynamic_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_gibar_error
+							else
+								from i := 1 until i > nb loop
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+									current_file.put_character (' ')
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
+							end
 						end
 					end
 					current_file.put_character (')')
@@ -274,19 +278,31 @@ feature {NONE} -- Feature generation
 					current_file.put_character (' ')
 					print_static_routine_name (a_feature, a_type)
 					current_file.put_character ('(')
-					l_arguments := a_feature.argument_types
+					l_arguments := a_feature.static_feature.arguments
 					if l_arguments /= Void then
 						nb := l_arguments.count
-						from i := 1 until i > nb loop
-							if i /= 1 then
-								current_file.put_character (',')
-								current_file.put_character (' ')
+						if nb > 0 then
+								-- Dynamic type sets for arguments are stored first
+								-- in `dynamic_type_sets'.
+							l_dynamic_type_sets := a_feature.dynamic_type_sets
+							if l_dynamic_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_giaed_error
+							else
+								from i := 1 until i > nb loop
+									if i /= 1 then
+										current_file.put_character (',')
+										current_file.put_character (' ')
+									end
+									print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+									current_file.put_character (' ')
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
 							end
-							print_type_declaration (l_arguments.item (i).static_type)
-							current_file.put_character (' ')
-							current_file.put_character ('a')
-							current_file.put_integer (i)
-							i := i + 1
 						end
 					end
 					current_file.put_character (')')
@@ -301,17 +317,29 @@ feature {NONE} -- Feature generation
 					print_type_declaration (a_type)
 					current_file.put_character (' ')
 					current_file.put_character ('C')
-					l_arguments := a_feature.argument_types
+					l_arguments := a_feature.static_feature.arguments
 					if l_arguments /= Void then
 						nb := l_arguments.count
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_type_declaration (l_arguments.item (i).static_type)
-							current_file.put_character (' ')
-							current_file.put_character ('a')
-							current_file.put_integer (i)
-							i := i + 1
+						if nb > 0 then
+								-- Dynamic type sets for arguments are stored first
+								-- in `dynamic_type_sets'.
+							l_dynamic_type_sets := a_feature.dynamic_type_sets
+							if l_dynamic_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_giaec_error
+							else
+								from i := 1 until i > nb loop
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+									current_file.put_character (' ')
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
+							end
 						end
 					end
 					current_file.put_character (')')
@@ -324,19 +352,31 @@ feature {NONE} -- Feature generation
 					current_file.put_character (' ')
 					print_creation_procedure_name (a_feature, a_type)
 					current_file.put_character ('(')
-					l_arguments := a_feature.argument_types
+					l_arguments := a_feature.static_feature.arguments
 					if l_arguments /= Void then
 						nb := l_arguments.count
-						from i := 1 until i > nb loop
-							if i /= 1 then
-								current_file.put_character (',')
-								current_file.put_character (' ')
+						if nb > 0 then
+								-- Dynamic type sets for arguments are stored first
+								-- in `dynamic_type_sets'.
+							l_dynamic_type_sets := a_feature.dynamic_type_sets
+							if l_dynamic_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_gibcb_error
+							else
+								from i := 1 until i > nb loop
+									if i /= 1 then
+										current_file.put_character (',')
+										current_file.put_character (' ')
+									end
+									print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+									current_file.put_character (' ')
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
 							end
-							print_type_declaration (l_arguments.item (i).static_type)
-							current_file.put_character (' ')
-							current_file.put_character ('a')
-							current_file.put_integer (i)
-							i := i + 1
 						end
 					end
 					current_file.put_character (')')
@@ -347,19 +387,31 @@ feature {NONE} -- Feature generation
 					current_file.put_string ("extern void ")
 					print_static_routine_name (a_feature, a_type)
 					current_file.put_character ('(')
-					l_arguments := a_feature.argument_types
+					l_arguments := a_feature.static_feature.arguments
 					if l_arguments /= Void then
 						nb := l_arguments.count
-						from i := 1 until i > nb loop
-							if i /= 1 then
-								current_file.put_character (',')
-								current_file.put_character (' ')
+						if nb > 0 then
+								-- Dynamic type sets for arguments are stored first
+								-- in `dynamic_type_sets'.
+							l_dynamic_type_sets := a_feature.dynamic_type_sets
+							if l_dynamic_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_gibca_error
+							else
+								from i := 1 until i > nb loop
+									if i /= 1 then
+										current_file.put_character (',')
+										current_file.put_character (' ')
+									end
+									print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+									current_file.put_character (' ')
+									current_file.put_character ('a')
+									current_file.put_integer (i)
+									i := i + 1
+								end
 							end
-							print_type_declaration (l_arguments.item (i).static_type)
-							current_file.put_character (' ')
-							current_file.put_character ('a')
-							current_file.put_integer (i)
-							i := i + 1
 						end
 					end
 					current_file.put_character (')')
@@ -415,13 +467,9 @@ feature {NONE} -- Feature generation
 		do
 			old_feature := current_feature
 			current_feature := a_feature
-			current_assignment_attempt := a_feature.first_assignment_attempt
-			current_feature_call := a_feature.first_feature_call
 			local_count := 0
 			a_feature.static_feature.process (Current)
 			current_feature := old_feature
-			current_assignment_attempt := Void
-			current_feature_call := Void
 			l_precursor := a_feature.first_precursor
 			if l_precursor /= Void then
 				print_feature (l_precursor)
@@ -486,8 +534,6 @@ feature {NONE} -- Feature generation
 					print_external_routine (a_feature, False)
 				end
 				if current_feature.is_static then
-					current_assignment_attempt := current_feature.first_assignment_attempt
-					current_feature_call := current_feature.first_feature_call
 					print_external_routine (a_feature, True)
 				end
 			end
@@ -507,8 +553,6 @@ feature {NONE} -- Feature generation
 					print_external_routine (a_feature, False)
 				end
 				if current_feature.is_static then
-					current_assignment_attempt := current_feature.first_assignment_attempt
-					current_feature_call := current_feature.first_feature_call
 					print_external_routine (a_feature, True)
 				end
 			end
@@ -522,7 +566,8 @@ feature {NONE} -- Feature generation
 			is_static: a_static implies current_feature.is_static
 		local
 			l_result_type: ET_DYNAMIC_TYPE_SET
-			l_arguments: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			i, j, nb: INTEGER
 			i2, nb2: INTEGER
 			i3, nb3: INTEGER
@@ -557,21 +602,33 @@ feature {NONE} -- Feature generation
 				current_file.put_character ('C')
 				l_comma := True
 			end
-			l_arguments := current_feature.argument_types
+			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
 				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					if l_comma then
-						current_file.put_character (',')
-						current_file.put_character (' ')
+				if nb > 0 then
+						-- Dynamic type sets for arguments are stored first
+						-- in `dynamic_type_sets'.
+					l_dynamic_type_sets := current_feature.dynamic_type_sets
+					if l_dynamic_type_sets.count < nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibdz_error
 					else
-						l_comma := True
+						from i := 1 until i > nb loop
+							if l_comma then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							else
+								l_comma := True
+							end
+							print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+							current_file.put_character (' ')
+							current_file.put_character ('a')
+							current_file.put_integer (i)
+							i := i + 1
+						end
 					end
-					print_type_declaration (l_arguments.item (i).static_type)
-					current_file.put_character (' ')
-					current_file.put_character ('a')
-					current_file.put_integer (i)
-					i := i + 1
 				end
 			end
 			current_file.put_character (')')
@@ -699,8 +756,6 @@ feature {NONE} -- Feature generation
 					print_internal_routine (a_feature, False, False)
 				end
 				if current_feature.is_static then
-					current_assignment_attempt := current_feature.first_assignment_attempt
-					current_feature_call := current_feature.first_feature_call
 					print_internal_routine (a_feature, True, False)
 				end
 			end
@@ -720,13 +775,9 @@ feature {NONE} -- Feature generation
 					print_internal_routine (a_feature, False, False)
 				end
 				if current_feature.is_creation then
-					current_assignment_attempt := current_feature.first_assignment_attempt
-					current_feature_call := current_feature.first_feature_call
 					print_internal_routine (a_feature, False, True)
 				end
 				if current_feature.is_static then
-					current_assignment_attempt := current_feature.first_assignment_attempt
-					current_feature_call := current_feature.first_feature_call
 					print_internal_routine (a_feature, True, False)
 				end
 			end
@@ -741,8 +792,10 @@ feature {NONE} -- Feature generation
 			is_creation: a_creation implies current_feature.is_creation
 		local
 			l_result_type: ET_DYNAMIC_TYPE_SET
-			l_arguments: ET_DYNAMIC_TYPE_SET_LIST
-			l_locals: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_local_type: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_compound: ET_COMPOUND
 			l_comma: BOOLEAN
@@ -772,21 +825,33 @@ feature {NONE} -- Feature generation
 				current_file.put_character ('C')
 				l_comma := True
 			end
-			l_arguments := current_feature.argument_types
+			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
 				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					if l_comma then
-						current_file.put_character (',')
-						current_file.put_character (' ')
+				if nb > 0 then
+						-- Dynamic type sets for arguments are stored first
+						-- in `dynamic_type_sets'.
+					l_dynamic_type_sets := current_feature.dynamic_type_sets
+					if l_dynamic_type_sets.count < nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibdy_error
 					else
-						l_comma := True
+						from i := 1 until i > nb loop
+							if l_comma then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							else
+								l_comma := True
+							end
+							print_type_declaration (l_dynamic_type_sets.item (i).static_type)
+							current_file.put_character (' ')
+							current_file.put_character ('a')
+							current_file.put_integer (i)
+							i := i + 1
+						end
 					end
-					print_type_declaration (l_arguments.item (i).static_type)
-					current_file.put_character (' ')
-					current_file.put_character ('a')
-					current_file.put_integer (i)
-					i := i + 1
 				end
 			end
 			current_file.put_character (')')
@@ -806,21 +871,29 @@ feature {NONE} -- Feature generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
-			l_locals := current_feature.local_types
+			l_locals := a_feature.locals
 			if l_locals /= Void then
 				nb := l_locals.count
 				from i := 1 until i > nb loop
-					print_indentation
-					print_type_declaration (l_locals.item (i).static_type)
-					current_file.put_character (' ')
-					current_file.put_character ('l')
-					current_file.put_integer (i)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('0')
-					current_file.put_character (';')
-					current_file.put_new_line
+					l_local_type := current_feature.dynamic_type_set (l_locals.local_variable (i).name)
+					if l_local_type = Void then
+							-- Internal error: the dynamic type of local variable
+							-- should be known at this stage.
+						set_fatal_error
+						error_handler.report_gibdx_error
+					else
+						print_indentation
+						print_type_declaration (l_local_type.static_type)
+						current_file.put_character (' ')
+						current_file.put_character ('l')
+						current_file.put_integer (i)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('0')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 					i := i + 1
 				end
 			end
@@ -909,14 +982,13 @@ feature {NONE} -- Instruction generation
 			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
 			l_local_index: INTEGER
 		do
-			l_dynamic_assignment := current_assignment_attempt
+			l_dynamic_assignment := current_feature.dynamic_assignment_attempt (an_instruction)
 			if l_dynamic_assignment = Void then
 					-- Internal error: there should be a least one assignment attempt
 					-- dynamic representation left.
 				set_fatal_error
 				error_handler.report_gibcj_error
 			else
-				current_assignment_attempt := l_dynamic_assignment.next_assignment_attempt
 				if l_dynamic_assignment.is_direct_assignment then
 					print_writable (an_instruction.target)
 					current_file.put_character (' ')
@@ -929,15 +1001,7 @@ feature {NONE} -- Instruction generation
 				else
 					local_count := local_count + 1
 					l_local_index := local_count
-					print_local_buffer_indentation
-					current_local_buffer.put_character ('T')
-					current_local_buffer.put_character ('0')
-					current_local_buffer.put_character ('*')
-					current_local_buffer.put_character (' ')
-					current_local_buffer.put_character ('z')
-					current_local_buffer.put_integer (l_local_index)
-					current_local_buffer.put_character (';')
-					current_local_buffer.put_new_line
+					print_reference_local_declaration (l_local_index)
 					current_file.put_character ('z')
 					current_file.put_integer (l_local_index)
 					current_file.put_character (' ')
@@ -958,6 +1022,18 @@ feature {NONE} -- Instruction generation
 						current_file.put_integer (l_dynamic_assignment.first_type.id)
 						current_file.put_character (':')
 						current_file.put_new_line
+						from 
+							l_other_type := l_dynamic_assignment.other_types
+						until
+							l_other_type = Void
+						loop
+							print_indentation
+							current_file.put_string ("case ")
+							current_file.put_integer (l_other_type.item.id)
+							current_file.put_character (':')
+							current_file.put_new_line
+							l_other_type := l_other_type.right
+						end
 						indent
 						print_indentation
 						print_writable (an_instruction.target)
@@ -972,32 +1048,6 @@ feature {NONE} -- Instruction generation
 						current_file.put_string ("break;")
 						current_file.put_new_line
 						dedent
-						from 
-							l_other_type := l_dynamic_assignment.other_types
-						until
-							l_other_type = Void
-						loop
-							print_indentation
-							current_file.put_string ("case ")
-							current_file.put_integer (l_other_type.item.id)
-							current_file.put_character (':')
-							current_file.put_new_line
-							indent
-							print_indentation
-							print_writable (an_instruction.target)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('z')
-							current_file.put_integer (l_local_index)
-							current_file.put_character (';')
-							current_file.put_new_line
-							print_indentation
-							current_file.put_string ("break;")
-							current_file.put_new_line
-							dedent
-							l_other_type := l_other_type.right
-						end
 					end
 					print_indentation
 					current_file.put_string ("default:")
@@ -1031,10 +1081,10 @@ feature {NONE} -- Instruction generation
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
-			if an_instruction.target = Void then
-				print_unqualified_call (an_instruction.name, an_instruction.arguments)
+			if an_instruction.is_qualified_call then
+				print_qualified_call (an_instruction)
 			else
-				print_qualified_call (an_instruction.target, an_instruction.name, an_instruction.arguments)
+				print_unqualified_call (an_instruction)
 			end
 		end
 
@@ -1085,11 +1135,6 @@ feature {NONE} -- Instruction generation
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_result: ET_RESULT
-			l_identifier: ET_IDENTIFIER
-			l_locals: ET_DYNAMIC_TYPE_SET_LIST
-			l_feature_name: ET_FEATURE_NAME
-			l_any: ANY
 		do
 				-- Look for the dynamic type of the creation type.
 			l_target := an_instruction.target
@@ -1101,83 +1146,14 @@ feature {NONE} -- Instruction generation
 				end
 			else
 					-- Look for the dynamic type of the target.
-				l_result ?= l_target
-				if l_result /= Void then
-					l_dynamic_type_set := current_feature.result_type
-					if l_dynamic_type_set = Void then
-							-- Internal error: if the target is "Result" then `current_feature'
-							-- should be a function.
-						set_fatal_error
-						error_handler.report_gibck_error
-					else
-						l_dynamic_type := l_dynamic_type_set.static_type
-					end
+				l_dynamic_type_set := current_feature.dynamic_type_set (l_target)
+				if l_dynamic_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- target should be known at this stage.
+					set_fatal_error
+					error_handler.report_gibck_error
 				else
-					l_identifier ?= l_target
-					if l_identifier /= Void then
-						l_seed := l_identifier.seed
-						if l_identifier.is_local then
-							l_locals := current_feature.local_types
-							if l_locals = Void or else (l_seed < 1 and l_seed > l_locals.count) then
-									-- Internal error: invalid local variable as target.
-								set_fatal_error
-								error_handler.report_gibcl_error
-							else
-								l_dynamic_type_set := l_locals.item (l_seed)
-								l_dynamic_type := l_dynamic_type_set.static_type
-							end
-						else
-							l_feature := current_type.base_class.seeded_feature (l_seed)
-							if l_feature = Void then
-									-- Internal error: unknown creation target.
-								set_fatal_error
-								error_handler.report_gibcm_error
-							else
-								l_dynamic_feature := current_type.dynamic_feature (l_feature, current_system)
-								l_dynamic_type_set := l_dynamic_feature.result_type
-								if l_dynamic_type_set = Void then
-										-- Internal error: the target is an attribute, so the
-										-- corresponding dynamic feature should have a result type.
-									set_fatal_error
-									error_handler.report_gibcn_error
-								else
-									l_dynamic_type := l_dynamic_type_set.static_type
-								end
-							end
-						end
-					else
-							-- An attribute may have a prefix name.
-							--
-							-- SmartEiffel 1.1 does not allow the assignment attempt
-							-- because ET_FEATURE_NAME does not conform to ET_WRITABLE.
-						-- l_feature_name ?= l_target
-						l_any := l_target
-						l_feature_name ?= l_any
-						if l_feature_name /= Void then
-							l_seed := l_feature_name.seed
-							l_feature := current_type.base_class.seeded_feature (l_seed)
-							if l_feature = Void then
-									-- Internal error: unknown creation target.
-								set_fatal_error
-								error_handler.report_gibco_error
-							else
-								l_dynamic_feature := current_type.dynamic_feature (l_feature, current_system)
-								l_dynamic_type_set := l_dynamic_feature.result_type
-								if l_dynamic_type_set = Void then
-										-- Internal error: the target is an attribute, so the
-										-- corresponding dynamic feature should have a result type.
-									set_fatal_error
-									error_handler.report_gibcp_error
-								else
-									l_dynamic_type := l_dynamic_type_set.static_type
-								end
-							end
-						else
-								-- Internal error: unknown creation target.
-							set_fatal_error
-							error_handler.report_gibcq_error
-						end
-					end
+					l_dynamic_type := l_dynamic_type_set.static_type
 				end
 			end
 			if l_dynamic_type /= Void then
@@ -1236,7 +1212,7 @@ feature {NONE} -- Instruction generation
 			current_file.put_character ('f')
 			current_file.put_character (' ')
 			current_file.put_character ('(')
-			print_expression (an_instruction.conditional.expression)
+			print_expression (an_instruction.expression)
 			current_file.put_character (')')
 			current_file.put_character (' ')
 			current_file.put_character ('{')
@@ -1264,7 +1240,7 @@ feature {NONE} -- Instruction generation
 					current_file.put_character ('f')
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					print_expression (an_elseif.conditional.expression)
+					print_expression (an_elseif.expression)
 					current_file.put_character (')')
 					current_file.put_character (' ')
 					current_file.put_character ('{')
@@ -1312,6 +1288,7 @@ feature {NONE} -- Instruction generation
 			a_compound: ET_COMPOUND
 			i, nb: INTEGER
 			j, nb2: INTEGER
+			l_has_case: BOOLEAN
 		do
 -- TODO.
 			current_file.put_string ("switch (")
@@ -1326,28 +1303,33 @@ feature {NONE} -- Instruction generation
 					a_choices := a_when_part.choices
 					nb2 := a_choices.count
 					if nb2 = 0 then
--- TODO
-						print_indentation
-						current_file.put_line ("case 0:")
+						-- Do nothing.
 					else
+						l_has_case := False
 						from j := 1 until j > nb2 loop
 							a_choice := a_choices.choice (j)
+							if a_choice.is_range then
 -- TODO
-							print_indentation
-							current_file.put_string ("case ")
-							print_expression (a_choice.lower.expression)
-							current_file.put_character (':')
-							current_file.put_new_line
+							else
+								l_has_case := True
+								print_indentation
+								current_file.put_string ("case ")
+								print_expression (a_choice.lower.expression)
+								current_file.put_character (':')
+								current_file.put_new_line
+							end
 							j := j + 1
 						end
-					end
-					a_compound := a_when_part.then_compound
-					if a_compound /= Void then
-						indent
-						print_compound (a_compound)
-						print_indentation
-						current_file.put_line ("break;")
-						dedent
+						if l_has_case then
+							indent
+							a_compound := a_when_part.then_compound
+							if a_compound /= Void then
+								print_compound (a_compound)
+							end
+							print_indentation
+							current_file.put_line ("break;")
+							dedent
+						end
 					end
 					i := i + 1
 				end
@@ -1434,7 +1416,6 @@ feature {NONE} -- Instruction generation
 		do
 			a_compound := an_instruction.from_compound
 			if a_compound /= Void then
-				current_file.put_line ("/* Loop from */")
 				print_compound (a_compound)
 				print_indentation
 			end
@@ -1445,7 +1426,7 @@ feature {NONE} -- Instruction generation
 			current_file.put_character ('e')
 			current_file.put_character (' ')
 			current_file.put_character ('(')
-			print_expression (an_instruction.until_conditional.expression)
+			print_expression (an_instruction.until_expression)
 			current_file.put_character (')')
 			current_file.put_character (' ')
 			current_file.put_character ('{')
@@ -1596,10 +1577,10 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			if an_expression.target = Void then
-				print_unqualified_call (an_expression.name, an_expression.arguments)
+			if an_expression.is_qualified_call then
+				print_qualified_call (an_expression)
 			else
-				print_qualified_call (an_expression.target, an_expression.name, an_expression.arguments)
+				print_unqualified_call (an_expression)
 			end
 		end
 
@@ -1612,9 +1593,7 @@ feature {NONE} -- Expression generation
 			an_actuals: ET_ACTUAL_ARGUMENTS
 		do
 			a_convert_feature := an_expression.convert_feature
-			if a_convert_feature.is_convert_to then
-				print_qualified_call (an_expression.expression, a_convert_feature.name, Void)
-			elseif a_convert_feature.is_convert_from then
+			if a_convert_feature.is_convert_from then
 				an_actuals := an_expression.expression
 -- TODO.
 --				check_creation_expression_validity (current_target_type.named_type (universe),
@@ -1623,6 +1602,14 @@ feature {NONE} -- Expression generation
 			else
 				print_expression (an_expression.expression)
 			end
+		end
+
+	print_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+			print_qualified_call (an_expression)
 		end
 
 	print_create_expression (an_expression: ET_CREATE_EXPRESSION) is
@@ -1708,33 +1695,31 @@ feature {NONE} -- Expression generation
 			an_expression_not_void: an_expression /= Void
 		local
 			l_local_index: INTEGER
+			a_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			a_dynamic_type: ET_DYNAMIC_TYPE
 		do
 -- TODO.
-			local_count := local_count + 1
-			l_local_index := local_count
-			print_local_buffer_indentation
-			current_local_buffer.put_character ('T')
-			current_local_buffer.put_integer (current_type.typed_pointer_type (current_system).id)
-			current_local_buffer.put_character (' ')
-			current_local_buffer.put_character ('z')
-			current_local_buffer.put_integer (l_local_index)
-			current_local_buffer.put_character (' ')
-			current_local_buffer.put_character ('=')
-			current_local_buffer.put_character (' ')
-			current_local_buffer.put_character ('{')
-			current_local_buffer.put_character ('0')
-			current_local_buffer.put_character ('}')
-			current_local_buffer.put_character (';')
-			current_local_buffer.put_new_line
-			if current_type.is_expanded then
---				current_file.put_character ('&')
---				current_file.put_character ('C')
-				current_file.put_character ('z')
-				current_file.put_integer (l_local_index)
+			a_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if a_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known atthis stage.
+				set_fatal_error
+				error_handler.report_gibdg_error
 			else
-				--current_file.put_character ('C')
-				current_file.put_character ('z')
-				current_file.put_integer (l_local_index)
+				a_dynamic_type := a_dynamic_type_set.static_type
+				local_count := local_count + 1
+				l_local_index := local_count
+				print_typed_pointer_local_declaration (l_local_index, a_dynamic_type)
+				if current_type.is_expanded then
+--					current_file.put_character ('&')
+--					current_file.put_character ('C')
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+				else
+--					current_file.put_character ('C')
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+				end
 			end
 		end
 
@@ -1788,79 +1773,30 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			a_name: ET_FEATURE_NAME
-			a_seed: INTEGER
-			an_arguments: ET_DYNAMIC_TYPE_SET_LIST
-			a_locals: ET_DYNAMIC_TYPE_SET_LIST
+			a_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			a_dynamic_type: ET_DYNAMIC_TYPE
-			a_feature: ET_FEATURE
 			l_local_index: INTEGER
 		do
 -- TODO.
-			a_name := an_expression.name
-			a_seed := a_name.seed
-			if a_name.is_argument then
-				an_arguments := current_feature.argument_types
-				if an_arguments = Void then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_gibch_error
-				elseif a_seed < 1 or a_seed > an_arguments.count then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_gibcf_error
-				else
-					a_dynamic_type := an_arguments.item (a_seed).static_type.typed_pointer_type (current_system)
-				end
-			elseif a_name.is_local then
-				a_locals := current_feature.local_types
-				if a_locals = Void then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_gibdj_error
-				elseif a_seed < 1 or a_seed > a_locals.count then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_gibdk_error
-				else
-					a_dynamic_type := a_locals.item (a_seed).static_type.typed_pointer_type (current_system)
-				end
+			a_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if a_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known atthis stage.
+				set_fatal_error
+				error_handler.report_gibch_error
 			else
-				a_feature := current_type.base_class.seeded_feature (a_seed)
-				if a_feature /= Void then
-					if a_feature.is_attribute then
-						a_dynamic_type := current_system.dynamic_type (a_feature.type, current_type.base_type).typed_pointer_type (current_system)
-					else
-							-- $feature_name is of type POINTER, even
-							-- in ISE and its TYPED_POINTER support.
-						current_file.put_character ('0')
-					end
+				a_dynamic_type := a_dynamic_type_set.static_type
+				if a_dynamic_type = current_system.pointer_type then
+						-- $feature_name is of type POINTER, even
+						-- in ISE and its TYPED_POINTER support.
+					current_file.put_character ('0')
 				else
-						-- Report internal error: if we got a seed, the
-						-- `a_feature' should not be void.
-					set_fatal_error
-					error_handler.report_gibdg_error
+					local_count := local_count + 1
+					l_local_index := local_count
+					print_typed_pointer_local_declaration (l_local_index, a_dynamic_type)
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
 				end
-			end
-			if a_dynamic_type /= Void then
-				local_count := local_count + 1
-				l_local_index := local_count
-				print_local_buffer_indentation
-				current_local_buffer.put_character ('T')
-				current_local_buffer.put_integer (a_dynamic_type.id)
-				current_local_buffer.put_character (' ')
-				current_local_buffer.put_character ('z')
-				current_local_buffer.put_integer (l_local_index)
-				current_local_buffer.put_character (' ')
-				current_local_buffer.put_character ('=')
-				current_local_buffer.put_character (' ')
-				current_local_buffer.put_character ('{')
-				current_local_buffer.put_character ('0')
-				current_local_buffer.put_character ('}')
-				current_local_buffer.put_character (';')
-				current_local_buffer.put_new_line
-				current_file.put_character ('z')
-				current_file.put_integer (l_local_index)
 			end
 		end
 
@@ -1929,7 +1865,7 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			print_qualified_call (an_expression.left, an_expression.name, an_expression.right)
+			print_qualified_call (an_expression)
 		end
 
 	print_local_variable (a_name: ET_IDENTIFIER) is
@@ -1953,15 +1889,7 @@ feature {NONE} -- Expression generation
 -- TODO.
 			local_count := local_count + 1
 			l_local_index := local_count
-			print_local_buffer_indentation
-			current_local_buffer.put_character ('T')
-			current_local_buffer.put_character ('0')
-			current_local_buffer.put_character ('*')
-			current_local_buffer.put_character (' ')
-			current_local_buffer.put_character ('z')
-			current_local_buffer.put_integer (l_local_index)
-			current_local_buffer.put_character (';')
-			current_local_buffer.put_new_line
+			print_reference_local_declaration (l_local_index)
 			nb := an_expression.count
 			current_file.put_character ('(')
 			from i := 1 until i > nb loop
@@ -1986,15 +1914,7 @@ feature {NONE} -- Expression generation
 -- TODO.
 			local_count := local_count + 1
 			l_local_index := local_count
-			print_local_buffer_indentation
-			current_local_buffer.put_character ('T')
-			current_local_buffer.put_character ('0')
-			current_local_buffer.put_character ('*')
-			current_local_buffer.put_character (' ')
-			current_local_buffer.put_character ('z')
-			current_local_buffer.put_integer (l_local_index)
-			current_local_buffer.put_character (';')
-			current_local_buffer.put_new_line
+			print_reference_local_declaration (l_local_index)
 			nb := an_expression.count
 			current_file.put_character ('(')
 			from i := 1 until i > nb loop
@@ -2138,15 +2058,18 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			print_qualified_call (an_expression.expression, an_expression.name, Void)
+			print_qualified_call (an_expression)
 		end
 
-	print_qualified_call (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	print_qualified_call (a_call: ET_FEATURE_CALL) is
 			-- Print qualified call.
 		require
-			a_target_not_void: a_target /= Void
-			a_name_not_void: a_name /= Void
+			a_call_not_void: a_call /= Void
+			qualified_call: a_call.is_qualified_call
 		local
+			a_name: ET_FEATURE_NAME
+			a_target: ET_EXPRESSION
+			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_feature: ET_FEATURE
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_seed: INTEGER
@@ -2155,16 +2078,17 @@ feature {NONE} -- Expression generation
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_other_dynamic_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
 			l_local_index: INTEGER
-			old_current_feature_call: like current_feature_call
 		do
-			l_call := current_feature_call
+			a_target := a_call.target
+			a_name := a_call.name
+			an_actuals := a_call.arguments
+			l_call := current_feature.dynamic_call (a_call)
 			if l_call = Void then
 					-- Internal error: there should be a least one feature call
 					-- dynamic representation left.
 				set_fatal_error
 				error_handler.report_gibcy_error
 			else
-				current_feature_call := l_call.next_call
 				a_feature := l_call.static_feature
 				a_seed := a_feature.first_seed
 				l_dynamic_type := l_call.target_type.first_type
@@ -2175,15 +2099,7 @@ feature {NONE} -- Expression generation
 -- TODO
 						local_count := local_count + 1
 						l_local_index := local_count
-						print_local_buffer_indentation
-						current_local_buffer.put_character ('T')
-						current_local_buffer.put_character ('0')
-						current_local_buffer.put_character ('*')
-						current_local_buffer.put_character (' ')
-						current_local_buffer.put_character ('z')
-						current_local_buffer.put_integer (l_local_index)
-						current_local_buffer.put_character (';')
-						current_local_buffer.put_new_line
+						print_reference_local_declaration (l_local_index)
 						current_file.put_character ('z')
 						current_file.put_integer (l_local_index)
 						current_file.put_character (' ')
@@ -2297,15 +2213,7 @@ feature {NONE} -- Expression generation
 						from
 							local_count := local_count + 1
 							l_local_index := local_count
-							print_local_buffer_indentation
-							current_local_buffer.put_character ('T')
-							current_local_buffer.put_character ('0')
-							current_local_buffer.put_character ('*')
-							current_local_buffer.put_character (' ')
-							current_local_buffer.put_character ('z')
-							current_local_buffer.put_integer (l_local_index)
-							current_local_buffer.put_character (';')
-							current_local_buffer.put_new_line
+							print_reference_local_declaration (l_local_index)
 							current_file.put_character ('z')
 							current_file.put_integer (l_local_index)
 							current_file.put_character (' ')
@@ -2320,7 +2228,6 @@ feature {NONE} -- Expression generation
 							current_file.put_string ("switch (z")
 							current_file.put_integer (l_local_index)
 							current_file.put_line ("->id) {")
-							old_current_feature_call := current_feature_call
 						until
 							l_dynamic_type = Void
 						loop
@@ -2335,7 +2242,6 @@ feature {NONE} -- Expression generation
 								set_fatal_error
 								error_handler.report_gibdf_error
 							else
-								current_feature_call := old_current_feature_call
 								print_indentation
 								print_routine_name (l_dynamic_type.dynamic_feature (a_feature, current_system), l_dynamic_type)
 								current_file.put_character ('(')
@@ -2373,15 +2279,7 @@ feature {NONE} -- Expression generation
 						from
 							local_count := local_count + 1
 							l_local_index := local_count
-							print_local_buffer_indentation
-							current_local_buffer.put_character ('T')
-							current_local_buffer.put_character ('0')
-							current_local_buffer.put_character ('*')
-							current_local_buffer.put_character (' ')
-							current_local_buffer.put_character ('z')
-							current_local_buffer.put_integer (l_local_index)
-							current_local_buffer.put_character (';')
-							current_local_buffer.put_new_line
+							print_reference_local_declaration (l_local_index)
 							current_file.put_character ('(')
 							current_file.put_character ('(')
 							current_file.put_character ('z')
@@ -2394,7 +2292,6 @@ feature {NONE} -- Expression generation
 							current_file.put_character (')')
 							current_file.put_character (')')
 							current_file.put_character (',')
-							old_current_feature_call := current_feature_call
 						until
 							l_dynamic_type = Void
 						loop
@@ -2429,7 +2326,6 @@ feature {NONE} -- Expression generation
 								current_file.put_integer (unique_count)
 								current_file.put_character (')')
 							else
-								current_feature_call := old_current_feature_call
 								print_routine_name (l_dynamic_type.dynamic_feature (a_feature, current_system), l_dynamic_type)
 								current_file.put_character ('(')
 								current_file.put_character ('z')
@@ -2541,36 +2437,39 @@ feature {NONE} -- Expression generation
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			l_result_type: ET_DYNAMIC_TYPE_SET
 			l_local_index: INTEGER
+			l_result_type: ET_DYNAMIC_TYPE_SET
+			a_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			a_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			l_result_type := current_feature.result_type
---			if l_result_type /= Void and then l_result_type.static_type.is_expanded then
---				current_file.put_character ('&')
---			end
---			current_file.put_character ('R')
 -- TODO.
-			if l_result_type = Void then
--- TODO: error
+			a_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
+			if a_dynamic_type_set = Void then
+					-- Internal error: the dynamic type set of `an_expression'
+					-- should be known atthis stage.
+				set_fatal_error
+				error_handler.report_gibdj_error
 			else
+				a_dynamic_type := a_dynamic_type_set.static_type
 				local_count := local_count + 1
 				l_local_index := local_count
-				print_local_buffer_indentation
-				current_local_buffer.put_character ('T')
-				current_local_buffer.put_integer (l_result_type.static_type.typed_pointer_type (current_system).id)
-				current_local_buffer.put_character (' ')
-				current_local_buffer.put_character ('z')
-				current_local_buffer.put_integer (l_local_index)
-				current_local_buffer.put_character (' ')
-				current_local_buffer.put_character ('=')
-				current_local_buffer.put_character (' ')
-				current_local_buffer.put_character ('{')
-				current_local_buffer.put_character ('0')
-				current_local_buffer.put_character ('}')
-				current_local_buffer.put_character (';')
-				current_local_buffer.put_new_line
-				current_file.put_character ('z')
-				current_file.put_integer (l_local_index)
+				print_typed_pointer_local_declaration (l_local_index, a_dynamic_type)
+				l_result_type := current_feature.result_type
+				if l_result_type = Void then
+						-- Internal error: it should have been checked elsewhere that
+						-- the current feature is a function.
+					set_fatal_error
+					error_handler.report_gibdk_error
+				elseif l_result_type.static_type.is_expanded then
+--					current_file.put_character ('&')
+--					current_file.put_character ('R')
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+				else
+--					current_file.put_character ('R')
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+				end
 			end
 		end
 
@@ -2763,16 +2662,20 @@ feature {NONE} -- Expression generation
 			current_file.put_character (')')
 		end
 
-	print_unqualified_call (a_name: ET_FEATURE_NAME; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
+	print_unqualified_call (a_call: ET_FEATURE_CALL) is
 			-- Print unqualified call.
 		require
-			a_name_not_void: a_name /= Void
+			a_call_not_void: a_call /= Void
+			unqualified_call: not a_call.is_qualified_call
 		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_feature: ET_FEATURE
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_seed: INTEGER
 			i, nb: INTEGER
 		do
+			a_name := a_call.name
 			a_seed := a_name.seed
 			a_feature := current_type.base_class.seeded_feature (a_seed)
 			if a_feature = Void then
@@ -2785,6 +2688,7 @@ feature {NONE} -- Expression generation
 				print_routine_name (current_type.dynamic_feature (a_feature, current_system), current_type)
 				current_file.put_character ('(')
 				current_file.put_character ('C')
+				an_actuals := a_call.arguments
 				if an_actuals /= Void then
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
@@ -2818,6 +2722,7 @@ feature {NONE} -- Expression generation
 				print_routine_name (current_type.dynamic_feature (a_feature, current_system), current_type)
 				current_file.put_character ('(')
 				current_file.put_character ('C')
+				an_actuals := a_call.arguments
 				if an_actuals /= Void then
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
@@ -2925,13 +2830,59 @@ feature {NONE} -- Agent generation
 -- TODO.
 		end
 
+feature {NONE} -- Locals
+
+	print_reference_local_declaration (i: INTEGER) is
+			-- Print declaration of reference local z`i'.
+		local
+			old_file: like current_file
+		do
+			old_file := current_file
+			current_file := current_local_buffer
+			print_indentation
+			current_file.put_character ('T')
+			current_file.put_character ('0')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_character ('z')
+			current_file.put_integer (i)
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file := old_file
+		end
+
+	print_typed_pointer_local_declaration (i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
+			-- Print declaration of typed pointer local z`i'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			old_file: like current_file
+		do
+			old_file := current_file
+			current_file := current_local_buffer
+			print_indentation
+			current_file.put_character ('T')
+			current_file.put_integer (a_type.id)
+			current_file.put_character (' ')
+			current_file.put_character ('z')
+			current_file.put_integer (i)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_character ('0')
+			current_file.put_character ('}')
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file := old_file
+		end
+
 feature {NONE} -- Type generation
 
 	print_types is
 			-- Print declarations of types of `current_system'.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [ET_DYNAMIC_TYPE], ET_CLASS]
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
@@ -2939,86 +2890,82 @@ feature {NONE} -- Type generation
 			j, nb2: INTEGER
 		do
 			current_file.put_line ("typedef struct {int id;} T0;")
-			l_cursor := current_system.dynamic_types.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				l_dynamic_types := l_cursor.item
-				nb := l_dynamic_types.count
-				from i := 1 until i > nb loop
-					l_type := l_dynamic_types.item (i)
-					if l_type.is_alive then
-						if l_type = current_system.character_type then
-							current_file.put_string ("typedef unsigned char ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.boolean_type then
-							current_file.put_string ("typedef int ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.integer_8_type then
-							current_file.put_string ("typedef int8_t ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.integer_16_type then
-							current_file.put_string ("typedef int16_t ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.integer_type then
-							current_file.put_string ("typedef int32_t ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.integer_64_type then
-							current_file.put_string ("typedef int64_t ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.real_type then
-							current_file.put_string ("typedef float ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.double_type then
-							current_file.put_string ("typedef double ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						elseif l_type = current_system.pointer_type then
-							current_file.put_string ("typedef void* ")
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						else
-							current_file.put_string ("typedef struct {int id;")
-							l_features := l_type.features
-							if l_features /= Void then
-								nb2 := l_features.count
-								from j := 1 until j > nb2 loop
-									l_feature := l_features.item (j)
-									if l_feature.is_attribute then
-										current_file.put_character (' ')
-										print_type_declaration (l_feature.result_type.static_type)
-										current_file.put_character (' ')
-										current_file.put_character ('a')
-										current_file.put_integer (l_feature.id)
-										current_file.put_character (';')
-									end
-									j := j + 1
+			l_dynamic_types := current_system.dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive then
+					if l_type = current_system.character_type then
+						current_file.put_string ("typedef unsigned char ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.boolean_type then
+						current_file.put_string ("typedef int ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.integer_8_type then
+						current_file.put_string ("typedef int8_t ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.integer_16_type then
+						current_file.put_string ("typedef int16_t ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.integer_type then
+						current_file.put_string ("typedef int32_t ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.integer_64_type then
+						current_file.put_string ("typedef int64_t ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.real_type then
+						current_file.put_string ("typedef float ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.double_type then
+						current_file.put_string ("typedef double ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					elseif l_type = current_system.pointer_type then
+						current_file.put_string ("typedef void* ")
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					else
+						current_file.put_string ("typedef struct {int id;")
+						l_features := l_type.features
+						if l_features /= Void then
+							nb2 := l_features.count
+							from j := 1 until j > nb2 loop
+								l_feature := l_features.item (j)
+								if l_feature.is_attribute then
+									current_file.put_character (' ')
+									print_type_declaration (l_feature.result_type.static_type)
+									current_file.put_character (' ')
+									current_file.put_character ('a')
+									current_file.put_integer (l_feature.id)
+									current_file.put_character (';')
 								end
+								j := j + 1
 							end
-							current_file.put_character ('}')
-							current_file.put_character (' ')
-							print_type_name (l_type)
-							current_file.put_character (';')
-							current_file.put_new_line
 						end
+						current_file.put_character ('}')
+						current_file.put_character (' ')
+						print_type_name (l_type)
+						current_file.put_character (';')
+						current_file.put_new_line
 					end
-					i := i + 1
 				end
-				l_cursor.forth
+				i := i + 1
 			end
 		end
 
@@ -3139,7 +3086,7 @@ feature {NONE} -- Feature name generation
 			current_file.put_integer (an_attribute.id)
 		end
 
-	print_local_attribute_name (an_attribute: ET_DYNAMIC_FEATURE; a_local: INTEGER; a_type: ET_DYNAMIC_TYPE) is
+	print_local_attribute_name (an_attribute: ET_DYNAMIC_FEATURE; i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
 			-- Print name of `an_attribute' applied on `i'-th internal C local variabe of type `a_type'.
 		require
 			an_attribute_not_void: an_attribute /= Void
@@ -3149,7 +3096,7 @@ feature {NONE} -- Feature name generation
 			print_type_cast (a_type)
 			current_file.put_character ('(')
 			current_file.put_character ('z')
-			current_file.put_integer (a_local)
+			current_file.put_integer (i)
 			current_file.put_character (')')
 			current_file.put_character (')')
 			current_file.put_character ('-')
@@ -3208,18 +3155,6 @@ feature {NONE} -- Indentation
 			nb := indentation
 			from i := 1 until i > nb loop
 				current_file.put_character ('%T')
-				i := i + 1
-			end
-		end
-
-	print_local_buffer_indentation is
-			-- Print indentation to `current_local_buffer'.
-		local
-			i, nb: INTEGER
-		do
-			nb := indentation
-			from i := 1 until i > nb loop
-				current_local_buffer.put_character ('%T')
 				i := i + 1
 			end
 		end
@@ -3308,6 +3243,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_convert_expression (an_expression)
+		end
+
+	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			print_convert_to_expression (an_expression)
 		end
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
@@ -3414,7 +3355,7 @@ feature {ET_AST_NODE} -- Processing
 			elseif an_identifier.is_local then
 				print_local_variable (an_identifier)
 			else
-				print_unqualified_call (an_identifier, Void)
+				print_unqualified_call (an_identifier)
 			end
 		end
 
@@ -3650,12 +3591,6 @@ feature {NONE} -- Access
 
 	current_type: ET_DYNAMIC_TYPE
 			-- Type where `current_feature' belongs
-
-	current_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
-			-- Dynamic type set of current assignment attempt
-
-	current_feature_call: ET_DYNAMIC_CALL
-			-- Dynamic type set of current polymorphic call
 
 	current_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
