@@ -16,7 +16,8 @@ inherit
 
 	ET_EXPRESSION_CHECKER
 		redefine
-			check_old_expression_validity
+			check_old_expression_validity,
+			check_precursor_expression_validity
 		end
 
 creation
@@ -30,6 +31,14 @@ feature {NONE} -- Expression validity
 		do
 				-- Check VAOL-2 (ETL2 p.124).
 			check_expression_validity (an_expression.expression, current_target_type, current_target_context, current_feature, current_class)
+		end
+
+	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION) is
+			-- Check validity of `an_expression'.
+		do
+				-- The Precursor expression does not appear in a Routine_body.
+			set_fatal_error
+			error_handler.report_vdpr1b_error (current_feature.implementation_class, an_expression)
 		end
 
 end

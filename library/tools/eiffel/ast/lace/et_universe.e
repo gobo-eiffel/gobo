@@ -74,7 +74,6 @@ feature {NONE} -- Initialization
 	make_basic_classes is
 			-- Create basic classes.
 		local
-			any_parent: ET_PARENT
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 				-- Basic classes.
@@ -144,6 +143,7 @@ feature {NONE} -- Initialization
 			none_type_not_void: none_type /= Void
 			array_any_type_not_void: array_any_type /= Void
 			array_none_type_not_void: array_none_type /= Void
+			any_parent_not_void: any_parent /= Void
 			any_parents_not_void: any_parents /= Void
 		end
 
@@ -275,6 +275,9 @@ feature -- Basic classes
 
 	array_none_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ARRAY [NONE]"
+
+	any_parent: ET_PARENT
+			-- Default parent
 
 	any_parents: ET_PARENT_LIST
 			-- Default parents
@@ -1217,6 +1220,7 @@ invariant
 	string_type_not_void: string_type /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_none_type_not_void: array_none_type /= Void
+	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void

@@ -18,14 +18,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; args: like arguments) is
+	make (a_parent_name: like parent_name; args: like arguments) is
 			-- Create a new precursor call.
 		do
-			parent := a_parent
+			parent_name := a_parent_name
 			arguments := args
 			precursor_keyword := tokens.precursor_keyword
 		ensure
-			parent_set: parent = a_parent
+			parent_name_set: parent_name = a_parent_name
 			arguments_set: arguments = args
 		end
 
@@ -34,18 +34,26 @@ feature -- Access
 	precursor_keyword: ET_KEYWORD
 			-- 'precursor' keyword
 
-	parent: ET_PRECURSOR_CLASS_NAME
-			-- Parent class name sourrounded by braces
+	parent_name: ET_PRECURSOR_CLASS_NAME
+			-- Parent class name surrounded by braces
 
 	arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments
+
+	parent_type: ET_BASE_TYPE
+			-- Parent type;
+			-- Void if not resolved yet.
+
+	precursor_feature: ET_FEATURE
+			-- Associated feature in `parent';
+			-- Void if not resolved yet.
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			if is_parent_prefixed and parent /= Void then
-				Result := parent.position
+			if is_parent_prefixed and parent_name /= Void then
+				Result := parent_name.position
 			else
 				Result := precursor_keyword.position
 			end
@@ -56,8 +64,8 @@ feature -- Access
 		do
 			if arguments /= Void then
 				Result := arguments.break
-			elseif not is_parent_prefixed and parent /= Void then
-				Result := parent.break
+			elseif not is_parent_prefixed and parent_name /= Void then
+				Result := parent_name.break
 			else
 				Result := precursor_keyword.break
 			end
@@ -73,6 +81,22 @@ feature -- Setting
 			precursor_keyword := a_precursor
 		ensure
 			precursor_keyword_set: precursor_keyword = a_precursor
+		end
+
+	set_parent_type (a_parent_type: like parent_type) is
+			-- Set `parent_type' to `a_parent_type'.
+		do
+			parent_type := a_parent_type
+		ensure
+			parent_type_set: parent_type = a_parent_type
+		end
+
+	set_precursor_feature (a_feature: like precursor_feature) is
+			-- Set `precursor_feature' to `a_feature'.
+		do
+			precursor_feature := a_feature
+		ensure
+			precursor_feature_set: precursor_feature = a_feature
 		end
 
 feature -- Status report

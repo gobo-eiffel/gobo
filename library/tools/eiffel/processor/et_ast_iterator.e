@@ -1828,15 +1828,15 @@ feature {ET_AST_NODE} -- Processing
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
 			-- Process `an_expression'.
 		local
-			a_parent: ET_PRECURSOR_CLASS_NAME
+			a_parent_name: ET_PRECURSOR_CLASS_NAME
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			if not an_expression.is_parent_prefixed then
 				an_expression.precursor_keyword.process (Current)
 			end
-			a_parent := an_expression.parent
-			if a_parent /= Void then
-				a_parent.process (Current)
+			a_parent_name := an_expression.parent_name
+			if a_parent_name /= Void then
+				a_parent_name.process (Current)
 			end
 			if an_expression.is_parent_prefixed then
 				an_expression.precursor_keyword.process (Current)
@@ -1850,15 +1850,15 @@ feature {ET_AST_NODE} -- Processing
 	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			a_parent: ET_PRECURSOR_CLASS_NAME
+			a_parent_name: ET_PRECURSOR_CLASS_NAME
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			if not an_instruction.is_parent_prefixed then
 				an_instruction.precursor_keyword.process (Current)
 			end
-			a_parent := an_instruction.parent
-			if a_parent /= Void then
-				a_parent.process (Current)
+			a_parent_name := an_instruction.parent_name
+			if a_parent_name /= Void then
+				a_parent_name.process (Current)
 			end
 			if an_instruction.is_parent_prefixed then
 				an_instruction.precursor_keyword.process (Current)

@@ -39,6 +39,12 @@ creation
 	make_vdjr0a,
 	make_vdjr0b,
 	make_vdjr0c,
+	make_vdpr1a,
+	make_vdpr1b,
+	make_vdpr2a,
+	make_vdpr3a,
+	make_vdpr3b,
+	make_vdpr3c,
 	make_vdrd2a,
 	make_vdrd2b,
 	make_vdrd2c,
@@ -953,6 +959,249 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 			-- dollar7: $7 = first parent base class
 			-- dollar8: $8 = second parent base class
+		end
+
+	make_vdpr1a (a_class: like current_class; a_precursor: ET_PRECURSOR_INSTRUCTION) is
+			-- Create a new VDPR-1 error: instruction `a_precursor' does not 
+			-- appear in a routine body in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+		do
+			code := vdpr1a_template_code
+			etl_code := vdpr1_etl_code
+			default_template := vdpr1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_precursor.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
+	make_vdpr1b (a_class: like current_class; a_precursor: ET_PRECURSOR_EXPRESSION) is
+			-- Create a new VDPR-1 error: expression `a_precursor' does not 
+			-- appear in a routine body in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		do
+			code := vdpr1b_template_code
+			etl_code := vdpr1_etl_code
+			default_template := vdpr1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_precursor.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
+	make_vdpr2a (a_class: like current_class; a_precursor: ET_PRECURSOR) is
+			-- Create a new VDPR-2 error: the parent name specified in `a_precursor'
+			-- is not the name of a parent of `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_precursor_qualified: a_precursor.parent_name /= Void
+		local
+			a_class_name: ET_CLASS_NAME
+		do
+			code := vdpr2a_template_code
+			etl_code := vdpr2_etl_code
+			default_template := vdpr2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			a_class_name := a_precursor.parent_name.class_name
+			position := a_class_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = parent class name
+		end
+
+	make_vdpr3a (a_class: like current_class; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE) is
+			-- Create a new VDPR-3 error: two effective features `f1' and `f2' redefined into 
+			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_redefined_feature_not_void: a_redefined_feature /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vdpr3a_template_code
+			etl_code := vdpr3_etl_code
+			default_template := vdpr3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_precursor.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.precursor_feature.name.name, 6)
+			parameters.put (f1.parent.type.to_text, 7)
+			parameters.put (f2.precursor_feature.name.name, 8)
+			parameters.put (f2.parent.type.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first feature parent class name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second feature parent class name
+		end
+
+	make_vdpr3b (a_class: like current_class; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE) is
+			-- Create a new VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
+			-- is the redefinition of a deferred feature `an_inherited_feature' in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_redefined_feature_not_void: a_redefined_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		do
+			code := vdpr3b_template_code
+			etl_code := vdpr3_etl_code
+			default_template := vdpr3b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_precursor.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_redefined_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = redefined feature name
+		end
+
+	make_vdpr3c (a_class: like current_class; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE) is
+			-- Create a new VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
+			-- is not the redefinition of a feature inherited from `a_precursor.parent_name'
+			-- in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_precursor_qualified: a_precursor.parent_name /= Void
+			a_redefined_feature_not_void: a_redefined_feature /= Void
+		local
+			a_class_name: ET_CLASS_NAME
+		do
+			code := vdpr3b_template_code
+			etl_code := vdpr3_etl_code
+			default_template := vdpr3b_default_template
+			current_class := a_class
+			class_impl := a_class
+			a_class_name := a_precursor.parent_name.class_name
+			position := a_class_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_redefined_feature.name.name, 6)
+			parameters.put (a_class_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = redefined feature name
+			-- dollar7: $7 = parent class name
 		end
 
 	make_vdrd2a (a_class: like current_class; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
@@ -7421,6 +7670,12 @@ feature {NONE} -- Implementation
 	vdjr0a_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
 	vdjr0b_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
 	vdjr0c_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
+	vdpr1a_default_template: STRING is "[$1] class $5 ($3,$4): Precursor instruction does not appear in a Routine_body."
+	vdpr1b_default_template: STRING is "[$1] class $5 ($3,$4): Precursor expression does not appear in a Routine_body."
+	vdpr2a_default_template: STRING is "[$1] class $5 ($3,$4): class $6 in Precursor construct is not a parent of class $5."
+	vdpr3a_default_template: STRING is "[$1] class $5 ($3,$4): conflict in Precursor construct between effective features `$6' inherited from '$7' and `$8' inherited from '$9'."
+	vdpr3b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of an effective feature."
+	vdpr3c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of a feature from parent '$7'."
 	vdrd2a_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
 	vdrd2b_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
 	vdrd2c_default_template: STRING is "[$1] class $5 ($3,$4): signature of selected feature `$6' does not conform to the signature of replicated feature `$7' in parent $8."
@@ -7574,6 +7829,9 @@ feature {NONE} -- Implementation
 	vcfg2_etl_code: STRING is "VCFG-2"
 	vcfg3_etl_code: STRING is "VCFG-3"
 	vdjr_etl_code: STRING is "VDJR"
+	vdpr1_etl_code: STRING is "VDPR-1"
+	vdpr2_etl_code: STRING is "VDPR-2"
+	vdpr3_etl_code: STRING is "VDPR-3"
 	vdrd2_etl_code: STRING is "VDRD-2"
 	vdrd3_etl_code: STRING is "VDRD-3"
 	vdrd4_etl_code: STRING is "VDRD-4"
@@ -7666,6 +7924,12 @@ feature {NONE} -- Implementation
 	vdjr0a_template_code: STRING is "vdjr0a"
 	vdjr0b_template_code: STRING is "vdjr0b"
 	vdjr0c_template_code: STRING is "vdjr0c"
+	vdpr1a_template_code: STRING is "vdpr1a"
+	vdpr1b_template_code: STRING is "vdpr1b"
+	vdpr2a_template_code: STRING is "vdpr2a"
+	vdpr3a_template_code: STRING is "vdpr3a"
+	vdpr3b_template_code: STRING is "vdpr3b"
+	vdpr3c_template_code: STRING is "vdpr3c"
 	vdrd2a_template_code: STRING is "vdrd2a"
 	vdrd2b_template_code: STRING is "vdrd2b"
 	vdrd2c_template_code: STRING is "vdrd2c"

@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			create anchored_type_checker.make (a_universe)
 			create parent_checker.make (a_universe)
 			create formal_parameter_checker.make (a_universe)
+			create precursor_checker.make (a_universe)
 			create parent_context.make (a_universe.any_class, a_universe.any_class)
 		end
 
@@ -666,6 +667,7 @@ feature {NONE} -- Feature processing
 					-- This is not a fatal error.
 				error_handler.report_vdrd3b_error (current_class, l_postconditions, l_flattened_feature)
 			end
+			check_precursor_validity (a_feature)
 		end
 
 	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE) is
@@ -1264,6 +1266,19 @@ feature {NONE} -- Feature adaptation validity
 				end
 			end
 		end
+
+feature {NONE} -- Precursor validity
+
+	check_precursor_validity (a_feature: ET_REDECLARED_FEATURE) is
+			-- Check validity of Precursor constructs in `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			precursor_checker.check_feature_validity (a_feature, current_class)
+		end
+
+	precursor_checker: ET_PRECURSOR_CHECKER
+			-- Precursor validity checker
 
 feature {NONE} -- Signature resolving
 
@@ -2210,6 +2225,7 @@ invariant
 	anchored_type_checker_not_void: anchored_type_checker /= Void
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
+	precursor_checker_not_void: precursor_checker /= Void
 	parent_context_not_void: parent_context /= Void
 
 end

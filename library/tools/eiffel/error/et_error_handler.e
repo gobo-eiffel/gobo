@@ -826,6 +826,123 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdpr1a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_INSTRUCTION) is
+			-- Report VDPR-1 error: instruction `a_precursor' does not 
+			-- appear in a routine body in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr1_error (a_class) then
+				create an_error.make_vdpr1a (a_class, a_precursor)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr1b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_EXPRESSION) is
+			-- Report VDPR-1 error: expression `a_precursor' does not 
+			-- appear in a routine body in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr1_error (a_class) then
+				create an_error.make_vdpr1b (a_class, a_precursor)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr2a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR) is
+			-- Report VDPR-2 error: the parent name specified in `a_precursor'
+			-- is not the name of a parent of `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_precursor_qualified: a_precursor.parent_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr2_error (a_class) then
+				create an_error.make_vdpr2a (a_class, a_precursor)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr3a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; f1, f2: ET_PARENT_FEATURE) is
+			-- Report VDPR-3 error: two effective features `f1' and `f2' redefined into 
+			-- the same feature `a_redefined_feature' containing `a_precursor' in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_redefined_feature_not_void: a_redefined_feature /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr3_error (a_class) then
+				create an_error.make_vdpr3a (a_class, a_precursor, a_redefined_feature, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr3b_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE; an_inherited_feature: ET_PARENT_FEATURE) is
+			-- Report VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
+			-- is the redefinition of a deferred feature `an_inherited_feature' in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_redefined_feature_not_void: a_redefined_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr3_error (a_class) then
+				create an_error.make_vdpr3b (a_class, a_precursor, a_redefined_feature, an_inherited_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdpr3c_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_redefined_feature: ET_FEATURE) is
+			-- Report VDPR-3 error: feature `a_redefined_feature' where `a_precursor' appears
+			-- is not the redefinition of a feature inherited from `a_precursor.parent_name'
+			-- in `a_class'.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_precursor_qualified: a_precursor.parent_name /= Void
+			a_redefined_feature_not_void: a_redefined_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr3_error (a_class) then
+				create an_error.make_vdpr3c (a_class, a_precursor, a_redefined_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdrd2a_error (a_class: ET_CLASS; f1: ET_FEATURE; f2: ET_PARENT_FEATURE) is
 			-- Report VDRD-2 error: the feature `f2' is redeclared
 			-- as `f1' in `a_class', but the signature of `f1' in `a_class'
@@ -3922,6 +4039,36 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vdpr1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDPR-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vdpr2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDPR-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vdpr3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDPR-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vdrd2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDRD-2 error be reported when it
 			-- appears in `a_class'?
@@ -5065,6 +5212,24 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giabu
+			report_internal_error (an_error)
+		end
+
+	report_giabv_error is
+			-- Report GIABV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabv
+			report_internal_error (an_error)
+		end
+
+	report_giabw_error is
+			-- Report GIABW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabw
 			report_internal_error (an_error)
 		end
 

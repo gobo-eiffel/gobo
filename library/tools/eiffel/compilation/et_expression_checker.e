@@ -1652,16 +1652,16 @@ feature {NONE} -- Expression validity
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			a_parent: ET_PRECURSOR_CLASS_NAME
+			a_parent_name: ET_PRECURSOR_CLASS_NAME
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 -- TODO
 			if not an_expression.is_parent_prefixed then
 				an_expression.precursor_keyword.process (Current)
 			end
-			a_parent := an_expression.parent
-			if a_parent /= Void then
-				a_parent.process (Current)
+			a_parent_name := an_expression.parent_name
+			if a_parent_name /= Void then
+				a_parent_name.process (Current)
 			end
 			if an_expression.is_parent_prefixed then
 				an_expression.precursor_keyword.process (Current)

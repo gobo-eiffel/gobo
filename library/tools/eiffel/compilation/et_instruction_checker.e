@@ -1145,14 +1145,14 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			a_parent: ET_PRECURSOR_CLASS_NAME
+			a_parent_name: ET_PRECURSOR_CLASS_NAME
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 -- TODO
 -- TODO
-			a_parent := an_instruction.parent
-			if a_parent /= Void then
-				a_parent.process (Current)
+			a_parent_name := an_instruction.parent_name
+			if a_parent_name /= Void then
+				a_parent_name.process (Current)
 			end
 			an_arguments := an_instruction.arguments
 			if an_arguments /= Void then
@@ -1165,6 +1165,7 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
+				-- The Retry instruction does not appear in a Rescue clause.
 			set_fatal_error
 			error_handler.report_vxrt0a_error (current_feature.implementation_class, an_instruction)
 		end
