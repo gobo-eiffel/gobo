@@ -5,7 +5,7 @@ indexing
 		"Routines that ought to be in class STRING"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -263,6 +263,38 @@ feature -- Conversion
 		end
 
 feature -- Removal
+
+	keep_head (a_string: STRING; n: INTEGER) is
+			-- Remove all the characters of `a_string' except for the first `n';
+			-- if `n' > `a_string.count', do nothing.
+		require
+			a_string_not_void: a_string /= Void
+			n_non_negative: n >= 0
+		do
+#ifdef ISE || HACT
+			a_string.head (n)
+#else
+			a_string.keep_head (n)
+#endif
+		ensure
+			kept: a_string.is_equal (old a_string.substring (1, n.min (a_string.count)))
+		end
+
+	keep_tail (a_string: STRING; n: INTEGER) is
+			-- Remove all the characters of `a_string' except for the last `n';
+			-- if `n' > `a_string.count', do nothing.
+		require
+			a_string_not_void: a_string /= Void
+			n_non_negative: n >= 0
+		do
+#ifdef ISE || HACT
+			a_string.tail (n)
+#else
+			a_string.keep_tail (n)
+#endif
+		ensure
+			kept: a_string.is_equal (old a_string.substring (a_string.count - n.min (a_string.count) + 1, a_string.count))
+		end
 
 	wipe_out (a_string: STRING) is
 			-- Remove all characters in `a_string'.
