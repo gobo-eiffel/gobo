@@ -288,7 +288,7 @@ feature -- Test
 				create name_comparator.make
 				create name_sorter.make (name_comparator)
 				filenames.sort (name_sorter)
-				assert_arrays_equal ("entries", << >>, filenames.to_array)
+				assert ("entries", filenames.to_array.count = 0)
 				a_directory.close
 				assert ("is_closed", a_directory.is_closed)
 			else
