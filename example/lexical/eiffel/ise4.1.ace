@@ -12,7 +12,7 @@ system
 root
 
 	EIFFEL_SCANNER: "benchmark"
-		
+
 default
 
 	--debug (yes);
