@@ -14,10 +14,11 @@ indexing
 
 class DS_ARRAYED [G]
 
-#ifdef ISE || HACT
+#ifndef SE
 inherit
 
 	ARRAY [G]
+#ifdef ISE || HACT
 		rename
 			empty as ise_empty,
 			full as ise_full,
@@ -30,12 +31,19 @@ inherit
 			object_comparison as ise_object_comparison,
 			occurrences as ise_occurrences
 		end
+#else
+#ifdef VE
+		rename
+			remove as ve_remove,
+			wipe_out as ve_wipe_out
+		end
+#endif
+#endif
 
 creation
 
 	make, make_from_array
 #else
-#ifdef SE
 inherit
 
 	ANY
@@ -174,15 +182,6 @@ invariant
 	consistent_size: count = upper - lower + 1
 	positive_count: count >= 0
 	handle_not_void: handle /= Void
-#else
-inherit
-
-	ARRAY [G]
-
-creation
-
-	make, make_from_array
-#endif
 #endif
 
 end -- class DS_ARRAYED
