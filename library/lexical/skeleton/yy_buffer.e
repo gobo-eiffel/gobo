@@ -288,8 +288,8 @@ feature {NONE} -- Implementation
 feature {NONE} -- Constants
 
 	default_capacity: INTEGER is
-			-- Default capacity of buffer.
-		do
+			-- Default capacity of buffer
+		once
 			Result := 16384
 		ensure
 			positive_default_capacity: Result > 0
