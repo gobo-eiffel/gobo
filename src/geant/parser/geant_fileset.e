@@ -55,10 +55,27 @@ feature -- Status report
 			-- Can element be executed?
 		do
 			Result := (directory_name /= Void and then directory_name.count > 0)
-			Result := Result and then include_wildcard /= Void and then include_wildcard.compiled
-			Result := Result and then (exclude_wildcard = Void or else exclude_wildcard.compiled)
-			Result := Result and then (map = Void or else map.is_executable)
-			Result := Result and then (map = Void implies not force)
+			if not Result then
+				project.log ("  [fileset] error: attribute 'directory' is mandatory%N")
+			end
+			if Result then
+				Result := include_wildcard /= Void and then include_wildcard.compiled
+				if not Result then
+					project.log ("  [fileset] error: attribute 'include' is not valid%N")
+				end
+			end
+			if Result then
+				Result := exclude_wildcard = Void or else exclude_wildcard.compiled
+				if not Result then
+					project.log ("  [fileset] error: attribute 'exclude' is not valid%N")
+				end
+			end
+			if Result then
+				Result := map = Void or else map.is_executable
+				if not Result then
+					project.log ("  [fileset] error: element 'map' is not defined correctly%N")
+				end
+			end
 
 		ensure
 			directory_name_not_void: Result implies directory_name /= Void
@@ -68,7 +85,6 @@ feature -- Status report
 			exclude_wildcard_compiled: Result implies exclude_wildcard = Void or else
 				exclude_wildcard.compiled
 			map_executable: Result implies (map = Void or else map.is_executable)
-			not_force_without_map: Result implies (map = Void implies not force)
 		end
 
 feature -- Access
