@@ -11,17 +11,3 @@ releases.
 . Add %option backupfile="filename" and corresponding command-line option.
 . Add a feature in DS_ARRAYED_LIST to get rid of garbage (i.e. old items
   at indexes count+1..capacity.
-
-16 June 1997
-
-. Split function YY_SCANNER.wrap into a procedure and an attribute
-  to avoid side-effects.
-
-21 June 1997
-
-. Look at `fatal_error'. Try to avoid raising an exception.
-. Put precondition to `set_start_condition'.
-
-11 August 1998
-
-. Provide a better way to specify types of semantic values with geyacc.

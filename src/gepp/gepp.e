@@ -195,7 +195,7 @@ feature -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 		do
-			!! a_message.make ("1.1")
+			!! a_message.make ("1.4")
 			error_handler.report_message (a_message)
 		end
 
