@@ -34,11 +34,12 @@ feature {NONE} -- Initialization
 			!! classes.make (3000)
 			error_handler := an_error_handler
 			ast_factory := a_factory
+			make_basic_classes
 			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
 			eiffel_parser.set_create_keyword (True)
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]! class_sorter.make_default
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! formal_generic_parameter_sorter.make_default
-			make_basic_classes
+			!! feature_flattener.make (any_class)
 		ensure
 			clusters_set: clusters = a_clusters
 			ast_factory_set: ast_factory = a_factory
@@ -111,16 +112,46 @@ feature -- Access
 			class_not_void: Result /= Void
 		end
 
+	descendants (a_class: ET_CLASS): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Proper descendant classes of `a_class'
+		require
+			a_class_not_void: a_class /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			other_class: ET_CLASS
+		do
+			if a_class = any_class or a_class = general_class then
+				!! Result.make (classes.count)
+			else
+				!! Result.make (10)
+			end
+			a_cursor := classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				other_class := a_cursor.item
+				if other_class.ancestors_searched and not other_class.has_ancestors_error then
+					if other_class.has_ancestor (a_class) then
+						Result.force_last (other_class)
+					end
+				end
+				a_cursor.forth
+			end
+		ensure
+			descendants_not_void: Result /= Void
+			no_void_descendant: not Result.has (Void)
+		end
+
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
 	next_feature_id: INTEGER is
+			-- Next feature ID
 		do
 			feature_counter := feature_counter + 1
 			Result := feature_counter
 		end
 
 	feature_counter: INTEGER
+			-- Feature ID counter
 
 feature -- Basic classes
 
@@ -191,6 +222,7 @@ feature -- Compilation
 					nb := nb + 1
 					if a_class.is_parsed and then not a_class.has_syntax_error then
 						a_class.flatten
+--						a_class.search_ancestors
 					end
 --				end
 				a_cursor.forth
@@ -213,6 +245,9 @@ feature {ET_CLASS} -- Implementation
 	class_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]
 			-- Class sorter
 
+	feature_flattener: ET_FEATURE_FLATTENER
+			-- Feature flattener
+
 feature {ET_FORMAL_GENERIC_PARAMETERS, ET_FORMAL_GENERIC_TYPE} -- Implementation
 
 	formal_generic_parameter_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]
@@ -226,6 +261,7 @@ invariant
 	eiffel_parser_not_void: eiffel_parser /= Void
 	ast_factory_not_void: ast_factory /= Void
 	class_sorter_not_void: class_sorter /= Void
+	feature_flattener_not_void: feature_flattener /= Void
 	formal_generic_parameter_sorter_not_void: formal_generic_parameter_sorter /= Void
 	any_class_not_void: any_class /= Void
 	general_class_not_void: general_class /= Void
