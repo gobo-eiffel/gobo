@@ -126,7 +126,21 @@ feature -- Tests
 			check_invalid_scheme (uri)
 			assert_equal ("scheme_specific", "foo", uri.scheme_specific_part)
 		end
-			
+
+	test_rootless_path is
+			-- Test rootless path (opaque URI).
+		local
+			uri: UT_URI
+		do
+			create uri.make ("abc:foo/c")
+			check_uri (uri, "abc", Void, "foo/c", Void, Void)
+
+			create uri.make ("abc:foobar?q")
+			check_uri (uri, "abc", Void, "foobar", "q", Void)
+
+			create uri.make ("abc:foobar#loc")
+			check_uri (uri, "abc", Void, "foobar", Void, "loc")
+		end
 
 feature {NONE} -- Implementation
 
