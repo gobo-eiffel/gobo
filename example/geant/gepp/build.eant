@@ -11,7 +11,7 @@
 	</target>
 
 	<target name="gepp1" depend="init">
-		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir}/kl_array_routines.e" lines="false">
+		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir_flat}/kl_array_routines.e" lines="false">
 			<define name="HACT" if="$HACT"/>
 		</gepp>
 	</target>
@@ -19,7 +19,7 @@
 	<target name="gepp1a" depend="init">
 		<gepp
 			input="${GOBO}/library/kernel/kl_array_routines.ge"
-			output="${gendir}/kl_array_routines.e"
+			output="${gendir_flat}/kl_array_routines.e"
 			lines="false"
 			to_directory="ttt"
 		>
@@ -28,7 +28,7 @@
 	</target>
 
 	<target name="gepp2" depend="init">
-		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir}/ttt/kl_array_routines.e" lines="false">
+		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="${gendir_flat}/ttt/kl_array_routines.e" lines="false">
 			<define name="HACT" if="$HACT"/>
 		</gepp>
 	</target>
