@@ -1,0 +1,12 @@
+<!DOCTYPE doc [
+	<!ELEMENT doc (child*)>
+	<!ELEMENT child EMPTY>
+	<!ENTITY root1 SYSTEM "relative1.xml">
+	<!ENTITY root2 SYSTEM "relative2.xml">
+	<!ENTITY sub SYSTEM "relative/1.xml">
+	<!ENTITY subinsub SYSTEM "2.xml">
+]>
+<doc>
+&root1;
+&root2;
+</doc>
