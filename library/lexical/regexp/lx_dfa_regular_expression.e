@@ -10,7 +10,7 @@ indexing
 	date:       "$Date$";
 	revision:   "$Revision$"
 
-class LX_FULL_DFA_REGULAR_EXPRESSION
+class LX_DFA_REGULAR_EXPRESSION
 
 inherit
 
@@ -22,23 +22,43 @@ creation
 
 feature -- Element change
 
-	compile (a_regexp: STRING) is
-			-- Compile `a_regexp'. Set `compiled' to True
-			-- after successful compilation.
+	compile (a_regexp: STRING; i: BOOLEAN) is
+			-- Compile `a_regexp'. Make the matching engine
+			-- case-insensitive if `i' is set. Set `compiled'
+			-- to True after successful compilation.
 		local
 			a_parser: LX_REGEXP_PARSER
 			a_description: LX_DESCRIPTION
-			an_error_handler: GELEX_ERROR_HANDLER
+			an_error_handler: LX_REGEXP_ERROR_HANDLER
 			a_dfa: LX_FULL_DFA
 			a_full_tables: LX_FULL_TABLES
+			a_string: STRING
+			nb: INTEGER
 		do
 			!! an_error_handler.make
 			!! a_description.make
 			a_description.set_equiv_classes_used (False)
 			a_description.set_meta_equiv_classes_used (False)
 			a_description.set_full_table (True)
+			a_description.set_case_insensitive (i)
 			!! a_parser.make_from_description (a_description, an_error_handler)
-			a_parser.parse_string (a_regexp)
+			a_string := clone (a_regexp)
+			nb := a_string.count
+			if nb > 0 and then a_string.item (1) = '^' then
+				has_caret := True
+				a_string.tail (nb - 1)
+				nb := nb - 1
+			else
+				has_caret := False
+			end
+			if nb > 0 and then a_string.item (nb) = '$'
+			then
+				has_dollar := True
+				a_string.head (nb - 1)
+			else
+				has_dollar := False
+			end
+			a_parser.parse_string (a_string)
 			if an_error_handler.syntax_error then
 				yy_nxt := Void
 				yy_accept := Void
@@ -61,59 +81,196 @@ feature -- Status report
 		end
 
 	matches (a_string: STRING): BOOLEAN is
-			-- Does current regular expression match `a_string'?
+			-- Does `a_string' include a token of the language
+			-- described by current regular expression?
 		local
-			i, j, nb: INTEGER
+			i, nb: INTEGER
+		do
+			nb := a_string.count
+			if has_caret then
+				if has_dollar then
+					Result := longest_end_position (a_string, 1) = nb
+				else
+					Result := smallest_end_position (a_string, 1) /= -1
+				end
+			else
+				if has_dollar then
+					from
+						i := 1
+					until
+						Result or i > nb
+					loop
+						Result := longest_end_position (a_string, i) = nb
+						i := i + 1
+					end
+				else
+					from
+						i := 1
+					until
+						Result or i > nb
+					loop
+						Result := smallest_end_position (a_string, i) /= -1
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	recognizes (a_string: STRING): BOOLEAN is
+			-- Is `a_string' a token of the language
+			-- described by current regular expression?
+		do
+			Result := longest_end_position (a_string, 1) = a_string.count
+		end
+
+feature -- Access
+
+	matched_position (a_string: STRING): DS_PAIR [INTEGER, INTEGER] is
+			-- Position of the longest-leftmost token matched
+			-- by current regular expression in `a_string'
+		local
+			i, nb: INTEGER
+			e: INTEGER
+		do
+			nb := a_string.count
+			if has_caret then
+				e := longest_end_position (a_string, 1)
+				if has_dollar then
+					if e = nb then
+						!! Result.make (1, e)
+					end
+				else
+					if e /= -1 then
+						!! Result.make (1, e)
+					end
+				end
+			else
+				if has_dollar then
+					from
+						i := 1
+					until
+						Result /= Void or i > nb
+					loop
+						e := longest_end_position (a_string, i)
+						if e = nb then
+							!! Result.make (i, e)
+						else
+							i := i + 1
+						end
+					end
+				else
+					from
+						i := 1
+					until
+						Result /= Void or i > nb
+					loop
+						e := longest_end_position (a_string, i)
+						if e /= -1 then
+							!! Result.make (i, e)
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Matching
+
+	smallest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
+			-- Position of the last character of the longest
+			-- token in `a_string' starting at position `start_pos'
+			-- and matched by current regular expression;
+			-- -1 if no such token exists
+		require
+			compiled: compiled
+			a_string_not_void: a_string /= Void
+			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
+		local
+			i, nb: INTEGER
 			a_state: INTEGER
 			a_symbol: INTEGER
 		do
 			from
+				i := start_pos
 				nb := a_string.count
-				from
-					j := 1
-					a_state := 2
-					Result := yy_accept.item (a_state) /= 0
-				until
-					Result or j > nb
-				loop
-					a_symbol := a_string.item (j).code
-					a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
-					if a_state > 0 then
-						Result := yy_accept.item (a_state) /= 0
-						j := j + 1
-					else
-						j := nb + 1
-					end
+				a_state := 1
+				if yy_accept.item (a_state) /= 0 then
+					Result := i - 1
+				else
+					Result := -1
 				end
-				i := 2
 			until
-				Result or i > nb
+				Result /= -1 or i > nb
 			loop
-				from
-					j := i
-					if j = 1 or else a_string.item (j - 1) = '%N' then
-						a_state := 2
+				a_symbol := a_string.item (i).code
+				a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
+				if a_state > 0 then
+					if yy_accept.item (a_state) /= 0 then
+						Result := i
 					else
-						a_state := 1
+						i := i + 1
 					end
-					Result := yy_accept.item (a_state) /= 0
-				until
-					Result or j > nb
-				loop
-					a_symbol := a_string.item (j).code
-					a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
-					if a_state > 0 then
-						Result := yy_accept.item (a_state) /= 0
-						j := j + 1
-					else
-						j := nb + 1
-					end
+				else
+					i := nb + 1
 				end
-				i := i + 1
 			end
+		ensure
+			valid_position: Result /= -1 implies
+				(start_pos <= Result + 1 and Result <= a_string.count)
 		end
 
-feature {NONE} -- Implementation
+	longest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
+			-- Position of the last character of the longest
+			-- token in `a_string' starting at position `start_pos'
+			-- and matched by current regular expression;
+			-- -1 if no such token exists
+		require
+			compiled: compiled
+			a_string_not_void: a_string /= Void
+			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
+		local
+			i, nb: INTEGER
+			a_state: INTEGER
+			a_symbol: INTEGER
+		do
+			from
+				i := start_pos
+				nb := a_string.count
+				a_state := 1
+				if yy_accept.item (a_state) /= 0 then
+					Result := i - 1  
+				else
+					Result := -1
+				end
+			until
+				i > nb
+			loop
+				a_symbol := a_string.item (i).code
+				a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
+				if a_state > 0 then
+					if yy_accept.item (a_state) /= 0 then
+						Result := i
+					end
+					i := i + 1
+				else
+					i := nb + 1
+				end
+			end
+		ensure
+			valid_position: Result /= -1 implies
+				(start_pos <= Result + 1 and Result <= a_string.count)
+		end
+
+feature {NONE} -- Engine Data
+
+	has_caret: BOOLEAN
+			-- Does current regular expression start with '^'?
+			-- ('^' matches at start of string as a whole.)
+
+	has_dollar: BOOLEAN
+			-- Does current regular expression end with '$'?
+			-- ('$' matches at end of string as a whole.)
 
 	yy_nxt: ARRAY [INTEGER]
 			-- States to enter upon reading symbol;
@@ -125,4 +282,4 @@ feature {NONE} -- Implementation
 	yyNb_rows: INTEGER
 			-- Number of rows in `yy_nxt'
 
-end -- class LX_FULL_DFA_REGULAR_EXPRESSION
+end -- class LX_DFA_REGULAR_EXPRESSION
