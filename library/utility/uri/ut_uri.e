@@ -81,7 +81,7 @@ feature -- Initialization.
 							-- To resolve
 							if path = Void then
 								-- 1. we don't have a path, use path of parent, if any
-								create path.make_from_string (base.path)
+								path := clone (base.path)
 							elseif base.path = Void then
 								-- 2. Parent doesn't have a path, make our path absolute
 								STRING_.insert_character (path, '/', 1)
@@ -97,24 +97,24 @@ feature -- Initialization.
 				end
 
 				-- Build `reference' from parsed components
-				create full_reference.make (64)
-				full_reference.append_string (scheme)
+				create full_reference.make_empty
+				full_reference := STRING_.appended_string (full_reference, scheme)
 				full_reference.append_character (':')
 				if authority /= Void then
-					full_reference.append_string ("//")
-					full_reference.append_string (authority)
+					full_reference := STRING_.appended_string (full_reference, "//")
+					full_reference := STRING_.appended_string (full_reference, authority)
 				end
 				if path /= Void then
 					-- path is void for relative //g
-					full_reference.append_string (path)
+					full_reference := STRING_.appended_string (full_reference, path)
 				end
 				if query /= Void then
-					full_reference.append_string ("?")
-					full_reference.append_string (query)
+					full_reference.append_character ('?')
+					full_reference := STRING_.appended_string (full_reference, query)
 				end
 				if fragment /= Void then
-					full_reference.append_string ("#")
-					full_reference.append_string (fragment)
+					full_reference.append_character ('#')
+					full_reference := STRING_.appended_string (full_reference, fragment)
 				end
 
 			end
