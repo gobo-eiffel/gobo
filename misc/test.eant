@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<project name="kernel" inherit="${GOBO}/misc/eiffel.eant" default="help">
+
+	<description>
+		system:      "Gobo Eiffel Kernel Library Tester"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant test"/>
+		<echo message="   geant test_ise"/>
+		<echo message="   geant test_hact"/>
+		<echo message="   geant test_se"/>
+		<echo message="   geant test_ve"/>
+		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant test_debug_hact"/>
+		<echo message="   geant test_debug_se"/>
+		<echo message="   geant test_debug_ve"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_hact"/>
+		<echo message="   geant compile_se"/>
+		<echo message="   geant compile_ve"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant compile_debug_hact"/>
+		<echo message="   geant compile_debug_se"/>
+		<echo message="   geant compile_debug_ve"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="test" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}'.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="test_${eiffel}"/>
+	</target>
+
+	<target name="test_ise" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with ISE Eiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_ise ${compilation_log}"/>
+	</target>
+
+	<target name="test_hact" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with Halstenbach Eiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_hact ${compilation_log}"/>
+	</target>
+
+	<target name="test_ve" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with Visual Eiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_ve ${compilation_log}"/>
+	</target>
+
+	<target name="test_se" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with SmallEiffel.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_se ${compilation_log}"/>
+	</target>
+
+	<target name="test_debug" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="test_debug_${eiffel}"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with ISE Eiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_ise ${compilation_log}"/>
+	</target>
+
+	<target name="test_debug_hact" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with Halstenbach Eiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_hact ${compilation_log}"/>
+	</target>
+
+	<target name="test_debug_ve" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with Visual Eiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_ve ${compilation_log}"/>
+	</target>
+
+	<target name="test_debug_se" depend="init" dir="${system_dir}">
+		<description>
+			Test '${system}' with SmallEiffel in debug mode.
+		</description>
+
+		<getest config="getest.cfg" compile="geant compile_debug_se ${compilation_log}"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${system_dir}">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<ise clean="${system}"/>
+		<hact clean="${system}"/>
+		<se clean="${system}"/>
+		<ve clean="${system}"/>
+		<delete file="${system}${exe}"/>
+		<delete file="${system}.melted"/>
+		<delete file="${system}.h2o"/>
+		<delete directory="TESTGEN"/>
+		<delete file="xcompile.log"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<set name="compilation_log" value="&gt; xcompile.log 2&gt;&amp;1"/>
+		<set name="eiffel" value="se"/>
+		<geant target="init_eiffel"/>
+		<geant target="init_os"/>
+		<geant target="init_system"/>
+	</target>
+
+</project>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xml" inherit="${GOBO}/misc/ge2e.eant" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
@@ -68,45 +68,16 @@
 
 	<target name="install_api">
 		<set name="gepp_dir" value="impl/expat/api"/>
+		<set name="spec_dir" value="impl/expat/spec"/>
 		<set name="gepp_file" value="xp_api"/>
-		<geant target="spec_eif"/>
+		<geant target="ge2e"/>
 	</target>
 
 	<target name="install_general">
 		<set name="gepp_dir" value="impl/expat/general"/>
+		<set name="spec_dir" value="impl/expat/spec"/>
 		<set name="gepp_file" value="c_string_helper"/>
-		<geant target="spec_eif"/>
-	</target>
-
-	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/hact/${gepp_file}.e">
-			<define name="HACT"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/ise/${gepp_file}.e">
-			<define name="ISE"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/se/${gepp_file}.e">
-			<define name="SE"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="impl/expat/spec/ve/${gepp_file}.e">
-			<define name="VE"/>
-		</gepp>
-	</target>
-
-	<target name="spec_hact">
-		<mkdir directory="impl/expat/spec/hact"/>
-	</target>
-
-	<target name="spec_ise">
-		<mkdir directory="impl/expat/spec/ise"/>
-	</target>
-
-	<target name="spec_se">
-		<mkdir directory="impl/expat/spec/se"/>
-	</target>
-
-	<target name="spec_ve">
-		<mkdir directory="impl/expat/spec/ve"/>
+		<geant target="ge2e"/>
 	</target>
 
 </project>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="calculator" default="help">
+<project name="calculator" inherit="${GOBO}/misc/eiffel.eant" default="help">
 
 	<description>
 		system:      "Infix Notation Calculator"
@@ -30,19 +30,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Install ${system} directory.
-		</description>
-
-		<geant target="scanner"/>
-		<gexace command="build" command_options="ise"/>
-		<gexace command="build" command_options="hact"/>
-		<gexace command="build" command_options="se"/>
-		<gexace command="build" command_options="ve"/>
-	</target>
-
-	<target name="scanner" depend="init" dir="${GOBO}/example/${library}/${example}">
+	<target name="scanner" depend="init" dir="${system_dir}">
 		<description>
 			Generate scanner classes.
 		</description>
@@ -50,7 +38,7 @@
 		<geant target="calc_scanner"/>
 	</target>
 
-	<target name="parser" depend="init" dir="${GOBO}/example/${library}/${example}">
+	<target name="parser" depend="init" dir="${system_dir}">
 		<description>
 			Generate parser classes.
 		</description>
@@ -58,135 +46,24 @@
 		<geant target="calc_parser"/>
 	</target>
 
-	<target name="compile" depend="init">
-		<description>
-			Compile '${system}'.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'se' if this variable is not defined.
-		</description>
-
-		<geant target="compile_${eiffel}"/>
-	</target>
-
-	<target name="compile_ise" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with ISE Eiffel.
-		</description>
-
-		<gexace command="build" command_options="ise"/>
-		<ise ace="ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
-	</target>
-
-	<target name="compile_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with Halstenbach Eiffel.
-		</description>
-
-		<gexace command="build" command_options="hact"/>
-		<hact ace="hact.ace" system="${system}" finalize="true" fish="true"/>
-	</target>
-
-	<target name="compile_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with Visual Eiffel.
-		</description>
-
-		<gexace command="build" command_options="ve"/>
-		<ve esd="ve.esd"/>
-	</target>
-
-	<target name="compile_se" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with SmallEiffel.
-		</description>
-
-		<gexace command="build" command_options="se"/>
-		<se ace="se.ace"/>
-	</target>
-
-	<target name="compile_debug" depend="init">
-		<description>
-			Compile '${system}' in debug mode.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'se' if this variable is not defined.
-		</description>
-
-		<geant target="compile_debug_${eiffel}"/>
-	</target>
-
-	<target name="compile_debug_ise" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with ISE Eiffel in debug mode.
-		</description>
-
-		<gexace command="build" command_options="ise">
-			<define name="DEBUG" value="true"/>
-		</gexace>
-		<ise ace="ise.ace" system="${system}" finalize="false" finish_freezing="true"/>
-	</target>
-
-	<target name="compile_debug_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with Halstenbach Eiffel in debug mode.
-		</description>
-
-		<gexace command="build" command_options="hact">
-			<define name="DEBUG" value="true"/>
-		</gexace>
-		<hact ace="hact.ace" system="${system}" finalize="false" fish="true"/>
-	</target>
-
-	<target name="compile_debug_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with Visual Eiffel in debug mode.
-		</description>
-
-		<gexace command="build" command_options="ve">
-			<define name="DEBUG" value="true"/>
-		</gexace>
-		<ve esd="ve.esd"/>
-	</target>
-
-	<target name="compile_debug_se" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Compile '${system}' with SmallEiffel in debug mode.
-		</description>
-
-		<gexace command="build" command_options="se">
-			<define name="DEBUG" value="true"/>
-		</gexace>
-		<se ace="se.ace"/>
-	</target>
-
-	<target name="clean" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<ise clean="${system}"/>
-		<hact clean="${system}"/>
-		<se clean="${system}"/>
-		<ve clean="${system}"/>
-	</target>
-
-	<target name="clobber" depend="init" dir="${GOBO}/example/${library}/${example}">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<geant target="clean"/>
-		<delete file="calc_scanner.e"/>
-		<delete file="ise.ace"/>
-		<delete file="hact.ace"/>
-		<delete file="se.ace"/>
-		<delete file="ve.esd"/>
-		<delete file="${system}${exe}"/>
-		<delete file="${system}.melted"/>
-		<delete file="${system}.h2o"/>
-	</target>
-
 
 <!-- Implementation -->
+
+	<target name="other_install" depend="init" dir="${system_dir}">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+
+		<geant target="scanner"/>
+	</target>
+
+	<target name="other_clobber" depend="init" dir="${system_dir}">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="calc_scanner.e"/>
+	</target>
 
 	<target name="calc_scanner">
 		<gelex input="calc_scanner.l"/>
@@ -196,30 +73,10 @@
 		<exec executable="ibyacc -o calc_parser.e calc_parser.y"/>
 	</target>
 
-	<target name="init">
+	<target name="init_system">
 		<set name="system" value="calculator"/>
 		<set name="library" value="lexical"/>
-		<set name="example" value="calculator"/>
-		<set name="eiffel" value="se"/>
-		<geant target="init_eiffel"/>
-		<geant target="init_os"/>
-	</target>
-
-	<target name="init_eiffel" if="${GOBO_EIFFEL}">
-		<set name="eiffel" value="${GOBO_EIFFEL}"/>
-	</target>
-
-	<target name="init_os">
-		<geant target="init_windows"/>
-		<geant target="init_unix"/>
-	</target>
-
-	<target name="init_windows" if="${GOBO_OS}=windows">
-		<set name="exe" value=".exe"/>
-	</target>
-
-	<target name="init_unix" unless="${GOBO_OS}=windows">
-		<set name="exe" value=""/>
+		<set name="system_dir" value="${GOBO}/example/${library}/${system}"/>
 	</target>
 
 </project>

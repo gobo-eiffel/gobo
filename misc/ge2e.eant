@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<project name="ge2e">
+
+	<description>
+		description: "Generate Eiffel files from .ge files"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="ge2e">
+		<description>
+			Generate Eiffel files to directory '${spec_dir}/[compiler]'
+			from '${gepp_dir}/${gepp_file}.ge', where [compiler] is
+			'ise', 'hact', 'se' and 've'. Create spec directories
+			if necessary.
+		</description>
+
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/hact/${gepp_file}.e" lines="true">
+			<define name="HACT"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ise/${gepp_file}.e" lines="true">
+			<define name="ISE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/se/${gepp_file}.e" lines="true">
+			<define name="SE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ve/${gepp_file}.e" lines="true">
+			<define name="VE"/>
+		</gepp>
+	</target>
+
+</project>

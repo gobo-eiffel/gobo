@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="geant" default="help">
+<project name="geant" inherit="${GOBO}/misc/eiffel.eant" default="help">
 
 	<description>
 		description: "Eiffel Ant file for 'geant'"
@@ -12,120 +12,12 @@
 		revision:    "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant compile"/>
-		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_hact"/>
-		<echo message="   geant compile_se"/>
-		<echo message="   geant compile_ve"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Install ${system} directory.
-		</description>
-		<!-- do nothing -->
-	</target>
-
-	<target name="compile" depend="init">
-		<description>
-			Compile '${system}'.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'se' if this variable is not defined.
-		</description>
-
-		<geant target="compile_${eiffel}"/>
-	</target>
-
-	<target name="compile_ise" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Compile '${system}' with ISE Eiffel.
-		</description>
-
-		<gexace command="build" command_options="ise"/>
-		<ise ace="ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
-	</target>
-
-	<target name="compile_hact" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Compile '${system}' with Halstenbach Eiffel.
-		</description>
-
-		<gexace command="build" command_options="hact"/>
-		<hact ace="hact.ace" system="${system}" finalize="true" fish="true"/>
-	</target>
-
-	<target name="compile_ve" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Compile '${system}' with Visual Eiffel.
-		</description>
-
-		<gexace command="build" command_options="ve"/>
-		<ve esd="ve.esd"/>
-	</target>
-
-	<target name="compile_se" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Compile '${system}' with SmallEiffel.
-		</description>
-
-		<gexace command="build" command_options="se"/>
-		<se ace="se.ace"/>
-	</target>
-
-	<target name="clean" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<ise clean="${system}"/>
-		<delete file="ise.ace"/>
-		<hact clean="${system}"/>
-		<delete file="hact.ace"/>
-		<se clean="${system}"/>
-		<delete file="se.ace"/>
-		<ve clean="${system}" recursive="true"/>
-		<delete file="ve.esd"/>
-	</target>
-
-	<target name="clobber" depend="init" dir="${GOBO}/src/${system}">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<geant target="clean"/>
-		<delete file="${system}${exe}"/>
-	</target>
-
 
 <!-- Implementation -->
 
-	<target name="init">
+	<target name="init_system">
 		<set name="system" value="geant"/>
-		<set name="eiffel" value="se"/>
-		<geant target="init_eiffel"/>
-		<geant target="init_os"/>
-	</target>
-
-	<target name="init_eiffel" if="${GOBO_EIFFEL}">
-		<set name="eiffel" value="${GOBO_EIFFEL}"/>
-	</target>
-
-	<target name="init_os">
-		<geant target="init_windows"/>
-		<geant target="init_unix"/>
-	</target>
-
-	<target name="init_windows" if="${GOBO_OS}=windows">
-		<set name="exe" value=".exe"/>
-	</target>
-
-	<target name="init_unix" unless="${GOBO_OS}=windows">
-		<set name="exe" value=""/>
+		<set name="system_dir" value="${GOBO}/src/${system}"/>
 	</target>
 
 </project>
