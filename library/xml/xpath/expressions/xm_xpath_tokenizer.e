@@ -553,25 +553,25 @@ feature {NONE} -- Status setting
 							next_token := Greater_than_token
 						end
 						finished := True
-												
-					when '.'..'9' then
+
+					when '/' then
+						if input_index < input.count and then input.item (input_index) = '/' then
+							input_index := input_index + 1
+							next_token := Slash_slash_token
+							finished := True
+						else
+							next_token := Slash_token
+							finished := True
+						end
+							
+					when '.', '0'..'9' then
 						
 						-- The logic here can return some tokens that are not legitimate numbers,
 						-- for example "23e" or "1.0e+". However, this will only happen if the XPath
 						-- expression as a whole is syntactically incorrect.
 						-- These errors will be caught by the numeric creation procedure.
 
-												
-						if c =  '/' then
-							if input_index < input.count and then input.item (input_index) = '/' then
-								input_index := input_index + 1
-								next_token := Slash_slash_token
-								finished := True
-							else
-								next_token := Slash_token
-								finished := True
-							end
-						elseif c = '.' then
+						if c = '.' then
 							if input_index < input.count and then input.item (input_index) = '.' then
 								input_index := input_index + 1
 								next_token := Dot_dot_token

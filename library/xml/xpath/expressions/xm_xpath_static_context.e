@@ -55,13 +55,20 @@ feature -- Access
 			-- URI for a namespace prefix;
 			-- The default namespace is NOT used when the prefix is empty.
 		require
-			valid_prefix: xml_prefix /= Void and then is_ncname (xml_prefix)
+			valid_prefix: 	xml_prefix /= Void and then is_ncname (xml_prefix) and then is_declared_prefix (xml_prefix)
 		deferred
 		ensure
 			uri_not_void: Result /= Void
 		end
 
 feature -- Status report
+
+	is_declared_prefix (xml_prefix: STRING): BOOLEAN is
+			-- Is `xml_prefix' allocated to a namespace?
+		require
+			valid_prefix: xml_prefix /= Void and then is_ncname (xml_prefix)
+		deferred
+		end
 
 	was_last_variable_bound: BOOLEAN
 			-- Did last call to `bind_variable' succeed?

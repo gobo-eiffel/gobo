@@ -20,6 +20,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_SHARED_STANDARD_FILES
+
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
 	XM_XPATH_TYPE
@@ -32,6 +34,17 @@ inherit
 		-- to indicate success or failure.
 		-- Upon success, theier result can be accessed via
 		-- `last_parsed_expression' and `last_parsed_sequence' respectively.
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+		do
+			do_nothing
+		end
 
 feature -- Access
 
@@ -244,6 +257,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_APPEND_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_expression%N")
+			end
 			parse_single_expression
 			if not is_parse_error then
 				from
@@ -279,6 +295,9 @@ feature {NONE} -- Expression parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_single_expression%N")
+			end			
 			inspect
 				tokenizer.last_token
 			when For_token then
@@ -312,7 +331,10 @@ feature {NONE} -- Expression parsers
 			if_expression: XM_XPATH_IF_EXPRESSION
 			message: STRING
 		do
-
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_if_expression%N")
+			end
+			
 			-- The Left_parenthesis_token has already been read.
 			
 			tokenizer.next
@@ -371,6 +393,9 @@ feature {NONE} -- Expression parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_typeswitch_expression%N")
+			end
 			report_parse_error("typeswitch is not allowed in XPath")
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -387,6 +412,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_BOOLEAN_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_or_expression%N")
+			end
 			parse_and_expression
 			if not is_parse_error then
 				from
@@ -423,6 +451,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_BOOLEAN_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_and_expression%N")
+			end
 			parse_instance_of_expression
 			if not is_parse_error then
 				from
@@ -456,6 +487,9 @@ feature {NONE} -- Expression parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_for_expression%N")
+			end
 			if tokenizer.last_token = Let_token then
 				report_parse_error ("'let' is not supported in XPath")
 			else
@@ -473,6 +507,9 @@ feature {NONE} -- Expression parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_quantified_expression%N")
+			end
 			parse_mapping_expression
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -495,6 +532,9 @@ feature {NONE} -- Expression parsers
 			assignment: XM_XPATH_ASSIGNATION
 			single_item, a_sequence: XM_XPATH_SEQUENCE_TYPE
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_mapping_expression%N")
+			end
 			create clause_list.make (5)
 			operator := tokenizer.last_token			
 			from
@@ -626,6 +666,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_INSTANCE_OF_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_instance_of_expression%N")
+			end			
 			parse_treat_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -657,6 +700,9 @@ feature {NONE} -- Expression parsers
 		local
 			expr1, expr2: XM_XPATH_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_treat_expression%N")
+			end			
 			parse_castable_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -690,6 +736,9 @@ feature {NONE} -- Expression parsers
 		local
 			expr1: XM_XPATH_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_castable_expression%N")
+			end
 			parse_cast_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -722,6 +771,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_CAST_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_cast_expression%N")
+			end			
 			parse_comparison_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -759,6 +811,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			op: INTEGER
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_comparison_expression%N")
+			end			
 			parse_range_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -821,6 +876,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr3: XM_XPATH_RANGE_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_range_expression%N")
+			end			
 			parse_additive_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -856,6 +914,9 @@ feature {NONE} -- Expression parsers
 			expr3: XM_XPATH_ARITHMETIC_EXPRESSION
 			op: INTEGER
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_additive_expression%N")
+			end			
 			parse_multiplicative_expression
 			if not is_parse_error then
 				expr1 := internal_last_parsed_expression
@@ -893,6 +954,9 @@ feature {NONE} -- Expression parsers
 			op: INTEGER
 			finished: BOOLEAN
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_multiplicative_expression%N")
+			end
 			parse_unary_expression
 			if not is_parse_error then
 				from
@@ -938,6 +1002,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr3: XM_XPATH_ARITHMETIC_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_unary_expression%N")
+			end			
 			if tokenizer.last_token = Minus_token then
 				tokenizer.next
 				if tokenizer.is_lexical_error then
@@ -989,6 +1056,9 @@ feature {NONE} -- Expression parsers
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_VENN_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_union_expression%N")
+			end			
 			parse_intersect_expression
 			if not is_parse_error then
 				from
@@ -1028,6 +1098,9 @@ feature {NONE} -- Expression parsers
 			expr2: XM_XPATH_VENN_EXPRESSION
 			op: INTEGER
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_intersect_expression%N")
+			end
 			parse_path_expression
 			if not is_parse_error then
 				from
@@ -1070,6 +1143,9 @@ feature {NONE} -- Expression parsers
 			root: XM_XPATH_ROOT_EXPRESSION
 			axis: XM_XPATH_AXIS_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_path_expression%N")
+			end			
 			inspect
 				tokenizer.last_token
 
@@ -1128,7 +1204,9 @@ feature {NONE} -- Expression parsers
 			axis: XM_XPATH_AXIS_EXPRESSION
 			op: INTEGER
 		do
-			parse_step_expression
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_relative_path_expression%N")
+			end			parse_step_expression
 			if not is_parse_error then
 				from
 					expr1 := internal_last_parsed_expression
@@ -1178,6 +1256,9 @@ feature {NONE} -- Expression parsers
 			reverse: BOOLEAN
 			message: STRING
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_step_expression%N")
+			end
 			parse_basic_step
 
 			if not is_parse_error then
@@ -1242,6 +1323,13 @@ feature {NONE} -- Expression parsers
 			string_literal: XM_XPATH_STRING_VALUE
 			value: XM_XPATH_VALUE
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_basic_step%N")
+			end
+			debug ("XPath Expression Parser - tokens")
+				std.error.put_string ("Current token is ")
+				std.error.put_string (display_current_token)
+			end			
 			inspect
 				tokenizer.last_token
 
@@ -1461,6 +1549,9 @@ feature {NONE} -- Expression parsers
 			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			arg: XM_XPATH_EXPRESSION
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_function_call%N")
+			end
 			function_name := tokenizer.last_token_value
 			if is_qname (function_name) then
 				
@@ -1539,6 +1630,9 @@ feature {NONE} -- Expression parsers
 			message: STRING
 			types: ARRAY [INTEGER]
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_node_test%N")
+			end
 			token := tokenizer.last_token
 			token_value := tokenizer.last_token_value
 			inspect
@@ -1624,6 +1718,9 @@ feature {NONE} -- Expression parsers
 			-- Parse a node constructor.
 			-- This is allowed only in XQuery, so the feature reports an error for XPath.
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_constructor%N")
+			end
 			report_parse_error ("Node constructor expressions are allowed only in XQuery, not in XPath")
 		end
 
@@ -1633,6 +1730,9 @@ feature {NONE} -- Expression parsers
 			primary_type, content_type, name_code: INTEGER
 			a_type_name, message: STRING
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_node_kind%N")
+			end			
 			a_type_name := tokenizer.last_token_value
 			primary_type := system_type (a_type_name)
 			name_code := -1
