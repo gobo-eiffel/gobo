@@ -255,6 +255,19 @@ feature -- Basic classes
 
 feature -- Features
 
+	default_create_seed: INTEGER
+			-- Seed of feature 'default_create' in class ANY
+
+	set_default_create_seed (a_seed: INTEGER) is
+			-- Set `default_create_seed' to `a_seed'.
+		require
+			a_seed_positive: a_seed > 0
+		do
+			default_create_seed := a_seed
+		ensure
+			default_create_seed_set: default_create_seed = a_seed
+		end
+
 	register_feature (a_feature: ET_FEATURE) is
 			-- Register `a_feature'.
 		require
@@ -531,6 +544,7 @@ feature -- Compilation
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
+			a_feature: ET_FEATURE
 			nb: INTEGER
 			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
@@ -556,7 +570,7 @@ end
 			a_cursor := classes.new_cursor
 				-- Parse classes.
 			from a_cursor.start until a_cursor.after loop
-			a_class := a_cursor.item
+				a_class := a_cursor.item
 				if a_class.is_preparsed then
 					a_class.process (eiffel_parser)
 				end
@@ -570,6 +584,12 @@ debug ("ericb")
 	print (" features%N")
 	io.read_line
 end
+			a_feature := any_class.named_feature (tokens.default_create_feature_name)
+			if a_feature /= Void then
+				set_default_create_seed (a_feature.first_seed)
+			else
+				-- TODO
+			end
 				-- Build ancestors.
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
@@ -607,8 +627,8 @@ end
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.interface_checked then
-					a_class.process (flat_checker)
-					--a_class.process (implementation_checker)
+					--a_class.process (flat_checker)
+					a_class.process (implementation_checker)
 				end
 				a_cursor.forth
 			end
@@ -629,6 +649,7 @@ end
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
+			a_feature: ET_FEATURE
 			nb: INTEGER
 			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
@@ -647,6 +668,12 @@ debug ("ericb")
 	print (" features%N")
 	io.read_line
 end
+			a_feature := any_class.named_feature (tokens.default_create_feature_name)
+			if a_feature /= Void then
+				set_default_create_seed (a_feature.first_seed)
+			else
+				-- TODO
+			end
 			a_cursor := classes.new_cursor
 				-- Build ancestors.
 			from a_cursor.start until a_cursor.after loop
