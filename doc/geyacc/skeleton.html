@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Parser Skeleton</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Parser Skeleton</h1>
+
+<pre><em><strong>indexing</strong></em>
+
+    description: &quot;General parsers&quot;
+    library:     &quot;Gobo Eiffel Parse Library&quot;
+    author:      &quot;Eric Bezault &lt;ericb@gobo.demon.co.uk&gt;&quot;
+    copyright:   &quot;Copyright (c) 1997, Eric Bezault&quot;
+
+<em><strong>deferred class</strong></em> <em>YY_PARSER</em> [<em>G</em>]
+
+<em><strong>creation</strong></em>
+
+    <a href="parser.html#make" name="make"><em>make</em></a>
+            -- Create a new parser.
+
+<em><strong>feature</strong></em> -- Parsing
+
+    <a href="parser.html#parse" name="parse"><em>parse</em></a>
+            -- Parse input stream.
+            -- Set <em>syntax_error</em> to True if
+            -- parsing has not been successful.
+
+<em><strong>feature</strong></em> -- Status report
+
+    <a href="parser.html#syntax_error" name="syntax_error"><em>syntax_error</em></a>: <em>BOOLEAN</em>
+            -- Has last parsing been unsuccesful?
+
+<em><strong>feature</strong></em> -- Access
+
+    <a href="actions.html#error_count" name="error_count"><em>error_count</em></a>: <em>INTEGER</em>
+            -- Number of errors detected during last parsing
+        <em><strong>ensure</strong></em>
+            <em>error_count_positive</em>: <em>Result</em> &gt;= <em>0</em>
+
+<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Status report
+
+    <a href="actions.html#is_recovering" name="is_recovering"><em>is_recovering</em></a>: <em>BOOLEAN</em>
+            -- Is current parser recovering from a syntax error?
+
+<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Basic operations
+
+    <a href="actions.html#accept" name="accept"><em>accept</em></a>
+            -- Stop parsing successfully.
+        <em><strong>ensure</strong></em>
+            <em>accepted</em>: <em><strong>not</strong></em> <em>syntax_error</em>
+
+    <a href="actions.html#abort" name="abort"><em>abort</em></a>
+            -- Abort parsing.
+            -- Do not print error message.
+        <em><strong>ensure</strong></em>
+            <em>aborted</em>: <em>syntax_error</em>
+
+    <a href="actions.html#raise_error" name="raise_error"><em>raise_error</em></a>
+            -- Raise a syntax error.
+            -- Report error using <em>report_error</em> and
+            -- perform normal error recovery if possible.
+
+    <a href="actions.html#recover" name="recover"><em>recover</em></a>
+            -- Recover immediately after a parse error.
+
+    <a href="actions.html#report_error" name="report_error"><em>report_error</em></a> (<em>a_message</em>: <em>STRING</em>)
+            -- Print error message.
+            -- (This routine is called by `parse' when it detects
+            -- a syntax error. It can be redefined in descendants.)
+        <em><strong>require</strong></em>
+            <em>a_message_not_void</em>: <em>a_message</em> /= <em>Void</em>
+
+    <a href="actions.html#clear_token" name="clear_token"><em>clear_token</em></a>
+            -- Clear the previous lookahead token.
+            -- Used in error-recovery rule actions.
+</pre>
+
+<pre>    <a href="actions.html#clear_all" name="clear_all"><em>clear_all</em></a>
+            -- Clear temporary objects so that they can be collected
+            -- by the garbage collector. (This routine is called by
+            -- `parse' before exiting. It can be redefined in descendants.)
+
+<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Scanning
+
+    <a href="actions.html#read_token" name="read_token"><em>read_token</em></a>
+            -- Read a token from input stream.
+            -- Make result available in <em>last_token</em>.
+            -- (This routine is called by `parse' when it needs a
+            -- new token from the input stream.)
+
+    <a href="actions.html#last_token" name="last_token"><em>last_token</em></a>: <em>INTEGER</em>
+            -- Last token read
+
+    <a href="actions.html#last_value" name="last_value"><em>last_value</em></a>: <em>G</em>
+            -- Semantic value of last token read
+
+<em><strong>end</strong></em> -- class YY_PARSER</pre>
+
+<hr size="1">
+
+<center><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></center>
+</body>
+</html>

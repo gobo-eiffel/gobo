@@ -1,0 +1,138 @@
+%{
+indexing
+
+	description:
+
+		"Infix notation calculator"
+
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class CALC
+
+inherit
+
+	YY_PARSER_SKELETON [DOUBLE]
+
+	KL_SHARED_STANDARD_FILES
+
+	KL_SHARED_STRING_ROUTINES
+
+	KL_SHARED_INPUT_STREAM_ROUTINES
+
+creation
+
+	make, execute
+
+%}
+
+	-- geyacc declarations.
+%token NUM
+%left '-' '+'
+%left '*' '/'
+%left NEG  -- negation--unary minus
+%right '^' -- exponentiation
+
+%%
+
+input: -- /* empty */
+	| input line
+	;
+
+line: '\n'
+	| exp '\n' { print ($1); print ('%N') }
+	| error '\n' { recover }
+	
+	;
+
+exp: NUM
+	| exp '+' exp { $$ := $1 + $3 }
+	| exp '-' exp { $$ := $1 - $3 }
+	| exp '*' exp { $$ := $1 * $3 }
+	| exp '/' exp { $$ := $1 / $3 }
+	| '-' exp %prec NEG { $$ := -$2 }
+	| '(' exp ')' { $$ := $2 }
+	;
+
+%%
+
+feature {NONE} -- Initialization
+
+	execute is
+			-- Run calculator.
+		do
+			make
+			parse
+		end
+
+feature {NONE} -- Scanner
+
+	read_token is
+			-- Lexical analyzer returns a double floating point
+			-- number on the stack and the token NUM, or the ASCII
+			-- character read if not a number. Skips all blanks
+			-- and tabs, returns 0 for EOF.
+		local
+			c: CHARACTER
+			buffer: STRING
+		do
+				-- Skip white space
+			from
+				if has_pending_character then
+					c := pending_character
+					has_pending_character := False
+				else
+					std.input.read_character
+					c := std.input.last_character
+				end
+			until
+				input_stream_.end_of_input (std.input) or else
+				(c /= ' ' and c /= '%T')
+			loop
+				std.input.read_character
+				c := std.input.last_character
+			end
+			if input_stream_.end_of_input (std.input) then
+					-- Return end-of-file
+				last_token := 0
+			elseif c = '.' or (c >= '0' and c <= '9') then
+					-- Process numbers
+				last_token := NUM
+				from
+					buffer := string_.make (10)
+					buffer.append_character (c)
+					std.input.read_character
+					c := std.input.last_character
+				until
+					input_stream_.end_of_input (std.input) or else
+					(c /= '.' and (c < '0' or c > '9'))
+				loop
+					buffer.append_character (c)
+					std.input.read_character
+					c := std.input.last_character
+				end
+				if not input_stream_.end_of_input (std.input) then
+					pending_character := c
+					has_pending_character := True
+				end
+				last_value := buffer.to_double
+			else
+					-- Return single character
+				last_token := c.code
+			end
+		end
+	
+	last_token: INTEGER
+			-- Last token read
+
+	last_value: DOUBLE
+			-- Semantic value of last token read
+
+feature {NONE} -- Implementation
+
+	pending_character: CHARACTER
+	has_pending_character: BOOLEAN
+
+end -- class CALC

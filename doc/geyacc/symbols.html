@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Symbols, Terminal and Nonterminal</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Symbols, Terminal and Nonterminal</h1>
+
+<p><em>Symbols</em> in <em>geyacc</em> grammars represent the
+grammatical classifications of the language.</p>
+
+<p>A <em>terminal symbol</em> (also known as a <em>token type</em>)
+represents a class of syntactically equivalent tokens. You use
+the symbol in grammar rules to mean that a token in that class is
+allowed. The symbol is represented in the <em>geyacc</em> parser
+by a numeric code, and the <font color="#008080" size="2"
+face="Courier New"><em>read_token</em></font> routine returns a
+token type code <font color="#008080" size="2" face="Courier New"><em>last_token</em></font>
+to indicate what kind of token has been read. You don't need to
+know what the code value is; you can use the symbol to stand for
+it.</p>
+
+<p>A <em>nonterminal symbol</em> stands for a class of
+syntactically equivalent groupings. The symbol name is used in
+writing grammar rules. By convention, it should be all lower
+case.</p>
+
+<p>Symbol names are case-insensitive words beginning with a
+letter and followed by zero or more letters, digits, or
+underscore.</p>
+
+<p>There are two ways of writing terminal symbols in the grammar:</p>
+
+<ul>
+    <li>A <em>named token type</em> is written with an
+        identifier, like an identifier in Eiffel. By convention,
+        it should be all upper case. Each such name must be
+        defined with a <em>geyacc</em> declaration such as <a
+        href="declarations.html#token"><font color="#0000FF"
+        size="2" face="Courier New">%token</font></a>.</li>
+</ul>
+
+<ul>
+    <li>A <em>character token type</em> (or <em>literal character
+        token</em>) is written in the grammar using the same
+        syntax used in C for character constants; for example, <font
+        color="#FF0000" size="2" face="Courier New">'+'</font> is
+        a character token type. A character token type doesn't
+        need to be declared unless you need to specify its
+        associativity, or <a href="declarations.html#precedence">precedence</a>.<br>
+        <br>
+        By convention, a character token type is used only to
+        represent a token that consists of that particular
+        character. Thus, the token type <font color="#FF0000"
+        size="2" face="Courier New">'+'</font> is used to
+        represent the character<font face="Courier New"> </font><font
+        color="#808000" face="Courier New">+</font><font
+        face="Courier New"> </font>as a token. Nothing enforces
+        this convention, but if you depart from it, your program
+        will confuse other readers.<br>
+        <br>
+        All the usual escape sequences used in character literals
+        in C can be used in <em>geyacc</em> as well, but you must
+        not use the null character as a character literal because
+        its ASCII code, zero, is the code <font color="#008080"
+        size="2" face="Courier New"><em>read_token</em></font>
+        returns for end-of-input.</li>
+</ul>
+
+<p>How you choose to write a terminal symbol has no effect on its
+grammatical meaning. That depends only on where it appears in
+rules.</p>
+
+<p>The value returned by <font color="#008080" size="2"
+face="Courier New"><em>read_token</em></font> is always one of
+the terminal symbols (or 0 for end-of-input). Whichever way you
+write the token type in the grammar rules, you write it the same
+way in the definition of <font color="#008080" size="2"
+face="Courier New"><em>read_token</em></font>. The numeric code
+for a character token type is simply the ASCII code for the
+character, so <font color="#008080" size="2" face="Courier New"><em>read_token</em></font>
+can use the identical character constant to generate the
+requisite code. Each named token type becomes an integer constant
+feature in the parser class, so <font color="#008080" size="2"
+face="Courier New"><em>read_token</em></font> can use the name to
+stand for the code.</p>
+
+<p>If <font color="#008080" size="2" face="Courier New"><em>read_token</em></font>
+is defined in a separate class, you need to arrange for the
+token-type integer constants definitions to be available there.
+Use the <font color="#800000" size="2" face="Courier New">-d </font>option
+when running <em>geyacc</em>, so that it will write these
+constants definitions into a separate class from which you can
+inherit in the classes that need it.</p>
+
+<p>The symbol <font color="#0000FF" size="2" face="Courier New">error</font>
+is a terminal symbol reserved for <a href="error.html">error
+recovery</a>; it shouldn't be used for any other purpose. In
+particular, <font color="#008080" size="2" face="Courier New"><em>read_token</em></font>
+should never return this value.</p>
+
+<hr size="1">
+
+<center><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></center>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Semantic Actions</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Semantic Actions</h1>
+
+<p>The grammar rules for a language determine only the syntax.
+The semantics are determined by the <a
+href="introduction.html#semantic_values">semantic values</a>
+associated with various tokens and groupings, and by the actions
+taken when various groupings are recognized. For example, the
+calculator calculates properly because the value associated with
+each expression is the proper number; it adds properly because
+the action for the grouping<font color="#808000"> </font><font
+color="#808000" size="2" face="Courier New">X + Y</font><font
+color="#808000"> </font>is to add the numbers associated with <font
+color="#808000" size="2" face="Courier New">X</font><font
+size="2" face="Courier New"> </font>and <font color="#808000"
+size="2" face="Courier New">Y</font>.</p>
+
+<h2>Actions</h2>
+
+<p>An action accompanies a syntactic rule and contains Eiffel
+code to be executed each time an instance of that rule is
+recognized. The task of most actions is to compute a <a
+href="introduction.html#semantic_values">semantic value</a> for
+the grouping built by the rule from the semantic values
+associated with tokens or smaller groupings.</p>
+
+<p>An action consists of Eiffel instructions surrounded by
+braces. <em>Geyacc</em> knows about Eiffel strings, characters
+and comments and therefore won't be fooled by braces found within
+them. An action can be placed at any position in the rule; it is
+executed at that position. Most rules have just one action at the
+end of the rule, following all the components. Actions in the <a
+href="#midrule_actions">middle of a rule</a> are tricky and used
+only for special purposes.</p>
+
+<p>The Eiffel code in an action can refer to the semantic values
+of the components matched by the rule with the construct <font
+color="#0000FF" size="2" face="Courier New">$N</font>, which
+stands for the value of the <font size="2" face="Courier New">N</font>th
+component. The semantic value for the grouping being constructed
+is <font color="#0000FF" size="2" face="Courier New">$$</font>. (<em>Geyacc</em>
+translates both of these constructs into array element references
+when it copies the actions into the generated parser class.)</p>
+
+<p>Here is a typical example:</p>
+
+<blockquote>
+    <pre><font color="#800080">exp</font><font color="#0000FF">:</font> ...
+    <font color="#0000FF">|</font> <font color="#800080">exp</font> <font
+color="#FF0000">'+'</font> <font color="#800080">exp</font>
+        <font color="#0000FF">{</font> <font color="#0000FF">$$</font> <font
+color="#008080">:=</font> <font color="#0000FF">$1</font> <font
+color="#008080">+</font> <font color="#0000FF">$3</font> <font
+color="#0000FF">}</font></pre>
+</blockquote>
+
+<p>This rule constructs an <font color="#800080" size="2"
+face="Courier New">exp</font> from two smaller <font
+color="#800080" size="2" face="Courier New">exp</font> groupings
+connected by a plus-sign token. In the action, <font
+color="#0000FF" size="2" face="Courier New">$1</font> and <font
+color="#0000FF" size="2" face="Courier New">$3</font> refer to
+the semantic values of the two component <font color="#800080"
+size="2" face="Courier New">exp</font> groupings, which are the
+first and third symbols on the right hand side of the rule. The
+sum is stored into <font color="#0000FF" size="2"
+face="Courier New">$$</font> so that it becomes the semantic
+value of the addition-expression just recognized by the rule. If
+there were a useful semantic value associated with the <font
+color="#FF0000" size="2" face="Courier New">'+'</font> token, it
+could be referred to as <font color="#0000FF" size="2"
+face="Courier New">$2</font>.</p>
+
+<p>If you don't specify an action for a rule, <em>geyacc</em>
+supplies a default: `<font color="#0000FF" size="2"
+face="Courier New">$$</font><font size="2" face="Courier New"> </font><font
+color="#008080" size="2" face="Courier New">:=</font><font
+size="2" face="Courier New"> </font><font color="#0000FF"
+size="2" face="Courier New">$1</font>'. Thus, the value of the
+first symbol in the rule becomes the value of the whole rule.
+There is no meaningful default action for an empty rule; every
+empty rule must have an explicit action unless the rule's value
+does not matter.</p>
+
+<p><font color="#0000FF" size="2" face="Courier New">$N</font>
+with <font size="2" face="Courier New">N</font> zero or negative
+is allowed for reference to tokens and groupings on the stack <em>before</em>
+those that match the current rule. This is a very risky practice,
+and to use it reliably you must be certain of the context in
+which the rule is applied. Here is a case in which you can use
+this reliably:</p>
+
+<blockquote>
+    <pre><font color="#800080">foo</font><font color="#0000FF">:</font> <font
+color="#800080">expr</font> <font color="#800080">bar</font> <font
+color="#FF0000">'+'</font> <font color="#800080">expr</font> <font
+color="#0000FF">{</font> <font color="#008080">...</font> <font
+color="#0000FF">}</font>
+    <font color="#0000FF">|</font> <font color="#800080">expr</font> <font
+color="#800080">bar</font> <font color="#FF0000">'-'</font> <font
+color="#800080">expr</font> <font color="#0000FF">{</font> <font
+color="#008080">...</font> <font color="#0000FF">}</font>
+    <font color="#0000FF">;</font>
+
+<font color="#800080">bar</font><font color="#0000FF">:</font> <font
+color="#008080">-- /* empty */</font>
+        <font color="#0000FF">{</font> <font color="#008080"><em>previous_expr</em> :=</font> <font
+color="#0000FF">$0 }</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>As long as <font color="#800080" size="2" face="Courier New">bar</font>
+is used only in the fashion shown here,<font color="#0000FF"
+size="2" face="Courier New"> $0</font> always refers to the <font
+color="#800080" size="2" face="Courier New">expr</font> which
+precedes <font color="#800080" size="2" face="Courier New">bar</font>
+in the definition of <font color="#800080" size="2"
+face="Courier New">foo</font>.</p>
+
+<h2>Action Features</h2>
+
+<p>Actions can include arbitrary Eiffel code. There are a number
+of special features, inherited from class <a href="skeleton.html"><font
+color="#008080" size="2" face="Courier New"><em>YY_PARSER</em></font></a>,
+which can be used in actions:</p>
+
+<dl>
+    <dt><a href="skeleton.html#abort" name="abort"><font
+        color="#008080" size="2" face="Courier New"><em>abort</em></font></a></dt>
+    <dd>Stop the current parsing and set <font color="#008080"
+        size="2" face="Courier New"><em>syntax_error </em></font>set
+        to true.</dd>
+    <dd>Do not report an error through <font color="#008080"
+        size="2" face="Courier New"><em>report_error</em></font>.</dd>
+    <dt><a href="skeleton.html#accept" name="accept"><font
+        color="#008080" size="2" face="Courier New"><em>accept</em></font></a></dt>
+    <dd>Stop the current parsing and set <font color="#008080"
+        size="2" face="Courier New"><em>syntax_error </em></font>set
+        to false.</dd>
+    <dt><a href="skeleton.html#clear_token" name="clear_token"><font
+        color="#008080" size="2" face="Courier New"><em>clear_token</em></font></a></dt>
+    <dd>Discard the look-ahead token. This is useful primarily in
+        <a href="error.html">error-recovery</a> rule actions.</dd>
+    <dt><a href="skeleton.html#clear_all" name="clear_all"><font
+        color="#008080" size="2" face="Courier New"><em>clear_all</em></font></a></dt>
+    <dd>Clear temporary objects so that they can be collected by
+        the garbage collector. This routine is called by <font
+        color="#008080" size="2" face="Courier New"><em>parse</em></font>
+        before exiting. It can be redefined in descendants.</dd>
+    <dt><a href="skeleton.html#error_count" name="error_count"><font
+        color="#008080" size="2" face="Courier New"><em>error_count</em></font></a><font
+        color="#008080" size="2" face="Courier New">:<em> INTEGER</em></font></dt>
+    <dd>Each time the <em>geyacc</em> parser detects a syntax
+        error, it increments <font color="#008080" size="2"
+        face="Courier New"><em>error_count</em></font>, which
+        hence contains the number of syntax errors encountered so
+        far during the current parsing. Even when <font
+        color="#008080" size="2" face="Courier New"><em>parse</em></font>
+        returns with <font color="#008080" size="2"
+        face="Courier New"><em>syntax_error</em></font> set to
+        false, <font color="#008080" size="2" face="Courier New"><em>error_count</em></font>
+        may have a non-null value. This may indeed happen when <a
+        href="error.html">error recovery</a> was successful.</dd>
+    <dt><a href="skeleton.html#is_recovering"
+        name="is_recovering"><font color="#008080" size="2"
+        face="Courier New"><em>is_recovering</em></font></a><font
+        color="#008080" size="2" face="Courier New">:<em> BOOLEAN</em></font></dt>
+    <dd>Specify whether the parser is recovering from a syntax
+        error. The parser is in a recovering phase when a syntax
+        error has been detected and the grammar is equipped with <a
+        href="error.html">error recovery</a> rules. During that
+        phase, syntax errors are not reported anymore. After
+        three syntax errors have been ignored, the parser exits
+        the recovering phase and parsing resumes as if no error
+        had been detected (<font color="#008080" size="2"
+        face="Courier New"><em>error_count</em></font> has been
+        kept uptodate though). Normal parsing can be immediately
+        resumed by calling <font color="#008080" size="2"
+        face="Courier New"><em>recover</em></font>.</dd>
+    <dt><a href="skeleton.html#last_token" name="last_token"><font
+        color="#008080" size="2" face="Courier New"><em>last_token</em></font></a><font
+        color="#008080" size="2" face="Courier New">:<em> INTEGER</em></font></dt>
+    <dd>Current look-ahead token. This token is returned by <font
+        color="#008080" size="2" face="Courier New"><em>read_token
+        </em></font>and can be discarded with <font
+        color="#008080" size="2" face="Courier New"><em>clear_token</em></font>
+        when recovering from a syntax error.</dd>
+    <dt><a href="skeleton.html#last_value" name="last_value"><font
+        color="#008080" size="2" face="Courier New"><em>last_value</em></font></a><font
+        color="#008080" size="2" face="Courier New">:<em> G</em></font></dt>
+    <dd>Semantic value of the last token read. This value is
+        updated whenever <font color="#008080" size="2"
+        face="Courier New"><em>read_token </em></font>is called.</dd>
+    <dt><a href="skeleton.html#raise_error" name="raise_error"><font
+        color="#008080" size="2" face="Courier New"><em>raise_error</em></font></a></dt>
+    <dd>Cause an immediate syntax error. This routine initiates <a
+        href="error.html">error recovery</a> just as if the
+        parser itself had detected an error; it also calls <font
+        color="#008080" size="2" face="Courier New"><em>report_error</em></font>.</dd>
+    <dt><a href="skeleton.html#read_token" name="read_token"><font
+        color="#008080" size="2" face="Courier New"><em>read_token</em></font></a></dt>
+    <dd>The <a href="parser.html#lexical_analyzer">lexical
+        analyzer</a> routine, <font color="#008080" size="2"
+        face="Courier New"><em>read_token</em></font>, recognizes
+        tokens from the input stream and makes them available to
+        the parser in <font color="#008080" size="2"
+        face="Courier New"><em>last_token</em></font>. <font
+        color="#008080" size="2" face="Courier New"><em>read_token</em></font>
+        also updates the semantic value of the last token read in
+        feature <font color="#008080" size="2" face="Courier New"><em>last_value</em></font>.
+        The routine <font color="#008080" size="2"
+        face="Courier New"><em>read_token</em></font> is called
+        by <font color="#008080" size="2" face="Courier New"><em>parse</em></font>
+        when it needs a new token from the input stream.</dd>
+    <dt><a href="skeleton.html#recover" name="recover"><font
+        color="#008080" size="2" face="Courier New"><em>recover</em></font></a></dt>
+    <dd>Resume generating error messages immediately for
+        subsequent syntax errors. This is useful primarily in <a
+        href="error.html">error-recovery</a> rule actions.</dd>
+    <dt><a href="skeleton.html#report_error" name="report_error"><font
+        color="#008080" size="2" face="Courier New"><em>report_error</em></font></a><font
+        color="#008080" size="2" face="Courier New"><em> </em>(<em>a_message</em>:<em>
+        STRING</em>)</font></dt>
+    <dd>The <em>geyacc</em> parser detects a <em>parse error</em>
+        or <em>syntax error</em> whenever it reads a token which
+        cannot satisfy any syntax rule. An action in the grammar
+        can also explicitly proclaim an error by calling feature <font
+        color="#008080" size="2" face="Courier New"><em>raise_error</em></font>.
+        The <em>geyacc</em> parser expects to report the error by
+        calling the error reporting routine <font color="#008080"
+        size="2" face="Courier New"><em>report_error</em></font>.
+        For a parse error, the message is normally &quot;parse
+        error&quot;. The default behavior is to print this
+        message on the screen, but <font color="#008080" size="2"
+        face="Courier New"><em>report_error </em></font>can
+        easily be redefined to suit your needs. </dd>
+    <dd>After <font color="#008080" size="2" face="Courier New"><em>report_error
+        </em></font>returns to <font color="#008080" size="2"
+        face="Courier New"><em>parse</em></font>, the latter will
+        attempt <a href="error.html">error recovery</a> if you
+        have written suitable error recovery grammar rules. If
+        recovery is impossible, <font color="#008080" size="2"
+        face="Courier New"><em>parse</em></font> will immediately
+        return and <font color="#008080" size="2"
+        face="Courier New"><em>syntax_error</em></font> will be
+        set to true.</dd>
+</dl>
+
+<h2><a name="midrule_actions">Actions in Mid-Rule</a></h2>
+
+<p>Occasionally it is useful to put an action in the middle of a
+rule. These actions are written just like usual end-of-rule
+actions, but they are executed before the parser even recognizes
+the following components.</p>
+
+<p>A mid-rule action may refer to the components preceding it
+using <font color="#0000FF" size="2" face="Courier New">$N</font>,
+but it may not refer to subsequent components because it is run
+before they are parsed. The mid-rule action itself counts as one
+of the components of the rule. This makes a difference when there
+is another action later in the same rule (and usually there is
+another at the end): you have to count the actions along with the
+symbols when working out which number <font size="2"
+face="Courier New">N</font> to use in <font color="#0000FF"
+size="2" face="Courier New">$N</font>.</p>
+
+<p>The mid-rule action can also have a semantic value. The action
+can set its value with an assignment to <font color="#0000FF"
+size="2" face="Courier New">$$</font>, and actions later in the
+rule can refer to the value using <font color="#0000FF" size="2"
+face="Courier New">$N</font>. There is no way to set the value of
+the entire rule with a mid-rule action, because assignments to <font
+color="#0000FF" size="2" face="Courier New">$$</font> do not have
+that effect. The only way to set the value for the entire rule is
+with an ordinary action at the end of the rule.</p>
+
+<p>Here is an example from a hypothetical compiler, handling a <font
+color="#808000" size="2" face="Courier New">let</font> statement
+that looks like <font color="#808000" size="2" face="Courier New">let
+(VARIABLE) STATEMENT</font> and serves to create a variable named
+<font color="#808000" size="2" face="Courier New">VARIABLE</font>
+temporarily for the duration of <font color="#808000" size="2"
+face="Courier New">STATEMENT</font>. To parse this construct, we
+must put <font color="#808000" size="2" face="Courier New">VARIABLE</font>
+into the symbol table while <font color="#808000" size="2"
+face="Courier New">STATEMENT</font> is parsed, then remove it
+afterward. Here is how it is done:</p>
+
+<blockquote>
+    <pre><font color="#800080">stmt</font>: <font color="#FF0000">LET</font> <font
+color="#FF0000">'('</font> <font color="#800080">var</font> <font
+color="#FF0000">')'</font>
+        <font color="#0000FF">{</font>
+            <font color="#0000FF">$$</font> <font color="#008080">:= <em>new_context</em>
+            <em>contexts</em>.<em>put</em> (</font><font
+color="#0000FF">$$</font><font color="#008080">)
+            </font><font color="#0000FF">$$</font><font
+color="#008080">.<em>declare_variable</em> (</font><font
+color="#0000FF">$3</font><font color="#008080">)</font>
+        <font color="#0000FF">}</font>
+    <font color="#800080">stmt</font>
+        <font color="#0000FF">{</font>
+            <font color="#0000FF">$$</font> <font color="#008080">:=</font> <font
+color="#0000FF">$6</font>
+            <font color="#008080"><em>contexts</em>.<em>remove</em> (</font><font
+color="#0000FF">$5</font><font color="#008080">)</font>
+        <font color="#0000FF">}</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>As soon as <font color="#808000" size="2" face="Courier New">let
+(VARIABLE)</font> has been recognized, the first action is run.
+It saves a copy of the current semantic context (the list of
+accessible variables) as its semantic value. Then it calls <font
+color="#008080" size="2" face="Courier New"><em>declare_variable</em></font>
+to add the new variable to that list. Once the first action is
+finished, the embedded statement <font color="#800080" size="2"
+face="Courier New">stmt</font> can be parsed. Note that the
+mid-rule action is component number 5, so the <font
+color="#800080" size="2" face="Courier New">stmt</font> is
+component number 6. After the embedded statement is parsed, its
+semantic value becomes the value of the entire `let'-statement.
+Then the semantic value from the earlier action is used to
+restore the prior list of variables. This removes the temporary
+`let'-variable from the list so that it won't appear to exist
+while the rest of the program is parsed.</p>
+
+<p>Taking action before a rule is completely recognized often
+leads to conflicts since the parser must commit to a parse in
+order to execute the action. For example, the following two
+rules, without mid-rule actions, can coexist in a working parser
+because the parser can shift the open-brace token and look at
+what follows before deciding whether there is a declaration or
+not:</p>
+
+<blockquote>
+    <pre><font color="#800080">compound</font><font
+color="#0000FF">:</font> <font color="#FF0000">'{'</font> <font
+color="#800080">declarations statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">|</font> <font color="#FF0000">'{'</font> <font
+color="#800080">statements</font> <font color="#FF0000">'}'</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>But when we add a mid-rule action as follows, the rules become
+nonfunctional:</p>
+
+<blockquote>
+    <pre><font color="#800080">compound</font><font
+color="#0000FF">: {</font> <font color="#008080"><em>prepare_for_local_variables</em></font> <font
+color="#0000FF">}</font>
+      <font color="#FF0000">'{'</font> <font color="#800080">declarations statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">|</font> <font color="#FF0000">'{'</font> <font
+color="#800080">statements</font> <font color="#FF0000">'}'</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>Now the parser is forced to decide whether to run the mid-rule
+action when it has read no farther than the open-brace. In other
+words, it must commit to using one rule or the other, without
+sufficient information to do it correctly. (The open-brace token
+is what is called the <a href="algorithm.html#look_ahead"><em>look-ahead</em></a>
+token at this time, since the parser is still deciding what to do
+about it.) You might think that you could correct the problem by
+putting identical actions into the two rules, like this:</p>
+
+<blockquote>
+    <pre><font color="#800080">compound</font><font
+color="#0000FF">: {</font> <font color="#008080"><em>prepare_for_local_variables</em></font> <font
+color="#0000FF">}</font>
+       <font color="#FF0000">'{'</font> <font color="#800080">declarations statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">|     {</font> <font color="#008080"><em>prepare_for_local_variables</em></font> <font
+color="#0000FF">}</font>
+       <font color="#FF0000">'{'</font> <font color="#800080">statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>But this does not help, because <em>geyacc</em> does not
+realize that the two actions are identical. (<em>Geyacc</em>
+never tries to understand the Eiffel code in an action.) If the
+grammar is such that a declaration can be distinguished from a
+statement by the first token (which is true in C), then one
+solution which does work is to put the action after the
+open-brace, like this:</p>
+
+<blockquote>
+    <pre><font color="#800080">compound</font><font
+color="#0000FF">:</font> <font color="#FF0000">'{'</font> <font
+color="#0000FF">{</font> <font color="#008080"><em>prepare_for_local_variables</em></font><font
+color="#0000FF"> }</font>
+      <font color="#800080">declarations statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">|</font> <font color="#FF0000">'{'</font> <font
+color="#800080">statements</font> <font color="#FF0000">'}'</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>Now the first token of the following declaration or statement,
+which would in any case tell <em>geyacc</em> which rule to use,
+can still do so. Another solution is to bury the action inside a
+nonterminal symbol which serves as a subroutine:</p>
+
+<blockquote>
+    <pre><font color="#800080">subroutine</font><font
+color="#0000FF">:</font><font color="#008080"> -- /* empty */</font>
+        <font color="#0000FF">{</font> <font color="#008080"><em>prepare_for_local_variables</em></font> <font
+color="#0000FF">}</font>
+    <font color="#0000FF">;</font>
+
+<font color="#800080">compound</font><font color="#0000FF">:</font> <font
+color="#800080">subroutine</font> <font color="#FF0000">'{'</font> <font
+color="#800080">declarations statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">| </font><font color="#800080">subroutine</font> <font
+color="#FF0000">'{'</font> <font color="#800080">statements</font> <font
+color="#FF0000">'}'</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>Now <em>geyacc</em> can execute the action in the rule for <font
+color="#800080" size="2" face="Courier New">subroutine</font>
+without deciding which rule for <font color="#800080" size="2"
+face="Courier New">compound</font> it will eventually use. Note
+that the action is now at the end of its rule. Any mid-rule
+action can be converted to an end-of-rule action in this way, and
+this is what <em>geyacc</em> actually does to implement mid-rule
+actions.</p>
+
+<hr size="1">
+
+<center><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></center>
+</body>
+</html>

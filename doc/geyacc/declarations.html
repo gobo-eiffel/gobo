@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc Declarations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Geyacc Declarations</h1>
+
+<p>The<em> geyacc declarations</em> subsection of a <em>geyacc</em>
+grammar defines the <a href="symbols.html">symbols</a> used in
+formulating the grammar.</p>
+
+<p>All token type names (but not single-character literal tokens
+such as<font color="#FF0000" size="2" face="Courier New"> '+'</font>
+and <font color="#FF0000" size="2" face="Courier New">'*'</font>)
+must be declared. On the other hand, nonterminal symbols do not
+need be declared. The first rule in the file also specifies the <a
+href="introduction.html#start_symbol"><em>start symbol</em></a>,
+by default. If you want some other symbol to be the start symbol,
+you must declare it explicitly.</p>
+
+<h2><a name="token">Token Type Names</a></h2>
+
+<p>The basic way to declare a token type name (terminal symbol)
+is as follows:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#FF0000">NAME</font></pre>
+</blockquote>
+
+<p><em>Geyacc</em> will convert this into an integer constant
+feature in the parser, so that the routine <font color="#008080"
+size="2" face="Courier New"><em>read_token</em></font> (if it is
+define in this class) can use the name <font color="#FF0000"
+size="2" face="Courier New">NAME</font> to stand for this token
+type's code.</p>
+
+<p>Alternatively, you can use <font color="#0000FF" size="2"
+face="Courier New">%left</font>, <font color="#0000FF" size="2"
+face="Courier New">%right</font>, or <font color="#0000FF"
+size="2" face="Courier New">%nonassoc</font> instead of <font
+color="#0000FF" size="2" face="Courier New">%token</font>, if you
+wish to specify <a href="precedence.html">precedence</a>.</p>
+
+<p>You can explicitly specify the numeric code for a token type
+by appending an integer value in the field immediately following
+the token name:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#FF0000">NUM</font> <font color="#008080">300</font></pre>
+</blockquote>
+
+<p>It is generally best, however, to let <em>geyacc</em> choose
+the numeric codes for all token types. <em>Geyacc</em> will
+automatically select codes that don't conflict with each other or
+with ASCII characters.</p>
+
+<h2><a name="precedence">Operator Precedence</a></h2>
+
+<p>Use the <font color="#0000FF" size="2" face="Courier New">%left</font>,
+<font color="#0000FF" size="2" face="Courier New">%right</font>
+or <font color="#0000FF" size="2" face="Courier New">%nonassoc</font>
+declaration to declare a token and specify its <a
+href="precedence.html">precedence</a> and associativity, all at
+once. These are called <em>precedence declarations</em>.</p>
+
+<p>The syntax of a precedence declaration is the same as that of <font
+color="#0000FF" size="2" face="Courier New">%token</font>:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%left</font> SYMBOLS...</pre>
+</blockquote>
+
+<p>And indeed any of these declarations serves the purposes of <font
+color="#FF0000" size="2" face="Courier New">%token</font>. But in
+addition, they specify the associativity and relative precedence
+for all the <font size="2" face="Courier New">SYMBOLS</font>:</p>
+
+<ul>
+    <li>The associativity of an operator <font color="#808000"
+        size="2" face="Courier New">OP</font> determines how
+        repeated uses of the operator nest: whether <font
+        color="#808000" size="2" face="Courier New">X OP Y OP Z</font>
+        is parsed by grouping <font color="#808000" size="2"
+        face="Courier New">X</font> with <font color="#808000"
+        size="2" face="Courier New">Y</font> first or by grouping
+        <font color="#808000" size="2" face="Courier New">Y</font>
+        with <font color="#808000" size="2" face="Courier New">Z</font>
+        first. <font color="#808000" size="2" face="Courier New">%left</font>
+        specifies left-associativity (grouping <font
+        color="#808000" size="2" face="Courier New">X</font> with
+        <font color="#808000" size="2" face="Courier New">Y</font>
+        first) and <font color="#0000FF" size="2"
+        face="Courier New">%right</font> specifies
+        right-associativity (grouping <font color="#808000"
+        size="2" face="Courier New">Y</font> with <font
+        color="#808000" size="2" face="Courier New">Z</font>
+        first). <font color="#0000FF" size="2" face="Courier New">%nonassoc</font>
+        specifies no associativity, which means that <font
+        color="#808000" size="2" face="Courier New">X OP Y OP Z</font>
+        is considered a syntax error.</li>
+    <li>The precedence of an operator determines how it nests
+        with other operators. All the tokens declared in a single
+        precedence declaration have equal precedence and nest
+        together according to their associativity. When two
+        tokens declared in different precedence declarations
+        associate, the one declared later has the higher
+        precedence and is grouped first.</li>
+</ul>
+
+<h2><a name="expect">Suppressing Conflict Warnings</a></h2>
+
+<p><em>Geyacc</em> normally warns if there are any conflicts in
+the grammar, but most real grammars have harmless <a
+href="algorithm.html#shift_reduce">shift/reduce</a> conflicts
+which are resolved in a predictable way and would be difficult to
+eliminate. It is desirable to suppress the warning about these
+conflicts unless the number of conflicts changes. You can do this
+with the <font color="#0000FF" size="2" face="Courier New">%expect</font>
+declaration. The declaration looks like this:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%expect</font> N</pre>
+</blockquote>
+
+<p>Here <font size="2" face="Courier New">N</font> is a decimal
+integer. The declaration says there should be no warning if there
+are <font size="2" face="Courier New">N</font> shift/reduce
+conflicts and no reduce/reduce conflicts. The usual warning is
+given if there are either more or fewer conflicts, or if there
+are any reduce/reduce conflicts. In general, using <font
+color="#0000FF" size="2" face="Courier New">%expect</font>
+involves these steps:</p>
+
+<ul>
+    <li>Compile your grammar without <font color="#0000FF"
+        size="2" face="Courier New">%expect</font>. Use the <font
+        color="#800000" size="2" face="Courier New">-v</font><font
+        color="#800000"> </font>option to get a verbose list of
+        where the conflicts occur. <em>Geyacc</em> will also
+        print the number of conflicts.</li>
+    <li>Check each of the conflicts to make sure that <em>geyacc</em>'s
+        default resolution is what you really want. If not,
+        rewrite the grammar and go back to the beginning.</li>
+    <li>Add an <font color="#0000FF" size="2" face="Courier New">%expect</font>
+        declaration, copying the number <font size="2"
+        face="Courier New">N</font> from the number which <em>geyacc</em>
+        printed.</li>
+</ul>
+
+<p>Now <em>geyacc</em> will stop annoying you about the conflicts
+you have checked, but it will warn you again if changes in the
+grammar result in additional conflicts.</p>
+
+<h2><a name="start">The Start-Symbol</a></h2>
+
+<p><em>Geyacc</em> assumes by default that the start symbol for
+the grammar is the first nonterminal specified in the grammar
+specification section. The programmer may override this
+restriction with the <font color="#0000FF" size="2"
+face="Courier New">%start</font> declaration as follows:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%start</font> SYMBOL</pre>
+</blockquote>
+
+<h2>Geyacc Declaration Summary</h2>
+
+<p>Here is a summary of all <em>geyacc</em> declarations:</p>
+
+<dl>
+    <dt><a href="#token"><font color="#0000FF" size="2"
+        face="Courier New">%token</font></a></dt>
+    <dd>Declare a terminal symbol (token type name) with no
+        precedence or associativity specified.</dd>
+    <dt><a href="#precedence"><font color="#0000FF" size="2"
+        face="Courier New">%right</font></a></dt>
+    <dd>Declare a terminal symbol (token type name) that is
+        right-associative.</dd>
+    <dt><a href="#precedence"><font color="#0000FF" size="2"
+        face="Courier New">%left</font></a></dt>
+    <dd>Declare a terminal symbol (token type name) that is
+        left-associative.</dd>
+    <dt><a href="#precedence"><font color="#0000FF" size="2"
+        face="Courier New">%nonassoc</font></a></dt>
+    <dd>Declare a terminal symbol (token type name) that is
+        nonassociative (using it in a way that would be
+        associative is a syntax error).</dd>
+    <dt><a href="#start"><font color="#0000FF" size="2"
+        face="Courier New">%start</font></a></dt>
+    <dd>Specify the grammar's start symbol.</dd>
+    <dt><a href="#expect"><font color="#0000FF" size="2"
+        face="Courier New">%expect</font></a></dt>
+    <dd>Declare the expected number of shift-reduce conflicts.</dd>
+</dl>
+
+<hr size="1">
+
+<center><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></center>
+</body>
+</html>

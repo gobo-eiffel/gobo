@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Parser Description File</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Parser Description File</h1>
+
+<p>The <em>geyacc</em> input file consists of three sections,
+separated by a line with just <font color="#0000FF"><tt>%%</tt></font>
+in it:</p>
+
+<blockquote>
+    <pre><tt>declarations
+</tt><font color="#0000FF"><tt>%%</tt></font><tt>
+rules
+</tt><font color="#0000FF"><tt>%%</tt></font><tt>
+user code</tt></pre>
+</blockquote>
+
+<p>Comments follow Eiffel style conventions and have no effect on
+the description's semantics.</p>
+
+<h2><a name="declarations">Declarations section</a></h2>
+
+<p>The declarations section contains <em>geyacc</em> <a
+href="declarations.html">declarations</a> that define terminal
+symbols, specify precedence, and so on. In some simple grammars
+these declarations are not needed.</p>
+
+<p>This section may also contain <a name="eiffel_declarations">Eiffel
+code</a> to be copied verbatim to the beginning of the generated
+parser class. The Eiffel text has to be enclosed between two
+marks <font color="#0000FF" size="2" face="Courier New">%{</font>
+and <font color="#0000FF" size="2" face="Courier New">%}</font>
+such as in the following example:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> MY_PARSER
+
+</em><em><strong>inherit</strong></em><em>
+
+    YY_PARSER_SKELETON </em>[<em>ANY</em>]<em>
+
+</em><em><strong>creation</strong></em><em>
+
+    make</em></font>
+<font color="#0000FF">%}</font></pre>
+</blockquote>
+
+<p><em>Geyacc</em> does not generate the indexing, class header,
+formal generics, obsolete, inheritance and creation clauses. As
+the example above shows, Eiffel declarations are used to specify
+such clauses in order to ensure that the generated parser class
+is syntactically and sematically correct. Here, the name of the
+generated class is <font color="#008080" size="2"
+face="Courier New"><em>MY_PARSER</em></font> and its creation
+procedure is <font color="#008080" size="2" face="Courier New"><em>make</em></font>,
+a routine inherited from class <font color="#008080" size="2"
+face="Courier New"><em>YY_PARSER_SKELETON</em></font>. This class
+also provides numerous facilities such as routine <font
+color="#008080" size="2" face="Courier New"><em>parse</em></font>
+for analyzing a given input text. The generated parser class has
+to inherit from one such class to work properly. </p>
+
+<p>If several of these Eiffel blocks appear in the declarations
+section, they are all copied to the generated parser class in
+their order of appearance in the input file.</p>
+
+<h2><a name="rules">Rules section</a></h2>
+
+<p>The rules section of the <em>geyacc</em> input contains one or
+more <a href="rules.html">grammar rules</a>, and nothing else.
+There must be at least one grammar rule, and the first <font
+color="#0000FF" size="2" face="Courier New">%%</font> (which
+precedes the rules section) may never be omitted even if it is
+the first thing in the description file.</p>
+
+<h2><a name="user_code">User code section</a></h2>
+
+<p>Finally, the user code section is simply copied verbatim to <font
+size="4" face="Times New Roman"><tt>the en</tt></font>d of the
+generated parser class. <em>Geyacc</em> does not generate the
+invariant clause and the end of class keyword. This section is
+hence used to specify such clauses and also to define features
+called from the <a href="actions.html">semantic actions</a>. The
+presence of this section is optional (if it is missing, the
+second <font color="#0000FF"><tt>%%</tt></font> in the input file
+may be skipped, too) but is highly recommended if only to specify
+the end of the generated parser class and thus ensure that this
+class is syntactically correct.</p>
+
+<p>Names of implementation features inherited from class <font
+color="#008080" size="2" face="Courier New"><em>YY_PARSER_SKELETON</em></font>
+are prefixed by <font color="#008080" size="2" face="Courier New"><em>yy</em></font>.
+As a consequence, user-declarared feature names beginning with
+this prefix should be avoided. </p>
+
+<hr size="1">
+
+<center><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></center>
+</body>
+</html>

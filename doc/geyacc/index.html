@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gobo Eiffel Yacc</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Gobo Eiffel Yacc</h1>
+
+<p><em>Gobo Eiffel Yacc</em> is a general-purpose parser
+generator that converts a grammar description for an <font
+size="2">LALR(1)</font> context-free grammar into an Eiffel class
+equipped with routines to parse that grammar. <em>Geyacc</em> may
+be used to develop a wide range of language parsers, from those
+used in simple desk calculators to complex programming languages.
+<em>Geyacc</em> is very similar to <em>yacc</em> and <font
+size="2"><em>GNU</em></font><em> bison</em>. Anyone familiar with
+these utilities and fluent in Eiffel programming should be able
+to use <em>geyacc</em> with little trouble.</p>
+
+<p>This documentation is structured as follows:</p>
+
+<blockquote>
+    <dl>
+        <dt><a href="introduction.html">Introduction to <em>Geyacc</em></a></dt>
+        <dd>Basic concepts for understanding <em>geyacc</em>.</dd>
+        <dt><a href="examples.html">Some Simple Examples</a></dt>
+        <dd>Sime explained examples.</dd>
+        <dt><a href="description.html">Parser Description File</a></dt>
+        <dd>Format of <em>geyacc</em> input file:<dl>
+                <dd><a href="declarations.html"><em>Geyacc</em>
+                    Declarations</a><br>
+                    <a href="symbols.html">Symbols, Terminal and
+                    Nonterminal</a><br>
+                    <a href="rules.html">Grammar Rules</a><br>
+                    <a href="actions.html">Semantic Actions</a></dd>
+            </dl>
+        </dd>
+        <dt><a href="parser.html">The Generated Parser</a></dt>
+        <dd>&nbsp;</dd>
+        <dt><a href="options.html">Options</a></dt>
+        <dd>Command-line options.</dd>
+        <dt><a href="algorithm.html">Parser Algorithm</a></dt>
+        <dd>How <em>geyacc</em> parser works at run-time.</dd>
+        <dt><a href="precedence.html">Operator Precedence</a></dt>
+        <dd>How to deal with arithmetic expressions.</dd>
+        <dt><a href="context.html">Context Dependency</a></dt>
+        <dd>What to do if a language syntax is to messy for <em>geyacc</em>
+            to handle straightforwardly.</dd>
+        <dt><a href="error.html">Error Recovery</a></dt>
+        <dd>Writing rules for error recovery.</dd>
+        <dt><a href="skeleton.html">Skeleton</a></dt>
+        <dd>The flat-short form of class <font color="#008080"
+            size="2" face="Courier New"><em>YY_PARSER</em></font>.</dd>
+    </dl>
+</blockquote>
+
+<hr size="1">
+
+<p><em>Geyacc</em> is an adaptation of <font size="2">GNU</font>
+Bison (version 1.25), distributed by the Free Software
+Foundation, so that it can generate Eiffel classes instead of C
+files. The original version of <font size="2">GNU</font> Bison
+can be downloaded from <a href="ftp://prep.ai.mit.edu/pub/gnu"><font
+size="2" face="Courier New">ftp://prep.ai.mit.edu/pub/gnu</font></a>.
+<em>Geyacc</em> is distributed under the same terms and
+conditions as <font size="2">GNU</font> Bison. See <a
+href="COPYING"><font size="2" face="Courier New">COPYING</font></a>
+file for details.</p>
+
+<p>This program is distributed in the hope that it will be
+useful, but <font size="2">WITHOUT ANY WARRANTY</font>; without
+even the implied warranty of <font size="2">MERCHANTABILITY</font>
+or <font size="2">FITNESS FOR A PARTICULAR PURPOSE</font>.</p>
+
+<hr size="1">
+
+<center><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></center>
+</body>
+</html>
