@@ -6,7 +6,7 @@
 		"Geant's builtin variables"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2003, Sven Ehrke and others"
+	copyright: "Copyright (c) 2003-2004, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,8 +15,50 @@
 <chapter id="geant_builtin_variables">
 	<title>Geant's built-in variables</title>
 
-	<para>
-		To be done.
-	</para>
+	<sect1 id="cwd">
+		<title>cwd</title>
+		<para>
+			Current working directory. The value of this variable changes whenever the current working
+			directory changes. This usually happens when the attribute 'dir' is used which is supported
+			by tasks and the element 'target'.
+		</para>
+	</sect1>
+
+	<sect1 id="GOBO_OS">
+		<title>GOBO_OS</title>
+		<para>
+			The value of this variable contains the name of the used operating system: 'windows', 'unix'
+		</para>
+	</sect1>
+
+	<sect1 id="is_windows">
+		<title>is_windows</title>
+		<para>
+			If the used operating system is windows then this variable is set (to the value 'true'). Thus
+			you can simply use it in all targets/tasks in the if/unless attributes: ... if="${is_windows}"
+		</para>
+	</sect1>
+
+	<sect1 id="is_unix">
+		<title>is_unix</title>
+		<para>
+			If the used operating system is unix then this variable is set (to the value 'true'). Thus
+			you can simply use it in all targets/tasks in the if/unless attributes: ... if="${is_unix}"
+		</para>
+	</sect1>
+
+	<sect1 id="path_separator">
+		<title>path_separator</title>
+		<para>
+			The value of this variable is '\' if the used operating system is windows and '/' if it is unix.
+		</para>
+	</sect1>
+
+	<sect1 id="exe">
+		<title>exe</title>
+		<para>
+			The value of this variable is '.exe' if the used operating system is windows and '' (empty string) if it is unix.
+		</para>
+	</sect1>
 
 </chapter>
