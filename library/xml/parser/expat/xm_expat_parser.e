@@ -57,8 +57,6 @@ feature {NONE} -- Initialization
 			is_correct := True
 			last_error := Xml_err_none
 
-			create source.make ("-")
-
 			create {XM_CALLBACKS_NULL} callbacks.make
 
 			create {XM_NULL_EXTERNAL_RESOLVER} dtd_resolver
@@ -84,15 +82,19 @@ feature -- Status report
 
 feature -- Access
 
-	source: XM_FILE_SOURCE
+	source: XM_SOURCE is
 			-- Source of the XML document beeing parsed
+		obsolete "Use position.source_name"
+		do
+			create {XM_FILE_SOURCE} Result.make (position.source_name)
+		end
 
 	position: XM_POSITION is
 			-- Current position in the source of the XML document
 		do
 			create {XM_DEFAULT_POSITION} Result.make ("source unknown", last_byte_index, last_column_number, last_line_number)
 		end
-		
+
 	positions: DS_LINKED_LIST [XM_POSITION] is
 			-- To be implemented...
 		do
@@ -186,7 +188,7 @@ feature {NONE} -- Implementation
 			-- TODO: plug entity_resolver into expat entity resolving scheme and use it
 		end
 
-feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- 
+feature {XM_PARSER_STOP_ON_ERROR_FILTER} --
 
 	force_unreported_error (an_error: STRING) is
 			-- Stop the parser without reporting the error to downstream events.
@@ -195,7 +197,7 @@ feature {XM_PARSER_STOP_ON_ERROR_FILTER} --
 			last_error := Xml_err_unknown
 			-- TODO: really stop the parser
 		end
-		
+
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
@@ -203,7 +205,6 @@ feature -- Incremental parsing
 			-- After the last part of the data has been fed into the parser,
 			-- call `finish_incremental' to get any pending error messages.
 		do
-			create source.make (a_stream.name)
 			if not is_parser_created then
 				create_new_parser
 				on_start
@@ -225,7 +226,6 @@ feature -- Incremental parsing
 			-- You have to call `finish_incremental' after the last call to
 			-- 'parse_incremental_from_string' in every case.
 		do
-			create source.make ("-")
 			if not is_parser_created then
 				create_new_parser
 				on_start
@@ -817,7 +817,6 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			-- saving parents on the stack.
 		local
 			parent_item: POINTER
-			parent_source: like source
 			encoding: POINTER
 			system_id: UC_STRING
 			in_file: KL_TEXT_INPUT_FILE
@@ -835,9 +834,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					-- For now assume we simply encounter files, URI not
 					-- supported.
 				if system_id_ptr /= default_pointer then
-					parent_source := source
 					system_id := new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr)
-					create source.make (system_id)
 					create in_file.make (system_id.to_utf8)
 					in_file.open_read
 					if in_file.is_open_read then
@@ -848,7 +845,6 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					else
 						Result := False
 					end
-					source := parent_source
 				end
 				exml_XML_ParserFree (item)
 				item := parent_item
