@@ -120,9 +120,12 @@ feature 	-- Element change
 		end
 
 	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
-			-- TODO
+			-- Set the value of a local variable.
 		do
-			todo ("set-local-variable", False)
+			if local_variable_frame.count < a_slot_number + reserved_slot_count then
+				local_variable_frame.resize (1, 2 * local_variable_frame.count)
+			end
+			local_variable_frame.put (a_value, a_slot_number + reserved_slot_count)
 		end
 
 feature {NONE} -- Implementation

@@ -1,0 +1,184 @@
+indexing
+
+	description:
+
+		"Objects that enumerate a nodeset that is the difference of two other nodesets."
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_DIFFERENCE_ENUMERATION
+
+inherit
+
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
+			-- Establish invariant.
+		require
+			comparer_not_void: a_comparer /= Void
+			first_iterator_not_void: an_iterator /= Void
+			second_iterator_not_void: another_iterator /= Void
+		do
+			comparer := a_comparer
+			first_iterator := an_iterator
+			second_iterator := another_iterator
+		ensure
+			compare_set: comparer = a_comparer
+			first_iterator_set: first_iterator = an_iterator
+			second_iterator_set: second_iterator = another_iterator
+		end
+
+feature -- Access
+	
+	item: XM_XPATH_NODE is
+			-- Value or node at the current position
+		do
+			Result := current_node
+		end
+
+feature -- Status report
+
+	after: BOOLEAN is
+			-- Are there any more items in the sequence?
+		do
+			Result := first_iterator.after
+		end
+
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position
+		do
+			advance
+			index := index + 1
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original
+		do
+			create Result.make (first_iterator.another, second_iterator.another, comparer)
+		end
+
+feature {NONE} -- Implementation
+
+	comparer: XM_XPATH_NODE_ORDER_COMPARER
+			-- Node order comparer
+
+	first_iterator, second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Iterators across the two sets
+
+	current_node: like item
+			-- Current item
+
+	advance is
+			-- Move to next item.
+		require
+			not_after: before or else not after
+		local
+			first_item: XM_XPATH_ITEM
+		do
+			if before then
+				first_iterator.start
+				second_iterator.start
+			else
+				first_iterator.forth
+			end
+
+			if first_iterator.after then
+				current_node := Void
+			elseif second_iterator.after then
+				first_item := first_iterator.item
+				if first_item /= Void then
+					current_node ?= first_item
+						check
+							current_node /= Void
+							-- We are dealing with node sets
+						end
+				end
+			else
+				advance_both_iterators
+			end
+		end
+
+	advance_both_iterators is
+			-- Move to next item.
+		require
+			first_iterator_not_off: not first_iterator.off
+			second_iterator_not_off: not second_iterator.off
+		local
+			finished: BOOLEAN
+			comparison: INTEGER
+			first_node, second_node: XM_XPATH_NODE
+			first_item, second_item: XM_XPATH_ITEM
+		do
+			from
+				finished := False
+			until
+				finished
+			loop
+				first_item := first_iterator.item
+					check
+						first_item_not_void: first_item /= Void
+						-- From pre-condition and settings of `finished' below
+					end
+				first_node ?= first_item
+					check
+						first_node_not_void: first_node /= Void
+						-- We are dealing with node sets
+					end
+				second_item := second_iterator.item
+					check
+						second_item_not_void: second_item /= Void
+						-- From pre-condition and settings of `finished' below
+					end
+				second_node ?= second_item
+					check
+						second_node_not_void: second_node /= Void
+						-- We are dealing with node sets
+					end				
+				comparison := comparer.three_way_comparison (first_node, second_node)
+				if comparison = -1 then
+					finished := True
+					current_node := first_node
+				elseif comparison = 0 then
+					first_iterator.forth
+					if first_iterator.after then
+						finished := True
+						current_node := Void
+					else
+						second_iterator.forth
+						if second_iterator.after then
+							finished := True
+							current_node := first_node
+						end
+					end
+				else
+					second_iterator.forth
+					if second_iterator.after then
+						finished := True
+						current_node := first_node
+					end
+				end
+			end
+		end
+
+invariant
+
+	comparer_not_void: comparer /= Void
+	first_iterator_not_void: first_iterator /= Void
+	second_iterator_not_void: second_iterator /= Void
+	valid_item: off or else current_node /= Void
+
+end

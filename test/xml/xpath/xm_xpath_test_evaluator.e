@@ -285,8 +285,6 @@ feature
 			-- Dynamic error will be raised owing to static analysis.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
 			an_evaluator.build_static_context ("./books.xml", False, False)
@@ -299,8 +297,6 @@ feature
 			-- Test logical and in error.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
 			an_evaluator.build_static_context ("./books.xml", False, False)
@@ -308,6 +304,83 @@ feature
 			an_evaluator.evaluate ("1 eq 1 and 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
+
+	test_for_expression is
+			-- Test for expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("for $i in //* return name($i)")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Fifty evaluated_items", evaluated_items /= Void and then evaluated_items.count = 50)			
+		end
+	
+	test_nested_for_expression is
+			-- Test nested for expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("for $i in (10, 20), $j in (1, 2) return ($i + $j)")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Four evaluated_items", evaluated_items /= Void and then evaluated_items.count = 4)			
+		end
+
+	test_union_expression is
+			-- Test union expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] union //ITEM[@CAT = 'S']")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Four evaluated_items", evaluated_items /= Void and then evaluated_items.count = 4)			
+		end
+	
+	test_intersection_expression is
+			-- Test union expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] intersect //ITEM[@CAT = 'S']")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)			
+		end
+
+	test_difference_expression is
+			-- Test union expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM except //ITEM[@CAT = 'S']")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Five evaluated_items", evaluated_items /= Void and then evaluated_items.count = 5)			
+		end
+	
+
 	
 	-- Eventually, all errors should be tested here
 

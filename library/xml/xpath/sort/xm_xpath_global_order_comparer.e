@@ -12,14 +12,15 @@ indexing
 
 class XM_XPATH_GLOBAL_ORDER_COMPARER
 
+inherit
+
+	XM_XPATH_NODE_ORDER_COMPARER
+
 feature -- Comparison
 
 		three_way_comparison (a_node, another_node: XM_XPATH_NODE): INTEGER is
 			-- If nodes are then same, 0;
 			-- if `a_node' smaller, -1; if greater, 1
-		require
-			first_node_not_void: a_node /= Void
-			second_node_not_void: another_node /= Void
 		local
 			a_root, another_root: XM_XPATH_NODE
 			a_document, another_document: INTEGER
@@ -33,8 +34,6 @@ feature -- Comparison
 				another_document := another_root.document_number
 				Result := (a_document - another_document).sign
 			end
-		ensure
-			valid_result: -1 <= Result and then Result <= 1
 		end
 end
 	

@@ -90,6 +90,9 @@ feature -- Status report
 	last_evaluated_string: XM_XPATH_STRING_VALUE
 			-- Value from last call to `evaluate_as_string'
 
+	last_slot_number: INTEGER
+			-- Last allocated variable slot number
+
 	may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
 			-- (Overridden by some descendants.)
@@ -342,6 +345,37 @@ feature -- Evaluation
 			last_evaluation.set_analyzed
 		ensure
 			evaluated: last_evaluation /= Void and then last_evaluation.analyzed
+		end
+
+feature -- Element change
+
+	allocate_slots (next_free_slot: INTEGER) is
+			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
+		require
+			strictly_positive_slot_number: next_free_slot > 0
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+
+			-- This version only allocates slots to the children.
+			-- Redefined in `XM_XPATH_ASSIGNATION'.
+
+			last_slot_number := next_free_slot
+
+			from
+				a_cursor := sub_expressions.new_cursor
+				a_cursor.start
+			variant
+				sub_expressions.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_cursor.item.allocate_slots (last_slot_number)
+				last_slot_number := a_cursor.item.last_slot_number
+				a_cursor.forth
+			end
+		ensure
+			last_slot_number_not_less: last_slot_number >= old last_slot_number
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Local

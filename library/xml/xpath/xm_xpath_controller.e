@@ -29,19 +29,7 @@ feature {NONE} -- Initialization
 		do
 			make_context (a_context_item)
 
-			-- Initialize local variables
-
-			from
-				create local_variable_frame.make (1, a_static_context.bound_variables_count)
-				counter := 1
-			variant
-					a_static_context.bound_variables_count + 1 - counter
-			until
-				counter >  a_static_context.bound_variables_count
-			loop
-				--:= a_static_context.variable_definition (counter)
-				counter := counter + 1
-			end
+			create local_variable_frame.make (1, 50)
 		ensure
 			context_item_set: current_iterator /= Void and then current_iterator.item /= Void
 		end
@@ -91,6 +79,7 @@ feature 	-- Element change
 invariant
 
 	current_iterator_not_void: current_iterator /= void
+	local_variable_frame_not_void: local_variable_frame /= Void
 
 end
 	

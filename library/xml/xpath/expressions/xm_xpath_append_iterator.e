@@ -54,14 +54,11 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			if not before then
+			Result := current_iterator.after
+			if Result and then current_iterator = base_iterator then
+				current_iterator := second_expression.iterator (context)
+				current_iterator.start
 				Result := current_iterator.after
-				if Result and then current_iterator = base_iterator then
-					current_iterator := second_expression.iterator (context)
-					current_iterator.start
-					Result := current_iterator.after
-					switched := True
-				end
 			end
 		end
 
@@ -74,8 +71,7 @@ feature -- Cursor movement
 			if current_iterator = base_iterator and then current_iterator.after then
 				current_iterator := second_expression.iterator (context)
 			end
-			if not switched then current_iterator.forth end
-			switched := False
+			current_iterator.forth
 		end
 
 feature -- Duplication
@@ -99,11 +95,6 @@ feature {NONE} -- Implementation
 
 	current_iterator: like base_iterator
 			-- Iterator currently being used
-
-	switched: BOOLEAN
-			-- Used to communicate between `after' and `forth',
-			--  so the second iterator is not advanced twice
-			--  on the switch-over
 
 invariant
 

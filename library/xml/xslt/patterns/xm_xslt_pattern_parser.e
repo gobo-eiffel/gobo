@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that parse XSLT patterns"
+		"Objects that parse XSLT patterns and XPath sequence types"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -16,10 +16,6 @@ inherit
 
 	XM_XPATH_EXPRESSION_PARSER
 
-		-- The command `parse_pattern' sets `is_parse_error'
-		-- to indicate success or failure.
-		-- Upon success, it's result is available in `last_parsed_pattern'.
-
 feature -- Status report
 
 	last_parsed_pattern: XM_XSLT_PATTERN is
@@ -30,6 +26,16 @@ feature -- Status report
 			Result := internal_last_parsed_pattern
 		ensure
 			pattern_not_void: Result /= Void
+		end
+
+	last_parsed_sequence: XM_XPATH_SEQUENCE_TYPE is
+			-- Last expression sucessfully parsed by `parse_sequence_type'
+		require
+			no_parse_error: not is_parse_error
+		do
+			Result := internal_last_parsed_sequence
+		ensure
+			parsed_expression_not_void: Result /= Void
 		end
 
 feature -- Parsers
@@ -57,6 +63,34 @@ feature -- Parsers
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void
+			static_context_not_void: environment /= Void
+		end
+
+	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Parse `a_sequence_type_string';
+			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty" "(" ")")
+		require
+			sequence_text_not_void: a_sequence_type_string /= Void
+			static_context_not_void: a_context /= Void
+		local
+			s: STRING
+		do
+			internal_last_parse_error := Void
+			environment := a_context
+			create tokenizer.make
+			tokenizer.tokenize (a_sequence_type_string)
+			is_parse_error := False
+			parse_sequence
+
+			if	tokenizer.is_lexical_error then
+				report_parse_error (tokenizer.last_lexical_error, 3)
+			elseif tokenizer.last_token /= Eof_token then
+				s := STRING_.appended_string ("Unexpected token ", display_current_token)
+				s := STRING_.appended_string (s, " beyond end of sequence type")
+				report_parse_error (s, 3)
+			end
+		ensure
+			sequence_not_void_unless_error: not is_parse_error implies last_parsed_sequence /= Void
 			static_context_not_void: environment /= Void
 		end
 

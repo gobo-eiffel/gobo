@@ -43,7 +43,6 @@ feature -- Optimization
 			a_value, another_value: XM_XPATH_VALUE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_expression: XM_XPATH_EXPRESSION
 			a_single_node: XM_XPATH_SEQUENCE_TYPE
 		do
 			if first_operand.may_analyze then first_operand.analyze (a_context) end

@@ -71,7 +71,7 @@ feature -- Evaluation
 				inspect
 					operator
 				when And_token then
-					if not a_boolean_value.value then
+					if a_boolean_value.value then
 						Result := second_operand.effective_boolean_value (a_context)
 					else
 						Result := a_boolean_value

@@ -151,10 +151,14 @@ feature -- Evaluation
 					is_error := True
 					internal_error_value := an_expression.error_value
 				else
-					if not an_expression.is_error then
-						if an_expression.was_expression_replaced then
-							an_expression := an_expression.replacement_expression
-						end
+					if an_expression.was_expression_replaced then
+						an_expression := an_expression.replacement_expression
+					end
+					if an_expression.is_error then
+						is_error := True
+						internal_error_value := an_expression.error_value
+					else
+						an_expression.allocate_slots (1)
 						debug ("XPath evaluator")
 							if not an_expression.analyzed then
 								std.error.put_string ("Analyzed expression not marked analyzed:%N")
@@ -162,9 +166,6 @@ feature -- Evaluation
 							end
 						end
 						evaluate_post_analysis (an_expression)
-					else
-						is_error := True
-						internal_error_value := an_expression.error_value
 					end
 				end
 			end

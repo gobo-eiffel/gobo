@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze, simplified_expression, promoted_expression, sub_expressions
+			may_analyze, simplified_expression, promoted_expression, sub_expressions, allocate_slots
 		end
 	
 	XM_XPATH_BINDING
@@ -30,7 +30,7 @@ inherit
 feature -- Access
 
 	operator: INTEGER
-			-- "for", "some" or "every" operator
+			-- "let", "for", "some" or "every" operator
 
 	sequence: XM_XPATH_EXPRESSION
 			-- Sequence expression
@@ -117,6 +117,13 @@ feature -- Evaluation
 
 feature -- Element change
 
+	allocate_slots (next_free_slot: INTEGER) is
+			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
+		do
+			set_slot_number (next_free_slot)
+			Precursor (next_free_slot + 1)
+		end
+
 	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
 			-- Set `sequence.
 		require
@@ -142,7 +149,8 @@ feature -- Element change
 	set_declaration (a_declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION) is
 			-- Set `declaration'.
 		require
-			declaration_not_void: a_declaration /= Void
+			dclaration_is_void: declaration = Void
+			new_declaration_not_void: a_declaration /= Void
 		do
 			declaration := a_declaration
 			name := declaration.name

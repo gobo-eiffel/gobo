@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 				if counter > a_value.count then
 					a_value.resize (1, 2 * value.count)
 				end
-
 				a_value.put (an_iterator.item, counter)
 
 				counter := counter + 1

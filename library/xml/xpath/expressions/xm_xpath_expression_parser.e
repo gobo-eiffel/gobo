@@ -30,11 +30,6 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 
-		-- The commands `parse' and `parse_sequence_type' set `is_parse_error'
-		-- to indicate success or failure.
-		-- Upon success, their result can be accessed via
-		-- `last_parsed_expression' and `last_parsed_sequence' respectively.
-
 creation
 
 	make
@@ -46,7 +41,7 @@ feature {NONE} -- Initialization
 			do_nothing
 		end
 
-feature -- Access
+feature -- Status report
 
 	first_parse_error: STRING is
 			-- Text of first parse error
@@ -70,19 +65,6 @@ feature -- Access
 		ensure
 			parsed_expression_not_void: Result /= Void
 		end
-
-	last_parsed_sequence: XM_XPATH_SEQUENCE_TYPE is
-			-- Last expression sucessfully parsed by `parse_sequence_type'
-		require
-			no_parse_error: not is_parse_error
-		do
-			Result := internal_last_parsed_sequence
-		ensure
-			parsed_expression_not_void: Result /= Void
-		end
-	
-
-feature -- Status report
 
 	is_parse_error: BOOLEAN
 			-- Did last call to last parsing command fail?
@@ -113,34 +95,6 @@ feature -- Parsers
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies last_parsed_expression /= Void
-			static_context_not_void: environment /= Void
-		end
-
-	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Parse `a_sequence_type_string';
-			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty" "(" ")")
-		require
-			sequence_text_not_void: a_sequence_type_string /= Void
-			static_context_not_void: a_context /= Void
-		local
-			s: STRING
-		do
-			internal_last_parse_error := Void
-			environment := a_context
-			create tokenizer.make
-			tokenizer.tokenize (a_sequence_type_string)
-			is_parse_error := False
-			parse_sequence
-
-			if	tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, 3)
-			elseif tokenizer.last_token /= Eof_token then
-				s := STRING_.appended_string ("Unexpected token ", display_current_token)
-				s := STRING_.appended_string (s, " beyond end of sequence type")
-				report_parse_error (s, 3)
-			end
-		ensure
-			sequence_not_void_unless_error: not is_parse_error implies last_parsed_sequence /= Void
 			static_context_not_void: environment /= Void
 		end
 
@@ -280,7 +234,7 @@ feature {NONE} -- Implementation
 					end
 					if is_qname_valid_type (a_uri, a_local_name) then
 						a_primary_type := named_type (a_uri, a_local_name)
-						tokenizer.next
+						next_token ("In parse_sequence: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, 3)
 						end
@@ -318,19 +272,19 @@ feature {NONE} -- Implementation
 				tokenizer.last_token
 			when Star_token, Multiply_token then
 				an_occurrence_flag := Required_cardinality_zero_or_more
-				tokenizer.next
+				next_token ("In set_occurence_flag/*: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				end
 			when Plus_token then
 				an_occurrence_flag := Required_cardinality_one_or_more
-				tokenizer.next
+				next_token ("In set_occurence_flag/plus: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				end
 			when Question_mark_token then
 				an_occurrence_flag := Required_cardinality_optional
-				tokenizer.next
+				next_token ("In set_occurence_flag/?: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				end
@@ -363,7 +317,7 @@ feature {NONE} -- Implementation
 				until
 					is_parse_error or else tokenizer.last_token /= Comma_token
 				loop
-					tokenizer.next
+					next_token ("In parse_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -433,7 +387,7 @@ feature {NONE} -- Implementation
 			
 			-- The Left_parenthesis_token has already been read.
 			
-			tokenizer.next
+			next_token ("In parse_if_expression: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -445,7 +399,7 @@ feature {NONE} -- Implementation
 						a_message := STRING_.appended_string (a_message, display_current_token)
 						report_parse_error (a_message, 3)
 					else
-						tokenizer.next
+						next_token ("In parse_if_expression after RPAR: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, 3)
 						elseif tokenizer.last_token /= Then_token then
@@ -461,7 +415,7 @@ feature {NONE} -- Implementation
 									a_message := STRING_.appended_string (a_message, display_current_token)
 									report_parse_error (a_message, 3)
 								else
-									tokenizer.next
+									next_token ("In parse_if_expression after RPAR 2: current token is ")
 									if tokenizer.is_lexical_error then
 										report_parse_error (tokenizer.last_lexical_error, 3)
 									else
@@ -518,7 +472,7 @@ feature {NONE} -- Implementation
 				until
 					is_parse_error or else tokenizer.last_token /= Or_token
 				loop
-					tokenizer.next
+					next_token ("In parse_or_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -557,7 +511,7 @@ feature {NONE} -- Implementation
 				until
 					is_parse_error or else tokenizer.last_token /= And_token
 				loop
-					tokenizer.next
+					next_token ("In parse_and_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -634,7 +588,7 @@ feature {NONE} -- Implementation
 				finished or else is_parse_error
 			loop
 				a_line_number := tokenizer.line_number
-				tokenizer.next
+				next_token (" parse_mapping_expression: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				elseif tokenizer.last_token /= Dollar_token then
@@ -642,7 +596,7 @@ feature {NONE} -- Implementation
 					a_message := STRING_.appended_string (a_message, display_current_token)
 					report_parse_error (a_message, 3)
 				else
-					tokenizer.next
+					next_token ("In parse_mapping_expression after $: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					elseif tokenizer.last_token /= Name_token then
@@ -652,7 +606,7 @@ feature {NONE} -- Implementation
 					else
 						a_token_value := tokenizer.last_token_value
 
-						tokenizer.next
+						next_token ("In parse_mapping_expression after <name>: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, 3)
 						elseif tokenizer.last_token /= In_token then
@@ -689,7 +643,7 @@ feature {NONE} -- Implementation
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_in_clause%N")
 			end
-			tokenizer.next
+			next_token ("In parse_in_clause: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -712,9 +666,9 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 		do
-				debug ("XPath Expression Parser")
-					std.error.put_string ("Entered parse_return/satisfies%N")
-				end
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_return/satisfies%N")
+			end
 			if an_operator = For_token then
 				if tokenizer.last_token /= Return_token then
 					a_message := "expected %"return%", found "
@@ -728,17 +682,19 @@ feature {NONE} -- Implementation
 					report_parse_error (a_message, 3)
 				end
 			end
-			tokenizer.next
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, 3)
-			else
-				parse_single_expression
-				if not is_parse_error then
-					fix_up_references (an_operator, a_clause_list)
+			if not is_parse_error then
+				next_token (" parse_return_satisifies: current token is ")
+				if tokenizer.is_lexical_error then
+					report_parse_error (tokenizer.last_lexical_error, 3)
+				elseif not  is_parse_error then
+					parse_single_expression
+					if not is_parse_error then
+						fix_up_references (an_operator, a_clause_list)
+					end
 				end
 			end
 		end
-
+	
 	fix_up_references (an_operator: INTEGER; a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]) is
 			-- Work backwards through the list of range variables, fixing up all references to the variables in the inner expression.
 		local
@@ -810,7 +766,7 @@ feature {NONE} -- Implementation
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = Instance_of_token then
-					tokenizer.next
+					next_token (" parse_instance_of: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -844,7 +800,7 @@ feature {NONE} -- Implementation
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = Treat_as_token then
-					tokenizer.next
+					next_token ("In parse_treat_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -879,7 +835,7 @@ feature {NONE} -- Implementation
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = Castable_as_token then
-					tokenizer.next
+					next_token ("In parse_castable_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -914,7 +870,7 @@ feature {NONE} -- Implementation
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = Cast_as_token then
-					tokenizer.next
+					next_token ("In parse_cast_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -960,7 +916,7 @@ feature {NONE} -- Implementation
 
 				when Is_token, Precedes_token, Follows_token  then
 					an_operator := tokenizer.last_token
-					tokenizer.next
+					next_token ("In parse_comparison_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -972,7 +928,7 @@ feature {NONE} -- Implementation
 
 				when Equals_token, Not_equal_token, Less_than_token, Greater_than_token, Less_equal_token, Greater_equal_token then
 					an_operator := tokenizer.last_token
-					tokenizer.next
+					next_token ("In parse_comparison_expression/eq etc.: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -985,7 +941,7 @@ feature {NONE} -- Implementation
 
 				when Fortran_equal_token, Fortran_not_equal_token, Fortran_less_than_token, Fortran_greater_than_token, Fortran_less_equal_token, Fortran_greater_equal_token then
 					an_operator := tokenizer.last_token
-					tokenizer.next
+					next_token ("In parse_mapping_expression/= etc.: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1022,7 +978,7 @@ feature {NONE} -- Implementation
 			if not is_parse_error then
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = To_token then
-					tokenizer.next
+					next_token ("In parse_range_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1061,7 +1017,7 @@ feature {NONE} -- Implementation
 				an_expression := internal_last_parsed_expression
 				if tokenizer.last_token = Plus_token or else tokenizer.last_token = Minus_token then
 					an_operator := tokenizer.last_token
-					tokenizer.next
+					next_token ("In parse_additive_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1108,7 +1064,7 @@ feature {NONE} -- Implementation
 						and then tokenizer.last_token /= Integer_division_token
 				loop
 					an_operator := tokenizer.last_token
-					tokenizer.next
+					next_token ("In parse_multiplicative_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						finished := True
 						report_parse_error (tokenizer.last_lexical_error, 3)
@@ -1145,7 +1101,7 @@ feature {NONE} -- Implementation
 				std.error.put_string ("Entered parse_unary_expression%N")
 			end			
 			if tokenizer.last_token = Minus_token then
-				tokenizer.next
+				next_token ("In parse_unary_expression: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1157,7 +1113,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			elseif tokenizer.last_token = Plus_token then
-				tokenizer.next
+				next_token ("In parse_unary_expression/plus: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1205,7 +1161,7 @@ feature {NONE} -- Implementation
 				until
 					is_parse_error or else tokenizer.last_token /= Union_token
 				loop
-					tokenizer.next
+					next_token ("In parse_union_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1248,7 +1204,7 @@ feature {NONE} -- Implementation
 					is_parse_error or else (tokenizer.last_token /= Intersect_token and tokenizer.last_token /= Except_token)
 				loop
 					an_operator := tokenizer.last_token
-					tokenizer.next
+					next_token ("In parse_intersect_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1289,7 +1245,7 @@ feature {NONE} -- Implementation
 				tokenizer.last_token
 
 			when Slash_token then
-				tokenizer.next
+				next_token ("In parse_path_expression:/ current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1309,7 +1265,7 @@ feature {NONE} -- Implementation
 				end
 
 			when Slash_slash_token then
-				tokenizer.next
+				next_token ("In parse_path_expression:// current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1347,13 +1303,6 @@ feature {NONE} -- Implementation
 				std.error.put_string ("Entered parse_relative_path_expression%N")
 			end
 			parse_step_expression
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Parse_relative_path_expression: After parse_step_expression token is ")
-				std.error.put_string (display_current_token)
-				std.error.put_string (", is parse error? ")
-				std.error.put_string (is_parse_error.out)
-				std.error.put_new_line				
-			end
 			if not is_parse_error then
 				from
 					an_expression := internal_last_parsed_expression
@@ -1361,15 +1310,7 @@ feature {NONE} -- Implementation
 					is_parse_error or else (tokenizer.last_token /= Slash_token and then tokenizer.last_token /= Slash_slash_token)
 				loop
 					an_operator := tokenizer.last_token
-					tokenizer.next
-					debug ("XPath Expression Parser")
-						std.error.put_string ("Parse_relative_path_expression: operator is")
-						std.error.put_string (an_operator.out)
-						std.error.put_new_line
-						std.error.put_string (display_current_token)
-						std.error.put_new_line
-					end
-
+					next_token ("In parse_relative_path_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1426,7 +1367,7 @@ feature {NONE} -- Implementation
 				until
 					is_parse_error or else tokenizer.last_token /= Left_square_bracket_token
 				loop
-					tokenizer.next
+					next_token ("In parse_step_expression: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1438,7 +1379,7 @@ feature {NONE} -- Implementation
 								a_message := STRING_.appended_string (a_message, display_current_token)
 								report_parse_error (a_message, 3)
 							else
-								tokenizer.next
+								next_token ("In parse_step_expression]: current token is ")
 								if tokenizer.is_lexical_error then
 									report_parse_error (tokenizer.last_lexical_error, 3)
 								else
@@ -1473,12 +1414,7 @@ feature {NONE} -- Implementation
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_basic_step%N")
-			end
-			debug ("XPath Expression Parser - tokens")
-				std.error.put_string ("Current token is ")
-				std.error.put_string (display_current_token)
-				std.error.put_new_line
-			end			
+			end		
 			inspect
 				tokenizer.last_token
 			when Dollar_token then
@@ -1521,7 +1457,7 @@ feature {NONE} -- Implementation
 			-- Parse an abbreviated forward step.
 			-- AbbrevForwardStep ::= "@"? NodeTest
 		do
-			tokenizer.next
+			next_token ("In parse_abbrev_forward_step: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -1570,7 +1506,7 @@ feature {NONE} -- Implementation
 			-- Parse an abbreviated reverse step.
 			-- AbbrevReverseStep ::= ".."
 		do
-			tokenizer.next
+			next_token ("In parse_abbrev_reverse_step: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -1584,7 +1520,7 @@ feature {NONE} -- Implementation
 			-- Parse a context_item_expression.
 			-- ContextItemExpr ::= "."
 		do
-			tokenizer.next
+			next_token ("In parse_context_item: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -1601,7 +1537,7 @@ feature {NONE} -- Implementation
 			a_string_literal: XM_XPATH_STRING_VALUE
 		do
 			create a_string_literal.make (tokenizer.last_token_value)
-			tokenizer.next
+			next_token ("In parse_string_literal: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -1638,7 +1574,7 @@ feature {NONE} -- Implementation
 			else
 				an_axis_number := axis_number (tokenizer.last_token_value)
 				a_principal_node_type := axis_principal_node_type (an_axis_number)
-				tokenizer.next
+				next_token ("In parse_axis_step: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1698,7 +1634,7 @@ feature {NONE} -- Implementation
 					report_parse_error (a_message, 3)
 				end
 			end
-			tokenizer.next
+			next_token ("In parse_numeric_literal: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			end
@@ -1716,12 +1652,12 @@ feature {NONE} -- Implementation
 			a_message: STRING		
 			a_sequence: XM_XPATH_EXPRESSION
 		do
-			tokenizer.next
+			next_token ("In parse_parenthesized_expression: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
 				if tokenizer.last_token = Right_parenthesis_token then
-					tokenizer.next
+					next_token ("In parse_parenthesized_expression after RPAR: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1736,7 +1672,7 @@ feature {NONE} -- Implementation
 							a_message := STRING_.appended_string (a_message, display_current_token)
 							report_parse_error (a_message, 3)
 						else
-							tokenizer.next
+							next_token ("In parse_parenthesized_expression after RPAR 2: current token is ")
 							if tokenizer.is_lexical_error then
 								report_parse_error (tokenizer.last_lexical_error, 3)
 							else
@@ -1759,7 +1695,7 @@ feature {NONE} -- Implementation
 			a_variable: XM_XPATH_VARIABLE_DECLARATION
 			a_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
-			tokenizer.next
+			next_token ("In parse_var_ref_step: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			else
@@ -1771,7 +1707,7 @@ feature {NONE} -- Implementation
 					a_token_value := tokenizer.last_token_value
 					a_token_value_fingerprint := make_name_code (a_token_value, False) \\ bits_20
 					
-					tokenizer.next
+					next_token ("In parse_var_ref_step after <name>: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1830,7 +1766,7 @@ feature {NONE} -- Implementation
 			a_function_name := tokenizer.last_token_value
 			if is_qname (a_function_name) then
 				create arguments.make (10)
-				tokenizer.next
+				next_token ("In parse_function_call: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1846,7 +1782,7 @@ feature {NONE} -- Implementation
 							until
 								tokenizer.last_token /= Comma_token or else is_parse_error
 							loop
-								tokenizer.next
+								next_token ("In parse_function_call loop: current token is ")
 								if tokenizer.is_lexical_error then
 									report_parse_error (tokenizer.last_lexical_error, 3)
 								else
@@ -1867,7 +1803,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					tokenizer.next
+					next_token ("In parse_function_call after loop: current token is ")
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, 3)
 					else
@@ -1917,21 +1853,21 @@ feature {NONE} -- Implementation
 			inspect
 				a_token
 			when Name_token then
-				tokenizer.next
+				next_token ("In parse_node_test: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
 					internal_last_parsed_node_test := make_name_test (a_node_type, a_token_value, a_node_type = Element_node)
 				end				
 			when Prefix_token then
-				tokenizer.next
+				next_token ("In parse_node_test - prefix: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
 					internal_last_parsed_node_test := make_namespace_test (a_node_type, a_token_value)
 				end
 			when Suffix_token then
-				tokenizer.next
+				next_token ("In parse_node_test - suffix: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -1940,7 +1876,7 @@ feature {NONE} -- Implementation
 						a_message := STRING_.appended_string (a_message, display_current_token)
 						report_parse_error (a_message, 3)
 					else
-						tokenizer.next
+						next_token ("In parse_node_test <name>: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, 3)
 						else
@@ -1949,6 +1885,7 @@ feature {NONE} -- Implementation
 					end					
 				end
 			when Star_token then
+				next_token ("In parse_node_test - star: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				else
@@ -2018,11 +1955,11 @@ feature {NONE} -- Implementation
 			a_primary_type := system_type (a_type_name)
 			a_name_code := -1
 			a_content_type := Any_item
-			tokenizer.next
+			next_token ("In parse_node_kind: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
 			elseif tokenizer.last_token = Right_parenthesis_token then
-				tokenizer.next
+				next_token ("In parse_node_kind - RPAR: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
 				end
@@ -2043,11 +1980,11 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not is_parse_error then
-						tokenizer.next
+						next_token ("In parse_node_kind - no error: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, 3)
 						elseif tokenizer.last_token = Right_parenthesis_token then
-							tokenizer.next
+							next_token ("In parse_node_kind - RPAR 2: current token is ")
 							if tokenizer.is_lexical_error then
 								report_parse_error (tokenizer.last_lexical_error, 3)
 							end
@@ -2205,7 +2142,7 @@ feature {NONE} -- Implementation
 					if a_range_variable.fingerprint = a_fingerprint then
 						Result := a_range_variable
 					end
-					a_cursor.forth
+					a_cursor.back
 				end
 			end
 		ensure
@@ -2247,6 +2184,19 @@ feature {NONE} -- Implementation
 				Result := True								
 			else
 				Result := False
+			end
+		end
+
+	next_token (a_debugging_message: STRING) is
+			-- Fetch next token.
+		require
+			tokenizer_in_valid_state: tokenizer /= Void and then not tokenizer.is_lexical_error		
+		do
+			tokenizer.next
+			debug ("XPath Expression Parser - tokens")
+				std.error.put_string (a_debugging_message)
+				std.error.put_string (display_current_token)
+				std.error.put_new_line
 			end
 		end
 

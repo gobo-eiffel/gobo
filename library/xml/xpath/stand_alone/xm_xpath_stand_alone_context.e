@@ -293,7 +293,6 @@ feature {NONE} -- Implementation
 		local
 			a_function_call: XM_XPATH_FUNCTION_CALL
 		do
-			-- TODO - need a system function factory
 			a_function_call := Function_factory.make_system_function (a_name)
 			if a_function_call = Void then
 				was_last_function_bound := False

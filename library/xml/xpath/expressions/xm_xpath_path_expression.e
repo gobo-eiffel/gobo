@@ -95,6 +95,39 @@ feature -- Access
 			Result.put (step, 2)
 		end
 
+	first_step: XM_XPATH_EXPRESSION is
+			-- First step of `Current';
+			-- A path expression A/B/C is represented as (A/B)/C, but the first step is A
+		local
+			a_path_expression: XM_XPATH_PATH_EXPRESSION
+		do
+			a_path_expression ?= start
+			if a_path_expression /= Void then
+				Result := a_path_expression.first_step
+			else
+				Result := start
+			end
+		ensure
+			first_step_not_void: Result /= Void
+		end
+
+	remaining_steps: XM_XPATH_EXPRESSION is
+			-- Remaining steps after `first_step;
+			-- This is complicated by the fact that as A/B/C is represented as ((A/B)/C; we are required to return B/C
+		local
+			a_path_expression: XM_XPATH_PATH_EXPRESSION
+		do
+			a_path_expression ?= start
+			if a_path_expression /= Void then
+				create {XM_XPATH_PATH_EXPRESSION} Result.make (a_path_expression.remaining_steps, step)
+				-- TODO copy location information
+			else
+				Result := step
+			end
+		ensure
+			remaining_steps_not_void: Result /= Void
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
