@@ -57,7 +57,6 @@ feature -- Access
 
 	ecs: BOOLEAN
 			-- -e option, default: true
-			--?? how can one set it to false ?
 
 	full: BOOLEAN
 			-- -f option, default: false
@@ -201,22 +200,23 @@ feature -- Execution
 			if backup then
 				cmd.append_string ("-b ")
 			end
-				-- Option -e
-				--!! ecs is the default. there seems no way to set it to false
-			if ecs then
-				cmd.append_string ("-e ")
-			end
 				-- Option -f
 			if full then
 				cmd.append_string ("-f ")
+			elseif not ecs or not meta_ecs then
+				cmd.append_string ("-c ")
 			end
-				-- Option -i
-			if case_insensitive then
-				cmd.append_string ("-i ")	--?? how do I set it to false ?
+				-- Option -e
+			if ecs then
+				cmd.append_string ("-e ")
 			end
 				-- Option -m
 			if meta_ecs then
-				cmd.append_string ("-m ")	--?? how do I set it to false ?
+				cmd.append_string ("-m ")
+			end
+				-- Option -i
+			if case_insensitive then
+				cmd.append_string ("-i ")
 			end
 				-- Option -s
 			if no_default then
