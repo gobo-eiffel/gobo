@@ -82,6 +82,8 @@ Version 3.2 - ?
 	  attributes, for the same reason as above.
 	* Added _by_qualified_name routines to tree nodes.
 	* XM_FORMATTER.last_string replaced by .last_output stream.
+	* XM_NODE_TYPER.attribute obsoleted and renamed to `xml_attribute' 
+	  to avoid future keyword collision.
 
 Version 3.1 - 18 December 2002
 
