@@ -57,6 +57,21 @@ feature
 			assert ("parsed second time", parser.is_correct)
 		end
 	
+	test_file_error is
+			-- Test file error resolver.
+		do
+			create parser.make
+			parser.set_resolver (new_file_resolver_current_directory)
+
+				-- Parse broken file
+			parser.parse_from_system (Brokensub_data)
+			assert ("not parsed", not parser.is_correct)
+
+				-- Parse correct file
+			parser.parse_from_system (Relative_data)
+			assert ("ok", parser.is_correct)
+		end
+		
 	test_stream is
 			-- Test parse_from_stream and resolver interaction.
 		local
@@ -74,7 +89,7 @@ feature
 			parser.parse_from_stream (a_stream)
 			assert ("parsed second time", parser.is_correct)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
@@ -84,4 +99,6 @@ feature {NONE} -- Implementation
 			-- Top level doc for stream test.
 
 	Relative_data: STRING is "data/relative.xml"
+	Brokensub_data: STRING is "data/brokensub.xml"
+
 end
