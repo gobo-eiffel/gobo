@@ -86,7 +86,10 @@ feature -- Document type definition callbacks
 				Exceptions.raise (exception_message)
 			end	
 			create attribute_table.make_equal (7)
-			attribute_types.force (attribute_table, a_name)
+			if attribute_types.is_full then
+				attribute_types.resize (attribute_types.count * 2)
+			end
+			attribute_types.put (attribute_table, a_name)
 			-- In the future add support for element typing?
 		end
 
@@ -113,8 +116,10 @@ feature -- Document type definition callbacks
 				exception_message.append_string (an_element_name)
 				Exceptions.raise (exception_message)
 			end
-
-			attribute_table.force (a_model, a_name)
+			if attribute_table.is_full then
+				attribute_table.resize (attribute_table.count * 2)
+			end
+			attribute_table.put (a_model, a_name)
 		end
 
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;

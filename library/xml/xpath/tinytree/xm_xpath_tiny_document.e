@@ -60,18 +60,18 @@ feature -- Initialization
 			node_number := 1
 			document := Current
 			
-			create node_kinds.make (estimated_node_count)
-			create depth.make (estimated_node_count)
-			create next_sibling_indices.make (estimated_node_count)
-			create alpha.make (estimated_node_count)
-			create beta.make (estimated_node_count)
-			create name_codes.make (estimated_node_count)
+			create node_kinds.make (1, estimated_node_count)
+			create depth.make (1, estimated_node_count)
+			create next_sibling_indices.make (1, estimated_node_count)
+			create alpha.make (1, estimated_node_count)
+			create beta.make (1, estimated_node_count)
+			create name_codes.make (1, estimated_node_count)
 
 			create attribute_parents.make (estimated_attribute_count)
-			create attribute_code.make (estimated_attribute_count)
+			create attribute_codes.make (estimated_attribute_count)
 			create attribute_values.make (estimated_attribute_count)
 
-			create namespace_parent.make (estimated_namespace_count)
+			create namespace_parents.make (estimated_namespace_count)
 			create namespace_codes.make (estimated_namespace_count)
 
 			if is_string_mode_ascii then
@@ -239,7 +239,7 @@ feature -- Access
 		require
 			index_is_valid: an_index <= number_of_attributes
 		do
-			Result := attribute_code.item (an_index)
+			Result := attribute_codes.item (an_index)
 		end
 
 	retrieve_attribute_node (an_attribute_number: INTEGER): XM_XPATH_TINY_ATTRIBUTE is
@@ -347,10 +347,17 @@ feature -- Access
 			an_element: XM_XPATH_TINY_ELEMENT
 		do
 			if element_list = Void then
-				create element_list.make (1)
+				create element_list.make (10)
 			end
 			if not element_list.has (a_fingerprint) then
+				debug ("XPath tiny document")
+					print ("All_elements: adding new list for fingerprint ")
+					print (a_fingerprint.out)
+					print ("%N")
+				end
 				create a_list.make_default
+			else
+				a_list := element_list.item (a_fingerprint)
 			end
 
 			from
@@ -369,12 +376,17 @@ feature -- Access
 						check
 							element_not_void: an_element /= Void
 						end
-					a_list.force_last (an_element)
+					if a_list.is_full then
+						a_list.resize (a_list.count * 2)
+					end
+					a_list.put_last (an_element)
 				end
 				an_index := an_index + 1
 			end
-			
-			element_list.force (a_list, fingerprint)
+			if element_list.is_full then
+				element_list.resize (element_list.count * 2)
+			end
+			element_list.put (a_list, a_fingerprint)
 
 			Result := a_list
 		end
@@ -447,13 +459,23 @@ feature -- Element change
 			valid_alpha: alpha_val >= -1
 			valid_beta: beta_val >= -1
 			valid_name_codes: new_name_codes >= -1
+		local
+			new_size: INTEGER
 		do
 			number_of_nodes := number_of_nodes + 1
-			node_kinds.force (new_node_type, number_of_nodes)
-			depth.force (depth_value, number_of_nodes)
-			alpha.force (alpha_val, number_of_nodes)
-			beta.force (beta_val, number_of_nodes)
-			name_codes.force (new_name_codes, number_of_nodes) 
+			if number_of_nodes > node_kinds.count then
+				new_size := node_kinds.count * 2
+				node_kinds.resize (1, new_size)
+				depth.resize (1, new_size)
+				alpha.resize (1, new_size)
+				beta.resize (1, new_size)
+				name_codes.resize (1, new_size)
+			end
+			node_kinds.put (new_node_type, number_of_nodes)
+			depth.put (depth_value, number_of_nodes)
+			alpha.put (alpha_val, number_of_nodes)
+			beta.put (beta_val, number_of_nodes)
+			name_codes.put (new_name_codes, number_of_nodes) 
 			set_next_sibling (-1, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
 			debug ("XPath tiny document")
@@ -479,11 +501,6 @@ feature -- Element change
 			valid_current_node: which_node > 0
 			valid_next_sibling: next >= -1 -- -1 means no next sibling
 		do
-			if next_sibling_indices.count > 4 then
-				print ("Next sibling for node 5 is now ")
-				print (next_sibling_indices.item (5).out)
-				print ("%N")
-			end
 			debug ("XPath tiny document")
 				print ("Set_next_sibling: Node ")
 				print (which_node.out)
@@ -491,12 +508,8 @@ feature -- Element change
 				print (next.out)
 				print ("%N")
 			end
-			next_sibling_indices.force (next, which_node)
-			if next_sibling_indices.count > 4 then
-				print ("Next sibling for node 5 is now ")
-				print (next_sibling_indices.item (5).out)
-				print ("%N")
-			end
+			if which_node > next_sibling_indices.count then next_sibling_indices.resize (1, 2 * next_sibling_indices.count) end
+			next_sibling_indices.put (next, which_node)
 		ensure
 			next_sibling_set: next_sibling_indices.item (which_node) = next
 		end
@@ -511,19 +524,36 @@ feature -- Element change
 
 	add_namespace (the_parent: INTEGER; ns_code: INTEGER) is
 			-- Add a namespace declaration
+		local
+			new_size: INTEGER
 		do
-			namespace_parent.force_last (the_parent)
-			namespace_codes.force_last (ns_code)
+			if namespace_parents.is_full then
+				new_size := namespace_parents.count * 2
+				namespace_parents.resize (new_size)
+				namespace_codes.resize (new_size)
+			end
+			namespace_parents.put_last (the_parent)
+				check
+					namespace_codes_not_full: not	namespace_codes.is_full
+					-- same size as parent
+				end
+			namespace_codes.put_last (ns_code)
 		end
 
 	add_attribute (the_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; value: STRING) is
 			-- Add an attribute
 		local
-			an_index, a_type_code2: INTEGER
+			new_size, an_index, a_type_code2: INTEGER
 		do
-			attribute_parents.force_last (the_parent)
-			attribute_values.force_last (value)
-			attribute_code.force_last (a_name_code)
+			if attribute_parents.capacity < the_parent  then
+				new_size := last_node_added.max (attribute_parents.count * 2)
+				attribute_parents.resize (new_size)
+				attribute_values.resize (new_size)
+				attribute_codes.resize (new_size)
+			end
+			attribute_parents.put_last (the_parent)
+			attribute_values.put_last (value)
+			attribute_codes.put_last (a_name_code)
 
 			if a_type_code = 0 then
 				a_type_code2 := Untyped_atomic_type
@@ -532,7 +562,7 @@ feature -- Element change
 			end
 			if a_type_code2 /= Untyped_atomic_type then
 				if attribute_type_codes = Void then
-					create attribute_type_codes.make (attribute_parents.count)
+					create attribute_type_codes.make (1, attribute_parents.count)
 					from
 						an_index := 1
 					variant
@@ -540,15 +570,19 @@ feature -- Element change
 					until
 						an_index = attribute_parents.count
 					loop
-						attribute_type_codes.force (Untyped_atomic_type, an_index)
+						attribute_type_codes.put (Untyped_atomic_type, an_index)
 					end
 				end
 			end
 			if attribute_type_codes /= Void then
-				attribute_type_codes.force (a_type_code2, attribute_parents.count)
+				if attribute_type_codes.count < the_parent then
+					new_size := last_node_added.max (attribute_type_codes.count * 2)
+					attribute_type_codes.resize (1, new_size)
+				end
+				attribute_type_codes.put (a_type_code2, attribute_parents.count)
 			end
 			
-			if alpha.item (the_parent) = -1 then alpha.force (attribute_values.count, the_parent) end
+			if alpha.item (the_parent) = -1 then alpha.put (attribute_values.count, the_parent) end
 
 			if a_type_code2 = Id_type then
 				-- The attribute is marked as being an ID. But we don't trust it - it
@@ -605,7 +639,7 @@ feature -- Status setting
 		local
 			prior_index, next_node: INTEGER
 		do
-			create prior.make (last_node_added)
+			create prior.make (1, last_node_added)
 			from
 				prior_index := 1
 			variant
@@ -625,7 +659,7 @@ feature -- Status setting
 			loop
 				next_node := next_sibling_indices.item (prior_index)
 				if next_node > prior_index then
-					prior.force (prior_index, next_node)
+					prior.put (prior_index, next_node)
 				end
 				prior_index := prior_index + 1
 			end
@@ -659,17 +693,17 @@ feature {NONE} -- Implementation
 			-- The following arrays contain one entry for each node other than attribute
 			-- and namespace nodes, arranged in document order
 
-	node_kinds: DS_ARRAYED_LIST [INTEGER]
+	node_kinds: ARRAY [INTEGER]
 			-- Kind of node, e.g. Element, Text, Comment
 
-	depth: DS_ARRAYED_LIST [INTEGER]
+	depth: ARRAY [INTEGER]
 			-- Depth of the node in the hierarchy (document root is level 1, so = the number of ancestors + 1).
 
-	next_sibling_indices: DS_ARRAYED_LIST [INTEGER]
+	next_sibling_indices: ARRAY[INTEGER]
 			-- Node number of the next sibling;
 			-- unless it points backwards, in which case it is the node number of the parent
 
-	alpha: DS_ARRAYED_LIST [INTEGER]
+	alpha: ARRAY [INTEGER]
 			-- A value that depends on the node kind
 			-- For text nodes, it is the offset into the text buffer
 			-- For comments and processing instructions, it is the
@@ -677,7 +711,7 @@ feature {NONE} -- Implementation
 			-- For elements, it is the index of the first attribute node, or -1
 			--  if this element has no attributes.
 
-	beta: DS_ARRAYED_LIST [INTEGER]
+	beta: ARRAY [INTEGER]
 			-- A value that depends on the node kind
 			-- For text nodes, it is the length of the text
 			-- For comments and processing instructions, it is
@@ -685,11 +719,11 @@ feature {NONE} -- Implementation
 			-- For elements, it is the index of the first namespace node,
 			-- or -1 if this element has no namespaces
 
-	name_codes: DS_ARRAYED_LIST [INTEGER]
+	name_codes: ARRAY [INTEGER]
 			-- Name of the node, as an index into the name pool;
 			-- -1 indicates there is no name
 
-	prior: DS_ARRAYED_LIST [INTEGER]
+	prior: ARRAY [INTEGER]
 			-- Index of preceding-siblings
 			-- Constructed only when required
 
@@ -698,13 +732,13 @@ feature {NONE} -- Implementation
 	attribute_parents: DS_ARRAYED_LIST [INTEGER]
 			-- Index of the parent element node
 
-	attribute_code: DS_ARRAYED_LIST [INTEGER]
+	attribute_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name of the node, as an index into the name pool
 
 	attribute_values: DS_ARRAYED_LIST [STRING]
 			-- Value of attribute
 
-	attribute_type_codes: DS_ARRAYED_LIST [INTEGER]
+	attribute_type_codes: ARRAY [INTEGER]
 			-- Type annotations
 			-- Only created if at least one attribute actually has a type
 
@@ -712,7 +746,7 @@ feature {NONE} -- Implementation
 
 	number_of_namespaces: INTEGER
 
-	namespace_parent: DS_ARRAYED_LIST [INTEGER]
+	namespace_parents: DS_ARRAYED_LIST [INTEGER]
 			-- Index of the parent element node
 		
 	namespace_codes: DS_ARRAYED_LIST [INTEGER]
@@ -731,9 +765,9 @@ invariant
 	beta_not_void: beta /= Void
 	name_codes_not_void: name_codes /= Void
 	attribute_parents_not_void: attribute_parents /= Void
-	attribute_code_not_void: attribute_code /= Void
+	attribute_codes_not_void: attribute_codes /= Void
 	attribute_values_not_void: attribute_values /= Void
-	namespace_parent_not_void: namespace_parent /= Void
+	namespace_parents_not_void: namespace_parents /= Void
 	namespace_codes_not_void: namespace_codes /= Void
 	positive_node_count: number_of_nodes >= 0
 	positive_attribute_count: number_of_attributes >= 0 and number_of_attributes = attribute_values.count

@@ -98,7 +98,6 @@ feature
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
 
-			document.diagnostic_dump
 			-- Test document_element
 			
 			document_element ?= document.document_element
@@ -138,9 +137,7 @@ feature
 					assert("Sibling name", STRING_.same_string (a_name, "ITEM"))
 					counter := counter + 1
 				end
-				print ("once round loop ")
 			end
-			print (counter)
 			assert ("Eight Items 1", counter = 8)
 
 			-- Test descendant axis - look for "ITEM" descendants of the document_element
@@ -161,7 +158,6 @@ feature
 				descendants.forth
 				counter := counter + 1
 			end
-			print (counter.out); print ("%N")
 			assert ("Eight descendants", counter = 8)
 			
 			-- Test all_elements
@@ -174,7 +170,7 @@ feature
 
 			element_list_2 := document.all_elements (a_fingerprint)
 			assert ("Element list 2 not void", element_list_2 /= Void)
-			assert ("Cached list", element_list_1 = element_list_2)
+			assert_equal ("Cached list", element_list_1, element_list_2)
 		end
 
 feature {NONE} -- Implementation

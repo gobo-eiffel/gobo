@@ -61,9 +61,9 @@ feature -- Events
 			end
 			current_depth := 1
 			document.add_node (Document_node, current_depth, -1, -1, -1)
-			create previously_at_depth.make (100)
-			previously_at_depth.put_first (1) -- i.e. depth one is node 1 - the document node
-			previously_at_depth.put_first (1) -- i.e. no previous sibling
+			create previously_at_depth.make (1, 100)
+			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
+			previously_at_depth.put (0, 2) 
 			document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
 			document.set_name_pool (name_pool)
@@ -132,7 +132,10 @@ feature -- Events
 			
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
-			previously_at_depth.force (-1, current_depth) -- no previous sibling
+			if current_depth > previously_at_depth.count then
+				previously_at_depth.resize (1, previously_at_depth.count)
+			end
+			previously_at_depth.put (-1, current_depth) -- no previous sibling
 
 			-- TODO - locator stuff
 		end
@@ -169,7 +172,7 @@ feature -- Events
 			-- The receiver must maintain a stack if it needs to know which
 			--  element is ending.
 		do
-			previously_at_depth.force (-1, current_depth)
+			previously_at_depth.put (-1, current_depth)
 			current_depth := current_depth - 1			
 		end
 
@@ -206,7 +209,7 @@ feature -- Events
 				print ("%N")
 			end			
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.force (node_number, current_depth)
+			previously_at_depth.put (node_number, current_depth)
 		end
 
 	
@@ -248,7 +251,7 @@ feature -- Events
 				print ("%N")
 			end		
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.force (node_number, current_depth)		
+			previously_at_depth.put (node_number, current_depth)		
 		end
 
 	comment (content: STRING; properties: INTEGER) is
@@ -284,13 +287,14 @@ feature -- Events
 				print ("%N")
 			end					
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.force (node_number, current_depth)
+			previously_at_depth.put (node_number, current_depth)
 		end
 
 	end_document is
 			-- Parsing finished.
 		do
-			previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
+			-- previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
+			previously_at_depth := Void
 			-- TODO add timing information
 		end
 	
@@ -352,7 +356,7 @@ feature {NONE} -- Implementation
 	node_number: INTEGER
 			-- The local sequence number for a node within this document
 
-	previously_at_depth: DS_ARRAYED_LIST [INTEGER]
+	previously_at_depth: ARRAY [INTEGER]
 			-- Scaffolding used whilst building the tree;
 			-- Values are node numbers
 

@@ -646,8 +646,8 @@ feature {NONE} -- Implementation
 			valid_name: name /= Void and then (name.substring_index ("xs:", 1) > 0 or else  name.substring_index ("xdt:", 1) > 0 or else  name.substring_index ("eiffel:", 1) > 0)
 			type_in_range: type > 0 and type <= 255
 		do
-			type_names.force (name, type)
-			type_table.force (type, name)
+			type_names.put (name, type)
+			type_table.put (type, name)
 		ensure
 			type_in_table: type_table.item (name) = type
 			type_listed: type_names.item (type).is_equal (name)
@@ -659,8 +659,8 @@ feature {NONE} -- Implementation
 			valid_name: name /= Void and then name.substring_index ("xs:", 1) = 0 and  name.substring_index ("xdt:", 1) = 0 and  name.substring_index ("eiffel:", 1) = 0
 			type_in_range: type > 0 and type <= 255
 		do
-			type_names.force (name, type)
-			type_table.force (type, name)
+			type_names.put (name, type)
+			type_table.put (type, name)
 		ensure
 			type_in_table: type_table.item (name) = type
 			type_listed: type_names.item (type).is_equal (name)
@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 			valid_super_type: is_valid_type (super)
 			valid_sub_type: is_valid_type (sub_type)
 		do
-			hierarchy.force (super, sub_type)
+			hierarchy.put (super, sub_type)
 		ensure
 			relationship_defined: super_type (sub_type) = super
 		end
