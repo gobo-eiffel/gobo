@@ -25,6 +25,8 @@ inherit
 			on_comment
 		end
 
+	KL_SHARED_EXCEPTIONS
+
 creation
 
 	make_null,
@@ -39,33 +41,47 @@ feature -- Document
 
 	on_start is
 			-- Reset.
-		local
-			unused_node_number: INTEGER
 		do
+			if name_pool = Void then Exceptions.raise ("Name pool is void") end
 			if defaults_overridden then
 				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count)
 			else
 				create document.make_with_defaults
 			end
 			current_depth := 0
-			unused_node_number := document.add_node (document.Document_node, 0, 0, 0, 0)
-				check
-					first_node: unused_node_number = 1
-				end
+			document.add_node (document.Document_node, 0, 0, 0, 0)
 			create previously_at_depth.make (1,100)
 			previously_at_depth.put (0, 1)
 			previously_at_depth.put (-1, 2)
 			document.set_next_sibling (1, 0)
 			current_depth := current_depth + 1
+			document.set_name_pool (name_pool)
 		end
 
 feature -- Element
 
 	on_start_tag (namespace, ns_prefix, a_name: STRING) is
 			-- called whenever the parser findes a start element.
+		local
+			name_code, the_node_number, previous: INTEGER
 		do
+			if not name_pool.is_name_code_allocated (ns_prefix, namespace, a_name) then
+				name_pool.allocate_name (ns_prefix, namespace, a_name)
+				name_code := name_pool.last_name_code
+			else
+				name_code := name_pool.name_code (ns_prefix, namespace, a_name) 
+			end
+
+			document.add_node (document.Element_node, current_depth, 0, 0, name_code)
+			the_node_number := document.last_node_added
+
+			-- We have no type information from the current parser, so we cannot add this.
+
+			previous := previously_at_depth.item (current_depth)
+			if previous > 0  then document.set_next_sibling (previous, the_node_number) end
+			document.set_next_sibling (the_node_number, previously_at_depth.item (current_depth - 1))
 			-- TODO
-			-- first look up the `name_code' in the `name_pool'
+
 		end
 
 	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING) is
@@ -98,6 +114,11 @@ feature -- Element
 			-- TODO
 		end
 
+feature -- Access
+
+	name_pool: XM_XPATH_NAME_POOL
+			-- The name pool in use
+	
 feature -- Implementation control
 
 	estimated_node_count: INTEGER
@@ -111,6 +132,16 @@ feature -- Implementation control
 
 	estimated_character_count: INTEGER
 			-- An estimate of how many characters there are in the document contents
+
+	set_name_pool (new_pool: XM_XPATH_NAME_POOL) is
+			-- Set the name pool used by this builder
+		require
+			pool_not_void: new_pool /= Void
+		do
+			name_pool := new_pool
+		ensure
+			pool_set: name_pool = new_pool
+		end
 	
 	reset_defaults is
 			-- Use the default tree implementation parameters

@@ -132,11 +132,14 @@ feature -- Access
 			Result.put_first (untyped_value)
 		end
 
+	last_node_added: INTEGER
+			-- Last node created with `add_node'
+	
 	-- Node types follow:
 
 	Document_node, Element_node, Dummy_node_marker: INTEGER is unique
 
-	
+
 feature {XM_XPATH_NODE} -- Access
 
 	is_possible_child: BOOLEAN is
@@ -147,7 +150,7 @@ feature {XM_XPATH_NODE} -- Access
 
 feature -- Element change
 
-	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_value: INTEGER;  beta_value: INTEGER; new_name_code: INTEGER): INTEGER is
+	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_value: INTEGER;  beta_value: INTEGER; new_name_code: INTEGER) is
 			-- Add a node to the document
 		require
 			valid_node_type: new_node_type >= Document_node and then new_node_type < Dummy_node_marker
@@ -163,9 +166,9 @@ feature -- Element change
 			beta.put (beta_value, number_of_nodes)
 			name_code.put (new_name_code, number_of_nodes) 
 			set_next_sibling (number_of_nodes, 0) -- safety precaution
-			Result := number_of_nodes
+			last_node_added := number_of_nodes
 		ensure
-			one_more_node: number_of_nodes = old number_of_nodes + 1 and Result = number_of_nodes
+			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
 			correct_node_kind: node_kinds.item (number_of_nodes) = new_node_type
 			correct_depth: depth.item (number_of_nodes) = depth_value
 			correct_alpha: alpha.item (number_of_nodes) = alpha_value
@@ -183,6 +186,18 @@ feature -- Element change
 			next_sibling.put (next, which_node)
 		ensure
 			next_sibling_set: next_sibling.item (which_node) = next
+		end
+
+feature -- Status setting
+
+	set_name_pool (new_pool: XM_XPATH_NAME_POOL) is
+			-- Set the name pool used by this builder
+		require
+			pool_not_void: new_pool /= Void
+		do
+			name_pool := new_pool
+		ensure
+			pool_set: name_pool = new_pool
 		end
 	
 feature {NONE} -- Implementation

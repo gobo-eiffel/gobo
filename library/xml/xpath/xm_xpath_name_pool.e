@@ -87,12 +87,18 @@ feature -- Initialization
 	
 feature -- Access
 
-	bits_31: INTEGER is 2147483647 -- 0x7fffffff
-			-- As VE does not support hex constants
+	bits_10: INTEGER is 1024 -- 2^10
+			-- For extracting depth and hash code from name code
 
-	bits_16: INTEGER is 65535 -- 0x0000ffff
-			-- As VE does not support hex constants
+	bits_16: INTEGER is 65536 -- 2^16
+			-- For extracting uri code and prefix code from namespace code
 
+	bits_20: INTEGER is 1048576 -- 2^20
+			-- For extracting prefix index from name code
+
+	bits_28:INTEGER is 268435455 -- 2^28 -1
+			-- Maximum limit of fingerprint value
+		
 	namespace_code (xml_prefix: STRING; uri: STRING): INTEGER is
 			-- Return existing namespace code for a namespace prefix/URI pair
 		require
@@ -120,7 +126,9 @@ feature -- Access
 				std.error.put_string (uri_code.out)
 				std.error.put_new_line
 			end
-			Result := (prefix_code |<< 16) + uri_code
+			-- Result := (prefix_code |<< 16) + uri_code;
+			-- N.B. prefix_code is always a positive 16-bit, so no overflow can occur
+			Result := (prefix_code * bits_16) + uri_code
 		ensure
 			valid_result: Result >= 0
 		end
@@ -300,6 +308,20 @@ feature -- Access
 			end
 		end
 
+	name_code (xml_prefix: STRING; uri: STRING; local_name: STRING): INTEGER is
+			-- Name code for `xml_prefix' allocated to `{uri}local_name'
+		require
+			prefix_not_void: xml_prefix /= Void
+			uri_not_void: uri /= Void
+			local_name_not_void: local_name /= Void
+			name_is_allocated: is_name_code_allocated (xml_prefix, uri, local_name)
+		local
+			the_prefix_index: INTEGER
+		do
+			the_prefix_index :=  prefix_index (code_for_uri (uri), xml_prefix)
+			Result := (the_prefix_index * bits_20) + fingerprint (uri, local_name)
+		end
+	
 	fingerprint (uri: STRING; local_name: STRING): INTEGER is
 			-- Fingerprint for the name with a given uri and local name;
 			-- The fingerprint has the property that if two fingerprint are the same,
@@ -331,7 +353,7 @@ feature -- Access
 			if uri_code = -1 then
 				Result := -1
 			else
-				hash_code := (local_name.hash_code & bits_31) \\ 1023
+				hash_code := local_name.hash_code \\ 1024
 
 				if hash_slots.item (hash_code) = Void then
 					Result := -1
@@ -355,11 +377,11 @@ feature -- Access
 						end
 						depth := depth + 1
 					end
-					Result := (depth |<< 10) + hash_code
+					Result := (depth * bits_10) + hash_code
 				end
 			end
 		ensure
-			correct_range: Result > -2 and Result <= 0x000fffff
+			correct_range: Result > -2 and Result <= bits_16
 		end
 
 	fingerprint_from_expanded_name (expanded_name: STRING): INTEGER is
@@ -382,7 +404,7 @@ feature -- Access
 			end
 			Result := fingerprint (namespace, local_name)
 		ensure
-			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+			valid_name_code: Result > 0 and Result <= bits_28 -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
 	is_document_allocated (doc: XM_XPATH_TINY_DOCUMENT): BOOLEAN is
@@ -498,7 +520,7 @@ feature -- Access
 				if the_prefix_index = -1 then Result := False
 				else
 					depth := 0
-					hash_code := (local_name.hash_code & bits_31) \\ 1023
+					hash_code := local_name.hash_code \\ 1024
 					the_name_entry := hash_slots.item (hash_code)
 					if the_name_entry = Void then
 						Result := False
@@ -509,6 +531,11 @@ feature -- Access
 						until
 							finished = True
 						loop
+							debug ("name pool")
+								std.error.put_string ("is_name_code_allocated_using_uri_code: current depth is ")
+								std.error.put_string (depth.out)
+								std.error.put_new_line
+							end
 							if the_name_entry.local_name.is_equal (local_name) and the_name_entry.uri_code = uri_code then
 								finished := True
 								Result := True
@@ -677,7 +704,9 @@ feature -- Element change
 				std.error.put_string (uri_code.out)
 				std.error.put_new_line
 			end
-			last_namespace_code := (prefix_code |<< 16 ) + uri_code
+			--	last_namespace_code := (prefix_code |<< 16 ) + uri_code;
+			-- N.B. prefix_code is always a positive 16-bit number, so no overflow can occur
+			last_namespace_code := (prefix_code * bits_16 ) + uri_code
 		ensure
 			namespace_code_allocated: is_namespace_code_allocated (xml_prefix, uri)
 		end
@@ -769,7 +798,7 @@ feature -- Element change
 			finished: BOOLEAN
 		do
 			depth := 0
-			hash_code := (local_name.hash_code & bits_31) \\ 1023
+			hash_code := local_name.hash_code \\ 1024
 				check
 					valid_hash_code: hash_code >= 0 and hash_code < 1024
 				end
@@ -831,23 +860,23 @@ feature -- Element change
 					end
 				end
 			end
-			last_name_code := (the_prefix_index |<< 20) + (depth |<< 10) + hash_code
+			last_name_code := (the_prefix_index * bits_20) + (depth * bits_10) + hash_code
 		ensure
 			name_allocated: is_name_code_allocated_using_uri_code (xml_prefix, uri_code, local_name)
 		end
 
 feature -- Conversion
 
-	namespace_uri_from_name_code (name_code: INTEGER): STRING is
+	namespace_uri_from_name_code (a_name_code: INTEGER): STRING is
 			-- Namespace-URI of a name, given its name code or fingerprint
 		require
-			positive_name_code: name_code >= 0
+			positive_name_code: a_name_code >= 0
 		local
 			entry: XM_XPATH_NAME_ENTRY
 		do
-			entry := name_entry (name_code)
+			entry := name_entry (a_name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- Exceptions.raises an exception
 			else
 				Result := uris.item (entry.uri_code + 1)
 			end
@@ -855,31 +884,31 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end
 
-	uri_code_from_name_code (name_code: INTEGER): INTEGER is -- should be INTEGER_16
+	uri_code_from_name_code (a_name_code: INTEGER): INTEGER is -- should be INTEGER_16
 			-- URI code of a name, given its name code or fingerprint
 	require
-			positive_name_code: name_code >= 0
+			positive_name_code: a_name_code >= 0
 		local
 			entry: XM_XPATH_NAME_ENTRY
 		do
-			entry := name_entry (name_code)
+			entry := name_entry (a_name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- Exceptions.raises an exception
 			else
 				Result := entry.uri_code
 			end	
 		end
 
-	local_name_from_name_code (name_code: INTEGER): STRING is
+	local_name_from_name_code (a_name_code: INTEGER): STRING is
 			-- Local part of a name, given its name code or fingerprint
 		require
-			positive_name_code: name_code >= 0
+			positive_name_code: a_name_code >= 0
 		local
 			entry: XM_XPATH_NAME_ENTRY
 		do
-			entry := name_entry (name_code)
+			entry := name_entry (a_name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- Exceptions.raises an exception
 			else
 				Result := entry.local_name
 			end
@@ -887,16 +916,16 @@ feature -- Conversion
 			result_not_void: Result /= Void
 		end		
 
-	prefix_from_name_code (name_code: INTEGER): STRING is
+	prefix_from_name_code (a_name_code: INTEGER): STRING is
 			-- Local part of a name, given its name code or fingerprint
 		require
-			positive_name_code: name_code >= 0
+			positive_name_code: a_name_code >= 0
 		local
 			uri_code: INTEGER -- should be INTEGER_16
 			the_prefix_index: INTEGER
 		do
-			uri_code := uri_code_from_name_code (name_code)
-			the_prefix_index := (name_code |>> 20) & 0x000000ff
+			uri_code := uri_code_from_name_code (a_name_code)
+			the_prefix_index := name_code_to_prefix_index (a_name_code)
 			debug ("name pool")
 					std.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
 					std.error.put_string (the_prefix_index.out)
@@ -907,19 +936,19 @@ feature -- Conversion
 			result_may_be_void: True
 		end
 
-	display_name_from_name_code (name_code: INTEGER): STRING is
+	display_name_from_name_code (a_name_code: INTEGER): STRING is
 			-- Display form of a name (the QName), given its name code or fingerprint
 		require
-			positive_name_code: name_code >= 0
+			positive_name_code: a_name_code >= 0
 		local
 			entry: XM_XPATH_NAME_ENTRY
 			the_prefix_index: INTEGER
 		do
-			entry := name_entry (name_code)
+			entry := name_entry (a_name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- Exceptions.raises an exception
+				unknown_name_code (a_name_code) -- Exceptions.raises an exception
 			else
-				the_prefix_index := (name_code |>> 20) & 0x000000ff
+				the_prefix_index := name_code_to_prefix_index (a_name_code)
 				if the_prefix_index = 0 then
 					Result := entry.local_name
 				else
@@ -934,16 +963,21 @@ feature -- Conversion
 
 	uri_from_namespace_code (a_namespace_code: INTEGER): STRING is
 			-- Namespace URI from `namespace_code'
+		local
+			uri_code, top_bits: INTEGER -- should be INTEGER_16
 		do
+			-- Result := uris.item ((a_namespace_code & 0xffff) + 1);
+			-- N.B. namespace codes consist of two positive 16-bit numbers,
+			--      so overflow does not arise
+			top_bits := (a_namespace_code // bits_16) * bits_16
+			uri_code := a_namespace_code - top_bits
 			debug ("name pool")
-					std.error.put_string ("uri_from_namespace_code: Namespace code is ")
-					std.error.put_string (a_namespace_code.out)
-					std.error.put_new_line
-					std.error.put_string ("uri_from_namespace_code: masked Namespace code is ")
-					std.error.put_string ((a_namespace_code & bits_16).out)
-					std.error.put_new_line					
+				std.error.put_string ("uri_from_namespace_code: uri_code is ")
+				std.error.put_string (uri_code.out)
+				std.error.put_string (":")
+				std.error.put_new_line
 			end
-			Result := uris.item ((a_namespace_code & bits_16) + 1)
+			Result := uris.item (uri_code + 1)
 		end
 		
 	uri_from_uri_code (uri_code: INTEGER): STRING is
@@ -957,23 +991,26 @@ feature -- Conversion
 	prefix_from_namespace_code (a_namespace_code: INTEGER): STRING is
 			-- Namespace prefix from `namespace_code'
 		do
-			Result := prefixes.item ((a_namespace_code |>> 16) + 1)
+			-- Result := prefixes.item ((a_namespace_code |>> 16) + 1)
+			-- N.B. namespace codes consist of two positive 16-bit numbers,
+			--      so overflow does not arise
+			Result := prefixes.item ((a_namespace_code // bits_16) + 1)
 		end
 		
 
 feature {NONE} -- Implementation
 
-	name_entry (name_code: INTEGER): XM_XPATH_NAME_ENTRY is
-			-- Name entry corresponding to `name_code'
+	name_entry (a_name_code: INTEGER): XM_XPATH_NAME_ENTRY is
+			-- Name entry corresponding to `a_name_code'
 		require
-			positive_name_code: name_code >= 0
+			positive_name_code: a_name_code >= 0
 		local
 			hash_code, depth, counter: INTEGER
 			found: BOOLEAN
 			entry: XM_XPATH_NAME_ENTRY
 		do
-			hash_code := name_code & 0x000003ff
-			depth := (name_code |>> 10) & 0x000003ff
+			depth := name_code_to_depth (a_name_code)
+			hash_code := name_code_to_hash_code (a_name_code)
 			entry := hash_slots.item (hash_code)
 			from
 				counter := 1
@@ -1089,7 +1126,47 @@ feature {NONE} -- Implementation
 			valid_result: Result > -2 and Result < 255
 		end
 
-	unknown_name_code (name_code: INTEGER) is
+	name_code_to_prefix_index (a_name_code: INTEGER): INTEGER is
+			-- Extract the prefix index from `a_name_code'
+		do
+				check
+					name_code_is_positive: a_name_code > 0
+					-- because it only occupoes 28 bits
+				end
+			-- (a_name_code |>> 20) & 0x000000ff
+			Result := (a_name_code // bits_20)
+		ensure
+			valid_prefix_index: Result >= 0 and Result < 255
+		end
+
+	name_code_to_depth (a_name_code: INTEGER): INTEGER is
+			-- Extract the depth from `a_name_code'
+		local
+			scaled_prefix_index: INTEGER
+		do
+			--	(a_name_code |>> 10) & 0x000003ff
+			scaled_prefix_index := name_code_to_prefix_index (a_name_code) * bits_20
+
+			Result := (a_name_code - scaled_prefix_index) // bits_10
+		ensure
+			positive_result: Result >= 0 and Result < 1024
+		end
+
+	name_code_to_hash_code (a_name_code: INTEGER): INTEGER is
+			-- Extract the depth from `a_name_code'
+		local
+			scaled_prefix_index, depth: INTEGER
+		do
+			-- hash_code := a_name_code & 0x000003ff
+			scaled_prefix_index := name_code_to_prefix_index (a_name_code) * bits_20
+			depth := (a_name_code - scaled_prefix_index) // bits_10
+			
+			Result := (a_name_code - scaled_prefix_index - (depth * bits_10))
+		ensure
+			positive_result: Result >= 0 and Result < 1024
+		end
+
+	unknown_name_code (a_name_code: INTEGER) is
 		-- Exceptions.Raise an exception
 		require
 			always_valid: True
@@ -1097,7 +1174,7 @@ feature {NONE} -- Implementation
 			result_string: STRING
 		do
 			create result_string.make_from_string ("Unknown name code ")
-			result_string.append_string (name_code.out)
+			result_string.append_string (a_name_code.out)
 			Exceptions.raise (result_string)
 		ensure
 			impossible: False
