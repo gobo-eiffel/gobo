@@ -56,6 +56,20 @@ feature -- Access
 	clusters: DS_ARRAYED_LIST [like cluster]
 			-- Clusters
 
+feature {ET_CLUSTER} -- Setting
+
+	set_parent (a_parent: like cluster) is
+			-- Set parent of all clusters to `a_parent'.
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).set_parent (a_parent)
+				i := i + 1
+			end
+		end
+
 feature -- Element change
 
 	put_last (a_cluster: like cluster) is
