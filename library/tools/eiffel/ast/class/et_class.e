@@ -240,10 +240,8 @@ feature -- Parsing status
 			-- Set `is_parsed' to True.
 		do
 			is_parsed := True
-			has_syntax_error := False
 		ensure
 			is_parsed: is_parsed
-			no_syntax_error: not has_syntax_error
 		end
 
 	set_syntax_error is
@@ -591,6 +589,30 @@ feature -- Feature flattening status
 			has_flattening_error := True
 		ensure
 			has_flattening_error: has_flattening_error
+		end
+
+feature -- Interface checking status
+
+	interface_checked: BOOLEAN
+			-- Has the interface of current class been checked?
+
+	has_interface_error: BOOLEAN
+			-- Has a fatal error occurred during interface checking?
+
+	set_interface_checked is
+			-- Set `interface_checked' to True.
+		do
+			interface_checked := True
+		ensure
+			interface_checked: interface_checked
+		end
+
+	set_interface_error is
+			-- Set `has_interface_error' to True.
+		do
+			has_interface_error := True
+		ensure
+			has_interface_error: has_interface_error
 		end
 
 feature -- Invariant
