@@ -406,7 +406,7 @@ indicating the end of the input.)</p>
         </em><em><strong>if</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
                 </em>-- Return end-of-file<em>
             last_token </em>:=<em> 0
-        </em><em><strong>elseif</strong></em><em> c </em>=<em> '.' </em><em><strong>or</strong></em><em> </em>(<em>c </em>&gt;=<em> '0' </em><em><strong>and</strong></em><em> c </em>&lt;=<em> '9'</em>)<em> </em><em><strong>then</strong></em><em>
+        </em><em><strong>elseif</strong></em><em> </em>(<em>c </em>&gt;=<em> '0' </em><em><strong>and</strong></em><em> c </em>&lt;=<em> '9'</em>)<em> </em><em><strong>then</strong></em><em>
                 </em>-- Process numbers<em>
             last_token </em>:=<em> NUM
             </em><em><strong>from</strong></em><em>
@@ -416,12 +416,26 @@ indicating the end of the input.)</p>
                 c </em>:= <em>io.last_character
             </em><em><strong>until</strong></em><em>
                 io.end_of_file </em><em><strong>or else</strong></em><em>
-                </em>(<em>c </em>/=<em> '.' </em><em><strong>and</strong></em><em> </em>(<em>c </em>&lt;<em> '0' </em><em><strong>or</strong></em><em> c </em>&gt;<em> '9'</em>))<em>
+                </em>(<em>c </em>&lt;<em> '0' </em><em><strong>or</strong></em><em> c </em>&gt;<em> '9'</em>)<em>
             </em><em><strong>loop</strong></em><em>
                 buffer.append_character </em>(<em>c</em>)<em>
                 io.read_character
                 c </em>:=<em> io.last_character
             </em><em><strong>end</strong></em><em>
+            </em><em><strong>if not</strong></em><em> io.end_of_file </em><em><strong>and then</strong></em><em> c = '.' </em><em><strong>then</strong></em><em>
+		</em><em><strong>from</strong></em><em>
+                    buffer.append_character </em>(<em>'.'</em>)<em>
+                    io.read_character
+                    c </em>:= <em>io.last_character
+                </em><em><strong>until</strong></em><em>
+                    io.end_of_file </em><em><strong>or else</strong></em><em>
+                    </em>(<em>c </em>&lt;<em> '0' </em><em><strong>or</strong></em><em> c </em>&gt;<em> '9'</em>)<em>
+                </em><em><strong>loop</strong></em><em>
+                    buffer.append_character </em>(<em>c</em>)<em>
+                    io.read_character
+                    c </em>:=<em> io.last_character
+                </em><em><strong>end</strong></em><em>
+            end
             </em><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
                 pending_character </em>:=<em> c
                 has_pending_character </em>:=<em> True
@@ -588,7 +602,7 @@ href="precedence.html#context"><font color="#0000FF"><tt>%prec</tt></font></a>
 in the grammar section for the unary minus operator. The <font
 color="#0000FF"><tt>%prec</tt></font> simply instructs <em>geyacc</em>
 that the rule <font color="#FF0000"><tt>'-'</tt></font><tt> </tt><font
-color="#FF0000"><tt>exp</tt></font> has the same precedence as <font
+color="#800080"><tt>exp</tt></font> has the same precedence as <font
 color="#FF0000" face="Times New Roman"><tt>NEG</tt></font><font
 color="#FF0000" size="2" face="Courier New"> </font><font
 face="Symbol">-</font> in this case the next-to-highest.</p>
@@ -646,17 +660,17 @@ rest of the current line of input.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 8 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
