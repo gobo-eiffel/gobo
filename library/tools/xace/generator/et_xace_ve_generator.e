@@ -97,6 +97,7 @@ feature {NONE} -- Output
 		local
 			a_clusters: ET_XACE_CLUSTERS
 			an_option: ET_XACE_OPTIONS
+			an_external: ET_XACE_EXTERNALS
 		do
 			a_file.put_line ("system")
 			a_file.put_new_line
@@ -119,6 +120,12 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
+			end
+			an_external := a_system.externals
+			if an_external /= Void and then an_external.has_link_libraries then
+				a_file.put_line ("link")
+				a_file.put_new_line
+				print_link_libraries (an_external.link_libraries, a_file)
 			end
 			a_file.put_line ("option")
 			a_file.put_new_line
@@ -287,6 +294,37 @@ feature {NONE} -- Output
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
 				print_clusters (subclusters, a_file)
+			end
+		end
+
+	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_libraries' to `a_file'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+			no_void_library: not a_libraries.has (Void)
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
+		do
+			if not a_libraries.is_empty then
+				a_cursor := a_libraries.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (1, a_file)
+					a_file.put_character ('%"')
+					a_pathname := a_cursor.item
+						-- Visual Eiffel does not like the currly
+						-- brackets around environment variables.
+					a_pathname := remove_all_characters (a_pathname, '{')
+					a_pathname := remove_all_characters (a_pathname, '}')
+					a_pathname := remove_all_characters (a_pathname, '(')
+					a_pathname := remove_all_characters (a_pathname, ')')
+					a_file.put_string (a_pathname)
+					a_file.put_line ("%"")
+					a_cursor.forth
+				end
+				a_file.put_new_line
 			end
 		end
 
