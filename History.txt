@@ -6,17 +6,32 @@ Version 2.1 - ?
 	  which is useful in order to avoid invariant violation when
 	  reusing the same input buffer for subsequent scanning.
 	  (suggested by Emmanuel Stapf)
+	* Options specified on the command-line now override those
+	  specified in the %option directives of the input file
+	  (reported by Sven Ehrke).
+
+	geyacc:
+
+	* Added command-line options '-k' and '--tokens-file': name
+	  of the file where the tokens class will be written
+	  (reported by Sven Ehrke).
+	* Do not generate unused local variables anymore.
 
 	getest:
 
 	* Added command-line options: -g for testcase generation
 	  only, -c for testcase compilation only, and -e for
-	  testcase execution only.
+	  testcase execution only (suggested by Glenn Maughan).
 
 	Gobo Eiffel Structure Library:
 
 	* Fixed bug in feature `force_last' of DS_SPARSE_SET and
 	  DS_SPARSE_TABLE when resizing the container.
+	* Changed postconditions in DS_LINEAR_CURSOR and
+	  DS_BILINEAR_CURSOR which prevented descendants to
+	  implement partial traversals or different traversal
+	  strategies (reported by Berend de Boer and Einar
+	  Karttunen).
 
 Version 2.0 - 29 April 2001
 
