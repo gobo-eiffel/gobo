@@ -138,7 +138,9 @@ feature -- Pipes
 		do
 			a_last := new_stop_on_error
 			Result := callbacks_pipe (<< new_end_tag_checker, new_namespace_resolver, a_last >>)
-			a_last.set_next (callbacks_pipe (a))
+			if a.count > 0 then
+				a_last.set_next (callbacks_pipe (a))
+			end
 		ensure
 			pipe_not_void: Result /= Void
 		end
