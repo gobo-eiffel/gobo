@@ -90,7 +90,7 @@ feature -- Access
 	position: XM_POSITION is
 			-- Current position in the source of the XML document
 		do
-			create {XM_DEFAULT_POSITION} Result.make (source, last_byte_index, last_column_number, last_line_number)
+			create {XM_DEFAULT_POSITION} Result.make ("source unknown", last_byte_index, last_column_number, last_line_number)
 		end
 
 	relative_uri_base: STRING is
@@ -156,7 +156,7 @@ feature -- Parsing
 			parse_incremental_from_string (a_string)
 			finish_incremental
 		end
-	
+
 	parse_from_system (a_system: STRING) is
 			-- Parse from system identifier using resolver.
 		do
@@ -170,20 +170,15 @@ feature -- Parsing
 			entity_resolver.resolve_public (a_public, a_system)
 			parse_from_entity
 		end
-		
+
 feature {NONE} -- Implementation
 
 	parse_from_entity is
 			-- Parse from entity resolver
 		do
-			if not entity_resolver.has_error then
-				scanner.set_input_from_resolver (entity_resolver)
-				parse_with_events
-			else
-				force_error (Error_entity_unresolved_external)
-			end
+			-- TODO: I suppose, applicable for Expat?
 		end
-		
+
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
