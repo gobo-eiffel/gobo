@@ -2,7 +2,7 @@ HACT (Halstenbach)
 
 	* The Halstenbach compiler is not supported anymore.
 
-ISE 5.3 (ISE Eiffel)
+ISE 5.4 (ISE Eiffel)
 
 	* The Ace files for ISE Eiffel provided in this package are for
 	  Eiffel classic. In order to get Ace files configured for Eiffel
@@ -24,7 +24,7 @@ SE 1.1 (SmartEiffel)
 
 	* Futhermore, SmartEiffel has decided to make the live of portable
 	  Eiffel library developers even more difficult than it used to be
-	  by departing from the Eiffel standard without raisin the issue
+	  by departing from the Eiffel standard without raising the issue
 	  at NICE or ECMA. If like me you are sick of getting zillions of
 	  warning messages because of that please use the options -no_warning
 	  AND complain to the SmartEiffel team (otherwise one day these
