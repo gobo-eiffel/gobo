@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 				pristine_error_listener.set_recovery_policy (Recover_with_warnings)
 			end
 			shared_decimal_context.set_digits (18)
+			saved_base_uri := entity_resolver.uri
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
 			uri_resolver_set: uri_resolver = a_uri_resolver
@@ -138,6 +139,12 @@ feature -- Access
 		end
 
 feature -- Element change
+
+	reset_entity_resolver is
+			-- Reset `entity_resolver' stack to initial condition.
+		do
+			entity_resolver.reset_uri_stack (saved_base_uri)
+		end
 
 	set_digits (digits: INTEGER) is
 			-- Set the preceision for decimal and integer arithmetic.
@@ -264,9 +271,12 @@ feature {XM_XSLT_EXPRESSION_CONTEXT} -- Debugging
 	
 feature {NONE} -- Implementation
 
-		pristine_error_listener: XM_XSLT_ERROR_LISTENER
+	pristine_error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 	
+	saved_base_uri: UT_URI
+			-- Bodge - saved base URI from `entity_resolver'`
+
 invariant
 
 	entity_resolver_not_void: entity_resolver /= Void

@@ -926,8 +926,8 @@ feature -- Creation
 				create {XM_XPATH_STRING_VALUE} last_generated_expression.make ("")
 			elseif components.count = 1 then
 				last_generated_expression := components.item (1)
-			elseif a_static_context.is_backwards_compatible_mode then
-				last_generated_expression := components.item (1)
+--			elseif a_static_context.is_backwards_compatible_mode then
+--				last_generated_expression := components.item (1)
 			else
 				create a_concat_function.make
 				a_concat_function.set_arguments (components)
@@ -1499,7 +1499,7 @@ feature -- Element change
 			create last_generated_instruction_list.make_from_linear (an_instruction_list)
 			an_instruction.set_children (last_generated_instruction_list)
 		ensure
-			
+			instruction_children_not_void: an_instruction.children /= Void
 		end
 
 	fallback_processing (an_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT; an_instruction_list: DS_LINKED_LIST [XM_XSLT_INSTRUCTION]) is

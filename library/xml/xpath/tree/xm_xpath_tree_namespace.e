@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		require
 			element_not_void: an_element /= Void
 			strictly_positive_index: an_index > 0
-			strictly_positive_namespace_code: a_namespace_code > 0
+			positive_namespace_code: a_namespace_code >= 0
 		local
 			a_local_part: STRING
 		do

@@ -80,7 +80,7 @@ feature -- Element change
 					if last_generated_name_code = -1 then
 						report_compile_error (STRING_.appended_string (a_name_attribute, " is not a recognised QName"))
 					end
-					called_template_fingerprint := last_generated_name_code
+					called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				else
 					report_compile_error (STRING_.appended_string ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute))
 				end
@@ -135,7 +135,7 @@ feature -- Element change
 							an_actual_parameter_iterator.forth
 						end
 						if not is_parameter_ok then
-							report_compile_error (STRING_.appended_string ("No value supplied for required parameter ",
+							report_compile_error (STRING_.appended_string ("XT0690: No value supplied for required parameter ",
 														 a_param.variable_name))
 						end
 					end
@@ -170,8 +170,8 @@ feature -- Element change
 							end
 							a_declared_parameter_iterator.forth
 						end
-						if not is_parameter_ok then
-							a_message := STRING_.appended_string ("Parameter ", a_with_param.variable_name)
+						if not is_parameter_ok and then not is_backwards_compatible_processing_enabled then
+							a_message := STRING_.appended_string ("XT0680: Parameter ", a_with_param.variable_name)
 							report_compile_error (STRING_.appended_string (a_message, " is not declared in the called template"))
 						end
 					end
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if template = Void then
-				report_compile_error (STRING_.appended_string ("No template exists named ", called_template_name))
+				report_compile_error (STRING_.appended_string ("XT0650: No template exists named ", called_template_name))
 			end
 		end
 

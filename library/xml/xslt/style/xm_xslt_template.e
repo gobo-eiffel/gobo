@@ -217,9 +217,6 @@ feature -- Element change
 						a_rule_manager.register_mode (a_name_code)
 					end
 					a_mode := a_rule_manager.mode (a_name_code)
-					if a_name_code /= Default_mode and then  a_name_code /= All_modes then
-						a_mode.set_name (shared_name_pool.display_name_from_name_code (a_name_code))
-					end
 					create a_rule_value.make (compiled_template)
 					debug ("XSLT template rules")
 						std.error.put_string ("Adding a template rule for pattern ")

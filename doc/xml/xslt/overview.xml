@@ -50,6 +50,26 @@
 	    <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
 	  </para>
 	</listitem>
+	<listitem>
+	  <para>
+	    The next step is <link linkend="stylesheet">Creating an executable Stylesheet</link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The next step is <link linkend="transformer">Creating a Transformer</link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The next step is <link linkend="transforming">Executing the Transformation</link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Finally, <link linkend="accessing_result">Accessing the Transformation Result</link>.
+	  </para>
+	</listitem>
       </itemizedlist>
     </para>
   </section>
@@ -65,25 +85,29 @@
 	    <link linkend="output_resolver"><classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname></link>
 	  </para>
 	</listitem>
-      </itemizedlist>
-      <itemizedlist>
 	<listitem>
 	  <para>
 	    <link linkend="error_listener"><classname>XM_XSLT_ERROR_LISTENER</classname></link>
 	  </para>
 	</listitem>
-      </itemizedlist>
-      <itemizedlist>
 	<listitem>
 	  <para>
 	    <link linkend="trace_listener"><classname>XM_XSLT_TRACE_LISTENER</classname></link>
 	  </para>
 	</listitem>
-      </itemizedlist>
-      <itemizedlist>
 	<listitem>
 	  <para>
 	    <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <link linkend="transformation_source"><classname>XM_XSLT_SOURCE</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <classname>XM_XSLT_ENCODER_FACTORY</classname> is explained in <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
 	  </para>
 	</listitem>
       </itemizedlist>

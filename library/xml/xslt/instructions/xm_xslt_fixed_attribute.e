@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
-			validation: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
+			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
 		do
 			executable := an_executable
 			instruction_name := "attribute"
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	validation: validation_action >= Validation_strict  and then Validation_strip <= validation_action
+	validation: validation_action >= Validation_strict  and then Validation_strip >= validation_action
 
 end
 	

@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 
 	uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 			-- URI reference resolver
-
+		
 	set_build_error (a_message: STRING) is
 			-- Set `last_build_error'.
 		require

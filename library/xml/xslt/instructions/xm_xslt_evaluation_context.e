@@ -59,7 +59,23 @@ feature -- Access
 		do
 			Result := transformer.current_date_time
 		end
-	
+
+	is_current_item_available: BOOLEAN is
+			-- May `current()' be called without error?
+		do
+			Result := transformer.current_iterator /= Void and then not transformer.current_iterator.off
+		end
+
+	current_stylesheet_item: XM_XPATH_ITEM is
+			-- Item returned by `current()'
+		require
+			current_item_avaiable: is_current_item_available
+		do
+			Result := transformer.current_item
+		ensure
+			current_stylesheet_item_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	last_build_error: STRING
@@ -92,6 +108,7 @@ feature -- Element change
 					last_parsed_document	:= a_builder.document
 				end
 			end
+			transformer.configuration.reset_entity_resolver
 		end
 
 feature {NONE} -- Implementation

@@ -119,7 +119,7 @@ feature -- Events
 			previous_atomic := False
 		end
 
-		end_element is
+	end_element is
 			-- Notify the end of an element.
 		local
 			a_document: XM_XPATH_TREE_DOCUMENT

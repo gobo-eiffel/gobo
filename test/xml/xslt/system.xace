@@ -35,8 +35,8 @@
     <option name="warning" value="none"/>
   </option>
 
-  <!-- <option name="debug_tag" value="XPath Expression Parser"/>
-  <option name="debug_tag" value="XPath Expression Parser - tokens"/> -->
+  <!-- <option name="debug_tag" value="XPath Expression Parser"/> 
+  <option name="debug_tag" value="XPath content emitter"/> -->
 
   <cluster name="xslt_tester" location="${GOBO}/test/xml/xslt"/>
   <cluster name="eiffel_testgen" location="TESTGEN"/>

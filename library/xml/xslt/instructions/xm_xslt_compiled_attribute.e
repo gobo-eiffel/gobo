@@ -147,7 +147,16 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- All the XPath expressions associated with this instruction
 		do
-			todo ("xpath_expressions", False)
+			if namespace /= Void then
+				create Result.make (2)
+			else
+				create Result.make (1)
+			end
+			Result.put_last (attribute_name)
+			if namespace /= Void then
+				Result.put_last (namespace)
+			end
+			Result.set_equality_tester (expression_tester)
 		end
 		
 feature {NONE} -- Implementation

@@ -112,8 +112,7 @@ feature -- Evaluation
 
 	expand (a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Expand the template.
-			-- Called when the template is invoked using xsl:call-template.
-			-- Invoking a template by this method does not change the current template.
+			-- Called when the template is invoked using xsl:call-template or xsl:apply-templates.
 		require
 			transformer_not_void: a_transformer /= Void
 		do

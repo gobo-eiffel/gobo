@@ -55,20 +55,22 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		do
-			sequence.simplify
-			if sequence.is_error then
-				set_last_error (sequence.error_value)
-			else
-				if sequence.was_expression_replaced then
-					set_sequence (sequence.replacement_expression)
-				end
-				action.simplify
-				if action.is_error then
-					set_last_error (action.error_value)
-				elseif action.was_expression_replaced then
-					set_action (action.replacement_expression)
+			if declaration /= Void then
+				sequence.simplify
+				if sequence.is_error then
+					set_last_error (sequence.error_value)
 				else
-					set_action (action) -- this fixes up references on the declaration
+					if sequence.was_expression_replaced then
+						set_sequence (sequence.replacement_expression)
+					end
+					action.simplify
+					if action.is_error then
+						set_last_error (action.error_value)
+					elseif action.was_expression_replaced then
+						set_action (action.replacement_expression)
+					else
+						set_action (action) -- this fixes up references on the declaration
+					end
 				end
 			end
 		end

@@ -602,6 +602,7 @@ feature {NONE} -- Status setting
 									else
 										input_index := input_index - 1
 										only_state_change := True
+										end_of_number := True
 									end
 								when 'E' then
 									if allow_e then
@@ -610,6 +611,7 @@ feature {NONE} -- Status setting
 									else
 										input_index := input_index - 1
 										only_state_change := True
+										end_of_number := True
 									end
 								when 'e' then
 									if allow_e then
@@ -618,6 +620,7 @@ feature {NONE} -- Status setting
 									else
 										input_index := input_index - 1
 										only_state_change := True
+										end_of_number := True
 									end
 								when '+' then
 									if allow_sign then
@@ -625,6 +628,7 @@ feature {NONE} -- Status setting
 									else
 										input_index := input_index - 1
 										only_state_change := True
+										end_of_number := True
 									end
 								when '-' then
 									if allow_sign then
@@ -632,6 +636,7 @@ feature {NONE} -- Status setting
 									else
 										input_index := input_index - 1
 										only_state_change := True
+										end_of_number := True
 									end
 								else
 									input_index := input_index - 1

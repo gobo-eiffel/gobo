@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create module_list.make_default
 			module_list.set_equality_tester (string_equality_tester)
+			default_validation := Validation_strip
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -410,7 +411,6 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name: STRING
 		do
-			default_validation := Validation_strip
 			from
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
@@ -678,10 +678,10 @@ feature -- Element change
 				any_compile_errors or else a_cursor.after
 			loop
 				a_cursor.item.compile (last_compiled_executable)
+				a_system_id := a_cursor.item.system_id
+				if not is_module_registered (a_system_id) then register_module (a_system_id) end
 				an_instruction := a_cursor.item.last_generated_instruction						
 				if an_instruction /= Void then
-					a_system_id := a_cursor.item.system_id
-					if not is_module_registered (a_system_id) then register_module (a_system_id) end
 					an_instruction.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
 				end
 				a_cursor.forth
@@ -887,6 +887,9 @@ feature {NONE} -- Implementation
 						
 						-- This is not supposed to happen
 
+						check
+							redundant_variable_shouldnt_happen: False
+						end
 						another_variable.set_redundant_variable
 						variables_index.replace (a_variable_declaration, a_fingerprint)
 					end

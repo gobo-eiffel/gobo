@@ -138,10 +138,13 @@ feature -- Element change
 				else
 					create a_mode.make
 				end
+				if a_mode_name_code /= Default_mode then
+					a_mode.set_name (shared_name_pool.display_name_from_name_code (a_mode_name_code))
+				end
 				mode_map.force (a_mode, a_node_key)
 				debug ("XSLT template rules")
 					std.error.put_string ("Registered mode ")
-					std.error.put_string (shared_name_pool.display_name_from_name_code (a_mode_name_code))
+					std.error.put_string (a_mode.name)
 					std.error.put_new_line
 				end
 			end

@@ -632,6 +632,7 @@ feature -- Transformation
 			if not is_error then
 				transform_document (a_start_node, a_result)
 			end
+			configuration.reset_entity_resolver
 		end
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is

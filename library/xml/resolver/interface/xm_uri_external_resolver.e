@@ -19,7 +19,7 @@ inherit
 feature -- Status report
 
 	supports_registering_schemes: BOOLEAN is
-			-- Does `Current' support resgitering scheme resolvers?
+			-- Does `Current' support registering scheme resolvers?
 		deferred
 		end
 
@@ -43,6 +43,11 @@ feature -- Element change
 			-- Push `a_uri' onto the stack.
 		require
 			uri_not_void: a_uri /= Void
+		deferred
+		end
+
+	reset_uri_stack (a_uri: UT_URI ) is
+			-- Empty the stack then push `a_uri' onto the stack if not void.
 		deferred
 		end
 

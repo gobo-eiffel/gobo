@@ -141,6 +141,8 @@ feature -- Element change
 			end
 			if href = Void then
 				report_absence ("href")
+			elseif	uri_encoding.has_excluded_characters (href) then
+				report_compile_error ("XT0165: 'href' attribute contains invalid characters")
 			end
 			attributes_prepared := True
 		end
@@ -161,6 +163,16 @@ feature -- Element change
 				never_compiled: False
 			end
 			last_generated_instruction := Void
+		end
+
+feature {NONE} -- Implementation
+
+	uri_encoding: UT_URL_ENCODING is
+			-- Encoding/decoding routines and tests
+		once
+			create Result
+		ensure
+			uri_encoding_not_void: Result /= Void
 		end
 
 end

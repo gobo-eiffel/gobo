@@ -48,7 +48,7 @@ feature -- Access
 			-- Data type of the expression, where known
 		do
 			if static_type = Void then
-				create {XM_XPATH_ANY_ITEM_TYPE} Result.make
+				Result := any_item
 			else
 				Result := static_type.primary_type
 			end
@@ -148,7 +148,11 @@ feature -- Evaluation
 			-- Iterate over the values of a sequence
 		do
 			evaluate_variable (a_context)
-			Result := last_evaluated_binding.iterator (a_context)
+			if last_evaluated_binding.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_binding.error_value)
+			else
+				Result := last_evaluated_binding.iterator (a_context)
+			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

@@ -73,6 +73,9 @@ feature -- Events
 			end
 			tiny_document.add_node (Document_node, current_depth, 0, 0, -1)
 			node_number := tiny_document.last_node_added
+			check
+				document_node_number: node_number = 1
+			end
 			create previously_at_depth.make (1, 100)
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
 			previously_at_depth.put (0, 2) 
@@ -130,7 +133,7 @@ feature -- Events
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
-				tiny_document.add_namespace (node_number + 1, a_namespace_code)			
+				tiny_document.add_namespace (node_number, a_namespace_code)			
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -242,6 +245,7 @@ feature -- Events
 			-- Parsing finished.
 		do
 			previously_at_depth := Void
+--			tiny_document.diagnostic_dump
 
 			-- TODO add timing information
 

@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		require
 			executable_not_void: an_executable /= Void
 			namespace_codes_not_void: a_namespace_code_list /= Void
+			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
 		do
 			executable := an_executable
 			create children.make (0)

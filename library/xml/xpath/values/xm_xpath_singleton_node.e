@@ -16,6 +16,8 @@ inherit
 	
 	XM_XPATH_VALUE
 
+	XM_XPATH_SHARED_ANY_NODE_TEST
+
 creation
 
 	make
@@ -43,7 +45,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type
 		do
-			create {XM_XPATH_ANY_ITEM_TYPE} Result.make
+			Result := any_node_test
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.

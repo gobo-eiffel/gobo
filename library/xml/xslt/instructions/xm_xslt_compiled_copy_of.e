@@ -67,9 +67,14 @@ feature -- Evaluation
 				which_namespaces := No_namespaces
 			end
 			from
-				a_sequence_iterator := select_expression.iterator (a_context); a_sequence_iterator.start
+				a_sequence_iterator := select_expression.iterator (a_context)
+				if a_sequence_iterator.is_error then
+					a_receiver.on_error (a_sequence_iterator.error_value.error_message)
+				else
+					a_sequence_iterator.start
+				end
 			until
-				a_sequence_iterator.after
+				a_sequence_iterator.is_error or else a_sequence_iterator.after
 			loop
 				an_item := a_sequence_iterator.item
 				a_node ?= an_item

@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_error_listener">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformation_result">
   <chapterinfo>
     <copyright>
       <year>2004</year>
@@ -27,7 +27,7 @@
   </chapterinfo>
   <title>Transformation Result</title>    
   <para>
-    This class is a wrapper for the various classes which might receive
+    <classname>XM_XSLT_TRANSFORMATION_RESULT</classname> is a wrapper for the various classes which might receive
     a result document from a transformation.
   </para>
   <section>

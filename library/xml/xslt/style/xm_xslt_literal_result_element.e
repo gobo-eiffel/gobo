@@ -100,8 +100,8 @@ feature -- Element change
 					create accumulated_namespace_nodes.make_default
 					accumulate_namespace_nodes (Current, accumulated_namespace_nodes, True)
 					namespace_codes := namespace_codes_in_scope
-					apply_namespace_aliases (an_element_uri_code, a_stylesheet)
 				end
+				apply_namespace_aliases (an_element_uri_code, a_stylesheet)				
 				validate_special_attributes
 				establish_attribute_names (a_stylesheet)
 				remove_excluded_namespaces (a_stylesheet)

@@ -44,43 +44,43 @@ feature -- Access
 	is_namespace_declared (a_property_set: INTEGER): BOOLEAN is
 			-- Has the element/attribute namespace been declared?
 		do
-			Result := a_property_set /= (a_property_set // 2) * 2 
+			Result := a_property_set & Namespace_ok /= 0
 		end
 
 	is_disinherit_namespaces (a_property_set: INTEGER): BOOLEAN is
 			-- Does `a_property_set' mandate no inheritance of namespaces?
 		do
-			Result := a_property_set /= (a_property_set // 4) * 4 
+			Result := a_property_set & Disinherit_namespaces/= 0
 		end
 
 	is_prefix_check_needed (a_property_set: INTEGER): BOOLEAN is
 			-- Does `a_property_set' indicate a prefix check is needed?
 		do
-			Result := a_property_set /= (a_property_set // 8) * 8
+			Result := a_property_set & Prefix_check_needed /= 0
 		end
 
 	are_duplicates_rejected (a_property_set: INTEGER): BOOLEAN is
 			-- Are duplicates to be rejected?
 		do
-			Result := a_property_set /= (a_property_set // 16) * 16
+			Result := a_property_set & Reject_duplicates /= 0
 		end
 
 	are_no_special_characters (a_property_set: INTEGER): BOOLEAN is
 			-- is there an absence of special characters needing escaping?
 		do
-			Result := a_property_set /= (a_property_set // 32) * 32
+			Result := a_property_set & No_special_characters /= 0
 		end
 
 	are_null_markers_used (a_property_set: INTEGER): BOOLEAN is
 			-- Are null markers to be output without escaping?
 		do
-			Result := a_property_set /= (a_property_set // 64) * 64
+			Result := a_property_set & Use_null_markers /= 0
 		end
 
 	is_output_escaping_disabled (a_property_set: INTEGER): BOOLEAN is
 			-- is output-escaping disabled?
 		do
-			Result := a_property_set /= (a_property_set // 128) * 128
+			Result := a_property_set & Disable_escaping /= 0
 		end
 
 	

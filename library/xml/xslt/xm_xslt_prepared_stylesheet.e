@@ -117,6 +117,7 @@ feature -- Compilation
 			else
 				last_loaded_module := a_tree_builder.tree_document
 			end
+			configuration.reset_entity_resolver
 		ensure
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end
@@ -154,6 +155,7 @@ feature -- Compilation
 			else
 				last_loaded_module := a_tree_builder.tree_document
 			end
+			configuration.reset_entity_resolver
 		ensure
 			stylesheet_module_load_failed: load_stylesheet_module_failed implies load_stylesheet_module_error /= Void and then last_loaded_module = Void
 		end

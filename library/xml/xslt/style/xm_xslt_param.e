@@ -130,7 +130,10 @@ feature -- Element change
 						report_compile_error ("A parameter specifying required='yes' must have empty content")
 					end
 				end
-				if not any_compile_errors then Precursor end
+				
+			end
+			if not any_compile_errors then
+				Precursor
 			end
 			validated := True
 		end
@@ -160,7 +163,7 @@ feature -- Element change
 				create a_function_param.make (required_type, slot_number, variable_name)
 				fixup_binding (a_function_param)
 				last_generated_instruction := Void
-			else
+			elseif not is_redundant_variable then
 				check
 					strictly_positive_slot_number: slot_number > 0
 				end

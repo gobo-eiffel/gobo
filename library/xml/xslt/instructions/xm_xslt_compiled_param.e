@@ -58,6 +58,8 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			was_supplied: BOOLEAN
 			a_value: XM_XPATH_VALUE
+
+			a_singleton_node: XM_XPATH_SINGLETON_NODE
 		do
 			a_transformer := a_context.transformer
 			a_bindery := a_transformer.bindery
@@ -72,6 +74,7 @@ feature -- Evaluation
 			else
 				was_supplied := a_bindery.is_local_parameter_supplied (variable_fingerprint, is_tunnel_parameter)
 				if was_supplied then
+					a_singleton_node ?= a_bindery.supplied_local_parameter_value (variable_fingerprint, is_tunnel_parameter)
 					a_bindery.set_local_variable (slot_number, a_bindery.supplied_local_parameter_value (variable_fingerprint, is_tunnel_parameter))
 					if a_bindery.last_binding_failure /= Void then
 						a_transformer.report_fatal_error (a_bindery.last_binding_failure, Current)

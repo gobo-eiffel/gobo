@@ -171,6 +171,9 @@ feature -- Document events
 	on_start is
 			-- Called when parsing starts.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_start.%N")
+			end
 			receiver.start_document
 			Precursor
 		end
@@ -178,6 +181,9 @@ feature -- Document events
 		on_finish is
 			-- Called when parsing finished
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_finish.%N")
+			end
 			receiver.end_document
 			Precursor
 		end
@@ -185,6 +191,15 @@ feature -- Document events
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
 			-- XML declaration.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_xml_declaration; version is: ")
+				std.error.put_string (a_version)
+				std.error.put_string (", encoding is: ")
+				std.error.put_string (an_encoding)
+				std.error.put_string (", standalone is: ")
+				std.error.put_string (a_standalone.out)
+				std.error.put_new_line
+			end
 			Precursor (a_version, an_encoding, a_standalone)
 		end
 
@@ -193,6 +208,11 @@ feature -- Errors
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_error: ")
+				std.error.put_string (a_message)
+				std.error.put_new_line
+			end
 			receiver.on_error (a_message)
 			Precursor (a_message)
 		end
@@ -202,6 +222,13 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_processing_instruction target: ")
+				std.error.put_string (a_name)
+				std.error.put_string (", content: ")
+				std.error.put_string (a_content)
+				std.error.put_new_line
+			end
 			if before_dtd and STRING_.same_string (a_name, "xml-stylesheet") then
 				-- TODO `a_content' names the stylesheet to use in the href pseudo-attribute
 			end
@@ -212,6 +239,11 @@ feature -- Meta
 	on_comment (a_content: STRING) is
 			-- Processing a comment.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_comment: ")
+				std.error.put_string (a_content)
+				std.error.put_new_line
+			end
 			receiver.notify_comment (a_content, 0)
 			Precursor (a_content)
 		end
@@ -227,6 +259,12 @@ feature -- Tag
 			debug ("XPath content emitter")
 				std.error.put_string ("On_start_tag: local name is ")
 				std.error.put_string (a_local_part)
+				if an_ns_prefix /= Void then
+					std.error.put_string (", prefix is ")
+					std.error.put_string (an_ns_prefix)
+				end
+				std.error.put_string (", namespace is ")
+				std.error.put_string (a_namespace)
 				std.error.put_new_line
 			end
 			before_dtd := False
@@ -279,6 +317,10 @@ feature -- Tag
 			debug ("XPath content emitter")
 				std.error.put_string ("On_attribute: namespace is ")
 				std.error.put_string (a_namespace)
+				if an_ns_prefix /= Void then
+					std.error.put_string (", prefix is ")
+					std.error.put_string (an_ns_prefix)
+				end
 				std.error.put_string (", local name is ")
 				std.error.put_string (a_local_part)
 				std.error.put_string (", value is ")
@@ -286,7 +328,7 @@ feature -- Tag
 				std.error.put_new_line
 			end
 			if a_namespace = Void then
-				on_error ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
+				on_error ("XM_XPATH_RECEIVER requires namespace to be resolved")
 			end
 			if an_ns_prefix = Void then
 				a_prefix := ""
@@ -334,6 +376,9 @@ feature -- Tag
 	on_start_tag_finish is
 			-- End of start tag.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_start_tag_finish.%N")
+			end			
 			receiver.start_content
 			Precursor
 		end
@@ -344,6 +389,12 @@ feature -- Tag
 			debug ("XPath content emitter")
 				std.error.put_string ("On_end_tag: local name is ")
 				std.error.put_string (a_local_part)
+				if a_prefix /= Void then
+					std.error.put_string (", prefix is ")
+					std.error.put_string (a_prefix)
+				end
+				std.error.put_string (", namespace is ")
+				std.error.put_string (a_namespace)				
 				std.error.put_new_line
 			end
 			receiver.end_element
@@ -358,6 +409,11 @@ feature -- Content
 			--  earlier in the event chain, so this event is
 			--  atomic
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_content: ")
+				std.error.put_string (a_content)
+				std.error.put_new_line
+			end			
 			receiver.notify_characters (a_content, 0)
 			Precursor (a_content)
 		end

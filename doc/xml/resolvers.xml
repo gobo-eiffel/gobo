@@ -122,7 +122,14 @@
 	      handle additional <exmlsyntax>SYSTEM</exmlsyntax> and <exmlsyntax>PUBLIC</exmlsyntax> ids,
 	      and URI references (there are separate lists for each type).
 	    </para>
-
+	    <para>
+	      There is also an <classname>XM_STRING_URI_RESOLVER</classname>, which maps URIs in a string scheme
+	      to Eiffel <classname>STRING</classname>s. To use this, you must add additional <exmlsyntax>SYSTEM</exmlsyntax>
+	      ids to the bootstrap resolver's list of well-known <exmlsyntax>SYSTEM</exmlsyntax> ids, along with the
+	      contents of an Eiffel <classname>STRING</classname>. Then you must register the resolver with the bootstrap
+	      resolver's <featurename>uri_scheme_resolver</featurename>. Once this has been done, the catalog resolver will be 
+	      able to resolve your string URIs.
+	    </para>
 	  </listitem>
 	</varlistentry>
 

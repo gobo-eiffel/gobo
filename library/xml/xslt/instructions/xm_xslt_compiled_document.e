@@ -176,7 +176,6 @@ feature -- Evaluation
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_root: XM_XPATH_DOCUMENT
 			a_text_value: STRING
 			a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
 			a_builder: XM_XPATH_TREE_BUILDER
@@ -199,7 +198,7 @@ feature -- Evaluation
 					process_children (an_evaluation_context)
 					a_transformer.reset_output_destination (a_saved_receiver)
 				end
-				create {XM_XPATH_TEXT_FRAGMENT_VALUE} a_root.make (a_text_value, base_uri)
+				create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (a_text_value, base_uri)
 			else
 				a_saved_receiver := a_transformer.current_receiver
 
@@ -215,15 +214,18 @@ feature -- Evaluation
 				create a_node_factory
 				create a_builder.make (a_node_factory)
 				a_builder.set_system_id (base_uri)
-				--a_builder.start_document
 				create a_result.make_receiver (a_builder)
 				a_transformer.change_output_destination (Void, a_result, False, Validation_strip, Void)
 				process_children (an_evaluation_context)
 				a_transformer.reset_output_destination (a_saved_receiver)
 				a_builder.end_document
-				a_root := a_builder.document
+				if a_builder.has_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_builder.last_error, "FOER0000", Dynamic_error)
+					set_last_error (last_evaluated_item.error_value)
+				else
+					last_evaluated_item := a_builder.document
+				end
 			end
-			last_evaluated_item := a_root
 		end
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is

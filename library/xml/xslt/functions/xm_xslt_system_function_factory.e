@@ -24,7 +24,9 @@ feature -- Creation
 	make_system_function (a_function_name: STRING): XM_XPATH_SYSTEM_FUNCTION is
 			--  Create an XM_XPATH_FUNCTION_CALL object for `a_function_name'
 		do
-			if STRING_.same_string (a_function_name, "current-group") then
+			if STRING_.same_string (a_function_name, "current") then
+				create {XM_XSLT_CURRENT} Result.make
+			elseif STRING_.same_string (a_function_name, "current-group") then
 				create {XM_XSLT_CURRENT_GROUP} Result.make
 			elseif STRING_.same_string (a_function_name, "document") then
 				create {XM_XSLT_DOCUMENT} Result.make

@@ -42,7 +42,7 @@ feature {NONE} -- Implemnentation
 			-- Move to the next matching node
 		do
 			from
-				advance_one_step
+				if next_node /= Void then advance_one_step end
 			until
 				is_conforming (next_node)
 			loop

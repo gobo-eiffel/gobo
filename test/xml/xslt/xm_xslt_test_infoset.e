@@ -36,7 +36,6 @@ feature
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
 			an_output_string, another_output_string: STRING
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
@@ -67,6 +66,8 @@ feature
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
+--			print (an_output_string);print ("%N%N")
+--			print (another_output_string);print ("%N%N")
 			assert ("Files are canonically the same", STRING_.same_string (an_output_string, another_output_string))
 		end
 

@@ -116,7 +116,7 @@ feature -- Evaluation
 						
 						-- Output the element end tag (which will fail if validation fails)
 
-						a_validator.end_element
+						a_receiver.end_element
 					end
 				end
 				if a_saved_receiver /= Void then
@@ -172,6 +172,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	validation_action: validation_action >= Validation_strict  and then Validation_strip <= validation_action
+	validation_action: validation_action >= Validation_strict  and then Validation_strip >= validation_action
 end
 	

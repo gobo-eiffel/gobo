@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			operator := Let_token
 			set_declaration (a_range_variable)
 			set_sequence (a_sequence_expression)
-			set_action (an_action)
+			replace_action (an_action)
 			compute_static_properties
 			initialize
 		ensure

@@ -1,0 +1,128 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Transformation Source"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformation_source">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Friday, October 29th, 2004</date>
+  </chapterinfo>
+  <title>Transformation Source</title>    
+  <para>
+    <classname>XM_XSLT_SOURCE</classname> is an interface for the various sources of
+    data, both for source documents and stylesheets, along with routines to build a tree representation of the data.
+  </para>
+  <section>
+    <title>The interface</title>
+    <para>
+      The interface has deferred features <featurename>set_system_id (a_system_id: STRING)</featurename> and <featurename>system_id: STRING</featurename>
+      for naming the source. But the principal deferred feature is <featurename>send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN)</featurename>.
+    </para>
+    <para>
+      <featurename>Send</featurename> is called by the system to build a representation of the data which can be used by the stylesheet compiler
+      and/or the transformer. The meaning of the arguments is as follows:
+      <variablelist>
+	<varlistentry>
+	  <term><featurename>a_parser: XM_PARSER</featurename></term>
+	  <listitem>
+	    <para>
+	      This is an XML parser configured with a suitable entity resolver and string mode. Your implementation
+	      can use this to start the conversion of XML text data into events for the receiver. If your data source is not of a nature
+	      that requires parsing by an XML parser, then you still may want to make use of the entity resolver (though this seems unlikely).
+	      You certainly <emphasis>must</emphasis> honor the string mode setting when creating events to send to the receiver.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>a_receiver: XM_XPATH_RECEIVER</featurename></term>
+	  <listitem>
+	    <para>
+	      This is the receiver that will ultimately build the instance of the XPath data model. it will normally be a chain of receivers,
+	      so as to implement the correct stripping rules. But as far as the implementer is concerned, all you have to do is to call
+	      the events on the receiver in the correct order. This will be documented (in the future) as part of the XPath library documentation.
+	      In the meantime, look at <classname>XM_XPATH_CONTENT_EMITTER</classname> for details of how to do this (sorry).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>is_stylesheet: BOOLEAN</featurename></term>
+	  <listitem>
+	    <para>
+	      This argument is present so that your implementation may choose to behave differently when building a stylesheet module,
+	      from when building a source document.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>      
+    </para>
+    <para>
+      In summary, when <featurename>send</featurename> is called, an implementation must check the string mode on the supplied parser, and then generate
+      an event stream to the receiver.
+    </para>
+  </section>
+  <section>
+    <title>Implementations provided by the XSLT library</title>
+    <para>
+      The system provides the following implementation:
+      <variablelist>
+	<varlistentry>
+	  <term><classname>XM_XSLT_URI_SOURCE</classname></term>
+	  <listitem>
+	    <para>
+	      This implementation treats the <featurename>system_id</featurename> as a URI identifying
+	      a source of XML text data, and uses the supplied XML parser to supply (via it's configured entity resolver) 
+	      a stream of events (see <classname>XM_CALLBACKS</classname> and <classname>XM_DTD_CALLBACKS</classname>), and converts
+	      them, by a series of filters, into a stream of <classname>XM_XPATH_RECEIVER</classname> events.
+	    </para>
+	    <para>
+	      This class provides an additional feature, <featurename>send_from_stream</featurename>, which is used by the library
+	      for <xslt>xsl:import</xslt>, <xslt>xsl:include</xslt> and <xslt>document()</xslt> processing. Your own implementations
+	      should not implement this rotuine, as it will not be called by the library.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </para>
+    <para>
+      Possible future library-supplied implementations include <classname>XM_XSLT_RECEIVER_SOURCE</classname> and <classname>XM_XSLT_XM_CALLBACKS_SOURCE</classname>,
+      to direct existing event streams to the receiver. The former may be need for simple pipeling of multiple transformations. The latter could be useful for
+      bridging between application which are already programmed to use the <classname>XM_CALLBACKS</classname> interface, and the XSLT library.
+      I can also envisage a variation on the latter, <classname>XM_DOCUMENT_SOURCE</classname>, where an <classname>XM_DOCUMENT</classname> is turned
+      into an XPath data model. This will be expensive on memory (two representations of the same tree in memory). An alternative approach
+      is to virtualize an XPath data model over an <classname>XM_DOCUMENT</classname>. This would be more expensive on CPU cycles.
+    </para>
+  </section>
+  <section>
+    <title>When to write your own implementation</title>
+    <para>
+      Normally, you will not need to write an implementation of <classname>XM_XSLT_SOURCE</classname>. If you have a mechanism for supplying
+      XML data in a textual form, and a suitable URI scheme to associate with it, then you should only have to implement
+      <classname>XM_URI_RESOLVER</classname>. In this case, <classname>XM_XSLT_URI_SOURCE</classname> will handle your
+      data source transparently. Only when your data source cannot be supplied as a <classname>KI_CHARACTER_INPUT_STREAM</classname> supplying XML
+      text, will you need to write an <classname>XM_XSLT_SOURCE</classname>.
+      <warning>
+	If you cannot write an (or use an existing) implementation of <classname>XM_URI_RESOLVER</classname> for your data source,
+	then you cannot use that data source as an <xslt>xsl:import</xslt>, <xslt>xsl:include</xslt> or <xslt>document()</xslt> or
+	<xpath>doc()</xpath> source.
+      </warning>
+    </para>
+  </section>
+</chapter>

@@ -80,10 +80,16 @@ feature -- Element change
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value.error_message)
+				end
 			end
 			if a_terminate_attribute = Void then a_terminate_attribute := "no" end
 			generate_attribute_value_template (a_terminate_attribute, static_context)
 			terminate := last_generated_expression
+			if terminate.is_error then
+				report_compile_error (terminate.error_value.error_message)
+			end
 			a_string_value ?= terminate
 			if a_string_value /= Void then
 				a_terminate_attribute := a_string_value.string_value
@@ -108,14 +114,18 @@ feature -- Element change
 			if a_function = Void then
 				check_within_template
 			end
-			type_check_expression ("select", select_expression)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			if select_expression /= Void then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
 			end
-			type_check_expression ("terminate", terminate)
-			if terminate.was_expression_replaced then
-				terminate := terminate.replacement_expression
-			end						
+			if terminate /= Void then
+				type_check_expression ("terminate", terminate)
+				if terminate.was_expression_replaced then
+					terminate := terminate.replacement_expression
+				end
+			end
 			validated := True
 		end
 

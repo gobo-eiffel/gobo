@@ -273,56 +273,58 @@ feature {NONE} -- Implementation
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_count_function ?= first_operand; an_atomic_value ?= second_operand
-			if a_count_function /= Void and then an_atomic_value /= Void and then a_count_function.arguments.count = 1 and then is_zero (an_atomic_value) then
-				if operator = Fortran_equal_token or else operator = Fortran_less_equal_token then
+			if a_count_function /= Void and then an_atomic_value /= Void and then a_count_function.arguments.count = 1 then
+				if is_zero (an_atomic_value) then
+					if operator = Fortran_equal_token or else operator = Fortran_less_equal_token then
 						
-					-- Rewrite count(x)=0 as empty(x).
+						-- Rewrite count(x)=0 as empty(x).
 						
-					an_empty_function ?= function_factory.make_system_function ("empty")
-					an_empty_function.set_arguments (a_count_function.arguments)
-					an_expression := an_empty_function
-				elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
+						an_empty_function ?= function_factory.make_system_function ("empty")
+						an_empty_function.set_arguments (a_count_function.arguments)
+						an_expression := an_empty_function
+					elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
 						
-					-- Rewrite count(x)!=0, count(x)>0 as exists(x)
+						-- Rewrite count(x)!=0, count(x)>0 as exists(x)
 						
-					an_exists_function ?= function_factory.make_system_function ("exists")
-					an_exists_function.set_arguments (a_count_function.arguments)
-					an_expression := an_exists_function
-				elseif operator = Fortran_greater_equal_token then
+						an_exists_function ?= function_factory.make_system_function ("exists")
+						an_exists_function.set_arguments (a_count_function.arguments)
+						an_expression := an_exists_function
+					elseif operator = Fortran_greater_equal_token then
 						
-					-- Rewrite count(x)>=0 as true()
+						-- Rewrite count(x)>=0 as true()
 						
-					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
-				else
+						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
+					else
 						check
 							less_then_or_equal_to: operator = Fortran_less_equal_token
 						end
 						
-					-- Rewrite count(x)<0 as false()
+						-- Rewrite count(x)<0 as false()
 						
-					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
+						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
 						
+					end
+				else
+					an_integer_value ?= second_operand
+					if an_integer_value /= Void and then (operator = Fortran_greater_than_token or else operator = Fortran_greater_equal_token) then
+						
+						-- Rewrite count(x) gt n as exists(x[n+1])
+						--  and count(x) ge n as exists(x[n])
+						
+						an_integer := an_integer_value.value
+						if operator = Fortran_greater_than_token then an_integer := an_integer + one	end
+						an_exists_function ?= function_factory.make_system_function ("exists")
+						create new_arguments.make (1)
+						create an_integer_value.make (an_integer)
+						create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)
+						new_arguments.put (a_filter_expression, 1)
+						an_exists_function.set_arguments (new_arguments)
+						an_expression := an_exists_function
+						
+					end
 				end
-			else
-				an_integer_value ?= second_operand
-				if an_integer_value /= Void and then (operator = Fortran_greater_than_token or else operator = Fortran_greater_equal_token) then
-						
-					-- Rewrite count(x) gt n as exists(x[n+1])
-					--  and count(x) ge n as exists(x[n])
-					
-					an_integer := an_integer_value.value
-					if operator = Fortran_greater_than_token then an_integer := an_integer + one	end
-					an_exists_function ?= function_factory.make_system_function ("exists")
-					create new_arguments.make (1)
-					create an_integer_value.make (an_integer)
-					create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)
-					new_arguments.put (a_filter_expression, 1)
-					an_exists_function.set_arguments (new_arguments)
-					an_expression := an_exists_function
-
-				end
+				if an_expression /= Void then set_replacement (an_expression) end
 			end
-			if an_expression /= Void then set_replacement (an_expression) end
 		end			
 
 	optimize_count_second_operand (a_context: XM_XPATH_STATIC_CONTEXT; a_count_function: XM_XPATH_COUNT) is

@@ -156,6 +156,8 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_message_type_code then
 				create {XM_XSLT_MESSAGE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_namespace_alias_type_code then
+				create {XM_XSLT_NAMESPACE_ALIAS} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_number_type_code then
 				create {XM_XSLT_NUMBER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_otherwise_type_code then

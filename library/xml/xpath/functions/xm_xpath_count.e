@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item
+			evaluate_item, check_arguments
 		end
 
 creation
@@ -97,6 +97,15 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+feature {XM_XPATH_FUNCTION_CALL} -- Local
+
+	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Check arguments during parsing, when all the argument expressions have been read.
+		do
+			Precursor (a_context)
+			arguments.item (1).set_unsorted (True)
 		end
 
 end

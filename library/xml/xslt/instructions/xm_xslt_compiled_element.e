@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			executable_not_void: an_executable /= Void
 			element_name_not_void: an_element_name /= Void
 			namespace_or_namespace_context: a_namespace = Void implies a_namespace_context /= Void
+			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
 		do
 			executable := an_executable
 			create children.make (0)

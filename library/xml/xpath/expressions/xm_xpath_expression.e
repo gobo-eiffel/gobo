@@ -311,6 +311,8 @@ feature -- Evaluation
 							if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
 							if an_item = Void then
 								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+							elseif an_item.is_error then
+								create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
 							else
 								last_evaluation := an_item.as_value -- May still be `Void'
 							end
