@@ -6917,4 +6917,8 @@ feature -- Internal errors
 			report_internal_error (an_error)
 		end
 
+-- Codes not used anymore:
+--				error_handler.report_giadl_error
+--				error_handler.report_giadu_error
+
 end
