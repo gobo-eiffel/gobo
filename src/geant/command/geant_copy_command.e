@@ -63,11 +63,15 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := is_file_to_file_executable xor
-				is_file_to_directory_executable xor
-				is_fileset_to_directory_executable
+			Result :=
+				(is_file_to_file_executable and not is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and not is_file_to_directory_executable and is_fileset_to_directory_executable)
 		ensure then
-			file_xor_directory_xor_fileset: Result implies (is_file_to_file_executable xor is_file_to_directory_executable xor is_fileset_to_directory_executable)
+			file_xor_directory_xor_fileset: Result implies
+				((is_file_to_file_executable and not is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and is_file_to_directory_executable and not is_fileset_to_directory_executable) or
+				(not is_file_to_file_executable and not is_file_to_directory_executable and is_fileset_to_directory_executable))
 		end
 
 feature -- Access
