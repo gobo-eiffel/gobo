@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<project name="exec">
+
+	<target name="init">
+		<set name="short_dir" value="short"/>
+	</target>
+	
+	<target name="prepare" depend="init">
+		<mkdir directory="${short_dir}"/>
+		<gexace system="se" output="se.ace" xace="system.xace">
+			<define name="GOBO_OS" value="${GOBO_OS}"/>
+		</gexace>
+	</target>
+	
+	<target name="fs_variables" depend="init">
+		<exec executable="dir ${GOBO}\${fs.filename}" if="${GOBO_OS}=windows">
+			<fileset directory="$GOBO" include="@(**/*.ge)"/>
+		</exec>
+
+		<exec executable="ls -l ${GOBO}/${fs.filename}" unless="${GOBO_OS}=windows">
+			<fileset directory="$GOBO" include="@(**/*.ge)"/>
+		</exec>
+	</target>
+
+	<target name="se_short" depend="prepare">
+		<description>
+			Call SmallEiffel's 'short' command on a fileset. The 'exec' command is
+			executed for each entry in the fileset. By default only files which
+			are newer than their corresponding target files are included in the list.
+			We also call those files to be 'out of date'.
+			You can override this behaviour with the attribute 'force' (see target 'se_short_force').
+		</description>
+	
+	
+		<exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
+			<fileset
+				directory="$GOBO/library/structure/set"
+				include="@(**/*.e)"
+				exclude="@(**/spec/ise/*.e|**/spec/hact/*.e|**/spec/ve/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
+				force="false"
+			>
+				<map type="glob" from="*.e" to="${short_dir}/*.html">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</exec>
+	</target>
+
+	<target name="se_short_force" depend="prepare">
+		<description>
+			Same as target 'se_short' but by setting attribute 'force' to 'true' (which is the default anyway)
+			All selected files (not only those out of date) are included in the fileset.
+		</description>
+	
+	
+		<exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
+			<fileset
+				directory="$GOBO/library/structure/set"
+				include="@(**/*.e)"
+				exclude="@(**/spec/ise/*.e|**/spec/hact/*.e|**/spec/ve/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
+				force="true"
+			>
+				<map type="glob" from="*.e" to="${short_dir}\*.html">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</exec>
+	</target>
+
+	<target name="clean" depend="init">
+		<delete directory="${short_dir}"/>
+	</target>
+
+</project>
+
