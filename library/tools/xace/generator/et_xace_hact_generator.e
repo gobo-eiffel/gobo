@@ -130,7 +130,7 @@ feature {NONE} -- Output
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
-				print_link_libraries (an_external.link_libraries, a_file)
+				print_link_libraries_and_link_libraries_directories (an_external.link_libraries, an_external.link_libraries_directories, a_file)
 			end
 			a_file.put_line ("end")
 		end
@@ -176,7 +176,7 @@ feature {NONE} -- Output
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
-				print_link_libraries (an_external.link_libraries, a_file)
+				print_link_libraries_and_link_libraries_directories (an_external.link_libraries, an_external.link_libraries_directories, a_file)
 			end
 			a_file.put_line ("end")
 		end
@@ -386,33 +386,58 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_libraries' to `a_file'.
+	print_link_libraries_and_link_libraries_directories (link_libraries, link_libraries_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `link_libraries' and `link_libraries_directories' to
+			-- `a_file'.
 		require
-			a_libraries_not_void: a_libraries /= Void
-			no_void_library: not a_libraries.has (Void)
+			link_libraries_not_void: link_libraries /= Void
+			no_void_library: not link_libraries.has (Void)
+			link_libraries_directories_not_void: link_libraries_directories /= Void
+			no_void_directory: not link_libraries_directories.has (Void)
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			a_pathname: STRING
+			may_close_statement: BOOLEAN
+			lib_contains_path: BOOLEAN
 		do
-			if not a_libraries.is_empty then
+			if
+				not link_libraries.is_empty or else
+				not link_libraries_directories.is_empty
+			then
 				print_indentation (1, a_file)
-				a_file.put_string ("object:")
-				a_file.put_new_line
-				a_cursor := a_libraries.new_cursor
+				a_file.put_line ("object:")
+				may_close_statement := link_libraries_directories.is_empty
+				a_cursor := link_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
-					a_file.put_character ('%"')
-					a_pathname := a_cursor.item
-					a_file.put_string (a_pathname)
-					if a_cursor.is_last then
-						a_file.put_string ("%";")
+					lib_contains_path := a_cursor.item.has ('/') or a_cursor.item.has ('\')
+					if not lib_contains_path then
+						a_file.put_string ("%"-l")
 					else
-						a_file.put_string ("%",")
+						a_file.put_character ('%"')
 					end
-					a_file.put_new_line
+					a_file.put_string (a_cursor.item)
+					if a_cursor.is_last and may_close_statement then
+						a_file.put_line ("%";")
+					else
+						a_file.put_line ("%",")
+					end
+					a_cursor.forth
+				end
+				-- employ trick to get linker paths to the C compiler.
+				-- Works on Unix, I'm doubtful about Windows with MSC.
+				-- Windows and bcc probably work fine.
+				a_cursor := link_libraries_directories.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (2, a_file)
+					a_file.put_string ("%"-L")
+					a_file.put_string (a_cursor.item)
+					if a_cursor.is_last then
+						a_file.put_line ("%";")
+					else
+						a_file.put_line ("%",")
+					end
 					a_cursor.forth
 				end
 				a_file.put_new_line
