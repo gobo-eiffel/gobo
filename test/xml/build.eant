@@ -173,6 +173,17 @@
 
 		<geant file="build.eant" target="${target}" dir="oasis"/>
 		<geant file="build.eant" target="clean" dir="oasis" if="${do_clean}"/>
+		<geant target="do_all_expat" if="${EXPAT}"/>
+	</target>
+
+	<target name="do_all_expat" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories. The Expat package is
+			supposed to be installed and the environement
+			variable ${EXPAT} set.
+		</description>
+
 		<geant file="build.eant" target="${target}" dir="expat"/>
 		<geant file="build.eant" target="clean" dir="expat" if="${do_clean}"/>
 	</target>
