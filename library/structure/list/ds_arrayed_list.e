@@ -476,7 +476,6 @@ feature -- removal
 		local
 			a_cursor: like new_cursor
 			a_searcher: like searcher
-			nb: INTEGER
 		do
 			from
 				a_searcher := searcher
@@ -486,12 +485,10 @@ feature -- removal
 			until
 				a_cursor.before
 			loop
-				move_left (a_cursor.index + 1, 1)
-				nb := nb + 1
+				remove (a_cursor.index)
 				a_cursor.back
 				a_searcher.search_back (a_cursor, v)
 			end
-			count := count - nb
 		end
 
 	wipe_out is
