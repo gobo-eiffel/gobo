@@ -1,5 +1,4 @@
 -- system:     "Gobo Eiffel Time Library Tester"
--- library:    "Gobo Eiffel Time Library"
 -- compiler:   "Visual Eiffel 3.3"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
 -- copyright:  "Copyright (c) 2000, Eric Bezault and others"
@@ -27,9 +26,6 @@ cluster
 
 		-- Gobo Eiffel Library
 	[Gobo				"$GOBO/library"] end
-
-		-- Visual Eiffel Kernel
-	[Kernel				"$VE_LIB/kernel"] end
 
 option
 
