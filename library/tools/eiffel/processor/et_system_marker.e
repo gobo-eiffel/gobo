@@ -327,23 +327,41 @@ feature {ET_AST_NODE} -- Processing
 			a_parents: ET_PARENT_LIST
 			a_convert_features: ET_CONVERT_FEATURE_LIST
 			an_invariants: ET_INVARIANTS
+			a_providers: DS_HASH_SET [ET_CLASS]
+			a_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
+			a_provider: ET_CLASS
 		do
-			a_formal_parameters := a_class.formal_parameters
-			if a_formal_parameters /= Void then
-				process_formal_parameter_list (a_formal_parameters)
-			end
-			a_parents := a_class.parents
-			if a_parents /= Void then
-				process_parent_list (a_parents)
-			end
-			a_convert_features := a_class.convert_features
-			if a_convert_features /= Void then
-				process_convert_feature_list (a_convert_features)
-			end
-			process_features (a_class)
-			an_invariants := a_class.invariants
-			if an_invariants /= Void then
-				process_invariants (an_invariants)
+			a_providers := a_class.providers
+			if a_providers /= Void then
+				a_cursor := a_providers.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_provider := a_cursor.item
+					if not a_provider.in_system then
+						a_provider.set_in_system (True)
+						if is_recursive then
+							process_class (a_provider)
+						end
+					end
+					a_cursor.forth
+				end
+			else
+				a_formal_parameters := a_class.formal_parameters
+				if a_formal_parameters /= Void then
+					process_formal_parameter_list (a_formal_parameters)
+				end
+				a_parents := a_class.parents
+				if a_parents /= Void then
+					process_parent_list (a_parents)
+				end
+				a_convert_features := a_class.convert_features
+				if a_convert_features /= Void then
+					process_convert_feature_list (a_convert_features)
+				end
+				process_features (a_class)
+				an_invariants := a_class.invariants
+				if an_invariants /= Void then
+					process_invariants (an_invariants)
+				end
 			end
 		end
 
