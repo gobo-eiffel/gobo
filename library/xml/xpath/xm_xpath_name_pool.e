@@ -348,13 +348,13 @@ feature -- Access
 							finished := True
 						else
 							next := entry.next
-							depth := depth + 1
 							if next = Void then
 								Result := -1
 							else
 								entry := next
 							end
 						end
+						depth := depth + 1
 					end
 					Result := (depth |<< 10) + hash_code
 				end
