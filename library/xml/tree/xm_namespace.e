@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XML namespace declarations"
+		"XML namespace declaration, equality and hashable based on uri only"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	make (a_prefix: like ns_prefix; a_uri: like uri) is
 			-- Create a new namespace declaration.
 		require
-			valid: not (a_uri = Void and a_prefix = Void)
+			uri_not_void: a_uri /= Void
 		do
 			ns_prefix := a_prefix
 			uri := a_uri
@@ -127,13 +127,13 @@ feature -- Status report
 	is_default_namespace: BOOLEAN is
 			-- Is `Current' the default namespace (empty URI).
 		do
-			Result := (uri = Void or else uri.count = 0)
+			Result := uri.count = 0
 		ensure
-			definition: Result = (uri = Void or else uri.count = 0)
+			definition: Result = (uri.count = 0)
 		end
 
 invariant
 
-	valid: not (uri = Void and ns_prefix = Void)
+	uri_not_void: uri /= Void
 
 end
