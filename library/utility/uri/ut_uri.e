@@ -4,13 +4,7 @@ indexing
 		
 		"Structured URI (Universal Resource Identifier)"
 
-	standards:
-		"1. Based upon RFC 2396.%
-		%2. Also takes into account the revised version:%
-		%      http://www.apache.org/~fielding/uri/rev-2002/rfc2396bis.html%
-		%3. See for issues and other examples:%
-		%     http://www.apache.org/~fielding/uri/rev-2002/issues.html"
-
+	standards: "RFC 3986 (obsoleting RFC 2396)"
 	library: "Gobo Eiffel XML Library"
 	author: "Copyright (c) 2004, Berend de Boer and others"
 	revision: "$Revision$"
