@@ -71,6 +71,9 @@ feature -- Access
 			Result := id
 		end
 
+	cluster: ET_CLUSTER
+			-- Cluster to which current class belongs
+
 	universe: ET_UNIVERSE
 			-- Universe to which current class belongs
 
@@ -221,9 +224,9 @@ feature -- Compilation: parsing status
 	is_parsed: BOOLEAN is
 			-- Has current class been parsed?
 		do
-			Result := (filename /= Void)
+			Result := (filename /= Void and cluster /= Void)
 		ensure
-			definition: Result = (filename /= Void)
+			definition: Result = (filename /= Void and cluster /= Void)
 		end
 
 	has_syntax_error: BOOLEAN
@@ -239,6 +242,16 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			filename := a_name
 		ensure
 			filename_set: filename = a_name
+		end
+
+	set_cluster (a_cluster: like cluster) is
+			-- Set `cluster' to `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			cluster := a_cluster
+		ensure
+			cluster_set: cluster = a_cluster
 		end
 
 	set_deferred is
