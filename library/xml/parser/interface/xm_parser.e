@@ -88,7 +88,7 @@ feature -- Status report
 feature -- Access
 
 	source: XM_SOURCE is
-			-- Source of the XML document beeing parsed
+			-- Source of the XML document being parsed.
 		deferred
 		ensure
 			source_not_void: source /= Void
