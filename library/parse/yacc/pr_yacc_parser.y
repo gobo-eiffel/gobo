@@ -42,7 +42,7 @@ creation
 %type <PR_TYPE>		Eiffel_type
 %type <DS_ARRAYED_LIST [PR_TYPE]>	Eiffel_type_list Eiffel_generics
 
-%expect 7
+%expect 8
 
 %start Grammar
 
@@ -426,6 +426,8 @@ Identifier: T_IDENTIFIER
 	| T_DOUBLE
 		{ $$ := $1 }
 	| T_POINTER
+		{ $$ := $1 }
+	| T_LIKE
 		{ $$ := $1 }
 	;
 

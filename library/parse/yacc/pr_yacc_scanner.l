@@ -48,7 +48,6 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	">"					last_token := Greater_than_code
 	"["					last_token := Left_bracket_code
 	"]"					last_token := Right_bracket_code
-	[lL][iI][kK][eE]	last_token := T_LIKE
 	"%{"{WS}?{NL}	{
 						line_nb := line_nb + 1
 						set_start_condition (EIFFEL_CODE)
@@ -89,6 +88,10 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					}
 	[pP][oO][iI][nN][tT][eE][rR]	{
 						last_token := T_POINTER
+						last_value := text
+					}
+	[lL][iI][kK][eE]	{
+						last_token := T_LIKE
 						last_value := text
 					}
 	[a-z][a-z0-9_]*	{
