@@ -15,7 +15,7 @@ class ET_LACE_ERROR_HANDLER
 
 inherit
 
-	ET_ERROR_HANDLER
+	UT_ERROR_HANDLER
 
 creation
 
