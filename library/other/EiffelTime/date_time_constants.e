@@ -4,12 +4,11 @@ indexing
 
 		"EiffelTime DATE_TIME_CONSTANTS class interface"
 
-	library:    "Gobo Eiffel Time Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DATE_TIME_CONSTANTS
 

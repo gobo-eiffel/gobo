@@ -4,12 +4,11 @@ indexing
 
 		"EiffelTime DATE_DURATION class interface"
 
-	library:    "Gobo Eiffel Time Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DATE_DURATION
 
@@ -70,11 +69,11 @@ feature -- Status report
 
 	canonical (a_date: like date): BOOLEAN is
 			-- Is duration expressed minimally for adding to `a_date', i.e.
-			-- 	If addition will yield a date after `date', then:
+			--	If addition will yield a date after `date', then:
 			--		`year' positive,
 			--		`month' between 0 and `Months_in_year - 1',
 			--		`day' between 0 and (number of days of the month before the yielded) - 1?
-			-- 	If addition will yield a date before `date', then:
+			--	If addition will yield a date before `date', then:
 			--		`year' negative, 
 			--		`month' between `1 - Months_in_year' and 0, 
 			--		`day' between (number of days of the month before the yielded) and 0?
