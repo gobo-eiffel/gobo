@@ -26,6 +26,7 @@ Version ?
 
 	geant:
 
+	* Task 'available' supports checking for availablity of directories.
 	* If you use xsltproc and pass string parameters to it, you have to
 	  surround those parameters with single quotes now.
 
