@@ -25,9 +25,9 @@ inherit
 			process_attribute
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
+	KL_SHARED_STREAMS
 		export {NONE} all end
-
+	
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new XML formatter.
 		do
-			create last_string.make (0)
+			last_output := null_output_stream
 		end
 
 feature -- Initialization
@@ -53,8 +53,13 @@ feature -- Initialization
 
 feature -- Access
 
-	last_string: STRING
+	last_output: KI_CHARACTER_OUTPUT_STREAM
 			-- Output string
+			
+	set_output (an_output: like last_output) is
+		do
+			last_output := an_output
+		end
 
 feature -- Debugging options
 
@@ -304,7 +309,7 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		do
-			last_string := STRING_.appended_string (last_string, a_string)
+			last_output.put_string (a_string)
 		end
 
 	position_table: XM_POSITION_TABLE
@@ -312,6 +317,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	last_string_not_void: last_string /= Void
+	last_output_not_void: last_output /= Void
 
 end
