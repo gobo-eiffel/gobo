@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_project)
 			options := ""
-			compile := False
 			!! defines.make (10)
 		end
 
@@ -62,10 +61,8 @@ feature -- Access
 	xace_filename: STRING
 			-- xace filename
 
-	compile: BOOLEAN
-			-- Should compilation be started right after generation?
-			-- default: false
-			-- implementation note: do not use compile as name here, causes conflicts
+	output_filename: STRING
+			-- Output filename
 
 	defines: DS_HASH_TABLE [STRING, STRING]
 			-- Defined values from the commandline (--define option)
@@ -115,12 +112,15 @@ feature -- Setting
 			xace_filename_set: xace_filename = a_filename
 		end
 
-	set_compile (b: BOOLEAN) is
-			-- Set `compile' to `b'.
+	set_output_filename (a_filename: like output_filename) is
+			-- Set `output_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
 		do
-			compile := b
+			output_filename := a_filename
 		ensure
-			compile_set: compile = b
+			output_filename_set: output_filename = a_filename
 		end
 
 feature -- Execution
@@ -157,17 +157,16 @@ feature -- Execution
 			cmd.append_string (options)
 			cmd.append_string (" --" + command)
 			cmd.append_string (" --" + command_options)
+			if output_filename /= Void then
+				cmd.append_string (" --output=%"")
+				cmd.append_string (output_filename)
+				cmd.append_string ("%"")
+			end
 			if xace_filename /= Void then
 				cmd.append_string (" " + xace_filename)
 			end
 			trace ("  [gexace] " + cmd + "%N")
 			execute_shell (cmd)
-
-			if compile then
-				cmd := "compile se.ace"
-				trace ("  [gexace] " + cmd + "%N")
-				execute_shell (cmd)
-			end
 		end
 
 invariant
