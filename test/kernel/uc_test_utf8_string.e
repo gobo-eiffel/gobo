@@ -116,7 +116,7 @@ feature -- Test
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
 		end
 
-	test_make_from_utf8_1 is
+	test_make_from_utf8 is
 			-- Test feature `make_from_utf8'.
 		local
 			a_string: UC_UTF8_STRING
@@ -132,46 +132,6 @@ feature -- Test
 			utf8.append_latin1 ('f')
 			utf8.append_code (23456)
 			!! a_string.make_from_utf8 (utf8.to_utf8)
-			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
-		end
-
-	test_make_from_utf8_2 is
-			-- Test feature `make_from_utf8'.
-		local
-			a_string: UC_UTF8_STRING
-			utf8: UC_UTF8_STRING
-		do
-			!! a_string.make_from_string ("bar")
-			a_string.make_from_utf8 ("")
-			assert_equal ("empty", "", a_string.out)
-			a_string.make_from_utf8 ("foo")
-			assert_equal ("foo", "foo", a_string.out)
-			!! utf8.make (15)
-			utf8.append_code (265)
-			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
-			utf8.append_code (23456)
-			a_string.make_from_utf8 (utf8.to_utf8)
-			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
-		end
-
-	test_make_from_utf8_3 is
-			-- Test feature `make_from_utf8'.
-		local
-			a_string: UC_STRING
-			utf8: UC_UTF8_STRING
-		do
-			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			a_string.make_from_utf8 ("")
-			assert_equal ("empty", "", a_string.out)
-			a_string.make_from_utf8 ("foo")
-			assert_equal ("foo", "foo", a_string.out)
-			!! utf8.make (15)
-			utf8.append_code (265)
-			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
-			utf8.append_code (23456)
-			a_string.make_from_utf8 (utf8.to_utf8)
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
 		end
 
@@ -440,6 +400,24 @@ feature -- Test
 			a_string.put_code (543, 2)
 			assert_equal ("item_code4", 543, a_string.item_code (2)) 
 			a_string.put_code (134, 2)
+			assert_equal ("item_code5", 134, a_string.item_code (2)) 
+		end
+
+	test_item_code3 is
+			-- Test feature `item_code'.
+		local
+			a_string: STRING
+			utf8: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			assert_equal ("item_code1", ('b').code, a_string.item_code (1)) 
+			assert_equal ("item_code2", ('a').code, a_string.item_code (2)) 
+			assert_equal ("item_code3", ('r').code, a_string.item_code (3)) 
+			utf8 ?= a_string
+			assert ("utf8", utf8 /= Void)
+			utf8.put_code (543, 2)
+			assert_equal ("item_code4", 543, a_string.item_code (2)) 
+			utf8.put_code (134, 2)
 			assert_equal ("item_code5", 134, a_string.item_code (2)) 
 		end
 
@@ -2379,6 +2357,138 @@ feature -- Test
 			assert_equal ("index34", 0, a_string.substring_index (a_string2, 8)) 
 		end
 
+	test_latin1_substring_index1 is
+			-- Test feature `latin1_substring_index'.
+		local
+			a_string: UC_UTF8_STRING
+			a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("bar")
+			assert_equal ("index1", 4, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index2", 4, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index3", 4, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index4", 4, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index5", 0, a_string.latin1_substring_index (a_string2, 5)) 
+			assert_equal ("index6", 0, a_string.latin1_substring_index (a_string2, 6)) 
+			assert_equal ("index7", 0, a_string.latin1_substring_index (a_string2, 7)) 
+			assert_equal ("index8", 4, a_string.latin1_substring_index ("bar", 1)) 
+			assert_equal ("index9", 4, a_string.latin1_substring_index ("bar", 2)) 
+			assert_equal ("index10", 4, a_string.latin1_substring_index ("bar", 3)) 
+			assert_equal ("index11", 4, a_string.latin1_substring_index ("bar", 4)) 
+			assert_equal ("index12", 0, a_string.latin1_substring_index ("bar", 5)) 
+			assert_equal ("index13", 0, a_string.latin1_substring_index ("bar", 6)) 
+			assert_equal ("index14", 0, a_string.latin1_substring_index ("bar", 7)) 
+			!! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foobar")
+			assert_equal ("index15", 0, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index16", 0, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index17", 0, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index18", 0, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index19", 1, a_string.latin1_substring_index ("", 1)) 
+			assert_equal ("index20", 2, a_string.latin1_substring_index ("", 2)) 
+			assert_equal ("index21", 3, a_string.latin1_substring_index ("", 3)) 
+			assert_equal ("index22", 4, a_string.latin1_substring_index ("", 4)) 
+			assert_equal ("index23", 1, a_string.latin1_substring_index (a_string, 1)) 
+			assert_equal ("index24", 0, a_string.latin1_substring_index (a_string, 2)) 
+			assert_equal ("index25", 0, a_string.latin1_substring_index (a_string, 3)) 
+			assert_equal ("index26", 0, a_string.latin1_substring_index (a_string, 4)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (986)
+			a_string2.append_string ("b")
+			assert_equal ("index27", 3, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index28", 3, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index29", 3, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index30", 0, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index31", 0, a_string.latin1_substring_index (a_string2, 5)) 
+			assert_equal ("index32", 0, a_string.latin1_substring_index (a_string2, 6)) 
+			assert_equal ("index33", 0, a_string.latin1_substring_index (a_string2, 7)) 
+			assert_equal ("index34", 0, a_string.latin1_substring_index (a_string2, 8)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (555)
+			a_string2.append_string ("b")
+			assert_equal ("index35", 3, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index36", 3, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index37", 3, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index38", 0, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index39", 0, a_string.latin1_substring_index (a_string2, 5)) 
+			assert_equal ("index40", 0, a_string.latin1_substring_index (a_string2, 6)) 
+			assert_equal ("index41", 0, a_string.latin1_substring_index (a_string2, 7)) 
+			assert_equal ("index42", 0, a_string.latin1_substring_index (a_string2, 8)) 
+		end
+
+	test_latin1_substring_index2 is
+			-- Test feature `latin1_substring_index'.
+		local
+			a_string: UC_STRING
+			a_string2: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("bar")
+			assert_equal ("index1", 4, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index2", 4, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index3", 4, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index4", 4, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index5", 0, a_string.latin1_substring_index (a_string2, 5)) 
+			assert_equal ("index6", 0, a_string.latin1_substring_index (a_string2, 6)) 
+			assert_equal ("index7", 0, a_string.latin1_substring_index (a_string2, 7)) 
+			assert_equal ("index8", 4, a_string.latin1_substring_index ("bar", 1)) 
+			assert_equal ("index9", 4, a_string.latin1_substring_index ("bar", 2)) 
+			assert_equal ("index10", 4, a_string.latin1_substring_index ("bar", 3)) 
+			assert_equal ("index11", 4, a_string.latin1_substring_index ("bar", 4)) 
+			assert_equal ("index12", 0, a_string.latin1_substring_index ("bar", 5)) 
+			assert_equal ("index13", 0, a_string.latin1_substring_index ("bar", 6)) 
+			assert_equal ("index14", 0, a_string.latin1_substring_index ("bar", 7)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foobar")
+			assert_equal ("index15", 0, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index16", 0, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index17", 0, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index18", 0, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index19", 1, a_string.latin1_substring_index ("", 1)) 
+			assert_equal ("index20", 2, a_string.latin1_substring_index ("", 2)) 
+			assert_equal ("index21", 3, a_string.latin1_substring_index ("", 3)) 
+			assert_equal ("index22", 4, a_string.latin1_substring_index ("", 4)) 
+			assert_equal ("index23", 1, a_string.latin1_substring_index (a_string, 1)) 
+			assert_equal ("index24", 0, a_string.latin1_substring_index (a_string, 2)) 
+			assert_equal ("index25", 0, a_string.latin1_substring_index (a_string, 3)) 
+			assert_equal ("index26", 0, a_string.latin1_substring_index (a_string, 4)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (986)
+			a_string2.append_string ("b")
+			assert_equal ("index27", 3, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index28", 3, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index29", 3, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index30", 0, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index31", 0, a_string.latin1_substring_index (a_string2, 5)) 
+			assert_equal ("index32", 0, a_string.latin1_substring_index (a_string2, 6)) 
+			assert_equal ("index33", 0, a_string.latin1_substring_index (a_string2, 7)) 
+			assert_equal ("index34", 0, a_string.latin1_substring_index (a_string2, 8)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (555)
+			a_string2.append_string ("b")
+			assert_equal ("index35", 3, a_string.latin1_substring_index (a_string2, 1)) 
+			assert_equal ("index36", 3, a_string.latin1_substring_index (a_string2, 2)) 
+			assert_equal ("index37", 3, a_string.latin1_substring_index (a_string2, 3)) 
+			assert_equal ("index38", 0, a_string.latin1_substring_index (a_string2, 4)) 
+			assert_equal ("index39", 0, a_string.latin1_substring_index (a_string2, 5)) 
+			assert_equal ("index40", 0, a_string.latin1_substring_index (a_string2, 6)) 
+			assert_equal ("index41", 0, a_string.latin1_substring_index (a_string2, 7)) 
+			assert_equal ("index42", 0, a_string.latin1_substring_index (a_string2, 8)) 
+		end
+
 	test_has_substring1 is
 			-- Test feature `has_substring'.
 		local
@@ -2400,7 +2510,7 @@ feature -- Test
 			!! a_string2.make_from_string ("o")
 			a_string2.append_code (986)
 			a_string2.append_string ("b")
-			assert ("has4", a_string.has_substring (a_string2)) 
+			assert ("has5", a_string.has_substring (a_string2)) 
 		end
 
 	test_has_substring2 is
@@ -2424,7 +2534,69 @@ feature -- Test
 			!! a_string2.make_from_string ("o")
 			a_string2.append_code (986)
 			a_string2.append_string ("b")
-			assert ("has4", a_string.has_substring (a_string2)) 
+			assert ("has5", a_string.has_substring (a_string2)) 
+		end
+
+	test_has_latin1_substring1 is
+			-- Test feature `has_latin1_substring'.
+		local
+			a_string: UC_UTF8_STRING
+			a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("bar")
+			assert ("has1", a_string.has_latin1_substring (a_string2)) 
+			assert ("has2", a_string.has_latin1_substring ("bar")) 
+			!! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foobar")
+			assert ("not_has1", not a_string.has_latin1_substring (a_string2)) 
+			assert ("has3", a_string.has_latin1_substring ("")) 
+			assert ("has4", a_string.has_latin1_substring (a_string)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (986)
+			a_string2.append_string ("b")
+			assert ("has5", a_string.has_latin1_substring (a_string2)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (22222)
+			a_string2.append_string ("b")
+			assert ("has6", a_string.has_latin1_substring (a_string2)) 
+		end
+
+	test_has_latin1_substring2 is
+			-- Test feature `has_latin1_substring'.
+		local
+			a_string: UC_STRING
+			a_string2: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("bar")
+			assert ("has1", a_string.has_latin1_substring (a_string2)) 
+			assert ("has2", a_string.has_latin1_substring ("bar")) 
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foobar")
+			assert ("not_has1", not a_string.has_latin1_substring (a_string2)) 
+			assert ("has3", a_string.has_latin1_substring ("")) 
+			assert ("has4", a_string.has_latin1_substring (a_string)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (986)
+			a_string2.append_string ("b")
+			assert ("has5", a_string.has_latin1_substring (a_string2)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (22222)
+			a_string2.append_string ("b")
+			assert ("has6", a_string.has_latin1_substring (a_string2)) 
 		end
 
 	test_is_empty1 is
@@ -2880,6 +3052,726 @@ feature -- Test
 			assert_equal ("removed2", "oo%%/367/a", a_string.out) 
 			a_string.remove (3)
 			assert_equal ("removed3", "ooa", a_string.out) 
+		end
+
+	test_to_lower1 is
+			-- Test feature `to_lower'.
+		local
+			a_string: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo.BAR")
+			a_string.to_lower
+			assert_equal ("to_lower1", "foo.bar", a_string.out)
+			!! a_string.make_empty
+			a_string.to_lower
+			assert_equal ("to_lower2", "", a_string.out)
+		end
+
+	test_to_lower2 is
+			-- Test feature `to_lower'.
+		local
+			a_string: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo.BAR")
+			a_string.to_lower
+			assert_equal ("to_lower1", "foo.bar", a_string.out)
+			!UC_UTF8_STRING! a_string.make_empty
+			a_string.to_lower
+			assert_equal ("to_lower2", "", a_string.out)
+		end
+
+	test_to_lower3 is
+			-- Test feature `to_lower'.
+		local
+			a_string: STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo.BAR")
+			a_string.to_lower
+			assert_equal ("to_lower1", "foo.bar", a_string.out)
+			!UC_UTF8_STRING! a_string.make_empty
+			a_string.to_lower
+			assert_equal ("to_lower2", "", a_string.out)
+		end
+
+	test_to_upper1 is
+			-- Test feature `to_upper'.
+		local
+			a_string: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo.BAR")
+			a_string.to_upper
+			assert_equal ("to_upper1", "FOO.BAR", a_string.out)
+			!! a_string.make_empty
+			a_string.to_upper
+			assert_equal ("to_upper2", "", a_string.out)
+		end
+
+	test_to_upper2 is
+			-- Test feature `to_upper'.
+		local
+			a_string: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo.BAR")
+			a_string.to_upper
+			assert_equal ("to_upper1", "FOO.BAR", a_string.out)
+			!UC_UTF8_STRING! a_string.make_empty
+			a_string.to_upper
+			assert_equal ("to_upper2", "", a_string.out)
+		end
+
+	test_to_upper3 is
+			-- Test feature `to_upper'.
+		local
+			a_string: STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo.BAR")
+			a_string.to_upper
+			assert_equal ("to_upper1", "FOO.BAR", a_string.out)
+			!UC_UTF8_STRING! a_string.make_empty
+			a_string.to_upper
+			assert_equal ("to_upper2", "", a_string.out)
+		end
+
+	test_as_lower1 is
+			-- Test feature `as_lower'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo.BAR")
+			a_string2 := a_string.as_lower
+			assert ("new_string", a_string2 /= a_string)
+			assert_equal ("as_lower1", "foo.bar", a_string2.out)
+			!! a_string.make_empty
+			assert_equal ("to_lower2", "", a_string.as_lower.out)
+		end
+
+	test_as_lower2 is
+			-- Test feature `as_lower'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo.BAR")
+			a_string2 := a_string.as_lower
+			assert ("new_string", a_string2 /= a_string)
+			assert_equal ("as_lower1", "foo.bar", a_string2.out)
+			!UC_UTF8_STRING! a_string.make_empty
+			assert_equal ("to_lower2", "", a_string.as_lower.out)
+		end
+
+	test_as_upper1 is
+			-- Test feature `as_upper'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo.BAR")
+			a_string2 := a_string.as_upper
+			assert ("new_string", a_string2 /= a_string)
+			assert_equal ("as_upper1", "FOO.BAR", a_string2.out)
+			!! a_string.make_empty
+			assert_equal ("to_upper2", "", a_string.as_upper.out)
+		end
+
+	test_as_upper2 is
+			-- Test feature `as_upper'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo.BAR")
+			a_string2 := a_string.as_upper
+			assert ("new_string", a_string2 /= a_string)
+			assert_equal ("as_upper1", "FOO.BAR", a_string2.out)
+			!UC_UTF8_STRING! a_string.make_empty
+			assert_equal ("to_upper2", "", a_string.as_upper.out)
+		end
+
+	test_infix_less1 is
+			-- Test feature `infix "<"'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("bar")
+			assert ("not_less1", not (a_string < a_string2))
+			assert ("not_less2", not (a_string < a_string))
+			assert ("less1", a_string2 < a_string)
+			!! a_string.make_from_string ("fo")
+			!! a_string2.make_from_string ("foo")
+			assert ("less2", a_string < a_string2)
+			assert ("not_less3", not (a_string2 < a_string))
+			!! a_string.make_from_string ("")
+			!! a_string2.make_from_string ("foo")
+			assert ("less3", a_string < a_string2)
+			assert ("not_less4", not (a_string2 < a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert ("not_less5", not (a_string < a_string2))
+			assert ("not_less6", not (a_string2 < a_string))
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (3333)
+			!! a_string2.make_from_string ("foo")
+			a_string2.append_code (9999)
+			assert ("less4", a_string < a_string2)
+			assert ("not_less7", not (a_string2 < a_string))
+		end
+
+	test_infix_less2 is
+			-- Test feature `infix "<"'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert ("not_less1", not (a_string < a_string2))
+			assert ("not_less2", not (a_string < a_string))
+			assert ("less1", a_string2 < a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("fo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less2", a_string < a_string2)
+			assert ("not_less3", not (a_string2 < a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less3", a_string < a_string2)
+			assert ("not_less4", not (a_string2 < a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_less5", not (a_string < a_string2))
+			assert ("not_less6", not (a_string2 < a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (3333)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			a_string2.append_code (9999)
+			assert ("less4", a_string < a_string2)
+			assert ("not_less7", not (a_string2 < a_string))
+		end
+
+	test_infix_less3 is
+			-- Test feature `infix "<"'.
+		local
+			a_string, a_string2: STRING
+			utf8: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert ("not_less1", not (a_string < a_string2))
+			assert ("not_less2", not (a_string < a_string))
+			assert ("less1", a_string2 < a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("fo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less2", a_string < a_string2)
+			assert ("not_less3", not (a_string2 < a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less3", a_string < a_string2)
+			assert ("not_less4", not (a_string2 < a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_less5", not (a_string < a_string2))
+			assert ("not_less6", not (a_string2 < a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			utf8 ?= a_string
+			assert ("utf8_1", utf8 /= Void)
+			utf8.append_code (3333)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			utf8 ?= a_string2
+			assert ("utf8_2", utf8 /= Void)
+			utf8.append_code (9999)
+			assert ("less4", a_string < a_string2)
+			assert ("not_less7", not (a_string2 < a_string))
+		end
+
+	test_infix_less_equal1 is
+			-- Test feature `infix "<="'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("bar")
+			assert ("not_less1", not (a_string <= a_string2))
+			assert ("less1", a_string <= a_string)
+			assert ("less2", a_string2 <= a_string)
+			!! a_string.make_from_string ("fo")
+			!! a_string2.make_from_string ("foo")
+			assert ("less3", a_string <= a_string2)
+			assert ("not_less2", not (a_string2 <= a_string))
+			!! a_string.make_from_string ("")
+			!! a_string2.make_from_string ("foo")
+			assert ("less4", a_string <= a_string2)
+			assert ("not_less3", not (a_string2 <= a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert ("less5", a_string <= a_string2)
+			assert ("less6", a_string2 <= a_string)
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (3333)
+			!! a_string2.make_from_string ("foo")
+			a_string2.append_code (9999)
+			assert ("less7", a_string <= a_string2)
+			assert ("not_less4", not (a_string2 <= a_string))
+		end
+
+	test_infix_less_equal2 is
+			-- Test feature `infix "<="'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert ("not_less1", not (a_string <= a_string2))
+			assert ("less1", a_string <= a_string)
+			assert ("less2", a_string2 <= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("fo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less3", a_string <= a_string2)
+			assert ("not_less2", not (a_string2 <= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less4", a_string <= a_string2)
+			assert ("not_less3", not (a_string2 <= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less5", a_string <= a_string2)
+			assert ("less6", a_string2 <= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (3333)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			a_string2.append_code (9999)
+			assert ("less7", a_string <= a_string2)
+			assert ("not_less4", not (a_string2 <= a_string))
+		end
+
+	test_infix_less_equal3 is
+			-- Test feature `infix "<="'.
+		local
+			a_string, a_string2: STRING
+			utf8: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert ("not_less1", not (a_string <= a_string2))
+			assert ("less1", a_string <= a_string)
+			assert ("less2", a_string2 <= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("fo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less3", a_string <= a_string2)
+			assert ("not_less2", not (a_string2 <= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less4", a_string <= a_string2)
+			assert ("not_less3", not (a_string2 <= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("less5", a_string <= a_string2)
+			assert ("less6", a_string2 <= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			utf8 ?= a_string
+			assert ("utf8_1", utf8 /= Void)
+			utf8.append_code (3333)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			utf8 ?= a_string2
+			assert ("utf8_2", utf8 /= Void)
+			utf8.append_code (9999)
+			assert ("less7", a_string <= a_string2)
+			assert ("not_less4", not (a_string2 <= a_string))
+		end
+
+	test_infix_greater1 is
+			-- Test feature `infix ">"'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foo")
+			assert ("not_greater1", not (a_string > a_string2))
+			assert ("not_greater2", not (a_string > a_string))
+			assert ("greater1", a_string2 > a_string)
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("fo")
+			assert ("greater2", a_string > a_string2)
+			assert ("not_greater3", not (a_string2 > a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("")
+			assert ("greater3", a_string > a_string2)
+			assert ("not_greater4", not (a_string2 > a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert ("not_greater5", not (a_string > a_string2))
+			assert ("not_greater6", not (a_string2 > a_string))
+			!! a_string.make_from_string ("foo")
+			a_string2.append_code (9999)
+			!! a_string2.make_from_string ("foo")
+			a_string.append_code (3333)
+			assert ("greater4", a_string > a_string2)
+			assert ("not_greater7", not (a_string2 > a_string))
+		end
+
+	test_infix_greater2 is
+			-- Test feature `infix ">"'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_greater1", not (a_string > a_string2))
+			assert ("not_greater2", not (a_string > a_string))
+			assert ("greater1", a_string2 > a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("fo")
+			assert ("greater2", a_string > a_string2)
+			assert ("not_greater3", not (a_string2 > a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("")
+			assert ("greater3", a_string > a_string2)
+			assert ("not_greater4", not (a_string2 > a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_greater5", not (a_string > a_string2))
+			assert ("not_greater6", not (a_string2 > a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string2.append_code (9999)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			a_string.append_code (3333)
+			assert ("greater4", a_string > a_string2)
+			assert ("not_greater7", not (a_string2 > a_string))
+		end
+
+	test_infix_greater3 is
+			-- Test feature `infix ">"'.
+		local
+			a_string, a_string2: STRING
+			utf8: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_greater1", not (a_string > a_string2))
+			assert ("not_greater2", not (a_string > a_string))
+			assert ("greater1", a_string2 > a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("fo")
+			assert ("greater2", a_string > a_string2)
+			assert ("not_greater3", not (a_string2 > a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("")
+			assert ("greater3", a_string > a_string2)
+			assert ("not_greater4", not (a_string2 > a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_greater5", not (a_string > a_string2))
+			assert ("not_greater6", not (a_string2 > a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			utf8 ?= a_string
+			assert ("utf8_1", utf8 /= Void)
+			utf8.append_code (9999)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			utf8 ?= a_string2
+			assert ("utf8_2", utf8 /= Void)
+			utf8.append_code (3333)
+			assert ("greater4", a_string > a_string2)
+			assert ("not_greater7", not (a_string2 > a_string))
+		end
+
+	test_infix_greater_equal1 is
+			-- Test feature `infix ">="'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foo")
+			assert ("not_greater1", not (a_string >= a_string2))
+			assert ("greater1", a_string >= a_string)
+			assert ("greater2", a_string2 >= a_string)
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("fo")
+			assert ("greater3", a_string >= a_string2)
+			assert ("not_greater2", not (a_string2 >= a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("")
+			assert ("greater4", a_string >= a_string2)
+			assert ("not_greater3", not (a_string2 >= a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert ("greater5", a_string >= a_string2)
+			assert ("greater6", a_string2 >= a_string)
+			!! a_string.make_from_string ("foo")
+			a_string2.append_code (9999)
+			!! a_string2.make_from_string ("foo")
+			a_string.append_code (3333)
+			assert ("greater7", a_string >= a_string2)
+			assert ("not_greater4", not (a_string2 >= a_string))
+		end
+
+	test_infix_greater_equal2 is
+			-- Test feature `infix ">="'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_greater1", not (a_string >= a_string2))
+			assert ("greater1", a_string >= a_string)
+			assert ("greater2", a_string2 >= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("fo")
+			assert ("greater3", a_string >= a_string2)
+			assert ("not_greater2", not (a_string2 >= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("")
+			assert ("greater4", a_string >= a_string2)
+			assert ("not_greater3", not (a_string2 >= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("greater5", a_string >= a_string2)
+			assert ("greater6", a_string2 >= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string2.append_code (9999)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			a_string.append_code (3333)
+			assert ("greater7", a_string >= a_string2)
+			assert ("not_greater4", not (a_string2 >= a_string))
+		end
+
+	test_infix_greater_equal3 is
+			-- Test feature `infix ">="'.
+		local
+			a_string, a_string2: STRING
+			utf8: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_greater1", not (a_string >= a_string2))
+			assert ("greater1", a_string >= a_string)
+			assert ("greater2", a_string2 >= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("fo")
+			assert ("greater3", a_string >= a_string2)
+			assert ("not_greater2", not (a_string2 >= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("")
+			assert ("greater4", a_string >= a_string2)
+			assert ("not_greater3", not (a_string2 >= a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("greater5", a_string >= a_string2)
+			assert ("greater6", a_string2 >= a_string)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			utf8 ?= a_string
+			assert ("utf8_1", utf8 /= Void)
+			utf8.append_code (9999)
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			utf8 ?= a_string2
+			assert ("utf8_2", utf8 /= Void)
+			utf8.append_code (3333)
+			assert ("greater7", a_string >= a_string2)
+			assert ("not_greater4", not (a_string2 >= a_string))
+		end
+
+	test_min1 is
+			-- Test feature `min'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foo")
+			assert_same ("min1", a_string, a_string.min (a_string2))
+			assert_same ("min2", a_string, a_string.min (a_string))
+			assert_same ("min3", a_string, a_string2.min (a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("")
+			assert_same ("min4", a_string2, a_string.min (a_string2))
+			assert_same ("min5", a_string2, a_string2.min (a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert_same ("min6", a_string, a_string.min (a_string2))
+			assert_same ("min7", a_string2, a_string2.min (a_string))
+		end
+
+	test_min2 is
+			-- Test feature `min'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("min1", a_string, a_string.min (a_string2))
+			assert_same ("min2", a_string, a_string.min (a_string))
+			assert_same ("min3", a_string, a_string2.min (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("")
+			assert_same ("min4", a_string2, a_string.min (a_string2))
+			assert_same ("min5", a_string2, a_string2.min (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("min6", a_string, a_string.min (a_string2))
+			assert_same ("min7", a_string2, a_string2.min (a_string))
+		end
+
+	test_min3 is
+			-- Test feature `min'.
+		local
+			a_string, a_string2: STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("min1", a_string, a_string.min (a_string2))
+			assert_same ("min2", a_string, a_string.min (a_string))
+			assert_same ("min3", a_string, a_string2.min (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("")
+			assert_same ("min4", a_string2, a_string.min (a_string2))
+			assert_same ("min5", a_string2, a_string2.min (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("min6", a_string, a_string.min (a_string2))
+			assert_same ("min7", a_string2, a_string2.min (a_string))
+		end
+
+	test_max1 is
+			-- Test feature `max'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("bar")
+			assert_same ("max1", a_string, a_string.max (a_string2))
+			assert_same ("max2", a_string, a_string.max (a_string))
+			assert_same ("max3", a_string, a_string2.max (a_string))
+			!! a_string.make_from_string ("")
+			!! a_string2.make_from_string ("foo")
+			assert_same ("max4", a_string2, a_string.max (a_string2))
+			assert_same ("max5", a_string2, a_string2.max (a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert_same ("max6", a_string, a_string.max (a_string2))
+			assert_same ("max7", a_string2, a_string2.max (a_string))
+		end
+
+	test_max2 is
+			-- Test feature `max'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert_same ("max1", a_string, a_string.max (a_string2))
+			assert_same ("max2", a_string, a_string.max (a_string))
+			assert_same ("max3", a_string, a_string2.max (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("max4", a_string2, a_string.max (a_string2))
+			assert_same ("max5", a_string2, a_string2.max (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("max6", a_string, a_string.max (a_string2))
+			assert_same ("max7", a_string2, a_string2.max (a_string))
+		end
+
+	test_max3 is
+			-- Test feature `max'.
+		local
+			a_string, a_string2: STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert_same ("max1", a_string, a_string.max (a_string2))
+			assert_same ("max2", a_string, a_string.max (a_string))
+			assert_same ("max3", a_string, a_string2.max (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("max4", a_string2, a_string.max (a_string2))
+			assert_same ("max5", a_string2, a_string2.max (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_same ("max6", a_string, a_string.max (a_string2))
+			assert_same ("max7", a_string2, a_string2.max (a_string))
+		end
+
+	test_three_way_comparison1 is
+			-- Test feature `three_way_comparison'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("bar")
+			assert_equal ("compare1", 1, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare2", 0, a_string.three_way_comparison (a_string))
+			assert_equal ("compare3", -1, a_string2.three_way_comparison (a_string))
+			!! a_string.make_from_string ("")
+			!! a_string2.make_from_string ("foo")
+			assert_equal ("compare4", -1, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare5", 1, a_string2.three_way_comparison (a_string))
+			!! a_string.make_from_string ("foo")
+			!! a_string2.make_from_string ("foo")
+			assert_equal ("compare6", 0, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
+		end
+
+	test_three_way_comparison2 is
+			-- Test feature `three_way_comparison'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert_equal ("compare1", 1, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare2", 0, a_string.three_way_comparison (a_string))
+			assert_equal ("compare3", -1, a_string2.three_way_comparison (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_equal ("compare4", -1, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare5", 1, a_string2.three_way_comparison (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_equal ("compare6", 0, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
+		end
+
+	test_three_way_comparison3 is
+			-- Test feature `three_way_comparison'.
+		local
+			a_string, a_string2: STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("bar")
+			assert_equal ("compare1", 1, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare2", 0, a_string.three_way_comparison (a_string))
+			assert_equal ("compare3", -1, a_string2.three_way_comparison (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_equal ("compare4", -1, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare5", 1, a_string2.three_way_comparison (a_string))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert_equal ("compare6", 0, a_string.three_way_comparison (a_string2))
+			assert_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
+		end
+
+	test_is_ascii1 is
+			-- Test feature `is_ascii'.
+		local
+			a_string: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foo")
+			assert ("is_ascii1", a_string.is_ascii)
+			!! a_string.make_empty
+			assert ("is_ascii2", a_string.is_ascii)
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (130)
+			a_string.append_string ("bar")
+			assert ("not_is_ascii1", not a_string.is_ascii)
+		end
+
+	test_is_ascii2 is
+			-- Test feature `is_ascii'.
+		local
+			a_string: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			assert ("is_ascii1", a_string.is_ascii)
+			!UC_UTF8_STRING! a_string.make_empty
+			assert ("is_ascii2", a_string.is_ascii)
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (130)
+			a_string.append_string ("bar")
+			assert ("not_is_ascii1", not a_string.is_ascii)
 		end
 
 end -- class UC_TEST_UTF8_STRING
