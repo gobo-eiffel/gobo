@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel Developer Guidelines"
+
+	library: "Gobo Eiffel Developer Guidelines"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter id="supported_compilers">
+	<title>Supported Eiffel compilers</title>
+
+  <para>
+    The classes provided in the Gobo Eiffel package should compile and
+    work without any change on the three currently maintained Eiffel
+    compilers: <ulink url="http://www.eiffel.com/">Eiffel
+    Studio</ulink>, <ulink
+    url="http://smarteiffel.loria.fr/">SmartEiffel</ulink> and <ulink
+    url="http://www.object-tools.com/">Visual Eiffel</ulink>. Those
+    compilers are supported on all platforms supported by those
+    compilers. Gobo Developers are not expected to test on all
+    platforms and compilers. Because of the collaboration of many
+    different Eiffel programmers, developers can and should ask other
+    developers to test on compilers and platforms they don't have
+    access to. Note that all three Eiffel compilers offer a free
+    version on Windows and Linux.
+  </para>
+
+  <para>
+    In order to make things easier, only the latest stable release of
+    each compiler will be supported. This stable release is usually
+    the latest public release. The currently supported compilers are:
+  </para>
+
+  <orderedlist>
+    <listitem><para><ulink url="http://www.eiffel.com/products/studio52/">Eiffel Studio 5.4</ulink>.</para></listitem>
+    <listitem><para><ulink url="http://www.eiffel.com/products/envsn10/">Eiffel ENViSioN 2.0</ulink>.</para></listitem>
+    <listitem><para><ulink url="http://smarteiffel.loria.fr/general/download.html">SmartEiffel 1.0</ulink>.</para></listitem>
+    <listitem><para><ulink url="http://www.object-tools.com/products/VisualEiffel.html">VisualEiffel 4.1</ulink>.</para></listitem>
+  </orderedlist>
+
+  <para>Developers should use these compilers when testing their
+  libraries.</para>
+
+</chapter>

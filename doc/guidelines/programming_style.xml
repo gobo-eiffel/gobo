@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel Developer Guidelines programming style"
+
+	library: "Gobo Eiffel Developer Guidelines"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter id="programming_style">
+	<title>Programming Style</title>
+
+  <sect1>
+    <title>Assertions</title>
+
+    <para>
+      Routines should be properly equipped with pre- and
+      postconditions and classes with invariants. This is useful as
+      documentation in addition to the header comments to make sure
+      that the routines and class instances are correctly used. These
+      assertions can also be enabled when running the test suite in
+      <filename>$GOBO/test/[library-name]</filename> in order to check
+      the correctness of the library classes.
+    </para>
+
+    <para>
+      All assertions should have a tag, as in the following example:
+    </para>
+
+    <programlisting>
+_   foo_not_void: foo /= Void
+    </programlisting>
+
+    <para>
+      Note that in the example above the tag
+      <tagname>foo_not_void</tagname> is preferred to
+      <tagname>foo_exists</tagname> as it may cause confusion when
+      <featurename>exists</featurename> is a feature of the class of
+      <featurename>foo</featurename>. So using systematically
+      '*_not_void' is a good way to avoid such possible confusion.
+    </para>
+
+  </sect1>
+
+  <sect1>
+    <title>Indexing Clause</title>
+
+    <para>
+      Each class should have an indexing clause at the top of the file
+      which looks like that:
+    </para>
+
+    <programlisting>
+indexing
+
+_   description:
+
+_   _   "Short description of the class"
+
+_   library:    "Gobo Eiffel Lexical Library"
+_   author:     "Eric Bezault &lt;ericb@gobosoft.com>"
+_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
+_   license:    "Eiffel Forum License v2 (see forum.txt)"
+_   date:       "$Date$"
+_   revision:   "$Revision$"
+    </programlisting>
+
+    <para>
+      Put a short description of the class in the
+      <tagname>description</tagname> field.  Replace "Lexical" in the
+      <tagname>library</tagname> field by the name of your
+      library. Replace "Eric Bezault" by your name in the
+      <tagname>author</tagname> and <tagname>copyright</tagname>
+      fields and put your e-mail address in the
+      <tagname>author</tagname> field.  The fields <tagname>date</tagname> and
+      <tagname>revision</tagname> are automatically expanded by CVS.
+    </para>
+
+  </sect1>
+
+  <sect1>
+    <title>Header Comments</title>
+
+    <para>
+      Every feature and feature clause should have a header comment
+      such as:
+    </para>
+
+    <programlisting>
+feature -- Access
+
+_   title: STRING
+_   _   _   -- Title displayed in the title bar
+
+feature -- Setting
+
+_   set_title (a_title: like title) is
+_   _   _   -- Set `title' to `a_title'.
+_   _   require
+_   _   _   a_title_not_void: a_title /= Void
+_   _   do
+_   _   _   title := a_title
+_   _   ensure
+_   _   _   title_set: title = a_title
+_   _   end
+    </programlisting>
+
+    <para>
+      (Borrow guidelines to write good header comments from
+      OOSC2 section 26.4 page 886-888.)
+    </para>
+
+  </sect1>
+
+  <sect1>
+    <title>Free Comments</title>
+
+    <para>
+      They should give useful information and not just paraphrase
+      the software text. They should appear on the line before
+      the instruction(s) to be explained and should have one
+      more indentation level to the right than the instruction(s).
+    </para>
+
+  </sect1>
+
+  <sect1>
+    <title>Semicolons</title>
+
+    <para>
+      Semicolons are optional in Eiffel. For consistency reason,
+      they should not be used in the Gobo Eiffel classes. The
+      only places where they are used are:
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            to separate formal arguments of routines:
+          </para>
+
+          <programlisting>
+       f (a_foo: FOO; a_bar: BAR) is
+          </programlisting>
+        </listitem>
+        <listitem>
+          <para>
+            to separate several instructions on the same line,
+            although this programming style is not recommended:
+          </para>
+
+          <programlisting>
+       print ("Hello "); print (you.name)
+          </programlisting>
+        </listitem>
+        <listitem>
+          <para>
+            to remove parsing ambiguity:
+          </para>
+
+          <programlisting>
+            foo.bar;
+            (baz).do_something
+          </programlisting>
+        </listitem>
+        <listitem>
+          <para>
+            SmartEiffel emits a warning when semicolons are missing
+            in the Export subclause of the Feature_adaptation clause.
+            Semicolons can be added here in order to keep SmartEiffel
+            quiet.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+
+  </sect1>
+
+  <sect1>
+    <title>Exceptions</title>
+
+    <para>
+      Exceptions should only be raised when an unexpected behavior
+      occurs. Reading an integer from the standard input when the user
+      actually typed "hello", or trying to open a file in read mode
+      when the file does not exist (it could just have been deleted)
+      are not considered unexpected behaviors by Eiffel programmers.
+    </para>
+
+    <para>
+      Also raising exceptions in the creation routine should be
+      avoided since it is not clear (unless I'm proven otherwise)
+      that ETL describes precisely what should happen in that
+      particular case. It is preferred to properly create the
+      objects and then call the routines which may raise the
+      exception.
+    </para>
+
+    <para>
+      Routines which may raise exceptions should make it clear
+      in their header comment. (There is no need to report the
+      fact that a No_more_memory exception can be raised in each
+      routine creating objects though ;-))
+    </para>
+
+  </sect1>
+
+</chapter>

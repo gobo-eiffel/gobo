@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel Developer Guidelines on test suites"
+
+	library: "Gobo Eiffel Developer Guidelines"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter id="test_suite">
+	<title>Test Suite</title>
+
+  <para>
+    Each Eiffel library should come with a test suite runnable with
+    <command>getest</command>. The test case classes should be placed
+    in <filename>$GOBO/test/[library-name]</filename> along with the
+    Ace files, loadpath files, ESD files and the
+    <command>getest</command> configuration files to run the tests.
+  </para>
+
+  <para>
+    The purpose of these tests is to make sure that the library
+    classes work as expected (i.e. as specified by the assertions)
+    and also to make sure that they compile correctly with compilers
+    such as SmartEiffel which compiles only alive code.
+  </para>
+
+  <para>
+    These tests are also useful for library maintainers who have
+    not access to all supported Eiffel compilers or to some
+    operating systems. That way the maintainers can ask others
+    from the Gobo development team to run the tests on other
+    platforms or with other compilers for them.
+  </para>
+
+  <para>
+    Finally the <filename>$GOBO/test/[library-name]</filename>
+    directory is used as regression test to make sure that no new bugs
+    have been introduced between two releases.
+  </para>
+
+  <para>
+    Note: <command>getest</command> is based on Jim Weirich's
+    <command>eunit</command> tool but has the advantage to work with
+    all Eiffel compilers supported by the Gobo Eiffel project.
+  </para>
+
+</chapter>

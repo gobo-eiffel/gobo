@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+
+<project name="guidelines_documentation" default="help">
+
+	<description>
+		description: "Gobo Eiffel Developer Guidelines"
+		system: "Gobo Eiffel Developer Guidelines"
+		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel Developer Guidelines.
+		</description>
+
+		<set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
+
+			<!-- Concepts: -->
+		<xslt
+			processor="${xslt_processor}"
+			input="index.xml"
+			output="index.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+		/>
+
+		<set name="input" value="index"/>
+		<set name="next" value="index"/>
+
+		<set name="next_chapter" value="supported_compilers"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="language_constructs"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="naming_conventions"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="class_layout"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="programming_style"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="documentation"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="examples"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="test_suite"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="cvs_repository"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="installation_procedure"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="license"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="index"/>
+		<geant target="xslt"/>
+
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+			<!-- Concepts: -->
+		<delete file="guidelines.html"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="xslt">
+		<description>
+			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+		</description>
+
+		<set name="previous" value="${input}"/>
+		<set name="input" value="${next}"/>
+		<set name="next" value="${next_chapter}"/>
+
+		<xslt
+			processor="${xslt_processor}"
+			input="${input}.xml"
+			output="${input}.html"
+			stylesheet="${GOBO}/doc/misc/gobo2xhtml.xsl"
+		>
+			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'index.html'&quot;"/>
+		</xslt>
+	</target>
+
+
+</project>

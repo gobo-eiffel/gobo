@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Index to Gobo Eiffel Developer Guidelines"
+
+	library: "Gobo Eiffel Developer Guidelines"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+TODO:
+- cluster prefix naming
+- bubbling exceptions
+- once routines/accessor classes
+-->
+
+<chapter id="guidelines_index">
+	<title>Table of Contents</title>
+
+  <para>
+    This document describes the developer guidelines that MUST be
+    followed by all contributions to the Gobo Eiffel library. The
+    guidelines are based on the rules laid out in OOSC2 and clarified
+    or amended where necessary.
+  </para>
+
+  <para>
+    We hope these guidelines will be widely followed by other Eiffel
+    libraries as well as this will facilitate code sharing and code
+    reading.
+  </para>
+
+	<sect1>
+		<title>Overview</title>
+		<para>
+			<link linkend="supported_compilers">Eiffel compilers that MUST be supported</link>
+		</para>
+		<para>
+			<link linkend="language_constructs">Eiffel language constructs</link>
+		</para>
+		<para>
+			<link linkend="naming_conventions">Naming conventions</link>
+		</para>
+		<para>
+			<link linkend="class_layout">Class layout</link>
+		</para>
+		<para>
+			<link linkend="programming_style">Programming style</link>
+		</para>
+		<para>
+			<link linkend="documentation">Documentation</link>
+		</para>
+		<para>
+			<link linkend="examples">Examples</link>
+		</para>
+		<para>
+			<link linkend="test_suite">Test suite</link>
+		</para>
+		<para>
+			<link linkend="cvs_repository">CVS repository</link>
+		</para>
+		<para>
+			<link linkend="installation_procedure">Installation procedure</link>
+		</para>
+		<para>
+			<link linkend="license">License</link>
+		</para>
+	</sect1>
+</chapter>
