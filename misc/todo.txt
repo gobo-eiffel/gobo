@@ -1,6 +1,6 @@
 8 June 1997
 
-. Remove commented lines wrt `yy_null_trans'.
+- Remove commented lines wrt `yy_null_trans'.
 . Review the ID counter in NFA states.
 . Resize input buffer if a call to `unput' results in too much text being
   pushed back (it presently raise an run-time error).

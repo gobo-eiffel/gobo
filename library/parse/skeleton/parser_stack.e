@@ -1,3 +1,9 @@
+-- Special stack for lalr1_parser.
+-- Has direct access to all elements relative to top element.
+
+indexing
+	author: "Andreas Auras"
+
 class PARSER_STACK [G]
 
 creation
@@ -29,10 +35,7 @@ feature {ANY}
 			-- push `v' into stack.
 	do
 		count := count + 1;
-		if an_array.upper < count then
-			an_array.resize (1, an_array.upper * 3 // 2)
-		end
-		an_array.put(v, count)
+		an_array.force(v, count)
 
 		debug
 			if count > max_count then
@@ -74,3 +77,14 @@ feature {NONE}
 	an_array: ARRAY[G]		-- array to store items
 
 end -- class PARSER_STACK
+
+--|-------------------------------------------------------------------
+--| iss_yacc V1.0    : A yacc parser generator for Eiffel
+--|
+--| Copyright (C) 1995-1997 Halstenbach ACT GMBH
+--| Breidenbrucherstr 2
+--| D - 51674 Wiehl
+--| Tel +49 2261 99020      Fax +49 2261 990299
+--| Customer support e-mail <support@halstenbach.de>
+--| All rights reserved. Duplication and distribution prohibited.
+--|-------------------------------------------------------------------
