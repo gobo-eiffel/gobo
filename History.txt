@@ -18,6 +18,10 @@ Version 2.0 -
 	  can be used to make the debugging output more human-readable.
 	  (suggested by Andreas Leitner)
 
+	getest:
+
+	* First release.
+
 	Gobo Eiffel Structure Library:
 
 	* Added argumentless creation routine `make_default' to
