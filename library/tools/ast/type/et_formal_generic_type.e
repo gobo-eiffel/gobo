@@ -26,7 +26,7 @@ inherit
 			has_formal_parameters,
 			resolved_formal_parameters,
 			resolved_named_types,
-			actual_type, deep_cloned_type
+			base_type, deep_cloned_type
 		end
 
 creation
@@ -189,22 +189,23 @@ feature -- Type processing
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		local
 			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 			parameters: ET_ACTUAL_GENERIC_PARAMETERS
 			a_formal: ET_FORMAL_GENERIC_TYPE
 		do
-			a_generic_class_type ?= a_base_type
+			a_generic_class_type ?= a_type
 			if a_generic_class_type /= Void then
 				parameters := a_generic_class_type.generic_parameters
 			end
 			if parameters = Void or else index > parameters.count then
 -- Error already reported elsewhere.
-print (a_base_type.base_class.name.name)
+print (a_type.base_class.name.name)
 print (": unknown formal type #")
 print (index)
 print ("'%N")
@@ -215,10 +216,10 @@ print ("'%N")
 				if a_formal /= Void and then a_formal.index = index then
 					Result := Current
 				else
-						-- `a_base_type' has been flattened and no
+						-- `a_type' has been flattened and no
 						-- error occurred, so there is no loop in
 						-- anchored types.
-					Result := Result.actual_type (a_feature, a_base_type)
+					Result := Result.base_type (a_feature, a_type)
 				end
 			end
 		end

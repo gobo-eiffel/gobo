@@ -30,7 +30,7 @@ inherit
 			resolved_formal_parameters,
 			resolved_identifier_types,
 			resolved_named_types,
-			actual_type, deep_cloned_type
+			base_type, deep_cloned_type
 		end
 
 	ET_GENERIC_NAMED_TYPE
@@ -47,7 +47,7 @@ inherit
 			resolved_formal_parameters,
 			resolved_identifier_types,
 			resolved_named_types,
-			actual_type, deep_cloned_type
+			base_type, deep_cloned_type
 		end
 
 creation
@@ -106,7 +106,6 @@ feature -- Status report
 			a_class_type, an_ancestor: ET_CLASS_TYPE
 			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 			other_parameters: like generic_parameters
-			ancestor_parameters: like generic_parameters
 		do
 			if other = Current then
 				Result := True
@@ -271,10 +270,11 @@ feature -- Type processing
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		local
 			parameters: like generic_parameters
 			a_parameter, an_actual: ET_TYPE
@@ -287,7 +287,7 @@ feature -- Conversion
 					-- `a_base_type' has been flattened and no
 					-- error occurred, so there is no loop in
 					-- anchored types.
-				an_actual := a_parameter.actual_type (a_feature, a_base_type)
+				an_actual := a_parameter.base_type (a_feature, a_type)
 				if a_parameter /= an_actual then
 					duplication_needed := True
 				end
@@ -320,4 +320,4 @@ invariant
 
 	is_generic: is_generic
 
-end -- class ET_CLASS_TYPE
+end -- class ET_GENERIC_CLASS_TYPE

@@ -105,10 +105,11 @@ feature -- Type processing
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		do
 			Result := Current
 		end
@@ -118,7 +119,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name)
+			Result := Current
 		end
 
 feature -- Output

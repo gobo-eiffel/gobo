@@ -77,15 +77,16 @@ feature -- Validity
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		do
-				-- `a_base_type' has been flattened and no
+				-- `a_type.base_class' has been flattened and no
 				-- error occurred, so there is no loop in
 				-- anchored types.
-			Result := a_base_type.actual_type (a_feature, a_base_type)
+			Result := a_type.base_type (a_feature, a_type)
 		end
 
 feature -- Duplication
@@ -93,7 +94,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (position)
+			Result := Current
 		end
 
 feature -- Output
@@ -102,15 +103,12 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			a_string.append_string (like_keyword)
-			a_string.append_character (' ')
-			a_string.append_string (current_keyword)
+			a_string.append_string (like_space_current)
 		end
 
 feature {NONE} -- Constants
 
-	like_keyword: STRING is "like"
-	current_keyword: STRING is "Current"
+	like_space_current: STRING is "like Current"
 			-- Eiffel keywords
 
 end -- class ET_LIKE_CURRENT

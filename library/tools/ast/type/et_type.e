@@ -92,7 +92,7 @@ feature -- Type processing
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		do
-			Result := False
+			-- Result := False
 		end
 
 	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_TYPE is
@@ -143,18 +143,19 @@ feature -- Type processing
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		require
 			a_feature_not_void: a_feature /= Void
-			a_base_type_not_void: a_base_type /= Void
-			flattened: a_base_type.base_class.is_flattened
-			no_flatten_error: not a_base_type.base_class.has_flatten_error
+			a_type_not_void: a_type /= Void
+			flattened: a_type.base_class.is_flattened
+			no_flatten_error: not a_type.base_class.has_flatten_error
 		deferred
 		ensure
-			actual_type_not_void: Result /= Void
+			base_type_not_void: Result /= Void
 		end
 
 feature -- Duplication

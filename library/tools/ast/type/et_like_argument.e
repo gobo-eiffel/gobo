@@ -93,10 +93,11 @@ feature -- Validity
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		local
 			a_routine: ET_ROUTINE
 			args: ET_FORMAL_ARGUMENTS
@@ -108,10 +109,10 @@ feature -- Conversion
 -- ERROR
 					Result := Current
 				else
-						-- `a_base_type' has been flattened and no
+						-- `a_type' has been flattened and no
 						-- error occurred, so there is no loop in
 						-- anchored types.
-					Result := args.item (index).type.actual_type (a_feature, a_base_type)
+					Result := args.item (index).type.base_type (a_feature, a_type)
 				end
 			else
 -- ERROR
@@ -133,14 +134,13 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			a_string.append_string (like_keyword)
-			a_string.append_character (' ')
+			a_string.append_string (like_space)
 			a_string.append_string (name.name)
 		end
 
 feature {NONE} -- Constants
 
-	like_keyword: STRING is "like"
+	like_space: STRING is "like "
 			-- Eiffel keywords
 
 invariant

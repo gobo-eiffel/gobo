@@ -93,24 +93,26 @@ feature -- Validity
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		local
-			seeds: DS_HASH_TABLE [ET_FEATURE, INTEGER]
+			seeded_features: DS_HASH_TABLE [ET_FEATURE, INTEGER]
 			seeded_feature: ET_FEATURE
 			a_query: ET_QUERY
 		do
-			seeds := a_base_type.base_class.seeds
-			if seeds.has (feature_id) then
-				seeded_feature := seeds.item (feature_id)
+			seeded_features := a_type.base_class.seeded_features
+			seeded_features.search (feature_id)
+			if seeded_features.found then
+				seeded_feature := seeded_features.found_item
 				a_query ?= seeded_feature
 				if a_query /= Void then
-						-- `a_base_type' has been flattened and no
+						-- `a_type.base_class' has been flattened and no
 						-- error occurred, so there is no loop in
 						-- anchored types.
-					Result := a_query.type.actual_type (a_feature, a_base_type)
+					Result := a_query.type.base_type (a_feature, a_type)
 				else
 -- ERROR
 					Result := Current
@@ -135,14 +137,13 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			a_string.append_string (like_keyword)
-			a_string.append_character (' ')
+			a_string.append_string (like_space)
 			a_string.append_string (name.name)
 		end
 
 feature {NONE} -- Constants
 
-	like_keyword: STRING is "like"
+	like_space: STRING is "like "
 			-- Eiffel keywords
 
 invariant
