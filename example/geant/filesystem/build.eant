@@ -33,7 +33,7 @@
 			using mode 'file to directory'.
 		</description>
 
-		<copy file="${GOBO}/Readme.txt" to_directory="example/geant/filesystem"/>
+		<copy file="${GOBO}/Readme.txt" to_directory="${GOBO}/example/geant/filesystem"/>
 	</target>
 
 	<target name="copy_file3">
@@ -49,7 +49,7 @@
 			does not exist yet or the source file is newer are copied.
 		</description>
 
-		<copy file="${GOBO}/Readme.txt" to_directory="example/geant/filesystem"/>
+		<copy file="${GOBO}/Readme.txt" to_directory="${GOBO}/example/geant/filesystem" force="true"/>
 	</target>
 
 	<!-- copy filesets -->	
