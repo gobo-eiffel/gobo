@@ -56,7 +56,7 @@ feature -- Execution
 				a_file.close
 				a_system := a_parser.last_universe
 				if
-					a_system /= Void and then 
+					a_system /= Void and then
 					(a_system.system_name /= Void and
 					a_system.root_class_name /= Void and
 					a_system.creation_procedure_name /= Void)
