@@ -40,12 +40,46 @@
 			</varlistentry>
 		
 			<varlistentry>
-				<term>output</term>
+				<term>compile</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>compile</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Optional compilation command</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>class</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+						Regular expression to determine names
+						of classes wich will be included into test suite. Note that this overrides the
+						corresponding value in the configuration file.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid regular expression</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>feature</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+						Regular expression to determine names of features of classes preselected by
+						<emphasis>class</emphasis> to be tested. Note that this overrides the
+						corresponding value in the configuration file.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid regular expression</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
