@@ -57,10 +57,31 @@ feature -- Access
 			--namespace: Result /= Void implies same_namespace (Result)
 		end
 
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT is
+			-- Direct child element with given qualified name;
+			-- If there are more than one element with that name, anyone may be returned.
+			-- Return Void if no element with that name is a child of current node.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+		deferred
+		ensure
+			element_not_void: has_element_by_qualified_name (a_uri, a_name) = (Result /= Void)
+		end
+		
 	has_element_by_name (a_name: STRING): BOOLEAN is
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 		require
+			a_name_not_void: a_name /= Void
+		deferred
+		end
+		
+	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+			-- Has current node at least one direct child
+			-- element with given qualified name ?
+		require
+			a_uri_not_void: a_uri /= Void
 			a_name_not_void: a_name /= Void
 		deferred
 		end

@@ -39,6 +39,8 @@ feature -- Status report
 		
 	same_namespace (other: XM_NAMED_NODE): BOOLEAN is
 			-- Has current node same namespace as other?
+		require
+			other_not_void: other /= Void
 		do
 			Result := ((not has_namespace) and (not other.has_namespace))
 				or ((has_namespace and other.has_namespace) and then namespace.is_equal (other.namespace))
@@ -49,6 +51,8 @@ feature -- Status report
 	
 	same_name (other: XM_NAMED_NODE): BOOLEAN is
 			-- Has current node same name and namespace as other?
+		require
+			other_not_void: other /= Void
 		do
 			Result := same_namespace (other) and
 				STRING_.same_string (name, other.name)
@@ -56,6 +60,19 @@ feature -- Status report
 			definition: Result = (same_namespace (other) and same_name (other))
 		end
 
+	has_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+			-- Does this node match the qualified name?
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+		do
+			Result := (STRING_.same_string (a_uri, namespace.uri) 
+					and STRING_.same_string (a_name, name))
+		ensure
+			definition: Result = (STRING_.same_string (a_uri, namespace.uri)
+					and STRING_.same_string (a_name, name))
+		end
+	
 feature -- Access
 
 	name: STRING
