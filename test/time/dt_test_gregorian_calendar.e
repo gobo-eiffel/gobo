@@ -175,6 +175,19 @@ feature -- Test
 			assert_integers_equal ("December 2000", 335, gc.days_at_month (gc.December, 2000))
 		end
 
+	test_week_day_of_date is
+			-- Test feature `week_day_of_date' of class DT_GREGORIAN_CALENDAR.
+		local
+			gc: DT_GREGORIAN_CALENDAR
+		do
+			create gc
+			assert_integers_equal ("week_day1", gc.Thursday, gc.week_day_of_date (1970, 1, 1))
+			assert_integers_equal ("week_day2", gc.Friday, gc.week_day_of_date (2000, 3, 31))
+			assert_integers_equal ("week_day3", gc.Saturday, gc.week_day_of_date (1968, 2, 24))
+			assert_integers_equal ("week_day4", gc.Sunday, gc.week_day_of_date (2004, 12, 12))
+			assert_integers_equal ("week_day5", gc.Sunday, gc.week_day_of_date (1970, 1, 4))
+		end
+
 	test_next_day is
 			-- Test feature `next_day' of class DT_GREGORIAN_CALENDAR.
 		local
