@@ -323,7 +323,7 @@ color="#0000FF">{</font>
             <em>buffer</em>.<em>append_character</em> (<em>code</em>.<em>to_character</em>)
         <em><strong>end</strong></em></font>
      <font color="#0000FF">}</font>
-<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\n[ \t\r]*%</font>    <font
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\r?\n[ \t\r]*%</font>    <font
 color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
 <font color="#800000">&lt;str&gt;</font>\&quot;     <font
 color="#0000FF">{</font>
@@ -332,9 +332,9 @@ color="#0000FF">{</font>
                  <em>last_value</em> := <em>clone</em> (<em>buffer</em>)
                  <em>last_token</em> := <em>E_STRING</em></font>
             <font color="#0000FF">}</font>
-<font color="#800000">&lt;str&gt;</font><font color="#FF0000">. </font>                  <font
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">.|\n </font>               <font
 color="#0000FF">|</font>
-<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\n[ \t\r]*</font>         <font
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\r?\n[ \t\r]*</font>      <font
 color="#0000FF">|</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\/([0-9]+(\/)?)</font>?   <font
 color="#0000FF">|</font>
@@ -393,7 +393,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -403,7 +403,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 19 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
