@@ -24,6 +24,8 @@ inherit
 
 	HASHABLE
 
+	DEBUG_OUTPUT
+
 feature -- Access
 
 	name: ET_FEATURE_NAME is
@@ -571,6 +573,14 @@ feature -- Inheritance
 			-- Current feature viewed as an immediate feature
 		do
 			Result := Current
+		end
+
+feature -- Output
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'
+		do
+			Result := name.name
 		end
 
 invariant

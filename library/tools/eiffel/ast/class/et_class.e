@@ -24,10 +24,9 @@ inherit
 			formal_parameters,
 			is_expanded, is_separate,
 			position, break, append_to_string,
-			is_named_type, is_valid_context
+			is_named_type, is_valid_context,
+			debug_output
 		end
-
-	DEBUG_OUTPUT
 
 	HASHABLE
 
