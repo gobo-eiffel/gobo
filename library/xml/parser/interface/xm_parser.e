@@ -46,7 +46,7 @@ feature -- Incremental parsing
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse partial XML document from input stream.
 			-- After the last part of the data has been fed into the parser,
-			-- call `set_end_of_document' to get any pending error messages.
+			-- call `finish_incremental' to get any pending error messages.
 		require
 			is_incremental: is_incremental
 			a_stream_not_void: a_stream /= Void
@@ -58,7 +58,7 @@ feature -- Incremental parsing
 			-- Parse partial XML document from 'a_data'.
 			-- Note: You can call `parse_incremental_from_string' multiple
 			-- times and give the parse the document in parts only.
-			-- You have to call `set_end_of_file' after the last call to
+			-- You have to call `finish_incremental' after the last call to
 			-- 'parse_incremental_from_string' in every case.
 		require
 			is_incremental: is_incremental
@@ -66,12 +66,19 @@ feature -- Incremental parsing
 		deferred
 		end
 
-	set_end_of_document is
-			-- Call this routine to tell the parser that the document
-			-- has been completely parsed and no input is coming anymore.
+	finish_incremental is
+			-- Call this routine after `parse_incremental_xxxx' to tell
+			-- the parser that the document has been completely parsed
+			-- and no input is coming anymore.
 		require
 			is_incremental: is_incremental
 		deferred
+		end
+
+	set_end_of_document is
+		obsolete "Use finish_incremental instead."
+		do
+			finish_incremental
 		end
 
 feature -- Status report
@@ -98,7 +105,7 @@ feature -- Resolving external entity
 			entity_resolver_set: entity_resolver = a_resolver
 			dtd_resolver_set: dtd_resolver = a_resolver
 		end
-		
+
 	set_dtd_resolver (a_resolver: like dtd_resolver) is
 			-- Set resolver for external DTD.
 		require
@@ -108,7 +115,7 @@ feature -- Resolving external entity
 		ensure
 			dtd_resolver_set: dtd_resolver = a_resolver
 		end
-		
+
 	set_entity_resolver (a_resolver: like entity_resolver) is
 			-- Set resolver for external entities.
 		require
@@ -118,13 +125,13 @@ feature -- Resolving external entity
 		ensure
 			entity_resolver_set: entity_resolver = a_resolver
 		end
-		
+
 	dtd_resolver: XM_EXTERNAL_RESOLVER
 			-- Resolver for external DTD.
-			
+
 	entity_resolver: XM_EXTERNAL_RESOLVER
 			-- Resolver for external entities.
-		
+
 feature -- Access
 
 	source: XM_SOURCE is

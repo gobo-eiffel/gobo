@@ -140,21 +140,21 @@ feature -- Parsing
 	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse XML document from input stream.
 		do
-			on_start
-			create_new_parser
+			if is_parser_created then
+				free_parser
+			end
 			parse_incremental_from_stream (a_stream)
-			set_end_of_document
-			on_finish
+			finish_incremental
 		end
 
 	parse_from_string (a_string: STRING) is
 			-- Parse XML document from `a_string'.
 		do
-			on_start
-			create_new_parser
+			if is_parser_created then
+				free_parser
+			end
 			parse_incremental_from_string (a_string)
-			set_end_of_document
-			on_finish
+			finish_incremental
 		end
 
 feature -- Incremental parsing
@@ -162,11 +162,12 @@ feature -- Incremental parsing
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse partial XML document from input stream.
 			-- After the last part of the data has been fed into the parser,
-			-- call `set_end_of_document' to get any pending error messages.
+			-- call `finish_incremental' to get any pending error messages.
 		do
 			!XM_DEFAULT_URI_SOURCE! source.make (a_stream.name)
 			if not is_parser_created then
 				create_new_parser
+				on_start
 			end
 			from
 				a_stream.read_string (read_block_size)
@@ -182,24 +183,29 @@ feature -- Incremental parsing
 			-- Parse partial XML document from 'a_data'.
 			-- Note: You can call `parse_incremental_from_string' multiple
 			-- times and give the parse the document in parts only.
-			-- You have to call `set_end_of_file' after the last call to
+			-- You have to call `finish_incremental' after the last call to
 			-- 'parse_incremental_from_string' in every case.
 		do
 			!XM_STRING_SOURCE! source
 			if not is_parser_created then
 				create_new_parser
+				on_start
 			end
 			parse_string_and_set_error (a_data, False)
 		end
 
-	set_end_of_document is
+	finish_incremental is
 			-- Call this routine to tell the parser that the document
 			-- has been completely parsed and no input is coming anymore.
+			-- We also generate the `on_finish' callback.
 		do
 			if is_parser_created then
 				parse_string_and_set_error (once_empty_string, True)
+				on_finish
+				free_parser
 			end
 		end
+
 
 feature {NONE} -- Low-level parsing
 
