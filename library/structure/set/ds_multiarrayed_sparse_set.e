@@ -17,7 +17,11 @@ deferred class DS_MULTIARRAYED_SPARSE_SET [G]
 inherit
 
 	DS_SPARSE_SET [G]
+		rename
+			make as make_sparse_set,
+			make_equal as make_equal_sparse_set
 		redefine
+			make_default,
 			new_cursor
 		end
 
@@ -33,12 +37,107 @@ inherit
 			is_equal, copy
 		end
 
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Create an empty set and allocate memory space
+			-- for at least `n' items. Array chunks will have
+			-- a size of `default_chunk_size'.
+			-- Use `=' as comparison criterion.
+		require
+			positive_n: n >= 0
+		do
+			make_with_chunk_size (n, default_chunk_size)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			chunk_size_set: chunk_size = default_chunk_size
+			before: before
+		end
+
+	make_equal (n: INTEGER) is
+			-- Create an empty set and allocate memory space
+			-- for at least `n' items. Array chunks will have
+			-- a size of `default_chunk_size'.
+			-- Use `equal' as comparison criterion.
+		require
+			positive_n: n >= 0
+		do
+			make_equal_with_chunk_size (n, default_chunk_size)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			chunk_size_set: chunk_size = default_chunk_size
+			before: before
+		end
+
+	make_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER) is
+			-- Create an empty set and allocate memory space
+			-- for at least `n' items. Array chunks will have
+			-- a size of `a_chunk_size'.
+			-- Use `=' as comparison criterion.
+		require
+			positive_n: n >= 0
+			a_chunk_size_positive: a_chunk_size > 0
+		do
+			chunk_size := a_chunk_size
+			make_sparse_set (n)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			chunk_size_set: chunk_size = a_chunk_size
+			before: before
+		end
+
+	make_equal_with_chunk_size (n: INTEGER; a_chunk_size: INTEGER) is
+			-- Create an empty set and allocate memory space
+			-- for at least `n' items. Array chunks will have
+			-- a size of `a_chunk_size'.
+			-- Use `equal' as comparison criterion.
+		require
+			positive_n: n >= 0
+			a_chunk_size_positive: a_chunk_size > 0
+		do
+			chunk_size := a_chunk_size
+			make_equal_sparse_set (n)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			chunk_size_set: chunk_size = a_chunk_size
+			before: before
+		end
+
+	make_default is
+			-- Create an empty set and allocate memory space
+			-- for at least `default_capacity' items.  Array
+			-- chunks will have a size of `default_chunk_size'.
+			-- Use `=' as comparison criterion.
+		do
+			make_with_chunk_size (default_capacity, default_chunk_size)
+		ensure then
+			chunk_size_set: chunk_size = default_chunk_size
+		end
+
 feature -- Access
 
 	new_cursor: DS_MULTIARRAYED_SPARSE_SET_CURSOR [G] is
 			-- New external cursor for traversal
 		do
 			!! Result.make (Current)
+		end
+
+feature -- Measurement
+
+	chunk_size: INTEGER
+			-- Size of array chunks
+
+	default_chunk_size: INTEGER is
+			-- Default value for `chunk_size'
+			-- (Default vale: 30000)
+		once
+			Result := 30000
+		ensure 
+			default_chunk_size_positive: Result > 0
 		end
 
 feature {DS_MULTIARRAYED_SPARSE_SET_CURSOR} -- Implementation
@@ -68,17 +167,13 @@ feature {DS_MULTIARRAYED_SPARSE_SET_CURSOR} -- Implementation
 feature {NONE} -- Implementation
 
 	items: ARRAY [like FIXED_ITEM_ARRAY_TYPE]
-			-- Storage for items of the set indexed from 0 to `capacity-1'
+			-- Storage for items of the set indexed from 1 to `capacity'
 
 	make_items (n: INTEGER) is
 			-- Create `items'.
 		do
 			!! FIXED_ITEM_ARRAY_
-			if n = 0 then
-				!! items.make (0, -1)
-			else
-				!! items.make (0, ((n - 1) // chunk_size))
-			end
+			!! items.make (0, ((n - 1) // chunk_size))
 		end
 
 	items_put (v: G; i: INTEGER) is
@@ -115,21 +210,29 @@ feature {NONE} -- Implementation
 			items.resize (0, ((n - 1) // chunk_size))
 		end
 
+	items_wipe_out is
+			-- Wipe out items in `items'.
+		local
+			i, nb: INTEGER
+		do
+			nb := items.upper
+			from i := 0 until i > nb loop
+				items.put (Void, i)
+				i := i + 1
+			end
+		end
+
 	clashes: ARRAY [like FIXED_INTEGER_ARRAY_TYPE]
-			-- Indexes in `items' when there is clashes
+			-- Indexes in `items' when there are clashes
 			-- in `slots'. Each entry points to the next alternative
-			-- until `No_position' is reached. Also keep track of
-			-- free slot positions with indexes less that or equal
-			-- to `Free_watermark'
+			-- until `No_position' is reached. Also keep track of free
+			-- slot positions located before or at `last_position' with
+			-- indexes less that or equal to `Free_watermark'.
 
 	make_clashes (n: INTEGER) is
 			-- Create `clashes'.
 		do
-			if n = 0 then
-				!! clashes.make (0, -1)
-			else
-				!! clashes.make (0, ((n - 1) // chunk_size))
-			end
+			!! clashes.make (0, ((n - 1) // chunk_size))
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER) is
@@ -166,6 +269,18 @@ feature {NONE} -- Implementation
 			clashes.resize (0, ((n - 1) // chunk_size))
 		end
 
+	clashes_wipe_out is
+			-- Wipe out items in `clashes'.
+		local
+			i, nb: INTEGER
+		do
+			nb := clashes.upper
+			from i := 0 until i > nb loop
+				clashes.put (Void, i)
+				i := i + 1
+			end
+		end
+
 	slots: ARRAY [like FIXED_INTEGER_ARRAY_TYPE]
 			-- Indexes in `items', indexed by hash codes
 			-- from 0 to `modulus' (the entry at index `modulus'
@@ -174,11 +289,7 @@ feature {NONE} -- Implementation
 	make_slots (n: INTEGER) is
 			-- Create `slots'.
 		do
-			if n = 0 then
-				!! slots.make (0, -1)
-			else
-				!! slots.make (0, ((n - 1) // chunk_size))
-			end
+			!! slots.make (0, ((n - 1) // chunk_size))
 		end
 
 	slots_item (i: INTEGER): INTEGER is
@@ -226,22 +337,30 @@ feature {NONE} -- Implementation
 			slots.resize (0, ((n - 1) // chunk_size))
 		end
 
+	slots_wipe_out is
+			-- Wipe out items in `slots'.
+		local
+			i, nb: INTEGER
+		do
+			nb := slots.upper
+			from i := 0 until i > nb loop
+				slots.put (Void, i)
+				i := i + 1
+			end
+		end
+
 	FIXED_ITEM_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
 			-- Routines that ought to be in FIXED_ARRAY
 
-feature {NONE} -- Constants
-
-	chunk_size: INTEGER is 30000
-			-- Size of array chunks
-
 invariant
 
+	chunk_size_positive: chunk_size > 0
 	items_not_void: items /= Void
 	items_count1: capacity = 0 implies items.count = 0
-	items_count2: capacity > 0 implies (items.count = ((capacity - 1) // chunk_size) + 1)
+	items_count2: capacity > 0 implies (items.count = ((capacity) // chunk_size) + 1)
 	clashes_not_void: clashes /= Void
 	clashes_count1: capacity = 0 implies clashes.count = 0
-	clashes_count2: capacity > 0 implies (clashes.count = ((capacity - 1) // chunk_size) + 1)
+	clashes_count2: capacity > 0 implies (clashes.count = ((capacity) // chunk_size) + 1)
 	slots_not_void: slots /= Void
 	slots_count: slots.count = (modulus // chunk_size) + 1
 
