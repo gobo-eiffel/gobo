@@ -164,8 +164,7 @@ feature -- Generation
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
 				a_file.put_new_line
-				a_file.put_string ("end -- class ")
-				a_file.put_line (new_name)
+				a_file.put_line ("end")
 				a_file.close
 			else
 				!! cannot_write.make (a_filename)
@@ -247,8 +246,7 @@ feature -- Generation
 				end
 				a_file.put_line ("%T%Tend")
 				a_file.put_new_line
-				a_file.put_string ("end -- class ")
-				a_file.put_line (upper_class_name)
+				a_file.put_line ("end")
 				a_file.close
 			else
 				!! cannot_write.make (a_filename)
