@@ -37,7 +37,7 @@ creation
 %type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
 %type <ET_LACE_CLUSTERS> Cluster_list Clusters_opt Subclusters_opt Subcluster_list
 %type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
-%type <ET_IDENTIFIER> Identifier
+%type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt
 
 %start Ace
 
@@ -48,16 +48,22 @@ Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_o
 	Defaults_opt Clusters_opt Externals_opt Generates_opt L_END
 		{
 			last_universe := new_universe ($8)
+			last_universe.set_system_name ($2.name)
 			last_universe.set_root_class ($4)
+			last_universe.set_root_creation ($6)
 		}
 	;
 
 Root_cluster_opt: -- Empty
+		--{ $$ := Void }
 	| '(' Identifier ')'
+		{ $$ := $2 }
 	;
 
 Creation_procedure_opt: -- Empty
+		--{ $$ := Void }
 	| ':' Identifier
+		{ $$ := $2 }
 	;
 
 Defaults: L_DEFAULT
@@ -95,11 +101,21 @@ Clusters_opt: -- Empty
 Cluster_list: Cluster
 		{ $$ := new_clusters ($1) }
 	| Qualified_subcluster
-		{ $$ := new_clusters ($1) }
+		{
+-- TODO: syntax error: the cluster list cannot contain just
+-- one subcluster that is qualified because it needs an unqualified
+-- parent cluster.
+			$$ := new_clusters ($1)
+		}
 	| Cluster_list Cluster_separator Cluster
 		{ $$ := $1; $$.put_last ($3) }
 	| Cluster_list Cluster_separator Qualified_subcluster
-		{ $$ := $1; $$.put_last ($3) }
+		{
+				-- Note: the subcluster has already been inserted
+				-- in the list of subclusters of its parent. So
+				-- no need to add it to the top-level list of clusters.
+			$$ := $1
+		}
 	;
 
 Cluster: L_ABSTRACT Nested_cluster
