@@ -103,6 +103,25 @@ feature -- Strings
 		ensure
 			empty_not_name: a_name.is_empty implies not Result
 		end
+		
+	is_qname (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid XML Namespace 'Qname'?
+			-- Qname := [NCName ':']? NCName 
+		require
+			a_name_not_void: a_name /= Void
+		local
+			a_colon: INTEGER
+		do
+			a_colon  := a_name.index_of (':', 1)
+			if a_colon > 0 then
+				Result := is_ncname (a_name.substring (1, a_colon - 1))
+						and is_ncname (a_name.substring (a_colon + 1, a_name.count))
+			else
+				Result := is_ncname (a_name)
+			end
+		ensure
+			empty_not_name: a_name.is_empty implies not Result
+		end
 
 feature -- Characters
 
