@@ -1696,16 +1696,16 @@ feature -- XML_cp members
 
 feature -- Conversion
 
-	new_attribute_list_from_c (attr_spec_ptr: POINTER): DS_BILINKED_LIST [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]] is
+	new_attribute_list_from_c (attr_spec_ptr: POINTER): DS_BILINKED_LIST [DS_PAIR [DS_PAIR [STRING, STRING], STRING]] is
 		require
 			attr_spec_ptr_not_null: attr_spec_ptr /= default_pointer
 		local
-			a_name: UC_STRING
-			a_prefix: UC_STRING
-			a_value: UC_STRING
+			a_name: STRING
+			a_prefix: STRING
+			a_value: STRING
 			ptr: POINTER
-			pair1: DS_PAIR [UC_STRING, UC_STRING]
-			pair2: DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]
+			pair1: DS_PAIR [STRING, STRING]
+			pair2: DS_PAIR [DS_PAIR [STRING, STRING], STRING]
 			colon_index: INTEGER
 #ifdef SE
 			a_storage: NATIVE_ARRAY [POINTER]
@@ -1756,12 +1756,12 @@ feature -- Conversion
 				ptr = default_pointer
 			loop
 				a_name := new_unicode_string_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
-				colon_index := a_name.substring_index (uc_colon, 1)
+				colon_index := a_name.index_of (':', 1)
 				if colon_index /= 0 then
 					a_prefix := a_name.substring (1, colon_index - 1)
 					a_name := a_name.substring (colon_index + 1, a_name.count)
 				else
-					a_prefix := new_unicode_string ("")
+					a_prefix := new_unicode_string_empty
 				end
 #ifdef SE
 				i := i + 1
@@ -1813,13 +1813,6 @@ feature -- Conversion
 		end
 
 feature {NONE} -- Implementation
-
-	uc_colon: UC_STRING is
-		once
-			Result := new_unicode_string (":")
-		ensure
-			uc_colon_not_void: Result /= Void
-		end
 
 #ifdef ISE
 	c_rtid (p: POINTER): POINTER is

@@ -22,6 +22,28 @@ inherit
 			out
 		end
 
+	XM_MARKUP_CONSTANTS
+		undefine
+			is_equal,
+			out
+		end
+		
+	XM_UNICODE_STRUCTURE_FACTORY
+		export
+			{NONE} all
+		undefine
+			is_equal,
+			out
+		end
+	
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			is_equal,
+			out
+		end
+		
 creation
 
 	make
@@ -35,12 +57,13 @@ feature -- Any
 				if count = 0 then
 					Result := True
 				elseif count = 1 then
-					Result := first.is_equal (other.first)
+					Result := same_string (first,other.first)
 				elseif count = 2 then
-					Result := first.is_equal (other.first) and second.is_equal (other.second)
+					Result := same_string (first, other.first) 
+							and same_string (second, other.second)
 				else
-					Result := first.is_equal (other.first)
-							and second.is_equal (other.second)
+					Result := same_string (first, other.first)
+							and same_string (second, other.second)
 							and tail.is_equal (other.tail)
 				end
 			end
@@ -52,14 +75,14 @@ feature -- Any
 			i: INTEGER
 		do
 			if i > 0 then
-				Result := clone (item (1))
+				Result := item (1)
 			end
 			from
 				i := 2
 			until
 				i > count
 			loop
-				Result.append_string (item(i))
+				Result := string_.concat (Result, item(i))
 				i := i + 1
 			end
 		end
@@ -111,7 +134,7 @@ feature -- XML
 	is_namespace_declaration: BOOLEAN is
 			-- Is this an XML namespace declaration?
 		do
-			Result := (count = 1 or count = 2) and then first.is_equal (Xmlns)
+			Result := (count = 1 or count = 2) and then same_string (Xmlns, first)
 		end
 
 	is_named_namespace_declaration: BOOLEAN is
@@ -139,14 +162,14 @@ feature
 			if count <= 2 then
 				Result := last
 			else
-				Result := clone (second)
+				Result := second
 				from
 					it := tail.new_cursor
 					it.start
 				until
 					it.after
 				loop
-					Result.append_string (it.item)
+					Result := string_.concat (Result, it.item)
 					it.forth
 				end
 			end
@@ -157,7 +180,7 @@ feature {XF_PARSER_NAME} -- Data
 	second: STRING
 			-- Second (name).
 
-	tail: DS_BILINKED_LIST[STRING]
+	tail: DS_LIST[STRING]
 			-- Inefficient(?) tail, because "a:b:c:d" is valid XML 1.0 but 
 			-- it is supposed to be rare in practice.
 
@@ -219,7 +242,7 @@ feature -- DS_LIST like features
 				second := a_string
 			else
 				if count = 3 then
-					!! tail.make_equal
+					tail := new_string_bilinked_list
 				end
 				tail.force_last (a_string)
 			end
@@ -227,9 +250,5 @@ feature -- DS_LIST like features
 			count_done: count = ((old count) + 1)
 			at_last: item (count) = a_string
 		end
-
-feature {NONE} -- Constants
-
-	Xmlns: STRING is "xmlns"
 
 end

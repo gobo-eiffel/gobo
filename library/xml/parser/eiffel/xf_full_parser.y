@@ -26,29 +26,22 @@ inherit
 		end
 
 	XM_CALLBACKS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	XM_DTD_CALLBACKS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	XF_PARSER_TOKENS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	XF_PARSER_ERRORS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	UC_UNICODE_FACTORY
-		export
-			{NONE} all
-		end
+		export {NONE} all end
+	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
 
 -- TODO:
 -- character classes validation: external
@@ -230,9 +223,9 @@ entity_value_trail: CHARDATA
 	| entity_value_reference
 		{ $$ := $1 }
 	| entity_value_trail CHARDATA
-		{ $$ := concatenate ($1, $2) }
+		{ $$ := STRING_.concat ($1, $2) }
 	| entity_value_trail entity_value_reference
-		{ $$ := concatenate ($1, $2) }
+		{ $$ := STRING_.concat ($1, $2) }
 	;
 
 entity_value_reference: ENTITYVALUE_PEREFERENCE
@@ -250,7 +243,7 @@ att_value: VALUE_START VALUE_END
 att_value_trail: att_value_trail_item
 		{ $$ := $1 }
 	| att_value_trail att_value_trail_item
-		{ $$ := concatenate ($1, $2) }
+		{ $$ := STRING_.concat ($1, $2) }
 	;
 
 att_value_trail_item: CHARDATA { $$ := $1 }
@@ -272,7 +265,7 @@ comment: COMMENT_START comment_content COMMENT_END
 comment_content: comment_content_item
 		{ $$ := $1 }
 	| comment_content comment_content_item
-		{ $$ := concatenate ($1, $2) }
+		{ $$ := STRING_.concat ($1, $2) }
 	;
 	
 comment_content_item: CHARDATA { $$ := $1 }
@@ -282,7 +275,7 @@ comment_content_item: CHARDATA { $$ := $1 }
 -- 2.6 Processing instructions
 
 pi: PI_START PI_TARGET req_space pi_content_first pi_content_trail PI_END
-		{ on_processing_instruction (onstring ($2), onstring (concatenate ($4,$5))) }
+		{ on_processing_instruction (onstring ($2), onstring (STRING_.concat ($4,$5))) }
 	| PI_START PI_TARGET req_space pi_content_first PI_END
 		{ on_processing_instruction (onstring ($2), onstring ($4)) }	
 	| PI_START PI_TARGET maybe_space PI_END
@@ -293,7 +286,7 @@ pi: PI_START PI_TARGET req_space pi_content_first pi_content_trail PI_END
 pi_content_trail: pi_content_item
 		{ $$ := $1 }
 	| pi_content_trail pi_content_item
-		{ $$ := concatenate ($1, $2) }
+		{ $$ := STRING_.concat ($1, $2) }
 	;
 
 pi_content_item: CHARDATA { $$ := $1 }
@@ -316,7 +309,7 @@ cd_sect: CDATA_START CDATA_END
 cdata_body: CHARDATA
 		{ $$ := $1 }
 	| cdata_body CHARDATA
-		{ $$ := concatenate ($1, $2) }
+		{ $$ := STRING_.concat ($1, $2) }
 	;
 
 -- 2.8 Prolog and DTD
@@ -432,9 +425,9 @@ sd_decl: XMLDECLARATION_STANDALONE_YES { stand_alone := True }
 
 element: empty_elem_tag
 	| s_tag e_tag 
-		{ if not ($1).is_equal ($2) then force_error (Error_end_tag_mismatch) end }
+		{ if not $1.is_equal ($2) then force_error (Error_end_tag_mismatch) end }
 	| s_tag content e_tag
-		{ if not ($1).is_equal ($3) then force_error (Error_end_tag_mismatch) end }
+		{ if not $1.is_equal ($3) then force_error (Error_end_tag_mismatch) end }
 	| s_tag content error { force_error (Error_element_end_tag) }
 	| s_tag error { force_error (Error_element_content) }
 	;
@@ -657,7 +650,7 @@ attlist_decl: DOCTYPE_ATTLIST req_space doctype_name maybe_space DOCTYPE_END
 	;
 
 attlist_decl_trail: att_def
-	{ !! $$.make; $$.force_last ($1) }
+	{ $$ := new_dtd_attribute_content_list; $$.force_last ($1) }
 	|  attlist_decl_trail att_def
 	{ $$ := $1; $$.force_last ($2) }
 	;
@@ -668,7 +661,7 @@ att_def: req_space doctype_name req_space att_type req_space default_decl
 	;
 
 att_type: DOCTYPE_ATT_CDATA -- string_type
-	{ !! $$.make; $$.set_data }
+	{ $$ := new_dtd_attribute_content; $$.set_data }
 	| att_tokenized_type
 	{ $$ := $1 }
 	| enumerated_type
@@ -676,25 +669,25 @@ att_type: DOCTYPE_ATT_CDATA -- string_type
 	;
 	
 att_tokenized_type: DOCTYPE_ATT_ID
-	{ !! $$.make; $$.set_id }
+	{ $$ := new_dtd_attribute_content; $$.set_id }
 	| DOCTYPE_ATT_IDREF
-	{ !! $$.make; $$.set_id_ref }
+	{ $$ := new_dtd_attribute_content; $$.set_id_ref }
 	| DOCTYPE_ATT_IDREFS
-	{ !! $$.make; $$.set_id_ref; $$.set_list_type }
+	{ $$ := new_dtd_attribute_content; $$.set_id_ref; $$.set_list_type }
 	| DOCTYPE_ATT_ENTITY
-	{ !! $$.make; $$.set_entity }
+	{ $$ := new_dtd_attribute_content; $$.set_entity }
 	| DOCTYPE_ATT_ENTITIES
-	{ !! $$.make; $$.set_entity; $$.set_list_type }
+	{ $$ := new_dtd_attribute_content; $$.set_entity; $$.set_list_type }
 	| DOCTYPE_ATT_NMTOKEN
-	{ !! $$.make; $$.set_token }
+	{ $$ := new_dtd_attribute_content; $$.set_token }
 	| DOCTYPE_ATT_NMTOKENS
-	{ !! $$.make; $$.set_token; $$.set_list_type }
+	{ $$ := new_dtd_attribute_content; $$.set_token; $$.set_list_type }
 	;	
 
 enumerated_type: notation_type
-	{ !! $$.make; $$.set_notation }
+	{ $$ := new_dtd_attribute_content; $$.set_notation }
 	| enumeration
-	{ !! $$.make; $$.set_enumeration }
+	{ $$ := new_dtd_attribute_content; $$.set_enumeration }
 	;
 
 notation_type: DOCTYPE_ATT_NOTATION req_space group_start notation_type_trail DOCTYPE_GROUP_END
@@ -709,19 +702,19 @@ enumeration: group_start enumeration_trail group_end
 	;
 
 enumeration_trail: nm_token maybe_space
-	{ !! $$.make; $$.force_last ($1) }
+	{ $$ := new_string_bilinked_list; $$.force_last ($1) }
 	| enumeration_trail group_or nm_token maybe_space
 	{ $$ := $1; $$.force_last ($3) }
 	;
 
 default_decl: DOCTYPE_REQUIRED
-	{ !! $$.make; $$.set_value_required }
+	{ $$ := new_dtd_attribute_content; $$.set_value_required }
 	| DOCTYPE_IMPLIED
-	{ !! $$.make; $$.set_value_implied }
+	{ $$ := new_dtd_attribute_content; $$.set_value_implied }
 	| DOCTYPE_FIXED req_space att_value
-	{ !! $$.make; $$.set_value_fixed (onstring ($3)) }
+	{ $$ := new_dtd_attribute_content; $$.set_value_fixed (onstring ($3)) }
 	| att_value
-	{ !! $$.make; $$.set_default_value (onstring($1)) }
+	{ $$ := new_dtd_attribute_content; $$.set_default_value (onstring($1)) }
 	;
 
 -- 3.4 Conditional section
@@ -797,14 +790,14 @@ pe_decl: DOCTYPE_ENTITY req_space DOCTYPE_PERCENT req_space doctype_name req_spa
 	;
 	
 external_id: DOCTYPE_SYSTEM
-		{ !! $$.make;  $$.set_system (onstring ($1)) }
+		{ $$ := new_dtd_external_id;  $$.set_system (onstring ($1)) }
 	;
 
 -- see problem in scanner
 --external_id: DOCTYPE_SYSTEM
---		{ !! $$.make; $$.set_system (onstring ($1)) }
+--		{ $$ := new_dtd_external_id; $$.set_system (onstring ($1)) }
 --	| DOCTYPE_PUBLIC DOCTYPE_SYSTEM
---		{ !! $$.make; $$.set_public (onstring ($1)); $$.set_system (onstring ($2)) }
+--		{ $$ := new_dtd_external_id; $$.set_public (onstring ($1)); $$.set_system (onstring ($2)) }
 --	;
 
 ndata_decl: req_space DOCTYPE_NDATA req_space doctype_name -- $2 is 'NDATA'
@@ -833,7 +826,7 @@ notation_decl: DOCTYPE_NOTATION req_space doctype_name req_space external_id may
 	;
 
 public_id: DOCTYPE_PUBLIC
-		{ !! $$.make; $$.set_system (onstring ($1)) }
+		{ $$ := new_dtd_external_id; $$.set_system (onstring ($1)) }
 	;
 
 %%
@@ -850,8 +843,8 @@ feature {NONE} -- creation
 			in_external_dtd := False
 			
 			-- entities
-			!! entities.make_default
-			!! pe_entities.make_default
+			entities := new_entities_table
+			pe_entities := new_entities_table
 		end
 
 feature -- Initialization
@@ -901,7 +894,34 @@ feature {NONE} -- Factory
 			-- Name set for checking.
 		do
 			!! Result.make_equal (0)
+		ensure
+			new_object: Result /= Void
 		end
+		
+	new_dtd_attribute_content: XM_DTD_ATTRIBUTE_CONTENT is
+			-- New dtd attribute content.
+		do
+			!! Result.make
+		ensure
+			new_object: Result /= Void
+		end
+	
+	new_dtd_attribute_content_list: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT] is
+			-- New dtd attribute content list.
+		do
+			!! Result.make
+		ensure
+			new_object: Result /= Void
+		end
+		
+	new_dtd_external_id: XM_DTD_EXTERNAL_ID is
+			-- New dtd external id.
+		do
+			!! Result.make
+		ensure
+			new_object: Result /= Void
+		end
+		
 
 feature {NONE} -- DTD
 
@@ -963,7 +983,7 @@ feature {NONE} -- Entities
 		require
 			not_void: a_value /= Void
 		do
-			!! Result.make_external (a_value.system_id.to_utf8)
+			!! Result.make_external (a_value.system_id)
 		end
 
 feature {NONE} -- Entities
@@ -1055,7 +1075,7 @@ feature {NONE} -- Entities
 			a_file: XF_UTF16_INPUT_STREAM
 			an_error: STRING
 		do
-			Result := clone ("")
+			Result := clone (shared_empty_string)
 			!! a_file.make (a_sys)
 			if a_file.is_open_read then
 				-- inefficient?
@@ -1066,9 +1086,8 @@ feature {NONE} -- Entities
 					Result.append_character (a_file.last_character)
 				end
 			else
-				an_error := clone (Error_cannot_read_file)
-				an_error.append_string (": ")
-				an_error.append_string (a_sys)
+				an_error := STRING_.concat (Error_cannot_read_file, ": ")
+				an_error := STRING_.concat (an_error, a_sys)
 				force_error (an_error)
 			end
 		end
@@ -1086,7 +1105,7 @@ feature {NONE} -- DTD
 			-- push old scanner
 			scanners.force (scanner)
 			!XF_SCANNER_DTD! scanner.make_scanner
-			scanner.set_input_file (a_system.system_id.to_utf8)
+			scanner.set_input_file (a_system.system_id)
 			if not scanner.last_input_file_opened then
 				on_error (Error_cannot_open_external_dtd)
 			end
@@ -1265,42 +1284,74 @@ feature -- Error diagnostic
 			-- Header for error message.
 			-- <filename>:<line>:<column>:
 		do
-			Result := clone (filename)
-			Result.append_string (":")
-			Result.append_string (line.out)
-			Result.append_string (":")
-			Result.append_string (column.out)
-			Result.append_string (":")
+			Result := STRING_.concat (filename,
+				":" + line.out + ":" + column.out + ":")
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {NONE} -- String
 
-	concatenate (a, b: STRING): STRING is
-			-- Result := a + b
-		require
-			not_void: a /= Void and b /= Void
-		do
-			Result := clone (a)
-			Result.append_string (b)
-		end
-
 	shared_empty_string: STRING is
 			-- Shared empty string. 
 		once
-			Result := clone ("")
+			!! Result.make (0)
 		end
 
-	onstring (a: STRING): UC_STRING is
+	onstring (a: STRING): STRING is
 			-- Convert string from inside the parser to string as 
 			-- seen by callback interface.
 		do
 			if a /= Void then
-				Result := new_unicode_string_from_utf8 (a)
+				if is_string_mode_unicode then
+					Result := new_unicode_string_from_utf8 (a)
+				elseif not is_ascii (a) then
+					if is_string_mode_ascii then
+						force_error (Error_unicode_in_ascii_string_mode)
+					else
+						Result := new_unicode_string_from_utf8 (a)
+					end
+				else
+					Result := a
+				end
 			end
 		end
+		
+	is_ascii (a: STRING): BOOLEAN is
+			-- Is this stricly an ascii string? 
+		require
+			not_void: a /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+				Result := True
+			until
+				(i > a.count) or (not Result)
+			loop
+				Result := a.item_code (i) <= 127
+				i := i + 1
+			end
+		end
+		
+feature -- String mode
 
+	is_string_mode_ascii: BOOLEAN is
+			-- STRING only?
+		deferred
+		end
+		
+	is_string_mode_mixed: BOOLEAN is
+			-- STRING and UC_STRING?
+		deferred
+		end
+		
+	is_string_mode_unicode: BOOLEAN is
+			-- UC_STRING only?
+		deferred
+		end
+		
 invariant
 
 	scanner_not_void: scanner /= Void
