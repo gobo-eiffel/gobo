@@ -271,8 +271,36 @@ name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</
     </em><a href="actions.html#echo" name="echo"><em>echo</em></a><em> 
             </em>-- Output <em>text</em> using feature <em>output</em>.<em>
 
+</em><em><strong>feature</strong></em><em> </em>-- Action<em>
+
+    </em><a name="pre_action"><em>pre_action</em></a><em>
+            </em>-- Action executed before every semantic action
+            -- when <em>%option pre-action</em> has been specified.
+            -- (Note: this routine can be redefined in descendant
+            -- classes. Default: do nothing.)
+<em>
+    </em><a name="post_action"><em>post_action</em></a><em>
+            </em>-- Action executed after every semantic action
+            -- when <em>%option post-action </em>has been specified.
+            -- (Note: this routine can be redefined in descendant
+            -- classes. Default: do nothing.)<em>
+
+    </em><a name="pre_eof_action"><em>pre_eof_action</em></a><em>
+            </em>-- Action executed before every end-of-file semantic action
+            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when <em>%option pre-eof-action</em> has been specified.
+            -- (Note: this routine can be redefined in descendant classes.
+            -- Default: do nothing.)<em>
+
+    </em><a name="post_eof_action"><em>post_eof_action</em></a><em>
+            </em>-- Action executed after every end-of-file semantic action
+            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when <em>%option post-eof-action</em> has been specified.
+            -- (Note: this routine can be redefined in descendant classes.
+            -- Default: do nothing.)<em>
+
     </em><a name="default_action"><em>default_action</em></a><em>
            </em> -- Action executed when default rule is matched.<em>
+            </em>-- (Note: this routine can be redefined in descendant classes.
+            -- Default: print last character read to standard output.)<em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Error handling<em>
 
@@ -304,7 +332,7 @@ name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 2 February 2000</font><br>
+            <strong>Last Updated:</strong> 6 February 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
