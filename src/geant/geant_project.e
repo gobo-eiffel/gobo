@@ -309,6 +309,23 @@ feature -- Processing
 			build_target (a_target)
 		end
 
+	show_target_info is
+			-- Print list of name and description for all targets of project.
+		require
+			targets_not_void: targets /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
+			a_target: GEANT_TARGET
+		do
+			a_cursor := targets.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_target := a_cursor.item
+				output_file.put_line (a_target.full_name)
+				output_file.put_line ("  " + a_target.description)
+				a_cursor.forth
+			end
+		end
+
 	build_target (a_target: GEANT_TARGET) is
 			-- Analyze dependencies and execute `a_target'.
 		require
