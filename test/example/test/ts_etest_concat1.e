@@ -40,7 +40,7 @@ feature -- Test
 				a_debug := ""
 			end
 			a_geant_filename := geant_filename
-			assert_execute ("geant -b " + a_geant_filename + " test_" + a_debug + eiffel_compiler.vendor + " " + output_log)
+			assert_not_exit_code_execute ("geant -b " + a_geant_filename + " test_" + a_debug + eiffel_compiler.vendor + " " + output_log, 0)
 				-- Check result.
 			assert_files_equal ("output", expected_output, output_log_filename)
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
