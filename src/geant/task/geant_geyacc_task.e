@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	copyright:  "Copyright (c) 2001-2002, Sven Ehrke and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -54,6 +54,13 @@ feature {NONE} -- Initialization
 					command.set_tokens_classname (a_value)
 				end
 			end
+				-- tokens_filename:
+			if has_uc_attribute (Tokens_filename_attribute_name) then
+				a_value := uc_attribute_value (Tokens_filename_attribute_name).out
+				if a_value.count > 0 then
+					command.set_tokens_filename (a_value)
+				end
+			end
 				-- output_filename:
 			if has_uc_attribute (Output_filename_attribute_name) then
 				a_value := uc_attribute_value (Output_filename_attribute_name).out
@@ -99,6 +106,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for tokens_classname
 		once
 			Result := new_unicode_string ("tokens")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Tokens_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for tokens_filename
+		once
+			Result := new_unicode_string ("tokens_file")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	copyright:  "Copyright (c) 2001-2002, Sven Ehrke and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -57,6 +57,9 @@ feature -- Access
 	tokens_classname: STRING
 			-- -t option
 
+	tokens_filename: STRING
+			-- -k option
+
 	output_filename: STRING
 			-- -o option
 
@@ -93,6 +96,17 @@ feature -- Setting
 			tokens_classname := a_classname
 		ensure
 			tokens_classname_set: tokens_classname = a_classname
+		end
+
+	set_tokens_filename (a_filename: like tokens_filename) is
+			-- Set `tokens_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		do
+			tokens_filename := a_filename
+		ensure
+			tokens_filename_set: tokens_filename = a_filename
 		end
 
 	set_output_filename (a_filename: like output_filename) is
@@ -141,6 +155,12 @@ feature -- Execution
 			if tokens_classname /= Void and then tokens_classname.count > 0 then
 				cmd.append_string ("-t ")
 				cmd.append_string (tokens_classname)
+				cmd.append_string (" ")
+			end
+				-- Option -k
+			if tokens_filename /= Void and then tokens_filename.count > 0 then
+				cmd.append_string ("-k ")
+				cmd.append_string (tokens_filename)
 				cmd.append_string (" ")
 			end
 				-- Option -o
