@@ -17,6 +17,8 @@ inherit
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser_skeleton
+		redefine
+			report_error
 		end
 
 	LX_LEX_SCANNER
@@ -49,7 +51,7 @@ feature {NONE} -- Tables
 			yycheck := yycheck_
 		end
 
-	yyFinal: INTEGER is 79
+	yyFinal: INTEGER is 80
 
 	yyFlag: INTEGER is -32768
 
@@ -95,10 +97,10 @@ feature {NONE} -- Tables
 			Result := integer_array_.make_from_array (<<0,
     31,    32,    33,    33,    33,    34,    34,    34,    34,    35,
     36,    36,    36,    37,    38,    38,    38,    39,    39,    39,
-    39,    40,    40,    40,    40,    41,    41,    42,    43,    43,
-    44,    44,    44,    44,    44,    44,    44,    44,    44,    44,
-    44,    44,    45,    45,    46,    46,    46,    46,    47,    47,
-    48,    48,    48>>, 0)
+    39,    40,    40,    40,    40,    40,    41,    41,    42,    43,
+    43,    44,    44,    44,    44,    44,    44,    44,    44,    44,
+    44,    44,    44,    45,    45,    46,    46,    46,    46,    47,
+    47,    48,    48,    48>>, 0)
 		end
 
 	yyr2_: ARRAY [INTEGER] is
@@ -106,78 +108,78 @@ feature {NONE} -- Tables
 			Result := integer_array_.make_from_array (<<0,
      4,     1,     0,     5,     5,     0,     1,     1,     1,     0,
      0,     3,     3,     1,     1,     3,     1,     2,     1,     1,
-     1,     2,     3,     2,     1,     1,     3,     2,     1,     2,
-     1,     2,     2,     2,     6,     5,     4,     1,     1,     1,
-     3,     3,     3,     4,     1,     2,     3,     4,     0,     2,
-     0,     1,     2>>, 0)
+     1,     2,     2,     1,     2,     3,     1,     3,     2,     1,
+     2,     1,     2,     2,     2,     6,     5,     4,     1,     1,
+     1,     3,     3,     3,     4,     1,     2,     3,     4,     0,
+     2,     0,     1,     2>>, 0)
 		end
 
 	yydefact_: ARRAY [INTEGER] is
 		once
 			Result := integer_array_.make_from_array (<<     0,
-     2,     3,    11,    14,    51,    10,     0,    52,     1,     3,
-     0,    17,    15,     0,     0,    53,    11,    21,    31,    20,
-    39,     0,    38,    49,     0,     0,     6,    19,    25,     0,
-    26,    29,    40,    12,    13,     0,     5,    18,     0,     0,
-    45,     0,     0,     7,     8,     9,     4,    24,     0,    28,
-    22,    30,     0,    32,    33,    34,    16,    50,    41,    42,
-     0,     0,    46,    43,    27,    23,     0,    47,    44,     0,
-    37,     0,    48,     0,    36,    35,     0,     0,     0>>, 0)
+     2,     3,    11,    14,    52,    10,     0,    53,     1,     3,
+     0,    17,    15,     0,     0,    54,    11,    21,    32,    20,
+    40,     0,    39,    50,     0,     0,     6,    19,    24,     0,
+    27,    30,    41,    12,    13,     0,     5,    18,     0,     0,
+    46,     0,     0,     7,     8,     9,     4,    23,     0,    29,
+    22,    25,    31,     0,    33,    34,    35,    16,    51,    42,
+    43,     0,     0,    47,    44,    28,    26,     0,    48,    45,
+     0,    38,     0,    49,     0,    37,    36,     0,     0,     0>>, 0)
 		end
 
 	yydefgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    77,
+			Result := integer_array_.make_from_array (<<    78,
      2,     3,    47,     5,     6,     7,    15,    27,    28,    29,
     30,    31,    32,    33,    43,    39,     9>>, 0)
 		end
 
 	yypact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    42,
--32768,-32768,     6,-32768,    49,     3,    15,    50,-32768,-32768,
-     0,-32768,-32768,    43,    38,-32768,    -4,-32768,-32768,-32768,
--32768,    11,-32768,-32768,    11,    -1,    34,-32768,    31,    11,
-    11,    26,-32768,-32768,-32768,    54,-32768,-32768,     7,    -7,
-    32,    58,     1,-32768,-32768,-32768,-32768,-32768,    11,-32768,
-    37,    26,    59,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
-    61,     2,    35,-32768,    11,-32768,    10,-32768,-32768,    63,
--32768,    29,-32768,    55,-32768,-32768,    67,    69,-32768>>, 0)
+			Result := integer_array_.make_from_array (<<     4,
+-32768,-32768,    22,-32768,    14,    17,    38,    39,-32768,-32768,
+     0,-32768,-32768,    36,    26,-32768,    34,-32768,-32768,-32768,
+-32768,     8,-32768,-32768,     8,    -1,    44,-32768,    37,     8,
+     8,    -2,-32768,-32768,-32768,    43,-32768,-32768,    12,   -14,
+    32,    60,     1,-32768,-32768,-32768,-32768,-32768,     8,-32768,
+    40,-32768,    -2,    61,-32768,-32768,-32768,-32768,-32768,-32768,
+-32768,    63,     2,    41,-32768,     8,-32768,    29,-32768,-32768,
+    64,-32768,    10,-32768,    51,-32768,-32768,    68,    69,-32768>>, 0)
 		end
 
 	yypgoto_: ARRAY [INTEGER] is
 		once
 			Result := integer_array_.make_from_array (<<-32768,
--32768,    60,-32768,    65,-32768,-32768,-32768,-32768,    51,    16,
--32768,    23,   -31,-32768,    33,-32768,-32768>>, 0)
+-32768,    62,-32768,    67,-32768,-32768,-32768,-32768,    48,    15,
+    45,    25,   -31,-32768,    35,-32768,-32768>>, 0)
 		end
 
-	yyLast: INTEGER is 75
+	yyLast: INTEGER is 77
 
 	yytable_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    52,
-    18,    41,    19,    63,    63,   -10,    20,    21,    37,    58,
-   -10,     4,    49,    19,    10,    12,    42,    22,    21,    60,
-    13,     4,    71,    23,    24,    25,    72,    26,    14,    64,
-    69,    59,    74,    52,    23,    24,    25,    53,    26,    54,
-    40,    75,    44,    45,    46,    51,     1,    55,    56,    48,
-    49,    50,    35,     8,    36,    66,    49,    34,    16,    57,
-    41,    61,    67,    68,    70,    73,    78,    76,    79,    17,
-    11,    65,    38,     0,    62>>, 0)
+			Result := integer_array_.make_from_array (<<    53,
+    18,    41,    19,    64,    64,    49,    20,    21,     1,    54,
+    19,    55,    61,    75,    59,    21,    42,    22,     8,    56,
+    57,   -10,    76,    23,    24,    25,   -10,    26,    10,    65,
+    70,    23,    24,    25,    53,    26,    60,     4,    12,    40,
+    35,    72,    36,    13,    51,    73,    37,    16,    58,     4,
+    34,    14,    44,    45,    46,    48,    49,    50,    67,    49,
+    50,    62,    41,    77,    68,    69,    74,    79,    80,    38,
+    71,    17,    11,    66,    52,     0,    63>>, 0)
 		end
 
 	yycheck_: ARRAY [INTEGER] is
 		once
 			Result := integer_array_.make_from_array (<<    31,
-     1,     3,     3,     3,     3,     0,     7,     8,    13,     3,
-     5,    16,    20,     3,    12,     1,    18,    18,     8,    27,
-     6,    16,    13,    24,    25,    26,    17,    28,    14,    29,
-    29,    25,     4,    65,    24,    25,    26,    12,    28,    14,
-    25,    13,     9,    10,    11,    30,     5,    22,    23,    19,
-    20,    21,    15,     5,    17,    19,    20,    15,     9,     6,
-     3,    30,     4,     3,    30,     3,     0,    13,     0,    10,
-     6,    49,    22,    -1,    42>>, 0)
+     1,     3,     3,     3,     3,    20,     7,     8,     5,    12,
+     3,    14,    27,     4,     3,     8,    18,    18,     5,    22,
+    23,     0,    13,    24,    25,    26,     5,    28,    12,    29,
+    29,    24,    25,    26,    66,    28,    25,    16,     1,    25,
+    15,    13,    17,     6,    30,    17,    13,     9,     6,    16,
+    15,    14,     9,    10,    11,    19,    20,    21,    19,    20,
+    21,    30,     3,    13,     4,     3,     3,     0,     0,    22,
+    30,    10,     6,    49,    30,    -1,    42>>, 0)
 		end
 
 feature {NONE} -- Semantic actions
@@ -187,7 +189,7 @@ feature {NONE} -- Semantic actions
 			inspect yy_act
 
 when 1 then
---#line 46 "lx_lex_parser.y"
+--#line 48 "lx_lex_parser.y"
 
 			process_default_rule
 			if equiv_classes /= Void then
@@ -197,7 +199,7 @@ when 1 then
 		
 
 when 2 then
---#line 56 "lx_lex_parser.y"
+--#line 58 "lx_lex_parser.y"
 
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
@@ -206,152 +208,145 @@ when 2 then
 		
 
 when 4 then
---#line 66 "lx_lex_parser.y"
+--#line 68 "lx_lex_parser.y"
 
 			start_condition_stack.keep_first (dollar_integer (yyvs.item (yyvsp - 3)))
 		
 
 when 5 then
---#line 70 "lx_lex_parser.y"
+--#line 72 "lx_lex_parser.y"
 
 			start_condition_stack.keep_first (dollar_integer (yyvs.item (yyvsp - 3)))
 		
 
 when 7 then
---#line 77 "lx_lex_parser.y"
+--#line 79 "lx_lex_parser.y"
 
 			set_action (dollar_string (yyvs.item (yyvsp)))
 		
 
 when 9 then
---#line 82 "lx_lex_parser.y"
+--#line 84 "lx_lex_parser.y"
 
 			set_action ("")
 		
 
 when 10 then
---#line 88 "lx_lex_parser.y"
+--#line 90 "lx_lex_parser.y"
 
 				-- Initialize for a parse of one rule.
-			has_trail_context := False
 			variable_trail_rule := False
 			variable_length := False
 			trail_count := 0
 			head_count := 0
 			rule_length := 0
 			in_trail_context := False
-			rule_id := rules.count + 1
+			!! rule.make_default (rules.count + 1)
 		
 
 when 11 then
---#line 102 "lx_lex_parser.y"
+--#line 103 "lx_lex_parser.y"
 
 			yyval := start_condition_stack.count
 		
 
 when 12 then
---#line 106 "lx_lex_parser.y"
+--#line 107 "lx_lex_parser.y"
 
 			start_condition_stack.append_start_conditions (start_conditions)
 		
 
 when 14 then
---#line 113 "lx_lex_parser.y"
+--#line 114 "lx_lex_parser.y"
 
 			yyval := start_condition_stack.count
 		
 
 when 15 then
---#line 119 "lx_lex_parser.y"
+--#line 120 "lx_lex_parser.y"
 
 			push_start_condition (dollar_string (yyvs.item (yyvsp)), start_condition_stack)
 		
 
 when 16 then
---#line 123 "lx_lex_parser.y"
+--#line 124 "lx_lex_parser.y"
 
 			push_start_condition (dollar_string (yyvs.item (yyvsp)), start_condition_stack)
 		
 
 when 17 then
---#line 127 "lx_lex_parser.y"
+--#line 128 "lx_lex_parser.y"
 
 			error_handler.bad_start_condition_list (filename, line_nb)
 		
 
 when 18 then
---#line 133 "lx_lex_parser.y"
+--#line 134 "lx_lex_parser.y"
 
 			process_bol_rule (dollar_nfa (yyvs.item (yyvsp)))
 		
 
 when 19 then
---#line 137 "lx_lex_parser.y"
+--#line 138 "lx_lex_parser.y"
 
 			process_rule (dollar_nfa (yyvs.item (yyvsp)))
 		
 
 when 20 then
---#line 141 "lx_lex_parser.y"
+--#line 142 "lx_lex_parser.y"
 
 			process_eof_rule
 		
 
 when 21 then
---#line 145 "lx_lex_parser.y"
+--#line 146 "lx_lex_parser.y"
 
 			error_handler.unrecognized_rule (filename, line_nb)
 		
 
 when 22 then
---#line 151 "lx_lex_parser.y"
+--#line 152 "lx_lex_parser.y"
 
 			yyval := append_trail_context_to_regexp
 				(dollar_nfa (yyvs.item (yyvsp)), dollar_nfa (yyvs.item (yyvsp - 1)))
 		
 
 when 23 then
---#line 156 "lx_lex_parser.y"
-
-			error_handler.trailing_context_used_twice (filename, line_nb)
-		
-
-when 24 then
---#line 160 "lx_lex_parser.y"
+--#line 157 "lx_lex_parser.y"
 
 			yyval := append_eol_to_regexp (dollar_nfa (yyvs.item (yyvsp - 1)))
 		
 
-when 25 then
---#line 164 "lx_lex_parser.y"
+when 24 then
+--#line 161 "lx_lex_parser.y"
 
-			if has_trail_context then
-				if variable_length and head_count = 0 then
-						-- Both head and trail are variable-length.
-					variable_trail_rule := True
-				else
-					trail_count := rule_length
-				end
-			end
+			-- $$ := $1
 		
 
-when 27 then
---#line 178 "lx_lex_parser.y"
+when 25 then
+--#line 165 "lx_lex_parser.y"
+
+			error_handler.trailing_context_used_twice (filename, line_nb)
+		
+
+when 26 then
+--#line 169 "lx_lex_parser.y"
+
+			error_handler.trailing_context_used_twice (filename, line_nb)
+		
+
+when 28 then
+--#line 176 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := dollar_nfa (yyvs.item (yyvsp - 2)) | dollar_nfa (yyvs.item (yyvsp))
 		
 
-when 28 then
---#line 185 "lx_lex_parser.y"
+when 29 then
+--#line 183 "lx_lex_parser.y"
 
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-			else
-				has_trail_context := True
-			end
 			if variable_length then
 					-- We hope the trailing context is fixed-length.
 				variable_length := False
@@ -362,58 +357,58 @@ when 28 then
 			in_trail_context := True
 		
 
-when 30 then
---#line 206 "lx_lex_parser.y"
+when 31 then
+--#line 199 "lx_lex_parser.y"
 
 			yyval := dollar_nfa (yyvs.item (yyvsp - 1)) & dollar_nfa (yyvs.item (yyvsp))
 		
 
-when 31 then
---#line 212 "lx_lex_parser.y"
+when 32 then
+--#line 205 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := new_nfa_from_character (dollar_integer (yyvs.item (yyvsp)))
 		
 
-when 32 then
---#line 217 "lx_lex_parser.y"
+when 33 then
+--#line 210 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := |*| dollar_nfa (yyvs.item (yyvsp - 1))
 		
 
-when 33 then
---#line 222 "lx_lex_parser.y"
+when 34 then
+--#line 215 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := |+| dollar_nfa (yyvs.item (yyvsp - 1))
 		
 
-when 34 then
---#line 227 "lx_lex_parser.y"
+when 35 then
+--#line 220 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := |?| dollar_nfa (yyvs.item (yyvsp - 1))
 		
 
-when 35 then
---#line 232 "lx_lex_parser.y"
+when 36 then
+--#line 225 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := new_bounded_iteration_nfa
 				(dollar_nfa (yyvs.item (yyvsp - 5)), dollar_integer (yyvs.item (yyvsp - 3)), dollar_integer (yyvs.item (yyvsp - 1)))
 		
 
-when 36 then
---#line 238 "lx_lex_parser.y"
+when 37 then
+--#line 231 "lx_lex_parser.y"
 
 			variable_length := True
 			yyval := new_unbounded_iteration_nfa
 				(dollar_nfa (yyvs.item (yyvsp - 4)), dollar_integer (yyvs.item (yyvsp - 2)))
 		
 
-when 37 then
---#line 244 "lx_lex_parser.y"
+when 38 then
+--#line 237 "lx_lex_parser.y"
 
 				-- The singleton could be something like "(foo)",
 				-- in which case we have no idea what its length
@@ -422,49 +417,49 @@ when 37 then
 			yyval := new_iteration_nfa (dollar_nfa (yyvs.item (yyvsp - 3)), dollar_integer (yyvs.item (yyvsp - 1)))
 		
 
-when 38 then
---#line 252 "lx_lex_parser.y"
+when 39 then
+--#line 245 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := new_symbol_class_nfa (dot_character_class)
 		
 
-when 39 then
---#line 257 "lx_lex_parser.y"
+when 40 then
+--#line 250 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvs.item (yyvsp)))
 		
 
-when 40 then
---#line 262 "lx_lex_parser.y"
+when 41 then
+--#line 255 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvs.item (yyvsp)))
 		
 
-when 41 then
---#line 267 "lx_lex_parser.y"
-
-			yyval := yyvs.item (yyvsp - 1)
-		
-
 when 42 then
---#line 271 "lx_lex_parser.y"
+--#line 260 "lx_lex_parser.y"
 
 			yyval := yyvs.item (yyvsp - 1)
 		
 
 when 43 then
---#line 277 "lx_lex_parser.y"
+--#line 264 "lx_lex_parser.y"
+
+			yyval := yyvs.item (yyvsp - 1)
+		
+
+when 44 then
+--#line 270 "lx_lex_parser.y"
 
 			character_classes.force
 				(dollar_symbol_class (yyvs.item (yyvsp - 1)), dollar_string (yyvs.item (yyvsp - 2)))
 			yyval := yyvs.item (yyvsp - 1)
 		
 
-when 44 then
---#line 283 "lx_lex_parser.y"
+when 45 then
+--#line 276 "lx_lex_parser.y"
 
 			dollar_symbol_class (yyvs.item (yyvsp - 1)).set_negated (True)
 			character_classes.force
@@ -472,52 +467,52 @@ when 44 then
 			yyval := yyvs.item (yyvsp - 1)
 		
 
-when 45 then
---#line 292 "lx_lex_parser.y"
+when 46 then
+--#line 285 "lx_lex_parser.y"
 
 			yyval := append_character_to_character_class
 				(dollar_integer (yyvs.item (yyvsp)), new_character_class)
 		
 
-when 46 then
---#line 297 "lx_lex_parser.y"
+when 47 then
+--#line 290 "lx_lex_parser.y"
 
 			yyval := append_character_to_character_class
 				(dollar_integer (yyvs.item (yyvsp)), dollar_symbol_class (yyvs.item (yyvsp - 1)))
 		
 
-when 47 then
---#line 302 "lx_lex_parser.y"
+when 48 then
+--#line 295 "lx_lex_parser.y"
 
 			yyval := append_character_set_to_character_class
 				(dollar_integer (yyvs.item (yyvsp - 2)), dollar_integer (yyvs.item (yyvsp)),
 				new_character_class)
 		
 
-when 48 then
---#line 308 "lx_lex_parser.y"
+when 49 then
+--#line 301 "lx_lex_parser.y"
 
 			yyval := append_character_set_to_character_class
 				(dollar_integer (yyvs.item (yyvsp - 2)), dollar_integer (yyvs.item (yyvsp)),
 				dollar_symbol_class (yyvs.item (yyvsp - 3)))
 		
 
-when 49 then
---#line 316 "lx_lex_parser.y"
+when 50 then
+--#line 309 "lx_lex_parser.y"
 
 			yyval := new_epsilon_nfa
 		
 
-when 50 then
---#line 320 "lx_lex_parser.y"
+when 51 then
+--#line 313 "lx_lex_parser.y"
 
 			rule_length := rule_length + 1
 			yyval := append_character_to_string
 				(dollar_integer (yyvs.item (yyvsp)), dollar_nfa (yyvs.item (yyvsp - 1)))
 		
 
-when 53 then
---#line 330 "lx_lex_parser.y"
+when 54 then
+--#line 323 "lx_lex_parser.y"
 
 			eiffel_code := dollar_string (yyvs.item (yyvsp))
 		
@@ -626,15 +621,36 @@ feature -- Setting
 
 feature -- Status report
 
-	has_trail_context: BOOLEAN
 	variable_trail_rule: BOOLEAN
-	variable_length: BOOLEAN
-	rule_length: INTEGER
-	head_count: INTEGER
-	trail_count: INTEGER
+			-- Does the rule being parsed have a variable
+			-- trailing context?
 
-	rule_id: INTEGER
-			-- Id of rule being parsed
+	variable_length: BOOLEAN
+			-- Does the regular expression being parsed
+			-- (either the head or trail of the rule)
+			-- have a variable length? (In other words,
+			-- may tokens recognized by that regexp have
+			-- different sizes?)
+
+	rule_length: INTEGER
+			-- Length of the tokens recognized by the
+			-- regexp being parsed when `variable_length'
+			-- is false; undefined otherwise
+
+	head_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the head part of the rule being parsed
+			-- when this rule has a triling context and
+			-- `variable_length' is false; 0 otherwise
+
+	trail_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the trail part of the rule being parsed
+			-- when this rule has a triling context and
+			-- `variable_length' is false; 0 otherwise
+
+	rule: LX_RULE
+			-- Rule being parsed
 
 	in_trail_context: BOOLEAN
 			-- Is a trailing context being parsed?
@@ -866,39 +882,26 @@ feature {NONE} -- Implementation
 			-- Process a rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
+			rule_not_void: rule /= Void
 		local
-			a_rule: LX_RULE
 			a_state: LX_NFA_STATE
 		do
-			if rule_id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
+			a_nfa.set_accepted_rule (rule)
+			rule.set_pattern (a_nfa)
+			rules.force_last (rule)
+			pending_rules.force_last (rule)
+			rule.set_line_nb (rule_line_nb)
+			rule.set_trail_context (variable_trail_rule, head_count, trail_count)
+			if variable_trail_rule then
+				variable_trail_context := True
+			end
+			a_state := a_nfa.start_state
+			if start_condition_stack.is_empty then
+					-- Add `a_state' to all non-exclusive start condition,
+					-- including the default (INITIAL) start condition.
+				start_conditions.add_state_to_non_exclusive (a_state)
 			else
-				a_nfa.set_accepting_id (rule_id)
-				!! a_rule.make (rule_id, a_nfa, Dummy_action)
-				rules.force_last (a_rule)
-				pending_rules.force_last (a_rule)
-				a_rule.set_line_nb (rule_line_nb)
-				a_rule.set_trail_context
-					(variable_trail_rule, head_count, trail_count)
-				if variable_trail_rule then
-					variable_trail_context := True
-				end
-				a_state := a_nfa.start_state
-				if start_condition_stack.is_empty then
-						-- Add `a_state' to all non-exclusive start condition,
-						-- including the default (INITIAL) start condition.
-					start_conditions.add_state_to_non_exclusive (a_state)
-				else
-					start_condition_stack.add_state_to_all (a_state)
-				end
+				start_condition_stack.add_state_to_all (a_state)
 			end
 		end
 
@@ -906,40 +909,27 @@ feature {NONE} -- Implementation
 			-- Process a beginning-of-line rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
+			rule_not_void: rule /= Void
 		local
-			a_rule: LX_RULE
 			a_state: LX_NFA_STATE
 		do
-			if rule_id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
+			a_nfa.set_accepted_rule (rule)
+			rule.set_pattern (a_nfa)
+			rules.force_last (rule)
+			pending_rules.force_last (rule)
+			rule.set_line_nb (rule_line_nb)
+			rule.set_trail_context (variable_trail_rule, head_count, trail_count)
+			bol_needed := True
+			if variable_trail_rule then
+				variable_trail_context := True
+			end
+			a_state := a_nfa.start_state
+			if start_condition_stack.is_empty then
+					-- Add `a_state' to all non-exclusive start condition,
+					-- including the default (INITIAL) start condition.
+				start_conditions.add_bol_state_to_non_exclusive (a_state)
 			else
-				a_nfa.set_accepting_id (rule_id)
-				!! a_rule.make (rule_id, a_nfa, Dummy_action)
-				rules.force_last (a_rule)
-				pending_rules.force_last (a_rule)
-				a_rule.set_line_nb (rule_line_nb)
-				a_rule.set_trail_context
-					(variable_trail_rule, head_count, trail_count)
-				bol_needed := True
-				if variable_trail_rule then
-					variable_trail_context := True
-				end
-				a_state := a_nfa.start_state
-				if start_condition_stack.is_empty then
-						-- Add `a_state' to all non-exclusive start condition,
-						-- including the default (INITIAL) start condition.
-					start_conditions.add_bol_state_to_non_exclusive (a_state)
-				else
-					start_condition_stack.add_bol_state_to_all (a_state)
-				end
+				start_condition_stack.add_bol_state_to_all (a_state)
 			end
 		end
 
@@ -949,11 +939,9 @@ feature {NONE} -- Implementation
 			if start_condition_stack.is_empty then
 					-- This EOF applies to all start conditions
 					-- which don't already have EOF actions.
-				start_condition_stack.append_non_eof_start_conditions
-					(start_conditions)
+				start_condition_stack.append_non_eof_start_conditions (start_conditions)
 				if start_condition_stack.is_empty then
-					error_handler.all_start_conditions_have_EOF
-						(filename, line_nb)
+					error_handler.all_start_conditions_have_EOF (filename, line_nb)
 				else
 					build_eof_action (start_condition_stack)
 				end
@@ -985,10 +973,12 @@ feature {NONE} -- Implementation
 					error_handler.multiple_EOF_rules (sc, filename, line_nb)
 				else
 					a_start_condition.set_has_eof (True)
-					!! a_rule.make (a_start_condition.id, Eof_nfa, Dummy_action)
+					!! a_rule.make_default (a_start_condition.id)
+					a_rule.set_pattern (Eof_nfa)
 						-- Save `rule' as an end-of-file rule.
 					eof_rules.force_last (a_rule)
 					pending_rules.force_last (a_rule)
+					rule.set_line_nb (rule_line_nb)
 				end
 				i := i + 1
 			end
@@ -996,39 +986,28 @@ feature {NONE} -- Implementation
 
 	process_default_rule is
 			-- Process default rule.
+		require
+			rule_not_void: rule /= Void
 		local
-			a_rule: LX_RULE
 			a_character_class: LX_SYMBOL_CLASS
 			a_nfa: LX_NFA
 			a_state: LX_NFA_STATE
 		do
-			if rule_id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
+			!! a_character_class.make (0)
+			a_character_class.set_negated (True)
+			a_nfa := new_symbol_class_nfa (a_character_class)
+			a_nfa.set_accepted_rule (rule)
+			rule.set_pattern (a_nfa)
+			rules.force_last (rule)
+			pending_rules.force_last (rule)
+			rule.set_line_nb (0)
+			rule.set_trail_context (False, 0, 0)
+			a_state := a_nfa.start_state
+			start_conditions.add_state_to_all (a_state)
+			if no_default_rule then
+				set_action ("fatal_error (%"scanner jammed%")")
 			else
-				!! a_character_class.make (0)
-				a_character_class.set_negated (True)
-				a_nfa := new_symbol_class_nfa (a_character_class)
-				a_nfa.set_accepting_id (rule_id)
-				!! a_rule.make (rule_id, a_nfa, Dummy_action)
-				rules.force_last (a_rule)
-				pending_rules.force_last (a_rule)
-				a_rule.set_line_nb (0)
-				a_rule.set_trail_context (False, 0, 0)
-				a_state := a_nfa.start_state
-				start_conditions.add_state_to_all (a_state)
-				if no_default_rule then
-					set_action ("fatal_error (%"scanner jammed%")")
-				else
-					set_action ("echo")
-				end
+				set_action ("echo")
 			end
 		end
 
@@ -1172,11 +1151,11 @@ feature {NONE} -- Implementation
 			in_trail_context := False
 			if variable_length and head_count = 0 then
 					-- Variable trailing context rule.
+				variable_trail_rule := True
 					-- Mark the first part of the rule as the accepting
 					-- "head" part of a trailing context rule.
-				a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
-				variable_trail_rule := True
-			else
+				a_regexp.set_accepted_rule (rule)
+			elseif not variable_length then
 				trail_count := rule_length
 			end
 			Result := a_regexp & a_trail
@@ -1195,21 +1174,8 @@ feature {NONE} -- Implementation
 			rule_length := 1
 			variable_length := False
 			in_trail_context := True
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-				Result := a_regexp
-			else
-				if variable_length then
-						-- Variable trailing context rule.
-						-- Mark the first part of the rule as the accepting
-						-- "head" part of a trailing context rule.
-					a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
-					variable_trail_rule := True
-				end
-				has_trail_context := True
-				Result := a_regexp & new_epsilon_nfa &
-						new_symbol_nfa (New_line_code)
-			end
+			Result := a_regexp & new_epsilon_nfa &
+					new_symbol_nfa (New_line_code)
 		ensure
 			regexp_set: Result = a_regexp
 		end
@@ -1295,6 +1261,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	report_error (a_message: STRING) is
+			-- Do nothing.
+			-- Syntax error are reported elsewhere.
+		do
+		end
+
 feature {NONE} -- Constants
 
 	Initial_max_pending_rules: INTEGER is 10
@@ -1302,14 +1274,6 @@ feature {NONE} -- Constants
 
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
-
-	Dummy_action: LX_ACTION is
-			-- Dummy action
-		once
-			!! Result.make ("fatal_error (%"Unknown action%")")
-		ensure
-			dummy_action_not_void: Result /= Void
-		end
 
 	Eof_nfa: LX_NFA is
 			-- End-of-file NFA
