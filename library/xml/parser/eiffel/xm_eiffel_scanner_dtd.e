@@ -46,9 +46,9 @@ feature -- Input
 			-- token pair.
 		do
 			debug ("xml_parser")
-				std.output.put_string ("--dtd-scanner--")
+				std.error.put_string ("--dtd-scanner--")
 				if has_error then
-					std.output.put_string (last_error)
+					std.error.put_string (last_error)
 				end
 			end
 			if not decl_start_sent then
