@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<system name="pcre">
+	<description>
+		system: "PCRE regexp usage example"
+		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="PCRE" creation="make"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="false"/>
+	</option>
+
+	<cluster name="regexp_example" location="${GOBO}/example/regexp/pcre"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
+</system>
