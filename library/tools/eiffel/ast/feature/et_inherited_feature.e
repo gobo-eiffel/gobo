@@ -14,17 +14,13 @@ class ET_INHERITED_FEATURE
 
 inherit
 
-	ET_FEATURE
+	ET_ADAPTED_FEATURE
 		redefine
-			name, is_deferred, is_inherited,
-			precursor_feature, type, arguments,
+			name, is_deferred, is_redeclared,
 			new_name, undefine_name, redefine_name,
 			select_name, inherited_feature,
-			merged_feature, selected_feature,
-			seeded_feature, flattened_feature,
-			is_selected, replicated_seeds,
-			is_other_seeds_shared, is_feature_shared,
-			is_redeclared
+			merged_feature, is_other_seeds_shared,
+			adapted_feature
 		end
 
 creation
@@ -37,7 +33,6 @@ feature {NONE} -- Initialization
 			-- Create a new inherited feature.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_not_redeclared: not a_feature.is_redeclared
 			a_parent_not_void: a_parent /= Void
 		do
 			parent := a_parent
@@ -55,6 +50,7 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			precursor_feature_set: precursor_feature = a_feature
+			flattened_feature_set: flattened_feature = a_feature
 			registered: id = a_feature.id
 		end
 
@@ -68,20 +64,6 @@ feature -- Access
 			else
 				Result := name_item.feature_name
 			end
-		end
-
-	type: ET_TYPE is
-			-- Return type;
-			-- Void for procedures
-		do
-			Result := flattened_feature.type
-		end
-
-	arguments: ET_FORMAL_ARGUMENT_LIST is
-			-- Formal arguments;
-			-- Void if not a routine or a routine with no arguments
-		do
-			Result := flattened_feature.arguments
 		end
 
 	new_name: ET_RENAME
@@ -99,27 +81,7 @@ feature -- Access
 			-- Name listed in select clause
 			-- when feature is selected
 
-	selected_feature: ET_FEATURE is
-			-- Either current feature or one of its merged or
-			-- joined features that appears in a Select clause?
-		local
-			a_feature: ET_FEATURE
-		do
-			from
-				a_feature := Current
-			until
-				a_feature = Void
-			loop
-				if a_feature.has_select then
-					Result := a_feature
-					a_feature := Void -- Jump out of the loop.
-				else
-					a_feature := a_feature.merged_feature
-				end
-			end
-		end
-
-	precursor_feature: ET_FEATURE
+	precursor_feature: ET_FLATTENED_FEATURE
 			-- Feature inherited from `parent'
 
 	inherited_feature: ET_INHERITED_FEATURE is
@@ -130,43 +92,30 @@ feature -- Access
 			definition: Result = Current
 		end
 
+	parent_feature: ET_FEATURE is
+			-- Feature in `parent'
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
 	merged_feature: ET_FEATURE
 			-- Inherited feature being merged or joined
 			-- with current inherited feature
 
-	seeded_feature (a_seed: INTEGER): ET_FEATURE is
-			-- Either current feature or one of its merged or joined
-			-- features whose precursor feature has `a_seed' as seed
-		local
-			a_feature: ET_FEATURE
+	adapted_feature: ET_INHERITED_FEATURE is
+			-- Version of current feature where none of its
+			-- inherited components are flattened
 		do
-			from
-				a_feature := Current
-			until
-				Result /= Void
-			loop
-				if a_feature.precursor_feature.has_seed (a_seed) then
-					Result := a_feature
-				else
-					a_feature := a_feature.merged_feature
-				end
+			Result := Current
+			if merged_feature /= Void then
+				merged_feature := merged_feature.inherited_feature.adapted_feature
 			end
 		end
 
-	flattened_feature: ET_FEATURE
-			-- Feature resulting from feature adaptation
-
 	inherited_flattened_feature: ET_FEATURE
 			-- Inherited feature from which `flattened_feature' is resulting
-
-	replicated_seeds: ET_FEATURE_IDS
-			-- Seeds involved when current feature has been replicated
-
-	break: ET_BREAK is
-			-- Break which appears just after current node
-		do
-			Result := precursor_feature.break
-		end
 
 feature -- Setting
 
@@ -226,9 +175,6 @@ feature -- Setting
 
 feature -- Status report
 
-	is_inherited: BOOLEAN is True
-			-- Is current feature being inherited?
-
 	is_redeclared: BOOLEAN is False
 			-- Is current feature being redeclared?
 
@@ -240,46 +186,12 @@ feature -- Status report
 			definition: Result = (precursor_feature.is_deferred or has_undefine)
 		end
 
-	is_selected: BOOLEAN
-			-- Has an inherited feature been selected
-			-- to solve a replication conflict?
-
-	is_feature_shared: BOOLEAN is False
-			-- Is current feature object shared with `parent'?
-			-- (If shared, then we need to duplicate this feature
-			-- before modifying it in current heir.)
-
 	is_other_seeds_shared: BOOLEAN is
 			-- Is `other_seeds' object shared with one of
 			-- the precursors? (If shared, then we need to
 			-- clone it before modifying it.)
 		do
 			Result := (other_seeds = precursor_feature.other_seeds)
-		end
-
-feature -- Status setting
-
-	set_replicated (a_seed: INTEGER) is
-			-- Set `is_replicated' to True.
-			-- `a_seed' is the seed which needs replication.
-		require
-			has_seed: has_seed (a_seed)
-		do
-			if replicated_seeds = Void then
-				create replicated_seeds.make (a_seed)
-			elseif not replicated_seeds.has (a_seed) then
-				replicated_seeds.put (a_seed)
-			end
-		ensure
-			is_replicated: is_replicated
-		end
-
-	set_selected is
-			-- Set `is_selected' to True.
-		do
-			is_selected := True
-		ensure
-			is_selected: is_selected
 		end
 
 feature -- Duplication
@@ -296,24 +208,6 @@ feature -- Conversion
 			-- Renamed version of current feature
 		do
 			create Result.make (flattened_feature.renamed_feature (a_name), parent)
-		end
-
-	undefined_feature (a_name: like name): ET_DEFERRED_ROUTINE is
-			-- Undefined version of current feature
-		do
-			Result := flattened_feature.undefined_feature (a_name)
-		end
-
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		do
-			precursor_feature.resolve_inherited_signature (a_parent)
 		end
 
 feature -- Element change
@@ -390,19 +284,9 @@ feature {ET_INHERITED_FEATURE} -- Setting
 			merged_feature_set: merged_feature = a_feature
 		end
 
-feature -- Processing
-
-	process (a_processor: ET_AST_PROCESSOR) is
-			-- Process current node.
-		do
-			flattened_feature.process (a_processor)
-		end
-
 invariant
 
-	is_inherited: is_inherited
 	not_redeclared: not is_redeclared
-	not_feature_shared: not is_feature_shared
 	inherited_flattened_feature_not_void: inherited_flattened_feature /= Void
 	inherited_flattened_feature_inherited: inherited_flattened_feature.is_inherited
 	inherited_flattened_feature_not_redeclared: not inherited_flattened_feature.is_redeclared

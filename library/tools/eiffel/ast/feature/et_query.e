@@ -14,7 +14,7 @@ deferred class ET_QUERY
 
 inherit
 
-	ET_FEATURE
+	ET_FLATTENED_FEATURE
 		redefine
 			type
 		end

@@ -389,20 +389,17 @@ feature -- Inheritance / Feature adaptation
 
 	is_redeclared: BOOLEAN is
 			-- Is current feature being redeclared?
-		do
-			-- Result := False
+		deferred
 		ensure
 			is_inherited: Result implies is_inherited
 		end
 
-	is_feature_shared: BOOLEAN is
-			-- Is current feature object shared with `parent'?
-			-- (If shared, then we need to duplicate this feature
-			-- before modifying it in current heir.)
-		require
-			is_inherited: is_inherited
-		do
-			Result := True
+	is_flattened: BOOLEAN is
+			-- Is current feature flattened?
+		deferred
+		ensure
+			definition: Result = (flattened_feature = Current)
+			not_inherited: not is_inherited implies Result
 		end
 
 	has_rename: BOOLEAN is
@@ -522,15 +519,13 @@ feature -- Inheritance / Feature adaptation
 			has_select: Result /= Void implies Result.has_select
 		end
 
-	precursor_feature: ET_FEATURE is
+	precursor_feature: ET_FLATTENED_FEATURE is
 			-- Feature inherited from `parent'
 		require
 			is_inherited: is_inherited
-		do
-			Result := Current
+		deferred
 		ensure
 			precursor_feature_not_void: Result /= Void
-			precursor_feature_not_redeclared: not Result.is_redeclared
 		end
 
 	inherited_feature: ET_INHERITED_FEATURE is
@@ -539,7 +534,7 @@ feature -- Inheritance / Feature adaptation
 			is_inherited: is_inherited
 			not_redeclared: not is_redeclared
 		do
-			create Result.make (Current, parent)
+			create Result.make (precursor_feature, parent)
 		ensure
 			inherited_feature_not_void: Result /= Void
 			same_precursor_feature: Result.precursor_feature = precursor_feature
@@ -565,7 +560,7 @@ feature -- Inheritance / Feature adaptation
 		do
 			-- Result := Void
 		ensure
-			void_if_shared: is_feature_shared implies Result = Void
+			void_if_shared: is_flattened implies Result = Void
 			is_inherited: Result /= Void implies Result.is_inherited
 			not_redeclared: Result /= Void implies not Result.is_redeclared
 		end
@@ -585,14 +580,21 @@ feature -- Inheritance / Feature adaptation
 			has_seed: Result.precursor_feature.has_seed (a_seed)
 		end
 
-	flattened_feature: ET_FEATURE is
-			-- Feature resulting from feature adaptation
-		do
-			Result := Current
+	flattened_feature: ET_FLATTENED_FEATURE is
+			-- Feature resulting after feature adaptation
+		deferred
 		ensure
 			flattened_feature_not_void: Result /= Void
-			flattened_feature_not_redeclared: not Result.is_redeclared
-			immediate: not is_inherited implies Result = Current
+		end
+
+	adapted_feature: ET_ADAPTED_FEATURE is
+			-- Version of current feature where none of its
+			-- inherited components are flattened
+		require
+			is_inherited: is_inherited
+		deferred
+		ensure
+			adapted_feature_not_void: Result /= Void
 		end
 
 	parent: ET_PARENT
@@ -613,7 +615,7 @@ feature -- Inheritance / Feature adaptation
 			-- Unset `parent'.
 		require
 			is_inherited: is_inherited
-			is_feature_shared: is_feature_shared
+			is_flattened: is_flattened
 		do
 			parent := Void
 		ensure

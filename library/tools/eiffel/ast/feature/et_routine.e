@@ -14,7 +14,7 @@ deferred class ET_ROUTINE
 
 inherit
 
-	ET_FEATURE
+	ET_FLATTENED_FEATURE
 		redefine
 			arguments
 		end
