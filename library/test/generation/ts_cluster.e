@@ -120,21 +120,25 @@ feature -- Processing
 			testcases_not_void: testcases /= Void
 		local
 			feature_names: DS_LINKED_LIST [STRING]
+			named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
 			an_identifier: ET_IDENTIFIER
 			a_name: STRING
 		do
 			!! feature_names.make
-			a_cursor := a_class.named_features.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				an_identifier ?= a_cursor.key
-				if an_identifier /= Void then
-					a_name := an_identifier.name
-					if feature_regexp.recognizes (a_name) then
-						feature_names.put_last (a_name)
+			named_features := a_class.named_features
+			if named_features /= Void then
+				a_cursor := named_features.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_identifier ?= a_cursor.key
+					if an_identifier /= Void then
+						a_name := an_identifier.name
+						if feature_regexp.recognizes (a_name) then
+							feature_names.put_last (a_name)
+						end
 					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			if not feature_names.is_empty then
 				testcases.put (a_class.name.name, feature_names, class_prefix)
