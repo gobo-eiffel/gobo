@@ -539,8 +539,11 @@ feature -- removal
 			-- Remove item at end of list.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(1).)
+		local
+			dead_item: G
 		do
 			move_last_cursors_after
+			storage.put (dead_item, count)
 			count := count - 1
 		end
 
@@ -548,12 +551,15 @@ feature -- removal
 			-- Remove item at `i'-th position.
 			-- Move any cursors at this position `forth'.
 			-- (Performance: O(count-i).)
+		local
+			dead_item: G
 		do
 			if i = count then
 				remove_last
 			else
 				move_cursors_left (i + 1)
 				move_left (i + 1, 1)
+				storage.put (dead_item, count + 1)
 			end
 		end
 
@@ -598,6 +604,7 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_all_cursors_after
+			clear_items (count - n + 1, count)
 			count := count - n
 		end
 
@@ -611,6 +618,7 @@ feature -- removal
 			else
 				move_all_cursors_after
 				move_left (i + n, n)
+				clear_items (count + 1, count + n)
 			end
 		end
 
@@ -638,6 +646,7 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_all_cursors_after
+			clear_items (n + 1, count)
 			count := n
 		end
 
@@ -657,10 +666,12 @@ feature -- removal
 			-- (Performance: O(count^2).)
 		local
 			i, j, k: INTEGER
+			old_count: INTEGER
 			a_tester: like equality_tester
 		do
 			move_all_cursors_after
 			if not is_empty then
+				old_count := count
 				a_tester := equality_tester
 				if a_tester /= Void then
 					from i := count until i < 1 loop
@@ -702,6 +713,7 @@ feature -- removal
 						end
 					end
 				end
+				clear_items (count + 1, old_count)
 			end
 		end
 
@@ -711,6 +723,7 @@ feature -- removal
 			-- (Performance: O(1).)
 		do
 			move_all_cursors_after
+			clear_items (1, count)
 			count := 0
 		end
 
@@ -778,8 +791,29 @@ feature {NONE} -- Implementation
 			count_set: count = old count - offset
 		end
 
+	clear_items (s, e: INTEGER) is
+			-- Clear items in `storage' within bounds `s'..`e'.
+		require
+			s_large_enough: s >= 1
+			e_small_enough: e <= capacity
+			valid_bound: s <= e + 1
+		local
+			dead_item: G
+			i: INTEGER
+		do
+			from i := s until i > e loop
+				storage.put (dead_item, i)
+				i := i + 1
+			end
+		end
+
 	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
 			-- Routines that ought to be in FIXED_ARRAY
+
+feature {NONE} -- Implementation
+
+	internal_cursor: like new_cursor
+			-- Internal cursor
 
 feature {NONE} -- Cursor movement
 
