@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -15,7 +15,9 @@
 		<cluster name="basic"/>
 		<cluster name="elks"/>
 		<cluster name="io"/>
-		<cluster name="misc"/>
+		<cluster name="misc">
+			<option name="include" value="**/*.e.${VE_OS}" unless="${VE_4_1}"/>
+		</cluster>
 		<cluster name="unicode"/>
 		<cluster name="support"/>
 		<cluster name="spec">
