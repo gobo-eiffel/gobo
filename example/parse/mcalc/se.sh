@@ -15,4 +15,4 @@ echo ${GOBO}/library/structure/loadpath.se>>	loadpath.se
 echo ${GOBO}/library/kernel/loadpath.se>>		loadpath.se
 
 export geoptions="-boost -no_split -no_style_warning -no_gc"
-compile $geoptions MCALC execute
+compile $geoptions -o mcalc MCALC execute

@@ -15,4 +15,4 @@ echo ${GOBO}/library/utility/loadpath.se>>	loadpath.se
 echo ${GOBO}/library/kernel/loadpath.se>>	loadpath.se
 
 export geoptions="-boost -no_split -no_style_warning -no_gc"
-compile $geoptions EIFFEL_SCANNER benchmark
+compile $geoptions -o eiffel_scanner EIFFEL_SCANNER benchmark

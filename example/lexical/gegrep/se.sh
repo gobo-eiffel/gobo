@@ -13,4 +13,4 @@ echo ${GOBO}/example/lexical/gegrep/>	loadpath.se
 echo ${GOBO}/library/loadpath.se>>		loadpath.se
 
 export geoptions="-boost -no_split -no_style_warning -no_gc"
-compile $geoptions GEGREP execute
+compile $geoptions -o gegrep GEGREP execute

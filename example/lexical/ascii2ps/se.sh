@@ -14,4 +14,4 @@ echo ${GOBO}/library/lexical/skeleton/>>	loadpath.se
 echo ${GOBO}/library/kernel/loadpath.se>>	loadpath.se
 
 export geoptions="-boost -no_split -no_style_warning -no_gc"
-compile $geoptions ASCII2PS make
+compile $geoptions -o ascii2ps ASCII2PS make

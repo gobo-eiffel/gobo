@@ -14,4 +14,4 @@ echo ${GOBO}/library/parse/skeleton/>>		loadpath.se
 echo ${GOBO}/library/kernel/loadpath.se>>	loadpath.se
 
 export geoptions="-boost -no_split -no_style_warning -no_gc"
-compile $geoptions RPCALC execute
+compile $geoptions -o rpcalc RPCALC execute
