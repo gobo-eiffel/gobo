@@ -1929,29 +1929,6 @@ VE:
 SE:
   <tag> -> debug ("<tag>"): CLASS_NAME
 -------------------------------------------------------------
-NAME: layout
-
-VALUES: auto | sequential
-DEFAULT: auto
-DESCRIPTION: Specify the layout of an object when it is accessed
-  from outside Eiffel code. 'auto' means the layout for the object
-  fields (variable attributes) in memory is chosen automatically.
-  'sequential' means the fields are laid out in memory in the order
-  they appear in a class text. The fields of child classes are laid
-  out after the fields of parent classes. Inability to do so
-  (because of repeated and multiple inheritance) results in a
-  compilation error.
-
-ISE:
-  N/A
-HACT:
-  N/A
-VE:
-  auto -> no output
-  sequential -> interface CLASS_NAME
-SE:
-  N/A
--------------------------------------------------------------
 NAME: export
 
 VALUES: <external_name>
@@ -1975,6 +1952,29 @@ HACT:
   Limitation: the external name is not taken into account.
 VE:
   N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: layout
+
+VALUES: auto | sequential
+DEFAULT: auto
+DESCRIPTION: Specify the layout of an object when it is accessed
+  from outside Eiffel code. 'auto' means the layout for the object
+  fields (variable attributes) in memory is chosen automatically.
+  'sequential' means the fields are laid out in memory in the order
+  they appear in a class text. The fields of child classes are laid
+  out after the fields of parent classes. Inability to do so
+  (because of repeated and multiple inheritance) results in a
+  compilation error.
+
+ISE:
+  N/A
+HACT:
+  N/A
+VE:
+  auto -> no output
+  sequential -> interface CLASS_NAME
 SE:
   N/A
 -------------------------------------------------------------
